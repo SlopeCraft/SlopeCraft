@@ -1,9 +1,15 @@
 # SlopeCraft
-Get your 3D pixel painting in minecraft.<br>
+Get your 3D pixel painting in minecraft.
 在minecraft中生成3d的地图画<br>
-
+<br>
+<br>
+<br>
+<br>
 刚刚写了个傻瓜级教程，主要是为了面向b站的用户写的，不过github这里还是放一份吧。<br>
 [SlopeCraft v3.0 傻瓜级使用教程](./傻瓜级使用教程.md)
+<br>
+<br>
+<br>
 <br>
 
 
