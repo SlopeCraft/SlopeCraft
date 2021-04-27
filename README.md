@@ -2,17 +2,6 @@
 Get your 3D pixel painting in minecraft.
 在minecraft中生成3d的地图画<br>
 <br>
-<br>
-<br>
-<br>
-刚刚写了个傻瓜级教程，主要是为了面向b站的用户写的，不过github这里还是放一份吧。<br>
-[SlopeCraft v3.0 傻瓜级使用教程](./傻瓜级使用教程.md)
-<br>
-<br>
-<br>
-<br>
-
-
 ## 软件简介<br>
 SlopeCraft软件是我（TokiNoBug）用matlab开发的、用于在minecraft中生成立体地图画的软件。<br>
 与spritecraft等像素画软件不同，SlopeCraft是专门面向地图的像素画，它设计的目的就是让你用地图将像素画记录下来，然后贴在物品展示框上。这里地图指游戏中可以记录地形的物品，不是存档。<br>
