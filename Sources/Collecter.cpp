@@ -41,6 +41,7 @@ void MainWindow::Collect()
         {
             Blocks[Base][j]=NULL;
             Data.BlockId[Base][j]="DefaultBlockId";
+            Data.BlockIdfor12[Base][j]="[]";
             Data.BlockVersion[Base][j]=0;//0代表很早以前就出现的方块，255代表没有对应的方块
         }
 
@@ -169,137 +170,137 @@ void MainWindow::Collect()
     ////////////////
     Blocks[0][0]=ui->is00Glass;     Data.BlockId[0][0]="glass";
 
-    Blocks[1][0]=ui->is01Grass;     Data.BlockId[1][0]="grass_block[snowy=false]";
-    Blocks[1][1]=ui->is01SlimeBlock;        Data.BlockId[1][1]="slime_block";
+    Blocks[1][0]=ui->is01Grass;     Data.BlockId[1][0]="grass_block[snowy=false]";      Data.BlockIdfor12[1][0]="grass[snowy=false]";
+    Blocks[1][1]=ui->is01SlimeBlock;        Data.BlockId[1][1]="slime_block";       Data.BlockIdfor12[1][1]="slime";
 
-    Blocks[2][0]=ui->is02BirchPlanks;       Data.BlockId[2][0]="birch_planks";
-    Blocks[2][1]=ui->is02SmoothSandstone;       Data.BlockId[2][1]="smooth_sandstone";
+    Blocks[2][0]=ui->is02BirchPlanks;       Data.BlockId[2][0]="birch_planks";      Data.BlockIdfor12[2][0]="planks[variant=birch]";
+    Blocks[2][1]=ui->is02SmoothSandstone;       Data.BlockId[2][1]="smooth_sandstone";      Data.BlockIdfor12[2][1]="sandstone[type=smooth_sandstone]";
     Blocks[2][2]=ui->is02Glowstone;       Data.BlockId[2][2]="glowstone";
     Blocks[2][3]=ui->is02EndStone;       Data.BlockId[2][3]="end_stone";
     Blocks[2][4]=ui->is02EndBricks;       Data.BlockId[2][4]="end_stone_bricks";
     Blocks[2][5]=ui->is02TurtleEgg;       Data.BlockId[2][5]="turtle_egg[eggs=4,hatch=0]";Data.BlockVersion[2][5]=13;
 
-    Blocks[3][0]=ui->is03MushroomStem;       Data.BlockId[3][0]="mushroom_stem[east=true,west=true,north=true,south=true,up=true,down=true]";
-    Blocks[3][1]=ui->is03CobWeb;       Data.BlockId[3][1]="cobweb";
+    Blocks[3][0]=ui->is03MushroomStem;       Data.BlockId[3][0]="mushroom_stem[east=true,west=true,north=true,south=true,up=true,down=true]";Data.BlockVersion[3][0]=13;
+    Blocks[3][1]=ui->is03CobWeb;       Data.BlockId[3][1]="cobweb";       Data.BlockIdfor12[3][1]="web";
 
     Blocks[4][0]=ui->is04RedstoneBlock;       Data.BlockId[4][0]="redstone_block";
-    Blocks[4][1]=ui->is04TNT;       Data.BlockId[4][1]="tnt[unstable=false]";
+    Blocks[4][1]=ui->is04TNT;       Data.BlockId[4][1]="tnt[unstable=false]";       Data.BlockIdfor12[4][1]="tnt[explode=false]";
 
     Blocks[5][0]=ui->is05Ice;       Data.BlockId[5][0]="ice";
     Blocks[5][1]=ui->is05PackedIce;       Data.BlockId[5][1]="packed_ice";
-    Blocks[5][2]=ui->is05BlueIce;       Data.BlockId[5][2]="blue_ice";
+    Blocks[5][2]=ui->is05BlueIce;       Data.BlockId[5][2]="blue_ice";Data.BlockVersion[5][2]=13;
 
     Blocks[6][0]=ui->is06IronBlock;       Data.BlockId[6][0]="iron_block";
     Blocks[6][1]=ui->is06BrewingStand;       Data.BlockId[6][1]="brewing_stand[has_bottle_0=false,has_bottle_1=false,has_bottle_2=false]";
     Blocks[6][2]=ui->is06IronPlate;       Data.BlockId[6][2]="heavy_weighted_pressure_plate[power=0]";
-    Blocks[6][3]=ui->is06IronTrapDoor;       Data.BlockId[6][3]="iron_trapdoor[facing=north,half=top,open=false,powered=false,waterlogged=false]";
+    Blocks[6][3]=ui->is06IronTrapDoor;       Data.BlockId[6][3]="iron_trapdoor[facing=north,half=top,open=false,powered=false,waterlogged=false]";      Data.BlockIdfor12[6][3]="iron_trapdoor[facing=north,half=top,open=false]";
     Blocks[6][4]=ui->is06Lantern;       Data.BlockId[6][4]="lantern[hanging=false]";Data.BlockVersion[6][4]=14;
     Blocks[6][5]=ui->is06Grindstone;       Data.BlockId[6][5]="grindstone[face=floor,facing=north]";Data.BlockVersion[6][5]=14;
 
-    Blocks[7][0]=ui->is07OakLeaves;       Data.BlockId[7][0]="oak_leaves[distance=7,persistent=true]";
-    Blocks[7][1]=ui->is07SpruceLeaves;       Data.BlockId[7][1]="spruce_leaves[distance=7,persistent=true]";
-    Blocks[7][2]=ui->is07BirchLeaves;       Data.BlockId[7][2]="birch_leaves[distance=7,persistent=true]";
-    Blocks[7][3]=ui->is07JungleLeaves;       Data.BlockId[7][3]="jungle_leaves[distance=7,persistent=true]";
-    Blocks[7][4]=ui->is07AcaciaLeaves;       Data.BlockId[7][4]="acacia_leaves[distance=7,persistent=true]";
-    Blocks[7][5]=ui->is07DarkOakLeaves;       Data.BlockId[7][5]="dark_oak_leaves[distance=7,persistent=true]";
+    Blocks[7][0]=ui->is07OakLeaves;       Data.BlockId[7][0]="oak_leaves[distance=7,persistent=true]";      Data.BlockIdfor12[7][0]="leaves[variant=oak,check_decay=false,decayable=false]";
+    Blocks[7][1]=ui->is07SpruceLeaves;       Data.BlockId[7][1]="spruce_leaves[distance=7,persistent=true]";      Data.BlockIdfor12[7][1]="leaves[variant=spruce,check_decay=false,decayable=false]";
+    Blocks[7][2]=ui->is07BirchLeaves;       Data.BlockId[7][2]="birch_leaves[distance=7,persistent=true]";      Data.BlockIdfor12[7][2]="leaves[variant=birch,check_decay=false,decayable=false]";
+    Blocks[7][3]=ui->is07JungleLeaves;       Data.BlockId[7][3]="jungle_leaves[distance=7,persistent=true]";      Data.BlockIdfor12[7][3]="leaves[variant=jungle,check_decay=false,decayable=false]";
+    Blocks[7][4]=ui->is07AcaciaLeaves;       Data.BlockId[7][4]="acacia_leaves[distance=7,persistent=true]";      Data.BlockIdfor12[7][4]="leaves2[variant=acacia,check_decay=false,decayable=false]";
+    Blocks[7][5]=ui->is07DarkOakLeaves;       Data.BlockId[7][5]="dark_oak_leaves[distance=7,persistent=true]";      Data.BlockIdfor12[7][5]="leaves2[variant=dark_oak,check_decay=false,decayable=false]";
 
-    Blocks[8][0]=ui->is08Concrete;       Data.BlockId[8][0]="white_concrete";
-    Blocks[8][1]=ui->is08Wool;       Data.BlockId[8][1]="white_wool";
-    Blocks[8][2]=ui->is08StainedGlass;       Data.BlockId[8][2]="white_stained_glass";
-    Blocks[8][3]=ui->is08SnowBlock;       Data.BlockId[8][3]="snow_block";
+    Blocks[8][0]=ui->is08Concrete;       Data.BlockId[8][0]="white_concrete";     Data.BlockIdfor12[8][0]="concrete[color=white]";
+    Blocks[8][1]=ui->is08Wool;       Data.BlockId[8][1]="white_wool";     Data.BlockIdfor12[8][1]="wool[color=white]";
+    Blocks[8][2]=ui->is08StainedGlass;       Data.BlockId[8][2]="white_stained_glass";     Data.BlockIdfor12[8][2]="stained_glass[color=white]";
+    Blocks[8][3]=ui->is08SnowBlock;       Data.BlockId[8][3]="snow_block";      Data.BlockIdfor12[8][3]="snow";
 
     Blocks[9][0]=ui->is09Clay;      Data.BlockId[9][0]="clay";
 
-    Blocks[10][0]=ui->is10CoarseDirt;      Data.BlockId[10][0]="coarse_dirt";Data.BlockVersion[10][0]=13;
-    Blocks[10][1]=ui->is10PolishedGranite;      Data.BlockId[10][1]="polished_granite";
-    Blocks[10][2]=ui->is10JunglePlanks;      Data.BlockId[10][2]="jungle_planks";
-    Blocks[10][3]=ui->is10BrownMushroomBlock;      Data.BlockId[10][3]="brown_mushroom_block[east=true,west=true,north=true,south=true,up=true,down=true]";
-    Blocks[10][4]=ui->is10Dirt;      Data.BlockId[10][4]="dirt";
+    Blocks[10][0]=ui->is10CoarseDirt;      Data.BlockId[10][0]="coarse_dirt";Data.BlockVersion[10][0]=13;       Data.BlockIdfor12[10][0]="dirt[variant=coarse_dirt,snowy=false]";
+    Blocks[10][1]=ui->is10PolishedGranite;      Data.BlockId[10][1]="polished_granite";     Data.BlockIdfor12[10][1]="stone[variant=smooth_granite]";
+    Blocks[10][2]=ui->is10JunglePlanks;      Data.BlockId[10][2]="jungle_planks";      Data.BlockIdfor12[10][2]="planks[variant=jungle]";
+    Blocks[10][3]=ui->is10BrownMushroomBlock;      Data.BlockId[10][3]="brown_mushroom_block[east=true,west=true,north=true,south=true,up=true,down=true]";     Data.BlockIdfor12[10][3]="brown_mushroom_block[variant=all_outside]";
+    Blocks[10][4]=ui->is10Dirt;      Data.BlockId[10][4]="dirt";        Data.BlockIdfor12[10][4]="dirt[variant=dirt,snowy=false]";
 
     Blocks[11][0]=ui->is11Cobblestone;      Data.BlockId[11][0]="cobblestone";
-    Blocks[11][1]=ui->is11Stone;      Data.BlockId[11][1]="stone";
+    Blocks[11][1]=ui->is11Stone;      Data.BlockId[11][1]="stone";      Data.BlockIdfor12[11][1]="stone[variant=stone]";
     Blocks[11][2]=ui->is11SmoothStone;      Data.BlockId[11][2]="smooth_stone";
-    Blocks[11][3]=ui->is11StoneBricks;      Data.BlockId[11][3]="stone_bricks";
+    Blocks[11][3]=ui->is11StoneBricks;      Data.BlockId[11][3]="stone_bricks";Data.BlockIdfor12[11][3]="stonebrick[variant=stonebrick]";
 
     Blocks[12][0]=ui->is12Water;      Data.BlockId[12][0]="water[level=0]";
 
-    Blocks[13][0]=ui->is13OakPlanks;      Data.BlockId[13][0]="oak_planks";
+    Blocks[13][0]=ui->is13OakPlanks;      Data.BlockId[13][0]="oak_planks";     Data.BlockIdfor12[13][0]="planks[variant=oak]";
 
-    Blocks[14][0]=ui->is14PolishedDiorite;      Data.BlockId[14][0]="polished_diorite";
-    Blocks[14][1]=ui->is14QuartzBlock;      Data.BlockId[14][1]="quartz_block";
+    Blocks[14][0]=ui->is14PolishedDiorite;      Data.BlockId[14][0]="polished_diorite";     Data.BlockIdfor12[14][0]="stone[variant=smooth_diorite]";
+    Blocks[14][1]=ui->is14QuartzBlock;      Data.BlockId[14][1]="quartz_block";     Data.BlockIdfor12[14][1]="quartz_block[variant=default]";
     Blocks[14][2]=ui->is14SeaLantern;      Data.BlockId[14][2]="sea_lantern";
     Blocks[14][3]=ui->is14Target;      Data.BlockId[14][3]="target[power=0]";Data.BlockVersion[14][3]=16;
 
-    Blocks[15][0]=ui->is15Concrete;      Data.BlockId[15][0]="orange_concrete";
-    Blocks[15][1]=ui->is15Wool;      Data.BlockId[15][1]="orange_wool";
+    Blocks[15][0]=ui->is15Concrete;      Data.BlockId[15][0]="orange_concrete";     Data.BlockIdfor12[15][0]="concrete[color=orange]";
+    Blocks[15][1]=ui->is15Wool;      Data.BlockId[15][1]="orange_wool";     Data.BlockIdfor12[15][1]="wool[color=orange]";
     Blocks[15][2]=ui->is15StainedGlass;      Data.BlockId[15][2]="orange_stained_glass";
-    Blocks[15][3]=ui->is15AcaciaPlanks;      Data.BlockId[15][3]="acacia_planks";
-    Blocks[15][4]=ui->is15Pumpkin;      Data.BlockId[15][4]="pumpkin";
-    Blocks[15][5]=ui->is15Terracotta;      Data.BlockId[15][5]="terracotta";
-    Blocks[15][6]=ui->is15SmoothRedsandstone;      Data.BlockId[15][6]="smooth_red_sandstone";
+    Blocks[15][3]=ui->is15AcaciaPlanks;      Data.BlockId[15][3]="acacia_planks";      Data.BlockIdfor12[15][3]="planks[variant=acacia]";
+    Blocks[15][4]=ui->is15Pumpkin;      Data.BlockId[15][4]="pumpkin";      Data.BlockIdfor12[15][4]="pumpkin[variant=north]";
+    Blocks[15][5]=ui->is15Terracotta;      Data.BlockId[15][5]="terracotta";        Data.BlockIdfor12[15][5]="hardened_clay";
+    Blocks[15][6]=ui->is15SmoothRedsandstone;      Data.BlockId[15][6]="smooth_red_sandstone";      Data.BlockIdfor12[15][6]="red_sandstone[type=smooth_red_sandstone]";
     Blocks[15][7]=ui->is15HoneyBlock;      Data.BlockId[15][7]="honey_block";Data.BlockVersion[15][7]=15;
     Blocks[15][8]=ui->is15Honeycomb;      Data.BlockId[15][8]="honeycomb_block";Data.BlockVersion[15][8]=15;
 
-    Blocks[16][0]=ui->is16Concrete;      Data.BlockId[16][0]="magenta_concrete";
-    Blocks[16][1]=ui->is16Wool;      Data.BlockId[16][1]="magenta_wool";
-    Blocks[16][2]=ui->is16StainedGlass;      Data.BlockId[16][2]="magenta_stained_glass";
+    Blocks[16][0]=ui->is16Concrete;      Data.BlockId[16][0]="magenta_concrete";     Data.BlockIdfor12[16][0]="concrete[color=orange]";
+    Blocks[16][1]=ui->is16Wool;      Data.BlockId[16][1]="magenta_wool";     Data.BlockIdfor12[16][1]="wool[color=magenta]";
+    Blocks[16][2]=ui->is16StainedGlass;      Data.BlockId[16][2]="magenta_stained_glass";     Data.BlockIdfor12[16][2]="stained_glass[color=magenta]";
     Blocks[16][3]=ui->is16PurpurBlock;      Data.BlockId[16][3]="purpur_block";
 
-    Blocks[17][0]=ui->is17Concrete;      Data.BlockId[17][0]="light_blue_concrete";
-    Blocks[17][1]=ui->is17Wool;      Data.BlockId[17][1]="light_blue_wool";
-    Blocks[17][2]=ui->is17StainedGlass;      Data.BlockId[17][2]="light_blue_stained_glass";
+    Blocks[17][0]=ui->is17Concrete;      Data.BlockId[17][0]="light_blue_concrete";     Data.BlockIdfor12[17][0]="concrete[color=light_blue]";
+    Blocks[17][1]=ui->is17Wool;      Data.BlockId[17][1]="light_blue_wool";     Data.BlockIdfor12[17][1]="wool[color=light_blue]";
+    Blocks[17][2]=ui->is17StainedGlass;      Data.BlockId[17][2]="light_blue_stained_glass";     Data.BlockIdfor12[17][2]="stained_glass[color=light_blue]";
 
-    Blocks[18][0]=ui->is18Concrete;      Data.BlockId[18][0]="yellow_concrete";
-    Blocks[18][1]=ui->is18Wool;      Data.BlockId[18][1]="yellow_wool";
-    Blocks[18][2]=ui->is18StainedGlass;      Data.BlockId[18][2]="yellow_stained_glass";
+    Blocks[18][0]=ui->is18Concrete;      Data.BlockId[18][0]="yellow_concrete";     Data.BlockIdfor12[18][0]="concrete[color=yellow]";
+    Blocks[18][1]=ui->is18Wool;      Data.BlockId[18][1]="yellow_wool";     Data.BlockIdfor12[18][1]="wool[color=yellow]";
+    Blocks[18][2]=ui->is18StainedGlass;      Data.BlockId[18][2]="yellow_stained_glass";     Data.BlockIdfor12[18][2]="stained_glass[color=yellow]";
     Blocks[18][3]=ui->is18HayBlock;      Data.BlockId[18][3]="hay_block[axis=y]";
 
-    Blocks[19][0]=ui->is19Concrete;      Data.BlockId[19][0]="lime_concrete";
-    Blocks[19][1]=ui->is19Wool;      Data.BlockId[19][1]="lime_wool";
-    Blocks[19][2]=ui->is19StainedGlass;      Data.BlockId[19][2]="lime_stained_glass";
+    Blocks[19][0]=ui->is19Concrete;      Data.BlockId[19][0]="lime_concrete";     Data.BlockIdfor12[19][0]="concrete[color=lime]";
+    Blocks[19][1]=ui->is19Wool;      Data.BlockId[19][1]="lime_wool";     Data.BlockIdfor12[19][1]="wool[color=lime]";
+    Blocks[19][2]=ui->is19StainedGlass;      Data.BlockId[19][2]="lime_stained_glass";     Data.BlockIdfor12[19][2]="stained_glass[color=lime]";
 
-    Blocks[20][0]=ui->is20Concrete;      Data.BlockId[20][0]="pink_concrete";
-    Blocks[20][1]=ui->is20Wool;      Data.BlockId[20][1]="pink_wool";
-    Blocks[20][2]=ui->is20StainedGlass;      Data.BlockId[20][2]="pink_stained_glass";
+    Blocks[20][0]=ui->is20Concrete;      Data.BlockId[20][0]="pink_concrete";     Data.BlockIdfor12[20][0]="concrete[color=pink]";
+    Blocks[20][1]=ui->is20Wool;      Data.BlockId[20][1]="pink_wool";     Data.BlockIdfor12[20][1]="wool[color=pink]";
+    Blocks[20][2]=ui->is20StainedGlass;      Data.BlockId[20][2]="pink_stained_glass";     Data.BlockIdfor12[20][2]="stained_glass[color=pink]";
 
-    Blocks[21][0]=ui->is21Concrete;      Data.BlockId[21][0]="gray_concrete";
-    Blocks[21][1]=ui->is21Wool;      Data.BlockId[21][1]="gray_wool";
-    Blocks[21][2]=ui->is21StainedGlass;      Data.BlockId[21][2]="gray_stained_glass";
+    Blocks[21][0]=ui->is21Concrete;      Data.BlockId[21][0]="gray_concrete";     Data.BlockIdfor12[21][0]="concrete[color=gray]";
+    Blocks[21][1]=ui->is21Wool;      Data.BlockId[21][1]="gray_wool";     Data.BlockIdfor12[21][1]="wool[color=gray]";
+    Blocks[21][2]=ui->is21StainedGlass;      Data.BlockId[21][2]="gray_stained_glass";     Data.BlockIdfor12[21][2]="stained_glass[color=gray]";
 
-    Blocks[22][0]=ui->is22Concrete;      Data.BlockId[22][0]="light_gray_concrete";
-    Blocks[22][1]=ui->is22Wool;      Data.BlockId[22][1]="light_gray_wool";
-    Blocks[22][2]=ui->is22StainedGlass;      Data.BlockId[22][2]="light_gray_stained_glass";
+    Blocks[22][0]=ui->is22Concrete;      Data.BlockId[22][0]="light_gray_concrete";     Data.BlockIdfor12[22][0]="concrete[color=silver]";
+    Blocks[22][1]=ui->is22Wool;      Data.BlockId[22][1]="light_gray_wool";     Data.BlockIdfor12[22][1]="wool[color=silver]";
+    Blocks[22][2]=ui->is22StainedGlass;      Data.BlockId[22][2]="light_gray_stained_glass";     Data.BlockIdfor12[22][2]="stained_glass[color=silver]";
 
-    Blocks[23][0]=ui->is23Concrete;      Data.BlockId[23][0]="cyan_concrete";
-    Blocks[23][1]=ui->is23Wool;      Data.BlockId[23][1]="cyan_wool";
-    Blocks[23][2]=ui->is23StainedGlass;      Data.BlockId[23][2]="cyan_stained_glass";
-    Blocks[23][3]=ui->is23Prismarine;      Data.BlockId[23][3]="prismarine";//Data.BlockVersion[23][3]=13;
+    Blocks[23][0]=ui->is23Concrete;      Data.BlockId[23][0]="cyan_concrete";     Data.BlockIdfor12[23][0]="concrete[color=cyan]";
+    Blocks[23][1]=ui->is23Wool;      Data.BlockId[23][1]="cyan_wool";     Data.BlockIdfor12[23][1]="wool[color=cyan]";
+    Blocks[23][2]=ui->is23StainedGlass;      Data.BlockId[23][2]="cyan_stained_glass";     Data.BlockIdfor12[23][2]="stained_glass[color=cyan]";
+    Blocks[23][3]=ui->is23Prismarine;      Data.BlockId[23][3]="prismarine";    Data.BlockIdfor12[23][3]="prismarine[variant=prismarine]";
 
-    Blocks[24][0]=ui->is24Concrete;      Data.BlockId[24][0]="purple_concrete";
-    Blocks[24][1]=ui->is24Wool;      Data.BlockId[24][1]="light_blue_wool";
-    Blocks[24][2]=ui->is24StainedGlass;      Data.BlockId[24][2]="light_blue_stained_glass";
+    Blocks[24][0]=ui->is24Concrete;      Data.BlockId[24][0]="purple_concrete";     Data.BlockIdfor12[24][0]="concrete[color=purple]";
+    Blocks[24][1]=ui->is24Wool;      Data.BlockId[24][1]="purple_wool";     Data.BlockIdfor12[24][1]="wool[color=purple]";
+    Blocks[24][2]=ui->is24StainedGlass;      Data.BlockId[24][2]="purple_stained_glass";     Data.BlockIdfor12[24][2]="stained_glass[color=purple]";
 
-    Blocks[25][0]=ui->is25Concrete;      Data.BlockId[25][0]="blue_concrete";
-    Blocks[25][1]=ui->is25Wool;      Data.BlockId[25][1]="blue_wool";
-    Blocks[25][2]=ui->is25StainedGlass;      Data.BlockId[25][2]="blue_stained_glass";
+    Blocks[25][0]=ui->is25Concrete;      Data.BlockId[25][0]="blue_concrete";     Data.BlockIdfor12[25][0]="concrete[color=blue]";
+    Blocks[25][1]=ui->is25Wool;      Data.BlockId[25][1]="blue_wool";     Data.BlockIdfor12[25][1]="wool[color=blue]";
+    Blocks[25][2]=ui->is25StainedGlass;      Data.BlockId[25][2]="blue_stained_glass";     Data.BlockIdfor12[25][2]="stained_glass[color=blue]";
 
-    Blocks[26][0]=ui->is26Concrete;      Data.BlockId[26][0]="brown_concrete";
-    Blocks[26][1]=ui->is26Wool;      Data.BlockId[26][1]="brown_wool";
-    Blocks[26][2]=ui->is26StainedGlass;      Data.BlockId[26][2]="brown_stained_glass";
-    Blocks[26][3]=ui->is26DarkOakPlanks;      Data.BlockId[26][3]="dark_oak_planks";
+    Blocks[26][0]=ui->is26Concrete;      Data.BlockId[26][0]="brown_concrete";     Data.BlockIdfor12[26][0]="concrete[color=brown]";
+    Blocks[26][1]=ui->is26Wool;      Data.BlockId[26][1]="brown_wool";     Data.BlockIdfor12[26][1]="wool[color=brown]";
+    Blocks[26][2]=ui->is26StainedGlass;      Data.BlockId[26][2]="brown_stained_glass";     Data.BlockIdfor12[26][2]="stained_glass[color=brown]";
+    Blocks[26][3]=ui->is26DarkOakPlanks;      Data.BlockId[26][3]="dark_oak_planks";      Data.BlockIdfor12[26][3]="planks[variant=dark_oak]";
     Blocks[26][4]=ui->is26SoulSand;      Data.BlockId[26][4]="soul_sand";
     Blocks[26][5]=ui->is26SoulSoil;      Data.BlockId[26][5]="soul_soil";Data.BlockVersion[26][5]=16;
 
-    Blocks[27][0]=ui->is27Concrete;      Data.BlockId[27][0]="green_concrete";
-    Blocks[27][1]=ui->is27Wool;      Data.BlockId[27][1]="green_wool";
-    Blocks[27][2]=ui->is27StainedGlass;      Data.BlockId[27][2]="green_stained_glass";
+    Blocks[27][0]=ui->is27Concrete;      Data.BlockId[27][0]="green_concrete";     Data.BlockIdfor12[27][0]="concrete[color=green]";
+    Blocks[27][1]=ui->is27Wool;      Data.BlockId[27][1]="green_wool";     Data.BlockIdfor12[27][1]="wool[color=green]";
+    Blocks[27][2]=ui->is27StainedGlass;      Data.BlockId[27][2]="green_stained_glass";     Data.BlockIdfor12[27][2]="stained_glass[color=green]";
     Blocks[27][3]=ui->is27KelpBlock;      Data.BlockId[27][3]="dried_kelp_block";Data.BlockVersion[27][3]=13;
 
-    Blocks[28][0]=ui->is28Concrete;      Data.BlockId[28][0]="red_concrete";
-    Blocks[28][1]=ui->is28Wool;      Data.BlockId[28][1]="red_wool";
-    Blocks[28][2]=ui->is28StainedGlass;      Data.BlockId[28][2]="red_stained_glass";
-    Blocks[28][3]=ui->is28Bricks;      Data.BlockId[28][3]="bricks";
-    Blocks[28][4]=ui->is28RedMushroomBlock;      Data.BlockId[28][4]="red_mushroom_block[east=true,west=true,north=true,south=true,up=true,down=true]";
+    Blocks[28][0]=ui->is28Concrete;      Data.BlockId[28][0]="red_concrete";     Data.BlockIdfor12[28][0]="concrete[color=red]";
+    Blocks[28][1]=ui->is28Wool;      Data.BlockId[28][1]="red_wool";     Data.BlockIdfor12[28][1]="wool[color=red]";
+    Blocks[28][2]=ui->is28StainedGlass;      Data.BlockId[28][2]="red_stained_glass";     Data.BlockIdfor12[28][2]="stained_glass[color=red]";
+    Blocks[28][3]=ui->is28Bricks;      Data.BlockId[28][3]="bricks";        Data.BlockIdfor12[28][3]="brick_block";
+    Blocks[28][4]=ui->is28RedMushroomBlock;      Data.BlockId[28][4]="red_mushroom_block[east=true,west=true,north=true,south=true,up=true,down=true]";     Data.BlockIdfor12[28][4]="red_mushroom_block[variant=all_outside]";
     Blocks[28][5]=ui->is28WartBlock;      Data.BlockId[28][5]="nether_wart_block";
     Blocks[28][6]=ui->is28Shroomlight;      Data.BlockId[28][6]="shroomlight";Data.BlockVersion[28][6]=16;
 
@@ -315,37 +316,37 @@ void MainWindow::Collect()
     Blocks[30][1]=ui->is30GoldPlate;      Data.BlockId[30][1]="light_weighted_pressure_plate[power=0]";
 
     Blocks[31][0]=ui->is31DiamondBlock;      Data.BlockId[31][0]="diamond_block";
-    Blocks[31][1]=ui->is31PrismarineBricks;      Data.BlockId[31][1]="prismarine_bricks";//Data.BlockVersion[31][1]=13;
-    Blocks[31][2]=ui->is31DarkPrismarine;      Data.BlockId[31][2]="dark_prismarine";//Data.BlockVersion[31][2]=13;
+    Blocks[31][1]=ui->is31PrismarineBricks;      Data.BlockId[31][1]="prismarine_bricks";       Data.BlockIdfor12[31][1]="prismarine[variant=prismarine_bricks]";
+    Blocks[31][2]=ui->is31DarkPrismarine;      Data.BlockId[31][2]="dark_prismarine";Data.BlockIdfor12[31][2]="prismarine[variant=dark_prismarine]";
 
     Blocks[32][0]=ui->is32LapisBlock;      Data.BlockId[32][0]="lapis_block";
 
     Blocks[33][0]=ui->is33EmeraldBlock;         Data.BlockId[33][0]="emerald_block";
 
-    Blocks[34][0]=ui->is34Podzol;         Data.BlockId[34][0]="podzol[snowy=false]";
-    Blocks[34][1]=ui->is34SprucePlanks;         Data.BlockId[34][1]="spruce_planks";
+    Blocks[34][0]=ui->is34Podzol;         Data.BlockId[34][0]="podzol[snowy=false]";        Data.BlockIdfor12[34][0]="dirt[variant=podzol,snowy=false]";
+    Blocks[34][1]=ui->is34SprucePlanks;         Data.BlockId[34][1]="spruce_planks";      Data.BlockIdfor12[34][1]="planks[variant=spruce]";
     Blocks[34][2]=ui->is34Campfire;         Data.BlockId[34][2]="campfire[facing=north,lit=true,signal_fire=false,waterlogged=false]";Data.BlockVersion[34][2]=14;
 
     Blocks[35][0]=ui->is35Netherrack;         Data.BlockId[35][0]="netherrack";
-    Blocks[35][1]=ui->is35NetherBricks;         Data.BlockId[35][1]="nether_bricks";
-    Blocks[35][2]=ui->is35Magma;         Data.BlockId[35][2]="magma_block";
+    Blocks[35][1]=ui->is35NetherBricks;         Data.BlockId[35][1]="nether_bricks";        Data.BlockIdfor12[35][1]="nether_brick";
+    Blocks[35][2]=ui->is35Magma;         Data.BlockId[35][2]="magma_block";     Data.BlockIdfor12[35][2]="magma";
 
-    Blocks[36][0]=ui->is36Terracotta;           Data.BlockId[36][0]="white_terracotta";
-    Blocks[37][0]=ui->is37Terracotta;           Data.BlockId[37][0]="orange_terracotta";
-    Blocks[38][0]=ui->is38Terracotta;           Data.BlockId[38][0]="magenta_terracotta";
-    Blocks[39][0]=ui->is39Terracotta;           Data.BlockId[39][0]="light_blue_terracotta";
-    Blocks[40][0]=ui->is40Terracotta;           Data.BlockId[40][0]="yellow_terracotta";
-    Blocks[41][0]=ui->is41Terracotta;           Data.BlockId[41][0]="lime_terracotta";
-    Blocks[42][0]=ui->is42Terracotta;           Data.BlockId[42][0]="pink_terracotta";
-    Blocks[43][0]=ui->is43Terracotta;           Data.BlockId[43][0]="gray_terracotta";
-    Blocks[44][0]=ui->is44Terracotta;           Data.BlockId[44][0]="light_gray_terracotta";
-    Blocks[45][0]=ui->is45Terracotta;           Data.BlockId[45][0]="cyan_terracotta";
-    Blocks[46][0]=ui->is46Terracotta;           Data.BlockId[46][0]="purple_terracotta";
-    Blocks[47][0]=ui->is47Terracotta;           Data.BlockId[47][0]="blue_terracotta";
-    Blocks[48][0]=ui->is48Terracotta;           Data.BlockId[48][0]="brown_terracotta";
-    Blocks[49][0]=ui->is49Terracotta;           Data.BlockId[49][0]="green_terracotta";
-    Blocks[50][0]=ui->is50Terracotta;           Data.BlockId[50][0]="red_terracotta";
-    Blocks[51][0]=ui->is51Terracotta;           Data.BlockId[51][0]="black_terracotta";
+    Blocks[36][0]=ui->is36Terracotta;           Data.BlockId[36][0]="white_terracotta";     Data.BlockIdfor12[36][0]="stained_hardened_clay[color=white]";
+    Blocks[37][0]=ui->is37Terracotta;           Data.BlockId[37][0]="orange_terracotta";     Data.BlockIdfor12[37][0]="stained_hardened_clay[color=orange]";
+    Blocks[38][0]=ui->is38Terracotta;           Data.BlockId[38][0]="magenta_terracotta";     Data.BlockIdfor12[38][0]="stained_hardened_clay[color=magenta]";
+    Blocks[39][0]=ui->is39Terracotta;           Data.BlockId[39][0]="light_blue_terracotta";     Data.BlockIdfor12[39][0]="stained_hardened_clay[color=light_blue]";
+    Blocks[40][0]=ui->is40Terracotta;           Data.BlockId[40][0]="yellow_terracotta";     Data.BlockIdfor12[40][0]="stained_hardened_clay[color=yellow]";
+    Blocks[41][0]=ui->is41Terracotta;           Data.BlockId[41][0]="lime_terracotta";     Data.BlockIdfor12[41][0]="stained_hardened_clay[color=lime]";
+    Blocks[42][0]=ui->is42Terracotta;           Data.BlockId[42][0]="pink_terracotta";     Data.BlockIdfor12[42][0]="stained_hardened_clay[color=pink]";
+    Blocks[43][0]=ui->is43Terracotta;           Data.BlockId[43][0]="gray_terracotta";     Data.BlockIdfor12[43][0]="stained_hardened_clay[color=gray]";
+    Blocks[44][0]=ui->is44Terracotta;           Data.BlockId[44][0]="light_gray_terracotta";     Data.BlockIdfor12[44][0]="stained_hardened_clay[color=silver]";
+    Blocks[45][0]=ui->is45Terracotta;           Data.BlockId[45][0]="cyan_terracotta";     Data.BlockIdfor12[45][0]="stained_hardened_clay[color=cyan]";
+    Blocks[46][0]=ui->is46Terracotta;           Data.BlockId[46][0]="purple_terracotta";     Data.BlockIdfor12[46][0]="stained_hardened_clay[color=purple]";
+    Blocks[47][0]=ui->is47Terracotta;           Data.BlockId[47][0]="blue_terracotta";     Data.BlockIdfor12[47][0]="stained_hardened_clay[color=blue]";
+    Blocks[48][0]=ui->is48Terracotta;           Data.BlockId[48][0]="brown_terracotta";     Data.BlockIdfor12[48][0]="stained_hardened_clay[color=brown]";
+    Blocks[49][0]=ui->is49Terracotta;           Data.BlockId[49][0]="green_terracotta";     Data.BlockIdfor12[49][0]="stained_hardened_clay[color=green]";
+    Blocks[50][0]=ui->is50Terracotta;           Data.BlockId[50][0]="red_terracotta";     Data.BlockIdfor12[50][0]="stained_hardened_clay[color=red]";
+    Blocks[51][0]=ui->is51Terracotta;           Data.BlockId[51][0]="black_terracotta";     Data.BlockIdfor12[51][0]="stained_hardened_clay[color=black]";
 
     Blocks[52][0]=ui->is52CrimsonNylium;           Data.BlockId[52][0]="crimson_nylium";Data.BlockVersion[52][0]=16;
 

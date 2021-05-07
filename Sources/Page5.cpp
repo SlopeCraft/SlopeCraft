@@ -94,7 +94,7 @@ void MainWindow::on_ExportLite_clicked()
         return;
     }
 
-    Data.step=6;
+    Data.step=6;updateEnables();
     qDebug("导出为投影成功");
     ui->FinishExLite->setEnabled(true);    
     ui->seeExported->setEnabled(true);
@@ -118,8 +118,8 @@ void MainWindow::on_Build4Lite_clicked()
     Data.makeHeight();
     ui->ShowLiteXYZ->setText("X:"+QString::number(Data.size3D[0])+"  × Y:"+QString::number(Data.size3D[1])+"  × Z:"+QString::number(Data.size3D[2]));
     Data.ExLitestep=1;    
-    Data.step=5;
-
+    Data.step=5;updateEnables();
+    updateEnables();
     if((Data.Height.array()<0).any())
     {
         qDebug("调整高度出错：出现了负高度");
@@ -407,9 +407,9 @@ long mcMap::exportAsLitematica(QString FilePathAndName)
 {
 
     Lite.open(FilePathAndName.toLocal8Bit().data());
-    QString LiteName=parent->ui->InputLiteName->toMarkdown();
-    QString author=parent->ui->InputAuthor->toMarkdown();
-    QString RegionName=parent->ui->InputRegionName->toMarkdown();
+    QString LiteName=parent->ui->InputLiteName->toPlainText();
+    QString author=parent->ui->InputAuthor->toPlainText();
+    QString RegionName=parent->ui->InputRegionName->toPlainText();
 
     Lite.writeCompound("Metadata");
         Lite.writeCompound("EnclosingSize");
@@ -492,8 +492,35 @@ parent->ui->ShowProgressExLite->setValue(50);
             }
     Lite.endCompound();
 Lite.endCompound();
-Lite.writeInt("MinecraftDataVersion",2584);
-Lite.writeInt("Version",5);
+switch (gameVersion)
+{
+case 12:
+    Lite.writeInt("MinecraftDataVersion",1343);
+    Lite.writeInt("Version",4);
+    break;
+case 13:
+    Lite.writeInt("MinecraftDataVersion",1631);
+    Lite.writeInt("Version",5);
+    break;
+case 14:
+    Lite.writeInt("MinecraftDataVersion",1976);
+    Lite.writeInt("Version",5);
+    break;
+case 15:
+    Lite.writeInt("MinecraftDataVersion",2230);
+    Lite.writeInt("Version",5);
+    break;
+case 16:
+    Lite.writeInt("MinecraftDataVersion",2586);
+    Lite.writeInt("Version",5);
+    break;
+case 17:
+    qDebug("现在这个版本尚不支持");break;
+default:
+    qDebug("错误的游戏版本！");break;
+}
+
+
 
 Lite.close();
     return Lite.getByteCount();

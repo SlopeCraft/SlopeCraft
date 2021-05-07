@@ -31,6 +31,175 @@ This file is part of SlopeCraft.
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QDebug>
+//#include <NBTWriter.h>
 
+void MainWindow::on_InputDataIndex_textChanged()
+{
+    bool isIndexValid=false;
+    const int indexStart=ui->InputDataIndex->toPlainText().toInt(&isIndexValid);
+    isIndexValid=isIndexValid&&(indexStart>=0);
+    if(isIndexValid)
+    {
+        if(ceil(Data.mapPic.rows()/128.0f)==1&&ceil(Data.mapPic.cols()/128.0f)==1)
+        ui->ShowDataFileName->setText("map_"+QString::number(indexStart)+".dat");
+        else
+            ui->ShowDataFileName->setText("map_"+QString::number(indexStart)+".dat"+"~"+"map_"+QString::number(indexStart+ceil(Data.mapPic.cols()/128.0f)*ceil(Data.mapPic.rows()/128.0f)-1)+".dat");
+        ui->ExportData->setEnabled(true);
+        return;
+    }
+
+    ui->ShowDataFileName->setText(tr("你输入的起始序号不可用，请输入大于等于0的整数！"));
+    ui->ExportData->setEnabled(false);
+    return;
+}
+
+
+void MainWindow::on_ExportData_clicked()
+{
+    if(Data.step<5)return;
+    bool isIndexValid=false;
+    const int indexStart=ui->InputDataIndex->toPlainText().toInt(&isIndexValid);
+    isIndexValid=isIndexValid&&(indexStart>=0);
+    if(!isIndexValid)
+    {
+        QMessageBox::information(this,tr("你输入的起始序号不可用"),tr("请输入大于等于0的整数！"));
+                    return;
+    }
+    QString FolderPath=QFileDialog::getExistingDirectory(this,tr("请选择导出的文件夹"));
+    if(FolderPath.isEmpty())
+    {
+        QMessageBox::information(this,tr("你选择的文件夹不存在！"),tr("你可以选择存档中的data文件夹"));
+        return;
+    }
+
+    ui->InputDataIndex->setEnabled(false);
+    ui->ExportData->setEnabled(false);
+    ui->FinshExData->setEnabled(false);
+    ui->ExportData->setText(tr("请稍等"));
+
+
+    FolderPath.replace("\\","/");
+    Data.exportAsData(FolderPath,indexStart);
+    qDebug("导出地图文件成功");
+    Data.step=6;updateEnables();
+
+    ui->InputDataIndex->setEnabled(true);
+    ui->ExportData->setEnabled(true);
+    ui->FinshExData->setEnabled(true);
+    ui->ExportData->setText(tr("导出"));
+}
+
+long mcMap::exportAsData(const QString &FolderPath,const int indexStart)
+{
+const int rows=ceil(mapPic.rows()/128.0f);
+const int cols=ceil(mapPic.cols()/128.0f);
+const int maxrr=rows*128;
+const int maxcc=cols*128;
+parent->ui->ShowProgressExData->setValue(0);
+parent->ui->ShowProgressExData->setMaximum(128*rows*cols);
+
+int offset[2]={0,0};//r,c
+int currentIndex=indexStart;
+for(int c=0;c<cols;c++)
+{
+    for(int r=0;r<rows;r++)
+    {
+        offset[0]=r*128;
+        offset[1]=c*128;
+
+        QString currentUn=FolderPath+"/map_"+QString::number(currentIndex)+".TokiNoBug";
+        QString currentFile=FolderPath+"/map_"+QString::number(currentIndex)+".dat";
+
+        qDebug()<<"开始导出("<<r<<","<<c<<")的地图"<<currentUn;
+
+        NBT::NBTWriter MapFile(currentUn.toLocal8Bit().data());
+
+        switch (gameVersion)
+        {
+        case 13:
+            break;
+        case 14:
+            MapFile.writeInt("DataVersion",1631);
+            break;
+        case 15:
+            MapFile.writeInt("DataVersion",2230);
+            break;
+        case 16:
+            MapFile.writeInt("DataVersion",2586);
+            break;
+        case 17:
+            qDebug("这个版本尚不支持");
+            break;
+        }
+        MapFile.writeString("ExportedBy","Exported by SlopeCraft v3.1, developed by TokiNoBug");
+        MapFile.writeCompound("data");
+            MapFile.writeByte("scale",0);
+            MapFile.writeByte("trackingPosition",0);
+            MapFile.writeByte("unlimitedTracking",0);
+            MapFile.writeInt("xCenter",0);
+            MapFile.writeInt("zCenter",0);
+            switch(gameVersion)
+            {
+            case 12:
+                MapFile.writeByte("dimension",114);
+                MapFile.writeShort("height",128);
+                MapFile.writeShort("width",128);
+                break;
+            case 13:
+                MapFile.writeListHead("banners",NBT::idCompound,0);
+                MapFile.writeListHead("frames",NBT::idCompound,0);
+                MapFile.writeInt("dimension",889464);
+                break;
+            case 14:
+                MapFile.writeListHead("banners",NBT::idCompound,0);
+                MapFile.writeListHead("frames",NBT::idCompound,0);
+                MapFile.writeInt("dimension",0);
+                MapFile.writeByte("locked",1);
+                break;
+            case 15:
+                MapFile.writeListHead("banners",NBT::idCompound,0);
+                MapFile.writeListHead("frames",NBT::idCompound,0);
+                MapFile.writeInt("dimension",0);
+                MapFile.writeByte("locked",1);
+                break;
+            case 16:
+                MapFile.writeListHead("banners",NBT::idCompound,0);
+                MapFile.writeListHead("frames",NBT::idCompound,0);
+                MapFile.writeString("dimension","minecraft:overworld");
+                MapFile.writeByte("locked",1);
+                break;
+            }
+
+            MapFile.writeByteArrayHead("colors",16384);
+            unsigned char ColorCur=0;
+                for(short rr=0;rr<128;rr++)
+                {
+                    for(short cc=0;cc<128;cc++)
+                    {
+                        if(rr+offset[0]<maxrr&&cc+offset[1]<maxcc)
+                        ColorCur=(unsigned char)mapPic(rr+offset[0],cc+offset[1]);
+                        else
+                            ColorCur=255;
+                        MapFile.writeByte("this should never be seen",ColorCur);
+                    }
+                    parent->ui->ShowProgressExData->setValue(parent->ui->ShowProgressExData->value()+1);
+                }
+            MapFile.endCompound();
+            MapFile.close();
+
+            if(compressFile(currentUn.toLocal8Bit().data(),currentFile.toLocal8Bit().data()))
+            {
+                qDebug("压缩成功");
+                QFile umComFile(currentUn);
+                umComFile.remove();
+            }
+            currentIndex++;
+    }
+}
+    //scale=0,trackingPosition=0,unlimitedTracking=0(均为byte)在1.12~1.16均不变
+    //xCenter=0,zCenter=0(int)均不变
+    //colors(16384byte)均不变
+    return 0;
+}
 
 #endif

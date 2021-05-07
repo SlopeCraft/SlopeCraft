@@ -43,6 +43,11 @@ using namespace Eigen;
 void MainWindow::on_isColorSpaceXYZ_clicked()
 {
     Data.adjStep=0;
+    if(Data.step>=4)Data.step=4;
+    else
+    {updateEnables();
+        return;}
+    updateEnables();
     Data.Mode='X';
     qDebug("调整颜色空间为XYZ");
 }
@@ -50,6 +55,11 @@ void MainWindow::on_isColorSpaceXYZ_clicked()
 void MainWindow::on_isColorSpaceLab_clicked()
 {
     Data.adjStep=0;
+    if(Data.step>=4)Data.step=4;
+    else
+    {updateEnables();
+        return;}
+    updateEnables();
     Data.Mode='L';
     qDebug("调整颜色空间为Lab");
 }
@@ -57,6 +67,11 @@ void MainWindow::on_isColorSpaceLab_clicked()
 void MainWindow::on_isColorSpaceHSV_clicked()
 {
     Data.adjStep=0;
+    if(Data.step>=4)Data.step=4;
+    else
+    {updateEnables();
+        return;}
+    updateEnables();
     Data.Mode='H';
     qDebug("调整颜色空间为HSV");
 }
@@ -64,6 +79,11 @@ void MainWindow::on_isColorSpaceHSV_clicked()
 void MainWindow::on_isColorSpaceRGB_clicked()
 {
     Data.adjStep=0;
+    if(Data.step>=4)Data.step=4;
+    else
+    {updateEnables();
+        return;}
+    updateEnables();
     Data.Mode='R';
     qDebug("调整颜色空间为RGB");
 }
@@ -71,6 +91,11 @@ void MainWindow::on_isColorSpaceRGB_clicked()
 void MainWindow::on_isColorSpaceRGBOld_clicked()
 {
     Data.adjStep=0;
+    if(Data.step>=4)Data.step=4;
+    else
+    {updateEnables();
+        return;}
+    updateEnables();
     Data.Mode='r';
     qDebug("调整颜色空间为旧版RGB");
 }
@@ -400,7 +425,7 @@ void MainWindow::on_AdjPicColor_clicked()
 {
 ui->ExData->setEnabled(false);
 ui->ExLite->setEnabled(false);
-ui->ExMcF->setEnabled(false);
+//ui->ExMcF->setEnabled(false);
 
 ui->isColorSpaceHSV->setEnabled(false);
 ui->isColorSpaceRGB->setEnabled(false);;
@@ -475,20 +500,32 @@ case 'R':
     break;
 case 'L':
     Pic2Map4Lab(*allowedColor);
+    break;
 case 'H':
     Pic2Map4HSV(*allowedColor);
+    break;
 default:
     Pic2Map(*allowedColor);
     break;
 }
 qDebug()<<"调整为地图色用时："<<clock()-start;
+
+if(Data.isCreative())
+{
+    ui->ShowDataCols->setText(QString::number(ceil(Data.mapPic.cols()/128.0f)));
+    ui->ShowDataRows->setText(QString::number(ceil(Data.mapPic.rows()/128.0f)));
+    ui->ShowDataCounts->setText(QString::number(ceil(Data.mapPic.cols()/128.0f)*ceil(Data.mapPic.rows()/128.0f)));
+    ui->InputDataIndex->setText("0");
+}
+
+
 start=clock();
 
 Data.adjStep=3;
 //qDebug("开始生成调整后图像");
 getAdjedPic();
 Data.adjStep=4;
-emit on_ShowAdjed_clicked();
+on_ShowAdjed_clicked();
 
 qDebug()<<"生成调整后图像用时："<<clock()-start;
 //start=clock();
@@ -496,10 +533,14 @@ qDebug()<<"生成调整后图像用时："<<clock()-start;
 ui->ShowProgressABbar->setValue(4*Data.sizePic[0]+1);
 
 Data.step=5;
+updateEnables();
 Data.ExLitestep=0;
 Data.ExMcFstep=0;
 //qDebug("已显示调整后图像并允许翻页");
-ui->ExLite->setEnabled(true);
+
+
+ui->ExData->setEnabled(Data.isCreative());
+ui->ExLite->setEnabled(!Data.isCreative());
 //ui->ExMcF->setEnabled(true);
 
 ui->isColorSpaceHSV->setEnabled(true);
@@ -509,7 +550,7 @@ ui->isColorSpaceXYZ->setEnabled(true);
 ui->isColorSpaceRGBOld->setEnabled(true);
 ui->ShowAdjed->setEnabled(true);
 
-ui->AdjPicColor->setText("调整颜色");
+ui->AdjPicColor->setText(tr("调整颜色"));
 
 }
 

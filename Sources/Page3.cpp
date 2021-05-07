@@ -226,6 +226,12 @@ void MainWindow::applyCheap()
 {
     applyPre(BLCheaper);
     //ui->isBLSurvivalCheaper->setChecked(true);
+    if(!Data.isCreative()&&Data.gameVersion<=12)
+    {
+    disconnect(ui->Enable03,SIGNAL(clicked()),this,SLOT(ChangeToCustom()));
+    ui->Enable03->setChecked(false);
+    connect(ui->Enable03,SIGNAL(clicked()),this,SLOT(ChangeToCustom()));
+    }
     return;
 }
 
@@ -233,6 +239,12 @@ void MainWindow::applyElegant()
 {
     applyPre(BLBetter);
     //ui->isBLSurvivalBetter->setChecked(true);
+    if(!Data.isCreative()&&Data.gameVersion<=12)
+    {
+    disconnect(ui->Enable03,SIGNAL(clicked()),this,SLOT(ChangeToCustom()));
+    ui->Enable03->setChecked(false);
+    connect(ui->Enable03,SIGNAL(clicked()),this,SLOT(ChangeToCustom()));
+    }
     return;
 }
 
@@ -240,6 +252,12 @@ void MainWindow::applyShiny()
 {
     applyPre(BLGlowing);
     //ui->isBLGlowing->setChecked(true);
+    if(!Data.isCreative()&&Data.gameVersion<=12)
+    {
+    disconnect(ui->Enable03,SIGNAL(clicked()),this,SLOT(ChangeToCustom()));
+    ui->Enable03->setChecked(false);
+    connect(ui->Enable03,SIGNAL(clicked()),this,SLOT(ChangeToCustom()));
+    }
     return;
 }
 
@@ -261,9 +279,10 @@ void MainWindow::on_confirmBL_clicked()
     Data.Allowed.ApplyAllowed(&Data.Basic,Data.colorAllowed);
     qDebug("成功刷新了颜色列表");
 
-    ui->IntroColorCount->setText("根据你的选项，地图画将可以使用"+QString::number(Data.Allowed._RGB.rows())+"种颜色");
+    ui->IntroColorCount->setText(tr("根据你的选项，地图画将可以使用")+QString::number(Data.Allowed._RGB.rows())+tr("种颜色"));
     ui->NextPage3->setEnabled(true);
     Data.step=4;
+    updateEnables();
     qDebug("成功从界面读入了自定义方块列表的数据，并刷新了颜色列表，允许翻页调整图像");
 }
 
@@ -284,7 +303,7 @@ void MainWindow::getMIndex()
         }
         if(Base==12)
         {
-            Data.colorAllowed[Data.mapColor2Index(mapColor)]=(Data.isCreative()==(Depth==3))&&(!Data.isFlat()||(Depth==0))&&Enables[Base]->isChecked();
+            Data.colorAllowed[Data.mapColor2Index(mapColor)]=(Data.isCreative()||(Depth!=3))&&(!Data.isFlat()||(Depth==0))&&Enables[Base]->isChecked();
             continue;
         }
             switch(Depth)
@@ -324,6 +343,8 @@ void MainWindow::getBlockList()
             {
                 Data.SelectedBlockList[i]=j;
                 Data.BlockListId[i]=Data.BlockId[i][j];
+                if(Data.gameVersion<=12&&Data.BlockIdfor12[i][j]!="[]")
+                    Data.BlockListId[i]=Data.BlockIdfor12[i][j];
                 break;
             }
             if(j>=8&&Blocks[i][j]==NULL)

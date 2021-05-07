@@ -63,7 +63,7 @@ void MainWindow::on_confirmType_clicked()
 {
     static bool needInitialize=true;
     Data.step=3;
-
+    updateEnables();
 
 
     if(needInitialize)
@@ -115,23 +115,24 @@ void MainWindow::on_confirmType_clicked()
 
     QString Info;
     if(Data.is16())
-        Info="你的地图画将适用1.16+版本\n";
+        Info=tr("你的地图画将适用1.16+版本\n");
     else
-        Info="你的地图画将适用1.12~1.15版本\n";
+        Info=tr("你的地图画将适用1.12~1.15版本\n");
 
     if(Data.isFlat())
-        Info+="这是一个传统的平版地图画，易于建造\n";
+        Info+=tr("这是一个传统的平版地图画，易于建造\n");
     else
-        Info+="这是一个新型的立体地图画，颜色丰富\n";
+        Info+=tr("这是一个新型的立体地图画，颜色丰富\n");
 
-    if(Data.isSurvival())
-        Info+="它可以生存实装";
+    if(!Data.isCreative())
+        Info+=tr("它可以生存实装");
     else
-        Info+="它不可以生存实装，只能导出为地图文件，但拥有最丰富的颜色";
+        Info+=tr("它不可以生存实装，只能导出为地图文件");
 
     ui->IntroType->setText(Info);
 
     Data.step=3;
+    updateEnables();
     return;
 
 }

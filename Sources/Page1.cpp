@@ -45,7 +45,6 @@ void MainWindow::on_ImportPic_clicked()
     if(! ( Data.rawPic.load(Path) ) )
     {
         QMessageBox::information(this,tr("打开图片失败"),tr("要不试试换一张图片吧！"));
-        //delete rawPic;
                     return;
     }
 
@@ -78,7 +77,7 @@ void MainWindow::on_ImportPic_clicked()
     Data.sizePic[0]=Data.rawPic.height();//z
     Data.sizePic[1]=Data.rawPic.width();//x
 
-    ui->IntroPicInfo->setText("图片尺寸："+QString::number(Data.sizePic[0])+"×"+QString::number(Data.sizePic[1])+"像素");
+    ui->IntroPicInfo->setText(tr("图片尺寸：")+QString::number(Data.sizePic[0])+"×"+QString::number(Data.sizePic[1])+tr("像素"));
 
 
     Data.size3D[0]=Data.sizePic[1]+2;
@@ -96,6 +95,7 @@ void MainWindow::on_ImportPic_clicked()
     ui->ShowPic->setPixmap(QPixmap::fromImage(Data.rawPic));
     //这里要将图片信息加入到Data
     Data.step=2;
+    updateEnables();
     ui->NextPage->setEnabled(true);
 
     checkBlockIds();

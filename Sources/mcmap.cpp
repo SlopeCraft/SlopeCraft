@@ -29,10 +29,11 @@ This file is part of SlopeCraft.
 #include <iostream>
 #include <fstream>
 #include  <Eigen/Dense>
+
 #include <unsupported/Eigen/CXX11/Tensor>
 
 //#include "D:/OpenCV/build/include/opencv2/opencv.hpp"
-
+#include <QTranslator>
 #include <QMessageBox>
 #include <QDebug>
 using namespace std;
@@ -134,6 +135,7 @@ void ColorSet::ApplyAllowed(ColorSet*standard,bool *MIndex)
         short write=0;
         for(short readIndex=0;readIndex<=256;readIndex++)
         {
+
             if(write>=totalAllowColorCount)
                 break;
             if(MIndex[readIndex])
@@ -146,6 +148,7 @@ void ColorSet::ApplyAllowed(ColorSet*standard,bool *MIndex)
                 write++;
             }
         }
+        //cout<<Map;
         return;
 }
 

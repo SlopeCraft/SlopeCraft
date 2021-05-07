@@ -2,10 +2,10 @@ QT       += core gui
 INCLUDEPATH += D:\eigen-3.3.8
 RC_ICONS =SlopeCraft.ico
 # 版本号
-VERSION = 3.0.0
+VERSION = 3.1.0
 # 语言
 # 0x0004 表示 简体中文
-#RC_LANG = 0x0004
+RC_LANG = 0x0004
 # 公司名
 #QMAKE_TARGET_COMPANY =  TokiNoBug
 # 产品名称
@@ -77,7 +77,13 @@ FORMS += \
     mainwindow.ui
 
 TRANSLATIONS += \
-    Slope_zh_CN.ts
+    Slope_zh_CN.ts \
+    Slope_en_US.ts
+
+CODECFORTR = utf-8
+
+
+
 CONFIG += lrelease
 CONFIG += embed_translations
 
@@ -88,4 +94,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     ../BlockTextures.qrc \
+    ../Languages.qrc \
     Pics.qrc

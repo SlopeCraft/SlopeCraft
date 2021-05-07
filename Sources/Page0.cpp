@@ -46,6 +46,7 @@ void MainWindow::on_StartWithSlope_clicked()
     on_isMapSurvival_clicked();
     qDebug("成功调整了page2的方块列表设定");
     Data.step=1;
+    updateEnables();
     turnToPage(1);
 }
 
@@ -64,6 +65,7 @@ void MainWindow::on_StartWithFlat_clicked()
     on_isMapFlat_clicked();
     qDebug("成功调整了page2的方块列表设定");
     Data.step=1;
+    updateEnables();
     turnToPage(1);
 }
 
@@ -81,6 +83,7 @@ void MainWindow::on_StartWithNotVanilla_clicked()
     on_isMapCreative_clicked();
     qDebug("成功调整了page2的方块列表设定");
     Data.step=1;
+    updateEnables();
     turnToPage(1);
 }
 

@@ -22,6 +22,7 @@ This file is part of SlopeCraft.
 
 //#pragma once
 #include <QProcess>
+#include <QDebug>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -54,18 +55,21 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->menuBL,SIGNAL(triggered(QAction*)),this,SLOT(turnToPage3()));
     connect(ui->menuAdjPic,SIGNAL(triggered(QAction*)),this,SLOT(turnToPage4()));
     connect(ui->menuExLite,SIGNAL(triggered()),this,SLOT(turnToPage5()));
-    connect(ui->menuExMcF,SIGNAL(triggered()),this,SLOT(turnToPage6()));
+    //connect(ui->menuExMcF,SIGNAL(triggered()),this,SLOT(turnToPage6()));
     connect(ui->menuExData,SIGNAL(triggered()),this,SLOT(turnToPage7()));
-    connect(ui->actionAboutSlopeCraft,SIGNAL(triggered()),this,SLOT(turnToPage8()));
+    connect(ui->actionAboutSlopeCraft,SIGNAL(triggered()),this,SLOT(turnToPage8()));    
+    connect(ui->actionChinese,SIGNAL(triggered()),this,SLOT(turnCh()));
+    connect(ui->actionEnglish,SIGNAL(triggered()),this,SLOT(turnEn()));
     qDebug("成功connect所有的菜单");
 
     connect(ui->NextPage,SIGNAL(clicked()),this,SLOT(turnToPage2()));
     connect(ui->NextPage2,SIGNAL(clicked()),this,SLOT(turnToPage3()));
     connect(ui->NextPage3,SIGNAL(clicked()),this,SLOT(turnToPage4()));
     connect(ui->ExLite,SIGNAL(clicked()),this,SLOT(turnToPage5()));
-    connect(ui->ExMcF,SIGNAL(clicked()),this,SLOT(turnToPage6()));
+    //connect(ui->ExMcF,SIGNAL(clicked()),this,SLOT(turnToPage6()));
     connect(ui->ExData,SIGNAL(clicked()),this,SLOT(turnToPage7()));
-    connect(ui->FinishExLite,SIGNAL(clicked()),this,SLOT(turnToPage8()));
+    connect(ui->FinishExLite,SIGNAL(clicked()),this,SLOT(turnToPage8()));    
+    connect(ui->FinshExData,SIGNAL(clicked()),this,SLOT(turnToPage8()));
     connect(ui->Exit,SIGNAL(clicked()),this,SLOT(close()));
     qDebug("成功connect所有的翻页按钮");
 
@@ -83,12 +87,16 @@ MainWindow::MainWindow(QWidget *parent)
     Data.ExLitestep=-1;
     Data.ExMcFstep=-1;
     //checkBlockIds();
+    //QString FolderPath=QFileDialog::getExistingDirectory(this,tr("请选择导出的文件夹"));
+    //qDebug()<<FolderPath;
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+
 
 void MainWindow::checkBlockIds()
 {
@@ -109,5 +117,4 @@ void MainWindow::checkBlockIds()
         }
     out.close();
 }
-
 
