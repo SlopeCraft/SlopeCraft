@@ -82,7 +82,7 @@ public:
         inline bool canUseBlock(short r,short c);
         short SelectedBlockList[64];//实际的方块列表
         QString BlockListId[64];
-        NBT::NBTWriter Lite;
+        //NBT::NBTWriter Lite;
 
         int size3D[3];//x,y,z
         int sizePic[2];
@@ -136,9 +136,9 @@ public:
 
 
 
-        void writeBlock(const QString &netBlockId,vector<QString>&Property,vector<QString>&ProVal);
+        void writeBlock(const QString &netBlockId,vector<QString>&Property,vector<QString>&ProVal,NBT::NBTWriter&);
 
-        void writeTrash(int count);
+        void writeTrash(int count,NBT::NBTWriter&);
 
         int CommandCount;
         int NWPos[3];//x,y,z

@@ -292,14 +292,39 @@ void MainWindow::Pic2Map4RGB(MatrixXf &allowedColors)
             float R=Data.rawPicRHLXc3[0](r,c);
             float g=Data.rawPicRHLXc3[1](r,c);
             float b=Data.rawPicRHLXc3[2](r,c);
+            float w_r=1.0f,w_g=2.0f,w_b=1.0f;
+            auto SqrModSquare=((R*R+g*g+b*b)*(allowedColors.col(0).array().square()+allowedColors.col(1).array().square()+allowedColors.col(2).array().square())).sqrt();
+            auto deltaR=(R-allowedColors.col(0).array());
+            auto deltaG=(g-allowedColors.col(1).array());
+            auto deltaB=(b-allowedColors.col(2).array());
+            auto SigmaRGB=(R+g+b+allowedColors.col(0).array()+allowedColors.col(1).array()+allowedColors.col(2).array())/3.0f;
+            auto S_r=((allowedColors.col(0).array()+R)<SigmaRGB).select((allowedColors.col(0).array()+R)/SigmaRGB,1.0f);
+            auto S_g=((allowedColors.col(1).array()+g)<SigmaRGB).select((allowedColors.col(1).array()+g)/SigmaRGB,1.0f);
+            auto S_b=((allowedColors.col(2).array()+b)<SigmaRGB).select((allowedColors.col(2).array()+b)/SigmaRGB,1.0f);
+            auto sumRGBsquare=R*allowedColors.col(0).array()+g*allowedColors.col(1).array()+b*allowedColors.col(2).array();
+            auto theta=0.6366197724f*(sumRGBsquare/SqrModSquare).acos();
+            auto OnedDeltaR=deltaR.abs()/(R+allowedColors.col(0).array());
+            auto OnedDeltaG=deltaG.abs()/(g+allowedColors.col(1).array());
+            auto OnedDeltaB=deltaB.abs()/(b+allowedColors.col(2).array());
+            auto sumOnedDelta=OnedDeltaR+OnedDeltaG+OnedDeltaB+1e-10f;
+            auto S_tr=OnedDeltaR/sumOnedDelta*S_r.square();
+            auto S_tg=OnedDeltaG/sumOnedDelta*S_g.square();
+            auto S_tb=OnedDeltaB/sumOnedDelta*S_b.square();
+            auto S_theta=S_tr+S_tg+S_tb;
+            auto Rmax=(allowedColors.col(0).array()>R).select(allowedColors.col(0).array(),R);
+            auto Gmax=(allowedColors.col(1).array()>g).select(allowedColors.col(1).array(),g);
+            auto Bmax=(allowedColors.col(2).array()>b).select(allowedColors.col(2).array(),b);
+            auto maxRGmax=(Rmax>Gmax).select(Rmax,Gmax);
+            auto S_ratio=(maxRGmax>Bmax).select(maxRGmax,Bmax);
 
-            auto tao=(R+allowedColors.col(0).array())/2;
-            auto deltaRsquare=(R-allowedColors.col(0).array()).square();
-            auto deltaGsquare=(g-allowedColors.col(1).array()).square();
-            auto deltaBsquare=(b-allowedColors.col(2).array()).square();
+            auto dist=(S_r.square()*w_r*deltaR.square()+S_g.square()*w_g*deltaG.square()+S_b.square()*w_b*deltaB.square())/(w_r+w_g+w_b)+S_theta*S_ratio*theta.square();//+S_theta*S_ratio*theta.square()
+
+            dist.minCoeff(&tempIndex);
+            /*auto tao=(R+allowedColors.col(0).array())/2;// old rgb+ equation
+
 
             auto Diff=(tao*0.99609375f+2)*deltaRsquare+4*deltaGsquare+((1.0f-tao)/1.003922f)*deltaBsquare;
-            Diff.minCoeff(&tempIndex);
+            Diff.minCoeff(&tempIndex);*/
             //((Data.CurrentColor-allowedColors).rowwise().squaredNorm()).minCoeff(&tempIndex);
 
 

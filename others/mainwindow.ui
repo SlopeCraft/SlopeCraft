@@ -29,7 +29,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>SlopeCraft v3.1  Copyright © 2021 TokiNoBug</string>
+   <string>SlopeCraft v3.2  Copyright © 2021 TokiNoBug</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -156,7 +156,7 @@
          <enum>QFrame::Plain</enum>
         </property>
         <property name="currentIndex">
-         <number>7</number>
+         <number>8</number>
         </property>
         <widget class="QWidget" name="PageStart">
          <property name="styleSheet">
@@ -657,7 +657,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
              <string notr="true">backgroundcolor: rgb(255, 255, 255);</string>
             </property>
             <property name="text">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;第二步，选择好你要什么样的像素画。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;请选择好像素画对应的游戏版本，以及像素画的类型。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;Survival类型像素画是可以生存实装的立体地图画，是我们的核心功能；&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;Creative类型像素画颜色更丰富，但不可以生存实装；&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;Flat类型代表平板的像素画，它更容易实装。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;第二步，选择好你要什么样的像素画。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;请选择好像素画对应的游戏版本，以及像素画的类型。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;立体地图画如右图，是我们的核心功能；&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;平板地图画颜色相对少，但更容易实装；&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;不可实装的地图画拥有最丰富的的颜色，但不够原版。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="wordWrap">
              <bool>true</bool>
@@ -9733,8 +9733,8 @@ p, li { white-space: pre-wrap; }
   <tabstop>NextPage2</tabstop>
  </tabstops>
  <resources>
-  <include location="../BlockTextures.qrc"/>
   <include location="Pics.qrc"/>
+  <include location="../BlockTextures.qrc"/>
  </resources>
  <connections/>
 </ui>

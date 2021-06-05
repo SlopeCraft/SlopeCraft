@@ -2,7 +2,7 @@ QT       += core gui
 INCLUDEPATH += D:\eigen-3.3.8
 RC_ICONS =SlopeCraft.ico
 # 版本号
-VERSION = 3.1.0
+VERSION = 3.2.0
 # 语言
 # 0x0004 表示 简体中文
 RC_LANG = 0x0004

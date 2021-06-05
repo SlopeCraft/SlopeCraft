@@ -405,6 +405,7 @@ totalBlocks=TotalBlockCount;
 
 long mcMap::exportAsLitematica(QString FilePathAndName)
 {
+    NBT::NBTWriter Lite;
 
     Lite.open(FilePathAndName.toLocal8Bit().data());
     QString LiteName=parent->ui->InputLiteName->toPlainText();
@@ -448,14 +449,14 @@ parent->ui->ShowProgressExLite->setValue(50);
                     QString netBlockId;
 
                     dealBlockId("air",netBlockId,ProName,ProVal);
-                    writeBlock(netBlockId,ProName,ProVal);
+                    writeBlock(netBlockId,ProName,ProVal,Lite);
                     for(short r=0;r<written;r++)
                     {
                         dealBlockId(BlockListId[r],netBlockId,ProName,ProVal);
-                        writeBlock(netBlockId,ProName,ProVal);
+                        writeBlock(netBlockId,ProName,ProVal,Lite);
                     }//到此写入了written+1个方块，还需要写入130-written个
 
-                    writeTrash(130-written);
+                    writeTrash(130-written,Lite);
                 }
             Lite.writeListHead("Entities",NBT::idCompound,0);
             Lite.writeListHead("PendingBlockTicks",NBT::idCompound,0);

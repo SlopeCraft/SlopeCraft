@@ -208,6 +208,8 @@ void MainWindow::applyPre(short*BL)
 
     qDebug("修改了方块列表");
 
+    if(Data.isSurvival())ui->Enable12->setChecked(false);
+
     allowUpdateToCustom(true);
 
     qDebug("恢复了更改预设");

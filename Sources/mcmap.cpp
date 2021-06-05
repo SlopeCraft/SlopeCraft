@@ -275,7 +275,7 @@ bool dealBlockId(const QString&BlockId,QString&netBlockId,vector<QString>&Proper
     return true;
 }
 
-void mcMap::writeBlock(const QString &netBlockId,vector<QString>&Property,vector<QString>&ProVal)
+void mcMap::writeBlock(const QString &netBlockId,vector<QString>&Property,vector<QString>&ProVal,NBT::NBTWriter&Lite)
 {
     Lite.writeCompound("ThisStringShouldNeverBeSeen");
     QString BlockId;
@@ -305,7 +305,7 @@ void mcMap::writeBlock(const QString &netBlockId,vector<QString>&Property,vector
     Lite.endCompound();
 }
 
-void mcMap::writeTrash(int count)
+void mcMap::writeTrash(int count,NBT::NBTWriter&Lite)
 {
     vector<QString> ProName(5),ProVal(5);
     //ProName:NEWSP
@@ -332,7 +332,7 @@ void mcMap::writeTrash(int count)
                         ProVal.at(2)=dir[West];
                         ProVal.at(3)=dir[South];
                         ProVal.at(4)=power[Power];
-                        writeBlock("minecraft:redstone_wire",ProName,ProVal);
+                        writeBlock("minecraft:redstone_wire",ProName,ProVal,Lite);
                         written++;
                     }
 }
