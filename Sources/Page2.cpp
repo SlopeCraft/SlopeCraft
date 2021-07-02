@@ -114,7 +114,9 @@ void MainWindow::on_confirmType_clicked()
     grabGameVersion();
 
     QString Info;
-    if(Data.is16())
+    if(Data.is17())
+        Info=tr("你的地图画将适用1.17+版本\n");
+    else if(Data.is16())
         Info=tr("你的地图画将适用1.16+版本\n");
     else
         Info=tr("你的地图画将适用1.12~1.15版本\n");

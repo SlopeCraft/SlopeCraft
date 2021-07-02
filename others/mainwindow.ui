@@ -29,7 +29,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>SlopeCraft v3.2  Copyright © 2021 TokiNoBug</string>
+   <string>SlopeCraft v3.3  Copyright © 2021 TokiNoBug</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -156,7 +156,7 @@
          <enum>QFrame::Plain</enum>
         </property>
         <property name="currentIndex">
-         <number>8</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="PageStart">
          <property name="styleSheet">
@@ -175,7 +175,6 @@
              <font>
               <family>微软雅黑</family>
               <pointsize>9</pointsize>
-              <weight>50</weight>
               <italic>false</italic>
               <bold>false</bold>
              </font>
@@ -198,7 +197,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
              <string notr="true">font: 9pt &quot;Comic Sans MS&quot;;</string>
             </property>
             <property name="text">
-             <string notr="true">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:36pt; font-style:italic; color:#ffffff;&quot;&gt;SlopeCraft &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic; color:#ffffff;&quot;&gt;v3.1&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:14pt; color:#ffff00;&quot;&gt;Copyright © 2021 TokiNoBug&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string notr="true">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:36pt; font-style:italic; color:#ffffff;&quot;&gt;SlopeCraft &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic; color:#ffffff;&quot;&gt;v3.3&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:14pt; color:#ffff00;&quot;&gt;Copyright © 2021 TokiNoBug&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </widget>
           </item>
@@ -249,7 +248,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                 <string notr="true"/>
                </property>
                <property name="text">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-weight:700; color:#ffffff;&quot;&gt;最传统的像素画样式，建造起来轻松自如。不过，代价是只有58色的画质。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-weight:700; color:#ffffff;&quot;&gt;最传统的像素画样式，建造起来轻松自如。不过，代价是只有60色的画质。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -309,7 +308,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                 <string notr="true"/>
                </property>
                <property name="text">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-weight:700; color:#ffffff;&quot;&gt;原版生存中画质最高的地图画。174种颜色是坡度起伏的馈赠，也是智慧的灵光闪现。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-weight:700; color:#ffffff;&quot;&gt;原版生存中画质最高的地图画。180种颜色是坡度起伏的馈赠，也是智慧的灵光闪现。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -378,7 +377,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                 <string notr="true"/>
                </property>
                <property name="text">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-weight:700; color:#ffffff;&quot;&gt;这是地图画质的极限！232种颜色竭力为你呈现自定义的画面。可惜的是，它需要修改存档。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:700; color:#ffff00;&quot;&gt;Not Vanilla！&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-weight:700; color:#ffffff;&quot;&gt;这是地图画质的极限！240种颜色竭力为你呈现自定义的画面。可惜的是，它需要修改存档。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:700; color:#ffff00;&quot;&gt;Not Vanilla！&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -753,7 +752,12 @@ font: 9pt &quot;微软雅黑&quot;;</string>
              <item row="3" column="1">
               <widget class="QRadioButton" name="isGame17">
                <property name="enabled">
-                <bool>false</bool>
+                <bool>true</bool>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                </font>
                </property>
                <property name="text">
                 <string>1.17</string>
@@ -1204,8 +1208,8 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>276</width>
-                 <height>5411</height>
+                 <width>316</width>
+                 <height>5398</height>
                 </rect>
                </property>
                <property name="sizePolicy">
@@ -3138,6 +3142,17 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                    <property name="bottomMargin">
                     <number>3</number>
                    </property>
+                   <item row="10" column="2">
+                    <widget class="QRadioButton" name="is15RawCopperBlock">
+                     <property name="text">
+                      <string>生铜块</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/raw_copper_block.png</normaloff>:/new/Textures/Slope/block/raw_copper_block.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
                    <item row="0" column="1">
                     <widget class="QCheckBox" name="Enable15">
                      <property name="sizePolicy">
@@ -3148,63 +3163,6 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                      </property>
                      <property name="text">
                       <string>启用</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="2">
-                    <spacer name="horizontalSpacer_27">
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>40</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                   <item row="3" column="1">
-                    <widget class="QRadioButton" name="is15Concrete">
-                     <property name="text">
-                      <string>橙色混凝土</string>
-                     </property>
-                     <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
-                       <normaloff>:/new/Textures/Slope/block/orange_concrete.png</normaloff>:/new/Textures/Slope/block/orange_concrete.png</iconset>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="2">
-                    <widget class="QRadioButton" name="is15Wool">
-                     <property name="text">
-                      <string>橙色羊毛</string>
-                     </property>
-                     <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
-                       <normaloff>:/new/Textures/Slope/block/orange_wool.png</normaloff>:/new/Textures/Slope/block/orange_wool.png</iconset>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="5" column="1">
-                    <widget class="QRadioButton" name="is15StainedGlass">
-                     <property name="text">
-                      <string>橙色染色玻璃</string>
-                     </property>
-                     <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
-                       <normaloff>:/new/Textures/Slope/block/orange_stained_glass.png</normaloff>:/new/Textures/Slope/block/orange_stained_glass.png</iconset>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="5" column="2">
-                    <widget class="QRadioButton" name="is15AcaciaPlanks">
-                     <property name="text">
-                      <string>金合欢木板</string>
-                     </property>
-                     <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
-                       <normaloff>:/new/Textures/Slope/block/acacia_planks.png</normaloff>:/new/Textures/Slope/block/acacia_planks.png</iconset>
                      </property>
                     </widget>
                    </item>
@@ -3219,14 +3177,14 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="7" column="2">
-                    <widget class="QRadioButton" name="is15Terracotta">
+                   <item row="3" column="2">
+                    <widget class="QRadioButton" name="is15Wool">
                      <property name="text">
-                      <string>陶瓦</string>
+                      <string>橙色羊毛</string>
                      </property>
                      <property name="icon">
                       <iconset resource="../BlockTextures.qrc">
-                       <normaloff>:/new/Textures/Slope/block/terracotta.png</normaloff>:/new/Textures/Slope/block/terracotta.png</iconset>
+                       <normaloff>:/new/Textures/Slope/block/orange_wool.png</normaloff>:/new/Textures/Slope/block/orange_wool.png</iconset>
                      </property>
                     </widget>
                    </item>
@@ -3238,6 +3196,50 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                      <property name="icon">
                       <iconset resource="../BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/red_sandstone_top.png</normaloff>:/new/Textures/Slope/block/red_sandstone_top.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="QRadioButton" name="is15Concrete">
+                     <property name="text">
+                      <string>橙色混凝土</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/orange_concrete.png</normaloff>:/new/Textures/Slope/block/orange_concrete.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="2">
+                    <widget class="QRadioButton" name="is15AcaciaPlanks">
+                     <property name="text">
+                      <string>金合欢木板</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/acacia_planks.png</normaloff>:/new/Textures/Slope/block/acacia_planks.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="1">
+                    <widget class="QRadioButton" name="is15StainedGlass">
+                     <property name="text">
+                      <string>橙色染色玻璃</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/orange_stained_glass.png</normaloff>:/new/Textures/Slope/block/orange_stained_glass.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="7" column="2">
+                    <widget class="QRadioButton" name="is15Terracotta">
+                     <property name="text">
+                      <string>陶瓦</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/terracotta.png</normaloff>:/new/Textures/Slope/block/terracotta.png</iconset>
                      </property>
                     </widget>
                    </item>
@@ -3263,7 +3265,42 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="0" rowspan="11">
+                   <item row="0" column="2">
+                    <spacer name="horizontalSpacer_27">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item row="11" column="1">
+                    <widget class="QRadioButton" name="is15WaxedCopper">
+                     <property name="text">
+                      <string>涂蜡铜块</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/copper_block.png</normaloff>:/new/Textures/Slope/block/copper_block.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="11" column="2">
+                    <widget class="QRadioButton" name="is15WaxedCutCopper">
+                     <property name="text">
+                      <string>涂蜡切制铜块</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/cut_copper.png</normaloff>:/new/Textures/Slope/block/cut_copper.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0" rowspan="12">
                     <widget class="QLabel" name="Color15">
                      <property name="minimumSize">
                       <size>
@@ -4027,6 +4064,17 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                      </property>
                     </widget>
                    </item>
+                   <item row="4" column="2">
+                    <widget class="QRadioButton" name="is21TintedGlass">
+                     <property name="text">
+                      <string>遮光玻璃</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/tinted_glass.png</normaloff>:/new/Textures/Slope/block/tinted_glass.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
                   </layout>
                  </widget>
                 </item>
@@ -4398,6 +4446,17 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                      </property>
                     </widget>
                    </item>
+                   <item row="4" column="2">
+                    <widget class="QRadioButton" name="is24AmethystBlock">
+                     <property name="text">
+                      <string>紫水晶块</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/amethyst_block.png</normaloff>:/new/Textures/Slope/block/amethyst_block.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
                   </layout>
                  </widget>
                 </item>
@@ -4733,6 +4792,39 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                      </property>
                     </spacer>
                    </item>
+                   <item row="0" column="0" rowspan="6">
+                    <widget class="QLabel" name="Color27">
+                     <property name="minimumSize">
+                      <size>
+                       <width>30</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>微软雅黑</family>
+                       <pointsize>9</pointsize>
+                      </font>
+                     </property>
+                     <property name="frameShape">
+                      <enum>QFrame::StyledPanel</enum>
+                     </property>
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="2">
+                    <widget class="QRadioButton" name="is27KelpBlock">
+                     <property name="text">
+                      <string>海带块</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/dried_kelp_top.png</normaloff>:/new/Textures/Slope/block/dried_kelp_top.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
                    <item row="3" column="1">
                     <widget class="QRadioButton" name="is27Concrete">
                      <property name="text">
@@ -4763,39 +4855,6 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                      <property name="icon">
                       <iconset resource="../BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/green_stained_glass.png</normaloff>:/new/Textures/Slope/block/green_stained_glass.png</iconset>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="5" column="2">
-                    <widget class="QRadioButton" name="is27KelpBlock">
-                     <property name="text">
-                      <string>海带块</string>
-                     </property>
-                     <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
-                       <normaloff>:/new/Textures/Slope/block/dried_kelp_top.png</normaloff>:/new/Textures/Slope/block/dried_kelp_top.png</iconset>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="0" rowspan="6">
-                    <widget class="QLabel" name="Color27">
-                     <property name="minimumSize">
-                      <size>
-                       <width>30</width>
-                       <height>0</height>
-                      </size>
-                     </property>
-                     <property name="font">
-                      <font>
-                       <family>微软雅黑</family>
-                       <pointsize>9</pointsize>
-                      </font>
-                     </property>
-                     <property name="frameShape">
-                      <enum>QFrame::StyledPanel</enum>
-                     </property>
-                     <property name="text">
-                      <string/>
                      </property>
                     </widget>
                    </item>
@@ -5166,19 +5225,6 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                    <property name="bottomMargin">
                     <number>3</number>
                    </property>
-                   <item row="0" column="1">
-                    <widget class="QCheckBox" name="Enable30">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="text">
-                      <string>启用</string>
-                     </property>
-                    </widget>
-                   </item>
                    <item row="0" column="2">
                     <spacer name="horizontalSpacer_44">
                      <property name="orientation">
@@ -5191,6 +5237,19 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       </size>
                      </property>
                     </spacer>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QCheckBox" name="Enable30">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>启用</string>
+                     </property>
+                    </widget>
                    </item>
                    <item row="1" column="1">
                     <widget class="QRadioButton" name="is30GoldBlock">
@@ -5214,7 +5273,18 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="0" rowspan="2">
+                   <item row="2" column="1">
+                    <widget class="QRadioButton" name="is30RawGoldBlock">
+                     <property name="text">
+                      <string>粗金块</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/raw_gold_block.png</normaloff>:/new/Textures/Slope/block/raw_gold_block.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0" rowspan="3">
                     <widget class="QLabel" name="Color30">
                      <property name="minimumSize">
                       <size>
@@ -5275,65 +5345,6 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                    <property name="bottomMargin">
                     <number>3</number>
                    </property>
-                   <item row="0" column="1">
-                    <widget class="QCheckBox" name="Enable31">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="text">
-                      <string>启用</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="2">
-                    <spacer name="horizontalSpacer_45">
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>40</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                   <item row="3" column="1">
-                    <widget class="QRadioButton" name="is31DiamondBlock">
-                     <property name="text">
-                      <string>钻石块</string>
-                     </property>
-                     <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
-                       <normaloff>:/new/Textures/Slope/block/diamond_block.png</normaloff>:/new/Textures/Slope/block/diamond_block.png</iconset>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="2">
-                    <widget class="QRadioButton" name="is31PrismarineBricks">
-                     <property name="text">
-                      <string>海晶石砖</string>
-                     </property>
-                     <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
-                       <normaloff>:/new/Textures/Slope/block/prismarine_bricks.png</normaloff>:/new/Textures/Slope/block/prismarine_bricks.png</iconset>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="4" column="1">
-                    <widget class="QRadioButton" name="is31DarkPrismarine">
-                     <property name="text">
-                      <string>暗海晶石</string>
-                     </property>
-                     <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
-                       <normaloff>:/new/Textures/Slope/block/dark_prismarine.png</normaloff>:/new/Textures/Slope/block/dark_prismarine.png</iconset>
-                     </property>
-                    </widget>
-                   </item>
                    <item row="0" column="0" rowspan="5">
                     <widget class="QLabel" name="Color31">
                      <property name="minimumSize">
@@ -5353,6 +5364,65 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                      </property>
                      <property name="text">
                       <string/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="1">
+                    <widget class="QRadioButton" name="is31DarkPrismarine">
+                     <property name="text">
+                      <string>暗海晶石</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/dark_prismarine.png</normaloff>:/new/Textures/Slope/block/dark_prismarine.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="QRadioButton" name="is31DiamondBlock">
+                     <property name="text">
+                      <string>钻石块</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/diamond_block.png</normaloff>:/new/Textures/Slope/block/diamond_block.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="2">
+                    <spacer name="horizontalSpacer_45">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QCheckBox" name="Enable31">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>启用</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="2">
+                    <widget class="QRadioButton" name="is31PrismarineBricks">
+                     <property name="text">
+                      <string>海晶石砖</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/prismarine_bricks.png</normaloff>:/new/Textures/Slope/block/prismarine_bricks.png</iconset>
                      </property>
                     </widget>
                    </item>
@@ -5893,6 +5963,17 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                      </property>
                      <property name="text">
                       <string/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="2">
+                    <widget class="QRadioButton" name="is36Calcite">
+                     <property name="text">
+                      <string>方解石</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/calcite.png</normaloff>:/new/Textures/Slope/block/calcite.png</iconset>
                      </property>
                     </widget>
                    </item>
@@ -6658,7 +6739,29 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="0" rowspan="2">
+                   <item row="1" column="2">
+                    <widget class="QRadioButton" name="is44WaxExposedCopper">
+                     <property name="text">
+                      <string>涂蜡斑驳铜块</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/exposed_copper.png</normaloff>:/new/Textures/Slope/block/exposed_copper.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QRadioButton" name="is44WaxCutExposedCopper">
+                     <property name="text">
+                      <string>涂蜡切制斑驳铜块</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/exposed_cut_copper.png</normaloff>:/new/Textures/Slope/block/exposed_cut_copper.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0" rowspan="3">
                     <widget class="QLabel" name="Color44">
                      <property name="minimumSize">
                       <size>
@@ -7069,6 +7172,17 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                      </property>
                      <property name="text">
                       <string/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="2">
+                    <widget class="QRadioButton" name="is48DripstoneBlock">
+                     <property name="text">
+                      <string>滴水石块</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/dripstone_block.png</normaloff>:/new/Textures/Slope/block/dripstone_block.png</iconset>
                      </property>
                     </widget>
                    </item>
@@ -7747,6 +7861,30 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                    <property name="bottomMargin">
                     <number>3</number>
                    </property>
+                   <item row="0" column="1">
+                    <widget class="QCheckBox" name="Enable55">
+                     <property name="text">
+                      <string>启用</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="2">
+                    <widget class="QRadioButton" name="is55WaxedOxidedCopper">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>涂蜡氧化铜块</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/oxidized_copper.png</normaloff>:/new/Textures/Slope/block/oxidized_copper.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
                    <item row="1" column="1">
                     <widget class="QRadioButton" name="is55WarpedNylium">
                      <property name="sizePolicy">
@@ -7764,7 +7902,37 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="0" rowspan="2">
+                   <item row="0" column="2">
+                    <spacer name="horizontalSpacer_5">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QRadioButton" name="is55WaxedCutOxidedCopper">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>涂蜡切制氧化铜块</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/oxidized_cut_copper.png</normaloff>:/new/Textures/Slope/block/oxidized_cut_copper.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0" rowspan="3">
                     <widget class="QLabel" name="Color55">
                      <property name="minimumSize">
                       <size>
@@ -7785,26 +7953,6 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string/>
                      </property>
                     </widget>
-                   </item>
-                   <item row="0" column="1">
-                    <widget class="QCheckBox" name="Enable55">
-                     <property name="text">
-                      <string>启用</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="2">
-                    <spacer name="horizontalSpacer_5">
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>40</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                    </spacer>
                    </item>
                   </layout>
                  </widget>
@@ -7845,17 +7993,6 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                    <property name="bottomMargin">
                     <number>3</number>
                    </property>
-                   <item row="3" column="2">
-                    <widget class="QRadioButton" name="is56StrippedWarpedLog">
-                     <property name="text">
-                      <string>去皮扭曲原木</string>
-                     </property>
-                     <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
-                       <normaloff>:/new/Textures/Slope/block/stripped_warped_stem_top.png</normaloff>:/new/Textures/Slope/block/stripped_warped_stem_top.png</iconset>
-                     </property>
-                    </widget>
-                   </item>
                    <item row="3" column="1">
                     <widget class="QRadioButton" name="is56WarpedPlanks">
                      <property name="sizePolicy">
@@ -7873,6 +8010,13 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                      </property>
                     </widget>
                    </item>
+                   <item row="0" column="1">
+                    <widget class="QCheckBox" name="Enable56">
+                     <property name="text">
+                      <string>启用</string>
+                     </property>
+                    </widget>
+                   </item>
                    <item row="0" column="2">
                     <spacer name="horizontalSpacer_4">
                      <property name="orientation">
@@ -7886,14 +8030,52 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                      </property>
                     </spacer>
                    </item>
-                   <item row="0" column="1">
-                    <widget class="QCheckBox" name="Enable56">
+                   <item row="3" column="2">
+                    <widget class="QRadioButton" name="is56StrippedWarpedLog">
                      <property name="text">
-                      <string>启用</string>
+                      <string>去皮扭曲原木</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/stripped_warped_stem_top.png</normaloff>:/new/Textures/Slope/block/stripped_warped_stem_top.png</iconset>
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="0" rowspan="4">
+                   <item row="4" column="1">
+                    <widget class="QRadioButton" name="is56WaxedWeatheredCopper">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>涂蜡生锈铜块</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/weathered_copper.png</normaloff>:/new/Textures/Slope/block/weathered_copper.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="2">
+                    <widget class="QRadioButton" name="is56WaxedCutWeatheredCopper">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>涂蜡切制生锈铜块</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/weathered_cut_copper.png</normaloff>:/new/Textures/Slope/block/weathered_cut_copper.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0" rowspan="5">
                     <widget class="QLabel" name="Color56">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -8081,30 +8263,6 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                    <property name="bottomMargin">
                     <number>3</number>
                    </property>
-                   <item row="0" column="1">
-                    <widget class="QCheckBox" name="Enable58">
-                     <property name="text">
-                      <string>启用</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="1">
-                    <widget class="QRadioButton" name="is58WarpedWartBlock">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="text">
-                      <string>扭曲疣块</string>
-                     </property>
-                     <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
-                       <normaloff>:/new/Textures/Slope/block/warped_wart_block.png</normaloff>:/new/Textures/Slope/block/warped_wart_block.png</iconset>
-                     </property>
-                    </widget>
-                   </item>
                    <item row="0" column="0" rowspan="2">
                     <widget class="QLabel" name="Color58">
                      <property name="minimumSize">
@@ -8139,6 +8297,311 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       </size>
                      </property>
                     </spacer>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QRadioButton" name="is58WarpedWartBlock">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>扭曲疣块</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/warped_wart_block.png</normaloff>:/new/Textures/Slope/block/warped_wart_block.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QCheckBox" name="Enable58">
+                     <property name="text">
+                      <string>启用</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QGroupBox" name="Base59">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="autoFillBackground">
+                   <bool>true</bool>
+                  </property>
+                  <property name="title">
+                   <string>59 Deepslate</string>
+                  </property>
+                  <property name="flat">
+                   <bool>false</bool>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_72">
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>3</number>
+                   </property>
+                   <item row="0" column="2">
+                    <spacer name="horizontalSpacer_61">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QCheckBox" name="Enable59">
+                     <property name="text">
+                      <string>启用</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QRadioButton" name="is59Deepslate">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>深板岩</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/deepslate.png</normaloff>:/new/Textures/Slope/block/deepslate.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="2">
+                    <widget class="QRadioButton" name="is59DeepslateBricks">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>深板岩砖</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/deepslate_bricks.png</normaloff>:/new/Textures/Slope/block/deepslate_bricks.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QRadioButton" name="is59PolishedDeepslate">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>磨制深板岩</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/polished_deepslate.png</normaloff>:/new/Textures/Slope/block/polished_deepslate.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="2">
+                    <widget class="QRadioButton" name="is59ChiseledDeepslate">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>錾制深板岩</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/chiseled_deepslate.png</normaloff>:/new/Textures/Slope/block/chiseled_deepslate.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="QRadioButton" name="is59DeepslateTiles">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>深板岩瓦</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/deepslate_tiles.png</normaloff>:/new/Textures/Slope/block/deepslate_tiles.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0" rowspan="4">
+                    <widget class="QLabel" name="Color59">
+                     <property name="minimumSize">
+                      <size>
+                       <width>30</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>微软雅黑</family>
+                       <pointsize>9</pointsize>
+                      </font>
+                     </property>
+                     <property name="frameShape">
+                      <enum>QFrame::StyledPanel</enum>
+                     </property>
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="2">
+                    <widget class="QRadioButton" name="is59CobbledDeepslate">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>深板岩圆石</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/cobbled_deepslate.png</normaloff>:/new/Textures/Slope/block/cobbled_deepslate.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QGroupBox" name="Base60">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="autoFillBackground">
+                   <bool>true</bool>
+                  </property>
+                  <property name="title">
+                   <string>60 RawIron</string>
+                  </property>
+                  <property name="flat">
+                   <bool>false</bool>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_73">
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>3</number>
+                   </property>
+                   <item row="0" column="0" rowspan="2">
+                    <widget class="QLabel" name="Color60">
+                     <property name="minimumSize">
+                      <size>
+                       <width>30</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>微软雅黑</family>
+                       <pointsize>9</pointsize>
+                      </font>
+                     </property>
+                     <property name="frameShape">
+                      <enum>QFrame::StyledPanel</enum>
+                     </property>
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="2">
+                    <spacer name="horizontalSpacer_62">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QRadioButton" name="is60RawIronBlock">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>生铁块</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="../BlockTextures.qrc">
+                       <normaloff>:/new/Textures/Slope/block/raw_iron_block.png</normaloff>:/new/Textures/Slope/block/raw_iron_block.png</iconset>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QCheckBox" name="Enable60">
+                     <property name="text">
+                      <string>启用</string>
+                     </property>
+                    </widget>
                    </item>
                   </layout>
                  </widget>
@@ -8638,7 +9101,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
               </property>
               <property name="html">
                <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'微软雅黑'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Pixel Paint by SlopeCraft&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -8671,7 +9134,7 @@ p, li { white-space: pre-wrap; }
               </property>
               <property name="html">
                <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'微软雅黑'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;TokiNoBug&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -8751,7 +9214,7 @@ p, li { white-space: pre-wrap; }
               </property>
               <property name="html">
                <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'微软雅黑'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;SlopeCraft&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -8937,9 +9400,9 @@ p, li { white-space: pre-wrap; }
               </property>
               <property name="html">
                <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'微软雅黑','微软雅黑';&quot;&gt;1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
              </widget>
@@ -8977,9 +9440,9 @@ p, li { white-space: pre-wrap; }
               </property>
               <property name="html">
                <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'微软雅黑','微软雅黑';&quot;&gt;-64&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
              </widget>
@@ -9028,9 +9491,9 @@ p, li { white-space: pre-wrap; }
               </property>
               <property name="html">
                <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'微软雅黑','微软雅黑';&quot;&gt;-64&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
              </widget>
@@ -9329,10 +9792,10 @@ p, li { white-space: pre-wrap; }
             </property>
             <property name="html">
              <string notr="true">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Microsoft YaHei UI';&quot;&gt;0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="placeholderText">
              <string notr="true"/>
@@ -9546,7 +10009,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>680</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuImPic">
@@ -9733,8 +10196,8 @@ p, li { white-space: pre-wrap; }
   <tabstop>NextPage2</tabstop>
  </tabstops>
  <resources>
-  <include location="Pics.qrc"/>
   <include location="../BlockTextures.qrc"/>
+  <include location="Pics.qrc"/>
  </resources>
  <connections/>
 </ui>

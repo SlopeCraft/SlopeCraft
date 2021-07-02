@@ -26,7 +26,7 @@ This file is part of SlopeCraft.
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-
+//#include "tokicolor.cpp"
 #include "Collecter.cpp"
 #include "Pages.cpp"
 
@@ -40,6 +40,8 @@ This file is part of SlopeCraft.
 #include "Page6.cpp"
 #include "Page7.cpp"
 #include "Page8.cpp"
+ColorSet* TokiColor::Allowed=NULL;
+ColorSet*TokiColor::Basic=NULL;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -89,6 +91,8 @@ MainWindow::MainWindow(QWidget *parent)
     //checkBlockIds();
     //QString FolderPath=QFileDialog::getExistingDirectory(this,tr("请选择导出的文件夹"));
     //qDebug()<<FolderPath;
+    /*TokiColor::Allowed=&Data.Allowed;
+    TokiColor::Basic=&Data.Basic;*/
 }
 
 MainWindow::~MainWindow()
@@ -117,4 +121,5 @@ void MainWindow::checkBlockIds()
         }
     out.close();
 }
+
 

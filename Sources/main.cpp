@@ -20,12 +20,11 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
-#include "mainwindow.h"
-
 #include <QApplication>
 #include <QLocale>
 #include <QTranslator>
 #include <vector>
+#include "mainwindow.h"
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);

@@ -25,7 +25,7 @@ This file is part of SlopeCraft.
 #pragma once
 #ifndef MCMAP_CPP
 #define MCMAP_CPP
-#include "mcmap.h"
+#include "mainwindow.h"
 #include <iostream>
 #include <fstream>
 #include  <Eigen/Dense>
@@ -44,10 +44,14 @@ inline bool mcMap::canUseBlock(short r, short c)
     return (gameVersion>=BlockVersion[r][c]);
 }
 
-
 inline bool mcMap::is16()
 {
-    return gameVersion==16;
+    return gameVersion>=16;
+}
+
+inline bool mcMap::is17()
+{
+    return gameVersion>=17;
 }
 
 inline bool mcMap::isSurvival()
@@ -80,77 +84,6 @@ void readFromFile(const char*FileName,MatrixXf & M)
     return;
 }
 
-void GetMap(unsigned char *Map)
-{
-    for(short r=0;r<256;r++)Map[r]=4*(r%64)+r/64;
-    return;
-}
-
-void GetMap(MatrixXi &Map)
-{
-    Map.setZero(256,1);
-    for(short r=0;r<256;r++)Map(r,0)=4*(r%64)+r/64;
-    return;
-}
-
-
-ColorSet::ColorSet()
-{
-    GetMap(Map);
-    _RGB.setZero(256,3);
-    HSV.setZero(256,3);
-    Lab.setZero(256,3);
-    XYZ.setZero(256,3);
-}
-
-
-void ColorSet::ApplyAllowed(ColorSet*standard,bool *MIndex)
-{
-    short totalAllowColorCount=0;
-        for(short r=0;r<256;r++)
-            totalAllowColorCount+=MIndex[r];//if r%64==0, that is air, air isn't used as color(it's transparent)
-        if(totalAllowColorCount<=1)
-        {
-            qDebug("你只准许了一两种颜色，巧妇难为无米之炊！");
-            _RGB.setZero(1,3);
-            HSV.setZero(1,3);
-            Lab.setZero(1,3);
-            XYZ.setZero(1,3);
-            Map.setZero(1,1);
-            return;
-        }
-        qDebug()<<"共允许使用"<<totalAllowColorCount<<"种颜色";
-
-        for(short Index=0;Index<256;Index++)
-            if(MIndex[Index])
-                qDebug()<<4*(Index%64)+(Index/64);
-
-
-
-        _RGB.setZero(totalAllowColorCount,3);
-        HSV.setZero(totalAllowColorCount,3);
-        Lab.setZero(totalAllowColorCount,3);
-        XYZ.setZero(totalAllowColorCount,3);
-        Map.setZero(totalAllowColorCount,1);
-        short write=0;
-        for(short readIndex=0;readIndex<=256;readIndex++)
-        {
-
-            if(write>=totalAllowColorCount)
-                break;
-            if(MIndex[readIndex])
-            {
-                _RGB.row(write)=standard->_RGB.row(readIndex);
-                HSV.row(write)=standard->HSV.row(readIndex);
-                Lab.row(write)=standard->Lab.row(readIndex);
-                XYZ.row(write)=standard->XYZ.row(readIndex);
-                Map(write,0)=standard->Map(readIndex,0);
-                write++;
-            }
-        }
-        //cout<<Map;
-        return;
-}
 
 void GetBLCreative(short*BL)
 {
@@ -193,7 +126,7 @@ mcMap::mcMap()
    // BLCreative[0]=0;
     Mode='L';
     size3D[0]=130;size3D[1]=50;size3D[2]=130;//x,y,z
-    isTransed2Float=false;
+    //isTransed2Float=false;
     adjStep=-1;
 
     CommandCount=0;
@@ -335,6 +268,76 @@ void mcMap::writeTrash(int count,NBT::NBTWriter&Lite)
                         writeBlock("minecraft:redstone_wire",ProName,ProVal,Lite);
                         written++;
                     }
+}
+
+ColorSet::ColorSet()
+{
+    GetMap(Map);
+    _RGB.setZero(256,3);
+    HSV.setZero(256,3);
+    Lab.setZero(256,3);
+    XYZ.setZero(256,3);
+}
+
+void ColorSet::ApplyAllowed(ColorSet*standard,bool *MIndex)
+{
+    short totalAllowColorCount=0;
+        for(short r=0;r<256;r++)
+            totalAllowColorCount+=MIndex[r];//if r%64==0, that is air, air isn't used as color(it's transparent)
+        if(totalAllowColorCount<=1)
+        {
+            qDebug("你只准许了一两种颜色，巧妇难为无米之炊！");
+            _RGB.setZero(1,3);
+            HSV.setZero(1,3);
+            Lab.setZero(1,3);
+            XYZ.setZero(1,3);
+            Map.setZero(1);
+            return;
+        }
+        qDebug()<<"共允许使用"<<totalAllowColorCount<<"种颜色";
+
+        /*for(short Index=0;Index<256;Index++)
+            if(MIndex[Index])
+                qDebug()<<4*(Index%64)+(Index/64);*/
+
+
+
+        _RGB.setZero(totalAllowColorCount,3);
+        HSV.setZero(totalAllowColorCount,3);
+        Lab.setZero(totalAllowColorCount,3);
+        XYZ.setZero(totalAllowColorCount,3);
+        Map.setZero(totalAllowColorCount,1);
+        short write=0;
+        for(short readIndex=0;readIndex<=256;readIndex++)
+        {
+
+            if(write>=totalAllowColorCount)
+                break;
+            if(MIndex[readIndex])
+            {
+                _RGB.row(write)=standard->_RGB.row(readIndex);
+                HSV.row(write)=standard->HSV.row(readIndex);
+                Lab.row(write)=standard->Lab.row(readIndex);
+                XYZ.row(write)=standard->XYZ.row(readIndex);
+                Map(write)=standard->Map(readIndex);
+                write++;
+            }
+        }
+        //cout<<Map;
+        return;
+}
+
+void GetMap(unsigned char *Map)
+{
+    for(short r=0;r<256;r++)Map[r]=4*(r%64)+r/64;
+    return;
+}
+
+void GetMap(VectorXi &Map)
+{
+    Map.setZero(256);
+    for(short r=0;r<256;r++)Map(r)=4*(r%64)+r/64;
+    return;
 }
 
 #endif

@@ -37,7 +37,7 @@ void MainWindow::Collect()
     for(short Base=0;Base<64;Base++)
     {Enables[Base]=NULL;
         ShowColors[Base]=NULL;
-        for(short j=0;j<9;j++)
+        for(short j=0;j<12;j++)
         {
             Blocks[Base][j]=NULL;
             Data.BlockId[Base][j]="DefaultBlockId";
@@ -107,6 +107,8 @@ void MainWindow::Collect()
     Enables[56]=ui->Enable56;
     Enables[57]=ui->Enable57;
     Enables[58]=ui->Enable58;
+    Enables[59]=ui->Enable59;
+    Enables[60]=ui->Enable60;
     /////////////////
     ShowColors[0]=ui->Color00;
     ShowColors[1]=ui->Color01;
@@ -167,6 +169,8 @@ void MainWindow::Collect()
     ShowColors[56]=ui->Color56;
     ShowColors[57]=ui->Color57;
     ShowColors[58]=ui->Color58;
+    ShowColors[59]=ui->Color59;
+    ShowColors[60]=ui->Color60;
     ////////////////
     Blocks[0][0]=ui->is00Glass;     Data.BlockId[0][0]="glass";
 
@@ -240,6 +244,10 @@ void MainWindow::Collect()
     Blocks[15][6]=ui->is15SmoothRedsandstone;      Data.BlockId[15][6]="smooth_red_sandstone";      Data.BlockIdfor12[15][6]="red_sandstone[type=smooth_red_sandstone]";
     Blocks[15][7]=ui->is15HoneyBlock;      Data.BlockId[15][7]="honey_block";Data.BlockVersion[15][7]=15;
     Blocks[15][8]=ui->is15Honeycomb;      Data.BlockId[15][8]="honeycomb_block";Data.BlockVersion[15][8]=15;
+    Blocks[15][9]=ui->is15RawCopperBlock;       Data.BlockId[15][9]="raw_copper_block";Data.BlockVersion[15][9]=17;
+    Blocks[15][10]=ui->is15WaxedCopper;         Data.BlockId[15][10]="waxed_copper_block";Data.BlockVersion[15][10]=17;
+    Blocks[15][11]=ui->is15WaxedCutCopper;      Data.BlockId[15][11]="waxed_cut_copper";Data.BlockVersion[15][11]=17;
+
 
     Blocks[16][0]=ui->is16Concrete;      Data.BlockId[16][0]="magenta_concrete";     Data.BlockIdfor12[16][0]="concrete[color=orange]";
     Blocks[16][1]=ui->is16Wool;      Data.BlockId[16][1]="magenta_wool";     Data.BlockIdfor12[16][1]="wool[color=magenta]";
@@ -266,6 +274,7 @@ void MainWindow::Collect()
     Blocks[21][0]=ui->is21Concrete;      Data.BlockId[21][0]="gray_concrete";     Data.BlockIdfor12[21][0]="concrete[color=gray]";
     Blocks[21][1]=ui->is21Wool;      Data.BlockId[21][1]="gray_wool";     Data.BlockIdfor12[21][1]="wool[color=gray]";
     Blocks[21][2]=ui->is21StainedGlass;      Data.BlockId[21][2]="gray_stained_glass";     Data.BlockIdfor12[21][2]="stained_glass[color=gray]";
+    Blocks[21][3]=ui->is21TintedGlass;      Data.BlockId[21][3]="tinted_glass";     Data.BlockVersion[21][3]=17;
 
     Blocks[22][0]=ui->is22Concrete;      Data.BlockId[22][0]="light_gray_concrete";     Data.BlockIdfor12[22][0]="concrete[color=silver]";
     Blocks[22][1]=ui->is22Wool;      Data.BlockId[22][1]="light_gray_wool";     Data.BlockIdfor12[22][1]="wool[color=silver]";
@@ -279,6 +288,7 @@ void MainWindow::Collect()
     Blocks[24][0]=ui->is24Concrete;      Data.BlockId[24][0]="purple_concrete";     Data.BlockIdfor12[24][0]="concrete[color=purple]";
     Blocks[24][1]=ui->is24Wool;      Data.BlockId[24][1]="purple_wool";     Data.BlockIdfor12[24][1]="wool[color=purple]";
     Blocks[24][2]=ui->is24StainedGlass;      Data.BlockId[24][2]="purple_stained_glass";     Data.BlockIdfor12[24][2]="stained_glass[color=purple]";
+    Blocks[24][3]=ui->is24AmethystBlock;        Data.BlockId[24][3]="amethyst_block";       Data.BlockVersion[24][3]=17;
 
     Blocks[25][0]=ui->is25Concrete;      Data.BlockId[25][0]="blue_concrete";     Data.BlockIdfor12[25][0]="concrete[color=blue]";
     Blocks[25][1]=ui->is25Wool;      Data.BlockId[25][1]="blue_wool";     Data.BlockIdfor12[25][1]="wool[color=blue]";
@@ -314,6 +324,7 @@ void MainWindow::Collect()
 
     Blocks[30][0]=ui->is30GoldBlock;      Data.BlockId[30][0]="gold_block";
     Blocks[30][1]=ui->is30GoldPlate;      Data.BlockId[30][1]="light_weighted_pressure_plate[power=0]";
+    Blocks[30][2]=ui->is30RawGoldBlock;     Data.BlockId[30][2]="raw_gold_block";       Data.BlockVersion[30][2]=17;
 
     Blocks[31][0]=ui->is31DiamondBlock;      Data.BlockId[31][0]="diamond_block";
     Blocks[31][1]=ui->is31PrismarineBricks;      Data.BlockId[31][1]="prismarine_bricks";       Data.BlockIdfor12[31][1]="prismarine[variant=prismarine_bricks]";
@@ -332,6 +343,8 @@ void MainWindow::Collect()
     Blocks[35][2]=ui->is35Magma;         Data.BlockId[35][2]="magma_block";     Data.BlockIdfor12[35][2]="magma";
 
     Blocks[36][0]=ui->is36Terracotta;           Data.BlockId[36][0]="white_terracotta";     Data.BlockIdfor12[36][0]="stained_hardened_clay[color=white]";
+    Blocks[36][1]=ui->is36Calcite;          Data.BlockId[36][1]="calcite";      Data.BlockVersion[36][1]=17;
+
     Blocks[37][0]=ui->is37Terracotta;           Data.BlockId[37][0]="orange_terracotta";     Data.BlockIdfor12[37][0]="stained_hardened_clay[color=orange]";
     Blocks[38][0]=ui->is38Terracotta;           Data.BlockId[38][0]="magenta_terracotta";     Data.BlockIdfor12[38][0]="stained_hardened_clay[color=magenta]";
     Blocks[39][0]=ui->is39Terracotta;           Data.BlockId[39][0]="light_blue_terracotta";     Data.BlockIdfor12[39][0]="stained_hardened_clay[color=light_blue]";
@@ -340,10 +353,15 @@ void MainWindow::Collect()
     Blocks[42][0]=ui->is42Terracotta;           Data.BlockId[42][0]="pink_terracotta";     Data.BlockIdfor12[42][0]="stained_hardened_clay[color=pink]";
     Blocks[43][0]=ui->is43Terracotta;           Data.BlockId[43][0]="gray_terracotta";     Data.BlockIdfor12[43][0]="stained_hardened_clay[color=gray]";
     Blocks[44][0]=ui->is44Terracotta;           Data.BlockId[44][0]="light_gray_terracotta";     Data.BlockIdfor12[44][0]="stained_hardened_clay[color=silver]";
+    Blocks[44][1]=ui->is44WaxExposedCopper;         Data.BlockId[44][1]="waxed_exposed_copper";     Data.BlockVersion[44][1]=17;
+    Blocks[44][2]=ui->is44WaxCutExposedCopper;          Data.BlockId[44][2]="waxed_exposed_cut_copper";     Data.BlockVersion[44][2]=17;
+
     Blocks[45][0]=ui->is45Terracotta;           Data.BlockId[45][0]="cyan_terracotta";     Data.BlockIdfor12[45][0]="stained_hardened_clay[color=cyan]";
     Blocks[46][0]=ui->is46Terracotta;           Data.BlockId[46][0]="purple_terracotta";     Data.BlockIdfor12[46][0]="stained_hardened_clay[color=purple]";
     Blocks[47][0]=ui->is47Terracotta;           Data.BlockId[47][0]="blue_terracotta";     Data.BlockIdfor12[47][0]="stained_hardened_clay[color=blue]";
     Blocks[48][0]=ui->is48Terracotta;           Data.BlockId[48][0]="brown_terracotta";     Data.BlockIdfor12[48][0]="stained_hardened_clay[color=brown]";
+    Blocks[48][1]=ui->is48DripstoneBlock;           Data.BlockId[48][1]="dripstone_block";      Data.BlockVersion[48][1]=17;
+
     Blocks[49][0]=ui->is49Terracotta;           Data.BlockId[49][0]="green_terracotta";     Data.BlockIdfor12[49][0]="stained_hardened_clay[color=green]";
     Blocks[50][0]=ui->is50Terracotta;           Data.BlockId[50][0]="red_terracotta";     Data.BlockIdfor12[50][0]="stained_hardened_clay[color=red]";
     Blocks[51][0]=ui->is51Terracotta;           Data.BlockId[51][0]="black_terracotta";     Data.BlockIdfor12[51][0]="stained_hardened_clay[color=black]";
@@ -357,15 +375,29 @@ void MainWindow::Collect()
     Blocks[54][1]=ui->is54StrippedCrimsonStem;           Data.BlockId[54][1]="stripped_crimson_hyphae[axis=y]";Data.BlockVersion[54][1]=16;
 
     Blocks[55][0]=ui->is55WarpedNylium;           Data.BlockId[55][0]="warped_nylium";Data.BlockVersion[55][0]=16;
+    Blocks[55][1]=ui->is55WaxedOxidedCopper;            Data.BlockId[55][1]="waxed_oxidized_copper";    Data.BlockVersion[55][1]=17;
+    Blocks[55][2]=ui->is55WaxedCutOxidedCopper;            Data.BlockId[55][2]="waxed_oxidized_cut_copper";    Data.BlockVersion[55][2]=17;
+
 
     Blocks[56][0]=ui->is56WarpedPlanks;           Data.BlockId[56][0]="warped_planks";Data.BlockVersion[56][0]=16;
     Blocks[56][1]=ui->is56StrippedWarpedLog;           Data.BlockId[56][1]="stripped_warped_stem[axis=y]";Data.BlockVersion[56][1]=16;
+    Blocks[56][2]=ui->is56WaxedWeatheredCopper;         Data.BlockId[56][2]="waxed_weathered_copper";Data.BlockVersion[56][2]=17;
+    Blocks[56][3]=ui->is56WaxedCutWeatheredCopper;          Data.BlockId[56][3]="waxed_oxidized_cut_copper";Data.BlockVersion[56][3]=17;
+
 
     Blocks[57][0]=ui->is57WarpedStem;           Data.BlockId[57][0]="warped_hyphae[axis=y]";Data.BlockVersion[57][0]=16;
     Blocks[57][1]=ui->is57StrippedWarpedStem;           Data.BlockId[57][1]="stripped_warped_hyphae[axis=y]";Data.BlockVersion[57][1]=16;
 
     Blocks[58][0]=ui->is58WarpedWartBlock;           Data.BlockId[58][0]="warped_wart_block";Data.BlockVersion[58][0]=16;
 
+    Blocks[59][0]=ui->is59Deepslate;        Data.BlockId[59][0]="deepslate";    Data.BlockVersion[59][0]=17;
+    Blocks[59][1]=ui->is59ChiseledDeepslate;    Data.BlockId[59][1]="chiseled_deepslate";   Data.BlockVersion[59][1]=17;
+    Blocks[59][2]=ui->is59PolishedDeepslate;    Data.BlockId[59][2]="polished_deepslate";   Data.BlockVersion[59][2]=17;
+    Blocks[59][3]=ui->is59DeepslateBricks;      Data.BlockId[59][3]="deepslate_bricks";     Data.BlockVersion[59][3]=17;
+    Blocks[59][4]=ui->is59DeepslateTiles;       Data.BlockId[59][4]="deepslate_tiles";      Data.BlockVersion[59][4]=17;
+    Blocks[59][5]=ui->is59CobbledDeepslate;     Data.BlockId[59][5]="cobbled_deepslate";        Data.BlockVersion[59][5]=17;
+
+    Blocks[60][0]=ui->is60RawIronBlock;     Data.BlockId[60][0]="raw_iron_block";       Data.BlockVersion[60][0]=17;
     for(short r=0;r<64;r++)
         for(short c=0;c<9;c++)
             if(Blocks[r][c]==NULL)Data.BlockVersion[r][c]=255;

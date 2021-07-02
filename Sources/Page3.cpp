@@ -39,16 +39,31 @@ void MainWindow::versionCheck()
 {
     allowUpdateToCustom(false);
     short maxIndex=(Data.is16()?58:52);
-    if(!Data.is16())
+    if(Data.is17())maxIndex=60;
+
+    if(!Data.is17())
+        for(short r=59;r<64;r++)
+        {
+
+            if(Enables[r]!=NULL)
+            {
+                disconnect(Enables[r],SIGNAL(clicked()),this,SLOT(ChangeToCustom()));
+                Enables[r]->setChecked(false);
+                Enables[r]->setEnabled(false);
+                connect(Enables[r],SIGNAL(clicked()),this,SLOT(ChangeToCustom()));
+            }
+
+        }
+    else    if(!Data.is16())
         for(short r=52;r<64;r++)
         {
 
             if(Enables[r]!=NULL)
             {
-                disconnect(Enables[r],SIGNAL(clicked()),this,SLOT(changeToCustom()));
+                disconnect(Enables[r],SIGNAL(clicked()),this,SLOT(ChangeToCustom()));
                 Enables[r]->setChecked(false);
                 Enables[r]->setEnabled(false);
-                connect(Enables[r],SIGNAL(clicked()),this,SLOT(changeToCustom()));
+                connect(Enables[r],SIGNAL(clicked()),this,SLOT(ChangeToCustom()));
             }
 
         }
@@ -57,18 +72,18 @@ void MainWindow::versionCheck()
 
         if(Enables[r]!=NULL)
         {
-            disconnect(Enables[r],SIGNAL(clicked()),this,SLOT(changeToCustom()));
+            disconnect(Enables[r],SIGNAL(clicked()),this,SLOT(ChangeToCustom()));
             Enables[r]->setChecked(true);
             Enables[r]->setEnabled(true);
-            connect(Enables[r],SIGNAL(clicked()),this,SLOT(changeToCustom()));
+            connect(Enables[r],SIGNAL(clicked()),this,SLOT(ChangeToCustom()));
         }
 
     }
 
 
 
-    for(short i=0;i<=maxIndex;i++)
-        for(short j=0;j<9;j++)
+    for(short i=0;i<64;i++)
+        for(short j=0;j<12;j++)
         {
             if(Blocks[i][j]==NULL)break;
             if(!Data.canUseBlock(i,j))Blocks[i][j]->setEnabled(false);
@@ -90,7 +105,7 @@ return;
 void MainWindow::IniNeedGlass()
 {
     for(short i=0;i<64;i++)
-        for(short j=0;j<9;j++)
+        for(short j=0;j<12;j++)
             NeedGlass[i][j]=false;
 
     NeedGlass[6][4]=true;//Lantern
@@ -103,7 +118,7 @@ void MainWindow::IniNeedGlass()
 void MainWindow::InidoGlow()
 {
     for(short i=0;i<64;i++)
-        for(short j=0;j<9;j++)
+        for(short j=0;j<12;j++)
             doGlow[i][j]=false;
     doGlow[2][2]=true;//glowstone
     doGlow[6][4]=true;//lantern
@@ -136,7 +151,7 @@ void MainWindow::allowUpdateToCustom(bool allowAutoUpdate)
     if(allowAutoUpdate)
        {
         for(short i=0;i<64;i++)
-            for(short j=0;j<9;j++)
+            for(short j=0;j<12;j++)
             {if(Blocks[i][j]!=NULL)
                     connect(Blocks[i][j],SIGNAL(clicked()),this,SLOT(ChangeToCustom()));
               }
@@ -144,7 +159,7 @@ void MainWindow::allowUpdateToCustom(bool allowAutoUpdate)
         }
        else {
         for(short i=0;i<64;i++)
-            for(short j=0;j<9;j++)
+            for(short j=0;j<12;j++)
             {if(Blocks[i][j]!=NULL)
                     disconnect(Blocks[i][j],SIGNAL(clicked()),this,SLOT(ChangeToCustom()));
               }
@@ -157,7 +172,7 @@ void MainWindow::IniBL()
 {
     ui->isBLSurvivalBetter->setChecked(true);
 
-    qDebug("IniBL运行到一半");
+    //qDebug("IniBL运行到一半");
 
     applyPre(BLBetter);
 }
@@ -180,14 +195,14 @@ void MainWindow::ChangeToCustom()
 
 void MainWindow::applyPre(short*BL)
 {
-    qDebug("调用了applyPre");
+    //qDebug("调用了applyPre");
     allowUpdateToCustom(false);//prevent radiobuttons from switching BlockList mode to Custom
 
-    qDebug("成功禁用更改预设");
+    //qDebug("成功禁用更改预设");
 
     grabGameVersion();
     short maxIndex=(Data.is16()?58:51);
-
+    if(Data.is17())maxIndex=60;
     for(short i=0;i<=maxIndex;i++)
         if(Blocks[i][BL[i]]==NULL)continue;
         else
@@ -198,7 +213,7 @@ void MainWindow::applyPre(short*BL)
                 if(Data.canUseBlock(i,0))
                     Blocks[i][0]->setChecked(true);
             else
-                    for(short c=0;c<9;c++)
+                    for(short c=0;c<12;c++)
                         if(Data.canUseBlock(i,c))
                         {Blocks[i][c]->setChecked(true);break;}
             else
@@ -206,7 +221,7 @@ void MainWindow::applyPre(short*BL)
 
         }
 
-    qDebug("修改了方块列表");
+    //qDebug("修改了方块列表");
 
     if(Data.isSurvival())ui->Enable12->setChecked(false);
 
@@ -279,6 +294,7 @@ void MainWindow::on_confirmBL_clicked()
 
     //以后会在这里加入一些功能，检查版本冲突
     Data.Allowed.ApplyAllowed(&Data.Basic,Data.colorAllowed);
+    cout<<Data.Allowed.Map.transpose()<<endl;
     qDebug("成功刷新了颜色列表");
 
     ui->IntroColorCount->setText(tr("根据你的选项，地图画将可以使用")+QString::number(Data.Allowed._RGB.rows())+tr("种颜色"));
@@ -290,12 +306,56 @@ void MainWindow::on_confirmBL_clicked()
 
 void MainWindow::getMIndex()
 {
-    short Base,Depth;
+    short Base,Depth,index;
     for(short mapColor=0;mapColor<256;mapColor++)
     {
         Base=mapColor/4;
         Depth=mapColor%4;
+        index=Data.mapColor2Index(mapColor);
+        Data.colorAllowed[index]=true;
+        if(!Base)
+        {
+            Data.colorAllowed[index]=false;
+            continue;
+        }
         if(Enables[Base]==NULL)
+        {
+            Data.colorAllowed[index]=false;
+            continue;
+        }
+        if(!Enables[Base]->isChecked())
+        {
+            Data.colorAllowed[index]=false;
+            continue;
+        }
+        if(!Data.is16()&&Base>=52)
+        {
+            Data.colorAllowed[index]=false;
+            continue;
+        }
+        if(!Data.is17()&&Base>=59)
+        {
+            Data.colorAllowed[index]=false;
+            continue;
+        }
+
+        if(Depth==3&&!Data.isCreative())
+        {
+            Data.colorAllowed[index]=false;
+            continue;
+        }
+        if(Base!=12&&Depth!=1&&Data.isFlat())
+        {
+            Data.colorAllowed[index]=false;
+            continue;
+        }
+        if(Base==12&&Depth!=0&&Data.isFlat())
+        {
+            Data.colorAllowed[index]=false;
+            continue;
+        }
+
+        /*if(Enables[Base]==NULL)
         {Data.colorAllowed[Data.mapColor2Index(mapColor)]=false;
             continue;}
         if(Base==0)
@@ -330,7 +390,7 @@ void MainWindow::getMIndex()
                 qDebug("出现了错误的Depth");
                 Data.colorAllowed[Data.mapColor2Index(mapColor)]=false;
                 break;
-            }
+            }*/
     }
     //Data.colorAllowed[0]=true;
     return;
@@ -339,7 +399,7 @@ void MainWindow::getMIndex()
 void MainWindow::getBlockList()
 {
     for(short i=0;i<64;i++)
-        for(short j=0;j<9;j++)
+        for(short j=0;j<12;j++)
         {
             if(Blocks[i][j]!=NULL&&Blocks[i][j]->isChecked())
             {
@@ -349,12 +409,12 @@ void MainWindow::getBlockList()
                     Data.BlockListId[i]=Data.BlockIdfor12[i][j];
                 break;
             }
-            if(j>=8&&Blocks[i][j]==NULL)
+            if(j>=11&&Blocks[i][j]==NULL)
             {
                 Data.SelectedBlockList[i]=0;
                 Data.BlockListId[i]="DefaultBlockId";
-                if(i>=59)
-                qDebug("出现被设为DefaultBlockId的方块");
+                /*if(i>=61)
+                qDebug("出现被设为DefaultBlockId的方块");*/
             }
 
         }

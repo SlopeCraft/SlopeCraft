@@ -49,7 +49,7 @@ void MainWindow::on_ImportPic_clicked()
     }
 
     Data.adjedPic.load(Path);
-    Data.isTransed2Float=false;
+    //Data.isTransed2Float=false;
     if(needInitialize)
     {
 
@@ -83,12 +83,23 @@ void MainWindow::on_ImportPic_clicked()
     Data.size3D[0]=Data.sizePic[1]+2;
     Data.size3D[2]=Data.sizePic[0]+2;
 
-    Data.rawPicRGBc3[0].setZero(Data.sizePic[0],Data.sizePic[1]);
-    Data.rawPicRGBc3[1].setZero(Data.sizePic[0],Data.sizePic[1]);
-    Data.rawPicRGBc3[2].setZero(Data.sizePic[0],Data.sizePic[1]);
-    Data.rawPicRHLXc3[0].setZero(Data.sizePic[0],Data.sizePic[1]);
-    Data.rawPicRHLXc3[1].setZero(Data.sizePic[0],Data.sizePic[1]);
-    Data.rawPicRHLXc3[2].setZero(Data.sizePic[0],Data.sizePic[1]);
+    QRgb*CurrentLine=NULL;
+    for(int r=0;r<Data.sizePic[0];r++)
+    {
+        CurrentLine=(QRgb*)Data.rawPic.scanLine(r);
+        for(int c=0;c<Data.sizePic[1];c++)
+            {
+                //CurrentLine[c]|=~(unsigned(32-1)<<28);
+                if(qAlpha(CurrentLine[c])!=255)
+                {
+                    if(qAlpha(CurrentLine[c])>=127)
+                    CurrentLine[c]=qRgb(qRed(CurrentLine[c]),qGreen(CurrentLine[c]),qBlue(CurrentLine[c]));
+                    else
+                        CurrentLine[c]=qRgb(255,255,255);
+                }
+            }
+    }
+
     Data.mapPic.setZero(Data.sizePic[0],Data.sizePic[1]);
 
     ui->ShowRawPic->setPixmap(QPixmap::fromImage(Data.rawPic));

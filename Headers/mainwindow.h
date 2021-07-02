@@ -19,16 +19,163 @@ This file is part of SlopeCraft.
     github:https://github.com/ToKiNoBug
     bilibili:https://space.bilibili.com/351429231
 */
-
-
-#pragma once
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-#include "mcmap.h"
+#include "NBTWriter.h"
 #include "ui_mainwindow.h"
+
 #include <QMainWindow>
 #include <QButtonGroup>
 #include <QTranslator>
+#include <QHash>
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <Eigen/Dense>
+#include <unsupported/Eigen/CXX11/Tensor>
+#include <QString>
+#include <QImage>
+#include <QThread>
+//#include "adjt.h"
+using namespace std;
+using namespace Eigen;
+
+class MainWindow;
+class ColorSet{
+    public:
+        MatrixXf _RGB;
+        MatrixXf  HSV;
+        MatrixXf  Lab;
+        MatrixXf  XYZ;
+        VectorXi  Map;
+        ColorSet();
+        void ApplyAllowed(ColorSet*standard,bool *MIndex);
+};
+void GetMap(unsigned char *Map);
+
+void GetMap(VectorXi &Map);
+
+#include <QColor>
+#include <QRgb>
+#include <Eigen/Dense>
+
+using namespace Eigen;
+//class ColorSet;
+void f(float &);
+void RGB2HSV(float, float, float,  float &, float &, float &);
+void RGB2XYZ(float R, float G, float B, float &X, float &Y, float &Z);
+void XYZ2Lab(float X, float Y, float Z, float &L, float &a, float &b);
+class TokiColor
+{
+public:
+    TokiColor(const QRgb&,char);
+    TokiColor();
+    //QRgb Raw;//相当于Key
+    float c3[3];
+    char ColorSpaceType;
+    unsigned char Result;
+    static ColorSet * Basic;
+    static ColorSet * Allowed;
+    unsigned char apply();
+private:
+    unsigned char applyRGB();
+    unsigned char applyRGB_plus();
+    unsigned char applyHSV();
+    unsigned char applyXYZ();
+    unsigned char applyLab_old();
+    unsigned char applyLab_new();
+};
+
+class mcMap
+{
+public:
+        mcMap();
+        //mcMap(mcMap*p);
+      ~mcMap();
+
+        MainWindow*parent;
+
+        inline short mapColor2Index(short mapColor);
+        inline short Index2mapColor(short Index);
+
+        inline bool is16();
+        inline bool is17();
+        unsigned char gameVersion;//12,13,14,15,16,17
+        char mapType;//S,C,F
+        inline bool isFlat();
+        inline bool isSurvival();
+        inline bool isCreative();
+        int step;
+        ColorSet Basic;
+        ColorSet Allowed;
+        bool colorAllowed[256];
+        QString BlockId[64][12];
+        QString BlockIdfor12[64][12];
+        unsigned char BlockVersion[64][12];
+        inline bool canUseBlock(short r,short c);
+        short SelectedBlockList[64];//实际的方块列表
+        QString BlockListId[64];
+        //NBT::NBTWriter Lite;
+
+        int size3D[3];//x,y,z
+        int sizePic[2];
+        int totalBlocks;
+
+        short adjStep;
+        QImage rawPic;
+        QImage adjedPic;
+        //MatrixXf rawPicRGBc3[3];
+        //MatrixXf rawPicRHLXc3[3];
+
+        //MatrixXf CurrentColor;
+
+        MatrixXi mapPic;//stores mapColor
+        MatrixXi Base;
+        MatrixXi Depth;
+        MatrixXi Height;
+        Matrix<int,4,Dynamic> WaterList;
+
+        //unsigned char***Build;
+
+        Tensor<unsigned char,3>Build;//x,y,z
+        char Mode;//R->RGB,H->HSV,L->Lab,X->XYZ
+
+        //Colors
+        //rawPic*
+        //MapPic*
+        //AdjedPic*
+        //NBTWriter*
+        //Build
+        //
+        short ExLitestep;
+        short ExMcFstep;
+
+        QString ProductPath;
+
+        long makeHeight();//构建高度矩阵
+        long BuildHeight();//构建真正的立体结构（三维矩阵
+        long exportAsLitematica(QString FilePathAndName);
+        //long exportAsMcF(QString FilePathAndName);
+        long exportAsData(const QString &FolderPath,const int indexStart);
+
+        void putCommand(const QString&Command);
+
+
+
+        void writeBlock(const QString &netBlockId,vector<QString>&Property,vector<QString>&ProVal,NBT::NBTWriter&);
+
+        void writeTrash(int count,NBT::NBTWriter&);
+
+        int CommandCount;
+        int NWPos[3];//x,y,z
+        fstream ExMcF;
+        char netFilePath[256];//纯路径，不包含最后的文件名
+        char netFileName[64];//纯文件名，不含后缀名
+};
+bool dealBlockId(const QString&BlockId,QString&netBlockId,vector<QString>&Property,vector<QString>&ProVal);
+
+class AdjT;
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -36,7 +183,6 @@ QT_END_NAMESPACE
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-
 public:
     friend mcMap;
     MainWindow(QWidget *parent = nullptr);
@@ -44,13 +190,12 @@ public:
     mcMap Data;
 
     //QTranslator translater;
-    QRadioButton *Blocks[64][9];
+    QRadioButton *Blocks[64][12];
     QCheckBox *Enables[64];
     QLabel *ShowColors[64];
     //bool Enabled[64];//被启动的方块列表，相当于最终的MIndex
-    bool NeedGlass[64][9];
-    bool doGlow[64][9];
-    //QString BlockId[64][9];
+    bool NeedGlass[64][12];
+    bool doGlow[64][12];
     short BLCreative[64];
     short BLCheaper[64];
     short BLBetter[64];
@@ -75,16 +220,11 @@ public:
     void getBlockList();
 
     //调整颜色,Page4
-    void transQim2Float();//for step1
-    void transPic2RGB();//for step2
-    void transPic2HSV();
-    void transPic2Lab();
-    void transPic2XYZ();
-    void Pic2Map(MatrixXf&);//for step3//old method
-    void Pic2Map4RGB(MatrixXf&);
-    void Pic2Map4HSV(MatrixXf&);
-    void Pic2Map4Lab(MatrixXf&);
-    //void Pic2Map4XYZ(MatrixXf&);
+    void pushToHash(AdjT*);
+    void applyTokiColor(AdjT*);
+    void fillMapMat(AdjT*);
+
+
 
     void getAdjedPic();//for step4
 
@@ -100,6 +240,10 @@ private:
     QTranslator trans;
 
 //////////////////////////////////////////////////////////////////////////////////
+///
+
+public slots:
+    void AdjPro(int step=1);
 private slots:
 
     //语言槽
@@ -188,7 +332,17 @@ private:
 };
 bool compressFile(const char*sourcePath,const char*destPath);
 
-
+class AdjT : public QThread
+{
+    Q_OBJECT
+public:
+    AdjT(MainWindow*p=NULL);
+    MainWindow*parent;
+    QHash<QRgb,TokiColor> colorAdjuster;
+    void run();
+signals:
+    void addProgress(int);
+};
 
 
 

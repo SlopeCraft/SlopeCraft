@@ -128,10 +128,13 @@ for(int c=0;c<cols;c++)
             MapFile.writeInt("DataVersion",2586);
             break;
         case 17:
-            qDebug("这个版本尚不支持");
+            MapFile.writeInt("DataVersion",2724);
+            break;
+        default:
+            qDebug("错误的游戏版本！");
             break;
         }
-        MapFile.writeString("ExportedBy","Exported by SlopeCraft v3.1, developed by TokiNoBug");
+        MapFile.writeString("ExportedBy","Exported by SlopeCraft v3.3, developed by TokiNoBug");
         MapFile.writeCompound("data");
             MapFile.writeByte("scale",0);
             MapFile.writeByte("trackingPosition",0);
@@ -168,6 +171,11 @@ for(int c=0;c<cols;c++)
                 MapFile.writeString("dimension","minecraft:overworld");
                 MapFile.writeByte("locked",1);
                 break;
+            case 17:
+                MapFile.writeListHead("banners",NBT::idCompound,0);
+                MapFile.writeListHead("frames",NBT::idCompound,0);
+                MapFile.writeString("dimension","minecraft:overworld");
+                MapFile.writeByte("locked",1);
             }
 
             MapFile.writeByteArrayHead("colors",16384);
@@ -176,10 +184,10 @@ for(int c=0;c<cols;c++)
                 {
                     for(short cc=0;cc<128;cc++)
                     {
-                        if(rr+offset[0]<maxrr&&cc+offset[1]<maxcc)
+                        if(rr+offset[0]<mapPic.rows()&&cc+offset[1]<mapPic.cols())
                         ColorCur=(unsigned char)mapPic(rr+offset[0],cc+offset[1]);
                         else
-                            ColorCur=255;
+                            ColorCur=0;
                         MapFile.writeByte("this should never be seen",ColorCur);
                     }
                     parent->ui->ShowProgressExData->setValue(parent->ui->ShowProgressExData->value()+1);

@@ -146,9 +146,12 @@ Base=mapPic/4;
 qDebug()<<u++;
 Depth.setZero(sizePic[0],sizePic[1]);
 qDebug()<<u++;
-for(short r=0;r<sizePic[0];r++)
+
+Depth=mapPic-4*(mapPic/4);
+
+/*for(short r=0;r<sizePic[0];r++)
     for(short c=0;c<sizePic[1];c++)
-        Depth(r,c)=mapPic(r,c)%4;
+        Depth(r,c)=mapPic(r,c)%4;*/
 
 qDebug()<<u++;
 
@@ -464,7 +467,7 @@ parent->ui->ShowProgressExLite->setValue(50);
             Lite.writeListHead("TileEntities",NBT::idCompound,0);
             {
                 int ArraySize;
-                Lite.writeLong("aLong",1145141919810);
+                //Lite.writeLong("aLong",1145141919810);
                 int Volume=size3D[0]*size3D[1]*size3D[2];
                 ArraySize=((Volume%8)?(Volume/8+1):Volume/8);
                 long long HackyVal=sizeof(long long);
@@ -516,7 +519,9 @@ case 16:
     Lite.writeInt("Version",5);
     break;
 case 17:
-    qDebug("现在这个版本尚不支持");break;
+    Lite.writeInt("MinecraftDataVersion",2724);
+    Lite.writeInt("Version",5);
+    break;
 default:
     qDebug("错误的游戏版本！");break;
 }

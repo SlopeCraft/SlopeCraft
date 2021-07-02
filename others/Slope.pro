@@ -1,8 +1,9 @@
 QT       += core gui
-INCLUDEPATH += D:\eigen-3.3.8
+INCLUDEPATH += D:\eigen-3.3.9
+ DEFINES += WIN32_LEAN_AND_MEAN
 RC_ICONS =SlopeCraft.ico
 # 版本号
-VERSION = 3.2.0
+VERSION = 3.3.0
 # 语言
 # 0x0004 表示 简体中文
 RC_LANG = 0x0004
@@ -38,9 +39,11 @@ SOURCES += \
     Page7.cpp \
     Page8.cpp \
     Pages.cpp \
+    adjt.cpp \
     main.cpp \
     mainwindow.cpp \
     mcmap.cpp \
+    tokicolor.cpp \
     zlibs/adler32.c \
     zlibs/compress.c \
     zlibs/crc32.c \
@@ -60,7 +63,6 @@ SOURCES += \
 HEADERS += \
     NBTWriter.h \
     mainwindow.h \
-    mcmap.h \
     zlibs/crc32.h \
     zlibs/deflate.h \
     zlibs/gzguts.h \
@@ -96,3 +98,5 @@ RESOURCES += \
     ../BlockTextures.qrc \
     ../Languages.qrc \
     Pics.qrc
+
+QT += widgets
