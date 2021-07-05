@@ -39,7 +39,12 @@ This file is part of SlopeCraft.
 #include <time.h>
 
 using namespace Eigen;
-
+void MainWindow::on_ExImage_clicked()
+{
+    QString ImagePath=QFileDialog::getSaveFileName(this,tr("保存当前显示图片"),"",tr("图片(*.png *.bmp *.jpg *.tif *.GIF )"));
+    if(ImagePath.isEmpty())return;
+    ui->ShowPic->pixmap().save(ImagePath);
+}
 void MainWindow::AdjPro(int step)
 {
     ui->ShowProgressABbar->setValue(ui->ShowProgressABbar->value()+step);
@@ -128,6 +133,7 @@ void MainWindow::pushToHash(AdjT*R)
     }
     //qDebug("成功将所有颜色装入QHash");
     //qDebug()<<"总颜色数量"<<ColorCount;
+    qDebug()<<"总颜色数量："<<R->colorAdjuster.count();
     Data.adjStep=1;
 }
 
@@ -139,7 +145,7 @@ void MainWindow::applyTokiColor(AdjT*R)
     qDebug("即将开始子线程");
     R->start();
     qDebug("已经开始子线程");
-    int step=reportRate*Data.sizePic[0]*Data.sizePic[1]/R->colorAdjuster.count();
+    int step=reportRate*Data.sizePic[0]*Data.sizePic[1]/R->colorAdjuster.count()/2;
     int itered=1;
     auto mid=R->colorAdjuster.begin();
     for(int count=0;count*2>=R->colorAdjuster.count();)

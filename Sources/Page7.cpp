@@ -93,8 +93,8 @@ long mcMap::exportAsData(const QString &FolderPath,const int indexStart)
 {
 const int rows=ceil(mapPic.rows()/128.0f);
 const int cols=ceil(mapPic.cols()/128.0f);
-//const int maxrr=rows*128;
-//const int maxcc=cols*128;
+const int maxrr=rows*128;
+const int maxcc=cols*128;
 parent->ui->ShowProgressExData->setValue(0);
 parent->ui->ShowProgressExData->setMaximum(128*rows*cols);
 

@@ -10,7 +10,7 @@ void AdjT::run()
 {
     if(parent->Data.adjStep<1)return;
     //wait();
-    int step=reportRate*parent->Data.sizePic[0]*parent->Data.sizePic[1]/colorAdjuster.count();
+    int step=reportRate*parent->Data.sizePic[0]*parent->Data.sizePic[1]/colorAdjuster.count()/2;
     int itered=1;
     //qDebug()<<"step="<<step;
     auto mid=colorAdjuster.begin();

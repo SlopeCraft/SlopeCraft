@@ -42,7 +42,9 @@ This file is part of SlopeCraft.
 #include "Page8.cpp"
 ColorSet* TokiColor::Allowed=NULL;
 ColorSet*TokiColor::Basic=NULL;
-
+short TokiColor::DepthIndexEnd[4]={63,127,191,255};
+unsigned char TokiColor::DepthCount[4]={64,64,64,64};
+bool TokiColor::needFindSide=false;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -121,5 +123,8 @@ void MainWindow::checkBlockIds()
         }
     out.close();
 }
+
+
+
 
 

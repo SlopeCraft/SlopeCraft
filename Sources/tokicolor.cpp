@@ -3,10 +3,75 @@
 #define Thre 1e-8f
 #include <cmath>
 
-inline VectorXf atan2(VectorXf y,VectorXf x)
+auto atan2(VectorXf y,VectorXf x)
 {
-    auto t=(x.array().abs()>1e-4f).select((y.array()/x.array()).atan(),0.0);
-    return (x.array()<0.0).select(t+M_PI,(y.array()>=0).select(t,t+2*M_PI));
+    x=(x.array()!=0.0).select(x,1e-10f);
+    auto adder=(x.array()<=0).select((y.array()<=0).select(y*0.0,2*M_PI),M_PI);
+
+    return adder.array()+(y.array()/x.array()).atan();
+    /*auto t=(x.array().abs()>1e-4f).select((y.array()/x.array()).atan(),0.0);
+    return (x.array()<0.0).select(t+M_PI,(y.array()>=0).select(t,t+2*M_PI));*/
+}
+
+void TokiColor::doSide(VectorXf Diff,float ResultDiff)
+{
+    int tempIndex=0;
+    //Diff.array()+=10.0;ResultDiff+=10.0;
+    sideSelectivity[0]=1e35f;sideResult[0]=0;
+    sideSelectivity[1]=1e35f;sideResult[1]=0;
+    if(!needFindSide) return;
+    //qDebug("开始doSide");
+    //qDebug()<<"size(Diff)=["<<Diff.rows()<<','<<Diff.cols()<<']';
+    //qDebug()<<"DepthCount="<<(short)DepthCount[0]<<;
+    //qDebug()<<"DepthCount=["<<(short)DepthCount[0]<<','<<(short)DepthCount[1]<<','<<(short)DepthCount[2]<<','<<(short)DepthCount[3]<<']';
+    //qDebug()<<"DepthIndex=["<<DepthIndexEnd[0]<<','<<DepthIndexEnd[1]<<','<<DepthIndexEnd[2]<<','<<DepthIndexEnd[3]<<']';
+    switch (Result%4)
+    {
+    case 3:
+        return;
+    case 0://1,2
+        if(DepthCount[1])
+        {
+            sideSelectivity[0]=Diff.segment(DepthIndexEnd[0]+1,DepthCount[1]).minCoeff(&tempIndex);
+            sideResult[0]=Allowed->Map(DepthIndexEnd[0]+1+tempIndex);
+        }
+        if(DepthCount[2])
+        {
+            sideSelectivity[1]=Diff.segment(DepthIndexEnd[1]+1,DepthCount[2]).minCoeff(&tempIndex);
+            sideResult[1]=Allowed->Map(DepthIndexEnd[1]+1+tempIndex);
+        }
+        break;
+    case 1://0,2
+        if(DepthCount[0])
+        {
+            sideSelectivity[0]=Diff.segment(0,DepthCount[0]).minCoeff(&tempIndex);
+            sideResult[0]=Allowed->Map(tempIndex);
+        }
+        if(DepthCount[2])
+        {
+            sideSelectivity[1]=Diff.segment(DepthIndexEnd[1]+1,DepthCount[2]).minCoeff(&tempIndex);
+            sideResult[1]=Allowed->Map(DepthIndexEnd[1]+1+tempIndex);
+        }
+        break;
+    case 2://0,1
+        if(DepthCount[0])
+        {
+            sideSelectivity[0]=Diff.segment(0,DepthCount[0]).minCoeff(&tempIndex);
+            sideResult[0]=Allowed->Map(tempIndex);
+        }
+        if(DepthCount[1])
+        {
+            sideSelectivity[1]=Diff.segment(DepthIndexEnd[0]+1,DepthCount[1]).minCoeff(&tempIndex);
+            sideResult[1]=Allowed->Map(DepthIndexEnd[0]+1+tempIndex);
+        }
+        break;
+    }
+    //sideSelectivity[0]-=1.0;sideSelectivity[1]-=1.0;
+    //sideSelectivity[0]*=100.0;sideSelectivity[1]*=100.0;
+    qDebug()<<"side[0]=["<<sideResult[0]<<','<<sideSelectivity[0]<<']';
+    qDebug()<<"side[1]=["<<sideResult[1]<<','<<sideSelectivity[1]<<']';
+    qDebug()<<"ResultDiff="<<ResultDiff;
+    return;
 }
 
 void f(float &I)
@@ -72,9 +137,10 @@ if (_ColorSpaceType>='a')
 switch (_ColorSpaceType)
 {
 case 'R':
-    c3[0]=qRed(rawColor)/255.0f;
-    c3[1]=qGreen(rawColor)/255.0f;
-    c3[2]=qBlue(rawColor)/255.0f;
+    c3[0]=max(qRed(rawColor)/255.0f,1e-10f);
+    c3[1]=max(qGreen(rawColor)/255.0f,1e-10f);
+    c3[2]=max(qBlue(rawColor)/255.0f,1e-10f);
+
     break;
 case 'H':
     RGB2HSV(qRed(rawColor)/255.0f,qGreen(rawColor)/255.0f,qBlue(rawColor)/255.0f,c3[0],c3[1],c3[2]);
@@ -88,6 +154,7 @@ default:
     XYZ2Lab(X,Y,Z,c3[0],c3[1],c3[2]);
     break;
 }
+
 Result=0;
 }
 
@@ -119,9 +186,13 @@ unsigned char TokiColor::applyRGB()
     auto Diff=Diff0_2+Diff1_2+Diff2_2;
     //Data.CurrentColor-=allowedColors;
 
-    Diff.minCoeff(&tempIndex);
+    float ResultDiff=Diff.minCoeff(&tempIndex)+1e-8f;
     //Diff.minCoeff(tempIndex,u);
     Result=Allowed->Map(tempIndex);
+    //qDebug("调色完毕");
+    if(needFindSide)
+    doSide(Diff,ResultDiff);
+
     return Result;
 }
 
@@ -143,7 +214,7 @@ unsigned char TokiColor::applyRGB_plus()
     auto S_g=((allowedColors.col(1).array()+g)<SigmaRGB).select((allowedColors.col(1).array()+g)/SigmaRGB,1.0f);
     auto S_b=((allowedColors.col(2).array()+b)<SigmaRGB).select((allowedColors.col(2).array()+b)/SigmaRGB,1.0f);
     auto sumRGBsquare=R*allowedColors.col(0).array()+g*allowedColors.col(1).array()+b*allowedColors.col(2).array();
-    auto theta=0.6366197724f*(sumRGBsquare/SqrModSquare).acos();
+    auto theta=2.0/M_PI*(sumRGBsquare/SqrModSquare).acos();
     auto OnedDeltaR=deltaR.abs()/(R+allowedColors.col(0).array());
     auto OnedDeltaG=deltaG.abs()/(g+allowedColors.col(1).array());
     auto OnedDeltaB=deltaB.abs()/(b+allowedColors.col(2).array());
@@ -152,16 +223,18 @@ unsigned char TokiColor::applyRGB_plus()
     auto S_tg=OnedDeltaG/sumOnedDelta*S_g.square();
     auto S_tb=OnedDeltaB/sumOnedDelta*S_b.square();
     auto S_theta=S_tr+S_tg+S_tb;
-    auto Rmax=(allowedColors.col(0).array()>R).select(allowedColors.col(0).array(),R);
-    auto Gmax=(allowedColors.col(1).array()>g).select(allowedColors.col(1).array(),g);
-    auto Bmax=(allowedColors.col(2).array()>b).select(allowedColors.col(2).array(),b);
-    auto maxRGmax=(Rmax>Gmax).select(Rmax,Gmax);
-    auto S_ratio=(maxRGmax>Bmax).select(maxRGmax,Bmax);
+    auto Rmax=allowedColors.rowwise().maxCoeff();
+    auto S_ratio=Rmax.array().max(max(R,max(g,b)));
+
 
     auto dist=(S_r.square()*w_r*deltaR.square()+S_g.square()*w_g*deltaG.square()+S_b.square()*w_b*deltaB.square())/(w_r+w_g+w_b)+S_theta*S_ratio*theta.square();//+S_theta*S_ratio*theta.square()
 
-    dist.minCoeff(&tempIndex);
+    float ResultDiff=dist.minCoeff(&tempIndex);
+    //if(dist.isNaN().any())qDebug("出现Nan");
     Result=Allowed->Map(tempIndex);
+    if(needFindSide)
+    doSide(dist,ResultDiff);
+
     return Result;
 }
 
@@ -178,8 +251,10 @@ unsigned char TokiColor::applyHSV()
     auto deltaY=50.0f*(SV*(M_2_PI*allowedColors.col(0).array()).sin()-c3[2]*c3[1]*sin(M_2_PI*c3[0]));
     auto deltaZ=86.60254f*(allowedColors.col(2).array()-c3[2]);
     auto Diff=deltaX.square()+deltaY.square()+deltaZ.square();
-    Diff.minCoeff(&tempIndex);
+    float ResultDiff=Diff.minCoeff(&tempIndex);
     Result=Allowed->Map(tempIndex);
+    if(needFindSide)
+    doSide(Diff,ResultDiff);
     return Result;
 }
 
@@ -194,9 +269,11 @@ unsigned char TokiColor::applyXYZ()
     auto Diff=Diff0_2+Diff1_2+Diff2_2;
     //Data.CurrentColor-=allowedColors;
 
-    Diff.minCoeff(&tempIndex);
+    float ResultDiff=Diff.minCoeff(&tempIndex);
     //Diff.minCoeff(tempIndex,u);
     Result=Allowed->Map(tempIndex);
+    if(needFindSide)
+    doSide(Diff,ResultDiff);
     return Result;
 }
 
@@ -222,8 +299,10 @@ unsigned char TokiColor::applyLab_old()
     auto Diff=deltaL_2+deltaCab_2/SC_2+deltaHab_2/SH_2;
 
 
-    Diff.minCoeff(&tempIndex);
+    float ResultDiff=Diff.minCoeff(&tempIndex);
     Result=Allowed->Map(tempIndex);
+    if(needFindSide)
+    doSide(Diff,ResultDiff);
     return Result;
 }
 
@@ -247,39 +326,45 @@ unsigned char TokiColor::applyLab_new()
     auto Cp2=(ap2.square()+allow.col(2).array().square()).sqrt();
 
     auto hp1=(ap1.abs().min(abs(c3[2])>1e-4f)).select(atan2(ap1*0+c3[2],ap1).array(),0.0f);
+    //qDebug()<<"a";
     auto hp2=(ap2.abs().min(allow.col(2).array().abs())>1e-4f).select(atan2(allow.col(2).array(),ap2).array(),0.0f);
-
+    //qDebug()<<"b";
     auto dLp=allow.col(0).array()-c3[0];
     auto dCp=Cp2-Cp1;
     auto Cp1Cp2=(Cp1*Cp2).abs();
     auto hp2_1=hp2-hp1;
-
+    //qDebug()<<"c";
     auto addon=(hp2_1.abs()<=M_PI).select(hp2_1*0.0f,(hp2_1>0).select(hp2_1*0.0f+M_PI,-M_PI));
     auto dhp=(Cp1Cp2>1e-4f).select(hp2_1+addon,0.0f);
-
+    //qDebug()<<"d";
     auto dHp=2.0f*(Cp1Cp2).sqrt()*(dhp/2.0f).sin();
-
+    //qDebug()<<"e";
     auto mLp=(c3[0]+allow.col(0).array())/2.0f;
     auto mCp=(Cp1+Cp2)/2.0f;
-
+    //qDebug()<<"f";
     auto hp21=hp2+hp1;
     auto addon2=(hp2_1.abs()<=M_PI).select(hp2_1*0.0f,(hp21<2*M_PI).select(hp21*0.0f+M_PI,-M_PI));
     auto mhp=(Cp1Cp2>1e-4f).select(hp21/2.0f+addon2,hp21);
-
+    //qDebug()<<"g";
     auto T=1.0f-0.17f*(mhp-M_PI/6.0).cos()+0.24f*(2*mhp).cos()+0.32*(3*mhp+M_PI/30).cos()-0.20*(4*mhp-M_PI*63.0/180.0).cos();
     auto dTheta=M_PI/6.0*((M_PI*275.0/180.0-mhp)/(M_PI*25.0/180.0)).exp();
     auto Rc=2*(1-(pow(25,7))/(pow(25,7)+mCp.pow(7))).sqrt();
-
+    //qDebug()<<"h";
     auto mLp_50_2=(mLp-50.0).square();
     auto SL=1.0+0.015*mLp_50_2/(20.0+mLp_50_2).sqrt();
     auto SC=1.0+0.045*mCp;
     auto SH=1.0+0.015*mCp*T;
     auto RT=-Rc*(2.0*dTheta).sin();
-
+    //qDebug()<<"i";
     auto Diff=(dLp/SL).square()+(dCp/SC).square()+(dHp/SH).square()+RT*(dCp/SC)*(dHp/SH);
     //代码运行效果有问题
-    Diff.minCoeff(&tempIndex);
+    cout<<Diff.transpose()<<endl;
+    qDebug()<<"j";
+    //qDebug()<<"size(Diff)=["<<Diff.rows()<<','<<Diff.cols()<<']';
+    Diff.abs().minCoeff(&tempIndex);
+        qDebug()<<"k";
     Result=Allowed->Map(tempIndex);
+    qDebug()<<"l";
     return Result;
 }
 

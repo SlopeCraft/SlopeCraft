@@ -65,7 +65,7 @@ void MainWindow::on_confirmType_clicked()
     Data.step=3;
     updateEnables();
 
-
+    TokiColor::needFindSide=false&&Data.isSurvival();
     if(needInitialize)
     {
         IniBL();

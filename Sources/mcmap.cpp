@@ -281,9 +281,21 @@ ColorSet::ColorSet()
 
 void ColorSet::ApplyAllowed(ColorSet*standard,bool *MIndex)
 {
+    TokiColor::DepthCount[0]=0;
+    TokiColor::DepthCount[1]=0;
+    TokiColor::DepthCount[2]=0;
+    TokiColor::DepthCount[3]=0;
     short totalAllowColorCount=0;
         for(short r=0;r<256;r++)
+        {
             totalAllowColorCount+=MIndex[r];//if r%64==0, that is air, air isn't used as color(it's transparent)
+            TokiColor::DepthCount[mcMap::Index2mapColor(r)%4]+=MIndex[r];
+        }
+        TokiColor::DepthIndexEnd[0]=TokiColor::DepthCount[0]-1;
+        TokiColor::DepthIndexEnd[1]=TokiColor::DepthIndexEnd[0]+TokiColor::DepthCount[1];
+        TokiColor::DepthIndexEnd[2]=TokiColor::DepthIndexEnd[1]+TokiColor::DepthCount[2];
+        TokiColor::DepthIndexEnd[3]=TokiColor::DepthIndexEnd[2]+TokiColor::DepthCount[3];
+
         if(totalAllowColorCount<=1)
         {
             qDebug("你只准许了一两种颜色，巧妇难为无米之炊！");

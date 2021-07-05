@@ -71,11 +71,16 @@ public:
     TokiColor(const QRgb&,char);
     TokiColor();
     //QRgb Raw;//相当于Key
-    float c3[3];
+    float c3[3];//三通道的颜色值。可能为RGB,HSV,Lab,XYZ
+    float sideSelectivity[2];//记录与result的深度值不同的两个有损优化候选色选择系数（升序排列），Depth=3时无效
+    unsigned char sideResult[2];//记录与result的深度值不同的两个有损优化候选色（升序排列），Depth=3时无效
     char ColorSpaceType;
-    unsigned char Result;
+    unsigned char Result;//最终调色结果
+    static bool needFindSide;
     static ColorSet * Basic;
     static ColorSet * Allowed;
+    static short DepthIndexEnd[4];
+    static unsigned char DepthCount[4];
     unsigned char apply();
 private:
     unsigned char applyRGB();
@@ -84,7 +89,10 @@ private:
     unsigned char applyXYZ();
     unsigned char applyLab_old();
     unsigned char applyLab_new();
+    void doSide(VectorXf,float);
 };
+
+//int i=sizeof(TokiColor);
 
 class mcMap
 {
@@ -95,8 +103,8 @@ public:
 
         MainWindow*parent;
 
-        inline short mapColor2Index(short mapColor);
-        inline short Index2mapColor(short Index);
+        static inline short mapColor2Index(short mapColor);
+        static inline short Index2mapColor(short Index);
 
         inline bool is16();
         inline bool is17();
@@ -326,6 +334,8 @@ private slots:
     void on_ExportData_clicked();
 
     void on_InputDataIndex_textChanged();
+
+    void on_ExImage_clicked();
 
 private:
     Ui::MainWindow *ui;
