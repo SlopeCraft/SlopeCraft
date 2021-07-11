@@ -124,7 +124,3 @@ void MainWindow::checkBlockIds()
     out.close();
 }
 
-
-
-
-

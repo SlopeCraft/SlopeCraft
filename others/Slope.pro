@@ -3,7 +3,7 @@ INCLUDEPATH += D:\eigen-3.3.9
  DEFINES += WIN32_LEAN_AND_MEAN
 RC_ICONS =SlopeCraft.ico
 # 版本号
-VERSION = 3.3.0
+VERSION = 3.4.0
 # 语言
 # 0x0004 表示 简体中文
 RC_LANG = 0x0004
@@ -43,6 +43,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     mcmap.cpp \
+    optitree.cpp \
     tokicolor.cpp \
     zlibs/adler32.c \
     zlibs/compress.c \
@@ -63,6 +64,7 @@ SOURCES += \
 HEADERS += \
     NBTWriter.h \
     mainwindow.h \
+    optitree.h \
     zlibs/crc32.h \
     zlibs/deflate.h \
     zlibs/gzguts.h \

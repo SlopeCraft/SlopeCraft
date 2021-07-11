@@ -122,79 +122,89 @@ void MainWindow::turnToPage(int page)
 {
     page%=9;
     updateEnables();
+    QString newtitle="SlopeCraft v3.4  Copyright © 2021 TokiNoBug    ";
     switch (page)
     {
         case 0:
             if(Data.step>=page)
             {
-                ui->ShowStep->setText("Step 0 / 6");
-                ui->ShowStepName->setText(tr("开始"));
-ui->stackedWidget->setCurrentIndex(page);
-            }return;
+                newtitle+="Step 0 / 6";
+                newtitle+="    ";
+                newtitle+=tr("开始");
+                ui->stackedWidget->setCurrentIndex(page);
+            }break;
 
     case 1:
         if(Data.step>=page)
         {
-            ui->ShowStep->setText("Step 1 / 6");
-            ui->ShowStepName->setText(tr("导入图片"));
-ui->stackedWidget->setCurrentIndex(page);
-        }return;
+            newtitle+="Step 1 / 6";
+            newtitle+="    ";
+            newtitle+=tr("导入图片");
+            ui->stackedWidget->setCurrentIndex(page);
+        }break;
     case 2:
         if(Data.step>=page)
         {
-            ui->ShowStep->setText("Step 2 / 6");
-            ui->ShowStepName->setText(tr("设置地图画类型"));
-ui->stackedWidget->setCurrentIndex(page);
-        }return;
+            newtitle+="Step 2 / 6";
+            newtitle+="    ";
+            newtitle+=tr("设置地图画类型");
+            ui->stackedWidget->setCurrentIndex(page);
+        }break;
     case 3:
         if(Data.step>=page)
         {
-            ui->ShowStep->setText("Step 3 / 6");
-            ui->ShowStepName->setText(tr("设置方块列表"));
-ui->stackedWidget->setCurrentIndex(page);
-        }return;
+            newtitle+="Step 3 / 6";
+            newtitle+="    ";
+            newtitle+=tr("设置方块列表");
+            ui->stackedWidget->setCurrentIndex(page);
+        }break;
     case 4:
         if(Data.step>=page)
         {
-            ui->ShowStep->setText("Step 4 / 6");
-            ui->ShowStepName->setText(tr("调整颜色"));
-ui->stackedWidget->setCurrentIndex(page);
-        }return;
+            newtitle+="Step 4 / 6";
+            newtitle+="    ";
+            newtitle+=tr("调整颜色");
+            ui->stackedWidget->setCurrentIndex(page);
+        }break;
     case 5:
         if(Data.step>=5)
         {
-            ui->ShowStep->setText("Step 5 / 6");
-            ui->ShowStepName->setText(tr("导出为投影文件"));
-ui->stackedWidget->setCurrentIndex(page);
-        }return;
+            newtitle+="Step 5 / 6";
+            newtitle+="    ";
+            newtitle+=tr("导出为投影文件");
+            ui->stackedWidget->setCurrentIndex(page);
+        }break;
     case 6:
         if(Data.step>=5)
         {
-            ui->ShowStep->setText("Step 5 / 6");
-            ui->ShowStepName->setText(tr("导出为mcfunction"));
-ui->stackedWidget->setCurrentIndex(page);
-        }return;
+            newtitle+="Step 5 / 6";
+            newtitle+="    ";
+            newtitle+=tr("导出为mcfunction");
+            ui->stackedWidget->setCurrentIndex(page);
+        }break;
     case 7:
         if(Data.step>=5)
         {
-            ui->ShowStep->setText("Step 5 / 6");
-            ui->ShowStepName->setText(tr("导出为地图文件"));
-ui->stackedWidget->setCurrentIndex(page);
-        }return;
+            newtitle+="Step 5 / 6";
+            newtitle+="    ";
+            newtitle+=tr("导出为地图文件");
+            ui->stackedWidget->setCurrentIndex(page);
+        }break;
     case 8:
         if(true)
         {
-            ui->ShowStep->setText("Step 6 / 6");
-            ui->ShowStepName->setText(tr("结束"));
-ui->stackedWidget->setCurrentIndex(page);
-        }return;
+            newtitle+="Step 6 / 6";
+            newtitle+="    ";
+            newtitle+=tr("结束");
+            ui->stackedWidget->setCurrentIndex(page);
+        }break;
     default:
         qDebug("尝试翻页错误");
-        return;
+        break;
     }
 
 
-
+    this->setWindowTitle(newtitle);
     return;
 }
 

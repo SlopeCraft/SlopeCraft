@@ -36,6 +36,7 @@ This file is part of SlopeCraft.
 #include <QString>
 #include <QImage>
 #include <QThread>
+#include "optitree.h"
 //#include "adjt.h"
 using namespace std;
 using namespace Eigen;
@@ -159,6 +160,7 @@ public:
         short ExMcFstep;
 
         QString ProductPath;
+        bool allowNaturalOpti;
 
         long makeHeight();//构建高度矩阵
         long BuildHeight();//构建真正的立体结构（三维矩阵
@@ -336,6 +338,8 @@ private slots:
     void on_InputDataIndex_textChanged();
 
     void on_ExImage_clicked();
+
+    void on_AllowNaturalOpti_stateChanged(int arg1);
 
 private:
     Ui::MainWindow *ui;

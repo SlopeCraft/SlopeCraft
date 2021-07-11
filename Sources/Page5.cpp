@@ -57,6 +57,12 @@ bool compressFile(const char*sourcePath,const char*destPath)
     qDebug("succeed");
     return true;
 }
+
+void MainWindow::on_AllowNaturalOpti_stateChanged(int arg1)
+{
+    Data.allowNaturalOpti=Data.isSurvival()&&ui->AllowNaturalOpti->isChecked();
+}
+
 void MainWindow::on_ExportLite_clicked()
 {
     if(Data.ExLitestep<2)return;
@@ -104,7 +110,7 @@ void MainWindow::on_ExportLite_clicked()
 
 void MainWindow::on_Build4Lite_clicked()
 {
-    ui->ShowProgressExLite->setMaximum(7*Data.sizePic[0]*Data.sizePic[1]);
+    ui->ShowProgressExLite->setMaximum(8*Data.sizePic[0]*Data.sizePic[1]);
     ui->ShowProgressExLite->setValue(0);
 
     ui->ExportLite->setEnabled(false);
@@ -131,7 +137,7 @@ void MainWindow::on_Build4Lite_clicked()
     ui->ShowLiteBlocks->setText(QString::number(blockCount));
     Data.ExLitestep=2;
 
-    ui->ShowProgressExLite->setValue(7*Data.sizePic[0]*Data.sizePic[1]);
+    ui->ShowProgressExLite->setValue(8*Data.sizePic[0]*Data.sizePic[1]);
     ui->ExportLite->setEnabled(true);
 }
 
@@ -193,20 +199,12 @@ MatrixXi LowMap(sizePic[0]+1,sizePic[1]);
 LowMap<<Height;
 
 qDebug()<<u++;
-for(short r=0;r<sizePic[0];r++)
+for(short r=0;r<sizePic[0];r++)//抓取WaterList，并为水柱处理HighMap和LowMap
 for(short c=0;c<sizePic[1];c++)
 {
     parent->ui->ShowProgressExLite->setValue(parent->ui->ShowProgressExLite->value()+1);
 
-    if(parent->NeedGlass[Base(r,c)][SelectedBlockList[Base(r,c)]])
-        LowMap(r+1,c)-=-1;
-
-
-    if(!isWater(r,c)||(Base(r,c)!=12))
-    {
-        continue;
-    }
-
+    if(!isWater(r,c)||(Base(r,c)!=12))continue;
 
     if(writeWaterIndex>=waterCount)
     {
@@ -233,35 +231,33 @@ case 2:
 default:
     qDebug()<<"出现错误：("<<r<<','<<c<<")处出现了Depth为3的水";
     return 0;
-
 }
+Height(r+1,c)++;//遮顶玻璃
 writeWaterIndex++;
 }
 
 qDebug()<<u++;
 
 
-for(short c=0;c<sizePic[1];c++)
+for(short c=0;c<sizePic[1];c++)//将每一列沉降。优化可以放在这里
 {
     Height.col(c).array()-=LowMap.col(c).minCoeff();
+    LowMap.col(c).array()-=LowMap.col(c).minCoeff();//此后不再使用LowMap，所以这一句是多余的（除非使用了无损高度压缩）
     parent->ui->ShowProgressExLite->setValue(parent->ui->ShowProgressExLite->value()+sizePic[0]);
 }
 
 qDebug()<<u++;
-if(waterCount)
+/*if(waterCount)//重新获取WaterList
 {
     writeWaterIndex=0;
     for(short r=0;r<sizePic[0];r++)
     for(short c=0;c<sizePic[1];c++)
     {
-
         parent->ui->ShowProgressExLite->setValue(parent->ui->ShowProgressExLite->value()+1);
         if(!isWater(r,c)||(Base(r,c)!=12))
         {
             continue;
         }
-
-
         if(writeWaterIndex>=waterCount)
         {
             qDebug("出现错误：writeWaterIndex>=waterCount");
@@ -269,7 +265,7 @@ if(waterCount)
         }
         WaterList(0,writeWaterIndex)=r;
         WaterList(1,writeWaterIndex)=c;
-        WaterList(2,writeWaterIndex)=Height(r+1,c);
+        WaterList(2,writeWaterIndex)=Height(r+1,c)-1;
 
     switch (Depth(r,c))
     {
@@ -285,15 +281,74 @@ if(waterCount)
         //LowMap(r+1,c)=WaterList(3,writeWaterIndex);
         break;
     default:
-        qDebug()<<"出现错误：("<<r<<','<<c<<"处出现了Depth为3的水";
+        qDebug()<<"出现错误：("<<r<<','<<c<<")处出现了Depth为3的水";
         return 0;
 
     }
     writeWaterIndex++;
     }
-}
+}*/
 
-qDebug()<<u++;
+//qDebug()<<u++;
+
+if(allowNaturalOpti)
+{
+OptiTree Tree;
+VectorXi TempHM,TempLM;
+    for(int c=0;c<sizePic[1];c++)
+    {
+        TempHM=Height.col(c);
+        TempLM=LowMap.col(c);
+        Tree.NaturalOpti(TempHM,TempLM);
+        Height.col(c)=TempHM;
+        LowMap.col(c)=TempLM;
+        parent->ui->ShowProgressExLite->setValue(parent->ui->ShowProgressExLite->value()+sizePic[0]);
+    }
+    if(waterCount)
+    {
+        writeWaterIndex=0;
+        for(short r=0;r<sizePic[0];r++)
+        for(short c=0;c<sizePic[1];c++)
+        {
+            parent->ui->ShowProgressExLite->setValue(parent->ui->ShowProgressExLite->value()+1);
+            if(!isWater(r,c)||(Base(r,c)!=12))
+            {
+                continue;
+            }
+            if(writeWaterIndex>=waterCount)
+            {
+                qDebug("出现错误：writeWaterIndex>=waterCount");
+                continue;
+            }
+            WaterList(0,writeWaterIndex)=r;
+            WaterList(1,writeWaterIndex)=c;
+            WaterList(2,writeWaterIndex)=Height(r+1,c)-1;
+
+        switch (Depth(r,c))
+        {
+        case 0:
+            WaterList(3,writeWaterIndex)=WaterList(2,writeWaterIndex);
+            break;
+        case 1:
+            WaterList(3,writeWaterIndex)=WaterList(2,writeWaterIndex)-4;
+            //LowMap(r+1,c)=WaterList(3,writeWaterIndex);
+            break;
+        case 2:
+            WaterList(3,writeWaterIndex)=WaterList(2,writeWaterIndex)-9;
+            //LowMap(r+1,c)=WaterList(3,writeWaterIndex);
+            break;
+        default:
+            qDebug()<<"出现错误：("<<r<<','<<c<<")处出现了Depth为3的水";
+            return 0;
+
+        }
+        writeWaterIndex++;
+        }
+    }
+}
+else
+parent->ui->ShowProgressExLite->setValue(parent->ui->ShowProgressExLite->value()+2*sizePic[0]*sizePic[1]);
+
 
 size3D[2]=2+Base.rows();//z
 size3D[0]=2+Base.cols();//x

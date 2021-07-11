@@ -134,7 +134,7 @@ mcMap::mcMap()
     //fstream ExMcF;
     netFilePath[0]=0;//纯路径，不包含最后的文件名
     netFileName[0]=0;//纯文件名，不含后缀名
-
+    this->allowNaturalOpti=false;
     //Build.reshape(size3D);
     //Build.setZero();
     return;
