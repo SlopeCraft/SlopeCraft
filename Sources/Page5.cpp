@@ -173,6 +173,7 @@ MatrixXi isWater=(Base.array()==12).select(MatrixXi::Ones(sizePic[0],sizePic[1])
 
 qDebug()<<u++;
 MatrixXi dealedDepth=(Base.array()!=12).select(Depth,1)-MatrixXi::Ones(sizePic[0],sizePic[1]);
+dealedDepth=(Base.array()>0).select(dealedDepth,0);
 //dealedDepth为处理后的depth，也是真正意义的高度差。其中水的高度差被重置为0(它们的颜色仅由深度决定，与高度无关)
 qDebug()<<u++;
 
@@ -295,10 +296,12 @@ if(allowNaturalOpti)
 {
 OptiTree Tree;
 VectorXi TempHM,TempLM;
+HeightLine::Base=Base;
     for(int c=0;c<sizePic[1];c++)
     {
         TempHM=Height.col(c);
         TempLM=LowMap.col(c);
+        HeightLine::currentColum=c;
         Tree.NaturalOpti(TempHM,TempLM);
         Height.col(c)=TempHM;
         LowMap.col(c)=TempLM;
@@ -412,7 +415,7 @@ long mcMap::BuildHeight()//进度条上表现为遍历3遍图像
             x=c+1;y=Height(r+1,c);z=r+1;
             if(y>=1&&parent->NeedGlass[Base(r,c)][SelectedBlockList[Base(r,c)]])
                 Build(x,y-1,z)=0+1;
-            if(Base(r,c)==12)
+            if(Base(r,c)==12||Base(r,c)==0)
                 continue;
 
             Build(x,y,z)=Base(r,c)+1;

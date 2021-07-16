@@ -10,6 +10,8 @@
 Vector3i HeightLine::Both(-1,2,-1);
 Vector3i HeightLine::Left(-1,1,0);
 Vector3i HeightLine::Right(0,1,-1);
+MatrixXi HeightLine::Base;
+short HeightLine::currentColum=0;
 
 Pair::Pair(char _type,short _index)
 {
@@ -298,7 +300,7 @@ HeightLine::HeightLine(int _size,char method,int Low,int High)
         srand(time(0));
         isFirst=false;
         }
-        float x=(rand()%32768)/32767.0;
+        float x=cos((rand()%32768)/32767.0)/1.1;
         for(int i=0;i<Size;i++)
         {
             x=4.0*x*(1.0-x);
@@ -316,8 +318,13 @@ HeightLine::HeightLine(int _size,char method,int Low,int High)
         Height=(Height.array()>=0).select(Height,-1);*/
         for(int i=1;i<Size;i++)
         {
-
-            if(rand()%5==6){
+            if(isAir(i))
+            {
+                Offset(i)=0;
+                HighLine(i)+=HighLine(i-1);
+            }
+            else
+                if(isWater(i)){
                 switch (rand()%3)
                 {
                 case 0:
@@ -373,8 +380,23 @@ HeightLine::HeightLine(const VectorXi&HighL,const VectorXi&LowL)
 
 inline bool HeightLine::isWater(int index)
 {
-    return HighLine(index)-LowLine(index);//0->普通方块，>=1 -> 水柱
+    //return HighLine(index)-LowLine(index);//0->普通方块，>=1 -> 水柱
+    if(index<=0)return false;
+    return Base(index-1,currentColum)==12;
 }//水柱罩顶玻璃计入最高，但托底玻璃不计入
+
+inline bool HeightLine::isAir(int index)
+{
+    if(index<=0)return false;
+    return Base(index-1,currentColum)==0;
+}
+
+inline bool HeightLine::isNormalBlock(int index)
+{
+    return !(isAir(index)||isWater(index));
+    /*if(index<=0)return true;
+    return (Base(index-1,currentColum)>0)&&(Base(index-1,currentColum)!=12);*/
+}
 
 QImage HeightLine::toQImage()
 {
@@ -385,6 +407,7 @@ QImage HeightLine::toQImage()
 
     for(int i=0;i<Size;i++)
     {
+        if(isAir(i))continue;
         img.setPixelColor(i,img.height()-1-HighLine(i),isT);
         if(isWater(i))
         {
@@ -398,53 +421,7 @@ QImage HeightLine::toQImage()
     return img;
 }
 
-void HeightLine::toBrackets(list<short>&index,list<char>&brackets)
-{
-    if(Size<=0)return;
-    index.clear();brackets.clear();
-    brackets.push_back('(');index.push_back(0);
-    int LOffset=0,ROffset=0;
-    stack<short>S;//最后一步再加最外侧的大括号，将L与R的补偿设为1，自动囊括。
-
-    //考虑更优的补全括号方式：不一定要补全到两端，也许可以补全到最近的一个左/又括号
-    for(int i=1;i<Size;i++)
-    {
-        if(isWater(i)||validHigh(i)>validHigh(i-1))//上升处，i-1为孤立区间的末尾
-        {
-            if(S.empty())LOffset++;
-            else
-                S.pop();
-            brackets.push_back(')');
-            index.push_back(i-1);
-        }
-        if(isWater(i)||validHigh(i)<validHigh(i-1))//下降处，是孤立区间的起始
-        {
-            S.push('F');
-            brackets.push_back('(');
-            index.push_back(i);
-        }
-
-
-
-    }
-    ROffset+=1+S.size();
-
-    //qDebug()<<"LOffset="<<LOffset<<";  ROffset="<<ROffset;
-    //cout<<"Raw="<<brackets<<endl;
-
-    for(;LOffset>0;LOffset--)
-    {
-        index.insert(index.begin(),0);
-        brackets.push_front('(');
-    }
-    for(;ROffset>0;ROffset--)
-    {
-        index.push_back(Size-1);
-        brackets.push_back(')');
-    }
-
-}
-
+/*
 void HeightLine::toBrackets(list<Pair> &List)
 {
     if(Size<=0)return;
@@ -460,10 +437,10 @@ void HeightLine::toBrackets(list<Pair> &List)
     {
         if(isWater(i))
         {
-            /*ScanBoth(i)=2;
+            ScanBoth(i)=2;
             ScanLeft(i)=1;
             ScanRight(i)=1;
-            continue;*/
+            continue;
         }
         ScanBoth(i)=(VHL.segment(i-1,3).array()*Both.array()).sum();
         ScanLeft(i)=(VHL.segment(i-1,3).array()*Left.array()).sum();
@@ -472,10 +449,6 @@ void HeightLine::toBrackets(list<Pair> &List)
 ScanBoth=(ScanBoth.array()>=0).select(ScanBoth,0);
 ScanLeft=(ScanLeft.array()>=0).select(ScanLeft,0);
 ScanRight=(ScanRight.array()>=0).select(ScanRight,0);
-/*
-cout<<"ScanBoth="<<endl<<ScanBoth.transpose()<<endl;
-cout<<"ScanLeft="<<endl<<ScanLeft.transpose()<<endl;
-cout<<"ScanRight="<<endl<<ScanRight.transpose()<<endl;*/
     isReady=false;
     for(int i=1;i<Size-1;i++)
     {
@@ -520,6 +493,90 @@ cout<<"ScanRight="<<endl<<ScanRight.transpose()<<endl;*/
     disp(List);
 #endif
 }
+*/
+void HeightLine::segment2Brackets(list<Pair>&List,short sBeg,short sEnd)
+{
+    if(sEnd<sBeg||sBeg<0)return;
+    List.clear();
+
+    if(sBeg==sEnd)
+    {
+        List.push_back(Pair('(',sBeg));
+        List.push_back(Pair(')',sEnd));
+        return;
+    }
+
+    queue<Region>Pure;
+    queue<Region> disPure;//极大值区间
+    Region Temp;
+    bool isReady=false;
+    VectorXi VHL=ValidHighLine();
+    VectorXi ScanBoth=VHL,ScanLeft=VHL,ScanRight=VHL;
+    ScanBoth.setZero();ScanLeft.setZero();ScanRight.setZero();
+    for(int i=sBeg+1;i<sEnd-1;i++)//分别用三个算子处理
+    {
+        if(isWater(i))
+        {
+            /*ScanBoth(i)=2;
+            ScanLeft(i)=1;
+            ScanRight(i)=1;
+            continue;*/
+        }
+        ScanBoth(i)=(VHL.segment(i-1,3).array()*Both.array()).sum();
+        ScanLeft(i)=(VHL.segment(i-1,3).array()*Left.array()).sum();
+        ScanRight(i)=(VHL.segment(i-1,3).array()*Right.array()).sum();
+    }
+ScanBoth=(ScanBoth.array()>=0).select(ScanBoth,0);
+ScanLeft=(ScanLeft.array()>=0).select(ScanLeft,0);
+ScanRight=(ScanRight.array()>=0).select(ScanRight,0);
+/*
+cout<<"ScanBoth="<<endl<<ScanBoth.transpose()<<endl;
+cout<<"ScanLeft="<<endl<<ScanLeft.transpose()<<endl;
+cout<<"ScanRight="<<endl<<ScanRight.transpose()<<endl;*/
+    isReady=false;
+    for(int i=sBeg+1;i<sEnd-1;i++)
+    {
+        if(!isReady&&ScanBoth(i)&&ScanLeft(i))
+        {
+            isReady=true;
+            Temp.Begin=i;
+        }
+        if(isReady&&ScanBoth(i)&&ScanRight(i))
+        {
+            Temp.End=i;
+            disPure.push(Temp);
+            Temp.Begin=-1;
+            Temp.End=-1;
+            isReady=false;
+        }
+    }
+    Temp.Begin=sBeg;
+    Temp.End=sEnd;
+    while(!disPure.empty())
+    {
+        Temp.End=disPure.front().Begin-1;
+        Pure.push(Temp);
+        Temp.Begin=disPure.front().End+1;
+        disPure.pop();
+        if(Temp.Begin>=sEnd)Temp.Begin=sEnd;
+        Temp.End=sEnd;
+    }
+    Pure.push(Temp);
+
+    while(!Pure.empty())
+    {
+        DealRegion(Pure.front(),List);
+#ifndef NoOutPut
+        cout<<'['<<Pure.front().Begin<<','<<Pure.front().End<<']'<<"->";
+#endif
+        Pure.pop();
+    }
+    List.push_front(Pair('(',sBeg));
+    List.push_back(Pair(')',sEnd));
+#ifndef NoOutPut
+    disp(List);
+#endif
+}
 
 inline void HeightLine::DealRegion(Region PR, list<Pair> &List)
 {
@@ -528,7 +585,7 @@ inline void HeightLine::DealRegion(Region PR, list<Pair> &List)
     List.push_back(Pair(')',PR.End));
 }
 
-void HeightLine::toWaterRegion(queue<Region> &RList)
+/*void HeightLine::toWaterRegion(queue<Region> &RList)
 {
 
     Region Temp;
@@ -545,22 +602,66 @@ void HeightLine::toWaterRegion(queue<Region> &RList)
         }
     }
     RList.push(Temp);
-}
+}*/
 
-inline bool HeightLine::isContinious()
-{
-    return (HighLine.segment(1,Size-2).array()-HighLine.segment(0,Size-2).array()==0).all();
-}
+
 inline int HeightLine::validHigh(int index)
 {
+    if(isAir(index))return -1;
     if(isWater(index))return HighLine(index)-1;
     else return HighLine(index);
 }
+
+void HeightLine::toSubRegion(queue<Region> &Queue)
+{
+    while(!Queue.empty())Queue.pop();
+    Region Temp;
+    Temp.Begin=0;Temp.End=Size-1;
+    for(int i=1;i<Size;i++)
+    {
+        if(!isNormalBlock(i))
+        {
+            Temp.End=i-1;
+            Queue.push(Temp);
+            Temp.End=Size-1;
+            Temp.Begin=i;
+            if(isAir(i)&&i<Size-1)
+            {
+                HighLine(i)=HighLine(i+1);
+                LowLine(i)=LowLine(i+1);
+            }
+#ifndef NoOutPut
+            qDebug()<<"出现断点"<<i;
+#endif
+        }
+    }
+    Queue.push(Temp);
+#ifndef NoOutPut
+    /*qDebug("输出Queue：");
+    qDebug()<<"size of Queue="<<Queue.size();
+    QString disper="";
+    while(!Queue.empty())
+    {
+        //cout<<'['<<Queue.back().Begin<<','<<Queue.back().End<<"]->";
+        disper+='[';
+        disper+=QString::number(Queue.front().Begin)+',';
+        disper+=QString::number(Queue.front().End)+"]->";
+        Queue.pop();
+    }
+    qDebug()<<disper;*/
+#endif
+}
+
 VectorXi HeightLine::DepthLine()
 {
     VectorXi Depth=HighLine.segment(1,Size-1).array()*0;
     for(int i=0;i<Size-1;i++)
     {
+        if(isAir(i+1))
+        {
+            Depth(i)=1;
+            continue;
+        }
         if(isWater(i+1))
         {
             switch (HighLine(i+1)-LowLine(i+1)) {
@@ -577,7 +678,6 @@ VectorXi HeightLine::DepthLine()
         }
         else
         {
-
                 if(validHigh(i+1)<validHigh(i))
                 {
                     Depth(i)=0;
@@ -603,43 +703,6 @@ inline VectorXi HeightLine::ValidHighLine()
     return ((HighLine-LowLine).array()==0).select(HighLine,HighLine.array()-1);
 }
 
-/*
-void HeightLine::toBrackets_Near(list<short> &index, string &brackets)
-{
-
-}*/
-
-/*void HeightLine::SinkMonotonous()
-{
-    if(isContinious())return;
-    int IndexB=0,IndexE=0;
-    int gapB=0,gapE=0;//表示不连续段的落差绝对值
-    bool isReady=false,isIncrease=false;
-    for(int i=1;i<Size;i++)
-    {
-        isReady=isReady&&(isIncrease==(Height(i)>Height(i-1)));//如果区间不单调，不予沉降
-        if(abs(Height(i)-Height(i-1))>=2)//出现不连续
-        {
-            if(!isReady)//进入了不连续区间
-            {
-                isIncrease=Height(i)>Height(i-1);
-                gapB=abs(Height(i)-Height(i-1))-1;
-                isReady=true;
-                IndexB=i;
-                continue;
-            }
-            if(isReady)//将要结束一个不连续单调区间
-            {
-                gapE=abs(Height(i)-Height(i-1))-1;
-                IndexE=i-1;
-                Height.segment(IndexB,IndexE-IndexB+1).array()-=min(isIncrease?gapB:gapE,Height.segment(IndexB,IndexE-IndexB+1).minCoeff());
-                isReady=false;
-                IndexB=-1;IndexE=-1;
-                qDebug()<<"沉降了一个漂浮单调递"<<(isIncrease?"增":"减")<<"区间";
-            }
-        }
-    }
-}*/
 
 inline void HeightLine::Sink(Node*rg)
 {
@@ -651,64 +714,38 @@ inline void HeightLine::Sink(Node*rg)
     }
 }
 
-void HeightLine::SinkBoundary()
+void HeightLine::SinkBoundary(short Beg,short End)
 {
-    if(isContinious())return;
+    if(Beg<0||End<Beg)
+    {
+        Beg=0;End=Size-1;
+    }
     int gapB=0,gapE=0;
-    for(int i=0;i<Size-1;i++)//正向遍历，去除前端浮空
+
+    for(int i=Beg;i<End;i++)//正向遍历，去除前端浮空
     {
         if(validHigh(i)-validHigh(i+1)>=2)//右浮空
         {
             gapE=validHigh(i)-validHigh(i+1);//表示不连续段的落差
-            HighLine.segment(0,i+1).array()-=min(gapE-1,LowLine.segment(0,i+1).minCoeff());
-            LowLine.segment(0,i+1).array()-=min(gapE-1,LowLine.segment(0,i+1).minCoeff());
+            HighLine.segment(Beg,i-Beg+1).array()-=min(gapE-1,LowLine.segment(Beg,i-Beg+1).minCoeff());
+            LowLine.segment(Beg,i-Beg+1).array()-=min(gapE-1,LowLine.segment(Beg,i-Beg+1).minCoeff());
             break;
         }
     }
-
-    for(int i=Size-1;i>0;i--)
+    for(int i=End;i>Beg;i--)
     {
         if(validHigh(i)-validHigh(i-1)>=2)//左浮空
         {
             gapB=validHigh(i)-validHigh(i-1);
-            HighLine.segment(i,Size-i).array()-=min(gapB-1,LowLine.segment(i,Size-i).minCoeff());
-            LowLine.segment(i,Size-i).array()-=min(gapB-1,LowLine.segment(i,Size-i).minCoeff());
+            HighLine.segment(i,End+1-i).array()-=min(gapB-1,LowLine.segment(i,End+1-i).minCoeff());
+            LowLine.segment(i,End+1-i).array()-=min(gapB-1,LowLine.segment(i,End+1-i).minCoeff());
             break;
         }
     }
 
-    int FBegin=1,FEnd=Size-1;
+    int FBegin=Beg+1,FEnd=End;
     bool isReady=false;
-    //bool isBSinkable=false,isESinkable=false;
-    /*
-    for(int i=1;i<Size;i++)
-    {
-        if(abs(Height(i)-Height(i-1))>=2)
-        {
-            if(!isReady)
-            {
-                FBegin=i;
-                gapB=Height(i)-Height(i-1);
-                isBSinkable=gapB>0;
-                gapB=abs(gapB)-1;
-                isReady=true;
-                continue;
-            }
-            if(isReady)
-            {
-                FEnd=i-1;
-                gapE=Height(i)-Height(i-1);
-                isESinkable=gapE<0;
-                gapE=abs(gapE)-1;
-                Height.segment(FBegin,FEnd-FBegin+1).array()-=min(min(isBSinkable*gapB,isESinkable*gapE),Height.segment(FBegin,FEnd-FBegin+1).minCoeff());
-                isReady=false;
-
-            }
-        }
-    }*/
-
-
-    for(int i=1;i<Size-1;i++)//从i=1遍历至i=Size-2
+    for(int i=Beg+1;i<End-2;i++)//从i=1遍历至i=Size-2
     {
         if(validHigh(i)-validHigh(i-1)>=2)//左浮空
         {FBegin=i;
@@ -725,64 +762,47 @@ void HeightLine::SinkBoundary()
             isReady=false;
         }
     }
-
 }
 
-/*void HeightLine::SinkInner()
+
+void OptiTree::NaturalOpti(HeightLine& HL,short Beg,short End)
 {
-    queue<short>Gap,Index;//取断崖的前值为index
-    int GapVal=0,IndexVal=0;
-    bool isBSinkable=false,isESinkable=false;
-    int Offset=0;
-    for(int i=1;i<Size;i++)
-    {
-        if(abs(GapVal=Height(i)-Height(i-1))>=2)
-        {
-            Gap.push(GapVal);//Gap值为后减前
-            Index.push(i-1);
-            qDebug()<<i-1;
-        }
-    }
-    if(Gap.size()<=1)return;
-    do
-    {
-        GapVal=Gap.front();IndexVal=Index.front();
-        Gap.pop();Index.pop();
-        isBSinkable=GapVal>0;//对于一段内部连续的区间，前沟大于0才有意义
-        isESinkable=Gap.front()<0;
-        if(!isBSinkable&&!isESinkable)continue;
-        if(isBSinkable&&isESinkable)
-            Offset=min(GapVal,abs(Gap.front()))-1;
-        if(isBSinkable&&!isESinkable)
-            Offset=abs(Gap.front())-1;
-        if(!isBSinkable&&isESinkable)
-            Offset=GapVal-1;
-        Height.segment(IndexVal,Index.front()-IndexVal+1).array()-=min(Offset,Height.segment(IndexVal,Index.front()-IndexVal+1).minCoeff());
-    }
-    while(!Gap.empty());
-
-}*/
-
+    BuildTree(HL,Beg,End);
+    gotoRoot();
+    Compress(HL);
+    HL.SinkBoundary(Beg,End);
+    HL.SinkBoundary(Beg,End);
+}
 
 void OptiTree::NaturalOpti(VectorXi &HighL,VectorXi&LowL)
 {
     HeightLine HL(HighL,LowL);
-    NaturalOpti(HL);
+    queue<Region> SRL;
+    HL.toSubRegion(SRL);
+    while(!SRL.empty())
+    {
+    NaturalOpti(HL,SRL.front().Begin,SRL.front().End);
+    SRL.pop();
+    }
+
     LowL=HL.LowLine;
     HighL=HL.HighLine;
 }
 
 
-void OptiTree::BuildTree(HeightLine &HL)
+void OptiTree::BuildTree(HeightLine &HL,short Beg,short End)
 {
     FreezeTree();
     gotoRoot();
     preventEmpty();
 
     list<Pair> Index;
-
-    HL.toBrackets(Index);
-
+    if(Beg<0||Beg>End)
+    {
+        Beg=0;End=HL.Size-1;
+    }
+    //HL.toBrackets(Index);
+    HL.segment2Brackets(Index,Beg,End);
     auto iter=Index.begin();
 
 #ifndef NoOutPut
@@ -837,20 +857,7 @@ void OptiTree::BuildTree(HeightLine &HL)
         }
         iter++;
     }
-#ifndef NoOutPut
-    cout<<endl;
-    qDebug("开始插入水区间分段");
-#endif
-    queue<Region> waterRegion;
-    HL.toWaterRegion(waterRegion);
-    while(!waterRegion.empty())
-    {
-        add(waterRegion.front());
-        waterRegion.pop();
-#ifndef NoOutPut
-        qDebug("rua!");
-#endif
-    }
+
 #ifndef NoOutPut
     qDebug("优化树构建完毕");
     ShowTree();
@@ -873,6 +880,9 @@ void OptiTree::Compress(HeightLine &HL)
         Compress(HL);
         goPrevSib();
     }
+#ifndef NoOutPut
+    qDebug("Compress函数完成");
+#endif
 }
 
 void OptiTree::FreezeTree()
@@ -888,14 +898,7 @@ void OptiTree::ShowTree()
     cout<<endl;
 }
 
-void OptiTree::NaturalOpti(HeightLine& HL)
-{
-    BuildTree(HL);
-    gotoRoot();
-    Compress(HL);
-    HL.SinkBoundary();
-    HL.SinkBoundary();
-}
+
 
 void disp(const list<Pair>&L)
 {
@@ -909,7 +912,7 @@ void disp(const list<Pair>&L)
     cout<<endl;
     cout<<endl;
 }
-
+/*
 bool operator>=(Region a,Node*b)
 {
     return (a.Begin<=b->Begin)&&(a.End>=b->End);
@@ -939,7 +942,7 @@ inline bool isRightBeside(Region a,Node*b)//指示a在b的左侧成立
 inline bool isRightBeside(Node*a,Region b)
 {
     return (a->End<=b.Begin);
-}
+}*/
 
 Node* Node::SetValue(short beg, short end)
 {
@@ -956,7 +959,7 @@ Node* Node::creatSib(short beg, short end)
 {
     return creatSib()->SetValue(beg,end);
 }
-
+/*
 Node* Node::findRightBesideBrother(Region Reg)
 //返回最近的与Reg右邻的节点的brother
 {
@@ -968,6 +971,7 @@ Node* Node::findRightBesideBrother(Region Reg)
 
     return Sib->findRightBesideBrother(Reg);
 }
+
 
 void OptiTree::add(Region newR)
 {
@@ -1054,3 +1058,4 @@ void OptiTree::add(Region newR)
     }
 
 }
+*/
