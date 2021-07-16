@@ -46,6 +46,7 @@ public slots:
 private slots:
     void on_Confirm_clicked();
     void on_isBGCCustom_clicked();
+    void on_Reset_clicked();
 };
 
 

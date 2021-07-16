@@ -71,3 +71,11 @@ void tpStrategyWind::on_isBGCCustom_clicked()
     ui->ShowBGCCustom->setAutoFillBackground(true);
 }
 
+
+void tpStrategyWind::on_Reset_clicked()
+{
+    ui->isPureB->setChecked(true);
+    ui->isHS->setChecked(true);
+    ui->isBGCGray->setChecked(true);
+}
+

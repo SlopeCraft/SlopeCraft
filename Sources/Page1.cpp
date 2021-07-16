@@ -72,7 +72,7 @@ void MainWindow::on_ImportPic_clicked()
     if(OriginHasTp)
     {
         preProcess(Strategy.pTpS,Strategy.hTpS,Strategy.BGC);
-        ui->IntroPicInfo->setText(ui->IntroPicInfo->text()+"\n图片中存在透明/半透明像素，已处理，您可以点击“设置”重新选择处理透明/半透明像素的方式。\n重新设置处理方式后，需要重新导入一次。");
+        ui->IntroPicInfo->setText(ui->IntroPicInfo->text()+"\n"+tr("图片中存在透明/半透明像素，已处理，您可以点击“设置”重新选择处理透明/半透明像素的方式。\n重新设置处理方式后，需要重新导入一次。"));
     }
     else
     {
