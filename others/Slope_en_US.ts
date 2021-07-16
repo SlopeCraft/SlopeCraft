@@ -75,19 +75,19 @@
     <message>
         <location filename="mainwindow.ui" line="486"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;第一步，点击“导入图片“按钮，选择你要制作为地图画的图片。&lt;/p&gt;&lt;p&gt;图片的长宽（以像素为单位）最好是128的整倍数。&lt;/p&gt;&lt;p&gt;如果要生存实装，那么图片不要太大，我推荐128×128。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Step 1,click the Import Image button, choose the image you want to make into map.&lt;/p&gt;&lt;p&gt;The size of image should be multiple of 128 pixels.&lt;/p&gt;&lt;p&gt;Provided that you want to build it, don&apos;t choose a large image. 128×128 is enough.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Step 1,click the load Image button, choose the image you want to make into map.&lt;/p&gt;&lt;p&gt;The size of image should be multiple of 128 pixels.&lt;/p&gt;&lt;p&gt;Provided that you want to build it, don&apos;t choose a large image. 128×128 is enough.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="529"/>
         <location filename="mainwindow.ui" line="10052"/>
         <location filename="Pages.cpp" line="142"/>
         <source>导入图片</source>
-        <translation type="unfinished">Import Image</translation>
+        <translation type="unfinished">load Image</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="553"/>
         <source>设置</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Settings</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="640"/>
@@ -154,7 +154,7 @@
         <location filename="mainwindow.ui" line="842"/>
         <location filename="mainwindow.ui" line="1107"/>
         <source>确认</source>
-        <translation type="unfinished">Confirm</translation>
+        <translation type="unfinished">OK</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="895"/>
@@ -1471,7 +1471,7 @@
         <location filename="mainwindow.ui" line="9300"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;最后一步，将立体地图画导出为投影文件，这很方便生存实装，是不是？&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;左侧的三个栏是投影文件的一些属性，空着不填也完全没问题。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;如果您启用了“允许压缩高度”，SlopeCraft会在构建三维结构时尝试依据地图绘制的规律压缩立体地图画的高度，这可以有效避免超过限高（但未必能成功）。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;下面的两个栏显示了立体地图画的信息，以供参考。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;这个过程可能会很慢，请关注进度条&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;
-        The last step is to make your map into a litematic file, to make it easier to be built.&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;3 blanks on the left side is some properties of your litematic file, you can just ignore it. &lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;If you turn on "Compress height(lossless)", SlopeCraft will try to compress the height of 3d map according to rule of maps, in order to prevent it from surpassing 256(not always effective on all kinds of images).&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;Tow bars below exhibit some information of your map. &lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;This process might be quite slow, see the progress bar.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        The last step is to make your map into a litematic file, to make it easier to be built.&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;3 blanks on the left side is some properties of your litematic file, you can just ignore it. &lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;If you turn on &quot;Compress height(lossless)&quot;, SlopeCraft will try to compress the height of 3d map according to rule of maps, in order to prevent it from surpassing 256(not always effective on all kinds of images).&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;Tow bars below exhibit some information of your map. &lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;This process might be quite slow, see the progress bar.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="9772"/>
@@ -1870,6 +1870,13 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Pixels</translation>
     </message>
     <message>
+        <location filename="Page1.cpp" line="75"/>
+        <source>图片中存在透明/半透明像素，已处理，您可以点击“设置”重新选择处理透明/半透明像素的方式。
+重新设置处理方式后，需要重新导入一次。</source>
+        <translation type="unfinished">There's transparent pixels in your image, SlopeCraft has processed it. You can click "Settings" to reset the strategy of processing transparent pixels.
+After you reset the strategy, load the image again.</translation>
+    </message>
+    <message>
         <location filename="Page2.cpp" line="118"/>
         <source>你的地图画将适用1.17+版本
 </source>
@@ -1976,7 +1983,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="tpstrategywind.ui" line="59"/>
         <source>确定</source>
-        <translation type="unfinished">Confirm</translation>
+        <translation type="unfinished">OK</translation>
     </message>
     <message>
         <location filename="tpstrategywind.ui" line="66"/>
@@ -1994,9 +2001,10 @@ p, li { white-space: pre-wrap; }
 ”替换为背景色“会将像素替换为背景色；”替换为空气“将像素替换为空气。
 ”与背景色叠加“会按照像素的透明度与背景色叠加；“保留颜色”会忽视半透明像素的透明度，直接使用它们的颜色。
 完成设置后，需重新导入图片。</source>
-        <translation type="unfinished">Transparency is hardly supported in map paintings. 3d maps and flat maps cannot implement transparent pixels. Although transparent pixels do exist in file-only maps, they just let the background of map/item go through. Thus it's necessary to deal with full/semi trasnparent pixels.
-"Replace with background" replace pixels with background color, while "Replace with air" with air.
-"Compose with backgroundcolor" compose pixel's color with background color accroding to alpha value, and "Reserve color" simply ignore the alpha value, using its RGB directly.</translation>
+        <translation type="unfinished">Transparency is hardly supported in map paintings. 3d maps and flat maps cannot implement transparent pixels. Although transparent pixels do exist in file-only maps, they just let the background of map/item go through. Thus it&apos;s necessary to deal with full/semi trasnparent pixels.
+&quot;Replace with background&quot; replace pixels with background color, while &quot;Replace with air&quot; with air.
+&quot;Compose with backgroundcolor&quot; compose pixel&apos;s color with background color accroding to alpha value, and &quot;Reserve color&quot; simply ignore the alpha value, using its RGB directly.
+You should load the image again after you confirmed these settings.</translation>
     </message>
     <message>
         <location filename="tpstrategywind.ui" line="104"/>

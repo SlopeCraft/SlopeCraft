@@ -1859,6 +1859,12 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="Page1.cpp" line="75"/>
+        <source>图片中存在透明/半透明像素，已处理，您可以点击“设置”重新选择处理透明/半透明像素的方式。
+重新设置处理方式后，需要重新导入一次。</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="Page2.cpp" line="118"/>
         <source>你的地图画将适用1.17+版本
 </source>
@@ -1980,9 +1986,13 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="tpstrategywind.ui" line="88"/>
         <source>地图画中几乎不能使用透明像素。立体地图画和平板地图画都不能实现纯透明像素，纯文件地图画虽然理论上支持透明像素，但只会透出地图/物品展示框的背景色。因此有必要对透明/半透明像素进行处理。
-”替换为背景色“会将所有透明/半透明像素替换为背景色；”替换为空气“将纯透明像素替换为空气。
+”替换为背景色“会将像素替换为背景色；”替换为空气“将像素替换为空气。
 ”与背景色叠加“会按照像素的透明度与背景色叠加；“保留颜色”会忽视半透明像素的透明度，直接使用它们的颜色。
 完成设置后，需重新导入图片。</source>
+        <oldsource>地图画中几乎不能使用透明像素。立体地图画和平板地图画都不能实现纯透明像素，纯文件地图画虽然理论上支持透明像素，但只会透出地图/物品展示框的背景色。因此有必要对透明/半透明像素进行处理。
+”替换为背景色“会将所有透明/半透明像素替换为背景色；”替换为空气“将纯透明像素替换为空气。
+”与背景色叠加“会按照像素的透明度与背景色叠加；“保留颜色”会忽视半透明像素的透明度，直接使用它们的颜色。
+完成设置后，需重新导入图片。</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
