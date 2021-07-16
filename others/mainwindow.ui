@@ -110,7 +110,7 @@
          <enum>QFrame::Plain</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="PageStart">
          <property name="styleSheet">
@@ -392,6 +392,9 @@ font: 9pt &quot;微软雅黑&quot;;</string>
               <height>128</height>
              </size>
             </property>
+            <property name="styleSheet">
+             <string notr="true">#ShowRawPic{background-image: url(:/new/Pic/Transparent.png);}</string>
+            </property>
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
@@ -524,6 +527,30 @@ font: 9pt &quot;微软雅黑&quot;;</string>
               </property>
               <property name="text">
                <string>导入图片</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QPushButton" name="ImportSettings">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+               </font>
+              </property>
+              <property name="text">
+               <string>设置</string>
               </property>
              </widget>
             </item>

@@ -502,6 +502,7 @@ parent->ui->ShowProgressExLite->setValue(50);
             Lite.writeListHead("BlockStatePalette",NBT::idCompound,131);
                 {
                     short written=(is16()?59:52);
+                    if(is17())written=61;
                     vector<QString> ProName,ProVal;
                     //bool isNetBlockId;
                     QString netBlockId;

@@ -37,6 +37,7 @@ This file is part of SlopeCraft.
 #include <QImage>
 #include <QThread>
 #include "optitree.h"
+#include "tpstrategywind.h"
 //#include "adjt.h"
 using namespace std;
 using namespace Eigen;
@@ -82,8 +83,9 @@ public:
     static ColorSet * Allowed;
     static short DepthIndexEnd[4];
     static unsigned char DepthCount[4];
-    unsigned char apply();
+    unsigned char apply(QRgb);
 private:
+    unsigned char apply();
     unsigned char applyRGB();
     unsigned char applyRGB_plus();
     unsigned char applyHSV();
@@ -131,6 +133,7 @@ public:
         int totalBlocks;
 
         short adjStep;
+        QImage OriginPic;
         QImage rawPic;
         QImage adjedPic;
         //MatrixXf rawPicRGBc3[3];
@@ -178,17 +181,35 @@ public:
 
         int CommandCount;
         int NWPos[3];//x,y,z
-        fstream ExMcF;
         char netFilePath[256];//纯路径，不包含最后的文件名
         char netFileName[64];//纯文件名，不含后缀名
 };
 bool dealBlockId(const QString&BlockId,QString&netBlockId,vector<QString>&Property,vector<QString>&ProVal);
+QRgb ComposeColor(const QRgb&front,const QRgb&back);
+
 
 class AdjT;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
+
+class tpStrategyWind;
+
+#ifndef TPS__
+#define TPS__
+class tpS{
+public:
+    tpS(char _pTpS='B',char _hTpS='C',QRgb _BGC=qRgb(220,220,220)){
+            pTpS=_pTpS;
+            hTpS=_hTpS;
+            BGC=_BGC;    }
+    ~tpS();
+    char pTpS;
+    char hTpS;
+    QRgb BGC;
+};
+#endif
 
 class MainWindow : public QMainWindow
 {
@@ -198,7 +219,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     mcMap Data;
-
+    tpStrategyWind*transSubWind;
     //QTranslator translater;
     QRadioButton *Blocks[64][12];
     QCheckBox *Enables[64];
@@ -210,6 +231,8 @@ public:
     short BLCheaper[64];
     short BLBetter[64];
     short BLGlowing[64];
+
+    tpS Strategy;
 
     //初始化方块列表用
     void Collect();//done
@@ -254,6 +277,11 @@ private:
 
 public slots:
     void AdjPro(int step=1);
+    void destroySubWindTrans();
+    void preProcess(char pureTpStrategy='B',char halfTpStrategy='C',QRgb BGC=qRgb(220,220,220));
+    void ReceiveTPS(tpS);
+    //透明像素处理策略：B->替换为背景色；A->空气；W->暂缓，等待处理
+    //半透明像素处理策略：B->替换为背景色；C->与背景色叠加；R->保留颜色；W->暂缓，等待处理
 private slots:
 
     //语言槽
@@ -289,6 +317,8 @@ private slots:
     //forPage4
 
     //forPage5
+
+
 
     void on_StartWithSlope_clicked();
 
@@ -340,6 +370,8 @@ private slots:
     void on_ExImage_clicked();
 
     void on_AllowNaturalOpti_stateChanged(int arg1);
+
+    void on_ImportSettings_clicked();
 
 private:
     Ui::MainWindow *ui;

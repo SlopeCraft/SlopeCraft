@@ -25,7 +25,7 @@ void AdjT::run()
         if(colorAdjuster.contains(mid.key()))
         {
             if (mid.value().Result)break;//发现有处理过的颜色则终止
-            mid.value().apply();
+            mid.value().apply(mid.key());
             //parent->AdjPro(step);
             itered++;
             if(itered%reportRate==0)

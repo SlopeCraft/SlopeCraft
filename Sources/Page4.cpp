@@ -161,7 +161,7 @@ void MainWindow::applyTokiColor(AdjT*R)
         if(R->colorAdjuster.contains(i.key()))
         {
             if (i.value().Result)continue;//发现有处理过的颜色则跳过
-            i.value().apply();
+            i.value().apply(i.key());
             //parent->AdjPro(step);
             itered++;
             if(itered%reportRate==0)
@@ -473,6 +473,11 @@ void MainWindow::getAdjedPic()
         CurrentLine=(QRgb*)Data.adjedPic.scanLine(r);
         for(short c=0;c<Data.sizePic[1];c++)
         {
+            if(Data.mapPic(r,c)<=3)
+            {
+                CurrentLine[c]=qRgba(0,0,0,0);
+                continue;
+            }
             Index=Data.mapColor2Index(Data.mapPic(r,c));
            // Index=Data.mapPic(r,c);
 
@@ -565,7 +570,7 @@ Data.ExMcFstep=0;
 //qDebug("已显示调整后图像并允许翻页");
 
 
-ui->ExData->setEnabled(Data.isCreative());
+ui->ExData->setEnabled(true);
 ui->ExLite->setEnabled(!Data.isCreative());
 //ui->ExMcF->setEnabled(true);
 

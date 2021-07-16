@@ -1,4 +1,6 @@
 QT       += core gui
+#QT += opengl
+#QT += quick quick3d
 INCLUDEPATH += D:\eigen-3.3.9
  DEFINES += WIN32_LEAN_AND_MEAN
 RC_ICONS =SlopeCraft.ico
@@ -17,6 +19,9 @@ RC_LANG = 0x0004
 #QMAKE_TARGET_COPYRIGHT = CopyRight TokiNoBug
 
 
+#DEFINES += QT_NO_WARNING_OUTPUT\
+#                  QT_NO_DEBUG_OUTPUT
+#仅在发布时取消注释
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -45,6 +50,7 @@ SOURCES += \
     mcmap.cpp \
     optitree.cpp \
     tokicolor.cpp \
+    tpstrategywind.cpp \
     zlibs/adler32.c \
     zlibs/compress.c \
     zlibs/crc32.c \
@@ -65,6 +71,7 @@ HEADERS += \
     NBTWriter.h \
     mainwindow.h \
     optitree.h \
+    tpstrategywind.h \
     zlibs/crc32.h \
     zlibs/deflate.h \
     zlibs/gzguts.h \
@@ -78,7 +85,9 @@ HEADERS += \
     zlibs/zutil.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+ \    #previewer.ui
+    tpstrategywind.ui
 
 TRANSLATIONS += \
     Slope_zh_CN.ts \
@@ -102,3 +111,6 @@ RESOURCES += \
     Pics.qrc
 
 QT += widgets
+
+win32:LIBS += -lOpengl32 \
+                -lglu32 \

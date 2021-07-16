@@ -25,7 +25,7 @@ This file is part of SlopeCraft.
 #include <QDebug>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include "tpstrategywind.h"
 //#include "tokicolor.cpp"
 #include "Collecter.cpp"
 #include "Pages.cpp"
@@ -95,6 +95,7 @@ MainWindow::MainWindow(QWidget *parent)
     //qDebug()<<FolderPath;
     /*TokiColor::Allowed=&Data.Allowed;
     TokiColor::Basic=&Data.Basic;*/
+    transSubWind=nullptr;
 }
 
 MainWindow::~MainWindow()
@@ -123,4 +124,12 @@ void MainWindow::checkBlockIds()
         }
     out.close();
 }
+
+#ifndef tpSDestroyer
+#define tpSDestroyer
+tpS::~tpS()
+{
+
+}
+#endif
 

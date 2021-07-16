@@ -158,6 +158,15 @@ default:
 Result=0;
 }
 
+
+unsigned char TokiColor::apply(QRgb Color)
+{
+    if(qAlpha(Color)<=0)
+        return 0;
+    else
+        return apply();
+}
+
 unsigned char TokiColor::apply()
 {
 switch (ColorSpaceType)
@@ -174,6 +183,7 @@ default:
     return applyXYZ();
 }
 }
+
 
 unsigned char TokiColor::applyRGB()
 {
