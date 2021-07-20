@@ -103,8 +103,16 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+#ifndef tpSDestroyer
+#define tpSDestroyer
+tpS::~tpS()
+{
+
+}
+#endif
 
 
+#ifdef dispDerivative
 void MainWindow::checkBlockIds()
 {
     Collect();
@@ -124,12 +132,53 @@ void MainWindow::checkBlockIds()
         }
     out.close();
 }
-
-#ifndef tpSDestroyer
-#define tpSDestroyer
-tpS::~tpS()
+void MainWindow::makeImage(int unitL)
 {
+    qDebug("开始makeImage");
+    if(unitL<=0)unitL=16;
+    MatrixXi PMat;
+    PMat.setZero(4*unitL,60*unitL);
+    int mapColor=0,index=0;
+    QRgb CurrentColor;
+    int cIndex;
+    for(int Base=1;Base<61;Base++)
+    {
+        for(int depth=0;depth<4;depth++)
+        {
+            mapColor=4*Base+depth;
+            index=mcMap::mapColor2Index(mapColor);
+            CurrentColor=qRgb(255*Data.Basic._RGB(index,0),255*Data.Basic._RGB(index,1),255*Data.Basic._RGB(index,2));
+            switch (depth)
+            {
+            case 0:
+                cIndex=2;break;
+            case 1:
+                cIndex=1;break;
+            case 2:
+                cIndex=0;break;
+            case 3:
+                cIndex=3;break;
+            }
 
+            PMat.block(unitL*cIndex,unitL*(Base-1),unitL,unitL).array()=CurrentColor;
+
+            //qDebug("rua!");
+        }
+    }
+    qDebug("图像mat构建完毕");
+    QRgb*CL=nullptr;
+
+    //QSize size(PMat.rows(),PMat.cols());
+    QSize size(PMat.cols(),PMat.rows());
+    QImage Pic(size,QImage::Format_ARGB32);
+    for(int r=0;r<PMat.rows();r++)
+    {
+        CL=(QRgb*)Pic.scanLine(r);
+        for(int c=0;c<PMat.cols();c++)
+        {
+            CL[c]=PMat(r,c);
+        }
+    }
+    Pic.save("D:\\游戏\\Minecraft\\SlopeCraft广告\\240Colors.png");
 }
 #endif
-

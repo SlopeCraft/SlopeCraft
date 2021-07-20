@@ -305,10 +305,7 @@ unsigned char TokiColor::applyLab_old()
     //K2=0.015f
     float SC_2=(sqrt(C1_2)*0.045f+1.0f)*(sqrt(C1_2)*0.045f+1.0f);
     auto SH_2=(C2_2.sqrt()*0.015f+1.0f).square();
-
     auto Diff=deltaL_2+deltaCab_2/SC_2+deltaHab_2/SH_2;
-
-
     float ResultDiff=Diff.minCoeff(&tempIndex);
     Result=Allowed->Map(tempIndex);
     if(needFindSide)

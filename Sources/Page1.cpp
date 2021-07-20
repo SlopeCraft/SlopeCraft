@@ -88,11 +88,13 @@ void MainWindow::on_ImportPic_clicked()
         GetBLBetter(BLBetter);
         GetBLGlowing(BLGlowing);
         qDebug("成功初始化四个预设方块列表");
-
-        readFromFile("RGB.Toki",Data.Basic._RGB);
-        readFromFile("HSV.Toki",Data.Basic.HSV);
-        readFromFile("Lab.Toki",Data.Basic.Lab);
-        readFromFile("XYZ.Toki",Data.Basic.XYZ);
+        qDebug()<<"当前运行路径："<<QCoreApplication::applicationDirPath();
+        //QString DirPath=QCoreApplication::applicationDirPath()+'/';
+        QDir::setCurrent(QCoreApplication::applicationDirPath());
+        readFromFile("./RGB.Toki",Data.Basic._RGB);
+        readFromFile("./HSV.Toki",Data.Basic.HSV);
+        readFromFile("./Lab.Toki",Data.Basic.Lab);
+        readFromFile("./XYZ.Toki",Data.Basic.XYZ);
         qDebug("成功载入颜色");
 
         qDebug("导入图片按钮处的初始化部分完成");
@@ -101,6 +103,10 @@ void MainWindow::on_ImportPic_clicked()
         showColorColors();
         qDebug("成功为Colors赋予颜色");
         needInitialize=false;
+#ifdef dispDerivative
+    //checkBlockIds();
+    makeImage(64);
+#endif
     }
 
     //这里要将图片信息加入到Data
@@ -118,8 +124,6 @@ void MainWindow::on_ImportPic_clicked()
     Data.step=2;
     updateEnables();
     ui->NextPage->setEnabled(true);
-
-    checkBlockIds();
 
     return;
 }

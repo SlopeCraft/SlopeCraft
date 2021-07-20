@@ -21,6 +21,9 @@ This file is part of SlopeCraft.
 */
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+
+//#define dispDerivative
+
 #include "NBTWriter.h"
 #include "ui_mainwindow.h"
 
@@ -261,14 +264,16 @@ public:
 
     void getAdjedPic();//for step4
 
-    void checkBlockIds();
 
     void turnToPage(int);
 
     void updateEnables();
 
     void switchLan(bool);
-
+#ifdef dispDerivative
+    void checkBlockIds();
+    void makeImage(int);
+#endif
 private:
     QTranslator trans;
 
