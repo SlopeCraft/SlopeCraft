@@ -105,7 +105,7 @@ void MainWindow::on_ImportPic_clicked()
         needInitialize=false;
 #ifdef dispDerivative
     //checkBlockIds();
-    makeImage(64);
+    makeImage(1);
 #endif
     }
 

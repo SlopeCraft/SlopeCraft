@@ -223,7 +223,7 @@ void MainWindow::Collect()
 
     Blocks[11][0]=ui->is11Cobblestone;      Data.BlockId[11][0]="cobblestone";
     Blocks[11][1]=ui->is11Stone;      Data.BlockId[11][1]="stone";      Data.BlockIdfor12[11][1]="stone[variant=stone]";
-    Blocks[11][2]=ui->is11SmoothStone;      Data.BlockId[11][2]="smooth_stone";
+    Blocks[11][2]=ui->is11SmoothStone;      Data.BlockId[11][2]="smooth_stone";     Data.BlockVersion[11][2]=13;
     Blocks[11][3]=ui->is11StoneBricks;      Data.BlockId[11][3]="stone_bricks";Data.BlockIdfor12[11][3]="stonebrick[variant=stonebrick]";
 
     Blocks[12][0]=ui->is12Water;      Data.BlockId[12][0]="water[level=0]";
@@ -314,9 +314,9 @@ void MainWindow::Collect()
     Blocks[28][5]=ui->is28WartBlock;      Data.BlockId[28][5]="nether_wart_block";
     Blocks[28][6]=ui->is28Shroomlight;      Data.BlockId[28][6]="shroomlight";Data.BlockVersion[28][6]=16;
 
-    Blocks[29][0]=ui->is29Concrete;      Data.BlockId[29][0]="black_concrete";
-    Blocks[29][1]=ui->is29Wool;      Data.BlockId[29][1]="black_wool";
-    Blocks[29][2]=ui->is29StainedGlass;      Data.BlockId[29][2]="black_stained_glass";
+    Blocks[29][0]=ui->is29Concrete;      Data.BlockId[29][0]="black_concrete";      Data.BlockIdfor12[29][0]="concrete[color=black]";
+    Blocks[29][1]=ui->is29Wool;      Data.BlockId[29][1]="black_wool";     Data.BlockIdfor12[29][1]="wool[color=black]";
+    Blocks[29][2]=ui->is29StainedGlass;      Data.BlockId[29][2]="black_stained_glass";     Data.BlockIdfor12[29][2]="stained_glass[color=black]";
     Blocks[29][3]=ui->is29Obsidian;      Data.BlockId[29][3]="obsidian";
     Blocks[29][4]=ui->is29CoalBlock;      Data.BlockId[29][4]="coal_block";
     Blocks[29][5]=ui->is29Basalt;      Data.BlockId[29][5]="polished_basalt[axis=y]";Data.BlockVersion[29][5]=16;

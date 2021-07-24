@@ -179,6 +179,6 @@ void MainWindow::makeImage(int unitL)
             CL[c]=PMat(r,c);
         }
     }
-    Pic.save("D:\\游戏\\Minecraft\\SlopeCraft广告\\240Colors.png");
+    Pic.save("D:\\240Colors.png");
 }
 #endif
