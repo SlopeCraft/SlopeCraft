@@ -5,7 +5,7 @@ INCLUDEPATH += D:\eigen-3.3.9
 DEFINES += WIN32_LEAN_AND_MEAN
 RC_ICONS =SlopeCraft.ico
 # 版本号
-VERSION = 3.4.2
+VERSION = 3.4.3
 # 语言
 # 0x0004 表示 简体中文
 RC_LANG = 0x0004
@@ -19,8 +19,8 @@ RC_LANG = 0x0004
 #QMAKE_TARGET_COPYRIGHT = CopyRight TokiNoBug
 
 
-#DEFINES += QT_NO_WARNING_OUTPUT\
-#                QT_NO_DEBUG_OUTPUT
+DEFINES += QT_NO_WARNING_OUTPUT\
+                QT_NO_DEBUG_OUTPUT
 #仅在发布时取消注释
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
