@@ -240,14 +240,14 @@ unsigned char TokiColor::applyRGB_plus()
     auto deltaG=(g-allowedColors.col(1).array());
     auto deltaB=(b-allowedColors.col(2).array());
     auto SigmaRGB=(R+g+b+allowedColors.col(0).array()+allowedColors.col(1).array()+allowedColors.col(2).array())/3.0f;
-    auto S_r=((allowedColors.col(0).array()+R)<SigmaRGB).select((allowedColors.col(0).array()+R)/SigmaRGB,1.0f);
-    auto S_g=((allowedColors.col(1).array()+g)<SigmaRGB).select((allowedColors.col(1).array()+g)/SigmaRGB,1.0f);
-    auto S_b=((allowedColors.col(2).array()+b)<SigmaRGB).select((allowedColors.col(2).array()+b)/SigmaRGB,1.0f);
+    auto S_r=((allowedColors.col(0).array()+R)<SigmaRGB).select((allowedColors.col(0).array()+R)/(SigmaRGB+1e-10f),1.0f);
+    auto S_g=((allowedColors.col(1).array()+g)<SigmaRGB).select((allowedColors.col(1).array()+g)/(SigmaRGB+1e-10f),1.0f);
+    auto S_b=((allowedColors.col(2).array()+b)<SigmaRGB).select((allowedColors.col(2).array()+b)/(SigmaRGB+1e-10f),1.0f);
     auto sumRGBsquare=R*allowedColors.col(0).array()+g*allowedColors.col(1).array()+b*allowedColors.col(2).array();
-    auto theta=2.0/M_PI*(sumRGBsquare/SqrModSquare).acos();
-    auto OnedDeltaR=deltaR.abs()/(R+allowedColors.col(0).array());
-    auto OnedDeltaG=deltaG.abs()/(g+allowedColors.col(1).array());
-    auto OnedDeltaB=deltaB.abs()/(b+allowedColors.col(2).array());
+    auto theta=2.0/M_PI*(sumRGBsquare/(SqrModSquare+1e-10f)/1.01f).acos();
+    auto OnedDeltaR=deltaR.abs()/(R+allowedColors.col(0).array()+1e-10f);
+    auto OnedDeltaG=deltaG.abs()/(g+allowedColors.col(1).array()+1e-10f);
+    auto OnedDeltaB=deltaB.abs()/(b+allowedColors.col(2).array()+1e-10f);
     auto sumOnedDelta=OnedDeltaR+OnedDeltaG+OnedDeltaB+1e-10f;
     auto S_tr=OnedDeltaR/sumOnedDelta*S_r.square();
     auto S_tg=OnedDeltaG/sumOnedDelta*S_g.square();
@@ -256,11 +256,17 @@ unsigned char TokiColor::applyRGB_plus()
     auto Rmax=allowedColors.rowwise().maxCoeff();
     auto S_ratio=Rmax.array().max(max(R,max(g,b)));
 
-
     auto dist=(S_r.square()*w_r*deltaR.square()+S_g.square()*w_g*deltaG.square()+S_b.square()*w_b*deltaB.square())/(w_r+w_g+w_b)+S_theta*S_ratio*theta.square();//+S_theta*S_ratio*theta.square()
 
     float ResultDiff=dist.minCoeff(&tempIndex);
-    //if(dist.isNaN().any())qDebug("出现Nan");
+    /*if(dist.isNaN().any()){
+        qDebug("出现Nan");
+            if(SqrModSquare.isNaN().any())      qDebug("SqrModSquare出现Nan");
+            if(theta.isNaN().any())                      qDebug("theta出现Nan");
+            if(sumOnedDelta.isNaN().any())      qDebug("sumOnedDelta出现Nan");
+            if(S_ratio.isNaN().any())                  qDebug("S_ratio出现Nan");
+
+    }*/
     Result=Allowed->Map(tempIndex);
     if(needFindSide)
     doSide(dist,ResultDiff);
@@ -277,8 +283,8 @@ unsigned char TokiColor::applyHSV()
     //float s=c3[1];
     //float v=c3[2];
     auto SV=allowedColors.col(1).array()*allowedColors.col(2).array();
-    auto deltaX=50.0f*(SV*(M_2_PI*allowedColors.col(0).array()).cos()-c3[2]*c3[1]*cos(c3[0]));
-    auto deltaY=50.0f*(SV*(M_2_PI*allowedColors.col(0).array()).sin()-c3[2]*c3[1]*sin(c3[0]));
+    auto deltaX=50.0f*(SV*(allowedColors.col(0).array()).cos()-c3[2]*c3[1]*cos(c3[0]));
+    auto deltaY=50.0f*(SV*(allowedColors.col(0).array()).sin()-c3[2]*c3[1]*sin(c3[0]));
     auto deltaZ=86.60254f*(allowedColors.col(2).array()-c3[2]);
     auto Diff=deltaX.square()+deltaY.square()+deltaZ.square();
     float ResultDiff=Diff.minCoeff(&tempIndex);
