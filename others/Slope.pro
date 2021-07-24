@@ -5,7 +5,7 @@ INCLUDEPATH += D:\eigen-3.3.9
 DEFINES += WIN32_LEAN_AND_MEAN
 RC_ICONS =SlopeCraft.ico
 # 版本号
-VERSION = 3.4.2
+VERSION = 3.4.3
 # 语言
 # 0x0004 表示 简体中文
 RC_LANG = 0x0004
