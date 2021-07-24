@@ -391,7 +391,11 @@ unsigned char TokiColor::applyLab_new()
     qDebug()<<"i";
     auto Diff=(dLp/SL).square()+(dCp/SC).square()+(dHp/SH).square()+RT*(dCp/SC)*(dHp/SH);
     //代码运行效果有问题
-    cout<<Diff.transpose()<<endl;
+    //cout<<Diff.transpose()<<endl;
+    if(Diff.isInf().any())
+        qDebug("存在Inf");
+    if(Diff.isNaN().any())
+        qDebug("存在NaN");
     qDebug()<<"j";
     //qDebug()<<"size(Diff)=["<<Diff.rows()<<','<<Diff.cols()<<']';
     Diff.abs().minCoeff(&tempIndex);
