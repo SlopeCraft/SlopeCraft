@@ -122,7 +122,7 @@ void MainWindow::turnToPage(int page)
 {
     page%=9;
     updateEnables();
-    QString newtitle="SlopeCraft v3.4 Copyright © 2021 TokiNoBug    ";
+    QString newtitle="SlopeCraft v3.4.3 Copyright © 2021 TokiNoBug    ";
     switch (page)
     {
         case 0:
