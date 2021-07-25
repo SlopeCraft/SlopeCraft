@@ -352,6 +352,7 @@ unsigned char TokiColor::applyLab_old()
 
 unsigned char TokiColor::applyLab_new()
 {
+    char u='a';
     if(Result)return Result;
     int tempIndex=0;
     float L1s=c3[0];
@@ -362,6 +363,7 @@ unsigned char TokiColor::applyLab_new()
     auto a2s=allow.col(1).array();
     auto b2s=allow.col(2).array();
 
+    qDebug()<<u++;
     auto C1abs=sqrt(a1s*a1s+b1s*b1s);
     auto C2abs=(a2s.square()+b2s.square()).sqrt();
     auto mCabs=(C1abs+C2abs)/2.0;
@@ -373,6 +375,7 @@ unsigned char TokiColor::applyLab_new()
     auto h1p=AngleCvt(atan2(VectorXf::Ones(L2s.rows()).array()*b1s,a1p));
     auto h2p=AngleCvt(atan2(b2s,a2p));
 
+    qDebug()<<u++;
     auto dLp=L2s-L1s;
     auto dCp=C2p-C1p;
     auto h2p_h1p=h2p-h1p;
@@ -381,6 +384,7 @@ unsigned char TokiColor::applyLab_new()
     auto dhp=(C1pC2p!=0.0).select(h2p_h1p+addon4dhp,0.0);
     auto dHp=2*C1pC2p.sqrt()*(dhp*0.5).sin();
 
+    qDebug()<<u++;
     auto mLp=(L1s+L2s)/2.0;
     auto mCp=(C1p+C2p)/2.0;
     auto h1p_add_h2p=h1p+h2p;
@@ -394,9 +398,11 @@ unsigned char TokiColor::applyLab_new()
     auto SH=1+0.015*mCp*T;
     auto RT=-Rc*(2.0*dTheta).sin();
 
+    qDebug()<<u++;
     auto Diff=(dLp/SL/1.0).square()+(dCp/SC/1.0).square()+(dHp/SH/1.0).square()+RT*(dCp/SC/1.0)*(dHp/SH/1.0);
 
 
+    qDebug()<<u++;
     Diff.abs().minCoeff(&tempIndex);
         qDebug()<<"k";
     Result=Allowed->Map(tempIndex);
