@@ -20,16 +20,17 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 #include "mainwindow.h"
-#define Thre 1e-8f
+#define Thre 1e-10f
 #include <cmath>
 
 auto atan2(VectorXf y,VectorXf x)
 {
-    x=(x.array()!=0.0).select(x,1e-10f);
+    return (x.array()>0.0).select((y.array()/x.array()).atan(),(x.array()<0.0).select((y.array()>=0).select((y.array()/x.array()).atan()+M_PI,(y.array()/x.array()).atan()-M_PI),(y.array()!=0.0).select(y.array()/y.array().abs()*M_PI/2.0,0)));
+    /*x=(x.array()!=0.0).select(x,Thre);
     auto adder=(x.array()<=0).select((y.array()<=0).select(y*0.0,2*M_PI),M_PI);
 
-    return adder.array()+(y.array()/x.array()).atan();
-    /*auto t=(x.array().abs()>1e-4f).select((y.array()/x.array()).atan(),0.0);
+    return adder.array()+(y.array()/x.array()).atan();*/
+    /*auto t=(x.array().abs()>Thre).select((y.array()/x.array()).atan(),0.0);
     return (x.array()<0.0).select(t+M_PI,(y.array()>=0).select(t,t+2*M_PI));*/
 }
 
@@ -123,8 +124,8 @@ void RGB2HSV(float r, float g, float b,  float &h, float &s, float &v)
         K = -2.0f / 6.0f - K;
     }
     float chroma = r - std::min(g, b);
-    h = fabs(K + (g - b) / (6.0f * chroma + 1e-20f));
-    s = chroma / (r + 1e-20f);
+    h = fabs(K + (g - b) / (6.0f * chroma + Thre));
+    s = chroma / (r + Thre);
     v = r;
 
     return;
@@ -157,9 +158,9 @@ if (_ColorSpaceType>='a')
 switch (_ColorSpaceType)
 {
 case 'R':
-    c3[0]=max(qRed(rawColor)/255.0f,1e-10f);
-    c3[1]=max(qGreen(rawColor)/255.0f,1e-10f);
-    c3[2]=max(qBlue(rawColor)/255.0f,1e-10f);
+    c3[0]=max(qRed(rawColor)/255.0f,Thre);
+    c3[1]=max(qGreen(rawColor)/255.0f,Thre);
+    c3[2]=max(qBlue(rawColor)/255.0f,Thre);
 
     break;
 case 'H':
@@ -198,7 +199,7 @@ case 'r':
 case 'H':
     return applyHSV();
 case 'L':
-    return applyLab_old();
+    return applyLab_new();
 default:
     return applyXYZ();
 }
@@ -216,7 +217,7 @@ unsigned char TokiColor::applyRGB()
     auto Diff=Diff0_2+Diff1_2+Diff2_2;
     //Data.CurrentColor-=allowedColors;
 
-    float ResultDiff=Diff.minCoeff(&tempIndex)+1e-8f;
+    float ResultDiff=Diff.minCoeff(&tempIndex)+Thre;
     //Diff.minCoeff(tempIndex,u);
     Result=Allowed->Map(tempIndex);
     //qDebug("调色完毕");
@@ -240,15 +241,15 @@ unsigned char TokiColor::applyRGB_plus()
     auto deltaG=(g-allowedColors.col(1).array());
     auto deltaB=(b-allowedColors.col(2).array());
     auto SigmaRGB=(R+g+b+allowedColors.col(0).array()+allowedColors.col(1).array()+allowedColors.col(2).array())/3.0f;
-    auto S_r=((allowedColors.col(0).array()+R)<SigmaRGB).select((allowedColors.col(0).array()+R)/(SigmaRGB+1e-10f),1.0f);
-    auto S_g=((allowedColors.col(1).array()+g)<SigmaRGB).select((allowedColors.col(1).array()+g)/(SigmaRGB+1e-10f),1.0f);
-    auto S_b=((allowedColors.col(2).array()+b)<SigmaRGB).select((allowedColors.col(2).array()+b)/(SigmaRGB+1e-10f),1.0f);
+    auto S_r=((allowedColors.col(0).array()+R)<SigmaRGB).select((allowedColors.col(0).array()+R)/(SigmaRGB+Thre),1.0f);
+    auto S_g=((allowedColors.col(1).array()+g)<SigmaRGB).select((allowedColors.col(1).array()+g)/(SigmaRGB+Thre),1.0f);
+    auto S_b=((allowedColors.col(2).array()+b)<SigmaRGB).select((allowedColors.col(2).array()+b)/(SigmaRGB+Thre),1.0f);
     auto sumRGBsquare=R*allowedColors.col(0).array()+g*allowedColors.col(1).array()+b*allowedColors.col(2).array();
-    auto theta=2.0/M_PI*(sumRGBsquare/(SqrModSquare+1e-10f)/1.01f).acos();
-    auto OnedDeltaR=deltaR.abs()/(R+allowedColors.col(0).array()+1e-10f);
-    auto OnedDeltaG=deltaG.abs()/(g+allowedColors.col(1).array()+1e-10f);
-    auto OnedDeltaB=deltaB.abs()/(b+allowedColors.col(2).array()+1e-10f);
-    auto sumOnedDelta=OnedDeltaR+OnedDeltaG+OnedDeltaB+1e-10f;
+    auto theta=2.0/M_PI*(sumRGBsquare/(SqrModSquare+Thre)/1.01f).acos();
+    auto OnedDeltaR=deltaR.abs()/(R+allowedColors.col(0).array()+Thre);
+    auto OnedDeltaG=deltaG.abs()/(g+allowedColors.col(1).array()+Thre);
+    auto OnedDeltaB=deltaB.abs()/(b+allowedColors.col(2).array()+Thre);
+    auto sumOnedDelta=OnedDeltaR+OnedDeltaG+OnedDeltaB+Thre;
     auto S_tr=OnedDeltaR/sumOnedDelta*S_r.square();
     auto S_tg=OnedDeltaG/sumOnedDelta*S_g.square();
     auto S_tb=OnedDeltaB/sumOnedDelta*S_b.square();
@@ -352,43 +353,43 @@ unsigned char TokiColor::applyLab_new()
     auto Cs2ab=(allow.col(1).array().square()+allow.col(2).array().square()).sqrt();
     auto mCsab=(Cs1ab+Cs2ab)/2.0f;
     auto mCsab7=mCsab.pow(7);
-    auto G=0.5f*(1.0f-(1.0f-pow(25,7)/(mCsab7+pow(25,7)+1e-8f)).sqrt());
+    auto G=0.5f*(1.0f-(1.0f-pow(25,7)/(mCsab7+pow(25,7)+Thre)).sqrt());
     auto ap1=(1.0f+G)*c3[1];
     auto ap2=(1.0f+G)*allow.col(1).array();
     auto Cp1=(ap1.square()+c3[2]*c3[2]).sqrt();
     auto Cp2=(ap2.square()+allow.col(2).array().square()).sqrt();
 
-    auto hp1=(ap1.abs().min(abs(c3[2])>1e-4f)).select(atan2(ap1*0+c3[2],ap1).array(),0.0f);
-    qDebug()<<"a";
-    auto hp2=(ap2.abs().min(allow.col(2).array().abs())>1e-4f).select(atan2(allow.col(2).array(),ap2).array(),0.0f);
-    qDebug()<<"b";
+    auto hp1=(ap1.abs().min(abs(c3[2])>Thre)).select(atan2(ap1*0+c3[2],ap1).array(),0.0f);
+    qDebug()<<"a";//无Nan
+    auto hp2=(ap2.abs().min(allow.col(2).array().abs())>Thre).select(atan2(allow.col(2).array(),ap2).array(),0.0f);
+    qDebug()<<"b"<<hp2.isNaN().any();
     auto dLp=allow.col(0).array()-c3[0];
     auto dCp=Cp2-Cp1;
     auto Cp1Cp2=(Cp1*Cp2).abs();
     auto hp2_1=hp2-hp1;
-    qDebug()<<"c";
+    qDebug()<<"c"<<hp2_1.isNaN().any();
     auto addon=(hp2_1.abs()<=M_PI).select(hp2_1*0.0f,(hp2_1>0).select(hp2_1*0.0f+M_PI,-M_PI));
-    auto dhp=(Cp1Cp2>1e-4f).select(hp2_1+addon,0.0f);
-    qDebug()<<"d";
+    auto dhp=(Cp1Cp2>Thre).select(hp2_1+addon,0.0f);
+    qDebug()<<"d"<<dhp.isNaN().any();
     auto dHp=2.0f*(Cp1Cp2).sqrt()*(dhp/2.0f).sin();
     qDebug()<<"e";
     auto mLp=(c3[0]+allow.col(0).array())/2.0f;
     auto mCp=(Cp1+Cp2)/2.0f;
-    qDebug()<<"f";
+    qDebug()<<"f"<<mCp.isNaN().any();
     auto hp21=hp2+hp1;
     auto addon2=(hp2_1.abs()<=M_PI).select(hp2_1*0.0f,(hp21<2*M_PI).select(hp21*0.0f+M_PI,-M_PI));
-    auto mhp=(Cp1Cp2>1e-4f).select(hp21/2.0f+addon2,hp21);
-    qDebug()<<"g";
+    auto mhp=(Cp1Cp2>Thre).select(hp21/2.0f+addon2,hp21);
+    qDebug()<<"g"<<mhp.isNaN().any();
     auto T=1.0f-0.17f*(mhp-M_PI/6.0).cos()+0.24f*(2*mhp).cos()+0.32*(3*mhp+M_PI/30).cos()-0.20*(4*mhp-M_PI*63.0/180.0).cos();
     auto dTheta=M_PI/6.0*((M_PI*275.0/180.0-mhp)/(M_PI*25.0/180.0)).exp();
     auto Rc=2*(1-(pow(25,7))/(pow(25,7)+mCp.pow(7))).sqrt();
-    qDebug()<<"h";
+    qDebug()<<"h"<<Rc.isNaN().any();
     auto mLp_50_2=(mLp-50.0).square();
     auto SL=1.0+0.015*mLp_50_2/(20.0+mLp_50_2).sqrt();
     auto SC=1.0+0.045*mCp;
     auto SH=1.0+0.015*mCp*T;
     auto RT=-Rc*(2.0*dTheta).sin();
-    qDebug()<<"i";
+    qDebug()<<"i"<<RT.isNaN().any();
     auto Diff=(dLp/SL).square()+(dCp/SC).square()+(dHp/SH).square()+RT*(dCp/SC)*(dHp/SH);
     //代码运行效果有问题
     //cout<<Diff.transpose()<<endl;
