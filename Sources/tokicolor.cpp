@@ -406,10 +406,6 @@ unsigned char TokiColor::applyLab_new()
 
 
     Result=Allowed->Map(tempIndex);
-    qDebug()<<"l";
-
-
-
     return Result;
 }
 
