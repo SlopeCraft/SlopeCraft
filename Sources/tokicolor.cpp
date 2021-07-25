@@ -352,7 +352,6 @@ unsigned char TokiColor::applyLab_old()
 
 unsigned char TokiColor::applyLab_new()
 {
-    char u='a';
     if(Result)return Result;
     int tempIndex=0;
     float L1s=c3[0];
@@ -363,7 +362,6 @@ unsigned char TokiColor::applyLab_new()
     auto a2s=allow.col(1).array();
     auto b2s=allow.col(2).array();
 
-    qDebug()<<u++;
     auto C1abs=sqrt(a1s*a1s+b1s*b1s);
     auto C2abs=(a2s.square()+b2s.square()).sqrt();
     auto mCabs=(C1abs+C2abs)/2.0;
@@ -372,41 +370,46 @@ unsigned char TokiColor::applyLab_new()
     auto a2p=(1.0+G)*a2s;
     auto C1p=(a1p.square()+b1s*b1s).sqrt();
     auto C2p=(a2p.square()+b2s.square()).sqrt();
-    auto h1p=AngleCvt(atan2(VectorXf::Ones(L2s.rows()).array()*b1s,a1p));
-    auto h2p=AngleCvt(atan2(b2s,a2p));
+    VectorXf h1p=AngleCvt(atan2(L2s*0.0+b1s,a1p));
+    VectorXf h2p=AngleCvt(atan2(b2s,a2p));
 
-    qDebug()<<u++;
     auto dLp=L2s-L1s;
     auto dCp=C2p-C1p;
-    auto h2p_h1p=h2p-h1p;
+    auto h2p_h1p=(h2p-h1p).array();
     auto C1pC2p=C1p*C2p;
     auto addon4dhp=(h2p_h1p.abs()>M_PI).select(-2.0*M_PI*sign(h2p_h1p),0.0);
     auto dhp=(C1pC2p!=0.0).select(h2p_h1p+addon4dhp,0.0);
     auto dHp=2*C1pC2p.sqrt()*(dhp*0.5).sin();
 
-    qDebug()<<u++;
     auto mLp=(L1s+L2s)/2.0;
+
     auto mCp=(C1p+C2p)/2.0;
-    auto h1p_add_h2p=h1p+h2p;
-    auto addon4mhp=(h2p_h1p.abs()>M_PI).select((h1p_add_h2p>=2.0*M_PI).select(-2*M_PI*VectorXf::Ones(L2s.rows()).array(),2.0*M_PI),0.0);
+
+    auto h1p_add_h2p=(h1p+h2p).array();
+
+    auto addon4mhp=(h2p_h1p.abs()>M_PI).select((h1p_add_h2p>=2.0*M_PI).select(-2*M_PI+L2s*0.0,2.0*M_PI),0.0);
     auto mhp=(C1pC2p!=0).select((h1p_add_h2p+addon4mhp)/2.0,h1p_add_h2p);
     auto T=1-0.17*(mhp-deg2rad(30.0)).cos()+0.24*(2.0*mhp).cos()+0.32*(3.0*mhp+deg2rad(6.0)).cos()-0.2*(4.0*mhp-deg2rad(63.0)).cos();
     auto dTheta=deg2rad(30)*(-(mhp-deg2rad(275.0)/25.0).square()).exp();
     auto Rc=2*(mCp.pow(7)/(mCp.pow(7)+pow(25.0,7))).sqrt();
+
     auto SL=1+0.015*(mLp-50).square()/(20.0+(mLp-50).square()).sqrt();
     auto SC=1+0.045*mCp;
     auto SH=1+0.015*mCp*T;
     auto RT=-Rc*(2.0*dTheta).sin();
 
-    qDebug()<<u++;
     auto Diff=(dLp/SL/1.0).square()+(dCp/SC/1.0).square()+(dHp/SH/1.0).square()+RT*(dCp/SC/1.0)*(dHp/SH/1.0);
 
-
-    qDebug()<<u++;
     Diff.abs().minCoeff(&tempIndex);
-        qDebug()<<"k";
+    if(Diff.isNaN().any())
+        qDebug("存在NaN");
+
+
     Result=Allowed->Map(tempIndex);
     qDebug()<<"l";
+
+
+
     return Result;
 }
 
