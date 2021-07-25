@@ -322,8 +322,8 @@ unsigned char TokiColor::applyLab_old()
     float a=c3[1];
     float b=c3[2];
     MatrixXf &allowedColors=Allowed->Lab;
-     auto deltaL_2=(allowedColors.col(0).array()-L).square();
-    float C1_2=a*a+b*b;
+    auto deltaL_2=(allowedColors.col(0).array()-L).square();
+    auto C1_2=a*a+b*b;
     auto C2_2=allowedColors.col(1).array().square()+allowedColors.col(2).array().square();
     auto deltaCab_2=(sqrt(C1_2)-C2_2.array().sqrt()).square();
     auto deltaHab_2=(allowedColors.col(1).array()-a).square()+(allowedColors.col(2).array()-b).square()-deltaCab_2;
@@ -368,11 +368,15 @@ unsigned char TokiColor::applyLab_new()
     auto Cp1Cp2=(Cp1*Cp2).abs();
     auto hp2_1=hp2-hp1;
     qDebug()<<"c"<<hp2_1.isNaN().any();
-    auto addon=(hp2_1.abs()<=M_PI).select(hp2_1*0.0f,(hp2_1>0).select(hp2_1*0.0f+M_PI,-M_PI));
-    auto dhp=(Cp1Cp2>Thre).select(hp2_1+addon,0.0f);
+    auto addon=(hp2_1.abs()<=M_PI).select(hp2_1*0.0f,(hp2_1>0).select(hp2_1*0.0f+2*M_PI,-2*M_PI));
+    auto dhp=(Cp1Cp2>0.0).select(hp2_1+addon,0.0f);
     qDebug()<<"d"<<dhp.isNaN().any();
+    //cout<<addon.transpose();
+    //cout<<dhp.transpose();
+    //return Result=0;
+
     auto dHp=2.0f*(Cp1Cp2).sqrt()*(dhp/2.0f).sin();
-    qDebug()<<"e";
+    qDebug()<<"e"<<dHp.isNaN().any();
     auto mLp=(c3[0]+allow.col(0).array())/2.0f;
     auto mCp=(Cp1+Cp2)/2.0f;
     qDebug()<<"f"<<mCp.isNaN().any();
