@@ -186,12 +186,13 @@ void MainWindow::on_AllowNaturalOpti_clicked(bool checked)
 {
     if(!checked)
     {
-        ui->AllowForcedOpti->setCheckable(false);
+        ui->AllowForcedOpti->setDisabled(true);
+        ui->AllowForcedOpti->setChecked(false);
         ui->maxHeight->setDisabled(true);
     }
     else
     {
-        ui->AllowForcedOpti->setCheckable(true);
+        ui->AllowForcedOpti->setDisabled(false);
     }
 }
 

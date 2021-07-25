@@ -9220,6 +9220,9 @@ font: 9pt &quot;微软雅黑&quot;;</string>
             </item>
             <item row="6" column="1">
              <widget class="QCheckBox" name="AllowForcedOpti">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="font">
                <font>
                 <family>微软雅黑</family>
@@ -9284,6 +9287,9 @@ font: 9pt &quot;微软雅黑&quot;;</string>
             </item>
             <item row="7" column="1">
              <widget class="QSpinBox" name="maxHeight">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="font">
                <font>
                 <family>微软雅黑</family>
