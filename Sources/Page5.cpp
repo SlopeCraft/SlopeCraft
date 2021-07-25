@@ -585,10 +585,30 @@ default:
     qDebug("错误的游戏版本！");break;
 }
 
-
-
 Lite.close();
     return Lite.getByteCount();
+}
+
+
+void MainWindow::on_AllowNaturalOpti_clicked(bool checked)
+{
+    if(!checked)
+    {
+        ui->AllowForcedOpti->setDisabled(true);
+        ui->AllowForcedOpti->setChecked(false);
+        ui->maxHeight->setDisabled(true);
+    }
+    else
+    {
+        ui->AllowForcedOpti->setDisabled(false);
+    }
+}
+
+
+void MainWindow::on_AllowForcedOpti_stateChanged(int arg1)
+{
+    ui->maxHeight->setDisabled(!ui->AllowForcedOpti->isChecked());
+
 }
 
 #endif

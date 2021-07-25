@@ -181,25 +181,3 @@ void MainWindow::makeImage(int unitL)
     Pic.save("D:\\240Colors.png");
 }
 #endif
-
-void MainWindow::on_AllowNaturalOpti_clicked(bool checked)
-{
-    if(!checked)
-    {
-        ui->AllowForcedOpti->setDisabled(true);
-        ui->AllowForcedOpti->setChecked(false);
-        ui->maxHeight->setDisabled(true);
-    }
-    else
-    {
-        ui->AllowForcedOpti->setDisabled(false);
-    }
-}
-
-
-void MainWindow::on_AllowForcedOpti_stateChanged(int arg1)
-{
-    ui->maxHeight->setDisabled(!ui->AllowForcedOpti->isChecked());
-
-}
-
