@@ -63,7 +63,19 @@ void MainWindow::on_isColorSpaceXYZ_clicked()
     qDebug("调整颜色空间为XYZ");
 }
 
-void MainWindow::on_isColorSpaceLab_clicked()
+void MainWindow::on_isColorSpaceLab94_clicked()
+{
+    Data.adjStep=0;
+    if(Data.step>=4)Data.step=4;
+    else
+    {updateEnables();
+        return;}
+    updateEnables();
+    Data.Mode='l';
+    qDebug("调整颜色空间为Lab94");
+}
+
+void MainWindow::on_isColorSpaceLab00_clicked()
 {
     Data.adjStep=0;
     if(Data.step>=4)Data.step=4;
@@ -72,7 +84,7 @@ void MainWindow::on_isColorSpaceLab_clicked()
         return;}
     updateEnables();
     Data.Mode='L';
-    qDebug("调整颜色空间为Lab");
+    qDebug("调整颜色空间为Lab00");
 }
 
 void MainWindow::on_isColorSpaceHSV_clicked()
@@ -201,266 +213,6 @@ void MainWindow::fillMapMat(AdjT*R)
     //qDebug("成功将原图转为地图画");
     Data.adjStep=3;
 }
-/*
-void MainWindow::transQim2Float()
-{
-    if(Data.adjStep<0)return;
-    if(Data.isTransed2Float)return;
-
-    QRgb *CurrentLine;
-    QRgb CurrentColor;
-    float multiper=1.0f/255.0f;
-    //float r,g,b;
-
-    for(short r=0;r<Data.sizePic[0];r++)
-    {
-        CurrentLine=(QRgb*)Data.rawPic.scanLine(r);
-        for(short c=0;c<Data.sizePic[1];c++)
-        {
-            CurrentColor=CurrentLine[c];
-            Data.rawPicRGBc3[0](r,c)=multiper*qRed(CurrentColor);
-            Data.rawPicRGBc3[1](r,c)=multiper*qGreen(CurrentColor);
-            Data.rawPicRGBc3[2](r,c)=multiper*qBlue(CurrentColor);
-        }
-        ui->ShowProgressABbar->setValue(ui->ShowProgressABbar->value()+1);
-        //qDebug("rua!");
-    }
-    //qDebug("成功将图像转变为浮点图像");
-    Data.adjStep=1;
-}
-
-void MainWindow::transPic2RGB()
-{
-    if(!(Data.Mode=='R'||Data.Mode=='r'))
-        return;
-    if(Data.adjStep<1)return;
-    Data.rawPicRHLXc3[0]<<Data.rawPicRGBc3[0];
-    Data.rawPicRHLXc3[1]<<Data.rawPicRGBc3[1];
-    Data.rawPicRHLXc3[2]<<Data.rawPicRGBc3[2];
-    ui->ShowProgressABbar->setValue(ui->ShowProgressABbar->value()+Data.sizePic[0]);
-   // qDebug("成功将浮点图片转换为RGB");
-    Data.adjStep=2;
-}
-
-void MainWindow::transPic2HSV()
-{
-    if(Data.Mode!='H')
-        return;
-    if(Data.adjStep<1)return;
-    for(short r=0;r<Data.sizePic[0];r++)
-    {
-        for(short c=0;c<Data.sizePic[1];c++)
-        {
-            RGB2HSV(Data.rawPicRGBc3[0](r,c),Data.rawPicRGBc3[1](r,c),Data.rawPicRGBc3[2](r,c),Data.rawPicRHLXc3[0](r,c),Data.rawPicRHLXc3[1](r,c),Data.rawPicRHLXc3[2](r,c));
-            //Data.rawPicRHLXc3[0](r,c)
-        }
-        ui->ShowProgressABbar->setValue(ui->ShowProgressABbar->value()+1);
-    }
-    //qDebug("成功将浮点图片转换为HSV");
-    Data.adjStep=2;
-}
-
-void MainWindow::transPic2XYZ()
-{
-    if(Data.Mode!='X')
-        return;
-    if(Data.adjStep<1)return;
-    for(short r=0;r<Data.sizePic[0];r++)
-    {
-        for(short c=0;c<Data.sizePic[1];c++)
-        {
-            RGB2XYZ(Data.rawPicRGBc3[0](r,c),Data.rawPicRGBc3[1](r,c),Data.rawPicRGBc3[2](r,c),Data.rawPicRHLXc3[0](r,c),Data.rawPicRHLXc3[1](r,c),Data.rawPicRHLXc3[2](r,c));
-            //Data.rawPicRHLXc3[0](r,c)
-        }
-        ui->ShowProgressABbar->setValue(ui->ShowProgressABbar->value()+1);
-    }
-    //qDebug("成功将浮点图片转换为XYZ");
-    Data.adjStep=2;
-}
-
-void MainWindow::transPic2Lab()
-{
-    if(Data.Mode!='L')
-        return;
-    if(Data.adjStep<1)return;
-    for(short r=0;r<Data.sizePic[0];r++)
-    {
-        for(short c=0;c<Data.sizePic[1];c++)
-        {
-            RGB2XYZ(Data.rawPicRGBc3[0](r,c),Data.rawPicRGBc3[1](r,c),Data.rawPicRGBc3[2](r,c),Data.rawPicRHLXc3[0](r,c),Data.rawPicRHLXc3[1](r,c),Data.rawPicRHLXc3[2](r,c));
-            XYZ2Lab(Data.rawPicRHLXc3[0](r,c),Data.rawPicRHLXc3[1](r,c),Data.rawPicRHLXc3[2](r,c),Data.rawPicRHLXc3[0](r,c),Data.rawPicRHLXc3[1](r,c),Data.rawPicRHLXc3[2](r,c));
-            //Data.rawPicRHLXc3[0](r,c)
-        }
-        ui->ShowProgressABbar->setValue(ui->ShowProgressABbar->value()+1);
-    }
-    //qDebug("成功将浮点图片转换为Lab");
-    Data.adjStep=2;
-}
-
-void MainWindow::Pic2Map(MatrixXf&allowedColors)
-{
-
-    if(Data.adjStep<2)return;
-    int tempIndex=0;
-     //VectorXf Diff;
-    //Diff.setZero(allowedColors.rows());
-    for(short r=0;r<Data.sizePic[0];r++)
-    {
-        for(short c=0;c<Data.sizePic[1];c++)
-        {
-            float c0=Data.rawPicRHLXc3[0](r,c);
-            float c1=Data.rawPicRHLXc3[1](r,c);
-            float c2=Data.rawPicRHLXc3[2](r,c);
-
-            auto Diff0_2=(allowedColors.col(0).array()-c0).square();
-            auto Diff1_2=(allowedColors.col(1).array()-c1).square();
-            auto Diff2_2=(allowedColors.col(2).array()-c2).square();
-
-            auto Diff=Diff0_2+Diff1_2+Diff2_2;
-            //Data.CurrentColor-=allowedColors;
-
-            Diff.minCoeff(&tempIndex);
-            //Diff.minCoeff(tempIndex,u);
-
-
-            Data.mapPic(r,c)=Data.Allowed.Map(tempIndex,0);
-        }
-        ui->ShowProgressABbar->setValue(ui->ShowProgressABbar->value()+1);
-    }
-    Data.adjStep=3;
-    //qDebug("成功生成mapPic");
-    return;
-}
-
-void MainWindow::Pic2Map4RGB(MatrixXf &allowedColors)
-{
-    if(Data.adjStep<2)return;
-    int tempIndex=0;
-     //VectorXf Diff;
-    //Diff.setZero(allowedColors.rows());
-    for(short r=0;r<Data.sizePic[0];r++)
-    {
-        for(short c=0;c<Data.sizePic[1];c++)
-        {
-            float R=Data.rawPicRHLXc3[0](r,c);
-            float g=Data.rawPicRHLXc3[1](r,c);
-            float b=Data.rawPicRHLXc3[2](r,c);
-            float w_r=1.0f,w_g=2.0f,w_b=1.0f;
-            auto SqrModSquare=((R*R+g*g+b*b)*(allowedColors.col(0).array().square()+allowedColors.col(1).array().square()+allowedColors.col(2).array().square())).sqrt();
-            auto deltaR=(R-allowedColors.col(0).array());
-            auto deltaG=(g-allowedColors.col(1).array());
-            auto deltaB=(b-allowedColors.col(2).array());
-            auto SigmaRGB=(R+g+b+allowedColors.col(0).array()+allowedColors.col(1).array()+allowedColors.col(2).array())/3.0f;
-            auto S_r=((allowedColors.col(0).array()+R)<SigmaRGB).select((allowedColors.col(0).array()+R)/SigmaRGB,1.0f);
-            auto S_g=((allowedColors.col(1).array()+g)<SigmaRGB).select((allowedColors.col(1).array()+g)/SigmaRGB,1.0f);
-            auto S_b=((allowedColors.col(2).array()+b)<SigmaRGB).select((allowedColors.col(2).array()+b)/SigmaRGB,1.0f);
-            auto sumRGBsquare=R*allowedColors.col(0).array()+g*allowedColors.col(1).array()+b*allowedColors.col(2).array();
-            auto theta=0.6366197724f*(sumRGBsquare/SqrModSquare).acos();
-            auto OnedDeltaR=deltaR.abs()/(R+allowedColors.col(0).array());
-            auto OnedDeltaG=deltaG.abs()/(g+allowedColors.col(1).array());
-            auto OnedDeltaB=deltaB.abs()/(b+allowedColors.col(2).array());
-            auto sumOnedDelta=OnedDeltaR+OnedDeltaG+OnedDeltaB+1e-10f;
-            auto S_tr=OnedDeltaR/sumOnedDelta*S_r.square();
-            auto S_tg=OnedDeltaG/sumOnedDelta*S_g.square();
-            auto S_tb=OnedDeltaB/sumOnedDelta*S_b.square();
-            auto S_theta=S_tr+S_tg+S_tb;
-            auto Rmax=(allowedColors.col(0).array()>R).select(allowedColors.col(0).array(),R);
-            auto Gmax=(allowedColors.col(1).array()>g).select(allowedColors.col(1).array(),g);
-            auto Bmax=(allowedColors.col(2).array()>b).select(allowedColors.col(2).array(),b);
-            auto maxRGmax=(Rmax>Gmax).select(Rmax,Gmax);
-            auto S_ratio=(maxRGmax>Bmax).select(maxRGmax,Bmax);
-
-            auto dist=(S_r.square()*w_r*deltaR.square()+S_g.square()*w_g*deltaG.square()+S_b.square()*w_b*deltaB.square())/(w_r+w_g+w_b)+S_theta*S_ratio*theta.square();//+S_theta*S_ratio*theta.square()
-
-            dist.minCoeff(&tempIndex);
-
-            //((Data.CurrentColor-allowedColors).rowwise().squaredNorm()).minCoeff(&tempIndex);
-
-
-
-
-            Data.mapPic(r,c)=Data.Allowed.Map(tempIndex,0);
-        }
-        ui->ShowProgressABbar->setValue(ui->ShowProgressABbar->value()+1);
-    }
-    Data.adjStep=3;
-    //qDebug("成功生成mapPic");
-    return;
-}
-
-void MainWindow::Pic2Map4HSV(MatrixXf &allowedColors)
-{
-
-    //Pic2Map(allowedColors);
-    //return;
-
-    if(Data.adjStep<2)return;
-    int tempIndex=0;
-     //VectorXf Diff;
-    //Diff.setZero(allowedColors.rows());
-    for(short r=0;r<Data.sizePic[0];r++)
-    {
-        for(short c=0;c<Data.sizePic[1];c++)
-        {
-            float h=Data.rawPicRHLXc3[0](r,c);
-            float s=Data.rawPicRHLXc3[1](r,c);
-            float v=Data.rawPicRHLXc3[2](r,c);
-
-
-            auto deltaX=50.0f*allowedColors.col(1).array()*allowedColors.col(2).array()*((6.283185f*allowedColors.col(0).array()).cos())-50.0f*v*s*cos(6.283185f*h);
-            auto deltaY=50.0f*allowedColors.col(1).array()*allowedColors.col(2).array()*((6.283185f*allowedColors.col(0).array()).sin())-50.0f*v*s*sin(6.283185f*h);
-            auto deltaZ=86.60254f*(1.0f-allowedColors.col(2).array())-86.60254f*(1.0f-v);
-            auto Diff=deltaX.square()+deltaY.square()+deltaZ.square();
-            Diff.minCoeff(&tempIndex);
-            Data.mapPic(r,c)=Data.Allowed.Map(tempIndex,0);
-        }
-        ui->ShowProgressABbar->setValue(ui->ShowProgressABbar->value()+1);
-    }
-    Data.adjStep=3;
-    //qDebug("成功生成mapPic");
-    return;
-}
-
-void MainWindow::Pic2Map4Lab(MatrixXf &allowedColors)
-{
-    if(Data.adjStep<2)return;
-    int tempIndex=0;
-     //VectorXf Diff;
-    //Diff.setZero(allowedColors.rows());
-    for(short r=0;r<Data.sizePic[0];r++)
-    {
-        for(short c=0;c<Data.sizePic[1];c++)
-        {
-
-
-
-            float L=Data.rawPicRHLXc3[0](r,c);
-            float a=Data.rawPicRHLXc3[1](r,c);
-            float b=Data.rawPicRHLXc3[2](r,c);
-             auto deltaL_2=(allowedColors.col(0).array()-L).square();
-            float C1_2=a*a+b*b;
-            auto C2_2=allowedColors.col(1).array().square()+allowedColors.col(2).array().square();
-            auto deltaCab_2=(sqrt(C1_2)-C2_2.array().sqrt()).square();
-            auto deltaHab_2=(allowedColors.col(1).array()-a).square()+(allowedColors.col(2).array()-b).square()-deltaCab_2;
-            //SL=1,kL=1
-            //K1=0.045f
-            //K2=0.015f
-            float SC_2=(sqrt(C1_2)*0.045f+1.0f)*(sqrt(C1_2)*0.045f+1.0f);
-            auto SH_2=(C2_2.sqrt()*0.015f+1.0f).square();
-
-            auto Diff=deltaL_2+deltaCab_2/SC_2+deltaHab_2/SH_2;
-
-
-            Diff.minCoeff(&tempIndex);
-            Data.mapPic(r,c)=Data.Allowed.Map(tempIndex,0);
-        }
-        ui->ShowProgressABbar->setValue(ui->ShowProgressABbar->value()+1);
-    }
-    Data.adjStep=3;
-    //qDebug("成功生成mapPic");
-    return;
-}*/
-
 
 void MainWindow::getAdjedPic()
 {
@@ -509,10 +261,12 @@ ui->ExLite->setEnabled(false);
 //ui->ExMcF->setEnabled(false);
 
 ui->isColorSpaceHSV->setEnabled(false);
-ui->isColorSpaceRGB->setEnabled(false);;
-ui->isColorSpaceLab->setEnabled(false);;
-ui->isColorSpaceXYZ->setEnabled(false);;
-ui->isColorSpaceRGBOld->setEnabled(false);;
+ui->isColorSpaceRGB->setEnabled(false);
+ui->isColorSpaceLab94->setEnabled(false);
+ui->isColorSpaceLab00->setEnabled(false);
+ui->isColorSpaceXYZ->setEnabled(false);
+ui->isColorSpaceRGBOld->setEnabled(false);
+ui->AdjPicColor->setEnabled(false);
 ui->ShowAdjed->setEnabled(false);
 
 ui->AdjPicColor->setText("请稍等");
@@ -576,9 +330,11 @@ ui->ExLite->setEnabled(!Data.isCreative());
 
 ui->isColorSpaceHSV->setEnabled(true);
 ui->isColorSpaceRGB->setEnabled(true);
-ui->isColorSpaceLab->setEnabled(true);
+ui->isColorSpaceLab94->setEnabled(true);
+ui->isColorSpaceLab00->setEnabled(false);
 ui->isColorSpaceXYZ->setEnabled(true);
 ui->isColorSpaceRGBOld->setEnabled(true);
+ui->AdjPicColor->setEnabled(true);
 ui->ShowAdjed->setEnabled(true);
 
 ui->AdjPicColor->setText(tr("调整颜色"));

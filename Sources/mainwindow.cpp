@@ -182,3 +182,9 @@ void MainWindow::makeImage(int unitL)
     Pic.save("D:\\240Colors.png");
 }
 #endif
+
+void MainWindow::on_isColorSpaceLab00_clicked()
+{
+
+}
+

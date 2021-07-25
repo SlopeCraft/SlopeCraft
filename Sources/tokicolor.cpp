@@ -171,7 +171,6 @@ case 'R':
     c3[0]=max(qRed(rawColor)/255.0f,Thre);
     c3[1]=max(qGreen(rawColor)/255.0f,Thre);
     c3[2]=max(qBlue(rawColor)/255.0f,Thre);
-
     break;
 case 'H':
     RGB2HSV(qRed(rawColor)/255.0f,qGreen(rawColor)/255.0f,qBlue(rawColor)/255.0f,c3[0],c3[1],c3[2]);
@@ -210,6 +209,8 @@ case 'H':
     return applyHSV();
 case 'L':
     return applyLab_new();
+case 'l':
+    return applyLab_old();
 default:
     return applyXYZ();
 }
@@ -408,42 +409,3 @@ unsigned char TokiColor::applyLab_new()
     Result=Allowed->Map(tempIndex);
     return Result;
 }
-
-/*
-float L_1=Data.rawPicRHLXc3[0](r,c);
-float a_1=Data.rawPicRHLXc3[1](r,c);
-float b_1=Data.rawPicRHLXc3[2](r,c);
-auto L_2=allowedColors.col(0).array();
-auto a_2=allowedColors.col(1).array();
-auto b_2=allowedColors.col(2).array();
-float C_ab_s_1=sqrt(a_1*a_1+b_1*b_1);
-auto C_ab_s_2=(a_2.square()+b_2.square()).sqrt();
-
-auto meanC_ab_s=(C_ab_s_1+C_ab_s_2)/2.0f;
-auto G=0.5f*(1.0f-(meanC_ab_s.pow(7)/(meanC_ab_s.pow(7)+pow(25.0f,7))).sqrt());
-auto a_p_1=(1.0f+G)*a_1;
-auto a_p_2=(1.0f+G)*a_2;
-auto C_ab_p_1=(a_p_1.square()+b_1*b_1).sqrt();
-auto C_ab_p_2=(a_p_2.square()+b_2.square()).sqrt();
-auto h_ab_p_1=(b_1/a_p_1).atan();
-auto h_ab_p_2=(b_2/a_p_2).atan();
-
-auto DL_p=L_1-L_2;
-auto DC_ab=C_ab_p_1-C_ab_p_2;
-auto Dh_ab=h_ab_p_1-h_ab_p_2;
-auto DH_ab=2.0f*(C_ab_p_1*C_ab_p_2).sqrt()*((Dh_ab/2.0f).sin());
-
-auto meanL=(L_1+L_2)/2.0f;
-auto meanC_ab_p=(C_ab_p_1+C_ab_p_2)/2.0f;
-auto meanh_ab_p=(h_ab_p_1+h_ab_p_2)/2.0f;
-auto T=1.0f-0.17f*(meanh_ab_p-M_PI/6.0f).cos()+0.24f*(2.0f*meanh_ab_p).cos()+0.32f*(3.0f*meanh_ab_p+M_PI/30.0f).cos()-0.2f*(4.0f*meanh_ab_p-0.35f*M_PI).cos();
-auto S_L=1.0f+0.015f*(meanL-50.0f).square()/(20.0f+(meanL-50.0f).square()).sqrt();
-auto S_C=1.0f+0.045f*meanC_ab_p;
-auto S_H=1.0f+0.015f*meanC_ab_p*T;
-
-auto DTheta=M_PI/6.0f*(-((meanh_ab_p-275.0f/180.0f*M_PI)/25).square()).exp();
-auto R_C=2.0f*(meanC_ab_s.pow(7)/(meanC_ab_s.pow(7)+pow(25,7))).sqrt();
-auto R_T=-R_C*(2.0f*DTheta).sin();
-
-auto Diff=(DL_p/(1.0f*S_L)).square()+(DC_ab/(1.0f*S_C)).square()+(DH_ab/(1.0f*S_H)).square()+R_T*(DC_ab/(1.0f*S_C))*(DH_ab/(1.0f*S_H));
-*/

@@ -343,7 +343,9 @@ private slots:
 
     void on_isColorSpaceXYZ_clicked();
 
-    void on_isColorSpaceLab_clicked();
+    void on_isColorSpaceLab94_clicked();
+
+    void on_isColorSpaceLab00_clicked();
 
     void on_isColorSpaceHSV_clicked();
 
@@ -377,6 +379,7 @@ private slots:
     void on_AllowNaturalOpti_stateChanged(int arg1);
 
     void on_ImportSettings_clicked();
+
 
 private:
     Ui::MainWindow *ui;
