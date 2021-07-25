@@ -84,8 +84,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->isGame16,SIGNAL(clicked()),this,SLOT(grabGameVersion()));
     connect(ui->isGame17,SIGNAL(clicked()),this,SLOT(grabGameVersion()));
 
-    //connect()
-
     turnToPage(0);
 
     Data.parent=this;
@@ -183,3 +181,24 @@ void MainWindow::makeImage(int unitL)
     Pic.save("D:\\240Colors.png");
 }
 #endif
+
+void MainWindow::on_AllowNaturalOpti_clicked(bool checked)
+{
+    if(!checked)
+    {
+        ui->AllowForcedOpti->setCheckable(false);
+        ui->maxHeight->setDisabled(true);
+    }
+    else
+    {
+        ui->AllowForcedOpti->setCheckable(true);
+    }
+}
+
+
+void MainWindow::on_AllowForcedOpti_stateChanged(int arg1)
+{
+    ui->maxHeight->setDisabled(!ui->AllowForcedOpti->isChecked());
+
+}
+

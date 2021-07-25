@@ -380,6 +380,9 @@ private slots:
 
     void on_ImportSettings_clicked();
 
+    void on_AllowNaturalOpti_clicked(bool checked);
+
+    void on_AllowForcedOpti_stateChanged(int arg1);
 
 private:
     Ui::MainWindow *ui;
