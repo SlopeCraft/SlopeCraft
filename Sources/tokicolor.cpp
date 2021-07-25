@@ -344,65 +344,13 @@ unsigned char TokiColor::applyLab_new()
 {
     if(Result)return Result;
     int tempIndex=0;
-    //float L_1=c3[0];
-    //float a_1=c3[1];
-    //float b_1=c3[2];
+    float L1s=c3[0];
+    float a1s=c3[1];
+    float b1s=c3[2];
     MatrixXf &allow=Allowed->Lab;
-
-    auto Cs1ab=sqrt(c3[1]*c3[1]+c3[2]*c3[2]);
-    auto Cs2ab=(allow.col(1).array().square()+allow.col(2).array().square()).sqrt();
-    auto mCsab=(Cs1ab+Cs2ab)/2.0f;
-    auto mCsab7=mCsab.pow(7);
-    auto G=0.5f*(1.0f-(1.0f-pow(25,7)/(mCsab7+pow(25,7)+Thre)).sqrt());
-    auto ap1=(1.0f+G)*c3[1];
-    auto ap2=(1.0f+G)*allow.col(1).array();
-    auto Cp1=(ap1.square()+c3[2]*c3[2]).sqrt();
-    auto Cp2=(ap2.square()+allow.col(2).array().square()).sqrt();
-
-    auto hp1=(ap1.abs().min(abs(c3[2])>Thre)).select(atan2(ap1*0+c3[2],ap1).array(),0.0f);
-    qDebug()<<"a";//无Nan
-    auto hp2=(ap2.abs().min(allow.col(2).array().abs())>Thre).select(atan2(allow.col(2).array(),ap2).array(),0.0f);
-    qDebug()<<"b"<<hp2.isNaN().any();
-    auto dLp=allow.col(0).array()-c3[0];
-    auto dCp=Cp2-Cp1;
-    auto Cp1Cp2=(Cp1*Cp2).abs();
-    auto hp2_1=hp2-hp1;
-    qDebug()<<"c"<<hp2_1.isNaN().any();
-    auto addon=(hp2_1.abs()<=M_PI).select(hp2_1*0.0f,(hp2_1>0).select(hp2_1*0.0f+2*M_PI,-2*M_PI));
-    auto dhp=(Cp1Cp2>0.0).select(hp2_1+addon,0.0f);
-    qDebug()<<"d"<<dhp.isNaN().any();
-    //cout<<addon.transpose();
-    //cout<<dhp.transpose();
-    //return Result=0;
-
-    auto dHp=2.0f*(Cp1Cp2).sqrt()*(dhp/2.0f).sin();
-    qDebug()<<"e"<<dHp.isNaN().any();
-    auto mLp=(c3[0]+allow.col(0).array())/2.0f;
-    auto mCp=(Cp1+Cp2)/2.0f;
-    qDebug()<<"f"<<mCp.isNaN().any();
-    auto hp21=hp2+hp1;
-    auto addon2=(hp2_1.abs()<=M_PI).select(hp2_1*0.0f,(hp21<2*M_PI).select(hp21*0.0f+M_PI,-M_PI));
-    auto mhp=(Cp1Cp2>Thre).select(hp21/2.0f+addon2,hp21);
-    qDebug()<<"g"<<mhp.isNaN().any();
-    auto T=1.0f-0.17f*(mhp-M_PI/6.0).cos()+0.24f*(2*mhp).cos()+0.32*(3*mhp+M_PI/30).cos()-0.20*(4*mhp-M_PI*63.0/180.0).cos();
-    auto dTheta=M_PI/6.0*((M_PI*275.0/180.0-mhp)/(M_PI*25.0/180.0)).exp();
-    auto Rc=2*(1-(pow(25,7))/(pow(25,7)+mCp.pow(7))).sqrt();
-    qDebug()<<"h"<<Rc.isNaN().any();
-    auto mLp_50_2=(mLp-50.0).square();
-    auto SL=1.0+0.015*mLp_50_2/(20.0+mLp_50_2).sqrt();
-    auto SC=1.0+0.045*mCp;
-    auto SH=1.0+0.015*mCp*T;
-    auto RT=-Rc*(2.0*dTheta).sin();
-    qDebug()<<"i"<<RT.isNaN().any();
-    auto Diff=(dLp/SL).square()+(dCp/SC).square()+(dHp/SH).square()+RT*(dCp/SC)*(dHp/SH);
-    //代码运行效果有问题
-    //cout<<Diff.transpose()<<endl;
-    if(Diff.isInf().any())
-        qDebug("存在Inf");
-    if(Diff.isNaN().any())
-        qDebug("存在NaN");
-    qDebug()<<"j";
-    //qDebug()<<"size(Diff)=["<<Diff.rows()<<','<<Diff.cols()<<']';
+    auto L2s=allow.col(0).array();
+    auto a2s=allow.col(1).array();
+    auto b2s=allow.col(2).array();
     Diff.abs().minCoeff(&tempIndex);
         qDebug()<<"k";
     Result=Allowed->Map(tempIndex);
