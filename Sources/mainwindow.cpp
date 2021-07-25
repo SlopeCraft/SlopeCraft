@@ -84,6 +84,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->isGame16,SIGNAL(clicked()),this,SLOT(grabGameVersion()));
     connect(ui->isGame17,SIGNAL(clicked()),this,SLOT(grabGameVersion()));
 
+    //connect()
 
     turnToPage(0);
 
@@ -182,9 +183,3 @@ void MainWindow::makeImage(int unitL)
     Pic.save("D:\\240Colors.png");
 }
 #endif
-
-void MainWindow::on_isColorSpaceLab00_clicked()
-{
-
-}
-

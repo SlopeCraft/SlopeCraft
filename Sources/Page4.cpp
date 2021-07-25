@@ -331,7 +331,7 @@ ui->ExLite->setEnabled(!Data.isCreative());
 ui->isColorSpaceHSV->setEnabled(true);
 ui->isColorSpaceRGB->setEnabled(true);
 ui->isColorSpaceLab94->setEnabled(true);
-ui->isColorSpaceLab00->setEnabled(false);
+ui->isColorSpaceLab00->setEnabled(true);
 ui->isColorSpaceXYZ->setEnabled(true);
 ui->isColorSpaceRGBOld->setEnabled(true);
 ui->AdjPicColor->setEnabled(true);
