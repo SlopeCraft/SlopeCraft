@@ -81,6 +81,7 @@ public:
     unsigned char sideResult[2];//记录与result的深度值不同的两个有损优化候选色（升序排列），Depth=3时无效
     char ColorSpaceType;
     unsigned char Result;//最终调色结果
+    float ResultDiff;
     static bool needFindSide;
     static ColorSet * Basic;
     static ColorSet * Allowed;
@@ -95,7 +96,7 @@ private:
     unsigned char applyXYZ();
     unsigned char applyLab_old();
     unsigned char applyLab_new();
-    void doSide(VectorXf,float);
+    void doSide(VectorXf);
 };
 
 //int i=sizeof(TokiColor);

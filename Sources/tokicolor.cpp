@@ -44,7 +44,7 @@ auto AngleCvt(VectorXf I)
     return (I.array()>=0.0).select(I.array(),I.array()+2*M_PI);
 }
 
-void TokiColor::doSide(VectorXf Diff,float ResultDiff)
+void TokiColor::doSide(VectorXf Diff)
 {
     int tempIndex=0;
     //Diff.array()+=10.0;ResultDiff+=10.0;
@@ -228,12 +228,12 @@ unsigned char TokiColor::applyRGB()
     auto Diff=Diff0_2+Diff1_2+Diff2_2;
     //Data.CurrentColor-=allowedColors;
 
-    float ResultDiff=Diff.minCoeff(&tempIndex)+Thre;
+    ResultDiff=Diff.minCoeff(&tempIndex)+Thre;
     //Diff.minCoeff(tempIndex,u);
     Result=Allowed->Map(tempIndex);
     //qDebug("调色完毕");
     if(needFindSide)
-    doSide(Diff,ResultDiff);
+    doSide(Diff);
 
     return Result;
 }
@@ -270,7 +270,7 @@ unsigned char TokiColor::applyRGB_plus()
 
     auto dist=(S_r.square()*w_r*deltaR.square()+S_g.square()*w_g*deltaG.square()+S_b.square()*w_b*deltaB.square())/(w_r+w_g+w_b)+S_theta*S_ratio*theta.square();//+S_theta*S_ratio*theta.square()
 
-    float ResultDiff=dist.minCoeff(&tempIndex);
+    ResultDiff=dist.minCoeff(&tempIndex);
     /*if(dist.isNaN().any()){
         qDebug("出现Nan");
             if(SqrModSquare.isNaN().any())      qDebug("SqrModSquare出现Nan");
@@ -281,7 +281,7 @@ unsigned char TokiColor::applyRGB_plus()
     }*/
     Result=Allowed->Map(tempIndex);
     if(needFindSide)
-    doSide(dist,ResultDiff);
+    doSide(dist);
 
     return Result;
 }
@@ -299,10 +299,10 @@ unsigned char TokiColor::applyHSV()
     auto deltaY=50.0f*(SV*(allowedColors.col(0).array()).sin()-c3[2]*c3[1]*sin(c3[0]));
     auto deltaZ=86.60254f*(allowedColors.col(2).array()-c3[2]);
     auto Diff=deltaX.square()+deltaY.square()+deltaZ.square();
-    float ResultDiff=Diff.minCoeff(&tempIndex);
+    ResultDiff=Diff.minCoeff(&tempIndex);
     Result=Allowed->Map(tempIndex);
     if(needFindSide)
-    doSide(Diff,ResultDiff);
+    doSide(Diff);
     return Result;
 }
 
@@ -317,11 +317,11 @@ unsigned char TokiColor::applyXYZ()
     auto Diff=Diff0_2+Diff1_2+Diff2_2;
     //Data.CurrentColor-=allowedColors;
 
-    float ResultDiff=Diff.minCoeff(&tempIndex);
+    ResultDiff=Diff.minCoeff(&tempIndex);
     //Diff.minCoeff(tempIndex,u);
     Result=Allowed->Map(tempIndex);
     if(needFindSide)
-    doSide(Diff,ResultDiff);
+    doSide(Diff);
     return Result;
 }
 
@@ -344,10 +344,10 @@ unsigned char TokiColor::applyLab_old()
     float SC_2=(sqrt(C1_2)*0.045f+1.0f)*(sqrt(C1_2)*0.045f+1.0f);
     auto SH_2=(C2_2.sqrt()*0.015f+1.0f).square();
     auto Diff=deltaL_2+deltaCab_2/SC_2+deltaHab_2/SH_2;
-    float ResultDiff=Diff.minCoeff(&tempIndex);
+    ResultDiff=Diff.minCoeff(&tempIndex);
     Result=Allowed->Map(tempIndex);
     if(needFindSide)
-    doSide(Diff,ResultDiff);
+    doSide(Diff);
     return Result;
 }
 
@@ -403,9 +403,14 @@ unsigned char TokiColor::applyLab_new()
 
     Diff.abs().minCoeff(&tempIndex);
     if(Diff.isNaN().any())
+    {
         qDebug("存在NaN");
-
-
+        cout<<Diff.transpose()<<endl;
+    }
+    ResultDiff=Diff.minCoeff(&tempIndex);
+    //Diff.minCoeff(tempIndex,u);
     Result=Allowed->Map(tempIndex);
+    if(needFindSide)
+    doSide(Diff);
     return Result;
 }
