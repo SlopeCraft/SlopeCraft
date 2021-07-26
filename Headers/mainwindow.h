@@ -81,6 +81,8 @@ QRgb HSV2QRGB(float,float,float);
 QRgb XYZ2QRGB(float,float,float);
 QRgb Lab2QRGB(float,float,float);
 
+Matrix<float,2,3> DitherMapLR,DitherMapRL;
+
 class TokiColor
 {
 public:
@@ -263,11 +265,11 @@ public:
     void pushToHash(AdjT*);
     void applyTokiColor(AdjT*);
     void fillMapMat(AdjT*);
-
-
-
-    void getAdjedPic();//for step4
-
+    void Dither(AdjT*);//抖动，将三个Dither矩阵填充为抖动后的三通道值
+    void complementHash(AdjT*,MatrixXi&);//将Dither矩阵每一个元素转为QRGB装入hash
+    void reApplyTokiColor(AdjT*);//重新为新增的颜色匹配
+    void fillDitheredMapMat(AdjT*,MatrixXi&);//生成抖动后的Map矩阵
+    void getAdjedPic();//for step5
 
     void turnToPage(int);
 

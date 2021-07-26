@@ -140,6 +140,14 @@ mcMap::mcMap()
 
     colorHash=nullptr;
 
+
+    DitherMapLR<<0.0,0.0,7.0,
+                             3.0,5.0,1.0;
+    DitherMapRL<<7.0,0.0,0.0,
+                             1.0,5.0,3.0;
+    DitherMapLR/=16.0;
+    DitherMapRL/=16.0;
+
     //Build.reshape(size3D);
     //Build.setZero();
     return;

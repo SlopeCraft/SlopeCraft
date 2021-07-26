@@ -153,7 +153,6 @@ void MainWindow::applyTokiColor(AdjT*R)
 {//int ColorCount=0;
     if(Data.adjStep<1)return;
 
-
     qDebug("即将开始子线程");
     R->start();
     qDebug("已经开始子线程");
@@ -214,9 +213,173 @@ void MainWindow::fillMapMat(AdjT*R)
     Data.adjStep=3;
 }
 
+void MainWindow::Dither(AdjT *R)
+{
+    bool isDirLR=true;
+    QRgb*RCL=nullptr;
+    Data.Dither[0].setZero(Data.sizePic[0],Data.sizePic[1]);
+    Data.Dither[1].setZero(Data.sizePic[0],Data.sizePic[1]);
+    Data.Dither[2].setZero(Data.sizePic[0],Data.sizePic[1]);
+
+    MatrixXf *ColorMap=nullptr;
+    char ColorSpaceMode=(Data.Mode>='a')?(Data.Mode-('a'-'A')):Data.Mode;
+    switch (ColorSpaceMode) {
+    case 'R':
+        ColorMap=&Data.Basic._RGB;
+        break;
+    case 'H':
+        ColorMap=&Data.Basic.HSV;
+        break;
+    case 'L':
+        ColorMap=&Data.Basic.Lab;
+    default:
+        ColorMap=&Data.Basic.XYZ;
+        break;
+    }
+    MatrixXf &CM=*ColorMap;
+    int index=0;
+    for(short r=0;r<Data.sizePic[0];r++)
+    {
+        RCL=(QRgb*)Data.rawPic.scanLine(r);
+        for(short c=0;c<Data.sizePic[1];c++)
+        {
+            index=mcMap::mapColor2Index(R->colorAdjuster[RCL[c]].Result);
+            Data.Dither[0](r,c)=CM(index,0);
+            Data.Dither[1](r,c)=CM(index,1);
+            Data.Dither[2](r,c)=CM(index,2);
+        }
+    }
+    qDebug("成功填充了待抖动的矩阵Dither");
+    float dValue[3];
+
+    for(short r=0;r<Data.sizePic[0]-1;r++)//底部一行、左右两侧不产生误差扩散，只接受误差
+    {
+        RCL=(QRgb*)Data.rawPic.scanLine(r);
+        if(isDirLR)//从左至右遍历
+        {
+            for(short c=1;c<Data.sizePic[1]-1;c++)
+            {
+                if(qAlpha(RCL[c])<=0)continue;
+                dValue[0]=Data.Dither[0](r,c)-R->colorAdjuster[RCL[c]].c3[0];
+                dValue[1]=Data.Dither[1](r,c)-R->colorAdjuster[RCL[c]].c3[1];
+                dValue[2]=Data.Dither[2](r,c)-R->colorAdjuster[RCL[c]].c3[2];
+
+                Data.Dither[0].block(r,c-1,2,3).array()+=dValue[0]*DitherMapLR.array();
+                Data.Dither[1].block(r,c-1,2,3).array()+=dValue[1]*DitherMapLR.array();
+                Data.Dither[2].block(r,c-1,2,3).array()+=dValue[2]*DitherMapLR.array();
+            }
+        }
+        else
+        {
+            for(short c=Data.sizePic[1]-1;c>0;c--)
+            {
+                if(qAlpha(RCL[c])<=0)continue;
+                dValue[0]=Data.Dither[0](r,c)-R->colorAdjuster[RCL[c]].c3[0];
+                dValue[1]=Data.Dither[1](r,c)-R->colorAdjuster[RCL[c]].c3[1];
+                dValue[2]=Data.Dither[2](r,c)-R->colorAdjuster[RCL[c]].c3[2];
+
+                Data.Dither[0].block(r,c-1,2,3).array()+=dValue[0]*DitherMapRL.array();
+                Data.Dither[1].block(r,c-1,2,3).array()+=dValue[1]*DitherMapRL.array();
+                Data.Dither[2].block(r,c-1,2,3).array()+=dValue[2]*DitherMapRL.array();
+            }
+        }
+    }
+    qDebug("完成了误差扩散");
+
+}
+
+void MainWindow::complementHash(AdjT *R,MatrixXi&DitheredTempRaw)
+{
+    QRgb Current;
+    QRgb (*CvtFun)(float,float,float);
+    DitheredTempRaw.setZero(Data.sizePic[0],Data.sizePic[1]);
+    switch (Data.Mode)
+    {
+    case 'R':
+        CvtFun=RGB2QRGB;
+        break;
+    case 'r':
+        CvtFun=RGB2QRGB;
+        break;
+    case 'H':
+        CvtFun=HSV2QRGB;
+        break;
+    case 'L':
+        CvtFun=Lab2QRGB;
+        break;
+    case 'l':
+        CvtFun=Lab2QRGB;
+        break;
+    default:
+        CvtFun=XYZ2QRGB;
+        break;
+    }
+    int newColorCount=0;
+    QRgb*RCL=nullptr;
+    for(short r=0;r<Data.sizePic[0];r++)
+    {
+        RCL=(QRgb*)Data.rawPic.scanLine(r);
+        for(short c=0;c<Data.sizePic[1];c++)
+        {
+            if(qAlpha(RCL[c])<=0)continue;
+            Current=CvtFun(Data.Dither[0](r,c),Data.Dither[1](r,c),Data.Dither[2](r,c));
+            DitheredTempRaw(r,c)=Current;
+            if(R->colorAdjuster.contains(Current))continue;
+            R->colorAdjuster[Current]=TokiColor(Current,Data.Mode);
+            newColorCount++;
+        }
+    }
+    qDebug()<<"向hash中增加了"<<newColorCount<<"种颜色";
+}
+
+void MainWindow::reApplyTokiColor(AdjT *R)
+{
+    qDebug("抖动后为新增颜色匹配地图色");
+    qDebug("即将开始子线程");
+    R->start();
+    qDebug("已经开始子线程");
+    int step=reportRate*Data.sizePic[0]*Data.sizePic[1]/R->colorAdjuster.count()/2;
+    int itered=1;
+    auto mid=R->colorAdjuster.begin();
+    for(int count=0;count*2>=R->colorAdjuster.count();)
+        if(R->colorAdjuster.contains(mid.key()))
+        {
+                mid++;
+                count++;
+        }
+    //qDebug()<<"step="<<step;
+    for(auto i=R->colorAdjuster.begin();i!=R->colorAdjuster.end();i++)//前部遍历
+    {
+        //if(i==mid)break;
+        if(R->colorAdjuster.contains(i.key()))
+        {
+            if (i.value().Result)continue;//发现有处理过的颜色则跳过
+            i.value().apply(i.key());
+            //parent->AdjPro(step);
+            itered++;
+            if(itered%reportRate==0)
+            AdjPro(step);
+        }
+    }
+    R->wait();
+    qDebug("子线程执行完毕");
+}
+
+void MainWindow::fillDitheredMapMat(AdjT *R,MatrixXi&DitheredTempRaw)
+{
+    for(short r=0;r<Data.sizePic[0];r++)
+    {
+        for(short c=0;c<Data.sizePic[1];c++)
+        {
+            Data.mapPic(r,c)=R->colorAdjuster[DitheredTempRaw(r,c)].Result;
+        }
+    }
+    qDebug("重新装填完毕");
+}
+
 void MainWindow::getAdjedPic()
 {
-    if(Data.adjStep<3)return;
+    if(Data.adjStep<4)return;
     MatrixXi RGBint=(255.0f*Data.Basic._RGB).cast<int>();
     short Index;
     QRgb *CurrentLine=NULL;
@@ -237,7 +400,7 @@ void MainWindow::getAdjedPic()
         }
         AdjPro(Data.sizePic[1]);
     }
-    Data.adjStep=4;
+    Data.adjStep=5;
     //qDebug("成功生成调整后图像");
     return;
 }
@@ -273,7 +436,11 @@ ui->AdjPicColor->setText("请稍等");
 
 Data.adjStep=0;
 ui->ShowProgressABbar->setRange(0,4*Data.sizePic[0]*Data.sizePic[1]+1);
-//第一步，装入hash顺便转换颜色空间;第二步，遍历hash并匹配颜色;第三步，从hash中检索出对应的匹配结果;第四步，生成调整后图片，显示(1)
+//第一步，装入hash顺便转换颜色空间;
+//第二步，遍历hash并匹配颜色;
+//第三步，从hash中检索出对应的匹配结果;
+//第四步，抖动（包含四个函数）
+//第五步，生成调整后图片，显示(1)
 ui->ShowProgressABbar->setValue(0);
 
 //Data.CurrentColor.setZero(Data.Allowed._RGB.rows(),3);
