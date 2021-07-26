@@ -215,36 +215,49 @@ void MainWindow::fillMapMat(AdjT*R)
 
 void MainWindow::Dither(AdjT *R)
 {
-
+#ifdef putDitheredImg
+    QImage DitheredImg(Data.sizePic[0],Data.sizePic[1],QImage::Format_ARGB32);
+#endif
     cout<<"DitherMapLR="<<endl;
     cout<<DitherMapLR<<endl;
     cout<<"DitherMapRL="<<endl;
     cout<<DitherMapRL<<endl;
     bool isDirLR=true;
     QRgb*RCL=nullptr;
-    Data.Dither[0].setZero(Data.sizePic[0],Data.sizePic[1]);
-    Data.Dither[1].setZero(Data.sizePic[0],Data.sizePic[1]);
-    Data.Dither[2].setZero(Data.sizePic[0],Data.sizePic[1]);
+#ifdef putDitheredImg
+    QRgb*OCL=nullptr;
+#endif
+    Data.Dither[0].setZero(Data.sizePic[0]+2,Data.sizePic[1]+2);
+    Data.Dither[1].setZero(Data.sizePic[0]+2,Data.sizePic[1]+2);
+    Data.Dither[2].setZero(Data.sizePic[0]+2,Data.sizePic[1]+2);
 
     MatrixXf *ColorMap=nullptr;
+    QRgb Current;
+    QRgb (*CvtFun)(float,float,float);
     switch (Data.Mode) {
     case 'R':
-        ColorMap=&Data.Basic._RGB;
+        ColorMap=&Data.Basic._RGB;        
+        CvtFun=RGB2QRGB;
         break;
     case 'r':
         ColorMap=&Data.Basic._RGB;
+        CvtFun=RGB2QRGB;
         break;
     case 'H':
         ColorMap=&Data.Basic.HSV;
+        CvtFun=HSV2QRGB;
         break;
     case 'L':
         ColorMap=&Data.Basic.Lab;
+        CvtFun=Lab2QRGB;
         break;
     case 'l':
         ColorMap=&Data.Basic.Lab;
+        CvtFun=Lab2QRGB;
         break;
     default:
         ColorMap=&Data.Basic.XYZ;
+        CvtFun=XYZ2QRGB;
         break;
     }
     MatrixXf &CM=*ColorMap;
@@ -254,46 +267,87 @@ void MainWindow::Dither(AdjT *R)
         RCL=(QRgb*)Data.rawPic.scanLine(r);
         for(short c=0;c<Data.sizePic[1];c++)
         {
-            index=mcMap::mapColor2Index(R->colorAdjuster[RCL[c]].Result);
-            Data.Dither[0](r,c)=CM(index,0);
-            Data.Dither[1](r,c)=CM(index,1);
-            Data.Dither[2](r,c)=CM(index,2);
+            //index=mcMap::mapColor2Index(R->colorAdjuster[RCL[c]].Result);
+            Data.Dither[0](r+1,c+1)=R->colorAdjuster[RCL[c]].c3[0];
+            Data.Dither[1](r+1,c+1)=R->colorAdjuster[RCL[c]].c3[1];
+            Data.Dither[2](r+1,c+1)=R->colorAdjuster[RCL[c]].c3[2];
         }
     }
     qDebug("成功填充了待抖动的矩阵Dither");
     float Error[3];
-
-    for(short r=0;r<Data.sizePic[0]-1;r++)//底部一行、左右两侧不产生误差扩散，只接受误差
+    int newCount=0;
+    for(short r=0;r<Data.sizePic[0];r++)//底部一行、左右两侧不产生误差扩散，只接受误差
     {
         RCL=(QRgb*)Data.rawPic.scanLine(r);
+#ifdef putDitheredImg
+        OCL=(QRgb*)DitheredImg.scanLine(r);
+#endif
         if(isDirLR)//从左至右遍历
         {
-            for(short c=1;c<Data.sizePic[1]-1;c++)
+            for(short c=0;c<Data.sizePic[1];c++)
             {
                 if(qAlpha(RCL[c])<=0)continue;
-                Error[0]=R->colorAdjuster[RCL[c]].c3[0]-Data.Dither[0](r,c);
-                Error[1]=R->colorAdjuster[RCL[c]].c3[1]-Data.Dither[1](r,c);
-                Error[2]=R->colorAdjuster[RCL[c]].c3[2]-Data.Dither[2](r,c);
 
-                Data.Dither[0].block(r,c-1,2,3)+=Error[0]*DitherMapLR;
-                Data.Dither[1].block(r,c-1,2,3)+=Error[1]*DitherMapLR;
-                Data.Dither[2].block(r,c-1,2,3)+=Error[2]*DitherMapLR;
+                Current=CvtFun(Data.Dither[0](r+1,c+1),Data.Dither[1](r+1,c+1),Data.Dither[2](r+1,c+1));
+#ifdef putDitheredImg
+      OCL[c]=Current;
+#endif
+                if(!R->colorAdjuster.contains(Current))
+                {
+                    R->colorAdjuster[Current]=TokiColor(Current,Data.Mode);
+                    R->colorAdjuster[Current].apply(Current);
+                    //装入了一个新颜色并匹配为地图色
+                    newCount++;
+                }
+                Data.mapPic(r,c)=R->colorAdjuster[Current].Result;
+                index=mcMap::mapColor2Index(Data.mapPic(r,c));
+                /*
+                Data.Dither[0](r+1,c+1)=CM(index,0);
+                Data.Dither[1](r+1,c+1)=CM(index,1);
+                Data.Dither[2](r+1,c+1)=CM(index,2);
+*/
+
+                Error[0]=Data.Dither[0](r+1,c+1)-CM(index,0);
+                Error[1]=Data.Dither[1](r+1,c+1)-CM(index,1);
+                Error[2]=Data.Dither[2](r+1,c+1)-CM(index,2);
+
+                Data.Dither[0].block(r+1,c+1-1,2,3)+=Error[0]*DitherMapLR;
+                Data.Dither[1].block(r+1,c+1-1,2,3)+=Error[1]*DitherMapLR;
+                Data.Dither[2].block(r+1,c+1-1,2,3)+=Error[2]*DitherMapLR;
             }
             //qDebug("从左至右遍历了一行");
             //qDebug()<<"Error="<<Error[0]<<','<<Error[1]<<','<<Error[2];
+
         }
         else
         {
-            for(short c=Data.sizePic[1]-2;c>0;c--)
+            for(short c=Data.sizePic[1]-1;c>=0;c--)
             {
                 if(qAlpha(RCL[c])<=0)continue;
-                Error[0]=R->colorAdjuster[RCL[c]].c3[0]-Data.Dither[0](r,c);
-                Error[1]=R->colorAdjuster[RCL[c]].c3[1]-Data.Dither[1](r,c);
-                Error[2]=R->colorAdjuster[RCL[c]].c3[2]-Data.Dither[2](r,c);
 
-                Data.Dither[0].block(r,c-1,2,3)+=Error[0]*DitherMapRL;
-                Data.Dither[1].block(r,c-1,2,3)+=Error[1]*DitherMapRL;
-                Data.Dither[2].block(r,c-1,2,3)+=Error[2]*DitherMapRL;
+                Current=CvtFun(Data.Dither[0](r+1,c+1),Data.Dither[1](r+1,c+1),Data.Dither[2](r+1,c+1));
+#ifdef putDitheredImg
+      OCL[c]=Current;
+#endif
+                if(!R->colorAdjuster.contains(Current))
+                {
+                    R->colorAdjuster[Current]=TokiColor(Current,Data.Mode);
+                    R->colorAdjuster[Current].apply(Current);
+                    qDebug("装入了一个新颜色并匹配为地图色");
+                }
+                Data.mapPic(r,c)=R->colorAdjuster[Current].Result;
+                index=mcMap::mapColor2Index(R->colorAdjuster[Current].Result);
+                Data.Dither[0](r+1,c+1)=CM(index,0);
+                Data.Dither[1](r+1,c+1)=CM(index,1);
+                Data.Dither[2](r+1,c+1)=CM(index,2);
+
+                Error[0]=R->colorAdjuster[RCL[c]].c3[0]-Data.Dither[0](r+1,c+1);
+                Error[1]=R->colorAdjuster[RCL[c]].c3[1]-Data.Dither[1](r+1,c+1);
+                Error[2]=R->colorAdjuster[RCL[c]].c3[2]-Data.Dither[2](r+1,c+1);
+
+                Data.Dither[0].block(r+1,c+1-1,2,3)+=Error[0]*DitherMapRL;
+                Data.Dither[1].block(r+1,c+1-1,2,3)+=Error[1]*DitherMapRL;
+                Data.Dither[2].block(r+1,c+1-1,2,3)+=Error[2]*DitherMapRL;
             }
             //qDebug("从右至左遍历了一行");
             //qDebug()<<"Error="<<Error[0]<<','<<Error[1]<<','<<Error[2];
@@ -301,9 +355,19 @@ void MainWindow::Dither(AdjT *R)
         //isDirLR=!isDirLR;
     }
     qDebug("完成了误差扩散");
+    qDebug()<<"Hash中共新插入了"<<newCount<<"个颜色";
+    Data.Dither[0]=Data.Dither[0].block(1,1,Data.sizePic[0],Data.sizePic[1]);
+    Data.Dither[1]=Data.Dither[1].block(1,1,Data.sizePic[0],Data.sizePic[1]);
+    Data.Dither[2]=Data.Dither[2].block(1,1,Data.sizePic[0],Data.sizePic[1]);
+
+    qDebug("去除了Dither的零边");
+
+#ifdef putDitheredImg
+      DitheredImg.save("D:\\DitheredRawImage.png");
+#endif
 
 }
-
+/*
 void MainWindow::complementHash(AdjT *R,MatrixXi&DitheredTempRaw)
 {
     QRgb Current;
@@ -407,7 +471,7 @@ void MainWindow::fillDitheredMapMat(AdjT *R,MatrixXi&DitheredTempRaw)
 
     DitheredRawImage.save("D:\\DitheredRawImage.png");
 
-}
+}*/
 
 void MainWindow::getAdjedPic()
 {
@@ -504,11 +568,8 @@ qDebug()<<"fillMapMat用时："<<clock()-start;
 
 if(ui->AllowDither->isChecked())
 {
-    MatrixXi DitherTempRaw;
+    //MatrixXi DitherTempRaw;
     Dither(&Runner);
-    complementHash(&Runner,DitherTempRaw);
-    reApplyTokiColor(&Runner);
-    fillDitheredMapMat(&Runner,DitherTempRaw);
 }
 Data.adjStep=4;
 

@@ -23,7 +23,7 @@ This file is part of SlopeCraft.
 #define MAINWINDOW_H
 
 //#define dispDerivative
-
+#define putDitheredImg
 #include "NBTWriter.h"
 #include "ui_mainwindow.h"
 
@@ -266,9 +266,6 @@ public:
     void applyTokiColor(AdjT*);
     void fillMapMat(AdjT*);
     void Dither(AdjT*);//抖动，将三个Dither矩阵填充为抖动后的三通道值
-    void complementHash(AdjT*,MatrixXi&);//将Dither矩阵每一个元素转为QRGB装入hash
-    void reApplyTokiColor(AdjT*);//重新为新增的颜色匹配
-    void fillDitheredMapMat(AdjT*,MatrixXi&);//生成抖动后的Map矩阵
     void getAdjedPic();//for step5
 
     void turnToPage(int);
