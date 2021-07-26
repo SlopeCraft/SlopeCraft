@@ -79,7 +79,7 @@ float squeeze01(float);
 QRgb RGB2QRGB(float,float,float);
 QRgb HSV2QRGB(float,float,float);
 QRgb XYZ2QRGB(float,float,float);
-QRgb Lab2QRgb(float,float,float);
+QRgb Lab2QRGB(float,float,float);
 
 class TokiColor
 {
