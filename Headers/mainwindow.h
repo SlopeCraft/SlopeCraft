@@ -67,9 +67,20 @@ void GetMap(VectorXi &Map);
 using namespace Eigen;
 //class ColorSet;
 void f(float &);
+void invf(float&);
 void RGB2HSV(float, float, float,  float &, float &, float &);
+void HSV2RGB(float,float,float,float&,float&,float&);
 void RGB2XYZ(float R, float G, float B, float &X, float &Y, float &Z);
 void XYZ2Lab(float X, float Y, float Z, float &L, float &a, float &b);
+void Lab2XYZ(float L,float a,float b,float&X,float&Y,float&Z);
+
+
+float squeeze01(float);
+QRgb RGB2QRGB(float,float,float);
+QRgb HSV2QRGB(float,float,float);
+QRgb XYZ2QRGB(float,float,float);
+QRgb Lab2QRgb(float,float,float);
+
 class TokiColor
 {
 public:
@@ -140,10 +151,10 @@ public:
         QImage OriginPic;
         QImage rawPic;
         QImage adjedPic;
-        //MatrixXf rawPicRGBc3[3];
-        //MatrixXf rawPicRHLXc3[3];
 
-        //MatrixXf CurrentColor;
+        MatrixXf Dither[3];
+        QHash<QRgb,TokiColor>*colorHash;
+
 
         MatrixXi mapPic;//stores mapColor
         MatrixXi Base;
@@ -156,19 +167,13 @@ public:
         Tensor<unsigned char,3>Build;//x,y,z
         char Mode;//R->RGB,H->HSV,L->Lab,X->XYZ
 
-        //Colors
-        //rawPic*
-        //MapPic*
-        //AdjedPic*
-        //NBTWriter*
-        //Build
-        //
         short ExLitestep;
         short ExMcFstep;
 
         QString ProductPath;
         bool allowNaturalOpti;
-
+        bool allowForcedOpti;
+        int maxHeight;
         long makeHeight();//构建高度矩阵
         long BuildHeight();//构建真正的立体结构（三维矩阵
         long exportAsLitematica(QString FilePathAndName);
@@ -176,8 +181,6 @@ public:
         long exportAsData(const QString &FolderPath,const int indexStart);
 
         void putCommand(const QString&Command);
-
-
 
         void writeBlock(const QString &netBlockId,vector<QString>&Property,vector<QString>&ProVal,NBT::NBTWriter&);
 

@@ -131,10 +131,15 @@ mcMap::mcMap()
 
     CommandCount=0;
     NWPos[0]=-64;NWPos[1]=5;NWPos[2]=-64;
-    //fstream ExMcF;
+
     netFilePath[0]=0;//纯路径，不包含最后的文件名
     netFileName[0]=0;//纯文件名，不含后缀名
-    this->allowNaturalOpti=false;
+    allowNaturalOpti=false;
+    allowForcedOpti=false;
+    maxHeight=-1;
+
+    colorHash=nullptr;
+
     //Build.reshape(size3D);
     //Build.setZero();
     return;

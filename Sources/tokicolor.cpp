@@ -114,6 +114,16 @@ void f(float &I)
     return;
 }
 
+void invf(float&I)
+{
+    if(I>std::pow(0.008856,1.0/3.0))
+        I=I*I*I;
+    else
+        I=(I-16.0/116.0)/7.787;
+    return;
+}
+
+
 TokiColor::TokiColor()
 {
     ColorSpaceType='R';
@@ -141,6 +151,54 @@ void RGB2HSV(float r, float g, float b,  float &h, float &s, float &v)
     return;
 }
 
+void HSV2RGB(float H,float S,float V,float&r,float&g,float&b)
+{
+    float C=V*S;
+    float X=C*(1-abs(int(H/deg2rad(60.0))%2-1));
+    float m=V-C;
+    if(H<deg2rad(60))
+    {
+        r=C+m;
+        g=X+m;
+        b=0+m;
+        return;
+    }
+    if(H<deg2rad(120))
+    {
+        r=X+m;
+        g=C+m;
+        b=0+m;
+        return;
+    }
+    if(H<deg2rad(180))
+    {
+        r=0+m;
+        g=C+m;
+        b=X+m;
+        return;
+    }
+    if(H<deg2rad(240))
+    {
+        r=0+m;
+        g=X+m;
+        b=C+m;
+        return;
+    }
+    if(H<deg2rad(300))
+    {
+        r=X+m;
+        g=0+m;
+        b=C+m;
+        return;
+    }
+
+        r=C+m;
+        g=0+m;
+        b=X+m;
+        return;
+
+}
+
 void RGB2XYZ(float R, float G, float B, float &X, float &Y, float &Z)
 {
     X = 0.412453f * R + 0.357580f * G + 0.180423f * B;
@@ -159,6 +217,58 @@ void XYZ2Lab(float X, float Y, float Z, float &L, float &a, float &b)
     b=200.0f*(Y-Z);
     return;
 }
+
+void Lab2XYZ(float L,float a,float b,float&X,float&Y,float&Z)
+{
+    L+=16.0;
+    X=0.008620689655172*L;
+    Y=X-0.002*a;
+    Z=Y-0.005*b;
+    /*
+[X';Y';Z']=[0.008620689655172,0,0;
+0.008620689655172,-0.002,0;
+0.008620689655172,-0.002,-0.005]*[L+16;a;b]
+*/
+    invf(X);invf(Y);invf(Z);
+    X*=0.9504f;Y*=1.0f;Z*=1.0888f;
+}
+
+inline float squeeze01(float t)
+{
+    if(t<0.0)return 0.0f;
+    if(t>1.0)return 1.0f;
+    return t;
+}
+
+QRgb RGB2QRGB(float r,float g,float b)
+{
+    return qRgb(255*squeeze01(r),255*squeeze01(g),255*squeeze01(b));
+}
+
+QRgb XYZ2QRGB(float x,float y,float z)
+{
+    /*
+[3.2404814,-1.5371516,-0.4985363;
+-0.9692550,1.8759900,0.0415559;
+0.0556466,-0.2040413,1.0573111]
+*/
+    return RGB2QRGB(3.2404814*x-1.5371516*y-0.4985363*z,-0.9692550*x+1.8759900*y+0.0415559*z,0.0556466*x-0.2040413*y+1.0573111*z);
+}
+
+QRgb Lab2QRGB(float L,float a,float b)
+{
+float x,y,z;
+Lab2XYZ(L,a,b,x,y,z);
+return XYZ2QRGB(x,y,z);
+}
+
+QRgb HSV2QRGB(float H,float S,float V)
+{
+    float r,g,b;
+    HSV2RGB(H,S,V,r,g,b);
+    return RGB2QRGB(r,g,b);
+}
+
 
 TokiColor::TokiColor(const QRgb& rawColor,char _ColorSpaceType)
 {
@@ -192,7 +302,11 @@ Result=0;
 unsigned char TokiColor::apply(QRgb Color)
 {
     if(qAlpha(Color)<=0)
+    {
+        Result=1;
+        ResultDiff=0;
         return 0;
+    }
     else
         return apply();
 }
