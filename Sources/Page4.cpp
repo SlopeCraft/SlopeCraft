@@ -215,6 +215,11 @@ void MainWindow::fillMapMat(AdjT*R)
 
 void MainWindow::Dither(AdjT *R)
 {
+
+    cout<<"DitherMapLR="<<endl;
+    cout<<DitherMapLR<<endl;
+    cout<<"DitherMapRL="<<endl;
+    cout<<DitherMapRL<<endl;
     bool isDirLR=true;
     QRgb*RCL=nullptr;
     Data.Dither[0].setZero(Data.sizePic[0],Data.sizePic[1]);
@@ -222,9 +227,11 @@ void MainWindow::Dither(AdjT *R)
     Data.Dither[2].setZero(Data.sizePic[0],Data.sizePic[1]);
 
     MatrixXf *ColorMap=nullptr;
-    char ColorSpaceMode=(Data.Mode>='a')?(Data.Mode-('a'-'A')):Data.Mode;
-    switch (ColorSpaceMode) {
+    switch (Data.Mode) {
     case 'R':
+        ColorMap=&Data.Basic._RGB;
+        break;
+    case 'r':
         ColorMap=&Data.Basic._RGB;
         break;
     case 'H':
@@ -232,6 +239,10 @@ void MainWindow::Dither(AdjT *R)
         break;
     case 'L':
         ColorMap=&Data.Basic.Lab;
+        break;
+    case 'l':
+        ColorMap=&Data.Basic.Lab;
+        break;
     default:
         ColorMap=&Data.Basic.XYZ;
         break;
@@ -250,7 +261,7 @@ void MainWindow::Dither(AdjT *R)
         }
     }
     qDebug("成功填充了待抖动的矩阵Dither");
-    float dValue[3];
+    float Error[3];
 
     for(short r=0;r<Data.sizePic[0]-1;r++)//底部一行、左右两侧不产生误差扩散，只接受误差
     {
@@ -260,29 +271,34 @@ void MainWindow::Dither(AdjT *R)
             for(short c=1;c<Data.sizePic[1]-1;c++)
             {
                 if(qAlpha(RCL[c])<=0)continue;
-                dValue[0]=Data.Dither[0](r,c)-R->colorAdjuster[RCL[c]].c3[0];
-                dValue[1]=Data.Dither[1](r,c)-R->colorAdjuster[RCL[c]].c3[1];
-                dValue[2]=Data.Dither[2](r,c)-R->colorAdjuster[RCL[c]].c3[2];
+                Error[0]=R->colorAdjuster[RCL[c]].c3[0]-Data.Dither[0](r,c);
+                Error[1]=R->colorAdjuster[RCL[c]].c3[1]-Data.Dither[1](r,c);
+                Error[2]=R->colorAdjuster[RCL[c]].c3[2]-Data.Dither[2](r,c);
 
-                Data.Dither[0].block(r,c-1,2,3).array()+=dValue[0]*DitherMapLR.array();
-                Data.Dither[1].block(r,c-1,2,3).array()+=dValue[1]*DitherMapLR.array();
-                Data.Dither[2].block(r,c-1,2,3).array()+=dValue[2]*DitherMapLR.array();
+                Data.Dither[0].block(r,c-1,2,3)+=Error[0]*DitherMapLR;
+                Data.Dither[1].block(r,c-1,2,3)+=Error[1]*DitherMapLR;
+                Data.Dither[2].block(r,c-1,2,3)+=Error[2]*DitherMapLR;
             }
+            //qDebug("从左至右遍历了一行");
+            //qDebug()<<"Error="<<Error[0]<<','<<Error[1]<<','<<Error[2];
         }
         else
         {
-            for(short c=Data.sizePic[1]-1;c>0;c--)
+            for(short c=Data.sizePic[1]-2;c>0;c--)
             {
                 if(qAlpha(RCL[c])<=0)continue;
-                dValue[0]=Data.Dither[0](r,c)-R->colorAdjuster[RCL[c]].c3[0];
-                dValue[1]=Data.Dither[1](r,c)-R->colorAdjuster[RCL[c]].c3[1];
-                dValue[2]=Data.Dither[2](r,c)-R->colorAdjuster[RCL[c]].c3[2];
+                Error[0]=R->colorAdjuster[RCL[c]].c3[0]-Data.Dither[0](r,c);
+                Error[1]=R->colorAdjuster[RCL[c]].c3[1]-Data.Dither[1](r,c);
+                Error[2]=R->colorAdjuster[RCL[c]].c3[2]-Data.Dither[2](r,c);
 
-                Data.Dither[0].block(r,c-1,2,3).array()+=dValue[0]*DitherMapRL.array();
-                Data.Dither[1].block(r,c-1,2,3).array()+=dValue[1]*DitherMapRL.array();
-                Data.Dither[2].block(r,c-1,2,3).array()+=dValue[2]*DitherMapRL.array();
+                Data.Dither[0].block(r,c-1,2,3)+=Error[0]*DitherMapRL;
+                Data.Dither[1].block(r,c-1,2,3)+=Error[1]*DitherMapRL;
+                Data.Dither[2].block(r,c-1,2,3)+=Error[2]*DitherMapRL;
             }
+            //qDebug("从右至左遍历了一行");
+            //qDebug()<<"Error="<<Error[0]<<','<<Error[1]<<','<<Error[2];
         }
+        //isDirLR=!isDirLR;
     }
     qDebug("完成了误差扩散");
 
@@ -324,7 +340,9 @@ void MainWindow::complementHash(AdjT *R,MatrixXi&DitheredTempRaw)
             if(qAlpha(RCL[c])<=0)continue;
             Current=CvtFun(Data.Dither[0](r,c),Data.Dither[1](r,c),Data.Dither[2](r,c));
             DitheredTempRaw(r,c)=Current;
+
             if(R->colorAdjuster.contains(Current))continue;
+
             R->colorAdjuster[Current]=TokiColor(Current,Data.Mode);
             newColorCount++;
         }
@@ -375,6 +393,20 @@ void MainWindow::fillDitheredMapMat(AdjT *R,MatrixXi&DitheredTempRaw)
         }
     }
     qDebug("重新装填完毕");
+
+    QImage DitheredRawImage(Data.sizePic[0],Data.sizePic[1],QImage::Format_ARGB32);
+    QRgb *CL=nullptr;
+    for(short r=0;r<Data.sizePic[0];r++)
+    {
+        CL=(QRgb*)DitheredRawImage.scanLine(r);
+        for(short c=0;c<Data.sizePic[1];c++)
+        {
+            CL[c]=DitheredTempRaw(r,c);
+        }
+    }
+
+    DitheredRawImage.save("D:\\DitheredRawImage.png");
+
 }
 
 void MainWindow::getAdjedPic()
@@ -412,7 +444,7 @@ void MainWindow::on_ShowRaw_clicked()
 
 void MainWindow::on_ShowAdjed_clicked()
 {
-    if(Data.adjStep<4)return;
+    if(Data.adjStep<5)return;
     ui->ShowPic->setPixmap((QPixmap::fromImage(Data.adjedPic)));
 }
 
@@ -435,7 +467,7 @@ ui->ShowAdjed->setEnabled(false);
 ui->AdjPicColor->setText("请稍等");
 
 Data.adjStep=0;
-ui->ShowProgressABbar->setRange(0,4*Data.sizePic[0]*Data.sizePic[1]+1);
+ui->ShowProgressABbar->setRange(0,5*Data.sizePic[0]*Data.sizePic[1]+1);
 //第一步，装入hash顺便转换颜色空间;
 //第二步，遍历hash并匹配颜色;
 //第三步，从hash中检索出对应的匹配结果;
@@ -452,12 +484,7 @@ if(Data.isCreative())
     ui->ShowDataCounts->setText(QString::number(ceil(Data.mapPic.cols()/128.0f)*ceil(Data.mapPic.rows()/128.0f)));
     ui->InputDataIndex->setText("0");
 }
-/*
-qDebug("即将开始子线程");
-Runner.start();
-qDebug("已经开始子线程");
-Runner.wait();
-qDebug("子线程执行完毕");*/
+
 AdjT Runner(this);
 clock_t start;
 start=clock();
@@ -474,9 +501,22 @@ ui->ShowProgressABbar->setValue(lastValue+Data.sizePic[0]*Data.sizePic[1]);
 start=clock();
 fillMapMat(&Runner);
 qDebug()<<"fillMapMat用时："<<clock()-start;
+
+if(ui->AllowDither->isChecked())
+{
+    MatrixXi DitherTempRaw;
+    Dither(&Runner);
+    complementHash(&Runner,DitherTempRaw);
+    reApplyTokiColor(&Runner);
+    fillDitheredMapMat(&Runner,DitherTempRaw);
+}
+Data.adjStep=4;
+
+start=clock();
+
 getAdjedPic();
 
-Data.adjStep=4;
+Data.adjStep=5;
 on_ShowAdjed_clicked();
 
 qDebug()<<"生成调整后图像用时："<<clock()-start;

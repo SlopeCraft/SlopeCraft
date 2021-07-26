@@ -81,7 +81,7 @@ QRgb HSV2QRGB(float,float,float);
 QRgb XYZ2QRGB(float,float,float);
 QRgb Lab2QRGB(float,float,float);
 
-Matrix<float,2,3> DitherMapLR,DitherMapRL;
+extern Matrix<float,2,3> DitherMapLR,DitherMapRL;
 
 class TokiColor
 {
