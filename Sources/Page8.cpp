@@ -41,7 +41,6 @@ void MainWindow::on_seeExported_clicked()
         //char b='\"';
         Data.ProductPath.replace("/","\\");
         QProcess pro;
-        //explorer /select,D:\游戏\Minecraft\海蛋的皮肤.png
         Data.ProductPath=Data.ProductPath.left(Data.ProductPath.lastIndexOf('\\'));
         qDebug().noquote()<<Data.ProductPath;
         QString cmd="explorer /select,\""+Data.ProductPath+"\"";

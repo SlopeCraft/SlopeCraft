@@ -23,7 +23,7 @@ This file is part of SlopeCraft.
 #define MAINWINDOW_H
 
 //#define dispDerivative
-#define putDitheredImg
+//#define putDitheredImg
 #include "NBTWriter.h"
 #include "ui_mainwindow.h"
 
@@ -74,6 +74,7 @@ void RGB2XYZ(float R, float G, float B, float &X, float &Y, float &Z);
 void XYZ2Lab(float X, float Y, float Z, float &L, float &a, float &b);
 void Lab2XYZ(float L,float a,float b,float&X,float&Y,float&Z);
 
+float Lab00(float,float,float,float,float,float);
 
 float squeeze01(float);
 QRgb RGB2QRGB(float,float,float);
@@ -196,7 +197,6 @@ public:
 bool dealBlockId(const QString&BlockId,QString&netBlockId,vector<QString>&Property,vector<QString>&ProVal);
 QRgb ComposeColor(const QRgb&front,const QRgb&back);
 
-float Lab00(float,float,float,float,float,float);
 
 class AdjT;
 
