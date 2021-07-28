@@ -70,11 +70,11 @@ SOURCES += \
     zlibs/zutil.c
 
 HEADERS += \
-    NBTWriter.h \
-    mainwindow.h \
-    optitree.h \
-    previewwind.h \
-    tpstrategywind.h \
+    Headers/NBTWriter.h \
+    Headers/mainwindow.h \
+    Headers/optitree.h \
+    Headers/previewwind.h \
+    Headers/tpstrategywind.h \
     zlibs/crc32.h \
     zlibs/deflate.h \
     zlibs/gzguts.h \
@@ -88,14 +88,14 @@ HEADERS += \
     zlibs/zutil.h
 
 FORMS += \
-    mainwindow.ui \
+    others/mainwindow.ui \
  \    #previewer.ui
-    previewwind.ui \
-    tpstrategywind.ui
+    others/previewwind.ui \
+    others/tpstrategywind.ui
 
 TRANSLATIONS += \
-    Slope_zh_CN.ts \
-    Slope_en_US.ts
+    others/Slope_zh_CN.ts \
+    others/Slope_en_US.ts
 
 CODECFORTR = utf-8
 
@@ -110,8 +110,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
-    ../BlockTextures.qrc \
-    ../Languages.qrc \
-    Pics.qrc
+    others/BlockTextures.qrc \
+    others/Languages.qrc \
+    others/Pics.qrc
 
 QT += widgets
