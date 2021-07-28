@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/lans">
-        <file>Slope/Slope_en_US.qm</file>
-        <file>Slope/Slope_zh_CN.qm</file>
+        <file>Slope_en_US.qm</file>
+        <file>Slope_zh_CN.qm</file>
     </qresource>
 </RCC>

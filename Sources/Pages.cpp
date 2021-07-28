@@ -47,9 +47,9 @@ void MainWindow::switchLan(bool isEng)
     qDebug("开始调整语言");
     if(isEng)
     {
-        if(!trans.load(":/lans/Slope/Slope_en_US.qm"))
+        if(!trans.load(":/lans/Slope_en_US.qm"))
         {
-            qDebug("载入\":/lans/Slope/Slope_en_US.qm\"失败");
+            qDebug("载入\":/lans/Slope_en_US.qm\"失败");
             return;
         }
         qApp->installTranslator(&trans);
@@ -58,9 +58,9 @@ void MainWindow::switchLan(bool isEng)
     }
     else
     {
-        if(!trans.load(":/lans/Slope/Slope_zh_CN.qm"))
+        if(!trans.load(":/lans/Slope_zh_CN.qm"))
         {
-            qDebug("载入\":/lans/Slope/Slope_zh_CN.qm\"失败");
+            qDebug("载入\":/lans/Slope_zh_CN.qm\"失败");
             return;
         }
         qApp->installTranslator(&trans);
