@@ -2,6 +2,11 @@ QT       += core gui
 #QT += opengl
 #QT += quick quick3d
 INCLUDEPATH += D:\eigen-3.3.9
+INCLUDEPATH += ./Headers
+INCLUDEPATH += ./Sources
+INCLUDEPATH += ./others
+
+
 DEFINES += WIN32_LEAN_AND_MEAN
 RC_ICONS = others/SlopeCraft.ico
 # 版本号
