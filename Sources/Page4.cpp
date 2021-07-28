@@ -231,7 +231,7 @@ void MainWindow::Dither(AdjT *R)
     Data.Dither[1].setZero(Data.sizePic[0]+2,Data.sizePic[1]+2);
     Data.Dither[2].setZero(Data.sizePic[0]+2,Data.sizePic[1]+2);
 
-    MatrixXf *ColorMap=nullptr;
+    ArrayXXf *ColorMap=nullptr;
     QRgb Current;
     QRgb (*CvtFun)(float,float,float);
     switch (Data.Mode) {
@@ -260,7 +260,7 @@ void MainWindow::Dither(AdjT *R)
         CvtFun=XYZ2QRGB;
         break;
     }
-    MatrixXf &CM=*ColorMap;
+    ArrayXXf &CM=*ColorMap;
     int index=0;
     for(short r=0;r<Data.sizePic[0];r++)
     {

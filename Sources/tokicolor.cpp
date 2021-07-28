@@ -355,7 +355,7 @@ unsigned char TokiColor::applyRGB_plus()
 {
     if(Result)return Result;
     int tempIndex=0;
-    MatrixXf &allowedColors=Allowed->_RGB;
+    ArrayXXf &allowedColors=Allowed->_RGB;
     float R=c3[0];
     float g=c3[1];
     float b=c3[2];
@@ -403,7 +403,7 @@ unsigned char TokiColor::applyHSV()
 {
     if(Result)return Result;
     int tempIndex=0;
-    MatrixXf &allowedColors=Allowed->HSV;
+    ArrayXXf &allowedColors=Allowed->HSV;
     //float h=c3[0];
     //float s=c3[1];
     //float v=c3[2];
@@ -445,7 +445,7 @@ unsigned char TokiColor::applyLab_old()
     float L=c3[0];
     float a=c3[1];
     float b=c3[2];
-    MatrixXf &allowedColors=Allowed->Lab;
+    ArrayXXf &allowedColors=Allowed->Lab;
     auto deltaL_2=(allowedColors.col(0).array()-L).square();
     auto C1_2=a*a+b*b;
     auto C2_2=allowedColors.col(1).array().square()+allowedColors.col(2).array().square();
@@ -471,7 +471,15 @@ unsigned char TokiColor::applyLab_new()
     float L1s=c3[0];
     float a1s=c3[1];
     float b1s=c3[2];
-    MatrixXf &allow=Allowed->Lab;
+    ArrayXXf &allow=Allowed->Lab;
+    ArrayXf Diff(allow.rows());
+
+    for(short i=0;i<allow.rows();i++)
+    {
+        Diff(i)=Lab00(L1s,a1s,b1s,allow(i,0),allow(i,1),allow(i,2));
+    }
+
+    /*
     auto L2s=allow.col(0).array();
     auto a2s=allow.col(1).array();
     auto b2s=allow.col(2).array();
@@ -513,7 +521,7 @@ unsigned char TokiColor::applyLab_new()
     auto RT=-Rc*(2.0*dTheta).sin();
 
     auto Diff=(dLp/SL/1.0).square()+(dCp/SC/1.0).square()+(dHp/SH/1.0).square()+RT*(dCp/SC/1.0)*(dHp/SH/1.0);
-
+*/
     Diff.abs().minCoeff(&tempIndex);
     if(Diff.isNaN().any())
     {

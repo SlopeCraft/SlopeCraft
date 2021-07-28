@@ -69,7 +69,7 @@ inline bool mcMap::isFlat()
     return mapType=='F';
 }
 
-void readFromFile(const char*FileName,MatrixXf & M)
+void readFromFile(const char*FileName,ArrayXXf & M)
 {
     fstream Reader(FileName, ios::in|ios::binary);
     float data[256][3];

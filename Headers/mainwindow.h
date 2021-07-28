@@ -48,10 +48,10 @@ using namespace Eigen;
 class MainWindow;
 class ColorSet{
     public:
-        MatrixXf _RGB;
-        MatrixXf  HSV;
-        MatrixXf  Lab;
-        MatrixXf  XYZ;
+        ArrayXXf _RGB;
+        ArrayXXf  HSV;
+        ArrayXXf  Lab;
+        ArrayXXf  XYZ;
         VectorXi  Map;
         ColorSet();
         void ApplyAllowed(ColorSet*standard,bool *MIndex);
