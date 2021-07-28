@@ -333,34 +333,38 @@ void MainWindow::Dither(AdjT *R)
                 {
                     R->colorAdjuster[Current]=TokiColor(Current,Data.Mode);
                     R->colorAdjuster[Current].apply(Current);
-                    qDebug("装入了一个新颜色并匹配为地图色");
+                    //装入了一个新颜色并匹配为地图色
+                    newCount++;
                 }
                 Data.mapPic(r,c)=R->colorAdjuster[Current].Result;
-                index=mcMap::mapColor2Index(R->colorAdjuster[Current].Result);
+                index=mcMap::mapColor2Index(Data.mapPic(r,c));
+                /*
                 Data.Dither[0](r+1,c+1)=CM(index,0);
                 Data.Dither[1](r+1,c+1)=CM(index,1);
                 Data.Dither[2](r+1,c+1)=CM(index,2);
+*/
 
-                Error[0]=R->colorAdjuster[RCL[c]].c3[0]-Data.Dither[0](r+1,c+1);
-                Error[1]=R->colorAdjuster[RCL[c]].c3[1]-Data.Dither[1](r+1,c+1);
-                Error[2]=R->colorAdjuster[RCL[c]].c3[2]-Data.Dither[2](r+1,c+1);
+                Error[0]=Data.Dither[0](r+1,c+1)-CM(index,0);
+                Error[1]=Data.Dither[1](r+1,c+1)-CM(index,1);
+                Error[2]=Data.Dither[2](r+1,c+1)-CM(index,2);
 
                 Data.Dither[0].block(r+1,c+1-1,2,3)+=Error[0]*DitherMapRL;
                 Data.Dither[1].block(r+1,c+1-1,2,3)+=Error[1]*DitherMapRL;
                 Data.Dither[2].block(r+1,c+1-1,2,3)+=Error[2]*DitherMapRL;
             }
-            //qDebug("从右至左遍历了一行");
+            //qDebug("从左至右遍历了一行");
             //qDebug()<<"Error="<<Error[0]<<','<<Error[1]<<','<<Error[2];
         }
-        //isDirLR=!isDirLR;
+        isDirLR=!isDirLR;
+        AdjPro(Data.sizePic[1]);
     }
     qDebug("完成了误差扩散");
     qDebug()<<"Hash中共新插入了"<<newCount<<"个颜色";
-    Data.Dither[0]=Data.Dither[0].block(1,1,Data.sizePic[0],Data.sizePic[1]);
+    /*Data.Dither[0]=Data.Dither[0].block(1,1,Data.sizePic[0],Data.sizePic[1]);
     Data.Dither[1]=Data.Dither[1].block(1,1,Data.sizePic[0],Data.sizePic[1]);
     Data.Dither[2]=Data.Dither[2].block(1,1,Data.sizePic[0],Data.sizePic[1]);
 
-    qDebug("去除了Dither的零边");
+    qDebug("去除了Dither的零边");*/
 
 #ifdef putDitheredImg
       DitheredImg.save("D:\\DitheredRawImage.png");
