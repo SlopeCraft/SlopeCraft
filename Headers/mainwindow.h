@@ -196,6 +196,7 @@ public:
 bool dealBlockId(const QString&BlockId,QString&netBlockId,vector<QString>&Property,vector<QString>&ProVal);
 QRgb ComposeColor(const QRgb&front,const QRgb&back);
 
+float Lab00(float,float,float,float,float,float);
 
 class AdjT;
 
