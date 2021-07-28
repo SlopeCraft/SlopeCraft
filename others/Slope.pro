@@ -50,6 +50,7 @@ SOURCES += \
     mainwindow.cpp \
     mcmap.cpp \
     optitree.cpp \
+    previewwind.cpp \
     tokicolor.cpp \
     tpstrategywind.cpp \
     zlibs/adler32.c \
@@ -72,6 +73,7 @@ HEADERS += \
     NBTWriter.h \
     mainwindow.h \
     optitree.h \
+    previewwind.h \
     tpstrategywind.h \
     zlibs/crc32.h \
     zlibs/deflate.h \
@@ -88,6 +90,7 @@ HEADERS += \
 FORMS += \
     mainwindow.ui \
  \    #previewer.ui
+    previewwind.ui \
     tpstrategywind.ui
 
 TRANSLATIONS += \

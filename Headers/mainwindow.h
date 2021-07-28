@@ -41,6 +41,7 @@ This file is part of SlopeCraft.
 #include <QThread>
 #include "optitree.h"
 #include "tpstrategywind.h"
+#include "previewwind.h"
 //#include "adjt.h"
 using namespace std;
 using namespace Eigen;
@@ -81,6 +82,11 @@ QRgb RGB2QRGB(float,float,float);
 QRgb HSV2QRGB(float,float,float);
 QRgb XYZ2QRGB(float,float,float);
 QRgb Lab2QRGB(float,float,float);
+
+bool dealBlockId(const QString&BlockId,QString&netBlockId,vector<QString>&Property,vector<QString>&ProVal);
+QRgb ComposeColor(const QRgb&front,const QRgb&back);
+
+
 
 extern Matrix<float,2,3> DitherMapLR,DitherMapRL;
 
@@ -194,8 +200,6 @@ public:
         char netFilePath[256];//纯路径，不包含最后的文件名
         char netFileName[64];//纯文件名，不含后缀名
 };
-bool dealBlockId(const QString&BlockId,QString&netBlockId,vector<QString>&Property,vector<QString>&ProVal);
-QRgb ComposeColor(const QRgb&front,const QRgb&back);
 
 
 class AdjT;
@@ -291,6 +295,9 @@ public slots:
     void ReceiveTPS(tpS);
     //透明像素处理策略：B->替换为背景色；A->空气；W->暂缓，等待处理
     //半透明像素处理策略：B->替换为背景色；C->与背景色叠加；R->保留颜色；W->暂缓，等待处理
+
+    void showPreview();
+
 private slots:
 
     //语言槽

@@ -139,6 +139,8 @@ void MainWindow::on_Build4Lite_clicked()
 
     ui->ShowProgressExLite->setValue(8*Data.sizePic[0]*Data.sizePic[1]);
     ui->ExportLite->setEnabled(true);
+
+    showPreview();
 }
 
 long mcMap::makeHeight()//整张图片将被遍历4遍（向量化的遍历也被视为遍历）
@@ -361,6 +363,9 @@ size3D[1]=1+Height.array().maxCoeff();//y
 //Base(r,c)<->Depth(r,c)<->Height(r+1,c)
 
 ExLitestep=1;
+
+
+
 return (sizePic[0]+1)*sizePic[1];
 }
 

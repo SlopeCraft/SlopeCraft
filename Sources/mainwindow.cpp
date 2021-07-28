@@ -103,6 +103,60 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::showPreview()
+{
+    if(Data.ExLitestep<2)return;
+    if(Data.step<5)return;
+
+    PreviewWind*preWind=new PreviewWind(this);
+    preWind->Src.resize(61);
+    preWind->BlockCount.resize(61);
+
+    for(int i=0;i<61;i++)
+    {
+        preWind->BlockCount[i]=0;
+        preWind->Src[i]=Blocks[i][Data.SelectedBlockList[i]];
+    }
+
+
+    for(int y=0;y<Data.size3D[1];y++)
+        for(int z=0;z<Data.size3D[2];z++)
+        {
+            for(int x=0;x<Data.size3D[0];x++)
+            {
+                if(Data.Build(x,y,z)<=0)continue;
+                preWind->BlockCount[Data.Build(x,y,z)-1]++;
+            }
+        }
+    qDebug()<<"去重前有："<<preWind->Src.size()<<"个元素";
+    auto iS=preWind->Src.begin();
+    for(auto ib=preWind->BlockCount.begin();ib!=preWind->BlockCount.end();)
+    {
+        if(*ib>0)
+        {
+            ib++;
+            iS++;
+            continue;
+        }
+        ib=preWind->BlockCount.erase(ib);
+        iS=preWind->Src.erase(iS);
+    }
+
+    preWind->size[0]=Data.size3D[0];
+    preWind->size[1]=Data.size3D[1];
+    preWind->size[2]=Data.size3D[2];
+
+    qDebug()<<"去重后有："<<preWind->Src.size()<<"个元素";
+    preWind->Water=Blocks[12][0];
+
+    //preWind->Src[1]=Blocks[1][0];preWind->BlockCount[1]=1919810;
+
+    preWind->ShowMaterialList();
+    preWind->show();
+}
+
+
+
 #ifndef tpSDestroyer
 #define tpSDestroyer
 tpS::~tpS()
