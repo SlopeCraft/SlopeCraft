@@ -3,7 +3,7 @@ QT       += core gui
 #QT += quick quick3d
 INCLUDEPATH += D:\eigen-3.3.9
 DEFINES += WIN32_LEAN_AND_MEAN
-RC_ICONS =SlopeCraft.ico
+RC_ICONS = others/SlopeCraft.ico
 # 版本号
 VERSION = 3.4.3
 # 语言
@@ -32,27 +32,27 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    CIEDE00.cpp \
-    Collecter.cpp \
-    NBTWriter.cpp \
-    Page0.cpp \
-    Page1.cpp \
-    Page2.cpp \
-    Page3.cpp \
-    Page4.cpp \
-    Page5.cpp \
-    Page6.cpp \
-    Page7.cpp \
-    Page8.cpp \
-    Pages.cpp \
-    adjt.cpp \
-    main.cpp \
-    mainwindow.cpp \
-    mcmap.cpp \
-    optitree.cpp \
-    previewwind.cpp \
-    tokicolor.cpp \
-    tpstrategywind.cpp \
+    Sources/CIEDE00.cpp \
+    Sources/Collecter.cpp \
+    Sources/NBTWriter.cpp \
+    Sources/Page0.cpp \
+    Sources/Page1.cpp \
+    Sources/Page2.cpp \
+    Sources/Page3.cpp \
+    Sources/Page4.cpp \
+    Sources/Page5.cpp \
+    Sources/Page6.cpp \
+    Sources/Page7.cpp \
+    Sources/Page8.cpp \
+    Sources/Pages.cpp \
+    Sources/adjt.cpp \
+    Sources/main.cpp \
+    Sources/mainwindow.cpp \
+    Sources/mcmap.cpp \
+    Sources/optitree.cpp \
+    Sources/previewwind.cpp \
+    Sources/tokicolor.cpp \
+    Sources/tpstrategywind.cpp \
     zlibs/adler32.c \
     zlibs/compress.c \
     zlibs/crc32.c \
