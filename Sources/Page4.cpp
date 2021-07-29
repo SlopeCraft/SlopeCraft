@@ -532,7 +532,7 @@ ui->isColorSpaceRGBOld->setEnabled(false);
 ui->AdjPicColor->setEnabled(false);
 ui->ShowAdjed->setEnabled(false);
 
-ui->AdjPicColor->setText("请稍等");
+ui->AdjPicColor->setText(QObject::tr("请稍等"));
 
 Data.adjStep=0;
 ui->ShowProgressABbar->setRange(0,5*Data.sizePic[0]*Data.sizePic[1]+1);

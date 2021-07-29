@@ -5,8 +5,8 @@
     <name>MainWindow</name>
     <message>
         <location filename="mainwindow.ui" line="32"/>
-        <source>SlopeCraft v3.4  Copyright © 2021 TokiNoBug</source>
-        <oldsource>SlopeCraft v3.3  Copyright © 2021 TokiNoBug</oldsource>
+        <source>SlopeCraft v3.5  Copyright © 2021 TokiNoBug</source>
+        <oldsource>SlopeCraft v3.4  Copyright © 2021 TokiNoBug</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2028,6 +2028,11 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../Sources/previewwind.cpp" line="46"/>
         <source>组</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/Page4.cpp" line="535"/>
+        <source>请稍等</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

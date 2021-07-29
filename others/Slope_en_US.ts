@@ -5,8 +5,8 @@
     <name>MainWindow</name>
     <message>
         <location filename="mainwindow.ui" line="32"/>
-        <source>SlopeCraft v3.4  Copyright © 2021 TokiNoBug</source>
-        <oldsource>SlopeCraft v3.3  Copyright © 2021 TokiNoBug</oldsource>
+        <source>SlopeCraft v3.5  Copyright © 2021 TokiNoBug</source>
+        <oldsource>SlopeCraft v3.4  Copyright © 2021 TokiNoBug</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -31,7 +31,7 @@
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-weight:700; color:#ffffff;&quot;&gt;这是地图画质的极限！240种颜色竭力为你呈现自定义的画面。可惜的是，它需要修改存档。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:700; color:#ffff00;&quot;&gt;Not Vanilla！&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="obsolete">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-weight:700; color:#ffffff;&quot;&gt;It's the maximal of Map paintings! 240 types of colors will try their best to display your frame. However,editing saves required.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:700; color:#ffff00;&quot;&gt;Not Vanilla！&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation type="obsolete">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-weight:700; color:#ffffff;&quot;&gt;It&apos;s the maximal of Map paintings! 240 types of colors will try their best to display your frame. However,editing saves required.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:700; color:#ffff00;&quot;&gt;Not Vanilla！&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:11pt; font-weight:700; color:#ffffff;&quot;&gt;想要容易实装的地图画？&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
@@ -1096,12 +1096,12 @@
     <message>
         <location filename="mainwindow.ui" line="641"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;第二步，选择好你要什么样的地图画。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;请选择好地图画对应的游戏版本，以及地图画的类型。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;立体地图画如右图，是我们的核心功能；&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;平板地图画颜色相对少，但更容易建造；&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;纯文件地图画拥有最丰富的的颜色，但不可建造。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;第二步，选择好你要什么样的地图画。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;请选择好地图画对应的游戏版本，以及地图画的类型。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;立体地图画如右图，是我们的核心功能；&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;平板地图画颜色相对少，但更容易建造；&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;纯文件地图画拥有最丰富的的颜色，但不可建造。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Step 2&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;Set the type and gameversion of your map.&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;3D means 3D map paintings built in survival.&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;Flat is like a floor which is easiest to build.&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;File-only Maps has most colors but can&apos;t be built.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="808"/>
         <source>纯文件地图画</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">File-only Map</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="5261"/>
@@ -1316,7 +1316,7 @@
     <message>
         <location filename="mainwindow.ui" line="7163"/>
         <source>滴水石块</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">DripStone Block</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="7198"/>
@@ -1505,7 +1505,7 @@
 六种算法对应不同的调整颜色的方式，你可以挨个试一试。如果开启“抖动仿色”，SlopeCraft会尝试用相近的颜色混合，更好的贴近原图。
 调整颜色可能会比较慢，下面的进度条指示了进度。</source>
         <translation type="unfinished">Step 4, Convert image to map. Your map should only consist of map colors.
-6 Algorithms correspond to different method to adjust pixel colors, you can try each. If "Dithering" is turned on,SlopeCraft will try to fit image better through mixing similar colors.
+6 Algorithms correspond to different method to adjust pixel colors, you can try each. If &quot;Dithering&quot; is turned on,SlopeCraft will try to fit image better through mixing similar colors.
 It might be laggy, the progressbar shows the progress.</translation>
     </message>
     <message>
@@ -1635,7 +1635,7 @@ sequence number</translation>
     <message>
         <location filename="mainwindow.ui" line="10144"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:700; color:#ffffff;&quot;&gt;地图画生成完毕！&lt;/span&gt;&lt;br/&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:11pt; font-weight:700; color:#ffffff;&quot;&gt;关于SlopeCraft&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;感谢你使用SlopeCraft，我是开发者TokiNoBug。SlopeCraft是由我开发的一款立体地图画生成器，主要用于在minecraft中制造可以生存实装的立体地图画（但同样支持传统的平板地图画）。立体地图画的优势在于拥有更高的“画质”，此处不再详述。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;你正在使用的是SlopeCraft的第三代版本，在开发时使用了Qt，zlib和eigen，对上述库的开发者表示感谢。也感谢Mojang，整个软件就是为minecraft而设计的。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;你可以访问：&lt;/span&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/SlopeCraft/&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;SlopeCraft的github&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;，&lt;/span&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;我的github主页&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;，&lt;/span&gt;&lt;a href=&quot;https://space.bilibili.com/351429231&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;我的bilibili&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;本软件遵循GPL-3.0及以后版本(GPL-3.0 or later)协议开放源代码。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Copyright © 2021 TokiNoBug&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:700; color:#ffffff;&quot;&gt;Your map is finished!&lt;/span&gt;&lt;br/&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:11pt; font-weight:700; color:#ffffff;&quot;&gt;关于SlopeCraft&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Thank you for using SlopeCraft, I'm TokiNoBug, the developer. SlopeCraft is a minecraft map generator, supporting many kinds of maps.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;You are currently using the 3rd generation of SlopeCraft, based on Qt, Eigen and zlib. I'm grateful to developers of thest libs. Also thanks Mojang, the whold software is developed for minecraft&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Contact with me:&lt;/span&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/SlopeCraft/&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;SlopeCraft的github&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;，&lt;/span&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;My homepage on GitHub:&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;，&lt;/span&gt;&lt;a href=&quot;https://space.bilibili.com/351429231&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;bilibili:&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;This program is released under license GPL-3.0 or later.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Copyright © 2021 TokiNoBug&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:700; color:#ffffff;&quot;&gt;Your map is finished!&lt;/span&gt;&lt;br/&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:11pt; font-weight:700; color:#ffffff;&quot;&gt;关于SlopeCraft&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Thank you for using SlopeCraft, I&apos;m TokiNoBug, the developer. SlopeCraft is a minecraft map generator, supporting many kinds of maps.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;You are currently using the 3rd generation of SlopeCraft, based on Qt, Eigen and zlib. I&apos;m grateful to developers of thest libs. Also thanks Mojang, the whold software is developed for minecraft&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Contact with me:&lt;/span&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/SlopeCraft/&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;SlopeCraft的github&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;，&lt;/span&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;My homepage on GitHub:&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;，&lt;/span&gt;&lt;a href=&quot;https://space.bilibili.com/351429231&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;bilibili:&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;This program is released under license GPL-3.0 or later.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Copyright © 2021 TokiNoBug&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="10179"/>
