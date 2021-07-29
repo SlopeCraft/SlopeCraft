@@ -8933,6 +8933,12 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                 <height>55</height>
                </size>
               </property>
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>16777215</height>
+               </size>
+              </property>
               <property name="font">
                <font>
                 <family>微软雅黑</family>
