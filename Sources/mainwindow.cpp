@@ -156,6 +156,47 @@ void MainWindow::showPreview()
 }
 
 
+void MainWindow::InitializeAll()
+{
+    if(!Collected)
+    {
+        Collect();
+        qDebug("Collected");
+
+        Collected=true;
+        qDebug("StartWithSlope中的初始化部分完成");
+    }
+    static bool needInitialize=true;
+    if(needInitialize)
+    {
+
+        GetBLCreative(BLCreative);
+        GetBLCheaper(BLCheaper);
+        GetBLBetter(BLBetter);
+        GetBLGlowing(BLGlowing);
+        qDebug("成功初始化四个预设方块列表");
+        qDebug()<<"当前运行路径："<<QCoreApplication::applicationDirPath();
+        //QString DirPath=QCoreApplication::applicationDirPath()+'/';
+        QDir::setCurrent(QCoreApplication::applicationDirPath());
+        readFromFile("./RGB.Toki",Data.Basic._RGB);
+        readFromFile("./HSV.Toki",Data.Basic.HSV);
+        readFromFile("./Lab.Toki",Data.Basic.Lab);
+        readFromFile("./XYZ.Toki",Data.Basic.XYZ);
+        qDebug("成功载入颜色");
+
+        qDebug("导入图片按钮处的初始化部分完成");
+
+
+        showColorColors();
+        qDebug("成功为Colors赋予颜色");
+        needInitialize=false;
+#ifdef dispDerivative
+    //checkBlockIds();
+    makeImage(1);
+#endif
+    }
+}
+
 
 #ifndef tpSDestroyer
 #define tpSDestroyer

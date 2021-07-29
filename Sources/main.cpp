@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
         }
     }
     MainWindow w;
-
+    w.InitializeAll();
 
 
     w.show();

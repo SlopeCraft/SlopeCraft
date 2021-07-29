@@ -249,6 +249,9 @@ public:
     tpS Strategy;
 
     //初始化方块列表用
+
+    void InitializeAll();
+
     void Collect();//done
     bool Collected;
     void IniNeedGlass();//done

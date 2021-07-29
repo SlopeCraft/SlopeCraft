@@ -110,7 +110,7 @@
          <enum>QFrame::Plain</enum>
         </property>
         <property name="currentIndex">
-         <number>4</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="PageStart">
          <property name="styleSheet">
@@ -129,6 +129,7 @@
              <font>
               <family>微软雅黑</family>
               <pointsize>9</pointsize>
+              <weight>50</weight>
               <italic>false</italic>
               <bold>false</bold>
              </font>
@@ -1189,8 +1190,8 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>316</width>
-                 <height>5398</height>
+                 <width>467</width>
+                 <height>5748</height>
                 </rect>
                </property>
                <property name="sizePolicy">
@@ -1297,7 +1298,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>玻璃</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/glass.png</normaloff>:/new/Textures/Slope/block/glass.png</iconset>
                      </property>
                      <property name="checked">
@@ -1439,7 +1440,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>草方块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/grass_block_side.png</normaloff>:/new/Textures/Slope/block/grass_block_side.png</iconset>
                      </property>
                     </widget>
@@ -1450,7 +1451,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>粘液块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/slime_block.png</normaloff>:/new/Textures/Slope/block/slime_block.png</iconset>
                      </property>
                     </widget>
@@ -1503,7 +1504,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>末地石</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/end_stone.png</normaloff>:/new/Textures/Slope/block/end_stone.png</iconset>
                      </property>
                     </widget>
@@ -1549,7 +1550,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>平滑砂岩</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/sandstone_top.png</normaloff>:/new/Textures/Slope/block/sandstone_top.png</iconset>
                      </property>
                     </widget>
@@ -1560,7 +1561,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>萤石</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/glowstone.png</normaloff>:/new/Textures/Slope/block/glowstone.png</iconset>
                      </property>
                     </widget>
@@ -1584,7 +1585,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>海蛋</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/turtle_egg.png</normaloff>:/new/Textures/Slope/block/turtle_egg.png</iconset>
                      </property>
                     </widget>
@@ -1595,7 +1596,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>白桦木板</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/birch_planks.png</normaloff>:/new/Textures/Slope/block/birch_planks.png</iconset>
                      </property>
                     </widget>
@@ -1606,7 +1607,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>末地石砖</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/end_stone_bricks.png</normaloff>:/new/Textures/Slope/block/end_stone_bricks.png</iconset>
                      </property>
                     </widget>
@@ -1669,7 +1670,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>蜘蛛网</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/cobweb.png</normaloff>:/new/Textures/Slope/block/cobweb.png</iconset>
                      </property>
                     </widget>
@@ -1693,7 +1694,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>蘑菇柄</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/mushroom_stem.png</normaloff>:/new/Textures/Slope/block/mushroom_stem.png</iconset>
                      </property>
                     </widget>
@@ -1778,7 +1779,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>红石块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/redstone_block.png</normaloff>:/new/Textures/Slope/block/redstone_block.png</iconset>
                      </property>
                     </widget>
@@ -1789,7 +1790,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>TNT</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/tnt_side.png</normaloff>:/new/Textures/Slope/block/tnt_side.png</iconset>
                      </property>
                     </widget>
@@ -1900,7 +1901,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>冰</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/ice.png</normaloff>:/new/Textures/Slope/block/ice.png</iconset>
                      </property>
                     </widget>
@@ -1911,7 +1912,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>浮冰</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/packed_ice.png</normaloff>:/new/Textures/Slope/block/packed_ice.png</iconset>
                      </property>
                     </widget>
@@ -1922,7 +1923,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>蓝冰</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/blue_ice.png</normaloff>:/new/Textures/Slope/block/blue_ice.png</iconset>
                      </property>
                     </widget>
@@ -1994,7 +1995,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>铁块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/iron_block.png</normaloff>:/new/Textures/Slope/block/iron_block.png</iconset>
                      </property>
                     </widget>
@@ -2018,7 +2019,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>铁活板门</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/iron_trapdoor.png</normaloff>:/new/Textures/Slope/block/iron_trapdoor.png</iconset>
                      </property>
                     </widget>
@@ -2029,7 +2030,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>灯笼</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/lantern.png</normaloff>:/new/Textures/Slope/block/lantern.png</iconset>
                      </property>
                     </widget>
@@ -2053,7 +2054,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>酿造台</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/brewing_stand.png</normaloff>:/new/Textures/Slope/block/brewing_stand.png</iconset>
                      </property>
                     </widget>
@@ -2064,7 +2065,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>铁压力板</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/iron_block.png</normaloff>:/new/Textures/Slope/block/iron_block.png</iconset>
                      </property>
                     </widget>
@@ -2075,7 +2076,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>砂轮</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/grindstone_round.png</normaloff>:/new/Textures/Slope/block/grindstone_round.png</iconset>
                      </property>
                     </widget>
@@ -2173,7 +2174,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>橡树树叶</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/oak_leaves.png</normaloff>:/new/Textures/Slope/block/oak_leaves.png</iconset>
                      </property>
                     </widget>
@@ -2184,7 +2185,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>云杉树叶</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/spruce_leaves.png</normaloff>:/new/Textures/Slope/block/spruce_leaves.png</iconset>
                      </property>
                     </widget>
@@ -2195,7 +2196,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>白桦树叶</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/birch_leaves.png</normaloff>:/new/Textures/Slope/block/birch_leaves.png</iconset>
                      </property>
                     </widget>
@@ -2206,7 +2207,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>丛林木树叶</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/jungle_leaves.png</normaloff>:/new/Textures/Slope/block/jungle_leaves.png</iconset>
                      </property>
                     </widget>
@@ -2217,7 +2218,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>金合欢树叶</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/acacia_leaves.png</normaloff>:/new/Textures/Slope/block/acacia_leaves.png</iconset>
                      </property>
                     </widget>
@@ -2228,7 +2229,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>黑橡树树叶</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/dark_oak_leaves.png</normaloff>:/new/Textures/Slope/block/dark_oak_leaves.png</iconset>
                      </property>
                     </widget>
@@ -2326,7 +2327,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>白色混凝土</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/white_concrete.png</normaloff>:/new/Textures/Slope/block/white_concrete.png</iconset>
                      </property>
                     </widget>
@@ -2337,7 +2338,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>白色羊毛</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/white_wool.png</normaloff>:/new/Textures/Slope/block/white_wool.png</iconset>
                      </property>
                     </widget>
@@ -2348,7 +2349,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>白色染色玻璃</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/white_stained_glass.png</normaloff>:/new/Textures/Slope/block/white_stained_glass.png</iconset>
                      </property>
                     </widget>
@@ -2359,7 +2360,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>雪块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/snow.png</normaloff>:/new/Textures/Slope/block/snow.png</iconset>
                      </property>
                     </widget>
@@ -2457,7 +2458,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>黏土块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/clay.png</normaloff>:/new/Textures/Slope/block/clay.png</iconset>
                      </property>
                     </widget>
@@ -2542,7 +2543,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>砂土</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/coarse_dirt.png</normaloff>:/new/Textures/Slope/block/coarse_dirt.png</iconset>
                      </property>
                     </widget>
@@ -2566,7 +2567,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>磨制花岗岩</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/polished_granite.png</normaloff>:/new/Textures/Slope/block/polished_granite.png</iconset>
                      </property>
                     </widget>
@@ -2577,7 +2578,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>丛林木板</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/jungle_planks.png</normaloff>:/new/Textures/Slope/block/jungle_planks.png</iconset>
                      </property>
                     </widget>
@@ -2588,7 +2589,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>棕色蘑菇块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/brown_mushroom_block.png</normaloff>:/new/Textures/Slope/block/brown_mushroom_block.png</iconset>
                      </property>
                     </widget>
@@ -2599,7 +2600,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>泥土</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/dirt.png</normaloff>:/new/Textures/Slope/block/dirt.png</iconset>
                      </property>
                     </widget>
@@ -2697,7 +2698,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>圆石</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/cobblestone.png</normaloff>:/new/Textures/Slope/block/cobblestone.png</iconset>
                      </property>
                     </widget>
@@ -2708,7 +2709,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>石头</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/stone.png</normaloff>:/new/Textures/Slope/block/stone.png</iconset>
                      </property>
                     </widget>
@@ -2719,7 +2720,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>平滑石</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/smooth_stone.png</normaloff>:/new/Textures/Slope/block/smooth_stone.png</iconset>
                      </property>
                     </widget>
@@ -2730,7 +2731,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>石砖</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/stone_bricks.png</normaloff>:/new/Textures/Slope/block/stone_bricks.png</iconset>
                      </property>
                     </widget>
@@ -2828,7 +2829,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>水</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/water_flow.png</normaloff>:/new/Textures/Slope/block/water_flow.png</iconset>
                      </property>
                     </widget>
@@ -2926,7 +2927,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>橡木木板</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/oak_planks.png</normaloff>:/new/Textures/Slope/block/oak_planks.png</iconset>
                      </property>
                     </widget>
@@ -3024,7 +3025,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>磨制闪长岩</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/polished_diorite.png</normaloff>:/new/Textures/Slope/block/polished_diorite.png</iconset>
                      </property>
                     </widget>
@@ -3035,7 +3036,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>石英块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/quartz_block_side.png</normaloff>:/new/Textures/Slope/block/quartz_block_side.png</iconset>
                      </property>
                     </widget>
@@ -3046,7 +3047,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>海晶灯</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/sea_lantern.png</normaloff>:/new/Textures/Slope/block/sea_lantern.png</iconset>
                      </property>
                     </widget>
@@ -3057,7 +3058,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>靶子</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/target_side.png</normaloff>:/new/Textures/Slope/block/target_side.png</iconset>
                      </property>
                     </widget>
@@ -3129,7 +3130,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>生铜块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/raw_copper_block.png</normaloff>:/new/Textures/Slope/block/raw_copper_block.png</iconset>
                      </property>
                     </widget>
@@ -3153,7 +3154,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>南瓜</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/pumpkin_side.png</normaloff>:/new/Textures/Slope/block/pumpkin_side.png</iconset>
                      </property>
                     </widget>
@@ -3164,7 +3165,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>橙色羊毛</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/orange_wool.png</normaloff>:/new/Textures/Slope/block/orange_wool.png</iconset>
                      </property>
                     </widget>
@@ -3175,7 +3176,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>平滑红砂岩</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/red_sandstone_top.png</normaloff>:/new/Textures/Slope/block/red_sandstone_top.png</iconset>
                      </property>
                     </widget>
@@ -3186,7 +3187,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>橙色混凝土</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/orange_concrete.png</normaloff>:/new/Textures/Slope/block/orange_concrete.png</iconset>
                      </property>
                     </widget>
@@ -3197,7 +3198,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>金合欢木板</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/acacia_planks.png</normaloff>:/new/Textures/Slope/block/acacia_planks.png</iconset>
                      </property>
                     </widget>
@@ -3208,7 +3209,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>橙色染色玻璃</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/orange_stained_glass.png</normaloff>:/new/Textures/Slope/block/orange_stained_glass.png</iconset>
                      </property>
                     </widget>
@@ -3219,7 +3220,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>陶瓦</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/terracotta.png</normaloff>:/new/Textures/Slope/block/terracotta.png</iconset>
                      </property>
                     </widget>
@@ -3230,7 +3231,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>蜜块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/honey_block_bottom.png</normaloff>:/new/Textures/Slope/block/honey_block_bottom.png</iconset>
                      </property>
                     </widget>
@@ -3241,7 +3242,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>蜜脾块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/honeycomb_block.png</normaloff>:/new/Textures/Slope/block/honeycomb_block.png</iconset>
                      </property>
                     </widget>
@@ -3265,7 +3266,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>涂蜡铜块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/copper_block.png</normaloff>:/new/Textures/Slope/block/copper_block.png</iconset>
                      </property>
                     </widget>
@@ -3276,7 +3277,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>涂蜡切制铜块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/cut_copper.png</normaloff>:/new/Textures/Slope/block/cut_copper.png</iconset>
                      </property>
                     </widget>
@@ -3361,7 +3362,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>品红色混凝土</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/magenta_concrete.png</normaloff>:/new/Textures/Slope/block/magenta_concrete.png</iconset>
                      </property>
                     </widget>
@@ -3372,7 +3373,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>紫珀块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/purpur_block.png</normaloff>:/new/Textures/Slope/block/purpur_block.png</iconset>
                      </property>
                     </widget>
@@ -3396,7 +3397,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>品红色羊毛</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/magenta_wool.png</normaloff>:/new/Textures/Slope/block/magenta_wool.png</iconset>
                      </property>
                     </widget>
@@ -3429,7 +3430,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>品红染色玻璃</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/magenta_stained_glass.png</normaloff>:/new/Textures/Slope/block/magenta_stained_glass.png</iconset>
                      </property>
                     </widget>
@@ -3505,7 +3506,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>浅蓝混凝土</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/light_blue_concrete.png</normaloff>:/new/Textures/Slope/block/light_blue_concrete.png</iconset>
                      </property>
                     </widget>
@@ -3516,7 +3517,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>浅蓝羊毛</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/light_blue_wool.png</normaloff>:/new/Textures/Slope/block/light_blue_wool.png</iconset>
                      </property>
                     </widget>
@@ -3527,7 +3528,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>浅蓝染色玻璃</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/light_blue_stained_glass.png</normaloff>:/new/Textures/Slope/block/light_blue_stained_glass.png</iconset>
                      </property>
                     </widget>
@@ -3625,7 +3626,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>黄色混凝土</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/yellow_concrete.png</normaloff>:/new/Textures/Slope/block/yellow_concrete.png</iconset>
                      </property>
                     </widget>
@@ -3636,7 +3637,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>黄色羊毛</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/yellow_wool.png</normaloff>:/new/Textures/Slope/block/yellow_wool.png</iconset>
                      </property>
                     </widget>
@@ -3647,7 +3648,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>干草块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/hay_block_side.png</normaloff>:/new/Textures/Slope/block/hay_block_side.png</iconset>
                      </property>
                     </widget>
@@ -3658,7 +3659,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>黄色染色玻璃</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/yellow_stained_glass.png</normaloff>:/new/Textures/Slope/block/yellow_stained_glass.png</iconset>
                      </property>
                     </widget>
@@ -3756,7 +3757,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>浅绿混凝土</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/lime_concrete.png</normaloff>:/new/Textures/Slope/block/lime_concrete.png</iconset>
                      </property>
                     </widget>
@@ -3767,7 +3768,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>浅绿羊毛</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/lime_wool.png</normaloff>:/new/Textures/Slope/block/lime_wool.png</iconset>
                      </property>
                     </widget>
@@ -3778,7 +3779,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>浅绿染色玻璃</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/lime_stained_glass.png</normaloff>:/new/Textures/Slope/block/lime_stained_glass.png</iconset>
                      </property>
                     </widget>
@@ -3876,7 +3877,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>粉色混凝土</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/pink_concrete.png</normaloff>:/new/Textures/Slope/block/pink_concrete.png</iconset>
                      </property>
                     </widget>
@@ -3887,7 +3888,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>粉色羊毛</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/pink_wool.png</normaloff>:/new/Textures/Slope/block/pink_wool.png</iconset>
                      </property>
                     </widget>
@@ -3898,7 +3899,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>粉色染色玻璃</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/pink_stained_glass.png</normaloff>:/new/Textures/Slope/block/pink_stained_glass.png</iconset>
                      </property>
                     </widget>
@@ -3996,7 +3997,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>灰色混凝土</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/gray_concrete.png</normaloff>:/new/Textures/Slope/block/gray_concrete.png</iconset>
                      </property>
                     </widget>
@@ -4007,7 +4008,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>灰色羊毛</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/gray_wool.png</normaloff>:/new/Textures/Slope/block/gray_wool.png</iconset>
                      </property>
                     </widget>
@@ -4018,7 +4019,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>灰色染色玻璃</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/gray_stained_glass.png</normaloff>:/new/Textures/Slope/block/gray_stained_glass.png</iconset>
                      </property>
                     </widget>
@@ -4051,7 +4052,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>遮光玻璃</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/tinted_glass.png</normaloff>:/new/Textures/Slope/block/tinted_glass.png</iconset>
                      </property>
                     </widget>
@@ -4101,7 +4102,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>浅灰混凝土</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/light_gray_concrete.png</normaloff>:/new/Textures/Slope/block/light_gray_concrete.png</iconset>
                      </property>
                     </widget>
@@ -4138,7 +4139,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>浅灰羊毛</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/light_gray_wool.png</normaloff>:/new/Textures/Slope/block/light_gray_wool.png</iconset>
                      </property>
                     </widget>
@@ -4149,7 +4150,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>浅灰染色玻璃</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/light_gray_stained_glass.png</normaloff>:/new/Textures/Slope/block/light_gray_stained_glass.png</iconset>
                      </property>
                     </widget>
@@ -4247,7 +4248,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>青色混凝土</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/cyan_concrete.png</normaloff>:/new/Textures/Slope/block/cyan_concrete.png</iconset>
                      </property>
                     </widget>
@@ -4258,7 +4259,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>青色羊毛</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/cyan_wool.png</normaloff>:/new/Textures/Slope/block/cyan_wool.png</iconset>
                      </property>
                     </widget>
@@ -4269,7 +4270,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>青色染色玻璃</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/cyan_stained_glass.png</normaloff>:/new/Textures/Slope/block/cyan_stained_glass.png</iconset>
                      </property>
                     </widget>
@@ -4280,7 +4281,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>海晶石</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/prismarine.png</normaloff>:/new/Textures/Slope/block/prismarine.png</iconset>
                      </property>
                     </widget>
@@ -4374,7 +4375,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>紫色混凝土</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/purple_concrete.png</normaloff>:/new/Textures/Slope/block/purple_concrete.png</iconset>
                      </property>
                     </widget>
@@ -4385,7 +4386,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>紫色羊毛</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/purple_wool.png</normaloff>:/new/Textures/Slope/block/purple_wool.png</iconset>
                      </property>
                     </widget>
@@ -4396,7 +4397,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>紫色染色玻璃</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/purple_stained_glass.png</normaloff>:/new/Textures/Slope/block/purple_stained_glass.png</iconset>
                      </property>
                     </widget>
@@ -4433,7 +4434,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>紫水晶块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/amethyst_block.png</normaloff>:/new/Textures/Slope/block/amethyst_block.png</iconset>
                      </property>
                     </widget>
@@ -4509,7 +4510,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>蓝色羊毛</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/blue_wool.png</normaloff>:/new/Textures/Slope/block/blue_wool.png</iconset>
                      </property>
                     </widget>
@@ -4520,7 +4521,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>蓝色染色玻璃</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/blue_stained_glass.png</normaloff>:/new/Textures/Slope/block/blue_stained_glass.png</iconset>
                      </property>
                     </widget>
@@ -4531,7 +4532,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>蓝色混凝土</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/blue_concrete.png</normaloff>:/new/Textures/Slope/block/blue_concrete.png</iconset>
                      </property>
                     </widget>
@@ -4629,7 +4630,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>棕色混凝土</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/brown_concrete.png</normaloff>:/new/Textures/Slope/block/brown_concrete.png</iconset>
                      </property>
                     </widget>
@@ -4640,7 +4641,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>棕色羊毛</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/brown_wool.png</normaloff>:/new/Textures/Slope/block/brown_wool.png</iconset>
                      </property>
                     </widget>
@@ -4651,7 +4652,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>棕色染色玻璃</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/brown_stained_glass.png</normaloff>:/new/Textures/Slope/block/brown_stained_glass.png</iconset>
                      </property>
                     </widget>
@@ -4662,7 +4663,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>黑橡木木板</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/dark_oak_planks.png</normaloff>:/new/Textures/Slope/block/dark_oak_planks.png</iconset>
                      </property>
                     </widget>
@@ -4673,7 +4674,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>灵魂沙</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/soul_sand.png</normaloff>:/new/Textures/Slope/block/soul_sand.png</iconset>
                      </property>
                     </widget>
@@ -4706,7 +4707,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>灵魂土</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/soul_soil.png</normaloff>:/new/Textures/Slope/block/soul_soil.png</iconset>
                      </property>
                     </widget>
@@ -4801,7 +4802,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>海带块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/dried_kelp_top.png</normaloff>:/new/Textures/Slope/block/dried_kelp_top.png</iconset>
                      </property>
                     </widget>
@@ -4812,7 +4813,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>绿色混凝土</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/green_concrete.png</normaloff>:/new/Textures/Slope/block/green_concrete.png</iconset>
                      </property>
                     </widget>
@@ -4823,7 +4824,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>绿色羊毛</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/green_wool.png</normaloff>:/new/Textures/Slope/block/green_wool.png</iconset>
                      </property>
                     </widget>
@@ -4834,7 +4835,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>绿色染色玻璃</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/green_stained_glass.png</normaloff>:/new/Textures/Slope/block/green_stained_glass.png</iconset>
                      </property>
                     </widget>
@@ -4910,7 +4911,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>红色混凝土</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/red_concrete.png</normaloff>:/new/Textures/Slope/block/red_concrete.png</iconset>
                      </property>
                     </widget>
@@ -4921,7 +4922,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>红色羊毛</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/red_wool.png</normaloff>:/new/Textures/Slope/block/red_wool.png</iconset>
                      </property>
                     </widget>
@@ -4932,7 +4933,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>红色染色玻璃</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/red_stained_glass.png</normaloff>:/new/Textures/Slope/block/red_stained_glass.png</iconset>
                      </property>
                     </widget>
@@ -4943,7 +4944,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>砖块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/bricks.png</normaloff>:/new/Textures/Slope/block/bricks.png</iconset>
                      </property>
                     </widget>
@@ -4954,7 +4955,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>红色蘑菇块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/red_mushroom_block.png</normaloff>:/new/Textures/Slope/block/red_mushroom_block.png</iconset>
                      </property>
                     </widget>
@@ -4965,7 +4966,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>地狱疣块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/nether_wart_block.png</normaloff>:/new/Textures/Slope/block/nether_wart_block.png</iconset>
                      </property>
                     </widget>
@@ -4976,7 +4977,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>菌光体</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/shroomlight.png</normaloff>:/new/Textures/Slope/block/shroomlight.png</iconset>
                      </property>
                     </widget>
@@ -5048,7 +5049,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>煤块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/coal_block.png</normaloff>:/new/Textures/Slope/block/coal_block.png</iconset>
                      </property>
                     </widget>
@@ -5059,7 +5060,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>黑色染色玻璃</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/black_stained_glass.png</normaloff>:/new/Textures/Slope/block/black_stained_glass.png</iconset>
                      </property>
                     </widget>
@@ -5070,7 +5071,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>磨制玄武岩</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/polished_basalt_side.png</normaloff>:/new/Textures/Slope/block/polished_basalt_side.png</iconset>
                      </property>
                     </widget>
@@ -5081,7 +5082,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>黑色混凝土</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/black_concrete.png</normaloff>:/new/Textures/Slope/block/black_concrete.png</iconset>
                      </property>
                     </widget>
@@ -5092,7 +5093,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>黑曜石</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/obsidian.png</normaloff>:/new/Textures/Slope/block/obsidian.png</iconset>
                      </property>
                     </widget>
@@ -5116,7 +5117,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>黑色羊毛</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/black_wool.png</normaloff>:/new/Textures/Slope/block/black_wool.png</iconset>
                      </property>
                     </widget>
@@ -5162,7 +5163,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>磨制黑石</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/polished_blackstone.png</normaloff>:/new/Textures/Slope/block/polished_blackstone.png</iconset>
                      </property>
                     </widget>
@@ -5238,7 +5239,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>金块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/gold_block.png</normaloff>:/new/Textures/Slope/block/gold_block.png</iconset>
                      </property>
                     </widget>
@@ -5249,7 +5250,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>金压力板</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/gold_block.png</normaloff>:/new/Textures/Slope/block/gold_block.png</iconset>
                      </property>
                     </widget>
@@ -5260,7 +5261,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>粗金块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/raw_gold_block.png</normaloff>:/new/Textures/Slope/block/raw_gold_block.png</iconset>
                      </property>
                     </widget>
@@ -5354,7 +5355,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>暗海晶石</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/dark_prismarine.png</normaloff>:/new/Textures/Slope/block/dark_prismarine.png</iconset>
                      </property>
                     </widget>
@@ -5365,7 +5366,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>钻石块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/diamond_block.png</normaloff>:/new/Textures/Slope/block/diamond_block.png</iconset>
                      </property>
                     </widget>
@@ -5402,7 +5403,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>海晶石砖</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/prismarine_bricks.png</normaloff>:/new/Textures/Slope/block/prismarine_bricks.png</iconset>
                      </property>
                     </widget>
@@ -5478,7 +5479,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>青金石块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/lapis_block.png</normaloff>:/new/Textures/Slope/block/lapis_block.png</iconset>
                      </property>
                     </widget>
@@ -5576,7 +5577,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>绿宝石块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/emerald_block.png</normaloff>:/new/Textures/Slope/block/emerald_block.png</iconset>
                      </property>
                     </widget>
@@ -5680,7 +5681,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>灰化土</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/podzol_side.png</normaloff>:/new/Textures/Slope/block/podzol_side.png</iconset>
                      </property>
                     </widget>
@@ -5691,7 +5692,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>云杉木板</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/spruce_planks.png</normaloff>:/new/Textures/Slope/block/spruce_planks.png</iconset>
                      </property>
                     </widget>
@@ -5702,7 +5703,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>营火</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/campfire.png</normaloff>:/new/Textures/Slope/block/campfire.png</iconset>
                      </property>
                     </widget>
@@ -5800,7 +5801,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>地狱岩</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/netherrack.png</normaloff>:/new/Textures/Slope/block/netherrack.png</iconset>
                      </property>
                     </widget>
@@ -5811,7 +5812,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>地狱砖块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/nether_bricks.png</normaloff>:/new/Textures/Slope/block/nether_bricks.png</iconset>
                      </property>
                     </widget>
@@ -5822,7 +5823,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>岩浆块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/magma.png</normaloff>:/new/Textures/Slope/block/magma.png</iconset>
                      </property>
                     </widget>
@@ -5920,7 +5921,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>白色陶瓦</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/white_terracotta.png</normaloff>:/new/Textures/Slope/block/white_terracotta.png</iconset>
                      </property>
                     </widget>
@@ -5953,7 +5954,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>方解石</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/calcite.png</normaloff>:/new/Textures/Slope/block/calcite.png</iconset>
                      </property>
                     </widget>
@@ -6029,7 +6030,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>橙色陶瓦</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/orange_terracotta.png</normaloff>:/new/Textures/Slope/block/orange_terracotta.png</iconset>
                      </property>
                     </widget>
@@ -6149,7 +6150,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>品红陶瓦</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/magenta_terracotta.png</normaloff>:/new/Textures/Slope/block/magenta_terracotta.png</iconset>
                      </property>
                     </widget>
@@ -6225,7 +6226,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>浅蓝陶瓦</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/light_blue_terracotta.png</normaloff>:/new/Textures/Slope/block/light_blue_terracotta.png</iconset>
                      </property>
                     </widget>
@@ -6323,7 +6324,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>黄色陶瓦</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/yellow_terracotta.png</normaloff>:/new/Textures/Slope/block/yellow_terracotta.png</iconset>
                      </property>
                     </widget>
@@ -6421,7 +6422,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>浅绿陶瓦</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/lime_terracotta.png</normaloff>:/new/Textures/Slope/block/lime_terracotta.png</iconset>
                      </property>
                     </widget>
@@ -6519,7 +6520,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>粉色陶瓦</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/pink_terracotta.png</normaloff>:/new/Textures/Slope/block/pink_terracotta.png</iconset>
                      </property>
                     </widget>
@@ -6617,7 +6618,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>灰色陶瓦</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/gray_terracotta.png</normaloff>:/new/Textures/Slope/block/gray_terracotta.png</iconset>
                      </property>
                     </widget>
@@ -6715,7 +6716,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>浅灰陶瓦</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/light_gray_terracotta.png</normaloff>:/new/Textures/Slope/block/light_gray_terracotta.png</iconset>
                      </property>
                     </widget>
@@ -6726,7 +6727,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>涂蜡斑驳铜块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/exposed_copper.png</normaloff>:/new/Textures/Slope/block/exposed_copper.png</iconset>
                      </property>
                     </widget>
@@ -6737,7 +6738,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>涂蜡切制斑驳铜块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/exposed_cut_copper.png</normaloff>:/new/Textures/Slope/block/exposed_cut_copper.png</iconset>
                      </property>
                     </widget>
@@ -6835,7 +6836,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>青色陶瓦</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/cyan_terracotta.png</normaloff>:/new/Textures/Slope/block/cyan_terracotta.png</iconset>
                      </property>
                     </widget>
@@ -6933,7 +6934,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>紫色陶瓦</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/purple_terracotta.png</normaloff>:/new/Textures/Slope/block/purple_terracotta.png</iconset>
                      </property>
                     </widget>
@@ -7031,7 +7032,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>蓝色陶瓦</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/blue_terracotta.png</normaloff>:/new/Textures/Slope/block/blue_terracotta.png</iconset>
                      </property>
                     </widget>
@@ -7129,7 +7130,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>棕色陶瓦</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/brown_terracotta.png</normaloff>:/new/Textures/Slope/block/brown_terracotta.png</iconset>
                      </property>
                     </widget>
@@ -7162,7 +7163,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>滴水石块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/dripstone_block.png</normaloff>:/new/Textures/Slope/block/dripstone_block.png</iconset>
                      </property>
                     </widget>
@@ -7238,7 +7239,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>绿色陶瓦</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/green_terracotta.png</normaloff>:/new/Textures/Slope/block/green_terracotta.png</iconset>
                      </property>
                     </widget>
@@ -7323,7 +7324,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>红色陶瓦</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/red_terracotta.png</normaloff>:/new/Textures/Slope/block/red_terracotta.png</iconset>
                      </property>
                     </widget>
@@ -7408,7 +7409,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>黑色陶瓦</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/black_terracotta.png</normaloff>:/new/Textures/Slope/block/black_terracotta.png</iconset>
                      </property>
                     </widget>
@@ -7532,7 +7533,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>绯红菌岩</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/crimson_nylium_side.png</normaloff>:/new/Textures/Slope/block/crimson_nylium_side.png</iconset>
                      </property>
                     </widget>
@@ -7617,7 +7618,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>绯红木板</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/crimson_planks.png</normaloff>:/new/Textures/Slope/block/crimson_planks.png</iconset>
                      </property>
                     </widget>
@@ -7654,7 +7655,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>去皮绯红原木</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/stripped_crimson_stem_top.png</normaloff>:/new/Textures/Slope/block/stripped_crimson_stem_top.png</iconset>
                      </property>
                     </widget>
@@ -7745,7 +7746,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>绯红树皮</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/crimson_stem.png</normaloff>:/new/Textures/Slope/block/crimson_stem.png</iconset>
                      </property>
                     </widget>
@@ -7756,7 +7757,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>去皮绯红树皮</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/stripped_crimson_stem.png</normaloff>:/new/Textures/Slope/block/stripped_crimson_stem.png</iconset>
                      </property>
                     </widget>
@@ -7861,7 +7862,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>涂蜡氧化铜块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/oxidized_copper.png</normaloff>:/new/Textures/Slope/block/oxidized_copper.png</iconset>
                      </property>
                     </widget>
@@ -7878,7 +7879,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>扭曲菌岩</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/warped_nylium_side.png</normaloff>:/new/Textures/Slope/block/warped_nylium_side.png</iconset>
                      </property>
                     </widget>
@@ -7908,7 +7909,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>涂蜡切制氧化铜块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/oxidized_cut_copper.png</normaloff>:/new/Textures/Slope/block/oxidized_cut_copper.png</iconset>
                      </property>
                     </widget>
@@ -7986,7 +7987,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>扭曲木板</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/warped_planks.png</normaloff>:/new/Textures/Slope/block/warped_planks.png</iconset>
                      </property>
                     </widget>
@@ -8017,7 +8018,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>去皮扭曲原木</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/stripped_warped_stem_top.png</normaloff>:/new/Textures/Slope/block/stripped_warped_stem_top.png</iconset>
                      </property>
                     </widget>
@@ -8034,7 +8035,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>涂蜡生锈铜块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/weathered_copper.png</normaloff>:/new/Textures/Slope/block/weathered_copper.png</iconset>
                      </property>
                     </widget>
@@ -8051,7 +8052,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>涂蜡切制生锈铜块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/weathered_cut_copper.png</normaloff>:/new/Textures/Slope/block/weathered_cut_copper.png</iconset>
                      </property>
                     </widget>
@@ -8142,7 +8143,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>扭曲树皮</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/warped_stem.png</normaloff>:/new/Textures/Slope/block/warped_stem.png</iconset>
                      </property>
                     </widget>
@@ -8159,7 +8160,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>去皮扭曲树皮</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/stripped_warped_stem.png</normaloff>:/new/Textures/Slope/block/stripped_warped_stem.png</iconset>
                      </property>
                     </widget>
@@ -8291,7 +8292,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>扭曲疣块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/warped_wart_block.png</normaloff>:/new/Textures/Slope/block/warped_wart_block.png</iconset>
                      </property>
                     </widget>
@@ -8374,7 +8375,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>深板岩</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/deepslate.png</normaloff>:/new/Textures/Slope/block/deepslate.png</iconset>
                      </property>
                     </widget>
@@ -8391,7 +8392,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>深板岩砖</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/deepslate_bricks.png</normaloff>:/new/Textures/Slope/block/deepslate_bricks.png</iconset>
                      </property>
                     </widget>
@@ -8408,7 +8409,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>磨制深板岩</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/polished_deepslate.png</normaloff>:/new/Textures/Slope/block/polished_deepslate.png</iconset>
                      </property>
                     </widget>
@@ -8425,7 +8426,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>錾制深板岩</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/chiseled_deepslate.png</normaloff>:/new/Textures/Slope/block/chiseled_deepslate.png</iconset>
                      </property>
                     </widget>
@@ -8442,7 +8443,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>深板岩瓦</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/deepslate_tiles.png</normaloff>:/new/Textures/Slope/block/deepslate_tiles.png</iconset>
                      </property>
                     </widget>
@@ -8481,7 +8482,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>深板岩圆石</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/cobbled_deepslate.png</normaloff>:/new/Textures/Slope/block/cobbled_deepslate.png</iconset>
                      </property>
                     </widget>
@@ -8572,7 +8573,7 @@ font: 9pt &quot;微软雅黑&quot;;</string>
                       <string>生铁块</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="../BlockTextures.qrc">
+                      <iconset resource="BlockTextures.qrc">
                        <normaloff>:/new/Textures/Slope/block/raw_iron_block.png</normaloff>:/new/Textures/Slope/block/raw_iron_block.png</iconset>
                      </property>
                     </widget>
@@ -9513,9 +9514,9 @@ font: 9pt &quot;微软雅黑&quot;;</string>
               </property>
               <property name="html">
                <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'微软雅黑','微软雅黑';&quot;&gt;1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
              </widget>
@@ -9553,9 +9554,9 @@ p, li { white-space: pre-wrap; }
               </property>
               <property name="html">
                <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'微软雅黑','微软雅黑';&quot;&gt;-64&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
              </widget>
@@ -9604,9 +9605,9 @@ p, li { white-space: pre-wrap; }
               </property>
               <property name="html">
                <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'微软雅黑','微软雅黑';&quot;&gt;-64&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
              </widget>
@@ -9917,10 +9918,10 @@ p, li { white-space: pre-wrap; }
             </property>
             <property name="html">
              <string notr="true">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Microsoft YaHei UI';&quot;&gt;0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="placeholderText">
              <string notr="true"/>
@@ -10134,7 +10135,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>680</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuImPic">
@@ -10178,7 +10179,16 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>关于</string>
     </property>
+    <widget class="QMenu" name="menu">
+     <property name="title">
+      <string>联系作者</string>
+     </property>
+     <addaction name="actionGitHub"/>
+     <addaction name="actionBiliBili"/>
+    </widget>
     <addaction name="actionAboutSlopeCraft"/>
+    <addaction name="separator"/>
+    <addaction name="menu"/>
    </widget>
    <widget class="QMenu" name="menuLanguages">
     <property name="title">
@@ -10283,6 +10293,16 @@ p, li { white-space: pre-wrap; }
     <string>English</string>
    </property>
   </action>
+  <action name="actionGitHub">
+   <property name="text">
+    <string>GitHub</string>
+   </property>
+  </action>
+  <action name="actionBiliBili">
+   <property name="text">
+    <string>BiliBili</string>
+   </property>
+  </action>
  </widget>
  <tabstops>
   <tabstop>StartWithSlope</tabstop>
@@ -10321,8 +10341,8 @@ p, li { white-space: pre-wrap; }
   <tabstop>NextPage2</tabstop>
  </tabstops>
  <resources>
-  <include location="../BlockTextures.qrc"/>
   <include location="Pics.qrc"/>
+  <include location="BlockTextures.qrc"/>
  </resources>
  <connections/>
 </ui>

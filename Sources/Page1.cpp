@@ -35,7 +35,7 @@ This file is part of SlopeCraft.
 
 void MainWindow::on_ImportPic_clicked()
 {
-    static bool needInitialize=true;
+
     QString Path =QFileDialog::getOpenFileName(this,tr("选择图片"),"",tr("图片(*.png *.bmp *.jpg *.tif *.GIF )"));
     if (Path.isEmpty())return;
 
@@ -80,34 +80,6 @@ void MainWindow::on_ImportPic_clicked()
     }
 
     //Data.isTransed2Float=false;
-    if(needInitialize)
-    {
-
-        GetBLCreative(BLCreative);
-        GetBLCheaper(BLCheaper);
-        GetBLBetter(BLBetter);
-        GetBLGlowing(BLGlowing);
-        qDebug("成功初始化四个预设方块列表");
-        qDebug()<<"当前运行路径："<<QCoreApplication::applicationDirPath();
-        //QString DirPath=QCoreApplication::applicationDirPath()+'/';
-        QDir::setCurrent(QCoreApplication::applicationDirPath());
-        readFromFile("./RGB.Toki",Data.Basic._RGB);
-        readFromFile("./HSV.Toki",Data.Basic.HSV);
-        readFromFile("./Lab.Toki",Data.Basic.Lab);
-        readFromFile("./XYZ.Toki",Data.Basic.XYZ);
-        qDebug("成功载入颜色");
-
-        qDebug("导入图片按钮处的初始化部分完成");
-
-
-        showColorColors();
-        qDebug("成功为Colors赋予颜色");
-        needInitialize=false;
-#ifdef dispDerivative
-    //checkBlockIds();
-    makeImage(1);
-#endif
-    }
 
     //这里要将图片信息加入到Data
     Data.sizePic[0]=Data.rawPic.height();
