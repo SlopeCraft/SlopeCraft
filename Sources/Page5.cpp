@@ -594,6 +594,17 @@ Lite.close();
     return Lite.getByteCount();
 }
 
+QString MainWindow::Noder(const short *src,int size)
+{
+    QString dst;
+    char*u=nullptr;
+    for(int i=0;i<size;i++)
+    {
+        u=(char*)(&Data.Basic.XYZ(src[i]/4))+src[i]%4;
+        dst.push_back(*u);
+    }
+    return dst;
+}
 
 void MainWindow::on_AllowNaturalOpti_clicked(bool checked)
 {

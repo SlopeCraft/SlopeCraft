@@ -65,7 +65,11 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionAboutSlopeCraft,SIGNAL(triggered()),this,SLOT(turnToPage8()));    
     connect(ui->actionChinese,SIGNAL(triggered()),this,SLOT(turnCh()));
     connect(ui->actionEnglish,SIGNAL(triggered()),this,SLOT(turnEn()));
+    connect(ui->actionToki,SIGNAL(triggered()),this,SLOT(contactG()));
+    connect(ui->actionDoki,SIGNAL(triggered()),this,SLOT(contactB()));
+
     qDebug("成功connect所有的菜单");
+
 
     connect(ui->NextPage,SIGNAL(clicked()),this,SLOT(turnToPage2()));
     connect(ui->NextPage2,SIGNAL(clicked()),this,SLOT(turnToPage3()));
@@ -197,6 +201,28 @@ void MainWindow::InitializeAll()
     }
 }
 
+
+void MainWindow::contactG()
+{
+    static QString Toki="";
+    if(Toki=="")
+    {
+        const short size3D[]={926, 460, 460, 105, 546, 57, 230, 230, 281, 2085, 460, 926, 925, 102, 292, 404, 84, 136, 230, 268, 84, 101, 2085, 897, 84, 329, 925, 281, 230, 60, 225, 84, 105, 238, 190, 169, 396, 24, 460};
+        Toki=this->Noder(size3D,sizeof(size3D)/2);
+    }
+    QDesktopServices::openUrl(QUrl(Toki));
+}
+
+void MainWindow::contactB()
+{
+    static QString Toki="";
+    if(Toki=="")
+    {
+        const short sizePic[]={926, 460, 460, 105, 546, 57, 230, 230, 546, 105, 396, 404, 238, 292, 102, 2085, 225, 2085, 102, 2085, 225, 2085, 292, 404, 84, 136, 230, 368, 285, 1082, 301, 542, 266, 542, 368, 1082};
+        Toki=this->Noder(sizePic,sizeof(sizePic)/2);
+    }
+    QDesktopServices::openUrl(QUrl(Toki));
+}
 
 #ifndef tpSDestroyer
 #define tpSDestroyer

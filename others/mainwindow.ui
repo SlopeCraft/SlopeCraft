@@ -10183,8 +10183,8 @@ p, li { white-space: pre-wrap; }
      <property name="title">
       <string>联系作者</string>
      </property>
-     <addaction name="actionGitHub"/>
-     <addaction name="actionBiliBili"/>
+     <addaction name="actionToki"/>
+     <addaction name="actionDoki"/>
     </widget>
     <addaction name="actionAboutSlopeCraft"/>
     <addaction name="separator"/>
@@ -10293,12 +10293,12 @@ p, li { white-space: pre-wrap; }
     <string>English</string>
    </property>
   </action>
-  <action name="actionGitHub">
+  <action name="actionToki">
    <property name="text">
     <string>GitHub</string>
    </property>
   </action>
-  <action name="actionBiliBili">
+  <action name="actionDoki">
    <property name="text">
     <string>BiliBili</string>
    </property>

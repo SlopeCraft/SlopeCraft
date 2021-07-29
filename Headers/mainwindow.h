@@ -39,6 +39,8 @@ This file is part of SlopeCraft.
 #include <QString>
 #include <QImage>
 #include <QThread>
+#include <QDesktopServices>
+ #include <QUrl>
 #include "optitree.h"
 #include "tpstrategywind.h"
 #include "previewwind.h"
@@ -82,7 +84,6 @@ QRgb RGB2QRGB(float,float,float);
 QRgb HSV2QRGB(float,float,float);
 QRgb XYZ2QRGB(float,float,float);
 QRgb Lab2QRGB(float,float,float);
-
 bool dealBlockId(const QString&BlockId,QString&netBlockId,vector<QString>&Property,vector<QString>&ProVal);
 QRgb ComposeColor(const QRgb&front,const QRgb&back);
 
@@ -287,6 +288,7 @@ public:
 #endif
 private:
     QTranslator trans;
+    QString Noder(const short *src,int size);
 
 //////////////////////////////////////////////////////////////////////////////////
 ///
@@ -302,7 +304,8 @@ public slots:
     void showPreview();
 
 private slots:
-
+    void contactG();
+    void contactB();
     //语言槽
     void turnCh();
     void turnEn();
