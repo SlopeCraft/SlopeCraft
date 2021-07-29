@@ -1504,17 +1504,19 @@
         <source>第四步，调整颜色。地图支持的颜色有限，你的图片必须也只能由地图允许的颜色组成。
 六种算法对应不同的调整颜色的方式，你可以挨个试一试。如果开启“抖动仿色”，SlopeCraft会尝试用相近的颜色混合，更好的贴近原图。
 调整颜色可能会比较慢，下面的进度条指示了进度。</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Step 4, Convert image to map. Your map should only consist of map colors.
+6 Algorithms correspond to different method to adjust pixel colors, you can try each. If "Dithering" is turned on,SlopeCraft will try to fit image better through mixing similar colors.
+It might be laggy, the progressbar shows the progress.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="8795"/>
         <source>显示地图画</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Show Map</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="8810"/>
         <source>算法</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Algothrims</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="8875"/>
@@ -1529,7 +1531,7 @@
     <message>
         <location filename="mainwindow.ui" line="8915"/>
         <source>抖动仿色</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Dithering</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="9046"/>
@@ -1550,12 +1552,12 @@
     <message>
         <location filename="mainwindow.ui" line="9264"/>
         <source>允许有损压缩（暂不支持）</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Compress with inaccuracy(not supported yet)</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="9340"/>
         <source>最大允许高度：</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Max height</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="9361"/>
@@ -1571,7 +1573,7 @@
     <message>
         <location filename="mainwindow.ui" line="9483"/>
         <source>预览</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Preview</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="9546"/>
@@ -1628,12 +1630,12 @@ sequence number</translation>
         <location filename="mainwindow.ui" line="10111"/>
         <location filename="mainwindow.ui" line="10214"/>
         <source>联系作者</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Contact with author</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="10144"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:700; color:#ffffff;&quot;&gt;地图画生成完毕！&lt;/span&gt;&lt;br/&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:11pt; font-weight:700; color:#ffffff;&quot;&gt;关于SlopeCraft&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;感谢你使用SlopeCraft，我是开发者TokiNoBug。SlopeCraft是由我开发的一款立体地图画生成器，主要用于在minecraft中制造可以生存实装的立体地图画（但同样支持传统的平板地图画）。立体地图画的优势在于拥有更高的“画质”，此处不再详述。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;你正在使用的是SlopeCraft的第三代版本，在开发时使用了Qt，zlib和eigen，对上述库的开发者表示感谢。也感谢Mojang，整个软件就是为minecraft而设计的。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;你可以访问：&lt;/span&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/SlopeCraft/&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;SlopeCraft的github&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;，&lt;/span&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;我的github主页&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;，&lt;/span&gt;&lt;a href=&quot;https://space.bilibili.com/351429231&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;我的bilibili&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;本软件遵循GPL-3.0及以后版本(GPL-3.0 or later)协议开放源代码。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Copyright © 2021 TokiNoBug&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:700; color:#ffffff;&quot;&gt;Your map is finished!&lt;/span&gt;&lt;br/&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:11pt; font-weight:700; color:#ffffff;&quot;&gt;关于SlopeCraft&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Thank you for using SlopeCraft, I'm TokiNoBug, the developer. SlopeCraft is a minecraft map generator, supporting many kinds of maps.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;You are currently using the 3rd generation of SlopeCraft, based on Qt, Eigen and zlib. I'm grateful to developers of thest libs. Also thanks Mojang, the whold software is developed for minecraft&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Contact with me:&lt;/span&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/SlopeCraft/&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;SlopeCraft的github&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;，&lt;/span&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;My homepage on GitHub:&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;，&lt;/span&gt;&lt;a href=&quot;https://space.bilibili.com/351429231&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;bilibili:&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;This program is released under license GPL-3.0 or later.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Copyright © 2021 TokiNoBug&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="10179"/>
@@ -2039,18 +2041,18 @@ After you reset the strategy, load the image again.</translation>
     <message>
         <location filename="previewwind.ui" line="14"/>
         <source>预览投影文件</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Preview Schematic</translation>
     </message>
     <message>
         <location filename="previewwind.ui" line="43"/>
         <source>材料表</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Material List</translation>
     </message>
     <message>
         <location filename="previewwind.ui" line="52"/>
         <location filename="previewwind.ui" line="376"/>
         <source>方块</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Blocks</translation>
     </message>
     <message>
         <location filename="previewwind.ui" line="81"/>
@@ -2061,27 +2063,27 @@ After you reset the strategy, load the image again.</translation>
         <location filename="previewwind.ui" line="153"/>
         <location filename="previewwind.ui" line="389"/>
         <source>数量</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Count</translation>
     </message>
     <message>
         <location filename="previewwind.ui" line="175"/>
         <source>总方块数</source>
-        <translation type="unfinished">Block count</translation>
+        <translation type="unfinished">Total count</translation>
     </message>
     <message>
         <location filename="previewwind.ui" line="191"/>
         <source>总体积</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Volume</translation>
     </message>
     <message>
         <location filename="previewwind.ui" line="447"/>
         <source>切换单位</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Switch Unit</translation>
     </message>
     <message>
         <location filename="previewwind.ui" line="458"/>
         <source>预览地图画</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Preview map</translation>
     </message>
 </context>
 <context>
@@ -2089,22 +2091,22 @@ After you reset the strategy, load the image again.</translation>
     <message>
         <location filename="../Sources/Page5.cpp" line="481"/>
         <source>(xz坐标=-65±128×整数)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">(xz coordinates=-65±128×any integer)</translation>
     </message>
     <message>
         <location filename="../Sources/previewwind.cpp" line="42"/>
         <source>个</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"> </translation>
     </message>
     <message>
         <location filename="../Sources/previewwind.cpp" line="44"/>
         <source>盒</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">SB</translation>
     </message>
     <message>
         <location filename="../Sources/previewwind.cpp" line="46"/>
         <source>组</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">stacks</translation>
     </message>
 </context>
 <context>
