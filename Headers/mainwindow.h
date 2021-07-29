@@ -401,6 +401,10 @@ private slots:
 
     void on_AllowForcedOpti_stateChanged(int arg1);
 
+    void on_ManualPreview_clicked();
+
+    void on_contact_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

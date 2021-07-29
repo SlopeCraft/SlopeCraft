@@ -49,4 +49,11 @@ void MainWindow::on_seeExported_clicked()
     }
 }
 
+void MainWindow::on_contact_clicked()
+{
+    contactB();
+    contactG();
+}
+
+
 #endif

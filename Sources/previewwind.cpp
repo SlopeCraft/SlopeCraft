@@ -38,7 +38,7 @@ PreviewWind::~PreviewWind()
 
 QString blockCount2string(int count,int setCount)
 {
-    if(count>=0&&count<=(setCount-1))
+    if(count>0&&count<=(setCount-1))
         return QString::number(count)+QObject::tr("个");
     if(count>=(setCount*27))
         return QString::number(count/(setCount*27))+QObject::tr("盒")+blockCount2string(count%(setCount*27));
@@ -73,13 +73,14 @@ void PreviewWind::ShowMaterialList()
         iconShower->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
         idShower->setText("      "+Src[i]->text());
         countShower->setText(QString::number(BlockCount[i]));
+        countShower->setAlignment(Qt::AlignHCenter);
         CountLabel.push_back(countShower);
         colOffset=2*(!colOffset);
         rows+=i%2;
     }
 
     //area->addWidget(new QSpacerItem(1,1,QSizePolicy::Preferred,QSizePolicy::Expanding),area->columnCount(),0);
-    area->addWidget(Spacer=new QLabel(""),area->columnCount()+1,0);
+    area->addWidget(Spacer=new QLabel(""),area->rowCount(),0);
     Spacer->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Expanding);
 }
 

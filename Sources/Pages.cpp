@@ -110,6 +110,7 @@ void MainWindow::updateEnables()
 
         ui->ExportData->setEnabled(false);
         ui->FinshExData->setEnabled(false);
+        ui->ManualPreview->setEnabled(false);
     }
     if(Data.step<5)
     {
@@ -122,7 +123,7 @@ void MainWindow::turnToPage(int page)
 {
     page%=9;
     updateEnables();
-    QString newtitle="SlopeCraft v3.4.3 Copyright © 2021 TokiNoBug    ";
+    QString newtitle="SlopeCraft v3.5 Copyright © 2021 TokiNoBug    ";
     switch (page)
     {
         case 0:

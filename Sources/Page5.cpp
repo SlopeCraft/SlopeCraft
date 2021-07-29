@@ -141,6 +141,7 @@ void MainWindow::on_Build4Lite_clicked()
     ui->ExportLite->setEnabled(true);
 
     showPreview();
+    ui->ManualPreview->setEnabled(true);
 }
 
 long mcMap::makeHeight()//整张图片将被遍历4遍（向量化的遍历也被视为遍历）
@@ -477,7 +478,7 @@ long mcMap::exportAsLitematica(QString FilePathAndName)
     QString LiteName=parent->ui->InputLiteName->toPlainText();
     QString author=parent->ui->InputAuthor->toPlainText();
     QString RegionName=parent->ui->InputRegionName->toPlainText();
-
+    RegionName+=QObject::tr("(xz坐标=-65±128×整数)");
     Lite.writeCompound("Metadata");
         Lite.writeCompound("EnclosingSize");
             Lite.writeInt("x",size3D[0]);
@@ -616,14 +617,19 @@ void MainWindow::on_AllowNaturalOpti_clicked(bool checked)
     }
     else
     {
-        ui->AllowForcedOpti->setDisabled(false);
+        ui->AllowForcedOpti->setDisabled(true);
+        //暂不支持，暂时锁死
     }
 }
 
+void MainWindow::on_ManualPreview_clicked()
+{
+    this->showPreview();
+}
 
 void MainWindow::on_AllowForcedOpti_stateChanged(int arg1)
 {
-    ui->maxHeight->setDisabled(!ui->AllowForcedOpti->isChecked());
+    ui->maxHeight->setDisabled(false&&!ui->AllowForcedOpti->isChecked());
 
 }
 
