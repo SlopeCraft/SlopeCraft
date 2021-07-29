@@ -35,6 +35,9 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
       <widget class="QWidget" name="MaterialList">
        <attribute name="title">
         <string>材料表</string>
@@ -104,8 +107,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>618</width>
-             <height>290</height>
+             <width>616</width>
+             <height>307</height>
             </rect>
            </property>
            <property name="autoFillBackground">
@@ -448,6 +451,9 @@
        </layout>
       </widget>
       <widget class="QWidget" name="PreviewImage">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <attribute name="title">
         <string>预览地图画</string>
        </attribute>
@@ -455,16 +461,6 @@
      </widget>
     </item>
    </layout>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>640</width>
-     <height>21</height>
-    </rect>
-   </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
