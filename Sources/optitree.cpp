@@ -607,25 +607,6 @@ inline void HeightLine::DealRegion(Region PR, list<Pair> &List)
     List.push_back(Pair(')',PR.End));
 }
 
-/*void HeightLine::toWaterRegion(queue<Region> &RList)
-{
-
-    Region Temp;
-    Temp.Begin=0;Temp.End=Size-1;
-    for(int i=1;i<Size;i++)
-    {
-        //qDebug("rue~");
-        if(isWater(i))
-        {
-            Temp.End=i-1;
-            RList.push(Temp);
-            Temp.End=Size-1;
-            Temp.Begin=i;
-        }
-    }
-    RList.push(Temp);
-}*/
-
 
 inline int HeightLine::validHigh(int index)
 {
@@ -793,6 +774,7 @@ void OptiTree::NaturalOpti(HeightLine& HL,short Beg,short End)
     gotoRoot();
     Compress(HL);
     HL.SinkBoundary(Beg,End);
+    HL.SinkBoundary(Beg,End);    
     HL.SinkBoundary(Beg,End);
 }
 
