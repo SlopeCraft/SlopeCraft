@@ -10,7 +10,7 @@ INCLUDEPATH += ./others
 DEFINES += WIN32_LEAN_AND_MEAN
 RC_ICONS = others/SlopeCraft.ico
 # 版本号
-VERSION = 3.4.3
+VERSION = 3.5.0.0
 # 语言
 # 0x0004 表示 简体中文
 RC_LANG = 0x0004
