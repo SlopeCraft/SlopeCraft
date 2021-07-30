@@ -276,6 +276,7 @@ void MainWindow::Dither(AdjT *R)
     qDebug("成功填充了待抖动的矩阵Dither");
     float Error[3];
     int newCount=0;
+    TokiColor* oldColor=nullptr;
     for(short r=0;r<Data.sizePic[0];r++)//底部一行、左右两侧不产生误差扩散，只接受误差
     {
         RCL=(QRgb*)Data.rawPic.scanLine(r);
@@ -301,15 +302,12 @@ void MainWindow::Dither(AdjT *R)
                 }
                 Data.mapPic(r,c)=R->colorAdjuster[Current].Result;
                 index=mcMap::mapColor2Index(Data.mapPic(r,c));
-                /*
-                Data.Dither[0](r+1,c+1)=CM(index,0);
-                Data.Dither[1](r+1,c+1)=CM(index,1);
-                Data.Dither[2](r+1,c+1)=CM(index,2);
-*/
 
-                Error[0]=Data.Dither[0](r+1,c+1)-CM(index,0);
-                Error[1]=Data.Dither[1](r+1,c+1)-CM(index,1);
-                Error[2]=Data.Dither[2](r+1,c+1)-CM(index,2);
+                oldColor=&R->colorAdjuster[Current];
+
+                Error[0]=oldColor->c3[0]-CM(index,0);
+                Error[1]=oldColor->c3[1]-CM(index,1);
+                Error[2]=oldColor->c3[2]-CM(index,2);
 
                 Data.Dither[0].block(r+1,c+1-1,2,3)+=Error[0]*DitherMapLR;
                 Data.Dither[1].block(r+1,c+1-1,2,3)+=Error[1]*DitherMapLR;
@@ -338,15 +336,12 @@ void MainWindow::Dither(AdjT *R)
                 }
                 Data.mapPic(r,c)=R->colorAdjuster[Current].Result;
                 index=mcMap::mapColor2Index(Data.mapPic(r,c));
-                /*
-                Data.Dither[0](r+1,c+1)=CM(index,0);
-                Data.Dither[1](r+1,c+1)=CM(index,1);
-                Data.Dither[2](r+1,c+1)=CM(index,2);
-*/
 
-                Error[0]=Data.Dither[0](r+1,c+1)-CM(index,0);
-                Error[1]=Data.Dither[1](r+1,c+1)-CM(index,1);
-                Error[2]=Data.Dither[2](r+1,c+1)-CM(index,2);
+                oldColor=&R->colorAdjuster[Current];
+
+                Error[0]=oldColor->c3[0]-CM(index,0);
+                Error[1]=oldColor->c3[1]-CM(index,1);
+                Error[2]=oldColor->c3[2]-CM(index,2);
 
                 Data.Dither[0].block(r+1,c+1-1,2,3)+=Error[0]*DitherMapRL;
                 Data.Dither[1].block(r+1,c+1-1,2,3)+=Error[1]*DitherMapRL;
