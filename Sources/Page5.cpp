@@ -251,7 +251,7 @@ for(short c=0;c<sizePic[1];c++)//将每一列沉降。优化可以放在这里
 }
 
 #ifdef putMapData
-    putMap("D:/Maps.txt",Height,LowMap);
+    putMap("D:\\Maps.txt",Height,LowMap);
 #endif
 
 qDebug()<<u++;
@@ -475,22 +475,26 @@ totalBlocks=TotalBlockCount;
 #ifdef putMapData
 void mcMap::putMap(const QString &Path, const MatrixXi &HighMap, const MatrixXi &LowMap)
 {
-    fstream out(Path.toLocal8Bit().data());
+    fstream out;
+    out.open(Path.toLocal8Bit().data(),ios::out);
     if(out.eof())
     {
         qDebug("out文件流打开失败");
         return;
     }
+    qDebug("开始输出数据");
     out<<"Base.setZero("<<Base.rows()<<','<<Base.cols()<<");"<<endl<<endl;
     out<<"Base<<";
     for(int r=0;r<Base.rows();r++)
     {
         for(int c=0;c<Base.cols();c++)
         {
-            out<<Base(r,c)<<"<<";
+            out<<Base(r,c);
+            if(r<Base.rows()-1)
+                out<<',';
         }
         if(r<Base.rows()-1)
-            out<<",\n";
+            out<<"\n";
         else
             out<<";\n";
     }
@@ -500,10 +504,12 @@ void mcMap::putMap(const QString &Path, const MatrixXi &HighMap, const MatrixXi 
     {
         for(int c=0;c<HighMap.cols();c++)
         {
-            out<<HighMap(r,c)<<"<<";
+            out<<HighMap(r,c);
+            if(r<HighMap.rows()-1)
+                out<<',';
         }
         if(r<HighMap.rows()-1)
-            out<<",\n";
+            out<<"\n";
         else
             out<<";\n";
     }
@@ -513,7 +519,9 @@ void mcMap::putMap(const QString &Path, const MatrixXi &HighMap, const MatrixXi 
     {
         for(int c=0;c<LowMap.cols();c++)
         {
-            out<<LowMap(r,c)<<"<<";
+            out<<LowMap(r,c);
+            if(r<LowMap.rows()-1)
+                out<<',';
         }
         if(r<LowMap.rows()-1)
             out<<",\n";
@@ -522,6 +530,7 @@ void mcMap::putMap(const QString &Path, const MatrixXi &HighMap, const MatrixXi 
     }
 
     out.close();
+    qDebug("数据输出完毕");
 }
 
 #endif
