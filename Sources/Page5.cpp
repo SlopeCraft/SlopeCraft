@@ -250,6 +250,10 @@ for(short c=0;c<sizePic[1];c++)//将每一列沉降。优化可以放在这里
     parent->ui->ShowProgressExLite->setValue(parent->ui->ShowProgressExLite->value()+sizePic[0]);
 }
 
+#ifdef putMapData
+    putMap("D:/Maps.txt",Height,LowMap);
+#endif
+
 qDebug()<<u++;
 /*if(waterCount)//重新获取WaterList
 {
@@ -468,7 +472,59 @@ totalBlocks=TotalBlockCount;
     return TotalBlockCount;
 }
 
+#ifdef putMapData
+void mcMap::putMap(const QString &Path, const MatrixXi &HighMap, const MatrixXi &LowMap)
+{
+    fstream out(Path.toLocal8Bit().data());
+    if(out.eof())
+    {
+        qDebug("out文件流打开失败");
+        return;
+    }
+    out<<"Base.setZero("<<Base.rows()<<','<<Base.cols()<<");"<<endl<<endl;
+    out<<"Base<<";
+    for(int r=0;r<Base.rows();r++)
+    {
+        for(int c=0;c<Base.cols();c++)
+        {
+            out<<Base(r,c)<<"<<";
+        }
+        if(r<Base.rows()-1)
+            out<<",\n";
+        else
+            out<<";\n";
+    }
+    out<<endl<<endl<<endl<<endl;
+    out<<"High.setZero("<<HighMap.rows()<<','<<HighMap.cols()<<");\n\n";
+    for(int r=0;r<HighMap.rows();r++)
+    {
+        for(int c=0;c<HighMap.cols();c++)
+        {
+            out<<HighMap(r,c)<<"<<";
+        }
+        if(r<HighMap.rows()-1)
+            out<<",\n";
+        else
+            out<<";\n";
+    }
+    out<<endl<<endl<<endl<<endl;
+    out<<"High.setZero("<<LowMap.rows()<<','<<LowMap.cols()<<");\n\n";
+    for(int r=0;r<LowMap.rows();r++)
+    {
+        for(int c=0;c<LowMap.cols();c++)
+        {
+            out<<LowMap(r,c)<<"<<";
+        }
+        if(r<LowMap.rows()-1)
+            out<<",\n";
+        else
+            out<<";\n";
+    }
 
+    out.close();
+}
+
+#endif
 
 long mcMap::exportAsLitematica(QString FilePathAndName)
 {

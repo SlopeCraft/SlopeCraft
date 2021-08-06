@@ -24,6 +24,7 @@ This file is part of SlopeCraft.
 
 //#define dispDerivative
 //#define putDitheredImg
+#define putMapData
 #include "NBTWriter.h"
 #include "ui_mainwindow.h"
 
@@ -185,6 +186,9 @@ public:
         bool allowForcedOpti;
         int maxHeight;
         long makeHeight();//构建高度矩阵
+#ifdef putMapData
+        void putMap(const QString &,const MatrixXi&HighMap,const MatrixXi&LowMap);
+#endif
         long BuildHeight();//构建真正的立体结构（三维矩阵
         long exportAsLitematica(QString FilePathAndName);
         //long exportAsMcF(QString FilePathAndName);
