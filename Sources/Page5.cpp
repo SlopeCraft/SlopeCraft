@@ -490,7 +490,7 @@ void mcMap::putMap(const QString &Path, const MatrixXi &HighMap, const MatrixXi 
         for(int c=0;c<Base.cols();c++)
         {
             out<<Base(r,c);
-            if(r<Base.rows()-1)
+            if(r<Base.rows()-1||c<Base.cols()-1)
                 out<<',';
         }
         if(r<Base.rows()-1)
@@ -500,12 +500,13 @@ void mcMap::putMap(const QString &Path, const MatrixXi &HighMap, const MatrixXi 
     }
     out<<endl<<endl<<endl<<endl;
     out<<"High.setZero("<<HighMap.rows()<<','<<HighMap.cols()<<");\n\n";
+    out<<"High<<";
     for(int r=0;r<HighMap.rows();r++)
     {
         for(int c=0;c<HighMap.cols();c++)
         {
             out<<HighMap(r,c);
-            if(r<HighMap.rows()-1)
+            if(r<HighMap.rows()-1||c<HighMap.cols()-1)
                 out<<',';
         }
         if(r<HighMap.rows()-1)
@@ -514,17 +515,18 @@ void mcMap::putMap(const QString &Path, const MatrixXi &HighMap, const MatrixXi 
             out<<";\n";
     }
     out<<endl<<endl<<endl<<endl;
-    out<<"High.setZero("<<LowMap.rows()<<','<<LowMap.cols()<<");\n\n";
+    out<<"Low.setZero("<<LowMap.rows()<<','<<LowMap.cols()<<");\n\n";
+    out<<"Low<<";
     for(int r=0;r<LowMap.rows();r++)
     {
         for(int c=0;c<LowMap.cols();c++)
         {
             out<<LowMap(r,c);
-            if(r<LowMap.rows()-1)
+            if(r<LowMap.rows()-1||c<LowMap.cols()-1)
                 out<<',';
         }
         if(r<LowMap.rows()-1)
-            out<<",\n";
+            out<<"\n";
         else
             out<<";\n";
     }
