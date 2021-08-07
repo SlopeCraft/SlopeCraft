@@ -1,5 +1,8 @@
 #include "WaterItem.h"
 
+const TokiPos nullPos=TokiRC(-1,-1);
+const waterItem nullWater=TokiRC(-32768,-32768);
+
 TokiPos TokiRC(short row,short col)
 {
     unsigned int u;

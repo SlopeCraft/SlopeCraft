@@ -124,13 +124,9 @@ void MainWindow::on_Build4Lite_clicked()
     Data.makeHeight();
     ui->ShowLiteXYZ->setText("X:"+QString::number(Data.size3D[0])+"  × Y:"+QString::number(Data.size3D[1])+"  × Z:"+QString::number(Data.size3D[2]));
     Data.ExLitestep=1;    
-    Data.step=5;updateEnables();
+    Data.step=5;
     updateEnables();
-    if((Data.Height.array()<0).any())
-    {
-        qDebug("调整高度出错：出现了负高度");
-        return;
-    }
+    updateEnables();
 
     qDebug("开始BuildHeight");
     long blockCount=Data.BuildHeight();
@@ -152,15 +148,54 @@ if(step<5)return 0;
 if(ExLitestep<0)return 0;
 
 Base=mapPic/4;
+Base<<ArrayXi::Constant(mapPic.cols(),11).transpose(),
+            Base;
+ArrayXXi dealedDepth=mapPic-4*(mapPic/4);
+
+if((dealedDepth>=3).any())
+{
+    qDebug("错误：Depth中存在深度为3的方块");
+    return -1;
+}
+
+dealedDepth<<ArrayXi::Zero(mapPic.cols()).transpose(),
+            dealedDepth-1;
+//Depth的第一行没有意义，只是为了保持行索引一致
+WaterList.clear();
+
+for(short c=0;c<Base.cols();c++)
+{
+    if(Base(1,c)==0||Base(1,c)==12)
+        Base(0,c)=0;
+}
+
+for(short r=0;r<Base.rows();r++)
+    for(short c=0;c<Base.cols();c++)
+    {
+        if(Base(r,c)==12)
+        {
+            WaterList[TokiRC(r,c)]=nullWater;
+            dealedDepth(r,c)=0;
+            continue;
+        }
+        if(Base(r,c)==0)
+        {
+            dealedDepth(r,c)=0;
+            continue;
+        }
+    }
+
+HighMap.setZero(sizePic[0]+1,sizePic[1]);
+LowMap.setZero(sizePic[0]+1,sizePic[1]);
+
+/*Base=mapPic/4;
 qDebug()<<u++;
 Depth.setZero(sizePic[0],sizePic[1]);
 qDebug()<<u++;
 
 Depth=mapPic-4*(mapPic/4);
 
-/*for(short r=0;r<sizePic[0];r++)
-    for(short c=0;c<sizePic[1];c++)
-        Depth(r,c)=mapPic(r,c)%4;*/
+
 
 qDebug()<<u++;
 
@@ -295,7 +330,7 @@ qDebug()<<u++;
     }
     writeWaterIndex++;
     }
-}*/
+}
 
 //qDebug()<<u++;
 
@@ -366,7 +401,7 @@ size3D[1]=1+Height.array().maxCoeff();//y
 
 
 //Base(r,c)<->Depth(r,c)<->Height(r+1,c)
-
+*/
 ExLitestep=1;
 
 
