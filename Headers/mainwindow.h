@@ -45,6 +45,7 @@ This file is part of SlopeCraft.
 #include "optitree.h"
 #include "tpstrategywind.h"
 #include "previewwind.h"
+#include "WaterItem.h"
 //#include "adjt.h"
 using namespace std;
 using namespace Eigen;
@@ -168,10 +169,11 @@ public:
 
 
         MatrixXi mapPic;//stores mapColor
-        MatrixXi Base;
-        MatrixXi Depth;
-        MatrixXi Height;
-        Matrix<int,4,Dynamic> WaterList;
+
+        ArrayXXi Base;
+        ArrayXXi HighMap;
+        ArrayXXi LowMap;
+        QHash<TokiPos,waterItem> WaterList;
 
         //unsigned char***Build;
 

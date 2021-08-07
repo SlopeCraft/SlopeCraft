@@ -380,9 +380,7 @@ long mcMap::BuildHeight()//进度条上表现为遍历3遍图像
     if(step<5)return 0;
     if(ExLitestep<1)return 0;
     Build.resize(size3D[0],size3D[1],size3D[2]);
-    qDebug()<<0;
     Build.setZero();
-    qDebug()<<1;
     int TotalBlockCount=0;
 
     //Base(r,c)<->Depth(r,c)<->Height(r+1,c)<->Build(c+1,Height(r+1,c),r+1)
