@@ -214,6 +214,14 @@ for(short c=0;c<sizePic[1];c++)
 if(allowNaturalOpti)
 {
     //执行高度压缩
+    OptiChain::Base=Base;
+    for(int c=0;c<sizePic[1];c++)
+    {
+        OptiChain Compressor(HighMap.col(c),LowMap.col(c),c);
+        Compressor.divideAndCompress();
+        HighMap.col(c)=Compressor.HighLine;
+        LowMap.col(c)=Compressor.LowLine;
+    }
 }
 
 int maxHeight=HighMap.maxCoeff();
