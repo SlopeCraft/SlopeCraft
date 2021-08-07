@@ -151,6 +151,7 @@ Base=mapPic/4;
 Base<<ArrayXi::Constant(mapPic.cols(),11).transpose(),
             Base;
 ArrayXXi dealedDepth=mapPic-4*(mapPic/4);
+ArrayXXi rawShadow=dealedDepth;
 
 if((dealedDepth>=3).any())
 {
@@ -188,54 +189,39 @@ for(short r=0;r<Base.rows();r++)
 HighMap.setZero(sizePic[0]+1,sizePic[1]);
 LowMap.setZero(sizePic[0]+1,sizePic[1]);
 
-/*Base=mapPic/4;
-qDebug()<<u++;
-Depth.setZero(sizePic[0],sizePic[1]);
-qDebug()<<u++;
-
-Depth=mapPic-4*(mapPic/4);
-
-
-
-qDebug()<<u++;
-
-if((Depth.array()>=3).any())
-{
-    qDebug()<<"出现错误：有深度为3的元素出现";
-    return 0;
-}
-
-qDebug()<<u++;
-
-MatrixXi isWater=(Base.array()==12).select(MatrixXi::Ones(sizePic[0],sizePic[1]),0);
-
-qDebug()<<u++;
-MatrixXi dealedDepth=(Base.array()!=12).select(Depth,1)-MatrixXi::Ones(sizePic[0],sizePic[1]);
-dealedDepth=(Base.array()>0).select(dealedDepth,0);
-//dealedDepth为处理后的depth，也是真正意义的高度差。其中水的高度差被重置为0(它们的颜色仅由深度决定，与高度无关)
-qDebug()<<u++;
-
-int waterCount=(Base.array()==12).count();
+int waterCount=WaterList.size();
 qDebug()<<"共有"<<waterCount<<"个水柱";
-//if(waterCount)
-WaterList.setZero(4,waterCount);
-//类似于稀疏矩阵，每一列代表一个水，第一行是行坐标，第二行是列坐标，第三行是水柱顶点高度，第四行是水柱低点高度
-qDebug()<<u++;
-Height.setZero(1+sizePic[0],sizePic[1]);
-
-qDebug()<<u++;
-int writeWaterIndex=0;
-
 for(short r=0;r<sizePic[0];r++)//遍历每一行，根据高度差构建高度图
 {
-    Height.row(r+1)=Height.row(r)+dealedDepth.row(r);
+    HighMap.row(r+1)=HighMap.row(r)+dealedDepth.row(r+1);
     parent->ui->ShowProgressExLite->setValue(parent->ui->ShowProgressExLite->value()+sizePic[0]);
 }
-qDebug()<<u++;
+LowMap=HighMap;
 
+for(auto it=WaterList.begin();it!=WaterList.end();it++)
+{
+    LowMap(TokiRow(it.key()),TokiCol(it.key()))=HighMap(TokiRow(it.key()),TokiCol(it.key()))-WaterColumnSize[rawShadow(TokiRow(it.key())-1,TokiCol(it.key()))]+1;
+}
 
-MatrixXi LowMap(sizePic[0]+1,sizePic[1]);
-LowMap<<Height;
+for(short c=0;c<sizePic[1];c++)
+{
+    HighMap.col(c)-=LowMap.col(c).minCoeff();
+    LowMap.col(c)-=LowMap.col(c).minCoeff();
+    //沉降每一列
+}
+
+if(allowNaturalOpti)
+{
+    //执行高度压缩
+}
+
+for(auto it=WaterList.begin();it!=WaterList.end();it++)
+{
+    int r=TokiRow(it.key()),c=TokiCol(it.key());
+    it.value()=TokiWater(HighMap(r,c),LowMap(r,c));
+}
+
+/*
 
 qDebug()<<u++;
 for(short r=0;r<sizePic[0];r++)//抓取WaterList，并为水柱处理HighMap和LowMap
@@ -245,11 +231,6 @@ for(short c=0;c<sizePic[1];c++)
 
     if(!isWater(r,c)||(Base(r,c)!=12))continue;
 
-    if(writeWaterIndex>=waterCount)
-    {
-        qDebug("出现错误：writeWaterIndex>=waterCount");
-        continue;
-    }
     WaterList(0,writeWaterIndex)=r;
     WaterList(1,writeWaterIndex)=c;
     WaterList(2,writeWaterIndex)=Height(r+1,c);
@@ -257,14 +238,14 @@ for(short c=0;c<sizePic[1];c++)
 switch (Depth(r,c))
 {
 case 0:
-    WaterList(3,writeWaterIndex)=WaterList(2,writeWaterIndex);
+    WaterList(3,writeWaterIndex)=WaterList(2,writeWaterIndex);//一格深
     break;
 case 1:
-    WaterList(3,writeWaterIndex)=WaterList(2,writeWaterIndex)-4;
+    WaterList(3,writeWaterIndex)=WaterList(2,writeWaterIndex)-4;//五格深
     LowMap(r+1,c)=WaterList(3,writeWaterIndex);
     break;
 case 2:
-    WaterList(3,writeWaterIndex)=WaterList(2,writeWaterIndex)-9;
+    WaterList(3,writeWaterIndex)=WaterList(2,writeWaterIndex)-9;//十格深
     LowMap(r+1,c)=WaterList(3,writeWaterIndex);
     break;
 default:

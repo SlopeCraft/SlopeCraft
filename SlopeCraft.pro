@@ -37,7 +37,6 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    Headers/WaterItem.cpp \
     Sources/CIEDE00.cpp \
     Sources/Collecter.cpp \
     Sources/NBTWriter.cpp \
@@ -51,6 +50,7 @@ SOURCES += \
     Sources/Page7.cpp \
     Sources/Page8.cpp \
     Sources/Pages.cpp \
+    Sources/WaterItem.cpp \
     Sources/adjt.cpp \
     Sources/main.cpp \
     Sources/mainwindow.cpp \
