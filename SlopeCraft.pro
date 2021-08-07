@@ -40,6 +40,7 @@ SOURCES += \
     Sources/CIEDE00.cpp \
     Sources/Collecter.cpp \
     Sources/NBTWriter.cpp \
+    Sources/OptiChain.cpp \
     Sources/Page0.cpp \
     Sources/Page1.cpp \
     Sources/Page2.cpp \
@@ -55,7 +56,6 @@ SOURCES += \
     Sources/main.cpp \
     Sources/mainwindow.cpp \
     Sources/mcmap.cpp \
-    Sources/optitree.cpp \
     Sources/previewwind.cpp \
     Sources/tokicolor.cpp \
     Sources/tpstrategywind.cpp \
@@ -77,9 +77,9 @@ SOURCES += \
 
 HEADERS += \
     Headers/NBTWriter.h \
+    Headers/OptiChain.h \
     Headers/WaterItem.h \
     Headers/mainwindow.h \
-    Headers/optitree.h \
     Headers/previewwind.h \
     Headers/tpstrategywind.h \
     zlibs/crc32.h \

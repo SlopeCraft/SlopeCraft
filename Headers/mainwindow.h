@@ -42,7 +42,7 @@ This file is part of SlopeCraft.
 #include <QThread>
 #include <QDesktopServices>
  #include <QUrl>
-#include "optitree.h"
+#include "OptiChain.h"
 #include "tpstrategywind.h"
 #include "previewwind.h"
 #include "WaterItem.h"
