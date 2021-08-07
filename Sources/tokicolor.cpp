@@ -334,9 +334,9 @@ unsigned char TokiColor::applyRGB()
 {
     if(Result)return Result;
     int tempIndex=0;
-    auto Diff0_2=(Allowed->_RGB.col(0).array()-c3[0]).square();
-    auto Diff1_2=(Allowed->_RGB.col(1).array()-c3[1]).square();
-    auto Diff2_2=(Allowed->_RGB.col(2).array()-c3[2]).square();
+    auto Diff0_2=(Allowed->_RGB.col(0)-c3[0]).square();
+    auto Diff1_2=(Allowed->_RGB.col(1)-c3[1]).square();
+    auto Diff2_2=(Allowed->_RGB.col(2)-c3[2]).square();
 
     auto Diff=Diff0_2+Diff1_2+Diff2_2;
     //Data.CurrentColor-=allowedColors;

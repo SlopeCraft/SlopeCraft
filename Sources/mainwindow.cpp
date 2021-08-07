@@ -47,7 +47,7 @@ short TokiColor::DepthIndexEnd[4]={63,127,191,255};
 unsigned char TokiColor::DepthCount[4]={64,64,64,64};
 bool TokiColor::needFindSide=false;
 Matrix<float,2,3> DitherMapLR,DitherMapRL;
-const short WaterColumnSize[3]={1,5,10};
+const short WaterColumnSize[3]={1,6,11};
 
 
 MainWindow::MainWindow(QWidget *parent)
