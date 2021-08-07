@@ -40,6 +40,7 @@ This file is part of SlopeCraft.
 #include "Page6.cpp"
 #include "Page7.cpp"
 #include "Page8.cpp"
+
 ColorSet* TokiColor::Allowed=NULL;
 ColorSet*TokiColor::Basic=NULL;
 short TokiColor::DepthIndexEnd[4]={63,127,191,255};

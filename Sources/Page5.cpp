@@ -27,6 +27,7 @@ This file is part of SlopeCraft.
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "NBTWriter.h"
+#include "WaterItem.h"
 #include  <QFile>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -147,20 +148,20 @@ long mcMap::makeHeight()//整张图片将被遍历4遍（向量化的遍历也�
 if(step<5)return 0;
 if(ExLitestep<0)return 0;
 
-Base=mapPic/4;
-Base<<ArrayXi::Constant(mapPic.cols(),11).transpose(),
-            Base;
-ArrayXXi dealedDepth=mapPic-4*(mapPic/4);
-ArrayXXi rawShadow=dealedDepth;
+Base.setConstant(sizePic[0]+1,sizePic[1],11);
+
+Base.block(1,0,sizePic[0],sizePic[1])=mapPic/4;
+
+ArrayXXi dealedDepth;
+ArrayXXi rawShadow=mapPic-4*(mapPic/4);
 
 if((dealedDepth>=3).any())
 {
     qDebug("错误：Depth中存在深度为3的方块");
     return -1;
 }
-
-dealedDepth<<ArrayXi::Zero(mapPic.cols()).transpose(),
-            dealedDepth-1;
+dealedDepth.setZero(sizePic[0]+1,sizePic[1]);
+dealedDepth.block(1,0,sizePic[0],sizePic[1])=rawShadow-1;
 //Depth的第一行没有意义，只是为了保持行索引一致
 WaterList.clear();
 

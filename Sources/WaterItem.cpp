@@ -6,30 +6,30 @@ const waterItem nullWater=TokiRC(-32768,-32768);
 TokiPos TokiRC(short row,short col)
 {
     unsigned int u;
-    *(short*)&u=row;
+    *((short*)&u)=row;
     *(((short*)&u)+1)=col;
     return u;
 }
-inline short TokiRow(TokiPos pos)
+short TokiRow(TokiPos pos)
 {
     return *((short*)&pos);
 }
-inline short TokiCol(TokiPos pos)
+short TokiCol(TokiPos pos)
 {
     return *(((short*)&pos)+1);
 }
 waterItem TokiWater(short high,short low)
 {
     unsigned int u;
-    *(short*)&u=high;
+    *((short*)&u)=high;
     *(((short*)&u)+1)=low;
     return u;
 }
-inline short waterHigh(waterItem item)
+short waterHigh(waterItem item)
 {
     return *((short*)&item);
 }
-inline short waterLow(waterItem item)
+short waterLow(waterItem item)
 {
     return *(((short*)&item)+1);
 }
