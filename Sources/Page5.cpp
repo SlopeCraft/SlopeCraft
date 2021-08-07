@@ -227,7 +227,7 @@ for(auto it=WaterList.begin();it!=WaterList.end();it++)
 }
 
 #ifdef putMapData
-    putMap("D:\\check_",HighMap,LowMap);
+    putMap("D:\\test_",HighMap,LowMap);
 #endif
 
 
@@ -328,13 +328,13 @@ void mcMap::putMap(const QString &Path, const MatrixXi &HighMap, const MatrixXi 
         return;
     }
     qDebug("开始输出数据");
-    for(int r=0;r<Base.rows();r++)
-    {
+
         for(int c=0;c<Base.cols();c++)
+            for(int r=0;r<Base.rows();r++)
         {
             out.write((const char*)&Base(r,c),sizeof(int));
         }
-    }
+
 
     out.close();
 
@@ -344,13 +344,13 @@ void mcMap::putMap(const QString &Path, const MatrixXi &HighMap, const MatrixXi 
         qDebug("out文件流打开失败(HighMap)");
         return;
     }
-    for(int r=0;r<HighMap.rows();r++)
-    {
+
         for(int c=0;c<HighMap.cols();c++)
+            for(int r=0;r<HighMap.rows();r++)
         {
             out.write((const char*)&HighMap(r,c),sizeof(int));
         }
-    }
+
     out.close();
 
     out.open((Path+"LowMap.Toki").toLocal8Bit().data(),ios::out|ios::binary);
@@ -359,13 +359,12 @@ void mcMap::putMap(const QString &Path, const MatrixXi &HighMap, const MatrixXi 
         qDebug("out文件流打开失败(LowMap)");
         return;
     }
-    for(int r=0;r<LowMap.rows();r++)
-    {
+
         for(int c=0;c<LowMap.cols();c++)
+            for(int r=0;r<LowMap.rows();r++)
         {
             out.write((const char*)&LowMap(r,c),sizeof(int));
         }
-    }
 
     out.close();
     qDebug("数据输出完毕");
