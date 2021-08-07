@@ -227,7 +227,7 @@ for(auto it=WaterList.begin();it!=WaterList.end();it++)
 }
 
 #ifdef putMapData
-    putMap("D:\\test_",HighMap,LowMap);
+    putMap("D:\\extreme_",HighMap,LowMap);
 #endif
 
 
