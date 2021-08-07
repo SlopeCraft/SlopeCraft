@@ -215,104 +215,30 @@ if(allowNaturalOpti)
     //执行高度压缩
 }
 
+int maxHeight=HighMap.maxCoeff();
+
 for(auto it=WaterList.begin();it!=WaterList.end();it++)
 {
     int r=TokiRow(it.key()),c=TokiCol(it.key());
     it.value()=TokiWater(HighMap(r,c),LowMap(r,c));
-}
-
-/*
-
-qDebug()<<u++;
-for(short r=0;r<sizePic[0];r++)//抓取WaterList，并为水柱处理HighMap和LowMap
-for(short c=0;c<sizePic[1];c++)
-{
-    parent->ui->ShowProgressExLite->setValue(parent->ui->ShowProgressExLite->value()+1);
-
-    if(!isWater(r,c)||(Base(r,c)!=12))continue;
-
-    WaterList(0,writeWaterIndex)=r;
-    WaterList(1,writeWaterIndex)=c;
-    WaterList(2,writeWaterIndex)=Height(r+1,c);
-
-switch (Depth(r,c))
-{
-case 0:
-    WaterList(3,writeWaterIndex)=WaterList(2,writeWaterIndex);//一格深
-    break;
-case 1:
-    WaterList(3,writeWaterIndex)=WaterList(2,writeWaterIndex)-4;//五格深
-    LowMap(r+1,c)=WaterList(3,writeWaterIndex);
-    break;
-case 2:
-    WaterList(3,writeWaterIndex)=WaterList(2,writeWaterIndex)-9;//十格深
-    LowMap(r+1,c)=WaterList(3,writeWaterIndex);
-    break;
-default:
-    qDebug()<<"出现错误：("<<r<<','<<c<<")处出现了Depth为3的水";
-    return 0;
-}
-Height(r+1,c)++;//遮顶玻璃
-writeWaterIndex++;
-}
-
-qDebug()<<u++;
-
-
-for(short c=0;c<sizePic[1];c++)//将每一列沉降。优化可以放在这里
-{
-    Height.col(c).array()-=LowMap.col(c).minCoeff();
-    LowMap.col(c).array()-=LowMap.col(c).minCoeff();//此后不再使用LowMap，所以这一句是多余的（除非使用了无损高度压缩）
-    parent->ui->ShowProgressExLite->setValue(parent->ui->ShowProgressExLite->value()+sizePic[0]);
+    maxHeight=max(maxHeight,HighMap(r,c)+1);
+    //遮顶玻璃块
 }
 
 #ifdef putMapData
-    putMap("D:\\Maps.txt",Height,LowMap);
+    putMap("D:\\check_",HighMap,LowMap);
 #endif
 
-qDebug()<<u++;
-/*if(waterCount)//重新获取WaterList
-{
-    writeWaterIndex=0;
-    for(short r=0;r<sizePic[0];r++)
-    for(short c=0;c<sizePic[1];c++)
-    {
-        parent->ui->ShowProgressExLite->setValue(parent->ui->ShowProgressExLite->value()+1);
-        if(!isWater(r,c)||(Base(r,c)!=12))
-        {
-            continue;
-        }
-        if(writeWaterIndex>=waterCount)
-        {
-            qDebug("出现错误：writeWaterIndex>=waterCount");
-            continue;
-        }
-        WaterList(0,writeWaterIndex)=r;
-        WaterList(1,writeWaterIndex)=c;
-        WaterList(2,writeWaterIndex)=Height(r+1,c)-1;
 
-    switch (Depth(r,c))
-    {
-    case 0:
-        WaterList(3,writeWaterIndex)=WaterList(2,writeWaterIndex);
-        break;
-    case 1:
-        WaterList(3,writeWaterIndex)=WaterList(2,writeWaterIndex)-4;
-        //LowMap(r+1,c)=WaterList(3,writeWaterIndex);
-        break;
-    case 2:
-        WaterList(3,writeWaterIndex)=WaterList(2,writeWaterIndex)-9;
-        //LowMap(r+1,c)=WaterList(3,writeWaterIndex);
-        break;
-    default:
-        qDebug()<<"出现错误：("<<r<<','<<c<<")处出现了Depth为3的水";
-        return 0;
 
-    }
-    writeWaterIndex++;
-    }
-}
+    size3D[2]=2+sizePic[0];//z
+    size3D[0]=2+sizePic[1];//x
+    size3D[1]=1+maxHeight;//y
 
+    ExLitestep=1;
+
+    return (sizePic[0]+1)*sizePic[1];
+/*
 //qDebug()<<u++;
 
 if(allowNaturalOpti)
@@ -375,19 +301,9 @@ HeightLine::Base=Base;
 else
 parent->ui->ShowProgressExLite->setValue(parent->ui->ShowProgressExLite->value()+2*sizePic[0]*sizePic[1]);
 
-
-size3D[2]=2+Base.rows();//z
-size3D[0]=2+Base.cols();//x
-size3D[1]=1+Height.array().maxCoeff();//y
-
-
 //Base(r,c)<->Depth(r,c)<->Height(r+1,c)
 */
-ExLitestep=1;
 
-
-
-return (sizePic[0]+1)*sizePic[1];
 }
 
 long mcMap::BuildHeight()//进度条上表现为遍历3遍图像
@@ -405,16 +321,16 @@ long mcMap::BuildHeight()//进度条上表现为遍历3遍图像
 
     int yLow=0;
 
-    int waterCount=WaterList.cols();
+    int waterCount=WaterList.size();
     qDebug()<<"共有"<<waterCount<<"个水柱";
     qDebug()<<2;
     if(waterCount)
-    for(int waterIndex=0;waterIndex<WaterList.cols();waterIndex++)
+    for(auto it=WaterList.begin();it!=WaterList.end();it++)
     {
-        x=WaterList(1,waterIndex)+1;
-        z=WaterList(0,waterIndex)+1;
-        y=WaterList(2,waterIndex);
-        yLow=WaterList(3,waterIndex);
+        x=TokiCol(it.key())+1;
+        z=TokiRow(it.key())+1;
+        y=waterHigh(it.value());
+        yLow=waterLow(it.value());
 
         Build(x,y+1,z)=0+1;//柱顶玻璃
 
@@ -436,10 +352,10 @@ long mcMap::BuildHeight()//进度条上表现为遍历3遍图像
     {
         for(short c=0;c<sizePic[1];c++)
         {
-            x=c+1;y=Height(r+1,c);z=r+1;
-            if(y>=1&&parent->NeedGlass[Base(r,c)][SelectedBlockList[Base(r,c)]])
+            x=c+1;y=HighMap(r+1,c);z=r+1;
+            if(y>=1&&parent->NeedGlass[Base(r+1,c)][SelectedBlockList[Base(r+1,c)]])
                 Build(x,y-1,z)=0+1;
-            if(Base(r,c)==12||Base(r,c)==0)
+            if(Base(r+1,c)==12||Base(r+1,c)==0)
                 continue;
 
             Build(x,y,z)=Base(r,c)+1;
@@ -448,35 +364,26 @@ long mcMap::BuildHeight()//进度条上表现为遍历3遍图像
     }
 
     for(short c=0;c<sizePic[1];c++)
-        Build(c+1,Height(0,c),0)=11+1;
+        if(Base(0,c))        Build(c+1,HighMap(0,c),0)=11+1;
 
 
 qDebug()<<4;
 
-    qDebug()<<5;
-
 parent->ui->ShowProgressExLite->setValue(parent->ui->ShowProgressExLite->value()+sizePic[1]*sizePic[0]);
 
-if(waterCount)
-for(int waterIndex=0;waterIndex<WaterList.cols();waterIndex++)
+for(auto it=WaterList.begin();it!=WaterList.end();it++)
 {
-    x=WaterList(1,waterIndex)+1;
-    z=WaterList(0,waterIndex)+1;
-    y=WaterList(2,waterIndex);
-    yLow=WaterList(3,waterIndex);
-
-    Build(x,y+1,z)=0+1;//柱顶玻璃
-
+    x=TokiCol(it.key())+1;
+    z=TokiRow(it.key())+1;
+    y=waterHigh(it.value());
+    yLow=waterLow(it.value());
     for(short yDynamic=yLow;yDynamic<=y;yDynamic++)
     {
-        //Build(x-1,yDynamic,z-0)=1;
-        //Build(x-1,yDynamic,z+0)=1;
-        //Build(x+0,yDynamic,z-1)=1;
-        //Build(x+0,yDynamic,z+1)=1;
         Build(x,yDynamic,z)=13;
     }
 
 }
+
 for(x=0;x<size3D[0];x++)
     for(y=0;y<size3D[1];y++)
         for(z=0;z<size3D[2];z++)
@@ -490,59 +397,50 @@ totalBlocks=TotalBlockCount;
 void mcMap::putMap(const QString &Path, const MatrixXi &HighMap, const MatrixXi &LowMap)
 {
     fstream out;
-    out.open(Path.toLocal8Bit().data(),ios::out);
+    out.open((Path+"Base.Toki").toLocal8Bit().data(),ios::out|ios::binary);
     if(out.eof())
     {
-        qDebug("out文件流打开失败");
+        qDebug("out文件流打开失败(Base)");
         return;
     }
     qDebug("开始输出数据");
-    out<<"Base.setZero("<<Base.rows()<<','<<Base.cols()<<");"<<endl<<endl;
-    out<<"Base<<";
     for(int r=0;r<Base.rows();r++)
     {
         for(int c=0;c<Base.cols();c++)
         {
-            out<<Base(r,c);
-            if(r<Base.rows()-1||c<Base.cols()-1)
-                out<<',';
+            out.write((const char*)&Base(r,c),sizeof(int));
         }
-        if(r<Base.rows()-1)
-            out<<"\n";
-        else
-            out<<";\n";
     }
-    out<<endl<<endl<<endl<<endl;
-    out<<"High.setZero("<<HighMap.rows()<<','<<HighMap.cols()<<");\n\n";
-    out<<"High<<";
+
+    out.close();
+
+    out.open((Path+"HighMap.Toki").toLocal8Bit().data(),ios::out|ios::binary);
+    if(out.eof())
+    {
+        qDebug("out文件流打开失败(HighMap)");
+        return;
+    }
     for(int r=0;r<HighMap.rows();r++)
     {
         for(int c=0;c<HighMap.cols();c++)
         {
-            out<<HighMap(r,c);
-            if(r<HighMap.rows()-1||c<HighMap.cols()-1)
-                out<<',';
+            out.write((const char*)&HighMap(r,c),sizeof(int));
         }
-        if(r<HighMap.rows()-1)
-            out<<"\n";
-        else
-            out<<";\n";
     }
-    out<<endl<<endl<<endl<<endl;
-    out<<"Low.setZero("<<LowMap.rows()<<','<<LowMap.cols()<<");\n\n";
-    out<<"Low<<";
+    out.close();
+
+    out.open((Path+"LowMap.Toki").toLocal8Bit().data(),ios::out|ios::binary);
+    if(out.eof())
+    {
+        qDebug("out文件流打开失败(LowMap)");
+        return;
+    }
     for(int r=0;r<LowMap.rows();r++)
     {
         for(int c=0;c<LowMap.cols();c++)
         {
-            out<<LowMap(r,c);
-            if(r<LowMap.rows()-1||c<LowMap.cols()-1)
-                out<<',';
+            out.write((const char*)&LowMap(r,c),sizeof(int));
         }
-        if(r<LowMap.rows()-1)
-            out<<"\n";
-        else
-            out<<";\n";
     }
 
     out.close();
