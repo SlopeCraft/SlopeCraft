@@ -128,6 +128,7 @@ void MainWindow::on_Build4Lite_clicked()
     Data.step=5;
     updateEnables();
     updateEnables();
+    ui->ShowProgressExLite->setValue(5*Data.sizePic[0]*Data.sizePic[1]);
 
     qDebug("开始BuildHeight");
     long blockCount=Data.BuildHeight();
@@ -141,7 +142,7 @@ void MainWindow::on_Build4Lite_clicked()
     ui->ManualPreview->setEnabled(true);
 }
 
-long mcMap::makeHeight()//整张图片将被遍历4遍（向量化的遍历也被视为遍历）
+long mcMap::makeHeight()//整张图片将被遍历5遍（向量化的遍历也被视为遍历）
 {
     int u=0;
     qDebug()<<u++;
@@ -165,13 +166,8 @@ dealedDepth.block(1,0,sizePic[0],sizePic[1])=rawShadow-1;
 //Depth的第一行没有意义，只是为了保持行索引一致
 WaterList.clear();
 
-for(short c=0;c<Base.cols();c++)
-{
-    if(Base(1,c)==0||Base(1,c)==12)
-        Base(0,c)=0;
-}
-
 for(short r=0;r<Base.rows();r++)
+{
     for(short c=0;c<Base.cols();c++)
     {
         if(Base(r,c)==12)
@@ -186,6 +182,8 @@ for(short r=0;r<Base.rows();r++)
             continue;
         }
     }
+    parent->ui->ShowProgressExLite->setValue(parent->ui->ShowProgressExLite->value()+sizePic[0]);
+}
 
 HighMap.setZero(sizePic[0]+1,sizePic[1]);
 LowMap.setZero(sizePic[0]+1,sizePic[1]);
@@ -197,6 +195,18 @@ for(short r=0;r<sizePic[0];r++)//遍历每一行，根据高度差构建高度�
     HighMap.row(r+1)=HighMap.row(r)+dealedDepth.row(r+1);
     parent->ui->ShowProgressExLite->setValue(parent->ui->ShowProgressExLite->value()+sizePic[0]);
 }
+
+for(short c=0;c<Base.cols();c++)
+{
+    if(Base(1,c)==0||Base(1,c)==12||rawShadow(0,c)==2)
+    {
+        Base(0,c)=0;
+        HighMap(0,c)=HighMap(1,c);
+    }
+    parent->ui->ShowProgressExLite->setValue(parent->ui->ShowProgressExLite->value()+sizePic[1]);
+}
+
+
 LowMap=HighMap;
 
 for(auto it=WaterList.begin();it!=WaterList.end();it++)
@@ -209,6 +219,7 @@ for(short c=0;c<sizePic[1];c++)
     HighMap.col(c)-=LowMap.col(c).minCoeff();
     LowMap.col(c)-=LowMap.col(c).minCoeff();
     //沉降每一列
+    parent->ui->ShowProgressExLite->setValue(parent->ui->ShowProgressExLite->value()+sizePic[1]);
 }
 
 if(allowNaturalOpti)
@@ -221,6 +232,7 @@ if(allowNaturalOpti)
         Compressor.divideAndCompress();
         HighMap.col(c)=Compressor.HighLine;
         LowMap.col(c)=Compressor.LowLine;
+        parent->ui->ShowProgressExLite->setValue(parent->ui->ShowProgressExLite->value()+sizePic[1]);
     }
 }
 
