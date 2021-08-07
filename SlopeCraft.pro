@@ -10,11 +10,12 @@ INCLUDEPATH += ./others
 DEFINES += WIN32_LEAN_AND_MEAN
 RC_ICONS = others/SlopeCraft.ico
 # 版本号
-VERSION = 3.5.0.0
+VERSION = 3.5.1.0
 # 语言
 # 0x0004 表示 简体中文
 RC_LANG = 0x0004
 # 公司名
+
 #QMAKE_TARGET_COMPANY =  TokiNoBug
 # 产品名称
 #QMAKE_TARGET_PRODUCT = SlopeCraft.exe
@@ -24,8 +25,8 @@ RC_LANG = 0x0004
 #QMAKE_TARGET_COPYRIGHT = CopyRight TokiNoBug
 
 
-#DEFINES += QT_NO_WARNING_OUTPUT\
-#                QT_NO_DEBUG_OUTPUT
+DEFINES += QT_NO_WARNING_OUTPUT\
+                QT_NO_DEBUG_OUTPUT
 #仅在发布时取消注释
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets

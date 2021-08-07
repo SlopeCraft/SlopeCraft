@@ -24,7 +24,8 @@ This file is part of SlopeCraft.
 
 //#define dispDerivative
 //#define putDitheredImg
-#define putMapData
+//#define putMapData
+
 #include "NBTWriter.h"
 #include "ui_mainwindow.h"
 
