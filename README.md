@@ -28,6 +28,20 @@ SlopeCraft软件是我（TokiNoBug）用qt+Eigen+zlib开发的、用于在minecr
 
 正是因此，利用SlopeCraft制作的地图画的“画质”，比spritecraft导出、再用地图记录的地图画要好很多——因为专业。<
 
+## Program Description
+
+SlopeCraft is created by me(TokiNoBug) using qt+Eigen+zlib - it's used to create 3D pixel map arts within Minecraft.
+
+The difference between this program and SpriteCraft is that this program focuses on pixel art on maps. Its purpose is to record the pixel art with the map, then display it in an item frame (the map here refers to the in-game item, and not the save file).
+
+The color modification module is targeted towards the map. The pixel art is meant to resemble the art within a map - it will not resemble the art from the point of view of the player.
+
+Since the color within the map is related to the relative height of the block, the pixel art created by SlopeCraft is usually in 3D, which I call 3D Pixel Art.
+
+In summary, SlopeCraft is created for map pixel art.
+
+This is why maps made by SlopeCraft have higher quality than exporting a picture from SpriteCraft then recording it with a map - because SlopeCraft is specifically designed for map pixel art.
+
 ## 地图画的游戏版本、类型、颜色空间和方块列表是怎么一回事？
 
 在SlopeCraft中，你可以调节地图画所对应的游戏版本、地图画类型、颜色空间和方块列表。我将一一简述这些参数是怎么回事。
@@ -62,7 +76,7 @@ SlopeCraft中使用了4种颜色空间：RGB、HSV、Lab、XYZ。
 
 这是最为重要的部分，它与最终生成的地图画息息相关。简单来说，地图中的每个基础颜色往往对应着多种方块，但导出的时候我们只能给每个基础颜色选择一种对应的方块。
 
-所以方块列表就是建造像素画的“材料表”，称之为方块列表。我预设了4种方块列表，分别为：Vanilla，Cheap，Elegent和Shiny。
+所以方块列表就是建造像素画的“材料表”，称之为方块列表。我预设了4种方块列表，分别为：Vanilla，Cheap，Elegant和Shiny。
 
 Vanilla方块列表尽量还原每一种基础颜色的“原汁原味”，如沙子的颜色就对应砂岩、钻石块的颜色就对应钻石块等。
 它往往不太适合生存实装（废话，3000个钻石块爽死你），只适合创造模式演示，因此我命名为Creative。
@@ -75,15 +89,64 @@ Shiny专为光影而生，它尽量选择可以发光的方块。
 
 Custom是自定义的方块列表，你可以自由的配置一切。
 
+## Game Version, Type, Color Space and Block List
+
+### 1.Game Version: SlopeCraft supports 1.12 to 1.16. There isn't much difference from 1.12 to 1.15, but the addition of nether trees added 28 more colors, creating a total of 232 colors (ignoring transparent blocks).
+
+### 2. Types of Map Art:
+
+Creative Map Art uses the full color palette. It has the highest quality, but it can't be exported into the world itself. It can only be exported as a map file, using commands to obtain it in game. 
+
+For more information on this procedure, visit [mc-map.djfun.de](mc-map.djfun.de)
+
+Survival Map Art leaves 1/4th of the colors out as a trade off for being able to export it into vanilla survival. This type of map art can generate 3D map arts, which is the core feature of this program.
+
+Flat type Map Art is the traditional 2D map art - it's the easiest to build but it only have 1/4th of the color palette compared to Creative: 51/58 colors.
+
+Do note, Survival and Creative map arts are mutually exclusive - the map art can only be one of the two types, but Flat type map art can be used on both of them (Having a flat Creative Map Art is pointless though)
+
+### 3. Color Space:
+
+This is more difficult to explain. Simply put, the program describes the color in different ways in each color space. In SlopeCraft, this means different ways of choosing a block for a color
+
+The four types of color space: RGB, HSV, LAB, XYZ
+
+Lab is the best quality for most pictures, which is why it is default, but the others should still be tried to see which color space has the best visual effect for your picture.
+
+### 4. Block List:
+
+This is the most important part, it controls how the final product looks. Simply put, every color within a picture has multiple blocks with its color, but we can only choose one when we export it, which means only one block of each color can be chosen
+
+So the Block List is more like the Material List of the pixel art. 4 Presets have been set: Vanilla, Cheap, Elegant and Shiny.
+
+Vanilla block lists try to recreate the color of the original picture as much as possible, such as the color of sand being sandstone, the color of diamond blocks will use diamond blocks. This preset is usually not used within survival (have fun trying to get 3000 Diamond Blocks), but for creative mode purposes, which is why I call it Creative.
+
+Cheap is a highly optimized block list - every color will use its most easily obtainable block counterpart. The color red would use netherrack, the color white would use snow. This is best for survival mode when resources aren't abundant. 
+
+Elegant: The most "Elegant" Block List, it mostly uses blocks that can be mass produced in survival while still looking clean, such as white being white concrete. It's best for late stages of survival, when resources are abundant.
+
+Shiny is created specifically for use with shaders, so it mostly uses blocks that emits light.
+
+Custom is for you to freely choose the blocks you would like to use.
+
 ## SlopeCraft的功能
 
 SlopeCraft包含以下功能：
 
 导入图片、调整颜色、生成立体地图画、导出为投影文件。
 
+## Features of SlopeCraft
+These features are included in SlopeCraft
+
+Importing Pictures, Adjusting Colors, Generating 3D map art, exporting into a file for Minecraft
+
 ## 安装方法：
 
 无需安装。
+
+## Installation
+
+No Installation Required
 
 ## 使用方法：
 
@@ -95,3 +158,13 @@ SlopeCraft包含以下功能：
 6. 在调整颜色页面，选择任何一种颜色空间，点击调整颜色。完成这一步之后，点击导出为投影。（另外两个导出选项还没有完成）
 7. 在导出为投影页面，设置投影名称、投影作者和投影区域名称。（你也可以不填）。然后先点击构建三维结构，待进度条完成后，点击导出为投影。导出完毕后，点击完成按钮。
 8. 点击左下角的查看导出的文件按钮，或点击右下角的退出按钮，结束程序。
+
+## Usage Guide
+
+1. Find the picture you would like to turn into a pixel art. Use Photoshop or other photo editing softwares to make sure the length and width of the picture in pixels are multiples of 128, which is best for maps in Minecraft.
+2. Open SlopeCraft.exe, and choose the type of map art you would like to create in the start menu.
+3. Click the "Import Photo" button, and choose the modified photo from step 1. The program will then import it.
+4. Choose the right game version for your map art, click Confirm, and click Next Page.
+5. Choose the block list for your map art - usually you can skip this step and just choose Confirm.
+6. In the color adjusting page, choose any color space, choose Convert to Map, then click one of the export options.
+7. In the Export page (different for each export option), follow the instructions in the page.

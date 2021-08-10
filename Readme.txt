@@ -14,3 +14,16 @@ SlopeCraft的github：https://github.com/ToKiNoBug/SlopeCraft
 本软件遵循GPL-3.0及以后版本(GPL-3.0 or later)协议开放源代码。
 
 
+SlopeCraft is used to create 3D map art within Minecraft.
+ Copyright (C) 2021 TokiNoBug
+ This program is licensed under the GNU General Public License (GNU GPL) Version 3 or Later by the Free Software Foundation, and you may modify and redistribute it as you please. We hope that you find this software useful, but we do not promise that it has any commercial value or specific use. For more information, refer to the GNU GPL.
+ You should have received a copy of the GNU GPL. If not, please refer to http://www.gnu.org/licenses/
+ Thank you for using SlopeCraft. I am the developer TokiNoBug, and SlopeCraft is a 3D map maker developed by me. It's mainly used to create 3D map art (also supports traditional 2D map art) that can be recreated in survival. The advantage of the 3D map art created by SlopeCraft is that it is higher resolution and quality, because it utilizes of the shading of Minecraft maps based on height level. More details will be provided in a separate document.
+
+You are currently using SlopeCraft 3.0. Qt, Zlib and Eigen were used during development. Thank you to all the developers mentioned, and thank you to Mojang.
+
+SlopeCraft's Github Page: https://github.com/ToKiNoBug/SlopeCraft
+My Github Page: https://github.com/ToKiNoBug/
+My Bilibili Page: https://space.bilibili.com/351429231
+
+This software is licensed under GPLv3 or later as an Open Source Program.
