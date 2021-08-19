@@ -149,19 +149,19 @@ void MainWindow::pushToHash(QHash<QRgb,TokiColor>*R)
     Data.adjStep=1;
 }
 
-void match(TokiColor& tColor,QRgb qColor) {
-    tColor.apply(qColor);
+void matchColor(TokiColor * tColor,QRgb qColor) {
+    tColor->apply(qColor);
 }
 
 void MainWindow::applyTokiColor(QHash<QRgb,TokiColor>*R)
 {//int ColorCount=0;
     if(Data.adjStep<1)return;
 
-    int step=reportRate*Data.sizePic[0]*Data.sizePic[1]/R->count();
-    int itered=1;
-    queue<QFuture<unsigned char>> taskTracker;
+    int step=Data.sizePic[0]*Data.sizePic[1]/R->count();
+    queue<QFuture<void>> taskTracker;
     for(auto it=R->begin();it!=R->end();it++)
-        taskTracker.push(QtConcurrent::run(match,it.value(),it.key()));
+        taskTracker.push(QtConcurrent::run(matchColor,&it.value(),it.key()));
+
 
     while(!taskTracker.empty()) {
         taskTracker.front().waitForFinished();
@@ -256,6 +256,7 @@ void MainWindow::Dither(QHash<QRgb,TokiColor> *R)
     TokiColor* oldColor=nullptr;
     for(short r=0;r<Data.sizePic[0];r++)//底部一行、左右两侧不产生误差扩散，只接受误差
     {
+        QCoreApplication::processEvents();
         RCL=(QRgb*)Data.rawPic.scanLine(r);
 #ifdef putDitheredImg
         OCL=(QRgb*)DitheredImg.scanLine(r);
@@ -291,8 +292,6 @@ void MainWindow::Dither(QHash<QRgb,TokiColor> *R)
                 Data.Dither[2].block(r+1,c+1-1,2,3)+=Error[2]*DitherMapLR;
             }
             //qDebug("从左至右遍历了一行");
-            //qDebug()<<"Error="<<Error[0]<<','<<Error[1]<<','<<Error[2];
-
         }
         else
         {
@@ -325,7 +324,6 @@ void MainWindow::Dither(QHash<QRgb,TokiColor> *R)
                 Data.Dither[2].block(r+1,c+1-1,2,3)+=Error[2]*DitherMapRL;
             }
             //qDebug("从左至右遍历了一行");
-            //qDebug()<<"Error="<<Error[0]<<','<<Error[1]<<','<<Error[2];
         }
         isDirLR=!isDirLR;
         AdjPro(Data.sizePic[1]);
@@ -343,111 +341,6 @@ void MainWindow::Dither(QHash<QRgb,TokiColor> *R)
 #endif
 
 }
-/*
-void MainWindow::complementHash(AdjT *R,MatrixXi&DitheredTempRaw)
-{
-    QRgb Current;
-    QRgb (*CvtFun)(float,float,float);
-    DitheredTempRaw.setZero(Data.sizePic[0],Data.sizePic[1]);
-    switch (Data.Mode)
-    {
-    case 'R':
-        CvtFun=RGB2QRGB;
-        break;
-    case 'r':
-        CvtFun=RGB2QRGB;
-        break;
-    case 'H':
-        CvtFun=HSV2QRGB;
-        break;
-    case 'L':
-        CvtFun=Lab2QRGB;
-        break;
-    case 'l':
-        CvtFun=Lab2QRGB;
-        break;
-    default:
-        CvtFun=XYZ2QRGB;
-        break;
-    }
-    int newColorCount=0;
-    QRgb*RCL=nullptr;
-    for(short r=0;r<Data.sizePic[0];r++)
-    {
-        RCL=(QRgb*)Data.rawPic.scanLine(r);
-        for(short c=0;c<Data.sizePic[1];c++)
-        {
-            if(qAlpha(RCL[c])<=0)continue;
-            Current=CvtFun(Data.Dither[0](r,c),Data.Dither[1](r,c),Data.Dither[2](r,c));
-            DitheredTempRaw(r,c)=Current;
-
-            if(R->colorAdjuster.contains(Current))continue;
-
-            R->colorAdjuster[Current]=TokiColor(Current,Data.Mode);
-            newColorCount++;
-        }
-    }
-    qDebug()<<"向hash中增加了"<<newColorCount<<"种颜色";
-}
-
-void MainWindow::reApplyTokiColor(AdjT *R)
-{
-    qDebug("抖动后为新增颜色匹配地图色");
-    qDebug("即将开始子线程");
-    R->start();
-    qDebug("已经开始子线程");
-    int step=reportRate*Data.sizePic[0]*Data.sizePic[1]/R->colorAdjuster.count()/2;
-    int itered=1;
-    auto mid=R->colorAdjuster.begin();
-    for(int count=0;count*2>=R->colorAdjuster.count();)
-        if(R->colorAdjuster.contains(mid.key()))
-        {
-                mid++;
-                count++;
-        }
-    //qDebug()<<"step="<<step;
-    for(auto i=R->colorAdjuster.begin();i!=R->colorAdjuster.end();i++)//前部遍历
-    {
-        //if(i==mid)break;
-        if(R->colorAdjuster.contains(i.key()))
-        {
-            if (i.value().Result)continue;//发现有处理过的颜色则跳过
-            i.value().apply(i.key());
-            //parent->AdjPro(step);
-            itered++;
-            if(itered%reportRate==0)
-            AdjPro(step);
-        }
-    }
-    R->wait();
-    qDebug("子线程执行完毕");
-}
-
-void MainWindow::fillDitheredMapMat(AdjT *R,MatrixXi&DitheredTempRaw)
-{
-    for(short r=0;r<Data.sizePic[0];r++)
-    {
-        for(short c=0;c<Data.sizePic[1];c++)
-        {
-            Data.mapPic(r,c)=R->colorAdjuster[DitheredTempRaw(r,c)].Result;
-        }
-    }
-    qDebug("重新装填完毕");
-
-    QImage DitheredRawImage(Data.sizePic[0],Data.sizePic[1],QImage::Format_ARGB32);
-    QRgb *CL=nullptr;
-    for(short r=0;r<Data.sizePic[0];r++)
-    {
-        CL=(QRgb*)DitheredRawImage.scanLine(r);
-        for(short c=0;c<Data.sizePic[1];c++)
-        {
-            CL[c]=DitheredTempRaw(r,c);
-        }
-    }
-
-    DitheredRawImage.save("D:\\DitheredRawImage.png");
-
-}*/
 
 void MainWindow::getAdjedPic()
 {
@@ -488,7 +381,6 @@ void MainWindow::on_ShowAdjed_clicked()
     ui->ShowPic->setPixmap((QPixmap::fromImage(Data.adjedPic)));
 }
 
-
 void MainWindow::on_AdjPicColor_clicked()
 {
 ui->ExData->setEnabled(false);
@@ -507,12 +399,12 @@ ui->ShowAdjed->setEnabled(false);
 ui->AdjPicColor->setText(QObject::tr("请稍等"));
 
 Data.adjStep=0;
-ui->ShowProgressABbar->setRange(0,5*Data.sizePic[0]*Data.sizePic[1]+1);
-//第一步，装入hash顺便转换颜色空间;
-//第二步，遍历hash并匹配颜色;
-//第三步，从hash中检索出对应的匹配结果;
-//第四步，抖动（包含四个函数）
-//第五步，生成调整后图片，显示(1)
+ui->ShowProgressABbar->setRange(0,5*Data.sizePic[0]*Data.sizePic[1]);
+//第一步，装入hash顺便转换颜色空间;（一次遍历
+//第二步，遍历hash并匹配颜色;（一次遍历
+//第三步，从hash中检索出对应的匹配结果;（一次遍历
+//第四步，抖动（包含四个函数）（一次遍历
+//第五步，生成调整后图片，显示
 ui->ShowProgressABbar->setValue(0);
 
 //Data.CurrentColor.setZero(Data.Allowed._RGB.rows(),3);
@@ -525,37 +417,40 @@ if(Data.isCreative())
     ui->InputDataIndex->setText("0");
 }
 
-QHash<QRgb,TokiColor> colorHash;
+auto colorHash=new QHash<QRgb,TokiColor>;
 clock_t start;
 start=clock();
 //t=GetCycleCount();
-pushToHash(&colorHash);
+pushToHash(colorHash);
 qDebug()<<"装入qHash用时："<<clock()-start;
 
+QCoreApplication::processEvents();
 int lastValue=ui->ShowProgressABbar->value();
 start=clock();
-applyTokiColor(&colorHash);
+applyTokiColor(colorHash);
 qDebug()<<"applyTokiColor用时："<<clock()-start;
 
+QCoreApplication::processEvents();
 ui->ShowProgressABbar->setValue(lastValue+Data.sizePic[0]*Data.sizePic[1]);
 start=clock();
-fillMapMat(&colorHash);
+fillMapMat(colorHash);
 qDebug()<<"fillMapMat用时："<<clock()-start;
 
-if(ui->AllowDither->isChecked())
-{
-    //MatrixXi DitherTempRaw;
-    Dither(&colorHash);
-}
-Data.adjStep=4;
-
+QCoreApplication::processEvents();
 start=clock();
+if(ui->AllowDither->isChecked())
+    Dither(colorHash);
+else
+    AdjPro(Data.sizePic[0]*Data.sizePic[1]);
+Data.adjStep=4;
+qDebug()<<"抖动用时："<<clock()-start;
 
+
+QCoreApplication::processEvents();
+start=clock();
 getAdjedPic();
-
 Data.adjStep=5;
 on_ShowAdjed_clicked();
-
 qDebug()<<"生成调整后图像用时："<<clock()-start;
 //start=clock();
 
@@ -582,6 +477,8 @@ ui->AdjPicColor->setEnabled(true);
 ui->ShowAdjed->setEnabled(true);
 
 ui->AdjPicColor->setText(tr("调整颜色"));
+
+delete colorHash;
 
 }
 

@@ -44,6 +44,7 @@ This file is part of SlopeCraft.
 #include <QDesktopServices>
 #include <QUrl>
 #include <QtConcurrent>
+#include <QFuture>
 #include "OptiChain.h"
 #include "tpstrategywind.h"
 #include "previewwind.h"
@@ -414,5 +415,5 @@ private:
     Ui::MainWindow *ui;
 };
 bool compressFile(const char*sourcePath,const char*destPath);
-void match(TokiColor& tColor,QRgb qColor);
+void matchColor(TokiColor * tColor,QRgb qColor);
 #endif // MAINWINDOW_H
