@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui concurrent
 #QT += opengl
 #QT += quick quick3d
 INCLUDEPATH += D:\eigen-3.3.9
@@ -53,7 +53,6 @@ SOURCES += \
     Sources/Page8.cpp \
     Sources/Pages.cpp \
     Sources/WaterItem.cpp \
-    Sources/adjt.cpp \
     Sources/main.cpp \
     Sources/mainwindow.cpp \
     Sources/mcmap.cpp \

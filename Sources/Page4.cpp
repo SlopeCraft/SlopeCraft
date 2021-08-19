@@ -123,10 +123,10 @@ void MainWindow::on_isColorSpaceRGBOld_clicked()
     qDebug("调整颜色空间为旧版RGB");
 }
 
-void MainWindow::pushToHash(AdjT*R)
+void MainWindow::pushToHash(QHash<QRgb,TokiColor>*R)
 {
     if(Data.adjStep<0)return;
-    R->colorAdjuster.clear();
+    R->clear();
     QRgb *CurrentLine;
     int ColorCount=0;
     TokiColor::Allowed=&Data.Allowed;
@@ -135,68 +135,45 @@ void MainWindow::pushToHash(AdjT*R)
     {
         CurrentLine=(QRgb*)Data.rawPic.scanLine(r);
         for(short c=0;c<Data.sizePic[1];c++)
-            if(!R->colorAdjuster.contains(CurrentLine[c]))
+            if(!R->contains(CurrentLine[c]))
             {
                 ColorCount++;
-                R->colorAdjuster[CurrentLine[c]]=TokiColor(CurrentLine[c],Data.Mode);
+                R->operator[](CurrentLine[c])=TokiColor(CurrentLine[c],Data.Mode);
             }
         AdjPro(Data.sizePic[1]);
         //qDebug("rua!");
     }
     //qDebug("成功将所有颜色装入QHash");
     //qDebug()<<"总颜色数量"<<ColorCount;
-    qDebug()<<"总颜色数量："<<R->colorAdjuster.count();
+    qDebug()<<"总颜色数量："<<R->count();
     Data.adjStep=1;
 }
 
-void MainWindow::applyTokiColor(AdjT*R)
+void match(TokiColor& tColor,QRgb qColor) {
+    tColor.apply(qColor);
+}
+
+void MainWindow::applyTokiColor(QHash<QRgb,TokiColor>*R)
 {//int ColorCount=0;
     if(Data.adjStep<1)return;
 
-    qDebug("即将开始子线程");
-    R->start();
-    qDebug("已经开始子线程");
-    int step=reportRate*Data.sizePic[0]*Data.sizePic[1]/R->colorAdjuster.count()/2;
+    int step=reportRate*Data.sizePic[0]*Data.sizePic[1]/R->count();
     int itered=1;
-    auto mid=R->colorAdjuster.begin();
-    for(int count=0;count*2>=R->colorAdjuster.count();)
-        if(R->colorAdjuster.contains(mid.key()))
-        {
-                mid++;
-                count++;
-        }
-    //qDebug()<<"step="<<step;
-    for(auto i=R->colorAdjuster.begin();i!=R->colorAdjuster.end();i++)//前部遍历
-    {
-        //if(i==mid)break;
-        if(R->colorAdjuster.contains(i.key()))
-        {
-            if (i.value().Result)continue;//发现有处理过的颜色则跳过
-            i.value().apply(i.key());
-            //parent->AdjPro(step);
-            itered++;
-            if(itered%reportRate==0)
-            AdjPro(step);
-        }
+    queue<QFuture<unsigned char>> taskTracker;
+    for(auto it=R->begin();it!=R->end();it++)
+        taskTracker.push(QtConcurrent::run(match,it.value(),it.key()));
+
+    while(!taskTracker.empty()) {
+        taskTracker.front().waitForFinished();
+        this->AdjPro(step);
+        taskTracker.pop();
     }
-    R->wait();
+
     qDebug("子线程执行完毕");
-    /*int step=Data.sizePic[0]/R->colorAdjuster.count();
-    for(auto i=R->colorAdjuster.begin();i!=R->colorAdjuster.end();i++)
-    {
-        if(R->colorAdjuster.contains(i.key()))
-        {
-            i.value().apply();
-            ui->ShowProgressABbar->setValue(ui->ShowProgressABbar->value()+step);
-        }
-    }
-    //qDebug("成功将hash中所有颜色匹配为地图色");
-    //qDebug()<<"调色工作量："<<ColorCount;
-    Data.adjStep=2;*/
     Data.adjStep=2;
 }
 
-void MainWindow::fillMapMat(AdjT*R)
+void MainWindow::fillMapMat(QHash<QRgb,TokiColor>*R)
 {
     if(Data.adjStep<2)return;
     QRgb*CurrentLine;
@@ -205,7 +182,7 @@ void MainWindow::fillMapMat(AdjT*R)
         CurrentLine=(QRgb*)Data.rawPic.scanLine(r);
         for(short c=0;c<Data.sizePic[1];c++)
         {
-            Data.mapPic(r,c)=R->colorAdjuster[CurrentLine[c]].Result;
+            Data.mapPic(r,c)=R->operator[](CurrentLine[c]).Result;
         }
         AdjPro(Data.sizePic[1]);
     }
@@ -213,7 +190,7 @@ void MainWindow::fillMapMat(AdjT*R)
     Data.adjStep=3;
 }
 
-void MainWindow::Dither(AdjT *R)
+void MainWindow::Dither(QHash<QRgb,TokiColor> *R)
 {
 #ifdef putDitheredImg
     QImage DitheredImg(Data.sizePic[0],Data.sizePic[1],QImage::Format_ARGB32);
@@ -268,9 +245,9 @@ void MainWindow::Dither(AdjT *R)
         for(short c=0;c<Data.sizePic[1];c++)
         {
             //index=mcMap::mapColor2Index(R->colorAdjuster[RCL[c]].Result);
-            Data.Dither[0](r+1,c+1)=R->colorAdjuster[RCL[c]].c3[0];
-            Data.Dither[1](r+1,c+1)=R->colorAdjuster[RCL[c]].c3[1];
-            Data.Dither[2](r+1,c+1)=R->colorAdjuster[RCL[c]].c3[2];
+            Data.Dither[0](r+1,c+1)=R->operator[](RCL[c]).c3[0];
+            Data.Dither[1](r+1,c+1)=R->operator[](RCL[c]).c3[1];
+            Data.Dither[2](r+1,c+1)=R->operator[](RCL[c]).c3[2];
         }
     }
     qDebug("成功填充了待抖动的矩阵Dither");
@@ -293,17 +270,17 @@ void MainWindow::Dither(AdjT *R)
 #ifdef putDitheredImg
       OCL[c]=Current;
 #endif
-                if(!R->colorAdjuster.contains(Current))
+                if(!R->contains(Current))
                 {
-                    R->colorAdjuster[Current]=TokiColor(Current,Data.Mode);
-                    R->colorAdjuster[Current].apply(Current);
+                    R->operator[](Current)=TokiColor(Current,Data.Mode);
+                    R->operator[](Current).apply(Current);
                     //装入了一个新颜色并匹配为地图色
                     newCount++;
                 }
-                Data.mapPic(r,c)=R->colorAdjuster[Current].Result;
+                Data.mapPic(r,c)=R->operator[](Current).Result;
                 index=mcMap::mapColor2Index(Data.mapPic(r,c));
 
-                oldColor=&R->colorAdjuster[Current];
+                oldColor=&R->operator[](Current);
 
                 Error[0]=oldColor->c3[0]-CM(index,0);
                 Error[1]=oldColor->c3[1]-CM(index,1);
@@ -327,17 +304,17 @@ void MainWindow::Dither(AdjT *R)
 #ifdef putDitheredImg
       OCL[c]=Current;
 #endif
-                if(!R->colorAdjuster.contains(Current))
+                if(!R->contains(Current))
                 {
-                    R->colorAdjuster[Current]=TokiColor(Current,Data.Mode);
-                    R->colorAdjuster[Current].apply(Current);
+                    R->operator[](Current)=TokiColor(Current,Data.Mode);
+                    R->operator[](Current).apply(Current);
                     //装入了一个新颜色并匹配为地图色
                     newCount++;
                 }
-                Data.mapPic(r,c)=R->colorAdjuster[Current].Result;
+                Data.mapPic(r,c)=R->operator[](Current).Result;
                 index=mcMap::mapColor2Index(Data.mapPic(r,c));
 
-                oldColor=&R->colorAdjuster[Current];
+                oldColor=&R->operator[](Current);
 
                 Error[0]=oldColor->c3[0]-CM(index,0);
                 Error[1]=oldColor->c3[1]-CM(index,1);
@@ -548,27 +525,27 @@ if(Data.isCreative())
     ui->InputDataIndex->setText("0");
 }
 
-AdjT Runner(this);
+QHash<QRgb,TokiColor> colorHash;
 clock_t start;
 start=clock();
 //t=GetCycleCount();
-pushToHash(&Runner);
+pushToHash(&colorHash);
 qDebug()<<"装入qHash用时："<<clock()-start;
 
 int lastValue=ui->ShowProgressABbar->value();
 start=clock();
-applyTokiColor(&Runner);
+applyTokiColor(&colorHash);
 qDebug()<<"applyTokiColor用时："<<clock()-start;
 
 ui->ShowProgressABbar->setValue(lastValue+Data.sizePic[0]*Data.sizePic[1]);
 start=clock();
-fillMapMat(&Runner);
+fillMapMat(&colorHash);
 qDebug()<<"fillMapMat用时："<<clock()-start;
 
 if(ui->AllowDither->isChecked())
 {
     //MatrixXi DitherTempRaw;
-    Dither(&Runner);
+    Dither(&colorHash);
 }
 Data.adjStep=4;
 

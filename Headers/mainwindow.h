@@ -42,7 +42,8 @@ This file is part of SlopeCraft.
 #include <QImage>
 #include <QThread>
 #include <QDesktopServices>
- #include <QUrl>
+#include <QUrl>
+#include <QtConcurrent>
 #include "OptiChain.h"
 #include "tpstrategywind.h"
 #include "previewwind.h"
@@ -209,9 +210,6 @@ public:
         char netFileName[64];//纯文件名，不含后缀名
 };
 
-
-class AdjT;
-
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -278,10 +276,10 @@ public:
     void getBlockList();
 
     //调整颜色,Page4
-    void pushToHash(AdjT*);
-    void applyTokiColor(AdjT*);
-    void fillMapMat(AdjT*);
-    void Dither(AdjT*);//抖动，将三个Dither矩阵填充为抖动后的三通道值
+    void pushToHash(QHash<QRgb,TokiColor>*);
+    void applyTokiColor(QHash<QRgb,TokiColor>*);
+    void fillMapMat(QHash<QRgb,TokiColor>*);
+    void Dither(QHash<QRgb,TokiColor>*);//抖动，将三个Dither矩阵填充为抖动后的三通道值
     void getAdjedPic();//for step5
 
     void turnToPage(int);
@@ -416,19 +414,5 @@ private:
     Ui::MainWindow *ui;
 };
 bool compressFile(const char*sourcePath,const char*destPath);
-
-class AdjT : public QThread
-{
-    Q_OBJECT
-public:
-    AdjT(MainWindow*p=NULL);
-    MainWindow*parent;
-    QHash<QRgb,TokiColor> colorAdjuster;
-    void run();
-signals:
-    void addProgress(int);
-};
-
-
-
+void match(TokiColor& tColor,QRgb qColor);
 #endif // MAINWINDOW_H
