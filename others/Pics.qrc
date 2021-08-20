@@ -1,9 +1,12 @@
 <RCC>
-  <qresource prefix="/new/Pic">
-    <file>Transparent.png</file>
-    <file>BG1.png</file>
-    <file>BG2.png</file>
-    <file>BG3.png</file>
-    <file>BG4.png</file>
-  </qresource>
+    <qresource prefix="/new/Pic">
+        <file>Transparent.png</file>
+        <file>BG1.png</file>
+        <file>BG3.png</file>
+        <file>BG4.png</file>
+        <file>BG2.jpg</file>
+        <file>BG5.png</file>
+        <file>BG6.png</file>
+        <file>BG7.png</file>
+    </qresource>
 </RCC>
