@@ -69,9 +69,11 @@ inline bool mcMap::isFlat()
     return mapType=='F';
 }
 
-void readFromFile(const char*FileName,ArrayXXf & M)
+bool readFromFile(const char*FileName,ArrayXXf & M)
 {
-    fstream Reader(FileName, ios::in|ios::binary);
+    fstream Reader;
+    Reader.open(FileName, ios::in|ios::binary);
+    if(!Reader)return false;
     float data[256][3];
     Reader.read((char*)&data[0][0],sizeof(data));
     Reader.close();
@@ -81,7 +83,7 @@ void readFromFile(const char*FileName,ArrayXXf & M)
     M(r,1)=data[r][1];
     M(r,2)=data[r][2];
     }
-    return;
+    return true;
 }
 
 
@@ -103,7 +105,7 @@ void GetBLCheaper(short*BL)
 
 void GetBLBetter(short*BL)
 {
-short Bett[64]={0,1,1,0,0,2,0,2,0,0,3,2,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0};
+short Bett[64]={0,1,1,0,0,1,0,2,0,0,3,2,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0};
 for(short i=0;i<64;i++)
     BL[i]=Bett[i];
 return;

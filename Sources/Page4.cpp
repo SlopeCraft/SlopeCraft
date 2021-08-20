@@ -48,7 +48,6 @@ void MainWindow::on_ExImage_clicked()
 void MainWindow::AdjPro(int step)
 {
     ui->ShowProgressABbar->setValue(ui->ShowProgressABbar->value()+step);
-    //qDebug("调用了AdjPro");
 }
 
 void MainWindow::on_isColorSpaceXYZ_clicked()

@@ -5,12 +5,12 @@
     <name>MainWindow</name>
     <message>
         <location filename="mainwindow.ui" line="32"/>
-        <source>SlopeCraft v3.5  Copyright © 2021 TokiNoBug</source>
-        <oldsource>SlopeCraft v3.4  Copyright © 2021 TokiNoBug</oldsource>
+        <source>SlopeCraft v3.5.1  Copyright © 2021 TokiNoBug</source>
+        <oldsource>SlopeCraft v3.5  Copyright © 2021 TokiNoBug</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="10197"/>
+        <location filename="mainwindow.ui" line="10203"/>
         <location filename="../Sources/Pages.cpp" line="134"/>
         <source>开始</source>
         <translation type="unfinished">Start</translation>
@@ -72,7 +72,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="530"/>
-        <location filename="mainwindow.ui" line="10173"/>
+        <location filename="mainwindow.ui" line="10179"/>
         <location filename="../Sources/Pages.cpp" line="143"/>
         <source>导入图片</source>
         <translation type="unfinished">load Image</translation>
@@ -599,12 +599,12 @@
         <translation type="unfinished">Orange concrete</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="10328"/>
+        <location filename="mainwindow.ui" line="10334"/>
         <source>GitHub</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="10333"/>
+        <location filename="mainwindow.ui" line="10339"/>
         <source>BiliBili</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1490,7 +1490,7 @@
         <translation type="unfinished">Show image</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="8943"/>
+        <location filename="mainwindow.ui" line="8949"/>
         <source>调整图片</source>
         <translation type="unfinished">Convert</translation>
     </message>
@@ -1534,49 +1534,49 @@ It might be laggy, the progressbar shows the progress.</translation>
         <translation type="unfinished">Dithering</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9046"/>
+        <location filename="mainwindow.ui" line="9052"/>
         <source>允许压缩高度（无损）</source>
         <translation type="unfinished">Compress height(lossless)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9108"/>
-        <location filename="mainwindow.ui" line="9249"/>
+        <location filename="mainwindow.ui" line="9114"/>
+        <location filename="mainwindow.ui" line="9255"/>
         <source>Pixel Paint by SlopeCraft</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9212"/>
+        <location filename="mainwindow.ui" line="9218"/>
         <source>SlopeCraft</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9264"/>
+        <location filename="mainwindow.ui" line="9270"/>
         <source>允许有损压缩（暂不支持）</source>
         <translation type="unfinished">Compress with inaccuracy(not supported yet)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9340"/>
+        <location filename="mainwindow.ui" line="9346"/>
         <source>最大允许高度：</source>
         <translation type="unfinished">Max height</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9361"/>
+        <location filename="mainwindow.ui" line="9367"/>
         <source>压缩高度</source>
         <translation type="unfinished">Compressing</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9381"/>
+        <location filename="mainwindow.ui" line="9387"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;最后一步，将立体地图画导出为投影文件，这很方便生存实装，是不是？&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;左侧的三个栏是投影文件的一些属性，空着不填也完全没问题。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;如果您启用了“允许压缩高度”，SlopeCraft会在构建三维结构时尝试依据地图绘制的规律压缩立体地图画的高度，这可以有效避免超过限高（但未必能成功）。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;下面的两个栏显示了立体地图画的信息，以供参考。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;这个过程可能会很慢，请关注进度条&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;
         The last step is to make your map into a litematic file, to make it easier to be built.&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;3 blanks on the left side is some properties of your litematic file, you can just ignore it. &lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;If you turn on &quot;Compress height(lossless)&quot;, SlopeCraft will try to compress the height of 3d map according to rule of maps, in order to prevent it from surpassing 256(not always effective on all kinds of images).&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;Tow bars below exhibit some information of your map. &lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;This process might be quite slow, see the progress bar.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9483"/>
+        <location filename="mainwindow.ui" line="9489"/>
         <source>预览</source>
         <translation type="unfinished">Preview</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9546"/>
+        <location filename="mainwindow.ui" line="9552"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -1585,8 +1585,8 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9586"/>
-        <location filename="mainwindow.ui" line="9637"/>
+        <location filename="mainwindow.ui" line="9592"/>
+        <location filename="mainwindow.ui" line="9643"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -1595,58 +1595,58 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9893"/>
+        <location filename="mainwindow.ui" line="9899"/>
         <source>地图文件起始序号</source>
         <translation type="unfinished">Beginning 
 sequence number</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9906"/>
+        <location filename="mainwindow.ui" line="9912"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;最后一步，导出为地图文件。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;地图文件的文件名形如map_3.dat，是minecraft用于存储地图内容的文件。其中3表示地图文件的序号,地图的序号从0开始。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;地图文件存储于存档中的data文件夹下，你需要一定的权限才能修改它们。如果你既不是单机游戏，又不是服主，那你应该选择导出为投影，而不是地图文件。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;每张地图只能显示128×128的画面，大图片可能会有多个地图，对应多个地图文件。它们会占用连续的一段序号。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;例如，你可以使用/give @s filled_map{map:3}来获得map_3.dat的地图。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;这种方法适合以最高画质展示大图片，但不适合服务器。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <oldsource>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;最后一步，导出为地图文件。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;地图文件的文件名形如map_3.dat，是minecraft用于存储地图内容的文件。其中3表示地图文件的序号,地图的序号从0开始。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;地图文件存储于存档中的data文件夹下，你需要一定的权限才能修改它们。如果你既不是单机游戏，又不是服主，那你应该选择导出为投影，而不是地图文件。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;每张地图只能显示128×128的画面，大图片可能会有多个地图，对应多个地图文件。它们会占用连续的一段序号。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;例如，你可以使用/give @s filled_map{tag:{map:3}}来获得map_3.dat的地图。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;这种方法适合以最高画质展示大图片，但不适合服务器。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</oldsource>
         <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;The last step is to generate map data files.&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;The name of map data files is like&lt;span style=&quot; font-weight:700;&quot;&gt; map_3.dat&lt;/span&gt;, it&apos;s used to storage content of maps. In it&apos;s file name, 3 refers to the sequence number of map data files. Sequence number starts with 0.&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;Located in&lt;span style=&quot; font-weight:700;&quot;&gt; data&lt;/span&gt; folder in your saves, map data files can only be manipulated with enough authority. If you are neither single-player nor op in a server, you should export it as litematic instead of map data files.&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;Each map can only show a 128×128 frame, a large image results to multiple map data files. Thus, a continuous series of sequence numbers will be occupied.&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;For ex, run &lt;span style=&quot; font-weight:700;&quot;&gt;/give @s filled_map{map:3}&lt;/span&gt; will give you the map of &lt;span style=&quot; font-weight:700;&quot;&gt;map_3.dat &lt;/span&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;This is suitable for large images, but not for servers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9916"/>
+        <location filename="mainwindow.ui" line="9922"/>
         <source>地图画行数</source>
         <translation type="unfinished">Map rows</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9964"/>
+        <location filename="mainwindow.ui" line="9970"/>
         <source>地图画列数</source>
         <translation type="unfinished">Map cols</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9971"/>
+        <location filename="mainwindow.ui" line="9977"/>
         <source>地图文件数量</source>
         <translation type="unfinished">Map counts</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9978"/>
+        <location filename="mainwindow.ui" line="9984"/>
         <source>导出的文件名</source>
         <translation type="unfinished">Map data files</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="10111"/>
-        <location filename="mainwindow.ui" line="10214"/>
+        <location filename="mainwindow.ui" line="10117"/>
+        <location filename="mainwindow.ui" line="10220"/>
         <source>联系作者</source>
         <translation type="unfinished">Contact with me</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="10144"/>
+        <location filename="mainwindow.ui" line="10150"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:700; color:#ffffff;&quot;&gt;地图画生成完毕！&lt;/span&gt;&lt;br/&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:11pt; font-weight:700; color:#ffffff;&quot;&gt;关于SlopeCraft&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;感谢你使用SlopeCraft，我是开发者TokiNoBug。SlopeCraft是由我开发的一款立体地图画生成器，主要用于在minecraft中制造可以生存实装的立体地图画（但同样支持传统的平板地图画）。立体地图画的优势在于拥有更高的“画质”，此处不再详述。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;你正在使用的是SlopeCraft的第三代版本，在开发时使用了Qt，zlib和eigen，对上述库的开发者表示感谢。也感谢Mojang，整个软件就是为minecraft而设计的。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;你可以访问：&lt;/span&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/SlopeCraft/&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;SlopeCraft的github&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;，&lt;/span&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;我的github主页&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;，&lt;/span&gt;&lt;a href=&quot;https://space.bilibili.com/351429231&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;我的bilibili&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;本软件遵循GPL-3.0及以后版本(GPL-3.0 or later)协议开放源代码。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Copyright © 2021 TokiNoBug&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:700; color:#ffffff;&quot;&gt;Your map is finished!&lt;/span&gt;&lt;br/&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:11pt; font-weight:700; color:#ffffff;&quot;&gt;关于SlopeCraft&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Thank you for using SlopeCraft, I&apos;m TokiNoBug, the developer. SlopeCraft is a minecraft map generator, supporting many kinds of maps.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;You are currently using the 3rd generation of SlopeCraft, based on Qt, Eigen and zlib. I&apos;m grateful to developers of thest libs. Also thanks Mojang, the whold software is developed for minecraft&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Contact with me:&lt;/span&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/SlopeCraft/&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;SlopeCraft的github&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;，&lt;/span&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;My homepage on GitHub:&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;，&lt;/span&gt;&lt;a href=&quot;https://space.bilibili.com/351429231&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;bilibili:&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;This program is released under license GPL-3.0 or later.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Copyright © 2021 TokiNoBug&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="10179"/>
+        <location filename="mainwindow.ui" line="10185"/>
         <location filename="../Sources/Pages.cpp" line="167"/>
-        <location filename="../Sources/Page4.cpp" line="612"/>
+        <location filename="../Sources/Page4.cpp" line="478"/>
         <source>调整颜色</source>
         <translation type="unfinished">Convert to Map</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="8668"/>
-        <location filename="../Sources/Page5.cpp" line="70"/>
+        <location filename="../Sources/Page5.cpp" line="71"/>
         <source>导出为投影</source>
         <translation type="unfinished">Export
 litematic</translation>
@@ -1665,27 +1665,27 @@ mcfuncton</translation>
 map files</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9142"/>
+        <location filename="mainwindow.ui" line="9148"/>
         <source>投影区域名称</source>
         <translation type="unfinished">Region name</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9071"/>
+        <location filename="mainwindow.ui" line="9077"/>
         <source>总方块数</source>
         <translation type="unfinished">Block count</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9225"/>
+        <location filename="mainwindow.ui" line="9231"/>
         <source>投影作者</source>
         <translation type="unfinished">Author</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="10318"/>
+        <location filename="mainwindow.ui" line="10324"/>
         <source>简体中文</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="10323"/>
+        <location filename="mainwindow.ui" line="10329"/>
         <source>English</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1745,12 +1745,12 @@ map files</translation>
         <translation type="unfinished">Raw iron block</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9290"/>
+        <location filename="mainwindow.ui" line="9296"/>
         <source>投影名称</source>
         <translation type="unfinished">Litematic name</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9167"/>
+        <location filename="mainwindow.ui" line="9173"/>
         <source>投影尺寸</source>
         <translation type="unfinished">Size</translation>
     </message>
@@ -1759,69 +1759,69 @@ map files</translation>
         <translation type="obsolete">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;The last step, export your map as litematic.&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;You can set the properties of your litematic in the three blanks on left, or just ignore them.&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;The 2 bars below tell you some info about the litematic.&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;Exporting costs time, please wait.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9414"/>
+        <location filename="mainwindow.ui" line="9420"/>
         <location filename="../Sources/Pages.cpp" line="199"/>
         <source>结束</source>
         <translation type="unfinished">Finish</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9467"/>
-        <location filename="mainwindow.ui" line="9744"/>
-        <location filename="mainwindow.ui" line="10066"/>
-        <location filename="mainwindow.ui" line="10203"/>
+        <location filename="mainwindow.ui" line="9473"/>
+        <location filename="mainwindow.ui" line="9750"/>
+        <location filename="mainwindow.ui" line="10072"/>
+        <location filename="mainwindow.ui" line="10209"/>
         <location filename="../Sources/Page7.cpp" line="89"/>
         <source>导出</source>
         <translation type="unfinished">Export</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9501"/>
-        <location filename="mainwindow.ui" line="9762"/>
+        <location filename="mainwindow.ui" line="9507"/>
+        <location filename="mainwindow.ui" line="9768"/>
         <source>构建三维结构</source>
         <translation type="unfinished">Build 3D</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9557"/>
+        <location filename="mainwindow.ui" line="9563"/>
         <source>地图画起点坐标</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9564"/>
+        <location filename="mainwindow.ui" line="9570"/>
         <source>地图画尺寸</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9597"/>
+        <location filename="mainwindow.ui" line="9603"/>
         <source>Y</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9604"/>
+        <location filename="mainwindow.ui" line="9610"/>
         <source>X</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9611"/>
+        <location filename="mainwindow.ui" line="9617"/>
         <source>总命令数</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9618"/>
+        <location filename="mainwindow.ui" line="9624"/>
         <source>Z</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9699"/>
-        <location filename="mainwindow.ui" line="10021"/>
+        <location filename="mainwindow.ui" line="9705"/>
+        <location filename="mainwindow.ui" line="10027"/>
         <source>完成</source>
         <translation type="unfinished">Finish</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="9782"/>
+        <location filename="mainwindow.ui" line="9788"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;最后一步，导出为mcfunction！&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;如果你不想导出为投影文件，也可以使用mc自带的数据包。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;导出的文件是一个mc中的“函数”，是数据包的一部分。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;你可以在单机存档中使用/reload命令来加载它，用/function命令调用它。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;如果地图画很大，超过了一个mcfunction的命令数，那么会将全部的命令分散在多个mcfuntion中。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;在导出前，你需要指定地图画的起点坐标，它是xyz负方向的方块的坐标。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;（如果不知道要放在哪里，请使用默认值-64,1,-64）&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="10090"/>
+        <location filename="mainwindow.ui" line="10096"/>
         <source>查看导出的文件</source>
         <translation type="unfinished">See exported file</translation>
     </message>
@@ -1830,7 +1830,7 @@ map files</translation>
         <translation type="obsolete">Create another</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="10129"/>
+        <location filename="mainwindow.ui" line="10135"/>
         <source>退出</source>
         <translation type="unfinished">Exit</translation>
     </message>
@@ -1839,60 +1839,60 @@ map files</translation>
         <translation type="obsolete">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:700; color:#ffffff;&quot;&gt;Your map is generated!&lt;/span&gt;&lt;span style=&quot; color:#ffffff;&quot;&gt;&lt;br/&gt;&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:11pt; font-weight:700; color:#ffffff;&quot;&gt;About SlopeCraft&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Thanks your for using SlopeCraft, I&apos;m TokiNoBug, the developer. SlopeCraft is a 3D pixel map painting generator (flat maps are also supproted) developed by I. 3D maps can be displayed with better quality than flat maps.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;You are right using the thrid generation of SlopeCraft, using Qt, eigen and zlib. I&apos;m gratitude to their developers. Also thanks Mojang, the whole app is designed for minecraft.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/SlopeCraft&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#ffffff;&quot;&gt;SlopeCraft on Github:https://github.com/ToKiNoBug/SlopeCraft&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;a href=&quot;https://github.com/ToKiNoBug&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#ffffff;&quot;&gt;Contact me on Github:https://github.com/ToKiNoBug&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;This program is released under license GPL-3.0 or later.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Copyright © 2021 TokiNoBug&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="10185"/>
+        <location filename="mainwindow.ui" line="10191"/>
         <source>方块列表</source>
         <translation type="unfinished">Block List</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="10191"/>
+        <location filename="mainwindow.ui" line="10197"/>
         <location filename="../Sources/Pages.cpp" line="151"/>
         <source>设置地图画类型</source>
         <translation type="unfinished">Set map type</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="10210"/>
+        <location filename="mainwindow.ui" line="10216"/>
         <source>关于</source>
         <translation type="unfinished">About</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="10225"/>
+        <location filename="mainwindow.ui" line="10231"/>
         <source>Languages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="10242"/>
-        <location filename="mainwindow.ui" line="10247"/>
-        <location filename="mainwindow.ui" line="10252"/>
-        <location filename="mainwindow.ui" line="10257"/>
-        <location filename="mainwindow.ui" line="10262"/>
-        <location filename="mainwindow.ui" line="10267"/>
-        <location filename="mainwindow.ui" line="10272"/>
+        <location filename="mainwindow.ui" line="10248"/>
+        <location filename="mainwindow.ui" line="10253"/>
+        <location filename="mainwindow.ui" line="10258"/>
+        <location filename="mainwindow.ui" line="10263"/>
+        <location filename="mainwindow.ui" line="10268"/>
+        <location filename="mainwindow.ui" line="10273"/>
+        <location filename="mainwindow.ui" line="10278"/>
         <source>转到页面</source>
         <translation type="unfinished">Goto this page</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="10280"/>
-        <location filename="mainwindow.ui" line="10283"/>
         <location filename="mainwindow.ui" line="10286"/>
+        <location filename="mainwindow.ui" line="10289"/>
+        <location filename="mainwindow.ui" line="10292"/>
         <location filename="../Sources/Pages.cpp" line="175"/>
         <source>导出为投影文件</source>
         <translation type="unfinished">Export as litematic</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="10294"/>
-        <location filename="mainwindow.ui" line="10297"/>
+        <location filename="mainwindow.ui" line="10300"/>
+        <location filename="mainwindow.ui" line="10303"/>
         <location filename="../Sources/Pages.cpp" line="183"/>
         <source>导出为mcfunction</source>
         <translation type="unfinished">Export as mcfunction</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="10308"/>
+        <location filename="mainwindow.ui" line="10314"/>
         <location filename="../Sources/Pages.cpp" line="191"/>
         <source>导出为地图文件</source>
         <translation type="unfinished">Export as map files</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="10313"/>
+        <location filename="mainwindow.ui" line="10319"/>
         <source>关于SlopeCraft</source>
         <translation type="unfinished">About SlopeCraft</translation>
     </message>
@@ -1991,7 +1991,7 @@ After you reset the strategy, load the image again.</translation>
         <translation type="unfinished"> colors.</translation>
     </message>
     <message>
-        <location filename="../Sources/Page5.cpp" line="70"/>
+        <location filename="../Sources/Page5.cpp" line="71"/>
         <source>投影文件(*.litematic)</source>
         <translation type="unfinished">Litematic(*.litematic)</translation>
     </message>
@@ -2089,14 +2089,14 @@ After you reset the strategy, load the image again.</translation>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../Sources/Page5.cpp" line="481"/>
+        <location filename="../Sources/Page5.cpp" line="403"/>
         <source>(xz坐标=-65±128×整数)</source>
         <translation type="unfinished">(xz coordinates=-65±128×any integer)</translation>
     </message>
     <message>
         <location filename="../Sources/previewwind.cpp" line="42"/>
         <source>个</source>
-        <translation type="unfinished"> </translation>
+        <translation type="unfinished">.</translation>
     </message>
     <message>
         <location filename="../Sources/previewwind.cpp" line="44"/>
@@ -2107,6 +2107,27 @@ After you reset the strategy, load the image again.</translation>
         <location filename="../Sources/previewwind.cpp" line="46"/>
         <source>组</source>
         <translation type="unfinished">stacks</translation>
+    </message>
+    <message>
+        <location filename="../Sources/Page4.cpp" line="398"/>
+        <source>请稍等</source>
+        <translation>Please wait</translation>
+    </message>
+    <message>
+        <location filename="../Sources/mainwindow.cpp" line="196"/>
+        <location filename="../Sources/mainwindow.cpp" line="205"/>
+        <location filename="../Sources/mainwindow.cpp" line="214"/>
+        <location filename="../Sources/mainwindow.cpp" line="223"/>
+        <source>未找到颜色表文件</source>
+        <translation type="unfinished">Colormap file</translation>
+    </message>
+    <message>
+        <location filename="../Sources/mainwindow.cpp" line="196"/>
+        <location filename="../Sources/mainwindow.cpp" line="205"/>
+        <location filename="../Sources/mainwindow.cpp" line="214"/>
+        <location filename="../Sources/mainwindow.cpp" line="223"/>
+        <source>，请手动寻找</source>
+        <translation type="unfinished">not found, please find it</translation>
     </message>
 </context>
 <context>

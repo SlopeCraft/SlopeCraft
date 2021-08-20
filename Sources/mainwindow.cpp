@@ -186,10 +186,43 @@ void MainWindow::InitializeAll()
         qDebug()<<"当前运行路径："<<QCoreApplication::applicationDirPath();
         //QString DirPath=QCoreApplication::applicationDirPath()+'/';
         QDir::setCurrent(QCoreApplication::applicationDirPath());
-        readFromFile("./RGB.Toki",Data.Basic._RGB);
-        readFromFile("./HSV.Toki",Data.Basic.HSV);
-        readFromFile("./Lab.Toki",Data.Basic.Lab);
-        readFromFile("./XYZ.Toki",Data.Basic.XYZ);
+
+        QString ColorFilePath;
+        ColorFilePath="./RGB.Toki";
+        while(!readFromFile(ColorFilePath.toLocal8Bit().data(),Data.Basic._RGB))
+        {
+            qDebug("未找到颜色文件RGB.Toki");
+            ColorFilePath=QFileDialog::getOpenFileName(this,
+                                                       QObject::tr("未找到颜色表文件")+"RGB.Toki"+QObject::tr("，请手动寻找")
+                                                       ,"","RGB.Toki");
+        }
+
+        ColorFilePath="./HSV.Toki";
+        while(!readFromFile(ColorFilePath.toLocal8Bit().data(),Data.Basic.HSV))
+        {
+            qDebug("未找到颜色文件HSV.Toki");
+            ColorFilePath=QFileDialog::getOpenFileName(this,
+                                                       QObject::tr("未找到颜色表文件")+"HSV.Toki"+QObject::tr("，请手动寻找")
+                                                       ,"","HSV.Toki");
+        }
+
+        ColorFilePath="./Lab.Toki";
+        while(!readFromFile(ColorFilePath.toLocal8Bit().data(),Data.Basic.Lab))
+        {
+            qDebug("未找到颜色文件Lab.Toki");
+            ColorFilePath=QFileDialog::getOpenFileName(this,
+                                                       QObject::tr("未找到颜色表文件")+"Lab.Toki"+QObject::tr("，请手动寻找")
+                                                       ,"","Lab.Toki");
+        }
+
+        ColorFilePath="./XYZ.Toki";
+        while(!readFromFile(ColorFilePath.toLocal8Bit().data(),Data.Basic.XYZ))
+        {
+            qDebug("未找到颜色文件XYZ.Toki");
+            ColorFilePath=QFileDialog::getOpenFileName(this,
+                                                       QObject::tr("未找到颜色表文件")+"XYZ.Toki"+QObject::tr("，请手动寻找")
+                                                       ,"","XYZ.Toki");
+        }
         qDebug("成功载入颜色");
 
         qDebug("导入图片按钮处的初始化部分完成");
