@@ -25,8 +25,8 @@ RC_LANG = 0x0004
 #QMAKE_TARGET_COPYRIGHT = CopyRight TokiNoBug
 
 
-DEFINES += QT_NO_WARNING_OUTPUT\
-                QT_NO_DEBUG_OUTPUT
+#DEFINES += QT_NO_WARNING_OUTPUT\
+#                QT_NO_DEBUG_OUTPUT
 #仅在发布时取消注释
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets

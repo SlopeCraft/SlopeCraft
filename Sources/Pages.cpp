@@ -72,6 +72,14 @@ void MainWindow::switchLan(bool isEng)
 
 void MainWindow::updateEnables()
 {
+
+    ui->progressImPic->setEnabled(!(Data.step<1));
+    ui->progressType->setEnabled(!(Data.step<2));
+    ui->progressBL->setEnabled(!(Data.step<3));
+    ui->progressAdjPic->setEnabled(!(Data.step<4));
+    ui->progressEx->setEnabled(!(Data.step<5));
+    ui->progressExLite->setEnabled((!(Data.step<5))&&!Data.isCreative());
+    ui->progressExData->setEnabled(!(Data.step<5));
     if(true)//用来锁住暂且没有实现的界面
     {
         //ui->ExMcF->setEnabled(false);
