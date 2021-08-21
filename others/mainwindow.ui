@@ -395,7 +395,7 @@ font: 11pt &quot;微软雅黑&quot;;
        <enum>QFrame::Plain</enum>
       </property>
       <property name="currentIndex">
-       <number>8</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="PageStart">
        <property name="styleSheet">
@@ -9192,7 +9192,7 @@ font: 11pt &quot;微软雅黑&quot;;
              </font>
             </property>
             <property name="text">
-             <string>调整图片</string>
+             <string>转换为地图画</string>
             </property>
             <property name="flat">
              <bool>false</bool>
@@ -9201,6 +9201,37 @@ font: 11pt &quot;微软雅黑&quot;;
           </item>
           <item row="0" column="1" rowspan="2">
            <layout class="QVBoxLayout" name="verticalLayout">
+            <item>
+             <widget class="QPushButton" name="ExLite">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>40</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>32767</width>
+                <height>32767</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>9</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>导出为投影</string>
+              </property>
+             </widget>
+            </item>
             <item>
              <widget class="QPushButton" name="ExData">
               <property name="enabled">
@@ -9232,37 +9263,6 @@ font: 11pt &quot;微软雅黑&quot;;
               <property name="text">
                <string>导出为
 地图文件</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="ExLite">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>100</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>32767</width>
-                <height>32767</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <family>微软雅黑</family>
-                <pointsize>9</pointsize>
-               </font>
-              </property>
-              <property name="text">
-               <string>导出为投影</string>
               </property>
              </widget>
             </item>
@@ -10751,8 +10751,8 @@ p, li { white-space: pre-wrap; }
   <tabstop>NextPage2</tabstop>
  </tabstops>
  <resources>
-  <include location="BlockTextures.qrc"/>
   <include location="Pics.qrc"/>
+  <include location="BlockTextures.qrc"/>
  </resources>
  <connections/>
 </ui>

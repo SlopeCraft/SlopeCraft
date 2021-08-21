@@ -344,15 +344,15 @@ void MainWindow::getMIndex()
             Data.colorAllowed[index]=false;
             continue;
         }
-        if(Base!=12&&Depth!=1&&Data.isFlat())
-        {
-            Data.colorAllowed[index]=false;
-            continue;
-        }
-        if(Base==12&&Depth!=0&&Data.isFlat())
-        {
-            Data.colorAllowed[index]=false;
-            continue;
+        if(Data.isFlat()) {
+            if(Base==12&&Depth!=2) {
+                Data.colorAllowed[index]=false;
+                continue;
+            }
+            if(Base!=12&&Depth!=1) {
+                Data.colorAllowed[index]=false;
+                continue;
+            }
         }
 
         /*if(Enables[Base]==NULL)
