@@ -17,7 +17,7 @@
 
 4. SlopeCraft 点了调整颜色之后图片几乎是灰的？/为什么颜色不理想/……
    - 有哪几种颜色是 Mojang 钦定的，有一些颜色就是没有特别相似的地图色，比如浅蓝、灰蓝、浅粉、浅紫，只能寻找差别不是太大的颜色。
-   - 已经实现了抖动/仿色算法。
+   - v3.5已经实现了抖动/仿色算法。
 
 5. `/give` 命令得不到地图物品怎么办？
    - 1.12使用 `/give @p filled_map 1 i`，获得序号为i的地图
@@ -42,7 +42,7 @@
 
 4. SlopeCraft turned everything grey after I clicked color adjust? / Why does the color look nothing like the original?
  - Some colors are featured in game, while some others aren't, such as light blue, greyish blue, light pink, light purple, so a substitute color is required
- - A color simulation feature has been implemented
+ - A color simulation feature (dithering) has been implemented in v3.5
 
 4. '/give' didn't give me the map item
  - 1.12 Command: `/give @p filled_map 1 i` where i is the number for the map
