@@ -26,7 +26,7 @@ SlopeCraft软件是我（TokiNoBug）用qt+Eigen+zlib开发的、用于在minecr
 
 一言以蔽之，SlopeCraft是为地图而设计的。
 
-正是因此，利用SlopeCraft制作的地图画的“画质”，比spritecraft导出、再用地图记录的地图画要好很多——因为专业。<
+正是因此，利用SlopeCraft制作的地图画的“画质”，比spritecraft导出、再用地图记录的地图画要好很多——因为专业。
 
 ## Program Description
 
@@ -48,21 +48,18 @@ This is why maps made by SlopeCraft have higher quality than exporting a picture
 
 ### 1.游戏版本：
 
-SlopeCraft支持的minecraft版本为1.12\~1.16。其中从1.12到1.15的地图没有什么变化，最多只有204种颜色；而1.16则为了下界树木增加了28种颜色，达到了232色。（这里的颜色忽略透明）
+SlopeCraft支持的minecraft版本为1.12\~1.17。其中从1.12到1.15的地图没有什么变化，最多只有204种颜色；而1.16则为了下界树木增加了28种颜色，达到了232色。1.17为深板岩和生铁块增加了8种颜色，达到了240色。（这里的颜色忽略透明）
 
 ### 2.地图画类型：
 
-Creative类型的地图画可以使用到完整的204/232种颜色，享受最高的画质；但它不能导出为立体地图画，只能导出为地图文件，利用作弊的方法在存档中呈现。
+纯文件地图画可以使用到完整的204/232/240种颜色，享受最高的画质；但它不能导出为立体地图画，只能导出为地图文件，利用作弊的方法在存档中呈现。
 
-关于这种方法，可以使用 [mc-map.djfun.de](mc-map.djfun.de) 这个网站。
-
-Survival类型的地图画则牺牲了1/4的颜色，换来可以在原版生存实装的优点。这种地图画可以生成为三维地图画，也是这个软件的核心功能。
+立体地图画则牺牲了1/4的颜色，换来可以在原版生存实装的优点。这种地图画可以生成为三维地图画，也是这个软件的核心功能。
 
 Flat类型的地图画是平板的。由于立体地图画实装的难度很高，我特意开发了平板地图画的功能。
 
-平板地图画顾名思义，是传统平坦的像素画，它最容易实装，但只有Creative类型1/4的颜色：51/58色。
+平板地图画顾名思义，是传统平坦的像素画，它最容易实装，但只有纯文件地图画1/4的颜色：51/58/60色。
 
-这里需要注明，Survival类型与Creative类型冲突，地图画只能为其中一种；但Flat类型的地图画与它们平行（虽然平坦的Creative没什么意义）。
 
 ### 3.颜色空间：
 
@@ -95,15 +92,13 @@ Custom是自定义的方块列表，你可以自由的配置一切。
 
 ### 2. Types of Map Art:
 
-Creative Map Art uses the full color palette. It has the highest quality, but it can't be exported into the world itself. It can only be exported as a map file, using commands to obtain it in game. 
+File-only Map Art uses the full color palette. It has the highest quality, but it can't be exported into the world itself. It can only be exported as a map file, using commands to obtain it in game. 
 
-For more information on this procedure, visit [mc-map.djfun.de](mc-map.djfun.de)
 
-Survival Map Art leaves 1/4th of the colors out as a trade off for being able to export it into vanilla survival. This type of map art can generate 3D map arts, which is the core feature of this program.
+3D Map Art leaves 1/4th of the colors out as a trade off for being able to export it into vanilla survival. This type of map art can generate 3D map arts, which is the core feature of this program.
 
-Flat type Map Art is the traditional 2D map art - it's the easiest to build but it only have 1/4th of the color palette compared to Creative: 51/58 colors.
+Flat Map Art is the traditional 2D map art - it's the easiest to build but it only have 1/4th of the color palette compared to File-only: 51/58/60 colors.
 
-Do note, Survival and Creative map arts are mutually exclusive - the map art can only be one of the two types, but Flat type map art can be used on both of them (Having a flat Creative Map Art is pointless though)
 
 ### 3. Color Space:
 
