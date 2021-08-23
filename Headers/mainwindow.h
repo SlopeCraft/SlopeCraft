@@ -196,7 +196,7 @@ public:
 #endif
         long BuildHeight();//构建真正的立体结构（三维矩阵
         long exportAsLitematica(QString FilePathAndName);
-        //long exportAsMcF(QString FilePathAndName);
+        long exportAsStructure(QString FilePathAndName);
         long exportAsData(const QString &FolderPath,const int indexStart);
 
         void putCommand(const QString&Command);

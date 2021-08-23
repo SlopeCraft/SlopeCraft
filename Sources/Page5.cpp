@@ -68,27 +68,33 @@ void MainWindow::on_ExportLite_clicked()
 {
     if(Data.ExLitestep<2)return;
     if(Data.step<5)return;
-    QString FileName=QFileDialog::getSaveFileName(this,tr("导出为投影"),"",tr("投影文件(*.litematic)"));
+    QString FileName=QFileDialog::getSaveFileName(this,tr("导出为投影/结构方块文件"),"",tr("投影文件(*.litematic) ;; 结构方块文件(*.nbt)"));
 
     if(FileName.isEmpty())return;
 
-    if(!FileName.endsWith(".litematic"))
+    if(!FileName.endsWith(".litematic")&&!FileName.endsWith(".nbt"))
     {
         qDebug("得到的文件路径有错！");
         return;
     }
-    QString unCompressed=FileName.left(FileName.length()-strlen(".litematic"))+".TokiNoBug";
-
+    QString unCompressed;
+    if(FileName.endsWith(".litematic"))
+        unCompressed=FileName.left(FileName.length()-strlen(".litematic"))+".TokiNoBug";
+    else
+        unCompressed=FileName.left(FileName.length()-strlen(".nbt"))+".TokiNoBug";
     ui->ShowProgressExLite->setMaximum(100+Data.size3D[0]*Data.size3D[1]*Data.size3D[2]);
     ui->ShowProgressExLite->setValue(0);
 
     qDebug("开始导出投影");
 
-    Data.exportAsLitematica(unCompressed);
+    if(FileName.endsWith(".litematic"))
+        Data.exportAsLitematica(unCompressed);
+    else
+        Data.exportAsStructure(unCompressed);
 
     if(compressFile(unCompressed.toLocal8Bit().data(),FileName.toLocal8Bit().data()))
     {
-        ui->ShowProgressExLite->setValue(100+Data.size3D[0]*Data.size3D[1]*Data.size3D[2]);
+        ui->ShowProgressExLite->setValue(100+Data.Build.size());
         qDebug("压缩成功");
         Data.ExLitestep=4;
         QFile umComFile(unCompressed);
@@ -515,6 +521,73 @@ default:
 
 Lite.close();
     return Lite.getByteCount();
+}
+
+long mcMap::exportAsStructure(QString FilePathAndName) {
+    NBT::NBTWriter file;
+    file.open(FilePathAndName.toLocal8Bit().data());
+    file.writeListHead("entities",NBT::idByte,0);
+    file.writeListHead("size",NBT::idInt,3);
+        file.writeInt("This should never be shown",size3D[0]);
+        file.writeInt("This should never be shown",size3D[1]);
+        file.writeInt("This should never be shown",size3D[2]);
+        file.writeListHead("palette",NBT::idCompound,70);
+            {
+                short written=(is16()?59:52);
+                if(is17())written=61;
+                vector<QString> ProName,ProVal;
+                //bool isNetBlockId;
+                QString netBlockId;
+
+                dealBlockId("air",netBlockId,ProName,ProVal);
+                writeBlock(netBlockId,ProName,ProVal,file);
+                for(short r=0;r<written;r++)
+                {
+                    dealBlockId(BlockListId[r],netBlockId,ProName,ProVal);
+                    writeBlock(netBlockId,ProName,ProVal,file);
+                }//到此写入了written+1个方块，还需要写入69-written个
+
+                writeTrash(69-written,file);
+            }
+
+        file.writeListHead("blocks",NBT::idCompound,Build.size());
+            for(int x=0;x<size3D[0];x++)
+                for(int y=0;y<size3D[1];y++) {
+                    for(int z=0;z<size3D[2];z++) {
+                        file.writeCompound("This should never be shown");
+                            file.writeListHead("pos",NBT::idInt,3);
+                                file.writeInt("This should never be shown",x);
+                                file.writeInt("This should never be shown",y);
+                                file.writeInt("This should never be shown",z);
+                            file.writeInt("state",Build(x,y,z));
+                        file.endCompound();
+                    }
+                    parent->ui->ShowProgressExLite->setValue(parent->ui->ShowProgressExLite->value()+size3D[2]);
+                }
+            switch (gameVersion)
+            {
+            case 12:
+                file.writeInt("DataVersion",1343);
+                break;
+            case 13:
+                file.writeInt("DataVersion",1631);
+                break;
+            case 14:
+                file.writeInt("DataVersion",1976);
+                break;
+            case 15:
+                file.writeInt("DataVersion",2230);
+                break;
+            case 16:
+                file.writeInt("DataVersion",2586);
+                break;
+            case 17:
+                file.writeInt("DataVersion",2724);
+                break;
+            default:
+                qDebug("错误的游戏版本！");break;
+            }
+    return file.close();
 }
 
 QString MainWindow::Noder(const short *src,int size)
