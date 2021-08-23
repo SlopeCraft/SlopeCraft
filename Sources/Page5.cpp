@@ -550,10 +550,15 @@ long mcMap::exportAsStructure(QString FilePathAndName) {
                 writeTrash(69-written,file);
             }
 
-        file.writeListHead("blocks",NBT::idCompound,Build.size());
+        int BlockCount=0;
+        for(int i=0;i<Build.size();i++)
+            if(Build(i))BlockCount++;
+
+        file.writeListHead("blocks",NBT::idCompound,BlockCount);
             for(int x=0;x<size3D[0];x++)
                 for(int y=0;y<size3D[1];y++) {
                     for(int z=0;z<size3D[2];z++) {
+                        if(!Build(x,y,z))continue;
                         file.writeCompound("This should never be shown");
                             file.writeListHead("pos",NBT::idInt,3);
                                 file.writeInt("This should never be shown",x);
