@@ -864,5 +864,10 @@
         <file>Slope/block/white_candle_lit.png</file>
         <file>Slope/block/yellow_candle.png</file>
         <file>Slope/block/yellow_candle_lit.png</file>
+        <file>Slope/items/map.png</file>
+        <file>Slope/items/amethyst_shard.png</file>
+        <file>Slope/items/book.png</file>
+        <file>Slope/items/iron_pickaxe.png</file>
+        <file>Slope/items/diamond.png</file>
     </qresource>
 </RCC>
