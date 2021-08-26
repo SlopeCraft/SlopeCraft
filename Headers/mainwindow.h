@@ -31,6 +31,8 @@ This file is part of SlopeCraft.
 
 #include <QMainWindow>
 #include <QButtonGroup>
+#include <QScrollArea>
+#include <QScrollBar>
 #include <QTranslator>
 #include <QHash>
 #include <iostream>

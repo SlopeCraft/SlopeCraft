@@ -79,6 +79,7 @@ void MainWindow::updateEnables()
     ui->progressAdjPic->setEnabled(!(Data.step<4));
     ui->progressEx->setEnabled(!(Data.step<5));
     ui->progressExLite->setEnabled((!(Data.step<5))&&!Data.isCreative());
+    ui->progressExStructure->setEnabled(ui->progressExLite->isEnabled());
     ui->progressExData->setEnabled(!(Data.step<5));
     if(true)//用来锁住暂且没有实现的界面
     {

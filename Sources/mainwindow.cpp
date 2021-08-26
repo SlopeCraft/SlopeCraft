@@ -64,14 +64,19 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->progressBL,SIGNAL(clicked()),this,SLOT(turnToPage3()));
     connect(ui->progressAdjPic,SIGNAL(clicked()),this,SLOT(turnToPage4()));
     connect(ui->progressExLite,SIGNAL(clicked()),this,SLOT(turnToPage5()));
+    connect(ui->progressExStructure,SIGNAL(clicked()),this,SLOT(turnToPage5()));
     //connect(ui->menuExMcF,SIGNAL(triggered()),this,SLOT(turnToPage6()));
     connect(ui->progressExData,SIGNAL(clicked()),this,SLOT(turnToPage7()));
     connect(ui->progressAbout,SIGNAL(clicked()),this,SLOT(turnToPage8()));
     connect(ui->actionAboutSlopeCraft,SIGNAL(triggered()),this,SLOT(turnToPage8()));    
     connect(ui->actionChinese,SIGNAL(triggered()),this,SLOT(turnCh()));
     connect(ui->actionEnglish,SIGNAL(triggered()),this,SLOT(turnEn()));
+    connect(ui->progressChinese,SIGNAL(clicked()),this,SLOT(turnCh()));
+    connect(ui->progressEnglish,SIGNAL(clicked()),this,SLOT(turnEn()));
     connect(ui->actionToki,SIGNAL(triggered()),this,SLOT(contactG()));
     connect(ui->actionDoki,SIGNAL(triggered()),this,SLOT(contactB()));
+    connect(ui->progressG,SIGNAL(clicked()),this,SLOT(contactG()));
+    connect(ui->progressB,SIGNAL(clicked()),this,SLOT(contactB()));
 
     qDebug("成功connect所有的菜单");
 
@@ -167,6 +172,7 @@ void MainWindow::showPreview()
 
 void MainWindow::InitializeAll()
 {
+    ui->LeftScroll->verticalScrollBar()->setStyleSheet("QScrollBar{width: 7px;margin: 0px 0 0px 0;background-color: rgba(255, 255, 255, 64);color: rgba(255, 255, 255, 128);}");
     if(!Collected)
     {
         Collect();
