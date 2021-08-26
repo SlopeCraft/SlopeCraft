@@ -49,7 +49,7 @@ This file is part of SlopeCraft.
 #include "tpstrategywind.h"
 #include "previewwind.h"
 #include "WaterItem.h"
-//#include "adjt.h"
+#include "zlib.h"
 using namespace std;
 using namespace Eigen;
 

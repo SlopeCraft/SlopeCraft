@@ -5,7 +5,7 @@ INCLUDEPATH += D:\eigen-3.3.9
 INCLUDEPATH += ./Headers
 INCLUDEPATH += ./Sources
 INCLUDEPATH += ./others
-
+INCLUDEPATH += D:\zlibs
 
 DEFINES += WIN32_LEAN_AND_MEAN
 RC_ICONS = others/SlopeCraft.ico
@@ -38,6 +38,21 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    ../../zlibs/adler32.c \
+    ../../zlibs/compress.c \
+    ../../zlibs/crc32.c \
+    ../../zlibs/deflate.c \
+    ../../zlibs/gzclose.c \
+    ../../zlibs/gzlib.c \
+    ../../zlibs/gzread.c \
+    ../../zlibs/gzwrite.c \
+    ../../zlibs/infback.c \
+    ../../zlibs/inffast.c \
+    ../../zlibs/inflate.c \
+    ../../zlibs/inftrees.c \
+    ../../zlibs/trees.c \
+    ../../zlibs/uncompr.c \
+    ../../zlibs/zutil.c \
     Sources/CIEDE00.cpp \
     Sources/Collecter.cpp \
     Sources/NBTWriter.cpp \
@@ -58,41 +73,26 @@ SOURCES += \
     Sources/mcmap.cpp \
     Sources/previewwind.cpp \
     Sources/tokicolor.cpp \
-    Sources/tpstrategywind.cpp \
-    zlibs/adler32.c \
-    zlibs/compress.c \
-    zlibs/crc32.c \
-    zlibs/deflate.c \
-    zlibs/gzclose.c \
-    zlibs/gzlib.c \
-    zlibs/gzread.c \
-    zlibs/gzwrite.c \
-    zlibs/infback.c \
-    zlibs/inffast.c \
-    zlibs/inflate.c \
-    zlibs/inftrees.c \
-    zlibs/trees.c \
-    zlibs/uncompr.c \
-    zlibs/zutil.c
+    Sources/tpstrategywind.cpp
 
 HEADERS += \
+    ../../zlibs/crc32.h \
+    ../../zlibs/deflate.h \
+    ../../zlibs/gzguts.h \
+    ../../zlibs/inffast.h \
+    ../../zlibs/inffixed.h \
+    ../../zlibs/inflate.h \
+    ../../zlibs/inftrees.h \
+    ../../zlibs/trees.h \
+    ../../zlibs/zconf.h \
+    ../../zlibs/zlib.h \
+    ../../zlibs/zutil.h \
     Headers/NBTWriter.h \
     Headers/OptiChain.h \
     Headers/WaterItem.h \
     Headers/mainwindow.h \
     Headers/previewwind.h \
-    Headers/tpstrategywind.h \
-    zlibs/crc32.h \
-    zlibs/deflate.h \
-    zlibs/gzguts.h \
-    zlibs/inffast.h \
-    zlibs/inffixed.h \
-    zlibs/inflate.h \
-    zlibs/inftrees.h \
-    zlibs/trees.h \
-    zlibs/zconf.h \
-    zlibs/zlib.h \
-    zlibs/zutil.h
+    Headers/tpstrategywind.h
 
 FORMS += \
     others/mainwindow.ui \

@@ -32,7 +32,7 @@ This file is part of SlopeCraft.
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QDebug>
-#include "D:/zlib-1.2.11/zlib.h"
+//#include "zlib.h"
 #define bufferSize 1024
 bool compressFile(const char*sourcePath,const char*destPath)
 {
