@@ -304,5 +304,9 @@
         <file>Slope/items/book.png</file>
         <file>Slope/items/iron_pickaxe.png</file>
         <file>Slope/items/diamond.png</file>
+        <file>Slope/block/brewing_stand.png</file>
+        <file>Slope/block/grindstone_round.png</file>
+        <file>Slope/block/iron_trapdoor.png</file>
+        <file>Slope/block/spruce_leaves.png</file>
     </qresource>
 </RCC>
