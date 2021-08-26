@@ -1,63 +1,21 @@
 <RCC>
     <qresource prefix="/new/Textures">
-        <file>Slope/block/acacia_door_bottom.png</file>
-        <file>Slope/block/acacia_door_top.png</file>
         <file>Slope/block/acacia_leaves.png</file>
         <file>Slope/block/acacia_log.png</file>
         <file>Slope/block/acacia_log_top.png</file>
         <file>Slope/block/acacia_planks.png</file>
-        <file>Slope/block/acacia_sapling.png</file>
-        <file>Slope/block/acacia_trapdoor.png</file>
-        <file>Slope/block/activator_rail.png</file>
-        <file>Slope/block/activator_rail_on.png</file>
-        <file>Slope/block/allium.png</file>
-        <file>Slope/block/ancient_debris_side.png</file>
-        <file>Slope/block/ancient_debris_top.png</file>
         <file>Slope/block/andesite.png</file>
-        <file>Slope/block/anvil.png</file>
-        <file>Slope/block/anvil_top.png</file>
-        <file>Slope/block/attached_melon_stem.png</file>
-        <file>Slope/block/attached_pumpkin_stem.png</file>
-        <file>Slope/block/azure_bluet.png</file>
         <file>Slope/block/bamboo_large_leaves.png</file>
-        <file>Slope/block/bamboo_singleleaf.png</file>
         <file>Slope/block/bamboo_small_leaves.png</file>
-        <file>Slope/block/bamboo_stage0.png</file>
-        <file>Slope/block/bamboo_stalk.png</file>
-        <file>Slope/block/barrel_bottom.png</file>
-        <file>Slope/block/barrel_side.png</file>
-        <file>Slope/block/barrel_top.png</file>
-        <file>Slope/block/barrel_top_open.png</file>
         <file>Slope/block/basalt_side.png</file>
         <file>Slope/block/basalt_top.png</file>
         <file>Slope/block/beacon.png</file>
         <file>Slope/block/bedrock.png</file>
-        <file>Slope/block/bee_nest_bottom.png</file>
-        <file>Slope/block/bee_nest_front.png</file>
-        <file>Slope/block/bee_nest_front_honey.png</file>
-        <file>Slope/block/bee_nest_side.png</file>
-        <file>Slope/block/bee_nest_top.png</file>
-        <file>Slope/block/beehive_end.png</file>
-        <file>Slope/block/beehive_front.png</file>
-        <file>Slope/block/beehive_front_honey.png</file>
-        <file>Slope/block/beehive_side.png</file>
-        <file>Slope/block/beetroots_stage0.png</file>
-        <file>Slope/block/beetroots_stage1.png</file>
-        <file>Slope/block/beetroots_stage2.png</file>
-        <file>Slope/block/beetroots_stage3.png</file>
-        <file>Slope/block/bell_bottom.png</file>
-        <file>Slope/block/bell_side.png</file>
-        <file>Slope/block/bell_top.png</file>
-        <file>Slope/block/birch_door_bottom.png</file>
-        <file>Slope/block/birch_door_top.png</file>
         <file>Slope/block/birch_leaves.png</file>
         <file>Slope/block/birch_log.png</file>
         <file>Slope/block/birch_log_top.png</file>
         <file>Slope/block/birch_planks.png</file>
-        <file>Slope/block/birch_sapling.png</file>
-        <file>Slope/block/birch_trapdoor.png</file>
         <file>Slope/block/black_concrete.png</file>
-        <file>Slope/block/black_concrete_powder.png</file>
         <file>Slope/block/black_glazed_terracotta.png</file>
         <file>Slope/block/black_shulker_box.png</file>
         <file>Slope/block/black_stained_glass.png</file>
@@ -66,13 +24,7 @@
         <file>Slope/block/black_wool.png</file>
         <file>Slope/block/blackstone.png</file>
         <file>Slope/block/blackstone_top.png</file>
-        <file>Slope/block/blast_furnace_front.png</file>
-        <file>Slope/block/blast_furnace_front_on.png</file>
-        <file>Slope/block/blast_furnace_front_on.png.mcmeta</file>
-        <file>Slope/block/blast_furnace_side.png</file>
-        <file>Slope/block/blast_furnace_top.png</file>
         <file>Slope/block/blue_concrete.png</file>
-        <file>Slope/block/blue_concrete_powder.png</file>
         <file>Slope/block/blue_glazed_terracotta.png</file>
         <file>Slope/block/blue_ice.png</file>
         <file>Slope/block/blue_orchid.png</file>
@@ -82,18 +34,10 @@
         <file>Slope/block/blue_terracotta.png</file>
         <file>Slope/block/blue_wool.png</file>
         <file>Slope/block/bone_block_side.png</file>
-        <file>Slope/block/bone_block_top.png</file>
         <file>Slope/block/bookshelf.png</file>
-        <file>Slope/block/brain_coral.png</file>
-        <file>Slope/block/brain_coral_block.png</file>
-        <file>Slope/block/brain_coral_fan.png</file>
-        <file>Slope/block/brewing_stand.png</file>
-        <file>Slope/block/brewing_stand_base.png</file>
         <file>Slope/block/bricks.png</file>
         <file>Slope/block/brown_concrete.png</file>
-        <file>Slope/block/brown_concrete_powder.png</file>
         <file>Slope/block/brown_glazed_terracotta.png</file>
-        <file>Slope/block/brown_mushroom.png</file>
         <file>Slope/block/brown_mushroom_block.png</file>
         <file>Slope/block/brown_shulker_box.png</file>
         <file>Slope/block/brown_stained_glass.png</file>
@@ -103,22 +47,6 @@
         <file>Slope/block/bubble_coral.png</file>
         <file>Slope/block/bubble_coral_block.png</file>
         <file>Slope/block/bubble_coral_fan.png</file>
-        <file>Slope/block/cactus_bottom.png</file>
-        <file>Slope/block/cactus_side.png</file>
-        <file>Slope/block/cactus_top.png</file>
-        <file>Slope/block/cake_bottom.png</file>
-        <file>Slope/block/cake_inner.png</file>
-        <file>Slope/block/cake_side.png</file>
-        <file>Slope/block/cake_top.png</file>
-        <file>Slope/block/campfire_fire.png</file>
-        <file>Slope/block/campfire_fire.png.mcmeta</file>
-        <file>Slope/block/campfire_log.png</file>
-        <file>Slope/block/campfire_log_lit.png</file>
-        <file>Slope/block/campfire_log_lit.png.mcmeta</file>
-        <file>Slope/block/carrots_stage0.png</file>
-        <file>Slope/block/carrots_stage1.png</file>
-        <file>Slope/block/carrots_stage2.png</file>
-        <file>Slope/block/carrots_stage3.png</file>
         <file>Slope/block/cartography_table_side1.png</file>
         <file>Slope/block/cartography_table_side2.png</file>
         <file>Slope/block/cartography_table_side3.png</file>
@@ -128,18 +56,6 @@
         <file>Slope/block/cauldron_inner.png</file>
         <file>Slope/block/cauldron_side.png</file>
         <file>Slope/block/cauldron_top.png</file>
-        <file>Slope/block/chain.png</file>
-        <file>Slope/block/chain_command_block_back.png</file>
-        <file>Slope/block/chain_command_block_back.png.mcmeta</file>
-        <file>Slope/block/chain_command_block_conditional.png</file>
-        <file>Slope/block/chain_command_block_conditional.png.mcmeta</file>
-        <file>Slope/block/chain_command_block_front.png</file>
-        <file>Slope/block/chain_command_block_front.png.mcmeta</file>
-        <file>Slope/block/chain_command_block_side.png</file>
-        <file>Slope/block/chain_command_block_side.png.mcmeta</file>
-        <file>Slope/block/chipped_anvil_top.png</file>
-        <file>Slope/block/chiseled_nether_bricks.png</file>
-        <file>Slope/block/chiseled_polished_blackstone.png</file>
         <file>Slope/block/chiseled_quartz_block.png</file>
         <file>Slope/block/chiseled_quartz_block_top.png</file>
         <file>Slope/block/chiseled_red_sandstone.png</file>
@@ -157,14 +73,6 @@
         <file>Slope/block/cocoa_stage0.png</file>
         <file>Slope/block/cocoa_stage1.png</file>
         <file>Slope/block/cocoa_stage2.png</file>
-        <file>Slope/block/command_block_back.png</file>
-        <file>Slope/block/command_block_back.png.mcmeta</file>
-        <file>Slope/block/command_block_conditional.png</file>
-        <file>Slope/block/command_block_conditional.png.mcmeta</file>
-        <file>Slope/block/command_block_front.png</file>
-        <file>Slope/block/command_block_front.png.mcmeta</file>
-        <file>Slope/block/command_block_side.png</file>
-        <file>Slope/block/command_block_side.png.mcmeta</file>
         <file>Slope/block/comparator.png</file>
         <file>Slope/block/comparator_on.png</file>
         <file>Slope/block/composter_bottom.png</file>
@@ -189,14 +97,12 @@
         <file>Slope/block/crimson_roots.png</file>
         <file>Slope/block/crimson_roots_pot.png</file>
         <file>Slope/block/crimson_stem.png</file>
-        <file>Slope/block/crimson_stem.png.mcmeta</file>
         <file>Slope/block/crimson_stem_top.png</file>
         <file>Slope/block/crimson_trapdoor.png</file>
         <file>Slope/block/crying_obsidian.png</file>
         <file>Slope/block/cut_red_sandstone.png</file>
         <file>Slope/block/cut_sandstone.png</file>
         <file>Slope/block/cyan_concrete.png</file>
-        <file>Slope/block/cyan_concrete_powder.png</file>
         <file>Slope/block/cyan_glazed_terracotta.png</file>
         <file>Slope/block/cyan_shulker_box.png</file>
         <file>Slope/block/cyan_stained_glass.png</file>
@@ -274,9 +180,7 @@
         <file>Slope/block/farmland_moist.png</file>
         <file>Slope/block/fern.png</file>
         <file>Slope/block/fire_0.png</file>
-        <file>Slope/block/fire_0.png.mcmeta</file>
         <file>Slope/block/fire_1.png</file>
-        <file>Slope/block/fire_1.png.mcmeta</file>
         <file>Slope/block/fire_coral.png</file>
         <file>Slope/block/fire_coral_block.png</file>
         <file>Slope/block/fire_coral_fan.png</file>
@@ -308,7 +212,6 @@
         <file>Slope/block/grass_path_top.png</file>
         <file>Slope/block/gravel.png</file>
         <file>Slope/block/gray_concrete.png</file>
-        <file>Slope/block/gray_concrete_powder.png</file>
         <file>Slope/block/gray_glazed_terracotta.png</file>
         <file>Slope/block/gray_shulker_box.png</file>
         <file>Slope/block/gray_stained_glass.png</file>
@@ -316,7 +219,6 @@
         <file>Slope/block/gray_terracotta.png</file>
         <file>Slope/block/gray_wool.png</file>
         <file>Slope/block/green_concrete.png</file>
-        <file>Slope/block/green_concrete_powder.png</file>
         <file>Slope/block/green_glazed_terracotta.png</file>
         <file>Slope/block/green_shulker_box.png</file>
         <file>Slope/block/green_stained_glass.png</file>
@@ -327,7 +229,6 @@
         <file>Slope/block/grindstone_round.png</file>
         <file>Slope/block/grindstone_side.png</file>
         <file>Slope/block/hay_block_side.png</file>
-        <file>Slope/block/hay_block_top.png</file>
         <file>Slope/block/honey_block_bottom.png</file>
         <file>Slope/block/honey_block_side.png</file>
         <file>Slope/block/honey_block_top.png</file>
@@ -362,27 +263,11 @@
         <file>Slope/block/jungle_sapling.png</file>
         <file>Slope/block/jungle_trapdoor.png</file>
         <file>Slope/block/kelp.png</file>
-        <file>Slope/block/kelp.png.mcmeta</file>
         <file>Slope/block/kelp_plant.png</file>
-        <file>Slope/block/kelp_plant.png.mcmeta</file>
-        <file>Slope/block/ladder.png</file>
         <file>Slope/block/lantern.png</file>
-        <file>Slope/block/lantern.png.mcmeta</file>
         <file>Slope/block/lapis_block.png</file>
-        <file>Slope/block/lapis_ore.png</file>
-        <file>Slope/block/large_fern_bottom.png</file>
-        <file>Slope/block/large_fern_top.png</file>
-        <file>Slope/block/lava_flow.png</file>
-        <file>Slope/block/lava_flow.png.mcmeta</file>
-        <file>Slope/block/lava_still.png</file>
-        <file>Slope/block/lava_still.png.mcmeta</file>
-        <file>Slope/block/lectern_base.png</file>
-        <file>Slope/block/lectern_front.png</file>
-        <file>Slope/block/lectern_sides.png</file>
-        <file>Slope/block/lectern_top.png</file>
         <file>Slope/block/lever.png</file>
         <file>Slope/block/light_blue_concrete.png</file>
-        <file>Slope/block/light_blue_concrete_powder.png</file>
         <file>Slope/block/light_blue_glazed_terracotta.png</file>
         <file>Slope/block/light_blue_shulker_box.png</file>
         <file>Slope/block/light_blue_stained_glass.png</file>
@@ -390,7 +275,6 @@
         <file>Slope/block/light_blue_terracotta.png</file>
         <file>Slope/block/light_blue_wool.png</file>
         <file>Slope/block/light_gray_concrete.png</file>
-        <file>Slope/block/light_gray_concrete_powder.png</file>
         <file>Slope/block/light_gray_glazed_terracotta.png</file>
         <file>Slope/block/light_gray_shulker_box.png</file>
         <file>Slope/block/light_gray_stained_glass.png</file>
@@ -402,7 +286,6 @@
         <file>Slope/block/lily_of_the_valley.png</file>
         <file>Slope/block/lily_pad.png</file>
         <file>Slope/block/lime_concrete.png</file>
-        <file>Slope/block/lime_concrete_powder.png</file>
         <file>Slope/block/lime_glazed_terracotta.png</file>
         <file>Slope/block/lime_shulker_box.png</file>
         <file>Slope/block/lime_stained_glass.png</file>
@@ -416,7 +299,6 @@
         <file>Slope/block/loom_side.png</file>
         <file>Slope/block/loom_top.png</file>
         <file>Slope/block/magenta_concrete.png</file>
-        <file>Slope/block/magenta_concrete_powder.png</file>
         <file>Slope/block/magenta_glazed_terracotta.png</file>
         <file>Slope/block/magenta_shulker_box.png</file>
         <file>Slope/block/magenta_stained_glass.png</file>
@@ -424,7 +306,6 @@
         <file>Slope/block/magenta_terracotta.png</file>
         <file>Slope/block/magenta_wool.png</file>
         <file>Slope/block/magma.png</file>
-        <file>Slope/block/magma.png.mcmeta</file>
         <file>Slope/block/melon_side.png</file>
         <file>Slope/block/melon_stem.png</file>
         <file>Slope/block/melon_top.png</file>
@@ -437,7 +318,6 @@
         <file>Slope/block/nether_bricks.png</file>
         <file>Slope/block/nether_gold_ore.png</file>
         <file>Slope/block/nether_portal.png</file>
-        <file>Slope/block/nether_portal.png.mcmeta</file>
         <file>Slope/block/nether_quartz_ore.png</file>
         <file>Slope/block/nether_sprouts.png</file>
         <file>Slope/block/nether_wart_block.png</file>
@@ -462,7 +342,6 @@
         <file>Slope/block/observer_top.png</file>
         <file>Slope/block/obsidian.png</file>
         <file>Slope/block/orange_concrete.png</file>
-        <file>Slope/block/orange_concrete_powder.png</file>
         <file>Slope/block/orange_glazed_terracotta.png</file>
         <file>Slope/block/orange_shulker_box.png</file>
         <file>Slope/block/orange_stained_glass.png</file>
@@ -475,7 +354,6 @@
         <file>Slope/block/peony_bottom.png</file>
         <file>Slope/block/peony_top.png</file>
         <file>Slope/block/pink_concrete.png</file>
-        <file>Slope/block/pink_concrete_powder.png</file>
         <file>Slope/block/pink_glazed_terracotta.png</file>
         <file>Slope/block/pink_shulker_box.png</file>
         <file>Slope/block/pink_stained_glass.png</file>
@@ -505,13 +383,11 @@
         <file>Slope/block/powered_rail.png</file>
         <file>Slope/block/powered_rail_on.png</file>
         <file>Slope/block/prismarine.png</file>
-        <file>Slope/block/prismarine.png.mcmeta</file>
         <file>Slope/block/prismarine_bricks.png</file>
         <file>Slope/block/pumpkin_side.png</file>
         <file>Slope/block/pumpkin_stem.png</file>
         <file>Slope/block/pumpkin_top.png</file>
         <file>Slope/block/purple_concrete.png</file>
-        <file>Slope/block/purple_concrete_powder.png</file>
         <file>Slope/block/purple_glazed_terracotta.png</file>
         <file>Slope/block/purple_shulker_box.png</file>
         <file>Slope/block/purple_stained_glass.png</file>
@@ -530,7 +406,6 @@
         <file>Slope/block/rail.png</file>
         <file>Slope/block/rail_corner.png</file>
         <file>Slope/block/red_concrete.png</file>
-        <file>Slope/block/red_concrete_powder.png</file>
         <file>Slope/block/red_glazed_terracotta.png</file>
         <file>Slope/block/red_mushroom.png</file>
         <file>Slope/block/red_mushroom_block.png</file>
@@ -558,13 +433,9 @@
         <file>Slope/block/repeater.png</file>
         <file>Slope/block/repeater_on.png</file>
         <file>Slope/block/repeating_command_block_back.png</file>
-        <file>Slope/block/repeating_command_block_back.png.mcmeta</file>
         <file>Slope/block/repeating_command_block_conditional.png</file>
-        <file>Slope/block/repeating_command_block_conditional.png.mcmeta</file>
         <file>Slope/block/repeating_command_block_front.png</file>
-        <file>Slope/block/repeating_command_block_front.png.mcmeta</file>
         <file>Slope/block/repeating_command_block_side.png</file>
-        <file>Slope/block/repeating_command_block_side.png.mcmeta</file>
         <file>Slope/block/respawn_anchor_bottom.png</file>
         <file>Slope/block/respawn_anchor_side0.png</file>
         <file>Slope/block/respawn_anchor_side1.png</file>
@@ -572,7 +443,6 @@
         <file>Slope/block/respawn_anchor_side3.png</file>
         <file>Slope/block/respawn_anchor_side4.png</file>
         <file>Slope/block/respawn_anchor_top.png</file>
-        <file>Slope/block/respawn_anchor_top.png.mcmeta</file>
         <file>Slope/block/respawn_anchor_top_off.png</file>
         <file>Slope/block/rose_bush_bottom.png</file>
         <file>Slope/block/rose_bush_top.png</file>
@@ -584,10 +454,8 @@
         <file>Slope/block/scaffolding_side.png</file>
         <file>Slope/block/scaffolding_top.png</file>
         <file>Slope/block/sea_lantern.png</file>
-        <file>Slope/block/sea_lantern.png.mcmeta</file>
         <file>Slope/block/sea_pickle.png</file>
         <file>Slope/block/seagrass.png</file>
-        <file>Slope/block/seagrass.png.mcmeta</file>
         <file>Slope/block/shroomlight.png</file>
         <file>Slope/block/shulker_box.png</file>
         <file>Slope/block/slime_block.png</file>
@@ -598,22 +466,16 @@
         <file>Slope/block/smoker_bottom.png</file>
         <file>Slope/block/smoker_front.png</file>
         <file>Slope/block/smoker_front_on.png</file>
-        <file>Slope/block/smoker_front_on.png.mcmeta</file>
         <file>Slope/block/smoker_side.png</file>
         <file>Slope/block/smoker_top.png</file>
         <file>Slope/block/smooth_stone.png</file>
         <file>Slope/block/smooth_stone_slab_side.png</file>
         <file>Slope/block/snow.png</file>
         <file>Slope/block/soul_campfire_fire.png</file>
-        <file>Slope/block/soul_campfire_fire.png.mcmeta</file>
         <file>Slope/block/soul_campfire_log_lit.png</file>
-        <file>Slope/block/soul_campfire_log_lit.png.mcmeta</file>
         <file>Slope/block/soul_fire_0.png</file>
-        <file>Slope/block/soul_fire_0.png.mcmeta</file>
         <file>Slope/block/soul_fire_1.png</file>
-        <file>Slope/block/soul_fire_1.png.mcmeta</file>
         <file>Slope/block/soul_lantern.png</file>
-        <file>Slope/block/soul_lantern.png.mcmeta</file>
         <file>Slope/block/soul_sand.png</file>
         <file>Slope/block/soul_soil.png</file>
         <file>Slope/block/soul_torch.png</file>
@@ -631,7 +493,6 @@
         <file>Slope/block/stone_bricks.png</file>
         <file>Slope/block/stonecutter_bottom.png</file>
         <file>Slope/block/stonecutter_saw.png</file>
-        <file>Slope/block/stonecutter_saw.png.mcmeta</file>
         <file>Slope/block/stonecutter_side.png</file>
         <file>Slope/block/stonecutter_top.png</file>
         <file>Slope/block/stripped_acacia_log.png</file>
@@ -667,9 +528,7 @@
         <file>Slope/block/tall_grass_bottom.png</file>
         <file>Slope/block/tall_grass_top.png</file>
         <file>Slope/block/tall_seagrass_bottom.png</file>
-        <file>Slope/block/tall_seagrass_bottom.png.mcmeta</file>
         <file>Slope/block/tall_seagrass_top.png</file>
-        <file>Slope/block/tall_seagrass_top.png.mcmeta</file>
         <file>Slope/block/target_side.png</file>
         <file>Slope/block/target_top.png</file>
         <file>Slope/block/terracotta.png</file>
@@ -697,15 +556,12 @@
         <file>Slope/block/warped_roots.png</file>
         <file>Slope/block/warped_roots_pot.png</file>
         <file>Slope/block/warped_stem.png</file>
-        <file>Slope/block/warped_stem.png.mcmeta</file>
         <file>Slope/block/warped_stem_top.png</file>
         <file>Slope/block/warped_trapdoor.png</file>
         <file>Slope/block/warped_wart_block.png</file>
         <file>Slope/block/water_flow.png</file>
-        <file>Slope/block/water_flow.png.mcmeta</file>
         <file>Slope/block/water_overlay.png</file>
         <file>Slope/block/water_still.png</file>
-        <file>Slope/block/water_still.png.mcmeta</file>
         <file>Slope/block/weeping_vines.png</file>
         <file>Slope/block/weeping_vines_plant.png</file>
         <file>Slope/block/wet_sponge.png</file>
@@ -718,7 +574,6 @@
         <file>Slope/block/wheat_stage6.png</file>
         <file>Slope/block/wheat_stage7.png</file>
         <file>Slope/block/white_concrete.png</file>
-        <file>Slope/block/white_concrete_powder.png</file>
         <file>Slope/block/white_glazed_terracotta.png</file>
         <file>Slope/block/white_shulker_box.png</file>
         <file>Slope/block/white_stained_glass.png</file>
@@ -728,7 +583,6 @@
         <file>Slope/block/white_wool.png</file>
         <file>Slope/block/wither_rose.png</file>
         <file>Slope/block/yellow_concrete.png</file>
-        <file>Slope/block/yellow_concrete_powder.png</file>
         <file>Slope/block/yellow_glazed_terracotta.png</file>
         <file>Slope/block/yellow_shulker_box.png</file>
         <file>Slope/block/yellow_stained_glass.png</file>
@@ -737,30 +591,14 @@
         <file>Slope/block/yellow_wool.png</file>
         <file>Slope/block/campfire.png</file>
         <file>Slope/block/amethyst_block.png</file>
-        <file>Slope/block/amethyst_cluster.png</file>
         <file>Slope/block/azalea_leaves.png</file>
-        <file>Slope/block/azalea_plant.png</file>
-        <file>Slope/block/azalea_side.png</file>
-        <file>Slope/block/azalea_top.png</file>
-        <file>Slope/block/big_dripleaf_side.png</file>
-        <file>Slope/block/big_dripleaf_stem.png</file>
-        <file>Slope/block/big_dripleaf_tip.png</file>
         <file>Slope/block/big_dripleaf_top.png</file>
-        <file>Slope/block/black_candle.png</file>
-        <file>Slope/block/black_candle_lit.png</file>
         <file>Slope/block/blue_candle.png</file>
         <file>Slope/block/blue_candle_lit.png</file>
         <file>Slope/block/brown_candle.png</file>
         <file>Slope/block/brown_candle_lit.png</file>
         <file>Slope/block/budding_amethyst.png</file>
         <file>Slope/block/calcite.png</file>
-        <file>Slope/block/candle.png</file>
-        <file>Slope/block/candle_lit.png</file>
-        <file>Slope/block/cave_vines.png</file>
-        <file>Slope/block/cave_vines_lit.png</file>
-        <file>Slope/block/cave_vines_plant.png</file>
-        <file>Slope/block/cave_vines_plant_lit.png</file>
-        <file>Slope/block/chiseled_deepslate.png</file>
         <file>Slope/block/cobbled_deepslate.png</file>
         <file>Slope/block/copper_block.png</file>
         <file>Slope/block/copper_ore.png</file>
@@ -796,7 +634,6 @@
         <file>Slope/block/green_candle.png</file>
         <file>Slope/block/green_candle_lit.png</file>
         <file>Slope/block/hanging_roots.png</file>
-        <file>Slope/block/large_amethyst_bud.png</file>
         <file>Slope/block/light_blue_candle.png</file>
         <file>Slope/block/light_blue_candle_lit.png</file>
         <file>Slope/block/light_gray_candle.png</file>
@@ -832,7 +669,6 @@
         <file>Slope/block/potted_flowering_azalea_bush_plant.png</file>
         <file>Slope/block/potted_flowering_azalea_bush_side.png</file>
         <file>Slope/block/potted_flowering_azalea_bush_top.png</file>
-        <file>Slope/block/powder_snow.png</file>
         <file>Slope/block/purple_candle.png</file>
         <file>Slope/block/purple_candle_lit.png</file>
         <file>Slope/block/raw_copper_block.png</file>
@@ -844,9 +680,7 @@
         <file>Slope/block/sculk_sensor_bottom.png</file>
         <file>Slope/block/sculk_sensor_side.png</file>
         <file>Slope/block/sculk_sensor_tendril_active.png</file>
-        <file>Slope/block/sculk_sensor_tendril_active.png.mcmeta</file>
         <file>Slope/block/sculk_sensor_tendril_inactive.png</file>
-        <file>Slope/block/sculk_sensor_tendril_inactive.png.mcmeta</file>
         <file>Slope/block/sculk_sensor_top.png</file>
         <file>Slope/block/small_amethyst_bud.png</file>
         <file>Slope/block/small_dripleaf_side.png</file>
