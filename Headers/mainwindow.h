@@ -284,10 +284,10 @@ public:
     void getBlockList();
 
     //调整颜色,Page4
-    void pushToHash(QHash<QRgb,TokiColor>*);
-    void applyTokiColor(QHash<QRgb,TokiColor>*);
-    void fillMapMat(QHash<QRgb,TokiColor>*);
-    void Dither(QHash<QRgb,TokiColor>*);//抖动，将三个Dither矩阵填充为抖动后的三通道值
+    void pushToHash(unordered_map<QRgb,TokiColor>*);
+    void applyTokiColor(unordered_map<QRgb,TokiColor>*);
+    void fillMapMat(unordered_map<QRgb,TokiColor>*);
+    void Dither(unordered_map<QRgb,TokiColor>*);//抖动，将三个Dither矩阵填充为抖动后的三通道值
     void getAdjedPic();//for step5
 
     void turnToPage(int);

@@ -122,7 +122,7 @@ void MainWindow::on_isColorSpaceRGBOld_clicked()
     qDebug("调整颜色空间为旧版RGB");
 }
 
-void MainWindow::pushToHash(QHash<QRgb,TokiColor>*R)
+void MainWindow::pushToHash(unordered_map<QRgb,TokiColor>*R)
 {
     if(Data.adjStep<0)return;
     R->clear();
@@ -134,7 +134,7 @@ void MainWindow::pushToHash(QHash<QRgb,TokiColor>*R)
     {
         CurrentLine=(QRgb*)Data.rawPic.scanLine(r);
         for(short c=0;c<Data.sizePic[1];c++)
-            if(!R->contains(CurrentLine[c]))
+            if(R->find(CurrentLine[c])==R->end())//找不到这个颜色
             {
                 ColorCount++;
                 R->operator[](CurrentLine[c])=TokiColor(CurrentLine[c],Data.Mode);
@@ -144,7 +144,7 @@ void MainWindow::pushToHash(QHash<QRgb,TokiColor>*R)
     }
     //qDebug("成功将所有颜色装入QHash");
     //qDebug()<<"总颜色数量"<<ColorCount;
-    qDebug()<<"总颜色数量："<<R->count();
+    qDebug()<<"总颜色数量："<<R->size();
     Data.adjStep=1;
 }
 
@@ -152,14 +152,14 @@ void matchColor(TokiColor * tColor,QRgb qColor) {
     tColor->apply(qColor);
 }
 
-void MainWindow::applyTokiColor(QHash<QRgb,TokiColor>*R)
+void MainWindow::applyTokiColor(unordered_map<QRgb,TokiColor>*R)
 {//int ColorCount=0;
     if(Data.adjStep<1)return;
 
-    int step=Data.sizePic[0]*Data.sizePic[1]/R->count();
+    int step=Data.sizePic[0]*Data.sizePic[1]/R->size();
     queue<QFuture<void>> taskTracker;
     for(auto it=R->begin();it!=R->end();it++)
-        taskTracker.push(QtConcurrent::run(matchColor,&it.value(),it.key()));
+        taskTracker.push(QtConcurrent::run(matchColor,&it->second,it->first));
 
 
     while(!taskTracker.empty()) {
@@ -172,7 +172,7 @@ void MainWindow::applyTokiColor(QHash<QRgb,TokiColor>*R)
     Data.adjStep=2;
 }
 
-void MainWindow::fillMapMat(QHash<QRgb,TokiColor>*R)
+void MainWindow::fillMapMat(unordered_map<QRgb,TokiColor>*R)
 {
     if(Data.adjStep<2)return;
     QRgb*CurrentLine;
@@ -189,7 +189,7 @@ void MainWindow::fillMapMat(QHash<QRgb,TokiColor>*R)
     Data.adjStep=3;
 }
 
-void MainWindow::Dither(QHash<QRgb,TokiColor> *R)
+void MainWindow::Dither(unordered_map<QRgb,TokiColor> *R)
 {
 #ifdef putDitheredImg
     QImage DitheredImg(Data.sizePic[0],Data.sizePic[1],QImage::Format_ARGB32);
@@ -270,7 +270,7 @@ void MainWindow::Dither(QHash<QRgb,TokiColor> *R)
 #ifdef putDitheredImg
       OCL[c]=Current;
 #endif
-                if(!R->contains(Current))
+                if(R->find(Current)==R->end())
                 {
                     R->operator[](Current)=TokiColor(Current,Data.Mode);
                     R->operator[](Current).apply(Current);
@@ -302,7 +302,7 @@ void MainWindow::Dither(QHash<QRgb,TokiColor> *R)
 #ifdef putDitheredImg
       OCL[c]=Current;
 #endif
-                if(!R->contains(Current))
+                if(R->find(Current)==R->end())
                 {
                     R->operator[](Current)=TokiColor(Current,Data.Mode);
                     R->operator[](Current).apply(Current);
@@ -416,7 +416,7 @@ if(Data.isCreative())
     ui->InputDataIndex->setText("0");
 }
 
-auto colorHash=new QHash<QRgb,TokiColor>;
+auto colorHash=new unordered_map<QRgb,TokiColor>;
 clock_t start;
 start=clock();
 //t=GetCycleCount();

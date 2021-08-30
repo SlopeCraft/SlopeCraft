@@ -37,7 +37,6 @@ This file is part of SlopeCraft.
 #include "Page3.cpp"
 #include "Page4.cpp"
 #include "Page5.cpp"
-#include "Page6.cpp"
 #include "Page7.cpp"
 #include "Page8.cpp"
 
