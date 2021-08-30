@@ -25,6 +25,7 @@ This file is part of SlopeCraft.
 //#define dispDerivative
 //#define putDitheredImg
 //#define putMapData
+//#define putBlockList
 #include "TokiBlock.h"
 #include "NBTWriter.h"
 #include "ui_mainwindow.h"
@@ -295,17 +296,19 @@ public:
     void updateEnables();
 
     void switchLan(bool);
+
 #ifdef dispDerivative
     void checkBlockIds();
     void makeImage(int);
-    void putBlockList();
 #endif
+
+#ifdef putBlockList
+    void putBlockListInfo();
+#endif
+
 private:
     QTranslator trans;
     string Noder(const short *src,int size);
-
-//////////////////////////////////////////////////////////////////////////////////
-///
 
 public slots:
     void AdjPro(int step=1);

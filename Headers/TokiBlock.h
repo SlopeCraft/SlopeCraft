@@ -2,7 +2,7 @@
 #define TOKIBLOCK_H
 #include <vector>
 #include <string>
-
+#include <iostream>
 #include <QRadioButton>
 
 typedef unsigned char uchar ;
@@ -28,26 +28,27 @@ public:
     QString nameZH;
     QString nameEN;
 
-    inline void setBaseColor(uchar);
-    inline void setId(const std::string &);
-    //inline void setName(const std::string &);
-    inline void setVersion(uchar);
-    inline void setIdOld(const std::string &);
-    inline void setNeedGlass(bool);
-    inline void setIsGlowing(bool);
+    /*INLINE*/ void setBaseColor(uchar);
+    /*INLINE*/ void setId(const std::string &);
+    ///*INLINE*/ void setName(const std::string &);
+    /*INLINE*/ void setVersion(uchar);
+    /*INLINE*/ void setIdOld(const std::string &);
+    /*INLINE*/ void setNeedGlass(bool);
+    /*INLINE*/ void setIsGlowing(bool);
 
-    inline uchar getBaseColor() const;
-    inline std::string getId() const;
-    //inline std::string getName() const;
-    inline uchar getVersion() const;
-    inline std::string getIdOld() const;
-    inline bool getNeedGlass() const;
-    inline bool getIsGlowing() const;
+    /*INLINE*/ uchar getBaseColor() const;
+    /*INLINE*/ std::string getId() const;
+    ///*INLINE*/ std::string getName() const;
+    /*INLINE*/ uchar getVersion() const;
+    /*INLINE*/ std::string getIdOld() const;
+    /*INLINE*/ bool getNeedGlass() const;
+    /*INLINE*/ bool getIsGlowing() const;
 
     std::string toPureBlockId() const;
-    void toProperties(stringList * proName,stringList * proVal) const;
-
+    bool toProperties(std::string & ,stringList * proName,stringList * proVal) const;
+#ifdef putBlockList
     QString toJSON() const;
+#endif
 
 private:
     uchar baseColor;

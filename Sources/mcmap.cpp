@@ -229,8 +229,7 @@ bool dealBlockId(const QString&BlockId,
 void mcMap::writeBlock(const QString &netBlockId,vector<QString>&Property,vector<QString>&ProVal,NBT::NBTWriter&Lite)
 {
     Lite.writeCompound("ThisStringShouldNeverBeSeen");
-    QString BlockId;
-    BlockId=netBlockId;
+    QString BlockId=netBlockId;
     if(!netBlockId.startsWith("minecraft:"))
         BlockId="minecraft:"+BlockId;
 

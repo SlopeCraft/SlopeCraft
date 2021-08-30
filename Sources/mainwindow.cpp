@@ -346,3 +346,64 @@ void MainWindow::makeImage(int unitL)
     Pic.save("D:\\240Colors.png");
 }
 #endif
+
+#ifdef putBlockList
+void MainWindow::putBlockListInfo() {
+    if(!Collected)return;
+    QString jsonDest=QFileDialog::getSaveFileName(this,
+                                                  "将方块列表保存为json","","*.json");
+    if(jsonDest.isEmpty())return;
+
+    QString imgDest=QFileDialog::getExistingDirectory(this,
+                                                      "选择输出图片的文件夹","");
+    if(imgDest.isEmpty())return;
+    imgDest.replace("\\","/");
+
+
+    switchLan(false);
+
+    queue<TokiBlock> blockQueue;
+    TokiBlock temp;
+
+    for(int r=0;r<64;r++)
+        for(int c=0;c<12;c++) {
+            if(Blocks[r][c]==NULL)
+                continue;
+            temp.setBaseColor(r);
+            temp.setId(Data.BlockId[r][c].toStdString());
+            temp.setVersion(Data.BlockVersion[r][c]);
+            temp.setIdOld(Data.BlockIdfor12[r][c].toStdString());
+            temp.setNeedGlass(NeedGlass[r][c]);
+            temp.setIsGlowing(doGlow[r][c]);
+
+            temp.btn=Blocks[r][c];
+            temp.nameZH=temp.btn->text();
+
+            blockQueue.push(temp);
+        }
+
+    switchLan(true);
+
+    fstream jsonFile;
+    jsonFile.open(jsonDest.toLocal8Bit().data(),ios::out);
+    if(!jsonFile) {
+        qDebug("错误！MainWindow::putBlockListInfo中文件流jsonFile打开失败");
+        return;
+    }
+    jsonFile<<"[\n";
+
+    while(!blockQueue.empty()) {
+        blockQueue.front().nameEN=blockQueue.front().btn->text();
+        QString imgPath=imgDest+"/"+QString::fromStdString(blockQueue.front().toPureBlockId())+".png";
+        blockQueue.front().iconPath=blockQueue.front().toPureBlockId();
+        jsonFile<<blockQueue.front().toJSON().toUtf8().data();
+        jsonFile<<",\n";
+        blockQueue.front().btn->icon().pixmap(QSize(16,16)).save(imgPath);
+        blockQueue.pop();
+    }
+
+    jsonFile.close();
+    switchLan(false);
+
+}
+#endif
