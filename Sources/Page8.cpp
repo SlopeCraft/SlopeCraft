@@ -45,9 +45,9 @@ void MainWindow::on_seeExported_clicked()
         QProcess pro;
         //Data.ProductPath=Data.ProductPath.left(Data.ProductPath.lastIndexOf('\\'));
         Data.ProductPath=Data.ProductPath.substr(0,Data.ProductPath.find_last_of('\\'));
-        qDebug().noquote()<<Data.ProductPath;
+        qDebug().noquote()<<QString::fromStdString(Data.ProductPath);
         string cmd="explorer /select,\""+Data.ProductPath+"\"";
-        qDebug().noquote()<<cmd;
+        qDebug().noquote()<<QString::fromStdString(cmd);
         pro.startDetached(QString::fromStdString(cmd));
     }
 }

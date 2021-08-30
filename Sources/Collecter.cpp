@@ -46,7 +46,6 @@ void MainWindow::Collect()
         }
 
     }
-
     //////////////
     Enables[0]=ui->Enable00;
     Enables[1]=ui->Enable01;

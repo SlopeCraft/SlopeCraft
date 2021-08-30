@@ -113,7 +113,7 @@ for(int c=0;c<cols;c++)
         string currentUn=FolderPath+"/map_"+std::to_string(currentIndex)+".TokiNoBug";
         string currentFile=FolderPath+"/map_"+std::to_string(currentIndex)+".dat";
 
-        qDebug()<<"开始导出("<<r<<","<<c<<")的地图"<<currentUn;
+        qDebug()<<"开始导出("<<r<<","<<c<<")的地图"<<QString::fromStdString(currentUn);
 
         NBT::NBTWriter MapFile(currentUn.data());
 
