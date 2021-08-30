@@ -37,12 +37,12 @@ bool OptiChain::AllowSinkHang=false;
 #else
     #define AllowSinkHang true
 #endif
-
+#ifndef removeQt
 QRgb isTColor=qRgb(0,0,0);
 QRgb isFColor=qRgb(255,255,255);
 QRgb WaterColor=qRgb(0,64,255);
 QRgb greyColor=qRgb(192,192,192);
-
+#endif
 Region::Region(short _Beg,short _End,RegionType _Type)
 {
     Beg=_Beg;End=_End;type=_Type;
@@ -140,7 +140,11 @@ void OptiChain::dispSubChain()
     {
         out+=it->toString();
     }
+#ifdef removeQt
+    cerr<<out<<endl;
+#else
     qDebug()<<QString::fromStdString(out);
+#endif
     //cout<<out<<endl;
 }
 
@@ -274,7 +278,11 @@ void OptiChain::divideToChain()
     }
     Temp.End=MapSize-1;
     Chain.push(Temp);
+#ifdef removeQt
+    cerr<<"将第"<<Col<<"列切分为"<<Chain.size()<<"个孤立区间"<<endl;
+#else
     qDebug()<<"将第"<<Col<<"列切分为"<<Chain.size()<<"个孤立区间";
+#endif
 }
 
 void OptiChain::divideToSubChain()
@@ -292,22 +300,26 @@ void OptiChain::divideToSubChain()
 
 void OptiChain::divideToSubChain(const Region &Cur)
 {
+#ifdef removeQt
+    cerr<<"开始分析区间"<<Cur.toString()<<endl;
+#else
     qDebug()<<"开始分析区间"+QString::fromStdString(Cur.toString());
+#endif
     if(Cur.size()<=3)
     {
         SubChain.push_back(Region(Cur.Beg,Cur.End,idp));
+#ifdef removeQt
+        cerr<<"Chain中的区间"<<Cur.toString()<<"过小，直接简单沉降"<<endl;
+#else
         qDebug()<<"Chain中的区间"+QString::fromStdString(Cur.toString())+"过小，直接简单沉降";
+#endif
         return;
     }
-    //qDebug()<<"size(HighLine)=["<<HighLine.rows()<<','<<HighLine.cols()<<']';
 
     ArrayXi HL;
     HL.setZero(Cur.size()+1);
     HL.segment(0,Cur.size())=HighLine.segment(Cur.Beg,Cur.size());
     HL(Cur.size())=NInf;
-    //HL(0)=NInf;
-
-    //qDebug()<<"size(HL)=["<<HL.rows()<<','<<HL.cols()<<']';
 
     ArrayXi ScanBoth,ScanLeft,ScanRight;
     ScanBoth.setZero(Cur.size());
@@ -322,7 +334,13 @@ void OptiChain::divideToSubChain(const Region &Cur)
     }
     ScanLeft*=ScanBoth;
     ScanRight*=ScanBoth;
+
+#ifdef removeQt
+    cerr<<"扫描完成"<<endl;
+#else
     qDebug("扫描完成");
+#endif
+
     bool isReady=false;
 
     //表示已经检测出极大值区间的入口，找到出口就装入一个极大值区间
@@ -372,15 +390,23 @@ void OptiChain::divideToSubChain(const Region &Cur)
     }
     else    if(SubChain.back().End<Cur.End)
         SubChain.push_back(Region(SubChain.back().End+1,Cur.End,idp));
+
+#ifdef removeQt
+    cerr<<"SubChain构建完成"<<endl;
+#else
     qDebug("SubChain构建完成");
-    //dispSubChain();
+#endif
 }
 
 void OptiChain::Sink(const Region &Reg)
 {
     if(!Reg.isValid())
     {
+#ifdef removeQt
+        cerr<<"无效区间："<<Reg.toString();
+#else
         qDebug()<<"无效区间："+QString::fromStdString(Reg.toString());
+#endif
         return;
     }
     if(Reg.isIDP())
@@ -405,7 +431,7 @@ void OptiChain::Sink(const Region &Reg)
         LowLine.segment(Reg.Beg,Reg.size())-=offset;
     }
 }
-
+#ifndef removeQt
 QImage OptiChain::toQImage(int pixelSize)
 {
     int maxHeight=HighLine.maxCoeff()+1;
@@ -448,3 +474,4 @@ QImage Mat2Image(const ArrayXXi& mat,int pixelSize)
 
     return img;
 }
+#endif

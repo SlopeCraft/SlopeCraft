@@ -65,8 +65,8 @@ void MainWindow::on_ExportData_clicked()
         QMessageBox::information(this,tr("你输入的起始序号不可用"),tr("请输入大于等于0的整数！"));
                     return;
     }
-    QString FolderPath=QFileDialog::getExistingDirectory(this,tr("请选择导出的文件夹"));
-    if(FolderPath.isEmpty())
+    string FolderPath=(QFileDialog::getExistingDirectory(this,tr("请选择导出的文件夹"))).toStdString();
+    if(FolderPath.empty())
     {
         QMessageBox::information(this,tr("你选择的文件夹不存在！"),tr("你可以选择存档中的data文件夹"));
         return;
@@ -78,7 +78,10 @@ void MainWindow::on_ExportData_clicked()
     ui->ExportData->setText(tr("请稍等"));
 
 
-    FolderPath.replace("\\","/");
+    //FolderPath.replace("\\","/");
+    for(auto it=FolderPath.begin();it!=FolderPath.end();it++)
+        if(*it=='\\')*it='/';
+
     Data.exportAsData(FolderPath,indexStart);
     qDebug("导出地图文件成功");
     Data.step=6;updateEnables();
@@ -89,12 +92,12 @@ void MainWindow::on_ExportData_clicked()
     ui->ExportData->setText(tr("导出"));
 }
 
-long mcMap::exportAsData(const QString &FolderPath,const int indexStart)
+long mcMap::exportAsData(const string &FolderPath,const int indexStart)
 {
 const int rows=ceil(mapPic.rows()/128.0f);
 const int cols=ceil(mapPic.cols()/128.0f);
-const int maxrr=rows*128;
-const int maxcc=cols*128;
+//const int maxrr=rows*128;
+//const int maxcc=cols*128;
 parent->ui->ShowProgressExData->setValue(0);
 parent->ui->ShowProgressExData->setMaximum(128*rows*cols);
 
@@ -107,12 +110,12 @@ for(int c=0;c<cols;c++)
         offset[0]=r*128;
         offset[1]=c*128;
 
-        QString currentUn=FolderPath+"/map_"+QString::number(currentIndex)+".TokiNoBug";
-        QString currentFile=FolderPath+"/map_"+QString::number(currentIndex)+".dat";
+        string currentUn=FolderPath+"/map_"+std::to_string(currentIndex)+".TokiNoBug";
+        string currentFile=FolderPath+"/map_"+std::to_string(currentIndex)+".dat";
 
         qDebug()<<"开始导出("<<r<<","<<c<<")的地图"<<currentUn;
 
-        NBT::NBTWriter MapFile(currentUn.toLocal8Bit().data());
+        NBT::NBTWriter MapFile(currentUn.data());
 
         switch (gameVersion)
         {
@@ -195,10 +198,10 @@ for(int c=0;c<cols;c++)
             MapFile.endCompound();
             MapFile.close();
 
-            if(compressFile(currentUn.toLocal8Bit().data(),currentFile.toLocal8Bit().data()))
+            if(compressFile(currentUn.data(),currentFile.data()))
             {
                 qDebug("压缩成功");
-                QFile umComFile(currentUn);
+                QFile umComFile(QString::fromStdString(currentUn));
                 umComFile.remove();
             }
             currentIndex++;

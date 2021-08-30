@@ -63,7 +63,6 @@ SOURCES += \
     Sources/Page3.cpp \
     Sources/Page4.cpp \
     Sources/Page5.cpp \
-    Sources/Page6.cpp \
     Sources/Page7.cpp \
     Sources/Page8.cpp \
     Sources/Pages.cpp \

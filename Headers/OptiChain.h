@@ -24,26 +24,30 @@ This file is part of SlopeCraft.
 #ifndef OPTICHAIN_H
 #define OPTICHAIN_H
 //#define showImg
-
+#define removeQt
 
 #include <iostream>
 #include <string>
-#include <QDebug>
 #include <Eigen/Dense>
 #include <list>
 #include <queue>
-#include <QRgb>
-#include <QImage>
-#include <QLabel>
+#ifndef removeQt
+    #include <QDebug>
+    #include <QRgb>
+    #include <QImage>
+    #include <QLabel>
+#endif
 using namespace std;
 using namespace Eigen;
 enum RegionType {idp,Hang,Invalid};
 
+#ifndef removeQt
 extern QRgb isTColor;
 extern QRgb isFColor;
 extern QRgb WaterColor;
 extern QRgb greyColor;
 
+#endif
 class Region
 {
 public:
@@ -98,13 +102,14 @@ public:
     void Sink(const Region&);
     ArrayXi toDepth();
     int validHeight(int index);
+#ifndef removeQt
     QImage toQImage(int pixelSize);
-    //void dispChain();
+#endif
     void dispSubChain();
 private:
     void divideToSubChain(const Region&);
 };
-
+#ifndef removeQt
 QImage Mat2Image(const ArrayXXi&,int pixelSize);
-
+#endif
 #endif // OPTICHAIN_H

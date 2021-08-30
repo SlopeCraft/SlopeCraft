@@ -35,17 +35,20 @@ This file is part of SlopeCraft.
 void MainWindow::on_seeExported_clicked()
 {
     if(Data.step<6)return;
-    if(!Data.ProductPath.isEmpty()&&(Data.ExLitestep>=2||Data.ExMcFstep>=1))
+    if(!Data.ProductPath.empty()&&(Data.ExLitestep>=2||Data.ExMcFstep>=1))
     {
         //char a='\\';
         //char b='\"';
-        Data.ProductPath.replace("/","\\");
+        for(auto it=Data.ProductPath.begin();it!=Data.ProductPath.end();it++)
+            if(*it=='/') *it='\\';
+        //Data.ProductPath.replace("/","\\");
         QProcess pro;
-        Data.ProductPath=Data.ProductPath.left(Data.ProductPath.lastIndexOf('\\'));
+        //Data.ProductPath=Data.ProductPath.left(Data.ProductPath.lastIndexOf('\\'));
+        Data.ProductPath=Data.ProductPath.substr(0,Data.ProductPath.find_last_of('\\'));
         qDebug().noquote()<<Data.ProductPath;
-        QString cmd="explorer /select,\""+Data.ProductPath+"\"";
+        string cmd="explorer /select,\""+Data.ProductPath+"\"";
         qDebug().noquote()<<cmd;
-        pro.startDetached(cmd);
+        pro.startDetached(QString::fromStdString(cmd));
     }
 }
 

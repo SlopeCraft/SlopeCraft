@@ -68,36 +68,38 @@ void MainWindow::on_ExportLite_clicked()
 {
     if(Data.ExLitestep<2)return;
     if(Data.step<5)return;
-    QString FileName=QFileDialog::getSaveFileName(this,tr("导出为投影/结构方块文件"),"",tr("投影文件(*.litematic) ;; 结构方块文件(*.nbt)"));
+    string FileName=QFileDialog::getSaveFileName(this,tr("导出为投影/结构方块文件"),"",tr("投影文件(*.litematic) ;; 结构方块文件(*.nbt)")).toStdString();
 
-    if(FileName.isEmpty())return;
+    if(FileName.empty())return;
+    bool putLitematic=(FileName.substr(FileName.length()-strlen(".litematic"))==".litematic");
+    bool putStructure=(FileName.substr(FileName.length()-strlen(".nbt"))==".nbt");
 
-    if(!FileName.endsWith(".litematic")&&!FileName.endsWith(".nbt"))
+    if(!putLitematic&&!putStructure)
     {
         qDebug("得到的文件路径有错！");
         return;
     }
-    QString unCompressed;
-    if(FileName.endsWith(".litematic"))
-        unCompressed=FileName.left(FileName.length()-strlen(".litematic"))+".TokiNoBug";
+    string unCompressed;
+    if(putLitematic)
+        unCompressed=FileName.substr(0,FileName.length()-strlen(".litematic"))+".TokiNoBug";
     else
-        unCompressed=FileName.left(FileName.length()-strlen(".nbt"))+".TokiNoBug";
+        unCompressed=FileName.substr(0,FileName.length()-strlen(".nbt"))+".TokiNoBug";
     ui->ShowProgressExLite->setMaximum(100+Data.size3D[0]*Data.size3D[1]*Data.size3D[2]);
     ui->ShowProgressExLite->setValue(0);
 
     qDebug("开始导出投影");
 
-    if(FileName.endsWith(".litematic"))
+    if(putStructure)
         Data.exportAsLitematica(unCompressed);
     else
         Data.exportAsStructure(unCompressed);
 
-    if(compressFile(unCompressed.toLocal8Bit().data(),FileName.toLocal8Bit().data()))
+    if(compressFile(unCompressed.data(),FileName.data()))
     {
         ui->ShowProgressExLite->setValue(100+Data.Build.size());
         qDebug("压缩成功");
         Data.ExLitestep=4;
-        QFile umComFile(unCompressed);
+        QFile umComFile(QString::fromStdString(unCompressed));
         umComFile.remove();
         Data.ProductPath=FileName;
     }
@@ -129,7 +131,12 @@ void MainWindow::on_Build4Lite_clicked()
 
     qDebug("开始makeHeight");
     Data.makeHeight();
-    ui->ShowLiteXYZ->setText("X:"+QString::number(Data.size3D[0])+"  × Y:"+QString::number(Data.size3D[1])+"  × Z:"+QString::number(Data.size3D[2]));
+    ui->ShowLiteXYZ->setText(QString::fromStdString(
+                                 "X:"+std::to_string(Data.size3D[0])+
+                             "  × Y:"+std::to_string(Data.size3D[1])+
+            "  × Z:"+std::to_string(Data.size3D[2])
+            )
+            );
     Data.ExLitestep=1;    
     Data.step=5;
     updateEnables();
@@ -217,7 +224,8 @@ LowMap=HighMap;
 
 for(auto it=WaterList.begin();it!=WaterList.end();it++)
 {
-    LowMap(TokiRow(it.key()),TokiCol(it.key()))=HighMap(TokiRow(it.key()),TokiCol(it.key()))-WaterColumnSize[rawShadow(TokiRow(it.key())-1,TokiCol(it.key()))]+1;
+    LowMap(TokiRow(it->first),TokiCol(it->first))=HighMap(TokiRow(it->second),TokiCol(it->second))
+            -WaterColumnSize[rawShadow(TokiRow(it->first)-1,TokiCol(it->first))]+1;
 }
 
 for(short c=0;c<sizePic[1];c++)
@@ -246,8 +254,8 @@ int maxHeight=HighMap.maxCoeff();
 
 for(auto it=WaterList.begin();it!=WaterList.end();it++)
 {
-    int r=TokiRow(it.key()),c=TokiCol(it.key());
-    it.value()=TokiWater(HighMap(r,c),LowMap(r,c));
+    int r=TokiRow(it->first),c=TokiCol(it->first);
+    it->second=TokiWater(HighMap(r,c),LowMap(r,c));
     maxHeight=max(maxHeight,HighMap(r,c)+1);
     //遮顶玻璃块
 }
@@ -283,10 +291,10 @@ long mcMap::BuildHeight()//进度条上表现为遍历3遍图像
     qDebug()<<2;
     for(auto it=WaterList.begin();it!=WaterList.end();it++)//水柱周围的玻璃
     {
-        x=TokiCol(it.key())+1;
-        z=TokiRow(it.key());
-        y=waterHigh(it.value());
-        yLow=waterLow(it.value());
+        x=TokiCol(it->first)+1;
+        z=TokiRow(it->first);
+        y=waterHigh(it->second);
+        yLow=waterLow(it->second);
         Build(x,y+1,z)=0+1;//柱顶玻璃
         for(short yDynamic=yLow;yDynamic<=y;yDynamic++)
         {
@@ -321,10 +329,10 @@ parent->ui->ShowProgressExLite->setValue(parent->ui->ShowProgressExLite->value()
 
 for(auto it=WaterList.begin();it!=WaterList.end();it++)
 {
-    x=TokiCol(it.key())+1;
-    z=TokiRow(it.key());
-    y=waterHigh(it.value());
-    yLow=waterLow(it.value());
+    x=TokiCol(it->first)+1;
+    z=TokiRow(it->first);
+    y=waterHigh(it->second);
+    yLow=waterLow(it->second);
     for(short yDynamic=yLow;yDynamic<=y;yDynamic++)
     {
         Build(x,yDynamic,z)=13;
@@ -398,11 +406,11 @@ void mcMap::putMap(const QString &Path, const MatrixXi &HighMap, const MatrixXi 
 
 #endif
 
-long mcMap::exportAsLitematica(QString FilePathAndName)
+long mcMap::exportAsLitematica(string FilePathAndName)
 {
     NBT::NBTWriter Lite;
 
-    Lite.open(FilePathAndName.toLocal8Bit().data());
+    Lite.open(FilePathAndName.data());
     QString LiteName=parent->ui->InputLiteName->toPlainText();
     QString author=parent->ui->InputAuthor->toPlainText();
     QString RegionName=parent->ui->InputRegionName->toPlainText();
@@ -523,9 +531,9 @@ Lite.close();
     return Lite.getByteCount();
 }
 
-long mcMap::exportAsStructure(QString FilePathAndName) {
+long mcMap::exportAsStructure(string FilePathAndName) {
     NBT::NBTWriter file;
-    file.open(FilePathAndName.toLocal8Bit().data());
+    file.open(FilePathAndName.data());
     file.writeListHead("entities",NBT::idByte,0);
     file.writeListHead("size",NBT::idInt,3);
         file.writeInt("This should never be shown",size3D[0]);
@@ -595,9 +603,9 @@ long mcMap::exportAsStructure(QString FilePathAndName) {
     return file.close();
 }
 
-QString MainWindow::Noder(const short *src,int size)
+string MainWindow::Noder(const short *src,int size)
 {
-    QString dst;
+    string dst;
     char*u=nullptr;
     for(int i=0;i<size;i++)
     {

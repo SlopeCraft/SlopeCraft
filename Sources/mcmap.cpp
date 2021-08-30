@@ -169,7 +169,10 @@ inline short mcMap::Index2mapColor(short Index)
     return 4*(Index%64)+(Index/64);
 }
 
-bool dealBlockId(const QString&BlockId,QString&netBlockId,vector<QString>&Property,vector<QString>&ProVal)
+bool dealBlockId(const QString&BlockId,
+                 QString&netBlockId,
+                 vector<QString>&Property,
+                 vector<QString>&ProVal)
 {
     Property.clear();
     ProVal.clear();

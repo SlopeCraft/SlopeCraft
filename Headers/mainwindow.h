@@ -35,11 +35,6 @@ This file is part of SlopeCraft.
 #include <QScrollBar>
 #include <QTranslator>
 #include <QHash>
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <Eigen/Dense>
-#include <unsupported/Eigen/CXX11/Tensor>
 #include <QString>
 #include <QImage>
 #include <QThread>
@@ -47,6 +42,16 @@ This file is part of SlopeCraft.
 #include <QUrl>
 #include <QtConcurrent>
 #include <QFuture>
+
+
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <string>
+#include <cstring>
+#include <unordered_map>
+#include <Eigen/Dense>
+#include <unsupported/Eigen/CXX11/Tensor>
 #include "OptiChain.h"
 #include "tpstrategywind.h"
 #include "previewwind.h"
@@ -91,7 +96,10 @@ QRgb RGB2QRGB(float,float,float);
 QRgb HSV2QRGB(float,float,float);
 QRgb XYZ2QRGB(float,float,float);
 QRgb Lab2QRGB(float,float,float);
-bool dealBlockId(const QString&BlockId,QString&netBlockId,vector<QString>&Property,vector<QString>&ProVal);
+bool dealBlockId(const QString&BlockId,
+                 QString&netBlockId,
+                 vector<QString>&Property,
+                 vector<QString>&ProVal);
 QRgb ComposeColor(const QRgb&front,const QRgb&back);
 
 
@@ -127,13 +135,10 @@ private:
     void doSide(VectorXf);
 };
 
-//int i=sizeof(TokiColor);
-
 class mcMap
 {
 public:
         mcMap();
-        //mcMap(mcMap*p);
       ~mcMap();
 
         MainWindow*parent;
@@ -178,7 +183,7 @@ public:
         ArrayXXi Base;
         ArrayXXi HighMap;
         ArrayXXi LowMap;
-        QHash<TokiPos,waterItem> WaterList;
+        std::unordered_map<TokiPos,waterItem> WaterList;
 
         //unsigned char***Build;
 
@@ -188,7 +193,7 @@ public:
         short ExLitestep;
         short ExMcFstep;
 
-        QString ProductPath;
+        string ProductPath;
         bool allowNaturalOpti;
         bool allowForcedOpti;
         int maxHeight;
@@ -197,9 +202,9 @@ public:
         void putMap(const QString &,const MatrixXi&HighMap,const MatrixXi&LowMap);
 #endif
         long BuildHeight();//构建真正的立体结构（三维矩阵
-        long exportAsLitematica(QString FilePathAndName);
-        long exportAsStructure(QString FilePathAndName);
-        long exportAsData(const QString &FolderPath,const int indexStart);
+        long exportAsLitematica(string FilePathAndName);
+        long exportAsStructure(string FilePathAndName);
+        long exportAsData(const string &FolderPath,const int indexStart);
 
         void putCommand(const QString&Command);
 
@@ -296,7 +301,7 @@ public:
 #endif
 private:
     QTranslator trans;
-    QString Noder(const short *src,int size);
+    string Noder(const short *src,int size);
 
 //////////////////////////////////////////////////////////////////////////////////
 ///
