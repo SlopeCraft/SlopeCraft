@@ -132,7 +132,7 @@ mcMap::mcMap()
     adjStep=-1;
 
     CommandCount=0;
-    NWPos[0]=-64;NWPos[1]=5;NWPos[2]=-64;
+    //NWPos[0]=-64;NWPos[1]=5;NWPos[2]=-64;
 
     netFilePath[0]=0;//纯路径，不包含最后的文件名
     netFileName[0]=0;//纯文件名，不含后缀名
@@ -226,14 +226,14 @@ bool dealBlockId(const QString&BlockId,
     return true;
 }
 
-void mcMap::writeBlock(const QString &netBlockId,vector<QString>&Property,vector<QString>&ProVal,NBT::NBTWriter&Lite)
+void mcMap::writeBlock(const string &netBlockId,vector<string>&Property,vector<string>&ProVal,NBT::NBTWriter&Lite)
 {
     Lite.writeCompound("ThisStringShouldNeverBeSeen");
-    QString BlockId=netBlockId;
-    if(!netBlockId.startsWith("minecraft:"))
+    string BlockId=netBlockId;
+    if(netBlockId.substr(0,strlen("minecraft:"))!="minecraft:")
         BlockId="minecraft:"+BlockId;
 
-    Lite.writeString("Name",BlockId.toLocal8Bit().data());
+    Lite.writeString("Name",BlockId.data());
     if(Property.empty()||ProVal.empty())
     {
         Lite.endCompound();
@@ -248,7 +248,7 @@ void mcMap::writeBlock(const QString &netBlockId,vector<QString>&Property,vector
     }
         Lite.writeCompound("Properties");
             for(unsigned short i=0;i<ProVal.size();i++)
-                Lite.writeString(Property.at(i).toLocal8Bit().data(),ProVal.at(i).toLocal8Bit().data());
+                Lite.writeString(Property.at(i).data(),ProVal.at(i).data());
         Lite.endCompound();
         //Property.clear();
         //ProVal.clear();
@@ -257,7 +257,7 @@ void mcMap::writeBlock(const QString &netBlockId,vector<QString>&Property,vector
 
 void mcMap::writeTrash(int count,NBT::NBTWriter&Lite)
 {
-    vector<QString> ProName(5),ProVal(5);
+    vector<string> ProName(5),ProVal(5);
     //ProName:NEWSP
     //,,,,
     ProName.at(0)="north";
@@ -265,10 +265,10 @@ void mcMap::writeTrash(int count,NBT::NBTWriter&Lite)
     ProName.at(2)="west";
     ProName.at(3)="south";
     ProName.at(4)="power";
-    QString dir[3]={"none","size","up"};
-    QString power[16];
+    string dir[3]={"none","size","up"};
+    string power[16];
     for(short i=0;i<15;i++)
-        power[i]=QString::number(i);
+        power[i]=to_string(i);
     int written=0;
     for(short North=0;North<3;North++)
         for(short East=0;East<3;East++)

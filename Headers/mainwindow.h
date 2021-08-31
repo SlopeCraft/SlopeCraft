@@ -176,7 +176,7 @@ public:
         QImage adjedPic;
 
         MatrixXf Dither[3];
-        QHash<QRgb,TokiColor>*colorHash;
+        //std::unordered_map<QRgb,TokiColor>*colorHash;
 
 
         MatrixXi mapPic;//stores mapColor
@@ -207,14 +207,13 @@ public:
         long exportAsStructure(string FilePathAndName);
         long exportAsData(const string &FolderPath,const int indexStart);
 
-        void putCommand(const QString&Command);
+        //void putCommand(const QString&Command);
 
-        void writeBlock(const QString &netBlockId,vector<QString>&Property,vector<QString>&ProVal,NBT::NBTWriter&);
+        void writeBlock(const string &netBlockId,vector<string>&Property,vector<string>&ProVal,NBT::NBTWriter&);
 
         void writeTrash(int count,NBT::NBTWriter&);
 
-        int CommandCount;
-        int NWPos[3];//x,y,z
+        //int CommandCount;
         char netFilePath[256];//纯路径，不包含最后的文件名
         char netFileName[64];//纯文件名，不含后缀名
 };
