@@ -26,7 +26,6 @@ This file is part of SlopeCraft.
 //#define putDitheredImg
 //#define putMapData
 //#define putBlockList
-#include "TokiBlock.h"
 #include "NBTWriter.h"
 #include "ui_mainwindow.h"
 
@@ -159,12 +158,15 @@ public:
         ColorSet Basic;
         ColorSet Allowed;
         bool colorAllowed[256];
-        QString BlockId[64][12];
+
+        vector<vector<simpleBlock>> FullBlockList;
+        short SelectedBlockList[64];//实际的方块列表
+        inline bool canUseBlock(short r,short c);
+
+        /*QString BlockId[64][12];
         QString BlockIdfor12[64][12];
         unsigned char BlockVersion[64][12];
-        inline bool canUseBlock(short r,short c);
-        short SelectedBlockList[64];//实际的方块列表
-        QString BlockListId[64];
+        QString BlockListId[64];*/
         //NBT::NBTWriter Lite;
 
         int size3D[3];//x,y,z

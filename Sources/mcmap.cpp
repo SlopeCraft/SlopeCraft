@@ -131,8 +131,12 @@ mcMap::mcMap()
     //isTransed2Float=false;
     adjStep=-1;
 
-    CommandCount=0;
+    //CommandCount=0;
     //NWPos[0]=-64;NWPos[1]=5;NWPos[2]=-64;
+
+    FullBlockList.resize(64);
+    for(int i=0;i<64;i++)
+        FullBlockList[i].resize(12);
 
     netFilePath[0]=0;//纯路径，不包含最后的文件名
     netFileName[0]=0;//纯文件名，不含后缀名
@@ -140,7 +144,7 @@ mcMap::mcMap()
     allowForcedOpti=false;
     maxHeight=-1;
 
-    colorHash=nullptr;
+    //colorHash=nullptr;
 
 
     DitherMapLR<<0.0,0.0,7.0,
