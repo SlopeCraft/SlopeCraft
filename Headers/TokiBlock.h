@@ -5,19 +5,34 @@
 #include <iostream>
 #include <QRadioButton>
 
+class TokiBlock;
+class TokiBaseColor;
+class BlockList;
+
 typedef unsigned char uchar ;
 typedef std::vector<std::string> stringList;
-class TokiBlock :public QRadioButton
+
+class simpleBlock//block class without qt
+{
+public:
+    simpleBlock();
+    std::string id;
+    std::string name;
+    uchar version;
+    std::string idOld;
+    bool needGlass;
+    bool isGlowing;
+    std::string toPureBlockId() const;
+    bool toProperties(std::string & ,stringList * proName,stringList * proVal) const;
+};
+
+class TokiBlock :public QRadioButton,private simpleBlock
 {
     Q_OBJECT
+    friend class TokiBaseColor;
+    friend class BlockList;
 public:
     TokiBlock();
-    static QString basePath;
-
-    std::string iconPath;
-
-    QString nameZH;
-    QString nameEN;
 
     /*INLINE*/ //void setBaseColor(uchar);
     /*INLINE*/ void setId(const std::string &);
@@ -35,21 +50,20 @@ public:
     /*INLINE*/ bool getNeedGlass() const;
     /*INLINE*/ bool getIsGlowing() const;
 
-    std::string toPureBlockId() const;
-    bool toProperties(std::string & ,stringList * proName,stringList * proVal) const;
+    //std::string toPureBlockId() const;
+    //bool toProperties(std::string & ,stringList * proName,stringList * proVal) const;
+    simpleBlock * toSimpleBlock() const;
+private slots:
     void setLanguage(bool isEng);
+    void updateStatue(uchar ver);
 #ifdef putBlockList
     QString toJSON() const;
 #endif
 
 private:
-    //uchar baseColor;
-    std::string id;
-    //std::string name;
-    uchar version;
-    std::string idOld;
-    bool needGlass;
-    bool isGlowing;
+    static QString basePath;
+    QString nameZH;
+    QString nameEN;
 
 };
 
