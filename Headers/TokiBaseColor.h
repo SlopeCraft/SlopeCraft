@@ -6,16 +6,21 @@
 #include <QLabel>
 #include <QGroupBox>
 #include <QLayout>
-class TokiBaseColor// : private QGroupBox , private QLayout
+#include <QRgb>
+class TokiBaseColor : public QGroupBox , public QGridLayout
 {
+    Q_OBJECT
 public:
     TokiBaseColor();
-
-    QLabel * showColor;
-    QCheckBox * Enable;
-    std::vector<TokiBlock> Blocks;
-    void createEnable();
-    void createShowColor();
+    std::vector<TokiBlock * > Blocks;
+    void addTokiBlock(const std::string & ,//id
+                        const  std::string & ,//iconPath
+                        const QString & ,//nameZH
+                        const QString & ,//nameEN
+                        uchar = 0,//version
+                      const std::string & ="",//idOld
+                      bool = false,//needGlass
+                      bool = false);//isGlowing
 
 };
 

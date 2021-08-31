@@ -1,13 +1,13 @@
 #include "TokiBlock.h"
-
+QString TokiBlock::basePath="";
 TokiBlock::TokiBlock()
 {
 
 }
 
-/*INLINE*/ void TokiBlock::setBaseColor(uchar mc) {
+/*INLINE*/ /*void TokiBlock::setBaseColor(uchar mc) {
     baseColor=mc;
-}
+}*/
 /*INLINE*/ void TokiBlock::setId(const std::string &i) {
     id=i;
 }
@@ -25,9 +25,9 @@ TokiBlock::TokiBlock()
     isGlowing=ig;
 }
 
-/*INLINE*/ uchar TokiBlock::getBaseColor() const {
+/*INLINE*/ /*uchar TokiBlock::getBaseColor() const {
     return baseColor;
-}
+}*/
 /*INLINE*/ std::string TokiBlock::getId() const {
     return id;
 }

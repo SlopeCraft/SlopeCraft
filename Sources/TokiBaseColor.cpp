@@ -2,5 +2,4 @@
 
 TokiBaseColor::TokiBaseColor()
 {
-
 }

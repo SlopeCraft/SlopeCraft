@@ -7,28 +7,19 @@
 
 typedef unsigned char uchar ;
 typedef std::vector<std::string> stringList;
-class TokiBlock
+class TokiBlock :public QRadioButton
 {
+    Q_OBJECT
 public:
     TokiBlock();
-    /*
-    TokiBlock(uchar,//mapColor
-              const std::string &,//id
-              const std::string &,//nameZH
-              const std::string &,//nameEN
-              uchar=0,//version
-              const std::string & ="",//idOld
-              bool=false,//needGlass
-              bool=false//isGlowing
-                      );*/
-    std::string iconPath;
+    static QString basePath;
 
-    QRadioButton * btn;
+    std::string iconPath;
 
     QString nameZH;
     QString nameEN;
 
-    /*INLINE*/ void setBaseColor(uchar);
+    /*INLINE*/ //void setBaseColor(uchar);
     /*INLINE*/ void setId(const std::string &);
     ///*INLINE*/ void setName(const std::string &);
     /*INLINE*/ void setVersion(uchar);
@@ -36,7 +27,7 @@ public:
     /*INLINE*/ void setNeedGlass(bool);
     /*INLINE*/ void setIsGlowing(bool);
 
-    /*INLINE*/ uchar getBaseColor() const;
+    /*INLINE*/ //uchar getBaseColor() const;
     /*INLINE*/ std::string getId() const;
     ///*INLINE*/ std::string getName() const;
     /*INLINE*/ uchar getVersion() const;
@@ -46,12 +37,13 @@ public:
 
     std::string toPureBlockId() const;
     bool toProperties(std::string & ,stringList * proName,stringList * proVal) const;
+    void setLanguage(bool isEng);
 #ifdef putBlockList
     QString toJSON() const;
 #endif
 
 private:
-    uchar baseColor;
+    //uchar baseColor;
     std::string id;
     //std::string name;
     uchar version;

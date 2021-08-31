@@ -53,6 +53,7 @@ SOURCES += \
     ../../zlibs/trees.c \
     ../../zlibs/uncompr.c \
     ../../zlibs/zutil.c \
+    Sources/BlockList.cpp \
     Sources/TokiBaseColor.cpp \
     Sources/CIEDE00.cpp \
     Sources/Collecter.cpp \
@@ -88,6 +89,7 @@ HEADERS += \
     ../../zlibs/zconf.h \
     ../../zlibs/zlib.h \
     ../../zlibs/zutil.h \
+    Headers/BlockList.h \
     Headers/NBTWriter.h \
     Headers/OptiChain.h \
     Headers/TokiBaseColor.h \
