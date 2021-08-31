@@ -1,5 +1,6 @@
-#include "colorset.h"
-
+#ifndef colorset_cpp
+#define colorset_cpp
+#include "ColorSet.h"
 
 ColorSet::ColorSet()
 {
@@ -10,12 +11,24 @@ ColorSet::ColorSet()
     XYZ.setZero(256,3);
 }
 
-
 void ColorSet::ApplyAllowed(ColorSet*standard,bool *MIndex)
 {
+    TokiColor::DepthCount[0]=0;
+    TokiColor::DepthCount[1]=0;
+    TokiColor::DepthCount[2]=0;
+    TokiColor::DepthCount[3]=0;
     short totalAllowColorCount=0;
         for(short r=0;r<256;r++)
+        {
             totalAllowColorCount+=MIndex[r];//if r%64==0, that is air, air isn't used as color(it's transparent)
+            TokiColor::DepthCount[(4*(r%64)+(r/64))%4]+=MIndex[r];
+            //(4*(r%64)+(r/64))
+        }
+        TokiColor::DepthIndexEnd[0]=TokiColor::DepthCount[0]-1;
+        TokiColor::DepthIndexEnd[1]=TokiColor::DepthIndexEnd[0]+TokiColor::DepthCount[1];
+        TokiColor::DepthIndexEnd[2]=TokiColor::DepthIndexEnd[1]+TokiColor::DepthCount[2];
+        TokiColor::DepthIndexEnd[3]=TokiColor::DepthIndexEnd[2]+TokiColor::DepthCount[3];
+
         if(totalAllowColorCount<=1)
         {
             qDebug("你只准许了一两种颜色，巧妇难为无米之炊！");
@@ -23,14 +36,14 @@ void ColorSet::ApplyAllowed(ColorSet*standard,bool *MIndex)
             HSV.setZero(1,3);
             Lab.setZero(1,3);
             XYZ.setZero(1,3);
-            Map.setZero(1,1);
+            Map.setZero(1);
             return;
         }
         qDebug()<<"共允许使用"<<totalAllowColorCount<<"种颜色";
 
-        for(short Index=0;Index<256;Index++)
+        /*for(short Index=0;Index<256;Index++)
             if(MIndex[Index])
-                qDebug()<<4*(Index%64)+(Index/64);
+                qDebug()<<4*(Index%64)+(Index/64);*/
 
 
 
@@ -51,10 +64,25 @@ void ColorSet::ApplyAllowed(ColorSet*standard,bool *MIndex)
                 HSV.row(write)=standard->HSV.row(readIndex);
                 Lab.row(write)=standard->Lab.row(readIndex);
                 XYZ.row(write)=standard->XYZ.row(readIndex);
-                Map(write,0)=standard->Map(readIndex,0);
+                Map(write)=standard->Map(readIndex);
                 write++;
             }
         }
         //cout<<Map;
         return;
 }
+
+void GetMap(unsigned char *Map)
+{
+    for(short r=0;r<256;r++)Map[r]=4*(r%64)+r/64;
+    return;
+}
+
+void GetMap(VectorXi &Map)
+{
+    Map.setZero(256);
+    for(short r=0;r<256;r++)Map(r)=4*(r%64)+r/64;
+    return;
+}
+
+#endif

@@ -21,16 +21,11 @@ This file is part of SlopeCraft.
 */
 
 
-#ifndef Page0_H
-#define Page0_H
+#ifndef Page0_CPP
+#define Page0_CPP
 
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 
-#include  <QFile>
-#include <QFileDialog>
-#include <QMessageBox>
-#include <QDebug>
 
 void MainWindow::on_StartWithSlope_clicked()
 {

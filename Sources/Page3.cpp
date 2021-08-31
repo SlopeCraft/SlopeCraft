@@ -21,8 +21,8 @@ This file is part of SlopeCraft.
 */
 
 
-#ifndef Page3_H
-#define Page3_H
+#ifndef Page3_CPP
+#define Page3_CPP
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -401,18 +401,18 @@ void MainWindow::getBlockList()
     for(short i=0;i<64;i++)
         for(short j=0;j<12;j++)
         {
-            if(Blocks[i][j]!=NULL&&Blocks[i][j]->isChecked())
+            if(Blocks[i][j]!=nullptr&&Blocks[i][j]->isChecked())
             {
                 Data.SelectedBlockList[i]=j;
-                Data.BlockListId[i]=Data.BlockId[i][j];
-                if(Data.gameVersion<=12&&Data.BlockIdfor12[i][j]!="[]")
-                    Data.BlockListId[i]=Data.BlockIdfor12[i][j];
+                Data.BlockListId[i]=&Data.FullBlockList[i][j].id;
+                if(Data.gameVersion<=12&&Data.FullBlockList[i][j].idOld!="")
+                    Data.BlockListId[i]=&Data.FullBlockList[i][j].idOld;
                 break;
             }
-            if(j>=11&&Blocks[i][j]==NULL)
+            if(j>=11&&Blocks[i][j]==nullptr)
             {
                 Data.SelectedBlockList[i]=0;
-                Data.BlockListId[i]="DefaultBlockId";
+                Data.BlockListId[i]=nullptr;
                 /*if(i>=61)
                 qDebug("出现被设为DefaultBlockId的方块");*/
             }

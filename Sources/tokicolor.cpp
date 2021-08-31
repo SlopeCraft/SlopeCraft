@@ -19,6 +19,8 @@ This file is part of SlopeCraft.
     github:https://github.com/ToKiNoBug
     bilibili:https://space.bilibili.com/351429231
 */
+#ifndef TOKICOLOR_CPP
+#define TOKICOLOR_CPP
 #include "mainwindow.h"
 #define Thre 1e-10f
 #include <cmath>
@@ -535,3 +537,5 @@ unsigned char TokiColor::applyLab_new()
     doSide(Diff);
     return Result;
 }
+
+#endif

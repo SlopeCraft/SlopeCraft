@@ -19,7 +19,8 @@ This file is part of SlopeCraft.
     github:https://github.com/ToKiNoBug
     bilibili:https://space.bilibili.com/351429231
 */
-
+#ifndef TpStrategyWind_CPP
+#define TpStrategyWind_CPP
 #include "mainwindow.h"
 #include "tpstrategywind.h"
 #include "ui_tpstrategywind.h"
@@ -101,3 +102,4 @@ void tpStrategyWind::on_Reset_clicked()
     ui->isBGCGray->setChecked(true);
 }
 
+#endif

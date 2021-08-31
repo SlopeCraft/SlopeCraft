@@ -26,11 +26,12 @@ This file is part of SlopeCraft.
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "tpstrategywind.h"
-//#include "tokicolor.cpp"
+
 #include "Collecter.cpp"
 #include "Pages.cpp"
 
 #include "mcmap.cpp"
+
 #include "Page0.cpp"
 #include "Page1.cpp"
 #include "Page2.cpp"

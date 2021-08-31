@@ -21,16 +21,12 @@ This file is part of SlopeCraft.
 */
 
 
-#ifndef Page1_H
-#define Page1_H
+#ifndef Page1_CPP
+#define Page1_CPP
 
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 #include "mcmap.cpp"
-#include  <QFile>
-#include <QFileDialog>
 #include <QMessageBox>
-#include <QDebug>
 
 
 void MainWindow::on_ImportPic_clicked()

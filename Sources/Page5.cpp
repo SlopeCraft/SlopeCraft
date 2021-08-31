@@ -21,8 +21,8 @@ This file is part of SlopeCraft.
 */
 
 
-#ifndef Page5_H
-#define Page5_H
+#ifndef Page5_CPP
+#define Page5_CPP
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -101,7 +101,7 @@ void MainWindow::on_ExportLite_clicked()
         Data.ExLitestep=4;
         QFile umComFile(QString::fromStdString(unCompressed));
         umComFile.remove();
-        Data.ProductPath=FileName;
+        ProductPath=FileName;
     }
     else
     {
@@ -448,15 +448,15 @@ parent->ui->ShowProgressExLite->setValue(50);
                 {
                     short written=(is16()?59:52);
                     if(is17())written=61;
-                    vector<QString> ProName,ProVal;
+                    vector<string> ProName,ProVal;
                     //bool isNetBlockId;
-                    QString netBlockId;
+                    string netBlockId;
 
-                    dealBlockId("air",netBlockId,ProName,ProVal);
+                    simpleBlock::dealBlockId("air",netBlockId,&ProName,&ProVal);
                     writeBlock(netBlockId,ProName,ProVal,Lite);
                     for(short r=0;r<written;r++)
                     {
-                        dealBlockId(BlockListId[r],netBlockId,ProName,ProVal);
+                        simpleBlock::dealBlockId(*BlockListId[r],netBlockId,&ProName,&ProVal);
                         writeBlock(netBlockId,ProName,ProVal,Lite);
                     }//到此写入了written+1个方块，还需要写入130-written个
 
@@ -543,15 +543,15 @@ long mcMap::exportAsStructure(string FilePathAndName) {
             {
                 short written=(is16()?59:52);
                 if(is17())written=61;
-                vector<QString> ProName,ProVal;
+                vector<string> ProName,ProVal;
                 //bool isNetBlockId;
-                QString netBlockId;
+                string netBlockId;
 
-                dealBlockId("air",netBlockId,ProName,ProVal);
+                simpleBlock::dealBlockId("air",netBlockId,&ProName,&ProVal);
                 writeBlock(netBlockId,ProName,ProVal,file);
                 for(short r=0;r<written;r++)
                 {
-                    dealBlockId(BlockListId[r],netBlockId,ProName,ProVal);
+                    simpleBlock::dealBlockId(*BlockListId[r],netBlockId,&ProName,&ProVal);
                     writeBlock(netBlockId,ProName,ProVal,file);
                 }//到此写入了written+1个方块，还需要写入69-written个
 

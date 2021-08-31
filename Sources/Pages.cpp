@@ -21,8 +21,8 @@ This file is part of SlopeCraft.
 */
 
 
-#ifndef Pages_H
-#define Pages_H
+#ifndef Pages_CPP
+#define Pages_CPP
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"

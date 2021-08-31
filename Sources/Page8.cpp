@@ -21,8 +21,8 @@ This file is part of SlopeCraft.
 */
 
 
-#ifndef Page8_H
-#define Page8_H
+#ifndef Page8_CPP
+#define Page8_CPP
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -35,18 +35,18 @@ This file is part of SlopeCraft.
 void MainWindow::on_seeExported_clicked()
 {
     if(Data.step<6)return;
-    if(!Data.ProductPath.empty()&&(Data.ExLitestep>=2||Data.ExMcFstep>=1))
+    if(!ProductPath.empty()&&(Data.ExLitestep>=2||Data.ExMcFstep>=1))
     {
         //char a='\\';
         //char b='\"';
-        for(auto it=Data.ProductPath.begin();it!=Data.ProductPath.end();it++)
+        for(auto it=ProductPath.begin();it!=ProductPath.end();it++)
             if(*it=='/') *it='\\';
         //Data.ProductPath.replace("/","\\");
         QProcess pro;
         //Data.ProductPath=Data.ProductPath.left(Data.ProductPath.lastIndexOf('\\'));
-        Data.ProductPath=Data.ProductPath.substr(0,Data.ProductPath.find_last_of('\\'));
-        qDebug().noquote()<<QString::fromStdString(Data.ProductPath);
-        string cmd="explorer /select,\""+Data.ProductPath+"\"";
+        ProductPath=ProductPath.substr(0,ProductPath.find_last_of('\\'));
+        qDebug().noquote()<<QString::fromStdString(ProductPath);
+        string cmd="explorer /select,\""+ProductPath+"\"";
         qDebug().noquote()<<QString::fromStdString(cmd);
         pro.startDetached(QString::fromStdString(cmd));
     }

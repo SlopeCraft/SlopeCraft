@@ -21,28 +21,24 @@ This file is part of SlopeCraft.
 */
 
 
+#ifndef Collecter_CPP
+#define Collecter_CPP
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include  <QFile>
-#include <QFileDialog>
-#include <QMessageBox>
-#include <QDebug>
-#include <QString>
-#ifndef Collecter_H
-#define Collecter_H
 
 void MainWindow::Collect()
 {
     for(short Base=0;Base<64;Base++)
-    {Enables[Base]=NULL;
-        ShowColors[Base]=NULL;
+    {Enables[Base]=nullptr;
+        ShowColors[Base]=nullptr;
         for(short j=0;j<12;j++)
         {
-            Blocks[Base][j]=NULL;
-            Data.FullBlockList[Base][j].id="DefaultBlockId";
+            Blocks[Base][j]=nullptr;
+            /*Data.FullBlockList[Base][j].id="DefaultBlockId";
             Data.FullBlockList[Base][j].idOld="[]";
             Data.FullBlockList[Base][j].version=0;//0代表很早以前就出现的方块，255代表没有对应的方块
+            */
         }
 
     }
@@ -399,7 +395,7 @@ void MainWindow::Collect()
     Blocks[60][0]=ui->is60RawIronBlock;     Data.FullBlockList[60][0].id="raw_iron_block";       Data.FullBlockList[60][0].version=17;
     for(short r=0;r<64;r++)
         for(short c=0;c<9;c++)
-            if(Blocks[r][c]==NULL)Data.FullBlockList[r][c].version=255;
+            if(Blocks[r][c]==nullptr)Data.FullBlockList[r][c].version=255;
 
 }
 

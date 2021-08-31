@@ -53,8 +53,6 @@ SOURCES += \
     ../../zlibs/trees.c \
     ../../zlibs/uncompr.c \
     ../../zlibs/zutil.c \
-    Sources/BlockList.cpp \
-    Sources/TokiBaseColor.cpp \
     Sources/CIEDE00.cpp \
     Sources/Collecter.cpp \
     Sources/NBTWriter.cpp \
@@ -77,8 +75,6 @@ SOURCES += \
     Sources/simpleBlock.cpp \
     Sources/tokicolor.cpp \
     Sources/tpstrategywind.cpp \
-    Sources/TokiBlock.cpp \
-    simpleBlock.cpp
 
 HEADERS += \
     ../../zlibs/crc32.h \
@@ -92,17 +88,16 @@ HEADERS += \
     ../../zlibs/zconf.h \
     ../../zlibs/zlib.h \
     ../../zlibs/zutil.h \
-    Headers/BlockList.h \
+    Headers/ColorSet.h \
     Headers/NBTWriter.h \
     Headers/OptiChain.h \
     Headers/TokiBaseColor.h \
+    Headers/TokiColor.h \
     Headers/WaterItem.h \
     Headers/mainwindow.h \
     Headers/previewwind.h \
     Headers/simpleBlock.h \
     Headers/tpstrategywind.h \
-    Headers/TokiBlock.h \
-    simpleBlock.h
 
 FORMS += \
     others/mainwindow.ui \

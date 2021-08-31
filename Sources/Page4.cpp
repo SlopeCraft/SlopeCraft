@@ -21,8 +21,8 @@ This file is part of SlopeCraft.
 */
 
 
-#ifndef Page4_H
-#define Page4_H
+#ifndef Page4_CPP
+#define Page4_CPP
 #define reportRate 50
 #include "mainwindow.h"
 #include "ui_mainwindow.h"

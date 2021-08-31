@@ -26,7 +26,6 @@ This file is part of SlopeCraft.
 //#define putDitheredImg
 //#define putMapData
 //#define putBlockList
-#include "NBTWriter.h"
 #include "ui_mainwindow.h"
 
 #include <QMainWindow>
@@ -42,6 +41,7 @@ This file is part of SlopeCraft.
 #include <QUrl>
 #include <QtConcurrent>
 #include <QFuture>
+#include <QFileDialog>
 
 
 #include <iostream>
@@ -52,6 +52,10 @@ This file is part of SlopeCraft.
 #include <unordered_map>
 #include <Eigen/Dense>
 #include <unsupported/Eigen/CXX11/Tensor>
+
+
+#include "ColorSet.h"
+#include "NBTWriter.h"
 #include "OptiChain.h"
 #include "tpstrategywind.h"
 #include "previewwind.h"
@@ -62,19 +66,6 @@ using namespace std;
 using namespace Eigen;
 
 class MainWindow;
-class ColorSet{
-    public:
-        ArrayXXf _RGB;
-        ArrayXXf  HSV;
-        ArrayXXf  Lab;
-        ArrayXXf  XYZ;
-        VectorXi  Map;
-        ColorSet();
-        void ApplyAllowed(ColorSet*standard,bool *MIndex);
-};
-void GetMap(unsigned char *Map);
-
-void GetMap(VectorXi &Map);
 
 #include <QColor>
 #include <QRgb>
@@ -104,37 +95,18 @@ bool dealBlockId(const QString&BlockId,
 QRgb ComposeColor(const QRgb&front,const QRgb&back);
 
 
+bool readFromFile(const char*FileName,ArrayXXf & M);
+
+void GetBLCreative(short*BL);
+
+void GetBLCheaper(short*BL);
+
+void GetBLBetter(short*BL);
+
+void GetBLGlowing(short*BL);
 
 extern Matrix<float,2,3> DitherMapLR,DitherMapRL;
 extern const short WaterColumnSize[3];
-class TokiColor
-{
-public:
-    TokiColor(const QRgb&,char);
-    TokiColor();
-    //QRgb Raw;//相当于Key
-    float c3[3];//三通道的颜色值。可能为RGB,HSV,Lab,XYZ
-    float sideSelectivity[2];//记录与result的深度值不同的两个有损优化候选色选择系数（升序排列），Depth=3时无效
-    unsigned char sideResult[2];//记录与result的深度值不同的两个有损优化候选色（升序排列），Depth=3时无效
-    char ColorSpaceType;
-    unsigned char Result;//最终调色结果
-    float ResultDiff;
-    static bool needFindSide;
-    static ColorSet * Basic;
-    static ColorSet * Allowed;
-    static short DepthIndexEnd[4];
-    static unsigned char DepthCount[4];
-    unsigned char apply(QRgb);
-private:
-    unsigned char apply();
-    unsigned char applyRGB();
-    unsigned char applyRGB_plus();
-    unsigned char applyHSV();
-    unsigned char applyXYZ();
-    unsigned char applyLab_old();
-    unsigned char applyLab_new();
-    void doSide(VectorXf);
-};
 
 class mcMap
 {
@@ -143,17 +115,8 @@ public:
       ~mcMap();
 
         MainWindow*parent;
-
-        static inline short mapColor2Index(short mapColor);
-        static inline short Index2mapColor(short Index);
-
-        inline bool is16();
-        inline bool is17();
         unsigned char gameVersion;//12,13,14,15,16,17
         char mapType;//S,C,F
-        inline bool isFlat();
-        inline bool isSurvival();
-        inline bool isCreative();
         int step;
         ColorSet Basic;
         ColorSet Allowed;
@@ -161,13 +124,7 @@ public:
 
         vector<vector<simpleBlock>> FullBlockList;
         short SelectedBlockList[64];//实际的方块列表
-        inline bool canUseBlock(short r,short c);
-
-        /*QString BlockId[64][12];
-        QString BlockIdfor12[64][12];
-        unsigned char BlockVersion[64][12];
-        QString BlockListId[64];*/
-        //NBT::NBTWriter Lite;
+        vector<string*> BlockListId;
 
         int size3D[3];//x,y,z
         int sizePic[2];
@@ -189,22 +146,38 @@ public:
         ArrayXXi LowMap;
         std::unordered_map<TokiPos,waterItem> WaterList;
 
-        //unsigned char***Build;
-
         Tensor<unsigned char,3>Build;//x,y,z
         char Mode;//R->RGB,H->HSV,L->Lab,X->XYZ
 
         short ExLitestep;
         short ExMcFstep;
 
-        string ProductPath;
+        //string ProductPath;
         bool allowNaturalOpti;
         bool allowForcedOpti;
         int maxHeight;
+
+        char netFilePath[256];//纯路径，不包含最后的文件名
+        char netFileName[64];//纯文件名，不含后缀名
+
+
+
         long makeHeight();//构建高度矩阵
 #ifdef putMapData
         void putMap(const QString &,const MatrixXi&HighMap,const MatrixXi&LowMap);
 #endif
+
+
+        static inline short mapColor2Index(short mapColor);
+        static inline short Index2mapColor(short Index);
+
+        inline bool is16();
+        inline bool is17();
+        inline bool isFlat();
+        inline bool isSurvival();
+        inline bool isCreative();
+
+        inline bool canUseBlock(short r,short c);
         long BuildHeight();//构建真正的立体结构（三维矩阵
         long exportAsLitematica(string FilePathAndName);
         long exportAsStructure(string FilePathAndName);
@@ -217,8 +190,6 @@ public:
         void writeTrash(int count,NBT::NBTWriter&);
 
         //int CommandCount;
-        char netFilePath[256];//纯路径，不包含最后的文件名
-        char netFileName[64];//纯文件名，不含后缀名
 };
 
 QT_BEGIN_NAMESPACE
@@ -264,6 +235,8 @@ public:
     short BLGlowing[64];
 
     tpS Strategy;
+
+    string ProductPath;
 
     //初始化方块列表用
 
