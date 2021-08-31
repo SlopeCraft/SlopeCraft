@@ -1,57 +1,14 @@
 #include "TokiBlock.h"
+QString TokiBlock::basePath="";
 
-TokiBlock::TokiBlock()
-{
 
-}
-
-/*INLINE*/ void TokiBlock::setBaseColor(uchar mc) {
-    baseColor=mc;
-}
-/*INLINE*/ void TokiBlock::setId(const std::string &i) {
-    id=i;
-}
-///*INLINE*/ void TokiBlock::setName(const std::string &) {}
-/*INLINE*/ void TokiBlock::setVersion(uchar v) {
-    version=v;
-}
-/*INLINE*/ void TokiBlock::setIdOld(const std::string &io) {
-    idOld=io;
-}
-/*INLINE*/ void TokiBlock::setNeedGlass(bool ns) {
-    needGlass=ns;
-}
-/*INLINE*/ void TokiBlock::setIsGlowing(bool ig) {
-    isGlowing=ig;
-}
-
-/*INLINE*/ uchar TokiBlock::getBaseColor() const {
-    return baseColor;
-}
-/*INLINE*/ std::string TokiBlock::getId() const {
-    return id;
-}
-///*INLINE*/ std::string TokiBlock::getName() const {}
-/*INLINE*/ uchar TokiBlock::getVersion() const {
-    return version;
-}
-/*INLINE*/ std::string TokiBlock::getIdOld() const {
-    return idOld;
-}
-/*INLINE*/ bool TokiBlock::getNeedGlass() const {
-    return needGlass;
-}
-/*INLINE*/ bool TokiBlock::getIsGlowing() const {
-    return isGlowing;
-}
-
-std::string TokiBlock::toPureBlockId() const {
+std::string simpleBlock::toPureBlockId() const {
     int i=id.find('[');
     if(i<0)return id;//isPureBlockId
 
     return id.substr(0,i);
 }
-bool TokiBlock::toProperties(std::string & netBlockId,stringList * proName,stringList * proVal) const {
+bool simpleBlock::toProperties(std::string & netBlockId,stringList * proName,stringList * proVal) const {
 proName->clear();
 proVal->clear();
 if(id.back()!=']')
@@ -114,6 +71,69 @@ for(short read=ReadBeg;read<=ReadEnd;read++)
 //qDebug()<<proValue->back()<<'='<<proValue->back();
 return true;
 }
+
+TokiBlock::TokiBlock()
+{
+
+}
+
+/*INLINE*/ /*void TokiBlock::setBaseColor(uchar mc) {
+    baseColor=mc;
+}*/
+/*INLINE*/ void TokiBlock::setId(const std::string &i) {
+    id=i;
+}
+///*INLINE*/ void TokiBlock::setName(const std::string &) {}
+/*INLINE*/ void TokiBlock::setVersion(uchar v) {
+    version=v;
+}
+/*INLINE*/ void TokiBlock::setIdOld(const std::string &io) {
+    idOld=io;
+}
+/*INLINE*/ void TokiBlock::setNeedGlass(bool ns) {
+    needGlass=ns;
+}
+/*INLINE*/ void TokiBlock::setIsGlowing(bool ig) {
+    isGlowing=ig;
+}
+
+/*INLINE*/ /*uchar TokiBlock::getBaseColor() const {
+    return baseColor;
+}*/
+/*INLINE*/ std::string TokiBlock::getId() const {
+    return id;
+}
+///*INLINE*/ std::string TokiBlock::getName() const {}
+/*INLINE*/ uchar TokiBlock::getVersion() const {
+    return version;
+}
+/*INLINE*/ std::string TokiBlock::getIdOld() const {
+    return idOld;
+}
+/*INLINE*/ bool TokiBlock::getNeedGlass() const {
+    return needGlass;
+}
+/*INLINE*/ bool TokiBlock::getIsGlowing() const {
+    return isGlowing;
+}
+
+void TokiBlock::setLanguage(bool isEng) {
+    if(isEng)
+        setText(nameEN);
+    else
+        setText(nameZH);
+
+    name=text().toStdString();
+}
+
+void TokiBlock::updateStatue(uchar ver) {
+    setEnabled(ver<=version);
+}
+
+simpleBlock * TokiBlock::toSimpleBlock() const {
+    return (simpleBlock * )this;
+}
+
 #ifdef putBlockList
 QString TokiBlock::toJSON() const {
     QString js="{\n";
