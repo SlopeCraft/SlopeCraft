@@ -110,6 +110,11 @@ MainWindow::MainWindow(QWidget *parent)
     /*TokiColor::Allowed=&Data.Allowed;
     TokiColor::Basic=&Data.Basic;*/
     transSubWind=nullptr;
+
+    Blocks.resize(64);
+    for(int i=0;i<64;i++)Blocks[i].resize(12);
+    Enables.resize(64);
+    ShowColors.resize(64);
 }
 
 MainWindow::~MainWindow()

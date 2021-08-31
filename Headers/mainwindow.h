@@ -93,17 +93,14 @@ bool dealBlockId(const QString&BlockId,
                  vector<QString>&Property,
                  vector<QString>&ProVal);
 QRgb ComposeColor(const QRgb&front,const QRgb&back);
-
-
 bool readFromFile(const char*FileName,ArrayXXf & M);
-
 void GetBLCreative(short*BL);
-
 void GetBLCheaper(short*BL);
-
 void GetBLBetter(short*BL);
-
 void GetBLGlowing(short*BL);
+bool compressFile(const char*sourcePath,const char*destPath);
+void matchColor(TokiColor * tColor,QRgb qColor);
+
 
 extern Matrix<float,2,3> DitherMapLR,DitherMapRL;
 extern const short WaterColumnSize[3];
@@ -152,13 +149,12 @@ public:
         short ExLitestep;
         short ExMcFstep;
 
-        //string ProductPath;
         bool allowNaturalOpti;
         bool allowForcedOpti;
         int maxHeight;
 
-        char netFilePath[256];//纯路径，不包含最后的文件名
-        char netFileName[64];//纯文件名，不含后缀名
+        //char netFilePath[256];//纯路径，不包含最后的文件名
+        //char netFileName[64];//纯文件名，不含后缀名
 
 
 
@@ -223,9 +219,9 @@ public:
     mcMap Data;
     tpStrategyWind*transSubWind;
     //QTranslator translater;
-    QRadioButton *Blocks[64][12];
-    QCheckBox *Enables[64];
-    QLabel *ShowColors[64];
+    vector<vector<QRadioButton*>>Blocks;
+    vector<QCheckBox*>Enables;
+    vector<QLabel*>ShowColors;
     //bool Enabled[64];//被启动的方块列表，相当于最终的MIndex
     bool NeedGlass[64][12];
     bool doGlow[64][12];
@@ -400,6 +396,4 @@ private slots:
 private:
     Ui::MainWindow *ui;
 };
-bool compressFile(const char*sourcePath,const char*destPath);
-void matchColor(TokiColor * tColor,QRgb qColor);
 #endif // MAINWINDOW_H

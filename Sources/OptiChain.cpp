@@ -141,7 +141,7 @@ void OptiChain::dispSubChain()
         out+=it->toString();
     }
 #ifdef removeQt
-    cerr<<out<<endl;
+    cout<<out<<endl;
 #else
     qDebug()<<QString::fromStdString(out);
 #endif
@@ -279,7 +279,7 @@ void OptiChain::divideToChain()
     Temp.End=MapSize-1;
     Chain.push(Temp);
 #ifdef removeQt
-    cerr<<"将第"<<Col<<"列切分为"<<Chain.size()<<"个孤立区间"<<endl;
+    cout<<"将第"<<Col<<"列切分为"<<Chain.size()<<"个孤立区间"<<endl;
 #else
     qDebug()<<"将第"<<Col<<"列切分为"<<Chain.size()<<"个孤立区间";
 #endif
@@ -301,7 +301,7 @@ void OptiChain::divideToSubChain()
 void OptiChain::divideToSubChain(const Region &Cur)
 {
 #ifdef removeQt
-    cerr<<"开始分析区间"<<Cur.toString()<<endl;
+    cout<<"开始分析区间"<<Cur.toString()<<endl;
 #else
     qDebug()<<"开始分析区间"+QString::fromStdString(Cur.toString());
 #endif
@@ -309,7 +309,7 @@ void OptiChain::divideToSubChain(const Region &Cur)
     {
         SubChain.push_back(Region(Cur.Beg,Cur.End,idp));
 #ifdef removeQt
-        cerr<<"Chain中的区间"<<Cur.toString()<<"过小，直接简单沉降"<<endl;
+        cout<<"Chain中的区间"<<Cur.toString()<<"过小，直接简单沉降"<<endl;
 #else
         qDebug()<<"Chain中的区间"+QString::fromStdString(Cur.toString())+"过小，直接简单沉降";
 #endif
@@ -336,7 +336,7 @@ void OptiChain::divideToSubChain(const Region &Cur)
     ScanRight*=ScanBoth;
 
 #ifdef removeQt
-    cerr<<"扫描完成"<<endl;
+    cout<<"扫描完成"<<endl;
 #else
     qDebug("扫描完成");
 #endif
@@ -392,7 +392,7 @@ void OptiChain::divideToSubChain(const Region &Cur)
         SubChain.push_back(Region(SubChain.back().End+1,Cur.End,idp));
 
 #ifdef removeQt
-    cerr<<"SubChain构建完成"<<endl;
+    cout<<"SubChain构建完成"<<endl;
 #else
     qDebug("SubChain构建完成");
 #endif
@@ -403,7 +403,7 @@ void OptiChain::Sink(const Region &Reg)
     if(!Reg.isValid())
     {
 #ifdef removeQt
-        cerr<<"无效区间："<<Reg.toString();
+        cout<<"无效区间："<<Reg.toString();
 #else
         qDebug()<<"无效区间："+QString::fromStdString(Reg.toString());
 #endif

@@ -68,7 +68,7 @@ void MainWindow::on_ExportLite_clicked()
 {
     if(Data.ExLitestep<2)return;
     if(Data.step<5)return;
-    string FileName=QFileDialog::getSaveFileName(this,tr("导出为投影/结构方块文件"),"",tr("投影文件(*.litematic) ;; 结构方块文件(*.nbt)")).toStdString();
+    string FileName=QFileDialog::getSaveFileName(this,tr("导出为投影/结构方块文件"),"",tr("投影文件(*.litematic) ;; 结构方块文件(*.nbt)")).toLocal8Bit().data();
 
     if(FileName.empty())return;
     bool putLitematic=(FileName.substr(FileName.length()-strlen(".litematic"))==".litematic");
@@ -88,6 +88,8 @@ void MainWindow::on_ExportLite_clicked()
     ui->ShowProgressExLite->setValue(0);
 
     qDebug("开始导出投影");
+    cout<<FileName<<endl;
+    cout<<unCompressed<<endl;
 
     if(putStructure)
         Data.exportAsLitematica(unCompressed);
@@ -99,7 +101,7 @@ void MainWindow::on_ExportLite_clicked()
         ui->ShowProgressExLite->setValue(100+Data.Build.size());
         qDebug("压缩成功");
         Data.ExLitestep=4;
-        QFile umComFile(QString::fromStdString(unCompressed));
+        QFile umComFile(QString(unCompressed.data()));
         umComFile.remove();
         ProductPath=FileName;
     }

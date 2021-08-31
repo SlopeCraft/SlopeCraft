@@ -43,33 +43,27 @@ inline bool mcMap::canUseBlock(short r, short c)
     return (gameVersion>=FullBlockList[r][c].version);
 }
 
-inline bool mcMap::is16()
-{
+inline bool mcMap::is16() {
     return gameVersion>=16;
 }
 
-inline bool mcMap::is17()
-{
+inline bool mcMap::is17() {
     return gameVersion>=17;
 }
 
-inline bool mcMap::isSurvival()
-{
+inline bool mcMap::isSurvival() {
     return mapType=='S';
 }
 
-inline bool mcMap::isCreative()
-{
+inline bool mcMap::isCreative() {
     return mapType=='C';
 }
 
-inline bool mcMap::isFlat()
-{
+inline bool mcMap::isFlat() {
     return mapType=='F';
 }
 
-bool readFromFile(const char*FileName,ArrayXXf & M)
-{
+bool readFromFile(const char*FileName,ArrayXXf & M) {
     fstream Reader;
     Reader.open(FileName, ios::in|ios::binary);
     if(!Reader)return false;
@@ -138,8 +132,8 @@ mcMap::mcMap()
     for(int i=0;i<64;i++)
         FullBlockList[i].resize(12);
 
-    netFilePath[0]=0;//纯路径，不包含最后的文件名
-    netFileName[0]=0;//纯文件名，不含后缀名
+    //netFilePath[0]=0;//纯路径，不包含最后的文件名
+    //netFileName[0]=0;//纯文件名，不含后缀名
     allowNaturalOpti=false;
     allowForcedOpti=false;
     maxHeight=-1;
