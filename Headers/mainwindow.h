@@ -58,6 +58,7 @@ This file is part of SlopeCraft.
 #include "previewwind.h"
 #include "WaterItem.h"
 #include "zlib.h"
+#include "simpleBlock.h"
 using namespace std;
 using namespace Eigen;
 
