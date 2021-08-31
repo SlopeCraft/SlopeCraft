@@ -53,6 +53,7 @@ SOURCES += \
     ../../zlibs/trees.c \
     ../../zlibs/uncompr.c \
     ../../zlibs/zutil.c \
+    Sources/TokiBaseColor.cpp \
     Sources/CIEDE00.cpp \
     Sources/Collecter.cpp \
     Sources/NBTWriter.cpp \
@@ -89,6 +90,7 @@ HEADERS += \
     ../../zlibs/zutil.h \
     Headers/NBTWriter.h \
     Headers/OptiChain.h \
+    Headers/TokiBaseColor.h \
     Headers/WaterItem.h \
     Headers/mainwindow.h \
     Headers/previewwind.h \

@@ -157,7 +157,7 @@ font: 9pt &quot;微软雅黑&quot;;
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>-57</y>
+         <y>0</y>
          <width>152</width>
          <height>728</height>
         </rect>
@@ -578,7 +578,7 @@ font: 11pt &quot;微软雅黑&quot;;
        <enum>QFrame::Plain</enum>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="PageStart">
        <property name="styleSheet">
@@ -1732,8 +1732,8 @@ font: 11pt &quot;微软雅黑&quot;;
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>0</y>
-               <width>316</width>
+               <y>-5002</y>
+               <width>551</width>
                <height>5398</height>
               </rect>
              </property>
@@ -8969,7 +8969,7 @@ font: 11pt &quot;微软雅黑&quot;;
                     <string>錾制深板岩</string>
                    </property>
                    <property name="icon">
-                    <iconset resource="BlockTextures.qrc">
+                    <iconset>
                      <normaloff>:/new/Textures/Slope/block/chiseled_deepslate.png</normaloff>:/new/Textures/Slope/block/chiseled_deepslate.png</iconset>
                    </property>
                   </widget>
