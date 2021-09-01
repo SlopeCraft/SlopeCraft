@@ -1,4 +1,4 @@
-[
+{"FixedBlocks":[
 {
     "mapColor":0,
     "id":"glass",
@@ -1935,4 +1935,4 @@
     "needGlass":true,
     "isGlowing":true
 }
-]
+]}
