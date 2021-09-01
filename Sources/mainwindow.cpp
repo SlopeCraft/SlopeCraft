@@ -200,40 +200,44 @@ void MainWindow::InitializeAll()
         QDir::setCurrent(QCoreApplication::applicationDirPath());
 
         string ColorFilePath;
-        ColorFilePath="./RGB.Toki";
-        while(!readFromFile(ColorFilePath.data(),Data.Basic._RGB))
+        ColorFilePath="./Colors/RGB.TokiColor";
+        while(!readFromTokiColor(ColorFilePath.data(),Data.Basic._RGB,
+                                 "ba56d5af2ba89d9ba3362a72778e1624"))
         {
-            qDebug("未找到颜色文件RGB.Toki");
+            qDebug("未找到颜色文件RGB.TokiColor");
             ColorFilePath=QFileDialog::getOpenFileName(this,
-                                                       QObject::tr("未找到颜色表文件")+"RGB.Toki"+QObject::tr("，请手动寻找")
-                                                       ,"","RGB.Toki").toStdString();
+                                                       QObject::tr("颜色表文件")+"RGB.TokiColor"+QObject::tr("不存在或被篡改，请手动寻找")
+                                                       ,"./Colors","RGB.TokiColor").toLocal8Bit().data();
         }
 
-        ColorFilePath="./HSV.Toki";
-        while(!readFromFile(ColorFilePath.data(),Data.Basic.HSV))
+        ColorFilePath="./Colors/HSV.TokiColor";
+        while(!readFromTokiColor(ColorFilePath.data(),Data.Basic.HSV,
+                                 "db47a74d0b32fa682d1256cce60bf574"))
         {
-            qDebug("未找到颜色文件HSV.Toki");
+            qDebug("未找到颜色文件HSV.TokiColor");
             ColorFilePath=QFileDialog::getOpenFileName(this,
-                                                       QObject::tr("未找到颜色表文件")+"HSV.Toki"+QObject::tr("，请手动寻找")
-                                                       ,"","HSV.Toki").toStdString();
+                                                       QObject::tr("颜色表文件")+"HSV.TokiColor"+QObject::tr("不存在或被篡改，请手动寻找")
+                                                       ,"./Colors","HSV.TokiColor").toLocal8Bit().data();
         }
 
-        ColorFilePath="./Lab.Toki";
-        while(!readFromFile(ColorFilePath.data(),Data.Basic.Lab))
+        ColorFilePath="./Colors/Lab.TokiColor";
+        while(!readFromTokiColor(ColorFilePath.data(),Data.Basic.Lab,
+                                 "2aec9d79b920745472c0ccf56cbb7669"))
         {
-            qDebug("未找到颜色文件Lab.Toki");
+            qDebug("未找到颜色文件Lab.TokiColor");
             ColorFilePath=QFileDialog::getOpenFileName(this,
-                                                       QObject::tr("未找到颜色表文件")+"Lab.Toki"+QObject::tr("，请手动寻找")
-                                                       ,"","Lab.Toki").toStdString();
+                                                       QObject::tr("颜色表文件")+"Lab.TokiColor"+QObject::tr("不存在或被篡改，请手动寻找")
+                                                       ,"./Colors","Lab.TokiColor").toLocal8Bit().data();
         }
 
-        ColorFilePath="./XYZ.Toki";
-        while(!readFromFile(ColorFilePath.data(),Data.Basic.XYZ))
+        ColorFilePath="./Colors/XYZ.TokiColor";
+        while(!readFromTokiColor(ColorFilePath.data(),Data.Basic.XYZ,
+                                 "6551171faf62961e3ae6bc3c2ee8d051"))
         {
-            qDebug("未找到颜色文件XYZ.Toki");
+            qDebug("未找到颜色文件XYZ.TokiColor");
             ColorFilePath=QFileDialog::getOpenFileName(this,
-                                                       QObject::tr("未找到颜色表文件")+"XYZ.Toki"+QObject::tr("，请手动寻找")
-                                                       ,"","XYZ.Toki").toStdString();
+                                                       QObject::tr("颜色表文件")+"XYZ.TokiColor"+QObject::tr("不存在或被篡改，请手动寻找")
+                                                       ,"./Colors","XYZ.TokiColor").toLocal8Bit().data();
         }
         qDebug("成功载入颜色");
 

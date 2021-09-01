@@ -42,7 +42,7 @@ This file is part of SlopeCraft.
 #include <QtConcurrent>
 #include <QFuture>
 #include <QFileDialog>
-
+#include <QCryptographicHash>
 
 #include <iostream>
 #include <fstream>
@@ -94,6 +94,10 @@ bool dealBlockId(const QString&BlockId,
                  vector<QString>&ProVal);
 QRgb ComposeColor(const QRgb&front,const QRgb&back);
 bool readFromFile(const char*FileName,ArrayXXf & M);
+bool readFromTokiColor(const char*,ArrayXXf &,const string &);
+uchar h2d(char);
+
+
 void GetBLCreative(short*BL);
 void GetBLCheaper(short*BL);
 void GetBLBetter(short*BL);

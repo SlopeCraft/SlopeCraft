@@ -79,6 +79,50 @@ bool readFromFile(const char*FileName,ArrayXXf & M) {
     return true;
 }
 
+uchar h2d(char h) {
+    //cout<<h;
+    if(h>='0'&&h<='9')
+        return h-'0';
+    if(h>='A'&&h<='Z')
+        return h-'A'+10;
+    if(h>='a'&&h<='z')
+        return h-'a'+10;
+    qDebug()<<"出现非16进制的字节"<<(int)h<<"->"<<h;
+    return 255;
+}
+bool readFromTokiColor(const char*FileName,ArrayXXf & M,const string & MD5) {
+    fstream Reader;
+    Reader.open(FileName, ios::in|ios::binary);
+    if(!Reader)return false;
+
+    char * buf=new char[7168];
+    Reader.read(buf,7168);
+
+    string fileMD5=
+    QCryptographicHash::hash(buf,QCryptographicHash::Md5).toHex().toStdString();
+    //cout<<FileName<<",hash="<<fileMD5<<endl;
+    if(fileMD5!=MD5) {
+        delete [] buf;
+        return false;
+    }
+    float temp;
+    uchar * wp=(uchar*)&temp;
+    uchar * rp=(uchar*)buf;
+    M.setZero(256,3);
+
+    for(int i=0;i<M.size();i++) {
+
+        for(int byte=0;byte<4;byte++)
+            wp[byte]=(h2d(rp[byte*2+0])<<4)|(h2d(rp[byte*2+1]));
+        M(i/3,i%3)=temp;
+        rp+=9;
+        if(i%3==2)
+            rp++;
+    }
+
+    delete[] buf;
+    return true;
+}
 
 void GetBLCreative(short*BL)
 {
