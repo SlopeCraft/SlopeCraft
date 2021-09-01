@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include "TokiColor.h"
 #include <cmath>
 
 #define deg2rad(deg) ((deg)*M_PI/180.0)

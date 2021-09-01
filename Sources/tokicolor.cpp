@@ -21,7 +21,7 @@ This file is part of SlopeCraft.
 */
 #ifndef TOKICOLOR_CPP
 #define TOKICOLOR_CPP
-#include "mainwindow.h"
+#include "ColorSet.h"
 #define Thre 1e-10f
 #include <cmath>
 #define deg2rad(deg) ((deg)*M_PI/180.0)

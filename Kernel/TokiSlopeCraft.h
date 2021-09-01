@@ -21,15 +21,24 @@
 #include "NBTWriter.h"
 
 #ifdef WITH_QT
+
+#endif
+
 #include <QObject>
 #include <QRgb>
 #include <QtConcurrent>
 #include <QFuture>
-#endif
-
 typedef unsigned char gameVersion;
 
 using namespace Eigen;
+
+#define mapColor2Index(mapColor) (64*(mapColor%4)+(mapColor/4))
+#define index2mapColor(index) (4*(index%64)+(index/64))
+#define mapColor2baseColor(mapColor) (mapColor>>2)
+#define index2baseColor(index) (mapColor2baseColor(index2mapColor(index)))
+#define mapColor2depth(mapColor) (mapColor%4)
+#define index2depth(index) (mapColor2depth(index2mapColor(index)))
+
 
 #ifdef WITH_QT
 class TokiSlopeCraft : public QObject
@@ -41,17 +50,22 @@ class TokiSlopeCraft : public QObject
 #endif
 public:
 #ifdef WITH_QT
-    explicit TokiSlopeCraft(const string &, QObject *parent = nullptr);
+    explicit TokiSlopeCraft(const vector<string> &, QObject *parent = nullptr);
 #else
-    TokiSlopeCraft(const string &);
+    TokiSlopeCraft(const vector<string> &);
 #endif
     enum convertAlgo{
-        RGB,RGB_Better,HSV,Lab94,Lab00,XYZ
+        RGB='r',
+        RGB_Better='R',
+        HSV='H',
+        Lab94='l',
+        Lab00='L',
+        XYZ='X'
     };
     enum compressSettings{
         noCompress,Natural,Forced
     };
-    enum mapType{
+    enum mapTypes{
         Slope, //立体
         Flat, //平板
         FileOnly,//纯文件
@@ -65,11 +79,12 @@ public:
 //can do in nothing:
     step queryStep() const;
     bool setType(
-        mapType,
+        mapTypes,
         gameVersion,
         const bool [64],
         simpleBlock [64] ,
         const ArrayXXi &);
+
     vector<string> getAuthorURL() const;
 
 //can do in convertionReady:
@@ -91,6 +106,7 @@ public:
 #ifdef WITH_QT
 signals:
     void convertProgressRangeSet(int min,int max,int val);//设置进度条的取值范围和值
+    void convertProgressSetVal(int val);
     void convertProgressAdd(int deltaVal);
     void buildProgressRangeSet(int min,int max,int val);//设置进度条的取值范围
     void buildProgressAdd(int deltaVal);
@@ -102,10 +118,11 @@ private slots:
 #endif
 private:
     enum ColorSpace {
-        R,H,L,X
+        R='R',H='H',L='L',X='X'
     };
+    static Array<float,2,3> DitherMapLR,DitherMapRL;
     gameVersion mcVer;//12,13,14,15,16,17
-    mapType mapType;//S,C,F
+    mapTypes mapType;
     step kernelStep;
     convertAlgo ConvertAlgo;
     compressSettings compressMethod;
@@ -132,12 +149,15 @@ private:
 //for setType:
     void makeAllowedColorIndex(bool*);
     void makeColorSet();
+    bool isVanilla() const;//判断是可以生存实装的地图画
+    bool isFlat() const;//判断是平板的
 //for convert:
     ColorSpace getColorSpace() const;
     void pushToHash();
-    void matchColor();
-    void fillMap();
+    void applyTokiColor();
+    void fillMapMat();
     void Dither();
+    short sizePic(short) const;
 
 //for build
     void makeHeight();//构建HighMap和LowMap
@@ -148,7 +168,13 @@ private:
                     vector<string>&ProVal,
                     NBT::NBTWriter&);
     void writeTrash(int count,NBT::NBTWriter&);
+    string Noder(const short *src,int size) const;
 
 };
+
+bool readFromTokiColor(const char*FileName,ArrayXXf & M);
+uchar h2d(char h);
+void crash();
+void matchColor(TokiColor * tColor,QRgb qColor);
 
 #endif // TOKISLOPECRAFT_H

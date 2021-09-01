@@ -268,13 +268,13 @@ void MainWindow::contactG()
 
 void MainWindow::contactB()
 {
-    static string Toki="";
-    if(Toki=="")
+    static string Doki="";
+    if(Doki=="")
     {
         const short sizePic[]={1229, 150, 150, 44, 40, 69, 204, 204, 40, 44, 922, 173, 364, 142, 182, 114, 166, 114, 182, 114, 166, 114, 142, 173, 110, 238, 204, 80, 218, 380, 56, 28, 286, 28, 80, 380};
-        Toki=this->Noder(sizePic,sizeof(sizePic)/2);
+        Doki=this->Noder(sizePic,sizeof(sizePic)/2);
     }
-    QDesktopServices::openUrl(QUrl(QString::fromStdString(Toki)));
+    QDesktopServices::openUrl(QUrl(QString::fromStdString(Doki)));
 }
 
 #ifndef tpSDestroyer
