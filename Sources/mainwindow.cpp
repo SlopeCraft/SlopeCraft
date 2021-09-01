@@ -27,19 +27,6 @@ This file is part of SlopeCraft.
 #include "ui_mainwindow.h"
 #include "tpstrategywind.h"
 
-#include "Collecter.cpp"
-#include "Pages.cpp"
-
-#include "mcmap.cpp"
-
-#include "Page0.cpp"
-#include "Page1.cpp"
-#include "Page2.cpp"
-#include "Page3.cpp"
-#include "Page4.cpp"
-#include "Page5.cpp"
-#include "Page7.cpp"
-#include "Page8.cpp"
 
 ColorSet* TokiColor::Allowed=NULL;
 ColorSet*TokiColor::Basic=NULL;

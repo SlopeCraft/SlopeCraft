@@ -157,7 +157,7 @@ font: 9pt &quot;微软雅黑&quot;;
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>-156</y>
+         <y>0</y>
          <width>152</width>
          <height>728</height>
         </rect>
@@ -578,7 +578,7 @@ font: 11pt &quot;微软雅黑&quot;;
        <enum>QFrame::Plain</enum>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="PageStart">
        <property name="styleSheet">

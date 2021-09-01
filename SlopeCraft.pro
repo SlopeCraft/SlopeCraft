@@ -1,11 +1,12 @@
 QT       += core gui concurrent
 #QT += opengl
 #QT += quick quick3d
-INCLUDEPATH += D:\eigen-3.3.9
-INCLUDEPATH += ./Headers
-INCLUDEPATH += ./Sources
-INCLUDEPATH += ./others
-INCLUDEPATH += D:\zlibs
+INCLUDEPATH += D:\eigen-3.3.9 \
+                                ./Headers \
+                                ./Sources \
+                                ./others \
+                                D:\zlibs \
+                                ./Kernel
 
 DEFINES += WIN32_LEAN_AND_MEAN
 RC_ICONS = others/SlopeCraft.ico
@@ -53,24 +54,14 @@ SOURCES += \
     ../../zlibs/trees.c \
     ../../zlibs/uncompr.c \
     ../../zlibs/zutil.c \
+    Kernel/TokiSlopeCraft.cpp \
     Sources/CIEDE00.cpp \
-    Sources/Collecter.cpp \
     Sources/NBTWriter.cpp \
     Sources/OptiChain.cpp \
-    Sources/Page0.cpp \
-    Sources/Page1.cpp \
-    Sources/Page2.cpp \
-    Sources/Page3.cpp \
-    Sources/Page4.cpp \
-    Sources/Page5.cpp \
-    Sources/Page7.cpp \
-    Sources/Page8.cpp \
-    Sources/Pages.cpp \
     Sources/WaterItem.cpp \
     Sources/colorset.cpp \
     Sources/main.cpp \
     Sources/mainwindow.cpp \
-    Sources/mcmap.cpp \
     Sources/previewwind.cpp \
     Sources/simpleBlock.cpp \
     Sources/tokicolor.cpp \
@@ -93,6 +84,7 @@ HEADERS += \
     Headers/OptiChain.h \
     Headers/TokiBaseColor.h \
     Headers/TokiColor.h \
+    Kernel/TokiSlopeCraft.h \
     Headers/WaterItem.h \
     Headers/mainwindow.h \
     Headers/previewwind.h \
