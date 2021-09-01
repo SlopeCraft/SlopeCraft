@@ -432,3 +432,28 @@ TokiSlopeCraft::ColorSpace TokiSlopeCraft::getColorSpace() const {
         return X;
     }
 }
+
+ArrayXXi TokiSlopeCraft::getConovertedImage() const {
+ArrayXXi cvtedImg(sizePic(0),sizePic(1));
+cvtedImg.setZero();
+if(kernelStep<converted)
+    return cvtedImg;
+
+ArrayXXi RGBint=(255.0f*Basic._RGB).cast<int>();
+    short Index;
+    for(short r=0;r<sizePic(0);r++)
+    {
+        for(short c=0;c<sizePic(1);c++)
+        {
+            if(mapPic(r,c)<=3)
+            {
+                cvtedImg(r,c)=qRgba(0,0,0,0);
+                continue;
+            }
+            Index=mapColor2Index(mapPic(r,c));
+
+           cvtedImg(r,c)=qRgb(RGBint(Index,0),RGBint(Index,1),RGBint(Index,2));
+        }
+    }
+    return cvtedImg;
+}
