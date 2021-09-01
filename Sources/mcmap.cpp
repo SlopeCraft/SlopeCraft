@@ -87,7 +87,7 @@ uchar h2d(char h) {
         return h-'A'+10;
     if(h>='a'&&h<='z')
         return h-'a'+10;
-    qDebug()<<"出现非16进制的字节"<<(int)h<<"->"<<h;
+    qDebug()<<"错误！出现非16进制的字节"<<(int)h<<"->"<<h;
     return 255;
 }
 bool readFromTokiColor(const char*FileName,ArrayXXf & M,const string & MD5) {
@@ -102,6 +102,7 @@ bool readFromTokiColor(const char*FileName,ArrayXXf & M,const string & MD5) {
     QCryptographicHash::hash(buf,QCryptographicHash::Md5).toHex().toStdString();
     //cout<<FileName<<",hash="<<fileMD5<<endl;
     if(fileMD5!=MD5) {
+        qDebug("颜色表文件哈希校验失败");
         delete [] buf;
         return false;
     }

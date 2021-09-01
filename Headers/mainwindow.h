@@ -162,7 +162,6 @@ public:
 
 
 
-        long makeHeight();//构建高度矩阵
 #ifdef putMapData
         void putMap(const QString &,const MatrixXi&HighMap,const MatrixXi&LowMap);
 #endif
@@ -170,6 +169,8 @@ public:
 
         static inline short mapColor2Index(short mapColor);
         static inline short Index2mapColor(short Index);
+
+        long makeHeight();//构建高度矩阵
 
         inline bool is16();
         inline bool is17();

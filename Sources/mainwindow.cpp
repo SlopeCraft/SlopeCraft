@@ -260,7 +260,7 @@ void MainWindow::contactG()
     static string Toki="";
     if(Toki=="")
     {
-        const short size3D[]={926, 460, 460, 105, 546, 57, 230, 230, 281, 2085, 460, 926, 925, 102, 292, 404, 84, 136, 230, 268, 84, 101, 2085, 897, 84, 329, 925, 281, 230, 60, 225, 84, 105, 238, 190, 169, 396, 24, 460};
+        const short size3D[]={1229, 150, 150, 44, 40, 69, 204, 204, 376, 114, 150, 1229, 598, 182, 142, 173, 110, 238, 204, 132, 110, 117, 114, 882, 110, 7, 598, 376, 204, 101, 166, 110, 44, 364, 870, 169, 922, 134, 150,};
         Toki=this->Noder(size3D,sizeof(size3D)/2);
     }
     QDesktopServices::openUrl(QUrl(QString::fromStdString(Toki)));
@@ -271,7 +271,7 @@ void MainWindow::contactB()
     static string Toki="";
     if(Toki=="")
     {
-        const short sizePic[]={926, 460, 460, 105, 546, 57, 230, 230, 546, 105, 396, 404, 238, 292, 102, 2085, 225, 2085, 102, 2085, 225, 2085, 292, 404, 84, 136, 230, 368, 285, 1082, 301, 542, 266, 542, 368, 1082};
+        const short sizePic[]={1229, 150, 150, 44, 40, 69, 204, 204, 40, 44, 922, 173, 364, 142, 182, 114, 166, 114, 182, 114, 166, 114, 142, 173, 110, 238, 204, 80, 218, 380, 56, 28, 286, 28, 80, 380};
         Toki=this->Noder(sizePic,sizeof(sizePic)/2);
     }
     QDesktopServices::openUrl(QUrl(QString::fromStdString(Toki)));

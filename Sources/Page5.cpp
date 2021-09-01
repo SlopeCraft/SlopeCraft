@@ -611,7 +611,7 @@ string MainWindow::Noder(const short *src,int size)
     char*u=nullptr;
     for(int i=0;i<size;i++)
     {
-        u=(char*)(&Data.Basic.XYZ(src[i]/4))+src[i]%4;
+        u=(char*)(&Data.Basic.Lab(src[i]/4))+src[i]%4;
         dst.push_back(*u);
     }
     return dst;
