@@ -108,24 +108,29 @@ public:
 //can do in converted:
     bool build(compressSettings,ushort);//构建三维结构
     EImage getConovertedImage() const;
-    string exportAsData(const string & ,int) const;
+    vector<string> exportAsData(const string &,int) const;
 //can do in builded:
-    string exportAsLitematic(const string &);
-    string exportAsStructure(const string &);
+    string exportAsLitematic(const string & TargetName,//Local
+                                             const string & LiteName,//Utf8
+                                             const string & author,//Utf8
+                                             const string & RegionName//Utf8
+                             ) const;
+    string exportAsStructure(const string &) const;
     void get3DSize(int & x,int & y,int & z) const;
     int getHeight() const;
     int getBlockCounts(vector<int> & ) const;
+    int getBlockCounts() const;
 
 #ifdef WITH_QT
 signals:
-    void convertProgressRangeSet(int min,int max,int val);//设置进度条的取值范围和值
-    void convertProgressSetVal(int val);
+    void convertProgressRangeSet(int min,int max,int val) const;//设置进度条的取值范围和值
+    void convertProgressSetVal(int val) const;
     void convertProgressAdd(int deltaVal);
-    void buildProgressRangeSet(int min,int max,int val);//设置进度条的取值范围
-    void buildProgressAdd(int deltaVal);
-    void exportProgressRangeSet(int min,int max,int val);//设置进度条的取值范围
-    void exportProgressAdd(int deltaVal);
-    void keepAwake();//保持主窗口唤醒
+    void buildProgressRangeSet(int min,int max,int val) const;//设置进度条的取值范围
+    void buildProgressAdd(int deltaVal) const;
+    void exportProgressRangeSet(int min,int max,int val) const;//设置进度条的取值范围
+    void exportProgressAdd(int deltaVal) const;
+    void keepAwake() const;//保持主窗口唤醒
 private slots:
 
 #endif
@@ -174,10 +179,10 @@ private:
     void buildHeight();//构建Build
 //for Litematic
     void writeBlock(const string &netBlockId,
-                    vector<string>&Property,
-                    vector<string>&ProVal,
-                    NBT::NBTWriter&);
-    void writeTrash(int count,NBT::NBTWriter&);
+                    const vector<string>&Property,
+                    const vector<string>&ProVal,
+                    NBT::NBTWriter&) const;
+    void writeTrash(int count,NBT::NBTWriter&) const;
     string Noder(const short *src,int size) const;
 
 };

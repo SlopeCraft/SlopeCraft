@@ -488,6 +488,137 @@ short TokiSlopeCraft::getImageCols() const {
     return rawImage.cols();
 }
 
+vector<string> TokiSlopeCraft::exportAsData(const string & FolderPath ,
+                                            int indexStart) const {
+    vector<string> unCompressedFileList;
+    unCompressedFileList.clear();
+
+    if(kernelStep<converted) {
+        unCompressedFileList.push_back("Too hasty! export after you converted the map!");
+        return unCompressedFileList;
+    }
+
+    const int rows=ceil(mapPic.rows()/128.0f);
+    const int cols=ceil(mapPic.cols()/128.0f);
+    //const int maxrr=rows*128;
+    //const int maxcc=cols*128;
+    emit exportProgressRangeSet(0,128*rows*cols,0);
+
+    int offset[2]={0,0};//r,c
+    int currentIndex=indexStart;
+    for(int c=0;c<cols;c++)
+    {
+        for(int r=0;r<rows;r++)
+        {
+            offset[0]=r*128;
+            offset[1]=c*128;
+
+            string currentUn=FolderPath+"/map_"+std::to_string(currentIndex)+".dat.TokiNoBug";
+            //string currentFile=FolderPath+"/map_"+std::to_string(currentIndex)+".dat";
+
+            qDebug()<<"开始导出("<<r<<","<<c<<")的地图"<<QString::fromStdString(currentUn);
+
+            NBT::NBTWriter MapFile(currentUn.data());
+
+            switch (mcVer)
+            {
+            case MC12:
+                break;
+            case MC13:
+                break;
+            case MC14:
+                MapFile.writeInt("DataVersion",1631);
+                break;
+            case MC15:
+                MapFile.writeInt("DataVersion",2230);
+                break;
+            case MC16:
+                MapFile.writeInt("DataVersion",2586);
+                break;
+            case MC17:
+                MapFile.writeInt("DataVersion",2730);
+                break;
+            default:
+                qDebug("错误的游戏版本！");
+                break;
+            }
+            MapFile.writeString("ExportedBy","Exported by SlopeCraft v3.6, developed by TokiNoBug");
+            MapFile.writeCompound("data");
+                MapFile.writeByte("scale",0);
+                MapFile.writeByte("trackingPosition",0);
+                MapFile.writeByte("unlimitedTracking",0);
+                MapFile.writeInt("xCenter",0);
+                MapFile.writeInt("zCenter",0);
+                switch(mcVer)
+                {
+                case MC12:
+                    MapFile.writeByte("dimension",114);
+                    MapFile.writeShort("height",128);
+                    MapFile.writeShort("width",128);
+                    break;
+                case MC13:
+                    MapFile.writeListHead("banners",NBT::idCompound,0);
+                    MapFile.writeListHead("frames",NBT::idCompound,0);
+                    MapFile.writeInt("dimension",889464);
+                    break;
+                case MC14:
+                    MapFile.writeListHead("banners",NBT::idCompound,0);
+                    MapFile.writeListHead("frames",NBT::idCompound,0);
+                    MapFile.writeInt("dimension",0);
+                    MapFile.writeByte("locked",1);
+                    break;
+                case MC15:
+                    MapFile.writeListHead("banners",NBT::idCompound,0);
+                    MapFile.writeListHead("frames",NBT::idCompound,0);
+                    MapFile.writeInt("dimension",0);
+                    MapFile.writeByte("locked",1);
+                    break;
+                case MC16:
+                    MapFile.writeListHead("banners",NBT::idCompound,0);
+                    MapFile.writeListHead("frames",NBT::idCompound,0);
+                    MapFile.writeString("dimension","minecraft:overworld");
+                    MapFile.writeByte("locked",1);
+                    break;
+                case MC17:
+                    MapFile.writeListHead("banners",NBT::idCompound,0);
+                    MapFile.writeListHead("frames",NBT::idCompound,0);
+                    MapFile.writeString("dimension","minecraft:overworld");
+                    MapFile.writeByte("locked",1);
+                default:
+                    qDebug("错误的游戏版本！");
+                    break;
+                }
+
+                MapFile.writeByteArrayHead("colors",16384);
+                uchar ColorCur=0;
+                    for(short rr=0;rr<128;rr++)
+                    {
+                        for(short cc=0;cc<128;cc++)
+                        {
+                            if(rr+offset[0]<mapPic.rows()&&cc+offset[1]<mapPic.cols())
+                                ColorCur=mapPic(rr+offset[0],cc+offset[1]);
+                            else
+                                ColorCur=0;
+                            MapFile.writeByte("this should never be seen",ColorCur);
+                        }
+                        emit exportProgressAdd(1);
+                    }
+                MapFile.endCompound();
+                MapFile.close();
+                unCompressedFileList.push_back(currentUn);
+                /*
+                if(compressFile(currentUn.data(),currentFile.data()))
+                {
+                    qDebug("压缩成功");
+                    QFile umComFile(QString::fromStdString(currentUn));
+                    umComFile.remove();
+                }*/
+                currentIndex++;
+        }
+    }
+    return unCompressedFileList;
+}
+
 bool TokiSlopeCraft::build(compressSettings cS, ushort mAH) {
     if(kernelStep<converted)return false;
     if(maxAllowedHeight<2)return false;
@@ -679,7 +810,6 @@ void TokiSlopeCraft::buildHeight() {
         if(Base(0,c))   Build(c+1,HighMap(0,c),0)=11+1;
 }
 
-
 void TokiSlopeCraft::get3DSize(int & x,int & y,int & z) const {
     if(kernelStep<builded)return;
     x=size3D[0];
@@ -687,10 +817,12 @@ void TokiSlopeCraft::get3DSize(int & x,int & y,int & z) const {
     z=size3D[2];
     return;
 }
+
 int TokiSlopeCraft::getHeight() const {
     if(kernelStep<builded) return -1;
     return size3D[1];
 }
+
 int TokiSlopeCraft::getBlockCounts(vector<int> & dest) const {
     if(kernelStep<builded) return -1;
     dest.resize(64);
@@ -704,4 +836,281 @@ int TokiSlopeCraft::getBlockCounts(vector<int> & dest) const {
     for(int i=0;i<64;i++)
         totalBlockCount+=dest[i];
     return totalBlockCount;
+}
+
+int TokiSlopeCraft::getBlockCounts() const {
+    if(kernelStep<builded) return -1;
+    int totalCount=0;
+    for(int i=0;i<Build.size();i++) {
+        if(Build(i))
+            totalCount++;
+    }
+    return totalCount;
+}
+
+void TokiSlopeCraft::writeBlock(const string &netBlockId,
+                const vector<string> & Property,
+                const vector<string> & ProVal,
+                NBT::NBTWriter & Lite) const {
+    Lite.writeCompound("ThisStringShouldNeverBeSeen");
+        string BlockId=netBlockId;
+        if(netBlockId.substr(0,strlen("minecraft:"))!="minecraft:")
+            BlockId="minecraft:"+BlockId;
+
+        Lite.writeString("Name",BlockId.data());
+        if(Property.empty()||ProVal.empty())
+        {
+            Lite.endCompound();
+            return;
+        }
+
+        if(Property.size()!=ProVal.size())
+        {
+            qDebug("出现错误：Property和ProVal尺寸不匹配");
+            return;
+        }
+            Lite.writeCompound("Properties");
+                for(unsigned short i=0;i<ProVal.size();i++)
+                    Lite.writeString(Property.at(i).data(),ProVal.at(i).data());
+            Lite.endCompound();
+            //Property.clear();
+            //ProVal.clear();
+        Lite.endCompound();
+}
+void TokiSlopeCraft::writeTrash(int count,NBT::NBTWriter & Lite) const {
+    vector<string> ProName(5),ProVal(5);
+    //ProName:NEWSP
+    //,,,,
+    ProName.at(0)="north";
+    ProName.at(1)="east";
+    ProName.at(2)="west";
+    ProName.at(3)="south";
+    ProName.at(4)="power";
+    string dir[3]={"none","size","up"};
+    string power[16];
+    for(short i=0;i<15;i++)
+        power[i]=to_string(i);
+    int written=0;
+    for(short North=0;North<3;North++)
+        for(short East=0;East<3;East++)
+            for(short West=0;West<3;West++)
+                for(short South=0;South<3;South++)
+                    for(short Power=0;Power<16;Power++)
+                    {
+                        if(written>=count)return;
+                        if(!Lite.isInList())return;
+                        ProVal.at(0)=dir[North];
+                        ProVal.at(1)=dir[East];
+                        ProVal.at(2)=dir[West];
+                        ProVal.at(3)=dir[South];
+                        ProVal.at(4)=power[Power];
+                        writeBlock("minecraft:redstone_wire",ProName,ProVal,Lite);
+                        written++;
+                    }
+}
+
+
+string TokiSlopeCraft::exportAsLitematic(const string & TargetName,
+                                         const string & LiteName,
+                                         const string & author,
+                                         const string & RegionName) const {
+    if(kernelStep<builded) {
+        return "Too hasty! export litematic after you built!";
+    }
+    emit exportProgressRangeSet(0,100+Build.size(),0);
+        NBT::NBTWriter Lite;
+        string unCompressed=TargetName+".TokiNoBug";
+        Lite.open(unCompressed.data());
+        Lite.writeCompound("Metadata");
+            Lite.writeCompound("EnclosingSize");
+                Lite.writeInt("x",size3D[0]);
+                Lite.writeInt("y",size3D[1]);
+                Lite.writeInt("z",size3D[2]);
+            Lite.endCompound();
+            Lite.writeString("Author",author.data());
+            Lite.writeString("Description","This litematic is generated by SlopeCraft v3.6, developer TokiNoBug");
+            Lite.writeString("Name",LiteName.data());
+            Lite.writeInt("RegionCount",1);
+            Lite.writeLong("TimeCreated",114514);
+            Lite.writeLong("TimeModified",1919810);
+            Lite.writeInt("TotalBlocks",this->getBlockCounts());
+            Lite.writeInt("TotalVolume",Build.size());
+        Lite.endCompound();
+    emit exportProgressRangeSet(0,100+Build.size(),50);
+        Lite.writeCompound("Regions");
+            Lite.writeCompound(RegionName.data());
+                Lite.writeCompound("Position");
+                    Lite.writeInt("x",0);
+                    Lite.writeInt("y",0);
+                    Lite.writeInt("z",0);
+                Lite.endCompound();
+                Lite.writeCompound("Size");
+                    Lite.writeInt("x",size3D[0]);
+                    Lite.writeInt("y",size3D[1]);
+                    Lite.writeInt("z",size3D[2]);
+                Lite.endCompound();
+                emit exportProgressRangeSet(0,100+Build.size(),100);
+                Lite.writeListHead("BlockStatePalette",NBT::idCompound,131);
+                    {
+                        short written=((mcVer>=MC16)?59:52);
+                        if(mcVer>=17)written=61;
+                        vector<string> ProName,ProVal;
+                        //bool isNetBlockId;
+                        string netBlockId;
+
+                        simpleBlock::dealBlockId("air",netBlockId,&ProName,&ProVal);
+                        writeBlock(netBlockId,ProName,ProVal,Lite);
+                        for(short r=0;r<written;r++)
+                        {
+                            simpleBlock::dealBlockId(blockPalette[r].id,netBlockId,&ProName,&ProVal);
+                            writeBlock(netBlockId,ProName,ProVal,Lite);
+                        }//到此写入了written+1个方块，还需要写入130-written个
+
+                        writeTrash(130-written,Lite);
+                    }
+                Lite.writeListHead("Entities",NBT::idCompound,0);
+                Lite.writeListHead("PendingBlockTicks",NBT::idCompound,0);
+                Lite.writeListHead("PendingFluidTiccks",NBT::idCompound,0);
+                Lite.writeListHead("TileEntities",NBT::idCompound,0);
+                {
+                    int ArraySize;
+                    //Lite.writeLong("aLong",1145141919810);
+                    int Volume=size3D[0]*size3D[1]*size3D[2];
+                    ArraySize=((Volume%8)?(Volume/8+1):Volume/8);
+                    long long HackyVal=sizeof(long long);
+                    char *inverser=(char*)&HackyVal;
+                    short inverserIndex=7;
+                Lite.writeLongArrayHead("BlockStates",ArraySize);
+                for(int y=0;y<size3D[1];y++)
+                    for(int z=0;z<size3D[2];z++)
+                    {
+                        for(int x=0;x<size3D[0];x++)
+                        {
+                            inverser[inverserIndex--]=Build(x,y,z);
+
+                            if(inverserIndex<0)
+                            {
+
+                                inverserIndex=7;
+                                Lite.writeLongDirectly("id",HackyVal);
+                            }
+                        }
+                        emit exportProgressAdd(size3D[0]);
+                    }
+
+                if(!Lite.isListFinished())
+                    Lite.writeLongDirectly("id",HackyVal);
+                }
+        Lite.endCompound();
+    Lite.endCompound();
+    switch (mcVer)
+    {
+    case MC12:
+        Lite.writeInt("MinecraftDataVersion",1343);
+        Lite.writeInt("Version",4);
+        break;
+    case MC13:
+        Lite.writeInt("MinecraftDataVersion",1631);
+        Lite.writeInt("Version",5);
+        break;
+    case MC14:
+        Lite.writeInt("MinecraftDataVersion",1976);
+        Lite.writeInt("Version",5);
+        break;
+    case MC15:
+        Lite.writeInt("MinecraftDataVersion",2230);
+        Lite.writeInt("Version",5);
+        break;
+    case MC16:
+        Lite.writeInt("MinecraftDataVersion",2586);
+        Lite.writeInt("Version",5);
+        break;
+    case MC17:
+        Lite.writeInt("MinecraftDataVersion",2730);
+        Lite.writeInt("Version",5);
+        break;
+    default:
+        qDebug("错误的游戏版本！");break;
+    }
+
+    Lite.close();
+        return unCompressed;
+}
+
+string TokiSlopeCraft::exportAsStructure(const string &TargetName) const {
+    if(kernelStep<builded) {
+        return "Too hasty! export structure after you built!";
+    }
+    emit exportProgressRangeSet(0,100+Build.size(),0);
+    NBT::NBTWriter file;
+    string unCompress=TargetName+".TokiNoBug";
+        file.open(unCompress.data());
+        file.writeListHead("entities",NBT::idByte,0);
+        file.writeListHead("size",NBT::idInt,3);
+            file.writeInt("This should never be shown",size3D[0]);
+            file.writeInt("This should never be shown",size3D[1]);
+            file.writeInt("This should never be shown",size3D[2]);
+            file.writeListHead("palette",NBT::idCompound,70);
+                {
+                    short written=((mcVer>=MC16)?59:52);
+                    if(mcVer>=MC17)written=61;
+                    vector<string> ProName,ProVal;
+                    //bool isNetBlockId;
+                    string netBlockId;
+
+                    simpleBlock::dealBlockId("air",netBlockId,&ProName,&ProVal);
+                    writeBlock(netBlockId,ProName,ProVal,file);
+                    for(short r=0;r<written;r++)
+                    {
+                        simpleBlock::dealBlockId(blockPalette[r].id,netBlockId,&ProName,&ProVal);
+                        writeBlock(netBlockId,ProName,ProVal,file);
+                    }//到此写入了written+1个方块，还需要写入69-written个
+
+                    writeTrash(69-written,file);
+                }
+
+            int BlockCount=0;
+            for(int i=0;i<Build.size();i++)
+                if(Build(i))BlockCount++;
+
+            file.writeListHead("blocks",NBT::idCompound,BlockCount);
+                for(int x=0;x<size3D[0];x++)
+                    for(int y=0;y<size3D[1];y++) {
+                        for(int z=0;z<size3D[2];z++) {
+                            if(!Build(x,y,z))continue;
+                            file.writeCompound("This should never be shown");
+                                file.writeListHead("pos",NBT::idInt,3);
+                                    file.writeInt("This should never be shown",x);
+                                    file.writeInt("This should never be shown",y);
+                                    file.writeInt("This should never be shown",z);
+                                file.writeInt("state",Build(x,y,z));
+                            file.endCompound();
+                        }
+                        emit exportProgressAdd(size3D[2]);
+                    }
+                switch (mcVer)
+                {
+                case MC12:
+                    file.writeInt("DataVersion",1343);
+                    break;
+                case MC13:
+                    file.writeInt("DataVersion",1631);
+                    break;
+                case MC14:
+                    file.writeInt("DataVersion",1976);
+                    break;
+                case MC15:
+                    file.writeInt("DataVersion",2230);
+                    break;
+                case MC16:
+                    file.writeInt("DataVersion",2586);
+                    break;
+                case MC17:
+                    file.writeInt("DataVersion",2730);
+                    break;
+                default:
+                    qDebug("错误的游戏版本！");break;
+                }
+    file.close();
+    return unCompress;
 }
