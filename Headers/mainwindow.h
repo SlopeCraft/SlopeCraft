@@ -62,6 +62,7 @@ This file is part of SlopeCraft.
 #include "WaterItem.h"
 #include "zlib.h"
 #include "simpleBlock.h"
+#include "TokiSlopeCraft.h"
 using namespace std;
 using namespace Eigen;
 
@@ -83,7 +84,7 @@ void matchColor(TokiColor * tColor,QRgb qColor);
 
 
 extern Matrix<float,2,3> DitherMapLR,DitherMapRL;
-
+/*
 class mcMap
 {
 public:
@@ -168,6 +169,7 @@ public:
         //int CommandCount;
 };
 
+*/
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -193,10 +195,9 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
-    friend mcMap;
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    mcMap Data;
+    TokiSlopeCraft * Kernel;
     tpStrategyWind*transSubWind;
     //QTranslator translater;
     vector<vector<QRadioButton*>>Blocks;
