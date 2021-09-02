@@ -28,13 +28,7 @@ This file is part of SlopeCraft.
 #include "tpstrategywind.h"
 
 
-ColorSet* TokiColor::Allowed=NULL;
-ColorSet*TokiColor::Basic=NULL;
-short TokiColor::DepthIndexEnd[4]={63,127,191,255};
-unsigned char TokiColor::DepthCount[4]={64,64,64,64};
-bool TokiColor::needFindSide=false;
-Matrix<float,2,3> DitherMapLR,DitherMapRL;
-const short WaterColumnSize[3]={11,6,1};
+
 
 
 MainWindow::MainWindow(QWidget *parent)

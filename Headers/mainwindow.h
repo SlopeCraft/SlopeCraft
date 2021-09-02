@@ -83,7 +83,6 @@ void matchColor(TokiColor * tColor,QRgb qColor);
 
 
 extern Matrix<float,2,3> DitherMapLR,DitherMapRL;
-extern const short WaterColumnSize[3];
 
 class mcMap
 {

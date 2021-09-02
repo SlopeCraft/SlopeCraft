@@ -1,8 +1,12 @@
 #include "TokiSlopeCraft.h"
 #ifdef WITH_QT
-TokiSlopeCraft::TokiSlopeCraft(const vector<string> & paths,QObject *parent) : QObject(parent)
+
+Array<float,2,3>TokiSlopeCraft::DitherMapLR;
+Array<float,2,3>TokiSlopeCraft::DitherMapRL;
+
+TokiSlopeCraft::TokiSlopeCraft(QObject *parent) : QObject(parent)
 #else
-TokiSlopeCraft::TokiSlopeCraft(const vector<string> & paths)
+TokiSlopeCraft::TokiSlopeCraft()
 #endif
 {
     kernelStep=TokiSlopeCraft::step::nothing;
@@ -13,28 +17,33 @@ TokiSlopeCraft::TokiSlopeCraft(const vector<string> & paths)
                              1.0,5.0,3.0;
     DitherMapLR/=16.0;
     DitherMapRL/=16.0;
-if(!readFromTokiColor(paths[0].data(),Basic._RGB)) {
-    cerr<<"Failed to read colormap file "<<paths[0]<<", crash the program\n";
-    crash();
-    return;
-}
-if(!readFromTokiColor(paths[1].data(),Basic.HSV)) {
-    cerr<<"Failed to read colormap file "<<paths[1]<<", crash the program\n";
-    crash();
-    return;
-}
-if(!readFromTokiColor(paths[2].data(),Basic.Lab)) {
-    cerr<<"Failed to read colormap file "<<paths[2]<<", crash the program\n";
-    crash();
-    return;
-}
-if(!readFromTokiColor(paths[3].data(),Basic.XYZ)) {
-    cerr<<"Failed to read colormap file "<<paths[3]<<", crash the program\n";
-    crash();
-    return;
 }
 
+bool TokiSlopeCraft::setColorSet(const char*R,const char*H,const char*L,const char*X) {
+    if(!readFromTokiColor(R,Basic._RGB)) {
+        cerr<<"Failed to read colormap RGB\n";
+        //crash();
+        return false;
+    }
+    if(!readFromTokiColor(H,Basic.HSV)) {
+        cerr<<"Failed to read colormap HSV\n";
+        //crash();
+        return false;
+    }
+    if(!readFromTokiColor(L,Basic.Lab)) {
+        cerr<<"Failed to read colormap Lab\n";
+        //crash();
+        return false;
+    }
+    if(!readFromTokiColor(X,Basic.XYZ)) {
+        cerr<<"Failed to read colormap XYZ\n";
+        //crash();
+        return false;
+    }
+    kernelStep=colorSetReady;
+    return true;
 }
+
 void crash() {
     int i;
     delete &i;
@@ -51,13 +60,21 @@ uchar h2d(char h) {
     cerr<<"Wrong byte:"<<(int)h<<"->"<<h;
     return 255;
 }
-bool readFromTokiColor(const char*FileName,ArrayXXf & M) {
+bool readFromTokiColor(const string & FileName,ArrayXXf & M) {
     fstream Reader;
     Reader.open(FileName, ios::in|ios::binary);
     if(!Reader)return false;
 
     char * buf=new char[7168];
     Reader.read(buf,7168);
+    bool result=readFromTokiColor(buf,M);
+    delete[] buf;
+    Reader.close();
+    return result;
+}
+
+bool readFromTokiColor(const char*src,ArrayXXf & M) {
+    const char * buf=src;
     /*
     string fileMD5=
     QCryptographicHash::hash(buf,QCryptographicHash::Md5).toHex().toStdString();
@@ -83,8 +100,6 @@ bool readFromTokiColor(const char*FileName,ArrayXXf & M) {
         if(i%3==2)
             rp++;
     }
-
-    delete[] buf;
     return true;
 }
 
@@ -97,7 +112,7 @@ bool TokiSlopeCraft::setType(mapTypes type,
                              const bool * allowedBaseColor,
                              simpleBlock * palettes,
                              const ArrayXXi & _rawimg) {
-    if(kernelStep<nothing)return false;
+    if(kernelStep<colorSetReady)return false;
     rawImage=_rawimg;
     mapType=type;
     mcVer=ver;
@@ -107,10 +122,10 @@ bool TokiSlopeCraft::setType(mapTypes type,
         blockPalette[i]=*palettes;
 
     ArrayXi baseColorVer(64);//基色对应的版本
-    baseColorVer.setConstant(255);
-    baseColorVer.segment(0,52).setZero();
-    baseColorVer.segment(52,7).setConstant(16);
-    baseColorVer.segment(59,3).setConstant(17);
+    baseColorVer.setConstant(FUTURE);
+    baseColorVer.segment(0,52).setConstant(ANCIENT);
+    baseColorVer.segment(52,7).setConstant(MC16);
+    baseColorVer.segment(59,3).setConstant(MC17);
 
     bool MIndex[256];
 
@@ -149,6 +164,9 @@ bool TokiSlopeCraft::setType(mapTypes type,
             }
         }
     }
+
+    Allowed.ApplyAllowed(&Basic,MIndex);
+
     kernelStep=convertionReady;
     return true;
 }
@@ -162,6 +180,12 @@ bool TokiSlopeCraft::isFlat() const {
 }
 
 vector<string> TokiSlopeCraft::getAuthorURL() const {
+    if(kernelStep<colorSetReady) {
+        vector<string> error(2);
+        error[0]="Too hasty operation!";
+        error[1]="make sure that you've deployed the colormap!";
+        return error;
+    }
     vector<string> urls(2);
     static string Toki="";
         if(Toki=="")
@@ -202,16 +226,13 @@ bool TokiSlopeCraft::convert(convertAlgo algo,bool dither) {
 //第一步，装入hash顺便转换颜色空间;（一次遍历
 //第二步，遍历hash并匹配颜色;（一次遍历
 //第三步，从hash中检索出对应的匹配结果;（一次遍历
-//第四步，抖动（包含四个函数）（一次遍历*/
-
-
+//第四步，抖动（一次遍历*/
     pushToHash();
 
     emit keepAwake();
     emit convertProgressSetVal(1*sizePic(2));
 
     applyTokiColor();
-
 
     emit keepAwake();
     emit convertProgressSetVal(2*sizePic(2));
@@ -224,7 +245,6 @@ bool TokiSlopeCraft::convert(convertAlgo algo,bool dither) {
         Dither();
 
     emit convertProgressSetVal(4*sizePic(2));
-
 
     emit keepAwake();
 
@@ -433,8 +453,8 @@ TokiSlopeCraft::ColorSpace TokiSlopeCraft::getColorSpace() const {
     }
 }
 
-ArrayXXi TokiSlopeCraft::getConovertedImage() const {
-ArrayXXi cvtedImg(sizePic(0),sizePic(1));
+EImage TokiSlopeCraft::getConovertedImage() const {
+EImage cvtedImg(sizePic(0),sizePic(1));
 cvtedImg.setZero();
 if(kernelStep<converted)
     return cvtedImg;
@@ -456,4 +476,232 @@ ArrayXXi RGBint=(255.0f*Basic._RGB).cast<int>();
         }
     }
     return cvtedImg;
+}
+
+short TokiSlopeCraft::getImageRows() const {
+    if(kernelStep<convertionReady) return -1;
+    return rawImage.rows();
+}
+
+short TokiSlopeCraft::getImageCols() const {
+    if(kernelStep<convertionReady) return -1;
+    return rawImage.cols();
+}
+
+bool TokiSlopeCraft::build(compressSettings cS, ushort mAH) {
+    if(kernelStep<converted)return false;
+    if(maxAllowedHeight<2)return false;
+
+    compressMethod=cS;
+
+    maxAllowedHeight=mAH;
+
+    emit buildProgressRangeSet(0,8*sizePic(2),0);
+
+    makeHeight();
+
+    emit buildProgressRangeSet(0,8*sizePic(2),5*sizePic(2));
+
+    buildHeight();
+
+    emit buildProgressRangeSet(0,8*sizePic(2),8*sizePic(2));
+
+    kernelStep=builded;
+
+    return true;
+}
+
+void TokiSlopeCraft::makeHeight() {
+    Base.setConstant(sizePic(0)+1,sizePic(1),11);
+
+    Base.block(1,0,sizePic(0),sizePic(1))=mapPic/4;
+
+    ArrayXXi dealedDepth;
+    ArrayXXi rawShadow=mapPic-4*(mapPic/4);
+
+    if((dealedDepth>=3).any())
+    {
+        qDebug("错误：Depth中存在深度为3的方块");
+        return;
+    }
+    dealedDepth.setZero(sizePic(0)+1,sizePic(1));
+    dealedDepth.block(1,0,sizePic(0),sizePic(1))=rawShadow-1;
+    //Depth的第一行没有意义，只是为了保持行索引一致
+    WaterList.clear();
+
+    for(short r=0;r<Base.rows();r++)
+    {
+        for(short c=0;c<Base.cols();c++)
+        {
+            if(Base(r,c)==12)
+            {
+                WaterList[TokiRC(r,c)]=nullWater;
+                dealedDepth(r,c)=0;
+                continue;
+            }
+            if(Base(r,c)==0)
+            {
+                dealedDepth(r,c)=0;
+                continue;
+            }
+        }
+        emit buildProgressAdd(sizePic(0));
+    }
+
+    HighMap.setZero(sizePic(0)+1,sizePic(1));
+    LowMap.setZero(sizePic(0)+1,sizePic(1));
+
+    int waterCount=WaterList.size();
+    qDebug()<<"共有"<<waterCount<<"个水柱";
+    for(short r=0;r<sizePic(0);r++)//遍历每一行，根据高度差构建高度图
+    {
+        HighMap.row(r+1)=HighMap.row(r)+dealedDepth.row(r+1);
+        emit buildProgressAdd(sizePic(0));
+    }
+
+    for(short c=0;c<Base.cols();c++)
+    {
+        if(Base(1,c)==0||Base(1,c)==12||rawShadow(0,c)==2)
+        {
+            Base(0,c)=0;
+            HighMap(0,c)=HighMap(1,c);
+        }
+        emit buildProgressAdd(sizePic(1));
+    }
+
+
+    LowMap=HighMap;
+
+    for(auto it=WaterList.begin();it!=WaterList.end();it++)
+    {
+        LowMap(TokiRow(it->first),TokiCol(it->first))=HighMap(TokiRow(it->second),TokiCol(it->second))
+                -WaterColumnSize[rawShadow(TokiRow(it->first)-1,TokiCol(it->first))]+1;
+    }
+
+    for(short c=0;c<sizePic(1);c++)
+    {
+        HighMap.col(c)-=LowMap.col(c).minCoeff();
+        LowMap.col(c)-=LowMap.col(c).minCoeff();
+        //沉降每一列
+        emit buildProgressAdd(sizePic(1));
+    }
+
+    if(compressMethod==NaturalOnly)
+    {
+        //执行高度压缩
+        OptiChain::Base=Base;
+        for(int c=0;c<sizePic(1);c++)
+        {
+            OptiChain Compressor(HighMap.col(c),LowMap.col(c),c);
+            Compressor.divideAndCompress();
+            HighMap.col(c)=Compressor.HighLine;
+            LowMap.col(c)=Compressor.LowLine;
+            emit buildProgressAdd(sizePic(1));
+        }
+    }
+
+    int maxHeight=HighMap.maxCoeff();
+
+    for(auto it=WaterList.begin();it!=WaterList.end();it++)
+    {
+        int r=TokiRow(it->first),c=TokiCol(it->first);
+        it->second=TokiWater(HighMap(r,c),LowMap(r,c));
+        maxHeight=max(maxHeight,HighMap(r,c)+1);
+        //遮顶玻璃块
+    }
+    size3D[2]=2+sizePic(0);//z
+    size3D[0]=2+sizePic(1);//x
+    size3D[1]=1+maxHeight;//y
+    return;
+}
+
+void TokiSlopeCraft::buildHeight() {
+        Build.resize(size3D[0],size3D[1],size3D[2]);
+        Build.setZero();
+        //Base(r+1,c)<->High(r+1,c)<->Build(c+1,High(r+1,c),r+1)
+        //为了区分玻璃与空气，张量中存储的是Base+1.所以元素为1对应着玻璃，0对应空气
+        int x=0,y=0,z=0;
+        int yLow=0;
+        qDebug()<<"共有"<<WaterList.size()<<"个水柱";
+        //qDebug()<<2;
+        for(auto it=WaterList.begin();it!=WaterList.end();it++)//水柱周围的玻璃
+        {
+            x=TokiCol(it->first)+1;
+            z=TokiRow(it->first);
+            y=waterHigh(it->second);
+            yLow=waterLow(it->second);
+            Build(x,y+1,z)=0+1;//柱顶玻璃
+            for(short yDynamic=yLow;yDynamic<=y;yDynamic++)
+            {
+                Build(x-1,yDynamic,z-0)=1;
+                Build(x+1,yDynamic,z+0)=1;
+                Build(x+0,yDynamic,z-1)=1;
+                Build(x+0,yDynamic,z+1)=1;
+            }
+            if(yLow>=1)       Build(x,yLow-1,z)=1;//柱底玻璃
+        }
+        //qDebug()<<3;
+
+        emit buildProgressAdd(sizePic(2));
+
+        for(short r=0;r<sizePic(0);r++)//普通方块
+        {
+            for(short c=0;c<sizePic(1);c++)
+            {
+                if(Base(r+1,c)==12||Base(r+1,c)==0)
+                    continue;
+                x=c+1;y=HighMap(r+1,c);z=r+1;
+                if(y>=1&&blockPalette[Base(r+1,c)].needGlass)
+                    Build(x,y-1,z)=0+1;
+
+                Build(x,y,z)=Base(r+1,c)+1;
+            }
+            emit buildProgressAdd(sizePic(1));
+        }
+
+    //qDebug()<<4;
+
+    emit buildProgressAdd(sizePic(2));
+
+    for(auto it=WaterList.begin();it!=WaterList.end();it++)
+    {
+        x=TokiCol(it->first)+1;
+        z=TokiRow(it->first);
+        y=waterHigh(it->second);
+        yLow=waterLow(it->second);
+        for(short yDynamic=yLow;yDynamic<=y;yDynamic++)
+        {
+            Build(x,yDynamic,z)=13;
+        }
+    }
+
+    for(short c=0;c<sizePic(1);c++)//北侧方块
+        if(Base(0,c))   Build(c+1,HighMap(0,c),0)=11+1;
+}
+
+
+void TokiSlopeCraft::get3DSize(int & x,int & y,int & z) const {
+    if(kernelStep<builded)return;
+    x=size3D[0];
+    y=size3D[1];
+    z=size3D[2];
+    return;
+}
+int TokiSlopeCraft::getHeight() const {
+    if(kernelStep<builded) return -1;
+    return size3D[1];
+}
+int TokiSlopeCraft::getBlockCounts(vector<int> & dest) const {
+    if(kernelStep<builded) return -1;
+    dest.resize(64);
+    for(int i=0;i<64;i++)
+        dest[i]=0;
+    for(int i=0;i<Build.size();i++) {
+        if(Build(i))
+            dest[Build(i)-1]++;
+    }
+    int totalBlockCount=0;
+    for(int i=0;i<64;i++)
+        totalBlockCount+=dest[i];
+    return totalBlockCount;
 }

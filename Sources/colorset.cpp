@@ -2,6 +2,12 @@
 #define colorset_cpp
 #include "ColorSet.h"
 
+ColorSet* TokiColor::Allowed=NULL;
+ColorSet*TokiColor::Basic=NULL;
+short TokiColor::DepthIndexEnd[4]={63,127,191,255};
+unsigned char TokiColor::DepthCount[4]={64,64,64,64};
+bool TokiColor::needFindSide=false;
+
 ColorSet::ColorSet()
 {
     GetMap(Map);
@@ -40,12 +46,6 @@ void ColorSet::ApplyAllowed(ColorSet*standard,bool *MIndex)
             return;
         }
         qDebug()<<"共允许使用"<<totalAllowColorCount<<"种颜色";
-
-        /*for(short Index=0;Index<256;Index++)
-            if(MIndex[Index])
-                qDebug()<<4*(Index%64)+(Index/64);*/
-
-
 
         _RGB.setZero(totalAllowColorCount,3);
         HSV.setZero(totalAllowColorCount,3);

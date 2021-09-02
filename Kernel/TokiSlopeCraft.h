@@ -28,8 +28,8 @@
 #include <QRgb>
 #include <QtConcurrent>
 #include <QFuture>
-typedef unsigned char gameVersion;
-
+//typedef unsigned char gameVersion;
+typedef ArrayXXi EImage;
 using namespace Eigen;
 
 #define mapColor2Index(mapColor) (64*(mapColor%4)+(mapColor/4))
@@ -50,10 +50,20 @@ class TokiSlopeCraft : public QObject
 #endif
 public:
 #ifdef WITH_QT
-    explicit TokiSlopeCraft(const vector<string> &, QObject *parent = nullptr);
+    explicit TokiSlopeCraft(QObject *parent = nullptr);
 #else
-    TokiSlopeCraft(const vector<string> &);
+    TokiSlopeCraft();
 #endif
+    enum gameVersion {
+        ANCIENT=0,
+        MC12=12,
+        MC13=13,
+        MC14=14,
+        MC15=15,
+        MC16=16,
+        MC17=17,
+        FUTURE=255
+    };
     enum convertAlgo{
         RGB='r',
         RGB_Better='R',
@@ -63,7 +73,7 @@ public:
         XYZ='X'
     };
     enum compressSettings{
-        noCompress,Natural,Forced
+        noCompress=0,NaturalOnly=1,ForcedOnly=2,Both=3
     };
     enum mapTypes{
         Slope, //立体
@@ -72,11 +82,14 @@ public:
     };
     enum step{
         nothing,//对象刚刚创建，什么都没做
+        colorSetReady,//颜色表读取完毕
         convertionReady,//一切就绪，等待convert
         converted,//已经将图像转化为地图画
         builded,//构建了三维结构
     };
 //can do in nothing:
+    bool setColorSet(const char*,const char*,const char*,const char*);
+//can do in colorSetReady:
     step queryStep() const;
     bool setType(
         mapTypes,
@@ -93,8 +106,8 @@ public:
     short getImageCols() const;
 
 //can do in converted:
-    bool build(compressSettings,ushort maxAllowedHeight);//构建三维结构
-    ArrayXXi getConovertedImage() const;
+    bool build(compressSettings,ushort);//构建三维结构
+    EImage getConovertedImage() const;
     string exportAsData(const string & ,int) const;
 //can do in builded:
     string exportAsLitematic(const string &);
@@ -132,13 +145,12 @@ private:
     vector<simpleBlock> blockPalette;
 
     int size3D[3];//x,y,z
-    int totalBlocks;
-    vector<int> blockCounts;
 
     ArrayXXi rawImage;
 
     std::unordered_map<QRgb,TokiColor> colorHash;
 
+    ushort maxAllowedHeight;
     ArrayXXi mapPic;//stores mapColor
     ArrayXXi Base;
     ArrayXXi HighMap;
@@ -147,8 +159,6 @@ private:
     Tensor<unsigned char,3>Build;//x,y,z
 
 //for setType:
-    void makeAllowedColorIndex(bool*);
-    void makeColorSet();
     bool isVanilla() const;//判断是可以生存实装的地图画
     bool isFlat() const;//判断是平板的
 //for convert:
@@ -171,8 +181,8 @@ private:
     string Noder(const short *src,int size) const;
 
 };
-
-bool readFromTokiColor(const char*FileName,ArrayXXf & M);
+bool readFromTokiColor(const string & FileName,ArrayXXf & M);
+bool readFromTokiColor(const char*src,ArrayXXf & M);
 uchar h2d(char h);
 void crash();
 void matchColor(TokiColor * tColor,QRgb qColor);
