@@ -10,22 +10,29 @@ BlockListManager::BlockListManager(QHBoxLayout * _area,
     TokiBaseColor * tbc=nullptr;
     tbcs.clear();
 for(uchar baseColor=0;baseColor<64;baseColor++) {
-    if(baseColorNames[baseColor].isEmpty())
-        break;
-    area->addWidget(qgb=new QGroupBox(baseColorNames[baseColor]));
-    qgl=new QGridLayout;
-    qgb->setLayout(qgl);
-    tbc=new TokiBaseColor(baseColor,qgl);
-    tbcs.push_back(tbc);
+        if(baseColorNames[baseColor].isEmpty())
+            break;
+        area->addWidget(qgb=new QGroupBox(baseColorNames[baseColor]));
+        qgl=new QGridLayout;
+        qgb->setLayout(qgl);
+        tbc=new TokiBaseColor(baseColor,qgl);
+        tbcs.push_back(tbc);
 
-    connect(this,SIGNAL(translate(Language)),tbc,SLOT(translate(Language)));
-    connect(tbc,SIGNAL(userClicked()),this,SLOT(receiveClicked()));
-}
+        connect(this,SIGNAL(translate(Language)),tbc,SLOT(translate(Language)));
+        connect(tbc,SIGNAL(userClicked()),this,SLOT(receiveClicked()));
+    }
 }
 
 BlockListManager::~BlockListManager() {
     for(uchar i=0;i<tbcs.size();i++)
         delete tbcs[i];
+}
+
+void BlockListManager::setVersion(uchar _ver) {
+    if(_ver<12||_ver>=18)return;
+    TokiBaseColor::mcVer=_ver;
+    for(uchar i=0;i<tbcs.size();i++)
+        tbcs[i]->versionCheck();
 }
 
 void BlockListManager::addBlocks(const QJsonArray & jArray,QString imgDir) {

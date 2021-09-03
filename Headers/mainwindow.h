@@ -38,6 +38,7 @@ This file is part of SlopeCraft.
 #include <QImage>
 #include <QThread>
 #include <QDesktopServices>
+#include <QMessageBox>
 #include <QUrl>
 #include <QtConcurrent>
 #include <QFuture>
@@ -76,99 +77,8 @@ class MainWindow;
 using namespace Eigen;
 //class ColorSet;
 
-void GetBLCreative(short*BL);
-void GetBLCheaper(short*BL);
-void GetBLBetter(short*BL);
-void GetBLGlowing(short*BL);
 bool compressFile(const char*sourcePath,const char*destPath);
 
-
-/*
-class mcMap
-{
-public:
-        mcMap();
-      ~mcMap();
-
-        MainWindow*parent;
-        unsigned char gameVersion;//12,13,14,15,16,17
-        char mapType;//S,C,F
-        int step;
-        ColorSet Basic;
-        ColorSet Allowed;
-        bool colorAllowed[256];
-
-        vector<vector<simpleBlock>> FullBlockList;
-        short SelectedBlockList[64];//实际的方块列表
-        vector<string*> BlockListId;
-
-        int size3D[3];//x,y,z
-        int sizePic[2];
-        int totalBlocks;
-
-        short adjStep;
-        QImage OriginPic;
-        QImage rawPic;
-        QImage adjedPic;
-
-        MatrixXf Dither[3];
-        //std::unordered_map<QRgb,TokiColor>*colorHash;
-
-
-        MatrixXi mapPic;//stores mapColor
-
-        ArrayXXi Base;
-        ArrayXXi HighMap;
-        ArrayXXi LowMap;
-        std::unordered_map<TokiPos,waterItem> WaterList;
-
-        Tensor<unsigned char,3>Build;//x,y,z
-        char Mode;//R->RGB,H->HSV,L->Lab,X->XYZ
-
-        short ExLitestep;
-        short ExMcFstep;
-
-        bool allowNaturalOpti;
-        bool allowForcedOpti;
-        int maxHeight;
-
-        //char netFilePath[256];//纯路径，不包含最后的文件名
-        //char netFileName[64];//纯文件名，不含后缀名
-
-
-
-#ifdef putMapData
-        void putMap(const QString &,const MatrixXi&HighMap,const MatrixXi&LowMap);
-#endif
-
-
-        static inline short mapColor2Index(short mapColor);
-        static inline short Index2mapColor(short Index);
-
-        long makeHeight();//构建高度矩阵
-
-        inline bool is16();
-        inline bool is17();
-        inline bool isFlat();
-        inline bool isSurvival();
-        inline bool isCreative();
-
-        inline bool canUseBlock(short r,short c);
-        long BuildHeight();//构建真正的立体结构（三维矩阵
-        long exportAsLitematica(string FilePathAndName);
-        long exportAsStructure(string FilePathAndName);
-        long exportAsData(const string &FolderPath,const int indexStart);
-
-        //void putCommand(const QString&Command);
-
-        void writeBlock(const string &netBlockId,vector<string>&Property,vector<string>&ProVal,NBT::NBTWriter&);
-
-        void writeTrash(int count,NBT::NBTWriter&);
-
-        //int CommandCount;
-};
-
-*/
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE

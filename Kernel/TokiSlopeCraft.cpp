@@ -215,6 +215,15 @@ string TokiSlopeCraft::Noder(const short *src,int size) const {
         return dst;
 }
 
+void TokiSlopeCraft::getARGB32(QRgb * dest) const {
+    if(kernelStep<colorSetReady) return;
+    for(uchar base=0;base<64;base++)
+        dest[base]=qRgba(Basic._RGB(mapColor2Index(base*4+2),0),
+                         Basic._RGB(mapColor2Index(base*4+2),1),
+                         Basic._RGB(mapColor2Index(base*4+2),2),
+                         255*(base!=0));
+}
+
 bool TokiSlopeCraft::convert(convertAlgo algo,bool dither) {
     if(kernelStep<convertionReady)
         return false;

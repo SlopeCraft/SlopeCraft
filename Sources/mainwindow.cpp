@@ -27,9 +27,10 @@ This file is part of SlopeCraft.
 #include "ui_mainwindow.h"
 #include "tpstrategywind.h"
 
-
-
-
+const ushort MainWindow::BLCreative[64]={0,0,1,1,0,0,0,0,3,0,4,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+const ushort MainWindow::BLCheaper[64]={0,0,0,0,1,0,5,2,3,0,4,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+const ushort MainWindow::BLBetter[64]={0,1,1,0,0,1,0,2,0,0,3,2,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0};
+const ushort MainWindow::BLGlowing[64]={0,1,2,0,0,2,4,2,0,0,3,2,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,6,0,0,1,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0};
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -136,35 +137,179 @@ void MainWindow::showPreview()
 }
 
 void MainWindow::loadColormap() {
+    QString ColorFilePath;
+    ColorFilePath="./Colors/RGB.TokiColor";
 
+    QByteArray R,H,L,X;
+    while(true) {
+        QFile temp(ColorFilePath);
+        if(temp.exists()) {
+            R=temp.readAll();
+            if(QCryptographicHash::hash(R,QCryptographicHash::Algorithm::Md5).toStdString()
+                    =="ba56d5af2ba89d9ba3362a72778e1624") {
+                break;
+            }
+        }
+        qDebug("未找到颜色文件RGB.TokiColor");
+        ColorFilePath=QFileDialog::getOpenFileName(this,
+                            tr("颜色表文件")+"RGB.TokiColor"+tr("不存在或被篡改，请手动寻找")
+                            ,"./Colors","RGB.TokiColor");
+        temp.close();
+    }
+
+    ColorFilePath="./Colors/HSV.TokiColor";
+    while(true) {
+        QFile temp(ColorFilePath);
+        if(temp.exists()) {
+            H=temp.readAll();
+            if(QCryptographicHash::hash(H,QCryptographicHash::Algorithm::Md5).toStdString()
+                    =="db47a74d0b32fa682d1256cce60bf574") {
+                break;
+            }
+        }
+        qDebug("未找到颜色文件HSV.TokiColor");
+        ColorFilePath=QFileDialog::getOpenFileName(this,
+                            tr("颜色表文件")+"HSV.TokiColor"+tr("不存在或被篡改，请手动寻找")
+                            ,"./Colors","HSV.TokiColor");
+        temp.close();
+    }
+
+    ColorFilePath="./Colors/Lab.TokiColor";
+    while(true) {
+        QFile temp(ColorFilePath);
+        if(temp.exists()) {
+            L=temp.readAll();
+            if(QCryptographicHash::hash(L,QCryptographicHash::Algorithm::Md5).toStdString()
+                    =="2aec9d79b920745472c0ccf56cbb7669") {
+                break;
+            }
+        }
+        qDebug("未找到颜色文件Lab.TokiColor");
+        ColorFilePath=QFileDialog::getOpenFileName(this,
+                            tr("颜色表文件")+"Lab.TokiColor"+tr("不存在或被篡改，请手动寻找")
+                            ,"./Colors","Lab.TokiColor");
+        temp.close();
+    }
+
+    ColorFilePath="./Colors/XYZ.TokiColor";
+    while(true) {
+        QFile temp(ColorFilePath);
+        if(temp.exists()) {
+            X=temp.readAll();
+            if(QCryptographicHash::hash(X,QCryptographicHash::Algorithm::Md5).toStdString()
+                    =="6551171faf62961e3ae6bc3c2ee8d051") {
+                break;
+            }
+        }
+        qDebug("未找到颜色文件XYZ.TokiColor");
+        ColorFilePath=QFileDialog::getOpenFileName(this,
+                            tr("颜色表文件")+"XYZ.TokiColor"+tr("不存在或被篡改，请手动寻找")
+                            ,"./Colors","XYZ.TokiColor");
+        temp.close();
+    }
+
+    if(Kernel->setColorSet(R.data(),H.data(),L.data(),X.data()))
+        qDebug("成功载入颜色");
+    else
+        qDebug("载入颜色失败");
 }
 
 void MainWindow::loadBlockList() {
-    QString FixedPath="./Blocks/FixedBlocks.json";
-    QString FixedDir="./Blocks/FixedBlocks";
+    QString Path="./Blocks/FixedBlocks.json";
+    QString Dir="./Blocks/FixedBlocks";
+    while(!QFile(Path).exists()) {
+        qDebug()<<"错误！找不到固定的方块列表文件"<<Path;
+        Path=QFileDialog::getOpenFileName(this,
+                                          "找不到固定方块列表文件，请手动寻找",
+                                          "./",
+                                          "FixedBlocks.json");
+    }
+    while(!QDir(Dir).exists()) {
+        qDebug()<<"错误！固定方块列表的图标路径"<<Dir<<"无效";
+        Dir=QFileDialog::getExistingDirectory(this,
+                                                 "找不到存放固定方块列表图片的文件夹，请手动寻找",
+                                              "./",
+                                              QFileDialog::Option::ReadOnly);
+
+    }
     QJsonDocument jd;
     QJsonParseError error;
-    jd.fromJson(QFile(FixedPath).readAll(),&error);
+    jd.fromJson(QFile(Path).readAll(),&error);
     if(error.error!=QJsonParseError::NoError) {
-        qDebug()<<error.errorString();
+        qDebug()<<"解析固定方块列表时出错："<<error.errorString();
         return;
     }
 
     QJsonArray ja=jd.array();
 
-    Manager->addBlocks(ja,FixedDir);
+    Manager->addBlocks(ja,Dir);
 
+
+
+//开始解析用户自定义的方块列表
+    Dir="./Blocks/CustomBlocks";
+    Path="./Blocks/CustomBlocks.json";
+
+    while(!QFile(Path).exists()) {
+        int choice=QMessageBox::question(this,
+                              "找不到自定义方块列表文件CustomBlocks.json",
+                              "这会导致你自定义的方块无法被加载。\n你可以手动寻找它（点确认），也可以忽略这个错误（点取消）。",
+                              QMessageBox::Ok|QMessageBox::Ignore);
+        if(choice==QMessageBox::Ok) {
+            Path=QFileDialog::getOpenFileName(this,
+                                              "找不到自定义列表文件，请手动寻找",
+                                              "./",
+                                              "FixedBlocks.json");
+        } else
+            return;
+    }
+
+    while(!QDir(Dir).exists()) {
+        int choice=QMessageBox::question(this,
+                              "找不到存放自定义方块图片的文件夹CustomBlocks",
+                              "这会导致你自定义的方块图标无法被加载。\n你可以手动寻找它（点确认），也可以忽略这个错误（点取消）。",
+                              QMessageBox::Ok|QMessageBox::Ignore);
+        if(choice==QMessageBox::Ok) {
+            Dir=QFileDialog::getExistingDirectory(this,
+                                                     "找不到存放固定方块列表图片的文件夹，请手动寻找",
+                                                  "./",
+                                                  QFileDialog::Option::ReadOnly);
+        } else
+            break;
+    }
+
+    jd.fromJson(QFile(Path).readAll(),&error);
+
+    while(error.error!=QJsonParseError::NoError) {
+        qDebug()<<"自定义方块列表json格式错误："<<error.errorString();
+        QMessageBox::warning(this,
+                              "解析自定义方块列表json时出错",
+                              error.errorString()+"\n这是因为json格式错误。\n你自定义的方块无法被加载。",
+                              QMessageBox::Abort);
+        return;
+    }
+    ja=jd.array();
+
+    Manager->addBlocks(ja,Dir);
+
+    if(Kernel->queryStep()>=TokiSlopeCraft::colorSetReady) {
+        QRgb colors[64];
+        Kernel->getARGB32(colors);
+        Manager->setLabelColors(colors);
+    }
 }
-
 
 void MainWindow::InitializeAll()
 {
     ui->LeftScroll->verticalScrollBar()->setStyleSheet("QScrollBar{width: 7px;margin: 0px 0 0px 0;background-color: rgba(255, 255, 255, 64);color: rgba(255, 255, 255, 128);}");
     if(!Collected)
     {
+        loadColormap();
+        qDebug("颜色表加载完毕");
         loadBlockList();
+        qDebug("方块列表加载完毕");
+        Manager->setVersion(TokiSlopeCraft::MC17);
         Collected=true;
-        qDebug("StartWithSlope中的初始化部分完成");
     }
     static bool needInitialize=true;
     if(needInitialize)
@@ -172,82 +317,6 @@ void MainWindow::InitializeAll()
         qDebug()<<"当前运行路径："<<QCoreApplication::applicationDirPath();
         //QString DirPath=QCoreApplication::applicationDirPath()+'/';
         QDir::setCurrent(QCoreApplication::applicationDirPath());
-
-        QString ColorFilePath;
-        ColorFilePath="./Colors/RGB.TokiColor";
-
-        QByteArray R,H,L,X;
-        while(true) {
-            QFile temp(ColorFilePath);
-            if(temp.exists()) {
-                R=temp.readAll();
-                if(QCryptographicHash::hash(R,QCryptographicHash::Algorithm::Md5).toStdString()
-                        =="ba56d5af2ba89d9ba3362a72778e1624") {
-                    break;
-                }
-            }
-            qDebug("未找到颜色文件RGB.TokiColor");
-            ColorFilePath=QFileDialog::getOpenFileName(this,
-                                tr("颜色表文件")+"RGB.TokiColor"+tr("不存在或被篡改，请手动寻找")
-                                ,"./Colors","RGB.TokiColor");
-            temp.close();
-        }
-
-        ColorFilePath="./Colors/HSV.TokiColor";
-        while(true) {
-            QFile temp(ColorFilePath);
-            if(temp.exists()) {
-                H=temp.readAll();
-                if(QCryptographicHash::hash(H,QCryptographicHash::Algorithm::Md5).toStdString()
-                        =="db47a74d0b32fa682d1256cce60bf574") {
-                    break;
-                }
-            }
-            qDebug("未找到颜色文件HSV.TokiColor");
-            ColorFilePath=QFileDialog::getOpenFileName(this,
-                                tr("颜色表文件")+"HSV.TokiColor"+tr("不存在或被篡改，请手动寻找")
-                                ,"./Colors","HSV.TokiColor");
-            temp.close();
-        }
-
-        ColorFilePath="./Colors/Lab.TokiColor";
-        while(true) {
-            QFile temp(ColorFilePath);
-            if(temp.exists()) {
-                L=temp.readAll();
-                if(QCryptographicHash::hash(L,QCryptographicHash::Algorithm::Md5).toStdString()
-                        =="2aec9d79b920745472c0ccf56cbb7669") {
-                    break;
-                }
-            }
-            qDebug("未找到颜色文件Lab.TokiColor");
-            ColorFilePath=QFileDialog::getOpenFileName(this,
-                                tr("颜色表文件")+"Lab.TokiColor"+tr("不存在或被篡改，请手动寻找")
-                                ,"./Colors","Lab.TokiColor");
-            temp.close();
-        }
-
-        ColorFilePath="./Colors/XYZ.TokiColor";
-        while(true) {
-            QFile temp(ColorFilePath);
-            if(temp.exists()) {
-                X=temp.readAll();
-                if(QCryptographicHash::hash(X,QCryptographicHash::Algorithm::Md5).toStdString()
-                        =="6551171faf62961e3ae6bc3c2ee8d051") {
-                    break;
-                }
-            }
-            qDebug("未找到颜色文件XYZ.TokiColor");
-            ColorFilePath=QFileDialog::getOpenFileName(this,
-                                tr("颜色表文件")+"XYZ.TokiColor"+tr("不存在或被篡改，请手动寻找")
-                                ,"./Colors","XYZ.TokiColor");
-            temp.close();
-        }
-
-        if(Kernel->setColorSet(R.data(),H.data(),L.data(),X.data()))
-            qDebug("成功载入颜色");
-        else
-            qDebug("载入颜色失败");
 
         needInitialize=false;
 #ifdef dispDerivative
@@ -259,23 +328,13 @@ void MainWindow::InitializeAll()
 
 void MainWindow::contactG()
 {
-    static string Toki="";
-    if(Toki=="")
-    {
-        const short size3D[]={1229, 150, 150, 44, 40, 69, 204, 204, 376, 114, 150, 1229, 598, 182, 142, 173, 110, 238, 204, 132, 110, 117, 114, 882, 110, 7, 598, 376, 204, 101, 166, 110, 44, 364, 870, 169, 922, 134, 150,};
-        Toki=this->Noder(size3D,sizeof(size3D)/2);
-    }
+    static string Toki=Kernel->getAuthorURL()[1];
     QDesktopServices::openUrl(QUrl(QString::fromStdString(Toki)));
 }
 
 void MainWindow::contactB()
 {
-    static string Toki="";
-    if(Toki=="")
-    {
-        const short sizePic[]={1229, 150, 150, 44, 40, 69, 204, 204, 40, 44, 922, 173, 364, 142, 182, 114, 166, 114, 182, 114, 166, 114, 142, 173, 110, 238, 204, 80, 218, 380, 56, 28, 286, 28, 80, 380};
-        Toki=this->Noder(sizePic,sizeof(sizePic)/2);
-    }
+    static string Toki=Kernel->getAuthorURL()[0];
     QDesktopServices::openUrl(QUrl(QString::fromStdString(Toki)));
 }
 

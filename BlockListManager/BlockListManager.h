@@ -26,6 +26,8 @@ public:
 
     void setLabelColors(const QRgb*);
 
+    void setVersion(uchar);
+
     void getEnableList(bool*) const;
     std::vector<const simpleBlock *> getSimpleBlockList() const;
     std::vector<const TokiBlock * >getTokiBlockList() const;

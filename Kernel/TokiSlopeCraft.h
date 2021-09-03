@@ -97,8 +97,8 @@ public:
         const bool [64],
         simpleBlock [64] ,
         const ArrayXXi &);
-
     vector<string> getAuthorURL() const;
+    void getARGB32(QRgb*) const;
 
 //can do in convertionReady:
     bool convert(convertAlgo=RGB_Better,bool dither=false);
