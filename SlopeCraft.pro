@@ -6,7 +6,8 @@ INCLUDEPATH += D:\eigen-3.3.9 \
                                 ./Sources \
                                 ./others \
                                 D:\zlibs \
-                                ./Kernel
+                                ./Kernel \
+                                ./BlockListManager
 
 DEFINES += WIN32_LEAN_AND_MEAN
 RC_ICONS = others/SlopeCraft.ico
@@ -54,6 +55,9 @@ SOURCES += \
     ../../zlibs/trees.c \
     ../../zlibs/uncompr.c \
     ../../zlibs/zutil.c \
+    BlockListManager/BlockListManager.cpp \
+    BlockListManager/TokiBaseColor.cpp \
+    BlockListManager/TokiBlock.cpp \
     Kernel/TokiSlopeCraft.cpp \
     Sources/CIEDE00.cpp \
     Sources/NBTWriter.cpp \
@@ -79,6 +83,9 @@ HEADERS += \
     ../../zlibs/zconf.h \
     ../../zlibs/zlib.h \
     ../../zlibs/zutil.h \
+    BlockListManager/BlockListManager.h \
+    BlockListManager/TokiBaseColor.h \
+    BlockListManager/TokiBlock.h \
     Headers/ColorSet.h \
     Headers/NBTWriter.h \
     Headers/OptiChain.h \

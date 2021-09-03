@@ -96,6 +96,8 @@ MainWindow::MainWindow(QWidget *parent)
     for(int i=0;i<64;i++)Blocks[i].resize(12);
     Enables.resize(64);
     ShowColors.resize(64);
+
+
 }
 
 MainWindow::~MainWindow()

@@ -1,6 +1,6 @@
 {"FixedBlocks":[
 {
-    "mapColor":0,
+    "baseColor":0,
     "id":"glass",
     "nameZH":"玻璃",
     "nameEN":"Glass",
@@ -11,7 +11,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":1,
+    "baseColor":1,
     "id":"grass_block[snowy=false]",
     "nameZH":"草方块",
     "nameEN":"Grass block",
@@ -22,7 +22,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":1,
+    "baseColor":1,
     "id":"slime_block",
     "nameZH":"粘液块",
     "nameEN":"Slime block",
@@ -33,7 +33,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":2,
+    "baseColor":2,
     "id":"birch_planks",
     "nameZH":"白桦木板",
     "nameEN":"Birch plank",
@@ -44,7 +44,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":2,
+    "baseColor":2,
     "id":"smooth_sandstone",
     "nameZH":"平滑砂岩",
     "nameEN":"Smooth sandstone",
@@ -55,7 +55,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":2,
+    "baseColor":2,
     "id":"glowstone",
     "nameZH":"萤石",
     "nameEN":"Glowstone",
@@ -66,7 +66,7 @@
     "isGlowing":true
 },
 {
-    "mapColor":2,
+    "baseColor":2,
     "id":"end_stone",
     "nameZH":"末地石",
     "nameEN":"End stone",
@@ -77,7 +77,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":2,
+    "baseColor":2,
     "id":"end_stone_bricks",
     "nameZH":"末地石砖",
     "nameEN":"Endstone bricks",
@@ -88,7 +88,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":2,
+    "baseColor":2,
     "id":"turtle_egg[eggs=4,hatch=0]",
     "nameZH":"海蛋",
     "nameEN":"Turtle egg",
@@ -99,7 +99,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":3,
+    "baseColor":3,
     "id":"mushroom_stem[east=true,west=true,north=true,south=true,up=true,down=true]",
     "nameZH":"蘑菇柄",
     "nameEN":"Mushroom stem",
@@ -110,7 +110,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":3,
+    "baseColor":3,
     "id":"cobweb",
     "nameZH":"蜘蛛网",
     "nameEN":"Cobweb",
@@ -121,7 +121,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":4,
+    "baseColor":4,
     "id":"redstone_block",
     "nameZH":"红石块",
     "nameEN":"Redstone block",
@@ -132,7 +132,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":4,
+    "baseColor":4,
     "id":"tnt[unstable=false]",
     "nameZH":"TNT",
     "nameEN":"TNT",
@@ -143,7 +143,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":5,
+    "baseColor":5,
     "id":"ice",
     "nameZH":"冰",
     "nameEN":"Ice",
@@ -154,7 +154,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":5,
+    "baseColor":5,
     "id":"packed_ice",
     "nameZH":"浮冰",
     "nameEN":"Packed ice",
@@ -165,7 +165,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":5,
+    "baseColor":5,
     "id":"blue_ice",
     "nameZH":"蓝冰",
     "nameEN":"Blue ice",
@@ -176,7 +176,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":6,
+    "baseColor":6,
     "id":"iron_block",
     "nameZH":"铁块",
     "nameEN":"Iron block",
@@ -187,7 +187,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":6,
+    "baseColor":6,
     "id":"brewing_stand[has_bottle_0=false,has_bottle_1=false,has_bottle_2=false]",
     "nameZH":"酿造台",
     "nameEN":"brewing stand",
@@ -198,7 +198,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":6,
+    "baseColor":6,
     "id":"heavy_weighted_pressure_plate[power=0]",
     "nameZH":"铁压力板",
     "nameEN":"Iron pressure plate",
@@ -209,7 +209,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":6,
+    "baseColor":6,
     "id":"iron_trapdoor[facing=north,half=top,open=false,powered=false,waterlogged=false]",
     "nameZH":"铁活板门",
     "nameEN":"Iron trapdoor",
@@ -220,7 +220,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":6,
+    "baseColor":6,
     "id":"lantern[hanging=false]",
     "nameZH":"灯笼",
     "nameEN":"lantern",
@@ -231,7 +231,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":6,
+    "baseColor":6,
     "id":"grindstone[face=floor,facing=north]",
     "nameZH":"砂轮",
     "nameEN":"Grindstone",
@@ -242,7 +242,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":7,
+    "baseColor":7,
     "id":"oak_leaves[distance=7,persistent=true]",
     "nameZH":"橡树树叶",
     "nameEN":"Oak leaves",
@@ -253,7 +253,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":7,
+    "baseColor":7,
     "id":"spruce_leaves[distance=7,persistent=true]",
     "nameZH":"云杉树叶",
     "nameEN":"Spurce leaves",
@@ -264,7 +264,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":7,
+    "baseColor":7,
     "id":"birch_leaves[distance=7,persistent=true]",
     "nameZH":"白桦树叶",
     "nameEN":"Brich leaves",
@@ -275,7 +275,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":7,
+    "baseColor":7,
     "id":"jungle_leaves[distance=7,persistent=true]",
     "nameZH":"丛林木树叶",
     "nameEN":"Jungle leaves",
@@ -286,7 +286,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":7,
+    "baseColor":7,
     "id":"acacia_leaves[distance=7,persistent=true]",
     "nameZH":"金合欢树叶",
     "nameEN":"Acacia leaves",
@@ -297,7 +297,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":7,
+    "baseColor":7,
     "id":"dark_oak_leaves[distance=7,persistent=true]",
     "nameZH":"黑橡树树叶",
     "nameEN":"Dark oat leaves",
@@ -308,7 +308,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":8,
+    "baseColor":8,
     "id":"white_concrete",
     "nameZH":"白色混凝土",
     "nameEN":"White concrete",
@@ -319,7 +319,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":8,
+    "baseColor":8,
     "id":"white_wool",
     "nameZH":"白色羊毛",
     "nameEN":"White wool",
@@ -330,7 +330,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":8,
+    "baseColor":8,
     "id":"white_stained_glass",
     "nameZH":"白色染色玻璃",
     "nameEN":"White glass",
@@ -341,7 +341,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":8,
+    "baseColor":8,
     "id":"snow_block",
     "nameZH":"雪块",
     "nameEN":"Snow",
@@ -352,7 +352,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":9,
+    "baseColor":9,
     "id":"clay",
     "nameZH":"黏土块",
     "nameEN":"Clay block",
@@ -363,7 +363,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":10,
+    "baseColor":10,
     "id":"coarse_dirt",
     "nameZH":"砂土",
     "nameEN":"Coarse dirt",
@@ -374,7 +374,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":10,
+    "baseColor":10,
     "id":"polished_granite",
     "nameZH":"磨制花岗岩",
     "nameEN":"Polished granite",
@@ -385,7 +385,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":10,
+    "baseColor":10,
     "id":"jungle_planks",
     "nameZH":"丛林木板",
     "nameEN":"Jungle plank",
@@ -396,7 +396,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":10,
+    "baseColor":10,
     "id":"brown_mushroom_block[east=true,west=true,north=true,south=true,up=true,down=true]",
     "nameZH":"棕色蘑菇块",
     "nameEN":"Brown mushroom block",
@@ -407,7 +407,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":10,
+    "baseColor":10,
     "id":"dirt",
     "nameZH":"泥土",
     "nameEN":"Dirt",
@@ -418,7 +418,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":11,
+    "baseColor":11,
     "id":"cobblestone",
     "nameZH":"圆石",
     "nameEN":"Cobblestone",
@@ -429,7 +429,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":11,
+    "baseColor":11,
     "id":"stone",
     "nameZH":"石头",
     "nameEN":"Stonr",
@@ -440,7 +440,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":11,
+    "baseColor":11,
     "id":"smooth_stone",
     "nameZH":"平滑石",
     "nameEN":"Smooth stone",
@@ -451,7 +451,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":11,
+    "baseColor":11,
     "id":"stone_bricks",
     "nameZH":"石砖",
     "nameEN":"Stone brick",
@@ -462,7 +462,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":12,
+    "baseColor":12,
     "id":"water[level=0]",
     "nameZH":"水",
     "nameEN":"Water",
@@ -473,7 +473,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":13,
+    "baseColor":13,
     "id":"oak_planks",
     "nameZH":"橡木木板",
     "nameEN":"Oak plank",
@@ -484,7 +484,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":14,
+    "baseColor":14,
     "id":"polished_diorite",
     "nameZH":"磨制闪长岩",
     "nameEN":"Polished diorite",
@@ -495,7 +495,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":14,
+    "baseColor":14,
     "id":"quartz_block",
     "nameZH":"石英块",
     "nameEN":"Quartz block",
@@ -506,7 +506,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":14,
+    "baseColor":14,
     "id":"sea_lantern",
     "nameZH":"海晶灯",
     "nameEN":"Sea lantern",
@@ -517,7 +517,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":14,
+    "baseColor":14,
     "id":"target[power=0]",
     "nameZH":"靶子",
     "nameEN":"Target",
@@ -528,7 +528,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":15,
+    "baseColor":15,
     "id":"orange_concrete",
     "nameZH":"橙色混凝土",
     "nameEN":"Orange concrete",
@@ -539,7 +539,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":15,
+    "baseColor":15,
     "id":"orange_wool",
     "nameZH":"橙色羊毛",
     "nameEN":"Orange wool",
@@ -550,7 +550,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":15,
+    "baseColor":15,
     "id":"orange_stained_glass",
     "nameZH":"橙色染色玻璃",
     "nameEN":"Orange glass",
@@ -561,7 +561,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":15,
+    "baseColor":15,
     "id":"acacia_planks",
     "nameZH":"金合欢木板",
     "nameEN":"Acacia plank",
@@ -572,7 +572,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":15,
+    "baseColor":15,
     "id":"pumpkin",
     "nameZH":"南瓜",
     "nameEN":"Pumpkin",
@@ -583,7 +583,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":15,
+    "baseColor":15,
     "id":"terracotta",
     "nameZH":"陶瓦",
     "nameEN":"Terracotta",
@@ -594,7 +594,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":15,
+    "baseColor":15,
     "id":"smooth_red_sandstone",
     "nameZH":"平滑红砂岩",
     "nameEN":"Smooth red sandstone",
@@ -605,7 +605,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":15,
+    "baseColor":15,
     "id":"honey_block",
     "nameZH":"蜜块",
     "nameEN":"Honey block",
@@ -616,7 +616,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":15,
+    "baseColor":15,
     "id":"honeycomb_block",
     "nameZH":"蜜脾块",
     "nameEN":"Honey comb block",
@@ -627,7 +627,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":15,
+    "baseColor":15,
     "id":"raw_copper_block",
     "nameZH":"生铜块",
     "nameEN":"Raw copper block",
@@ -638,7 +638,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":15,
+    "baseColor":15,
     "id":"waxed_copper_block",
     "nameZH":"涂蜡铜块",
     "nameEN":"Waxed copper",
@@ -649,7 +649,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":15,
+    "baseColor":15,
     "id":"waxed_cut_copper",
     "nameZH":"涂蜡切制铜块",
     "nameEN":"Waxed cut copper",
@@ -660,7 +660,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":16,
+    "baseColor":16,
     "id":"magenta_concrete",
     "nameZH":"品红色混凝土",
     "nameEN":"Magenta concrete",
@@ -671,7 +671,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":16,
+    "baseColor":16,
     "id":"magenta_wool",
     "nameZH":"品红色羊毛",
     "nameEN":"Magenta wool",
@@ -682,7 +682,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":16,
+    "baseColor":16,
     "id":"magenta_stained_glass",
     "nameZH":"品红染色玻璃",
     "nameEN":"Magenta glass",
@@ -693,7 +693,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":16,
+    "baseColor":16,
     "id":"purpur_block",
     "nameZH":"紫珀块",
     "nameEN":"Purpur block",
@@ -704,7 +704,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":17,
+    "baseColor":17,
     "id":"light_blue_concrete",
     "nameZH":"浅蓝混凝土",
     "nameEN":"Light blue concrete",
@@ -715,7 +715,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":17,
+    "baseColor":17,
     "id":"light_blue_wool",
     "nameZH":"浅蓝羊毛",
     "nameEN":"light blue wool",
@@ -726,7 +726,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":17,
+    "baseColor":17,
     "id":"light_blue_stained_glass",
     "nameZH":"浅蓝染色玻璃",
     "nameEN":"Light blue glass",
@@ -737,7 +737,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":18,
+    "baseColor":18,
     "id":"yellow_concrete",
     "nameZH":"黄色混凝土",
     "nameEN":"Yellow concrete",
@@ -748,7 +748,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":18,
+    "baseColor":18,
     "id":"yellow_wool",
     "nameZH":"黄色羊毛",
     "nameEN":"Yellow wool",
@@ -759,7 +759,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":18,
+    "baseColor":18,
     "id":"yellow_stained_glass",
     "nameZH":"黄色染色玻璃",
     "nameEN":"yellow glass",
@@ -770,7 +770,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":18,
+    "baseColor":18,
     "id":"hay_block[axis=y]",
     "nameZH":"干草块",
     "nameEN":"Hay block",
@@ -781,7 +781,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":19,
+    "baseColor":19,
     "id":"lime_concrete",
     "nameZH":"浅绿混凝土",
     "nameEN":"Lime concrete",
@@ -792,7 +792,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":19,
+    "baseColor":19,
     "id":"lime_wool",
     "nameZH":"浅绿羊毛",
     "nameEN":"Lime wool",
@@ -803,7 +803,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":19,
+    "baseColor":19,
     "id":"lime_stained_glass",
     "nameZH":"浅绿染色玻璃",
     "nameEN":"Lime glass",
@@ -814,7 +814,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":20,
+    "baseColor":20,
     "id":"pink_concrete",
     "nameZH":"粉色混凝土",
     "nameEN":"Pink concrete",
@@ -825,7 +825,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":20,
+    "baseColor":20,
     "id":"pink_wool",
     "nameZH":"粉色羊毛",
     "nameEN":"Pink wool",
@@ -836,7 +836,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":20,
+    "baseColor":20,
     "id":"pink_stained_glass",
     "nameZH":"粉色染色玻璃",
     "nameEN":"Pink glass",
@@ -847,7 +847,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":21,
+    "baseColor":21,
     "id":"gray_concrete",
     "nameZH":"灰色混凝土",
     "nameEN":"Gray concrete",
@@ -858,7 +858,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":21,
+    "baseColor":21,
     "id":"gray_wool",
     "nameZH":"灰色羊毛",
     "nameEN":"Gray wool",
@@ -869,7 +869,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":21,
+    "baseColor":21,
     "id":"gray_stained_glass",
     "nameZH":"灰色染色玻璃",
     "nameEN":"Gray glass",
@@ -880,7 +880,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":21,
+    "baseColor":21,
     "id":"tinted_glass",
     "nameZH":"遮光玻璃",
     "nameEN":"Tinted glass",
@@ -891,7 +891,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":22,
+    "baseColor":22,
     "id":"light_gray_concrete",
     "nameZH":"浅灰混凝土",
     "nameEN":"Light gray concrete",
@@ -902,7 +902,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":22,
+    "baseColor":22,
     "id":"light_gray_wool",
     "nameZH":"浅灰羊毛",
     "nameEN":"Light gray wool",
@@ -913,7 +913,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":22,
+    "baseColor":22,
     "id":"light_gray_stained_glass",
     "nameZH":"浅灰染色玻璃",
     "nameEN":"Light gray glass",
@@ -924,7 +924,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":23,
+    "baseColor":23,
     "id":"cyan_concrete",
     "nameZH":"青色混凝土",
     "nameEN":"Cyan concrete",
@@ -935,7 +935,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":23,
+    "baseColor":23,
     "id":"cyan_wool",
     "nameZH":"青色羊毛",
     "nameEN":"Cyan wool",
@@ -946,7 +946,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":23,
+    "baseColor":23,
     "id":"cyan_stained_glass",
     "nameZH":"青色染色玻璃",
     "nameEN":"Cyan glass",
@@ -957,7 +957,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":23,
+    "baseColor":23,
     "id":"prismarine",
     "nameZH":"海晶石",
     "nameEN":"Prismarine",
@@ -968,7 +968,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":24,
+    "baseColor":24,
     "id":"purple_concrete",
     "nameZH":"紫色混凝土",
     "nameEN":"Purple concrete",
@@ -979,7 +979,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":24,
+    "baseColor":24,
     "id":"purple_wool",
     "nameZH":"紫色羊毛",
     "nameEN":"Purple wool",
@@ -990,7 +990,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":24,
+    "baseColor":24,
     "id":"purple_stained_glass",
     "nameZH":"紫色染色玻璃",
     "nameEN":"Purple glass",
@@ -1001,7 +1001,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":24,
+    "baseColor":24,
     "id":"amethyst_block",
     "nameZH":"紫水晶块",
     "nameEN":"Amethyst block",
@@ -1012,7 +1012,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":25,
+    "baseColor":25,
     "id":"blue_concrete",
     "nameZH":"蓝色混凝土",
     "nameEN":"Blue concrete",
@@ -1023,7 +1023,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":25,
+    "baseColor":25,
     "id":"blue_wool",
     "nameZH":"蓝色羊毛",
     "nameEN":"Blue wool",
@@ -1034,7 +1034,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":25,
+    "baseColor":25,
     "id":"blue_stained_glass",
     "nameZH":"蓝色染色玻璃",
     "nameEN":"Blue glass",
@@ -1045,7 +1045,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":26,
+    "baseColor":26,
     "id":"brown_concrete",
     "nameZH":"棕色混凝土",
     "nameEN":"Brown concrete",
@@ -1056,7 +1056,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":26,
+    "baseColor":26,
     "id":"brown_wool",
     "nameZH":"棕色羊毛",
     "nameEN":"Brown wool",
@@ -1067,7 +1067,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":26,
+    "baseColor":26,
     "id":"brown_stained_glass",
     "nameZH":"棕色染色玻璃",
     "nameEN":"Brown glass",
@@ -1078,7 +1078,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":26,
+    "baseColor":26,
     "id":"dark_oak_planks",
     "nameZH":"黑橡木木板",
     "nameEN":"Dark oak plank",
@@ -1089,7 +1089,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":26,
+    "baseColor":26,
     "id":"soul_sand",
     "nameZH":"灵魂沙",
     "nameEN":"Soul sand",
@@ -1100,7 +1100,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":26,
+    "baseColor":26,
     "id":"soul_soil",
     "nameZH":"灵魂土",
     "nameEN":"Soul soil",
@@ -1111,7 +1111,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":27,
+    "baseColor":27,
     "id":"green_concrete",
     "nameZH":"绿色混凝土",
     "nameEN":"Green concrete",
@@ -1122,7 +1122,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":27,
+    "baseColor":27,
     "id":"green_wool",
     "nameZH":"绿色羊毛",
     "nameEN":"Green wool",
@@ -1133,7 +1133,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":27,
+    "baseColor":27,
     "id":"green_stained_glass",
     "nameZH":"绿色染色玻璃",
     "nameEN":"Green glass",
@@ -1144,7 +1144,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":27,
+    "baseColor":27,
     "id":"dried_kelp_block",
     "nameZH":"海带块",
     "nameEN":"Kelp block",
@@ -1155,7 +1155,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":28,
+    "baseColor":28,
     "id":"red_concrete",
     "nameZH":"红色混凝土",
     "nameEN":"Red concrete",
@@ -1166,7 +1166,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":28,
+    "baseColor":28,
     "id":"red_wool",
     "nameZH":"红色羊毛",
     "nameEN":"Red wool",
@@ -1177,7 +1177,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":28,
+    "baseColor":28,
     "id":"red_stained_glass",
     "nameZH":"红色染色玻璃",
     "nameEN":"Red glass",
@@ -1188,7 +1188,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":28,
+    "baseColor":28,
     "id":"bricks",
     "nameZH":"砖块",
     "nameEN":"Bricks",
@@ -1199,7 +1199,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":28,
+    "baseColor":28,
     "id":"red_mushroom_block[east=true,west=true,north=true,south=true,up=true,down=true]",
     "nameZH":"红色蘑菇块",
     "nameEN":"Red mushroom block",
@@ -1210,7 +1210,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":28,
+    "baseColor":28,
     "id":"nether_wart_block",
     "nameZH":"地狱疣块",
     "nameEN":"Nether wart block",
@@ -1221,7 +1221,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":28,
+    "baseColor":28,
     "id":"shroomlight",
     "nameZH":"菌光体",
     "nameEN":"Shroomlight",
@@ -1232,7 +1232,7 @@
     "isGlowing":true
 },
 {
-    "mapColor":29,
+    "baseColor":29,
     "id":"black_concrete",
     "nameZH":"黑色混凝土",
     "nameEN":"Black concrete",
@@ -1243,7 +1243,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":29,
+    "baseColor":29,
     "id":"black_wool",
     "nameZH":"黑色羊毛",
     "nameEN":"Black wool",
@@ -1254,7 +1254,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":29,
+    "baseColor":29,
     "id":"black_stained_glass",
     "nameZH":"黑色染色玻璃",
     "nameEN":"Blakc glass",
@@ -1265,7 +1265,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":29,
+    "baseColor":29,
     "id":"obsidian",
     "nameZH":"黑曜石",
     "nameEN":"Obsidian",
@@ -1276,7 +1276,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":29,
+    "baseColor":29,
     "id":"coal_block",
     "nameZH":"煤块",
     "nameEN":"Coal block",
@@ -1287,7 +1287,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":29,
+    "baseColor":29,
     "id":"polished_basalt[axis=y]",
     "nameZH":"磨制玄武岩",
     "nameEN":"Polished basalt",
@@ -1298,7 +1298,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":29,
+    "baseColor":29,
     "id":"polished_blackstone",
     "nameZH":"磨制黑石",
     "nameEN":"Polished blackstone",
@@ -1309,7 +1309,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":30,
+    "baseColor":30,
     "id":"gold_block",
     "nameZH":"金块",
     "nameEN":"Gold block",
@@ -1320,7 +1320,7 @@
     "isGlowing":true
 },
 {
-    "mapColor":30,
+    "baseColor":30,
     "id":"light_weighted_pressure_plate[power=0]",
     "nameZH":"金压力板",
     "nameEN":"Gold pressure plate",
@@ -1331,7 +1331,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":30,
+    "baseColor":30,
     "id":"raw_gold_block",
     "nameZH":"粗金块",
     "nameEN":"Raw gold block",
@@ -1342,7 +1342,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":31,
+    "baseColor":31,
     "id":"diamond_block",
     "nameZH":"钻石块",
     "nameEN":"Diamond block",
@@ -1353,7 +1353,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":31,
+    "baseColor":31,
     "id":"prismarine_bricks",
     "nameZH":"海晶石砖",
     "nameEN":"Prismarine bricks",
@@ -1364,7 +1364,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":31,
+    "baseColor":31,
     "id":"dark_prismarine",
     "nameZH":"暗海晶石",
     "nameEN":"Dark prismarine",
@@ -1375,7 +1375,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":32,
+    "baseColor":32,
     "id":"lapis_block",
     "nameZH":"青金石块",
     "nameEN":"Lapis block",
@@ -1386,7 +1386,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":33,
+    "baseColor":33,
     "id":"emerald_block",
     "nameZH":"绿宝石块",
     "nameEN":"Emerald block",
@@ -1397,7 +1397,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":34,
+    "baseColor":34,
     "id":"podzol[snowy=false]",
     "nameZH":"灰化土",
     "nameEN":"Podzol",
@@ -1408,7 +1408,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":34,
+    "baseColor":34,
     "id":"spruce_planks",
     "nameZH":"云杉木板",
     "nameEN":"Spruce plank",
@@ -1419,7 +1419,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":34,
+    "baseColor":34,
     "id":"campfire[facing=north,lit=true,signal_fire=false,waterlogged=false]",
     "nameZH":"营火",
     "nameEN":"Campfire",
@@ -1430,7 +1430,7 @@
     "isGlowing":true
 },
 {
-    "mapColor":35,
+    "baseColor":35,
     "id":"netherrack",
     "nameZH":"地狱岩",
     "nameEN":"Netherrack",
@@ -1441,7 +1441,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":35,
+    "baseColor":35,
     "id":"nether_bricks",
     "nameZH":"地狱砖块",
     "nameEN":"Nether brick",
@@ -1452,7 +1452,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":35,
+    "baseColor":35,
     "id":"magma_block",
     "nameZH":"岩浆块",
     "nameEN":"Magma block",
@@ -1463,7 +1463,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":36,
+    "baseColor":36,
     "id":"white_terracotta",
     "nameZH":"白色陶瓦",
     "nameEN":"White terracotta",
@@ -1474,7 +1474,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":36,
+    "baseColor":36,
     "id":"calcite",
     "nameZH":"方解石",
     "nameEN":"Calcite",
@@ -1485,7 +1485,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":37,
+    "baseColor":37,
     "id":"orange_terracotta",
     "nameZH":"橙色陶瓦",
     "nameEN":"Orange terracotta",
@@ -1496,7 +1496,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":38,
+    "baseColor":38,
     "id":"magenta_terracotta",
     "nameZH":"品红陶瓦",
     "nameEN":"Magenta terracotta",
@@ -1507,7 +1507,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":39,
+    "baseColor":39,
     "id":"light_blue_terracotta",
     "nameZH":"浅蓝陶瓦",
     "nameEN":"Light blue terracotta",
@@ -1518,7 +1518,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":40,
+    "baseColor":40,
     "id":"yellow_terracotta",
     "nameZH":"黄色陶瓦",
     "nameEN":"Yellow terracotta",
@@ -1529,7 +1529,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":41,
+    "baseColor":41,
     "id":"lime_terracotta",
     "nameZH":"浅绿陶瓦",
     "nameEN":"Lime terracotta",
@@ -1540,7 +1540,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":42,
+    "baseColor":42,
     "id":"pink_terracotta",
     "nameZH":"粉色陶瓦",
     "nameEN":"Pink terracotta",
@@ -1551,7 +1551,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":43,
+    "baseColor":43,
     "id":"gray_terracotta",
     "nameZH":"灰色陶瓦",
     "nameEN":"Gray terracotta",
@@ -1562,7 +1562,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":44,
+    "baseColor":44,
     "id":"light_gray_terracotta",
     "nameZH":"浅灰陶瓦",
     "nameEN":"Light gray terracotta",
@@ -1573,7 +1573,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":44,
+    "baseColor":44,
     "id":"waxed_exposed_copper",
     "nameZH":"涂蜡斑驳铜块",
     "nameEN":"Waxed exposed copper",
@@ -1584,7 +1584,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":44,
+    "baseColor":44,
     "id":"waxed_exposed_cut_copper",
     "nameZH":"涂蜡切制斑驳铜块",
     "nameEN":"Waxed exposed cut copper",
@@ -1595,7 +1595,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":45,
+    "baseColor":45,
     "id":"cyan_terracotta",
     "nameZH":"青色陶瓦",
     "nameEN":"Cyan terracotta",
@@ -1606,7 +1606,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":46,
+    "baseColor":46,
     "id":"purple_terracotta",
     "nameZH":"紫色陶瓦",
     "nameEN":"Purple terracotta",
@@ -1617,7 +1617,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":47,
+    "baseColor":47,
     "id":"blue_terracotta",
     "nameZH":"蓝色陶瓦",
     "nameEN":"Blue terracotta",
@@ -1628,7 +1628,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":48,
+    "baseColor":48,
     "id":"brown_terracotta",
     "nameZH":"棕色陶瓦",
     "nameEN":"Brown terracotta",
@@ -1639,7 +1639,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":48,
+    "baseColor":48,
     "id":"dripstone_block",
     "nameZH":"滴水石块",
     "nameEN":"DripStone Block",
@@ -1650,7 +1650,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":49,
+    "baseColor":49,
     "id":"green_terracotta",
     "nameZH":"绿色陶瓦",
     "nameEN":"Green terracotta",
@@ -1661,7 +1661,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":50,
+    "baseColor":50,
     "id":"red_terracotta",
     "nameZH":"红色陶瓦",
     "nameEN":"Red terracotta",
@@ -1672,7 +1672,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":51,
+    "baseColor":51,
     "id":"black_terracotta",
     "nameZH":"黑色陶瓦",
     "nameEN":"Black terracotta",
@@ -1683,7 +1683,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":52,
+    "baseColor":52,
     "id":"crimson_nylium",
     "nameZH":"绯红菌岩",
     "nameEN":"Crimson nylium",
@@ -1694,7 +1694,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":53,
+    "baseColor":53,
     "id":"crimson_planks",
     "nameZH":"绯红木板",
     "nameEN":"Crimson plank",
@@ -1705,7 +1705,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":53,
+    "baseColor":53,
     "id":"stripped_crimson_stem[axis=y]",
     "nameZH":"去皮绯红原木",
     "nameEN":"Stripped crimson log",
@@ -1716,7 +1716,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":54,
+    "baseColor":54,
     "id":"crimson_hyphae[axis=y]",
     "nameZH":"绯红树皮",
     "nameEN":"Crimson hyphae",
@@ -1727,7 +1727,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":54,
+    "baseColor":54,
     "id":"stripped_crimson_hyphae[axis=y]",
     "nameZH":"去皮绯红树皮",
     "nameEN":"Stripped crimson hyphae",
@@ -1738,7 +1738,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":55,
+    "baseColor":55,
     "id":"warped_nylium",
     "nameZH":"扭曲菌岩",
     "nameEN":"Warped nylium",
@@ -1749,7 +1749,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":55,
+    "baseColor":55,
     "id":"waxed_oxidized_copper",
     "nameZH":"涂蜡氧化铜块",
     "nameEN":"Waxed oxided copper",
@@ -1760,7 +1760,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":55,
+    "baseColor":55,
     "id":"waxed_oxidized_cut_copper",
     "nameZH":"涂蜡切制氧化铜块",
     "nameEN":"Waxed oxided cut copper",
@@ -1771,7 +1771,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":56,
+    "baseColor":56,
     "id":"warped_planks",
     "nameZH":"扭曲木板",
     "nameEN":"Warped plank",
@@ -1782,7 +1782,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":56,
+    "baseColor":56,
     "id":"stripped_warped_stem[axis=y]",
     "nameZH":"去皮扭曲原木",
     "nameEN":"Stripped warped log",
@@ -1793,7 +1793,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":56,
+    "baseColor":56,
     "id":"waxed_weathered_copper",
     "nameZH":"涂蜡生锈铜块",
     "nameEN":"Waxed weathered copper",
@@ -1804,7 +1804,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":56,
+    "baseColor":56,
     "id":"waxed_oxidized_cut_copper",
     "nameZH":"涂蜡切制生锈铜块",
     "nameEN":"Waxed weathered cut copper",
@@ -1815,7 +1815,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":57,
+    "baseColor":57,
     "id":"warped_hyphae[axis=y]",
     "nameZH":"扭曲树皮",
     "nameEN":"Warped hyphae",
@@ -1826,7 +1826,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":57,
+    "baseColor":57,
     "id":"stripped_warped_hyphae[axis=y]",
     "nameZH":"去皮扭曲树皮",
     "nameEN":"Stripped warped hyphae",
@@ -1837,7 +1837,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":58,
+    "baseColor":58,
     "id":"warped_wart_block",
     "nameZH":"扭曲疣块",
     "nameEN":"Warped wart block",
@@ -1848,7 +1848,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":59,
+    "baseColor":59,
     "id":"deepslate",
     "nameZH":"深板岩",
     "nameEN":"Deepslate",
@@ -1859,7 +1859,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":59,
+    "baseColor":59,
     "id":"chiseled_deepslate",
     "nameZH":"錾制深板岩",
     "nameEN":"Chiseled deepslate",
@@ -1870,7 +1870,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":59,
+    "baseColor":59,
     "id":"polished_deepslate",
     "nameZH":"磨制深板岩",
     "nameEN":"Polished deepslate",
@@ -1881,7 +1881,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":59,
+    "baseColor":59,
     "id":"deepslate_bricks",
     "nameZH":"深板岩砖",
     "nameEN":"Deepslate bricks",
@@ -1892,7 +1892,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":59,
+    "baseColor":59,
     "id":"deepslate_tiles",
     "nameZH":"深板岩瓦",
     "nameEN":"Deepslate tiles",
@@ -1903,7 +1903,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":59,
+    "baseColor":59,
     "id":"cobbled_deepslate",
     "nameZH":"深板岩圆石",
     "nameEN":"Cobbled deepslate",
@@ -1914,7 +1914,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":60,
+    "baseColor":60,
     "id":"raw_iron_block",
     "nameZH":"生铁块",
     "nameEN":"Raw iron block",
@@ -1925,7 +1925,7 @@
     "isGlowing":false
 },
 {
-    "mapColor":61,
+    "baseColor":61,
     "id":"glow_lichen[down=true,east=false,north=false,south=false,up=false,waterlogged=false]",
     "nameZH":"发光地衣",
     "nameEN":"Glow lichen",
