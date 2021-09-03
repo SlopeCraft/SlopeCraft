@@ -2,6 +2,7 @@
 #define TOKICOLOR_H
 #include <QRgb>
 #include <Eigen/Dense>
+#include <iostream>
 using namespace std;
 using namespace Eigen;
 

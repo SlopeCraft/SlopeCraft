@@ -81,14 +81,19 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->FinshExData,SIGNAL(clicked()),this,SLOT(turnToPage8()));
     connect(ui->Exit,SIGNAL(clicked()),this,SLOT(close()));
     qDebug("成功connect所有的翻页按钮");
-/*
-    connect(ui->isGame12,SIGNAL(clicked()),this,SLOT(grabGameVersion()));
-    connect(ui->isGame13,SIGNAL(clicked()),this,SLOT(grabGameVersion()));
-    connect(ui->isGame14,SIGNAL(clicked()),this,SLOT(grabGameVersion()));
-    connect(ui->isGame15,SIGNAL(clicked()),this,SLOT(grabGameVersion()));
-    connect(ui->isGame16,SIGNAL(clicked()),this,SLOT(grabGameVersion()));
-    connect(ui->isGame17,SIGNAL(clicked()),this,SLOT(grabGameVersion()));*/
 
+    connect(ui->isGame12,SIGNAL(clicked()),this,SLOT(onGameVerClicked()));
+    connect(ui->isGame13,SIGNAL(clicked()),this,SLOT(onGameVerClicked()));
+    connect(ui->isGame14,SIGNAL(clicked()),this,SLOT(onGameVerClicked()));
+    connect(ui->isGame15,SIGNAL(clicked()),this,SLOT(onGameVerClicked()));
+    connect(ui->isGame16,SIGNAL(clicked()),this,SLOT(onGameVerClicked()));
+    connect(ui->isGame17,SIGNAL(clicked()),this,SLOT(onGameVerClicked()));
+
+    connect(ui->isMapCreative,SIGNAL(clicked()),this,SLOT(onMapTypeClicked()));
+    connect(ui->isMapSurvival,SIGNAL(clicked()),this,SLOT(onMapTypeClicked()));
+    connect(ui->isMapFlat,SIGNAL(clicked()),this,SLOT(onMapTypeClicked()));
+
+    connect(Manager,SIGNAL(switchToCustom()),this,SLOT(ChangeToCustom()));
     turnToPage(0);
 
 }
@@ -346,7 +351,35 @@ tpS::~tpS()
 }
 #endif
 
+void MainWindow::updateEnables() {
+    bool temp=Kernel->queryStep()>=TokiSlopeCraft::colorSetReady;
+    ui->StartWithFlat->setEnabled(temp);
+    ui->StartWithNotVanilla->setEnabled(temp);
+    ui->StartWithNotVanilla->setEnabled(temp);
 
+
+    //temp=Kernel->queryStep()>=TokiSlopeCraft::convertionReady;
+    ui->Convert->setEnabled(temp);
+
+    temp=Kernel->queryStep()>=TokiSlopeCraft::converted;
+    ui->ExData->setEnabled(temp);
+    ui->ExLite->setEnabled(temp);
+    ui->ExStructure->setEnabled(temp);
+    ui->progressEx->setEnabled(temp);
+    ui->progressExData->setEnabled(temp);
+    ui->progressExLite->setEnabled(temp);
+    ui->progressExStructure->setEnabled(temp);
+    ui->Build4Lite->setEnabled(temp);
+    ui->ExportData->setEnabled(temp);
+
+    temp=Kernel->queryStep()>=TokiSlopeCraft::builded;
+    ui->ExportLite->setEnabled(temp);
+    ui->ManualPreview->setEnabled(temp);
+
+
+}
+
+/*
 #ifdef dispDerivative
 void MainWindow::checkBlockIds()
 {
@@ -362,7 +395,7 @@ void MainWindow::checkBlockIds()
             if(Blocks[r][c]==NULL)continue;
             out<<"setblock ";
             out<<c+offset[2]<<' '<<offset[1]<<' '<<r+offset[0];
-            out<<' '<<Data.BlockId[r][c].toLocal8Bit().data()<<'\n';
+            out<<' '<<BlockId[r][c].toLocal8Bit().data()<<'\n';
             //out<<command;
         }
     out.close();
@@ -382,7 +415,7 @@ void MainWindow::makeImage(int unitL)
         {
             mapColor=4*Base+depth;
             index=mcMap::mapColor2Index(mapColor);
-            CurrentColor=qRgb(255*Data.Basic._RGB(index,0),255*Data.Basic._RGB(index,1),255*Data.Basic._RGB(index,2));
+            CurrentColor=qRgb(255*Basic._RGB(index,0),255*Basic._RGB(index,1),255*Basic._RGB(index,2));
             switch (depth)
             {
             case 0:
@@ -441,9 +474,9 @@ void MainWindow::putBlockListInfo() {
             if(Blocks[r][c]==NULL)
                 continue;
             temp.setBaseColor(r);
-            temp.setId(Data.BlockId[r][c].toStdString());
-            temp.setVersion(Data.BlockVersion[r][c]);
-            temp.setIdOld(Data.BlockIdfor12[r][c].toStdString());
+            temp.setId(BlockId[r][c].toStdString());
+            temp.setVersion(BlockVersion[r][c]);
+            temp.setIdOld(BlockIdfor12[r][c].toStdString());
             temp.setNeedGlass(NeedGlass[r][c]);
             temp.setIsGlowing(doGlow[r][c]);
 
@@ -478,3 +511,214 @@ void MainWindow::putBlockListInfo() {
 
 }
 #endif
+*/
+void MainWindow::on_StartWithSlope_clicked() {
+ui->isMapSurvival->setChecked(true);
+turnToPage(1);
+}
+
+void MainWindow::on_StartWithFlat_clicked() {
+    ui->isMapFlat->setChecked(true);
+    turnToPage(1);
+}
+
+void MainWindow::on_StartWithNotVanilla_clicked() {
+    ui->isMapFlat->setChecked(true);
+    turnToPage(1);
+}
+
+void MainWindow::on_ImportPic_clicked() {
+    QString Path =QFileDialog::getOpenFileName(this,
+                                               tr("选择图片"),
+                                               "./",
+                                               tr("图片(*.png *.bmp *.jpg *.tif *.GIF )"));
+        if(Path.isEmpty())return;
+
+
+
+        if(!rawPic.load(Path))
+        {
+            QMessageBox::information(this,tr("打开图片失败"),tr("要不试试换一张图片吧！"));
+                        return;
+        }
+        bool needSearch=rawPic.hasAlphaChannel();
+        rawPic=rawPic.convertToFormat(QImage::Format_ARGB32);
+        bool OriginHasTp=false;
+        if(needSearch)
+        {
+            QRgb*CL=nullptr;
+            for(short r=0;r<rawPic.height();r++)
+            {
+                CL=(QRgb*)rawPic.scanLine(r);
+                for(short c=0;c<rawPic.width();c++)
+                {
+                    if(qAlpha(CL[c])<255)
+                    {
+                        r=rawPic.height()+1;
+                        OriginHasTp=true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        //ui->ShowRawPic->setPixmap(QPixmap::fromImage(rawPic));
+
+        ui->IntroPicInfo->setText(tr("图片尺寸：")+QString::number(rawPic.height())+"×"+QString::number(rawPic.width())+tr("像素"));
+        if(OriginHasTp)
+        {
+            preProcess(Strategy.pTpS,Strategy.hTpS,Strategy.BGC);
+            ui->IntroPicInfo->setText(ui->IntroPicInfo->text()+"\n"+tr("图片中存在透明/半透明像素，已处理，您可以点击“设置”重新选择处理透明/半透明像素的方式。\n重新设置处理方式后，需要重新导入一次。"));
+        }
+        else
+        {
+            rawPic=rawPic.copy();
+        }
+        ui->ShowRawPic->setPixmap(QPixmap::fromImage(rawPic));
+        ui->ShowPic->setPixmap(QPixmap::fromImage(rawPic));
+
+        Kernel->decreaseStep(TokiSlopeCraft::colorSetReady);
+        updateEnables();
+
+        return;
+}
+
+void MainWindow::on_ImportSettings_clicked() {
+    if(transSubWind!=nullptr) {
+            qDebug("子窗口已经打开，不能重复打开！");
+            return;
+        }
+        transSubWind=new tpStrategyWind(this);
+        transSubWind->show();
+        connect(transSubWind,SIGNAL(destroyed()),this,SLOT(destroySubWindTrans()));
+        connect(transSubWind,SIGNAL(Confirm(tpS)),this,SLOT(ReceiveTPS(tpS)));
+        transSubWind->setVal(Strategy);
+}
+
+void MainWindow::destroySubWindTrans() {
+    disconnect(transSubWind,SIGNAL(Confirm(tpS)),this,SLOT(ReceiveTPS(tpS)));
+    transSubWind=nullptr;
+}
+
+void MainWindow::ReceiveTPS(tpS t) {
+    this->Strategy=t;
+    qDebug("接收成功");
+    qDebug()<<"pTpS="<<t.pTpS<<"；hTpS="<<t.hTpS;
+}
+
+void MainWindow::preProcess(char pureTpStrategy,
+                char halfTpStrategy,
+                QRgb BGC) {
+    qDebug("调用了preProcess");
+    //透明像素处理策略：B->替换为背景色；A->空气；W->暂缓，等待处理
+    //半透明像素处理策略：B->替换为背景色；C->与背景色叠加；R->保留颜色；W->暂缓，等待处理
+    qDebug("Cpoied");
+    bool hasTotalTrans=false;
+    if(pureTpStrategy!='W'&&halfTpStrategy!='W')
+    {
+        QRgb*CL=nullptr;
+        for(int r=0;r<rawPic.height();r++)
+        {
+            CL=(QRgb*)rawPic.scanLine(r);
+            for(int c=0;c<rawPic.width();c++)
+            {
+                if(qAlpha(CL[c])>=255)continue;
+                if(qAlpha(CL[c])==0)
+                switch (pureTpStrategy) {
+                case 'B':
+                    CL[c]=BGC;
+                    continue;
+                case 'A':
+                    if(!hasTotalTrans)
+                    {qDebug()<<"发现纯透明像素";
+                    hasTotalTrans=true;}
+                    CL[c]=qRgba(0,0,0,0);
+                    continue;
+                }
+
+                //qDebug("neeeee");
+                switch (halfTpStrategy) {
+                case 'B':
+                    CL[c]=BGC;
+                    break;
+                case 'C':
+                    CL[c]=ComposeColor(CL[c],BGC);
+                    break;
+                case 'R':
+                    CL[c]=qRgb(qRed(CL[c]),qGreen(CL[c]),qBlue(CL[c]));
+                }
+            }
+        }
+    }
+
+}
+
+void MainWindow::onGameVerClicked() {
+    if(ui->isGame12->isChecked()) {
+        Manager->setVersion(12);
+
+    }
+    if(ui->isGame13->isChecked()) {
+        Manager->setVersion(13);
+
+    }
+    if(ui->isGame14->isChecked()) {
+        Manager->setVersion(14);
+
+    }
+    if(ui->isGame15->isChecked()) {
+        Manager->setVersion(15);
+
+    }
+    if(ui->isGame16->isChecked()) {
+        Manager->setVersion(16);
+
+    }
+    if(ui->isGame17->isChecked()) {
+        Manager->setVersion(17);
+
+    }
+    Kernel->decreaseStep(TokiSlopeCraft::colorSetReady);
+    updateEnables();
+}
+
+void MainWindow::onMapTypeClicked() {
+    if(ui->isMapCreative->isChecked()) {
+        Manager->setEnabled(12,true);
+
+    }
+    if(ui->isMapFlat->isChecked()) {
+        Manager->setEnabled(12,true);
+
+    }
+    if(ui->isMapSurvival->isChecked()) {
+        Manager->setEnabled(12,false);
+
+    }
+    Kernel->decreaseStep(TokiSlopeCraft::colorSetReady);
+    updateEnables();
+}
+
+void MainWindow::ChangeToCustom() {
+    ui->isBLCustom->setChecked(true);
+    Kernel->decreaseStep(TokiSlopeCraft::colorSetReady);
+    updateEnables();
+}
+
+void MainWindow::onPresetsClicked() {
+    if(ui->isBLCreative->isChecked()) {
+        Manager->applyPreset(BLCreative);
+    }
+    if(ui->isBLSurvivalCheaper->isChecked()) {
+        Manager->applyPreset(BLCheaper);
+    }
+    if(ui->isBLSurvivalBetter->isChecked()) {
+        Manager->applyPreset(BLBetter);
+    }
+    if(ui->isBLGlowing->isChecked()) {
+        Manager->applyPreset(BLGlowing);
+    }
+
+    Kernel->decreaseStep(TokiSlopeCraft::colorSetReady);
+    updateEnables();
+}

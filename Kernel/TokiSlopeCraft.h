@@ -88,6 +88,7 @@ public:
         builded,//构建了三维结构
     };
 //can do in nothing:
+    void decreaseStep(step);
     bool setColorSet(const char*,const char*,const char*,const char*);
 //can do in colorSetReady:
     step queryStep() const;

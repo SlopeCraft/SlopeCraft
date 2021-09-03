@@ -85,6 +85,21 @@ QT_END_NAMESPACE
 
 class tpStrategyWind;
 
+#ifndef TPS__
+#define TPS__
+class tpS{
+public:
+    tpS(char _pTpS='B',char _hTpS='C',QRgb _BGC=qRgb(220,220,220)){
+            pTpS=_pTpS;
+            hTpS=_hTpS;
+            BGC=_BGC;    }
+    ~tpS();
+    char pTpS;
+    char hTpS;
+    QRgb BGC;
+};
+#endif
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -93,12 +108,7 @@ public:
     ~MainWindow();
 
     //初始化方块列表用
-
-    void turnToPage(int);
-
-    void updateEnables();
-
-    void switchLan(Language);
+    void InitializeAll();
 
 #ifdef dispDerivative
     void checkBlockIds();
@@ -108,9 +118,6 @@ public:
 #ifdef putBlockList
     void putBlockListInfo();
 #endif
-
-private:
-
 
 public slots:
     void destroySubWindTrans();
@@ -140,86 +147,31 @@ private slots:
     void turnToPage7();
     void turnToPage8();
 
-    //forPage1
-    void on_ImportPic_clicked();
-
-    //forPage2
-
-    //forPage3
-    //应用预设方块列表的自定义槽
-    void ChangeToCustom();
-    void applyVanilla();
-    void applyCheap();
-    void applyElegant();
-    void applyShiny();
-    //forPage4
-
-    //forPage5
-
-
-
+    //for Page0
     void on_StartWithSlope_clicked();
 
     void on_StartWithFlat_clicked();
 
     void on_StartWithNotVanilla_clicked();
 
-    void on_confirmType_clicked();
-
-    void on_confirmBL_clicked();
-
-    void on_FirstConcrete_clicked();
-
-    void on_FirstWool_clicked();
-
-    void on_FirstStainedGlass_clicked();
-
-    void on_isColorSpaceXYZ_clicked();
-
-    void on_isColorSpaceLab94_clicked();
-
-    void on_isColorSpaceLab00_clicked();
-
-    void on_isColorSpaceHSV_clicked();
-
-    void on_isColorSpaceRGB_clicked();
-
-    void on_AdjPicColor_clicked();
-
-    void on_ShowRaw_clicked();
-
-    void on_ShowAdjed_clicked();
-
-    void on_isColorSpaceRGBOld_clicked();
-
-    void on_Build4Lite_clicked();
-    void on_ExportLite_clicked();
-
-    void on_seeExported_clicked();
-
-    void on_isMapFlat_clicked();
-
-    void on_isMapSurvival_clicked();
-
-    void on_isMapCreative_clicked();
-
-    void on_ExportData_clicked();
-
-    void on_InputDataIndex_textChanged();
-
-    void on_ExImage_clicked();
-
-    void on_AllowNaturalOpti_stateChanged(int arg1);
-
+    //for Page1
+    void on_ImportPic_clicked();
     void on_ImportSettings_clicked();
 
-    void on_AllowNaturalOpti_clicked(bool checked);
+    //for Page2
+    void onGameVerClicked();
+    void onMapTypeClicked();
 
-    void on_AllowForcedOpti_stateChanged(int arg1);
+    //for Page3
+    //应用预设方块列表的自定义槽
+    void ChangeToCustom();
+    void onPresetsClicked();
+    //forPage4
 
-    void on_ManualPreview_clicked();
+    //forPage5
 
-    void on_contact_clicked();
+
+
 
 private:
     Ui::MainWindow *ui;
@@ -227,6 +179,9 @@ private:
     TokiSlopeCraft * Kernel;
     tpStrategyWind*transSubWind;
     BlockListManager * Manager;
+
+    QImage rawPic;
+
     //QTranslator translater;
     //bool Enabled[64];//被启动的方块列表，相当于最终的MIndex
     static const ushort BLCreative[64];
@@ -239,9 +194,11 @@ private:
     string ProductPath;
     QTranslator trans;
     bool Collected;
-    void InitializeAll();
     void applyPre(short*BL);
     void loadBlockList();
     void loadColormap();
+    void turnToPage(int);
+    void updateEnables();
+    void switchLan(Language);
 };
 #endif // MAINWINDOW_H

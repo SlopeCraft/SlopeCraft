@@ -18,7 +18,10 @@ TokiSlopeCraft::TokiSlopeCraft()
     DitherMapLR/=16.0;
     DitherMapRL/=16.0;
 }
-
+void TokiSlopeCraft::decreaseStep(TokiSlopeCraft::step _step) {
+    if(kernelStep<=_step)return;
+    kernelStep=_step;
+}
 bool TokiSlopeCraft::setColorSet(const char*R,const char*H,const char*L,const char*X) {
     if(!readFromTokiColor(R,Basic._RGB)) {
         cerr<<"Failed to read colormap RGB\n";
