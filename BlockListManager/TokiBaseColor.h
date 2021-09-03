@@ -9,9 +9,13 @@
 #include <vector>
 #include <cmath>
 #include "TokiBlock.h"
+
+class BlockListManager;
+
 class TokiBaseColor : public QObject
 {
     Q_OBJECT
+    friend class BlockListManager;
 public:
     explicit TokiBaseColor(uchar,
                            QGridLayout*,
@@ -32,6 +36,7 @@ static uchar mcVer;
 
 signals:
     void translate(Language);
+    void userClicked();
 
 private:
     uchar baseColor;
@@ -41,6 +46,7 @@ private:
     QCheckBox * checkBox;
     std::vector<TokiBlock*> tbs;
     bool isAllOverVersion() const;
+    void setSelected(ushort);
 private slots:
     void receiveClicked(ushort);
     void updateEnabled(bool);

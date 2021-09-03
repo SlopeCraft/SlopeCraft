@@ -16,7 +16,7 @@ checkBox->setSizePolicy(QSizePolicy(QSizePolicy::Policy::Expanding,QSizePolicy::
 checkBox->setEnabled(baseColor!=0);
 
 connect(checkBox,SIGNAL(clicked(bool)),this,SLOT(updateEnabled(bool)));
-
+connect(checkBox,SIGNAL(clicked(bool)),this,SLOT(userClicked()));
 //创建弹簧
 QSpacerItem * si=new QSpacerItem(40,20,
                                  QSizePolicy::Policy::Expanding,QSizePolicy::Policy::Preferred);
@@ -50,6 +50,7 @@ void TokiBaseColor::addTokiBlock(const QJsonObject & json,
 
     connect(tb,SIGNAL(radioBtnClicked(ushort)),this,SLOT(receiveClicked(ushort)));
     connect(this,SIGNAL(translate(Language)),tb,SLOT(translate(Language)));
+    connect(tb,SIGNAL(radioBtnClicked(ushort)),this,SLOT(userClicked()));
 }
 
 void TokiBaseColor::makeLabel(QRgb color) {
@@ -84,6 +85,11 @@ void TokiBaseColor::versionCheck() {
     if(tbs.size()<=0) {
         selected=65535;
         return;}
+    if(tbs.size()==1) {
+        tbs[0]->getNCTarget()->setChecked(true);
+        tbs[0]->getNCTarget()->setEnabled(false);
+        return;
+    }
     std::vector<short>scores(tbs.size());
     for(ushort idx=0;idx<tbs.size();idx++) {
         if(tbs[idx]->getSimpleBlock()->version>=mcVer) {
@@ -111,6 +117,10 @@ void TokiBaseColor::versionCheck() {
     }
     isEnabled=checkBox->isChecked();
 
+}
+
+void TokiBaseColor::setSelected(ushort sel) {
+    tbs[sel]->getNCTarget()->setChecked(true);
 }
 
 void TokiBaseColor::updateEnabled(bool isChecked) {

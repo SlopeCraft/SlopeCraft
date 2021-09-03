@@ -3,6 +3,7 @@
 BlockListManager::BlockListManager(QHBoxLayout * _area,
                                    QObject *parent) : QObject(parent)
 {
+    isApplyingPreset=false;
     area=_area;
     QGroupBox * qgb=nullptr;
     QGridLayout * qgl=nullptr;
@@ -18,6 +19,7 @@ for(uchar baseColor=0;baseColor<64;baseColor++) {
     tbcs.push_back(tbc);
 
     connect(this,SIGNAL(translate(Language)),tbc,SLOT(translate(Language)));
+    connect(tbc,SIGNAL(userClicked()),this,SLOT(receiveClicked()));
 }
 }
 
@@ -58,6 +60,74 @@ void BlockListManager::addBlocks(const QJsonArray & jArray,QString imgDir) {
         }
     }
 
+}
+
+void BlockListManager::applyPreset(const ushort * preset) {
+    isApplyingPreset=true;
+        for(ushort i=0;i<tbcs.size();i++) {
+            tbcs[i]->setSelected(preset[i]);
+        }
+    isApplyingPreset=false;
+}
+
+void BlockListManager::setSelected(uchar baseColor,ushort blockSeq) {
+    isApplyingPreset=true;
+    tbcs[baseColor]->setSelected(blockSeq);
+    isApplyingPreset=false;
+}
+
+void BlockListManager::setEnabled(uchar baseColor, bool isEnable) {
+    isApplyingPreset=true;
+    tbcs[baseColor]->checkBox->setChecked(isEnable);
+    isApplyingPreset=false;
+}
+
+void BlockListManager::receiveClicked() const {
+    if(isApplyingPreset)return;
+    emit switchToCustom();
+}
+
+void BlockListManager::setLabelColors(const QRgb *colors) {
+    for(uchar i=0;i<tbcs.size();i++)
+        tbcs[i]->makeLabel(colors[i]);
+}
+
+void BlockListManager::getEnableList(bool *dest) const {
+    for(uchar i=0;i<tbcs.size();i++)
+        dest[i]=tbcs[i]->getEnabled();
+}
+
+std::vector<const TokiBlock*> BlockListManager::getTokiBlockList() const {
+    std::vector<const TokiBlock*> TBL(64);
+    for(uchar i=0;i<64;i++) {
+        if(i<tbcs.size())
+            TBL[i]=tbcs[i]->getTokiBlock();
+        else
+            TBL[i]=nullptr;
+    }
+    return TBL;
+}
+
+std::vector<const QRadioButton*>BlockListManager::getQRadioButtonList() const {
+    std::vector<const QRadioButton*> TBL(64);
+    for(uchar i=0;i<64;i++) {
+        if(i<tbcs.size())
+            TBL[i]=tbcs[i]->getTokiBlock()->getTarget();
+        else
+            TBL[i]=nullptr;
+    }
+    return TBL;
+}
+
+std::vector<ushort> BlockListManager::toPreset() const {
+    std::vector<ushort> TBL(64);
+    for(uchar i=0;i<64;i++) {
+        if(i<tbcs.size())
+            TBL[i]=tbcs[i]->getSelected();
+        else
+            TBL[i]=0;
+    }
+    return TBL;
 }
 
 bool isValidBlockInfo(const QJsonObject & json) {

@@ -38,7 +38,15 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     qDebug("成功setupUi");
     Collected=false;
-    Data.step=0;
+
+    Kernel=new TokiSlopeCraft(this);
+    Manager=new BlockListManager(
+                (QHBoxLayout*)ui->scrollArea->layout());
+
+    //connect(Kernel,SIGNAL(convertProgressSetRange(int,int,int)));
+
+    transSubWind=nullptr;
+
     connect(ui->progressStart,SIGNAL(clicked()),this,SLOT(turnToPage0()));
     connect(ui->progressImPic,SIGNAL(clicked()),this,SLOT(turnToPage1()));
     connect(ui->progressType,SIGNAL(clicked()),this,SLOT(turnToPage2()));
@@ -72,64 +80,37 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->FinshExData,SIGNAL(clicked()),this,SLOT(turnToPage8()));
     connect(ui->Exit,SIGNAL(clicked()),this,SLOT(close()));
     qDebug("成功connect所有的翻页按钮");
-
+/*
     connect(ui->isGame12,SIGNAL(clicked()),this,SLOT(grabGameVersion()));
     connect(ui->isGame13,SIGNAL(clicked()),this,SLOT(grabGameVersion()));
     connect(ui->isGame14,SIGNAL(clicked()),this,SLOT(grabGameVersion()));
     connect(ui->isGame15,SIGNAL(clicked()),this,SLOT(grabGameVersion()));
     connect(ui->isGame16,SIGNAL(clicked()),this,SLOT(grabGameVersion()));
-    connect(ui->isGame17,SIGNAL(clicked()),this,SLOT(grabGameVersion()));
+    connect(ui->isGame17,SIGNAL(clicked()),this,SLOT(grabGameVersion()));*/
 
     turnToPage(0);
-
-    Data.parent=this;
-    Data.ExLitestep=-1;
-    Data.ExMcFstep=-1;
-    //checkBlockIds();
-    //QString FolderPath=QFileDialog::getExistingDirectory(this,tr("请选择导出的文件夹"));
-    //qDebug()<<FolderPath;
-    /*TokiColor::Allowed=&Data.Allowed;
-    TokiColor::Basic=&Data.Basic;*/
-    transSubWind=nullptr;
-
-    Blocks.resize(64);
-    for(int i=0;i<64;i++)Blocks[i].resize(12);
-    Enables.resize(64);
-    ShowColors.resize(64);
-
 
 }
 
 MainWindow::~MainWindow()
 {
+    delete Kernel;
+    delete Manager;
     delete ui;
 }
 
 void MainWindow::showPreview()
 {
-    if(Data.ExLitestep<2)return;
-    if(Data.step<5)return;
+    if(Kernel->queryStep()<Kernel->builded)return;
 
     PreviewWind*preWind=new PreviewWind(this);
-    preWind->Src.resize(61);
-    preWind->BlockCount.resize(61);
+    preWind->Src.resize(62);
+    preWind->BlockCount.resize(62);
 
-    for(int i=0;i<61;i++)
-    {
-        preWind->BlockCount[i]=0;
-        preWind->Src[i]=Blocks[i][Data.SelectedBlockList[i]];
-    }
+    preWind->Src=Manager->getQRadioButtonList();
 
+    Kernel->getBlockCounts(preWind->BlockCount);
 
-    for(int y=0;y<Data.size3D[1];y++)
-        for(int z=0;z<Data.size3D[2];z++)
-        {
-            for(int x=0;x<Data.size3D[0];x++)
-            {
-                if(Data.Build(x,y,z)<=0)continue;
-                preWind->BlockCount[Data.Build(x,y,z)-1]++;
-            }
-        }
     qDebug()<<"去重前有："<<preWind->Src.size()<<"个元素";
     auto iS=preWind->Src.begin();
     for(auto ib=preWind->BlockCount.begin();ib!=preWind->BlockCount.end();)
@@ -143,18 +124,36 @@ void MainWindow::showPreview()
         ib=preWind->BlockCount.erase(ib);
         iS=preWind->Src.erase(iS);
     }
-
-    preWind->size[0]=Data.size3D[0];
-    preWind->size[1]=Data.size3D[1];
-    preWind->size[2]=Data.size3D[2];
+    Kernel->get3DSize(preWind->size[0],preWind->size[1],preWind->size[2]);
 
     qDebug()<<"去重后有："<<preWind->Src.size()<<"个元素";
-    preWind->Water=Blocks[12][0];
-
+    //preWind->Water=Blocks[12][0];
+    preWind->Water=Manager->getQRadioButtonList()[12];
     //preWind->Src[1]=Blocks[1][0];preWind->BlockCount[1]=1919810;
 
     preWind->ShowMaterialList();
     preWind->show();
+}
+
+void MainWindow::loadColormap() {
+
+}
+
+void MainWindow::loadBlockList() {
+    QString FixedPath="./Blocks/FixedBlocks.json";
+    QString FixedDir="./Blocks/FixedBlocks";
+    QJsonDocument jd;
+    QJsonParseError error;
+    jd.fromJson(QFile(FixedPath).readAll(),&error);
+    if(error.error!=QJsonParseError::NoError) {
+        qDebug()<<error.errorString();
+        return;
+    }
+
+    QJsonArray ja=jd.array();
+
+    Manager->addBlocks(ja,FixedDir);
+
 }
 
 
@@ -163,72 +162,93 @@ void MainWindow::InitializeAll()
     ui->LeftScroll->verticalScrollBar()->setStyleSheet("QScrollBar{width: 7px;margin: 0px 0 0px 0;background-color: rgba(255, 255, 255, 64);color: rgba(255, 255, 255, 128);}");
     if(!Collected)
     {
-        Collect();
-        qDebug("Collected");
-
+        loadBlockList();
         Collected=true;
         qDebug("StartWithSlope中的初始化部分完成");
     }
     static bool needInitialize=true;
     if(needInitialize)
     {
-
-        GetBLCreative(BLCreative);
-        GetBLCheaper(BLCheaper);
-        GetBLBetter(BLBetter);
-        GetBLGlowing(BLGlowing);
-        qDebug("成功初始化四个预设方块列表");
         qDebug()<<"当前运行路径："<<QCoreApplication::applicationDirPath();
         //QString DirPath=QCoreApplication::applicationDirPath()+'/';
         QDir::setCurrent(QCoreApplication::applicationDirPath());
 
-        string ColorFilePath;
+        QString ColorFilePath;
         ColorFilePath="./Colors/RGB.TokiColor";
-        while(!readFromTokiColor(ColorFilePath.data(),Data.Basic._RGB,
-                                 "ba56d5af2ba89d9ba3362a72778e1624"))
-        {
+
+        QByteArray R,H,L,X;
+        while(true) {
+            QFile temp(ColorFilePath);
+            if(temp.exists()) {
+                R=temp.readAll();
+                if(QCryptographicHash::hash(R,QCryptographicHash::Algorithm::Md5).toStdString()
+                        =="ba56d5af2ba89d9ba3362a72778e1624") {
+                    break;
+                }
+            }
             qDebug("未找到颜色文件RGB.TokiColor");
             ColorFilePath=QFileDialog::getOpenFileName(this,
-                                                       QObject::tr("颜色表文件")+"RGB.TokiColor"+QObject::tr("不存在或被篡改，请手动寻找")
-                                                       ,"./Colors","RGB.TokiColor").toLocal8Bit().data();
+                                tr("颜色表文件")+"RGB.TokiColor"+tr("不存在或被篡改，请手动寻找")
+                                ,"./Colors","RGB.TokiColor");
+            temp.close();
         }
 
         ColorFilePath="./Colors/HSV.TokiColor";
-        while(!readFromTokiColor(ColorFilePath.data(),Data.Basic.HSV,
-                                 "db47a74d0b32fa682d1256cce60bf574"))
-        {
+        while(true) {
+            QFile temp(ColorFilePath);
+            if(temp.exists()) {
+                H=temp.readAll();
+                if(QCryptographicHash::hash(H,QCryptographicHash::Algorithm::Md5).toStdString()
+                        =="db47a74d0b32fa682d1256cce60bf574") {
+                    break;
+                }
+            }
             qDebug("未找到颜色文件HSV.TokiColor");
             ColorFilePath=QFileDialog::getOpenFileName(this,
-                                                       QObject::tr("颜色表文件")+"HSV.TokiColor"+QObject::tr("不存在或被篡改，请手动寻找")
-                                                       ,"./Colors","HSV.TokiColor").toLocal8Bit().data();
+                                tr("颜色表文件")+"HSV.TokiColor"+tr("不存在或被篡改，请手动寻找")
+                                ,"./Colors","HSV.TokiColor");
+            temp.close();
         }
 
         ColorFilePath="./Colors/Lab.TokiColor";
-        while(!readFromTokiColor(ColorFilePath.data(),Data.Basic.Lab,
-                                 "2aec9d79b920745472c0ccf56cbb7669"))
-        {
+        while(true) {
+            QFile temp(ColorFilePath);
+            if(temp.exists()) {
+                L=temp.readAll();
+                if(QCryptographicHash::hash(L,QCryptographicHash::Algorithm::Md5).toStdString()
+                        =="2aec9d79b920745472c0ccf56cbb7669") {
+                    break;
+                }
+            }
             qDebug("未找到颜色文件Lab.TokiColor");
             ColorFilePath=QFileDialog::getOpenFileName(this,
-                                                       QObject::tr("颜色表文件")+"Lab.TokiColor"+QObject::tr("不存在或被篡改，请手动寻找")
-                                                       ,"./Colors","Lab.TokiColor").toLocal8Bit().data();
+                                tr("颜色表文件")+"Lab.TokiColor"+tr("不存在或被篡改，请手动寻找")
+                                ,"./Colors","Lab.TokiColor");
+            temp.close();
         }
 
         ColorFilePath="./Colors/XYZ.TokiColor";
-        while(!readFromTokiColor(ColorFilePath.data(),Data.Basic.XYZ,
-                                 "6551171faf62961e3ae6bc3c2ee8d051"))
-        {
+        while(true) {
+            QFile temp(ColorFilePath);
+            if(temp.exists()) {
+                X=temp.readAll();
+                if(QCryptographicHash::hash(X,QCryptographicHash::Algorithm::Md5).toStdString()
+                        =="6551171faf62961e3ae6bc3c2ee8d051") {
+                    break;
+                }
+            }
             qDebug("未找到颜色文件XYZ.TokiColor");
             ColorFilePath=QFileDialog::getOpenFileName(this,
-                                                       QObject::tr("颜色表文件")+"XYZ.TokiColor"+QObject::tr("不存在或被篡改，请手动寻找")
-                                                       ,"./Colors","XYZ.TokiColor").toLocal8Bit().data();
+                                tr("颜色表文件")+"XYZ.TokiColor"+tr("不存在或被篡改，请手动寻找")
+                                ,"./Colors","XYZ.TokiColor");
+            temp.close();
         }
-        qDebug("成功载入颜色");
 
-        qDebug("导入图片按钮处的初始化部分完成");
+        if(Kernel->setColorSet(R.data(),H.data(),L.data(),X.data()))
+            qDebug("成功载入颜色");
+        else
+            qDebug("载入颜色失败");
 
-
-        showColorColors();
-        qDebug("成功为Colors赋予颜色");
         needInitialize=false;
 #ifdef dispDerivative
     //checkBlockIds();
@@ -236,7 +256,6 @@ void MainWindow::InitializeAll()
 #endif
     }
 }
-
 
 void MainWindow::contactG()
 {

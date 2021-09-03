@@ -63,6 +63,7 @@ This file is part of SlopeCraft.
 #include "zlib.h"
 #include "simpleBlock.h"
 #include "TokiSlopeCraft.h"
+#include "BlockListManager.h"
 using namespace std;
 using namespace Eigen;
 
@@ -80,10 +81,8 @@ void GetBLCheaper(short*BL);
 void GetBLBetter(short*BL);
 void GetBLGlowing(short*BL);
 bool compressFile(const char*sourcePath,const char*destPath);
-void matchColor(TokiColor * tColor,QRgb qColor);
 
 
-extern Matrix<float,2,3> DitherMapLR,DitherMapRL;
 /*
 class mcMap
 {
@@ -176,78 +175,20 @@ QT_END_NAMESPACE
 
 class tpStrategyWind;
 
-#ifndef TPS__
-#define TPS__
-class tpS{
-public:
-    tpS(char _pTpS='B',char _hTpS='C',QRgb _BGC=qRgb(220,220,220)){
-            pTpS=_pTpS;
-            hTpS=_hTpS;
-            BGC=_BGC;    }
-    ~tpS();
-    char pTpS;
-    char hTpS;
-    QRgb BGC;
-};
-#endif
-
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    TokiSlopeCraft * Kernel;
-    tpStrategyWind*transSubWind;
-    //QTranslator translater;
-    vector<vector<QRadioButton*>>Blocks;
-    vector<QCheckBox*>Enables;
-    vector<QLabel*>ShowColors;
-    //bool Enabled[64];//被启动的方块列表，相当于最终的MIndex
-    bool NeedGlass[64][12];
-    bool doGlow[64][12];
-    short BLCreative[64];
-    short BLCheaper[64];
-    short BLBetter[64];
-    short BLGlowing[64];
-
-    tpS Strategy;
-
-    string ProductPath;
 
     //初始化方块列表用
-
-    void InitializeAll();
-
-    void Collect();//done
-    bool Collected;
-    void IniNeedGlass();//done
-    void InidoGlow();//done
-    void IniBL();//done
-    void IniEnables();
-    //void setShowColors();
-    void applyPre(short*BL);//done
-    void connectEnables();//done
-    void showColorColors();
-
-    //其他非初始化用途
-    void allowUpdateToCustom(bool allowAutoUpdate);//done
-    //void getBlockIds();
-    void getMIndex();
-    void getBlockList();
-
-    //调整颜色,Page4
-    void pushToHash(unordered_map<QRgb,TokiColor>*);
-    void applyTokiColor(unordered_map<QRgb,TokiColor>*);
-    void fillMapMat(unordered_map<QRgb,TokiColor>*);
-    void Dither(unordered_map<QRgb,TokiColor>*);//抖动，将三个Dither矩阵填充为抖动后的三通道值
-    void getAdjedPic();//for step5
 
     void turnToPage(int);
 
     void updateEnables();
 
-    void switchLan(bool);
+    void switchLan(Language);
 
 #ifdef dispDerivative
     void checkBlockIds();
@@ -259,13 +200,13 @@ public:
 #endif
 
 private:
-    QTranslator trans;
-    string Noder(const short *src,int size);
+
 
 public slots:
-    void AdjPro(int step=1);
     void destroySubWindTrans();
-    void preProcess(char pureTpStrategy='B',char halfTpStrategy='C',QRgb BGC=qRgb(220,220,220));
+    void preProcess(char pureTpStrategy='B',
+                    char halfTpStrategy='C',
+                    QRgb BGC=qRgb(220,220,220));
     void ReceiveTPS(tpS);
     //透明像素处理策略：B->替换为背景色；A->空气；W->暂缓，等待处理
     //半透明像素处理策略：B->替换为背景色；C->与背景色叠加；R->保留颜色；W->暂缓，等待处理
@@ -288,10 +229,6 @@ private slots:
     void turnToPage6();
     void turnToPage7();
     void turnToPage8();
-
-    void grabGameVersion();
-
-    void versionCheck();
 
     //forPage1
     void on_ImportPic_clicked();
@@ -376,5 +313,25 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
+    TokiSlopeCraft * Kernel;
+    tpStrategyWind*transSubWind;
+    BlockListManager * Manager;
+    //QTranslator translater;
+    //bool Enabled[64];//被启动的方块列表，相当于最终的MIndex
+    static const ushort BLCreative[64];
+    static const ushort BLCheaper[64];
+    static const ushort BLBetter[64];
+    static const ushort BLGlowing[64];
+
+    tpS Strategy;
+
+    string ProductPath;
+    QTranslator trans;
+    bool Collected;
+    void InitializeAll();
+    void applyPre(short*BL);
+    void loadBlockList();
+    void loadColormap();
 };
 #endif // MAINWINDOW_H

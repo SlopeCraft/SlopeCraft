@@ -1114,3 +1114,12 @@ string TokiSlopeCraft::exportAsStructure(const string &TargetName) const {
     file.close();
     return unCompress;
 }
+
+int TokiSlopeCraft::getXRange() const {
+    if(kernelStep<builded)return -1;
+    return size3D[0];
+}
+int TokiSlopeCraft::getZRange() const {
+    if(kernelStep<builded)return -1;
+    return size3D[2];
+}

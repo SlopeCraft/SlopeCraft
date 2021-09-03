@@ -20,6 +20,12 @@ public:
 
     void applyPreset(const ushort * );
 
+    void setSelected(uchar baseColor,ushort blockSeq);
+
+    void setEnabled(uchar baseColor,bool isEnable);
+
+    void setLabelColors(const QRgb*);
+
     void getEnableList(bool*) const;
     std::vector<const simpleBlock *> getSimpleBlockList() const;
     std::vector<const TokiBlock * >getTokiBlockList() const;
@@ -27,17 +33,18 @@ public:
     std::vector<ushort> toPreset() const;
 public slots:
 
-
-
 signals:
     void translate(Language);
+    void switchToCustom() const;
 
 private:
+    bool isApplyingPreset;
     QHBoxLayout * area;
     std::vector<TokiBaseColor*> tbcs;
     static const QString baseColorNames[64];
 
 private slots:
+    void receiveClicked() const;
 
 
 };

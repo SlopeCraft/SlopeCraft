@@ -118,6 +118,8 @@ public:
     string exportAsStructure(const string &) const;
     void get3DSize(int & x,int & y,int & z) const;
     int getHeight() const;
+    int getXRange() const;
+    int getZRange() const;
     int getBlockCounts(vector<int> & ) const;
     int getBlockCounts() const;
 
