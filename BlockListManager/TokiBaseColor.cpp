@@ -34,14 +34,7 @@ TokiBaseColor::~TokiBaseColor() {
 }
 void TokiBaseColor::addTokiBlock(const QJsonObject & json,
                   const QString & imgDir) {
-if(!(json.contains("id")&&
-     json.contains("nameZH")&&
-     json.contains("nameEN")&&
-     json.contains("baseColor")))
-{
-    //基础信息不全，视为无效json
-    qDebug()<<"出现无效json："<<json;
-}
+
     QRadioButton * qrb=new QRadioButton;
     int rows=1+tbs.size()/2;
     int cols=1+tbs.size()%2;
@@ -70,6 +63,7 @@ void TokiBaseColor::makeLabel(QRgb color) {
         pl.setColor(QPalette::ColorRole::Base,QColor(color));
     }
     qL->setPalette(pl);
+    qL->setSizePolicy(QSizePolicy::Policy::Preferred,QSizePolicy::Policy::Preferred);
 }
 
 void TokiBaseColor::receiveClicked(ushort _selected) {
