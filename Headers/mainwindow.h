@@ -131,6 +131,8 @@ public slots:
     void showPreview();
 
 private slots:
+    void keepAwake();
+
     void contactG();
     void contactB();
     //语言槽
@@ -167,11 +169,21 @@ private slots:
     void ChangeToCustom();
     void onPresetsClicked();
     //forPage4
+    void onAlgoClicked();
+    void on_Convert_clicked();
+    void convertProgressRangeSet(int min,int max,int val);//设置进度条的取值范围和值
+    void convertProgressAdd(int deltaVal);
+/*
+    void rogressRangeSet(int min,int max,int val) const;//设置进度条的取值范围和值
+    void progressAdd(int deltaVal) const;
+*/
 
     //forPage5
 
 
+    void on_ShowRaw_clicked();
 
+    void on_ShowAdjed_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -200,5 +212,9 @@ private:
     void turnToPage(int);
     void updateEnables();
     void switchLan(Language);
+    void kernelSetType();
 };
+
+EImage QImage2EImage(const QImage &);
+QImage EImage2QImage(const EImage &,ushort scale=1);
 #endif // MAINWINDOW_H

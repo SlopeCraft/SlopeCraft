@@ -126,13 +126,13 @@ public:
 
 #ifdef WITH_QT
 signals:
-    void convertProgressRangeSet(int min,int max,int val) const;//设置进度条的取值范围和值
-    void convertProgressSetVal(int val) const;
-    void convertProgressAdd(int deltaVal);
+    void progressRangeSet(int min,int max,int val) const;//设置进度条的取值范围和值
+    void progressAdd(int deltaVal) const;
+    /*
     void buildProgressRangeSet(int min,int max,int val) const;//设置进度条的取值范围
     void buildProgressAdd(int deltaVal) const;
     void exportProgressRangeSet(int min,int max,int val) const;//设置进度条的取值范围
-    void exportProgressAdd(int deltaVal) const;
+    void exportProgressAdd(int deltaVal) const;*/
     void keepAwake() const;//保持主窗口唤醒
 private slots:
 

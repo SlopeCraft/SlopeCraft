@@ -122,7 +122,7 @@ bool TokiSlopeCraft::setType(mapTypes type,
 
     blockPalette.resize(64);
     for(short i=0;i<64;i++)
-        blockPalette[i]=*palettes;
+        blockPalette[i]=palettes[i];
 
     ArrayXi baseColorVer(64);//基色对应的版本
     baseColorVer.setConstant(FUTURE);
@@ -233,7 +233,7 @@ bool TokiSlopeCraft::convert(convertAlgo algo,bool dither) {
     ConvertAlgo=algo;
     colorHash.clear();
 
-    emit convertProgressRangeSet(0,4*sizePic(2),0);
+    emit progressRangeSet(0,4*sizePic(2),0);
 /*
 //第一步，装入hash顺便转换颜色空间;（一次遍历
 //第二步，遍历hash并匹配颜色;（一次遍历
@@ -242,22 +242,21 @@ bool TokiSlopeCraft::convert(convertAlgo algo,bool dither) {
     pushToHash();
 
     emit keepAwake();
-    emit convertProgressSetVal(1*sizePic(2));
+    emit progressRangeSet(0,4*sizePic(2),1*sizePic(2));
 
     applyTokiColor();
 
     emit keepAwake();
-    emit convertProgressSetVal(2*sizePic(2));
+    emit progressRangeSet(0,4*sizePic(2),2*sizePic(2));
 
     fillMapMat();
     emit keepAwake();
-    emit convertProgressSetVal(3*sizePic(2));
+    emit progressRangeSet(0,4*sizePic(2),3*sizePic(2));
 
     if(dither)
         Dither();
 
-    emit convertProgressSetVal(4*sizePic(2));
-
+    emit progressRangeSet(0,4*sizePic(2),4*sizePic(2));
     emit keepAwake();
 
     kernelStep=converted;
@@ -285,7 +284,7 @@ void TokiSlopeCraft::pushToHash() {
                     ColorCount++;
                     R->operator[](rawImage(r,c))=TokiColor(rawImage(r,c),Mode);
                 }
-            emit convertProgressAdd(sizePic(1));
+            emit progressAdd(sizePic(1));
         }
         qDebug()<<"总颜色数量："<<R->size();
 }
@@ -299,7 +298,7 @@ void TokiSlopeCraft::applyTokiColor() {
 
         while(!taskTracker.empty()) {
             taskTracker.front().waitForFinished();
-            emit convertProgressAdd(step);
+            emit progressAdd(step);
             taskTracker.pop();
         }
 
@@ -314,7 +313,7 @@ void TokiSlopeCraft::fillMapMat() {
             {
                 mapPic(r,c)=R->operator[](rawImage(r,c)).Result;
             }
-            emit convertProgressAdd(sizePic(1));
+            emit progressAdd(sizePic(1));
         }
 }
 
@@ -438,7 +437,7 @@ void TokiSlopeCraft::Dither() {
             //qDebug("从左至右遍历了一行");
         }
         isDirLR=!isDirLR;
-        emit convertProgressAdd(sizePic(1));
+        emit progressAdd(sizePic(1));
     }
     qDebug("完成了误差扩散");
     qDebug()<<"Hash中共新插入了"<<newCount<<"个颜色";
@@ -514,7 +513,7 @@ vector<string> TokiSlopeCraft::exportAsData(const string & FolderPath ,
     const int cols=ceil(mapPic.cols()/128.0f);
     //const int maxrr=rows*128;
     //const int maxcc=cols*128;
-    emit exportProgressRangeSet(0,128*rows*cols,0);
+    emit progressRangeSet(0,128*rows*cols,0);
 
     int offset[2]={0,0};//r,c
     int currentIndex=indexStart;
@@ -613,7 +612,7 @@ vector<string> TokiSlopeCraft::exportAsData(const string & FolderPath ,
                                 ColorCur=0;
                             MapFile.writeByte("this should never be seen",ColorCur);
                         }
-                        emit exportProgressAdd(1);
+                        emit progressAdd(1);
                     }
                 MapFile.endCompound();
                 MapFile.close();
@@ -639,15 +638,15 @@ bool TokiSlopeCraft::build(compressSettings cS, ushort mAH) {
 
     maxAllowedHeight=mAH;
 
-    emit buildProgressRangeSet(0,8*sizePic(2),0);
+    emit progressRangeSet(0,8*sizePic(2),0);
 
     makeHeight();
 
-    emit buildProgressRangeSet(0,8*sizePic(2),5*sizePic(2));
+    emit progressRangeSet(0,8*sizePic(2),5*sizePic(2));
 
     buildHeight();
 
-    emit buildProgressRangeSet(0,8*sizePic(2),8*sizePic(2));
+    emit progressRangeSet(0,8*sizePic(2),8*sizePic(2));
 
     kernelStep=builded;
 
@@ -688,7 +687,7 @@ void TokiSlopeCraft::makeHeight() {
                 continue;
             }
         }
-        emit buildProgressAdd(sizePic(0));
+        emit progressAdd(sizePic(0));
     }
 
     HighMap.setZero(sizePic(0)+1,sizePic(1));
@@ -699,7 +698,7 @@ void TokiSlopeCraft::makeHeight() {
     for(short r=0;r<sizePic(0);r++)//遍历每一行，根据高度差构建高度图
     {
         HighMap.row(r+1)=HighMap.row(r)+dealedDepth.row(r+1);
-        emit buildProgressAdd(sizePic(0));
+        emit progressAdd(sizePic(0));
     }
 
     for(short c=0;c<Base.cols();c++)
@@ -709,7 +708,7 @@ void TokiSlopeCraft::makeHeight() {
             Base(0,c)=0;
             HighMap(0,c)=HighMap(1,c);
         }
-        emit buildProgressAdd(sizePic(1));
+        emit progressAdd(sizePic(1));
     }
 
 
@@ -726,7 +725,7 @@ void TokiSlopeCraft::makeHeight() {
         HighMap.col(c)-=LowMap.col(c).minCoeff();
         LowMap.col(c)-=LowMap.col(c).minCoeff();
         //沉降每一列
-        emit buildProgressAdd(sizePic(1));
+        emit progressAdd(sizePic(1));
     }
 
     if(compressMethod==NaturalOnly)
@@ -739,7 +738,7 @@ void TokiSlopeCraft::makeHeight() {
             Compressor.divideAndCompress();
             HighMap.col(c)=Compressor.HighLine;
             LowMap.col(c)=Compressor.LowLine;
-            emit buildProgressAdd(sizePic(1));
+            emit progressAdd(sizePic(1));
         }
     }
 
@@ -785,7 +784,7 @@ void TokiSlopeCraft::buildHeight() {
         }
         //qDebug()<<3;
 
-        emit buildProgressAdd(sizePic(2));
+        emit progressAdd(sizePic(2));
 
         for(short r=0;r<sizePic(0);r++)//普通方块
         {
@@ -799,12 +798,12 @@ void TokiSlopeCraft::buildHeight() {
 
                 Build(x,y,z)=Base(r+1,c)+1;
             }
-            emit buildProgressAdd(sizePic(1));
+            emit progressAdd(sizePic(1));
         }
 
     //qDebug()<<4;
 
-    emit buildProgressAdd(sizePic(2));
+    emit progressAdd(sizePic(2));
 
     for(auto it=WaterList.begin();it!=WaterList.end();it++)
     {
@@ -929,7 +928,7 @@ string TokiSlopeCraft::exportAsLitematic(const string & TargetName,
     if(kernelStep<builded) {
         return "Too hasty! export litematic after you built!";
     }
-    emit exportProgressRangeSet(0,100+Build.size(),0);
+    emit progressRangeSet(0,100+Build.size(),0);
         NBT::NBTWriter Lite;
         string unCompressed=TargetName+".TokiNoBug";
         Lite.open(unCompressed.data());
@@ -948,7 +947,7 @@ string TokiSlopeCraft::exportAsLitematic(const string & TargetName,
             Lite.writeInt("TotalBlocks",this->getBlockCounts());
             Lite.writeInt("TotalVolume",Build.size());
         Lite.endCompound();
-    emit exportProgressRangeSet(0,100+Build.size(),50);
+    emit progressRangeSet(0,100+Build.size(),50);
         Lite.writeCompound("Regions");
             Lite.writeCompound(RegionName.data());
                 Lite.writeCompound("Position");
@@ -961,7 +960,7 @@ string TokiSlopeCraft::exportAsLitematic(const string & TargetName,
                     Lite.writeInt("y",size3D[1]);
                     Lite.writeInt("z",size3D[2]);
                 Lite.endCompound();
-                emit exportProgressRangeSet(0,100+Build.size(),100);
+                emit progressRangeSet(0,100+Build.size(),100);
                 Lite.writeListHead("BlockStatePalette",NBT::idCompound,131);
                     {
                         short written=((mcVer>=MC16)?59:52);
@@ -1007,7 +1006,7 @@ string TokiSlopeCraft::exportAsLitematic(const string & TargetName,
                                 Lite.writeLongDirectly("id",HackyVal);
                             }
                         }
-                        emit exportProgressAdd(size3D[0]);
+                        emit progressAdd(size3D[0]);
                     }
 
                 if(!Lite.isListFinished())
@@ -1053,7 +1052,7 @@ string TokiSlopeCraft::exportAsStructure(const string &TargetName) const {
     if(kernelStep<builded) {
         return "Too hasty! export structure after you built!";
     }
-    emit exportProgressRangeSet(0,100+Build.size(),0);
+    emit progressRangeSet(0,100+Build.size(),0);
     NBT::NBTWriter file;
     string unCompress=TargetName+".TokiNoBug";
         file.open(unCompress.data());
@@ -1098,7 +1097,7 @@ string TokiSlopeCraft::exportAsStructure(const string &TargetName) const {
                                 file.writeInt("state",Build(x,y,z));
                             file.endCompound();
                         }
-                        emit exportProgressAdd(size3D[2]);
+                        emit progressAdd(size3D[2]);
                     }
                 switch (mcVer)
                 {

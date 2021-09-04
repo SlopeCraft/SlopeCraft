@@ -41,59 +41,92 @@ MainWindow::MainWindow(QWidget *parent)
     Collected=false;
 
     Kernel=new TokiSlopeCraft(this);
+    connect(Kernel,&TokiSlopeCraft::keepAwake,this,&MainWindow::keepAwake);
+
     Manager=new BlockListManager(
                 (QHBoxLayout*)ui->scrollArea->layout());
-
+    connect(Manager,&BlockListManager::switchToCustom,
+            this,&MainWindow::ChangeToCustom);
     //connect(Kernel,SIGNAL(convertProgressSetRange(int,int,int)));
 
     transSubWind=nullptr;
 
-    connect(ui->progressStart,SIGNAL(clicked()),this,SLOT(turnToPage0()));
-    connect(ui->progressImPic,SIGNAL(clicked()),this,SLOT(turnToPage1()));
-    connect(ui->progressType,SIGNAL(clicked()),this,SLOT(turnToPage2()));
-    connect(ui->progressBL,SIGNAL(clicked()),this,SLOT(turnToPage3()));
-    connect(ui->progressAdjPic,SIGNAL(clicked()),this,SLOT(turnToPage4()));
-    connect(ui->progressExLite,SIGNAL(clicked()),this,SLOT(turnToPage5()));
-    connect(ui->progressExStructure,SIGNAL(clicked()),this,SLOT(turnToPage5()));
-    //connect(ui->menuExMcF,SIGNAL(triggered()),this,SLOT(turnToPage6()));
-    connect(ui->progressExData,SIGNAL(clicked()),this,SLOT(turnToPage7()));
-    connect(ui->progressAbout,SIGNAL(clicked()),this,SLOT(turnToPage8()));
-    connect(ui->actionAboutSlopeCraft,SIGNAL(triggered()),this,SLOT(turnToPage8()));    
-    connect(ui->actionChinese,SIGNAL(triggered()),this,SLOT(turnCh()));
-    connect(ui->actionEnglish,SIGNAL(triggered()),this,SLOT(turnEn()));
-    connect(ui->progressChinese,SIGNAL(clicked()),this,SLOT(turnCh()));
-    connect(ui->progressEnglish,SIGNAL(clicked()),this,SLOT(turnEn()));
-    connect(ui->actionToki,SIGNAL(triggered()),this,SLOT(contactG()));
-    connect(ui->actionDoki,SIGNAL(triggered()),this,SLOT(contactB()));
-    connect(ui->progressG,SIGNAL(clicked()),this,SLOT(contactG()));
-    connect(ui->progressB,SIGNAL(clicked()),this,SLOT(contactB()));
-
+        connect(ui->progressStart,&QRadioButton::clicked,this,&MainWindow::turnToPage0);
+        connect(ui->progressImPic,&QRadioButton::clicked,this,&MainWindow::turnToPage1);
+        connect(ui->progressType,&QRadioButton::clicked,this,&MainWindow::turnToPage2);
+        connect(ui->progressBL,&QRadioButton::clicked,this,&MainWindow::turnToPage3);
+        connect(ui->progressAdjPic,&QRadioButton::clicked,this,&MainWindow::turnToPage4);
+        connect(ui->progressExLite,&QRadioButton::clicked,this,&MainWindow::turnToPage5);
+        connect(ui->progressExStructure,&QRadioButton::clicked,this,&MainWindow::turnToPage5);
+        //connect(ui->menuExMcF,&QAction::trigger,this,&MainWindow::turnToPage6);
+        connect(ui->progressExData,&QRadioButton::clicked,this,&MainWindow::turnToPage7);
+        connect(ui->progressAbout,&QRadioButton::clicked,this,&MainWindow::turnToPage8);
+        connect(ui->actionAboutSlopeCraft,&QAction::trigger,this,&MainWindow::turnToPage8);
+        connect(ui->actionChinese,&QAction::trigger,this,&MainWindow::turnCh);
+        connect(ui->actionEnglish,&QAction::trigger,this,&MainWindow::turnEn);
+        connect(ui->progressChinese,&QRadioButton::clicked,this,&MainWindow::turnCh);
+        connect(ui->progressEnglish,&QRadioButton::clicked,this,&MainWindow::turnEn);
+        connect(ui->actionToki,&QAction::trigger,this,&MainWindow::contactG);
+        connect(ui->actionDoki,&QAction::trigger,this,&MainWindow::contactB);
+        connect(ui->progressG,&QRadioButton::clicked,this,&MainWindow::contactG);
+        connect(ui->progressB,&QRadioButton::clicked,this,&MainWindow::contactB);
     qDebug("成功connect所有的菜单");
 
 
-    connect(ui->NextPage,SIGNAL(clicked()),this,SLOT(turnToPage2()));
-    connect(ui->NextPage2,SIGNAL(clicked()),this,SLOT(turnToPage3()));
-    connect(ui->NextPage3,SIGNAL(clicked()),this,SLOT(turnToPage4()));
-    connect(ui->ExLite,SIGNAL(clicked()),this,SLOT(turnToPage5()));
-    //connect(ui->ExMcF,SIGNAL(clicked()),this,SLOT(turnToPage6()));
-    connect(ui->ExData,SIGNAL(clicked()),this,SLOT(turnToPage7()));
-    connect(ui->FinishExLite,SIGNAL(clicked()),this,SLOT(turnToPage8()));    
-    connect(ui->FinshExData,SIGNAL(clicked()),this,SLOT(turnToPage8()));
-    connect(ui->Exit,SIGNAL(clicked()),this,SLOT(close()));
+        connect(ui->NextPage,&QRadioButton::clicked,
+                this,&MainWindow::turnToPage2);
+        connect(ui->NextPage2,&QRadioButton::clicked,
+                this,&MainWindow::turnToPage3);
+        connect(ui->NextPage3,&QRadioButton::clicked,
+                this,&MainWindow::turnToPage4);
+        connect(ui->ExLite,&QRadioButton::clicked,
+                this,&MainWindow::turnToPage5);
+        //connect(ui->ExMcF,&QRadioButton::clicked,this,&MainWindow::turnToPage6);
+        connect(ui->ExData,&QRadioButton::clicked,
+                this,&MainWindow::turnToPage7);
+        connect(ui->FinishExLite,&QRadioButton::clicked,
+                this,&MainWindow::turnToPage8);
+        connect(ui->FinshExData,&QRadioButton::clicked,
+                this,&MainWindow::turnToPage8);
+        connect(ui->Exit,&QRadioButton::clicked,
+                this,&MainWindow::close);
     qDebug("成功connect所有的翻页按钮");
 
-    connect(ui->isGame12,SIGNAL(clicked()),this,SLOT(onGameVerClicked()));
-    connect(ui->isGame13,SIGNAL(clicked()),this,SLOT(onGameVerClicked()));
-    connect(ui->isGame14,SIGNAL(clicked()),this,SLOT(onGameVerClicked()));
-    connect(ui->isGame15,SIGNAL(clicked()),this,SLOT(onGameVerClicked()));
-    connect(ui->isGame16,SIGNAL(clicked()),this,SLOT(onGameVerClicked()));
-    connect(ui->isGame17,SIGNAL(clicked()),this,SLOT(onGameVerClicked()));
+    connect(ui->isGame12,&QRadioButton::clicked,
+            this,&MainWindow::onGameVerClicked);
+    connect(ui->isGame13,&QRadioButton::clicked,
+            this,&MainWindow::onGameVerClicked);
+    connect(ui->isGame14,&QRadioButton::clicked,
+            this,&MainWindow::onGameVerClicked);
+    connect(ui->isGame15,&QRadioButton::clicked,
+            this,&MainWindow::onGameVerClicked);
+    connect(ui->isGame16,&QRadioButton::clicked,
+            this,&MainWindow::onGameVerClicked);
+    connect(ui->isGame17,&QRadioButton::clicked,
+            this,&MainWindow::onGameVerClicked);
 
-    connect(ui->isMapCreative,SIGNAL(clicked()),this,SLOT(onMapTypeClicked()));
-    connect(ui->isMapSurvival,SIGNAL(clicked()),this,SLOT(onMapTypeClicked()));
-    connect(ui->isMapFlat,SIGNAL(clicked()),this,SLOT(onMapTypeClicked()));
+    connect(ui->isMapCreative,&QRadioButton::clicked,
+            this,&MainWindow::onMapTypeClicked);
+    connect(ui->isMapSurvival,&QRadioButton::clicked,
+            this,&MainWindow::onMapTypeClicked);
+    connect(ui->isMapFlat,&QRadioButton::clicked,
+            this,&MainWindow::onMapTypeClicked);
 
-    connect(Manager,SIGNAL(switchToCustom()),this,SLOT(ChangeToCustom()));
+    connect(ui->isColorSpaceRGBOld,&QRadioButton::clicked,
+            this,&MainWindow::onAlgoClicked);
+    connect(ui->isColorSpaceRGB,&QRadioButton::clicked,
+            this,&MainWindow::onAlgoClicked);
+    connect(ui->isColorSpaceHSV,&QRadioButton::clicked,
+            this,&MainWindow::onAlgoClicked);
+    connect(ui->isColorSpaceLab94,&QRadioButton::clicked,
+            this,&MainWindow::onAlgoClicked);
+    connect(ui->isColorSpaceLab00,&QRadioButton::clicked,
+            this,&MainWindow::onAlgoClicked);
+    connect(ui->isColorSpaceXYZ,&QRadioButton::clicked,
+            this,&MainWindow::onAlgoClicked);
+    connect(ui->AllowDither,&QCheckBox::click,
+            this,&MainWindow::onAlgoClicked);
+
     turnToPage(0);
 
 }
@@ -139,6 +172,10 @@ void MainWindow::showPreview()
 
     preWind->ShowMaterialList();
     preWind->show();
+}
+
+void MainWindow::keepAwake() {
+    QCoreApplication::processEvents();
 }
 
 void MainWindow::loadColormap() {
@@ -351,6 +388,121 @@ tpS::~tpS()
 }
 #endif
 
+void MainWindow::turnToPage(int page)
+{
+    page%=9;
+    QString newtitle="SlopeCraft v3.6 Copyright © 2021 TokiNoBug    ";
+    switch (page)
+    {
+        case 0:
+                newtitle+="Step 0 / 6";
+                newtitle+="    ";
+                newtitle+=tr("开始");
+                ui->stackedWidget->setCurrentIndex(page);
+            break;
+
+    case 1:
+            newtitle+="Step 1 / 6";
+            newtitle+="    ";
+            newtitle+=tr("导入图片");
+            ui->stackedWidget->setCurrentIndex(page);
+        break;
+    case 2:
+            newtitle+="Step 2 / 6";
+            newtitle+="    ";
+            newtitle+=tr("设置地图画类型");
+            ui->stackedWidget->setCurrentIndex(page);
+        break;
+    case 3:
+            newtitle+="Step 3 / 6";
+            newtitle+="    ";
+            newtitle+=tr("设置方块列表");
+            ui->stackedWidget->setCurrentIndex(page);
+        break;
+    case 4:
+            newtitle+="Step 4 / 6";
+            newtitle+="    ";
+            newtitle+=tr("调整颜色");
+            ui->stackedWidget->setCurrentIndex(page);
+        break;
+    case 5:
+            newtitle+="Step 5 / 6";
+            newtitle+="    ";
+            newtitle+=tr("导出为投影文件");
+            ui->stackedWidget->setCurrentIndex(page);
+        break;
+    case 6:
+            newtitle+="Step 5 / 6";
+            newtitle+="    ";
+            newtitle+=tr("导出为mcfunction");
+            ui->stackedWidget->setCurrentIndex(page);
+       break;
+    case 7:
+            newtitle+="Step 5 / 6";
+            newtitle+="    ";
+            newtitle+=tr("导出为地图文件");
+            ui->stackedWidget->setCurrentIndex(page);
+        break;
+    case 8:
+            newtitle+="Step 6 / 6";
+            newtitle+="    ";
+            newtitle+=tr("结束");
+            ui->stackedWidget->setCurrentIndex(page);
+        break;
+    default:
+        qDebug("尝试翻页错误");
+        break;
+    }
+    this->setWindowTitle(newtitle);
+    updateEnables();
+    return;
+}
+
+void MainWindow::turnToPage0() {
+    turnToPage(0);
+    return;
+}
+
+void MainWindow::turnToPage1() {
+    turnToPage(1);
+    return;
+}
+
+void MainWindow::turnToPage2() {
+    turnToPage(2);
+    return;
+}
+
+void MainWindow::turnToPage3() {
+    turnToPage(3);
+    return;
+}
+
+void MainWindow::turnToPage4() {
+    turnToPage(4);
+    return;
+}
+
+void MainWindow::turnToPage5() {
+    turnToPage(5);
+    return;
+}
+
+void MainWindow::turnToPage6() {
+    turnToPage(6);
+    return;
+}
+
+void MainWindow::turnToPage7() {
+    turnToPage(7);
+    return;
+}
+
+void MainWindow::turnToPage8() {
+    turnToPage(8);
+    return;
+}
+
 void MainWindow::updateEnables() {
     bool temp=Kernel->queryStep()>=TokiSlopeCraft::colorSetReady;
     ui->StartWithFlat->setEnabled(temp);
@@ -361,7 +513,11 @@ void MainWindow::updateEnables() {
     //temp=Kernel->queryStep()>=TokiSlopeCraft::convertionReady;
     ui->Convert->setEnabled(temp);
 
+    temp=Kernel->queryStep()>=TokiSlopeCraft::convertionReady;
+    ui->ShowRaw->setEnabled(temp);
+
     temp=Kernel->queryStep()>=TokiSlopeCraft::converted;
+    ui->ShowAdjed->setEnabled(temp);
     ui->ExData->setEnabled(temp);
     ui->ExLite->setEnabled(temp);
     ui->ExStructure->setEnabled(temp);
@@ -685,7 +841,6 @@ void MainWindow::onGameVerClicked() {
 void MainWindow::onMapTypeClicked() {
     if(ui->isMapCreative->isChecked()) {
         Manager->setEnabled(12,true);
-
     }
     if(ui->isMapFlat->isChecked()) {
         Manager->setEnabled(12,true);
@@ -693,7 +848,6 @@ void MainWindow::onMapTypeClicked() {
     }
     if(ui->isMapSurvival->isChecked()) {
         Manager->setEnabled(12,false);
-
     }
     Kernel->decreaseStep(TokiSlopeCraft::colorSetReady);
     updateEnables();
@@ -722,3 +876,190 @@ void MainWindow::onPresetsClicked() {
     Kernel->decreaseStep(TokiSlopeCraft::colorSetReady);
     updateEnables();
 }
+
+void MainWindow::onAlgoClicked() {
+    static TokiSlopeCraft::convertAlgo lastChoice=TokiSlopeCraft::convertAlgo::RGB_Better;
+    static bool lastDither=false;
+
+    TokiSlopeCraft::convertAlgo now;
+    bool nowDither=ui->AllowDither->isChecked();
+    if(ui->isColorSpaceRGBOld->isChecked())
+        now=TokiSlopeCraft::convertAlgo::RGB;
+    if(ui->isColorSpaceRGB->isChecked())
+        now=TokiSlopeCraft::convertAlgo::RGB_Better;
+    if(ui->isColorSpaceHSV->isChecked())
+        now=TokiSlopeCraft::convertAlgo::HSV;
+    if(ui->isColorSpaceLab94->isChecked())
+        now=TokiSlopeCraft::convertAlgo::Lab94;
+    if(ui->isColorSpaceLab00->isChecked())
+        now=TokiSlopeCraft::convertAlgo::Lab00;
+    if(ui->isColorSpaceXYZ->isChecked())
+        now=TokiSlopeCraft::convertAlgo::XYZ;
+    if(lastChoice!=now||lastDither!=nowDither)
+        Kernel->decreaseStep(TokiSlopeCraft::step::convertionReady);
+
+    updateEnables();
+    lastChoice=now;
+    lastDither=nowDither;
+}
+
+void MainWindow::kernelSetType() {
+    /*
+bool TokiSlopeCraft::setType(mapTypes type,
+                             gameVersion ver,
+                             const bool * allowedBaseColor,
+                             simpleBlock * palettes,
+                             const ArrayXXi & _rawimg)
+*/
+    TokiSlopeCraft::mapTypes type;
+    {
+    if(ui->isMapCreative->isChecked())
+        type=TokiSlopeCraft::mapTypes::FileOnly;
+    if(ui->isMapFlat->isChecked())
+        type=TokiSlopeCraft::mapTypes::Flat;
+    if(ui->isMapSurvival->isChecked())
+        type=TokiSlopeCraft::mapTypes::Slope;
+    }
+
+    TokiSlopeCraft::gameVersion ver;
+    {
+    if(ui->isGame12->isChecked())
+        ver=TokiSlopeCraft::gameVersion::MC12;
+    if(ui->isGame13->isChecked())
+        ver=TokiSlopeCraft::gameVersion::MC13;
+    if(ui->isGame14->isChecked())
+        ver=TokiSlopeCraft::gameVersion::MC14;
+    if(ui->isGame15->isChecked())
+        ver=TokiSlopeCraft::gameVersion::MC15;
+    if(ui->isGame16->isChecked())
+        ver=TokiSlopeCraft::gameVersion::MC16;
+    if(ui->isGame17->isChecked())
+        ver=TokiSlopeCraft::gameVersion::MC17;
+    }
+
+    bool allowedBaseColor[64];
+    Manager->getEnableList(allowedBaseColor);
+
+    simpleBlock palette[64];
+    auto temp=Manager->getSimpleBlockList();
+    for(uchar i=0;i<temp.size();i++)
+        palette[i]=*temp[i];
+
+    EImage rawImg=QImage2EImage(rawPic);
+
+    Kernel->setType(type,ver,allowedBaseColor,palette,rawImg);
+    updateEnables();
+}
+
+EImage QImage2EImage(const QImage & qi) {
+    EImage ei;
+    ei.setZero(qi.height(),qi.width());
+    const QRgb * CL=nullptr;
+    for(int r=0;r<ei.rows();r++) {
+        CL=(const QRgb *)qi.scanLine(r);
+        for(int c=0;c<ei.cols();c++)
+            ei(r,c)=CL[c];
+    }
+    return ei;
+}
+
+QImage EImage2QImage(const EImage & ei,ushort scale) {
+    QImage qi(ei.cols()*scale,ei.rows()*scale,QImage::Format::Format_ARGB32);
+    QRgb * CL=nullptr;
+    for(int r=0;r<qi.height();r++) {
+        CL=(QRgb *)qi.scanLine(r);
+        for(int c=0;c<qi.width();c++)
+            CL[c]=ei(r/scale,c/scale);
+    }
+    return qi;
+}
+
+void MainWindow::convertProgressRangeSet(int min,int max,int val) {//设置进度条的取值范围和值
+    ui->ShowProgressABbar->setRange(min,max);
+    ui->ShowProgressABbar->setValue(val);
+}
+
+void MainWindow::convertProgressAdd(int deltaVal) {
+    ui->ShowProgressABbar->setValue(deltaVal+
+                                    ui->ShowProgressABbar->value());
+}
+
+void MainWindow::on_Convert_clicked() {
+if(Kernel->queryStep()<TokiSlopeCraft::convertionReady) {
+    kernelSetType();
+}
+TokiSlopeCraft::convertAlgo now;
+bool nowDither=ui->AllowDither->isChecked();
+{
+if(ui->isColorSpaceRGBOld->isChecked())
+    now=TokiSlopeCraft::convertAlgo::RGB;
+if(ui->isColorSpaceRGB->isChecked())
+    now=TokiSlopeCraft::convertAlgo::RGB_Better;
+if(ui->isColorSpaceHSV->isChecked())
+    now=TokiSlopeCraft::convertAlgo::HSV;
+if(ui->isColorSpaceLab94->isChecked())
+    now=TokiSlopeCraft::convertAlgo::Lab94;
+if(ui->isColorSpaceLab00->isChecked())
+    now=TokiSlopeCraft::convertAlgo::Lab00;
+if(ui->isColorSpaceXYZ->isChecked())
+    now=TokiSlopeCraft::convertAlgo::XYZ;
+}
+/*
+connect(Kernel,SIGNAL(progressRangeSet(int,int,int)),
+        this,SLOT(convertProgressRangeSet(int,int,int)));
+connect(Kernel,SIGNAL(progressAdd(int)),
+        this,SLOT(convertProgressAdd(int)));*/
+
+connect(Kernel,&TokiSlopeCraft::progressRangeSet,
+        this,&MainWindow::convertProgressRangeSet);
+connect(Kernel,&TokiSlopeCraft::progressAdd,
+        this,&MainWindow::convertProgressAdd);
+
+Kernel->decreaseStep(TokiSlopeCraft::step::convertionReady);
+updateEnables();
+
+bool temp=false;
+ui->Convert->setEnabled(temp);//防止用户在繁忙时重复操作
+ui->isColorSpaceHSV->setEnabled(temp);
+ui->isColorSpaceRGB->setEnabled(temp);
+ui->isColorSpaceLab94->setEnabled(temp);
+ui->isColorSpaceLab00->setEnabled(temp);
+ui->isColorSpaceXYZ->setEnabled(temp);
+ui->isColorSpaceRGBOld->setEnabled(temp);
+ui->AllowDither->setEnabled(temp);
+
+
+Kernel->convert(now,nowDither);
+/*
+disconnect(Kernel,SIGNAL(progressRangeSet(int,int,int)),
+        this,SLOT(convertProgressRangeSet(int,int,int)));
+disconnect(Kernel,SIGNAL(progressAdd(int)),
+        this,SLOT(convertProgressAdd(int)));*/
+
+disconnect(Kernel,&TokiSlopeCraft::progressRangeSet,
+        this,&MainWindow::convertProgressRangeSet);
+disconnect(Kernel,&TokiSlopeCraft::progressAdd,
+        this,&MainWindow::convertProgressAdd);
+
+temp=true;
+ui->Convert->setEnabled(temp);//恢复锁定
+ui->isColorSpaceHSV->setEnabled(temp);
+ui->isColorSpaceRGB->setEnabled(temp);
+ui->isColorSpaceLab94->setEnabled(temp);
+ui->isColorSpaceLab00->setEnabled(temp);
+ui->isColorSpaceXYZ->setEnabled(temp);
+ui->isColorSpaceRGBOld->setEnabled(temp);
+ui->AllowDither->setEnabled(temp);
+
+updateEnables();
+}
+
+void MainWindow::on_ShowRaw_clicked() {
+    ui->ShowPic->setPixmap(QPixmap::fromImage(rawPic));
+}
+
+void MainWindow::on_ShowAdjed_clicked() {
+    ui->ShowPic->setPixmap(QPixmap::fromImage(
+                               EImage2QImage(Kernel->getConovertedImage())));
+}
+
