@@ -153,9 +153,7 @@ private slots:
 
     //for Page0
     void on_StartWithSlope_clicked();
-
     void on_StartWithFlat_clicked();
-
     void on_StartWithNotVanilla_clicked();
 
     //for Page1
@@ -208,7 +206,7 @@ private:
     QTranslator trans;
     bool Collected;
     QProgressBar * proTracker;
-    void applyPre(short*BL);
+    //void applyPre(ushort*BL);
     void loadBlockList();
     void loadColormap();
     void turnToPage(int);

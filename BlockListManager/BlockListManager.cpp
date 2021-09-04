@@ -69,9 +69,9 @@ void BlockListManager::addBlocks(const QJsonArray & jArray,QString imgDir) {
         baseColor=temp.value("baseColor").toInt();
         tasks[baseColor].push(temp);
     }
-    qDebug("已经将全部的QJsonObject装入多个队列，开始创建控件");
+    //qDebug("已经将全部的QJsonObject装入多个队列，开始创建控件");
     for(ushort i=0;i<tasks.size();i++) {
-        qDebug()<<"基色"<<i<<"有"<<tasks[i].size()<<"个方块";
+        //qDebug()<<"基色"<<i<<"有"<<tasks[i].size()<<"个方块";
         while(!tasks[i].empty()) {
             tbcs[i]->addTokiBlock(tasks[i].front(),imgDir);
             tasks[i].pop();
@@ -81,9 +81,11 @@ void BlockListManager::addBlocks(const QJsonArray & jArray,QString imgDir) {
 }
 
 void BlockListManager::applyPreset(const ushort * preset) {
+    qDebug("applyPreset");
     isApplyingPreset=true;
         for(ushort i=0;i<tbcs.size();i++) {
             tbcs[i]->setSelected(preset[i]);
+            tbcs[i]->checkBox->setChecked(true);
         }
     isApplyingPreset=false;
 }

@@ -222,10 +222,10 @@ string TokiSlopeCraft::Noder(const short *src,int size) const {
 void TokiSlopeCraft::getARGB32(QRgb * dest) const {
     if(kernelStep<colorSetReady) return;
     for(uchar base=0;base<64;base++)
-        dest[base]=qRgba(Basic._RGB(128+base,0),
-                         Basic._RGB(128+base,1),
-                         Basic._RGB(128+base,2),
-                         255*(base!=0));
+        dest[base]=qRgba(255*Basic._RGB(128+base,0),
+                         255*Basic._RGB(128+base,1),
+                         255*Basic._RGB(128+base,2),255
+                         );
 }
 
 bool TokiSlopeCraft::convert(convertAlgo algo,bool dither) {

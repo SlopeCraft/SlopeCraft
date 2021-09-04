@@ -71,13 +71,13 @@ MainWindow::MainWindow(QWidget *parent)
         //connect(ui->menuExMcF,&QAction::trigger,this,&MainWindow::turnToPage6);
         connect(ui->progressExData,&QRadioButton::clicked,this,&MainWindow::turnToPage7);
         connect(ui->progressAbout,&QRadioButton::clicked,this,&MainWindow::turnToPage8);
-        connect(ui->actionAboutSlopeCraft,&QAction::trigger,this,&MainWindow::turnToPage8);
-        connect(ui->actionChinese,&QAction::trigger,this,&MainWindow::turnCh);
-        connect(ui->actionEnglish,&QAction::trigger,this,&MainWindow::turnEn);
+        connect(ui->actionAboutSlopeCraft,&QAction::triggered,this,&MainWindow::turnToPage8);
+        connect(ui->actionChinese,&QAction::triggered,this,&MainWindow::turnCh);
+        connect(ui->actionEnglish,&QAction::triggered,this,&MainWindow::turnEn);
         connect(ui->progressChinese,&QRadioButton::clicked,this,&MainWindow::turnCh);
         connect(ui->progressEnglish,&QRadioButton::clicked,this,&MainWindow::turnEn);
-        connect(ui->actionToki,&QAction::trigger,this,&MainWindow::contactG);
-        connect(ui->actionDoki,&QAction::trigger,this,&MainWindow::contactB);
+        connect(ui->actionToki,&QAction::triggered,this,&MainWindow::contactG);
+        connect(ui->actionDoki,&QAction::triggered,this,&MainWindow::contactB);
         connect(ui->progressG,&QRadioButton::clicked,this,&MainWindow::contactG);
         connect(ui->progressB,&QRadioButton::clicked,this,&MainWindow::contactB);
     qDebug("成功connect所有的菜单");
@@ -134,7 +134,7 @@ MainWindow::MainWindow(QWidget *parent)
             this,&MainWindow::onAlgoClicked);
     connect(ui->isColorSpaceXYZ,&QRadioButton::clicked,
             this,&MainWindow::onAlgoClicked);
-    connect(ui->AllowDither,&QCheckBox::click,
+    connect(ui->AllowDither,&QCheckBox::clicked,
             this,&MainWindow::onAlgoClicked);
 
     turnToPage(0);
@@ -273,6 +273,7 @@ void MainWindow::loadColormap() {
 void MainWindow::loadBlockList() {
     QString Path="./Blocks/FixedBlocks.json";
     QString Dir="./Blocks/FixedBlocks";
+
     while(!QFile(Path).exists()) {
         qDebug()<<"错误！找不到固定的方块列表文件"<<Path;
         Path=QFileDialog::getOpenFileName(this,
@@ -292,20 +293,20 @@ void MainWindow::loadBlockList() {
     QJsonParseError error;
     QFile temp(Path);
     temp.open(QIODevice::ReadOnly | QIODevice::Text);
-    jd.fromJson(temp.readAll(),&error);
+    jd=QJsonDocument::fromJson(temp.readAll(),&error);
     if(error.error!=QJsonParseError::NoError) {
         qDebug()<<"解析固定方块列表时出错："<<error.errorString();
         return;
     }
 
-    qDebug()<<"jd.toJson()="<<jd.isObject();
-
     QJsonArray ja=jd.object().value("FixedBlocks").toArray();
+
+    qDebug()<<ja.size();
 
     Manager->addBlocks(ja,Dir);
 
 
-    /*
+
 //开始解析用户自定义的方块列表
     Dir="./Blocks/CustomBlocks";
     Path="./Blocks/CustomBlocks.json";
@@ -339,7 +340,7 @@ void MainWindow::loadBlockList() {
     }
     QFile temp2(Path);
     temp2.open(QFile::OpenModeFlag::ReadOnly);
-    jd.fromJson(temp2.readAll(),&error);
+    jd=QJsonDocument::fromJson(temp2.readAll(),&error);
 
     while(error.error!=QJsonParseError::NoError) {
         qDebug()<<"自定义方块列表json格式错误："<<error.errorString();
@@ -352,12 +353,14 @@ void MainWindow::loadBlockList() {
     ja=jd.object().value("CustomBlocks").toArray();
 
     Manager->addBlocks(ja,Dir);
-*/
+
     if(Kernel->queryStep()>=TokiSlopeCraft::colorSetReady) {
         QRgb colors[64];
         Kernel->getARGB32(colors);
         Manager->setLabelColors(colors);
     }
+    //applyPre(BLBetter);
+    Manager->applyPreset(BLBetter);
 }
 
 void MainWindow::InitializeAll()

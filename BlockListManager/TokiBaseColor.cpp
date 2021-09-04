@@ -34,7 +34,7 @@ TokiBaseColor::~TokiBaseColor() {
 }
 void TokiBaseColor::addTokiBlock(const QJsonObject & json,
                   const QString & imgDir) {
-    qDebug("addTokiBlock被调用");
+    //qDebug("addTokiBlock被调用");
     QRadioButton * qrb=new QRadioButton;
     int rows=1+tbs.size()/2;
     int cols=1+tbs.size()%2;
@@ -51,21 +51,23 @@ void TokiBaseColor::addTokiBlock(const QJsonObject & json,
     connect(tb,&TokiBlock::radioBtnClicked,this,&TokiBaseColor::receiveClicked);
     connect(this,&TokiBaseColor::translate,tb,&TokiBlock::translate);
     connect(tb,&TokiBlock::radioBtnClicked,this,&TokiBaseColor::userClicked);
-    qDebug("add a TokiBlock");
+    //qDebug("add a TokiBlock");
 }
 
 void TokiBaseColor::makeLabel(QRgb color) {
     QLabel * qL=new QLabel("");
-    layout->addWidget(qL,0,0,ceil(1+tbs.size()/2),1);
+    layout->addWidget(qL,0,0,ceil(1+tbs.size()/2.0),1);
     QPalette pl;
     pl.setColor(QPalette::ColorRole::Text,Qt::black);
-    if(baseColor!=0) {
-        pl.setColor(QPalette::ColorRole::Base,QColor(0,0,0,0));
-    } else {
-        pl.setColor(QPalette::ColorRole::Base,QColor(color));
-    }
+    pl.setColor(QPalette::ColorRole::Window,QColor(qRed(color),qGreen(color),qBlue(color),255*bool(baseColor)));
+
     qL->setPalette(pl);
     qL->setSizePolicy(QSizePolicy::Policy::Preferred,QSizePolicy::Policy::Preferred);
+    qL->setMinimumWidth(30);
+    qL->setFrameShape(QFrame::Shape::StyledPanel);
+    qL->setFrameShadow(QFrame::Shadow::Plain);
+    qL->setLineWidth(1);
+    qL->setAutoFillBackground(true);
 }
 
 void TokiBaseColor::receiveClicked(ushort _selected) {
@@ -93,7 +95,7 @@ void TokiBaseColor::versionCheck() {
     }
     std::vector<short>scores(tbs.size());
     for(ushort idx=0;idx<tbs.size();idx++) {
-        if(tbs[idx]->getSimpleBlock()->version>=mcVer) {
+        if(tbs[idx]->getSimpleBlock()->version<=mcVer) {
             scores[idx]=(tbs[idx]->getTarget()->isChecked())?100:51;
             tbs[idx]->getNCTarget()->setEnabled(true);
         }
