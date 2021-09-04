@@ -21,7 +21,7 @@ This file is part of SlopeCraft.
 */
 #ifndef TOKICOLOR_CPP
 #define TOKICOLOR_CPP
-#include "mainwindow.h"
+#include "ColorSet.h"
 #define Thre 1e-10f
 #include <cmath>
 #define deg2rad(deg) ((deg)*M_PI/180.0)
@@ -254,7 +254,9 @@ QRgb XYZ2QRGB(float x,float y,float z)
 -0.9692550,1.8759900,0.0415559;
 0.0556466,-0.2040413,1.0573111]
 */
-    return RGB2QRGB(3.2404814*x-1.5371516*y-0.4985363*z,-0.9692550*x+1.8759900*y+0.0415559*z,0.0556466*x-0.2040413*y+1.0573111*z);
+    return RGB2QRGB(3.2404814*x-1.5371516*y-0.4985363*z,
+                    -0.9692550*x+1.8759900*y+0.0415559*z,
+                    0.0556466*x-0.2040413*y+1.0573111*z);
 }
 
 QRgb Lab2QRGB(float L,float a,float b)

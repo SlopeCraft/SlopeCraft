@@ -2,6 +2,12 @@
 #define colorset_cpp
 #include "ColorSet.h"
 
+ColorSet* TokiColor::Allowed=NULL;
+ColorSet*TokiColor::Basic=NULL;
+short TokiColor::DepthIndexEnd[4]={63,127,191,255};
+unsigned char TokiColor::DepthCount[4]={64,64,64,64};
+bool TokiColor::needFindSide=false;
+
 ColorSet::ColorSet()
 {
     GetMap(Map);
@@ -41,12 +47,6 @@ void ColorSet::ApplyAllowed(ColorSet*standard,bool *MIndex)
         }
         qDebug()<<"共允许使用"<<totalAllowColorCount<<"种颜色";
 
-        /*for(short Index=0;Index<256;Index++)
-            if(MIndex[Index])
-                qDebug()<<4*(Index%64)+(Index/64);*/
-
-
-
         _RGB.setZero(totalAllowColorCount,3);
         HSV.setZero(totalAllowColorCount,3);
         Lab.setZero(totalAllowColorCount,3);
@@ -83,6 +83,14 @@ void GetMap(VectorXi &Map)
     Map.setZero(256);
     for(short r=0;r<256;r++)Map(r)=4*(r%64)+r/64;
     return;
+}
+
+QRgb ComposeColor(const QRgb&front,const QRgb&back)
+{
+    int red=(qRed(front)*qAlpha(front)+qRed(back)*(255-qAlpha(front)))/255;
+    int green=(qGreen(front)*qAlpha(front)+qGreen(back)*(255-qAlpha(front)))/255;
+    int blue=(qBlue(front)*qAlpha(front)+qBlue(back)*(255-qAlpha(front)))/255;
+    return qRgb(red,green,blue);
 }
 
 #endif

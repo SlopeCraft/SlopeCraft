@@ -1,5 +1,27 @@
 {
 "CustomBlocks":[
-
+{
+    "baseColor":2,
+    "id":"birch_slab[type=top,waterlogged=false]",
+    "nameZH":"白桦上半砖",
+    "nameEN":"Birch slab",
+    "icon":"birch_planks.png",
+    "version":0,
+    "idOld":"planks[variant=birch]",
+    "needGlass":false,
+    "isGlowing":false,
+    "Hint1":"你可以按照这样的格式自定义添加新的方块",
+    "Hint2":"但必须遵守json格式",
+    "Hint3":"baseColor是这种方块对应的基色，是必填项",
+    "Hint4":"id是这种方块的id，也是必填项，最好附带完整的方块状态，但不要加minecraft:前缀",
+    "Hint5":"nameZH是方块中文名称，必填",
+    "Hint6":"nameEN是方块英文名称，必填",
+    "Hint7":"icon是方块对应图片的文件名，它应当放在CustomBlocks文件夹下，且不要有前缀",
+    "Hint8":"version是方块最早出现的版本。0代表早于1.12，12代表1.12，13代表1.13，如此类推。255代表尚未出现的版本",
+    "Hint9":"idOld是该方块在1.12的方块id（如果有的话）",
+    "Hint10":"needGlass代表这个方块的下方需要依附其他方块",
+    "Hint11":"isGlowing代表这个方块是发光的",
+    "Hint12":"所有的Hint都会被忽略"
+}
 ]
 }

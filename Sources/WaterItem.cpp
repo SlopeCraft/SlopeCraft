@@ -2,7 +2,7 @@
 
 const TokiPos nullPos=TokiRC(-1,-1);
 const waterItem nullWater=TokiRC(-32768,-32768);
-
+const short WaterColumnSize[3]={11,6,1};
 TokiPos TokiRC(short row,short col)
 {
     unsigned int u;

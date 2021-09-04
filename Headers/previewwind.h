@@ -43,10 +43,10 @@ class PreviewWind : public QMainWindow
 public:
     explicit PreviewWind(QWidget *parent = nullptr);
 
-    vector<QRadioButton *> Src;
+    vector<const QRadioButton *> Src;
     vector<int>BlockCount;
     vector<QLabel*>CountLabel;
-    QRadioButton*Water;
+    const QRadioButton*Water;
     int size[3];
     int TotalBlockCount;
     void ShowMaterialList();
