@@ -27,6 +27,8 @@ This file is part of SlopeCraft.
 #include "ui_mainwindow.h"
 #include "tpstrategywind.h"
 
+#define bufferSize 2048
+
 const ushort MainWindow::BLCreative[64]={0,0,1,1,0,0,0,0,3,0,4,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 const ushort MainWindow::BLCheaper[64]={0,0,0,0,1,0,5,2,3,0,4,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 const ushort MainWindow::BLBetter[64]={0,1,1,0,0,1,0,2,0,0,3,2,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0};
@@ -41,10 +43,17 @@ MainWindow::MainWindow(QWidget *parent)
     Collected=false;
 
     Kernel=new TokiSlopeCraft(this);
+    qDebug("成功创建内核");
     connect(Kernel,&TokiSlopeCraft::keepAwake,this,&MainWindow::keepAwake);
+    connect(Kernel,&TokiSlopeCraft::progressRangeSet,
+            this,&MainWindow::progressRangeSet);
+    connect(Kernel,&TokiSlopeCraft::progressAdd,
+            this,&MainWindow::progressAdd);
+    proTracker=nullptr;
 
     Manager=new BlockListManager(
                 (QHBoxLayout*)ui->scrollArea->layout());
+    qDebug("成功创建方块列表管理者");
     connect(Manager,&BlockListManager::switchToCustom,
             this,&MainWindow::ChangeToCustom);
     //connect(Kernel,SIGNAL(convertProgressSetRange(int,int,int)));
@@ -974,14 +983,14 @@ QImage EImage2QImage(const EImage & ei,ushort scale) {
     return qi;
 }
 
-void MainWindow::convertProgressRangeSet(int min,int max,int val) {//设置进度条的取值范围和值
-    ui->ShowProgressABbar->setRange(min,max);
-    ui->ShowProgressABbar->setValue(val);
+void MainWindow::progressRangeSet(int min,int max,int val) {//设置进度条的取值范围和值
+    proTracker->setRange(min,max);
+    proTracker->setValue(val);
 }
 
-void MainWindow::convertProgressAdd(int deltaVal) {
-    ui->ShowProgressABbar->setValue(deltaVal+
-                                    ui->ShowProgressABbar->value());
+void MainWindow::progressAdd(int deltaVal) {
+    proTracker->setValue(deltaVal+
+                                    proTracker->value());
 }
 
 void MainWindow::on_Convert_clicked() {
@@ -1009,11 +1018,7 @@ connect(Kernel,SIGNAL(progressRangeSet(int,int,int)),
         this,SLOT(convertProgressRangeSet(int,int,int)));
 connect(Kernel,SIGNAL(progressAdd(int)),
         this,SLOT(convertProgressAdd(int)));*/
-
-connect(Kernel,&TokiSlopeCraft::progressRangeSet,
-        this,&MainWindow::convertProgressRangeSet);
-connect(Kernel,&TokiSlopeCraft::progressAdd,
-        this,&MainWindow::convertProgressAdd);
+proTracker=ui->ShowProgressABbar;
 
 Kernel->decreaseStep(TokiSlopeCraft::step::convertionReady);
 updateEnables();
@@ -1028,18 +1033,9 @@ ui->isColorSpaceXYZ->setEnabled(temp);
 ui->isColorSpaceRGBOld->setEnabled(temp);
 ui->AllowDither->setEnabled(temp);
 
-
 Kernel->convert(now,nowDither);
-/*
-disconnect(Kernel,SIGNAL(progressRangeSet(int,int,int)),
-        this,SLOT(convertProgressRangeSet(int,int,int)));
-disconnect(Kernel,SIGNAL(progressAdd(int)),
-        this,SLOT(convertProgressAdd(int)));*/
 
-disconnect(Kernel,&TokiSlopeCraft::progressRangeSet,
-        this,&MainWindow::convertProgressRangeSet);
-disconnect(Kernel,&TokiSlopeCraft::progressAdd,
-        this,&MainWindow::convertProgressAdd);
+proTracker=nullptr;
 
 temp=true;
 ui->Convert->setEnabled(temp);//恢复锁定
@@ -1063,3 +1059,223 @@ void MainWindow::on_ShowAdjed_clicked() {
                                EImage2QImage(Kernel->getConovertedImage())));
 }
 
+void MainWindow::on_ExData_clicked() {
+    int mapRows=ceil(Kernel->getImageRows()/128.0);
+    int mapCols=ceil(Kernel->getImageCols()/128.0);
+    int mapCounts=mapRows*mapCols;
+    ui->ShowDataRows->setText(QString::number(mapRows));
+    ui->ShowDataCols->setText(QString::number(mapCols));
+    ui->ShowDataCounts->setText(QString::number(mapCounts));
+    ui->InputDataIndex->setText("0");
+}
+
+//Page5
+
+void MainWindow::on_Build4Lite_clicked() {
+
+    bool naturalCompress=ui->AllowNaturalOpti->isChecked();
+    bool forcedCompress=ui->AllowForcedOpti->isChecked();
+    TokiSlopeCraft::compressSettings cS;
+    if(naturalCompress) {
+        if(forcedCompress)
+            cS=TokiSlopeCraft::compressSettings::Both;
+        else
+            cS=TokiSlopeCraft::compressSettings::NaturalOnly;
+    } else {
+        if(forcedCompress)
+            cS=TokiSlopeCraft::compressSettings::ForcedOnly;
+        else cS=TokiSlopeCraft::compressSettings::noCompress;
+    }
+
+    ui->ExportLite->setEnabled(false);
+    ui->FinishExLite->setEnabled(false);
+    ui->ManualPreview->setEnabled(false);
+
+    proTracker=ui->ShowProgressExLite;
+
+    Kernel->build(cS,ui->maxHeight->value());
+
+    int size3D[3],total;
+
+    Kernel->get3DSize(size3D[0],size3D[1],size3D[2]);
+    total=Kernel->getBlockCounts();
+    ui->ShowLiteBlocks->setText(QString::number(total));
+    ui->ShowLiteXYZ->setText(QString::fromStdString(
+                                     "X:"+std::to_string(size3D[0])+
+                                 "  × Y:"+std::to_string(size3D[1])+
+                "  × Z:"+std::to_string(size3D[2])));
+    proTracker=nullptr;
+    updateEnables();
+    showPreview();
+}
+
+void MainWindow::on_ManualPreview_clicked() {
+    showPreview();
+}
+
+void MainWindow::on_ExportLite_clicked() {
+        string FileName=QFileDialog::getSaveFileName(this,tr("导出为投影/结构方块文件"),"",tr("投影文件(*.litematic) ;; 结构方块文件(*.nbt)")).toLocal8Bit().data();
+        string unCompressed;
+        if(FileName.empty())return;
+        bool putLitematic=(FileName.substr(FileName.length()-strlen(".litematic"))==".litematic");
+        bool putStructure=(FileName.substr(FileName.length()-strlen(".nbt"))==".nbt");
+
+        if(!putLitematic&&!putStructure)
+        {
+            qDebug("得到的文件路径有错！");
+            return;
+        }
+        qDebug("开始导出投影");
+        cout<<FileName<<endl;
+
+
+        ui->FinishExLite->setEnabled(false);
+        ui->seeExported->setEnabled(false);
+        ui->Build4Lite->setEnabled(false);
+
+        if(putStructure)
+            unCompressed=Kernel->exportAsStructure(FileName);
+        else
+            unCompressed=Kernel->exportAsLitematic(FileName,
+                                                   ui->InputLiteName->toPlainText().toUtf8().data(),
+                                                   ui->InputAuthor->toPlainText().toUtf8().data(),
+                                                   (ui->InputRegionName->toPlainText()+tr("(xz坐标=-65±128×整数)")).toUtf8().data());
+
+        if(compressFile(unCompressed.data(),FileName.data()))
+        {
+            qDebug("压缩成功");
+            QFile umComFile(QString(unCompressed.data()));
+            umComFile.remove();
+            ProductPath=FileName;
+        }
+        else
+        {
+            qDebug("压缩失败");
+            QMessageBox::warning(this,tr("投影文件导出失败"),
+                                 tr("这可能是汉字编码错误造成的。请检查路径中是否有汉字"));
+            return;
+        };
+        updateEnables();
+        qDebug("导出为投影成功");
+        return;
+}
+
+
+void MainWindow::on_InputDataIndex_textChanged() {
+    bool isIndexValid=false;
+        const int indexStart=ui->InputDataIndex->toPlainText().toInt(&isIndexValid);
+        isIndexValid=isIndexValid&&(indexStart>=0);
+        if(isIndexValid)
+        {
+            if(ceil(Kernel->getImageRows()/128.0f)==1&&
+                    ceil(Kernel->getImageCols()/128.0f)==1)
+            ui->ShowDataFileName->setText("map_"+QString::number(indexStart)+".dat");
+            else
+                ui->ShowDataFileName->setText(
+                            "map_"+QString::number(indexStart)+".dat"+
+                            "~"+"map_"+
+                            QString::number(indexStart+ceil(Kernel->getImageRows()/128.0f)*ceil(Kernel->getImageRows()/128.0f)-1)+".dat");
+            ui->ExportData->setEnabled(true);
+            return;
+        }
+
+        ui->ShowDataFileName->setText(tr("你输入的起始序号不可用，请输入大于等于0的整数！"));
+        ui->ExportData->setEnabled(false);
+        return;
+}
+
+
+void MainWindow::on_ExportData_clicked() {
+    bool isIndexValid=false;
+        const int indexStart=ui->InputDataIndex->toPlainText().toInt(&isIndexValid);
+        isIndexValid=isIndexValid&&(indexStart>=0);
+        if(!isIndexValid)
+        {
+            QMessageBox::information(this,tr("你输入的起始序号不可用"),tr("请输入大于等于0的整数！"));
+                        return;
+        }
+        string FolderPath=(QFileDialog::getExistingDirectory(this,tr("请选择导出的文件夹"))).toStdString();
+        if(FolderPath.empty())
+        {
+            QMessageBox::information(this,tr("你选择的文件夹不存在！"),tr("你可以选择存档中的data文件夹"));
+            return;
+        }
+
+        ui->InputDataIndex->setEnabled(false);
+        ui->ExportData->setEnabled(false);
+        ui->FinshExData->setEnabled(false);
+        ui->ExportData->setText(tr("请稍等"));
+
+        for(auto it=FolderPath.begin();it!=FolderPath.end();it++)
+            if(*it=='\\')*it='/';
+
+        Kernel->exportAsData(FolderPath,indexStart);
+        qDebug("导出地图文件成功");
+
+        ui->InputDataIndex->setEnabled(true);
+        ui->ExportData->setEnabled(true);
+        ui->FinshExData->setEnabled(true);
+        ui->ExportData->setText(tr("导出"));
+        updateEnables();
+}
+
+void MainWindow::turnCh() {
+    switchLan(ZH);
+}
+
+void MainWindow::turnEn() {
+    switchLan(EN);
+}
+
+void MainWindow::switchLan(Language lang) {
+    qDebug("开始调整语言");
+    emit Manager->translate(lang);
+        if(lang==EN)
+        {
+            if(!trans.load(":/lans/Slope_en_US.qm"))
+            {
+                qDebug("载入\":/lans/Slope_en_US.qm\"失败");
+                return;
+            }
+            qApp->installTranslator(&trans);
+            ui->retranslateUi(this);
+            qDebug("成功调整为英语界面");
+        }
+        else
+        {
+            if(!trans.load(":/lans/Slope_zh_CN.qm"))
+            {
+                qDebug("载入\":/lans/Slope_zh_CN.qm\"失败");
+                return;
+            }
+            qApp->installTranslator(&trans);
+            ui->retranslateUi(this);
+            qDebug("成功调整为简体中文界面");
+        }
+        return;
+}
+
+bool compressFile(const char*sourcePath,const char*destPath)
+{
+    char buf[bufferSize]={0};
+    FILE*in=NULL;
+    gzFile out=NULL;
+    int len=0;
+    fopen_s(&in,sourcePath,"rb");
+    out=gzopen(destPath,"wb");
+    if(in==NULL||out==NULL)
+        return false;
+    while(true)
+    {
+        len=(int)fread(buf,1,sizeof(buf),in);
+        if(ferror(in))return false;
+        if(len==0)break;
+        if(len!=gzwrite(out,buf,(unsigned)len))
+            return false;
+        memset(buf,0,sizeof(buf));
+    }
+    fclose(in);
+    gzclose(out);
+    qDebug("succeed");
+    return true;
+}

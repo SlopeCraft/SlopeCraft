@@ -85,4 +85,12 @@ void GetMap(VectorXi &Map)
     return;
 }
 
+QRgb ComposeColor(const QRgb&front,const QRgb&back)
+{
+    int red=(qRed(front)*qAlpha(front)+qRed(back)*(255-qAlpha(front)))/255;
+    int green=(qGreen(front)*qAlpha(front)+qGreen(back)*(255-qAlpha(front)))/255;
+    int blue=(qBlue(front)*qAlpha(front)+qBlue(back)*(255-qAlpha(front)))/255;
+    return qRgb(red,green,blue);
+}
+
 #endif

@@ -103,7 +103,24 @@ void BlockListManager::getEnableList(bool *dest) const {
     for(uchar i=0;i<tbcs.size();i++)
         dest[i]=tbcs[i]->getEnabled();
 }
-
+void BlockListManager::getSimpleBlockList(const simpleBlock ** SBL) const {
+    for(uchar i=0;i<64;i++) {
+        if(i<tbcs.size())
+            SBL[i]=tbcs[i]->getTokiBlock()->getSimpleBlock();
+        else
+            SBL[i]=nullptr;
+    }
+}
+std::vector<const simpleBlock *> BlockListManager::getSimpleBlockList() const {
+    std::vector<const simpleBlock *> SBL(64);
+    for(uchar i=0;i<64;i++) {
+        if(i<tbcs.size())
+            SBL[i]=tbcs[i]->getTokiBlock()->getSimpleBlock();
+        else
+            SBL[i]=nullptr;
+    }
+    return SBL;
+}
 std::vector<const TokiBlock*> BlockListManager::getTokiBlockList() const {
     std::vector<const TokiBlock*> TBL(64);
     for(uchar i=0;i<64;i++) {

@@ -130,7 +130,9 @@ public slots:
 
     void showPreview();
 
-private slots:
+private slots:    
+    void progressRangeSet(int min,int max,int val);//设置进度条的取值范围和值
+    void progressAdd(int deltaVal);
     void keepAwake();
 
     void contactG();
@@ -168,22 +170,21 @@ private slots:
     //应用预设方块列表的自定义槽
     void ChangeToCustom();
     void onPresetsClicked();
-    //forPage4
+    //for Page4
     void onAlgoClicked();
     void on_Convert_clicked();
-    void convertProgressRangeSet(int min,int max,int val);//设置进度条的取值范围和值
-    void convertProgressAdd(int deltaVal);
-/*
-    void rogressRangeSet(int min,int max,int val) const;//设置进度条的取值范围和值
-    void progressAdd(int deltaVal) const;
-*/
-
-    //forPage5
-
-
     void on_ShowRaw_clicked();
-
     void on_ShowAdjed_clicked();
+    void on_ExData_clicked();
+
+    //for Page5
+    void on_Build4Lite_clicked();
+    void on_ManualPreview_clicked();
+    void on_ExportLite_clicked();
+
+    //for Page7
+    void on_InputDataIndex_textChanged();
+    void on_ExportData_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -206,6 +207,7 @@ private:
     string ProductPath;
     QTranslator trans;
     bool Collected;
+    QProgressBar * proTracker;
     void applyPre(short*BL);
     void loadBlockList();
     void loadColormap();

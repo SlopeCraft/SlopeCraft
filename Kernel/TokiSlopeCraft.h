@@ -96,7 +96,7 @@ public:
         mapTypes,
         gameVersion,
         const bool [64],
-        simpleBlock [64] ,
+        const simpleBlock [64] ,
         const ArrayXXi &);
     vector<string> getAuthorURL() const;
     void getARGB32(QRgb*) const;
@@ -105,6 +105,8 @@ public:
     bool convert(convertAlgo=RGB_Better,bool dither=false);
     short getImageRows() const;
     short getImageCols() const;
+    bool isVanilla() const;//判断是可以生存实装的地图画
+    bool isFlat() const;//判断是平板的
 
 //can do in converted:
     bool build(compressSettings,ushort);//构建三维结构
@@ -167,8 +169,6 @@ private:
     Tensor<unsigned char,3>Build;//x,y,z
 
 //for setType:
-    bool isVanilla() const;//判断是可以生存实装的地图画
-    bool isFlat() const;//判断是平板的
 //for convert:
     ColorSpace getColorSpace() const;
     void pushToHash();

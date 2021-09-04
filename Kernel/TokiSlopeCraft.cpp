@@ -113,7 +113,7 @@ TokiSlopeCraft::step TokiSlopeCraft::queryStep() const {
 bool TokiSlopeCraft::setType(mapTypes type,
                              gameVersion ver,
                              const bool * allowedBaseColor,
-                             simpleBlock * palettes,
+                             const simpleBlock * palettes,
                              const ArrayXXi & _rawimg) {
     if(kernelStep<colorSetReady)return false;
     rawImage=_rawimg;
@@ -633,6 +633,9 @@ vector<string> TokiSlopeCraft::exportAsData(const string & FolderPath ,
 bool TokiSlopeCraft::build(compressSettings cS, ushort mAH) {
     if(kernelStep<converted)return false;
     if(maxAllowedHeight<2)return false;
+
+    if(isFlat()||!isVanilla())
+        compressMethod=compressSettings::noCompress;
 
     compressMethod=cS;
 
