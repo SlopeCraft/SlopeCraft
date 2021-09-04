@@ -52,7 +52,8 @@ MainWindow::MainWindow(QWidget *parent)
     proTracker=nullptr;
 
     Manager=new BlockListManager(
-                (QHBoxLayout*)ui->scrollArea->layout());
+                (QHBoxLayout*)ui->scrollAreaWidgetContents->layout());
+
     qDebug("成功创建方块列表管理者");
     connect(Manager,&BlockListManager::switchToCustom,
             this,&MainWindow::ChangeToCustom);
@@ -195,8 +196,9 @@ void MainWindow::loadColormap() {
     while(true) {
         QFile temp(ColorFilePath);
         if(temp.exists()) {
+            temp.open(QFile::OpenModeFlag::ReadOnly);
             R=temp.readAll();
-            if(QCryptographicHash::hash(R,QCryptographicHash::Algorithm::Md5).toStdString()
+            if(QCryptographicHash::hash(R,QCryptographicHash::Algorithm::Md5).toHex()
                     =="ba56d5af2ba89d9ba3362a72778e1624") {
                 break;
             }
@@ -212,8 +214,9 @@ void MainWindow::loadColormap() {
     while(true) {
         QFile temp(ColorFilePath);
         if(temp.exists()) {
+            temp.open(QFile::OpenModeFlag::ReadOnly);
             H=temp.readAll();
-            if(QCryptographicHash::hash(H,QCryptographicHash::Algorithm::Md5).toStdString()
+            if(QCryptographicHash::hash(H,QCryptographicHash::Algorithm::Md5).toHex()
                     =="db47a74d0b32fa682d1256cce60bf574") {
                 break;
             }
@@ -229,8 +232,9 @@ void MainWindow::loadColormap() {
     while(true) {
         QFile temp(ColorFilePath);
         if(temp.exists()) {
+            temp.open(QFile::OpenModeFlag::ReadOnly);
             L=temp.readAll();
-            if(QCryptographicHash::hash(L,QCryptographicHash::Algorithm::Md5).toStdString()
+            if(QCryptographicHash::hash(L,QCryptographicHash::Algorithm::Md5).toHex()
                     =="2aec9d79b920745472c0ccf56cbb7669") {
                 break;
             }
@@ -246,8 +250,9 @@ void MainWindow::loadColormap() {
     while(true) {
         QFile temp(ColorFilePath);
         if(temp.exists()) {
+            temp.open(QFile::OpenModeFlag::ReadOnly);
             X=temp.readAll();
-            if(QCryptographicHash::hash(X,QCryptographicHash::Algorithm::Md5).toStdString()
+            if(QCryptographicHash::hash(X,QCryptographicHash::Algorithm::Md5).toHex()
                     =="6551171faf62961e3ae6bc3c2ee8d051") {
                 break;
             }
@@ -285,18 +290,22 @@ void MainWindow::loadBlockList() {
     }
     QJsonDocument jd;
     QJsonParseError error;
-    jd.fromJson(QFile(Path).readAll(),&error);
+    QFile temp(Path);
+    temp.open(QIODevice::ReadOnly | QIODevice::Text);
+    jd.fromJson(temp.readAll(),&error);
     if(error.error!=QJsonParseError::NoError) {
         qDebug()<<"解析固定方块列表时出错："<<error.errorString();
         return;
     }
 
-    QJsonArray ja=jd.array();
+    qDebug()<<"jd.toJson()="<<jd.isObject();
+
+    QJsonArray ja=jd.object().value("FixedBlocks").toArray();
 
     Manager->addBlocks(ja,Dir);
 
 
-
+    /*
 //开始解析用户自定义的方块列表
     Dir="./Blocks/CustomBlocks";
     Path="./Blocks/CustomBlocks.json";
@@ -328,8 +337,9 @@ void MainWindow::loadBlockList() {
         } else
             break;
     }
-
-    jd.fromJson(QFile(Path).readAll(),&error);
+    QFile temp2(Path);
+    temp2.open(QFile::OpenModeFlag::ReadOnly);
+    jd.fromJson(temp2.readAll(),&error);
 
     while(error.error!=QJsonParseError::NoError) {
         qDebug()<<"自定义方块列表json格式错误："<<error.errorString();
@@ -339,10 +349,10 @@ void MainWindow::loadBlockList() {
                               QMessageBox::Abort);
         return;
     }
-    ja=jd.array();
+    ja=jd.object().value("CustomBlocks").toArray();
 
     Manager->addBlocks(ja,Dir);
-
+*/
     if(Kernel->queryStep()>=TokiSlopeCraft::colorSetReady) {
         QRgb colors[64];
         Kernel->getARGB32(colors);
@@ -353,15 +363,6 @@ void MainWindow::loadBlockList() {
 void MainWindow::InitializeAll()
 {
     ui->LeftScroll->verticalScrollBar()->setStyleSheet("QScrollBar{width: 7px;margin: 0px 0 0px 0;background-color: rgba(255, 255, 255, 64);color: rgba(255, 255, 255, 128);}");
-    if(!Collected)
-    {
-        loadColormap();
-        qDebug("颜色表加载完毕");
-        loadBlockList();
-        qDebug("方块列表加载完毕");
-        Manager->setVersion(TokiSlopeCraft::MC17);
-        Collected=true;
-    }
     static bool needInitialize=true;
     if(needInitialize)
     {
@@ -375,6 +376,16 @@ void MainWindow::InitializeAll()
     makeImage(1);
 #endif
     }
+    if(!Collected)
+    {
+        loadColormap();
+        qDebug("颜色表加载完毕");
+        loadBlockList();
+        qDebug("方块列表加载完毕");
+        Manager->setVersion(TokiSlopeCraft::MC17);
+        Collected=true;
+    }
+
 }
 
 void MainWindow::contactG()

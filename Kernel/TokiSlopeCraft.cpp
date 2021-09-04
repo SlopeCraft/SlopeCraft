@@ -103,6 +103,7 @@ bool readFromTokiColor(const char*src,ArrayXXf & M) {
         if(i%3==2)
             rp++;
     }
+    qDebug()<<"TokiSlopeCraft::成功加载了一个颜色表";
     return true;
 }
 
@@ -221,9 +222,9 @@ string TokiSlopeCraft::Noder(const short *src,int size) const {
 void TokiSlopeCraft::getARGB32(QRgb * dest) const {
     if(kernelStep<colorSetReady) return;
     for(uchar base=0;base<64;base++)
-        dest[base]=qRgba(Basic._RGB(mapColor2Index(base*4+2),0),
-                         Basic._RGB(mapColor2Index(base*4+2),1),
-                         Basic._RGB(mapColor2Index(base*4+2),2),
+        dest[base]=qRgba(Basic._RGB(128+base,0),
+                         Basic._RGB(128+base,1),
+                         Basic._RGB(128+base,2),
                          255*(base!=0));
 }
 

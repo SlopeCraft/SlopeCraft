@@ -5,22 +5,30 @@ BlockListManager::BlockListManager(QHBoxLayout * _area,
 {
     isApplyingPreset=false;
     area=_area;
+    qDebug()<<((area==nullptr)?" 错误！_area为空指针":"");
     QGroupBox * qgb=nullptr;
     QGridLayout * qgl=nullptr;
     TokiBaseColor * tbc=nullptr;
     tbcs.clear();
+    //qDebug("方块列表管理者开始创建QGroupBox");
 for(uchar baseColor=0;baseColor<64;baseColor++) {
         if(baseColorNames[baseColor].isEmpty())
             break;
-        area->addWidget(qgb=new QGroupBox(baseColorNames[baseColor]));
+        qgb=new QGroupBox(baseColorNames[baseColor]);
+        //qDebug("create QGroupBox");
         qgl=new QGridLayout;
         qgb->setLayout(qgl);
+        //qDebug("create Layout");
         tbc=new TokiBaseColor(baseColor,qgl);
+        //qDebug("create TokiBaseColor");
+        area->addWidget(qgb);
+        //qDebug("add QGroupBox to layout");
         tbcs.push_back(tbc);
 
-        connect(this,SIGNAL(translate(Language)),tbc,SLOT(translate(Language)));
-        connect(tbc,SIGNAL(userClicked()),this,SLOT(receiveClicked()));
+        connect(this,&BlockListManager::translate,tbc,&TokiBaseColor::translate);
+        connect(tbc,&TokiBaseColor::userClicked,this,&BlockListManager::receiveClicked);
     }
+//qDebug("Manager构造函数完毕");
 }
 
 BlockListManager::~BlockListManager() {
@@ -44,6 +52,7 @@ void BlockListManager::addBlocks(const QJsonArray & jArray,QString imgDir) {
     imgDir.replace("\\","/");
     QJsonObject temp;
     uchar baseColor;
+    qDebug()<<"jArray.size()="<<jArray.size();
     for(unsigned int i=0;i<jArray.size();i++) {
         temp=jArray[i].toObject();
 
@@ -60,7 +69,9 @@ void BlockListManager::addBlocks(const QJsonArray & jArray,QString imgDir) {
         baseColor=temp.value("baseColor").toInt();
         tasks[baseColor].push(temp);
     }
+    qDebug("已经将全部的QJsonObject装入多个队列，开始创建控件");
     for(ushort i=0;i<tasks.size();i++) {
+        qDebug()<<"基色"<<i<<"有"<<tasks[i].size()<<"个方块";
         while(!tasks[i].empty()) {
             tbcs[i]->addTokiBlock(tasks[i].front(),imgDir);
             tasks[i].pop();

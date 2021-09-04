@@ -22,7 +22,7 @@ QString imgName=imgDir+"/"+json.value("icon").toString();
 target->setText(nameZH);
 target->setChecked(true);
 
-connect(target,SIGNAL(clicked(bool)),this,SLOT(onTargetClicked(bool)));
+connect(target,&QRadioButton::clicked,this,&TokiBlock::onTargetClicked);
 
 if(!QFile(imgName).exists()) {
     qDebug()<<"错误！按钮"<<QString(block.id.data())<<"对应的图像"<<imgName<<"不存在！";

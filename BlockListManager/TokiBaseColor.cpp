@@ -15,8 +15,8 @@ checkBox->setChecked(false);
 checkBox->setSizePolicy(QSizePolicy(QSizePolicy::Policy::Expanding,QSizePolicy::Policy::Preferred));
 checkBox->setEnabled(baseColor!=0);
 
-connect(checkBox,SIGNAL(clicked(bool)),this,SLOT(updateEnabled(bool)));
-connect(checkBox,SIGNAL(clicked(bool)),this,SLOT(userClicked()));
+connect(checkBox,&QCheckBox::clicked,this,&TokiBaseColor::updateEnabled);
+connect(checkBox,&QCheckBox::clicked,this,&TokiBaseColor::userClicked);
 //创建弹簧
 QSpacerItem * si=new QSpacerItem(40,20,
                                  QSizePolicy::Policy::Expanding,QSizePolicy::Policy::Preferred);
@@ -34,7 +34,7 @@ TokiBaseColor::~TokiBaseColor() {
 }
 void TokiBaseColor::addTokiBlock(const QJsonObject & json,
                   const QString & imgDir) {
-
+    qDebug("addTokiBlock被调用");
     QRadioButton * qrb=new QRadioButton;
     int rows=1+tbs.size()/2;
     int cols=1+tbs.size()%2;
@@ -48,9 +48,10 @@ void TokiBaseColor::addTokiBlock(const QJsonObject & json,
         tb->getNCTarget()->setChecked(false);
     }
 
-    connect(tb,SIGNAL(radioBtnClicked(ushort)),this,SLOT(receiveClicked(ushort)));
-    connect(this,SIGNAL(translate(Language)),tb,SLOT(translate(Language)));
-    connect(tb,SIGNAL(radioBtnClicked(ushort)),this,SLOT(userClicked()));
+    connect(tb,&TokiBlock::radioBtnClicked,this,&TokiBaseColor::receiveClicked);
+    connect(this,&TokiBaseColor::translate,tb,&TokiBlock::translate);
+    connect(tb,&TokiBlock::radioBtnClicked,this,&TokiBaseColor::userClicked);
+    qDebug("add a TokiBlock");
 }
 
 void TokiBaseColor::makeLabel(QRgb color) {
