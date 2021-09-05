@@ -17,6 +17,7 @@ checkBox->setEnabled(baseColor!=0);
 
 connect(checkBox,&QCheckBox::clicked,this,&TokiBaseColor::updateEnabled);
 connect(checkBox,&QCheckBox::clicked,this,&TokiBaseColor::userClicked);
+connect(this,&TokiBaseColor::translate,this,&TokiBaseColor::translateCheckBox);
 //创建弹簧
 QSpacerItem * si=new QSpacerItem(40,20,
                                  QSizePolicy::Policy::Expanding,QSizePolicy::Policy::Preferred);
@@ -129,6 +130,18 @@ void TokiBaseColor::setSelected(ushort sel) {
 void TokiBaseColor::updateEnabled(bool isChecked) {
     isEnabled=isChecked;
     versionCheck();
+}
+
+void TokiBaseColor::translateCheckBox(Language lang) {
+    switch (lang) {
+    case ZH:
+        checkBox->setText("启用");
+        break;
+    case EN:
+        checkBox->setText("Enable");
+        break;
+    }
+
 }
 
 const TokiBlock* TokiBaseColor::getTokiBlock() const {

@@ -432,7 +432,7 @@
     "baseColor":11,
     "id":"stone",
     "nameZH":"石头",
-    "nameEN":"Stonr",
+    "nameEN":"Stone",
     "icon":"stone.png",
     "version":0,
     "idOld":"stone[variant=stone]",

@@ -35,8 +35,8 @@ void makeLabel(QRgb);
 static uchar mcVer;
 
 signals:
-    void translate(Language);
     void userClicked();
+    void translate(Language);
 
 private:
     uchar baseColor;
@@ -51,7 +51,7 @@ private slots:
     void receiveClicked(ushort);
     void updateEnabled(bool);
     void versionCheck();
-
+    void translateCheckBox(Language);
 };
 
 #endif // TOKIBASECOLOR_H

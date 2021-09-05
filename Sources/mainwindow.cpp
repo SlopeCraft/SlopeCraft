@@ -122,6 +122,15 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->isMapFlat,&QRadioButton::clicked,
             this,&MainWindow::onMapTypeClicked);
 
+    connect(ui->isBLCreative,&QRadioButton::clicked,
+            this,&MainWindow::onPresetsClicked);
+    connect(ui->isBLSurvivalCheaper,&QRadioButton::clicked,
+            this,&MainWindow::onPresetsClicked);
+    connect(ui->isBLSurvivalBetter,&QRadioButton::clicked,
+            this,&MainWindow::onPresetsClicked);
+    connect(ui->isBLGlowing,&QRadioButton::clicked,
+            this,&MainWindow::onPresetsClicked);
+
     connect(ui->isColorSpaceRGBOld,&QRadioButton::clicked,
             this,&MainWindow::onAlgoClicked);
     connect(ui->isColorSpaceRGB,&QRadioButton::clicked,
