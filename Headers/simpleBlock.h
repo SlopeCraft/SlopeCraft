@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+
 typedef unsigned char uchar ;
 typedef std::vector<std::string> stringList;
 class simpleBlock
@@ -19,6 +20,8 @@ public:
                             std::string & netBlockId,
                             stringList * proName,
                             stringList * proVal);
+    void copyFrom(const simpleBlock *);
+    simpleBlock& operator =(const simpleBlock &);
 };
 
 #endif // SIMPLEBLOCK_H

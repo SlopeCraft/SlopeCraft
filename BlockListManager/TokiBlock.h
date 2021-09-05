@@ -26,7 +26,7 @@ public:
                        QObject *parent = nullptr);
     ~TokiBlock();
     const QRadioButton * getTarget() const;
-    const simpleBlock * getSimpleBlock() const;
+    simpleBlock getSimpleBlock() const;
 signals:
     void radioBtnClicked(ushort);
 private:

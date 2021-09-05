@@ -9,14 +9,14 @@ TokiBlock::TokiBlock(QRadioButton * _target,
 self=_self;
 target=_target;
 
-block.id=json.value("id").toString().toStdString();
+block.id=json.value("id").toString().toLocal8Bit();
 block.version=json.value("version").toInt();
-block.idOld=json.value("idOld").toString().toStdString();
+block.idOld=json.value("idOld").toString().toLocal8Bit();
 block.needGlass=json.value("needGlass").toBool();
 block.doGlow=json.value("isGlowing").toBool();
 nameZH=json.value("nameZH").toString();
 nameEN=json.value("nameEN").toString();
-
+std::cerr<<block.id<<"\n"<<block.idOld<<"\n";
 QString imgName=imgDir+"/"+json.value("icon").toString();
 
 target->setText(nameZH);
@@ -69,8 +69,9 @@ const QRadioButton * TokiBlock::getTarget() const {
     return target;
 }
 
-const simpleBlock * TokiBlock::getSimpleBlock() const {
-    return &block;
+simpleBlock TokiBlock::getSimpleBlock() const {
+    qDebug("simpleBlock TokiBlock::getSimpleBlock() const");
+    return block;
 }
 
 QRadioButton * TokiBlock::getNCTarget() const {

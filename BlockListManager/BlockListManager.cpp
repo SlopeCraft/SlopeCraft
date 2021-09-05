@@ -116,21 +116,16 @@ void BlockListManager::getEnableList(bool *dest) const {
     for(uchar i=0;i<tbcs.size();i++)
         dest[i]=tbcs[i]->getEnabled();
 }
-void BlockListManager::getSimpleBlockList(const simpleBlock ** SBL) const {
-    for(uchar i=0;i<64;i++) {
-        if(i<tbcs.size())
+void BlockListManager::getSimpleBlockList(simpleBlock * SBL) const {
+    qDebug("void BlockListManager::getSimpleBlockList(simpleBlock * SBL) const");
+    for(uchar i=0;i<tbcs.size();i++) {
             SBL[i]=tbcs[i]->getTokiBlock()->getSimpleBlock();
-        else
-            SBL[i]=nullptr;
     }
 }
-std::vector<const simpleBlock *> BlockListManager::getSimpleBlockList() const {
-    std::vector<const simpleBlock *> SBL(64);
-    for(uchar i=0;i<64;i++) {
-        if(i<tbcs.size())
+std::vector<simpleBlock> BlockListManager::getSimpleBlockList() const {
+    std::vector<simpleBlock> SBL(tbcs.size());
+    for(uchar i=0;i<tbcs.size();i++) {
             SBL[i]=tbcs[i]->getTokiBlock()->getSimpleBlock();
-        else
-            SBL[i]=nullptr;
     }
     return SBL;
 }

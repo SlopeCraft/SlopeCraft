@@ -395,6 +395,7 @@ void MainWindow::InitializeAll()
         loadBlockList();
         qDebug("方块列表加载完毕");
         Manager->setVersion(TokiSlopeCraft::MC17);
+        onPresetsClicked();
         Collected=true;
     }
 
@@ -905,6 +906,9 @@ void MainWindow::onPresetsClicked() {
         Manager->applyPreset(BLGlowing);
     }
 
+    if(ui->isMapSurvival->isChecked())
+        Manager->setEnabled(12,false);
+
     Kernel->decreaseStep(TokiSlopeCraft::colorSetReady);
     updateEnables();
 }
@@ -968,18 +972,21 @@ bool TokiSlopeCraft::setType(mapTypes type,
     if(ui->isGame17->isChecked())
         ver=TokiSlopeCraft::gameVersion::MC17;
     }
-
+    qDebug("975");
     bool allowedBaseColor[64];
     Manager->getEnableList(allowedBaseColor);
-
+    qDebug("978");
     simpleBlock palette[64];
-    auto temp=Manager->getSimpleBlockList();
-    for(uchar i=0;i<temp.size();i++)
-        palette[i]=*temp[i];
+    Manager->getSimpleBlockList(palette);
+    qDebug("981");
 
+    /*for(uchar i=0;i<temp.size();i++){qDebug()<<i;
+        palette[i].copyFrom(temp[i]);}*/
+    qDebug("983");
     EImage rawImg=QImage2EImage(rawPic);
-
+    qDebug("985");
     Kernel->setType(type,ver,allowedBaseColor,palette,rawImg);
+    qDebug("987");
     updateEnables();
 }
 
@@ -1007,19 +1014,31 @@ QImage EImage2QImage(const EImage & ei,ushort scale) {
 }
 
 void MainWindow::progressRangeSet(int min,int max,int val) {//设置进度条的取值范围和值
+    if(proTracker==nullptr) {
+        qDebug("错误！proTracker==nullptr");
+        return;
+    }
     proTracker->setRange(min,max);
     proTracker->setValue(val);
 }
 
 void MainWindow::progressAdd(int deltaVal) {
+    if(proTracker==nullptr) {
+        qDebug("错误！proTracker==nullptr");
+        return;
+    }
     proTracker->setValue(deltaVal+
                                     proTracker->value());
 }
 
 void MainWindow::on_Convert_clicked() {
+qDebug("开始SetType");
 if(Kernel->queryStep()<TokiSlopeCraft::convertionReady) {
+    qDebug("重新setType");
     kernelSetType();
+
 }
+
 TokiSlopeCraft::convertAlgo now;
 bool nowDither=ui->AllowDither->isChecked();
 {
@@ -1036,11 +1055,7 @@ if(ui->isColorSpaceLab00->isChecked())
 if(ui->isColorSpaceXYZ->isChecked())
     now=TokiSlopeCraft::convertAlgo::XYZ;
 }
-/*
-connect(Kernel,SIGNAL(progressRangeSet(int,int,int)),
-        this,SLOT(convertProgressRangeSet(int,int,int)));
-connect(Kernel,SIGNAL(progressAdd(int)),
-        this,SLOT(convertProgressAdd(int)));*/
+
 proTracker=ui->ShowProgressABbar;
 
 Kernel->decreaseStep(TokiSlopeCraft::step::convertionReady);
@@ -1055,7 +1070,7 @@ ui->isColorSpaceLab00->setEnabled(temp);
 ui->isColorSpaceXYZ->setEnabled(temp);
 ui->isColorSpaceRGBOld->setEnabled(temp);
 ui->AllowDither->setEnabled(temp);
-
+qDebug("开始convert");
 Kernel->convert(now,nowDither);
 
 proTracker=nullptr;

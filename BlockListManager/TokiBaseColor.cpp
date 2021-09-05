@@ -43,7 +43,7 @@ void TokiBaseColor::addTokiBlock(const QJsonObject & json,
     TokiBlock * tb=new TokiBlock(qrb,json,imgDir,tbs.size());
     tbs.push_back(tb);
 
-    if(tb->getSimpleBlock()->version>mcVer)
+    if(tb->getSimpleBlock().version>mcVer)
     {
         tb->getNCTarget()->setEnabled(false);
         tb->getNCTarget()->setChecked(false);
@@ -96,7 +96,7 @@ void TokiBaseColor::versionCheck() {
     }
     std::vector<short>scores(tbs.size());
     for(ushort idx=0;idx<tbs.size();idx++) {
-        if(tbs[idx]->getSimpleBlock()->version<=mcVer) {
+        if(tbs[idx]->getSimpleBlock().version<=mcVer) {
             scores[idx]=(tbs[idx]->getTarget()->isChecked())?100:51;
             tbs[idx]->getNCTarget()->setEnabled(true);
         }
@@ -145,6 +145,7 @@ void TokiBaseColor::translateCheckBox(Language lang) {
 }
 
 const TokiBlock* TokiBaseColor::getTokiBlock() const {
+    qDebug("getTokiBlock");
     return tbs[selected];
 }
 
