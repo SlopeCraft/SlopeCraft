@@ -69,9 +69,8 @@ const QRadioButton * TokiBlock::getTarget() const {
     return target;
 }
 
-simpleBlock TokiBlock::getSimpleBlock() const {
-    qDebug("simpleBlock TokiBlock::getSimpleBlock() const");
-    return block;
+const simpleBlock *TokiBlock::getSimpleBlock() const {
+    return &block;
 }
 
 QRadioButton * TokiBlock::getNCTarget() const {

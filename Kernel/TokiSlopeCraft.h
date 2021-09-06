@@ -96,7 +96,7 @@ public:
         mapTypes,
         gameVersion,
         const bool [64],
-        const simpleBlock [64] ,
+        const simpleBlock[64] ,
         const ArrayXXi &);
     vector<string> getAuthorURL() const;
     void getARGB32(QRgb*) const;

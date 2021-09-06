@@ -1124,7 +1124,7 @@ void MainWindow::on_Build4Lite_clicked() {
             cS=TokiSlopeCraft::compressSettings::ForcedOnly;
         else cS=TokiSlopeCraft::compressSettings::noCompress;
     }
-
+    Kernel->decreaseStep(TokiSlopeCraft::step::converted);
     ui->ExportLite->setEnabled(false);
     ui->FinishExLite->setEnabled(false);
     ui->ManualPreview->setEnabled(false);

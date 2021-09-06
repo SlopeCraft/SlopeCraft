@@ -101,9 +101,10 @@ void TokiColor::doSide(VectorXf Diff)
     }
     //sideSelectivity[0]-=1.0;sideSelectivity[1]-=1.0;
     //sideSelectivity[0]*=100.0;sideSelectivity[1]*=100.0;
+    /*
     qDebug()<<"side[0]=["<<sideResult[0]<<','<<sideSelectivity[0]<<']';
     qDebug()<<"side[1]=["<<sideResult[1]<<','<<sideSelectivity[1]<<']';
-    qDebug()<<"ResultDiff="<<ResultDiff;
+    qDebug()<<"ResultDiff="<<ResultDiff;*/
     return;
 }
 

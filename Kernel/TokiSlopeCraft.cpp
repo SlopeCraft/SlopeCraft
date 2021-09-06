@@ -121,6 +121,8 @@ bool TokiSlopeCraft::setType(mapTypes type,
     mapType=type;
     mcVer=ver;
 
+    TokiColor::needFindSide=(mapType==mapTypes::Slope);
+
     blockPalette.resize(64);
     for(short i=0;i<64;i++)
         blockPalette[i]=palettes[i];
@@ -307,6 +309,7 @@ void TokiSlopeCraft::applyTokiColor() {
 }
 
 void TokiSlopeCraft::fillMapMat() {
+    mapPic.setZero(getImageRows(),getImageCols());
     auto R=&colorHash;
         for(short r=0;r<sizePic(0);r++)
         {
@@ -632,8 +635,14 @@ vector<string> TokiSlopeCraft::exportAsData(const string & FolderPath ,
 }
 
 bool TokiSlopeCraft::build(compressSettings cS, ushort mAH) {
-    if(kernelStep<converted)return false;
-    if(maxAllowedHeight<2)return false;
+    if(kernelStep<converted){
+        cerr<<"hasty!"<<endl;
+        return false;}
+    maxAllowedHeight=mAH;
+    if(maxAllowedHeight<2){
+        cerr<<"maxAllowedHeight<2 !"<<endl;
+        return false;}
+    cerr<<"ready to build"<<endl;
 
     if(isFlat()||!isVanilla())
         compressMethod=compressSettings::noCompress;
@@ -643,13 +652,13 @@ bool TokiSlopeCraft::build(compressSettings cS, ushort mAH) {
     maxAllowedHeight=mAH;
 
     emit progressRangeSet(0,8*sizePic(2),0);
-
+    cerr<<"start makeHeight"<<endl;
     makeHeight();
-
+    cerr<<"makeHeight finished"<<endl;
     emit progressRangeSet(0,8*sizePic(2),5*sizePic(2));
-
+    cerr<<"start buildHeight"<<endl;
     buildHeight();
-
+    cerr<<"buildHeight finished"<<endl;
     emit progressRangeSet(0,8*sizePic(2),8*sizePic(2));
 
     kernelStep=builded;

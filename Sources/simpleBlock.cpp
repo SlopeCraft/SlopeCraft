@@ -96,7 +96,7 @@ void simpleBlock::copyFrom(const simpleBlock * src) {
     this->idOld=src->idOld;
     std::cerr<<"idOld copied\n";
 }
-
+/*
 simpleBlock& simpleBlock::operator =(const simpleBlock & src) {
     std::cerr<<"copy begin\n";
     this->version=src.version;
@@ -109,4 +109,4 @@ simpleBlock& simpleBlock::operator =(const simpleBlock & src) {
     std::cerr<<"id copied\n";
     this->idOld=src.idOld;
     std::cerr<<"idOld copied\n";
-}
+}*/

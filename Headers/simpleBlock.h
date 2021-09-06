@@ -21,7 +21,7 @@ public:
                             stringList * proName,
                             stringList * proVal);
     void copyFrom(const simpleBlock *);
-    simpleBlock& operator =(const simpleBlock &);
+    //simpleBlock& operator =(const simpleBlock &);
 };
 
 #endif // SIMPLEBLOCK_H
