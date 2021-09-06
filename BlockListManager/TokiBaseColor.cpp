@@ -77,10 +77,9 @@ void TokiBaseColor::receiveClicked(ushort _selected) {
 }
 
 bool TokiBaseColor::isAllOverVersion() const {//判断是否所有方块都超版本了
-    bool isAllOver=false;
+    bool isAllOver=true;
     for(auto it=tbs.cbegin();it!=tbs.cend();it++) {
-        isAllOver+=((*it)->block.version>mcVer);
-        if(isAllOver)break;
+        isAllOver&=((*it)->block.version>mcVer);
     }
     return isAllOver;
 }
