@@ -49,6 +49,182 @@
     "Hint11":"isGlowing means if the block glows.",
     "Hint12":"All hints will be ignored",
     "Hint13":"The whole file will failed to be parsed once an error occurred in json format"
+},
+{
+    "baseColor":11,
+    "id":"stone_slab[type=top,waterlogged=false]",
+    "nameZH":"石头上半砖",
+    "nameEN":"Stone slab",
+    "icon":"stone.png",
+    "version":0,
+    "idOld":"stone_slab[half=top,variant=stone]",
+    "needGlass":false,
+    "isGlowing":false
+},
+{
+    "baseColor":2,
+    "id":"sandstone_slab[type=top,waterlogged=false]",
+    "nameZH":"砂岩上半砖",
+    "nameEN":"Sandstone slab",
+    "icon":"smooth_sandstone.png",
+    "version":0,
+    "idOld":"stone_slab[half=top,variant=sandstone]",
+    "needGlass":false,
+    "isGlowing":false
+},
+{
+    "baseColor":11,
+    "id":"cobblestone_slab[type=top,waterlogged=false]",
+    "nameZH":"圆石上半砖",
+    "nameEN":"Cobblestone slab",
+    "icon":"cobblestone.png",
+    "version":0,
+    "idOld":"stone_slab[half=top,variant=cobblestone]",
+    "needGlass":false,
+    "isGlowing":false
+},
+{
+    "baseColor":0,
+    "id":"redstone_lamp[lit=false]",
+    "nameZH":"红石灯",
+    "nameEN":"Redstone lamp",
+    "icon":".redstone_lamppng",
+    "version":0,
+    "idOld":"redstone_lamp",
+    "needGlass":false,
+    "isGlowing":false
+},
+{
+    "baseColor":28,
+    "id":"brick_slab[type=top,waterlogged=false]",
+    "nameZH":"砖块上半砖",
+    "nameEN":"Brick slab",
+    "icon":"bricks.png",
+    "version":0,
+    "idOld":"stone_slab[half=top,variant=brick]",
+    "needGlass":false,
+    "isGlowing":false
+},
+{
+    "baseColor":11,
+    "id":"stone_brick_slab[type=top,waterlogged=false]",
+    "nameZH":"石砖上半砖",
+    "nameEN":"Stonebrick slab",
+    "icon":"stone_bricks.png",
+    "version":0,
+    "idOld":"stone_slab[half=top,variant=stone_brick]",
+    "needGlass":false,
+    "isGlowing":false
+},
+{
+    "baseColor":35,
+    "id":"nether_brick_slab[type=top,waterlogged=false]",
+    "nameZH":"地狱砖块上半砖",
+    "nameEN":"Nether brick slab",
+    "icon":"nether_bricks.png",
+    "version":0,
+    "idOld":"stone_slab[half=top,variant=stone_nether_brick]",
+    "needGlass":false,
+    "isGlowing":false
+},
+{
+    "baseColor":14,
+    "id":"quartz_slab[type=top,waterlogged=false]",
+    "nameZH":"石英上半砖",
+    "nameEN":"Quartz slab",
+    "icon":"quartz_block.png",
+    "version":0,
+    "idOld":"stone_slab[half=top,variant=quartz]",
+    "needGlass":false,
+    "isGlowing":false
+},
+{
+    "baseColor":13,
+    "id":"oak_slab[type=top,waterlogged=false]",
+    "nameZH":"橡木上半砖",
+    "nameEN":"Oak slab",
+    "icon":"oak_planks.png",
+    "version":0,
+    "idOld":"wooden_slab[half=top,variant=oak]",
+    "needGlass":false,
+    "isGlowing":false
+},
+{
+    "baseColor":34,
+    "id":"spruce_slab[type=top,waterlogged=false]",
+    "nameZH":"云杉木上半砖",
+    "nameEN":"Spruce slab",
+    "icon":"spruce_planks.png",
+    "version":0,
+    "idOld":"wooden_slab[half=top,variant=spruce]",
+    "needGlass":false,
+    "isGlowing":false
+},
+{
+    "baseColor":2,
+    "id":"birch_slab[type=top,waterlogged=false]",
+    "nameZH":"白桦木上半砖",
+    "nameEN":"Birch slab",
+    "icon":"birch_planks.png",
+    "version":0,
+    "idOld":"wooden_slab[half=top,variant=birch]",
+    "needGlass":false,
+    "isGlowing":false
+},
+{
+    "baseColor":10,
+    "id":"jungle_slab[type=top,waterlogged=false]",
+    "nameZH":"丛林木上半砖",
+    "nameEN":"Jungle slab",
+    "icon":"jungle_planks.png",
+    "version":0,
+    "idOld":"wooden_slab[half=top,variant=jungle]",
+    "needGlass":false,
+    "isGlowing":false
+},
+{
+    "baseColor":15,
+    "id":"acacia_slab[type=top,waterlogged=false]",
+    "nameZH":"金合欢木上半砖",
+    "nameEN":"Acacia slab",
+    "icon":"acacia_planks.png",
+    "version":0,
+    "idOld":"wooden_slab[half=top,variant=acacia]",
+    "needGlass":false,
+    "isGlowing":false
+},
+{
+    "baseColor":26,
+    "id":"dark_oak_slab[type=top,waterlogged=false]",
+    "nameZH":"黑橡木上半砖",
+    "nameEN":"Dark oak slab",
+    "icon":"dark_oak_planks.png",
+    "version":0,
+    "idOld":"wooden_slab[half=top,variant=dark_oak]",
+    "needGlass":false,
+    "isGlowing":false
+},
+{
+    "baseColor":15,
+    "id":"red_sandstone_slab[type=top,waterlogged=false]",
+    "nameZH":"红砂岩上半砖",
+    "nameEN":"Red sandstone slab",
+    "icon":"smooth_red_sandstone.png",
+    "version":0,
+    "idOld":"stone_slab2[half=top,variant=red_sandstone]",
+    "needGlass":false,
+    "isGlowing":false
+},
+{
+    "baseColor":16,
+    "id":"purpur_slab[type=top,waterlogged=false]",
+    "nameZH":"紫珀上半砖",
+    "nameEN":"Purpur slab",
+    "icon":"purpur_block.png",
+    "version":0,
+    "idOld":"purpur_slab[half=top,variant=default]",
+    "needGlass":false,
+    "isGlowing":false
 }
 ]
 }
