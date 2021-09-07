@@ -21,16 +21,26 @@
 #include "NBTWriter.h"
 
 #ifdef WITH_QT
-
+#include <QObject>
 #endif
 
-#include <QObject>
+
+
+
 #include <QRgb>
 #include <QtConcurrent>
 #include <QFuture>
 //typedef unsigned char gameVersion;
 typedef Array<uint,Dynamic,Dynamic> EImage;
 using namespace Eigen;
+
+#ifndef WITH_QT
+/*
+    #define emit ;
+    #define qDebug() cerr;
+    #define qDebug(x) printf("%s/n",x);
+*/
+#endif
 
 #define mapColor2Index(mapColor) (64*(mapColor%4)+(mapColor/4))
 #define index2mapColor(index) (4*(index%64)+(index/64))
@@ -137,8 +147,12 @@ signals:
     void exportProgressAdd(int deltaVal) const;*/
     void keepAwake() const;//保持主窗口唤醒
 private slots:
-
+#else
+    void (*progressRangeSet)(int,int,int);
+    void (*progressAdd)(int);
+    void (*keepAwake)();
 #endif
+
 private:
     enum ColorSpace {
         R='R',H='H',L='L',X='X'
@@ -195,5 +209,11 @@ bool readFromTokiColor(const char*src,ArrayXXf & M);
 uchar h2d(char h);
 void crash();
 void matchColor(TokiColor * tColor,QRgb qColor);
+
+#ifndef WITH_QT
+void defaultProgressRangeSet(int,int,int);
+void defaultProgressAdd(int);
+void defaultKeepAwake();
+#endif
 
 #endif // TOKISLOPECRAFT_H

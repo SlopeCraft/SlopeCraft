@@ -1,14 +1,28 @@
 #include "TokiSlopeCraft.h"
-#ifdef WITH_QT
 
 Array<float,2,3>TokiSlopeCraft::DitherMapLR;
 Array<float,2,3>TokiSlopeCraft::DitherMapRL;
 
+#ifndef WITH_QT
+void defaultProgressRangeSet(int,int,int) {};
+void defaultProgressAdd(int){};
+void defaultKeepAwake(){};
+#endif
+
+
+#ifdef WITH_QT
 TokiSlopeCraft::TokiSlopeCraft(QObject *parent) : QObject(parent)
 #else
 TokiSlopeCraft::TokiSlopeCraft()
 #endif
 {
+#ifndef WITH_QT
+    progressRangeSet=defaultProgressRangeSet;
+    progressAdd=defaultProgressAdd;
+    keepAwake=defaultKeepAwake;
+#endif
+
+
     kernelStep=TokiSlopeCraft::step::nothing;
     rawImage.setZero(0,0);
     DitherMapLR<<0.0,0.0,7.0,
