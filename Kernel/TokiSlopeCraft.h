@@ -29,7 +29,7 @@
 #include <QtConcurrent>
 #include <QFuture>
 //typedef unsigned char gameVersion;
-typedef ArrayXXi EImage;
+typedef Array<uint,Dynamic,Dynamic> EImage;
 using namespace Eigen;
 
 #define mapColor2Index(mapColor) (64*(mapColor%4)+(mapColor/4))
@@ -97,7 +97,7 @@ public:
         gameVersion,
         const bool [64],
         const simpleBlock[64] ,
-        const ArrayXXi &);
+        const EImage &);
     vector<string> getAuthorURL() const;
     void getARGB32(QRgb*) const;
 
@@ -156,7 +156,8 @@ private:
 
     int size3D[3];//x,y,z
 
-    ArrayXXi rawImage;
+    EImage rawImage;
+    EImage ditheredImage;
 
     std::unordered_map<QRgb,TokiColor> colorHash;
 
@@ -175,7 +176,7 @@ private:
     void applyTokiColor();
     void fillMapMat();
     void Dither();
-    short sizePic(short) const;
+    int sizePic(short) const;
 
 //for build
     void makeHeight();//构建HighMap和LowMap

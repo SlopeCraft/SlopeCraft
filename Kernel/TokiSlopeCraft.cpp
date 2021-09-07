@@ -115,7 +115,7 @@ bool TokiSlopeCraft::setType(mapTypes type,
                              gameVersion ver,
                              const bool * allowedBaseColor,
                              const simpleBlock * palettes,
-                             const ArrayXXi & _rawimg) {
+                             const EImage & _rawimg) {
     if(kernelStep<colorSetReady)return false;
     rawImage=_rawimg;
     mapType=type;
@@ -266,7 +266,7 @@ bool TokiSlopeCraft::convert(convertAlgo algo,bool dither) {
     return true;
 }
 
-short TokiSlopeCraft::sizePic(short dim) const {
+int TokiSlopeCraft::sizePic(short dim) const {
     if(dim==0) return rawImage.rows();
     if(dim==1) return rawImage.cols();
     return rawImage.size();
@@ -334,6 +334,8 @@ void TokiSlopeCraft::Dither() {
     Dither[1].setZero(sizePic(0)+2,sizePic(1)+2);
     Dither[2].setZero(sizePic(0)+2,sizePic(1)+2);
 
+    ditheredImage.setZero(sizePic(0),sizePic(1));
+
     ArrayXXf *ColorMap=nullptr;
     QRgb Current;
     QRgb (*CvtFun)(float,float,float);
@@ -388,6 +390,7 @@ void TokiSlopeCraft::Dither() {
                 if(qAlpha(rawImage(r,c))<=0)continue;
 
                 Current=CvtFun(Dither[0](r+1,c+1),Dither[1](r+1,c+1),Dither[2](r+1,c+1));
+                ditheredImage(r,c)=Current;
                 if(R->find(Current)==R->end())
                 {
                     R->operator[](Current)=TokiColor(Current,ConvertAlgo);
@@ -417,7 +420,7 @@ void TokiSlopeCraft::Dither() {
                 if(qAlpha(rawImage(r,c))<=0)continue;
 
                 Current=CvtFun(Dither[0](r+1,c+1),Dither[1](r+1,c+1),Dither[2](r+1,c+1));
-
+                ditheredImage(r,c)=Current;
                 if(R->find(Current)==R->end())
                 {
                     R->operator[](Current)=TokiColor(Current,ConvertAlgo);
@@ -441,6 +444,7 @@ void TokiSlopeCraft::Dither() {
             //qDebug("从左至右遍历了一行");
         }
         isDirLR=!isDirLR;
+
         emit progressAdd(sizePic(1));
     }
     qDebug("完成了误差扩散");
@@ -466,6 +470,7 @@ TokiSlopeCraft::ColorSpace TokiSlopeCraft::getColorSpace() const {
     case XYZ:
         return X;
     }
+    return R;
 }
 
 EImage TokiSlopeCraft::getConovertedImage() const {
@@ -599,6 +604,7 @@ vector<string> TokiSlopeCraft::exportAsData(const string & FolderPath ,
                     MapFile.writeListHead("frames",NBT::idCompound,0);
                     MapFile.writeString("dimension","minecraft:overworld");
                     MapFile.writeByte("locked",1);
+                    break;
                 default:
                     qDebug("错误的游戏版本！");
                     break;

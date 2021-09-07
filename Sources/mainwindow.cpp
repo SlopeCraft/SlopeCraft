@@ -1084,7 +1084,7 @@ ui->isColorSpaceLab00->setEnabled(temp);
 ui->isColorSpaceXYZ->setEnabled(temp);
 ui->isColorSpaceRGBOld->setEnabled(temp);
 ui->AllowDither->setEnabled(temp);
-
+on_ShowAdjed_clicked();
 updateEnables();
 }
 
