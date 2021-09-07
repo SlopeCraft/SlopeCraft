@@ -59,16 +59,16 @@ SOURCES += \
     BlockListManager/TokiBaseColor.cpp \
     BlockListManager/TokiBlock.cpp \
     Kernel/TokiSlopeCraft.cpp \
-    Sources/CIEDE00.cpp \
-    Sources/NBTWriter.cpp \
-    Sources/OptiChain.cpp \
-    Sources/WaterItem.cpp \
-    Sources/colorset.cpp \
+    Kernel/CIEDE00.cpp \
+    Kernel/NBTWriter.cpp \
+    Kernel/OptiChain.cpp \
+    Kernel/WaterItem.cpp \
+    Kernel/colorset.cpp \
     Sources/main.cpp \
     Sources/mainwindow.cpp \
     Sources/previewwind.cpp \
-    Sources/simpleBlock.cpp \
-    Sources/tokicolor.cpp \
+    Kernel/simpleBlock.cpp \
+    Kernel/tokicolor.cpp \
     Sources/tpstrategywind.cpp \
 
 HEADERS += \
@@ -86,16 +86,16 @@ HEADERS += \
     BlockListManager/BlockListManager.h \
     BlockListManager/TokiBaseColor.h \
     BlockListManager/TokiBlock.h \
-    Headers/ColorSet.h \
-    Headers/NBTWriter.h \
-    Headers/OptiChain.h \
+    Kernel/ColorSet.h \
+    Kernel/NBTWriter.h \
+    Kernel/OptiChain.h \
     Headers/TokiBaseColor.h \
-    Headers/TokiColor.h \
+    Kernel/TokiColor.h \
     Kernel/TokiSlopeCraft.h \
-    Headers/WaterItem.h \
+    Kernel/WaterItem.h \
     Headers/mainwindow.h \
     Headers/previewwind.h \
-    Headers/simpleBlock.h \
+    Kernel/simpleBlock.h \
     Headers/tpstrategywind.h \
 
 FORMS += \
