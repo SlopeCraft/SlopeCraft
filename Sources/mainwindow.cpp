@@ -1171,6 +1171,8 @@ void MainWindow::on_ExportLite_clicked() {
         ui->seeExported->setEnabled(false);
         ui->Build4Lite->setEnabled(false);
 
+        this->proTracker=ui->ShowProgressExLite;
+
         if(putStructure)
             unCompressed=Kernel->exportAsStructure(FileName);
         else
@@ -1193,7 +1195,13 @@ void MainWindow::on_ExportLite_clicked() {
                                  tr("这可能是汉字编码错误造成的。请检查路径中是否有汉字"));
             return;
         };
+
+        ui->FinishExLite->setEnabled(true);
+        ui->seeExported->setEnabled(true);
+        ui->Build4Lite->setEnabled(true);
+
         updateEnables();
+        this->proTracker=nullptr;
         qDebug("导出为投影成功");
         return;
 }

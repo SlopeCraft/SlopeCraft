@@ -730,14 +730,18 @@ void TokiSlopeCraft::makeHeight() {
         emit progressAdd(sizePic(1));
     }
 
+    cerr<<"extra north side stones removed"<<endl;
 
     LowMap=HighMap;
 
     for(auto it=WaterList.begin();it!=WaterList.end();it++)
     {
-        LowMap(TokiRow(it->first),TokiCol(it->first))=HighMap(TokiRow(it->second),TokiCol(it->second))
+        LowMap(TokiRow(it->first),TokiCol(it->first))=
+                HighMap(TokiRow(it->first),TokiCol(it->first))
                 -WaterColumnSize[rawShadow(TokiRow(it->first)-1,TokiCol(it->first))]+1;
     }
+
+    cerr<<"LowMap updated"<<endl;
 
     for(short c=0;c<sizePic(1);c++)
     {
@@ -746,6 +750,8 @@ void TokiSlopeCraft::makeHeight() {
         //沉降每一列
         emit progressAdd(sizePic(1));
     }
+
+    cerr<<"basic sink done"<<endl;
 
     if(compressMethod==NaturalOnly)
     {
@@ -760,6 +766,8 @@ void TokiSlopeCraft::makeHeight() {
             emit progressAdd(sizePic(1));
         }
     }
+
+    cerr<<"waterList updated again"<<endl;
 
     int maxHeight=HighMap.maxCoeff();
 
