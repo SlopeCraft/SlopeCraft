@@ -88,7 +88,7 @@
     "id":"redstone_lamp[lit=false]",
     "nameZH":"红石灯",
     "nameEN":"Redstone lamp",
-    "icon":".redstone_lamppng",
+    "icon":"redstone_lamp.png",
     "version":0,
     "idOld":"redstone_lamp",
     "needGlass":false,

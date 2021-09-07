@@ -315,7 +315,7 @@
     "icon":"white_concrete.png",
     "version":0,
     "idOld":"concrete[color=white]",
-    "needGlass":true,
+    "needGlass":false,
     "isGlowing":false
 },
 {
@@ -1317,7 +1317,7 @@
     "version":0,
     "idOld":"",
     "needGlass":false,
-    "isGlowing":true
+    "isGlowing":false
 },
 {
     "baseColor":30,
