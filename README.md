@@ -4,6 +4,9 @@ Get your 3D pixel painting in minecraft.
 在minecraft中生成3d的地图画
 
 
+![](https://img.shields.io/badge/C%2B%2B-11-blue) &emsp; ![](https://img.shields.io/badge/Qt-v6.0.4-brightgreen) &emsp; ![](https://img.shields.io/badge/Minecraft-1.12~1.17-orange) &emsp; ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/TokiNoBug/SlopeCraft?style=plastic)
+
+
 ## Tutorials:
 
 * [SlopeCraftv3.1 Tutorial](./v3.1Tutorial/v3.1Tutorial.md)
