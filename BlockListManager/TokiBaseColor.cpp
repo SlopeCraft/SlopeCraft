@@ -145,8 +145,8 @@ void TokiBaseColor::translateCheckBox(Language lang) {
 }
 
 const TokiBlock* TokiBaseColor::getTokiBlock() const {
-    qDebug("getTokiBlock");
-    qDebug()<<selected;
+    //qDebug("getTokiBlock");
+    //qDebug()<<selected;
     return tbs[selected];
 }
 

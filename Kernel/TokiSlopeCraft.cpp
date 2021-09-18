@@ -44,7 +44,6 @@ TokiSlopeCraft::TokiSlopeCraft()
     keepAwake=defaultKeepAwake;
 #endif
 
-
     kernelStep=TokiSlopeCraft::step::nothing;
     rawImage.setZero(0,0);
     DitherMapLR<<0.0,0.0,7.0,
@@ -53,11 +52,26 @@ TokiSlopeCraft::TokiSlopeCraft()
                              1.0,5.0,3.0;
     DitherMapLR/=16.0;
     DitherMapRL/=16.0;
+    glassBuilder=new PrimGlassBuilder;
+#ifdef WITH_QT
+    connect(glassBuilder,&PrimGlassBuilder::progressRangeSet,
+            this,&TokiSlopeCraft::algoProgressRangeSet);
+    connect(glassBuilder,&PrimGlassBuilder::progressAdd,
+            this,&TokiSlopeCraft::algoProgressAdd);
+    connect(glassBuilder,&PrimGlassBuilder::keepAwake,
+            this,&TokiSlopeCraft::keepAwake);
+#endif
 }
+
+TokiSlopeCraft::~TokiSlopeCraft() {
+    delete glassBuilder;
+}
+
 void TokiSlopeCraft::decreaseStep(TokiSlopeCraft::step _step) {
     if(kernelStep<=_step)return;
     kernelStep=_step;
 }
+
 bool TokiSlopeCraft::setColorSet(const char*R,const char*H,const char*L,const char*X) {
     if(!readFromTokiColor(R,Basic._RGB)) {
         cerr<<"Failed to read colormap RGB\n";
@@ -676,32 +690,42 @@ vector<string> TokiSlopeCraft::exportAsData(const string & FolderPath ,
     return unCompressedFileList;
 }
 
-bool TokiSlopeCraft::build(compressSettings cS, ushort mAH) {
+bool TokiSlopeCraft::build(compressSettings cS, ushort mAH,
+                           glassBridgeSettings gBS,ushort bI) {
     if(kernelStep<converted){
         cerr<<"hasty!"<<endl;
         return false;}
-    maxAllowedHeight=mAH;
     if(maxAllowedHeight<2){
         cerr<<"maxAllowedHeight<2 !"<<endl;
         return false;}
     cerr<<"ready to build"<<endl;
 
-    if(isFlat()||!isVanilla())
-        compressMethod=compressSettings::noCompress;
-
     compressMethod=cS;
+    glassMethod=gBS;
+    if(isFlat()||!isVanilla()) {
+        compressMethod=compressSettings::noCompress;
+        glassMethod=glassBridgeSettings::noBridge;
+    }
 
     maxAllowedHeight=mAH;
+    bridgeInterval=bI;
 
-    emit progressRangeSet(0,8*sizePic(2),0);
+    emit progressRangeSet(0,9*sizePic(2),0);
     cerr<<"start makeHeight"<<endl;
+
     makeHeight();
     cerr<<"makeHeight finished"<<endl;
-    emit progressRangeSet(0,8*sizePic(2),5*sizePic(2));
+    emit progressRangeSet(0,9*sizePic(2),5*sizePic(2));
+
     cerr<<"start buildHeight"<<endl;
     buildHeight();
     cerr<<"buildHeight finished"<<endl;
-    emit progressRangeSet(0,8*sizePic(2),8*sizePic(2));
+    emit progressRangeSet(0,9*sizePic(2),8*sizePic(2));
+
+    cerr<<"start makeBridge"<<endl;
+    makeBridge();
+    cerr<<"makeBridge finished"<<endl;
+    emit progressRangeSet(0,9*sizePic(2),9*sizePic(2));
 
     kernelStep=builded;
 
@@ -728,12 +752,12 @@ void TokiSlopeCraft::makeHeightInLine(const ushort c) {
                 if(Base(r,c)==12)
                 {
                     tempWaterList[TokiRC(r,c)]=nullWater;
-                    dealedDepth(r,c)=0;
+                    dealedDepth(r)=0;
                     continue;
                 }
                 if(Base(r,c)==0)
                 {
-                    dealedDepth(r,c)=0;
+                    dealedDepth(r)=0;
                     continue;
                 }
         }
@@ -972,6 +996,56 @@ void TokiSlopeCraft::buildHeight() {
 
     for(short c=0;c<sizePic(1);c++)//北侧方块
         if(Base(0,c))   Build(c+1,HighMap(0,c),0)=11+1;
+}
+
+void TokiSlopeCraft::makeBridge() {
+    if(mapType!=mapTypes::Slope)
+        return;
+    if(glassMethod!=glassBridgeSettings::withBridge)
+        return;
+
+    int step=sizePic(2)/Build.dimension(1);
+
+    emit algoProgressRangeSet(0,100,0);
+
+    for(uint y=0;y<Build.dimension(1);y++) {
+        emit keepAwake();
+        emit progressAdd(step);
+        if(y<=0)
+            continue;
+        if(y%(bridgeInterval+1)==0) {
+            std::array<int,3> start,extension;
+            start[0]=0;start[1]=y;start[2]=0;
+            extension[0]=size3D[0];extension[1]=1;extension[2]=size3D[2];
+            TokiMap targetMap=ySlice2TokiMap(Build.slice(start,extension));
+            glassMap glass;
+            qDebug()<<"开始在y="<<y<<"的切片搭桥";
+            glass=glassBuilder->makeBridge(targetMap);
+            for(int r=0;r<glass.rows();r++)
+                for(int c=0;c<glass.cols();c++)
+                    if(Build(r,y,c)==PrimGlassBuilder::air&&
+                            glass(r,c)==PrimGlassBuilder::glass)
+                        Build(r,y,c)=PrimGlassBuilder::glass;
+        }
+        else {
+            std::array<int,3> start,extension;
+            start[0]=0;start[1]=y;start[2]=0;
+            extension[0]=size3D[0];extension[1]=1;extension[2]=size3D[2];
+            TokiMap yCur=ySlice2TokiMap(Build.slice(start,extension));
+            start[1]=y-1;
+            TokiMap yBelow=ySlice2TokiMap(Build.slice(start,extension));
+            qDebug()<<"开始在y="<<y<<"与y="<<y-1<<"之间搭桥";
+            glassMap glass=connectBetweenLayers(yCur,yBelow,nullptr);
+
+            for(int r=0;r<glass.rows();r++)
+                for(int c=0;c<glass.cols();c++)
+                    if(Build(r,y,c)==PrimGlassBuilder::air&&
+                            glass(r,c)==PrimGlassBuilder::glass)
+                        Build(r,y,c)=PrimGlassBuilder::glass;
+        }
+    }
+    emit algoProgressRangeSet(0,100,100);
+    qDebug("makeBridge完毕");
 }
 
 void TokiSlopeCraft::get3DSize(int & x,int & y,int & z) const {

@@ -135,6 +135,9 @@ private slots:
     void progressAdd(int deltaVal);
     void keepAwake();
 
+    void algoProgressRangeSet(int min,int max,int val);
+    void algoProgressAdd(int deltaVal);
+
     void contactG();
     void contactB();
     //语言槽
@@ -179,10 +182,12 @@ private slots:
     void on_Build4Lite_clicked();
     void on_ManualPreview_clicked();
     void on_ExportLite_clicked();
+    void on_allowGlassBridge_stateChanged(int arg1);
 
     //for Page7
     void on_InputDataIndex_textChanged();
     void on_ExportData_clicked();
+
 
 private:
     Ui::MainWindow *ui;

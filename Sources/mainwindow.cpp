@@ -44,11 +44,16 @@ MainWindow::MainWindow(QWidget *parent)
 
     Kernel=new TokiSlopeCraft(this);
     qDebug("成功创建内核");
-    connect(Kernel,&TokiSlopeCraft::keepAwake,this,&MainWindow::keepAwake);
+    connect(Kernel,&TokiSlopeCraft::keepAwake,this,
+            &MainWindow::keepAwake);
     connect(Kernel,&TokiSlopeCraft::progressRangeSet,
             this,&MainWindow::progressRangeSet);
     connect(Kernel,&TokiSlopeCraft::progressAdd,
             this,&MainWindow::progressAdd);
+    connect(Kernel,&TokiSlopeCraft::algoProgressRangeSet,
+            this,&MainWindow::algoProgressRangeSet);
+    connect(Kernel,&TokiSlopeCraft::algoProgressAdd,
+            this,&MainWindow::algoProgressAdd);
     proTracker=nullptr;
 
     Manager=new BlockListManager(
@@ -1013,7 +1018,8 @@ QImage EImage2QImage(const EImage & ei,ushort scale) {
     return qi;
 }
 
-void MainWindow::progressRangeSet(int min,int max,int val) {//设置进度条的取值范围和值
+void MainWindow::progressRangeSet(int min,int max,int val) {
+    //设置进度条的取值范围和值
     if(proTracker==nullptr) {
         qDebug("错误！proTracker==nullptr");
         return;
@@ -1029,6 +1035,15 @@ void MainWindow::progressAdd(int deltaVal) {
     }
     proTracker->setValue(deltaVal+
                                     proTracker->value());
+}
+
+void MainWindow::algoProgressRangeSet(int min,int max,int val) {
+    ui->algoBar->setRange(min,max);
+    ui->algoBar->setValue(val);
+}
+
+void MainWindow::algoProgressAdd(int deltaVal) {
+    ui->algoBar->setValue(ui->algoBar->value()+deltaVal);
 }
 
 void MainWindow::on_Convert_clicked() {
@@ -1124,14 +1139,20 @@ void MainWindow::on_Build4Lite_clicked() {
             cS=TokiSlopeCraft::compressSettings::ForcedOnly;
         else cS=TokiSlopeCraft::compressSettings::noCompress;
     }
+
+    bool allowBridge=ui->allowGlassBridge->isChecked();
+    TokiSlopeCraft::glassBridgeSettings gBS=
+            allowBridge?TokiSlopeCraft::withBridge:TokiSlopeCraft::noBridge;
+
     Kernel->decreaseStep(TokiSlopeCraft::step::converted);
     ui->ExportLite->setEnabled(false);
     ui->FinishExLite->setEnabled(false);
     ui->ManualPreview->setEnabled(false);
 
     proTracker=ui->ShowProgressExLite;
-
-    Kernel->build(cS,ui->maxHeight->value());
+    qDebug()<<"ui->maxHeight->value()="<<ui->maxHeight->value();
+    Kernel->build(cS,ui->maxHeight->value(),
+                  gBS,ui->glassBridgeInterval->value());
 
     int size3D[3],total;
 
@@ -1301,8 +1322,7 @@ void MainWindow::switchLan(Language lang) {
         return;
 }
 
-bool compressFile(const char*sourcePath,const char*destPath)
-{
+bool compressFile(const char*sourcePath,const char*destPath) {
     char buf[bufferSize]={0};
     FILE*in=NULL;
     gzFile out=NULL;
@@ -1325,3 +1345,8 @@ bool compressFile(const char*sourcePath,const char*destPath)
     qDebug("succeed");
     return true;
 }
+
+void MainWindow::on_allowGlassBridge_stateChanged(int arg1) {
+    ui->glassBridgeInterval->setEnabled(arg1);
+}
+

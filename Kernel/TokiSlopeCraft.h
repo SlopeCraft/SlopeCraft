@@ -41,6 +41,7 @@ This file is part of SlopeCraft.
 #include "TokiColor.h"
 #include "WaterItem.h"
 #include "NBTWriter.h"
+#include "PrimGlassBuilder.h"
 
 #ifdef WITH_QT
 #include <QObject>
@@ -88,6 +89,8 @@ public:
 #else
     TokiSlopeCraft();
 #endif
+    ~TokiSlopeCraft();
+
     enum gameVersion {
         ANCIENT=0,
         MC12=12,
@@ -108,6 +111,9 @@ public:
     };
     enum compressSettings{
         noCompress=0,NaturalOnly=1,ForcedOnly=2,Both=3
+    };
+    enum glassBridgeSettings{
+        noBridge=0,withBridge=1
     };
     enum mapTypes{
         Slope, //立体
@@ -143,7 +149,8 @@ public:
     bool isFlat() const;//判断是平板的
 
 //can do in converted:
-    bool build(compressSettings,ushort);//构建三维结构
+    bool build(compressSettings=noCompress,ushort=256,
+               glassBridgeSettings=noBridge,ushort=3);//构建三维结构
     EImage getConovertedImage() const;
     vector<string> exportAsData(const string &,int) const;
 //can do in builded:
@@ -164,12 +171,10 @@ public:
 signals:
     void progressRangeSet(int min,int max,int val) const;//设置进度条的取值范围和值
     void progressAdd(int deltaVal) const;
-    /*
-    void buildProgressRangeSet(int min,int max,int val) const;//设置进度条的取值范围
-    void buildProgressAdd(int deltaVal) const;
-    void exportProgressRangeSet(int min,int max,int val) const;//设置进度条的取值范围
-    void exportProgressAdd(int deltaVal) const;*/
     void keepAwake() const;//保持主窗口唤醒
+
+    void algoProgressRangeSet(int,int,int) const;
+    void algoProgressAdd(int) const;
 private slots:
 #else
     void (*progressRangeSet)(int,int,int);
@@ -187,6 +192,7 @@ private:
     step kernelStep;
     convertAlgo ConvertAlgo;
     compressSettings compressMethod;
+    glassBridgeSettings glassMethod;
 
     ColorSet Basic;
     ColorSet Allowed;
@@ -200,6 +206,8 @@ private:
     std::unordered_map<QRgb,TokiColor> colorHash;
 
     ushort maxAllowedHeight;
+    ushort bridgeInterval;
+    PrimGlassBuilder * glassBuilder;
     ArrayXXi mapPic;//stores mapColor
     ArrayXXi Base;
     ArrayXXi HighMap;
@@ -220,6 +228,7 @@ private:
     void makeHeight();//构建HighMap和LowMap
     void makeHeightInLine(const ushort c);
     void buildHeight();//构建Build
+    void makeBridge();
 //for Litematic
     void writeBlock(const string &netBlockId,
                     const vector<string>&Property,
