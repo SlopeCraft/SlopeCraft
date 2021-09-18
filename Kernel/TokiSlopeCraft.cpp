@@ -708,15 +708,107 @@ bool TokiSlopeCraft::build(compressSettings cS, ushort mAH) {
     return true;
 }
 
+void TokiSlopeCraft::makeHeightInLine(const ushort c) {
+    unordered_map<TokiPos,waterItem> tempWaterList;
+    tempWaterList.clear();
+    Base.col(c).setConstant(11);
+        Base.col(c).segment(1,sizePic(1))=mapPic.col(c)/4;
+        ArrayXi dealedDepth,rawShadow=mapPic.col(c)-4*(mapPic.col(c)/4);
+        if((rawShadow>=3).any())
+        {
+            qDebug("错误：Depth中存在深度为3的方块");
+            return;
+        }
+        dealedDepth.setZero(sizePic(0)+1);
+        dealedDepth.segment(1,sizePic(0))=rawShadow-1;
+        //Depth的第一行没有意义，只是为了保持行索引一致
+
+        for(short r=0;r<Base.rows();r++)
+        {
+                if(Base(r,c)==12)
+                {
+                    tempWaterList[TokiRC(r,c)]=nullWater;
+                    dealedDepth(r,c)=0;
+                    continue;
+                }
+                if(Base(r,c)==0)
+                {
+                    dealedDepth(r,c)=0;
+                    continue;
+                }
+        }
+
+        HighMap.col(c).setZero();
+        LowMap.col(c).setZero();
+
+        int waterCount=tempWaterList.size();
+        qDebug()<<"共有"<<waterCount<<"个水柱";
+        for(short r=0;r<sizePic(0);r++)//遍历每一行，根据高度差构建高度图
+        {
+            HighMap(r+1,c)=HighMap(r,c)+dealedDepth(r+1);
+            emit progressAdd(sizePic(0));
+        }
+
+            if(Base(1,c)==0||Base(1,c)==12||rawShadow(c)==2)
+            {
+                Base(0,c)=0;
+                HighMap(0,c)=HighMap(1,c);
+            }
+
+        cerr<<"extra north side stones removed"<<endl;
+
+        LowMap=HighMap;
+
+        for(auto it=tempWaterList.begin();it!=tempWaterList.end();it++)
+        {
+            if(TokiCol(it->first)!=c)continue;
+            LowMap(TokiRow(it->first),TokiCol(it->first))=
+                    HighMap(TokiRow(it->first),TokiCol(it->first))
+                    -WaterColumnSize[rawShadow(TokiRow(it->first)-1)]+1;
+        }
+
+        cerr<<"LowMap updated"<<endl;
+
+            HighMap.col(c)-=LowMap.col(c).minCoeff();
+            LowMap.col(c)-=LowMap.col(c).minCoeff();
+
+        cerr<<"basic sink done"<<endl;
+
+        if(compressMethod==NaturalOnly||compressMethod==Both)
+        {
+            //执行高度压缩
+            OptiChain::Base=Base;
+                OptiChain Compressor(HighMap.col(c),LowMap.col(c),c);
+                Compressor.divideAndCompress();
+                HighMap.col(c)=Compressor.HighLine;
+                LowMap.col(c)=Compressor.LowLine;
+        }
+
+        cerr<<"waterList updated again"<<endl;
+
+        int maxHeight=HighMap.maxCoeff();
+
+        for(auto it=tempWaterList.begin();it!=tempWaterList.end();it++)
+        {
+            int r=TokiRow(it->first),c=TokiCol(it->first);
+            it->second=TokiWater(HighMap(r,c),LowMap(r,c));
+            maxHeight=max(maxHeight,HighMap(r,c)+1);
+            //遮顶玻璃块
+        }
+}
+
 void TokiSlopeCraft::makeHeight() {
     Base.setConstant(sizePic(0)+1,sizePic(1),11);
+    WaterList.clear();
+    HighMap.setZero(sizePic(0)+1,sizePic(1));
+    LowMap.setZero(sizePic(0)+1,sizePic(1));
 
     Base.block(1,0,sizePic(0),sizePic(1))=mapPic/4;
 
     ArrayXXi dealedDepth;
     ArrayXXi rawShadow=mapPic-4*(mapPic/4);
 
-    if((dealedDepth>=3).any())
+    if((rawShadow>=3).any())
     {
         qDebug("错误：Depth中存在深度为3的方块");
         return;
@@ -724,7 +816,6 @@ void TokiSlopeCraft::makeHeight() {
     dealedDepth.setZero(sizePic(0)+1,sizePic(1));
     dealedDepth.block(1,0,sizePic(0),sizePic(1))=rawShadow-1;
     //Depth的第一行没有意义，只是为了保持行索引一致
-    WaterList.clear();
 
     for(short r=0;r<Base.rows();r++)
     {
@@ -836,14 +927,14 @@ void TokiSlopeCraft::buildHeight() {
             y=waterHigh(it->second);
             yLow=waterLow(it->second);
             Build(x,y+1,z)=0+1;//柱顶玻璃
-            for(short yDynamic=yLow;yDynamic<=y;yDynamic++)
-            {
+            for(short yDynamic=yLow;yDynamic<=y;yDynamic++) {
                 Build(x-1,yDynamic,z-0)=1;
                 Build(x+1,yDynamic,z+0)=1;
                 Build(x+0,yDynamic,z-1)=1;
                 Build(x+0,yDynamic,z+1)=1;
             }
-            if(yLow>=1)       Build(x,yLow-1,z)=1;//柱底玻璃
+            if(yLow>=1)
+                Build(x,yLow-1,z)=1;//柱底玻璃
         }
         //qDebug()<<3;
 
@@ -855,7 +946,7 @@ void TokiSlopeCraft::buildHeight() {
             {
                 if(Base(r+1,c)==12||Base(r+1,c)==0)
                     continue;
-                x=c+1;y=HighMap(r+1,c);z=r+1;
+                x=c+1;y=LowMap(r+1,c);z=r+1;
                 if(y>=1&&blockPalette[Base(r+1,c)].needGlass)
                     Build(x,y-1,z)=0+1;
 
@@ -868,14 +959,13 @@ void TokiSlopeCraft::buildHeight() {
 
     emit progressAdd(sizePic(2));
 
-    for(auto it=WaterList.begin();it!=WaterList.end();it++)
+    for(auto it=WaterList.cbegin();it!=WaterList.cend();it++)
     {
         x=TokiCol(it->first)+1;
         z=TokiRow(it->first);
         y=waterHigh(it->second);
         yLow=waterLow(it->second);
-        for(short yDynamic=yLow;yDynamic<=y;yDynamic++)
-        {
+        for(short yDynamic=yLow;yDynamic<=y;yDynamic++) {
             Build(x,yDynamic,z)=13;
         }
     }

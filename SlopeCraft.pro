@@ -58,6 +58,7 @@ SOURCES += \
     BlockListManager/BlockListManager.cpp \
     BlockListManager/TokiBaseColor.cpp \
     BlockListManager/TokiBlock.cpp \
+    Kernel/PrimGlassBuilder.cpp \
     Kernel/TokiSlopeCraft.cpp \
     Kernel/CIEDE00.cpp \
     Kernel/NBTWriter.cpp \
@@ -90,6 +91,7 @@ HEADERS += \
     Kernel/NBTWriter.h \
     Kernel/OptiChain.h \
     Headers/TokiBaseColor.h \
+    Kernel/PrimGlassBuilder.h \
     Kernel/TokiColor.h \
     Kernel/TokiSlopeCraft.h \
     Kernel/WaterItem.h \

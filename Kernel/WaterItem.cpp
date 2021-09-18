@@ -24,6 +24,9 @@ This file is part of SlopeCraft.
 const TokiPos nullPos=TokiRC(-1,-1);
 const waterItem nullWater=TokiRC(-32768,-32768);
 const short WaterColumnSize[3]={11,6,1};
+waterItem (*TokiWater)(int,int)=TokiRC;
+short (*waterHigh)(waterItem)=TokiRow;
+short (*waterLow)(waterItem)=TokiCol;
 TokiPos TokiRC(int row,int col)
 {
     /*unsigned int u;
@@ -40,6 +43,7 @@ short TokiCol(TokiPos pos)
 {
     return pos&0x0000FFFF;
 }
+/*
 waterItem TokiWater(short high,short low)
 {
     unsigned int u;
@@ -55,3 +59,4 @@ short waterLow(waterItem item)
 {
     return *(((short*)&item)+1);
 }
+*/

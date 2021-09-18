@@ -60,7 +60,9 @@ using namespace Eigen;
 /*
     #define emit ;
     #define qDebug() cerr;
-    #define qDebug(x) printf("%s/n",x);
+    void qDebug(const char* info) {
+        std::cerr<<info<<std::endl;
+    }
 */
 #endif
 
@@ -216,6 +218,7 @@ private:
 
 //for build
     void makeHeight();//构建HighMap和LowMap
+    void makeHeightInLine(const ushort c);
     void buildHeight();//构建Build
 //for Litematic
     void writeBlock(const string &netBlockId,
