@@ -306,6 +306,8 @@ bool TokiSlopeCraft::convert(convertAlgo algo,bool dither) {
     emit keepAwake();
     emit progressRangeSet(0,4*sizePic(2),3*sizePic(2));
 
+    ditheredImage=this->rawImage;
+
     if(dither)
         Dither();
 
@@ -503,6 +505,21 @@ void TokiSlopeCraft::Dither() {
 
 void matchColor(TokiColor * tColor,QRgb qColor) {
     tColor->apply(qColor);
+}
+
+void TokiSlopeCraft::getTokiColorPtr(ushort col, const TokiColor ** dst) const {
+    if(kernelStep<converted) {
+        cerr<<"Too hasty! export after you converted the map!"<<endl;
+        return ;
+    }
+    for(ushort r=0;r<ditheredImage.rows();r++) {
+        auto i=colorHash.find(ditheredImage(r,col));
+
+        if(i==colorHash.end())
+            dst[r]=nullptr;
+        else
+            dst[r]=(const TokiColor*)&(colorHash.at(ditheredImage(r,col)));
+    }
 }
 
 TokiSlopeCraft::ColorSpace TokiSlopeCraft::getColorSpace() const {

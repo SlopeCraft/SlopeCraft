@@ -309,6 +309,8 @@ unsigned char TokiColor::apply(QRgb Color)
     if(qAlpha(Color)<=0)
     {
         ResultDiff=0.0f;
+        sideResult[0]=0;sideResult[1]=0;
+        sideSelectivity[0]=0.0;sideSelectivity[1]=0;
         return Result=0;
     }
     else

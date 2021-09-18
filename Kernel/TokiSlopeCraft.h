@@ -153,6 +153,7 @@ public:
                glassBridgeSettings=noBridge,ushort=3);//构建三维结构
     EImage getConovertedImage() const;
     vector<string> exportAsData(const string &,int) const;
+    void getTokiColorPtr(ushort,const TokiColor*[]) const;
 //can do in builded:
     string exportAsLitematic(const string & TargetName,//Local
                                              const string & LiteName,//Utf8
