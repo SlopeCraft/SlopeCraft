@@ -64,6 +64,8 @@ MainWindow::MainWindow(QWidget *parent)
             this,&MainWindow::ChangeToCustom);
     //connect(Kernel,SIGNAL(convertProgressSetRange(int,int,int)));
 
+    ui->maxHeight->setValue(255);
+
     transSubWind=nullptr;
 
         connect(ui->progressStart,&QRadioButton::clicked,this,&MainWindow::turnToPage0);

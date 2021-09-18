@@ -226,8 +226,14 @@ glassMap PrimGlassBuilder::make4SingleMap(const TokiMap &_targetMap,
     targetPoints.clear();
     for(short r=0;r<_targetMap.rows();r++)
         for(short c=0;c<_targetMap.cols();c++) {
-            if(_targetMap(r,c))
-                targetPoints.push_back(TokiRC(r,c));
+            if(_targetMap(r,c)) {
+                if(r>1&&c>1&&r+1<_targetMap.rows()&&c+1<_targetMap.cols()
+                        &&_targetMap(r+1,c)&&_targetMap(r-1,c)
+                        &&_targetMap(r,c+1)&&_targetMap(r,c-1))
+                    continue;
+                else
+                    targetPoints.push_back(TokiRC(r,c));
+            }
         }
     targetPoints.shrink_to_fit();
     edges.clear();

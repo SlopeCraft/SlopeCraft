@@ -695,7 +695,7 @@ bool TokiSlopeCraft::build(compressSettings cS, ushort mAH,
     if(kernelStep<converted){
         cerr<<"hasty!"<<endl;
         return false;}
-    if(maxAllowedHeight<2){
+    if(mAH<2){
         cerr<<"maxAllowedHeight<2 !"<<endl;
         return false;}
     cerr<<"ready to build"<<endl;
@@ -1028,6 +1028,7 @@ void TokiSlopeCraft::makeBridge() {
                         Build(r,y,c)=PrimGlassBuilder::glass;
         }
         else {
+            continue;
             std::array<int,3> start,extension;
             start[0]=0;start[1]=y;start[2]=0;
             extension[0]=size3D[0];extension[1]=1;extension[2]=size3D[2];
@@ -1191,7 +1192,7 @@ string TokiSlopeCraft::exportAsLitematic(const string & TargetName,
                 Lite.writeListHead("BlockStatePalette",NBT::idCompound,131);
                     {
                         short written=((mcVer>=MC16)?59:52);
-                        if(mcVer>=17)written=61;
+                        if(mcVer>=17)written=62;
                         vector<string> ProName,ProVal;
                         //bool isNetBlockId;
                         string netBlockId;
@@ -1291,7 +1292,7 @@ string TokiSlopeCraft::exportAsStructure(const string &TargetName) const {
             file.writeListHead("palette",NBT::idCompound,70);
                 {
                     short written=((mcVer>=MC16)?59:52);
-                    if(mcVer>=MC17)written=61;
+                    if(mcVer>=MC17)written=62;
                     vector<string> ProName,ProVal;
                     //bool isNetBlockId;
                     string netBlockId;

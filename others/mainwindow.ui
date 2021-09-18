@@ -1707,8 +1707,8 @@ font: 11pt &quot;微软雅黑&quot;;
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>16</width>
-               <height>16</height>
+               <width>78</width>
+               <height>22</height>
               </rect>
              </property>
              <property name="sizePolicy">
@@ -2634,6 +2634,9 @@ font: 11pt &quot;微软雅黑&quot;;
             </property>
             <property name="prefix">
              <string>搭桥间隔:  </string>
+            </property>
+            <property name="value">
+             <number>4</number>
             </property>
            </widget>
           </item>
@@ -3623,8 +3626,8 @@ p, li { white-space: pre-wrap; }
   <tabstop>NextPage2</tabstop>
  </tabstops>
  <resources>
-  <include location="Pics.qrc"/>
   <include location="BlockTextures.qrc"/>
+  <include location="Pics.qrc"/>
  </resources>
  <connections/>
 </ui>
