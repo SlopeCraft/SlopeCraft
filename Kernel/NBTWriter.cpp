@@ -167,7 +167,7 @@ void NBTWriter::endList()
     if(isInList()&&isListFinished())
     {
         pop();
-        qDebug("结束列表");
+        //qDebug("结束列表");
         elementWritten();
     }
     return;
@@ -177,9 +177,11 @@ void NBTWriter::pop()
 {
     if(!isEmpty()){
     top--;
-    qDebug("popped");}
+    //qDebug("popped");
+    }
     else
-    qDebug("结束了一个列表");
+        ;
+    //qDebug("结束了一个列表");
     return;
 }
 
@@ -190,7 +192,7 @@ void NBTWriter::push(char typeId,int size)
         top++;
         CLA[top]=typeId;
         Size[top]=size;
-        qDebug()<<"push成功，栈顶CLA="<<(short)CLA[top]<<"，Size="<<Size[top];
+        //qDebug()<<"push成功，栈顶CLA="<<(short)CLA[top]<<"，Size="<<Size[top];
     }
     else
     qDebug("push失败，满栈不能继续push");
@@ -316,7 +318,7 @@ int NBTWriter::endCompound()
         pop();//This pop means end a Compound
         elementWritten();
         ByteCount+=ThisCount;
-        qDebug("结束了一个文件夹");
+        //qDebug("结束了一个文件夹");
         return ThisCount;
     }
     qDebug("错误：这里不能结束文件夹");
@@ -509,7 +511,7 @@ int NBTWriter::writeString(const char*Name,const char*value)
         File->write(Name,realNameL);ThisCount+=realNameL;
         File->write((char*)&writeValL,sizeof(short));ThisCount+=sizeof(short);
         File->write(value,realValL);ThisCount+=realValL;
-        qDebug("成功在文件夹中创建String");
+        //qDebug("成功在文件夹中创建String");
         ByteCount+=ThisCount;
         elementWritten();
         return ThisCount;
@@ -519,7 +521,7 @@ int NBTWriter::writeString(const char*Name,const char*value)
     {
         File->write((char*)&writeValL,sizeof(short));ThisCount+=sizeof(short);
         File->write(value,realValL);ThisCount+=realValL;
-        qDebug("成功在List中创建String");
+        //qDebug("成功在List中创建String");
         ByteCount+=ThisCount;
         elementWritten();
         return ThisCount;

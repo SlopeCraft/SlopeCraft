@@ -1011,8 +1011,6 @@ void TokiSlopeCraft::makeBridge() {
     for(uint y=0;y<Build.dimension(1);y++) {
         emit keepAwake();
         emit progressAdd(step);
-        if(y<=0)
-            continue;
         if(y%(bridgeInterval+1)==0) {
             std::array<int,3> start,extension;
             start[0]=0;start[1]=y;start[2]=0;
