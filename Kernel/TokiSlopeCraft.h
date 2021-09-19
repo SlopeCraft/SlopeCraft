@@ -38,6 +38,7 @@ This file is part of SlopeCraft.
 #include "ColorSet.h"
 #include "simpleBlock.h"
 #include "OptiChain.h"
+#include "HeightLine.h"
 #include "TokiColor.h"
 #include "WaterItem.h"
 #include "NBTWriter.h"
@@ -226,7 +227,8 @@ private:
     int sizePic(short) const;
 
 //for build
-    void makeHeight();//构建HighMap和LowMap
+    void makeHeight_old();//构建HighMap和LowMap
+    void makeHeight_new();
     //void makeHeightInLine(const ushort c);
     void buildHeight();//构建Build
     void makeBridge();

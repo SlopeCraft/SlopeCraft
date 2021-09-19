@@ -729,7 +729,7 @@ bool TokiSlopeCraft::build(compressSettings cS, ushort mAH,
 
     emit progressRangeSet(0,9*sizePic(2),0);
     cerr<<"start makeHeight"<<endl;
-    makeHeight();
+    makeHeight_new();
     cerr<<"makeHeight finished"<<endl;
     emit progressRangeSet(0,9*sizePic(2),5*sizePic(2));
 
@@ -748,9 +748,33 @@ bool TokiSlopeCraft::build(compressSettings cS, ushort mAH,
     return true;
 }
 
+void TokiSlopeCraft::makeHeight_new() {
+    Base.setZero(sizePic(0)+1,sizePic(1));
+    WaterList.clear();
+    HighMap.setZero(sizePic(0)+1,sizePic(1));
+    LowMap.setZero(sizePic(0)+1,sizePic(1));
+    bool allowNaturalCompress=
+            compressMethod==compressSettings::Both
+            ||compressMethod==compressSettings::NaturalOnly;
+    //std::vector<const TokiColor*> src;
+    qDebug("开始makeHeight_new");
+    for(ushort c=0;c<sizePic(1);c++) {
+        qDebug()<<"第"<<c<<"列";
+        HeightLine HL;
+        //getTokiColorPtr(c,&src[0]);
+        HL.make(mapPic.col(c),allowNaturalCompress);
+        Base.col(c)=HL.getBase();
+        HighMap.col(c)=HL.getHighLine();
+        LowMap.col(c)=HL.getLowLine();
+        auto HLM=&HL.getWaterMap();
+        for(auto it=HLM->cbegin();it!=HLM->cend();it++) {
+            WaterList[TokiRC(it->first,c)]=it->second;
+        }
+        emit progressAdd(5*sizePic(0));
+    }
+}
 
-
-void TokiSlopeCraft::makeHeight() {
+void TokiSlopeCraft::makeHeight_old() {
     Base.setConstant(sizePic(0)+1,sizePic(1),11);
     WaterList.clear();
     HighMap.setZero(sizePic(0)+1,sizePic(1));
@@ -836,13 +860,13 @@ void TokiSlopeCraft::makeHeight() {
     if(compressMethod==NaturalOnly)
     {
         //执行高度压缩
-        OptiChain::Base=Base;
+        //OptiChain::Base=Base;
         for(int c=0;c<sizePic(1);c++)
         {
-            OptiChain Compressor(HighMap.col(c),LowMap.col(c),c);
+            OptiChain Compressor(Base.col(c),HighMap.col(c),LowMap.col(c));
             Compressor.divideAndCompress();
-            HighMap.col(c)=Compressor.HighLine;
-            LowMap.col(c)=Compressor.LowLine;
+            HighMap.col(c)=Compressor.getHighLine();
+            LowMap.col(c)=Compressor.getLowLine();
             emit progressAdd(sizePic(1));
         }
     }
