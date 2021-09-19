@@ -28,7 +28,7 @@ float HeightLine::make(const TokiColor **src, const Array<uchar, Dynamic, 1> & g
     return sumDiff;
 }
 
-void HeightLine::make(const ArrayXi mapColorCol,bool allowNaturalCompress) {
+void HeightLine::make(const ArrayXi &mapColorCol,bool allowNaturalCompress) {
     ///////////////////////1
     waterMap.clear();
     const ushort picRows=mapColorCol.rows();
