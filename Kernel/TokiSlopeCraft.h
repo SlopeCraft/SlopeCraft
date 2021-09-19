@@ -227,7 +227,7 @@ private:
 
 //for build
     void makeHeight();//构建HighMap和LowMap
-    void makeHeightInLine(const ushort c);
+    //void makeHeightInLine(const ushort c);
     void buildHeight();//构建Build
     void makeBridge();
 //for Litematic

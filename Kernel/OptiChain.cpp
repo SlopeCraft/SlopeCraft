@@ -26,9 +26,9 @@ This file is part of SlopeCraft.
 #define NInf -100000
 #define MapSize (Base.rows())
 ArrayXXi OptiChain::Base=MatrixXi::Zero(0,0);
-Array3i OptiChain::Both(-1,2,-1);
-Array3i OptiChain::Left(-1,1,0);
-Array3i OptiChain::Right(0,1,-1);
+const Array3i OptiChain::Both(-1,2,-1);
+const Array3i OptiChain::Left(-1,1,0);
+const Array3i OptiChain::Right(0,1,-1);
 //QLabel* OptiChain::SinkIDP=nullptr;
 
 #ifdef showImg

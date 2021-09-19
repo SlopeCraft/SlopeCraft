@@ -76,9 +76,9 @@ public:
     void divideAndCompress();
 
     static ArrayXXi Base;
-    static Array3i Both;
-    static Array3i Left;
-    static Array3i Right;
+    static const Array3i Both;
+    static const Array3i Left;
+    static const Array3i Right;
 
 #ifdef showImg
     //static QLabel *SinkIDP;
