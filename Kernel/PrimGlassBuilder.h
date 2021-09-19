@@ -128,7 +128,6 @@ private:
 
 EImage TokiMap2EImage(const TokiMap&);
 
-double randD();
 
 void defaultProgressRangeSet(int,int,int);
 void defaultProgressAdd(int);

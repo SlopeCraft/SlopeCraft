@@ -27,11 +27,7 @@ const ARGB targetColor=qRgb(0,0,0);
 const ARGB glassColor=qRgb(192,192,192);
 
 
-double randD(){
-    static std::default_random_engine generator(time(0));
-    static std::uniform_real_distribution<double> rander(0,1);
-    return rander(generator);
-}
+
 
 void defaultProgressRangeSet(int,int,int) {
 
