@@ -38,8 +38,8 @@ This file is part of SlopeCraft.
     #include <QImage>
     #include <QLabel>
 #endif
-using namespace std;
-using namespace Eigen;
+//using namespace std;
+//using namespace Eigen;
 enum RegionType {idp,Hang,Invalid};
 
 #ifndef removeQt
@@ -62,7 +62,7 @@ public:
     int size() const;
     short indexLocal2Global(short) const;
     short indexGlobal2Local(short) const;
-    string toString() const;
+    std::string toString() const;
 };
 
 class OptiChain
@@ -71,18 +71,19 @@ public:
     //Index一律以Height矩阵中的索引为准。Height(r,c+1)<->Base(r,c)
     //高度矩阵一律不含水柱顶的玻璃方块
     OptiChain(int Size=-1);//default Random Constructor
-    OptiChain(const ArrayXi & base, const ArrayXi & High,const ArrayXi & Low);
+    OptiChain(const Eigen::ArrayXi & base,
+              const Eigen::ArrayXi & High,const Eigen::ArrayXi & Low);
     ~OptiChain();
 
     void divideAndCompress();
-    const ArrayXi & getHighLine();
-    const ArrayXi & getLowLine();
+    const Eigen::ArrayXi & getHighLine();
+    const Eigen::ArrayXi & getLowLine();
     //ArrayXi toDepth() const;
 
     //static ArrayXXi Base;
-    static const Array3i Both;
-    static const Array3i Left;
-    static const Array3i Right;
+    static const Eigen::Array3i Both;
+    static const Eigen::Array3i Left;
+    static const Eigen::Array3i Right;
 
 #ifdef showImg
     //static QLabel *SinkIDP;
@@ -92,11 +93,11 @@ public:
 
 private:
     //int Col;
-    ArrayXi Base;
-    ArrayXi HighLine;
-    ArrayXi LowLine;
-    queue<Region> Chain;//将一整列按水/空气切分为若干个大的孤立区间
-    list<Region> SubChain;//将Chain中每个大的孤立区间切分为若干“最大单孤立区间”和“悬空区间”组成的串
+    Eigen::ArrayXi Base;
+    Eigen::ArrayXi HighLine;
+    Eigen::ArrayXi LowLine;
+    std::queue<Region> Chain;//将一整列按水/空气切分为若干个大的孤立区间
+    std::list<Region> SubChain;//将Chain中每个大的孤立区间切分为若干“最大单孤立区间”和“悬空区间”组成的串
 
     void divideToChain();
     void divideToSubChain();

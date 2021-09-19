@@ -65,8 +65,6 @@ This file is part of SlopeCraft.
 #include "simpleBlock.h"
 #include "TokiSlopeCraft.h"
 #include "BlockListManager.h"
-using namespace std;
-using namespace Eigen;
 
 class MainWindow;
 
@@ -74,7 +72,6 @@ class MainWindow;
 #include <QRgb>
 #include <Eigen/Dense>
 
-using namespace Eigen;
 //class ColorSet;
 
 bool compressFile(const char*sourcePath,const char*destPath);
@@ -207,7 +204,7 @@ private:
 
     tpS Strategy;
 
-    string ProductPath;
+    std::string ProductPath;
     QTranslator trans;
     bool Collected;
     QProgressBar * proTracker;

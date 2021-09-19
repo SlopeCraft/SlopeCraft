@@ -35,7 +35,7 @@ void NBT::IE2BE(T &Val)
     if (sizeof(T)<=1)return;
     char *s=(char*)&Val;
     for(short i=0;i*2+1<(signed)sizeof(T);i++)
-    swap(s[i],s[sizeof(T)-1-i]);
+    std::swap(s[i],s[sizeof(T)-1-i]);
 }
 
 template <typename T>
@@ -46,7 +46,7 @@ T NBT::IE2BE(T *Val)
     T Res=*Val;
     char *s=(char*)&Res;
     for(short i=0;i*2+1<(signed)sizeof(T);i++)
-    swap(s[i],s[sizeof(T)-1-i]);
+    std::swap(s[i],s[sizeof(T)-1-i]);
     return Res;
 }
 bool NBT::isSysBE()
@@ -62,7 +62,7 @@ NBTWriter::NBTWriter(const char*path)
     allowEmergencyFill=true;
     isBE=isSysBE();
     ByteCount=0;
-    File=new fstream(path,ios::out|ios::binary);
+    File=new std::fstream(path,std::ios::out|std::ios::binary);
         char temp[3]={10,0,0};
         File->write(temp,3);ByteCount+=3;
     isOpen=true;
@@ -102,7 +102,7 @@ void NBTWriter::open(const char*path)
         qDebug("NBTWriter已经打开，不能重复打开！");
         return;
     }
-    File=new fstream(path,ios::out|ios::binary);
+    File=new std::fstream(path,std::ios::out|std::ios::binary);
     char temp[3]={10,0,0};
     File->write(temp,3);ByteCount+=3;
     isOpen=true;

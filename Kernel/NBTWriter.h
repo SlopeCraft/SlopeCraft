@@ -34,7 +34,7 @@ This file is part of SlopeCraft.
 #include <QString>
 #include <QDebug>
 #include <cstring>
-using namespace std;
+//using namespace std;
 #define TwinStackSize 128
 namespace NBT{
 	const char idEnd=0;
@@ -65,7 +65,7 @@ class NBTWriter
 		//Vars
 		bool isOpen;
 		bool isBE;
-		fstream *File;
+        std::fstream *File;
 		unsigned long long ByteCount;
 		short top;
 		char CLA[TwinStackSize];

@@ -55,10 +55,10 @@ This file is part of SlopeCraft.
 #endif
 
 
-using namespace Eigen;
+//using namespace Eigen;
 typedef unsigned int ARGB;
-typedef Array<ARGB,Dynamic,Dynamic> EImage;
-typedef Array<uchar,Dynamic,Dynamic> TokiMap;
+typedef Eigen::Array<ARGB,Eigen::Dynamic,Eigen::Dynamic> EImage;
+typedef Eigen::Array<uchar,Eigen::Dynamic,Eigen::Dynamic> TokiMap;
 typedef TokiMap glassMap;
 typedef TokiMap walkableMap;
 
@@ -79,7 +79,7 @@ public:
     void drawEdge(glassMap &,bool drawHead=false) const;
 };
 
-TokiMap ySlice2TokiMap(const Tensor<uchar,3>&);
+TokiMap ySlice2TokiMap(const Eigen::Tensor<uchar,3>&);
 
 glassMap connectBetweenLayers(const TokiMap & ,const TokiMap & ,
                           walkableMap* walkable);

@@ -24,8 +24,6 @@ This file is part of SlopeCraft.
 #include <QRgb>
 #include <Eigen/Dense>
 #include <iostream>
-using namespace std;
-using namespace Eigen;
 
 
 class ColorSet;
@@ -55,7 +53,7 @@ private:
     unsigned char applyXYZ();
     unsigned char applyLab_old();
     unsigned char applyLab_new();
-    void doSide(VectorXf);
+    void doSide(Eigen::VectorXf);
 };
 
 #endif // TOKICOLOR_H

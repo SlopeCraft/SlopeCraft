@@ -56,6 +56,7 @@ void tpStrategyWind::closeEvent(QCloseEvent*event)
 {
     emit destroyed();
     delete this;
+    event->accept();
 }
 
 tpStrategyWind::~tpStrategyWind()

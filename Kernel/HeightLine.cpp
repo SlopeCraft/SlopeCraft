@@ -5,9 +5,10 @@ HeightLine::HeightLine()
 
 }
 
-float HeightLine::make(const TokiColor **src, const Array<uchar, Dynamic, 1> & g) {
+float HeightLine::make(const TokiColor **src,
+                       const Eigen::Array<uchar, Eigen::Dynamic, 1> & g) {
     float sumDiff=0;
-    ArrayXi mapColorCol(g.rows());
+    Eigen::ArrayXi mapColorCol(g.rows());
     for(ushort r=0;r<g.rows();r++) {
         switch (g(r)) {
         case 0:
@@ -28,7 +29,7 @@ float HeightLine::make(const TokiColor **src, const Array<uchar, Dynamic, 1> & g
     return sumDiff;
 }
 
-void HeightLine::make(const ArrayXi &mapColorCol,bool allowNaturalCompress) {
+void HeightLine::make(const Eigen::ArrayXi &mapColorCol,bool allowNaturalCompress) {
     ///////////////////////1
     waterMap.clear();
     const ushort picRows=mapColorCol.rows();
@@ -42,15 +43,15 @@ void HeightLine::make(const ArrayXi &mapColorCol,bool allowNaturalCompress) {
     //qDebug()<<"size(mapColorCol)=["<<mapColorCol.rows()<<','<<mapColorCol.cols()<<']';
     base.segment(1,picRows)=mapColorCol/4;
     //qDebug("line 42");
-    ArrayXi rawShadow=mapColorCol-4*(mapColorCol/4);
+    Eigen::ArrayXi rawShadow=mapColorCol-4*(mapColorCol/4);
 
     if((rawShadow>=3).any()) {
         std::cerr<<"Fatal Error: depth=3 in vanilla map!"<<std::endl;
-        std::cerr<<"SlopeCraft will crash."<<endl;
+        std::cerr<<"SlopeCraft will crash."<<std::endl;
         delete &rawShadow;
         return;
     }
-    ArrayXi dealedDepth(picRows+1);
+    Eigen::ArrayXi dealedDepth(picRows+1);
     dealedDepth.setZero();
     dealedDepth.segment(1,picRows)=rawShadow-1;
 
@@ -118,14 +119,14 @@ void HeightLine::updateWaterMap() {
     }
 }
 
-const ArrayXi & HeightLine::getHighLine() const {
+const Eigen::ArrayXi & HeightLine::getHighLine() const {
     return HighLine;
 }
-const ArrayXi & HeightLine::getLowLine() const {
+const Eigen::ArrayXi & HeightLine::getLowLine() const {
     return LowLine;
 }
 
-const ArrayXi & HeightLine::getBase() const {
+const Eigen::ArrayXi & HeightLine::getBase() const {
     return base;
 }
 

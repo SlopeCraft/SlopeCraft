@@ -30,7 +30,6 @@ This file is part of SlopeCraft.
 #include <QRadioButton>
 #include <QLabel>
 #include <iostream>
-using namespace std;
 
 namespace Ui {
 class PreviewWind;
@@ -43,9 +42,9 @@ class PreviewWind : public QMainWindow
 public:
     explicit PreviewWind(QWidget *parent = nullptr);
 
-    vector<const QRadioButton *> Src;
-    vector<int>BlockCount;
-    vector<QLabel*>CountLabel;
+    std::vector<const QRadioButton *> Src;
+    std::vector<int>BlockCount;
+    std::vector<QLabel*>CountLabel;
     const QRadioButton*Water;
     int size[3];
     int TotalBlockCount;

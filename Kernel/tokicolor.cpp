@@ -25,7 +25,7 @@ This file is part of SlopeCraft.
 #define Thre 1e-10f
 #include <cmath>
 #define deg2rad(deg) ((deg)*M_PI/180.0)
-auto atan2(VectorXf y,VectorXf x)
+auto atan2(Eigen::VectorXf y,Eigen::VectorXf x)
 {
     return (x.array()>0.0).select((y.array()/x.array()).atan(),(x.array()<0.0).select((y.array()>=0).select((y.array()/x.array()).atan()+M_PI,(y.array()/x.array()).atan()-M_PI),(y.array()!=0.0).select(y.array()/y.array().abs()*M_PI/2.0,0)));
     /*x=(x.array()!=0.0).select(x,Thre);
@@ -36,17 +36,17 @@ auto atan2(VectorXf y,VectorXf x)
     return (x.array()<0.0).select(t+M_PI,(y.array()>=0).select(t,t+2*M_PI));*/
 }
 
-auto sign(VectorXf x)
+auto sign(Eigen::VectorXf x)
 {
     return x.array()/(x.array().abs()+Thre);
 }
 
-auto AngleCvt(VectorXf I)
+auto AngleCvt(Eigen::VectorXf I)
 {
     return (I.array()>=0.0).select(I.array(),I.array()+2*M_PI);
 }
 
-void TokiColor::doSide(VectorXf Diff)
+void TokiColor::doSide(Eigen::VectorXf Diff)
 {
     int tempIndex=0;
     //Diff.array()+=10.0;ResultDiff+=10.0;
@@ -283,9 +283,9 @@ if (_ColorSpaceType>='a')
 switch (_ColorSpaceType)
 {
 case 'R':
-    c3[0]=max(qRed(rawColor)/255.0f,Thre);
-    c3[1]=max(qGreen(rawColor)/255.0f,Thre);
-    c3[2]=max(qBlue(rawColor)/255.0f,Thre);
+    c3[0]=std::max(qRed(rawColor)/255.0f,Thre);
+    c3[1]=std::max(qGreen(rawColor)/255.0f,Thre);
+    c3[2]=std::max(qBlue(rawColor)/255.0f,Thre);
     break;
 case 'H':
     RGB2HSV(qRed(rawColor)/255.0f,qGreen(rawColor)/255.0f,qBlue(rawColor)/255.0f,c3[0],c3[1],c3[2]);
@@ -362,7 +362,7 @@ unsigned char TokiColor::applyRGB_plus()
 {
     if(Result)return Result;
     int tempIndex=0;
-    ArrayXXf &allowedColors=Allowed->_RGB;
+    Eigen::ArrayXXf &allowedColors=Allowed->_RGB;
     float R=c3[0];
     float g=c3[1];
     float b=c3[2];
@@ -386,7 +386,7 @@ unsigned char TokiColor::applyRGB_plus()
     auto S_tb=OnedDeltaB/sumOnedDelta*S_b.square();
     auto S_theta=S_tr+S_tg+S_tb;
     auto Rmax=allowedColors.rowwise().maxCoeff();
-    auto S_ratio=Rmax.array().max(max(R,max(g,b)));
+    auto S_ratio=Rmax.array().max(std::max(R,std::max(g,b)));
 
     auto dist=(S_r.square()*w_r*deltaR.square()+S_g.square()*w_g*deltaG.square()+S_b.square()*w_b*deltaB.square())/(w_r+w_g+w_b)+S_theta*S_ratio*theta.square();//+S_theta*S_ratio*theta.square()
 
@@ -410,7 +410,7 @@ unsigned char TokiColor::applyHSV()
 {
     if(Result)return Result;
     int tempIndex=0;
-    ArrayXXf &allowedColors=Allowed->HSV;
+    Eigen::ArrayXXf &allowedColors=Allowed->HSV;
     //float h=c3[0];
     //float s=c3[1];
     //float v=c3[2];
@@ -452,7 +452,7 @@ unsigned char TokiColor::applyLab_old()
     float L=c3[0];
     float a=c3[1];
     float b=c3[2];
-    ArrayXXf &allowedColors=Allowed->Lab;
+    Eigen::ArrayXXf &allowedColors=Allowed->Lab;
     auto deltaL_2=(allowedColors.col(0).array()-L).square();
     auto C1_2=a*a+b*b;
     auto C2_2=allowedColors.col(1).array().square()+allowedColors.col(2).array().square();
@@ -478,8 +478,8 @@ unsigned char TokiColor::applyLab_new()
     float L1s=c3[0];
     float a1s=c3[1];
     float b1s=c3[2];
-    ArrayXXf &allow=Allowed->Lab;
-    ArrayXf Diff(allow.rows());
+    Eigen::ArrayXXf &allow=Allowed->Lab;
+    Eigen::ArrayXf Diff(allow.rows());
 
     for(short i=0;i<allow.rows();i++)
     {
@@ -532,8 +532,8 @@ unsigned char TokiColor::applyLab_new()
     Diff.abs().minCoeff(&tempIndex);
     if(Diff.isNaN().any())
     {
-        qDebug("存在NaN");
-        cout<<Diff.transpose()<<endl;
+        std::cerr<<"Found NaN"<<std::endl;
+        std::cout<<Diff.transpose()<<std::endl;
     }
     ResultDiff=Diff.minCoeff(&tempIndex);
     //Diff.minCoeff(tempIndex,u);

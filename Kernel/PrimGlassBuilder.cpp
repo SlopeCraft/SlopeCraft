@@ -74,10 +74,10 @@ bool edge::connectWith(TokiPos P) const {
 void edge::drawEdge(glassMap & map,bool drawHead) const {
     if(lengthSquare<=2)return;
     float length=sqrt(lengthSquare);
-    Vector2f startPoint(TokiRow(beg),TokiCol(beg));
-    Vector2f endPoint(TokiRow(end),TokiCol(end));
-    Vector2f step=(endPoint-startPoint)/ceil(2.0*length);
-    Vector2f cur;
+    Eigen::Vector2f startPoint(TokiRow(beg),TokiCol(beg));
+    Eigen::Vector2f endPoint(TokiRow(end),TokiCol(end));
+    Eigen::Vector2f step=(endPoint-startPoint)/ceil(2.0*length);
+    Eigen::Vector2f cur;
     int stepCount=ceil(2.0*length);
     int r,c;
     for(int i=1;i<stepCount;i++) {
@@ -457,7 +457,7 @@ glassMap connectBetweenLayers(const TokiMap & map1,const TokiMap & map2,
     return result;
 }
 
-TokiMap ySlice2TokiMap(const Tensor<uchar,3>& raw) {
+TokiMap ySlice2TokiMap(const Eigen::Tensor<uchar,3>& raw) {
     TokiMap result(raw.dimension(0),raw.dimension(2));
     result.setZero();
     for(int i=0;i<raw.size();i++)

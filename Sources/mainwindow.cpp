@@ -410,13 +410,13 @@ void MainWindow::InitializeAll()
 
 void MainWindow::contactG()
 {
-    static string Toki=Kernel->getAuthorURL()[1];
+    static std::string Toki=Kernel->getAuthorURL()[1];
     QDesktopServices::openUrl(QUrl(QString::fromStdString(Toki)));
 }
 
 void MainWindow::contactB()
 {
-    static string Toki=Kernel->getAuthorURL()[0];
+    static std::string Toki=Kernel->getAuthorURL()[0];
     QDesktopServices::openUrl(QUrl(QString::fromStdString(Toki)));
 }
 
@@ -1175,8 +1175,8 @@ void MainWindow::on_ManualPreview_clicked() {
 }
 
 void MainWindow::on_ExportLite_clicked() {
-        string FileName=QFileDialog::getSaveFileName(this,tr("导出为投影/结构方块文件"),"",tr("投影文件(*.litematic) ;; 结构方块文件(*.nbt)")).toLocal8Bit().data();
-        string unCompressed;
+        std::string FileName=QFileDialog::getSaveFileName(this,tr("导出为投影/结构方块文件"),"",tr("投影文件(*.litematic) ;; 结构方块文件(*.nbt)")).toLocal8Bit().data();
+        std::string unCompressed;
         if(FileName.empty())return;
         bool putLitematic=(FileName.substr(FileName.length()-strlen(".litematic"))==".litematic");
         bool putStructure=(FileName.substr(FileName.length()-strlen(".nbt"))==".nbt");
@@ -1187,7 +1187,7 @@ void MainWindow::on_ExportLite_clicked() {
             return;
         }
         qDebug("开始导出投影");
-        cout<<FileName<<endl;
+        std::cout<<FileName<<std::endl;
 
 
         ui->FinishExLite->setEnabled(false);
@@ -1263,7 +1263,7 @@ void MainWindow::on_ExportData_clicked() {
             QMessageBox::information(this,tr("你输入的起始序号不可用"),tr("请输入大于等于0的整数！"));
                         return;
         }
-        string FolderPath=(QFileDialog::getExistingDirectory(this,tr("请选择导出的文件夹"))).toStdString();
+        std::string FolderPath=(QFileDialog::getExistingDirectory(this,tr("请选择导出的文件夹"))).toStdString();
         if(FolderPath.empty())
         {
             QMessageBox::information(this,tr("你选择的文件夹不存在！"),tr("你可以选择存档中的data文件夹"));

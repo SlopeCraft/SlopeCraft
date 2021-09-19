@@ -26,9 +26,9 @@ This file is part of SlopeCraft.
 #define NInf -100000
 #define MapSize (Base.rows())
 //ArrayXXi OptiChain::Base=MatrixXi::Zero(0,0);
-const Array3i OptiChain::Both(-1,2,-1);
-const Array3i OptiChain::Left(-1,1,0);
-const Array3i OptiChain::Right(0,1,-1);
+const Eigen::Array3i OptiChain::Both(-1,2,-1);
+const Eigen::Array3i OptiChain::Left(-1,1,0);
+const Eigen::Array3i OptiChain::Right(0,1,-1);
 //QLabel* OptiChain::SinkIDP=nullptr;
 
 #ifdef showImg
@@ -72,13 +72,13 @@ inline short Region::indexGlobal2Local(short indexGlobal) const {
     return indexGlobal-Beg;
 }
 
-string Region::toString() const {
+std::string Region::toString() const {
     if(!isValid())
-        return '{'+to_string(Beg)+','+to_string(End)+'}';//无效区间用大括号
+        return '{'+std::to_string(Beg)+','+std::to_string(End)+'}';//无效区间用大括号
     if(isHang())
-        return '['+to_string(Beg)+','+to_string(End)+']';//悬空区间用中括号
+        return '['+std::to_string(Beg)+','+std::to_string(End)+']';//悬空区间用中括号
 
-    return '('+to_string(Beg)+','+to_string(End)+')';//可沉降区间用括号
+    return '('+std::to_string(Beg)+','+std::to_string(End)+')';//可沉降区间用括号
 }
 
 OptiChain::OptiChain(int size) {
@@ -88,9 +88,9 @@ OptiChain::OptiChain(int size) {
 
 }
 
-OptiChain::OptiChain(const ArrayXi & base,
-                     const ArrayXi & High,
-                     const ArrayXi & Low) {
+OptiChain::OptiChain(const Eigen::ArrayXi & base,
+                     const Eigen::ArrayXi & High,
+                     const Eigen::ArrayXi & Low) {
     Base=base;
     HighLine=High;
     LowLine=Low;
@@ -109,10 +109,10 @@ OptiChain::~OptiChain() {
 }
 
 
-const ArrayXi & OptiChain::getHighLine() {
+const Eigen::ArrayXi & OptiChain::getHighLine() {
     return HighLine;
 }
-const ArrayXi & OptiChain::getLowLine() {
+const Eigen::ArrayXi & OptiChain::getLowLine() {
     return LowLine;
 }
 
@@ -138,13 +138,13 @@ inline bool OptiChain::isSolidBlock(int index) const {
 }
 
 void OptiChain::dispSubChain() const {
-    string out="";
+    std::string out="";
     for(auto it=SubChain.cbegin();it!=SubChain.cend();it++)
     {
         out+=it->toString();
     }
 #ifdef removeQt
-    cout<<out<<endl;
+    std::cout<<out<<std::endl;
 #else
     qDebug()<<QString::fromStdString(out);
 #endif
@@ -282,7 +282,7 @@ void OptiChain::divideToChain()
     Temp.End=MapSize-1;
     Chain.push(Temp);
 #ifdef removeQt
-    cout<<"Divided coloum "<<" into "<<Chain.size()<<"isolated region(s)"<<endl;
+    std::cout<<"Divided coloum "<<" into "<<Chain.size()<<"isolated region(s)"<<std::endl;
 #else
     qDebug()<<"将第"<<Col<<"列切分为"<<Chain.size()<<"个孤立区间";
 #endif
@@ -304,7 +304,7 @@ void OptiChain::divideToSubChain()
 void OptiChain::divideToSubChain(const Region &Cur)
 {
 #ifdef removeQt
-    cout<<"ready to analyse"<<Cur.toString()<<endl;
+    std::cout<<"ready to analyse"<<Cur.toString()<<std::endl;
 #else
     qDebug()<<"开始分析区间"+QString::fromStdString(Cur.toString());
 #endif
@@ -312,19 +312,19 @@ void OptiChain::divideToSubChain(const Region &Cur)
     {
         SubChain.push_back(Region(Cur.Beg,Cur.End,idp));
 #ifdef removeQt
-        cout<<"Region"<<Cur.toString()<<" in Chain is too thin, sink directly."<<endl;
+        std::cout<<"Region"<<Cur.toString()<<" in Chain is too thin, sink directly."<<std::endl;
 #else
         qDebug()<<"Chain中的区间"+QString::fromStdString(Cur.toString())+"过小，直接简单沉降";
 #endif
         return;
     }
 
-    ArrayXi HL;
+    Eigen::ArrayXi HL;
     HL.setZero(Cur.size()+1);
     HL.segment(0,Cur.size())=HighLine.segment(Cur.Beg,Cur.size());
     HL(Cur.size())=NInf;
 
-    ArrayXi ScanBoth,ScanLeft,ScanRight;
+    Eigen::ArrayXi ScanBoth,ScanLeft,ScanRight;
     ScanBoth.setZero(Cur.size());
     ScanLeft.setZero(Cur.size());
     ScanRight.setZero(Cur.size());
@@ -339,7 +339,7 @@ void OptiChain::divideToSubChain(const Region &Cur)
     ScanRight*=ScanBoth;
 
 #ifdef removeQt
-    cout<<"scanning finished"<<endl;
+    std::cout<<"scanning finished"<<std::endl;
 #else
     qDebug("扫描完成");
 #endif
@@ -395,7 +395,7 @@ void OptiChain::divideToSubChain(const Region &Cur)
         SubChain.push_back(Region(SubChain.back().End+1,Cur.End,idp));
 
 #ifdef removeQt
-    cout<<"SubChain constructed"<<endl;
+    std::cout<<"SubChain constructed"<<std::endl;
 #else
     qDebug("SubChain构建完成");
 #endif
@@ -406,7 +406,7 @@ void OptiChain::Sink(const Region &Reg)
     if(!Reg.isValid())
     {
 #ifdef removeQt
-        cout<<"Invalid region: "<<Reg.toString();
+        std::cout<<"Invalid region: "<<Reg.toString();
 #else
         qDebug()<<"无效区间："+QString::fromStdString(Reg.toString());
 #endif
@@ -429,7 +429,8 @@ void OptiChain::Sink(const Region &Reg)
             EndGap=validHeight(Reg.End)-validHeight(Reg.End+1);
         else
             EndGap=validHeight(Reg.End)-NInf;
-        int offset=min(max(min(BegGap,EndGap)-1,0),LowLine.segment(Reg.Beg,Reg.size()).minCoeff());
+        int offset=std::min(std::max(std::min(BegGap,EndGap)-1,0),
+                            LowLine.segment(Reg.Beg,Reg.size()).minCoeff());
         HighLine.segment(Reg.Beg,Reg.size())-=offset;
         LowLine.segment(Reg.Beg,Reg.size())-=offset;
     }

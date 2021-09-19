@@ -55,8 +55,8 @@ This file is part of SlopeCraft.
 #include <QtConcurrent>
 #include <QFuture>
 //typedef unsigned char gameVersion;
-typedef Array<uint,Dynamic,Dynamic> EImage;
-using namespace Eigen;
+typedef Eigen::Array<uint,Eigen::Dynamic,Eigen::Dynamic> EImage;
+//using namespace Eigen;
 
 #ifndef WITH_QT
 /*
@@ -139,7 +139,7 @@ public:
         const bool [64],
         const simpleBlock[64] ,
         const EImage &);
-    vector<string> getAuthorURL() const;
+    std::vector<std::string> getAuthorURL() const;
     void getARGB32(QRgb*) const;
 
 //can do in convertionReady:
@@ -153,20 +153,20 @@ public:
     bool build(compressSettings=noCompress,ushort=256,
                glassBridgeSettings=noBridge,ushort=3);//构建三维结构
     EImage getConovertedImage() const;
-    vector<string> exportAsData(const string &,int) const;
+    std::vector<std::string> exportAsData(const std::string &,int) const;
     void getTokiColorPtr(ushort,const TokiColor*[]) const;
 //can do in builded:
-    string exportAsLitematic(const string & TargetName,//Local
-                                             const string & LiteName,//Utf8
-                                             const string & author,//Utf8
-                                             const string & RegionName//Utf8
+    std::string exportAsLitematic(const std::string & TargetName,//Local
+                                             const std::string & LiteName,//Utf8
+                                             const std::string & author,//Utf8
+                                             const std::string & RegionName//Utf8
                              ) const;
-    string exportAsStructure(const string &) const;
+    std::string exportAsStructure(const std::string &) const;
     void get3DSize(int & x,int & y,int & z) const;
     int getHeight() const;
     int getXRange() const;
     int getZRange() const;
-    int getBlockCounts(vector<int> & ) const;
+    int getBlockCounts(std::vector<int> & ) const;
     int getBlockCounts() const;
 
 #ifdef WITH_QT
@@ -188,7 +188,7 @@ private:
     enum ColorSpace {
         R='R',H='H',L='L',X='X'
     };
-    static Array<float,2,3> DitherMapLR,DitherMapRL;
+    static Eigen::Array<float,2,3> DitherMapLR,DitherMapRL;
     gameVersion mcVer;//12,13,14,15,16,17
     mapTypes mapType;
     step kernelStep;
@@ -198,7 +198,7 @@ private:
 
     ColorSet Basic;
     ColorSet Allowed;
-    vector<simpleBlock> blockPalette;
+    std::vector<simpleBlock> blockPalette;
 
     int size3D[3];//x,y,z
 
@@ -210,12 +210,12 @@ private:
     ushort maxAllowedHeight;
     ushort bridgeInterval;
     PrimGlassBuilder * glassBuilder;
-    ArrayXXi mapPic;//stores mapColor
-    ArrayXXi Base;
-    ArrayXXi HighMap;
-    ArrayXXi LowMap;
+    Eigen::ArrayXXi mapPic;//stores mapColor
+    Eigen::ArrayXXi Base;
+    Eigen::ArrayXXi HighMap;
+    Eigen::ArrayXXi LowMap;
     std::unordered_map<TokiPos,waterItem> WaterList;
-    Tensor<unsigned char,3>Build;//x,y,z
+    Eigen::Tensor<unsigned char,3>Build;//x,y,z
 
 //for setType:
 //for convert:
@@ -233,16 +233,16 @@ private:
     void buildHeight();//构建Build
     void makeBridge();
 //for Litematic
-    void writeBlock(const string &netBlockId,
-                    const vector<string>&Property,
-                    const vector<string>&ProVal,
+    void writeBlock(const std::string &netBlockId,
+                    const std::vector<std::string>&Property,
+                    const std::vector<std::string>&ProVal,
                     NBT::NBTWriter&) const;
     void writeTrash(int count,NBT::NBTWriter&) const;
-    string Noder(const short *src,int size) const;
+    std::string Noder(const short *src,int size) const;
 
 };
-bool readFromTokiColor(const string & FileName,ArrayXXf & M);
-bool readFromTokiColor(const char*src,ArrayXXf & M);
+bool readFromTokiColor(const std::string & FileName,Eigen::ArrayXXf & M);
+bool readFromTokiColor(const char*src,Eigen::ArrayXXf & M);
 uchar h2d(char h);
 void crash();
 void matchColor(TokiColor * tColor,QRgb qColor);

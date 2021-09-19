@@ -16,7 +16,7 @@ block.needGlass=json.value("needGlass").toBool();
 block.doGlow=json.value("isGlowing").toBool();
 nameZH=json.value("nameZH").toString();
 nameEN=json.value("nameEN").toString();
-std::cerr<<block.id<<"\n"<<block.idOld<<"\n";
+//std::cerr<<block.id<<"\n"<<block.idOld<<"\n";
 QString imgName=imgDir+"/"+json.value("icon").toString();
 
 target->setText(nameZH);

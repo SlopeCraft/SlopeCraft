@@ -99,7 +99,7 @@ void GetMap(unsigned char *Map)
     return;
 }
 
-void GetMap(VectorXi &Map)
+void GetMap(Eigen::VectorXi &Map)
 {
     Map.setZero(256);
     for(short r=0;r<256;r++)Map(r)=4*(r%64)+r/64;

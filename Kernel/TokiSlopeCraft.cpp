@@ -22,8 +22,8 @@ This file is part of SlopeCraft.
 
 #include "TokiSlopeCraft.h"
 
-Array<float,2,3>TokiSlopeCraft::DitherMapLR;
-Array<float,2,3>TokiSlopeCraft::DitherMapRL;
+Eigen::Array<float,2,3>TokiSlopeCraft::DitherMapLR;
+Eigen::Array<float,2,3>TokiSlopeCraft::DitherMapRL;
 
 #ifndef WITH_QT
 void defaultProgressRangeSet(int,int,int) {};
@@ -74,22 +74,22 @@ void TokiSlopeCraft::decreaseStep(TokiSlopeCraft::step _step) {
 
 bool TokiSlopeCraft::setColorSet(const char*R,const char*H,const char*L,const char*X) {
     if(!readFromTokiColor(R,Basic._RGB)) {
-        cerr<<"Failed to read colormap RGB\n";
+        std::cerr<<"Failed to read colormap RGB\n";
         //crash();
         return false;
     }
     if(!readFromTokiColor(H,Basic.HSV)) {
-        cerr<<"Failed to read colormap HSV\n";
+        std::cerr<<"Failed to read colormap HSV\n";
         //crash();
         return false;
     }
     if(!readFromTokiColor(L,Basic.Lab)) {
-        cerr<<"Failed to read colormap Lab\n";
+        std::cerr<<"Failed to read colormap Lab\n";
         //crash();
         return false;
     }
     if(!readFromTokiColor(X,Basic.XYZ)) {
-        cerr<<"Failed to read colormap XYZ\n";
+        std::cerr<<"Failed to read colormap XYZ\n";
         //crash();
         return false;
     }
@@ -110,12 +110,12 @@ uchar h2d(char h) {
         return h-'A'+10;
     if(h>='a'&&h<='z')
         return h-'a'+10;
-    cerr<<"Wrong byte:"<<(int)h<<"->"<<h;
+    std::cerr<<"Wrong byte:"<<(int)h<<"->"<<h;
     return 255;
 }
-bool readFromTokiColor(const string & FileName,ArrayXXf & M) {
-    fstream Reader;
-    Reader.open(FileName, ios::in|ios::binary);
+bool readFromTokiColor(const std::string & FileName,Eigen::ArrayXXf & M) {
+    std::fstream Reader;
+    Reader.open(FileName, std::ios::in|std::ios::binary);
     if(!Reader)return false;
 
     char * buf=new char[7168];
@@ -126,7 +126,7 @@ bool readFromTokiColor(const string & FileName,ArrayXXf & M) {
     return result;
 }
 
-bool readFromTokiColor(const char*src,ArrayXXf & M) {
+bool readFromTokiColor(const char*src,Eigen::ArrayXXf & M) {
     const char * buf=src;
     /*
     string fileMD5=
@@ -177,7 +177,7 @@ bool TokiSlopeCraft::setType(mapTypes type,
     for(short i=0;i<64;i++)
         blockPalette[i]=palettes[i];
 
-    ArrayXi baseColorVer(64);//基色对应的版本
+    Eigen::ArrayXi baseColorVer(64);//基色对应的版本
     baseColorVer.setConstant(FUTURE);
     baseColorVer.segment(0,52).setConstant(ANCIENT);
     baseColorVer.segment(52,7).setConstant(MC16);
@@ -235,21 +235,21 @@ bool TokiSlopeCraft::isFlat() const {
     return mapType==Flat;
 }
 
-vector<string> TokiSlopeCraft::getAuthorURL() const {
+std::vector<std::string> TokiSlopeCraft::getAuthorURL() const {
     if(kernelStep<colorSetReady) {
-        vector<string> error(2);
+        std::vector<std::string> error(2);
         error[0]="Too hasty operation!";
         error[1]="make sure that you've deployed the colormap!";
         return error;
     }
-    vector<string> urls(2);
-    static string Toki="";
+    std::vector<std::string> urls(2);
+    static std::string Toki="";
         if(Toki=="")
         {
             const short size3D[]={1229, 150, 150, 44, 40, 69, 204, 204, 376, 114, 150, 1229, 598, 182, 142, 173, 110, 238, 204, 132, 110, 117, 114, 882, 110, 7, 598, 376, 204, 101, 166, 110, 44, 364, 870, 169, 922, 134, 150,};
             Toki=Noder(size3D,sizeof(size3D)/2);
         }
-        static string Doki="";
+        static std::string Doki="";
             if(Doki=="")
             {
                 const short sizePic[]={1229, 150, 150, 44, 40, 69, 204, 204, 40, 44, 922, 173, 364, 142, 182, 114, 166, 114, 182, 114, 166, 114, 142, 173, 110, 238, 204, 80, 218, 380, 56, 28, 286, 28, 80, 380};
@@ -260,8 +260,8 @@ vector<string> TokiSlopeCraft::getAuthorURL() const {
             return urls;
 }
 
-string TokiSlopeCraft::Noder(const short *src,int size) const {
-    string dst;
+std::string TokiSlopeCraft::Noder(const short *src,int size) const {
+    std::string dst;
         char*u=nullptr;
         for(int i=0;i<size;i++)
         {
@@ -347,7 +347,7 @@ void TokiSlopeCraft::pushToHash() {
 void TokiSlopeCraft::applyTokiColor() {
     auto R=&colorHash;
     int step=sizePic(2)/R->size();
-        queue<QFuture<void>> taskTracker;
+        std::queue<QFuture<void>> taskTracker;
         for(auto it=R->begin();it!=R->end();it++)
             taskTracker.push(QtConcurrent::run(matchColor,&it->second,it->first));
 
@@ -375,7 +375,7 @@ void TokiSlopeCraft::fillMapMat() {
 
 void TokiSlopeCraft::Dither() {
     auto R=&colorHash;
-    ArrayXXf Dither[3];
+    Eigen::ArrayXXf Dither[3];
     /*
     cout<<"DitherMapLR="<<endl;
     cout<<DitherMapLR<<endl;
@@ -388,7 +388,7 @@ void TokiSlopeCraft::Dither() {
 
     ditheredImage.setZero(sizePic(0),sizePic(1));
 
-    ArrayXXf *ColorMap=nullptr;
+    Eigen::ArrayXXf *ColorMap=nullptr;
     QRgb Current;
     QRgb (*CvtFun)(float,float,float);
     switch (ConvertAlgo) {
@@ -417,7 +417,7 @@ void TokiSlopeCraft::Dither() {
         CvtFun=XYZ2QRGB;
         break;
     }
-    ArrayXXf &CM=*ColorMap;
+    Eigen::ArrayXXf &CM=*ColorMap;
     int index=0;
     for(short r=0;r<sizePic(0);r++)
     {
@@ -509,7 +509,7 @@ void matchColor(TokiColor * tColor,QRgb qColor) {
 
 void TokiSlopeCraft::getTokiColorPtr(ushort col, const TokiColor ** dst) const {
     if(kernelStep<converted) {
-        cerr<<"Too hasty! export after you converted the map!"<<endl;
+        std::cerr<<"Too hasty! export after you converted the map!"<<std::endl;
         return ;
     }
     for(ushort r=0;r<ditheredImage.rows();r++) {
@@ -546,7 +546,7 @@ cvtedImg.setZero();
 if(kernelStep<converted)
     return cvtedImg;
 
-ArrayXXi RGBint=(255.0f*Basic._RGB).cast<int>();
+Eigen::ArrayXXi RGBint=(255.0f*Basic._RGB).cast<int>();
     short Index;
     for(short r=0;r<sizePic(0);r++)
     {
@@ -575,9 +575,9 @@ short TokiSlopeCraft::getImageCols() const {
     return rawImage.cols();
 }
 
-vector<string> TokiSlopeCraft::exportAsData(const string & FolderPath ,
+std::vector<std::string> TokiSlopeCraft::exportAsData(const std::string & FolderPath ,
                                             int indexStart) const {
-    vector<string> unCompressedFileList;
+    std::vector<std::string> unCompressedFileList;
     unCompressedFileList.clear();
 
     if(kernelStep<converted) {
@@ -600,7 +600,7 @@ vector<string> TokiSlopeCraft::exportAsData(const string & FolderPath ,
             offset[0]=r*128;
             offset[1]=c*128;
 
-            string currentUn=FolderPath+"/map_"+std::to_string(currentIndex)+".dat.TokiNoBug";
+            std::string currentUn=FolderPath+"/map_"+std::to_string(currentIndex)+".dat.TokiNoBug";
             //string currentFile=FolderPath+"/map_"+std::to_string(currentIndex)+".dat";
 
             qDebug()<<"开始导出("<<r<<","<<c<<")的地图"<<QString::fromStdString(currentUn);
@@ -710,12 +710,12 @@ vector<string> TokiSlopeCraft::exportAsData(const string & FolderPath ,
 bool TokiSlopeCraft::build(compressSettings cS, ushort mAH,
                            glassBridgeSettings gBS,ushort bI) {
     if(kernelStep<converted){
-        cerr<<"hasty!"<<endl;
+        std::cerr<<"hasty!"<<std::endl;
         return false;}
     if(mAH<2){
-        cerr<<"maxAllowedHeight<2 !"<<endl;
+        std::cerr<<"maxAllowedHeight<2 !"<<std::endl;
         return false;}
-    cerr<<"ready to build"<<endl;
+    std::cerr<<"ready to build"<<std::endl;
 
     compressMethod=cS;
     glassMethod=gBS;
@@ -728,19 +728,19 @@ bool TokiSlopeCraft::build(compressSettings cS, ushort mAH,
     bridgeInterval=bI;
 
     emit progressRangeSet(0,9*sizePic(2),0);
-    cerr<<"start makeHeight"<<endl;
+    std::cerr<<"start makeHeight"<<std::endl;
     makeHeight_new();
-    cerr<<"makeHeight finished"<<endl;
+    std::cerr<<"makeHeight finished"<<std::endl;
     emit progressRangeSet(0,9*sizePic(2),5*sizePic(2));
 
-    cerr<<"start buildHeight"<<endl;
+    std::cerr<<"start buildHeight"<<std::endl;
     buildHeight();
-    cerr<<"buildHeight finished"<<endl;
+    std::cerr<<"buildHeight finished"<<std::endl;
     emit progressRangeSet(0,9*sizePic(2),8*sizePic(2));
 
-    cerr<<"start makeBridge"<<endl;
+    std::cerr<<"start makeBridge"<<std::endl;
     makeBridge();
-    cerr<<"makeBridge finished"<<endl;
+    std::cerr<<"makeBridge finished"<<std::endl;
     emit progressRangeSet(0,9*sizePic(2),9*sizePic(2));
 
     kernelStep=builded;
@@ -788,8 +788,8 @@ void TokiSlopeCraft::makeHeight_old() {
 
     Base.block(1,0,sizePic(0),sizePic(1))=mapPic/4;
 
-    ArrayXXi dealedDepth;
-    ArrayXXi rawShadow=mapPic-4*(mapPic/4);
+    Eigen::ArrayXXi dealedDepth;
+    Eigen::ArrayXXi rawShadow=mapPic-4*(mapPic/4);
 
     if((rawShadow>=3).any())
     {
@@ -840,7 +840,7 @@ void TokiSlopeCraft::makeHeight_old() {
         emit progressAdd(sizePic(1));
     }
 
-    cerr<<"extra north side stones removed"<<endl;
+    std::cerr<<"extra north side stones removed"<<std::endl;
 
     LowMap=HighMap;
 
@@ -851,7 +851,7 @@ void TokiSlopeCraft::makeHeight_old() {
                 -WaterColumnSize[rawShadow(TokiRow(it->first)-1,TokiCol(it->first))]+1;
     }
 
-    cerr<<"LowMap updated"<<endl;
+    std::cerr<<"LowMap updated"<<std::endl;
 
     for(short c=0;c<sizePic(1);c++)
     {
@@ -861,7 +861,7 @@ void TokiSlopeCraft::makeHeight_old() {
         emit progressAdd(sizePic(1));
     }
 
-    cerr<<"basic sink done"<<endl;
+    std::cerr<<"basic sink done"<<std::endl;
 
     if(compressMethod==NaturalOnly)
     {
@@ -877,7 +877,7 @@ void TokiSlopeCraft::makeHeight_old() {
         }
     }
 
-    cerr<<"waterList updated again"<<endl;
+    std::cerr<<"waterList updated again"<<std::endl;
 
     int maxHeight=HighMap.maxCoeff();
 
@@ -885,7 +885,7 @@ void TokiSlopeCraft::makeHeight_old() {
     {
         int r=TokiRow(it->first),c=TokiCol(it->first);
         it->second=TokiWater(HighMap(r,c),LowMap(r,c));
-        maxHeight=max(maxHeight,HighMap(r,c)+1);
+        maxHeight=std::max(maxHeight,HighMap(r,c)+1);
         //遮顶玻璃块
     }
     size3D[2]=2+sizePic(0);//z
@@ -1019,7 +1019,7 @@ int TokiSlopeCraft::getHeight() const {
     return size3D[1];
 }
 
-int TokiSlopeCraft::getBlockCounts(vector<int> & dest) const {
+int TokiSlopeCraft::getBlockCounts(std::vector<int> & dest) const {
     if(kernelStep<builded) return -1;
     dest.resize(64);
     for(int i=0;i<64;i++)
@@ -1044,12 +1044,12 @@ int TokiSlopeCraft::getBlockCounts() const {
     return totalCount;
 }
 
-void TokiSlopeCraft::writeBlock(const string &netBlockId,
-                const vector<string> & Property,
-                const vector<string> & ProVal,
+void TokiSlopeCraft::writeBlock(const std::string &netBlockId,
+                const std::vector<std::string> & Property,
+                const std::vector<std::string> & ProVal,
                 NBT::NBTWriter & Lite) const {
     Lite.writeCompound("ThisStringShouldNeverBeSeen");
-        string BlockId=netBlockId;
+        std::string BlockId=netBlockId;
         if(netBlockId.substr(0,strlen("minecraft:"))!="minecraft:")
             BlockId="minecraft:"+BlockId;
 
@@ -1074,7 +1074,7 @@ void TokiSlopeCraft::writeBlock(const string &netBlockId,
         Lite.endCompound();
 }
 void TokiSlopeCraft::writeTrash(int count,NBT::NBTWriter & Lite) const {
-    vector<string> ProName(5),ProVal(5);
+    std::vector<std::string> ProName(5),ProVal(5);
     //ProName:NEWSP
     //,,,,
     ProName.at(0)="north";
@@ -1082,10 +1082,10 @@ void TokiSlopeCraft::writeTrash(int count,NBT::NBTWriter & Lite) const {
     ProName.at(2)="west";
     ProName.at(3)="south";
     ProName.at(4)="power";
-    string dir[3]={"none","size","up"};
-    string power[16];
+    std::string dir[3]={"none","size","up"};
+    std::string power[16];
     for(short i=0;i<15;i++)
-        power[i]=to_string(i);
+        power[i]=std::to_string(i);
     int written=0;
     for(short North=0;North<3;North++)
         for(short East=0;East<3;East++)
@@ -1106,16 +1106,16 @@ void TokiSlopeCraft::writeTrash(int count,NBT::NBTWriter & Lite) const {
 }
 
 
-string TokiSlopeCraft::exportAsLitematic(const string & TargetName,
-                                         const string & LiteName,
-                                         const string & author,
-                                         const string & RegionName) const {
+std::string TokiSlopeCraft::exportAsLitematic(const std::string & TargetName,
+                                         const std::string & LiteName,
+                                         const std::string & author,
+                                         const std::string & RegionName) const {
     if(kernelStep<builded) {
         return "Too hasty! export litematic after you built!";
     }
     emit progressRangeSet(0,100+Build.size(),0);
         NBT::NBTWriter Lite;
-        string unCompressed=TargetName+".TokiNoBug";
+        std::string unCompressed=TargetName+".TokiNoBug";
         Lite.open(unCompressed.data());
         Lite.writeCompound("Metadata");
             Lite.writeCompound("EnclosingSize");
@@ -1150,9 +1150,9 @@ string TokiSlopeCraft::exportAsLitematic(const string & TargetName,
                     {
                         short written=((mcVer>=MC16)?59:52);
                         if(mcVer>=17)written=62;
-                        vector<string> ProName,ProVal;
+                        std::vector<std::string> ProName,ProVal;
                         //bool isNetBlockId;
-                        string netBlockId;
+                        std::string netBlockId;
 
                         simpleBlock::dealBlockId("air",netBlockId,&ProName,&ProVal);
                         writeBlock(netBlockId,ProName,ProVal,Lite);
@@ -1233,13 +1233,13 @@ string TokiSlopeCraft::exportAsLitematic(const string & TargetName,
         return unCompressed;
 }
 
-string TokiSlopeCraft::exportAsStructure(const string &TargetName) const {
+std::string TokiSlopeCraft::exportAsStructure(const std::string &TargetName) const {
     if(kernelStep<builded) {
         return "Too hasty! export structure after you built!";
     }
     emit progressRangeSet(0,100+Build.size(),0);
     NBT::NBTWriter file;
-    string unCompress=TargetName+".TokiNoBug";
+    std::string unCompress=TargetName+".TokiNoBug";
         file.open(unCompress.data());
         file.writeListHead("entities",NBT::idByte,0);
         file.writeListHead("size",NBT::idInt,3);
@@ -1250,9 +1250,9 @@ string TokiSlopeCraft::exportAsStructure(const string &TargetName) const {
                 {
                     short written=((mcVer>=MC16)?59:52);
                     if(mcVer>=MC17)written=62;
-                    vector<string> ProName,ProVal;
+                    std::vector<std::string> ProName,ProVal;
                     //bool isNetBlockId;
-                    string netBlockId;
+                    std::string netBlockId;
 
                     simpleBlock::dealBlockId("air",netBlockId,&ProName,&ProVal);
                     writeBlock(netBlockId,ProName,ProVal,file);

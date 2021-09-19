@@ -24,21 +24,21 @@ This file is part of SlopeCraft.
 #include <Eigen/Dense>
 #include <QDebug>
 #include "TokiColor.h"
-using namespace Eigen;
+//using namespace Eigen;
 class ColorSet{
     public:
-        ArrayXXf _RGB;
-        ArrayXXf  HSV;
-        ArrayXXf  Lab;
-        ArrayXXf  XYZ;
-        VectorXi  Map;
+        Eigen::ArrayXXf _RGB;
+        Eigen::ArrayXXf  HSV;
+        Eigen::ArrayXXf  Lab;
+        Eigen::ArrayXXf  XYZ;
+        Eigen::VectorXi  Map;
         ColorSet();
         void ApplyAllowed(ColorSet*standard,bool *MIndex);
 };
 
 void GetMap(unsigned char *Map);
 
-void GetMap(VectorXi &Map);
+void GetMap(Eigen::VectorXi &Map);
 
 void f(float &);
 void invf(float&);
@@ -56,7 +56,7 @@ QRgb HSV2QRGB(float,float,float);
 QRgb XYZ2QRGB(float,float,float);
 QRgb Lab2QRGB(float,float,float);
 QRgb ComposeColor(const QRgb&front,const QRgb&back);
-bool readFromFile(const char*FileName,ArrayXXf & M);
-bool readFromTokiColor(const char*,ArrayXXf &,const string &);
+bool readFromFile(const char*FileName,Eigen::ArrayXXf & M);
+bool readFromTokiColor(const char*,Eigen::ArrayXXf &,const std::string &);
 uchar h2d(char);
 #endif // COLORSET_H
