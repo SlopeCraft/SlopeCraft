@@ -25,7 +25,7 @@ This file is part of SlopeCraft.
 
 #define NInf -100000
 #define MapSize (Base.rows())
-ArrayXXi OptiChain::Base=MatrixXi::Zero(0,0);
+//ArrayXXi OptiChain::Base=MatrixXi::Zero(0,0);
 const Array3i OptiChain::Both(-1,2,-1);
 const Array3i OptiChain::Left(-1,1,0);
 const Array3i OptiChain::Right(0,1,-1);
@@ -48,38 +48,31 @@ Region::Region(short _Beg,short _End,RegionType _Type)
     Beg=_Beg;End=_End;type=_Type;
 }
 
-inline bool Region::isHang() const
-{
+inline bool Region::isHang() const {
     return(type==Hang);
 }
 
-inline bool Region::isIDP() const
-{
+inline bool Region::isIDP() const {
     return(type==idp);
 }
 
-inline bool Region::isValid() const
-{
+inline bool Region::isValid() const {
     return(type!=Invalid)&&(size()>=1);
 }
 
-inline int Region::size() const
-{
+inline int Region::size() const {
     return (End-Beg+1);
 }
 
-inline short Region::indexLocal2Global(short indexLocal) const
-{
+inline short Region::indexLocal2Global(short indexLocal) const {
     return indexLocal+Beg;
 }
 
-inline short Region::indexGlobal2Local(short indexGlobal) const
-{
+inline short Region::indexGlobal2Local(short indexGlobal) const {
     return indexGlobal-Beg;
 }
 
-string Region::toString() const
-{
+string Region::toString() const {
     if(!isValid())
         return '{'+to_string(Beg)+','+to_string(End)+'}';//无效区间用大括号
     if(isHang())
@@ -88,53 +81,63 @@ string Region::toString() const
     return '('+to_string(Beg)+','+to_string(End)+')';//可沉降区间用括号
 }
 
-OptiChain::OptiChain(int size)
-{
+OptiChain::OptiChain(int size) {
+    SubChain.clear();
     if(size<0)
         return;
 
 }
 
-OptiChain::OptiChain(ArrayXi High,ArrayXi Low,int _col)
-{
-    Col=_col;
+OptiChain::OptiChain(const ArrayXi & base,
+                     const ArrayXi & High,
+                     const ArrayXi & Low) {
+    Base=base;
     HighLine=High;
     LowLine=Low;
     SubChain.clear();
 }
+/*
+OptiChain::OptiChain(const HeightLine& src) {
+    HighLine=src.HighLine;
+    LowLine=src.LowLine;
+    Base=src.base;
+    SubChain.clear();
+}*/
 
-OptiChain::~OptiChain()
-{
+OptiChain::~OptiChain() {
     return;
 }
 
-int OptiChain::validHeight(int index)
-{
+
+const ArrayXi & OptiChain::getHighLine() {
+    return HighLine;
+}
+const ArrayXi & OptiChain::getLowLine() {
+    return LowLine;
+}
+
+int OptiChain::validHeight(int index) const {
     if(index<0||index>=MapSize)return NInf;
     if(isAir(index))return NInf;
     return HighLine(index);
 }
 
-inline bool OptiChain::isAir(int index)
-{
+inline bool OptiChain::isAir(int index) const {
     if(index<0||index>=MapSize)return true;
-    return (Base(index,Col)==0);
+    return (Base(index)==0);
 }
 
-inline bool OptiChain::isWater(int index)
-{
+inline bool OptiChain::isWater(int index) const {
     if(index<0||index>=MapSize)return false;
-    return (Base(index,Col)==12);
+    return (Base(index)==12);
 }
 
-inline bool OptiChain::isSolidBlock(int index)
-{
+inline bool OptiChain::isSolidBlock(int index) const {
     if(index<0||index>=MapSize)return false;
-    return(Base(index,Col)!=0&&Base(index,Col)!=12);
+    return(Base(index)!=0&&Base(index)!=12);
 }
 
-void OptiChain::dispSubChain()
-{
+void OptiChain::dispSubChain() const {
     string out="";
     for(auto it=SubChain.cbegin();it!=SubChain.cend();it++)
     {
@@ -279,7 +282,7 @@ void OptiChain::divideToChain()
     Temp.End=MapSize-1;
     Chain.push(Temp);
 #ifdef removeQt
-    cout<<"Divided coloum "<<Col<<" into "<<Chain.size()<<"isolated region(s)"<<endl;
+    cout<<"Divided coloum "<<" into "<<Chain.size()<<"isolated region(s)"<<endl;
 #else
     qDebug()<<"将第"<<Col<<"列切分为"<<Chain.size()<<"个孤立区间";
 #endif

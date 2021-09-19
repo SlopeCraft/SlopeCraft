@@ -31,6 +31,7 @@ This file is part of SlopeCraft.
 #include <Eigen/Dense>
 #include <list>
 #include <queue>
+
 #ifndef removeQt
     #include <QDebug>
     #include <QRgb>
@@ -70,12 +71,15 @@ public:
     //Index一律以Height矩阵中的索引为准。Height(r,c+1)<->Base(r,c)
     //高度矩阵一律不含水柱顶的玻璃方块
     OptiChain(int Size=-1);//default Random Constructor
-    OptiChain(ArrayXi,ArrayXi,int);
+    OptiChain(const ArrayXi & base, const ArrayXi & High,const ArrayXi & Low);
     ~OptiChain();
 
     void divideAndCompress();
+    const ArrayXi & getHighLine();
+    const ArrayXi & getLowLine();
+    //ArrayXi toDepth() const;
 
-    static ArrayXXi Base;
+    //static ArrayXXi Base;
     static const Array3i Both;
     static const Array3i Left;
     static const Array3i Right;
@@ -86,7 +90,9 @@ public:
     static bool AllowSinkHang;
 #endif
 
-    int Col;
+private:
+    //int Col;
+    ArrayXi Base;
     ArrayXi HighLine;
     ArrayXi LowLine;
     queue<Region> Chain;//将一整列按水/空气切分为若干个大的孤立区间
@@ -95,18 +101,17 @@ public:
     void divideToChain();
     void divideToSubChain();
 
-    bool isAir(int index);
-    bool isWater(int index);
-    bool isSolidBlock(int index);
+    bool isAir(int index) const;
+    bool isWater(int index) const;
+    bool isSolidBlock(int index) const;
 
     void Sink(const Region&);
-    ArrayXi toDepth();
-    int validHeight(int index);
+    int validHeight(int index) const;
 #ifndef removeQt
     QImage toQImage(int pixelSize);
 #endif
-    void dispSubChain();
-private:
+    void dispSubChain() const;
+//private:
     void divideToSubChain(const Region&);
 };
 #ifndef removeQt
