@@ -28,17 +28,20 @@ float HeightLine::make(const TokiColor **src, const Array<uchar, Dynamic, 1> & g
     return sumDiff;
 }
 
-void HeightLine::make(const ArrayXi &mapColorCol,bool allowNaturalCompress) {
+void HeightLine::make(const ArrayXi mapColorCol,bool allowNaturalCompress) {
     ///////////////////////1
     waterMap.clear();
     const ushort picRows=mapColorCol.rows();
-    base.setConstant(11,1+picRows);
+    base.setConstant(1+picRows,11);
     HighLine.setZero(1+picRows);
     LowLine.setZero(1+picRows);
+    //qDebug("初始化完毕");
 
     //////////////////////////////2
+    //qDebug()<<"size(base.segment(1,picRows))=["<<base.segment(1,picRows).rows()<<','<<base.segment(1,picRows).cols()<<']';
+    //qDebug()<<"size(mapColorCol)=["<<mapColorCol.rows()<<','<<mapColorCol.cols()<<']';
     base.segment(1,picRows)=mapColorCol/4;
-
+    //qDebug("line 42");
     ArrayXi rawShadow=mapColorCol-4*(mapColorCol/4);
 
     if((rawShadow>=3).any()) {
@@ -61,13 +64,13 @@ void HeightLine::make(const ArrayXi &mapColorCol,bool allowNaturalCompress) {
             waterMap[r+1]=nullWater;
         }
     }
-
+    //qDebug("step2 finished");
     ///////////////////////3
     for(ushort r=0;r<picRows;r++) {
         //HighMap.row(r+1)=HighMap.row(r)+dealedDepth.row(r+1);
         HighLine(r+1)=HighLine(r)+dealedDepth(r+1);
     }
-
+    //qDebug("step3 finished");
     //////////////////4
     LowLine=HighLine;
     for(auto it=waterMap.cbegin();it!=waterMap.cend();it++) {
@@ -78,7 +81,7 @@ void HeightLine::make(const ArrayXi &mapColorCol,bool allowNaturalCompress) {
 */
         LowLine(it->first)=HighLine(it->first)-WaterColumnSize[rawShadow(it->first-1)]+1;
     }
-
+    //qDebug("step4 finished");
     /////////////////5
     HighLine-=LowLine.minCoeff();
     LowLine-=LowLine.minCoeff();
@@ -89,13 +92,13 @@ void HeightLine::make(const ArrayXi &mapColorCol,bool allowNaturalCompress) {
         HighLine=OC.getHighLine();
         LowLine=OC.getLowLine();
     }
-
+    //qDebug("无损压缩完毕");
     for(auto it=waterMap.begin();it!=waterMap.end();it++) {
         waterMap[it->first]=TokiWater(HighLine(it->first),
                                       LowLine(it->first));
         HighLine(it->first)+=1;
     }
-
+    //qDebug("step5 finished");
 }
 
 ushort HeightLine::maxHeight() const {

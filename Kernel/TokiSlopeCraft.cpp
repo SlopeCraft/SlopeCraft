@@ -767,11 +767,17 @@ void TokiSlopeCraft::makeHeight_new() {
         HighMap.col(c)=HL.getHighLine();
         LowMap.col(c)=HL.getLowLine();
         auto HLM=&HL.getWaterMap();
+
         for(auto it=HLM->cbegin();it!=HLM->cend();it++) {
             WaterList[TokiRC(it->first,c)]=it->second;
         }
+
         emit progressAdd(5*sizePic(0));
     }
+    qDebug("makeHeight_new完毕");
+    size3D[2]=2+sizePic(0);//z
+    size3D[0]=2+sizePic(1);//x
+    size3D[1]=HighMap.maxCoeff();//y
 }
 
 void TokiSlopeCraft::makeHeight_old() {
@@ -896,7 +902,7 @@ void TokiSlopeCraft::buildHeight() {
         int x=0,y=0,z=0;
         int yLow=0;
         qDebug()<<"共有"<<WaterList.size()<<"个水柱";
-        //qDebug()<<2;
+        qDebug()<<902;
         for(auto it=WaterList.begin();it!=WaterList.end();it++)//水柱周围的玻璃
         {
             x=TokiCol(it->first)+1;
@@ -913,11 +919,11 @@ void TokiSlopeCraft::buildHeight() {
             if(yLow>=1)
                 Build(x,yLow-1,z)=1;//柱底玻璃
         }
-        //qDebug()<<3;
+        qDebug()<<919;
 
         emit progressAdd(sizePic(2));
 
-        for(short r=0;r<sizePic(0);r++)//普通方块
+        for(short r=-1;r<sizePic(0);r++)//普通方块
         {
             for(short c=0;c<sizePic(1);c++)
             {
@@ -932,7 +938,7 @@ void TokiSlopeCraft::buildHeight() {
             emit progressAdd(sizePic(1));
         }
 
-    //qDebug()<<4;
+    qDebug()<<938;
 
     emit progressAdd(sizePic(2));
 
@@ -946,9 +952,9 @@ void TokiSlopeCraft::buildHeight() {
             Build(x,yDynamic,z)=13;
         }
     }
-
+    /*
     for(short c=0;c<sizePic(1);c++)//北侧方块
-        if(Base(0,c))   Build(c+1,HighMap(0,c),0)=11+1;
+        if(Base(0,c))   Build(c+1,HighMap(0,c),0)=11+1;*/
 }
 
 void TokiSlopeCraft::makeBridge() {
