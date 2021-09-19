@@ -46,14 +46,18 @@ void HeightLine::make(const ArrayXi mapColorCol,bool allowNaturalCompress) {
 
     if((rawShadow>=3).any()) {
         std::cerr<<"Fatal Error: depth=3 in vanilla map!"<<std::endl;
+        std::cerr<<"SlopeCraft will crash."<<endl;
+        delete &rawShadow;
         return;
     }
     ArrayXi dealedDepth(picRows+1);
     dealedDepth.setZero();
     dealedDepth.segment(1,picRows)=rawShadow-1;
 
-    if(base(1)==12||base(1)==0||rawShadow(0)==2)
+    if(base(1)==12||base(1)==0||rawShadow(0)==2) {
         base(0)=0;
+        dealedDepth(1)=0;
+    }
     for(ushort r=1;r<picRows;r++) {
         if(base(r+1)==0) {
             dealedDepth(r+1)=0;

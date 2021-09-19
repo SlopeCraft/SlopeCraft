@@ -777,7 +777,7 @@ void TokiSlopeCraft::makeHeight_new() {
     qDebug("makeHeight_new完毕");
     size3D[2]=2+sizePic(0);//z
     size3D[0]=2+sizePic(1);//x
-    size3D[1]=HighMap.maxCoeff();//y
+    size3D[1]=HighMap.maxCoeff()+1;//y
 }
 
 void TokiSlopeCraft::makeHeight_old() {
