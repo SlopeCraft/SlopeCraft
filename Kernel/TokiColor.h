@@ -42,7 +42,7 @@ public:
     static bool needFindSide;
     static ColorSet * Basic;
     static ColorSet * Allowed;
-    static short DepthIndexEnd[4];
+    //static short DepthIndexEnd[4];
     static unsigned char DepthCount[4];
     unsigned char apply(QRgb);
 private:

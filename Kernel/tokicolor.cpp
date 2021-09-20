@@ -65,37 +65,37 @@ void TokiColor::doSide(Eigen::VectorXf Diff)
     case 0://1,2
         if(DepthCount[1])
         {
-            sideSelectivity[0]=Diff.segment(DepthIndexEnd[0]+1,DepthCount[1]).minCoeff(&tempIndex);
-            sideResult[0]=Allowed->Map(DepthIndexEnd[0]+1+tempIndex);
+            sideSelectivity[0]=Diff.segment(DepthCount[0],DepthCount[1]).minCoeff(&tempIndex);
+            sideResult[0]=Allowed->Map(DepthCount[0]+tempIndex);
         }
         if(DepthCount[2])
         {
-            sideSelectivity[1]=Diff.segment(DepthIndexEnd[1]+1,DepthCount[2]).minCoeff(&tempIndex);
-            sideResult[1]=Allowed->Map(DepthIndexEnd[1]+1+tempIndex);
+            sideSelectivity[1]=Diff.segment(DepthCount[0]+DepthCount[1],DepthCount[2]).minCoeff(&tempIndex);
+            sideResult[1]=Allowed->Map(DepthCount[0]+DepthCount[1]+tempIndex);
         }
         break;
     case 1://0,2
         if(DepthCount[0])
         {
             sideSelectivity[0]=Diff.segment(0,DepthCount[0]).minCoeff(&tempIndex);
-            sideResult[0]=Allowed->Map(tempIndex);
+            sideResult[0]=Allowed->Map(0+tempIndex);
         }
         if(DepthCount[2])
         {
-            sideSelectivity[1]=Diff.segment(DepthIndexEnd[1]+1,DepthCount[2]).minCoeff(&tempIndex);
-            sideResult[1]=Allowed->Map(DepthIndexEnd[1]+1+tempIndex);
+            sideSelectivity[1]=Diff.segment(DepthCount[0]+DepthCount[1],DepthCount[2]).minCoeff(&tempIndex);
+            sideResult[1]=Allowed->Map(DepthCount[0]+DepthCount[1]+tempIndex);
         }
         break;
     case 2://0,1
         if(DepthCount[0])
         {
             sideSelectivity[0]=Diff.segment(0,DepthCount[0]).minCoeff(&tempIndex);
-            sideResult[0]=Allowed->Map(tempIndex);
+            sideResult[0]=Allowed->Map(0+tempIndex);
         }
         if(DepthCount[1])
         {
-            sideSelectivity[1]=Diff.segment(DepthIndexEnd[0]+1,DepthCount[1]).minCoeff(&tempIndex);
-            sideResult[1]=Allowed->Map(DepthIndexEnd[0]+1+tempIndex);
+            sideSelectivity[1]=Diff.segment(DepthCount[0],DepthCount[1]).minCoeff(&tempIndex);
+            sideResult[1]=Allowed->Map(DepthCount[0]+tempIndex);
         }
         break;
     }

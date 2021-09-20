@@ -25,7 +25,7 @@ This file is part of SlopeCraft.
 
 ColorSet* TokiColor::Allowed=NULL;
 ColorSet*TokiColor::Basic=NULL;
-short TokiColor::DepthIndexEnd[4]={63,127,191,255};
+//short TokiColor::DepthIndexEnd[4]={63,127,191,255};
 unsigned char TokiColor::DepthCount[4]={64,64,64,64};
 bool TokiColor::needFindSide=false;
 
@@ -51,11 +51,12 @@ void ColorSet::ApplyAllowed(ColorSet*standard,bool *MIndex)
             TokiColor::DepthCount[(4*(r%64)+(r/64))%4]+=MIndex[r];
             //(4*(r%64)+(r/64))
         }
+        /*
         TokiColor::DepthIndexEnd[0]=TokiColor::DepthCount[0]-1;
         TokiColor::DepthIndexEnd[1]=TokiColor::DepthIndexEnd[0]+TokiColor::DepthCount[1];
         TokiColor::DepthIndexEnd[2]=TokiColor::DepthIndexEnd[1]+TokiColor::DepthCount[2];
         TokiColor::DepthIndexEnd[3]=TokiColor::DepthIndexEnd[2]+TokiColor::DepthCount[3];
-
+*/
         if(totalAllowColorCount<=1)
         {
             qDebug("你只准许了一两种颜色，巧妇难为无米之炊！");

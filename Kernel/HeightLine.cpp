@@ -15,7 +15,16 @@ float HeightLine::make(const TokiColor **src,
                        bool allowNaturalCompress) {
     float sumDiff=0;
     Eigen::ArrayXi mapColorCol(g.rows());
+    //mapColorCol(0)=11;
+    //std::cerr<<"gene size="<<g.rows()<<std::endl;
+    //std::cerr<<g.transpose().cast<ushort>()<<std::endl;
+    //std::cerr<<"parsing gene\n";
     for(ushort r=0;r<g.rows();r++) {
+        //std::cerr<<"row="<<r<<std::endl;
+        if(src[r]==nullptr) {
+            std::cerr<<"Fatal Error! nullptr found in src\n";
+            return 0;
+        }
         switch (g(r)) {
         case 0:
             mapColorCol(r)=src[r]->Result;
@@ -31,6 +40,8 @@ float HeightLine::make(const TokiColor **src,
             break;
         }
     }
+    //std::cerr<<"mapColorCol="<<mapColorCol.transpose()<<std::endl;
+    //std::cerr<<"making\n";
     make(mapColorCol,allowNaturalCompress);
     return sumDiff;
 }
