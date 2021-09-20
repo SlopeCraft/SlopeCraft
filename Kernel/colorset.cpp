@@ -89,7 +89,7 @@ void ColorSet::ApplyAllowed(ColorSet*standard,bool *MIndex)
                 write++;
             }
         }
-        //cout<<Map;
+        //std::cout<<Map<<std::endl;
         return;
 }
 

@@ -143,10 +143,8 @@ void OptiChain::dispSubChain() const {
     {
         out+=it->toString();
     }
-#ifdef removeQt
+#ifdef sendInfo
     std::cout<<out<<std::endl;
-#else
-    qDebug()<<QString::fromStdString(out);
 #endif
     //cout<<out<<endl;
 }
@@ -281,10 +279,8 @@ void OptiChain::divideToChain()
     }
     Temp.End=MapSize-1;
     Chain.push(Temp);
-#ifdef removeQt
+#ifdef sendInfo
     std::cout<<"Divided coloum "<<" into "<<Chain.size()<<"isolated region(s)"<<std::endl;
-#else
-    qDebug()<<"将第"<<Col<<"列切分为"<<Chain.size()<<"个孤立区间";
 #endif
 }
 
@@ -303,18 +299,14 @@ void OptiChain::divideToSubChain()
 
 void OptiChain::divideToSubChain(const Region &Cur)
 {
-#ifdef removeQt
+#ifdef sendInfo
     std::cout<<"ready to analyse"<<Cur.toString()<<std::endl;
-#else
-    qDebug()<<"开始分析区间"+QString::fromStdString(Cur.toString());
 #endif
     if(Cur.size()<=3)
     {
         SubChain.push_back(Region(Cur.Beg,Cur.End,idp));
-#ifdef removeQt
+#ifdef sendInfo
         std::cout<<"Region"<<Cur.toString()<<" in Chain is too thin, sink directly."<<std::endl;
-#else
-        qDebug()<<"Chain中的区间"+QString::fromStdString(Cur.toString())+"过小，直接简单沉降";
 #endif
         return;
     }
@@ -338,10 +330,8 @@ void OptiChain::divideToSubChain(const Region &Cur)
     ScanLeft*=ScanBoth;
     ScanRight*=ScanBoth;
 
-#ifdef removeQt
+#ifdef sendInfo
     std::cout<<"scanning finished"<<std::endl;
-#else
-    qDebug("扫描完成");
 #endif
 
     bool isReady=false;
@@ -394,10 +384,8 @@ void OptiChain::divideToSubChain(const Region &Cur)
     else    if(SubChain.back().End<Cur.End)
         SubChain.push_back(Region(SubChain.back().End+1,Cur.End,idp));
 
-#ifdef removeQt
+#ifdef sendInfo
     std::cout<<"SubChain constructed"<<std::endl;
-#else
-    qDebug("SubChain构建完成");
 #endif
 }
 
@@ -405,11 +393,7 @@ void OptiChain::Sink(const Region &Reg)
 {
     if(!Reg.isValid())
     {
-#ifdef removeQt
-        std::cout<<"Invalid region: "<<Reg.toString();
-#else
-        qDebug()<<"无效区间："+QString::fromStdString(Reg.toString());
-#endif
+        std::cout<<"Invalid region: "<<Reg.toString()<<std::endl;
         return;
     }
     if(Reg.isIDP())

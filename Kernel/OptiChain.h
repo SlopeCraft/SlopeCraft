@@ -25,7 +25,7 @@ This file is part of SlopeCraft.
 #define OPTICHAIN_H
 //#define showImg
 #define removeQt
-
+//#define sendInfo
 #include <iostream>
 #include <string>
 #include <Eigen/Dense>

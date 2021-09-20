@@ -148,13 +148,13 @@ public:
     short getImageCols() const;
     bool isVanilla() const;//判断是可以生存实装的地图画
     bool isFlat() const;//判断是平板的
+    void getTokiColorPtr(ushort,const TokiColor*[]) const;
 
 //can do in converted:
     bool build(compressSettings=noCompress,ushort=256,
                glassBridgeSettings=noBridge,ushort=3);//构建三维结构
     EImage getConovertedImage() const;
     std::vector<std::string> exportAsData(const std::string &,int) const;
-    void getTokiColorPtr(ushort,const TokiColor*[]) const;
 //can do in builded:
     std::string exportAsLitematic(const std::string & TargetName,//Local
                                              const std::string & LiteName,//Utf8

@@ -1,12 +1,18 @@
 #include "HeightLine.h"
 
+const QRgb HeightLine::BlockColor=qRgb(0,0,0);
+const QRgb HeightLine::AirColor=qRgb(255,255,255);
+const QRgb HeightLine::WaterColor=qRgb(0,64,255);
+const QRgb HeightLine::greyColor=qRgb(192,192,192);
+
 HeightLine::HeightLine()
 {
 
 }
 
 float HeightLine::make(const TokiColor **src,
-                       const Eigen::Array<uchar, Eigen::Dynamic, 1> & g) {
+                       const Eigen::Array<uchar, Eigen::Dynamic, 1> & g,
+                       bool allowNaturalCompress) {
     float sumDiff=0;
     Eigen::ArrayXi mapColorCol(g.rows());
     for(ushort r=0;r<g.rows();r++) {
@@ -25,7 +31,7 @@ float HeightLine::make(const TokiColor **src,
             break;
         }
     }
-    make(mapColorCol);
+    make(mapColorCol,allowNaturalCompress);
     return sumDiff;
 }
 
@@ -134,6 +140,34 @@ const std::map<ushort,waterItem> & HeightLine::getWaterMap() const {
     return waterMap;
 }
 
+EImage HeightLine::toImg() const {
+    const short rMax=maxHeight()-1;
+    EImage img(maxHeight(),HighLine.size());
+    img.setConstant(AirColor);
+    short y=0,r=rMax-y;
+    for(ushort x=0;x<HighLine.size();x++) {
+        y=HighLine(x);
+        r=rMax-y;
+        if(base(x)) {
+            if(base(x)!=12) {
+                img(r,x)=BlockColor;
+            } else {
+                img(r,x)=greyColor;
+                short rmin=rMax-LowLine(x);
+                r++;
+                img.col(x).segment(r,rmin-r+1)=WaterColor;
+                if(rmin<rMax) {
+                    rmin++;
+                    img(rmin,x)=greyColor;
+                }
+
+            }
+        }
+
+    }
+    return img;
+}
+
 /*
 Base.setConstant(sizePic(0)+1,sizePic(1),11);
     WaterList.clear();
@@ -175,8 +209,7 @@ Base.setConstant(sizePic(0)+1,sizePic(1),11);
 
     HighMap.setZero(sizePic(0)+1,sizePic(1));
     LowMap.setZero(sizePic(0)+1,sizePic(1));
-*/
-/*
+
     int waterCount=WaterList.size();
     qDebug()<<"共有"<<waterCount<<"个水柱";
     for(short r=0;r<sizePic(0);r++)//遍历每一行，根据高度差构建高度图
