@@ -232,7 +232,7 @@ bool TokiSlopeCraft::isVanilla() const {
 }
 
 bool TokiSlopeCraft::isFlat() const {
-    return mapType==Flat;
+    return mapType==Flat||mapType==Wall;
 }
 
 std::vector<std::string> TokiSlopeCraft::getAuthorURL() const {
@@ -742,6 +742,23 @@ bool TokiSlopeCraft::build(compressSettings cS, ushort mAH,
     makeBridge();
     std::cerr<<"makeBridge finished"<<std::endl;
     emit progressRangeSet(0,9*sizePic(2),9*sizePic(2));
+
+    if(mapType==mapTypes::Wall) {
+        Eigen::Tensor<uchar,3> temp=Build;
+        Eigen::array<int,3> perm={1,2,0};
+        Build=temp.shuffle(perm);
+
+        for(ushort x=0;x<Build.dimension(0);x++)
+            for(ushort z=0;z<Build.dimension(2);z++)
+                for(ushort y=0;y<Build.dimension(1)/2;y++) {
+                    std::swap(Build(x,y,z),Build(x,Build.dimension(1)-y-1,z));
+                }
+
+
+        size3D[0]=Build.dimension(0);
+        size3D[1]=Build.dimension(1);
+        size3D[2]=Build.dimension(2);
+    }
 
     kernelStep=builded;
 

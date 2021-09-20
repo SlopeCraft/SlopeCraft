@@ -126,6 +126,8 @@ MainWindow::MainWindow(QWidget *parent)
             this,&MainWindow::onMapTypeClicked);
     connect(ui->isMapSurvival,&QRadioButton::clicked,
             this,&MainWindow::onMapTypeClicked);
+    connect(ui->isMapWall,&QRadioButton::clicked,
+            this,&MainWindow::onMapTypeClicked);
     connect(ui->isMapFlat,&QRadioButton::clicked,
             this,&MainWindow::onMapTypeClicked);
 
@@ -884,9 +886,11 @@ void MainWindow::onMapTypeClicked() {
     }
     if(ui->isMapFlat->isChecked()) {
         Manager->setEnabled(12,true);
-
     }
     if(ui->isMapSurvival->isChecked()) {
+        Manager->setEnabled(12,false);
+    }
+    if(ui->isMapWall->isChecked()) {
         Manager->setEnabled(12,false);
     }
     Kernel->decreaseStep(TokiSlopeCraft::colorSetReady);
@@ -954,7 +958,7 @@ bool TokiSlopeCraft::setType(mapTypes type,
                              simpleBlock * palettes,
                              const ArrayXXi & _rawimg)
 */
-    TokiSlopeCraft::mapTypes type;
+    TokiSlopeCraft::mapTypes type=TokiSlopeCraft::mapTypes::Slope;
     {
     if(ui->isMapCreative->isChecked())
         type=TokiSlopeCraft::mapTypes::FileOnly;
@@ -962,9 +966,12 @@ bool TokiSlopeCraft::setType(mapTypes type,
         type=TokiSlopeCraft::mapTypes::Flat;
     if(ui->isMapSurvival->isChecked())
         type=TokiSlopeCraft::mapTypes::Slope;
+    if(ui->isMapWall->isChecked())
+        type=TokiSlopeCraft::mapTypes::Wall;
     }
 
-    TokiSlopeCraft::gameVersion ver;
+
+    TokiSlopeCraft::gameVersion ver=TokiSlopeCraft::gameVersion::MC17;
     {
     if(ui->isGame12->isChecked())
         ver=TokiSlopeCraft::gameVersion::MC12;

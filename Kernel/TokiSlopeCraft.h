@@ -119,6 +119,7 @@ public:
     enum mapTypes{
         Slope, //立体
         Flat, //平板
+        Wall,//竖版
         FileOnly,//纯文件
     };
     enum step{
