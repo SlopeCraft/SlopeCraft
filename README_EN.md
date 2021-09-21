@@ -96,6 +96,7 @@ See tutorials listed above.
 
 # Other Related Repos
 * [SlopeCraftR](https://github.com/Van-Nya/SlopeCraftR) A rebuild version using python, but not finished now (The hope of cross-platform SlopeCraft)
+* * [NBTWriter](https://github.com/ToKiNoBug/NBTWriter-of-Toki) A lib to write nbt files.
 * [SlopeCraftTutorial](https://github.com/ToKiNoBug/SlopeCraftTutorial) Tutorials
 * [SlopeCraftCompressLib](https://github.com/ToKiNoBug/SlopeCraftCompressLib) Lib for building height map and lossless compression lib.
 * [SlopeCraftLossyCompression](https://github.com/ToKiNoBug/SlopeCraftLossyCompression) Lossy compression lib, based on SlopeCraftCompressLib.

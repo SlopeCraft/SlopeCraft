@@ -103,6 +103,7 @@ SlopeCraft包含以下核心功能：
 
 # 其他相关仓库
 * [SlopeCraftR](https://github.com/Van-Nya/SlopeCraftR) （外壳使用python的重制版，但尚未完成）（跨平台的艰巨任务交给它了）
+* [NBTWriter](https://github.com/ToKiNoBug/NBTWriter-of-Toki) 写NBT文件的库（自己写的，功能比较弱，满足自己的需求就够了）
 * [SlopeCraftTutorial](https://github.com/ToKiNoBug/SlopeCraftTutorial) 专门存放教程
 * [SlopeCraftCompressLib](https://github.com/ToKiNoBug/SlopeCraftCompressLib) 无损压缩库，也承担了构建高度矩阵的功能
 * [SlopeCraftLossyCompression](https://github.com/ToKiNoBug/SlopeCraftLossyCompression) 有损压缩库，基于无损压缩库实现
