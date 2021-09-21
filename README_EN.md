@@ -41,7 +41,7 @@ In summary, SlopeCraft is created for map pixel art.
 This is why maps made by SlopeCraft have higher quality than exporting a picture from SpriteCraft then recording it with a map - because SlopeCraft is specifically designed for map pixel art.
 
 
-## Game Version, Type, Color Space and Block List
+## Game Version, Type, Converting Algorithm and Block List
 
 ### 1.Game Version: SlopeCraft supports 1.12 to 1.16. There isn't much difference from 1.12 to 1.15, but the addition of nether trees added 28 more colors, creating a total of 232 colors, and 12 more colors added in 1.17, creating a total of 244 colors (ignoring transparent blocks).
 
