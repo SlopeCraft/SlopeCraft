@@ -578,7 +578,7 @@ font: 11pt &quot;微软雅黑&quot;;
        <enum>QFrame::Plain</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>5</number>
       </property>
       <widget class="QWidget" name="PageStart">
        <property name="styleSheet">
@@ -1714,8 +1714,8 @@ font: 11pt &quot;微软雅黑&quot;;
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>78</width>
-               <height>22</height>
+               <width>554</width>
+               <height>387</height>
               </rect>
              </property>
              <property name="sizePolicy">
@@ -2345,7 +2345,7 @@ font: 11pt &quot;微软雅黑&quot;;
           <item row="6" column="1">
            <widget class="QCheckBox" name="AllowForcedOpti">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="font">
              <font>
@@ -2353,7 +2353,10 @@ font: 11pt &quot;微软雅黑&quot;;
              </font>
             </property>
             <property name="text">
-             <string>允许有损压缩（暂不支持）</string>
+             <string>智能有损压缩</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -2378,7 +2381,10 @@ font: 11pt &quot;微软雅黑&quot;;
              </font>
             </property>
             <property name="text">
-             <string>允许压缩高度（无损）</string>
+             <string>无损压缩</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -2398,7 +2404,7 @@ font: 11pt &quot;微软雅黑&quot;;
           <item row="7" column="1">
            <widget class="QSpinBox" name="maxHeight">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="font">
              <font>
@@ -2418,13 +2424,13 @@ font: 11pt &quot;微软雅黑&quot;;
              <string>最大允许高度：</string>
             </property>
             <property name="minimum">
-             <number>1</number>
+             <number>14</number>
             </property>
             <property name="maximum">
-             <number>32768</number>
+             <number>32767</number>
             </property>
             <property name="value">
-             <number>256</number>
+             <number>255</number>
             </property>
            </widget>
           </item>

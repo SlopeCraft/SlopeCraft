@@ -91,6 +91,10 @@ MainWindow::MainWindow(QWidget *parent)
         connect(ui->actionDoki,&QAction::triggered,this,&MainWindow::contactB);
         connect(ui->progressG,&QRadioButton::clicked,this,&MainWindow::contactG);
         connect(ui->progressB,&QRadioButton::clicked,this,&MainWindow::contactB);
+
+        connect(ui->contact,&QPushButton::clicked,this,&MainWindow::contactB);
+        connect(ui->contact,&QPushButton::clicked,this,&MainWindow::contactG);
+
     qDebug("成功connect所有的菜单");
 
 
@@ -1419,7 +1423,7 @@ void MainWindow::showError(TokiSlopeCraft::errorFlag error) {
                          QMessageBox::StandardButton::NoButton);
     else {
         QMessageBox::critical(this,title,text,QMessageBox::StandardButton::Close);
-        this->on_Exit_clicked();
+        emit ui->Exit->clicked();
     }
     updateEnables();
     return;
@@ -1427,9 +1431,13 @@ void MainWindow::showError(TokiSlopeCraft::errorFlag error) {
 
 void MainWindow::showWorkingStatue(TokiSlopeCraft::workStatues statue) {
 QString title=this->windowTitle();
-if(title.contains(" | ")) {
-    title=title.left(title.lastIndexOf(" | "));
+const char spacer[]="   |   ";
+if(title.contains(spacer)) {
+    title=title.left(title.lastIndexOf(spacer));
 }
+
+if(statue!=TokiSlopeCraft::workStatues::none)
+    title+= spacer;
 
 switch (statue) {
 case TokiSlopeCraft::workStatues::none:
@@ -1476,13 +1484,14 @@ setWindowTitle(title);
 return;
 }
 
-void MainWindow::on_Exit_clicked() {
-    exit(0);
-    return;
-}
 
 
 void MainWindow::on_seeExported_clicked() {
 
+}
+
+
+void MainWindow::on_AllowForcedOpti_stateChanged(int arg1) {
+    ui->maxHeight->setEnabled(arg1);
 }
 

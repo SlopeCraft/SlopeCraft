@@ -188,11 +188,9 @@ private slots:
     void on_InputDataIndex_textChanged();
     void on_ExportData_clicked();
 
-
-    void on_Exit_clicked();
-
     void on_seeExported_clicked();
 
+    void on_AllowForcedOpti_stateChanged(int arg1);
 
 private:
     Ui::MainWindow *ui;
