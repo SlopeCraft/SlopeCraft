@@ -38,7 +38,7 @@ ColorSet::ColorSet()
     XYZ.setZero(256,3);
 }
 
-void ColorSet::ApplyAllowed(ColorSet*standard,bool *MIndex)
+bool ColorSet::ApplyAllowed(ColorSet*standard,bool *MIndex)
 {
     TokiColor::DepthCount[0]=0;
     TokiColor::DepthCount[1]=0;
@@ -65,7 +65,7 @@ void ColorSet::ApplyAllowed(ColorSet*standard,bool *MIndex)
             Lab.setZero(1,3);
             XYZ.setZero(1,3);
             Map.setZero(1);
-            return;
+            return false;
         }
         qDebug()<<"共允许使用"<<totalAllowColorCount<<"种颜色";
 
@@ -91,7 +91,7 @@ void ColorSet::ApplyAllowed(ColorSet*standard,bool *MIndex)
             }
         }
         //std::cout<<Map<<std::endl;
-        return;
+        return true;
 }
 
 void GetMap(unsigned char *Map)

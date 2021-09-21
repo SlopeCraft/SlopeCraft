@@ -53,6 +53,7 @@ TokiSlopeCraft::TokiSlopeCraft()
     DitherMapLR/=16.0;
     DitherMapRL/=16.0;
     glassBuilder=new PrimGlassBuilder;
+    Compressor=new LossyCompressor;
 #ifdef WITH_QT
     connect(glassBuilder,&PrimGlassBuilder::progressRangeSet,
             this,&TokiSlopeCraft::algoProgressRangeSet);
@@ -60,10 +61,17 @@ TokiSlopeCraft::TokiSlopeCraft()
             this,&TokiSlopeCraft::algoProgressAdd);
     connect(glassBuilder,&PrimGlassBuilder::keepAwake,
             this,&TokiSlopeCraft::keepAwake);
+    connect(Compressor,&LossyCompressor::progressRangeSet,
+            this,&TokiSlopeCraft::algoProgressRangeSet);
+    connect(Compressor,&LossyCompressor::progressAdd,
+            this,&TokiSlopeCraft::algoProgressAdd);
+    connect(Compressor,&LossyCompressor::keepAwake,
+            this,&TokiSlopeCraft::keepAwake);
 #endif
 }
 
 TokiSlopeCraft::~TokiSlopeCraft() {
+    delete Compressor;
     delete glassBuilder;
 }
 
@@ -74,21 +82,25 @@ void TokiSlopeCraft::decreaseStep(TokiSlopeCraft::step _step) {
 
 bool TokiSlopeCraft::setColorSet(const char*R,const char*H,const char*L,const char*X) {
     if(!readFromTokiColor(R,Basic._RGB)) {
+        emit reportError(errorFlag::PARSING_COLORMAP_RGB_FAILED);
         std::cerr<<"Failed to read colormap RGB\n";
         //crash();
         return false;
     }
     if(!readFromTokiColor(H,Basic.HSV)) {
+        emit reportError(errorFlag::PARSING_COLORMAP_HSV_FAILED);
         std::cerr<<"Failed to read colormap HSV\n";
         //crash();
         return false;
     }
     if(!readFromTokiColor(L,Basic.Lab)) {
+        emit reportError(errorFlag::PARSING_COLORMAP_Lab_FAILED);
         std::cerr<<"Failed to read colormap Lab\n";
         //crash();
         return false;
     }
     if(!readFromTokiColor(X,Basic.XYZ)) {
+        emit reportError(errorFlag::PARSING_COLORMAP_XYZ_FAILED);
         std::cerr<<"Failed to read colormap XYZ\n";
         //crash();
         return false;
@@ -166,7 +178,10 @@ bool TokiSlopeCraft::setType(mapTypes type,
                              const bool * allowedBaseColor,
                              const simpleBlock * palettes,
                              const EImage & _rawimg) {
-    if(kernelStep<colorSetReady)return false;
+    if(kernelStep<colorSetReady) {
+        emit reportError(errorFlag::HASTY_MANIPULATION);
+        return false;
+    }
     rawImage=_rawimg;
     mapType=type;
     mcVer=ver;
@@ -176,6 +191,8 @@ bool TokiSlopeCraft::setType(mapTypes type,
     blockPalette.resize(64);
     for(short i=0;i<64;i++)
         blockPalette[i]=palettes[i];
+
+    emit reportWorkingStatue(workStatues::collectingColors);
 
     Eigen::ArrayXi baseColorVer(64);//基色对应的版本
     baseColorVer.setConstant(FUTURE);
@@ -208,7 +225,7 @@ bool TokiSlopeCraft::setType(mapTypes type,
             MIndex[index]=false;
             continue;
         }
-        if(index2baseColor(index)==12) {//如果是水
+        if(index2baseColor(index)==12&&mapType!=mapTypes::Wall) {//如果是水且非墙面
             if(isFlat()&&index2depth(index)!=2) {//平板且水深不是1格
                 MIndex[index]=false;
                 continue;
@@ -221,7 +238,12 @@ bool TokiSlopeCraft::setType(mapTypes type,
         }
     }
 
-    Allowed.ApplyAllowed(&Basic,MIndex);
+    if(!Allowed.ApplyAllowed(&Basic,MIndex)) {
+        emit reportError(errorFlag::USEABLE_COLOR_TO_LITTLE);
+        return false;
+    }
+
+    emit reportWorkingStatue(workStatues::none);
 
     kernelStep=convertionReady;
     return true;
@@ -237,6 +259,7 @@ bool TokiSlopeCraft::isFlat() const {
 
 std::vector<std::string> TokiSlopeCraft::getAuthorURL() const {
     if(kernelStep<colorSetReady) {
+        emit reportError(errorFlag::HASTY_MANIPULATION);
         std::vector<std::string> error(2);
         error[0]="Too hasty operation!";
         error[1]="make sure that you've deployed the colormap!";
@@ -272,7 +295,10 @@ std::string TokiSlopeCraft::Noder(const short *src,int size) const {
 }
 
 void TokiSlopeCraft::getARGB32(QRgb * dest) const {
-    if(kernelStep<colorSetReady) return;
+    if(kernelStep<colorSetReady) {
+        emit reportError(errorFlag::HASTY_MANIPULATION);
+        return;
+    }
     for(uchar base=0;base<64;base++)
         dest[base]=qRgba(255*Basic._RGB(128+base,0),
                          255*Basic._RGB(128+base,1),
@@ -281,22 +307,28 @@ void TokiSlopeCraft::getARGB32(QRgb * dest) const {
 }
 
 bool TokiSlopeCraft::convert(convertAlgo algo,bool dither) {
-    if(kernelStep<convertionReady)
+    if(kernelStep<convertionReady) {
+        emit reportError(errorFlag::HASTY_MANIPULATION);
         return false;
+    }
     ConvertAlgo=algo;
     colorHash.clear();
 
     emit progressRangeSet(0,4*sizePic(2),0);
+
 /*
 //第一步，装入hash顺便转换颜色空间;（一次遍历
 //第二步，遍历hash并匹配颜色;（一次遍历
 //第三步，从hash中检索出对应的匹配结果;（一次遍历
 //第四步，抖动（一次遍历*/
+
+    emit reportWorkingStatue(workStatues::collectingColors);
     pushToHash();
 
     emit keepAwake();
     emit progressRangeSet(0,4*sizePic(2),1*sizePic(2));
 
+    emit reportWorkingStatue(workStatues::converting);
     applyTokiColor();
 
     emit keepAwake();
@@ -308,11 +340,14 @@ bool TokiSlopeCraft::convert(convertAlgo algo,bool dither) {
 
     ditheredImage=this->rawImage;
 
-    if(dither)
+    if(dither) {
+        emit reportWorkingStatue(workStatues::dithering);
         Dither();
-
+    }
     emit progressRangeSet(0,4*sizePic(2),4*sizePic(2));
     emit keepAwake();
+
+    emit reportWorkingStatue(workStatues::none);
 
     kernelStep=converted;
     return true;
@@ -510,6 +545,7 @@ void matchColor(TokiColor * tColor,QRgb qColor) {
 void TokiSlopeCraft::getTokiColorPtr(ushort col, const TokiColor ** dst) const {
     if(kernelStep<converted) {
         std::cerr<<"Too hasty! export after you converted the map!"<<std::endl;
+        emit reportError(errorFlag::HASTY_MANIPULATION);
         return ;
     }
     for(ushort r=0;r<ditheredImage.rows();r++) {
@@ -543,9 +579,10 @@ TokiSlopeCraft::ColorSpace TokiSlopeCraft::getColorSpace() const {
 EImage TokiSlopeCraft::getConovertedImage() const {
 EImage cvtedImg(sizePic(0),sizePic(1));
 cvtedImg.setZero();
-if(kernelStep<converted)
+if(kernelStep<converted) {
+    emit reportError(errorFlag::HASTY_MANIPULATION);
     return cvtedImg;
-
+}
 Eigen::ArrayXXi RGBint=(255.0f*Basic._RGB).cast<int>();
     short Index;
     for(short r=0;r<sizePic(0);r++)
@@ -566,12 +603,18 @@ Eigen::ArrayXXi RGBint=(255.0f*Basic._RGB).cast<int>();
 }
 
 short TokiSlopeCraft::getImageRows() const {
-    if(kernelStep<convertionReady) return -1;
+    if(kernelStep<convertionReady) {
+        emit reportError(errorFlag::HASTY_MANIPULATION);
+        return -1;
+    }
     return rawImage.rows();
 }
 
 short TokiSlopeCraft::getImageCols() const {
-    if(kernelStep<convertionReady) return -1;
+    if(kernelStep<convertionReady) {
+        emit reportError(errorFlag::HASTY_MANIPULATION);
+        return -1;
+    }
     return rawImage.cols();
 }
 
@@ -581,6 +624,7 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(const std::string & Folder
     unCompressedFileList.clear();
 
     if(kernelStep<converted) {
+        emit reportError(errorFlag::HASTY_MANIPULATION);
         unCompressedFileList.push_back("Too hasty! export after you converted the map!");
         return unCompressedFileList;
     }
@@ -593,6 +637,9 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(const std::string & Folder
 
     int offset[2]={0,0};//r,c
     int currentIndex=indexStart;
+
+    emit reportWorkingStatue(workStatues::writingMapDataFiles);
+
     for(int c=0;c<cols;c++)
     {
         for(int r=0;r<rows;r++)
@@ -704,17 +751,24 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(const std::string & Folder
                 currentIndex++;
         }
     }
+
+    emit reportWorkingStatue(workStatues::none);
+
     return unCompressedFileList;
 }
 
 bool TokiSlopeCraft::build(compressSettings cS, ushort mAH,
                            glassBridgeSettings gBS,ushort bI) {
     if(kernelStep<converted){
+        emit reportError(errorFlag::HASTY_MANIPULATION);
         std::cerr<<"hasty!"<<std::endl;
-        return false;}
-    if(mAH<2){
-        std::cerr<<"maxAllowedHeight<2 !"<<std::endl;
-        return false;}
+        return false;
+    }
+    if(mAH<14){
+        std::cerr<<"maxAllowedHeight<14!"<<std::endl;
+        emit reportError(errorFlag::MAX_ALLOWED_HEIGHT_LESS_THAN_14);
+        return false;
+    }
     std::cerr<<"ready to build"<<std::endl;
 
     compressMethod=cS;
@@ -727,23 +781,28 @@ bool TokiSlopeCraft::build(compressSettings cS, ushort mAH,
     maxAllowedHeight=mAH;
     bridgeInterval=bI;
 
+    emit reportWorkingStatue(workStatues::buidingHeighMap);
+
     emit progressRangeSet(0,9*sizePic(2),0);
     std::cerr<<"start makeHeight"<<std::endl;
     makeHeight_new();
     std::cerr<<"makeHeight finished"<<std::endl;
     emit progressRangeSet(0,9*sizePic(2),5*sizePic(2));
 
+    emit reportWorkingStatue(workStatues::building3D);
     std::cerr<<"start buildHeight"<<std::endl;
     buildHeight();
     std::cerr<<"buildHeight finished"<<std::endl;
     emit progressRangeSet(0,9*sizePic(2),8*sizePic(2));
 
+    emit reportWorkingStatue(workStatues::constructingBridges);
     std::cerr<<"start makeBridge"<<std::endl;
     makeBridge();
     std::cerr<<"makeBridge finished"<<std::endl;
     emit progressRangeSet(0,9*sizePic(2),9*sizePic(2));
 
     if(mapType==mapTypes::Wall) {
+        emit reportWorkingStatue(workStatues::flippingToWall);
         Eigen::Tensor<uchar,3> temp=Build;
         Eigen::array<int,3> perm={1,2,0};
         Build=temp.shuffle(perm);
@@ -760,6 +819,8 @@ bool TokiSlopeCraft::build(compressSettings cS, ushort mAH,
         size3D[2]=Build.dimension(2);
     }
 
+    emit reportWorkingStatue(workStatues::none);
+
     kernelStep=builded;
 
     return true;
@@ -775,11 +836,30 @@ void TokiSlopeCraft::makeHeight_new() {
             ||compressMethod==compressSettings::NaturalOnly;
     //std::vector<const TokiColor*> src;
     qDebug("开始makeHeight_new");
+
+    if((mapPic-4*(mapPic/4)>=3).any()) {
+        emit reportError(errorFlag::DEPTH_3_IN_VANILLA_MAP);
+        return;
+    }
+
     for(ushort c=0;c<sizePic(1);c++) {
+
         qDebug()<<"第"<<c<<"列";
         HeightLine HL;
         //getTokiColorPtr(c,&src[0]);
         HL.make(mapPic.col(c),allowNaturalCompress);
+
+        if(HL.maxHeight()>maxAllowedHeight&&
+                (compressMethod==compressSettings::ForcedOnly||
+                compressMethod==compressSettings::Both)) {
+            bool success=Compressor->compress(maxAllowedHeight,
+                                              allowNaturalCompress);
+            if(!success) {
+                emit reportError(LOSSYCOMPRESS_FAILED);
+                return;
+            }
+        }
+
         Base.col(c)=HL.getBase();
         HighMap.col(c)=HL.getHighLine();
         LowMap.col(c)=HL.getLowLine();
@@ -1090,6 +1170,7 @@ void TokiSlopeCraft::writeBlock(const std::string &netBlockId,
             //ProVal.clear();
         Lite.endCompound();
 }
+
 void TokiSlopeCraft::writeTrash(int count,NBT::NBTWriter & Lite) const {
     std::vector<std::string> ProName(5),ProVal(5);
     //ProName:NEWSP
@@ -1122,14 +1203,15 @@ void TokiSlopeCraft::writeTrash(int count,NBT::NBTWriter & Lite) const {
                     }
 }
 
-
 std::string TokiSlopeCraft::exportAsLitematic(const std::string & TargetName,
                                          const std::string & LiteName,
                                          const std::string & author,
                                          const std::string & RegionName) const {
     if(kernelStep<builded) {
+        emit reportError(errorFlag::HASTY_MANIPULATION);
         return "Too hasty! export litematic after you built!";
     }
+    emit reportWorkingStatue(workStatues::writingMetaInfo);
     emit progressRangeSet(0,100+Build.size(),0);
         NBT::NBTWriter Lite;
         std::string unCompressed=TargetName+".TokiNoBug";
@@ -1163,6 +1245,9 @@ std::string TokiSlopeCraft::exportAsLitematic(const std::string & TargetName,
                     Lite.writeInt("z",size3D[2]);
                 Lite.endCompound();
                 emit progressRangeSet(0,100+Build.size(),100);
+
+                emit reportWorkingStatue(workStatues::writingBlockPalette);
+
                 Lite.writeListHead("BlockStatePalette",NBT::idCompound,131);
                     {
                         short written=((mcVer>=MC16)?59:52);
@@ -1193,6 +1278,9 @@ std::string TokiSlopeCraft::exportAsLitematic(const std::string & TargetName,
                     long long HackyVal=sizeof(long long);
                     char *inverser=(char*)&HackyVal;
                     short inverserIndex=7;
+
+                    emit reportWorkingStatue(workStatues::writing3D);
+
                 Lite.writeLongArrayHead("BlockStates",ArraySize);
                 for(int y=0;y<size3D[1];y++)
                     for(int z=0;z<size3D[2];z++)
@@ -1247,13 +1335,18 @@ std::string TokiSlopeCraft::exportAsLitematic(const std::string & TargetName,
     }
 
     Lite.close();
+
+    emit reportWorkingStatue(workStatues::none);
+
         return unCompressed;
 }
 
 std::string TokiSlopeCraft::exportAsStructure(const std::string &TargetName) const {
     if(kernelStep<builded) {
+        emit reportError(errorFlag::HASTY_MANIPULATION);
         return "Too hasty! export structure after you built!";
     }
+    emit reportWorkingStatue(workStatues::writingMetaInfo);
     emit progressRangeSet(0,100+Build.size(),0);
     NBT::NBTWriter file;
     std::string unCompress=TargetName+".TokiNoBug";
@@ -1263,6 +1356,9 @@ std::string TokiSlopeCraft::exportAsStructure(const std::string &TargetName) con
             file.writeInt("This should never be shown",size3D[0]);
             file.writeInt("This should never be shown",size3D[1]);
             file.writeInt("This should never be shown",size3D[2]);
+
+            emit reportWorkingStatue(workStatues::writingBlockPalette);
+
             file.writeListHead("palette",NBT::idCompound,70);
                 {
                     short written=((mcVer>=MC16)?59:52);
@@ -1285,6 +1381,8 @@ std::string TokiSlopeCraft::exportAsStructure(const std::string &TargetName) con
             int BlockCount=0;
             for(int i=0;i<Build.size();i++)
                 if(Build(i))BlockCount++;
+
+            emit reportWorkingStatue(workStatues::writing3D);
 
             file.writeListHead("blocks",NBT::idCompound,BlockCount);
                 for(int x=0;x<size3D[0];x++)
@@ -1325,6 +1423,7 @@ std::string TokiSlopeCraft::exportAsStructure(const std::string &TargetName) con
                     qDebug("错误的游戏版本！");break;
                 }
     file.close();
+    emit reportWorkingStatue(workStatues::none);
     return unCompress;
 }
 
@@ -1335,4 +1434,8 @@ int TokiSlopeCraft::getXRange() const {
 int TokiSlopeCraft::getZRange() const {
     if(kernelStep<builded)return -1;
     return size3D[2];
+}
+
+const Eigen::Tensor<uchar,3> & TokiSlopeCraft::getBuild() const {
+    return Build;
 }

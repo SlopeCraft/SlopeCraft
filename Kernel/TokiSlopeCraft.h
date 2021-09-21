@@ -43,6 +43,7 @@ This file is part of SlopeCraft.
 #include "WaterItem.h"
 #include "NBTWriter.h"
 #include "PrimGlassBuilder.h"
+#include "lossyCompressor.h"
 
 #ifdef WITH_QT
 #include <QObject>
@@ -102,7 +103,7 @@ public:
         MC17=17,
         FUTURE=255
     };
-    enum convertAlgo{
+    enum convertAlgo {
         RGB='r',
         RGB_Better='R',
         HSV='H',
@@ -110,25 +111,62 @@ public:
         Lab00='L',
         XYZ='X'
     };
-    enum compressSettings{
+    enum compressSettings {
         noCompress=0,NaturalOnly=1,ForcedOnly=2,Both=3
     };
-    enum glassBridgeSettings{
+    enum glassBridgeSettings {
         noBridge=0,withBridge=1
     };
-    enum mapTypes{
+    enum mapTypes {
         Slope, //立体
         Flat, //平板
         Wall,//竖版
         FileOnly,//纯文件
     };
-    enum step{
+    enum step {
         nothing,//对象刚刚创建，什么都没做
         colorSetReady,//颜色表读取完毕
         convertionReady,//一切就绪，等待convert
         converted,//已经将图像转化为地图画
         builded,//构建了三维结构
     };
+
+    enum errorFlag {
+        NO_ERROR_OCCUR=-1,//无故障
+        HASTY_MANIPULATION=0x00,//跳步操作
+        LOSSYCOMPRESS_FAILED=0x01,//有损压缩失败
+        DEPTH_3_IN_VANILLA_MAP=0x02,//非纯文件地图画中出现深度为3的颜色
+        MAX_ALLOWED_HEIGHT_LESS_THAN_14=0x03,
+        USEABLE_COLOR_TO_LITTLE=0x04,
+        PARSING_COLORMAP_RGB_FAILED=0x10,//颜色表错误
+        PARSING_COLORMAP_HSV_FAILED=0x11,
+        PARSING_COLORMAP_Lab_FAILED=0x12,
+        PARSING_COLORMAP_XYZ_FAILED=0x13,
+    };
+
+    enum workStatues {
+        none=-1,
+        collectingColors=0x00,
+        converting=0x01,
+        dithering=0x02,
+        //convertFinished=0x03,
+
+        buidingHeighMap=0x10,
+        compressing=0x11,
+        building3D=0x12,
+        constructingBridges=0x13,
+        flippingToWall=0x14,
+
+
+        writingMetaInfo=0x20,
+        writingBlockPalette=0x21,
+        writing3D=0x22,
+        //slopeFinished=0x16,
+
+        writingMapDataFiles=0x30,
+        //dataFilesFinished=0x31,
+    };
+
 //can do in nothing:
     void decreaseStep(step);
     bool setColorSet(const char*,const char*,const char*,const char*);
@@ -169,6 +207,7 @@ public:
     int getZRange() const;
     int getBlockCounts(std::vector<int> & ) const;
     int getBlockCounts() const;
+    const Eigen::Tensor<uchar,3> & getBuild() const;
 
 #ifdef WITH_QT
 signals:
@@ -178,12 +217,22 @@ signals:
 
     void algoProgressRangeSet(int,int,int) const;
     void algoProgressAdd(int) const;
-private slots:
+
+    void reportError(errorFlag) const;
+    void reportWorkingStatue(workStatues) const;
+
 #else
     void (*progressRangeSet)(int,int,int);
     void (*progressAdd)(int);
     void (*keepAwake)();
+
+    void (*algoProgressRangeSet)(int,int,int);
+    void (*algoProgressAdd)(int);
+
+    void (*error)(errorFlag);
+    void (*reportWorkingStatue)(workStatues);
 #endif
+private slots:
 
 private:
     enum ColorSpace {
@@ -211,12 +260,13 @@ private:
     ushort maxAllowedHeight;
     ushort bridgeInterval;
     PrimGlassBuilder * glassBuilder;
+    LossyCompressor * Compressor;
     Eigen::ArrayXXi mapPic;//stores mapColor
     Eigen::ArrayXXi Base;
     Eigen::ArrayXXi HighMap;
     Eigen::ArrayXXi LowMap;
     std::unordered_map<TokiPos,waterItem> WaterList;
-    Eigen::Tensor<unsigned char,3>Build;//x,y,z
+    Eigen::Tensor<uchar,3>Build;//x,y,z
 
 //for setType:
 //for convert:
@@ -242,6 +292,7 @@ private:
     std::string Noder(const short *src,int size) const;
 
 };
+
 bool readFromTokiColor(const std::string & FileName,Eigen::ArrayXXf & M);
 bool readFromTokiColor(const char*src,Eigen::ArrayXXf & M);
 uchar h2d(char h);

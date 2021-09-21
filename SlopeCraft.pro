@@ -66,6 +66,7 @@ SOURCES += \
     Kernel/OptiChain.cpp \
     Kernel/WaterItem.cpp \
     Kernel/colorset.cpp \
+    Kernel/lossyCompressor.cpp \
     Sources/main.cpp \
     Sources/mainwindow.cpp \
     Sources/previewwind.cpp \
@@ -99,6 +100,7 @@ HEADERS += \
     Kernel/WaterItem.h \
     Headers/mainwindow.h \
     Headers/previewwind.h \
+    Kernel/lossyCompressor.h \
     Kernel/simpleBlock.h \
     Headers/tpstrategywind.h \
 

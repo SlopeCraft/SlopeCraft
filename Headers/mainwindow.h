@@ -132,6 +132,9 @@ private slots:
     void progressAdd(int deltaVal);
     void keepAwake();
 
+    void showError(TokiSlopeCraft::errorFlag);
+    void showWorkingStatue(TokiSlopeCraft::workStatues);
+
     void algoProgressRangeSet(int min,int max,int val);
     void algoProgressAdd(int deltaVal);
 

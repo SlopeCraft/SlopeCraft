@@ -1359,3 +1359,10 @@ void MainWindow::on_allowGlassBridge_stateChanged(int arg1) {
     ui->glassBridgeInterval->setEnabled(arg1);
 }
 
+void MainWindow::showError(TokiSlopeCraft::errorFlag) {
+
+}
+
+void MainWindow::showWorkingStatue(TokiSlopeCraft::workStatues) {
+
+}

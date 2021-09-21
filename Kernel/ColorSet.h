@@ -33,7 +33,7 @@ class ColorSet{
         Eigen::ArrayXXf  XYZ;
         Eigen::VectorXi  Map;
         ColorSet();
-        void ApplyAllowed(ColorSet*standard,bool *MIndex);
+        bool ApplyAllowed(ColorSet*standard,bool *MIndex);
 };
 
 void GetMap(unsigned char *Map);
