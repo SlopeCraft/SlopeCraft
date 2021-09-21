@@ -345,7 +345,7 @@ unsigned char TokiColor::applyRGB()
     auto Diff1_2=(Allowed->_RGB.col(1)-c3[1]).square();
     auto Diff2_2=(Allowed->_RGB.col(2)-c3[2]).square();
 
-    auto Diff=Diff0_2+Diff1_2+Diff2_2;
+    Eigen::ArrayXf Diff=Diff0_2+Diff1_2+Diff2_2;
     //Data.CurrentColor-=allowedColors;
 
     ResultDiff=Diff.minCoeff(&tempIndex)+Thre;
@@ -367,20 +367,20 @@ unsigned char TokiColor::applyRGB_plus()
     float g=c3[1];
     float b=c3[2];
     float w_r=1.0f,w_g=2.0f,w_b=1.0f;
-    auto SqrModSquare=((R*R+g*g+b*b)*(allowedColors.col(0).array().square()+allowedColors.col(1).array().square()+allowedColors.col(2).array().square())).sqrt();
-    auto deltaR=(R-allowedColors.col(0).array());
-    auto deltaG=(g-allowedColors.col(1).array());
-    auto deltaB=(b-allowedColors.col(2).array());
-    auto SigmaRGB=(R+g+b+allowedColors.col(0).array()+allowedColors.col(1).array()+allowedColors.col(2).array())/3.0f;
-    auto S_r=((allowedColors.col(0).array()+R)<SigmaRGB).select((allowedColors.col(0).array()+R)/(SigmaRGB+Thre),1.0f);
-    auto S_g=((allowedColors.col(1).array()+g)<SigmaRGB).select((allowedColors.col(1).array()+g)/(SigmaRGB+Thre),1.0f);
-    auto S_b=((allowedColors.col(2).array()+b)<SigmaRGB).select((allowedColors.col(2).array()+b)/(SigmaRGB+Thre),1.0f);
+    Eigen::ArrayXf SqrModSquare=((R*R+g*g+b*b)*(allowedColors.col(0).array().square()+allowedColors.col(1).array().square()+allowedColors.col(2).array().square())).sqrt();
+    Eigen::ArrayXf deltaR=(R-allowedColors.col(0).array());
+    Eigen::ArrayXf deltaG=(g-allowedColors.col(1).array());
+    Eigen::ArrayXf deltaB=(b-allowedColors.col(2).array());
+    Eigen::ArrayXf SigmaRGB=(R+g+b+allowedColors.col(0).array()+allowedColors.col(1).array()+allowedColors.col(2).array())/3.0f;
+    Eigen::ArrayXf S_r=((allowedColors.col(0).array()+R)<SigmaRGB).select((allowedColors.col(0).array()+R)/(SigmaRGB+Thre),1.0f);
+    Eigen::ArrayXf S_g=((allowedColors.col(1).array()+g)<SigmaRGB).select((allowedColors.col(1).array()+g)/(SigmaRGB+Thre),1.0f);
+    Eigen::ArrayXf S_b=((allowedColors.col(2).array()+b)<SigmaRGB).select((allowedColors.col(2).array()+b)/(SigmaRGB+Thre),1.0f);
     auto sumRGBsquare=R*allowedColors.col(0).array()+g*allowedColors.col(1).array()+b*allowedColors.col(2).array();
     auto theta=2.0/M_PI*(sumRGBsquare/(SqrModSquare+Thre)/1.01f).acos();
-    auto OnedDeltaR=deltaR.abs()/(R+allowedColors.col(0).array()+Thre);
-    auto OnedDeltaG=deltaG.abs()/(g+allowedColors.col(1).array()+Thre);
-    auto OnedDeltaB=deltaB.abs()/(b+allowedColors.col(2).array()+Thre);
-    auto sumOnedDelta=OnedDeltaR+OnedDeltaG+OnedDeltaB+Thre;
+    Eigen::ArrayXf OnedDeltaR=deltaR.abs()/(R+allowedColors.col(0).array()+Thre);
+    Eigen::ArrayXf OnedDeltaG=deltaG.abs()/(g+allowedColors.col(1).array()+Thre);
+    Eigen::ArrayXf OnedDeltaB=deltaB.abs()/(b+allowedColors.col(2).array()+Thre);
+    Eigen::ArrayXf sumOnedDelta=OnedDeltaR+OnedDeltaG+OnedDeltaB+Thre;
     auto S_tr=OnedDeltaR/sumOnedDelta*S_r.square();
     auto S_tg=OnedDeltaG/sumOnedDelta*S_g.square();
     auto S_tb=OnedDeltaB/sumOnedDelta*S_b.square();
@@ -388,7 +388,7 @@ unsigned char TokiColor::applyRGB_plus()
     auto Rmax=allowedColors.rowwise().maxCoeff();
     auto S_ratio=Rmax.array().max(std::max(R,std::max(g,b)));
 
-    auto dist=(S_r.square()*w_r*deltaR.square()+S_g.square()*w_g*deltaG.square()+S_b.square()*w_b*deltaB.square())/(w_r+w_g+w_b)+S_theta*S_ratio*theta.square();//+S_theta*S_ratio*theta.square()
+    Eigen::ArrayXf dist=(S_r.square()*w_r*deltaR.square()+S_g.square()*w_g*deltaG.square()+S_b.square()*w_b*deltaB.square())/(w_r+w_g+w_b)+S_theta*S_ratio*theta.square();//+S_theta*S_ratio*theta.square()
 
     ResultDiff=dist.minCoeff(&tempIndex);
     /*if(dist.isNaN().any()){
@@ -418,7 +418,7 @@ unsigned char TokiColor::applyHSV()
     auto deltaX=50.0f*(SV*(allowedColors.col(0).array()).cos()-c3[2]*c3[1]*cos(c3[0]));
     auto deltaY=50.0f*(SV*(allowedColors.col(0).array()).sin()-c3[2]*c3[1]*sin(c3[0]));
     auto deltaZ=86.60254f*(allowedColors.col(2).array()-c3[2]);
-    auto Diff=deltaX.square()+deltaY.square()+deltaZ.square();
+    Eigen::ArrayXf Diff=deltaX.square()+deltaY.square()+deltaZ.square();
     ResultDiff=Diff.minCoeff(&tempIndex);
     Result=Allowed->Map(tempIndex);
     if(needFindSide)
@@ -434,7 +434,7 @@ unsigned char TokiColor::applyXYZ()
     auto Diff1_2=(Allowed->XYZ.col(1).array()-c3[1]).square();
     auto Diff2_2=(Allowed->XYZ.col(2).array()-c3[2]).square();
 
-    auto Diff=Diff0_2+Diff1_2+Diff2_2;
+    Eigen::ArrayXf Diff=Diff0_2+Diff1_2+Diff2_2;
     //Data.CurrentColor-=allowedColors;
 
     ResultDiff=Diff.minCoeff(&tempIndex);
@@ -454,8 +454,8 @@ unsigned char TokiColor::applyLab_old()
     float b=c3[2];
     Eigen::ArrayXXf &allowedColors=Allowed->Lab;
     auto deltaL_2=(allowedColors.col(0).array()-L).square();
-    auto C1_2=a*a+b*b;
-    auto C2_2=allowedColors.col(1).array().square()+allowedColors.col(2).array().square();
+    float C1_2=a*a+b*b;
+    Eigen::ArrayXf C2_2=allowedColors.col(1).array().square()+allowedColors.col(2).array().square();
     auto deltaCab_2=(sqrt(C1_2)-C2_2.array().sqrt()).square();
     auto deltaHab_2=(allowedColors.col(1).array()-a).square()+(allowedColors.col(2).array()-b).square()-deltaCab_2;
     //SL=1,kL=1
@@ -463,7 +463,7 @@ unsigned char TokiColor::applyLab_old()
     //K2=0.015f
     float SC_2=(sqrt(C1_2)*0.045f+1.0f)*(sqrt(C1_2)*0.045f+1.0f);
     auto SH_2=(C2_2.sqrt()*0.015f+1.0f).square();
-    auto Diff=deltaL_2+deltaCab_2/SC_2+deltaHab_2/SH_2;
+    Eigen::ArrayXf Diff=deltaL_2+deltaCab_2/SC_2+deltaHab_2/SH_2;
     ResultDiff=Diff.minCoeff(&tempIndex);
     Result=Allowed->Map(tempIndex);
     if(needFindSide)
@@ -530,11 +530,12 @@ unsigned char TokiColor::applyLab_new()
     auto Diff=(dLp/SL/1.0).square()+(dCp/SC/1.0).square()+(dHp/SH/1.0).square()+RT*(dCp/SC/1.0)*(dHp/SH/1.0);
 */
     Diff.abs().minCoeff(&tempIndex);
+    /*
     if(Diff.isNaN().any())
     {
         std::cerr<<"Found NaN"<<std::endl;
         std::cout<<Diff.transpose()<<std::endl;
-    }
+    }*/
     ResultDiff=Diff.minCoeff(&tempIndex);
     //Diff.minCoeff(tempIndex,u);
     Result=Allowed->Map(tempIndex);
