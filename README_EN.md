@@ -15,18 +15,18 @@
 > Get your 3D pixel painting in minecraft.
 
 
-## Tutorials:
+# Tutorials:
 
 * [SlopeCraftv3.1 Tutorial](https://github.com/ToKiNoBug/SlopeCraftTutorial/blob/main/v3.1Tutorial/v3.1Tutorial.md)
 * [SlopeCraftv3.1 使用教程](https://github.com/ToKiNoBug/SlopeCraftTutorial/blob/main/v3.1Tutorial/v3.1%E6%95%99%E7%A8%8B%E4%B8%AD%E6%96%87%E7%89%88.md)
 * [SlopeCraft傻瓜级使用教程](https://github.com/ToKiNoBug/SlopeCraftTutorial/blob/main/v3.0Tutorial/%E5%82%BB%E7%93%9C%E7%BA%A7%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B.md)
 
-## FAQ：
+# FAQ：
 
-[SlopeCraft FAQ](./FAQ.md)
+[SlopeCraft FAQ](./FAQ_EN.md)
 
 
-## Program Description
+# Program Description
 
 SlopeCraft is created by me(TokiNoBug) using qt+Eigen+zlib - it's used to create 3D pixel map arts within Minecraft.
 
@@ -93,3 +93,10 @@ No Installation Required
 ## Usage Guide
 
 See tutorials listed above.
+
+# Other Related Repos
+* [SlopeCraftR](https://github.com/Van-Nya/SlopeCraftR) A rebuild version using python, but not finished now (The hope of cross-platform SlopeCraft)
+* [SlopeCraftTutorial](https://github.com/ToKiNoBug/SlopeCraftTutorial) Tutorials
+* [SlopeCraftCompressLib](https://github.com/ToKiNoBug/SlopeCraftCompressLib) Lib for building height map and lossless compression lib.
+* [SlopeCraftLossyCompression](https://github.com/ToKiNoBug/SlopeCraftLossyCompression) Lossy compression lib, based on SlopeCraftCompressLib.
+* [SlopeCraftGlassBuilder](https://github.com/ToKiNoBug/SlopeCraftGlassBuilder) Glass bridge building lib.

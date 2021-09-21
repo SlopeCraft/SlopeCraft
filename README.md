@@ -15,19 +15,17 @@
 > 在minecraft中生成多种样式的地图画
 
 
-
-
-## 使用教程
+# 使用教程
 
 * [SlopeCraftv3.1 Tutorial](https://github.com/ToKiNoBug/SlopeCraftTutorial/blob/main/v3.1Tutorial/v3.1Tutorial.md)
 * [SlopeCraftv3.1 使用教程](https://github.com/ToKiNoBug/SlopeCraftTutorial/blob/main/v3.1Tutorial/v3.1%E6%95%99%E7%A8%8B%E4%B8%AD%E6%96%87%E7%89%88.md)
 * [SlopeCraft傻瓜级使用教程](https://github.com/ToKiNoBug/SlopeCraftTutorial/blob/main/v3.0Tutorial/%E5%82%BB%E7%93%9C%E7%BA%A7%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B.md)
 
-## FAQ（常见问题）：
+# FAQ（常见问题）：
 
 [SlopeCraft FAQ](./FAQ.md)
 
-## 软件简介
+# 软件简介
 
 SlopeCraft软件是我（TokiNoBug）用qt+Eigen+zlib开发的、用于在minecraft中生成立体地图画的软件。
 
@@ -101,3 +99,11 @@ SlopeCraft包含以下核心功能：
 ## 使用方法：
 
 见使用教程。
+
+
+# 其他相关仓库
+* [SlopeCraftR](https://github.com/Van-Nya/SlopeCraftR) （外壳使用python的重制版，但尚未完成）（跨平台的艰巨任务交给它了）
+* [SlopeCraftTutorial](https://github.com/ToKiNoBug/SlopeCraftTutorial) 专门存放教程
+* [SlopeCraftCompressLib](https://github.com/ToKiNoBug/SlopeCraftCompressLib) 无损压缩库，也承担了构建高度矩阵的功能
+* [SlopeCraftLossyCompression](https://github.com/ToKiNoBug/SlopeCraftLossyCompression) 有损压缩库，基于无损压缩库实现
+* [SlopeCraftGlassBuilder](https://github.com/ToKiNoBug/SlopeCraftGlassBuilder) 搭桥库
