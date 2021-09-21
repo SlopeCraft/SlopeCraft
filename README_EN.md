@@ -43,25 +43,25 @@ This is why maps made by SlopeCraft have higher quality than exporting a picture
 
 ## Game Version, Type, Color Space and Block List
 
-### 1.Game Version: SlopeCraft supports 1.12 to 1.16. There isn't much difference from 1.12 to 1.15, but the addition of nether trees added 28 more colors, creating a total of 232 colors (ignoring transparent blocks).
+### 1.Game Version: SlopeCraft supports 1.12 to 1.16. There isn't much difference from 1.12 to 1.15, but the addition of nether trees added 28 more colors, creating a total of 232 colors, and 12 more colors added in 1.17, creating a total of 244 colors (ignoring transparent blocks).
 
 ### 2. Types of Map Art:
 
 File-only Map Art uses the full color palette. It has the highest quality, but it can't be exported into the world itself. It can only be exported as a map file, using commands to obtain it in game. 
 
-
 3D Map Art leaves 1/4th of the colors out as a trade off for being able to export it into vanilla survival. This type of map art can generate 3D map arts, which is the core feature of this program.
 
-Flat Map Art is the traditional 2D map art - it's the easiest to build but it only have 1/4th of the color palette compared to File-only: 51/58/60 colors.
+Flat Map Art is the traditional 2D map art - it's the easiest to build but it only have 1/4th of the color palette compared to File-only: 51/58/61 colors.
 
+Wall Map Art is added in response to users' requirement. In fact it simplify turns a flat map into vertical. It has no map meannings, and may no fit the origin image as good as flat map. For high-quality wall map, you'd better find another tool.
 
-### 3. Color Space:
+### 3. Converting Algorithm:
 
-This is more difficult to explain. Simply put, the program describes the color in different ways in each color space. In SlopeCraft, this means different ways of choosing a block for a color
+This is more difficult to explain. Simply put, your map art should only consist of map colors. an converting algorithm is a method to find a best-matched map color for each image color. In fact, the essence of a converting algorithm is a color difference formula. 
 
-The four types of color space: RGB, HSV, LAB, XYZ
+The 6 converting algorithm: RGB, RGB+, HSV, Lab94, Lab00 and XYZ. Besides, dithering can be enabled to trade color with resolution by mixing similiar colors.
 
-Lab is the best quality for most pictures, which is why it is default, but the others should still be tried to see which color space has the best visual effect for your picture.
+RGB+ is the best quality for most images, which is why it is default, but the others should still be tried to see which color space has the best visual effect for your image.
 
 ### 4. Block List:
 
@@ -83,7 +83,7 @@ Custom is for you to freely choose the blocks you would like to use.
 ## Features of SlopeCraft
 These features are included in SlopeCraft
 
-Importing Pictures, Adjusting Colors, Generating 3D map art, exporting into a file for Minecraft
+Importing image, Converting image, Generating 3D/Flat/Wall/File-only map art, exporting into Schematic file/Structure file/map data file/image (s).
 
 
 ## Installation
@@ -92,10 +92,4 @@ No Installation Required
 
 ## Usage Guide
 
-1. Find the picture you would like to turn into a pixel art. Use Photoshop or other photo editing softwares to make sure the length and width of the picture in pixels are multiples of 128, which is best for maps in Minecraft.
-2. Open SlopeCraft.exe, and choose the type of map art you would like to create in the start menu.
-3. Click the "Import Photo" button, and choose the modified photo from step 1. The program will then import it.
-4. Choose the right game version for your map art, click Confirm, and click Next Page.
-5. Choose the block list for your map art - usually you can skip this step and just choose Confirm.
-6. In the color adjusting page, choose any color space, choose Convert to Map, then click one of the export options.
-7. In the Export page (different for each export option), follow the instructions in the page.
+See tutorials listed above.
