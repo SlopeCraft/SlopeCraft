@@ -835,7 +835,7 @@ void TokiSlopeCraft::makeHeight_new() {
             compressMethod==compressSettings::Both
             ||compressMethod==compressSettings::NaturalOnly;
     //std::vector<const TokiColor*> src;
-    qDebug("开始makeHeight_new");
+    std::cerr<<"makeHeight_new\n";
 
     if((mapPic-4*(mapPic/4)>=3).any()) {
         emit reportError(errorFlag::DEPTH_3_IN_VANILLA_MAP);
@@ -844,7 +844,7 @@ void TokiSlopeCraft::makeHeight_new() {
 
     for(ushort c=0;c<sizePic(1);c++) {
 
-        qDebug()<<"第"<<c<<"列";
+        std::cerr<<"Coloumn "<<c<<std::endl;
         HeightLine HL;
         //getTokiColorPtr(c,&src[0]);
         HL.make(mapPic.col(c),allowNaturalCompress);
@@ -1168,7 +1168,7 @@ void TokiSlopeCraft::writeBlock(const std::string &netBlockId,
 
         if(Property.size()!=ProVal.size())
         {
-            qDebug("出现错误：Property和ProVal尺寸不匹配");
+            std::cerr<<"Error: Property and ProVal have different sizes\n";
             return;
         }
             Lite.writeCompound("Properties");
