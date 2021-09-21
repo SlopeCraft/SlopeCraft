@@ -852,12 +852,21 @@ void TokiSlopeCraft::makeHeight_new() {
         if(HL.maxHeight()>maxAllowedHeight&&
                 (compressMethod==compressSettings::ForcedOnly||
                 compressMethod==compressSettings::Both)) {
+
+            std::vector<const TokiColor*> ptr(getImageRows());
+
+            getTokiColorPtr(c,&ptr[0]);
+
+            Compressor->setSource(HL.getBase(),&ptr[0]);
             bool success=Compressor->compress(maxAllowedHeight,
                                               allowNaturalCompress);
             if(!success) {
                 emit reportError(LOSSYCOMPRESS_FAILED);
                 return;
             }
+
+            HL.make(&ptr[0],Compressor->getResult().getDNA(),allowNaturalCompress);
+
         }
 
         Base.col(c)=HL.getBase();
@@ -871,7 +880,7 @@ void TokiSlopeCraft::makeHeight_new() {
 
         emit progressAdd(5*sizePic(0));
     }
-    qDebug("makeHeight_new完毕");
+    std::cerr<<"makeHeight_new finished\n";
     size3D[2]=2+sizePic(0);//z
     size3D[0]=2+sizePic(1);//x
     size3D[1]=HighMap.maxCoeff()+1;//y

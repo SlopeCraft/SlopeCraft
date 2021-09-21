@@ -189,6 +189,11 @@ private slots:
     void on_ExportData_clicked();
 
 
+    void on_Exit_clicked();
+
+    void on_seeExported_clicked();
+
+
 private:
     Ui::MainWindow *ui;
 

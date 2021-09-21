@@ -54,6 +54,10 @@ MainWindow::MainWindow(QWidget *parent)
             this,&MainWindow::algoProgressRangeSet);
     connect(Kernel,&TokiSlopeCraft::algoProgressAdd,
             this,&MainWindow::algoProgressAdd);
+    connect(Kernel,&TokiSlopeCraft::reportError,
+            this,&MainWindow::showError);
+    connect(Kernel,&TokiSlopeCraft::reportWorkingStatue,
+            this,&MainWindow::showWorkingStatue);
     proTracker=nullptr;
 
     Manager=new BlockListManager(
@@ -1359,10 +1363,126 @@ void MainWindow::on_allowGlassBridge_stateChanged(int arg1) {
     ui->glassBridgeInterval->setEnabled(arg1);
 }
 
-void MainWindow::showError(TokiSlopeCraft::errorFlag) {
+void MainWindow::showError(TokiSlopeCraft::errorFlag error) {
+    QString title,text;
+    bool isFatal=false;
+    switch (error) {
+    case TokiSlopeCraft::errorFlag::NO_ERROR_OCCUR:
+        return;
+    case TokiSlopeCraft::errorFlag::DEPTH_3_IN_VANILLA_MAP:
+        title=tr("构建高度矩阵时出现错误");
+        text=tr("原版地图画不允许出现第三个阴影（不存在的几何关系不可能生存实装！）\n" \
+        "请检查你的地图画类型，纯文件地图画不可以导出为投影！");
+        break;
+    case TokiSlopeCraft::errorFlag::HASTY_MANIPULATION:
+        title=tr("跳步操作");
+        text=tr("SlopeCraft不允许你跳步操作，请按照左侧竖边栏的顺序操作！");
+        break;
+    case TokiSlopeCraft::errorFlag::LOSSYCOMPRESS_FAILED:
+        title=tr("有损压缩失败");
+        text=tr("在构建高度矩阵时，有损压缩失败，没能将地图画压缩到目标高度。 \
+        这可能是因为地图画行数过大。 \
+        尝试启用无损压缩，或者提高最大允许高度——不要给软件地图画太大的压力！");
+        break;
+    case TokiSlopeCraft::errorFlag::MAX_ALLOWED_HEIGHT_LESS_THAN_14:
+        title=tr("最大允许高度太小了");
+        text=tr("有损压缩的最大允许不要低于14，否则很容易压缩失败");
+        break;
+    case TokiSlopeCraft::errorFlag::PARSING_COLORMAP_HSV_FAILED:
+        isFatal=true;
+        title=tr("严重错误：颜色表文件HSV.TokiColor损坏");
+        text=tr("SlopeCraft不能正常解析颜色表文件，它是不可以被修改的！");
+        break;
+    case TokiSlopeCraft::errorFlag::PARSING_COLORMAP_Lab_FAILED:
+        isFatal=true;
+        title=tr("严重错误：颜色表文件Lab.TokiColor损坏");
+        text=tr("SlopeCraft不能正常解析颜色表文件，它是不可以被修改的！");
+        break;
+    case TokiSlopeCraft::errorFlag::PARSING_COLORMAP_XYZ_FAILED:
+        isFatal=true;
+        title=tr("严重错误：颜色表文件XYZ.TokiColor损坏");
+        text=tr("SlopeCraft不能正常解析颜色表文件，它是不可以被修改的！");
+        break;
+    case TokiSlopeCraft::errorFlag::PARSING_COLORMAP_RGB_FAILED:
+        isFatal=true;
+        title=tr("严重错误：颜色表文件RGB.TokiColor损坏");
+        text=tr("SlopeCraft不能正常解析颜色表文件，它是不可以被修改的！");
+        break;
+    case TokiSlopeCraft::errorFlag::USEABLE_COLOR_TO_LITTLE:
+        title=tr("允许使用的颜色过少");
+        text=tr("你应该勾选启用尽可能多的基色，颜色太少是不行的！");
+        break;
+    }
+    if(isFatal)
+        QMessageBox::warning(this,title,text,
+                         QMessageBox::StandardButton::Ok,
+                         QMessageBox::StandardButton::NoButton);
+    else {
+        QMessageBox::critical(this,title,text,QMessageBox::StandardButton::Close);
+        this->on_Exit_clicked();
+    }
+    updateEnables();
+    return;
+}
+
+void MainWindow::showWorkingStatue(TokiSlopeCraft::workStatues statue) {
+QString title=this->windowTitle();
+if(title.contains(" | ")) {
+    title=title.left(title.lastIndexOf(" | "));
+}
+
+switch (statue) {
+case TokiSlopeCraft::workStatues::none:
+    break;
+case TokiSlopeCraft::workStatues::buidingHeighMap:
+    title+=tr("正在构建高度矩阵");
+    break;
+case TokiSlopeCraft::workStatues::building3D:
+    title+=tr("正在构建三维结构");
+    break;
+case TokiSlopeCraft::workStatues::collectingColors:
+    title+=tr("正在收集整张图片的颜色");
+    break;
+case TokiSlopeCraft::workStatues::compressing:
+    title+=tr("正在压缩立体地图画");
+    break;
+case TokiSlopeCraft::workStatues::constructingBridges:
+    title+=tr("正在为立体地图画搭桥");
+    break;
+case TokiSlopeCraft::workStatues::converting:
+    title+=tr("正在匹配颜色");
+    break;
+case TokiSlopeCraft::workStatues::dithering:
+    title+=tr("正在使用抖动仿色");
+    break;
+case TokiSlopeCraft::workStatues::flippingToWall:
+    title+=tr("正在将平板地图画变为墙面地图画");
+    break;
+case TokiSlopeCraft::workStatues::writing3D:
+    title+=tr("正在写入三维结构");
+    break;
+case TokiSlopeCraft::workStatues::writingBlockPalette:
+    title+=tr("正在写入方块列表");
+    break;
+case TokiSlopeCraft::workStatues::writingMapDataFiles:
+    title+=tr("正在写入地图数据文件");
+    break;
+case TokiSlopeCraft::workStatues::writingMetaInfo:
+    title+=tr("正在写入基础信息");
+    break;
+}
+
+setWindowTitle(title);
+return;
+}
+
+void MainWindow::on_Exit_clicked() {
+    exit(0);
+    return;
+}
+
+
+void MainWindow::on_seeExported_clicked() {
 
 }
 
-void MainWindow::showWorkingStatue(TokiSlopeCraft::workStatues) {
-
-}
