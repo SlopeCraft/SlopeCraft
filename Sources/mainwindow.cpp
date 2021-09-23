@@ -1222,8 +1222,12 @@ void MainWindow::on_ExportLite_clicked() {
         if(compressFile(unCompressed.data(),FileName.data()))
         {
             qDebug("压缩成功");
-            QFile umComFile(QString(unCompressed.data()));
-            umComFile.remove();
+            QFile umComFile(QString::fromLocal8Bit(unCompressed.data()));
+            if(umComFile.remove())
+                qDebug("删除成功");
+            else
+                qDebug("删除失败");
+            qDebug()<<QString::fromLocal8Bit(unCompressed.data());
             ProductPath=FileName;
         }
         else
@@ -1293,8 +1297,25 @@ void MainWindow::on_ExportData_clicked() {
         for(auto it=FolderPath.begin();it!=FolderPath.end();it++)
             if(*it=='\\')*it='/';
 
-        Kernel->exportAsData(FolderPath,indexStart);
+        auto unCompressedList=Kernel->exportAsData(FolderPath,indexStart);
         qDebug("导出地图文件成功");
+        //QString::fromLocal8Bit(unCompressed.data())
+
+        for(auto it=unCompressedList.begin();it!=unCompressedList.end();it++) {
+            QString unName=QString::fromLocal8Bit(it->data());
+            QString dstName=unName.left(unName.lastIndexOf(".TokiNoBug"));
+
+            if(compressFile(unName.toLocal8Bit(),dstName.toLocal8Bit())) {
+                    QFile unFile(unName);
+                    if(unFile.remove()) {
+                        qDebug()<<"删除"<<unName<<"成功";
+                    }
+                    else {
+                        qDebug()<<"删除"<<unName<<"失败";
+                    }
+            }
+
+        }
 
         ui->InputDataIndex->setEnabled(true);
         ui->ExportData->setEnabled(true);
