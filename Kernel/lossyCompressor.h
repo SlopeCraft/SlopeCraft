@@ -54,6 +54,7 @@ public:
     float getFitness() const;
     ushort size() const;
     const Eigen::Array<uchar,Eigen::Dynamic,1> & getDNA() const;
+    //Eigen::ArrayXi toMapColor() const;
 
     void initialize(ushort size);
     void caculateFitness(const TokiColor**,ushort maxHeight,bool allowNaturalCompress);

@@ -206,7 +206,9 @@ void MainWindow::showPreview()
     preWind->Water=Manager->getQRadioButtonList()[12];
     //preWind->Src[1]=Blocks[1][0];preWind->BlockCount[1]=1919810;
 
+    QImage temp=EImage2QImage(Kernel->getConovertedImage());
     preWind->ShowMaterialList();
+    preWind->showConvertedImage(temp);
     preWind->show();
 }
 

@@ -15,7 +15,7 @@ class HeightLine
 public:
     HeightLine();
     float make(const TokiColor*[], const Eigen::Array<uchar,Eigen::Dynamic,1>&
-               ,bool allowNaturalCompress);
+               ,bool allowNaturalCompress, Eigen::ArrayXi* dst=nullptr);
     void make(const Eigen::ArrayXi & mapColorCol,bool allowNaturalCompress);
     void updateWaterMap();
     ushort maxHeight() const;

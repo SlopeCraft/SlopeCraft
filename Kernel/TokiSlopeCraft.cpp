@@ -595,6 +595,7 @@ if(kernelStep<converted) {
     return cvtedImg;
 }
 Eigen::ArrayXXi RGBint=(255.0f*Basic._RGB).cast<int>();
+RGBint=(RGBint>255).select(Eigen::ArrayXXi::Constant(256,3,255),RGBint);
     short Index;
     for(short r=0;r<sizePic(0);r++)
     {
@@ -875,8 +876,10 @@ void TokiSlopeCraft::makeHeight_new() {
                 emit reportError(LOSSYCOMPRESS_FAILED);
                 return;
             }
-
-            HL.make(&ptr[0],Compressor->getResult().getDNA(),allowNaturalCompress);
+            Eigen::ArrayXi temp;
+            HL.make(&ptr[0],Compressor->getResult().getDNA(),
+                    allowNaturalCompress,&temp);
+            mapPic.col(c)=temp;
 
         }
 

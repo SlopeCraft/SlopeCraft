@@ -143,7 +143,6 @@ public:
         constructingBridges=0x13,
         flippingToWall=0x14,
 
-
         writingMetaInfo=0x20,
         writingBlockPalette=0x21,
         writing3D=0x22,

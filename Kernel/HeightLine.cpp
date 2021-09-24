@@ -11,7 +11,7 @@ HeightLine::HeightLine() {
 
 float HeightLine::make(const TokiColor **src,
                        const Eigen::Array<uchar, Eigen::Dynamic, 1> & g,
-                       bool allowNaturalCompress) {
+                       bool allowNaturalCompress, Eigen::ArrayXi* dst) {
     float sumDiff=0;
     Eigen::ArrayXi mapColorCol(g.rows());
     //mapColorCol(0)=11;
@@ -41,6 +41,10 @@ float HeightLine::make(const TokiColor **src,
     }
     //std::cerr<<"mapColorCol="<<mapColorCol.transpose()<<std::endl;
     //std::cerr<<"making\n";
+
+    if(dst!=nullptr)
+        *dst=mapColorCol;
+
     make(mapColorCol,allowNaturalCompress);
     return sumDiff;
 }

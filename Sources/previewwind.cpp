@@ -105,3 +105,6 @@ void PreviewWind::on_SwitchUnit_clicked(bool checked)
     }
 }
 
+void PreviewWind::showConvertedImage(const QImage & img) {
+    ui->showImg->setPixmap(QPixmap::fromImage(img));
+}

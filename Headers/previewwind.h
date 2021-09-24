@@ -49,6 +49,7 @@ public:
     int size[3];
     int TotalBlockCount;
     void ShowMaterialList();
+    void showConvertedImage(const QImage&);
     ~PreviewWind();
 
 private slots:

@@ -62,6 +62,7 @@ ushort gene::size() const {
 const Eigen::Array<uchar,Eigen::Dynamic,1> & gene::getDNA() const {
     return DNA;
 }
+
 void gene::initialize(ushort size) {
     fitness=unCaculatedSign;
     DNA.setZero(size);
