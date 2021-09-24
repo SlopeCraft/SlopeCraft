@@ -37,6 +37,8 @@ public:
     std::string idOld;
     bool needGlass;
     bool doGlow;
+    bool endermanPickable;
+    bool burnable;
     static bool dealBlockId(const std::string & id ,
                             std::string & netBlockId,
                             stringList * proName,

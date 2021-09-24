@@ -28,6 +28,8 @@ simpleBlock::simpleBlock()
     idOld="";
     needGlass=false;
     doGlow=false;
+    endermanPickable=false;
+    burnable=false;
 /*
     std::string id;
     uchar version;

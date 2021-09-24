@@ -65,6 +65,8 @@ void BlockListManager::addBlocks(const QJsonArray & jArray,QString imgDir) {
         if(!temp.contains("needGlass")) temp["needGlass"]=false;
         if(!temp.contains("isGlowing")) temp["isGlowing"]=false;
         if(!temp.contains("icon")) temp["icon"]="";
+        if(!temp.contains("endermanPickable")) temp["endermanPickable"]=false;
+        if(!temp.contains("burnable")) temp["burnable"]=false;
 
         baseColor=temp.value("baseColor").toInt();
         tasks[baseColor].push(temp);

@@ -1038,6 +1038,21 @@ void TokiSlopeCraft::buildHeight() {
                 x=c+1;y=LowMap(r+1,c);z=r+1;
                 if(y>=1&&blockPalette[Base(r+1,c)].needGlass)
                     Build(x,y-1,z)=0+1;
+                if(blockPalette[Base(r+1,c)].burnable||
+                        blockPalette[Base(r+1,c)].endermanPickable) {
+                    if(y>=1&&Build(x,y-1,z)==0)
+                        Build(x,y-1,z)=0+1;
+                    if(x>=1&&Build(x-1,y,z)==0)
+                        Build(x-1,y,z)=0+1;
+                    if(z>=1&&Build(x,y,z-1)==0)
+                        Build(x,y,z-1)=0+1;
+                    if(y+1<size3D[1]&&Build(x,y+1,z)==0)
+                        Build(x,y+1,z)=0+1;
+                    if(x+1<size3D[0]&&Build(x+1,y,z)==0)
+                        Build(x+1,y,z)=0+1;
+                    if(z+1<size3D[2]&&Build(x,y,z+1)==0)
+                        Build(x,y,z+1)=0+1;
+                }
 
                 Build(x,y,z)=Base(r+1,c)+1;
             }

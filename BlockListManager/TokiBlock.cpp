@@ -14,6 +14,8 @@ block.version=json.value("version").toInt();
 block.idOld=json.value("idOld").toString().toLocal8Bit();
 block.needGlass=json.value("needGlass").toBool();
 block.doGlow=json.value("isGlowing").toBool();
+block.endermanPickable=json.value("endermanPickable").toBool();
+block.burnable=json.value("burnable").toBool();
 nameZH=json.value("nameZH").toString();
 nameEN=json.value("nameEN").toString();
 //std::cerr<<block.id<<"\n"<<block.idOld<<"\n";
