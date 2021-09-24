@@ -6,9 +6,7 @@
     "nameEN":"Glass",
     "icon":"glass.png",
     "version":0,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":1,
@@ -18,8 +16,7 @@
     "icon":"grass_block.png",
     "version":0,
     "idOld":"grass[snowy=false]",
-    "needGlass":false,
-    "isGlowing":false
+    "endermanPickable":true
 },
 {
     "baseColor":1,
@@ -28,9 +25,7 @@
     "nameEN":"Slime block",
     "icon":"slime_block.png",
     "version":0,
-    "idOld":"slime",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"slime"
 },
 {
     "baseColor":2,
@@ -40,8 +35,7 @@
     "icon":"birch_planks.png",
     "version":0,
     "idOld":"planks[variant=birch]",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":2,
@@ -50,9 +44,7 @@
     "nameEN":"Smooth sandstone",
     "icon":"smooth_sandstone.png",
     "version":0,
-    "idOld":"sandstone[type=smooth_sandstone]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"sandstone[type=smooth_sandstone]"
 },
 {
     "baseColor":2,
@@ -62,7 +54,6 @@
     "icon":"glowstone.png",
     "version":0,
     "idOld":"",
-    "needGlass":false,
     "isGlowing":true
 },
 {
@@ -72,9 +63,7 @@
     "nameEN":"End stone",
     "icon":"end_stone.png",
     "version":0,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":2,
@@ -83,9 +72,7 @@
     "nameEN":"Endstone bricks",
     "icon":"end_stone_bricks.png",
     "version":0,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":2,
@@ -95,8 +82,7 @@
     "icon":"turtle_egg.png",
     "version":13,
     "idOld":"",
-    "needGlass":true,
-    "isGlowing":false
+    "needGlass":true
 },
 {
     "baseColor":3,
@@ -106,8 +92,7 @@
     "icon":"mushroom_stem.png",
     "version":13,
     "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":3,
@@ -116,9 +101,7 @@
     "nameEN":"Cobweb",
     "icon":"cobweb.png",
     "version":0,
-    "idOld":"web",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"web"
 },
 {
     "baseColor":4,
@@ -127,9 +110,7 @@
     "nameEN":"Redstone block",
     "icon":"redstone_block.png",
     "version":0,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":4,
@@ -139,8 +120,8 @@
     "icon":"tnt.png",
     "version":0,
     "idOld":"tnt[explode=false]",
-    "needGlass":false,
-    "isGlowing":false
+    "endermanPickable":true,
+    "burnable":true
 },
 {
     "baseColor":5,
@@ -149,9 +130,7 @@
     "nameEN":"Ice",
     "icon":"ice.png",
     "version":0,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":5,
@@ -160,9 +139,7 @@
     "nameEN":"Packed ice",
     "icon":"packed_ice.png",
     "version":0,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":5,
@@ -171,9 +148,7 @@
     "nameEN":"Blue ice",
     "icon":"blue_ice.png",
     "version":13,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":6,
@@ -182,9 +157,7 @@
     "nameEN":"Iron block",
     "icon":"iron_block.png",
     "version":0,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":6,
@@ -193,9 +166,7 @@
     "nameEN":"brewing stand",
     "icon":"brewing_stand.png",
     "version":0,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":6,
@@ -205,8 +176,7 @@
     "icon":"heavy_weighted_pressure_plate.png",
     "version":0,
     "idOld":"",
-    "needGlass":true,
-    "isGlowing":false
+    "needGlass":true
 },
 {
     "baseColor":6,
@@ -215,9 +185,7 @@
     "nameEN":"Iron trapdoor",
     "icon":"iron_trapdoor.png",
     "version":0,
-    "idOld":"iron_trapdoor[facing=north,half=top,open=false]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"iron_trapdoor[facing=north,half=top,open=false]"
 },
 {
     "baseColor":6,
@@ -226,9 +194,7 @@
     "nameEN":"lantern",
     "icon":"lantern.png",
     "version":14,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":6,
@@ -237,9 +203,7 @@
     "nameEN":"Grindstone",
     "icon":"grindstone.png",
     "version":14,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":7,
@@ -248,9 +212,7 @@
     "nameEN":"Oak leaves",
     "icon":"oak_leaves.png",
     "version":0,
-    "idOld":"leaves[variant=oak,check_decay=false,decayable=false]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"leaves[variant=oak,check_decay=false,decayable=false]"
 },
 {
     "baseColor":7,
@@ -259,9 +221,7 @@
     "nameEN":"Spurce leaves",
     "icon":"spruce_leaves.png",
     "version":0,
-    "idOld":"leaves[variant=spruce,check_decay=false,decayable=false]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"leaves[variant=spruce,check_decay=false,decayable=false]"
 },
 {
     "baseColor":7,
@@ -270,9 +230,7 @@
     "nameEN":"Brich leaves",
     "icon":"birch_leaves.png",
     "version":0,
-    "idOld":"leaves[variant=birch,check_decay=false,decayable=false]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"leaves[variant=birch,check_decay=false,decayable=false]"
 },
 {
     "baseColor":7,
@@ -281,9 +239,7 @@
     "nameEN":"Jungle leaves",
     "icon":"jungle_leaves.png",
     "version":0,
-    "idOld":"leaves[variant=jungle,check_decay=false,decayable=false]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"leaves[variant=jungle,check_decay=false,decayable=false]"
 },
 {
     "baseColor":7,
@@ -292,9 +248,7 @@
     "nameEN":"Acacia leaves",
     "icon":"acacia_leaves.png",
     "version":0,
-    "idOld":"leaves2[variant=acacia,check_decay=false,decayable=false]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"leaves2[variant=acacia,check_decay=false,decayable=false]"
 },
 {
     "baseColor":7,
@@ -303,9 +257,7 @@
     "nameEN":"Dark oat leaves",
     "icon":"dark_oak_leaves.png",
     "version":0,
-    "idOld":"leaves2[variant=dark_oak,check_decay=false,decayable=false]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"leaves2[variant=dark_oak,check_decay=false,decayable=false]"
 },
 {
     "baseColor":8,
@@ -314,9 +266,7 @@
     "nameEN":"White concrete",
     "icon":"white_concrete.png",
     "version":0,
-    "idOld":"concrete[color=white]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"concrete[color=white]"
 },
 {
     "baseColor":8,
@@ -325,9 +275,7 @@
     "nameEN":"White wool",
     "icon":"white_wool.png",
     "version":0,
-    "idOld":"wool[color=white]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"wool[color=white]"
 },
 {
     "baseColor":8,
@@ -336,9 +284,7 @@
     "nameEN":"White glass",
     "icon":"white_stained_glass.png",
     "version":0,
-    "idOld":"stained_glass[color=white]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_glass[color=white]"
 },
 {
     "baseColor":8,
@@ -347,9 +293,7 @@
     "nameEN":"Snow",
     "icon":"snow_block.png",
     "version":0,
-    "idOld":"snow",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"snow"
 },
 {
     "baseColor":9,
@@ -359,8 +303,7 @@
     "icon":"clay.png",
     "version":0,
     "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "endermanPickable":true
 },
 {
     "baseColor":10,
@@ -370,8 +313,7 @@
     "icon":"coarse_dirt.png",
     "version":13,
     "idOld":"dirt[variant=coarse_dirt,snowy=false]",
-    "needGlass":false,
-    "isGlowing":false
+    "endermanPickable":true
 },
 {
     "baseColor":10,
@@ -380,9 +322,7 @@
     "nameEN":"Polished granite",
     "icon":"polished_granite.png",
     "version":0,
-    "idOld":"stone[variant=smooth_granite]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stone[variant=smooth_granite]"
 },
 {
     "baseColor":10,
@@ -392,8 +332,7 @@
     "icon":"jungle_planks.png",
     "version":0,
     "idOld":"planks[variant=jungle]",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":10,
@@ -402,9 +341,7 @@
     "nameEN":"Brown mushroom block",
     "icon":"brown_mushroom_block.png",
     "version":0,
-    "idOld":"brown_mushroom_block[variant=all_outside]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"brown_mushroom_block[variant=all_outside]"
 },
 {
     "baseColor":10,
@@ -414,8 +351,7 @@
     "icon":"dirt.png",
     "version":0,
     "idOld":"dirt[variant=dirt,snowy=false]",
-    "needGlass":false,
-    "isGlowing":false
+    "endermanPickable":true
 },
 {
     "baseColor":11,
@@ -424,9 +360,7 @@
     "nameEN":"Cobblestone",
     "icon":"cobblestone.png",
     "version":0,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":11,
@@ -435,9 +369,7 @@
     "nameEN":"Stone",
     "icon":"stone.png",
     "version":0,
-    "idOld":"stone[variant=stone]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stone[variant=stone]"
 },
 {
     "baseColor":11,
@@ -446,9 +378,7 @@
     "nameEN":"Smooth stone",
     "icon":"smooth_stone.png",
     "version":13,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":11,
@@ -457,9 +387,7 @@
     "nameEN":"Stone brick",
     "icon":"stone_bricks.png",
     "version":0,
-    "idOld":"stonebrick[variant=stonebrick]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stonebrick[variant=stonebrick]"
 },
 {
     "baseColor":12,
@@ -468,9 +396,7 @@
     "nameEN":"Water",
     "icon":"water.png",
     "version":0,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":13,
@@ -480,8 +406,7 @@
     "icon":"oak_planks.png",
     "version":0,
     "idOld":"planks[variant=oak]",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":14,
@@ -490,9 +415,7 @@
     "nameEN":"Polished diorite",
     "icon":"polished_diorite.png",
     "version":0,
-    "idOld":"stone[variant=smooth_diorite]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stone[variant=smooth_diorite]"
 },
 {
     "baseColor":14,
@@ -501,9 +424,7 @@
     "nameEN":"Quartz block",
     "icon":"quartz_block.png",
     "version":0,
-    "idOld":"quartz_block[variant=default]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"quartz_block[variant=default]"
 },
 {
     "baseColor":14,
@@ -512,9 +433,7 @@
     "nameEN":"Sea lantern",
     "icon":"sea_lantern.png",
     "version":0,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":14,
@@ -523,9 +442,7 @@
     "nameEN":"Target",
     "icon":"target.png",
     "version":16,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":15,
@@ -534,9 +451,7 @@
     "nameEN":"Orange concrete",
     "icon":"orange_concrete.png",
     "version":0,
-    "idOld":"concrete[color=orange]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"concrete[color=orange]"
 },
 {
     "baseColor":15,
@@ -545,9 +460,7 @@
     "nameEN":"Orange wool",
     "icon":"orange_wool.png",
     "version":0,
-    "idOld":"wool[color=orange]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"wool[color=orange]"
 },
 {
     "baseColor":15,
@@ -556,9 +469,7 @@
     "nameEN":"Orange glass",
     "icon":"orange_stained_glass.png",
     "version":0,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":15,
@@ -568,8 +479,7 @@
     "icon":"acacia_planks.png",
     "version":0,
     "idOld":"planks[variant=acacia]",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":15,
@@ -579,8 +489,7 @@
     "icon":"pumpkin.png",
     "version":0,
     "idOld":"pumpkin[variant=north]",
-    "needGlass":false,
-    "isGlowing":false
+    "endermanPickable":true
 },
 {
     "baseColor":15,
@@ -589,9 +498,7 @@
     "nameEN":"Terracotta",
     "icon":"terracotta.png",
     "version":0,
-    "idOld":"hardened_clay",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"hardened_clay"
 },
 {
     "baseColor":15,
@@ -600,9 +507,7 @@
     "nameEN":"Smooth red sandstone",
     "icon":"smooth_red_sandstone.png",
     "version":0,
-    "idOld":"red_sandstone[type=smooth_red_sandstone]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"red_sandstone[type=smooth_red_sandstone]"
 },
 {
     "baseColor":15,
@@ -611,9 +516,7 @@
     "nameEN":"Honey block",
     "icon":"honey_block.png",
     "version":15,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":15,
@@ -622,9 +525,7 @@
     "nameEN":"Honey comb block",
     "icon":"honeycomb_block.png",
     "version":15,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":15,
@@ -633,9 +534,7 @@
     "nameEN":"Raw copper block",
     "icon":"raw_copper_block.png",
     "version":17,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":15,
@@ -644,9 +543,7 @@
     "nameEN":"Waxed copper",
     "icon":"waxed_copper_block.png",
     "version":17,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":15,
@@ -655,9 +552,7 @@
     "nameEN":"Waxed cut copper",
     "icon":"waxed_cut_copper.png",
     "version":17,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":16,
@@ -666,9 +561,7 @@
     "nameEN":"Magenta concrete",
     "icon":"magenta_concrete.png",
     "version":0,
-    "idOld":"concrete[color=orange]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"concrete[color=orange]"
 },
 {
     "baseColor":16,
@@ -677,9 +570,7 @@
     "nameEN":"Magenta wool",
     "icon":"magenta_wool.png",
     "version":0,
-    "idOld":"wool[color=magenta]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"wool[color=magenta]"
 },
 {
     "baseColor":16,
@@ -688,9 +579,7 @@
     "nameEN":"Magenta glass",
     "icon":"magenta_stained_glass.png",
     "version":0,
-    "idOld":"stained_glass[color=magenta]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_glass[color=magenta]"
 },
 {
     "baseColor":16,
@@ -699,9 +588,7 @@
     "nameEN":"Purpur block",
     "icon":"purpur_block.png",
     "version":0,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":17,
@@ -710,9 +597,7 @@
     "nameEN":"Light blue concrete",
     "icon":"light_blue_concrete.png",
     "version":0,
-    "idOld":"concrete[color=light_blue]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"concrete[color=light_blue]"
 },
 {
     "baseColor":17,
@@ -721,9 +606,7 @@
     "nameEN":"light blue wool",
     "icon":"light_blue_wool.png",
     "version":0,
-    "idOld":"wool[color=light_blue]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"wool[color=light_blue]"
 },
 {
     "baseColor":17,
@@ -732,9 +615,7 @@
     "nameEN":"Light blue glass",
     "icon":"light_blue_stained_glass.png",
     "version":0,
-    "idOld":"stained_glass[color=light_blue]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_glass[color=light_blue]"
 },
 {
     "baseColor":18,
@@ -743,9 +624,7 @@
     "nameEN":"Yellow concrete",
     "icon":"yellow_concrete.png",
     "version":0,
-    "idOld":"concrete[color=yellow]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"concrete[color=yellow]"
 },
 {
     "baseColor":18,
@@ -754,9 +633,7 @@
     "nameEN":"Yellow wool",
     "icon":"yellow_wool.png",
     "version":0,
-    "idOld":"wool[color=yellow]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"wool[color=yellow]"
 },
 {
     "baseColor":18,
@@ -765,9 +642,7 @@
     "nameEN":"yellow glass",
     "icon":"yellow_stained_glass.png",
     "version":0,
-    "idOld":"stained_glass[color=yellow]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_glass[color=yellow]"
 },
 {
     "baseColor":18,
@@ -776,9 +651,7 @@
     "nameEN":"Hay block",
     "icon":"hay_block.png",
     "version":0,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":19,
@@ -787,9 +660,7 @@
     "nameEN":"Lime concrete",
     "icon":"lime_concrete.png",
     "version":0,
-    "idOld":"concrete[color=lime]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"concrete[color=lime]"
 },
 {
     "baseColor":19,
@@ -798,9 +669,7 @@
     "nameEN":"Lime wool",
     "icon":"lime_wool.png",
     "version":0,
-    "idOld":"wool[color=lime]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"wool[color=lime]"
 },
 {
     "baseColor":19,
@@ -809,9 +678,7 @@
     "nameEN":"Lime glass",
     "icon":"lime_stained_glass.png",
     "version":0,
-    "idOld":"stained_glass[color=lime]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_glass[color=lime]"
 },
 {
     "baseColor":20,
@@ -820,9 +687,7 @@
     "nameEN":"Pink concrete",
     "icon":"pink_concrete.png",
     "version":0,
-    "idOld":"concrete[color=pink]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"concrete[color=pink]"
 },
 {
     "baseColor":20,
@@ -831,9 +696,7 @@
     "nameEN":"Pink wool",
     "icon":"pink_wool.png",
     "version":0,
-    "idOld":"wool[color=pink]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"wool[color=pink]"
 },
 {
     "baseColor":20,
@@ -842,9 +705,7 @@
     "nameEN":"Pink glass",
     "icon":"pink_stained_glass.png",
     "version":0,
-    "idOld":"stained_glass[color=pink]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_glass[color=pink]"
 },
 {
     "baseColor":21,
@@ -853,9 +714,7 @@
     "nameEN":"Gray concrete",
     "icon":"gray_concrete.png",
     "version":0,
-    "idOld":"concrete[color=gray]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"concrete[color=gray]"
 },
 {
     "baseColor":21,
@@ -865,8 +724,7 @@
     "icon":"gray_wool.png",
     "version":0,
     "idOld":"wool[color=gray]",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":21,
@@ -875,9 +733,7 @@
     "nameEN":"Gray glass",
     "icon":"gray_stained_glass.png",
     "version":0,
-    "idOld":"stained_glass[color=gray]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_glass[color=gray]"
 },
 {
     "baseColor":21,
@@ -886,9 +742,7 @@
     "nameEN":"Tinted glass",
     "icon":"tinted_glass.png",
     "version":17,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":22,
@@ -897,9 +751,7 @@
     "nameEN":"Light gray concrete",
     "icon":"light_gray_concrete.png",
     "version":0,
-    "idOld":"concrete[color=silver]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"concrete[color=silver]"
 },
 {
     "baseColor":22,
@@ -909,8 +761,7 @@
     "icon":"light_gray_wool.png",
     "version":0,
     "idOld":"wool[color=silver]",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":22,
@@ -919,9 +770,7 @@
     "nameEN":"Light gray glass",
     "icon":"light_gray_stained_glass.png",
     "version":0,
-    "idOld":"stained_glass[color=silver]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_glass[color=silver]"
 },
 {
     "baseColor":23,
@@ -930,9 +779,7 @@
     "nameEN":"Cyan concrete",
     "icon":"cyan_concrete.png",
     "version":0,
-    "idOld":"concrete[color=cyan]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"concrete[color=cyan]"
 },
 {
     "baseColor":23,
@@ -942,8 +789,7 @@
     "icon":"cyan_wool.png",
     "version":0,
     "idOld":"wool[color=cyan]",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":23,
@@ -952,9 +798,7 @@
     "nameEN":"Cyan glass",
     "icon":"cyan_stained_glass.png",
     "version":0,
-    "idOld":"stained_glass[color=cyan]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_glass[color=cyan]"
 },
 {
     "baseColor":23,
@@ -963,9 +807,7 @@
     "nameEN":"Prismarine",
     "icon":"prismarine.png",
     "version":0,
-    "idOld":"prismarine[variant=prismarine]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"prismarine[variant=prismarine]"
 },
 {
     "baseColor":24,
@@ -974,9 +816,7 @@
     "nameEN":"Purple concrete",
     "icon":"purple_concrete.png",
     "version":0,
-    "idOld":"concrete[color=purple]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"concrete[color=purple]"
 },
 {
     "baseColor":24,
@@ -986,8 +826,7 @@
     "icon":"purple_wool.png",
     "version":0,
     "idOld":"wool[color=purple]",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":24,
@@ -996,9 +835,7 @@
     "nameEN":"Purple glass",
     "icon":"purple_stained_glass.png",
     "version":0,
-    "idOld":"stained_glass[color=purple]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_glass[color=purple]"
 },
 {
     "baseColor":24,
@@ -1007,9 +844,7 @@
     "nameEN":"Amethyst block",
     "icon":"amethyst_block.png",
     "version":17,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":25,
@@ -1018,9 +853,7 @@
     "nameEN":"Blue concrete",
     "icon":"blue_concrete.png",
     "version":0,
-    "idOld":"concrete[color=blue]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"concrete[color=blue]"
 },
 {
     "baseColor":25,
@@ -1030,8 +863,7 @@
     "icon":"blue_wool.png",
     "version":0,
     "idOld":"wool[color=blue]",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":25,
@@ -1040,9 +872,7 @@
     "nameEN":"Blue glass",
     "icon":"blue_stained_glass.png",
     "version":0,
-    "idOld":"stained_glass[color=blue]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_glass[color=blue]"
 },
 {
     "baseColor":26,
@@ -1051,9 +881,7 @@
     "nameEN":"Brown concrete",
     "icon":"brown_concrete.png",
     "version":0,
-    "idOld":"concrete[color=brown]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"concrete[color=brown]"
 },
 {
     "baseColor":26,
@@ -1063,8 +891,7 @@
     "icon":"brown_wool.png",
     "version":0,
     "idOld":"wool[color=brown]",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":26,
@@ -1073,9 +900,7 @@
     "nameEN":"Brown glass",
     "icon":"brown_stained_glass.png",
     "version":0,
-    "idOld":"stained_glass[color=brown]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_glass[color=brown]"
 },
 {
     "baseColor":26,
@@ -1085,8 +910,7 @@
     "icon":"dark_oak_planks.png",
     "version":0,
     "idOld":"planks[variant=dark_oak]",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":26,
@@ -1095,9 +919,7 @@
     "nameEN":"Soul sand",
     "icon":"soul_sand.png",
     "version":0,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":26,
@@ -1106,9 +928,7 @@
     "nameEN":"Soul soil",
     "icon":"soul_soil.png",
     "version":16,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":27,
@@ -1117,9 +937,7 @@
     "nameEN":"Green concrete",
     "icon":"green_concrete.png",
     "version":0,
-    "idOld":"concrete[color=green]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"concrete[color=green]"
 },
 {
     "baseColor":27,
@@ -1129,8 +947,7 @@
     "icon":"green_wool.png",
     "version":0,
     "idOld":"wool[color=green]",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":27,
@@ -1139,9 +956,7 @@
     "nameEN":"Green glass",
     "icon":"green_stained_glass.png",
     "version":0,
-    "idOld":"stained_glass[color=green]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_glass[color=green]"
 },
 {
     "baseColor":27,
@@ -1150,9 +965,7 @@
     "nameEN":"Kelp block",
     "icon":"dried_kelp_block.png",
     "version":13,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":28,
@@ -1161,9 +974,7 @@
     "nameEN":"Red concrete",
     "icon":"red_concrete.png",
     "version":0,
-    "idOld":"concrete[color=red]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"concrete[color=red]"
 },
 {
     "baseColor":28,
@@ -1173,8 +984,7 @@
     "icon":"red_wool.png",
     "version":0,
     "idOld":"wool[color=red]",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":28,
@@ -1183,9 +993,7 @@
     "nameEN":"Red glass",
     "icon":"red_stained_glass.png",
     "version":0,
-    "idOld":"stained_glass[color=red]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_glass[color=red]"
 },
 {
     "baseColor":28,
@@ -1194,9 +1002,7 @@
     "nameEN":"Bricks",
     "icon":"bricks.png",
     "version":0,
-    "idOld":"brick_block",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"brick_block"
 },
 {
     "baseColor":28,
@@ -1206,8 +1012,7 @@
     "icon":"red_mushroom_block.png",
     "version":0,
     "idOld":"red_mushroom_block[variant=all_outside]",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":28,
@@ -1216,9 +1021,7 @@
     "nameEN":"Nether wart block",
     "icon":"nether_wart_block.png",
     "version":0,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":28,
@@ -1228,7 +1031,6 @@
     "icon":"shroomlight.png",
     "version":16,
     "idOld":"",
-    "needGlass":false,
     "isGlowing":true
 },
 {
@@ -1238,9 +1040,7 @@
     "nameEN":"Black concrete",
     "icon":"black_concrete.png",
     "version":0,
-    "idOld":"concrete[color=black]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"concrete[color=black]"
 },
 {
     "baseColor":29,
@@ -1250,8 +1050,7 @@
     "icon":"black_wool.png",
     "version":0,
     "idOld":"wool[color=black]",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":29,
@@ -1260,9 +1059,7 @@
     "nameEN":"Blakc glass",
     "icon":"black_stained_glass.png",
     "version":0,
-    "idOld":"stained_glass[color=black]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_glass[color=black]"
 },
 {
     "baseColor":29,
@@ -1271,9 +1068,7 @@
     "nameEN":"Obsidian",
     "icon":"obsidian.png",
     "version":0,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":29,
@@ -1282,9 +1077,7 @@
     "nameEN":"Coal block",
     "icon":"coal_block.png",
     "version":0,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":29,
@@ -1293,9 +1086,7 @@
     "nameEN":"Polished basalt",
     "icon":"polished_basalt.png",
     "version":16,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":29,
@@ -1304,9 +1095,7 @@
     "nameEN":"Polished blackstone",
     "icon":"polished_blackstone.png",
     "version":16,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":30,
@@ -1315,9 +1104,7 @@
     "nameEN":"Gold block",
     "icon":"gold_block.png",
     "version":0,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":30,
@@ -1327,8 +1114,7 @@
     "icon":"light_weighted_pressure_plate.png",
     "version":0,
     "idOld":"",
-    "needGlass":true,
-    "isGlowing":false
+    "needGlass":true
 },
 {
     "baseColor":30,
@@ -1337,9 +1123,7 @@
     "nameEN":"Raw gold block",
     "icon":"raw_gold_block.png",
     "version":17,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":31,
@@ -1348,9 +1132,7 @@
     "nameEN":"Diamond block",
     "icon":"diamond_block.png",
     "version":0,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":31,
@@ -1359,9 +1141,7 @@
     "nameEN":"Prismarine bricks",
     "icon":"prismarine_bricks.png",
     "version":0,
-    "idOld":"prismarine[variant=prismarine_bricks]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"prismarine[variant=prismarine_bricks]"
 },
 {
     "baseColor":31,
@@ -1370,9 +1150,7 @@
     "nameEN":"Dark prismarine",
     "icon":"dark_prismarine.png",
     "version":0,
-    "idOld":"prismarine[variant=dark_prismarine]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"prismarine[variant=dark_prismarine]"
 },
 {
     "baseColor":32,
@@ -1381,9 +1159,7 @@
     "nameEN":"Lapis block",
     "icon":"lapis_block.png",
     "version":0,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":33,
@@ -1392,9 +1168,7 @@
     "nameEN":"Emerald block",
     "icon":"emerald_block.png",
     "version":0,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":34,
@@ -1404,8 +1178,7 @@
     "icon":"podzol.png",
     "version":0,
     "idOld":"dirt[variant=podzol,snowy=false]",
-    "needGlass":false,
-    "isGlowing":false
+    "endermanPickable":true
 },
 {
     "baseColor":34,
@@ -1415,8 +1188,7 @@
     "icon":"spruce_planks.png",
     "version":0,
     "idOld":"planks[variant=spruce]",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":34,
@@ -1426,7 +1198,6 @@
     "icon":"campfire.png",
     "version":14,
     "idOld":"",
-    "needGlass":false,
     "isGlowing":true
 },
 {
@@ -1436,9 +1207,7 @@
     "nameEN":"Netherrack",
     "icon":"netherrack.png",
     "version":0,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":35,
@@ -1447,9 +1216,7 @@
     "nameEN":"Nether brick",
     "icon":"nether_bricks.png",
     "version":0,
-    "idOld":"nether_brick",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"nether_brick"
 },
 {
     "baseColor":35,
@@ -1458,9 +1225,7 @@
     "nameEN":"Magma block",
     "icon":"magma_block.png",
     "version":0,
-    "idOld":"magma",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"magma"
 },
 {
     "baseColor":36,
@@ -1469,9 +1234,7 @@
     "nameEN":"White terracotta",
     "icon":"white_terracotta.png",
     "version":0,
-    "idOld":"stained_hardened_clay[color=white]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_hardened_clay[color=white]"
 },
 {
     "baseColor":36,
@@ -1480,9 +1243,7 @@
     "nameEN":"Calcite",
     "icon":"calcite.png",
     "version":17,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":37,
@@ -1491,9 +1252,7 @@
     "nameEN":"Orange terracotta",
     "icon":"orange_terracotta.png",
     "version":0,
-    "idOld":"stained_hardened_clay[color=orange]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_hardened_clay[color=orange]"
 },
 {
     "baseColor":38,
@@ -1502,9 +1261,7 @@
     "nameEN":"Magenta terracotta",
     "icon":"magenta_terracotta.png",
     "version":0,
-    "idOld":"stained_hardened_clay[color=magenta]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_hardened_clay[color=magenta]"
 },
 {
     "baseColor":39,
@@ -1513,9 +1270,7 @@
     "nameEN":"Light blue terracotta",
     "icon":"light_blue_terracotta.png",
     "version":0,
-    "idOld":"stained_hardened_clay[color=light_blue]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_hardened_clay[color=light_blue]"
 },
 {
     "baseColor":40,
@@ -1524,9 +1279,7 @@
     "nameEN":"Yellow terracotta",
     "icon":"yellow_terracotta.png",
     "version":0,
-    "idOld":"stained_hardened_clay[color=yellow]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_hardened_clay[color=yellow]"
 },
 {
     "baseColor":41,
@@ -1535,9 +1288,7 @@
     "nameEN":"Lime terracotta",
     "icon":"lime_terracotta.png",
     "version":0,
-    "idOld":"stained_hardened_clay[color=lime]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_hardened_clay[color=lime]"
 },
 {
     "baseColor":42,
@@ -1546,9 +1297,7 @@
     "nameEN":"Pink terracotta",
     "icon":"pink_terracotta.png",
     "version":0,
-    "idOld":"stained_hardened_clay[color=pink]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_hardened_clay[color=pink]"
 },
 {
     "baseColor":43,
@@ -1557,9 +1306,7 @@
     "nameEN":"Gray terracotta",
     "icon":"gray_terracotta.png",
     "version":0,
-    "idOld":"stained_hardened_clay[color=gray]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_hardened_clay[color=gray]"
 },
 {
     "baseColor":44,
@@ -1568,9 +1315,7 @@
     "nameEN":"Light gray terracotta",
     "icon":"light_gray_terracotta.png",
     "version":0,
-    "idOld":"stained_hardened_clay[color=silver]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_hardened_clay[color=silver]"
 },
 {
     "baseColor":44,
@@ -1579,9 +1324,7 @@
     "nameEN":"Waxed exposed copper",
     "icon":"waxed_exposed_copper.png",
     "version":17,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":44,
@@ -1590,9 +1333,7 @@
     "nameEN":"Waxed exposed cut copper",
     "icon":"waxed_exposed_cut_copper.png",
     "version":17,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":45,
@@ -1601,9 +1342,7 @@
     "nameEN":"Cyan terracotta",
     "icon":"cyan_terracotta.png",
     "version":0,
-    "idOld":"stained_hardened_clay[color=cyan]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_hardened_clay[color=cyan]"
 },
 {
     "baseColor":46,
@@ -1612,9 +1351,7 @@
     "nameEN":"Purple terracotta",
     "icon":"purple_terracotta.png",
     "version":0,
-    "idOld":"stained_hardened_clay[color=purple]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_hardened_clay[color=purple]"
 },
 {
     "baseColor":47,
@@ -1623,9 +1360,7 @@
     "nameEN":"Blue terracotta",
     "icon":"blue_terracotta.png",
     "version":0,
-    "idOld":"stained_hardened_clay[color=blue]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_hardened_clay[color=blue]"
 },
 {
     "baseColor":48,
@@ -1634,9 +1369,7 @@
     "nameEN":"Brown terracotta",
     "icon":"brown_terracotta.png",
     "version":0,
-    "idOld":"stained_hardened_clay[color=brown]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_hardened_clay[color=brown]"
 },
 {
     "baseColor":48,
@@ -1645,9 +1378,7 @@
     "nameEN":"DripStone Block",
     "icon":"dripstone_block.png",
     "version":17,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":49,
@@ -1656,9 +1387,7 @@
     "nameEN":"Green terracotta",
     "icon":"green_terracotta.png",
     "version":0,
-    "idOld":"stained_hardened_clay[color=green]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_hardened_clay[color=green]"
 },
 {
     "baseColor":50,
@@ -1667,9 +1396,7 @@
     "nameEN":"Red terracotta",
     "icon":"red_terracotta.png",
     "version":0,
-    "idOld":"stained_hardened_clay[color=red]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_hardened_clay[color=red]"
 },
 {
     "baseColor":51,
@@ -1678,9 +1405,7 @@
     "nameEN":"Black terracotta",
     "icon":"black_terracotta.png",
     "version":0,
-    "idOld":"stained_hardened_clay[color=black]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stained_hardened_clay[color=black]"
 },
 {
     "baseColor":52,
@@ -1690,8 +1415,7 @@
     "icon":"crimson_nylium.png",
     "version":16,
     "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "endermanPickable":true
 },
 {
     "baseColor":53,
@@ -1701,8 +1425,7 @@
     "icon":"crimson_planks.png",
     "version":16,
     "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":53,
@@ -1712,8 +1435,7 @@
     "icon":"stripped_crimson_stem.png",
     "version":16,
     "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":54,
@@ -1723,8 +1445,7 @@
     "icon":"crimson_hyphae.png",
     "version":16,
     "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":54,
@@ -1734,8 +1455,7 @@
     "icon":"stripped_crimson_hyphae.png",
     "version":16,
     "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":55,
@@ -1745,8 +1465,7 @@
     "icon":"warped_nylium.png",
     "version":16,
     "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "endermanPickable":true
 },
 {
     "baseColor":55,
@@ -1755,9 +1474,7 @@
     "nameEN":"Waxed oxided copper",
     "icon":"waxed_oxidized_copper.png",
     "version":17,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":55,
@@ -1766,9 +1483,7 @@
     "nameEN":"Waxed oxided cut copper",
     "icon":"waxed_oxidized_cut_copper.png",
     "version":17,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":56,
@@ -1778,8 +1493,7 @@
     "icon":"warped_planks.png",
     "version":16,
     "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":56,
@@ -1789,8 +1503,7 @@
     "icon":"stripped_warped_stem.png",
     "version":16,
     "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":56,
@@ -1799,9 +1512,7 @@
     "nameEN":"Waxed weathered copper",
     "icon":"waxed_weathered_copper.png",
     "version":17,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":56,
@@ -1810,9 +1521,7 @@
     "nameEN":"Waxed weathered cut copper",
     "icon":"waxed_oxidized_cut_copper.png",
     "version":17,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":57,
@@ -1822,8 +1531,7 @@
     "icon":"warped_hyphae.png",
     "version":16,
     "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":57,
@@ -1833,8 +1541,7 @@
     "icon":"stripped_warped_hyphae.png",
     "version":16,
     "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":58,
@@ -1843,9 +1550,7 @@
     "nameEN":"Warped wart block",
     "icon":"warped_wart_block.png",
     "version":16,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":59,
@@ -1854,9 +1559,7 @@
     "nameEN":"Deepslate",
     "icon":"deepslate.png",
     "version":17,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":59,
@@ -1865,9 +1568,7 @@
     "nameEN":"Chiseled deepslate",
     "icon":"chiseled_deepslate.png",
     "version":17,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":59,
@@ -1876,9 +1577,7 @@
     "nameEN":"Polished deepslate",
     "icon":"polished_deepslate.png",
     "version":17,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":59,
@@ -1887,9 +1586,7 @@
     "nameEN":"Deepslate bricks",
     "icon":"deepslate_bricks.png",
     "version":17,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":59,
@@ -1898,9 +1595,7 @@
     "nameEN":"Deepslate tiles",
     "icon":"deepslate_tiles.png",
     "version":17,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":59,
@@ -1909,9 +1604,7 @@
     "nameEN":"Cobbled deepslate",
     "icon":"cobbled_deepslate.png",
     "version":17,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":60,
@@ -1920,9 +1613,7 @@
     "nameEN":"Raw iron block",
     "icon":"raw_iron_block.png",
     "version":17,
-    "idOld":"",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":""
 },
 {
     "baseColor":61,
@@ -1933,6 +1624,7 @@
     "version":17,
     "idOld":"",
     "needGlass":true,
-    "isGlowing":true
+    "isGlowing":true,
+    "burnable":true
 }
 ]}

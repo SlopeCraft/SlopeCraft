@@ -8,8 +8,6 @@
     "icon":"waxed_copper_block.png",
     "version":17,
     "idOld":"",
-    "needGlass":false,
-    "isGlowing":false,
     "Hint0":"这个文件列出了所有用户自定义的方块的信息",
     "Hint1":"你可以按照这样的格式自定义添加新的方块，包括mod方块",
     "Hint2":"但必须遵守json格式",
@@ -20,10 +18,12 @@
     "Hint7":"icon是方块对应图片的文件名，它应当放在CustomBlocks文件夹下",
     "Hint8":"version是方块最早出现的版本。0代表早于1.12，12代表1.12，13代表1.13，如此类推。255代表尚未出现的版本",
     "Hint9":"idOld是该方块在1.12的方块id（如果有的话）",
-    "Hint10":"needGlass代表这个方块的下方需要依附其他方块",
-    "Hint11":"isGlowing代表这个方块是发光的",
-    "Hint12":"所有的Hint都会被忽略",
-    "Hint13":"如果json格式出错，整个文件都会无法解析。"
+    "Hint10":"needGlass代表这个方块的下方需要依附其他方块，默认为否",
+    "Hint11":"isGlowing代表这个方块是发光的，默认为否",
+    "Hint12":"endermanPickable代表这个方块可以被末影人偷走，默认为否",
+    "Hint13":"burnable代表这个方块会被火焰、岩浆或闪电点燃并燃烧，默认为否",
+    "Hint14":"所有的Hint都会被忽略",
+    "Hint15":"如果json格式出错，整个文件都会无法解析。"
 },
 {
     "baseColor":15,
@@ -33,8 +33,6 @@
     "icon":"waxed_cut_copper.png",
     "version":17,
     "idOld":"",
-    "needGlass":false,
-    "isGlowing":false,
     "Hint0":"This json file includes information of all custom blocks.",
     "Hint1":"You can add your custom block in such format, including mod-blocks.",
     "Hint2":"But always remember to follow json format",
@@ -45,10 +43,12 @@
     "Hint7":"icon is the image filename correspoing to this block, the image should be put under CustomBlocks directory.",
     "Hint8":"version is the latest version when the block is added to Minecraft. 0 means earlier than 1.12, 13 means 1.13, and so on. 255 mean future version.",
     "Hint9":"idOld is the blockid in 1.12(if there is)",
-    "Hint10":"needGlass means if this block must be setted on a solid block",
-    "Hint11":"isGlowing means if the block glows.",
-    "Hint12":"All hints will be ignored",
-    "Hint13":"The whole file will failed to be parsed once an error occurred in json format"
+    "Hint10":"needGlass means if this block must be setted on a solid block, default value is false",
+    "Hint11":"isGlowing means if the block glows, default value is false.",
+    "Hint12":"endermanPickable means if the block can be picked by enderman, efault value is false",
+    "Hint13":"burnable means if the block can be lit by fire, lava or lightning blot, default value is false",
+    "Hint14":"All hints will be ignored",
+    "Hint15":"The whole file will failed to be parsed once an error occurred in json format"
 },
 {
     "baseColor":11,
@@ -57,9 +57,7 @@
     "nameEN":"Stone slab",
     "icon":"stone.png",
     "version":0,
-    "idOld":"stone_slab[half=top,variant=stone]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stone_slab[half=top,variant=stone]"
 },
 {
     "baseColor":2,
@@ -68,9 +66,7 @@
     "nameEN":"Sandstone slab",
     "icon":"smooth_sandstone.png",
     "version":0,
-    "idOld":"stone_slab[half=top,variant=sandstone]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stone_slab[half=top,variant=sandstone]"
 },
 {
     "baseColor":11,
@@ -79,9 +75,7 @@
     "nameEN":"Cobblestone slab",
     "icon":"cobblestone.png",
     "version":0,
-    "idOld":"stone_slab[half=top,variant=cobblestone]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stone_slab[half=top,variant=cobblestone]"
 },
 {
     "baseColor":0,
@@ -90,9 +84,7 @@
     "nameEN":"Redstone lamp",
     "icon":"redstone_lamp.png",
     "version":0,
-    "idOld":"redstone_lamp",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"redstone_lamp"
 },
 {
     "baseColor":28,
@@ -101,9 +93,7 @@
     "nameEN":"Brick slab",
     "icon":"bricks.png",
     "version":0,
-    "idOld":"stone_slab[half=top,variant=brick]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stone_slab[half=top,variant=brick]"
 },
 {
     "baseColor":11,
@@ -112,9 +102,7 @@
     "nameEN":"Stonebrick slab",
     "icon":"stone_bricks.png",
     "version":0,
-    "idOld":"stone_slab[half=top,variant=stone_brick]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stone_slab[half=top,variant=stone_brick]"
 },
 {
     "baseColor":35,
@@ -123,9 +111,7 @@
     "nameEN":"Nether brick slab",
     "icon":"nether_bricks.png",
     "version":0,
-    "idOld":"stone_slab[half=top,variant=stone_nether_brick]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stone_slab[half=top,variant=stone_nether_brick]"
 },
 {
     "baseColor":14,
@@ -134,9 +120,7 @@
     "nameEN":"Quartz slab",
     "icon":"quartz_block.png",
     "version":0,
-    "idOld":"stone_slab[half=top,variant=quartz]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stone_slab[half=top,variant=quartz]"
 },
 {
     "baseColor":13,
@@ -145,9 +129,7 @@
     "nameEN":"Oak slab",
     "icon":"oak_planks.png",
     "version":0,
-    "idOld":"wooden_slab[half=top,variant=oak]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"wooden_slab[half=top,variant=oak]"
 },
 {
     "baseColor":34,
@@ -157,8 +139,7 @@
     "icon":"spruce_planks.png",
     "version":0,
     "idOld":"wooden_slab[half=top,variant=spruce]",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":2,
@@ -168,8 +149,7 @@
     "icon":"birch_planks.png",
     "version":0,
     "idOld":"wooden_slab[half=top,variant=birch]",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":10,
@@ -179,8 +159,7 @@
     "icon":"jungle_planks.png",
     "version":0,
     "idOld":"wooden_slab[half=top,variant=jungle]",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":15,
@@ -190,8 +169,7 @@
     "icon":"acacia_planks.png",
     "version":0,
     "idOld":"wooden_slab[half=top,variant=acacia]",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":26,
@@ -201,8 +179,7 @@
     "icon":"dark_oak_planks.png",
     "version":0,
     "idOld":"wooden_slab[half=top,variant=dark_oak]",
-    "needGlass":false,
-    "isGlowing":false
+    "burnable":true
 },
 {
     "baseColor":15,
@@ -211,9 +188,7 @@
     "nameEN":"Red sandstone slab",
     "icon":"smooth_red_sandstone.png",
     "version":0,
-    "idOld":"stone_slab2[half=top,variant=red_sandstone]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"stone_slab2[half=top,variant=red_sandstone]"
 },
 {
     "baseColor":16,
@@ -222,9 +197,7 @@
     "nameEN":"Purpur slab",
     "icon":"purpur_block.png",
     "version":0,
-    "idOld":"purpur_slab[half=top,variant=default]",
-    "needGlass":false,
-    "isGlowing":false
+    "idOld":"purpur_slab[half=top,variant=default]"
 }
 ]
 }
