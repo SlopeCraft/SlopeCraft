@@ -9,8 +9,7 @@
 ## Before submitting an issue for a bug, make sure that the bug isn't fixed in the latest version. Thank you!
 
 1. Can this be used in Bedrock edition?
-   - Not at the moment - no mod that resembles World Edit or Litematic was found.
-   - If you know any ways of importing the files from this program into Bedrock Edition, please tell me.
+   - No.
 
 2. SlopeCraft.exe isn't in this zip file
    - DO NOT DOWNLOAD THE SOURCE CODE !!!!!
@@ -19,9 +18,14 @@
 
 3. I don't know **.7z** files.
    - (i'm not kidding but someone really asked such questions)
+   - GOOGLE IT!
    - Use WinRAR or Bandizip.
 
-4. SlopeCraft turned everything grey after I clicked color adjust? / Why does the color look nothing like the original?
+4. How to make non-square maps?
+   - Why do you believe there's a restriction to prevent you from making non-square map?
+   - SlopeCraft process each pixel strictly instead of scalings your image. Just import your image and make it into map as usual.
+
+5. SlopeCraft turned everything grey after I clicked color adjust? / Why does the color look nothing like the original?
  - Some colors are featured in game, while some others aren't, such as light blue, greyish blue, light pink, light purple, so a substitute color is required
  - A color simulation feature (dithering) has been implemented in v3.5. Enable Dithering will make it better.
 
