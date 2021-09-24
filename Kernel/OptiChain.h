@@ -34,7 +34,6 @@ This file is part of SlopeCraft.
 
 #ifndef removeQt
     #include <QDebug>
-    #include <QRgb>
     #include <QImage>
     #include <QLabel>
 #endif

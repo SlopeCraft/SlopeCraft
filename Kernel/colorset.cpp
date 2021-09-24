@@ -26,7 +26,7 @@ This file is part of SlopeCraft.
 ColorSet* TokiColor::Allowed=NULL;
 ColorSet*TokiColor::Basic=NULL;
 //short TokiColor::DepthIndexEnd[4]={63,127,191,255};
-unsigned char TokiColor::DepthCount[4]={64,64,64,64};
+uchar TokiColor::DepthCount[4]={64,64,64,64};
 bool TokiColor::needFindSide=false;
 
 ColorSet::ColorSet()
@@ -107,12 +107,12 @@ void GetMap(Eigen::VectorXi &Map)
     return;
 }
 
-QRgb ComposeColor(const QRgb&front,const QRgb&back)
+ARGB ComposeColor(const ARGB&front,const ARGB&back)
 {
-    int red=(qRed(front)*qAlpha(front)+qRed(back)*(255-qAlpha(front)))/255;
-    int green=(qGreen(front)*qAlpha(front)+qGreen(back)*(255-qAlpha(front)))/255;
-    int blue=(qBlue(front)*qAlpha(front)+qBlue(back)*(255-qAlpha(front)))/255;
-    return qRgb(red,green,blue);
+    int red=(getR(front)*getA(front)+getR(back)*(255-getA(front)))/255;
+    int green=(getG(front)*getA(front)+getG(back)*(255-getA(front)))/255;
+    int blue=(getB(front)*getA(front)+getB(back)*(255-getA(front)))/255;
+    return ARGB32(red,green,blue);
 }
 
 #endif

@@ -243,39 +243,39 @@ inline float squeeze01(float t)
     return t;
 }
 
-QRgb RGB2QRGB(float r,float g,float b)
+ARGB RGB2ARGB(float r,float g,float b)
 {
-    return qRgb(255*squeeze01(r),255*squeeze01(g),255*squeeze01(b));
+    return ARGB32(255*squeeze01(r),255*squeeze01(g),255*squeeze01(b));
 }
 
-QRgb XYZ2QRGB(float x,float y,float z)
+ARGB XYZ2ARGB(float x,float y,float z)
 {
     /*
 [3.2404814,-1.5371516,-0.4985363;
 -0.9692550,1.8759900,0.0415559;
 0.0556466,-0.2040413,1.0573111]
 */
-    return RGB2QRGB(3.2404814*x-1.5371516*y-0.4985363*z,
+    return RGB2ARGB(3.2404814*x-1.5371516*y-0.4985363*z,
                     -0.9692550*x+1.8759900*y+0.0415559*z,
                     0.0556466*x-0.2040413*y+1.0573111*z);
 }
 
-QRgb Lab2QRGB(float L,float a,float b)
+ARGB Lab2ARGB(float L,float a,float b)
 {
 float x,y,z;
 Lab2XYZ(L,a,b,x,y,z);
-return XYZ2QRGB(x,y,z);
+return XYZ2ARGB(x,y,z);
 }
 
-QRgb HSV2QRGB(float H,float S,float V)
+ARGB HSV2ARGB(float H,float S,float V)
 {
     float r,g,b;
     HSV2RGB(H,S,V,r,g,b);
-    return RGB2QRGB(r,g,b);
+    return RGB2ARGB(r,g,b);
 }
 
 
-TokiColor::TokiColor(const QRgb& rawColor,char _ColorSpaceType)
+TokiColor::TokiColor(ARGB rawColor,char _ColorSpaceType)
 {
 ColorSpaceType=_ColorSpaceType;
 if (_ColorSpaceType>='a')
@@ -283,19 +283,19 @@ if (_ColorSpaceType>='a')
 switch (_ColorSpaceType)
 {
 case 'R':
-    c3[0]=std::max(qRed(rawColor)/255.0f,Thre);
-    c3[1]=std::max(qGreen(rawColor)/255.0f,Thre);
-    c3[2]=std::max(qBlue(rawColor)/255.0f,Thre);
+    c3[0]=std::max(getR(rawColor)/255.0f,Thre);
+    c3[1]=std::max(getG(rawColor)/255.0f,Thre);
+    c3[2]=std::max(getB(rawColor)/255.0f,Thre);
     break;
 case 'H':
-    RGB2HSV(qRed(rawColor)/255.0f,qGreen(rawColor)/255.0f,qBlue(rawColor)/255.0f,c3[0],c3[1],c3[2]);
+    RGB2HSV(getR(rawColor)/255.0f,getG(rawColor)/255.0f,getB(rawColor)/255.0f,c3[0],c3[1],c3[2]);
     break;
 case 'X':
-    RGB2XYZ(qRed(rawColor)/255.0f,qGreen(rawColor)/255.0f,qBlue(rawColor)/255.0f,c3[0],c3[1],c3[2]);
+    RGB2XYZ(getR(rawColor)/255.0f,getG(rawColor)/255.0f,getB(rawColor)/255.0f,c3[0],c3[1],c3[2]);
     break;
 default:
     float X,Y,Z;
-    RGB2XYZ(qRed(rawColor)/255.0f,qGreen(rawColor)/255.0f,qBlue(rawColor)/255.0f,X,Y,Z);
+    RGB2XYZ(getR(rawColor)/255.0f,getG(rawColor)/255.0f,getB(rawColor)/255.0f,X,Y,Z);
     XYZ2Lab(X,Y,Z,c3[0],c3[1],c3[2]);
     break;
 }
@@ -303,10 +303,28 @@ default:
 Result=0;
 }
 
+ARGB ARGB32(uint r,uint g,uint b,uint a) {
+    return ((a&0xFF)<<24)|((r&0xFF)<<16)|((g&0xFF)<<8)|(b&0xFF);
+}
 
-unsigned char TokiColor::apply(QRgb Color)
-{
-    if(qAlpha(Color)<=0)
+uchar getA(ARGB argb) {
+    return (argb>>24);
+}
+
+uchar getR(ARGB argb) {
+    return (argb&0x00FF0000)>>16;
+}
+
+uchar getG(ARGB argb) {
+    return (argb&0x0000FF00)>>8;
+}
+
+uchar getB(ARGB argb) {
+    return (argb&0x000000FF);
+}
+
+unsigned char TokiColor::apply(ARGB Color) {
+    if(getA(Color)<=0)
     {
         ResultDiff=0.0f;
         sideResult[0]=0;sideResult[1]=0;
@@ -317,10 +335,8 @@ unsigned char TokiColor::apply(QRgb Color)
         return apply();
 }
 
-unsigned char TokiColor::apply()
-{
-switch (ColorSpaceType)
-{
+unsigned char TokiColor::apply() {
+switch (ColorSpaceType) {
 case 'R':
     return applyRGB_plus();
 case 'r':
@@ -337,9 +353,9 @@ default:
 }
 
 
-unsigned char TokiColor::applyRGB()
-{
-    if(Result)return Result;
+unsigned char TokiColor::applyRGB() {
+    if(Result)
+        return Result;
     int tempIndex=0;
     auto Diff0_2=(Allowed->_RGB.col(0)-c3[0]).square();
     auto Diff1_2=(Allowed->_RGB.col(1)-c3[1]).square();
@@ -358,9 +374,9 @@ unsigned char TokiColor::applyRGB()
     return Result;
 }
 
-unsigned char TokiColor::applyRGB_plus()
-{
-    if(Result)return Result;
+unsigned char TokiColor::applyRGB_plus() {
+    if(Result)
+        return Result;
     int tempIndex=0;
     Eigen::ArrayXXf &allowedColors=Allowed->_RGB;
     float R=c3[0];
@@ -406,9 +422,9 @@ unsigned char TokiColor::applyRGB_plus()
     return Result;
 }
 
-unsigned char TokiColor::applyHSV()
-{
-    if(Result)return Result;
+unsigned char TokiColor::applyHSV() {
+    if(Result)
+        return Result;
     int tempIndex=0;
     Eigen::ArrayXXf &allowedColors=Allowed->HSV;
     //float h=c3[0];
@@ -426,9 +442,9 @@ unsigned char TokiColor::applyHSV()
     return Result;
 }
 
-unsigned char TokiColor::applyXYZ()
-{
-    if(Result)return Result;
+unsigned char TokiColor::applyXYZ() {
+    if(Result)
+        return Result;
     int tempIndex=0;
     auto Diff0_2=(Allowed->XYZ.col(0).array()-c3[0]).square();
     auto Diff1_2=(Allowed->XYZ.col(1).array()-c3[1]).square();
@@ -445,9 +461,9 @@ unsigned char TokiColor::applyXYZ()
     return Result;
 }
 
-unsigned char TokiColor::applyLab_old()
-{
-    if(Result)return Result;
+unsigned char TokiColor::applyLab_old() {
+    if(Result)
+        return Result;
     int tempIndex=0;
     float L=c3[0];
     float a=c3[1];
@@ -471,9 +487,9 @@ unsigned char TokiColor::applyLab_old()
     return Result;
 }
 
-unsigned char TokiColor::applyLab_new()
-{
-    if(Result)return Result;
+unsigned char TokiColor::applyLab_new() {
+    if(Result)
+        return Result;
     int tempIndex=0;
     float L1s=c3[0];
     float a1s=c3[1];

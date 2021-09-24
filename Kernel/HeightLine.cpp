@@ -1,9 +1,9 @@
 #include "HeightLine.h"
 
-const QRgb HeightLine::BlockColor=qRgb(0,0,0);
-const QRgb HeightLine::AirColor=qRgb(255,255,255);
-const QRgb HeightLine::WaterColor=qRgb(0,64,255);
-const QRgb HeightLine::greyColor=qRgb(192,192,192);
+const ARGB HeightLine::BlockColor=ARGB32(0,0,0);
+const ARGB HeightLine::AirColor=ARGB32(255,255,255);
+const ARGB HeightLine::WaterColor=ARGB32(0,64,255);
+const ARGB HeightLine::greyColor=ARGB32(192,192,192);
 
 HeightLine::HeightLine()
 {

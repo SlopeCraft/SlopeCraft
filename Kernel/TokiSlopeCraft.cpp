@@ -294,13 +294,13 @@ std::string TokiSlopeCraft::Noder(const short *src,int size) const {
         return dst;
 }
 
-void TokiSlopeCraft::getARGB32(QRgb * dest) const {
+void TokiSlopeCraft::getARGB32(ARGB * dest) const {
     if(kernelStep<colorSetReady) {
         emit reportError(errorFlag::HASTY_MANIPULATION);
         return;
     }
     for(uchar base=0;base<64;base++)
-        dest[base]=qRgba(255*Basic._RGB(128+base,0),
+        dest[base]=ARGB32(255*Basic._RGB(128+base,0),
                          255*Basic._RGB(128+base,1),
                          255*Basic._RGB(128+base,2),255
                          );
@@ -424,32 +424,32 @@ void TokiSlopeCraft::Dither() {
     ditheredImage.setZero(sizePic(0),sizePic(1));
 
     Eigen::ArrayXXf *ColorMap=nullptr;
-    QRgb Current;
-    QRgb (*CvtFun)(float,float,float);
+    ARGB Current;
+    ARGB (*CvtFun)(float,float,float);
     switch (ConvertAlgo) {
     case 'R':
         ColorMap=&Basic._RGB;
-        CvtFun=RGB2QRGB;
+        CvtFun=RGB2ARGB;
         break;
     case 'r':
         ColorMap=&Basic._RGB;
-        CvtFun=RGB2QRGB;
+        CvtFun=RGB2ARGB;
         break;
     case 'H':
         ColorMap=&Basic.HSV;
-        CvtFun=HSV2QRGB;
+        CvtFun=HSV2ARGB;
         break;
     case 'L':
         ColorMap=&Basic.Lab;
-        CvtFun=Lab2QRGB;
+        CvtFun=Lab2ARGB;
         break;
     case 'l':
         ColorMap=&Basic.Lab;
-        CvtFun=Lab2QRGB;
+        CvtFun=Lab2ARGB;
         break;
     default:
         ColorMap=&Basic.XYZ;
-        CvtFun=XYZ2QRGB;
+        CvtFun=XYZ2ARGB;
         break;
     }
     Eigen::ArrayXXf &CM=*ColorMap;
@@ -474,7 +474,7 @@ void TokiSlopeCraft::Dither() {
         {
             for(short c=0;c<sizePic(1);c++)
             {
-                if(qAlpha(rawImage(r,c))<=0)continue;
+                if(getA(rawImage(r,c))<=0)continue;
 
                 Current=CvtFun(Dither[0](r+1,c+1),Dither[1](r+1,c+1),Dither[2](r+1,c+1));
                 ditheredImage(r,c)=Current;
@@ -504,7 +504,7 @@ void TokiSlopeCraft::Dither() {
         {
             for(short c=sizePic(1)-1;c>=0;c--)
             {
-                if(qAlpha(rawImage(r,c))<=0)continue;
+                if(getA(rawImage(r,c))<=0)continue;
 
                 Current=CvtFun(Dither[0](r+1,c+1),Dither[1](r+1,c+1),Dither[2](r+1,c+1));
                 ditheredImage(r,c)=Current;
@@ -538,7 +538,7 @@ void TokiSlopeCraft::Dither() {
     qDebug()<<"Hash中共新插入了"<<newCount<<"个颜色";
 }
 
-void matchColor(TokiColor * tColor,QRgb qColor) {
+void matchColor(TokiColor * tColor,ARGB qColor) {
     tColor->apply(qColor);
 }
 
@@ -591,12 +591,12 @@ Eigen::ArrayXXi RGBint=(255.0f*Basic._RGB).cast<int>();
         {
             if(mapPic(r,c)<=3)
             {
-                cvtedImg(r,c)=qRgba(0,0,0,0);
+                cvtedImg(r,c)=ARGB32(0,0,0,0);
                 continue;
             }
             Index=mapColor2Index(mapPic(r,c));
 
-           cvtedImg(r,c)=qRgb(RGBint(Index,0),RGBint(Index,1),RGBint(Index,2));
+           cvtedImg(r,c)=ARGB32(RGBint(Index,0),RGBint(Index,1),RGBint(Index,2));
         }
     }
     return cvtedImg;

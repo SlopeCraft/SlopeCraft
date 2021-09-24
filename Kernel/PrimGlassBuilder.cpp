@@ -22,9 +22,9 @@ This file is part of SlopeCraft.
 
 #include "PrimGlassBuilder.h"
 
-const ARGB airColor=qRgb(255,255,255);
-const ARGB targetColor=qRgb(0,0,0);
-const ARGB glassColor=qRgb(192,192,192);
+const ARGB airColor=ARGB32(255,255,255);
+const ARGB targetColor=ARGB32(0,0,0);
+const ARGB glassColor=ARGB32(192,192,192);
 
 
 

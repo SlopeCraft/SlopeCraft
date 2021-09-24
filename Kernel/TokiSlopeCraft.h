@@ -47,14 +47,10 @@ This file is part of SlopeCraft.
 
 #ifdef WITH_QT
 #include <QObject>
-#endif
-
-
-
-
-#include <QRgb>
 #include <QtConcurrent>
 #include <QFuture>
+#endif
+
 //typedef unsigned char gameVersion;
 typedef Eigen::Array<uint,Eigen::Dynamic,Eigen::Dynamic> EImage;
 //using namespace Eigen;
@@ -179,7 +175,7 @@ public:
         const simpleBlock[64] ,
         const EImage &);
     std::vector<std::string> getAuthorURL() const;
-    void getARGB32(QRgb*) const;
+    void getARGB32(ARGB*) const;
 
 //can do in convertionReady:
     bool convert(convertAlgo=RGB_Better,bool dither=false);
@@ -255,7 +251,7 @@ private:
     EImage rawImage;
     EImage ditheredImage;
 
-    std::unordered_map<QRgb,TokiColor> colorHash;
+    std::unordered_map<ARGB,TokiColor> colorHash;
 
     ushort maxAllowedHeight;
     ushort bridgeInterval;
@@ -297,7 +293,7 @@ bool readFromTokiColor(const std::string & FileName,Eigen::ArrayXXf & M);
 bool readFromTokiColor(const char*src,Eigen::ArrayXXf & M);
 uchar h2d(char h);
 void crash();
-void matchColor(TokiColor * tColor,QRgb qColor);
+void matchColor(TokiColor * tColor,ARGB qColor);
 
 #ifndef WITH_QT
 void defaultProgressRangeSet(int,int,int);

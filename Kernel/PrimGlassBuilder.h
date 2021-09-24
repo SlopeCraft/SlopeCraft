@@ -40,11 +40,11 @@ This file is part of SlopeCraft.
 #include <stack>
 #include <unordered_set>
 #include <unsupported/Eigen/CXX11/Tensor>
+#include "TokiColor.h"
 #include "WaterItem.h"
 
 #ifdef WITH_QT
     #include <QObject>
-    #include <QRgb>
     #include <QDebug>
 #else
     #define qDebug()<< std::cerr<<

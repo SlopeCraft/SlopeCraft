@@ -51,11 +51,11 @@ void Lab2XYZ(float L,float a,float b,float&X,float&Y,float&Z);
 float Lab00(float,float,float,float,float,float);
 
 float squeeze01(float);
-QRgb RGB2QRGB(float,float,float);
-QRgb HSV2QRGB(float,float,float);
-QRgb XYZ2QRGB(float,float,float);
-QRgb Lab2QRGB(float,float,float);
-QRgb ComposeColor(const QRgb&front,const QRgb&back);
+ARGB RGB2ARGB(float,float,float);
+ARGB HSV2ARGB(float,float,float);
+ARGB XYZ2ARGB(float,float,float);
+ARGB Lab2ARGB(float,float,float);
+ARGB ComposeColor(const ARGB&front,const ARGB&back);
 bool readFromFile(const char*FileName,Eigen::ArrayXXf & M);
 bool readFromTokiColor(const char*,Eigen::ArrayXXf &,const std::string &);
 uchar h2d(char);

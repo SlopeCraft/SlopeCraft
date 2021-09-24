@@ -28,10 +28,10 @@ public:
     const std::map<ushort,waterItem> & getWaterMap() const;
     EImage toImg() const;
 
-    static const QRgb BlockColor;
-    static const QRgb AirColor;
-    static const QRgb WaterColor;
-    static const QRgb greyColor;
+    static const ARGB BlockColor;
+    static const ARGB AirColor;
+    static const ARGB WaterColor;
+    static const ARGB greyColor;
 
 private:
     Eigen::ArrayXi base;

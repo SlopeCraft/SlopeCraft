@@ -21,16 +21,25 @@ This file is part of SlopeCraft.
 */
 #ifndef TOKICOLOR_H
 #define TOKICOLOR_H
-#include <QRgb>
 #include <Eigen/Dense>
 #include <iostream>
+
+typedef unsigned int ARGB ;
+typedef unsigned int uint ;
+typedef unsigned char uchar ;
+
+ARGB ARGB32(uint r,uint g,uint b,uint a=255);
+uchar getA(ARGB);
+uchar getR(ARGB);
+uchar getG(ARGB);
+uchar getB(ARGB);
 
 
 class ColorSet;
 class TokiColor
 {
 public:
-    TokiColor(const QRgb&,char);
+    TokiColor(ARGB,char);
     TokiColor();
     //QRgb Raw;//相当于Key
     float c3[3];//三通道的颜色值。可能为RGB,HSV,Lab,XYZ
@@ -44,7 +53,7 @@ public:
     static ColorSet * Allowed;
     //static short DepthIndexEnd[4];
     static unsigned char DepthCount[4];
-    unsigned char apply(QRgb);
+    unsigned char apply(ARGB);
 private:
     unsigned char apply();
     unsigned char applyRGB();
