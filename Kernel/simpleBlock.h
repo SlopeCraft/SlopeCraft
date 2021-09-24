@@ -25,8 +25,8 @@ This file is part of SlopeCraft.
 #include <string>
 #include <vector>
 #include <iostream>
+#include "defines.h"
 
-typedef unsigned char uchar ;
 typedef std::vector<std::string> stringList;
 class simpleBlock
 {

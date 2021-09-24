@@ -103,6 +103,7 @@ HEADERS += \
     Kernel/lossyCompressor.h \
     Kernel/simpleBlock.h \
     Headers/tpstrategywind.h \
+    Kernel/defines.h
 
 FORMS += \
     others/mainwindow.ui \

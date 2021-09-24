@@ -108,7 +108,7 @@ PrimGlassBuilder::PrimGlassBuilder()
 
 glassMap PrimGlassBuilder::makeBridge(const TokiMap & _targetMap,
                                       walkableMap* walkable) {
-    clock_t lastTime=std::clock();
+    //clock_t lastTime=std::clock();
     const int rowCount=ceil(double(_targetMap.rows())/130);
     const int colCount=ceil(double(_targetMap.cols())/130);
 
@@ -117,7 +117,7 @@ glassMap PrimGlassBuilder::makeBridge(const TokiMap & _targetMap,
     std::vector<std::vector<walkableMap>>walkableMaps(rowCount);
     std::vector<std::vector<TokiMap>> targetMaps(rowCount);
 
-    qDebug()<<"开始分区分块，共["<<rowCount<<','<<colCount<<"]个分区";
+    //std::cerr<<"开始分区分块，共["<<rowCount<<','<<colCount<<"]个分区";
     for(int r=0;r<rowCount;r++) {
         algos[r].resize(colCount);
         glassMaps[r].resize(colCount);
@@ -143,7 +143,7 @@ glassMap PrimGlassBuilder::makeBridge(const TokiMap & _targetMap,
 #endif
         }
     }
-    qDebug("分区分块完毕，开始在每个分区内搭桥");
+    //qDebug("分区分块完毕，开始在每个分区内搭桥");
     for(int r=0;r<rowCount;r++) {
         for(int c=0;c<colCount;c++) {
             //qDebug()<<"开始处理第["<<r<<","<<c<<"]块分区";
@@ -152,7 +152,7 @@ glassMap PrimGlassBuilder::makeBridge(const TokiMap & _targetMap,
                                         (walkable==nullptr)?nullptr:(&walkableMaps[r][c]));
         }
     }
-    qDebug("每个分区内的搭桥完毕，开始在分区间搭桥");
+    //qDebug("每个分区内的搭桥完毕，开始在分区间搭桥");
     std::stack<edge> interRegionEdges;
     for(int r=0;r<rowCount;r++)
         for(int c=0;c<colCount;c++) {
@@ -169,9 +169,9 @@ glassMap PrimGlassBuilder::makeBridge(const TokiMap & _targetMap,
                     interRegionEdges.push(temp);
             }
         }
-    qDebug()<<"分区间搭桥完毕，将搭建"<<interRegionEdges.size()<<"个分区间桥梁";
+    //qDebug()<<"分区间搭桥完毕，将搭建"<<interRegionEdges.size()<<"个分区间桥梁";
 
-    qDebug()<<"开始拼合各分区的结果";
+    //qDebug()<<"开始拼合各分区的结果";
 
     glassMap result;
     result.setZero(_targetMap.rows(),_targetMap.cols());
@@ -196,19 +196,19 @@ glassMap PrimGlassBuilder::makeBridge(const TokiMap & _targetMap,
                         =walkableMaps[r][c];
             }
         }
-    qDebug("开始绘制分区间的桥");
+    //qDebug("开始绘制分区间的桥");
     while(!interRegionEdges.empty()) {
         interRegionEdges.top().drawEdge(result);
         if(walkable!=nullptr)
             interRegionEdges.top().drawEdge(*walkable,true);
         interRegionEdges.pop();
     }
-    qDebug("拼合分区完毕，开始delete各个分区的algo");
+    //qDebug("拼合分区完毕，开始delete各个分区的algo");
     for(int r=0;r<rowCount;r++)
         for(int c=0;c<colCount;c++)
             delete algos[r][c];
 
-    qDebug()<<"用时"<<std::clock()-lastTime<<"毫秒";
+    //qDebug()<<"用时"<<std::clock()-lastTime<<"毫秒";
 
 return result;
 }
@@ -216,7 +216,7 @@ return result;
 glassMap PrimGlassBuilder::make4SingleMap(const TokiMap &_targetMap,
                                           walkableMap *walkable) {
     if(_targetMap.rows()>130||_targetMap.cols()>130) {
-        qDebug("错误！make4SingleMap不应当收到超过130*130的图");
+        //qDebug("错误！make4SingleMap不应当收到超过130*130的图");
         return glassMap(0,0);
     }
     targetPoints.clear();
@@ -332,7 +332,7 @@ void PrimGlassBuilder::runPrim() {
         //从列表中第一个元素开始搜索第一个可行边
         for(;;) {
             if(selectedEdge==edges.end()) {
-                qDebug("错误！找不到可行边");
+                std::cerr<<"Error: failed to find valid edge!\n";
                 break;
             }
             TokiPos z=selectedEdge->beg;

@@ -5,13 +5,10 @@
 #include <vector>
 #include <map>
 #include <Eigen/Dense>
+#include "defines.h"
 #include "ColorSet.h"
 #include "WaterItem.h"
 #include "OptiChain.h"
-//using namespace Eigen;
-
-typedef unsigned short ushort;
-typedef Eigen::Array<uint,Eigen::Dynamic,Eigen::Dynamic> EImage;
 
 class HeightLine
 {

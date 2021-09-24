@@ -23,10 +23,8 @@ This file is part of SlopeCraft.
 #define TOKICOLOR_H
 #include <Eigen/Dense>
 #include <iostream>
+#include "defines.h"
 
-typedef unsigned int ARGB ;
-typedef unsigned int uint ;
-typedef unsigned char uchar ;
 
 ARGB ARGB32(uint r,uint g,uint b,uint a=255);
 uchar getA(ARGB);

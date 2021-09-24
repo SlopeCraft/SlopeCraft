@@ -21,7 +21,6 @@ This file is part of SlopeCraft.
 */
 
 
-//NBTWriter for Qt
 //Made by TokiNoBug
 
 #ifndef _NBTWRITER_H
@@ -32,8 +31,8 @@ This file is part of SlopeCraft.
 #include <iostream>
 #include <fstream>
 #include <QString>
-#include <QDebug>
 #include <cstring>
+#include "defines.h"
 //using namespace std;
 #define TwinStackSize 128
 namespace NBT{

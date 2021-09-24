@@ -37,12 +37,6 @@ bool OptiChain::AllowSinkHang=false;
 #else
     #define AllowSinkHang true
 #endif
-#ifndef removeQt
-QRgb isTColor=qRgb(0,0,0);
-QRgb isFColor=qRgb(255,255,255);
-QRgb WaterColor=qRgb(0,64,255);
-QRgb greyColor=qRgb(192,192,192);
-#endif
 Region::Region(short _Beg,short _End,RegionType _Type)
 {
     Beg=_Beg;End=_End;type=_Type;
@@ -419,47 +413,3 @@ void OptiChain::Sink(const Region &Reg)
         LowLine.segment(Reg.Beg,Reg.size())-=offset;
     }
 }
-#ifndef removeQt
-QImage OptiChain::toQImage(int pixelSize)
-{
-    int maxHeight=HighLine.maxCoeff()+1;
-    HighLine-=LowLine.minCoeff();
-    LowLine-=LowLine.minCoeff();
-    ArrayXXi QRgbMat(maxHeight,MapSize);
-
-    QRgbMat.setConstant(isFColor);
-
-    for(int i=0;i<MapSize;i++)
-    {
-        if(isAir(i))
-            continue;
-        if(isWater(i))
-        {
-            QRgbMat.block(LowLine(i),i,HighLine(i)-LowLine(i)+1,1)=WaterColor;
-            continue;
-        }
-        QRgbMat(HighLine(i),i)=isTColor;
-    }
-    QRgbMat.colwise().reverseInPlace();
-
-    return Mat2Image(QRgbMat,pixelSize);
-}
-
-QImage Mat2Image(const ArrayXXi& mat,int pixelSize)
-{
-    QImage img(mat.cols()*pixelSize,mat.rows()*pixelSize,QImage::Format_ARGB32);
-
-    QRgb* SL=nullptr;
-
-    for(int r=0;r<mat.rows()*pixelSize;r++)
-    {
-        SL=(QRgb*)img.scanLine(r);
-        for(int c=0;c<mat.cols()*pixelSize;c++)
-        {
-            SL[c]=mat(r/pixelSize,c/pixelSize);
-        }
-    }
-
-    return img;
-}
-#endif

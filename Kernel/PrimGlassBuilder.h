@@ -28,7 +28,7 @@ This file is part of SlopeCraft.
 
 //using namespace Eigen;
 
-#define WITH_QT
+//#define WITH_QT
 
 #include <iostream>
 #include <random>
@@ -45,26 +45,19 @@ This file is part of SlopeCraft.
 
 #ifdef WITH_QT
     #include <QObject>
-    #include <QDebug>
-#else
-    #define qDebug()<< std::cerr<<
-    #define emit ;
-    typedef unsigned char uchar;
-    typedef unsigned short ushort;
-    typedef unsigned int uint;
 #endif
 
 
 //using namespace Eigen;
-typedef unsigned int ARGB;
-typedef Eigen::Array<ARGB,Eigen::Dynamic,Eigen::Dynamic> EImage;
-typedef Eigen::Array<uchar,Eigen::Dynamic,Eigen::Dynamic> TokiMap;
-typedef TokiMap glassMap;
-typedef TokiMap walkableMap;
 
 extern const ARGB airColor;
 extern const ARGB targetColor;
 extern const ARGB glassColor;
+
+typedef Eigen::Array<uchar,Eigen::Dynamic,Eigen::Dynamic> TokiMap;
+typedef TokiMap glassMap;
+typedef TokiMap walkableMap;
+
 
 class edge
 {

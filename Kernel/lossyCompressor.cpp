@@ -33,7 +33,7 @@ const double LossyCompressor::mutateProb=0.01;
 const double LossyCompressor::initializeNonZeroRatio=0.05;
 
 double randD(){
-    static std::default_random_engine generator(time(0));
+    static std::default_random_engine generator(std::time(NULL));
     static std::uniform_real_distribution<double> rander(0,1);
     return rander(generator);
 }

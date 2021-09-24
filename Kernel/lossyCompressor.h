@@ -29,6 +29,7 @@ This file is part of SlopeCraft.
 #include <vector>
 #include <list>
 #include <cmath>
+#include <ctime>
 #include <algorithm>
 #include <random>
 #include <Eigen/Dense>
@@ -37,7 +38,6 @@ This file is part of SlopeCraft.
 #include "ColorSet.h"
 #include "HeightLine.h"
 
-#define WITH_QT
 
 #ifdef WITH_QT
     #include <QObject>

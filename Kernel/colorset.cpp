@@ -59,7 +59,7 @@ bool ColorSet::ApplyAllowed(ColorSet*standard,bool *MIndex)
 */
         if(totalAllowColorCount<=1)
         {
-            qDebug("你只准许了一两种颜色，巧妇难为无米之炊！");
+            std::cerr<<"Too few color allowed!\n";
             _RGB.setZero(1,3);
             HSV.setZero(1,3);
             Lab.setZero(1,3);
@@ -67,7 +67,7 @@ bool ColorSet::ApplyAllowed(ColorSet*standard,bool *MIndex)
             Map.setZero(1);
             return false;
         }
-        qDebug()<<"共允许使用"<<totalAllowColorCount<<"种颜色";
+        std::cerr<<totalAllowColorCount<<"colors allowed.\n";
 
         _RGB.setZero(totalAllowColorCount,3);
         HSV.setZero(totalAllowColorCount,3);

@@ -25,7 +25,6 @@ This file is part of SlopeCraft.
 #define _NBTWriter_Cpp
 #include "NBTWriter.h"
 #include <iostream>
-#include <QDebug>
 
 using namespace NBT;
 
@@ -302,7 +301,7 @@ int NBTWriter::writeCompound(const char*Name)
         return ThisCount;
     }
 
-    qDebug()<<"条件不符合，没有写入Compound";
+    std::cerr<<"Failed to write Compound Tag\n";
     ByteCount+=ThisCount;
     return ThisCount;
 
@@ -356,7 +355,7 @@ int NBTWriter::writeListHead(const char*Name,char TypeId,int listSize)
         if(listSize==0)elementWritten();
         return ThisCount;
     }
-    qDebug()<<"失败：未能创建List"<<Name;
+    std::cerr<<"Failed to create List Tag "<<Name<<std::endl;
     return ThisCount;
 
 }
@@ -546,63 +545,63 @@ int NBTWriter::emergencyFill()
         switch (readType())
         {
             case idEnd:
-                qDebug()<<"你为什么要创建一个tag_End的列表？这里我不管了！";
+                std::cerr<<"Why write a list of tag_End?\n";
                 continue;
             case idByte:
-                qDebug()<<"emergencyFill写入了Byte";
+                std::cerr<<"emergencyFill wrote in Byte Tag\n";
                 ThisCount+=writeByte("autoByte",114);
                 continue;
             case idShort:
-                qDebug()<<"emergencyFill写入了Short";
+                std::cerr<<"emergencyFill wrote in Short Tag\n";
                 ThisCount+=writeShort("autoShort",514);
                 continue;
             case idInt:
-                qDebug()<<"emergencyFill写入了Int";
+                std::cerr<<"emergencyFill wrote in Int Tag\n";
                 ThisCount+=writeInt("autoInt",114514);
                 continue;
             case idLong:
-                qDebug()<<"emergencyFill写入了Long";
+                std::cerr<<"emergencyFill wrote in Long Tag\n";
                 ThisCount+=writeLong("autoLong",1919810);
                 continue;
             case idFloat:
-                qDebug()<<"emergencyFill写入了Float";
+                std::cerr<<"emergencyFill wrote in Float Tag\n";
                 ThisCount+=writeFloat("autoFloat",114.514f);
                 continue;
             case idDouble:
-                qDebug()<<"emergencyFill写入了Double";
+                std::cerr<<"emergencyFill wrote in Double Tag\n";
                 ThisCount+=writeDouble("autoDouble",1919810.114514);
                 continue;
             case idByteArray:
-                qDebug()<<"emergencyFill写入了ByteArray";
+                std::cerr<<"emergencyFill wrote in ByteArray Tag\n";
                 ThisCount+=writeByteArrayHead("autoByteArray",1);
                 continue;
             case idString:
-                qDebug()<<"emergencyFill写入了String";
+                std::cerr<<"emergencyFill wrote in String Tag\n";
                 ThisCount+=writeString("autoString","FuckYUUUUUUUUUUUUUUUUU!");
                 continue;
             case idList:
-                qDebug()<<"emergencyFill写入了List";
+                std::cerr<<"emergencyFill wrote in List Tag\n";
                 ThisCount+=writeListHead("autoList",NBT::idInt,1);
                 continue;
             case idCompound:
-                qDebug()<<"emergencyFill写入了Compound";
+                std::cerr<<"emergencyFill wrote in Compound Tag\n";
                 ThisCount+=writeCompound("autoCompound");
                 continue;
             case idIntArray:
-                qDebug()<<"emergencyFill写入了IntArray";
+                std::cerr<<"emergencyFill wrote in IntArray Tag\n";
                 ThisCount+=writeIntArrayHead("autoIntArray",1);
                 continue;
             case idLongArray:
-                qDebug()<<"emergencyFill写入了LongArray";
+                std::cerr<<"emergencyFill wrote in LongArray Tag\n";
                 ThisCount+=writeLongArrayHead("autoLongArray",1);
                 continue;
             default:
-                qDebug()<<"我滴妈，你咋搞出来个不存在的id？管不了！";
+                std::cerr<<"How did you manage to generate an unexisting id?\n";
                 continue;
         }
     }
     ThisCount+=writeString("TokiNoBug'sWarning","There's sth wrong with ur NBTWriter, the file format is completed automatically instead of manually.");
-    qDebug("紧急补全格式成功");
+    std::cerr<<"emergency fill finished.\n";
     return ThisCount;
 }
 unsigned long long NBTWriter::getByteCount()

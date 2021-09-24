@@ -29,6 +29,8 @@ Eigen::Array<float,2,3>TokiSlopeCraft::DitherMapRL;
 void defaultProgressRangeSet(int,int,int) {};
 void defaultProgressAdd(int){};
 void defaultKeepAwake(){};
+void defaultReportError(TokiSlopeCraft::errorFlag) {}
+void defaultReportWorkStatues(TokiSlopeCraft::workStatues) {}
 #endif
 
 
@@ -42,6 +44,8 @@ TokiSlopeCraft::TokiSlopeCraft()
     progressRangeSet=defaultProgressRangeSet;
     progressAdd=defaultProgressAdd;
     keepAwake=defaultKeepAwake;
+    reportError=defaultReportError;
+    reportWorkingStatue=defaultReportWorkStatues;
 #endif
 
     kernelStep=TokiSlopeCraft::step::nothing;
@@ -165,7 +169,7 @@ bool readFromTokiColor(const char*src,Eigen::ArrayXXf & M) {
         if(i%3==2)
             rp++;
     }
-    qDebug()<<"TokiSlopeCraft::成功加载了一个颜色表";
+    //qDebug()<<"TokiSlopeCraft::成功加载了一个颜色表";
     return true;
 }
 
@@ -178,6 +182,7 @@ bool TokiSlopeCraft::setType(mapTypes type,
                              const bool * allowedBaseColor,
                              const simpleBlock * palettes,
                              const EImage & _rawimg) {
+
     if(kernelStep<colorSetReady) {
         emit reportError(errorFlag::HASTY_MANIPULATION);
         return false;
@@ -376,12 +381,13 @@ void TokiSlopeCraft::pushToHash() {
                 }
             emit progressAdd(sizePic(1));
         }
-        qDebug()<<"总颜色数量："<<R->size();
+        std::cerr<<"Total color count:"<<R->size()<<std::endl;
 }
 
 void TokiSlopeCraft::applyTokiColor() {
     auto R=&colorHash;
     int step=sizePic(2)/R->size();
+#ifdef WITH_QT
         std::queue<QFuture<void>> taskTracker;
         for(auto it=R->begin();it!=R->end();it++)
             taskTracker.push(QtConcurrent::run(matchColor,&it->second,it->first));
@@ -392,7 +398,14 @@ void TokiSlopeCraft::applyTokiColor() {
             taskTracker.pop();
         }
 
-        qDebug("子线程执行完毕");
+        std::cerr<<"Sub threads finished\n";
+#else
+    for(auto it=R->begin();it!=R->end();it++) {
+        matchColor(&it->second,it->first);
+        emit progressAdd(step);
+    }
+    std::cerr<<"color converted\n";
+#endif
 }
 
 void TokiSlopeCraft::fillMapMat() {
@@ -463,7 +476,7 @@ void TokiSlopeCraft::Dither() {
             Dither[2](r+1,c+1)=R->operator[](rawImage(r,c)).c3[2];
         }
     }
-    qDebug("成功填充了待抖动的矩阵Dither");
+    std::cerr<<"Filled Dither matrix\n";
     float Error[3];
     int newCount=0;
     TokiColor* oldColor=nullptr;
@@ -498,7 +511,6 @@ void TokiSlopeCraft::Dither() {
                 Dither[1].block(r+1,c+1-1,2,3)+=Error[1]*DitherMapLR;
                 Dither[2].block(r+1,c+1-1,2,3)+=Error[2]*DitherMapLR;
             }
-            //qDebug("从左至右遍历了一行");
         }
         else
         {
@@ -528,14 +540,13 @@ void TokiSlopeCraft::Dither() {
                 Dither[1].block(r+1,c+1-1,2,3)+=Error[1]*DitherMapRL;
                 Dither[2].block(r+1,c+1-1,2,3)+=Error[2]*DitherMapRL;
             }
-            //qDebug("从左至右遍历了一行");
         }
         isDirLR=!isDirLR;
 
         emit progressAdd(sizePic(1));
     }
-    qDebug("完成了误差扩散");
-    qDebug()<<"Hash中共新插入了"<<newCount<<"个颜色";
+    std::cerr<<"Error diffuse finished\n";
+    std::cerr<<"Inserted "<<newCount<<" colors to hash\n";
 }
 
 void matchColor(TokiColor * tColor,ARGB qColor) {
@@ -650,7 +661,7 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(const std::string & Folder
             std::string currentUn=FolderPath+"/map_"+std::to_string(currentIndex)+".dat.TokiNoBug";
             //string currentFile=FolderPath+"/map_"+std::to_string(currentIndex)+".dat";
 
-            qDebug()<<"开始导出("<<r<<","<<c<<")的地图"<<QString::fromStdString(currentUn);
+            std::cerr<<"Export map of ("<<r<<","<<c<<")"<<currentUn<<std::endl;
 
             NBT::NBTWriter MapFile(currentUn.data());
 
@@ -673,7 +684,7 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(const std::string & Folder
                 MapFile.writeInt("DataVersion",2730);
                 break;
             default:
-                qDebug("错误的游戏版本！");
+                std::cerr<<"Wrong game version!\n";
                 break;
             }
             MapFile.writeString("ExportedBy","Exported by SlopeCraft v3.6, developed by TokiNoBug");
@@ -720,7 +731,7 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(const std::string & Folder
                     MapFile.writeByte("locked",1);
                     break;
                 default:
-                    qDebug("错误的游戏版本！");
+                    std::cerr<<"Wrong game version!\n";
                     break;
                 }
 
@@ -886,6 +897,7 @@ void TokiSlopeCraft::makeHeight_new() {
     size3D[1]=HighMap.maxCoeff()+1;//y
 }
 
+/*
 void TokiSlopeCraft::makeHeight_old() {
     Base.setConstant(sizePic(0)+1,sizePic(1),11);
     WaterList.clear();
@@ -899,7 +911,7 @@ void TokiSlopeCraft::makeHeight_old() {
 
     if((rawShadow>=3).any())
     {
-        qDebug("错误：Depth中存在深度为3的方块");
+        //qDebug("错误：Depth中存在深度为3的方块");
         return;
     }
     dealedDepth.setZero(sizePic(0)+1,sizePic(1));
@@ -929,7 +941,7 @@ void TokiSlopeCraft::makeHeight_old() {
     LowMap.setZero(sizePic(0)+1,sizePic(1));
 
     int waterCount=WaterList.size();
-    qDebug()<<"共有"<<waterCount<<"个水柱";
+    //qDebug()<<"共有"<<waterCount<<"个水柱";
     for(short r=0;r<sizePic(0);r++)//遍历每一行，根据高度差构建高度图
     {
         HighMap.row(r+1)=HighMap.row(r)+dealedDepth.row(r+1);
@@ -999,6 +1011,7 @@ void TokiSlopeCraft::makeHeight_old() {
     size3D[1]=1+maxHeight;//y
     return;
 }
+*/
 
 void TokiSlopeCraft::buildHeight() {
         Build.resize(size3D[0],size3D[1],size3D[2]);
@@ -1007,8 +1020,8 @@ void TokiSlopeCraft::buildHeight() {
         //为了区分玻璃与空气，张量中存储的是Base+1.所以元素为1对应着玻璃，0对应空气
         int x=0,y=0,z=0;
         int yLow=0;
-        qDebug()<<"共有"<<WaterList.size()<<"个水柱";
-        qDebug()<<902;
+
+        std::cerr<<WaterList.size()<<" water columns in map\n";
         for(auto it=WaterList.begin();it!=WaterList.end();it++)//水柱周围的玻璃
         {
             x=TokiCol(it->first)+1;
@@ -1025,7 +1038,6 @@ void TokiSlopeCraft::buildHeight() {
             if(yLow>=1)
                 Build(x,yLow-1,z)=1;//柱底玻璃
         }
-        qDebug()<<919;
 
         emit progressAdd(sizePic(2));
 
@@ -1059,7 +1071,6 @@ void TokiSlopeCraft::buildHeight() {
             emit progressAdd(sizePic(1));
         }
 
-    qDebug()<<938;
 
     emit progressAdd(sizePic(2));
 
@@ -1097,7 +1108,7 @@ void TokiSlopeCraft::makeBridge() {
             extension[0]=size3D[0];extension[1]=1;extension[2]=size3D[2];
             TokiMap targetMap=ySlice2TokiMap(Build.slice(start,extension));
             glassMap glass;
-            qDebug()<<"开始在y="<<y<<"的切片搭桥";
+            std::cerr<<"Construct glass bridge at y="<<y<<std::endl;
             glass=glassBuilder->makeBridge(targetMap);
             for(int r=0;r<glass.rows();r++)
                 for(int c=0;c<glass.cols();c++)
@@ -1113,7 +1124,7 @@ void TokiSlopeCraft::makeBridge() {
             TokiMap yCur=ySlice2TokiMap(Build.slice(start,extension));
             start[1]=y-1;
             TokiMap yBelow=ySlice2TokiMap(Build.slice(start,extension));
-            qDebug()<<"开始在y="<<y<<"与y="<<y-1<<"之间搭桥";
+            std::cerr<<"Construct glass bridge between y="<<y<<" and y="<<y-1<<std::endl;
             glassMap glass=connectBetweenLayers(yCur,yBelow,nullptr);
 
             for(int r=0;r<glass.rows();r++)
@@ -1124,7 +1135,7 @@ void TokiSlopeCraft::makeBridge() {
         }
     }
     emit algoProgressRangeSet(0,100,100);
-    qDebug("makeBridge完毕");
+    std::cerr<<"makeBridge finished\n";
 }
 
 void TokiSlopeCraft::get3DSize(int & x,int & y,int & z) const {
@@ -1355,7 +1366,8 @@ std::string TokiSlopeCraft::exportAsLitematic(const std::string & TargetName,
         Lite.writeInt("Version",5);
         break;
     default:
-        qDebug("错误的游戏版本！");break;
+        std::cerr<<"Wrong game version!\n";
+        break;
     }
 
     Lite.close();
@@ -1444,7 +1456,8 @@ std::string TokiSlopeCraft::exportAsStructure(const std::string &TargetName) con
                     file.writeInt("DataVersion",2730);
                     break;
                 default:
-                    qDebug("错误的游戏版本！");break;
+                    std::cerr<<"Wrong game version!\n";
+                    break;
                 }
     file.close();
     emit reportWorkingStatue(workStatues::none);

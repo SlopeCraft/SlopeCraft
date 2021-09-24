@@ -23,7 +23,7 @@ This file is part of SlopeCraft.
 #ifndef TOKISLOPECRAFT_H
 #define TOKISLOPECRAFT_H
 /////////////////////////////
-#define WITH_QT
+//#define WITH_QT
 /////////////////////////////
 
 #include <iostream>
@@ -32,7 +32,6 @@ This file is part of SlopeCraft.
 #include <vector>
 #include <queue>
 #include <unordered_map>
-#include <Eigen/Dense>
 #include <unsupported/Eigen/CXX11/Tensor>
 
 #include "ColorSet.h"
@@ -52,18 +51,9 @@ This file is part of SlopeCraft.
 #endif
 
 //typedef unsigned char gameVersion;
-typedef Eigen::Array<uint,Eigen::Dynamic,Eigen::Dynamic> EImage;
 //using namespace Eigen;
 
-#ifndef WITH_QT
-/*
-    #define emit ;
-    #define qDebug() cerr;
-    void qDebug(const char* info) {
-        std::cerr<<info<<std::endl;
-    }
-*/
-#endif
+
 
 #define mapColor2Index(mapColor) (64*(mapColor%4)+(mapColor/4))
 #define index2mapColor(index) (4*(index%64)+(index/64))
@@ -225,7 +215,7 @@ signals:
     void (*algoProgressRangeSet)(int,int,int);
     void (*algoProgressAdd)(int);
 
-    void (*error)(errorFlag);
+    void (*reportError)(errorFlag);
     void (*reportWorkingStatue)(workStatues);
 #endif
 private slots:
@@ -274,7 +264,7 @@ private:
     int sizePic(short) const;
 
 //for build
-    void makeHeight_old();//构建HighMap和LowMap
+    //void makeHeight_old();//构建HighMap和LowMap
     void makeHeight_new();
     //void makeHeightInLine(const ushort c);
     void buildHeight();//构建Build
@@ -299,6 +289,8 @@ void matchColor(TokiColor * tColor,ARGB qColor);
 void defaultProgressRangeSet(int,int,int);
 void defaultProgressAdd(int);
 void defaultKeepAwake();
+void defaultReportError(TokiSlopeCraft::errorFlag);
+void defaultReportWorkStatues(TokiSlopeCraft::workStatues);
 #endif
 
 #endif // TOKISLOPECRAFT_H
