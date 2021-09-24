@@ -14,6 +14,8 @@
 
 > 在minecraft中生成多种样式的地图画
 
+# 原理介绍
+* [地图画原理](https://github.com/ToKiNoBug/SlopeCraftTutorial/blob/main/BasicPrinciple/Principle%20of%20map%20pixel%20arts.md)
 
 # 使用教程
 

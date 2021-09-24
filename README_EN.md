@@ -14,6 +14,8 @@
 
 > Get your 3D pixel painting in minecraft.
 
+# Principles
+* [Pinciple of Map Pixel Arts](https://github.com/ToKiNoBug/SlopeCraftTutorial/blob/main/BasicPrinciple/Principle%20of%20map%20pixel%20arts_EN.md)
 
 # Tutorials:
 
