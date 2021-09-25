@@ -1008,7 +1008,7 @@ It might be laggy, the progressbar shows the progress.</translation>
     <message>
         <location filename="mainwindow.ui" line="1395"/>
         <source>墙面地图画</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Wall Map</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="2036"/>
@@ -1047,17 +1047,21 @@ It might be laggy, the progressbar shows the progress.</translation>
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Microsoft YaHei UI&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:700; color:#ffffff;&quot;&gt;地图画&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Microsoft YaHei UI&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:700; color:#ffffff;&quot;&gt;Map Arts&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="386"/>
         <source>结构文件</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Structure</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="445"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;span style=&quot; font-weight:700; color:#ffffff;&quot;&gt;联系作者&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;span style=&quot; font-weight:700; color:#ffffff;&quot;&gt;Contact Us&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1894"/>
@@ -1186,32 +1190,32 @@ map files</translation>
     <message>
         <location filename="mainwindow.ui" line="2335"/>
         <source>无损压缩</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Lossless Compress</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="2420"/>
         <source>智能有损压缩</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Intelligent Lossy Compress</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="2498"/>
         <source>防火</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fire Proof</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="2508"/>
         <source>  层</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"> layers</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="2511"/>
         <source>搭桥间隔:  </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Construct interval: </translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="2581"/>
         <source>允许搭桥</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Construct Glass Bridge</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="2594"/>
@@ -1221,17 +1225,17 @@ map files</translation>
     <message>
         <location filename="mainwindow.ui" line="2601"/>
         <source>防末影人</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Enderman Proof</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="2627"/>
         <source>其他选项</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Others</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="2634"/>
         <source>搭桥</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Glass Bridge</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="2839"/>
@@ -1340,7 +1344,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="mainwindow.ui" line="2857"/>
         <source>地图画尺寸</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Map art size</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="2890"/>
@@ -1355,7 +1359,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="mainwindow.ui" line="2904"/>
         <source>总命令数</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Total command count</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="2911"/>
@@ -1535,58 +1539,61 @@ After you reset the strategy, load the image again.</translation>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1406"/>
         <source>转化原图为地图画时出错</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Error occurred when converting image to map</translation>
     </message>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1407"/>
         <source>原图为空！你可能没有导入原图！</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Your source image is empty! You might have forgot to import source image!</translation>
     </message>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1410"/>
         <source>构建高度矩阵时出现错误</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Error occurred when making height martix</translation>
     </message>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1411"/>
         <source>原版地图画不允许出现第三个阴影（不存在的几何关系不可能生存实装！）
 请检查你的地图画类型，纯文件地图画不可以导出为投影！</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">The third shadow shouldn&apos;t apper in vanilla map!
+Check your map type, remember that file-only map can&apos;t be exported as litematic!</translation>
     </message>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1415"/>
         <source>跳步操作</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">You skipped a step</translation>
     </message>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1416"/>
         <source>SlopeCraft不允许你跳步操作，请按照左侧竖边栏的顺序操作！</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Skipping operation is not allowed. Please follow the order shown in the sidebar!</translation>
     </message>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1419"/>
         <source>有损压缩失败</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Inteligent lossy compression failed</translation>
     </message>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1420"/>
         <source>在构建高度矩阵时，有损压缩失败，没能将地图画压缩到目标高度。         这可能是因为地图画行数过大。         尝试启用无损压缩，或者提高最大允许高度——不要给软件地图画太大的压力！</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Lossy compressor failed to deflate the maximum height down to your minmium allowed height.
+It&apos;s probably because your image is too large.
+Try enabling lossless compression, or increase the maximun allowed height -- don&apos;t push it too hard!</translation>
     </message>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1425"/>
         <source>最大允许高度太小了</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">The maxmium allowed height is too low</translation>
     </message>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1426"/>
         <source>有损压缩的最大允许不要低于14，否则很容易压缩失败</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">The maximum allowed height should be no less than 14, otherwise lossy compressor seldom succeeds.</translation>
     </message>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1430"/>
         <source>严重错误：颜色表文件HSV.TokiColor损坏</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fatal Error: colormap file HSV.TokiColor is corrupted</translation>
     </message>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1431"/>
@@ -1594,92 +1601,92 @@ After you reset the strategy, load the image again.</translation>
         <location filename="../Sources/mainwindow.cpp" line="1441"/>
         <location filename="../Sources/mainwindow.cpp" line="1446"/>
         <source>SlopeCraft不能正常解析颜色表文件，它是不可以被修改的！</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">SlopeCraft failed to parse the colormap file, it mustn&apos;t be modified!</translation>
     </message>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1435"/>
         <source>严重错误：颜色表文件Lab.TokiColor损坏</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fatal Error: colormap file Lab.TokiColor is corrupted</translation>
     </message>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1440"/>
         <source>严重错误：颜色表文件XYZ.TokiColor损坏</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fatal Error: colormap file XYZ.TokiColor is corrupted</translation>
     </message>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1445"/>
         <source>严重错误：颜色表文件RGB.TokiColor损坏</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fatal Error: colormap file RGB.TokiColor is corrupted</translation>
     </message>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1449"/>
         <source>允许使用的颜色过少</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Too few colors allowed!</translation>
     </message>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1450"/>
         <source>你应该勾选启用尽可能多的基色，颜色太少是不行的！</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">You should enable as much base colors as possible.</translation>
     </message>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1479"/>
         <source>正在构建高度矩阵</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Making height matrix</translation>
     </message>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1482"/>
         <source>正在构建三维结构</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Building 3D structure</translation>
     </message>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1485"/>
         <source>正在收集整张图片的颜色</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Collecting colors of the whole image</translation>
     </message>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1488"/>
         <source>正在压缩立体地图画</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Compressing 3D map pixel arts</translation>
     </message>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1491"/>
         <source>正在为立体地图画搭桥</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Constructing glass bridge</translation>
     </message>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1494"/>
         <source>正在匹配颜色</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Matching colors</translation>
     </message>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1497"/>
         <source>正在使用抖动仿色</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Dithering</translation>
     </message>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1500"/>
         <source>正在将平板地图画变为墙面地图画</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Converting flat map art to wall map art</translation>
     </message>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1503"/>
         <source>正在写入三维结构</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Writing 3D structure</translation>
     </message>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1506"/>
         <source>正在写入方块列表</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Writing block palette</translation>
     </message>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1509"/>
         <source>正在写入地图数据文件</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Writing map datas</translation>
     </message>
     <message>
         <location filename="../Sources/mainwindow.cpp" line="1512"/>
         <source>正在写入基础信息</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Writing meta datas</translation>
     </message>
     <message>
         <source>你的地图画将适用1.17+版本
@@ -1819,7 +1826,7 @@ After you reset the strategy, load the image again.</translation>
     <message>
         <location filename="previewwind.ui" line="510"/>
         <source>如果使用了有损压缩，上一步生成的地图画可能会被轻微的修改</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">If lossy compression is allowed, the converted image might be slightly modified.</translation>
     </message>
 </context>
 <context>
