@@ -187,6 +187,12 @@ bool TokiSlopeCraft::setType(mapTypes type,
         emit reportError(errorFlag::HASTY_MANIPULATION);
         return false;
     }
+
+    if(_rawimg.size()<=0) {
+        emit reportError(errorFlag::EMPTY_RAW_IMAGE);
+        return false;
+    }
+
     rawImage=_rawimg;
     mapType=type;
     mcVer=ver;

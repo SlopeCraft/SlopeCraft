@@ -85,6 +85,12 @@ bool TokiBaseColor::isAllOverVersion() const {//判断是否所有方块都超�
 }
 
 void TokiBaseColor::versionCheck() {
+    checkBox->setEnabled(baseColor!=0&&!isAllOverVersion());
+    if(!checkBox->isEnabled()) {
+        checkBox->setChecked(false||baseColor==0);
+    }
+    isEnabled=checkBox->isChecked();
+
     if(tbs.size()<=0) {
         selected=65535;
         return;}
@@ -115,16 +121,11 @@ void TokiBaseColor::versionCheck() {
         tbs[selected]->getNCTarget()->setChecked(true);
     }
 
-    checkBox->setEnabled(!isAllOverVersion());
-    if(!checkBox->isEnabled()) {
-        checkBox->setChecked(false);
-    }
-    isEnabled=checkBox->isChecked();
-
 }
 
 void TokiBaseColor::setSelected(ushort sel) {
     tbs[sel]->getNCTarget()->setChecked(true);
+    versionCheck();
 }
 
 void TokiBaseColor::updateEnabled(bool isChecked) {

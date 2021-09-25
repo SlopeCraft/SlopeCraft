@@ -996,26 +996,30 @@ bool TokiSlopeCraft::setType(mapTypes type,
     if(ui->isGame17->isChecked())
         ver=TokiSlopeCraft::gameVersion::MC17;
     }
-    qDebug("975");
+
     bool allowedBaseColor[64];
     Manager->getEnableList(allowedBaseColor);
-    qDebug("978");
+
     simpleBlock palette[64];
     Manager->getSimpleBlockList(palette);
-    qDebug("981");
+
 
     /*for(uchar i=0;i<temp.size();i++){qDebug()<<i;
         palette[i].copyFrom(temp[i]);}*/
-    qDebug("983");
+
     EImage rawImg=QImage2EImage(rawPic);
-    qDebug("985");
+
     Kernel->setType(type,ver,allowedBaseColor,palette,rawImg);
-    qDebug("987");
+
     updateEnables();
 }
 
 EImage QImage2EImage(const QImage & qi) {
     EImage ei;
+    if(qi.isNull()||qi.height()<=0||qi.width()<=0) {
+        ei.setZero(0,0);
+        return ei;
+    }
     ei.setZero(qi.height(),qi.width());
     const QRgb * CL=nullptr;
     for(int r=0;r<ei.rows();r++) {
@@ -1070,7 +1074,8 @@ qDebug("开始SetType");
 if(Kernel->queryStep()<TokiSlopeCraft::convertionReady) {
     qDebug("重新setType");
     kernelSetType();
-
+if(Kernel->queryStep()<TokiSlopeCraft::convertionReady)
+    return;
 }
 
 TokiSlopeCraft::convertAlgo now;
@@ -1396,6 +1401,10 @@ void MainWindow::showError(TokiSlopeCraft::errorFlag error) {
     switch (error) {
     case TokiSlopeCraft::errorFlag::NO_ERROR_OCCUR:
         return;
+    case TokiSlopeCraft::errorFlag::EMPTY_RAW_IMAGE:
+        title=tr("转化原图为地图画时出错");
+        text=tr("原图为空！你可能没有导入原图！");
+        break;
     case TokiSlopeCraft::errorFlag::DEPTH_3_IN_VANILLA_MAP:
         title=tr("构建高度矩阵时出现错误");
         text=tr("原版地图画不允许出现第三个阴影（不存在的几何关系不可能生存实装！）\n" \
