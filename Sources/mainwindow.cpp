@@ -1176,7 +1176,8 @@ void MainWindow::on_Build4Lite_clicked() {
     proTracker=ui->ShowProgressExLite;
     qDebug()<<"ui->maxHeight->value()="<<ui->maxHeight->value();
     Kernel->build(cS,ui->maxHeight->value(),
-                  gBS,ui->glassBridgeInterval->value());
+                  gBS,ui->glassBridgeInterval->value(),
+                  ui->allowAntiFire->isChecked(),ui->allowAntiEnderman->isChecked());
 
     int size3D[3],total;
 

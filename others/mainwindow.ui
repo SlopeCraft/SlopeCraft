@@ -578,7 +578,7 @@ font: 11pt &quot;微软雅黑&quot;;
        <enum>QFrame::Plain</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>5</number>
       </property>
       <widget class="QWidget" name="PageStart">
        <property name="styleSheet">
@@ -2293,85 +2293,15 @@ font: 11pt &quot;微软雅黑&quot;;
          <number>9</number>
         </property>
         <item>
-         <layout class="QGridLayout" name="gridLayout_2" rowstretch="0,0,0,0,0,0,0,0,0,0">
+         <layout class="QGridLayout" name="gridLayout_2" rowstretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0">
           <property name="rightMargin">
            <number>0</number>
           </property>
           <property name="verticalSpacing">
            <number>12</number>
           </property>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_2">
-            <property name="font">
-             <font>
-              <family>微软雅黑</family>
-              <pointsize>10</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>投影作者</string>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="3">
-           <widget class="QLabel" name="ShowLiteBlocks">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <family>微软雅黑</family>
-             </font>
-            </property>
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0" rowspan="3">
-           <widget class="QLabel" name="label_34">
-            <property name="font">
-             <font>
-              <family>微软雅黑</family>
-             </font>
-            </property>
-            <property name="text">
-             <string>压缩高度</string>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="2">
-           <widget class="QLabel" name="label_5">
-            <property name="font">
-             <font>
-              <family>微软雅黑</family>
-             </font>
-            </property>
-            <property name="text">
-             <string>总方块数</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="2">
-           <widget class="QLabel" name="label_4">
-            <property name="font">
-             <font>
-              <family>微软雅黑</family>
-             </font>
-            </property>
-            <property name="text">
-             <string>投影尺寸</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QPlainTextEdit" name="InputAuthor">
+          <item row="0" column="1">
+           <widget class="QPlainTextEdit" name="InputLiteName">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
               <horstretch>0</horstretch>
@@ -2390,42 +2320,33 @@ font: 11pt &quot;微软雅黑&quot;;
              </font>
             </property>
             <property name="plainText">
-             <string>SlopeCraft</string>
+             <string>Pixel Paint by SlopeCraft</string>
             </property>
            </widget>
           </item>
-          <item row="6" column="1">
-           <widget class="QCheckBox" name="allowGlassBridge">
-            <property name="text">
-             <string>允许搭桥</string>
+          <item row="4" column="1">
+           <widget class="QCheckBox" name="AllowNaturalOpti">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+             </font>
             </property>
-           </widget>
-          </item>
-          <item row="8" column="1">
-           <widget class="QCheckBox" name="allowAntiFire">
             <property name="text">
-             <string>防火</string>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="1">
-           <widget class="QCheckBox" name="allowAntiEnderman">
-            <property name="text">
-             <string>防末影人</string>
+             <string>无损压缩</string>
             </property>
             <property name="checked">
              <bool>true</bool>
             </property>
            </widget>
           </item>
-          <item row="6" column="0" rowspan="2">
-           <widget class="QLabel" name="label_37">
-            <property name="text">
-             <string>搭桥</string>
+          <item row="7" column="0" colspan="2">
+           <widget class="Line" name="line_4">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
             </property>
            </widget>
           </item>
-          <item row="5" column="1">
+          <item row="6" column="1">
            <widget class="QSpinBox" name="maxHeight">
             <property name="enabled">
              <bool>true</bool>
@@ -2458,7 +2379,7 @@ font: 11pt &quot;微软雅黑&quot;;
             </property>
            </widget>
           </item>
-          <item row="8" column="3">
+          <item row="12" column="3">
            <widget class="QLabel" name="ShowLiteXYZ">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -2482,6 +2403,151 @@ font: 11pt &quot;微软雅黑&quot;;
             </property>
             <property name="text">
              <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QCheckBox" name="AllowForcedOpti">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+             </font>
+            </property>
+            <property name="text">
+             <string>智能有损压缩</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_3">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>投影名称</string>
+            </property>
+           </widget>
+          </item>
+          <item row="13" column="2">
+           <widget class="QLabel" name="label_5">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+             </font>
+            </property>
+            <property name="text">
+             <string>总方块数</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0" rowspan="3">
+           <widget class="QLabel" name="label_34">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+             </font>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="text">
+             <string>压缩高度</string>
+            </property>
+           </widget>
+          </item>
+          <item row="13" column="3">
+           <widget class="QLabel" name="ShowLiteBlocks">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+             </font>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0" colspan="2">
+           <widget class="Line" name="line_6">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="12" column="1">
+           <widget class="QCheckBox" name="allowAntiFire">
+            <property name="text">
+             <string>防火</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="1" rowspan="2">
+           <widget class="QSpinBox" name="glassBridgeInterval">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="suffix">
+             <string>  层</string>
+            </property>
+            <property name="prefix">
+             <string>搭桥间隔:  </string>
+            </property>
+            <property name="value">
+             <number>4</number>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QPlainTextEdit" name="InputAuthor">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+             </font>
+            </property>
+            <property name="plainText">
+             <string>SlopeCraft</string>
+            </property>
+           </widget>
+          </item>
+          <item row="12" column="2">
+           <widget class="QLabel" name="label_4">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+             </font>
+            </property>
+            <property name="text">
+             <string>投影尺寸</string>
             </property>
            </widget>
           </item>
@@ -2509,25 +2575,74 @@ font: 11pt &quot;微软雅黑&quot;;
             </property>
            </widget>
           </item>
-          <item row="4" column="1">
-           <widget class="QCheckBox" name="AllowForcedOpti">
-            <property name="enabled">
-             <bool>true</bool>
+          <item row="8" column="1">
+           <widget class="QCheckBox" name="allowGlassBridge">
+            <property name="text">
+             <string>允许搭桥</string>
             </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_2">
             <property name="font">
              <font>
               <family>微软雅黑</family>
+              <pointsize>10</pointsize>
              </font>
             </property>
             <property name="text">
-             <string>智能有损压缩</string>
+             <string>投影作者</string>
+            </property>
+           </widget>
+          </item>
+          <item row="13" column="1">
+           <widget class="QCheckBox" name="allowAntiEnderman">
+            <property name="text">
+             <string>防末影人</string>
             </property>
             <property name="checked">
              <bool>true</bool>
             </property>
            </widget>
           </item>
-          <item row="0" column="2" rowspan="8" colspan="2">
+          <item row="2" column="0">
+           <widget class="QLabel" name="label">
+            <property name="font">
+             <font>
+              <family>微软雅黑</family>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>投影区域名称</string>
+            </property>
+           </widget>
+          </item>
+          <item row="12" column="0" rowspan="2">
+           <widget class="QLabel" name="label_38">
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="text">
+             <string>其他选项</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="0" rowspan="3">
+           <widget class="QLabel" name="label_37">
+            <property name="text">
+             <string>搭桥</string>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="0" colspan="2">
+           <widget class="Line" name="line_5">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2" rowspan="12" colspan="2">
            <widget class="QLabel" name="label_12">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -2545,94 +2660,6 @@ font: 11pt &quot;微软雅黑&quot;;
             </property>
             <property name="wordWrap">
              <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_3">
-            <property name="font">
-             <font>
-              <family>微软雅黑</family>
-              <pointsize>10</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>投影名称</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label">
-            <property name="font">
-             <font>
-              <family>微软雅黑</family>
-              <pointsize>10</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>投影区域名称</string>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="1">
-           <widget class="QSpinBox" name="glassBridgeInterval">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="suffix">
-             <string>  层</string>
-            </property>
-            <property name="prefix">
-             <string>搭桥间隔:  </string>
-            </property>
-            <property name="value">
-             <number>4</number>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QPlainTextEdit" name="InputLiteName">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <family>微软雅黑</family>
-             </font>
-            </property>
-            <property name="plainText">
-             <string>Pixel Paint by SlopeCraft</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QCheckBox" name="AllowNaturalOpti">
-            <property name="font">
-             <font>
-              <family>微软雅黑</family>
-             </font>
-            </property>
-            <property name="text">
-             <string>无损压缩</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="0" rowspan="2">
-           <widget class="QLabel" name="label_38">
-            <property name="text">
-             <string>其他选项</string>
             </property>
            </widget>
           </item>

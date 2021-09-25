@@ -177,7 +177,8 @@ public:
 
 //can do in converted:
     bool build(compressSettings=noCompress,ushort=256,
-               glassBridgeSettings=noBridge,ushort=3);//构建三维结构
+               glassBridgeSettings=noBridge,ushort=3,
+               bool fireProof=false,bool endermanProof=false);//构建三维结构
     EImage getConovertedImage() const;
     std::vector<std::string> exportAsData(const std::string &,int) const;
 //can do in builded:
@@ -267,7 +268,7 @@ private:
     //void makeHeight_old();//构建HighMap和LowMap
     void makeHeight_new();
     //void makeHeightInLine(const ushort c);
-    void buildHeight();//构建Build
+    void buildHeight(bool=false,bool=false);//构建Build
     void makeBridge();
 //for Litematic
     void writeBlock(const std::string &netBlockId,

@@ -776,7 +776,8 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(const std::string & Folder
 }
 
 bool TokiSlopeCraft::build(compressSettings cS, ushort mAH,
-                           glassBridgeSettings gBS,ushort bI) {
+                           glassBridgeSettings gBS,ushort bI,
+                           bool fireProof,bool endermanProof) {
     if(kernelStep<converted){
         emit reportError(errorFlag::HASTY_MANIPULATION);
         std::cerr<<"hasty!"<<std::endl;
@@ -809,7 +810,7 @@ bool TokiSlopeCraft::build(compressSettings cS, ushort mAH,
 
     emit reportWorkingStatue(workStatues::building3D);
     std::cerr<<"start buildHeight"<<std::endl;
-    buildHeight();
+    buildHeight(fireProof,endermanProof);
     std::cerr<<"buildHeight finished"<<std::endl;
     emit progressRangeSet(0,9*sizePic(2),8*sizePic(2));
 
@@ -1022,7 +1023,7 @@ void TokiSlopeCraft::makeHeight_old() {
 }
 */
 
-void TokiSlopeCraft::buildHeight() {
+void TokiSlopeCraft::buildHeight(bool fireProof,bool endermanProof) {
         Build.resize(size3D[0],size3D[1],size3D[2]);
         Build.setZero();
         //Base(r+1,c)<->High(r+1,c)<->Build(c+1,High(r+1,c),r+1)
@@ -1059,8 +1060,8 @@ void TokiSlopeCraft::buildHeight() {
                 x=c+1;y=LowMap(r+1,c);z=r+1;
                 if(y>=1&&blockPalette[Base(r+1,c)].needGlass)
                     Build(x,y-1,z)=0+1;
-                if(blockPalette[Base(r+1,c)].burnable||
-                        blockPalette[Base(r+1,c)].endermanPickable) {
+                if((fireProof&&blockPalette[Base(r+1,c)].burnable)||
+                        (endermanProof&&blockPalette[Base(r+1,c)].endermanPickable)) {
                     if(y>=1&&Build(x,y-1,z)==0)
                         Build(x,y-1,z)=0+1;
                     if(x>=1&&Build(x-1,y,z)==0)
