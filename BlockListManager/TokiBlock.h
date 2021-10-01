@@ -6,6 +6,7 @@
 #include <QString>
 #include <QJsonObject>
 #include <QFile>
+#include <QMessageBox>
 #include "simpleBlock.h"
 
 enum Language {

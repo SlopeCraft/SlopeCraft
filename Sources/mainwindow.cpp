@@ -542,6 +542,39 @@ while(true) {
 return QJsonArray();
 }
 
+QString MainWindow::getCustomBlockListDir(QString Dir) {
+    while(true) {
+        if(QDir(Dir).exists()) {
+            return Dir;
+        }
+        else {
+            int userChoice=
+            QMessageBox::warning(this,
+                                 tr("错误：存放自定义方块图标的文件夹CustomBlocks不存在"),
+                                 tr("CustomBlocks文件夹存储了用户自定义方块列表所有方块对应的图片。\n这个错误不致命，可以忽略，但最好重新下载SlopeCraft。\n点击Retry重新寻找这个文件夹，点击Ignore忽略这个错误，点击Close退出程序"),
+                                 QMessageBox::StandardButton::Retry,
+                                 QMessageBox::StandardButton::Ignore,
+                                 QMessageBox::StandardButton::Close);
+            switch (userChoice) {
+            case QMessageBox::StandardButton::Retry:
+                Dir=QFileDialog::getExistingDirectory(this,
+                                                         tr("重新寻找自定义方块图标文件夹CustomBlocks"),
+                                                      "./",
+                                                      QFileDialog::Option::ReadOnly);
+                if(!Dir.isEmpty()) {
+                    continue;
+                }
+                return "./";
+            case QMessageBox::StandardButton::Ignore:
+                return "./";
+            default:
+                exit(0);
+            }
+        }
+    }
+    return Dir;
+}
+
 void MainWindow::loadBlockList() {
 
     QJsonArray ja=getFixedBlocksList("./Blocks/FixedBlocks.json");
@@ -595,8 +628,6 @@ void MainWindow::loadBlockList() {
 
 
 //开始解析用户自定义的方块列表
-    Dir="./Blocks/CustomBlocks";
-
     /*
     while(!QFile(Path).exists()) {
         int choice=QMessageBox::question(this,
@@ -638,6 +669,8 @@ void MainWindow::loadBlockList() {
         return;
     }*/
     ja=getCustomBlockList("./Blocks/CustomBlocks.json");
+
+    Dir=getCustomBlockListDir("./Blocks/CustomBlocks");
 
     Manager->addBlocks(ja,Dir);
 

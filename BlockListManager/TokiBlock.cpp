@@ -25,8 +25,26 @@ target->setText(nameZH);
 target->setChecked(true);
 
 connect(target,&QRadioButton::clicked,this,&TokiBlock::onTargetClicked);
+static bool showLater=true;
+if((!QFile(imgName).exists()||QIcon(imgName).isNull())) {
+    if(showLater) {
+        int userChoice=QMessageBox::warning(nullptr,tr("错误：方块对应的图像不存在或不可用"),
+                             tr("方块id：")+QString(block.id.data())+tr("\n缺失的图像：")+imgName+
+                             tr("\n你可以点击Yes忽略这个错误，点击YesToAll屏蔽同类的警告，或者点击Close结束程序"),
+                             QMessageBox::StandardButton::Yes,
+                             QMessageBox::StandardButton::YesToAll,
+                             QMessageBox::StandardButton::Close);
 
-if(!QFile(imgName).exists()) {
+        switch (userChoice) {
+        case QMessageBox::StandardButton::Yes:
+            break;
+        case QMessageBox::StandardButton::YesToAll:
+            showLater=false;
+            break;
+        default:
+            exit(0);
+        }
+    }
     qDebug()<<"错误！按钮"<<QString(block.id.data())<<"对应的图像"<<imgName<<"不存在！";
     return;
 }

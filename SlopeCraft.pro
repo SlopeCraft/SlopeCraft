@@ -1,7 +1,7 @@
 QT       += core gui concurrent
 #QT += opengl
 #QT += quick quick3d
-INCLUDEPATH += D:\eigen-3.3.9 \
+INCLUDEPATH += D:\eigen-3.4.0 \
                                 ./Headers \
                                 ./Sources \
                                 ./others \
