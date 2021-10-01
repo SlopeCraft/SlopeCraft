@@ -221,6 +221,11 @@ private:
     void updateEnables();
     void switchLan(Language);
     void kernelSetType();
+    QByteArray parseColormap(QString,const QString &,const char*);
+    QJsonArray getFixedBlocksList(QString);
+    QString getFixedBlockListDir(QString);
+    QJsonArray getCustomBlockList(QString);
+    QString getCustomBlockListDir(QString);
 };
 
 EImage QImage2EImage(const QImage &);

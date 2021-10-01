@@ -61,9 +61,10 @@ int main(int argc, char *argv[])
         }
     }
     MainWindow w;
-    w.InitializeAll();
 
     w.show();
+
+    w.InitializeAll();
 
 #ifdef putBlockList
         qDebug()<<"sizeof(TokiBlock)="<<sizeof(TokiBlock);

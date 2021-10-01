@@ -216,11 +216,62 @@ void MainWindow::keepAwake() {
     QCoreApplication::processEvents();
 }
 
+QByteArray MainWindow::parseColormap(QString FilePath,
+                                     const QString & rawName,
+                                     const char * pattern) {
+    QByteArray dst;
+    QString title,text;
+        while(true) {
+            qDebug("225");
+            QFile temp(FilePath);
+            if(temp.exists()) {
+                temp.open(QFile::OpenModeFlag::ReadOnly);
+                dst=temp.readAll();
+
+                if(QCryptographicHash::hash(
+                            dst,QCryptographicHash::Algorithm::Md5).toHex()
+                    ==pattern) {
+                    break;
+                } else {
+                    //如果文件存在但校验失败
+                    title=tr("颜色表文件")+rawName+tr("被篡改");
+                    text=tr("这是程序运行所必须的文件，且绝对不允许篡改，请重新下载最新版的SlopeCraft，或者重新寻找它。");
+                }
+            } else {
+                //如果文件不存在
+                title=tr("颜色表文件")+rawName+tr("不存在");
+                text=tr("这是程序运行所必须的文件，请重新寻找");
+            }
+
+            int userChoice=QMessageBox::critical(this,title,text,QMessageBox::StandardButton::Retry,
+                                  QMessageBox::StandardButton::No);
+            if(userChoice==QMessageBox::StandardButton::Retry) {
+                FilePath=QFileDialog::getOpenFileName(this,
+                                            tr("颜色表文件")+rawName+tr("不存在或被篡改，请手动寻找")
+                                            ,"./Colors",rawName);
+                if(FilePath.isEmpty()) {
+                    qDebug("252");
+                    exit(0);
+                    return QByteArray();
+                } else {
+                    qDebug("255");
+                    continue;
+                }
+            } else {
+                qDebug("259");
+                exit(0);
+                return QByteArray();
+            }
+        }
+    return dst;
+}
+
 void MainWindow::loadColormap() {
-    QString ColorFilePath;
-    ColorFilePath="./Colors/RGB.TokiColor";
 
     QByteArray R,H,L,X;
+    R=parseColormap("./Colors/RGB.TokiColor","RGB.TokiColor",
+                    "ba56d5af2ba89d9ba3362a72778e1624");
+    /*
     while(true) {
         QFile temp(ColorFilePath);
         if(temp.exists()) {
@@ -232,13 +283,18 @@ void MainWindow::loadColormap() {
             }
         }
         qDebug("未找到颜色文件RGB.TokiColor");
+
+
+
         ColorFilePath=QFileDialog::getOpenFileName(this,
                             tr("颜色表文件")+"RGB.TokiColor"+tr("不存在或被篡改，请手动寻找")
                             ,"./Colors","RGB.TokiColor");
         temp.close();
-    }
+    }*/
 
-    ColorFilePath="./Colors/HSV.TokiColor";
+    H=parseColormap("./Colors/HSV.TokiColor","HSV.TokiColor",
+                    "db47a74d0b32fa682d1256cce60bf574");
+    /*
     while(true) {
         QFile temp(ColorFilePath);
         if(temp.exists()) {
@@ -254,9 +310,11 @@ void MainWindow::loadColormap() {
                             tr("颜色表文件")+"HSV.TokiColor"+tr("不存在或被篡改，请手动寻找")
                             ,"./Colors","HSV.TokiColor");
         temp.close();
-    }
+    }*/
 
-    ColorFilePath="./Colors/Lab.TokiColor";
+    L=parseColormap("./Colors/Lab.TokiColor","Lab.TokiColor",
+                    "2aec9d79b920745472c0ccf56cbb7669");
+    /*
     while(true) {
         QFile temp(ColorFilePath);
         if(temp.exists()) {
@@ -273,24 +331,28 @@ void MainWindow::loadColormap() {
                             ,"./Colors","Lab.TokiColor");
         temp.close();
     }
+    */
 
-    ColorFilePath="./Colors/XYZ.TokiColor";
+    X=parseColormap("./Colors/XYZ.TokiColor","XYZ.TokiColor",
+                    "6551171faf62961e3ae6bc3c2ee8d051");
+    /*
+    ColorFilePath=;
     while(true) {
         QFile temp(ColorFilePath);
         if(temp.exists()) {
             temp.open(QFile::OpenModeFlag::ReadOnly);
             X=temp.readAll();
             if(QCryptographicHash::hash(X,QCryptographicHash::Algorithm::Md5).toHex()
-                    =="6551171faf62961e3ae6bc3c2ee8d051") {
+                    ==) {
                 break;
             }
         }
         qDebug("未找到颜色文件XYZ.TokiColor");
         ColorFilePath=QFileDialog::getOpenFileName(this,
-                            tr("颜色表文件")+"XYZ.TokiColor"+tr("不存在或被篡改，请手动寻找")
+                            tr("颜色表文件")++tr("不存在或被篡改，请手动寻找")
                             ,"./Colors","XYZ.TokiColor");
         temp.close();
-    }
+    }*/
 
     if(Kernel->setColorSet(R.data(),H.data(),L.data(),X.data()))
         qDebug("成功载入颜色");
@@ -298,17 +360,215 @@ void MainWindow::loadColormap() {
         qDebug("载入颜色失败");
 }
 
-void MainWindow::loadBlockList() {
-    QString Path="./Blocks/FixedBlocks.json";
-    QString Dir="./Blocks/FixedBlocks";
 
+QJsonArray MainWindow::getFixedBlocksList(QString Path) {
+    QJsonDocument jd;
+    while(true) {
+        QFile temp(Path);
+        if(temp.exists()) {
+            QJsonParseError error;
+            temp.open(QIODevice::ReadOnly | QIODevice::Text);
+            jd=QJsonDocument::fromJson(temp.readAll(),&error);
+
+            if(error.error==QJsonParseError::NoError&&jd.object().value("FixedBlocks").isArray()) {
+                return jd.object().value("FixedBlocks").toArray();
+            }
+            else {
+
+                QString errorInfo=(error.error!=QJsonParseError::NoError)?
+                            error.errorString():
+                            "Json file doesn't contain array named \"FixedBlocks\"";
+                int userChoice=QMessageBox::critical(this,tr("错误：默认方块列表的JSON格式有错"),
+                                      tr("JSON错误原因：")+errorInfo+tr("\n默认方块列表记录了SlopeCraft最基础的常用方块，是程序运行必须的。\n请点击Yes手动寻找它，或者点击No退出程序，重新下载最新版SlopeCraft/修复错误后再启动程序。"),
+                                      QMessageBox::StandardButton::Yes,
+                                                     QMessageBox::StandardButton::No);
+                if(userChoice==QMessageBox::StandardButton::Yes) {
+                    Path=QFileDialog::getOpenFileName(this,
+                                                      "重新寻找默认方块列表文件FixedBlocks.json",
+                                                      "./",
+                                                      "FixedBlocks.json");
+                    if(Path.isEmpty()) {
+                        exit(0);
+                    }
+                    else {
+                        continue;
+                    }
+                }
+                else {
+                    exit(0);
+                }
+            }
+
+        }
+        else {
+            int userChoice=QMessageBox::critical(this,tr("错误：找不到默认方块列表"),
+                                  tr("默认方块列表记录了SlopeCraft最基础的常用方块，是程序运行必须的。\n请点击Yes手动寻找它，或者点击No退出程序，重新下载最新版SlopeCraft后再启动程序。"),
+                                  QMessageBox::StandardButton::Yes,
+                                                 QMessageBox::StandardButton::No);
+            if(userChoice==QMessageBox::StandardButton::Yes) {
+                Path=QFileDialog::getOpenFileName(this,
+                                                  "重新寻找默认方块列表文件FixedBlocks.json",
+                                                  "./",
+                                                  "FixedBlocks.json");
+                if(Path.isEmpty()) {
+                    exit(0);
+                }
+                else {
+                    continue;
+                }
+            }
+            else {
+                exit(0);
+            }
+        }
+    }
+return QJsonArray();
+}
+
+QString MainWindow::getFixedBlockListDir(QString Dir) {
+    while(true) {
+        if(QDir(Dir).exists()) {
+            return Dir;
+        }
+        else {
+            int userChoice=
+            QMessageBox::warning(this,
+                                 tr("错误：存放默认方块图标的文件夹FixedBlocks不存在"),
+                                 tr("FixedBlocks文件夹存储了默认方块列表所有方块对应的图片。\n这个错误不致命，可以忽略，但最好重新下载SlopeCraft。\n点击Retry重新寻找这个文件夹，点击Ignore忽略这个错误，点击Close退出程序"),
+                                 QMessageBox::StandardButton::Retry,
+                                 QMessageBox::StandardButton::Ignore,
+                                 QMessageBox::StandardButton::Close);
+            switch (userChoice) {
+            case QMessageBox::StandardButton::Retry:
+                Dir=QFileDialog::getExistingDirectory(this,
+                                                         tr("重新寻找默认方块图标文件夹FixedBlocks"),
+                                                      "./",
+                                                      QFileDialog::Option::ReadOnly);
+                if(!Dir.isEmpty()) {
+                    continue;
+                }
+                return "./";
+            case QMessageBox::StandardButton::Ignore:
+                return "./";
+            default:
+                exit(0);
+            }
+        }
+    }
+    return Dir;
+}
+
+QJsonArray MainWindow::getCustomBlockList(QString Path) {
+QJsonDocument jd;
+while(true) {
+    QFile temp(Path);
+    if(temp.exists()) {
+        temp.open(QIODevice::ReadOnly | QIODevice::Text);
+        QJsonParseError error;
+        jd=QJsonDocument::fromJson(temp.readAll(),&error);
+        if(error.error==QJsonParseError::NoError&&
+                jd.object().value("CustomBlocks").isArray()) {
+            return jd.object().value("CustomBlocks").toArray();
+        }
+        else {
+            QString errorInfo=(error.error!=QJsonParseError::NoError)?
+                        error.errorString():
+                        "Json file doesn't contain array named \"CustomBlocks\"";
+            int userChoice=QMessageBox::warning(this,tr("错误：自定义方块列表的JSON格式有错"),
+                                 tr("JSON错误原因：")+errorInfo+tr("\n自定义方块列表记录了SlopeCraft额外添加的可选方块，不是程序运行必须的。\n请点击Yes手动寻找它，或点击Ignore忽略这个错误，或者点击Close退出程序，重新下载最新版SlopeCraft/修复错误后再启动程序。"),
+                                 QMessageBox::StandardButton::Yes,
+                                 QMessageBox::StandardButton::Ignore,
+                                 QMessageBox::StandardButton::Close);
+            switch (userChoice) {
+            case QMessageBox::StandardButton::Yes:
+                Path=QFileDialog::getOpenFileName(this,
+                                                  "重新寻找自定义方块列表文件CustomBlocks.json",
+                                                  "./",
+                                                  "CustomBlocks.json");
+                if(Path.isEmpty()) {
+                    QJsonArray a;
+                    while(!a.empty())
+                        a.removeFirst();
+                    return a;
+                }
+                else {
+                    continue;
+                }
+                break;
+            case QMessageBox::StandardButton::Close:
+                exit(0);
+                break;
+            default:
+                QJsonArray a;
+                while(!a.empty())
+                    a.removeFirst();
+                return a;
+            }
+        }
+    }
+    else {
+        int userChoice=QMessageBox::warning(this,tr("错误：自定义方块列表文件CustomBlocks.json不存在"),
+                             tr("自定义方块列表记录了SlopeCraft额外添加的可选方块，不是程序运行必须的。\n请点击Yes手动寻找它，或点击Ignore忽略这个错误，或者点击Close退出程序，重新下载最新版SlopeCraft/修复错误后再启动程序。"),
+                             QMessageBox::StandardButton::Yes,
+                             QMessageBox::StandardButton::Ignore,
+                             QMessageBox::StandardButton::Close);
+        switch (userChoice) {
+        case QMessageBox::StandardButton::Yes:
+            Path=QFileDialog::getOpenFileName(this,
+                                              "重新寻找自定义方块列表文件CustomBlocks.json",
+                                              "./",
+                                              "CustomBlocks.json");
+            if(Path.isEmpty()) {
+                QJsonArray a;
+                while(!a.empty())
+                    a.removeFirst();
+                return a;
+            }
+            else {
+                continue;
+            }
+            break;
+        case QMessageBox::StandardButton::Close:
+            exit(0);
+            break;
+        default:
+            QJsonArray a;
+            while(!a.empty())
+                a.removeFirst();
+            return a;
+        }
+    }
+}
+return QJsonArray();
+}
+
+void MainWindow::loadBlockList() {
+
+    QJsonArray ja=getFixedBlocksList("./Blocks/FixedBlocks.json");
+
+/*
     while(!QFile(Path).exists()) {
         qDebug()<<"错误！找不到固定的方块列表文件"<<Path;
-        Path=QFileDialog::getOpenFileName(this,
-                                          "找不到固定方块列表文件，请手动寻找",
-                                          "./",
-                                          "FixedBlocks.json");
+        int userChoice=QMessageBox::critical(this,
+                                             tr("找不到默认方块列表"),
+                                             tr("默认方块列表记录了SlopeCraft最基础的常用方块，是程序运行必须的。\n请手动寻找它。"),
+                                             QMessageBox::StandardButton::Ok,
+                              QMessageBox::StandardButton::No);
+        if(userChoice==QMessageBox::StandardButton::Ok) {
+            Path=QFileDialog::getOpenFileName(this,
+                                              "找不到固定方块列表文件，请手动寻找",
+                                              "./",
+                                              "FixedBlocks.json");
+        } else {
+            exit(0);
+        }
+
     }
+    */
+
+    QString Dir=getFixedBlockListDir("./Blocks/FixedBlocks");
+
+/*
     while(!QDir(Dir).exists()) {
         qDebug()<<"错误！固定方块列表的图标路径"<<Dir<<"无效";
         Dir=QFileDialog::getExistingDirectory(this,
@@ -326,8 +586,7 @@ void MainWindow::loadBlockList() {
         qDebug()<<"解析固定方块列表时出错："<<error.errorString();
         return;
     }
-
-    QJsonArray ja=jd.object().value("FixedBlocks").toArray();
+*/
 
     qDebug()<<ja.size();
 
@@ -337,8 +596,8 @@ void MainWindow::loadBlockList() {
 
 //开始解析用户自定义的方块列表
     Dir="./Blocks/CustomBlocks";
-    Path="./Blocks/CustomBlocks.json";
 
+    /*
     while(!QFile(Path).exists()) {
         int choice=QMessageBox::question(this,
                               "找不到自定义方块列表文件CustomBlocks.json",
@@ -377,8 +636,8 @@ void MainWindow::loadBlockList() {
                               error.errorString()+"\n这是因为json格式错误。\n你自定义的方块无法被加载。",
                               QMessageBox::Abort);
         return;
-    }
-    ja=jd.object().value("CustomBlocks").toArray();
+    }*/
+    ja=getCustomBlockList("./Blocks/CustomBlocks.json");
 
     Manager->addBlocks(ja,Dir);
 
