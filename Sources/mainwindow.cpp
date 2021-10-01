@@ -862,15 +862,18 @@ void MainWindow::updateEnables() {
 
     temp=Kernel->queryStep()>=TokiSlopeCraft::converted;
     ui->ShowAdjed->setEnabled(temp);
-    ui->ExData->setEnabled(temp);
-    ui->ExLite->setEnabled(temp);
-    ui->ExStructure->setEnabled(temp);
+    ui->ExportData->setEnabled(temp);
     ui->progressEx->setEnabled(temp);
+    ui->ExData->setEnabled(temp);
     ui->progressExData->setEnabled(temp);
+
+    temp=(!ui->isMapCreative->isChecked())&&
+            Kernel->queryStep()>=TokiSlopeCraft::converted;
+    ui->ExLite->setEnabled(temp);
     ui->progressExLite->setEnabled(temp);
+    ui->ExStructure->setEnabled(temp);
     ui->progressExStructure->setEnabled(temp);
     ui->Build4Lite->setEnabled(temp);
-    ui->ExportData->setEnabled(temp);
 
     temp=Kernel->queryStep()>=TokiSlopeCraft::builded;
     ui->ExportLite->setEnabled(temp);
@@ -1582,8 +1585,8 @@ void MainWindow::on_ExportData_clicked() {
             QMessageBox::information(this,tr("你输入的起始序号不可用"),tr("请输入大于等于0的整数！"));
                         return;
         }
-        std::string FolderPath=(QFileDialog::getExistingDirectory(this,tr("请选择导出的文件夹"))).toStdString();
-        if(FolderPath.empty())
+        QString FolderPath=(QFileDialog::getExistingDirectory(this,tr("请选择导出的文件夹")));
+        if(FolderPath.isEmpty())
         {
             QMessageBox::information(this,tr("你选择的文件夹不存在！"),tr("你可以选择存档中的data文件夹"));
             return;
@@ -1594,16 +1597,21 @@ void MainWindow::on_ExportData_clicked() {
         ui->FinshExData->setEnabled(false);
         ui->ExportData->setText(tr("请稍等"));
 
+        proTracker=ui->ShowProgressExData;
+
         for(auto it=FolderPath.begin();it!=FolderPath.end();it++)
             if(*it=='\\')*it='/';
 
-        auto unCompressedList=Kernel->exportAsData(FolderPath,indexStart);
+        auto unCompressedList=Kernel->exportAsData(FolderPath.toLocal8Bit().data(),
+                                                   indexStart);
         qDebug("导出地图文件成功");
         //QString::fromLocal8Bit(unCompressed.data())
 
         for(auto it=unCompressedList.begin();it!=unCompressedList.end();it++) {
             QString unName=QString::fromLocal8Bit(it->data());
             QString dstName=unName.left(unName.lastIndexOf(".TokiNoBug"));
+            qDebug()<<"unName="<<unName;
+            qDebug()<<"dstName="<<dstName;
 
             if(compressFile(unName.toLocal8Bit(),dstName.toLocal8Bit())) {
                     QFile unFile(unName);
@@ -1621,6 +1629,7 @@ void MainWindow::on_ExportData_clicked() {
         ui->ExportData->setEnabled(true);
         ui->FinshExData->setEnabled(true);
         ui->ExportData->setText(tr("导出"));
+        proTracker=nullptr;
         updateEnables();
 }
 

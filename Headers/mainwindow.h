@@ -51,8 +51,6 @@ This file is part of SlopeCraft.
 #include <string>
 #include <cstring>
 #include <unordered_map>
-#include <Eigen/Dense>
-#include <unsupported/Eigen/CXX11/Tensor>
 
 
 #include "ColorSet.h"
@@ -70,7 +68,6 @@ class MainWindow;
 
 #include <QColor>
 #include <QRgb>
-#include <Eigen/Dense>
 
 //class ColorSet;
 

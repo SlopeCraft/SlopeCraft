@@ -790,6 +790,7 @@ bool TokiSlopeCraft::build(compressSettings cS, ushort mAH,
     }
     std::cerr<<"ready to build"<<std::endl;
 
+
     compressMethod=cS;
     glassMethod=gBS;
     if(isFlat()||!isVanilla()) {
@@ -804,6 +805,7 @@ bool TokiSlopeCraft::build(compressSettings cS, ushort mAH,
 
     emit progressRangeSet(0,9*sizePic(2),0);
     std::cerr<<"start makeHeight"<<std::endl;
+    fillMapMat();
     makeHeight_new();
     std::cerr<<"makeHeight finished"<<std::endl;
     emit progressRangeSet(0,9*sizePic(2),5*sizePic(2));
@@ -899,7 +901,7 @@ void TokiSlopeCraft::makeHeight_new() {
             WaterList[TokiRC(it->first,c)]=it->second;
         }
 
-        emit progressAdd(5*sizePic(0));
+        emit progressAdd(4*sizePic(0));
     }
     std::cerr<<"makeHeight_new finished\n";
     size3D[2]=2+sizePic(0);//z
