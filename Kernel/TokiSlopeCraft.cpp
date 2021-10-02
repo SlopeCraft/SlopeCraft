@@ -805,7 +805,15 @@ bool TokiSlopeCraft::build(compressSettings cS, ushort mAH,
 
     emit progressRangeSet(0,9*sizePic(2),0);
     std::cerr<<"start makeHeight"<<std::endl;
-    fillMapMat();
+
+    mapPic.setZero(sizePic(0),sizePic(1));
+    for(ushort r=0;r<sizePic(0);r++) {
+        for(ushort c=0;c<sizePic(1);c++) {
+            mapPic(r,c)=colorHash[ditheredImage(r,c)].Result;
+        }
+        emit progressAdd(sizePic(1));
+    }
+
     makeHeight_new();
     std::cerr<<"makeHeight finished"<<std::endl;
     emit progressRangeSet(0,9*sizePic(2),5*sizePic(2));

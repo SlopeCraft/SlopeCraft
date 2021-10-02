@@ -32,8 +32,8 @@ This file is part of SlopeCraft.
 #include <ctime>
 #include <algorithm>
 #include <random>
-#include <Eigen/Dense>
 
+#include "defines.h"
 #include "WaterItem.h"
 #include "ColorSet.h"
 #include "HeightLine.h"

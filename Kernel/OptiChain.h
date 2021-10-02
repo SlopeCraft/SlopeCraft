@@ -29,7 +29,6 @@ This file is part of SlopeCraft.
 
 #include <iostream>
 #include <string>
-#include <Eigen/Dense>
 #include <list>
 #include <queue>
 #include "defines.h"

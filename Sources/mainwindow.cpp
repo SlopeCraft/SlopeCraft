@@ -1406,9 +1406,14 @@ ui->isColorSpaceLab00->setEnabled(temp);
 ui->isColorSpaceXYZ->setEnabled(temp);
 ui->isColorSpaceRGBOld->setEnabled(temp);
 ui->AllowDither->setEnabled(temp);
+
+std::clock_t startTime=std::clock();
 qDebug("开始convert");
 Kernel->convert(now,nowDither);
 
+qDebug()<<"convert用时"
+       <<double(std::clock()-startTime)*1000.0/CLOCKS_PER_SEC
+      <<"毫秒";
 proTracker=nullptr;
 
 temp=true;

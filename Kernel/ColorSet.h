@@ -21,7 +21,7 @@ This file is part of SlopeCraft.
 */
 #ifndef COLORSET_H
 #define COLORSET_H
-#include <Eigen/Dense>
+#include "defines.h"
 #include "TokiColor.h"
 
 //using namespace Eigen;

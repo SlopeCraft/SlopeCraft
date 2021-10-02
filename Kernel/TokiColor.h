@@ -21,7 +21,6 @@ This file is part of SlopeCraft.
 */
 #ifndef TOKICOLOR_H
 #define TOKICOLOR_H
-#include <Eigen/Dense>
 #include <iostream>
 #include "defines.h"
 

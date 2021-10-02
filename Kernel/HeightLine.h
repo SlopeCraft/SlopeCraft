@@ -4,7 +4,6 @@
 #include <iostream>
 #include <vector>
 #include <map>
-#include <Eigen/Dense>
 #include "defines.h"
 #include "ColorSet.h"
 #include "WaterItem.h"

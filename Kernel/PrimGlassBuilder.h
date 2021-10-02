@@ -34,12 +34,12 @@ This file is part of SlopeCraft.
 #include <random>
 #include <cmath>
 #include <ctime>
-#include <Eigen/Dense>
 #include <vector>
 #include <queue>
 #include <stack>
 #include <unordered_set>
 #include <unsupported/Eigen/CXX11/Tensor>
+#include "defines.h"
 #include "TokiColor.h"
 #include "WaterItem.h"
 
