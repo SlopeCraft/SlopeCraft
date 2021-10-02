@@ -189,6 +189,8 @@ private slots:
 
     void on_AllowForcedOpti_stateChanged(int arg1);
 
+    void on_reportBugs_clicked();
+
 private:
     Ui::MainWindow *ui;
 

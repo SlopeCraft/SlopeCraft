@@ -157,9 +157,9 @@ font: 9pt &quot;微软雅黑&quot;;
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>0</y>
+         <y>-285</y>
          <width>152</width>
-         <height>728</height>
+         <height>774</height>
         </rect>
        </property>
        <property name="sizePolicy">
@@ -473,6 +473,19 @@ p, li { white-space: pre-wrap; }
          </widget>
         </item>
         <item>
+         <widget class="QPushButton" name="reportBugs">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>40</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>反馈Bug</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <spacer name="verticalSpacer_4">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -578,7 +591,7 @@ font: 11pt &quot;微软雅黑&quot;;
        <enum>QFrame::Plain</enum>
       </property>
       <property name="currentIndex">
-       <number>5</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="PageStart">
        <property name="styleSheet">
@@ -866,6 +879,12 @@ font: 11pt &quot;微软雅黑&quot;;
          <widget class="QLabel" name="label_21">
           <property name="contextMenuPolicy">
            <enum>Qt::DefaultContextMenu</enum>
+          </property>
+          <property name="accessibleName">
+           <string notr="true"/>
+          </property>
+          <property name="accessibleDescription">
+           <string notr="true"/>
           </property>
           <property name="styleSheet">
            <string notr="true">font: 9pt &quot;Tekton Pro&quot;;</string>
@@ -1223,7 +1242,7 @@ font: 11pt &quot;微软雅黑&quot;;
               </font>
              </property>
              <property name="text">
-              <string>1.13</string>
+              <string notr="true">1.13</string>
              </property>
             </widget>
            </item>
@@ -1235,7 +1254,7 @@ font: 11pt &quot;微软雅黑&quot;;
               </font>
              </property>
              <property name="text">
-              <string>1.12</string>
+              <string notr="true">1.12</string>
              </property>
             </widget>
            </item>
@@ -1248,7 +1267,7 @@ font: 11pt &quot;微软雅黑&quot;;
               </font>
              </property>
              <property name="text">
-              <string>1.16</string>
+              <string notr="true">1.16</string>
              </property>
              <property name="checked">
               <bool>false</bool>
@@ -1263,7 +1282,7 @@ font: 11pt &quot;微软雅黑&quot;;
               </font>
              </property>
              <property name="text">
-              <string>1.14</string>
+              <string notr="true">1.14</string>
              </property>
             </widget>
            </item>
@@ -1276,7 +1295,7 @@ font: 11pt &quot;微软雅黑&quot;;
               </font>
              </property>
              <property name="text">
-              <string>1.15</string>
+              <string notr="true">1.15</string>
              </property>
              <property name="checked">
               <bool>false</bool>
@@ -1294,7 +1313,7 @@ font: 11pt &quot;微软雅黑&quot;;
               </font>
              </property>
              <property name="text">
-              <string>1.17</string>
+              <string notr="true">1.17</string>
              </property>
              <property name="checked">
               <bool>true</bool>
@@ -1457,7 +1476,7 @@ font: 11pt &quot;微软雅黑&quot;;
                 </font>
                </property>
                <property name="text">
-                <string>Vanilla</string>
+                <string notr="true">Vanilla</string>
                </property>
               </widget>
              </item>
@@ -1470,7 +1489,7 @@ font: 11pt &quot;微软雅黑&quot;;
                 </font>
                </property>
                <property name="text">
-                <string>Cheap</string>
+                <string notr="true">Cheap</string>
                </property>
               </widget>
              </item>
@@ -1483,7 +1502,7 @@ font: 11pt &quot;微软雅黑&quot;;
                 </font>
                </property>
                <property name="text">
-                <string>Elegant</string>
+                <string notr="true">Elegant</string>
                </property>
                <property name="checked">
                 <bool>true</bool>
@@ -1499,7 +1518,7 @@ font: 11pt &quot;微软雅黑&quot;;
                 </font>
                </property>
                <property name="text">
-                <string>Shiny</string>
+                <string notr="true">Shiny</string>
                </property>
               </widget>
              </item>
@@ -1512,7 +1531,7 @@ font: 11pt &quot;微软雅黑&quot;;
                 </font>
                </property>
                <property name="text">
-                <string>Custom</string>
+                <string notr="true">Custom</string>
                </property>
               </widget>
              </item>
@@ -1717,8 +1736,8 @@ font: 11pt &quot;微软雅黑&quot;;
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>551</width>
-               <height>377</height>
+               <width>75</width>
+               <height>22</height>
               </rect>
              </property>
              <property name="sizePolicy">
@@ -2119,7 +2138,7 @@ font: 11pt &quot;微软雅黑&quot;;
                 </font>
                </property>
                <property name="text">
-                <string>RGB</string>
+                <string notr="true">RGB</string>
                </property>
               </widget>
              </item>
@@ -2137,7 +2156,7 @@ font: 11pt &quot;微软雅黑&quot;;
                 </font>
                </property>
                <property name="text">
-                <string>RGB优化</string>
+                <string notr="true">RGB+</string>
                </property>
                <property name="checked">
                 <bool>true</bool>
@@ -2159,7 +2178,7 @@ font: 11pt &quot;微软雅黑&quot;;
                 </font>
                </property>
                <property name="text">
-                <string>HSV</string>
+                <string notr="true">HSV</string>
                </property>
               </widget>
              </item>
@@ -2178,7 +2197,7 @@ font: 11pt &quot;微软雅黑&quot;;
                 </font>
                </property>
                <property name="text">
-                <string>Lab94</string>
+                <string notr="true">Lab94</string>
                </property>
                <property name="checked">
                 <bool>false</bool>
@@ -2199,7 +2218,7 @@ font: 11pt &quot;微软雅黑&quot;;
                 </font>
                </property>
                <property name="text">
-                <string>Lab00</string>
+                <string notr="true">Lab00</string>
                </property>
               </widget>
              </item>
@@ -2218,7 +2237,7 @@ font: 11pt &quot;微软雅黑&quot;;
                 </font>
                </property>
                <property name="text">
-                <string>XYZ</string>
+                <string notr="true">XYZ</string>
                </property>
               </widget>
              </item>
@@ -2318,6 +2337,9 @@ font: 11pt &quot;微软雅黑&quot;;
              <font>
               <family>微软雅黑</family>
              </font>
+            </property>
+            <property name="accessibleName">
+             <string notr="true"/>
             </property>
             <property name="plainText">
              <string>Pixel Paint by SlopeCraft</string>
@@ -2534,6 +2556,9 @@ font: 11pt &quot;微软雅黑&quot;;
               <family>微软雅黑</family>
              </font>
             </property>
+            <property name="accessibleName">
+             <string notr="true"/>
+            </property>
             <property name="plainText">
              <string>SlopeCraft</string>
             </property>
@@ -2569,6 +2594,9 @@ font: 11pt &quot;微软雅黑&quot;;
              <font>
               <family>微软雅黑</family>
              </font>
+            </property>
+            <property name="accessibleName">
+             <string notr="true"/>
             </property>
             <property name="plainText">
              <string>Pixel Paint by SlopeCraft</string>
@@ -3479,10 +3507,17 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionAboutSlopeCraft"/>
     <addaction name="separator"/>
     <addaction name="menu"/>
+    <addaction name="actionReportBugs"/>
    </widget>
    <widget class="QMenu" name="menuLanguages">
+    <property name="accessibleName">
+     <string notr="true"/>
+    </property>
+    <property name="accessibleDescription">
+     <string notr="true"/>
+    </property>
     <property name="title">
-     <string>Languages</string>
+     <string notr="true">Languages</string>
     </property>
     <addaction name="actionChinese"/>
     <addaction name="actionEnglish"/>
@@ -3569,22 +3604,27 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionChinese">
    <property name="text">
-    <string>简体中文</string>
+    <string notr="true">简体中文</string>
    </property>
   </action>
   <action name="actionEnglish">
    <property name="text">
-    <string>English</string>
+    <string notr="true">English</string>
    </property>
   </action>
   <action name="actionToki">
    <property name="text">
-    <string>GitHub</string>
+    <string notr="true">GitHub</string>
    </property>
   </action>
   <action name="actionDoki">
    <property name="text">
-    <string>BiliBili</string>
+    <string notr="true">BiliBili</string>
+   </property>
+  </action>
+  <action name="actionReportBugs">
+   <property name="text">
+    <string>反馈Bug</string>
    </property>
   </action>
  </widget>

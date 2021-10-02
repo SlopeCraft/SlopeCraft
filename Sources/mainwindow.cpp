@@ -94,6 +94,8 @@ MainWindow::MainWindow(QWidget *parent)
 
         connect(ui->contact,&QPushButton::clicked,this,&MainWindow::contactB);
         connect(ui->contact,&QPushButton::clicked,this,&MainWindow::contactG);
+        connect(ui->actionReportBugs,&QAction::triggered,
+                this,&MainWindow::on_reportBugs_clicked);
 
     qDebug("成功connect所有的菜单");
 
@@ -1827,5 +1829,11 @@ void MainWindow::on_seeExported_clicked() {
 
 void MainWindow::on_AllowForcedOpti_stateChanged(int arg1) {
     ui->maxHeight->setEnabled(arg1);
+}
+
+
+void MainWindow::on_reportBugs_clicked() {
+    QUrl url("https://github.com/ToKiNoBug/SlopeCraft/issues/new");
+    QDesktopServices::openUrl(url);
 }
 

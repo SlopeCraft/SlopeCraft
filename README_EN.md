@@ -1,6 +1,6 @@
 # SlopeCraft
 
-![](https://img.shields.io/badge/C%2B%2B-11-blue?style=plastic) ![](https://img.shields.io/badge/Qt-v6.0.4-brightgreen?style=plastic) ![](https://img.shields.io/badge/Eigen-v3.3.9-yellowgreen?style=plastic) 
+![](https://img.shields.io/badge/C%2B%2B-11-blue?style=plastic) ![](https://img.shields.io/badge/Qt-v6.0.4-brightgreen?style=plastic) ![](https://img.shields.io/badge/Eigen-v3.4.0-yellowgreen?style=plastic) 
 
 ![](https://img.shields.io/badge/Minecraft-1.12~1.17-orange?style=plastic) 
 
@@ -12,7 +12,7 @@
 
 <br>
 
-> Get your 3D pixel painting in minecraft.
+> Get your pixel painting in minecraft(all kinds of them!).
 
 # Principles
 * [Pinciple of Map Pixel Arts](https://github.com/ToKiNoBug/SlopeCraftTutorial/blob/main/BasicPrinciple/Principle%20of%20map%20pixel%20arts_EN.md)

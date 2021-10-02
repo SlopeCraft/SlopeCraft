@@ -1,6 +1,6 @@
 # SlopeCraft
 
-![](https://img.shields.io/badge/C%2B%2B-11-blue?style=plastic) ![](https://img.shields.io/badge/Qt-v6.0.4-brightgreen?style=plastic) ![](https://img.shields.io/badge/Eigen-v3.3.9-yellowgreen?style=plastic) 
+![](https://img.shields.io/badge/C%2B%2B-11-blue?style=plastic) ![](https://img.shields.io/badge/Qt-v6.0.4-brightgreen?style=plastic) ![](https://img.shields.io/badge/Eigen-v3.4.0-yellowgreen?style=plastic) 
 
 ![](https://img.shields.io/badge/Minecraft-1.12~1.17-orange?style=plastic) 
 
@@ -61,7 +61,7 @@ Flat类型的地图画是平板的。由于立体地图画实装的难度很高�
 
 墙面像素画则是应用户需求增加的，本质上只是把平板地图画竖起来而已。它没有“地图意义”，其视觉效果也未必贴近原图。如果想要视觉效果很好的墙面像素画，那还得另请高明。
 
-### 3.转化方法：
+### 3.转化算法：
 
 这是比较专业的部分。你地图画必须也只能由地图所允许的颜色组成，转化算法就是为图片中的每个像素匹配对应的地图颜色。转化算法的实质是不同的色差公式。
 
