@@ -32,8 +32,9 @@ This file is part of SlopeCraft.
 #include <vector>
 #include <queue>
 #include <unordered_map>
-#include <unsupported/Eigen/CXX11/Tensor>
 
+#include "defines.h"
+#include <unsupported/Eigen/CXX11/Tensor>
 #include "ColorSet.h"
 #include "simpleBlock.h"
 #include "OptiChain.h"

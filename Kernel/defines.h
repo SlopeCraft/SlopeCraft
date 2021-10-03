@@ -1,7 +1,7 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
-#define EIGEN_NO_DEBUG
+//#define EIGEN_NO_DEBUG
 #include <Eigen/Dense>
 #define WITH_QT
 

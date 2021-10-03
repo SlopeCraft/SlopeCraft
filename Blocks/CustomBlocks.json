@@ -198,6 +198,33 @@
     "icon":"purpur_block.png",
     "version":0,
     "idOld":"purpur_slab[half=top,variant=default]"
+},
+{
+    "baseColor":23,
+    "id":"prismarine_slab[type=top,waterlogged=false]",
+    "nameZH":"海晶石上半砖",
+    "nameEN":"Prismarine slab",
+    "icon":"prismarine.png",
+    "version":0,
+    "idOld":"stone_slab[half=top,variant=prismarine]"
+},
+{
+    "baseColor":31,
+    "id":"prismarine_brick_slab[type=top,waterlogged=false]",
+    "nameZH":"海晶石砖上半砖",
+    "nameEN":"Prismarine brick slab",
+    "icon":"prismarine_bricks.png",
+    "version":0,
+    "idOld":"stone_slab[half=top,variant=prismarine_bricks]"
+},
+{
+    "baseColor":31,
+    "id":"dark_prismarine_slab[type=top,waterlogged=false]",
+    "nameZH":"暗海晶石上半砖",
+    "nameEN":"Dark prismarine slab",
+    "icon":"dark_prismarine.png",
+    "version":0,
+    "idOld":"stone_slab[half=top,variant=dark_prismarine]"
 }
 ]
 }
