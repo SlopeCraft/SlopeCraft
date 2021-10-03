@@ -252,7 +252,7 @@ map files</translation>
     <message>
         <location filename="mainwindow.ui" line="2337"/>
         <source>最大允许高度：</source>
-        <translation>Max height</translation>
+        <translation>Max height: </translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="2384"/>
@@ -328,7 +328,7 @@ map files</translation>
         <location filename="mainwindow.ui" line="2612"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;最后一步，将立体地图画导出为投影文件，这很方便生存实装，是不是？&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;左侧的三个栏是投影文件的一些属性，空着不填也完全没问题。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;如果您启用了“允许压缩高度”，SlopeCraft会在构建三维结构时尝试依据地图绘制的规律压缩立体地图画的高度，这可以有效避免超过限高（但未必能成功）。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;下面的两个栏显示了立体地图画的信息，以供参考。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;这个过程可能会很慢，请关注进度条&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;
-        The last step is to make your map into a litematic file, to make it easier to be built.&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;3 blanks on the left side is some properties of your litematic file, you can just ignore it. &lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;If you turn on &quot;Compress height(lossless)&quot;, SlopeCraft will try to compress the height of 3d map according to rule of maps, in order to prevent it from surpassing 256(not always effective on all kinds of images).&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;Tow bars below exhibit some information of your map. &lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;This process might be quite slow, see the progress bar.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        The last step is to make your map into a litematic file, to make it easier to be built.&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;3 blanks on the left side are some properties of your litematic file. &lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;If you turn on &quot;Compress height(lossless)&quot;, SlopeCraft will try to compress the height of 3d map according to rule of maps, in order to prevent it from surpassing 256(not always effective on all kinds of images).&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;Two bars below exhibit some information of your map. &lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;This process might be quite slow, see the progress bar.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="2646"/>
