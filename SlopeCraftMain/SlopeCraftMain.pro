@@ -6,11 +6,26 @@ CONFIG += c++11
 
 
 
+
+TARGET = SlopeCraft
+
 RC_ICONS = others/SlopeCraft.ico
+
+RC_LANG = 0x0004
 
 VERSION += 3.6.0.0
 
-TARGET = SlopeCraft
+#QMAKE_TARGET_COMPANY = TokiNoBug
+#公司名称
+
+QMAKE_TARGET_DESCRIPTION = Map Pixel Art Generator
+#描述信息
+
+QMAKE_TARGET_COPYRIGHT = TokiNoBug
+#版权信息
+
+QMAKE_TARGET_PRODUCT = SlopeCraft
+#产品名称
 
 
 INCLUDEPATH += D:\CppLibs\zlibs \
