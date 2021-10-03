@@ -587,7 +587,7 @@ font: 11pt &quot;微软雅黑&quot;;
        <enum>QFrame::Plain</enum>
       </property>
       <property name="currentIndex">
-       <number>8</number>
+       <number>5</number>
       </property>
       <widget class="QWidget" name="PageStart">
        <property name="styleSheet">
@@ -1689,8 +1689,8 @@ font: 11pt &quot;微软雅黑&quot;;
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>551</width>
-               <height>378</height>
+               <width>75</width>
+               <height>22</height>
               </rect>
              </property>
              <property name="sizePolicy">
@@ -2292,7 +2292,7 @@ font: 11pt &quot;微软雅黑&quot;;
              <string notr="true"/>
             </property>
             <property name="plainText">
-             <string>Pixel Paint by SlopeCraft</string>
+             <string notr="true">Pixel Paint by SlopeCraft</string>
             </property>
            </widget>
           </item>
@@ -2493,7 +2493,7 @@ font: 11pt &quot;微软雅黑&quot;;
              <string notr="true"/>
             </property>
             <property name="plainText">
-             <string>SlopeCraft</string>
+             <string notr="true">SlopeCraft</string>
             </property>
            </widget>
           </item>
@@ -2528,7 +2528,7 @@ font: 11pt &quot;微软雅黑&quot;;
              <string notr="true"/>
             </property>
             <property name="plainText">
-             <string>Pixel Paint by SlopeCraft</string>
+             <string notr="true">Pixel Paint by SlopeCraft</string>
             </property>
            </widget>
           </item>

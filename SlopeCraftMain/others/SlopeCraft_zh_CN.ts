@@ -236,12 +236,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2295"/>
-        <location filename="mainwindow.ui" line="2531"/>
-        <source>Pixel Paint by SlopeCraft</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="mainwindow.ui" line="2305"/>
         <source>无损压缩</source>
         <translation type="unfinished"></translation>
@@ -284,11 +278,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="mainwindow.ui" line="2468"/>
         <source>搭桥间隔:  </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="2496"/>
-        <source>SlopeCraft</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -891,6 +880,31 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../previewwind.cpp" line="46"/>
         <source>组</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TokiBlock</name>
+    <message>
+        <location filename="../../BlockListManager/TokiBlock.cpp" line="31"/>
+        <source>错误：方块对应的图像不存在或不可用</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../BlockListManager/TokiBlock.cpp" line="32"/>
+        <source>方块id：</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../BlockListManager/TokiBlock.cpp" line="32"/>
+        <source>
+缺失的图像：</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../BlockListManager/TokiBlock.cpp" line="33"/>
+        <source>
+你可以点击Yes忽略这个错误，点击YesToAll屏蔽同类的警告，或者点击Close结束程序</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
