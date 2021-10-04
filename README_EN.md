@@ -25,7 +25,7 @@
 
 # FAQ：
 
-[SlopeCraft FAQ](./FAQ_EN.md)
+[SlopeCraft FAQ](./docs/FAQ_EN.md)
 
 
 # Program Description

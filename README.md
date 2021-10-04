@@ -25,7 +25,7 @@
 
 # FAQ（常见问题）：
 
-[SlopeCraft FAQ](./FAQ.md)
+[SlopeCraft FAQ](./docs/FAQ.md)
 
 # 软件简介
 
