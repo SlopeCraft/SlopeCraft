@@ -1304,7 +1304,9 @@ bool TokiSlopeCraft::setType(mapTypes type,
 
     EImage rawImg=QImage2EImage(rawPic);
 
-    Kernel->setType(type,ver,allowedBaseColor,palette,rawImg);
+    Kernel->setType(type,ver,allowedBaseColor,palette);
+
+    Kernel->setRawImage(rawImg);
 
     updateEnables();
 }

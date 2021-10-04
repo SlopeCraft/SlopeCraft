@@ -180,20 +180,19 @@ TokiSlopeCraft::step TokiSlopeCraft::queryStep() const {
 bool TokiSlopeCraft::setType(mapTypes type,
                              gameVersion ver,
                              const bool * allowedBaseColor,
-                             const simpleBlock * palettes,
-                             const EImage & _rawimg) {
+                             const simpleBlock * palettes) {
 
     if(kernelStep<colorSetReady) {
         emit reportError(errorFlag::HASTY_MANIPULATION);
         return false;
     }
-
+/*
     if(_rawimg.size()<=0) {
         emit reportError(errorFlag::EMPTY_RAW_IMAGE);
         return false;
     }
 
-    rawImage=_rawimg;
+    rawImage=_rawimg;*/
     mapType=type;
     mcVer=ver;
 
@@ -256,8 +255,31 @@ bool TokiSlopeCraft::setType(mapTypes type,
 
     emit reportWorkingStatue(workStatues::none);
 
-    kernelStep=convertionReady;
+    kernelStep=wait4Image;
     return true;
+}
+
+ushort TokiSlopeCraft::getColorCount() const {
+    if(kernelStep<wait4Image) {
+        emit reportError(errorFlag::HASTY_MANIPULATION);
+        return 0;
+    }
+    return Allowed.colorCount();
+}
+
+void TokiSlopeCraft::setRawImage(const EImage & _rawimg) {
+    if(kernelStep<wait4Image) {
+        emit reportError(errorFlag::HASTY_MANIPULATION);
+        return;
+    }
+    if(_rawimg.size()<=0) {
+        emit reportError(errorFlag::EMPTY_RAW_IMAGE);
+        return;
+    }
+
+    rawImage=_rawimg;
+    kernelStep=convertionReady;
+    return;
 }
 
 bool TokiSlopeCraft::isVanilla() const {

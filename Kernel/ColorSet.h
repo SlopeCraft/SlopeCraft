@@ -31,14 +31,15 @@ class ColorSet{
         Eigen::ArrayXXf  HSV;
         Eigen::ArrayXXf  Lab;
         Eigen::ArrayXXf  XYZ;
-        Eigen::VectorXi  Map;
+        Eigen::ArrayXi  Map;
         ColorSet();
         bool ApplyAllowed(ColorSet*standard,bool *MIndex);
+        ushort colorCount() const;
 };
 
 void GetMap(unsigned char *Map);
 
-void GetMap(Eigen::VectorXi &Map);
+void GetMap(Eigen::ArrayXi &Map);
 
 void f(float &);
 void invf(float&);

@@ -15,7 +15,7 @@
     "Hint4":"id是这种方块的id，也是必填项，最好附带完整的方块状态，但不要加minecraft:前缀",
     "Hint5":"nameZH是方块中文名称，必填",
     "Hint6":"nameEN是方块英文名称，必填",
-    "Hint7":"icon是方块对应图片的文件名，它应当放在CustomBlocks文件夹下",
+    "Hint7":"icon是方块对应图片的文件名，它应当放在CustomBlocks文件夹下。必填",
     "Hint8":"version是方块最早出现的版本。0代表早于1.12，12代表1.12，13代表1.13，如此类推。255代表尚未出现的版本",
     "Hint9":"idOld是该方块在1.12的方块id（如果有的话）",
     "Hint10":"needGlass代表这个方块的下方需要依附其他方块，默认为否",
@@ -23,7 +23,7 @@
     "Hint12":"endermanPickable代表这个方块可以被末影人偷走，默认为否",
     "Hint13":"burnable代表这个方块会被火焰、岩浆或闪电点燃并燃烧，默认为否",
     "Hint14":"所有的Hint都会被忽略",
-    "Hint15":"如果json格式出错，整个文件都会无法解析。"
+    "Hint15":"如果json格式出错，整个文件都会无法解析，SlopeCraft会报错。"
 },
 {
     "baseColor":15,
@@ -40,15 +40,15 @@
     "Hint4":"id is the block id with full blockstatus, but without minecraft: prefix. Compulsory item.",
     "Hint5":"nameZH is the Chinese name. Compulsory item.",
     "Hint6":"nameEN is the English name. Compulsory item.",
-    "Hint7":"icon is the image filename correspoing to this block, the image should be put under CustomBlocks directory.",
-    "Hint8":"version is the latest version when the block is added to Minecraft. 0 means earlier than 1.12, 13 means 1.13, and so on. 255 mean future version.",
-    "Hint9":"idOld is the blockid in 1.12(if there is)",
+    "Hint7":"icon is the image filename correspoing to this block, the image should be put under CustomBlocks directory. Compulsory item.",
+    "Hint8":"version is the earliest version when the block is added to Minecraft. 0 means earlier than 1.12, 12 means 1.12, 13 means 1.13, and so on. 255 means future version.",
+    "Hint9":"idOld is the blockid in 1.12 (if there is)",
     "Hint10":"needGlass means if this block must be setted on a solid block, default value is false",
     "Hint11":"isGlowing means if the block glows, default value is false.",
     "Hint12":"endermanPickable means if the block can be picked by enderman, efault value is false",
     "Hint13":"burnable means if the block can be lit by fire, lava or lightning blot, default value is false",
     "Hint14":"All hints will be ignored",
-    "Hint15":"The whole file will failed to be parsed once an error occurred in json format"
+    "Hint15":"The whole file will failed to be parsed once an error occurred in json format, then SlopeCraft will complain."
 },
 {
     "baseColor":11,

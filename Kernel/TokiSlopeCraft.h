@@ -113,6 +113,7 @@ public:
     enum step {
         nothing,//对象刚刚创建，什么都没做
         colorSetReady,//颜色表读取完毕
+        wait4Image,//等待图片
         convertionReady,//一切就绪，等待convert
         converted,//已经将图像转化为地图画
         builded,//构建了三维结构
@@ -163,11 +164,12 @@ public:
         mapTypes,
         gameVersion,
         const bool [64],
-        const simpleBlock[64] ,
-        const EImage &);
+        const simpleBlock[64]);
     std::vector<std::string> getAuthorURL() const;
     void getARGB32(ARGB*) const;
-
+//can do in wait4Image:
+    void setRawImage(const EImage & );
+    ushort getColorCount() const;
 //can do in convertionReady:
     bool convert(convertAlgo=RGB_Better,bool dither=false);
     short getImageRows() const;

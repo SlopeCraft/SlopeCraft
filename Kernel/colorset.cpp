@@ -100,7 +100,11 @@ void GetMap(unsigned char *Map)
     return;
 }
 
-void GetMap(Eigen::VectorXi &Map)
+ushort ColorSet::colorCount() const {
+    return _RGB.rows();
+}
+
+void GetMap(Eigen::ArrayXi &Map)
 {
     Map.setZero(256);
     for(short r=0;r<256;r++)Map(r)=4*(r%64)+r/64;
@@ -114,5 +118,6 @@ ARGB ComposeColor(const ARGB&front,const ARGB&back)
     int blue=(getB(front)*getA(front)+getB(back)*(255-getA(front)))/255;
     return ARGB32(red,green,blue);
 }
+
 
 #endif
