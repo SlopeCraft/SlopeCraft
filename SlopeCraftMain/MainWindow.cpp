@@ -1302,13 +1302,15 @@ bool TokiSlopeCraft::setType(mapTypes type,
     /*for(uchar i=0;i<temp.size();i++){qDebug()<<i;
         palette[i].copyFrom(temp[i]);}*/
 
-    EImage rawImg=QImage2EImage(rawPic);
 
     Kernel->setType(type,ver,allowedBaseColor,palette);
 
-    Kernel->setRawImage(rawImg);
-
     updateEnables();
+}
+
+void MainWindow::kernelSetImg() {
+    EImage rawImg=QImage2EImage(rawPic);
+    Kernel->setRawImage(rawImg);
 }
 
 EImage QImage2EImage(const QImage & qi) {
@@ -1367,10 +1369,16 @@ void MainWindow::algoProgressAdd(int deltaVal) {
 }
 
 void MainWindow::on_Convert_clicked() {
-qDebug("开始SetType");
-if(Kernel->queryStep()<TokiSlopeCraft::convertionReady) {
+if(Kernel->queryStep()<TokiSlopeCraft::wait4Image) {
     qDebug("重新setType");
     kernelSetType();
+if(Kernel->queryStep()<TokiSlopeCraft::wait4Image)
+    return;
+}
+
+if(Kernel->queryStep()<TokiSlopeCraft::convertionReady) {
+    qDebug("重新setImage");
+    kernelSetImg();
 if(Kernel->queryStep()<TokiSlopeCraft::convertionReady)
     return;
 }

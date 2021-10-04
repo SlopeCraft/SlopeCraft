@@ -215,6 +215,7 @@ private:
     void updateEnables();
     void switchLan(Language);
     void kernelSetType();
+    void kernelSetImg();
     QByteArray parseColormap(QString,const QString &,const char*);
     QJsonArray getFixedBlocksList(QString);
     QString getFixedBlockListDir(QString);
