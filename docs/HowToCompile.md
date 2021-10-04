@@ -2,7 +2,9 @@
 
 ## Libs required:
 Qt v6.2.0 or later
+
 Eigen v3.4.0 or later
+
 zlib (well, any version that is not too ancient?)
 
 ## Steps:
