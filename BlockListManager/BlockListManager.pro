@@ -5,7 +5,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TEMPLATE = lib
 DEFINES += BLOCKLISTMANAGER_LIBRARY
 
-CONFIG += c++11
+CONFIG += c++17
 
 INCLUDEPATH += ../Kernel
 
