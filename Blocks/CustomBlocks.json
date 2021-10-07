@@ -2,22 +2,21 @@
 "CustomBlocks":[
 {
     "baseColor":15,
-    "id":"waxed_copper_slab[type=top,waterlogged=false]",
+    "id":"minecraft:waxed_copper_slab[type=top,waterlogged=false]",
     "nameZH":"涂蜡铜上半砖",
     "nameEN":"Waxed copper slab",
     "icon":"waxed_copper_block.png",
     "version":17,
-    "idOld":"",
     "Hint0":"这个文件列出了所有用户自定义的方块的信息",
     "Hint1":"你可以按照这样的格式自定义添加新的方块，包括mod方块",
     "Hint2":"但必须遵守json格式",
     "Hint3":"baseColor是这种方块对应的基色，是必填项（非常非常重要！！！！！！！）",
-    "Hint4":"id是这种方块的id，也是必填项，最好附带完整的方块状态，但不要加minecraft:前缀",
+    "Hint4":"id是这种方块的id，也是必填项，最好附带完整的方块状态，必须加minecraft:前缀",
     "Hint5":"nameZH是方块中文名称，必填",
     "Hint6":"nameEN是方块英文名称，必填",
     "Hint7":"icon是方块对应图片的文件名，它应当放在CustomBlocks文件夹下。必填",
     "Hint8":"version是方块最早出现的版本。0代表早于1.12，12代表1.12，13代表1.13，如此类推。255代表尚未出现的版本",
-    "Hint9":"idOld是该方块在1.12的方块id（如果有的话）",
+    "Hint9":"idOld是该方块在1.12的方块id（如果有的话），必须加minecraft:前缀，选填，默认为空字符串",
     "Hint10":"needGlass代表这个方块的下方需要依附其他方块，默认为否",
     "Hint11":"isGlowing代表这个方块是发光的，默认为否",
     "Hint12":"endermanPickable代表这个方块可以被末影人偷走，默认为否",
@@ -27,204 +26,203 @@
 },
 {
     "baseColor":15,
-    "id":"waxed_cut_copper_slab[type=top,waterlogged=false]",
+    "id":"minecraft:waxed_cut_copper_slab[type=top,waterlogged=false]",
     "nameZH":"涂蜡切制铜上半砖",
     "nameEN":"Waxed cut copper slab",
     "icon":"waxed_cut_copper.png",
     "version":17,
-    "idOld":"",
     "Hint0":"This json file includes information of all custom blocks.",
     "Hint1":"You can add your custom block in such format, including mod-blocks.",
     "Hint2":"But always remember to follow json format",
     "Hint3":"baseColor is the base color of this block on map, a compulsory item(EXTREMELY IMPORTANT!!!!)",
-    "Hint4":"id is the block id with full blockstatus, but without minecraft: prefix. Compulsory item.",
+    "Hint4":"id is the block id with full blockstatus with minecraft: prefix. Compulsory item.",
     "Hint5":"nameZH is the Chinese name. Compulsory item.",
     "Hint6":"nameEN is the English name. Compulsory item.",
     "Hint7":"icon is the image filename correspoing to this block, the image should be put under CustomBlocks directory. Compulsory item.",
     "Hint8":"version is the earliest version when the block is added to Minecraft. 0 means earlier than 1.12, 12 means 1.12, 13 means 1.13, and so on. 255 means future version.",
-    "Hint9":"idOld is the blockid in 1.12 (if there is)",
+    "Hint9":"idOld is the blockid in 1.12 (if there is) with minecraft: prefix. default value is an empty string",
     "Hint10":"needGlass means if this block must be setted on a solid block, default value is false",
     "Hint11":"isGlowing means if the block glows, default value is false.",
-    "Hint12":"endermanPickable means if the block can be picked by enderman, efault value is false",
+    "Hint12":"endermanPickable means if the block can be picked by enderman, default value is false",
     "Hint13":"burnable means if the block can be lit by fire, lava or lightning blot, default value is false",
     "Hint14":"All hints will be ignored",
     "Hint15":"The whole file will failed to be parsed once an error occurred in json format, then SlopeCraft will complain."
 },
 {
     "baseColor":11,
-    "id":"stone_slab[type=top,waterlogged=false]",
+    "id":"minecraft:stone_slab[type=top,waterlogged=false]",
     "nameZH":"石头上半砖",
     "nameEN":"Stone slab",
     "icon":"stone.png",
     "version":0,
-    "idOld":"stone_slab[half=top,variant=stone]"
+    "idOld":"minecraft:stone_slab[half=top,variant=stone]"
 },
 {
     "baseColor":2,
-    "id":"sandstone_slab[type=top,waterlogged=false]",
+    "id":"minecraft:sandstone_slab[type=top,waterlogged=false]",
     "nameZH":"砂岩上半砖",
     "nameEN":"Sandstone slab",
     "icon":"smooth_sandstone.png",
     "version":0,
-    "idOld":"stone_slab[half=top,variant=sandstone]"
+    "idOld":"minecraft:stone_slab[half=top,variant=sandstone]"
 },
 {
     "baseColor":11,
-    "id":"cobblestone_slab[type=top,waterlogged=false]",
+    "id":"minecraft:cobblestone_slab[type=top,waterlogged=false]",
     "nameZH":"圆石上半砖",
     "nameEN":"Cobblestone slab",
     "icon":"cobblestone.png",
     "version":0,
-    "idOld":"stone_slab[half=top,variant=cobblestone]"
+    "idOld":"minecraft:stone_slab[half=top,variant=cobblestone]"
 },
 {
     "baseColor":0,
-    "id":"redstone_lamp[lit=false]",
+    "id":"minecraft:redstone_lamp[lit=false]",
     "nameZH":"红石灯",
     "nameEN":"Redstone lamp",
     "icon":"redstone_lamp.png",
     "version":0,
-    "idOld":"redstone_lamp"
+    "idOld":"minecraft:redstone_lamp"
 },
 {
     "baseColor":28,
-    "id":"brick_slab[type=top,waterlogged=false]",
+    "id":"minecraft:brick_slab[type=top,waterlogged=false]",
     "nameZH":"砖块上半砖",
     "nameEN":"Brick slab",
     "icon":"bricks.png",
     "version":0,
-    "idOld":"stone_slab[half=top,variant=brick]"
+    "idOld":"minecraft:stone_slab[half=top,variant=brick]"
 },
 {
     "baseColor":11,
-    "id":"stone_brick_slab[type=top,waterlogged=false]",
+    "id":"minecraft:stone_brick_slab[type=top,waterlogged=false]",
     "nameZH":"石砖上半砖",
     "nameEN":"Stonebrick slab",
     "icon":"stone_bricks.png",
     "version":0,
-    "idOld":"stone_slab[half=top,variant=stone_brick]"
+    "idOld":"minecraft:stone_slab[half=top,variant=stone_brick]"
 },
 {
     "baseColor":35,
-    "id":"nether_brick_slab[type=top,waterlogged=false]",
+    "id":"minecraft:nether_brick_slab[type=top,waterlogged=false]",
     "nameZH":"地狱砖块上半砖",
     "nameEN":"Nether brick slab",
     "icon":"nether_bricks.png",
     "version":0,
-    "idOld":"stone_slab[half=top,variant=stone_nether_brick]"
+    "idOld":"minecraft:stone_slab[half=top,variant=stone_nether_brick]"
 },
 {
     "baseColor":14,
-    "id":"quartz_slab[type=top,waterlogged=false]",
+    "id":"minecraft:quartz_slab[type=top,waterlogged=false]",
     "nameZH":"石英上半砖",
     "nameEN":"Quartz slab",
     "icon":"quartz_block.png",
     "version":0,
-    "idOld":"stone_slab[half=top,variant=quartz]"
+    "idOld":"minecraft:stone_slab[half=top,variant=quartz]"
 },
 {
     "baseColor":13,
-    "id":"oak_slab[type=top,waterlogged=false]",
+    "id":"minecraft:oak_slab[type=top,waterlogged=false]",
     "nameZH":"橡木上半砖",
     "nameEN":"Oak slab",
     "icon":"oak_planks.png",
     "version":0,
-    "idOld":"wooden_slab[half=top,variant=oak]"
+    "idOld":"minecraft:wooden_slab[half=top,variant=oak]"
 },
 {
     "baseColor":34,
-    "id":"spruce_slab[type=top,waterlogged=false]",
+    "id":"minecraft:spruce_slab[type=top,waterlogged=false]",
     "nameZH":"云杉木上半砖",
     "nameEN":"Spruce slab",
     "icon":"spruce_planks.png",
     "version":0,
-    "idOld":"wooden_slab[half=top,variant=spruce]",
+    "idOld":"minecraft:wooden_slab[half=top,variant=spruce]",
     "burnable":true
 },
 {
     "baseColor":2,
-    "id":"birch_slab[type=top,waterlogged=false]",
+    "id":"minecraft:birch_slab[type=top,waterlogged=false]",
     "nameZH":"白桦木上半砖",
     "nameEN":"Birch slab",
     "icon":"birch_planks.png",
     "version":0,
-    "idOld":"wooden_slab[half=top,variant=birch]",
+    "idOld":"minecraft:wooden_slab[half=top,variant=birch]",
     "burnable":true
 },
 {
     "baseColor":10,
-    "id":"jungle_slab[type=top,waterlogged=false]",
+    "id":"minecraft:jungle_slab[type=top,waterlogged=false]",
     "nameZH":"丛林木上半砖",
     "nameEN":"Jungle slab",
     "icon":"jungle_planks.png",
     "version":0,
-    "idOld":"wooden_slab[half=top,variant=jungle]",
+    "idOld":"minecraft:wooden_slab[half=top,variant=jungle]",
     "burnable":true
 },
 {
     "baseColor":15,
-    "id":"acacia_slab[type=top,waterlogged=false]",
+    "id":"minecraft:acacia_slab[type=top,waterlogged=false]",
     "nameZH":"金合欢木上半砖",
     "nameEN":"Acacia slab",
     "icon":"acacia_planks.png",
     "version":0,
-    "idOld":"wooden_slab[half=top,variant=acacia]",
+    "idOld":"minecraft:wooden_slab[half=top,variant=acacia]",
     "burnable":true
 },
 {
     "baseColor":26,
-    "id":"dark_oak_slab[type=top,waterlogged=false]",
+    "id":"minecraft:dark_oak_slab[type=top,waterlogged=false]",
     "nameZH":"黑橡木上半砖",
     "nameEN":"Dark oak slab",
     "icon":"dark_oak_planks.png",
     "version":0,
-    "idOld":"wooden_slab[half=top,variant=dark_oak]",
+    "idOld":"minecraft:wooden_slab[half=top,variant=dark_oak]",
     "burnable":true
 },
 {
     "baseColor":15,
-    "id":"red_sandstone_slab[type=top,waterlogged=false]",
+    "id":"minecraft:red_sandstone_slab[type=top,waterlogged=false]",
     "nameZH":"红砂岩上半砖",
     "nameEN":"Red sandstone slab",
     "icon":"smooth_red_sandstone.png",
     "version":0,
-    "idOld":"stone_slab2[half=top,variant=red_sandstone]"
+    "idOld":"minecraft:stone_slab2[half=top,variant=red_sandstone]"
 },
 {
     "baseColor":16,
-    "id":"purpur_slab[type=top,waterlogged=false]",
+    "id":"minecraft:purpur_slab[type=top,waterlogged=false]",
     "nameZH":"紫珀上半砖",
     "nameEN":"Purpur slab",
     "icon":"purpur_block.png",
     "version":0,
-    "idOld":"purpur_slab[half=top,variant=default]"
+    "idOld":"minecraft:purpur_slab[half=top,variant=default]"
 },
 {
     "baseColor":23,
-    "id":"prismarine_slab[type=top,waterlogged=false]",
+    "id":"minecraft:prismarine_slab[type=top,waterlogged=false]",
     "nameZH":"海晶石上半砖",
     "nameEN":"Prismarine slab",
     "icon":"prismarine.png",
     "version":0,
-    "idOld":"stone_slab[half=top,variant=prismarine]"
+    "idOld":"minecraft:stone_slab[half=top,variant=prismarine]"
 },
 {
     "baseColor":31,
-    "id":"prismarine_brick_slab[type=top,waterlogged=false]",
+    "id":"minecraft:prismarine_brick_slab[type=top,waterlogged=false]",
     "nameZH":"海晶石砖上半砖",
     "nameEN":"Prismarine brick slab",
     "icon":"prismarine_bricks.png",
     "version":0,
-    "idOld":"stone_slab[half=top,variant=prismarine_bricks]"
+    "idOld":"minecraft:stone_slab[half=top,variant=prismarine_bricks]"
 },
 {
     "baseColor":31,
-    "id":"dark_prismarine_slab[type=top,waterlogged=false]",
+    "id":"minecraft:dark_prismarine_slab[type=top,waterlogged=false]",
     "nameZH":"暗海晶石上半砖",
     "nameEN":"Dark prismarine slab",
     "icon":"dark_prismarine.png",
     "version":0,
-    "idOld":"stone_slab[half=top,variant=dark_prismarine]"
+    "idOld":"minecraft:stone_slab[half=top,variant=dark_prismarine]"
 }
 ]
 }

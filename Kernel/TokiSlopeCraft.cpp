@@ -199,8 +199,16 @@ bool TokiSlopeCraft::setType(mapTypes type,
     TokiColor::needFindSide=(mapType==mapTypes::Slope);
 
     blockPalette.resize(64);
-    for(short i=0;i<64;i++)
+    for(short i=0;i<64;i++) {
         blockPalette[i]=palettes[i];
+        if(blockPalette[i].id.find(':')==blockPalette[i].id.npos) {
+            blockPalette[i].id="minecraft:"+blockPalette[i].id;
+        }
+        if(blockPalette[i].idOld.size()>0
+                &&(blockPalette[i].idOld.find(':')==blockPalette[i].idOld.npos)) {
+            blockPalette[i].idOld="minecraft:"+blockPalette[i].idOld;
+        }
+    }
 
     emit reportWorkingStatue(workStatues::collectingColors);
 
@@ -1224,8 +1232,6 @@ void TokiSlopeCraft::writeBlock(const std::string &netBlockId,
                 NBT::NBTWriter & Lite) const {
     Lite.writeCompound("ThisStringShouldNeverBeSeen");
         std::string BlockId=netBlockId;
-        if(netBlockId.substr(0,strlen("minecraft:"))!="minecraft:")
-            BlockId="minecraft:"+BlockId;
 
         Lite.writeString("Name",BlockId.data());
         if(Property.empty()||ProVal.empty())
@@ -1333,7 +1339,7 @@ std::string TokiSlopeCraft::exportAsLitematic(const std::string & TargetName,
                         //bool isNetBlockId;
                         std::string netBlockId;
 
-                        simpleBlock::dealBlockId("air",netBlockId,&ProName,&ProVal);
+                        simpleBlock::dealBlockId("minecraft:air",netBlockId,&ProName,&ProVal);
                         writeBlock(netBlockId,ProName,ProVal,Lite);
                         for(short r=0;r<written;r++)
                         {
@@ -1368,7 +1374,6 @@ std::string TokiSlopeCraft::exportAsLitematic(const std::string & TargetName,
 
                             if(inverserIndex<0)
                             {
-
                                 inverserIndex=7;
                                 Lite.writeLongDirectly("id",HackyVal);
                             }
