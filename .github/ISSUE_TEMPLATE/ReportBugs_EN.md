@@ -6,12 +6,12 @@ about: A template to guide users to report bugs better.
 # Delete this line to show that you are following the template, otherwise your issue will be treated as a trash.
 [Delete this line to show that you have read FAQ and failed to find an answer](https://github.com/ToKiNoBug/SlopeCraft/blob/main/docs/FAQ_EN.md)
 
-# Delete this line if this isn't fixed in the latest version of SlopeCraft, otherwise your issue will be treated as a trash.
+# Delete this line if this isn't fixed in the latest version of SlopeCraft, otherwise your issue will be treated as a trash. Don't report an already fixed bug.
 
 ## Report a bug
 
 ### My operation on SlopeCraft
-Describe your operation as as detailed as possible.
+Describe your operation as detailed as possible.
 
 ### What I expected to happen
 Describe what should happen in your expectation.
