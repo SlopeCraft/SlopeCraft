@@ -1,4 +1,4 @@
 ---
-name: 其他
+name: 其他issue
 about: 其他issue。
 ---
