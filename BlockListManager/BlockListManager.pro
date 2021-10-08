@@ -6,6 +6,7 @@ TEMPLATE = lib
 DEFINES += BLOCKLISTMANAGER_LIBRARY
 
 CONFIG += c++17
+CONFIG += staticlib
 
 INCLUDEPATH += ../Kernel
 

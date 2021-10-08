@@ -1170,23 +1170,18 @@ void MainWindow::onGameVerClicked() {
     }
     if(ui->isGame13->isChecked()) {
         Manager->setVersion(13);
-
     }
     if(ui->isGame14->isChecked()) {
         Manager->setVersion(14);
-
     }
     if(ui->isGame15->isChecked()) {
         Manager->setVersion(15);
-
     }
     if(ui->isGame16->isChecked()) {
         Manager->setVersion(16);
-
     }
     if(ui->isGame17->isChecked()) {
         Manager->setVersion(17);
-
     }
     Kernel->decreaseStep(TokiSlopeCraft::colorSetReady);
     updateEnables();
