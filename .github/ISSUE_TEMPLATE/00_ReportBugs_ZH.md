@@ -1,6 +1,7 @@
 ---
 name: 反馈Bug
 about: 反馈Bug专用模板
+title: [Bug反馈]
 ---
 
 # 如果你真的在认真按照模板填写，删掉这一行。否则你的issue将会被当做一条垃圾issue。
