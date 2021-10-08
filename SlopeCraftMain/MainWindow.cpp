@@ -58,6 +58,8 @@ MainWindow::MainWindow(QWidget *parent)
             this,&MainWindow::showWorkingStatue);
     proTracker=nullptr;
 
+    ProductDir="";
+
     Manager=new BlockListManager(
                 (QHBoxLayout*)ui->scrollAreaWidgetContents->layout());
 
@@ -1016,8 +1018,8 @@ void MainWindow::putBlockListInfo() {
 #endif
 */
 void MainWindow::on_StartWithSlope_clicked() {
-ui->isMapSurvival->setChecked(true);
-turnToPage(1);
+    ui->isMapSurvival->setChecked(true);
+    turnToPage(1);
 }
 
 void MainWindow::on_StartWithFlat_clicked() {
@@ -1026,7 +1028,12 @@ void MainWindow::on_StartWithFlat_clicked() {
 }
 
 void MainWindow::on_StartWithNotVanilla_clicked() {
-    ui->isMapFlat->setChecked(true);
+    ui->isMapCreative->setChecked(true);
+    turnToPage(1);
+}
+
+void MainWindow::on_StartWithWall_clicked() {
+    ui->isMapWall->setChecked(true);
     turnToPage(1);
 }
 
@@ -1036,8 +1043,6 @@ void MainWindow::on_ImportPic_clicked() {
                                                "./",
                                                tr("图片(*.png *.bmp *.jpg *.tif *.GIF )"));
         if(Path.isEmpty())return;
-
-
 
         if(!rawPic.load(Path))
         {
@@ -1093,13 +1098,16 @@ void MainWindow::on_ImportSettings_clicked() {
         }
         transSubWind=new tpStrategyWind(this);
         transSubWind->show();
-        connect(transSubWind,SIGNAL(destroyed()),this,SLOT(destroySubWindTrans()));
-        connect(transSubWind,SIGNAL(Confirm(tpS)),this,SLOT(ReceiveTPS(tpS)));
+        connect(transSubWind,&tpStrategyWind::destroyed,
+                this,&MainWindow::destroySubWindTrans);
+        connect(transSubWind,&tpStrategyWind::Confirm,
+                this,&MainWindow::ReceiveTPS);
         transSubWind->setVal(Strategy);
 }
 
 void MainWindow::destroySubWindTrans() {
-    disconnect(transSubWind,SIGNAL(Confirm(tpS)),this,SLOT(ReceiveTPS(tpS)));
+    disconnect(transSubWind,&tpStrategyWind::Confirm,
+               this,&MainWindow::ReceiveTPS);
     transSubWind=nullptr;
 }
 
@@ -1159,7 +1167,6 @@ void MainWindow::preProcess(char pureTpStrategy,
 void MainWindow::onGameVerClicked() {
     if(ui->isGame12->isChecked()) {
         Manager->setVersion(12);
-
     }
     if(ui->isGame13->isChecked()) {
         Manager->setVersion(13);
@@ -1508,7 +1515,12 @@ void MainWindow::on_ManualPreview_clicked() {
 }
 
 void MainWindow::on_ExportLite_clicked() {
-        std::string FileName=QFileDialog::getSaveFileName(this,tr("导出为投影/结构方块文件"),"",tr("投影文件(*.litematic) ;; 结构方块文件(*.nbt)")).toLocal8Bit().data();
+        std::string FileName=
+                QFileDialog::getSaveFileName(this,
+                                             tr("导出为投影/结构方块文件"),
+                                             "",
+                                             tr("投影文件(*.litematic) ;; 结构方块文件(*.nbt)")
+                                             ).toLocal8Bit().data();
         std::string unCompressed;
         if(FileName.empty())return;
         bool putLitematic=(FileName.substr(FileName.length()-strlen(".litematic"))==".litematic");
@@ -1546,7 +1558,12 @@ void MainWindow::on_ExportLite_clicked() {
             else
                 qDebug("删除失败");
             qDebug()<<QString::fromLocal8Bit(unCompressed.data());
-            ProductPath=FileName;
+            ProductDir=QString::fromLocal8Bit(FileName.data());
+            ProductDir=ProductDir.replace('\\','/');
+            ProductDir=ProductDir.left(ProductDir.lastIndexOf('/'));
+
+            qDebug()<<"ProductDir="<<ProductDir;
+
         }
         else
         {
@@ -1607,6 +1624,7 @@ void MainWindow::on_ExportData_clicked() {
             return;
         }
 
+
         ui->InputDataIndex->setEnabled(false);
         ui->ExportData->setEnabled(false);
         ui->FinshExData->setEnabled(false);
@@ -1614,8 +1632,8 @@ void MainWindow::on_ExportData_clicked() {
 
         proTracker=ui->ShowProgressExData;
 
-        for(auto it=FolderPath.begin();it!=FolderPath.end();it++)
-            if(*it=='\\')*it='/';
+        FolderPath=FolderPath.replace('\\','/');
+        ProductDir=FolderPath;
 
         auto unCompressedList=Kernel->exportAsData(FolderPath.toLocal8Bit().data(),
                                                    indexStart);
@@ -1836,7 +1854,11 @@ return;
 
 
 void MainWindow::on_seeExported_clicked() {
-
+if(ProductDir.isEmpty()) {
+    return;
+}
+qDebug()<<"ProductDir="<<ProductDir;
+QDesktopServices::openUrl(QUrl::fromLocalFile(ProductDir));
 }
 
 
@@ -1846,7 +1868,7 @@ void MainWindow::on_AllowForcedOpti_stateChanged(int arg1) {
 
 
 void MainWindow::on_reportBugs_clicked() {
-    QUrl url("https://github.com/ToKiNoBug/SlopeCraft/issues/new");
+    QUrl url(
+                tr("https://github.com/ToKiNoBug/SlopeCraft/issues/new?assignees=&labels=&template=ReportBugs_ZH.md"));
     QDesktopServices::openUrl(url);
 }
-

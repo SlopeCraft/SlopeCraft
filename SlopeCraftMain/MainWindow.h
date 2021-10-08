@@ -186,6 +186,8 @@ private slots:
 
     void on_reportBugs_clicked();
 
+    void on_StartWithWall_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -204,7 +206,7 @@ private:
 
     tpS Strategy;
 
-    std::string ProductPath;
+    QString ProductDir;
     QTranslator trans;
     bool Collected;
     QProgressBar * proTracker;
