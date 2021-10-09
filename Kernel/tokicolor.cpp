@@ -46,7 +46,7 @@ auto AngleCvt(Eigen::VectorXf I)
     return (I.array()>=0.0).select(I.array(),I.array()+2*M_PI);
 }
 
-void TokiColor::doSide(Eigen::VectorXf Diff)
+void TokiColor::doSide(Eigen::ArrayXf Diff)
 {
     int tempIndex=0;
     //Diff.array()+=10.0;ResultDiff+=10.0;
@@ -378,31 +378,31 @@ unsigned char TokiColor::applyRGB_plus() {
     if(Result)
         return Result;
     int tempIndex=0;
-    Eigen::ArrayXXf &allowedColors=Allowed->_RGB;
+    Eigen::Array<float,Eigen::Dynamic,3> &allowedColors=Allowed->_RGB;
     float R=c3[0];
     float g=c3[1];
     float b=c3[2];
     float w_r=1.0f,w_g=2.0f,w_b=1.0f;
-    Eigen::ArrayXf SqrModSquare=((R*R+g*g+b*b)*(allowedColors.col(0).array().square()+allowedColors.col(1).array().square()+allowedColors.col(2).array().square())).sqrt();
-    Eigen::ArrayXf deltaR=(R-allowedColors.col(0).array());
-    Eigen::ArrayXf deltaG=(g-allowedColors.col(1).array());
-    Eigen::ArrayXf deltaB=(b-allowedColors.col(2).array());
-    Eigen::ArrayXf SigmaRGB=(R+g+b+allowedColors.col(0).array()+allowedColors.col(1).array()+allowedColors.col(2).array())/3.0f;
-    Eigen::ArrayXf S_r=((allowedColors.col(0).array()+R)<SigmaRGB).select((allowedColors.col(0).array()+R)/(SigmaRGB+Thre),1.0f);
-    Eigen::ArrayXf S_g=((allowedColors.col(1).array()+g)<SigmaRGB).select((allowedColors.col(1).array()+g)/(SigmaRGB+Thre),1.0f);
-    Eigen::ArrayXf S_b=((allowedColors.col(2).array()+b)<SigmaRGB).select((allowedColors.col(2).array()+b)/(SigmaRGB+Thre),1.0f);
-    auto sumRGBsquare=R*allowedColors.col(0).array()+g*allowedColors.col(1).array()+b*allowedColors.col(2).array();
+    Eigen::ArrayXf SqrModSquare=((R*R+g*g+b*b)*(allowedColors.col(0).square()+allowedColors.col(1).square()+allowedColors.col(2).square())).sqrt();
+    Eigen::ArrayXf deltaR=(R-allowedColors.col(0));
+    Eigen::ArrayXf deltaG=(g-allowedColors.col(1));
+    Eigen::ArrayXf deltaB=(b-allowedColors.col(2));
+    Eigen::ArrayXf SigmaRGB=(R+g+b+allowedColors.col(0)+allowedColors.col(1)+allowedColors.col(2))/3.0f;
+    Eigen::ArrayXf S_r=((allowedColors.col(0)+R)<SigmaRGB).select((allowedColors.col(0)+R)/(SigmaRGB+Thre),1.0f);
+    Eigen::ArrayXf S_g=((allowedColors.col(1)+g)<SigmaRGB).select((allowedColors.col(1)+g)/(SigmaRGB+Thre),1.0f);
+    Eigen::ArrayXf S_b=((allowedColors.col(2)+b)<SigmaRGB).select((allowedColors.col(2)+b)/(SigmaRGB+Thre),1.0f);
+    auto sumRGBsquare=R*allowedColors.col(0)+g*allowedColors.col(1)+b*allowedColors.col(2);
     auto theta=2.0/M_PI*(sumRGBsquare/(SqrModSquare+Thre)/1.01f).acos();
-    Eigen::ArrayXf OnedDeltaR=deltaR.abs()/(R+allowedColors.col(0).array()+Thre);
-    Eigen::ArrayXf OnedDeltaG=deltaG.abs()/(g+allowedColors.col(1).array()+Thre);
-    Eigen::ArrayXf OnedDeltaB=deltaB.abs()/(b+allowedColors.col(2).array()+Thre);
+    Eigen::ArrayXf OnedDeltaR=deltaR.abs()/(R+allowedColors.col(0)+Thre);
+    Eigen::ArrayXf OnedDeltaG=deltaG.abs()/(g+allowedColors.col(1)+Thre);
+    Eigen::ArrayXf OnedDeltaB=deltaB.abs()/(b+allowedColors.col(2)+Thre);
     Eigen::ArrayXf sumOnedDelta=OnedDeltaR+OnedDeltaG+OnedDeltaB+Thre;
     auto S_tr=OnedDeltaR/sumOnedDelta*S_r.square();
     auto S_tg=OnedDeltaG/sumOnedDelta*S_g.square();
     auto S_tb=OnedDeltaB/sumOnedDelta*S_b.square();
     auto S_theta=S_tr+S_tg+S_tb;
     auto Rmax=allowedColors.rowwise().maxCoeff();
-    auto S_ratio=Rmax.array().max(std::max(R,std::max(g,b)));
+    auto S_ratio=Rmax.max(std::max(R,std::max(g,b)));
 
     Eigen::ArrayXf dist=(S_r.square()*w_r*deltaR.square()+S_g.square()*w_g*deltaG.square()+S_b.square()*w_b*deltaB.square())/(w_r+w_g+w_b)+S_theta*S_ratio*theta.square();//+S_theta*S_ratio*theta.square()
 
@@ -426,14 +426,14 @@ unsigned char TokiColor::applyHSV() {
     if(Result)
         return Result;
     int tempIndex=0;
-    Eigen::ArrayXXf &allowedColors=Allowed->HSV;
+    Eigen::Array<float,Eigen::Dynamic,3> &allowedColors=Allowed->HSV;
     //float h=c3[0];
     //float s=c3[1];
     //float v=c3[2];
-    auto SV=allowedColors.col(1).array()*allowedColors.col(2).array();
-    auto deltaX=50.0f*(SV*(allowedColors.col(0).array()).cos()-c3[2]*c3[1]*cos(c3[0]));
-    auto deltaY=50.0f*(SV*(allowedColors.col(0).array()).sin()-c3[2]*c3[1]*sin(c3[0]));
-    auto deltaZ=86.60254f*(allowedColors.col(2).array()-c3[2]);
+    auto SV=allowedColors.col(1)*allowedColors.col(2);
+    auto deltaX=50.0f*(SV*(allowedColors.col(0)).cos()-c3[2]*c3[1]*cos(c3[0]));
+    auto deltaY=50.0f*(SV*(allowedColors.col(0)).sin()-c3[2]*c3[1]*sin(c3[0]));
+    auto deltaZ=86.60254f*(allowedColors.col(2)-c3[2]);
     Eigen::ArrayXf Diff=deltaX.square()+deltaY.square()+deltaZ.square();
     ResultDiff=Diff.minCoeff(&tempIndex);
     Result=Allowed->Map(tempIndex);
@@ -446,9 +446,9 @@ unsigned char TokiColor::applyXYZ() {
     if(Result)
         return Result;
     int tempIndex=0;
-    auto Diff0_2=(Allowed->XYZ.col(0).array()-c3[0]).square();
-    auto Diff1_2=(Allowed->XYZ.col(1).array()-c3[1]).square();
-    auto Diff2_2=(Allowed->XYZ.col(2).array()-c3[2]).square();
+    auto Diff0_2=(Allowed->XYZ.col(0)-c3[0]).square();
+    auto Diff1_2=(Allowed->XYZ.col(1)-c3[1]).square();
+    auto Diff2_2=(Allowed->XYZ.col(2)-c3[2]).square();
 
     Eigen::ArrayXf Diff=Diff0_2+Diff1_2+Diff2_2;
     //Data.CurrentColor-=allowedColors;
@@ -468,12 +468,12 @@ unsigned char TokiColor::applyLab_old() {
     float L=c3[0];
     float a=c3[1];
     float b=c3[2];
-    Eigen::ArrayXXf &allowedColors=Allowed->Lab;
-    auto deltaL_2=(allowedColors.col(0).array()-L).square();
+    Eigen::Array<float,Eigen::Dynamic,3> &allowedColors=Allowed->Lab;
+    auto deltaL_2=(allowedColors.col(0)-L).square();
     float C1_2=a*a+b*b;
-    Eigen::ArrayXf C2_2=allowedColors.col(1).array().square()+allowedColors.col(2).array().square();
-    auto deltaCab_2=(sqrt(C1_2)-C2_2.array().sqrt()).square();
-    auto deltaHab_2=(allowedColors.col(1).array()-a).square()+(allowedColors.col(2).array()-b).square()-deltaCab_2;
+    Eigen::ArrayXf C2_2=allowedColors.col(1).square()+allowedColors.col(2).square();
+    auto deltaCab_2=(sqrt(C1_2)-C2_2.sqrt()).square();
+    auto deltaHab_2=(allowedColors.col(1)-a).square()+(allowedColors.col(2)-b).square()-deltaCab_2;
     //SL=1,kL=1
     //K1=0.045f
     //K2=0.015f
@@ -494,11 +494,10 @@ unsigned char TokiColor::applyLab_new() {
     float L1s=c3[0];
     float a1s=c3[1];
     float b1s=c3[2];
-    Eigen::ArrayXXf &allow=Allowed->Lab;
+    Eigen::Array<float,Eigen::Dynamic,3> & allow=Allowed->Lab;
     Eigen::ArrayXf Diff(allow.rows());
 
-    for(short i=0;i<allow.rows();i++)
-    {
+    for(short i=0;i<allow.rows();i++) {
         Diff(i)=Lab00(L1s,a1s,b1s,allow(i,0),allow(i,1),allow(i,2));
     }
 

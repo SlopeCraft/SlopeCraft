@@ -59,7 +59,7 @@ private:
     unsigned char applyXYZ();
     unsigned char applyLab_old();
     unsigned char applyLab_new();
-    void doSide(Eigen::VectorXf);
+    void doSide(Eigen::ArrayXf);
 };
 
 #endif // TOKICOLOR_H

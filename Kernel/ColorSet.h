@@ -27,10 +27,10 @@ This file is part of SlopeCraft.
 //using namespace Eigen;
 class ColorSet{
     public:
-        Eigen::ArrayXXf _RGB;
-        Eigen::ArrayXXf  HSV;
-        Eigen::ArrayXXf  Lab;
-        Eigen::ArrayXXf  XYZ;
+        Eigen::Array<float,Eigen::Dynamic,3> _RGB;
+        Eigen::Array<float,Eigen::Dynamic,3>  HSV;
+        Eigen::Array<float,Eigen::Dynamic,3>  Lab;
+        Eigen::Array<float,Eigen::Dynamic,3>  XYZ;
         Eigen::ArrayXi  Map;
         ColorSet();
         bool ApplyAllowed(ColorSet*standard,bool *MIndex);

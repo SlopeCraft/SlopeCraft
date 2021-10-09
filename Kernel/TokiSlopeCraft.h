@@ -283,8 +283,8 @@ private:
 
 };
 
-bool readFromTokiColor(const std::string & FileName,Eigen::ArrayXXf & M);
-bool readFromTokiColor(const char*src,Eigen::ArrayXXf & M);
+bool readFromTokiColor(const std::string & FileName,Eigen::Array<float,Eigen::Dynamic,3> & M);
+bool readFromTokiColor(const char*src,Eigen::Array<float,Eigen::Dynamic,3> & M);
 uchar h2d(char h);
 void crash();
 void matchColor(TokiColor * tColor,ARGB qColor);
