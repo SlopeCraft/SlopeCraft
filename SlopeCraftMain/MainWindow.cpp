@@ -691,10 +691,6 @@ void MainWindow::InitializeAll()
     static bool needInitialize=true;
     if(needInitialize)
     {
-        qDebug()<<"当前运行路径："<<QCoreApplication::applicationDirPath();
-        //QString DirPath=QCoreApplication::applicationDirPath()+'/';
-        QDir::setCurrent(QCoreApplication::applicationDirPath());
-
         needInitialize=false;
 #ifdef dispDerivative
     //checkBlockIds();

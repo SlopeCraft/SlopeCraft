@@ -39,6 +39,10 @@ int main(int argc, char *argv[])
 
     qDebug()<<uiLanguages;
 
+    qDebug()<<"当前运行路径："<<QCoreApplication::applicationDirPath();
+    //QString DirPath=QCoreApplication::applicationDirPath()+'/';
+    QDir::setCurrent(QCoreApplication::applicationDirPath());
+
     const QStringList ZHLang={"zh-CN", "zh", "zh-Hans-CN"};
 
     bool isZH=false;
@@ -61,6 +65,7 @@ int main(int argc, char *argv[])
     }*/
     MainWindow w;
     w.show();
+
     if(isZH)
         w.turnCh();
     else
