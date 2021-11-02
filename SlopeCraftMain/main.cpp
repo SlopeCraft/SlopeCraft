@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 
     qDebug()<<uiLanguages;
 
-    const QStringList ZHLang={"zh-CN","zh_CN","zh"};
+    const QStringList ZHLang={"zh-CN", "zh", "zh-Hans-CN"};
 
     bool isZH=false;
     for(auto it=ZHLang.cbegin();it!=ZHLang.cend();it++) {
