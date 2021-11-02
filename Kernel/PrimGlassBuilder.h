@@ -28,8 +28,6 @@ This file is part of SlopeCraft.
 
 //using namespace Eigen;
 
-//#define WITH_QT
-
 #include <iostream>
 #include <random>
 #include <cmath>
