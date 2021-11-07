@@ -59,6 +59,7 @@ This file is part of SlopeCraft.
 #include <unordered_map>
 #include "zlib.h"
 
+#include "VersionDialog.h"
 #include "tpstrategywind.h"
 #include "previewwind.h"
 #include "BlockListManager.h"
