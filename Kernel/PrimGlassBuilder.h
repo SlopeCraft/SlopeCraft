@@ -22,7 +22,7 @@ This file is part of SlopeCraft.
 
 #ifndef PRIMGLASSBUILDER_H
 #define PRIMGLASSBUILDER_H
-
+#include "object_pool.hpp"
 
 #include <QObject>
 
@@ -30,8 +30,6 @@ This file is part of SlopeCraft.
 
 #include <iostream>
 #include <random>
-#include <cmath>
-#include <ctime>
 #include <vector>
 #include <queue>
 #include <stack>
@@ -52,7 +50,7 @@ extern const ARGB airColor;
 extern const ARGB targetColor;
 extern const ARGB glassColor;
 
-typedef Eigen::Array<uchar,Eigen::Dynamic,Eigen::Dynamic> TokiMap;
+typedef Eigen::Array<uchar, Eigen::Dynamic, Eigen::Dynamic> TokiMap;
 typedef TokiMap glassMap;
 typedef TokiMap walkableMap;
 
@@ -61,11 +59,31 @@ class edge
 {
 public:
     edge();
-    edge(TokiPos,TokiPos);
-    edge(ushort r1,ushort c1,ushort r2,ushort c2);
-    TokiPos beg;
-    TokiPos end;
+    edge(uint begIdx,uint endIdx);
+    //edge(uint begIdx,uint endIdx);
+    //edge(TokiPos,TokiPos);
+    //edge(ushort r1,ushort c1,ushort r2,ushort c2);
+    uint begIdx;
+    uint endIdx;
     int lengthSquare;
+
+    static const std::vector<TokiPos> * vertexes;
+
+    TokiPos beg() const;
+    TokiPos end() const;
+    bool connectWith(TokiPos) const;
+    void drawEdge(glassMap &,bool drawHead=false) const;
+};
+
+class pairedEdge : public std::pair<TokiPos,TokiPos>
+{
+public:
+    pairedEdge();
+    pairedEdge(TokiPos,TokiPos);
+    pairedEdge(ushort r1,ushort c1,ushort r2,ushort c2);
+    pairedEdge(const edge &);
+    int lengthSquare;
+
     bool connectWith(TokiPos) const;
     void drawEdge(glassMap &,bool drawHead=false) const;
 };
@@ -81,18 +99,23 @@ class PrimGlassBuilder : public QObject
 {
     Q_OBJECT
 public:
+	template <typename T, size_t S> friend class tf::ObjectPool;
+	void* _object_pool_block;
     explicit PrimGlassBuilder(QObject *parent = nullptr);
+    static const uint unitL=32;
+    static const uint reportRate=50;
 #else
 class PrimGlassBuilder
 {
 public:
     PrimGlassBuilder();
 #endif
-    enum blockType{
-            air=0,
-            glass=1,
-            target=127
-        };
+	enum blockType 
+    {
+		air = 0,
+		glass = 1,
+		target = 127
+	};
     glassMap makeBridge(const TokiMap & _targetMap,
                         walkableMap* walkable=nullptr);
 #ifdef WITH_QT
@@ -108,14 +131,15 @@ signals:
 private:
     std::vector<TokiPos> targetPoints;
     std::list<edge> edges;
-    std::vector<edge> tree;
+    std::vector<pairedEdge> tree;
     void addEdgesToGraph();
     void runPrim();
     glassMap make4SingleMap(const TokiMap & _targetMap,
                             walkableMap* walkable);
-    static edge connectSingleMaps(const PrimGlassBuilder * map1,TokiPos offset1,
+    static pairedEdge connectSingleMaps(const PrimGlassBuilder * map1,TokiPos offset1,
                                   const PrimGlassBuilder * map2, TokiPos offset2);
 };
+inline tf::ObjectPool<PrimGlassBuilder>pgb;
 
 EImage TokiMap2EImage(const TokiMap&);
 
