@@ -157,7 +157,9 @@ void LossyCompressor::crossover() {
         if(randD()<crossoverProb)
             crossoverQueue.push_back(i);
     }
-    std::random_shuffle(crossoverQueue.begin(),crossoverQueue.end());
+    std::random_device rd;
+    std::mt19937 rng(rd());
+    std::shuffle(crossoverQueue.begin(),crossoverQueue.end(),rng);
     if(crossoverQueue.size()%2==1)
         crossoverQueue.pop_back();
 
