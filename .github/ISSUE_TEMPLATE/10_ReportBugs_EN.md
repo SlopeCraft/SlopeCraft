@@ -1,7 +1,7 @@
 ---
 name: ReportBugs
 about: A template to guide users to report bugs better.
-title: [Bug report]
+title: Bug report
 ---
 
 # Delete this line to show that you are following the template, otherwise your issue will be treated as a trash.

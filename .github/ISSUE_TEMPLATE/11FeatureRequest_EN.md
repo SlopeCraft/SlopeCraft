@@ -1,5 +1,5 @@
 ---
 name: FeatureRequest
 about: Request for a feature.
-title: [Feature request]
+title: Feature request
 ---

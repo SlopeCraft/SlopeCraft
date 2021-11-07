@@ -1874,7 +1874,7 @@ void MainWindow::on_AllowForcedOpti_stateChanged(int arg1) {
 
 void MainWindow::on_reportBugs_clicked() {
     QUrl url(
-                tr("https://github.com/ToKiNoBug/SlopeCraft/issues/new?assignees=&labels=&template=ReportBugs_ZH.md"));
+               "https://github.com/ToKiNoBug/SlopeCraft/issues/new/choose");
     QDesktopServices::openUrl(url);
 }
 
