@@ -95,6 +95,7 @@ HEADERS += \
     ../Kernel/WaterItem.h \
     ../Kernel/defines.h \
     ../Kernel/lossyCompressor.h \
+    ../Kernel/object_pool.hpp \
     ../Kernel/simpleBlock.h \
     mainwindow.h \
     previewwind.h \

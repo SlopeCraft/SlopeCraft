@@ -273,24 +273,21 @@ glassMap PrimGlassBuilder::make4SingleMap(const TokiMap &_targetMap,
                     targetPoints.emplace_back(TokiRC(r,c));
             }
         }
-    targetPoints.shrink_to_fit();
 
-    //std::cerr<<"targetPoints.size="<<targetPoints.size()<<std::endl;
 
-    edges.clear();
-    tree.clear();
 
+    glassMap result(_targetMap.rows(),_targetMap.cols());
+    result.setZero();
 
     if(targetPoints.size()>1) {
         addEdgesToGraph();
         //std::cerr<<"edges.size="<<edges.size()<<std::endl;
         runPrim();
         //std::cerr<<"tree.size="<<tree.size()<<std::endl;
+    } else {
+        return result;
     }
 
-
-    glassMap result(_targetMap.rows(),_targetMap.cols());
-    result.setZero();
 
     for(auto it=tree.cbegin();it!=tree.cend();it++)
         it->drawEdge(result);
@@ -314,7 +311,7 @@ pairedEdge PrimGlassBuilder::connectSingleMaps(
                        const PrimGlassBuilder * map2, TokiPos offset2) {
 
     if(map1->targetPoints.size()<=0||map2->targetPoints.size()<=0)
-        return edge();
+        return pairedEdge();
 
     ushort offsetR1=TokiRow(offset1),offsetC1=TokiCol(offset1);
     ushort offsetR2=TokiRow(offset2),offsetC2=TokiCol(offset2);

@@ -36,6 +36,7 @@ HEADERS += \
     WaterItem.h \
     defines.h \
     lossyCompressor.h \
+    object_pool.hpp \
     simpleBlock.h
 
 # Default rules for deployment.
