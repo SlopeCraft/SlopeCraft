@@ -26,10 +26,6 @@ This file is part of SlopeCraft.
 #include <QLocale>
 #include <QTranslator>
 
-QJsonObject loadIni(bool);
-
-bool isValidIni(const QJsonObject & );
-
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -78,6 +74,11 @@ int main(int argc, char *argv[])
     else
         w.turnEn();
 
+    bool autoCheck=settings["autoCheckUpdates"].toBool();
+    if(autoCheck) {
+        w.checkVersion();
+    }
+
     return a.exec();
 }
 
@@ -102,17 +103,25 @@ QJsonObject loadIni(bool  isLocalZH) {
         }
     }
     qDebug("初始配置文件不存在，将重新创建");
+
+    QJsonObject jo;
+    jo["Language"]=(isLocalZH?"zh_CN":"en_US");
+    jo["autoCheckUpdates"]=true;
+
+    MainWindow::putSettings(jo);
+    /*
     QFile ini("./settings.json");
     ini.open(QFile::OpenModeFlag::WriteOnly|QFile::OpenModeFlag::Text);
     QString js;
     if(isLocalZH) {
-        js="{\n    \"Language\":\"zh_CN\"\n}";
+        js="{\n    \"Language\":\"zh_CN\",\n    \"autoCheckUpdates\":true\n}";
     } else
     {
-        js="{\n    \"Language\":\"en_US\"\n}";
+        js="{\n    \"Language\":\"en_US\",\n    \"autoCheckUpdates\":true\n}";
     }
     ini.write(js.toUtf8());
     ini.close();
+    */
     qDebug("创建初始配置文件");
     return loadIni(isLocalZH);
 }
@@ -129,6 +138,16 @@ bool isValidIni(const QJsonObject & jo) {
         qDebug()<<(jo.contains("Language")?
                        "Language value="+jo.value("Language").toString():
                        "jo doesn't contains Language key");
+        return false;
+    }
+    //
+    if(!jo.contains("autoCheckUpdates")) {
+        qDebug()<<"jo doesn't contains key \"autoCheckUpdates\"";
+        return false;
+    }
+    if(!jo["autoCheckUpdates"].isBool()) {
+        qDebug()<<"jo[\"autoCheckUpdates\"] is not a boolean value, but "
+               <<jo["autoCheckUpdates"];
         return false;
     }
 

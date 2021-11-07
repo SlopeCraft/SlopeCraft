@@ -593,7 +593,7 @@ font: 11pt &quot;微软雅黑&quot;;
        <property name="styleSheet">
         <string notr="true"/>
        </property>
-       <layout class="QGridLayout" name="gridLayout_9" columnstretch="1,0,0">
+       <layout class="QGridLayout" name="gridLayout_9" columnstretch="1,0">
         <item row="0" column="0" colspan="2">
          <widget class="QLabel" name="label_21">
           <property name="contextMenuPolicy">
@@ -1751,8 +1751,8 @@ font: 11pt &quot;微软雅黑&quot;;
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>551</width>
-               <height>378</height>
+               <width>75</width>
+               <height>22</height>
               </rect>
              </property>
              <property name="sizePolicy">
@@ -3464,6 +3464,7 @@ p, li { white-space: pre-wrap; }
     <addaction name="separator"/>
     <addaction name="menu"/>
     <addaction name="actionReportBugs"/>
+    <addaction name="actionCheckUpdates"/>
    </widget>
    <widget class="QMenu" name="menuLanguages">
     <property name="accessibleName">
@@ -3554,6 +3555,9 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionAboutSlopeCraft">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>关于SlopeCraft</string>
    </property>
@@ -3581,6 +3585,20 @@ p, li { white-space: pre-wrap; }
   <action name="actionReportBugs">
    <property name="text">
     <string>反馈Bug</string>
+   </property>
+  </action>
+  <action name="actionCheckUpdates">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>检查更新</string>
+   </property>
+   <property name="iconText">
+    <string>检查更新</string>
+   </property>
+   <property name="toolTip">
+    <string>检查更新</string>
    </property>
   </action>
  </widget>

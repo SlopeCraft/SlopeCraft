@@ -32,6 +32,8 @@ const ushort MainWindow::BLCheaper[64]={0,0,0,0,1,0,5,2,3,0,4,0,0,0,3,0,0,0,0,0,
 const ushort MainWindow::BLBetter[64]={0,1,1,0,0,1,0,2,0,0,3,2,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0};
 const ushort MainWindow::BLGlowing[64]={0,1,2,0,0,2,4,2,0,0,3,2,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,6,0,0,1,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0};
 
+const QString MainWindow::selfVersion="v3.6.0";
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -96,6 +98,8 @@ MainWindow::MainWindow(QWidget *parent)
         connect(ui->contact,&QPushButton::clicked,this,&MainWindow::contactG);
         connect(ui->actionReportBugs,&QAction::triggered,
                 this,&MainWindow::on_reportBugs_clicked);
+        connect(ui->actionCheckUpdates,&QAction::triggered,
+                this,&MainWindow::checkVersion);
 
     qDebug("成功connect所有的菜单");
 
@@ -433,13 +437,15 @@ QString MainWindow::getFixedBlockListDir(QString Dir) {
             return Dir;
         }
         else {
-            int userChoice=
+            QMessageBox::StandardButton userChoice=
             QMessageBox::warning(this,
                                  tr("错误：存放默认方块图标的文件夹FixedBlocks不存在"),
                                  tr("FixedBlocks文件夹存储了默认方块列表所有方块对应的图片。\n这个错误不致命，可以忽略，但最好重新下载SlopeCraft。\n点击Retry重新寻找这个文件夹，点击Ignore忽略这个错误，点击Close退出程序"),
-                                 QMessageBox::StandardButton::Retry,
-                                 QMessageBox::StandardButton::Ignore,
-                                 QMessageBox::StandardButton::Close);
+                                 {QMessageBox::StandardButton::Retry,
+                                  QMessageBox::StandardButton::Ignore,
+                                   QMessageBox::StandardButton::Close},
+
+                                 QMessageBox::StandardButton::Ignore);
             switch (userChoice) {
             case QMessageBox::StandardButton::Retry:
                 Dir=QFileDialog::getExistingDirectory(this,
@@ -476,11 +482,16 @@ while(true) {
             QString errorInfo=(error.error!=QJsonParseError::NoError)?
                         error.errorString():
                         "Json file doesn't contain array named \"CustomBlocks\"";
-            int userChoice=QMessageBox::warning(this,tr("错误：自定义方块列表的JSON格式有错"),
-                                 tr("JSON错误原因：")+errorInfo+tr("\n自定义方块列表记录了SlopeCraft额外添加的可选方块，不是程序运行必须的。\n请点击Yes手动寻找它，或点击Ignore忽略这个错误，或者点击Close退出程序，重新下载最新版SlopeCraft/修复错误后再启动程序。"),
-                                 QMessageBox::StandardButton::Yes,
-                                 QMessageBox::StandardButton::Ignore,
-                                 QMessageBox::StandardButton::Close);
+            QMessageBox::StandardButton userChoice=
+                    QMessageBox::warning(this,tr("错误：自定义方块列表的JSON格式有错"),
+                                 tr("JSON错误原因：")+errorInfo
+                                         +tr("\n自定义方块列表记录了SlopeCraft额外添加的可选方块，不是程序运行必须的。\n请点击Yes手动寻找它，或点击Ignore忽略这个错误，或者点击Close退出程序，重新下载最新版SlopeCraft/修复错误后再启动程序。"),
+                                                {
+                                                    QMessageBox::StandardButton::Yes,
+                                                    QMessageBox::StandardButton::Ignore,
+                                                    QMessageBox::StandardButton::Close
+                                                },
+                                         QMessageBox::StandardButton::Ignore);
             switch (userChoice) {
             case QMessageBox::StandardButton::Yes:
                 Path=QFileDialog::getOpenFileName(this,
@@ -509,11 +520,13 @@ while(true) {
         }
     }
     else {
-        int userChoice=QMessageBox::warning(this,tr("错误：自定义方块列表文件CustomBlocks.json不存在"),
+        QMessageBox::StandardButton userChoice=QMessageBox::warning(this,tr("错误：自定义方块列表文件CustomBlocks.json不存在"),
                              tr("自定义方块列表记录了SlopeCraft额外添加的可选方块，不是程序运行必须的。\n请点击Yes手动寻找它，或点击Ignore忽略这个错误，或者点击Close退出程序，重新下载最新版SlopeCraft/修复错误后再启动程序。"),
-                             QMessageBox::StandardButton::Yes,
-                             QMessageBox::StandardButton::Ignore,
-                             QMessageBox::StandardButton::Close);
+                                            {QMessageBox::StandardButton::Yes,
+                                             QMessageBox::StandardButton::Ignore,
+                                             QMessageBox::StandardButton::Close},
+                                       QMessageBox::StandardButton::Ignore
+                             );
         switch (userChoice) {
         case QMessageBox::StandardButton::Yes:
             Path=QFileDialog::getOpenFileName(this,
@@ -550,13 +563,14 @@ QString MainWindow::getCustomBlockListDir(QString Dir) {
             return Dir;
         }
         else {
-            int userChoice=
+            QMessageBox::StandardButton userChoice=
             QMessageBox::warning(this,
                                  tr("错误：存放自定义方块图标的文件夹CustomBlocks不存在"),
                                  tr("CustomBlocks文件夹存储了用户自定义方块列表所有方块对应的图片。\n这个错误不致命，可以忽略，但最好重新下载SlopeCraft。\n点击Retry重新寻找这个文件夹，点击Ignore忽略这个错误，点击Close退出程序"),
-                                 QMessageBox::StandardButton::Retry,
+                                 {QMessageBox::StandardButton::Retry,
                                  QMessageBox::StandardButton::Ignore,
-                                 QMessageBox::StandardButton::Close);
+                                 QMessageBox::StandardButton::Close},
+                                 QMessageBox::StandardButton::Ignore);
             switch (userChoice) {
             case QMessageBox::StandardButton::Retry:
                 Dir=QFileDialog::getExistingDirectory(this,
@@ -1862,4 +1876,148 @@ void MainWindow::on_reportBugs_clicked() {
     QUrl url(
                 tr("https://github.com/ToKiNoBug/SlopeCraft/issues/new?assignees=&labels=&template=ReportBugs_ZH.md"));
     QDesktopServices::openUrl(url);
+}
+
+void MainWindow::checkVersion() {
+
+    //QtConcurrent::run(grabVersion,this);
+    grabVersion(this);
+    return;
+}
+
+void grabVersion(MainWindow * parent) {
+    static bool isRunning=false;
+    if(isRunning) {
+        return;
+    }
+    isRunning=true;
+
+    static const QString url="https://api.github.com/repos/TokiNoBug/SlopeCraft/releases/latest";
+
+    QEventLoop tempLoop;
+    QNetworkAccessManager * manager=new QNetworkAccessManager;
+    QNetworkRequest request;
+    request.setUrl(
+                QUrl(url));
+    QNetworkReply * reply=manager->get(request);
+    QObject::connect(reply,&QNetworkReply::finished,
+                     &tempLoop,&QEventLoop::quit);
+    qDebug()<<"waitting for reply";
+    tempLoop.exec();
+    qDebug()<<reply->isFinished();
+    QByteArray result=reply->readAll();
+    reply->deleteLater();
+
+    QJsonParseError error;
+    QJsonDocument jd=QJsonDocument::fromJson(result,&error);
+    if(error.error!=error.NoError) {
+        int userReply=
+                QMessageBox::information(parent,
+                                         QObject::tr("检查更新时遇到Json解析错误"),
+                                         QObject::tr("网址  ")+url
+                                         +QObject::tr("  回复的信息无法通过json解析。\n点击No以忽略这个错误；点击NoToAll则不会再自动检查更新。\n具体的错误为：\n")
+                                         +error.errorString()+
+                                         QObject::tr("\n具体回复的信息为：\n")+result,
+                                         QMessageBox::StandardButton::No,
+                                         QMessageBox::StandardButton::NoToAll);
+        if(userReply==QMessageBox::StandardButton::NoToAll) {
+            parent->setAutoCheckUpdate(false);
+        }
+        isRunning=false;
+        return;
+    }
+
+
+    QJsonObject jo=jd.object();
+
+    bool hasKey=jo.contains("tag_name");
+    if(!hasKey) {
+        int userReply=
+                QMessageBox::information(parent,
+                                         QObject::tr("检查更新时返回信息错误"),
+                                         QObject::tr("网址  ")+url
+                                         +QObject::tr("  回复的信息中不包含版本号（\"tag_name\"）。\n点击No以忽略这个错误；点击NoToAll则不会再自动检查更新。\n")
+                                         +
+                                         QObject::tr("\n具体回复的信息为：\n")+result,
+                                         QMessageBox::StandardButton::No,
+                                         QMessageBox::StandardButton::NoToAll);
+        if(userReply==QMessageBox::StandardButton::NoToAll) {
+            parent->setAutoCheckUpdate(false);
+        }
+        isRunning=false;
+        return;
+    }
+
+    bool isKeyString=jo.value("tag_name").isString();
+    if(!isKeyString) {
+        int userReply=
+                QMessageBox::information(parent,
+                                         QObject::tr("检查更新时返回信息错误"),
+                                         QObject::tr("网址  ")+url
+                                         +QObject::tr("  回复的信息中，版本号（\"tag_name\"）不是字符串。\n点击No以忽略这个错误；点击NoToAll则不会再自动检查更新。\n")
+                                         +QObject::tr("\n具体回复的信息为：\n")+result
+                                         ,
+                                         QMessageBox::StandardButton::No,
+                                         QMessageBox::StandardButton::NoToAll);
+        if(userReply==QMessageBox::StandardButton::NoToAll) {
+            parent->setAutoCheckUpdate(false);
+        }
+        isRunning=false;
+        return;
+    }
+
+    QString updateInfo=jo["body"].toString();
+
+    QString latestVersion=jo["tag_name"].toString();
+    if(latestVersion==parent->selfVersion) {
+        isRunning=false;
+        return;
+    } else {
+        QMessageBox::StandardButton userReply =
+                QMessageBox::information(parent,
+                                         QObject::tr("SlopeCraft已更新"),
+                                         QObject::tr("好消息！好消息！SlopeCraft更新了！\n")+
+                                         QObject::tr("当前版本为")+parent->selfVersion+
+                                         QObject::tr("，检查到最新版本为")+latestVersion
+                                         +QObject::tr("\n点击Ok前往下载；点击No关闭提示；点击NoToAll不再自动检查更新。")
+                                         //+QObject::tr("\n更新内容：\n")+updateInfo
+                                         ,
+
+                                             {QMessageBox::StandardButton::Ok,
+                                              QMessageBox::StandardButton::No,
+                                               QMessageBox::StandardButton::NoToAll},
+
+                                         QMessageBox::StandardButton::Ok);
+
+        if(userReply==QMessageBox::StandardButton::Ok) {
+            QDesktopServices::openUrl(
+                        QUrl("https://github.com/ToKiNoBug/SlopeCraft/releases/latest"));
+        }
+        if(userReply==QMessageBox::StandardButton::NoToAll) {
+            parent->setAutoCheckUpdate(false);
+        }
+
+        isRunning=false;
+        return;
+    }
+}
+
+/*
+void MainWindow::receiveFinish(bool ok, QByteArray data) {
+
+}
+*/
+
+void MainWindow::putSettings(const QJsonObject & jo) {
+    QFile ini("./settings.json");
+    ini.open(QFile::OpenModeFlag::ReadWrite|QFile::OpenModeFlag::Text);
+
+    ini.write(QJsonDocument(jo).toJson());
+    ini.close();
+}
+
+void MainWindow::setAutoCheckUpdate(bool autoCheckUpdate) {
+    QJsonObject jo=loadIni();
+    jo["autoCheckUpdates"]=autoCheckUpdate;
+    putSettings(jo);
 }

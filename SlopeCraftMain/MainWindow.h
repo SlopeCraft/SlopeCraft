@@ -46,6 +46,11 @@ This file is part of SlopeCraft.
 #include <QFileDialog>
 #include <QCryptographicHash>
 
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QtConcurrent>
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -98,6 +103,10 @@ public:
 
     //初始化方块列表用
     void InitializeAll();
+    static void putSettings(const QJsonObject & jo);
+
+    static const QString selfVersion;
+
 
 #ifdef dispDerivative
     void checkBlockIds();
@@ -122,10 +131,15 @@ public slots:
     void turnCh();
     void turnEn();
 
+    void checkVersion();
+
+    void setAutoCheckUpdate(bool);
+
 private slots:    
     void progressRangeSet(int min,int max,int val);//设置进度条的取值范围和值
     void progressAdd(int deltaVal);
     void keepAwake();
+    //void receiveFinish(bool,QByteArray);
 
     void showError(TokiSlopeCraft::errorFlag);
     void showWorkingStatue(TokiSlopeCraft::workStatues);
@@ -211,6 +225,8 @@ private:
     bool Collected;
     QProgressBar * proTracker;
     //void applyPre(ushort*BL);
+
+private:
     void loadBlockList();
     void loadColormap();
     void turnToPage(int);
@@ -218,12 +234,19 @@ private:
     void switchLan(Language);
     void kernelSetType();
     void kernelSetImg();
+
     QByteArray parseColormap(QString,const QString &,const char*);
     QJsonArray getFixedBlocksList(QString);
     QString getFixedBlockListDir(QString);
     QJsonArray getCustomBlockList(QString);
     QString getCustomBlockListDir(QString);
+
 };
+
+void grabVersion(MainWindow*);
+
+QJsonObject loadIni(bool=false);
+bool isValidIni(const QJsonObject & );
 
 EImage QImage2EImage(const QImage &);
 QImage EImage2QImage(const EImage &,ushort scale=1);
