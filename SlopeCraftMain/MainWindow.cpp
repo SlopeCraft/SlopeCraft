@@ -1915,9 +1915,9 @@ void grabVersion(MainWindow * parent) {
                 QMessageBox::information(parent,
                                          QObject::tr("检查更新时遇到Json解析错误"),
                                          QObject::tr("网址  ")+url
-                                         +QObject::tr("  回复的信息无法通过json解析。\n点击No以忽略这个错误；点击NoToAll则不会再自动检查更新。\n具体的错误为：\n")
+                                         +QObject::tr("  回复的信息无法通过json解析。\n\n这只是检查更新时遇到的故障，但不要紧，软件该用还能用。\n点击No以忽略这个错误；点击NoToAll则不会再自动检查更新。\n\n具体的错误为：\n")
                                          +error.errorString()+
-                                         QObject::tr("\n具体回复的信息为：\n")+result,
+                                         QObject::tr("\n\n具体回复的信息为：\n")+result,
                                          QMessageBox::StandardButton::No,
                                          QMessageBox::StandardButton::NoToAll);
         if(userReply==QMessageBox::StandardButton::NoToAll) {
@@ -1936,9 +1936,9 @@ void grabVersion(MainWindow * parent) {
                 QMessageBox::information(parent,
                                          QObject::tr("检查更新时返回信息错误"),
                                          QObject::tr("网址  ")+url
-                                         +QObject::tr("  回复的信息中不包含版本号（\"tag_name\"）。\n点击No以忽略这个错误；点击NoToAll则不会再自动检查更新。\n")
+                                         +QObject::tr("  回复的信息中不包含版本号（\"tag_name\"）。\n\n这只是检查更新时遇到的故障，但不要紧，软件该用还能用。\n点击No以忽略这个错误；点击NoToAll则不会再自动检查更新。\n")
                                          +
-                                         QObject::tr("\n具体回复的信息为：\n")+result,
+                                         QObject::tr("\n\n具体回复的信息为：\n")+result,
                                          QMessageBox::StandardButton::No,
                                          QMessageBox::StandardButton::NoToAll);
         if(userReply==QMessageBox::StandardButton::NoToAll) {
@@ -1954,8 +1954,8 @@ void grabVersion(MainWindow * parent) {
                 QMessageBox::information(parent,
                                          QObject::tr("检查更新时返回信息错误"),
                                          QObject::tr("网址  ")+url
-                                         +QObject::tr("  回复的信息中，版本号（\"tag_name\"）不是字符串。\n点击No以忽略这个错误；点击NoToAll则不会再自动检查更新。\n")
-                                         +QObject::tr("\n具体回复的信息为：\n")+result
+                                         +QObject::tr("  回复的信息中，版本号（\"tag_name\"）不是字符串。\n\n这只是检查更新时遇到的故障，但不要紧，软件该用还能用。\n点击No以忽略这个错误；点击NoToAll则不会再自动检查更新。\n")
+                                         +QObject::tr("\n\n具体回复的信息为：\n")+result
                                          ,
                                          QMessageBox::StandardButton::No,
                                          QMessageBox::StandardButton::NoToAll);
