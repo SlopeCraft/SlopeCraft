@@ -1973,27 +1973,24 @@ void grabVersion(MainWindow * parent) {
         isRunning=false;
         return;
     } else {
-        QMessageBox::StandardButton userReply =
-                QMessageBox::information(parent,
+        VersionDialog::userChoice userReply =
+                VersionDialog::information(parent,
                                          QObject::tr("SlopeCraft已更新"),
+
                                          QObject::tr("好消息！好消息！SlopeCraft更新了！\n")+
                                          QObject::tr("当前版本为")+parent->selfVersion+
                                          QObject::tr("，检查到最新版本为")+latestVersion
-                                         +QObject::tr("\n点击Ok前往下载；点击No关闭提示；点击NoToAll不再自动检查更新。")
-                                         //+QObject::tr("\n更新内容：\n")+updateInfo
-                                         ,
+                                         //+QObject::tr("\n点击Ok前往下载；点击No关闭提示；点击NoToAll不再自动检查更新。")
+                                           ,
+                                         updateInfo
+                                         );
 
-                                             {QMessageBox::StandardButton::Ok,
-                                              QMessageBox::StandardButton::No,
-                                               QMessageBox::StandardButton::NoToAll},
 
-                                         QMessageBox::StandardButton::Ok);
-
-        if(userReply==QMessageBox::StandardButton::Ok) {
+        if(userReply==VersionDialog::userChoice::Yes) {
             QDesktopServices::openUrl(
                         QUrl("https://github.com/ToKiNoBug/SlopeCraft/releases/latest"));
         }
-        if(userReply==QMessageBox::StandardButton::NoToAll) {
+        if(userReply==VersionDialog::userChoice::NoToAll) {
             parent->setAutoCheckUpdate(false);
         }
 
