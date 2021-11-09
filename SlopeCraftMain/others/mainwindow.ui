@@ -62,7 +62,7 @@
     </sizepolicy>
    </property>
    <property name="styleSheet">
-    <string notr="true">QWidget#centralwidget{border-image: url(:/new/Pic/BG4.png);}</string>
+    <string notr="true">QWidget#centralwidget{border-image: url(:/new/Pic/BG4.jpg);}</string>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_2">
     <property name="sizeConstraint">
@@ -653,7 +653,7 @@ font: 11pt &quot;微软雅黑&quot;;
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="Pics.qrc">:/new/Pic/BG5.png</pixmap>
+               <pixmap resource="Pics.qrc">:/new/Pic/cover_Data.jpg</pixmap>
               </property>
               <property name="scaledContents">
                <bool>true</bool>
@@ -752,7 +752,7 @@ font: 11pt &quot;微软雅黑&quot;;
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="Pics.qrc">:/new/Pic/BG6.png</pixmap>
+               <pixmap resource="Pics.qrc">:/new/Pic/cover_3D.jpg</pixmap>
               </property>
               <property name="scaledContents">
                <bool>true</bool>
@@ -833,7 +833,7 @@ font: 11pt &quot;微软雅黑&quot;;
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="Pics.qrc">:/new/Pic/BG7.png</pixmap>
+               <pixmap resource="Pics.qrc">:/new/Pic/cover_Flat.jpg</pixmap>
               </property>
               <property name="scaledContents">
                <bool>true</bool>
@@ -896,13 +896,28 @@ font: 11pt &quot;微软雅黑&quot;;
             <item>
              <widget class="QLabel" name="label_39">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>195</height>
+               </size>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="lineWidth">
+               <number>2</number>
+              </property>
               <property name="text">
                <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="Pics.qrc">:/new/Pic/cover_Wall.jpg</pixmap>
               </property>
               <property name="scaledContents">
                <bool>true</bool>
@@ -912,7 +927,7 @@ font: 11pt &quot;微软雅黑&quot;;
             <item>
              <widget class="QCommandLinkButton" name="StartWithWall">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -940,8 +955,17 @@ font: 11pt &quot;微软雅黑&quot;;
             </item>
             <item>
              <widget class="QLabel" name="label_40">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="text">
                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;墙面地图画&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
               </property>
              </widget>
             </item>

@@ -2,9 +2,10 @@
     <qresource prefix="/new/Pic">
         <file>Transparent.png</file>
         <file>BG3.png</file>
-        <file>BG4.png</file>
-        <file>BG5.png</file>
-        <file>BG6.png</file>
-        <file>BG7.png</file>
+        <file>BG4.jpg</file>
+        <file>cover_3D.jpg</file>
+        <file>cover_Data.jpg</file>
+        <file>cover_Flat.jpg</file>
+        <file>cover_Wall.jpg</file>
     </qresource>
 </RCC>
