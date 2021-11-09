@@ -24,6 +24,8 @@ This file is part of SlopeCraft.
 
 Eigen::Array<float,2,3>TokiSlopeCraft::DitherMapLR;
 Eigen::Array<float,2,3>TokiSlopeCraft::DitherMapRL;
+ColorSet TokiSlopeCraft::Basic;
+ColorSet TokiSlopeCraft::Allowed;
 
 #ifndef WITH_QT
 void defaultProgressRangeSet(int,int,int) {};
@@ -129,7 +131,7 @@ uchar h2d(char h) {
     std::cerr<<"Wrong byte:"<<(int)h<<"->"<<h;
     return 255;
 }
-bool readFromTokiColor(const std::string & FileName,Eigen::Array<float,Eigen::Dynamic,3> & M) {
+bool readFromTokiColor(const std::string & FileName,ColorList & M) {
     std::fstream Reader;
     Reader.open(FileName, std::ios::in|std::ios::binary);
     if(!Reader)return false;
@@ -142,7 +144,7 @@ bool readFromTokiColor(const std::string & FileName,Eigen::Array<float,Eigen::Dy
     return result;
 }
 
-bool readFromTokiColor(const char*src,Eigen::Array<float,Eigen::Dynamic,3> & M) {
+bool readFromTokiColor(const char*src,ColorList & M) {
     const char * buf=src;
     /*
     string fileMD5=
@@ -477,7 +479,7 @@ void TokiSlopeCraft::Dither() {
 
     ditheredImage.setZero(sizePic(0),sizePic(1));
 
-    Eigen::Array<float,Eigen::Dynamic,3> *ColorMap=nullptr;
+    ColorList *ColorMap=nullptr;
     ARGB Current;
     ARGB (*CvtFun)(float,float,float);
     switch (ConvertAlgo) {
@@ -506,7 +508,7 @@ void TokiSlopeCraft::Dither() {
         CvtFun=XYZ2ARGB;
         break;
     }
-    Eigen::Array<float,Eigen::Dynamic,3> &CM=*ColorMap;
+    ColorList &CM=*ColorMap;
     int index=0;
     for(short r=0;r<sizePic(0);r++)
     {

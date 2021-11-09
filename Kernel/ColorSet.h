@@ -25,12 +25,13 @@ This file is part of SlopeCraft.
 #include "TokiColor.h"
 
 //using namespace Eigen;
+
 class ColorSet{
     public:
-        Eigen::Array<float,Eigen::Dynamic,3> _RGB;
-        Eigen::Array<float,Eigen::Dynamic,3>  HSV;
-        Eigen::Array<float,Eigen::Dynamic,3>  Lab;
-        Eigen::Array<float,Eigen::Dynamic,3>  XYZ;
+        ColorList _RGB;
+        ColorList  HSV;
+        ColorList  Lab;
+        ColorList  XYZ;
         Eigen::ArrayXi  Map;
         ColorSet();
         bool ApplyAllowed(ColorSet*standard,bool *MIndex);

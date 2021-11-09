@@ -228,6 +228,7 @@ private:
     enum ColorSpace {
         R='R',H='H',L='L',X='X'
     };
+    static ColorSet Basic,Allowed;
     static Eigen::Array<float,2,3> DitherMapLR,DitherMapRL;
     gameVersion mcVer;//12,13,14,15,16,17
     mapTypes mapType;
@@ -236,8 +237,8 @@ private:
     compressSettings compressMethod;
     glassBridgeSettings glassMethod;
 
-    ColorSet Basic;
-    ColorSet Allowed;
+    //ColorSet Basic;
+    //ColorSet Allowed;
     std::vector<simpleBlock> blockPalette;
 
     int size3D[3];//x,y,z
@@ -283,8 +284,8 @@ private:
 
 };
 
-bool readFromTokiColor(const std::string & FileName,Eigen::Array<float,Eigen::Dynamic,3> & M);
-bool readFromTokiColor(const char*src,Eigen::Array<float,Eigen::Dynamic,3> & M);
+bool readFromTokiColor(const std::string & FileName,ColorList & M);
+bool readFromTokiColor(const char*src,ColorList & M);
 uchar h2d(char h);
 void crash();
 void matchColor(TokiColor * tColor,ARGB qColor);
