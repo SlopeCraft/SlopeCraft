@@ -20,6 +20,7 @@
 | isGlowing | bool | 否 | false | 指示方块是否发光 |
 | endermanPickable | bool | 否 | false | 指示方块是否可以被末影人偷走 |
 | burnable | bool | 否 | false | 指示方块是否可以被烧毁 |
+| wallUseable | bool | 否 | true | 指示方块是否可以用于墙面像素画 |
 
 其中选填项可以跳过不填，SlopeCraft会自动补全为默认值。
 

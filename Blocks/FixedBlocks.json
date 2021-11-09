@@ -15,7 +15,8 @@
     "icon":"grass_block.png",
     "version":0,
     "idOld":"minecraft:grass[snowy=false]",
-    "endermanPickable":true
+    "endermanPickable":true,
+    "wallUseable":false
 },
 {
     "baseColor":1,
@@ -77,7 +78,8 @@
     "nameEN":"Turtle egg",
     "icon":"turtle_egg.png",
     "version":13,
-    "needGlass":true
+    "needGlass":true,
+    "wallUseable":false
 },
 {
     "baseColor":3,
@@ -154,7 +156,8 @@
     "nameZH":"酿造台",
     "nameEN":"brewing stand",
     "icon":"brewing_stand.png",
-    "version":0
+    "version":0,
+    "wallUseable":false
 },
 {
     "baseColor":6,
@@ -163,7 +166,8 @@
     "nameEN":"Iron pressure plate",
     "icon":"heavy_weighted_pressure_plate.png",
     "version":0,
-    "needGlass":true
+    "needGlass":true,
+    "wallUseable":false
 },
 {
     "baseColor":6,
@@ -172,7 +176,8 @@
     "nameEN":"Iron trapdoor",
     "icon":"iron_trapdoor.png",
     "version":0,
-    "idOld":"minecraft:iron_trapdoor[facing=north,half=top,open=false]"
+    "idOld":"minecraft:iron_trapdoor[facing=north,half=top,open=false]",
+    "wallUseable":false
 },
 {
     "baseColor":6,
@@ -180,7 +185,8 @@
     "nameZH":"灯笼",
     "nameEN":"lantern",
     "icon":"lantern.png",
-    "version":14
+    "version":14,
+    "wallUseable":false
 },
 {
     "baseColor":6,
@@ -188,7 +194,8 @@
     "nameZH":"砂轮",
     "nameEN":"Grindstone",
     "icon":"grindstone.png",
-    "version":14
+    "version":14,
+    "wallUseable":false
 },
 {
     "baseColor":7,
@@ -377,7 +384,8 @@
     "nameZH":"水",
     "nameEN":"Water",
     "icon":"water.png",
-    "version":0
+    "version":0,
+    "wallUseable":false
 },
 {
     "baseColor":13,
@@ -1151,7 +1159,8 @@
     "nameEN":"Campfire",
     "icon":"campfire.png",
     "version":14,
-    "isGlowing":true
+    "isGlowing":true,
+    "wallUseable":false
 },
 {
     "baseColor":35,
@@ -1362,7 +1371,8 @@
     "nameEN":"Crimson nylium",
     "icon":"crimson_nylium.png",
     "version":16,
-    "endermanPickable":true
+    "endermanPickable":true,
+    "wallUseable":false
 },
 {
     "baseColor":53,
@@ -1407,7 +1417,8 @@
     "nameEN":"Warped nylium",
     "icon":"warped_nylium.png",
     "version":16,
-    "endermanPickable":true
+    "endermanPickable":true,
+    "wallUseable":false
 },
 {
     "baseColor":55,
@@ -1550,6 +1561,7 @@
     "version":17,
     "needGlass":true,
     "isGlowing":true,
-    "burnable":true
+    "burnable":true,
+    "wallUseable":false
 }
 ]}
