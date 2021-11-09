@@ -89,6 +89,7 @@ void BlockListManager::addBlocks(const QJsonArray & jArray,QString imgDir) {
         if(!temp.contains("icon")) temp["icon"]="";
         if(!temp.contains("endermanPickable")) temp["endermanPickable"]=false;
         if(!temp.contains("burnable")) temp["burnable"]=false;
+        if(!temp.contains("wallUseable")) temp["wallUseable"]=true;
 
         baseColor=temp.value("baseColor").toInt();
         tasks[baseColor].push(temp);
@@ -112,6 +113,7 @@ void BlockListManager::applyPreset(const ushort * preset) {
             tbcs[i]->checkBox->setChecked(true);
         }
     isApplyingPreset=false;
+    emit blockListChanged();
 }
 
 void BlockListManager::setSelected(uchar baseColor,ushort blockSeq) {
@@ -127,8 +129,9 @@ void BlockListManager::setEnabled(uchar baseColor, bool isEnable) {
 }
 
 void BlockListManager::receiveClicked() const {
-    if(isApplyingPreset)return;
+    if(isApplyingPreset) return;
     emit switchToCustom();
+    emit blockListChanged();
 }
 
 void BlockListManager::setLabelColors(const QRgb *colors) {

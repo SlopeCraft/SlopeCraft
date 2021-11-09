@@ -61,6 +61,7 @@ public slots:
 signals:
     void translate(Language);
     void switchToCustom() const;
+    void blockListChanged() const;
 
 private:
     bool isApplyingPreset;

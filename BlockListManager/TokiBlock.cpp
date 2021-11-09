@@ -38,6 +38,7 @@ block.needGlass=json.value("needGlass").toBool();
 block.doGlow=json.value("isGlowing").toBool();
 block.endermanPickable=json.value("endermanPickable").toBool();
 block.burnable=json.value("burnable").toBool();
+block.wallUseable=json.value("wallUseable").toBool();
 nameZH=json.value("nameZH").toString();
 nameEN=json.value("nameEN").toString();
 //std::cerr<<block.id<<"\n"<<block.idOld<<"\n";
@@ -50,12 +51,13 @@ connect(target,&QRadioButton::clicked,this,&TokiBlock::onTargetClicked);
 static bool showLater=true;
 if((!QFile(imgName).exists()||QIcon(imgName).isNull())) {
     if(showLater) {
-        int userChoice=QMessageBox::warning(nullptr,tr("错误：方块对应的图像不存在或不可用"),
+        QMessageBox::StandardButton userChoice
+                =QMessageBox::warning(nullptr,tr("错误：方块对应的图像不存在或不可用"),
                              tr("方块id：")+QString(block.id.data())+tr("\n缺失的图像：")+imgName+
                              tr("\n你可以点击Yes忽略这个错误，点击YesToAll屏蔽同类的警告，或者点击Close结束程序"),
-                             QMessageBox::StandardButton::Yes,
+                             {QMessageBox::StandardButton::Yes,
                              QMessageBox::StandardButton::YesToAll,
-                             QMessageBox::StandardButton::Close);
+                             QMessageBox::StandardButton::Close});
 
         switch (userChoice) {
         case QMessageBox::StandardButton::Yes:

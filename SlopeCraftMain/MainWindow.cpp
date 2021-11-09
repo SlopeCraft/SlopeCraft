@@ -68,6 +68,8 @@ MainWindow::MainWindow(QWidget *parent)
     qDebug("成功创建方块列表管理者");
     connect(Manager,&BlockListManager::switchToCustom,
             this,&MainWindow::ChangeToCustom);
+    connect(Manager,&BlockListManager::blockListChanged,
+            this,&MainWindow::onBlockListChanged);
     //connect(Kernel,SIGNAL(convertProgressSetRange(int,int,int)));
 
     ui->maxHeight->setValue(255);
@@ -1291,13 +1293,7 @@ void MainWindow::onAlgoClicked() {
 }
 
 void MainWindow::kernelSetType() {
-    /*
-bool TokiSlopeCraft::setType(mapTypes type,
-                             gameVersion ver,
-                             const bool * allowedBaseColor,
-                             simpleBlock * palettes,
-                             const ArrayXXi & _rawimg)
-*/
+
     TokiSlopeCraft::mapTypes type=TokiSlopeCraft::mapTypes::Slope;
     {
     if(ui->isMapCreative->isChecked())
@@ -2040,4 +2036,19 @@ void MainWindow::setAutoCheckUpdate(bool autoCheckUpdate) {
     QJsonObject jo=loadIni();
     jo["autoCheckUpdates"]=autoCheckUpdate;
     putSettings(jo);
+}
+
+void MainWindow::onBlockListChanged() {
+    //qDebug("onBlockListChanged");
+    if(Kernel->queryStep()<TokiSlopeCraft::step::colorSetReady) {
+        return;
+    }
+
+    kernelSetType();
+
+    ushort colorCount=Kernel->getColorCount();
+    ui->IntroColorCount->setText(
+                tr("可用")+
+                QString::number(colorCount)+
+                tr("种颜色"));
 }

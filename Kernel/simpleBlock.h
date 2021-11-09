@@ -40,6 +40,8 @@ public:
     bool doGlow;
     bool endermanPickable;
     bool burnable;
+    bool wallUseable;
+
     static bool dealBlockId(const std::string & id ,
                             std::string & netBlockId,
                             stringList * proName,

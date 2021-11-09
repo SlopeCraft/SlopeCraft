@@ -178,6 +178,8 @@ private slots:
     //应用预设方块列表的自定义槽
     void ChangeToCustom();
     void onPresetsClicked();
+    void onBlockListChanged();
+
     //for Page4
     void onAlgoClicked();
     void on_Convert_clicked();

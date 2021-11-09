@@ -239,6 +239,11 @@ bool TokiSlopeCraft::setType(mapTypes type,
             MIndex[index]=false;
             continue;
         }
+        if((mapType==mapTypes::Wall)
+                &&!blockPalette[index2baseColor(index)].wallUseable) {//墙面像素画且当前方块不适合墙面
+            MIndex[index]=false;
+            continue;
+        }
         if(isVanilla()&&(index2depth(index)>=3)) {//可实装的地图画不允许第四种阴影
             MIndex[index]=false;
             continue;
