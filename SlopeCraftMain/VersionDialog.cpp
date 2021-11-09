@@ -67,6 +67,7 @@ void VersionDialog::on_BtnNoToAll_clicked() {
 
     QEventLoop EL;
     connect(form,&VersionDialog::finished,&EL,&QEventLoop::quit);
+    //connect(form,SLOT(close()),&EL,SLOT(quit()));
     EL.exec();
 
     VersionDialog::userChoice result=form->result;

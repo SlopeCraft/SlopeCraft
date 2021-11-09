@@ -42,7 +42,7 @@ public:
     float c3[3];//三通道的颜色值。可能为RGB,HSV,Lab,XYZ
     float sideSelectivity[2];//记录与result的深度值不同的两个有损优化候选色选择系数（升序排列），Depth=3时无效
     unsigned char sideResult[2];//记录与result的深度值不同的两个有损优化候选色（升序排列），Depth=3时无效
-    char ColorSpaceType;
+    static char ColorSpaceType;
     unsigned char Result;//最终调色结果
     float ResultDiff;
     static bool needFindSide;

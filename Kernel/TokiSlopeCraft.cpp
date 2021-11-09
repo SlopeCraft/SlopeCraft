@@ -413,7 +413,9 @@ void TokiSlopeCraft::pushToHash() {
         int ColorCount=0;
         TokiColor::Allowed=&Allowed;
         TokiColor::Basic=&Basic;
+
         char Mode=ConvertAlgo;
+        TokiColor::ColorSpaceType=Mode;
         for(short r=0;r<sizePic(0);r++)
         {
             for(short c=0;c<sizePic(1);c++)

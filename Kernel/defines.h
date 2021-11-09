@@ -10,8 +10,6 @@
     #define emit ;
 #endif
 
-
-
 typedef unsigned char uchar;
 typedef unsigned short ushort;
 typedef unsigned int uint;

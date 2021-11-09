@@ -25,6 +25,7 @@ This file is part of SlopeCraft.
 #define Thre 1e-10f
 #include <cmath>
 #define deg2rad(deg) ((deg)*M_PI/180.0)
+
 auto atan2(Eigen::VectorXf y,Eigen::VectorXf x)
 {
     return (x.array()>0.0).select((y.array()/x.array()).atan(),(x.array()<0.0).select((y.array()>=0).select((y.array()/x.array()).atan()+M_PI,(y.array()/x.array()).atan()-M_PI),(y.array()!=0.0).select(y.array()/y.array().abs()*M_PI/2.0,0)));
@@ -277,7 +278,7 @@ ARGB HSV2ARGB(float H,float S,float V)
 
 TokiColor::TokiColor(ARGB rawColor,char _ColorSpaceType)
 {
-ColorSpaceType=_ColorSpaceType;
+//ColorSpaceType=_ColorSpaceType;
 if (_ColorSpaceType>='a')
     _ColorSpaceType-='a'-'A';
 switch (_ColorSpaceType)
