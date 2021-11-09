@@ -3503,6 +3503,27 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionChinese"/>
     <addaction name="actionEnglish"/>
    </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>地图画</string>
+    </property>
+    <widget class="QMenu" name="menuExport">
+     <property name="title">
+      <string>导出为</string>
+     </property>
+     <addaction name="actionExportLite"/>
+     <addaction name="actionExportNBT"/>
+     <addaction name="actionExportData"/>
+    </widget>
+    <addaction name="actionStart"/>
+    <addaction name="actionImportImage"/>
+    <addaction name="actionMapType"/>
+    <addaction name="actionBlockList"/>
+    <addaction name="actionConvert"/>
+    <addaction name="menuExport"/>
+    <addaction name="actionFinish"/>
+   </widget>
+   <addaction name="menu_2"/>
    <addaction name="menuLanguages"/>
    <addaction name="menuAbout"/>
   </widget>
@@ -3623,6 +3644,51 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="toolTip">
     <string>检查更新</string>
+   </property>
+  </action>
+  <action name="actionStart">
+   <property name="text">
+    <string>开始</string>
+   </property>
+  </action>
+  <action name="actionImportImage">
+   <property name="text">
+    <string>导入图片</string>
+   </property>
+  </action>
+  <action name="actionMapType">
+   <property name="text">
+    <string>地图画类型</string>
+   </property>
+  </action>
+  <action name="actionBlockList">
+   <property name="text">
+    <string>方块列表</string>
+   </property>
+  </action>
+  <action name="actionConvert">
+   <property name="text">
+    <string>调整颜色</string>
+   </property>
+  </action>
+  <action name="actionExportLite">
+   <property name="text">
+    <string>投影文件</string>
+   </property>
+  </action>
+  <action name="actionExportNBT">
+   <property name="text">
+    <string>结构文件</string>
+   </property>
+  </action>
+  <action name="actionExportData">
+   <property name="text">
+    <string>地图文件</string>
+   </property>
+  </action>
+  <action name="actionFinish">
+   <property name="text">
+    <string>完成</string>
    </property>
   </action>
  </widget>

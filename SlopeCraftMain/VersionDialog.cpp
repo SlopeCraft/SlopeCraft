@@ -50,18 +50,20 @@ void VersionDialog::on_BtnNoToAll_clicked() {
 }
 
 
-VersionDialog::userChoice VersionDialog::information(QWidget * parent,
+    VersionDialog::userChoice VersionDialog::information(QWidget * parent,
                                   const QString & title,
                                   const QString & labelText,
                        const QString & browserText) {
     VersionDialog * form=new VersionDialog(nullptr);
 
-    QObject::connect(parent,&QWidget::destroyed,form,&VersionDialog::destroyed);
+    QObject::connect(parent,&QWidget::close,form,&VersionDialog::deleteLater);
 
     form->show();
     form->setWindowTitle(title);
     form->ui->label->setText(labelText);
     form->ui->textBrowser->setMarkdown(browserText);
+
+    //connect(parent)
 
     QEventLoop EL;
     connect(form,&VersionDialog::finished,&EL,&QEventLoop::quit);

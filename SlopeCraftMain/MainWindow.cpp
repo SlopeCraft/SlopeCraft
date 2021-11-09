@@ -169,6 +169,25 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->AllowDither,&QCheckBox::clicked,
             this,&MainWindow::onAlgoClicked);
 
+    connect(ui->actionStart,&QAction::triggered,
+            ui->progressStart,&QPushButton::clicked);
+    connect(ui->actionImportImage,&QAction::triggered,
+            ui->progressImPic,&QPushButton::clicked);
+    connect(ui->actionMapType,&QAction::triggered,
+            ui->progressType,&QPushButton::clicked);
+    connect(ui->actionBlockList,&QAction::triggered,
+            ui->progressBL,&QPushButton::clicked);
+    connect(ui->actionConvert,&QAction::triggered,
+            ui->progressAdjPic,&QPushButton::clicked);
+    connect(ui->actionExportLite,&QAction::triggered,
+            ui->progressExLite,&QPushButton::clicked);
+    connect(ui->actionExportNBT,&QAction::triggered,
+            ui->progressExStructure,&QPushButton::clicked);
+    connect(ui->actionExportData,&QAction::triggered,
+            ui->progressExData,&QPushButton::clicked);
+    connect(ui->actionFinish,&QAction::triggered,
+            ui->progressAbout,&QPushButton::clicked);
+
     turnToPage(0);
 
 }
@@ -876,15 +895,19 @@ void MainWindow::updateEnables() {
     ui->ShowAdjed->setEnabled(temp);
     ui->ExportData->setEnabled(temp);
     ui->progressEx->setEnabled(temp);
+    ui->menuExport->setEnabled(temp);
     ui->ExData->setEnabled(temp);
     ui->progressExData->setEnabled(temp);
+    ui->actionExportData->setEnabled(temp);
 
     temp=(!ui->isMapCreative->isChecked())&&
             Kernel->queryStep()>=TokiSlopeCraft::converted;
     ui->ExLite->setEnabled(temp);
     ui->progressExLite->setEnabled(temp);
+    ui->actionExportLite->setEnabled(temp);
     ui->ExStructure->setEnabled(temp);
     ui->progressExStructure->setEnabled(temp);
+    ui->actionExportNBT->setEnabled(temp);
     ui->Build4Lite->setEnabled(temp);
 
     temp=Kernel->queryStep()>=TokiSlopeCraft::builded;
