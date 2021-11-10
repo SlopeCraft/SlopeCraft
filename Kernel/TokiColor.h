@@ -40,7 +40,8 @@ public:
     TokiColor(ARGB);
     TokiColor();
     //QRgb Raw;//相当于Key
-    float c3[3];//三通道的颜色值。可能为RGB,HSV,Lab,XYZ
+    //float c3[3];//三通道的颜色值。可能为RGB,HSV,Lab,XYZ
+    Eigen::Array3f c3;
     float sideSelectivity[2];//记录与result的深度值不同的两个有损优化候选色选择系数（升序排列），Depth=3时无效
     unsigned char sideResult[2];//记录与result的深度值不同的两个有损优化候选色（升序排列），Depth=3时无效
     static char convertAlgo;

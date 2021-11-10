@@ -463,13 +463,12 @@ void TokiSlopeCraft::applyTokiColor() {
 
 void TokiSlopeCraft::fillMapMat() {
     mapPic.setZero(getImageRows(),getImageCols());
-    auto R=&colorHash;
-        for(short r=0;r<sizePic(0);r++)
-        {
-            for(short c=0;c<sizePic(1);c++)
-            {
-                mapPic(r,c)=R->operator[](rawImage(r,c)).Result;
+    //auto R=&colorHash;
+        for(short r=0;r<sizePic(0);r++) {
+            for(short c=0;c<sizePic(1);c++) {
+                mapPic(r,c)=colorHash[rawImage(r,c)].Result;
             }
+
             if(r%reportRate==0)
                 emit progressAdd(reportRate*sizePic(1));
         }
@@ -516,7 +515,7 @@ void TokiSlopeCraft::Dither() {
     }
     ColorList &CM=*ColorMap;
 
-    int t=sizeof(Eigen::Array3f);
+    //int t=sizeof(Eigen::Array3f);
 
     int index=0;
     for(short r=0;r<sizePic(0);r++)
@@ -531,7 +530,7 @@ void TokiSlopeCraft::Dither() {
     }
     std::cerr<<"Filled Dither matrix\n";
     int newCount=0;
-    TokiColor* oldColor=nullptr;
+    //TokiColor* oldColor=nullptr;
     for(short r=0;r<sizePic(0);r++)//底部一行、左右两侧不产生误差扩散，只接受误差
     {
         emit keepAwake();
@@ -539,61 +538,73 @@ void TokiSlopeCraft::Dither() {
         {
             for(short c=0;c<sizePic(1);c++)
             {
-                float Error[3];
+                //float Error[3];
+                Eigen::Array3f Error;
                 if(getA(rawImage(r,c))<=0)continue;
 
                 Current=CvtFun(Dither[0](r+1,c+1),Dither[1](r+1,c+1),Dither[2](r+1,c+1));
                 ditheredImage(r,c)=Current;
-                if(R->find(Current)==R->end())
+
+                auto find=R->find(Current);
+
+                if(find==R->end())
                 {
                     R->emplace(Current,TokiColor(Current));
-                    R->operator[](Current).apply(Current);
+                    find=R->find(Current);
+                    find->second.apply(Current);
                     //装入了一个新颜色并匹配为地图色
                     newCount++;
                 }
-                mapPic(r,c)=R->operator[](Current).Result;
+                TokiColor & oldColor=find->second;
+                mapPic(r,c)=oldColor.Result;
                 index=mapColor2Index(mapPic(r,c));
 
-                oldColor=&R->operator[](Current);
-
+                Error=oldColor.c3-CM.row(index).transpose();
+                /*
                 Error[0]=oldColor->c3[0]-CM(index,0);
                 Error[1]=oldColor->c3[1]-CM(index,1);
                 Error[2]=oldColor->c3[2]-CM(index,2);
+                */
 
-                Dither[0].block(r+1,c+1-1,2,3)+=Error[0]*DitherMapLR;
-                Dither[1].block(r+1,c+1-1,2,3)+=Error[1]*DitherMapLR;
-                Dither[2].block(r+1,c+1-1,2,3)+=Error[2]*DitherMapLR;
+                Dither[0].block<2,3>(r+1,c+1-1)+=Error[0]*DitherMapLR;
+                Dither[1].block<2,3>(r+1,c+1-1)+=Error[1]*DitherMapLR;
+                Dither[2].block<2,3>(r+1,c+1-1)+=Error[2]*DitherMapLR;
             }
         }
         else
         {
             for(short c=sizePic(1)-1;c>=0;c--)
             {
-                float Error[3];
+                //float Error[3];
+                Eigen::Array3f Error;
                 if(getA(rawImage(r,c))<=0)continue;
 
                 Current=CvtFun(Dither[0](r+1,c+1),Dither[1](r+1,c+1),Dither[2](r+1,c+1));
                 ditheredImage(r,c)=Current;
-                if(R->find(Current)==R->end())
+
+                auto find=R->find(Current);
+                if(find==R->end())
                 {
                     R->emplace(Current,TokiColor(Current));
-                    //R->operator[](Current)=TokiColor(Current);
-                    R->operator[](Current).apply(Current);
+                    find=R->find(Current);
+                    find->second.apply(Current);
                     //装入了一个新颜色并匹配为地图色
                     newCount++;
                 }
-                mapPic(r,c)=R->operator[](Current).Result;
+                TokiColor & oldColor=find->second;
+                mapPic(r,c)=oldColor.Result;
                 index=mapColor2Index(mapPic(r,c));
 
-                oldColor=&R->operator[](Current);
-
+                Error=oldColor.c3-CM.row(index).transpose();
+                /*
                 Error[0]=oldColor->c3[0]-CM(index,0);
                 Error[1]=oldColor->c3[1]-CM(index,1);
                 Error[2]=oldColor->c3[2]-CM(index,2);
+                */
 
-                Dither[0].block(r+1,c+1-1,2,3)+=Error[0]*DitherMapRL;
-                Dither[1].block(r+1,c+1-1,2,3)+=Error[1]*DitherMapRL;
-                Dither[2].block(r+1,c+1-1,2,3)+=Error[2]*DitherMapRL;
+                Dither[0].block<2,3>(r+1,c+1-1)+=Error[0]*DitherMapRL;
+                Dither[1].block<2,3>(r+1,c+1-1)+=Error[1]*DitherMapRL;
+                Dither[2].block<2,3>(r+1,c+1-1)+=Error[2]*DitherMapRL;
             }
         }
         isDirLR=!isDirLR;
