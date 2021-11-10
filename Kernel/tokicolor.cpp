@@ -131,6 +131,7 @@ void invf(float&I)
 TokiColor::TokiColor()
 {
     //c3[0]=0.0f;c3[1]=0.0f;c3[2]=0.0f;
+    Result=0;
 }
 
 void RGB2HSV(float r, float g, float b,  float &h, float &s, float &v)

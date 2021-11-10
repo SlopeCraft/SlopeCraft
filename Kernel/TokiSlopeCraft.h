@@ -229,8 +229,8 @@ private:
         R='R',H='H',L='L',X='X'
     };
     static ColorSet Basic,Allowed;
-    static Eigen::Array<float,2,3> DitherMapLR,DitherMapRL;
-    static const uint reportRate=50;
+    static const Eigen::Array<float,2,3> DitherMapLR,DitherMapRL;
+    static const uint reportRate=100;
 
     gameVersion mcVer;//12,13,14,15,16,17
     mapTypes mapType;

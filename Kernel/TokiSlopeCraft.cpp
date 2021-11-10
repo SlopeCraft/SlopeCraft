@@ -22,8 +22,12 @@ This file is part of SlopeCraft.
 
 #include "TokiSlopeCraft.h"
 
-Eigen::Array<float,2,3>TokiSlopeCraft::DitherMapLR;
-Eigen::Array<float,2,3>TokiSlopeCraft::DitherMapRL;
+const Eigen::Array<float,2,3>TokiSlopeCraft::DitherMapLR
+        ={{0.0/16.0,0.0/16.0,7.0/16.0},
+           {3.0/16.0,5.0/16.0,1.0/16.0}};
+const Eigen::Array<float,2,3>TokiSlopeCraft::DitherMapRL
+        ={{7.0/16.0,0.0/16.0,0.0/16.0},
+           {1.0/16.0,5.0/16.0,3.0/16.0}};;
 ColorSet TokiSlopeCraft::Basic;
 ColorSet TokiSlopeCraft::Allowed;
 
@@ -52,12 +56,14 @@ TokiSlopeCraft::TokiSlopeCraft()
 
     kernelStep=TokiSlopeCraft::step::nothing;
     rawImage.setZero(0,0);
+    /*
     DitherMapLR<<0.0,0.0,7.0,
                              3.0,5.0,1.0;
     DitherMapRL<<7.0,0.0,0.0,
                              1.0,5.0,3.0;
     DitherMapLR/=16.0;
     DitherMapRL/=16.0;
+    */
     glassBuilder=new PrimGlassBuilder;
     Compressor=new LossyCompressor;
 #ifdef WITH_QT
@@ -470,6 +476,7 @@ void TokiSlopeCraft::fillMapMat() {
 }
 
 void TokiSlopeCraft::Dither() {
+    //colorHash.reserve(3*colorHash.size());
     auto R=&colorHash;
     Eigen::ArrayXXf Dither[3];
     /*
@@ -489,9 +496,6 @@ void TokiSlopeCraft::Dither() {
     ARGB (*CvtFun)(float,float,float);
     switch (ConvertAlgo) {
     case 'R':
-        ColorMap=&Basic._RGB;
-        CvtFun=RGB2ARGB;
-        break;
     case 'r':
         ColorMap=&Basic._RGB;
         CvtFun=RGB2ARGB;
@@ -501,9 +505,6 @@ void TokiSlopeCraft::Dither() {
         CvtFun=HSV2ARGB;
         break;
     case 'L':
-        ColorMap=&Basic.Lab;
-        CvtFun=Lab2ARGB;
-        break;
     case 'l':
         ColorMap=&Basic.Lab;
         CvtFun=Lab2ARGB;
@@ -514,18 +515,21 @@ void TokiSlopeCraft::Dither() {
         break;
     }
     ColorList &CM=*ColorMap;
+
+    int t=sizeof(Eigen::Array3f);
+
     int index=0;
     for(short r=0;r<sizePic(0);r++)
     {
         for(short c=0;c<sizePic(1);c++)
         {
-            Dither[0](r+1,c+1)=R->operator[](rawImage(r,c)).c3[0];
-            Dither[1](r+1,c+1)=R->operator[](rawImage(r,c)).c3[1];
-            Dither[2](r+1,c+1)=R->operator[](rawImage(r,c)).c3[2];
+            TokiColor && temp=std::move(R->operator[](rawImage(r,c)));
+            Dither[0](r+1,c+1)=temp.c3[0];
+            Dither[1](r+1,c+1)=temp.c3[1];
+            Dither[2](r+1,c+1)=temp.c3[2];
         }
     }
     std::cerr<<"Filled Dither matrix\n";
-    float Error[3];
     int newCount=0;
     TokiColor* oldColor=nullptr;
     for(short r=0;r<sizePic(0);r++)//底部一行、左右两侧不产生误差扩散，只接受误差
@@ -535,6 +539,7 @@ void TokiSlopeCraft::Dither() {
         {
             for(short c=0;c<sizePic(1);c++)
             {
+                float Error[3];
                 if(getA(rawImage(r,c))<=0)continue;
 
                 Current=CvtFun(Dither[0](r+1,c+1),Dither[1](r+1,c+1),Dither[2](r+1,c+1));
@@ -564,6 +569,7 @@ void TokiSlopeCraft::Dither() {
         {
             for(short c=sizePic(1)-1;c>=0;c--)
             {
+                float Error[3];
                 if(getA(rawImage(r,c))<=0)continue;
 
                 Current=CvtFun(Dither[0](r+1,c+1),Dither[1](r+1,c+1),Dither[2](r+1,c+1));
