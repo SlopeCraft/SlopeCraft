@@ -28,7 +28,7 @@ ColorSet*TokiColor::Basic=NULL;
 //short TokiColor::DepthIndexEnd[4]={63,127,191,255};
 uchar TokiColor::DepthCount[4]={64,64,64,64};
 bool TokiColor::needFindSide=false;
-char TokiColor::ColorSpaceType;
+char TokiColor::convertAlgo='R';
 
 ColorSet::ColorSet()
 {

@@ -39,7 +39,8 @@ float Lab00( float L1, float a1, float b1, float L2, float a2, float b2)
     double C1sab=std::sqrt(a1*a1+b1*b1);
     double C2sab=std::sqrt(a2*a2+b2*b2);
     double mCsab=(C1sab+C2sab)/2;
-    double G=0.5*(1-std::sqrt(std::pow(mCsab,7)/(std::pow(mCsab,7)+std::pow(25,7))));
+    double && pow_mCsab_7=std::pow(mCsab,7);
+    double G=0.5*(1-std::sqrt(pow_mCsab_7/(pow_mCsab_7+std::pow(25,7))));
     double a1p=(1+G)*a1;
     double a2p=(1+G)*a2;
     double C1p=std::sqrt(a1p*a1p+b1*b1);
@@ -103,8 +104,8 @@ float Lab00( float L1, float a1, float b1, float L2, float a2, float b2)
     double dTheta=deg2rad(30)*exp(-square((mhp-deg2rad(275))/deg2rad(25)));
 
     double RC=2*sqrt(pow(mCp,7)/(pow(25,7)+pow(mCp,7)));
-
-    double SL=1+0.015*square(mLp-50)/sqrt(20+square(mLp-50));
+    double && square_mLp_minus_50=square(mLp-50);
+    double SL=1+0.015*square_mLp_minus_50/sqrt(20+square_mLp_minus_50);
 
     double SC=1+0.045*mCp;
 
@@ -112,7 +113,10 @@ float Lab00( float L1, float a1, float b1, float L2, float a2, float b2)
 
     double RT=-RC*sin(2*dTheta);
 
-    double Diffsquare=square(dLp/SL/kL)+square(dCp/SC/kC)+square(dHp/SH/kH)+RT*(dCp/SC/kC)*(dHp/SH/kH);
+    double Diffsquare=square(dLp/SL/kL)
+            +square(dCp/SC/kC)
+            +square(dHp/SH/kH)
+            +RT*(dCp/SC/kC)*(dHp/SH/kH);
 
 #ifdef ShowIntermedium
     printf("%s%lf\n","a1p=",a1p);

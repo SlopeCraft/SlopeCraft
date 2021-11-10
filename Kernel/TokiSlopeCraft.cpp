@@ -415,16 +415,17 @@ void TokiSlopeCraft::pushToHash() {
         TokiColor::Basic=&Basic;
 
         char Mode=ConvertAlgo;
-        TokiColor::ColorSpaceType=Mode;
+        TokiColor::convertAlgo=Mode;
         for(short r=0;r<sizePic(0);r++)
         {
             for(short c=0;c<sizePic(1);c++)
                 if(R->find(rawImage(r,c))==R->end())//找不到这个颜色
                 {
                     ColorCount++;
-                    R->operator[](rawImage(r,c))=TokiColor(rawImage(r,c),Mode);
+                    R->operator[](rawImage(r,c))=TokiColor(rawImage(r,c));
                 }
-            emit progressAdd(sizePic(1));
+            if(ColorCount%reportRate==0)
+                emit progressAdd(reportRate*sizePic(1));
         }
         std::cerr<<"Total color count:"<<R->size()<<std::endl;
 }
@@ -439,7 +440,8 @@ void TokiSlopeCraft::applyTokiColor() {
 
         while(!taskTracker.empty()) {
             taskTracker.front().waitForFinished();
-            emit progressAdd(step);
+            if(taskTracker.size()%reportRate==0)
+                emit progressAdd(step*reportRate);
             taskTracker.pop();
         }
 
@@ -462,7 +464,8 @@ void TokiSlopeCraft::fillMapMat() {
             {
                 mapPic(r,c)=R->operator[](rawImage(r,c)).Result;
             }
-            emit progressAdd(sizePic(1));
+            if(r%reportRate==0)
+                emit progressAdd(reportRate*sizePic(1));
         }
 }
 
@@ -538,7 +541,7 @@ void TokiSlopeCraft::Dither() {
                 ditheredImage(r,c)=Current;
                 if(R->find(Current)==R->end())
                 {
-                    R->operator[](Current)=TokiColor(Current,ConvertAlgo);
+                    R->emplace(Current,TokiColor(Current));
                     R->operator[](Current).apply(Current);
                     //装入了一个新颜色并匹配为地图色
                     newCount++;
@@ -567,7 +570,8 @@ void TokiSlopeCraft::Dither() {
                 ditheredImage(r,c)=Current;
                 if(R->find(Current)==R->end())
                 {
-                    R->operator[](Current)=TokiColor(Current,ConvertAlgo);
+                    R->emplace(Current,TokiColor(Current));
+                    //R->operator[](Current)=TokiColor(Current);
                     R->operator[](Current).apply(Current);
                     //装入了一个新颜色并匹配为地图色
                     newCount++;
@@ -587,8 +591,8 @@ void TokiSlopeCraft::Dither() {
             }
         }
         isDirLR=!isDirLR;
-
-        emit progressAdd(sizePic(1));
+        if(r%reportRate==0)
+            emit progressAdd(reportRate*sizePic(1));
     }
     std::cerr<<"Error diffuse finished\n";
     std::cerr<<"Inserted "<<newCount<<" colors to hash\n";

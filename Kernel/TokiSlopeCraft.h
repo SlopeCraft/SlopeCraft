@@ -230,6 +230,8 @@ private:
     };
     static ColorSet Basic,Allowed;
     static Eigen::Array<float,2,3> DitherMapLR,DitherMapRL;
+    static const uint reportRate=50;
+
     gameVersion mcVer;//12,13,14,15,16,17
     mapTypes mapType;
     step kernelStep;

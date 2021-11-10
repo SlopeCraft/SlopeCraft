@@ -16,4 +16,5 @@ typedef unsigned int uint;
 typedef uint ARGB;
 typedef Eigen::Array<uint,Eigen::Dynamic,Eigen::Dynamic> EImage;
 typedef Eigen::Array<float,Eigen::Dynamic,3,Eigen::ColMajor,256> ColorList;
+typedef Eigen::Array<float,Eigen::Dynamic,1,Eigen::ColMajor,256> TempVectorXf ;
 #endif // DEFINES_H

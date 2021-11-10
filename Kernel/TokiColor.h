@@ -24,6 +24,7 @@ This file is part of SlopeCraft.
 #include <iostream>
 #include "defines.h"
 
+//#define dispFunCalled
 
 ARGB ARGB32(uint r,uint g,uint b,uint a=255);
 uchar getA(ARGB);
@@ -36,13 +37,13 @@ class ColorSet;
 class TokiColor
 {
 public:
-    TokiColor(ARGB,char);
+    TokiColor(ARGB);
     TokiColor();
     //QRgb Raw;//相当于Key
     float c3[3];//三通道的颜色值。可能为RGB,HSV,Lab,XYZ
     float sideSelectivity[2];//记录与result的深度值不同的两个有损优化候选色选择系数（升序排列），Depth=3时无效
     unsigned char sideResult[2];//记录与result的深度值不同的两个有损优化候选色（升序排列），Depth=3时无效
-    static char ColorSpaceType;
+    static char convertAlgo;
     unsigned char Result;//最终调色结果
     float ResultDiff;
     static bool needFindSide;
@@ -59,7 +60,7 @@ private:
     unsigned char applyXYZ();
     unsigned char applyLab_old();
     unsigned char applyLab_new();
-    void doSide(Eigen::ArrayXf);
+    void doSide(const TempVectorXf &);
 };
 
 #endif // TOKICOLOR_H
