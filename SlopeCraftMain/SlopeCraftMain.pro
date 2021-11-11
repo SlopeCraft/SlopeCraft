@@ -108,7 +108,8 @@ HEADERS += \
     tpstrategywind.h
 
 FORMS += \
-    BatchUi.ui \
+    others/BatchUi.ui \
+    others/TaskBox.ui \
     others/VersionDialog.ui \
     others/mainwindow.ui \
     others/previewwind.ui \
