@@ -2,6 +2,11 @@
 #define BATCHUI_H
 
 #include <QMainWindow>
+#include <vector>
+
+#include "TokiTask.h"
+#include "TaskBox.h"
+#include "ui_BatchUi.h"
 
 namespace Ui {
 class BatchUi;
@@ -17,6 +22,8 @@ public:
 
 private:
     Ui::BatchUi *ui;
+    std::vector<TaskBox*> taskBoxes;
+
 };
 
 #endif // BATCHUI_H

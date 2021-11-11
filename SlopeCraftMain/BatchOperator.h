@@ -3,25 +3,9 @@
 #include <QObject>
 #include <QString>
 #include <vector>
-#include "WaterItem.h"
 
-class BatchOperator;
-
-class TokiTask
-{
-public:
-    TokiTask();
-    ~TokiTask();
-    friend class BatchOperator;
-    uint mapCount() const;
-private:
-    QString src_imageName;
-    TokiPos src_imageSize;
-    QString dst_liteFileName;
-    QString dst_DataFileName;
-    uint dst_beginSeqNum;
-
-};
+#include "BatchUi.h"
+#include "TokiTask.h"
 
 class BatchOperator : public QObject
 {
@@ -29,6 +13,10 @@ class BatchOperator : public QObject
 public:
     explicit BatchOperator(QObject *parent = nullptr);
 
+private:
+    std::vector<TokiTask> tasks;
+
+    BatchUi * batchWind;
 
 signals:
 

@@ -67,6 +67,8 @@ SOURCES += \
     ../Kernel/tokicolor.cpp \
     BatchOperator.cpp \
     BatchUi.cpp \
+    TaskBox.cpp \
+    TokiTask.cpp \
     VersionDialog.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -102,6 +104,8 @@ HEADERS += \
     ../Kernel/simpleBlock.h \
     BatchOperator.h \
     BatchUi.h \
+    TaskBox.h \
+    TokiTask.h \
     VersionDialog.h \
     mainwindow.h \
     previewwind.h \
