@@ -190,12 +190,12 @@ private slots:
     //for Page5
     void on_Build4Lite_clicked();
     void on_ManualPreview_clicked();
-    void on_ExportLite_clicked();
+    void on_ExportLite_clicked(const QString & ="");
     void on_allowGlassBridge_stateChanged(int arg1);
 
     //for Page7
     void on_InputDataIndex_textChanged();
-    void on_ExportData_clicked();
+    void on_ExportData_clicked(const QString & ="");
 
     void on_seeExported_clicked();
 
@@ -209,7 +209,7 @@ private:
     Ui::MainWindow *ui;
 
     TokiSlopeCraft * Kernel;
-    tpStrategyWind*transSubWind;
+    tpStrategyWind * transSubWind;
     BlockListManager * Manager;
 
     QImage rawPic;

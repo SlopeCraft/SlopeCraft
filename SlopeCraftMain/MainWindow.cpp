@@ -1538,13 +1538,18 @@ void MainWindow::on_ManualPreview_clicked() {
     showPreview();
 }
 
-void MainWindow::on_ExportLite_clicked() {
-        std::string FileName=
-                QFileDialog::getSaveFileName(this,
+void MainWindow::on_ExportLite_clicked(const QString & path) {
+
+        std::string FileName;
+        if(path.isEmpty()){
+                FileName=QFileDialog::getSaveFileName(this,
                                              tr("导出为投影/结构方块文件"),
                                              "",
                                              tr("投影文件(*.litematic) ;; 结构方块文件(*.nbt)")
                                              ).toLocal8Bit().data();
+        } else {
+            FileName=path.toLocal8Bit().data();
+        }
         std::string unCompressed;
         if(FileName.empty())return;
         bool putLitematic=(FileName.substr(FileName.length()-strlen(".litematic"))==".litematic");
@@ -1632,7 +1637,7 @@ void MainWindow::on_InputDataIndex_textChanged() {
 }
 
 
-void MainWindow::on_ExportData_clicked() {
+void MainWindow::on_ExportData_clicked(const QString & path) {
     bool isIndexValid=false;
         const int indexStart=ui->InputDataIndex->toPlainText().toInt(&isIndexValid);
         isIndexValid=isIndexValid&&(indexStart>=0);
@@ -1641,7 +1646,13 @@ void MainWindow::on_ExportData_clicked() {
             QMessageBox::information(this,tr("你输入的起始序号不可用"),tr("请输入大于等于0的整数！"));
                         return;
         }
-        QString FolderPath=(QFileDialog::getExistingDirectory(this,tr("请选择导出的文件夹")));
+        QString FolderPath;
+
+        if(path.isEmpty())
+            FolderPath=(QFileDialog::getExistingDirectory(this,tr("请选择导出的文件夹")));
+        else
+            FolderPath=path;
+
         if(FolderPath.isEmpty())
         {
             QMessageBox::information(this,tr("你选择的文件夹不存在！"),tr("你可以选择存档中的data文件夹"));

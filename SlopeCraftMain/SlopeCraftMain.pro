@@ -65,6 +65,8 @@ SOURCES += \
     ../Kernel/lossyCompressor.cpp \
     ../Kernel/simpleBlock.cpp \
     ../Kernel/tokicolor.cpp \
+    BatchOperator.cpp \
+    BatchUi.cpp \
     VersionDialog.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -98,12 +100,15 @@ HEADERS += \
     ../Kernel/lossyCompressor.h \
     ../Kernel/object_pool.hpp \
     ../Kernel/simpleBlock.h \
+    BatchOperator.h \
+    BatchUi.h \
     VersionDialog.h \
     mainwindow.h \
     previewwind.h \
     tpstrategywind.h
 
 FORMS += \
+    BatchUi.ui \
     others/VersionDialog.ui \
     others/mainwindow.ui \
     others/previewwind.ui \
