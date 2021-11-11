@@ -114,6 +114,9 @@
        <property name="text">
         <string>×</string>
        </property>
+       <property name="arrowType">
+        <enum>Qt::NoArrow</enum>
+       </property>
       </widget>
      </item>
     </layout>

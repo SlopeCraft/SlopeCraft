@@ -13,12 +13,15 @@ class BatchOperator : public QObject
 public:
     explicit BatchOperator(QObject *parent = nullptr);
 
+signals:
+    void start();
+    void reportStatue(QString);
+    void finish();
+
 private:
     std::vector<TokiTask> tasks;
 
     BatchUi * batchWind;
-
-signals:
 
 };
 

@@ -20,9 +20,14 @@ public:
     explicit BatchUi(QWidget *parent = nullptr);
     ~BatchUi();
 
+private slots:
+    void erased(TaskBox*);
+    void modified(TaskBox*);
+
 private:
     Ui::BatchUi *ui;
     std::vector<TaskBox*> taskBoxes;
+
 
 };
 

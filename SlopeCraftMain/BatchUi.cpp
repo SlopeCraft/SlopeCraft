@@ -12,3 +12,11 @@ BatchUi::~BatchUi()
 {
     delete ui;
 }
+
+void BatchUi::erased(TaskBox* ) {
+
+}
+
+void BatchUi::modified(TaskBox* ) {
+
+}
