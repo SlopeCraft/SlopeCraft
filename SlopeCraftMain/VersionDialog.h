@@ -26,6 +26,7 @@ This file is part of SlopeCraft.
 #include <QWidget>
 #include <QEvent>
 #include <QEventLoop>
+#include <QMainWindow>
 #include "ui_VersionDialog.h"
 
 namespace Ui {

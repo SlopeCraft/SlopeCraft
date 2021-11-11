@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>590</width>
-    <height>480</height>
+    <height>482</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -119,8 +119,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>566</width>
-             <height>307</height>
+             <width>568</width>
+             <height>335</height>
             </rect>
            </property>
            <property name="autoFillBackground">
@@ -538,7 +538,6 @@
     </item>
    </layout>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>
