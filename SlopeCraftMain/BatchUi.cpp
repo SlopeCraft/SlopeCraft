@@ -7,6 +7,7 @@ BatchUi::BatchUi(BatchUi ** _self,QWidget *parent) :
 {
     ui->setupUi(this);
     self=_self;
+
 }
 
 void BatchUi::closeEvent(QCloseEvent * event) {
@@ -79,12 +80,17 @@ void BatchUi::erased(TaskBox* widgetPtr) {
 }
 
 void BatchUi::on_BtnAddTask_clicked() {
+    QStringList newTasks=QFileDialog::getOpenFileNames(this,
+                                                                     tr("选择图片"),
+                                                                     "./",
+                                                                     tr("图片(*.png *.bmp *.jpg *.tif *.GIF )"));
 
 }
 
 void BatchUi::on_BtnClearTask_clicked() {
     for(const auto & it : taskBoxes) {
         ui->scrollLayout->removeWidget(it);
+        it->deleteLater();
     }
     taskBoxes.clear();
 }

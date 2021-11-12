@@ -168,7 +168,8 @@ private slots:
     void on_StartWithNotVanilla_clicked();
 
     //for Page1
-    void on_ImportPic_clicked(QString="");
+    void on_ImportPic_clicked();
+    void onImportPicclicked(QString);
     void on_ImportSettings_clicked();
 
     //for Page2
@@ -191,12 +192,14 @@ private slots:
     //for Page5
     void on_Build4Lite_clicked();
     void on_ManualPreview_clicked();
-    void on_ExportLite_clicked(const QString & ="");
+    void on_ExportLite_clicked();
+    void onExportLiteclicked(QString);
     void on_allowGlassBridge_stateChanged(int arg1);
 
     //for Page7
     void on_InputDataIndex_textChanged();
-    void on_ExportData_clicked(const QString & ="");
+    void on_ExportData_clicked();
+    void onExportDataclicked(QString);
 
     void on_seeExported_clicked();
 

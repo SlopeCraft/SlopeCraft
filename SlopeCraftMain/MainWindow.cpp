@@ -784,7 +784,11 @@ void MainWindow::on_StartWithWall_clicked() {
     turnToPage(1);
 }
 
-void MainWindow::on_ImportPic_clicked(QString input) {
+void MainWindow::on_ImportPic_clicked() {
+    onImportPicclicked("");
+}
+
+void MainWindow::onImportPicclicked(QString input) {
 
     QStringList userSelected;
     userSelected.clear();
@@ -800,7 +804,7 @@ void MainWindow::on_ImportPic_clicked(QString input) {
 
     if(userSelected.isEmpty())return;
 
-    if(userSelected.size()==0) {
+    if(userSelected.size()==1) {
         QString Path=userSelected.front();
         if(!rawPic.load(Path))
         {
@@ -1274,7 +1278,11 @@ void MainWindow::on_ManualPreview_clicked() {
     showPreview();
 }
 
-void MainWindow::on_ExportLite_clicked(const QString & path) {
+void MainWindow::on_ExportLite_clicked() {
+    onExportLiteclicked("");
+}
+
+void MainWindow::onExportLiteclicked(QString path) {
 
         std::string FileName;
         if(path.isEmpty()){
@@ -1372,8 +1380,11 @@ void MainWindow::on_InputDataIndex_textChanged() {
         return;
 }
 
+void MainWindow::on_ExportData_clicked() {
+    onExportDataclicked("");
+}
 
-void MainWindow::on_ExportData_clicked(const QString & path) {
+void MainWindow::onExportDataclicked(QString path) {
     bool isIndexValid=false;
         const int indexStart=ui->InputDataIndex->toPlainText().toInt(&isIndexValid);
         isIndexValid=isIndexValid&&(indexStart>=0);
