@@ -63,6 +63,7 @@ This file is part of SlopeCraft.
 #include "tpstrategywind.h"
 #include "previewwind.h"
 #include "BlockListManager.h"
+#include "BatchUi.h"
 #include "TokiSlopeCraft.h"
 
 class MainWindow;
@@ -167,7 +168,7 @@ private slots:
     void on_StartWithNotVanilla_clicked();
 
     //for Page1
-    void on_ImportPic_clicked();
+    void on_ImportPic_clicked(QString="");
     void on_ImportSettings_clicked();
 
     //for Page2
@@ -211,6 +212,7 @@ private:
     TokiSlopeCraft * Kernel;
     tpStrategyWind * transSubWind;
     BlockListManager * Manager;
+    BatchUi * batchOperator;
 
     QImage rawPic;
 

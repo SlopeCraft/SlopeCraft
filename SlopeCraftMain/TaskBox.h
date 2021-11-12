@@ -2,7 +2,7 @@
 #define TASKBOX_H
 
 #include <QWidget>
-
+#include <QFileDialog>
 #include "TokiTask.h"
 #include "ui_TaskBox.h"
 
@@ -19,24 +19,28 @@ class TaskBox : public QWidget
 public:
     explicit TaskBox(QWidget *parent = nullptr);
 
-    void setTask(TokiTask *);
+    void updateTask();
 
 signals:
     void erase(TaskBox *);
-    void modified(TaskBox *);
+    void seqNumChanged(TaskBox *);
 
 private slots:
     void on_BtnErase_clicked();
 
-    void onUserUsed();
-
-    void onImageChanged();
+    void onImageChanged(QString);
 
     void on_browseImage_clicked();
 
+    void on_ifExport3D_stateChanged(int arg1);
+
+    void on_ifExportData_stateChanged(int arg1);
+
+    void on_setMapBegSeq_valueChanged(int arg1);
+
 private:
     Ui::TaskBox *ui;
-    TokiTask * task;
+    TokiTask task;
 };
 
 #endif // TASKBOX_H

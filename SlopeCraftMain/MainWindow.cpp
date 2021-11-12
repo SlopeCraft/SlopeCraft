@@ -72,6 +72,8 @@ MainWindow::MainWindow(QWidget *parent)
             this,&MainWindow::onBlockListChanged);
     //connect(Kernel,SIGNAL(convertProgressSetRange(int,int,int)));
 
+    batchOperator = nullptr;
+
     ui->maxHeight->setValue(255);
 
     transSubWind=nullptr;
@@ -298,95 +300,21 @@ void MainWindow::loadColormap() {
     QByteArray R,H,L,X;
     R=parseColormap("./Colors/RGB.TokiColor","RGB.TokiColor",
                     "ba56d5af2ba89d9ba3362a72778e1624");
-    /*
-    while(true) {
-        QFile temp(ColorFilePath);
-        if(temp.exists()) {
-            temp.open(QFile::OpenModeFlag::ReadOnly);
-            R=temp.readAll();
-            if(QCryptographicHash::hash(R,QCryptographicHash::Algorithm::Md5).toHex()
-                    =="ba56d5af2ba89d9ba3362a72778e1624") {
-                break;
-            }
-        }
-        qDebug("未找到颜色文件RGB.TokiColor");
-
-
-
-        ColorFilePath=QFileDialog::getOpenFileName(this,
-                            tr("颜色表文件")+"RGB.TokiColor"+tr("不存在或被篡改，请手动寻找")
-                            ,"./Colors","RGB.TokiColor");
-        temp.close();
-    }*/
 
     H=parseColormap("./Colors/HSV.TokiColor","HSV.TokiColor",
                     "db47a74d0b32fa682d1256cce60bf574");
-    /*
-    while(true) {
-        QFile temp(ColorFilePath);
-        if(temp.exists()) {
-            temp.open(QFile::OpenModeFlag::ReadOnly);
-            H=temp.readAll();
-            if(QCryptographicHash::hash(H,QCryptographicHash::Algorithm::Md5).toHex()
-                    =="db47a74d0b32fa682d1256cce60bf574") {
-                break;
-            }
-        }
-        qDebug("未找到颜色文件HSV.TokiColor");
-        ColorFilePath=QFileDialog::getOpenFileName(this,
-                            tr("颜色表文件")+"HSV.TokiColor"+tr("不存在或被篡改，请手动寻找")
-                            ,"./Colors","HSV.TokiColor");
-        temp.close();
-    }*/
 
     L=parseColormap("./Colors/Lab.TokiColor","Lab.TokiColor",
                     "2aec9d79b920745472c0ccf56cbb7669");
-    /*
-    while(true) {
-        QFile temp(ColorFilePath);
-        if(temp.exists()) {
-            temp.open(QFile::OpenModeFlag::ReadOnly);
-            L=temp.readAll();
-            if(QCryptographicHash::hash(L,QCryptographicHash::Algorithm::Md5).toHex()
-                    =="2aec9d79b920745472c0ccf56cbb7669") {
-                break;
-            }
-        }
-        qDebug("未找到颜色文件Lab.TokiColor");
-        ColorFilePath=QFileDialog::getOpenFileName(this,
-                            tr("颜色表文件")+"Lab.TokiColor"+tr("不存在或被篡改，请手动寻找")
-                            ,"./Colors","Lab.TokiColor");
-        temp.close();
-    }
-    */
 
     X=parseColormap("./Colors/XYZ.TokiColor","XYZ.TokiColor",
                     "6551171faf62961e3ae6bc3c2ee8d051");
-    /*
-    ColorFilePath=;
-    while(true) {
-        QFile temp(ColorFilePath);
-        if(temp.exists()) {
-            temp.open(QFile::OpenModeFlag::ReadOnly);
-            X=temp.readAll();
-            if(QCryptographicHash::hash(X,QCryptographicHash::Algorithm::Md5).toHex()
-                    ==) {
-                break;
-            }
-        }
-        qDebug("未找到颜色文件XYZ.TokiColor");
-        ColorFilePath=QFileDialog::getOpenFileName(this,
-                            tr("颜色表文件")++tr("不存在或被篡改，请手动寻找")
-                            ,"./Colors","XYZ.TokiColor");
-        temp.close();
-    }*/
 
     if(Kernel->setColorSet(R.data(),H.data(),L.data(),X.data()))
         qDebug("成功载入颜色");
     else
         qDebug("载入颜色失败");
 }
-
 
 QJsonArray MainWindow::getFixedBlocksList(QString Path) {
     QJsonDocument jd;
@@ -616,95 +544,12 @@ void MainWindow::loadBlockList() {
 
     QJsonArray ja=getFixedBlocksList("./Blocks/FixedBlocks.json");
 
-/*
-    while(!QFile(Path).exists()) {
-        qDebug()<<"错误！找不到固定的方块列表文件"<<Path;
-        int userChoice=QMessageBox::critical(this,
-                                             tr("找不到默认方块列表"),
-                                             tr("默认方块列表记录了SlopeCraft最基础的常用方块，是程序运行必须的。\n请手动寻找它。"),
-                                             QMessageBox::StandardButton::Ok,
-                              QMessageBox::StandardButton::No);
-        if(userChoice==QMessageBox::StandardButton::Ok) {
-            Path=QFileDialog::getOpenFileName(this,
-                                              "找不到固定方块列表文件，请手动寻找",
-                                              "./",
-                                              "FixedBlocks.json");
-        } else {
-            exit(0);
-        }
-
-    }
-    */
-
     QString Dir=getFixedBlockListDir("./Blocks/FixedBlocks");
-
-/*
-    while(!QDir(Dir).exists()) {
-        qDebug()<<"错误！固定方块列表的图标路径"<<Dir<<"无效";
-        Dir=QFileDialog::getExistingDirectory(this,
-                                                 "找不到存放固定方块列表图片的文件夹，请手动寻找",
-                                              "./",
-                                              QFileDialog::Option::ReadOnly);
-
-    }
-    QJsonDocument jd;
-    QJsonParseError error;
-    QFile temp(Path);
-    temp.open(QIODevice::ReadOnly | QIODevice::Text);
-    jd=QJsonDocument::fromJson(temp.readAll(),&error);
-    if(error.error!=QJsonParseError::NoError) {
-        qDebug()<<"解析固定方块列表时出错："<<error.errorString();
-        return;
-    }
-*/
 
     qDebug()<<ja.size();
 
     Manager->addBlocks(ja,Dir);
 
-
-
-//开始解析用户自定义的方块列表
-    /*
-    while(!QFile(Path).exists()) {
-        int choice=QMessageBox::question(this,
-                              "找不到自定义方块列表文件CustomBlocks.json",
-                              "这会导致你自定义的方块无法被加载。\n你可以手动寻找它（点确认），也可以忽略这个错误（点取消）。",
-                              QMessageBox::Ok|QMessageBox::Ignore);
-        if(choice==QMessageBox::Ok) {
-            Path=QFileDialog::getOpenFileName(this,
-                                              "找不到自定义列表文件，请手动寻找",
-                                              "./",
-                                              "FixedBlocks.json");
-        } else
-            return;
-    }
-
-    while(!QDir(Dir).exists()) {
-        int choice=QMessageBox::question(this,
-                              "找不到存放自定义方块图片的文件夹CustomBlocks",
-                              "这会导致你自定义的方块图标无法被加载。\n你可以手动寻找它（点确认），也可以忽略这个错误（点取消）。",
-                              QMessageBox::Ok|QMessageBox::Ignore);
-        if(choice==QMessageBox::Ok) {
-            Dir=QFileDialog::getExistingDirectory(this,
-                                                     "找不到存放固定方块列表图片的文件夹，请手动寻找",
-                                                  "./",
-                                                  QFileDialog::Option::ReadOnly);
-        } else
-            break;
-    }
-    QFile temp2(Path);
-    temp2.open(QFile::OpenModeFlag::ReadOnly);
-    jd=QJsonDocument::fromJson(temp2.readAll(),&error);
-
-    while(error.error!=QJsonParseError::NoError) {
-        qDebug()<<"自定义方块列表json格式错误："<<error.errorString();
-        QMessageBox::warning(this,
-                              "解析自定义方块列表json时出错",
-                              error.errorString()+"\n这是因为json格式错误。\n你自定义的方块无法被加载。",
-                              QMessageBox::Abort);
-        return;
-    }*/
     ja=getCustomBlockList("./Blocks/CustomBlocks.json");
 
     Dir=getCustomBlockListDir("./Blocks/CustomBlocks");
@@ -919,139 +764,6 @@ void MainWindow::updateEnables() {
 
 }
 
-/*
-#ifdef dispDerivative
-void MainWindow::checkBlockIds()
-{
-    Collect();
-    qDebug("开始检查方块列表");
-    fstream out("D:/check.mcfunction",ios::out);
-    int offset[3]={-80,1,-80};
-    //QString command="";
-    if(out.is_open())qDebug("文件正常打开");else return;
-    for(short r=0;r<64;r++)//x
-        for(short c=0;c<9;c++)//z
-        {
-            if(Blocks[r][c]==NULL)continue;
-            out<<"setblock ";
-            out<<c+offset[2]<<' '<<offset[1]<<' '<<r+offset[0];
-            out<<' '<<BlockId[r][c].toLocal8Bit().data()<<'\n';
-            //out<<command;
-        }
-    out.close();
-}
-void MainWindow::makeImage(int unitL)
-{
-    qDebug("开始makeImage");
-    if(unitL<=0)unitL=16;
-    MatrixXi PMat;
-    PMat.setZero(4*unitL,60*unitL);
-    int mapColor=0,index=0;
-    QRgb CurrentColor;
-    int cIndex;
-    for(int Base=1;Base<61;Base++)
-    {
-        for(int depth=0;depth<4;depth++)
-        {
-            mapColor=4*Base+depth;
-            index=mcMap::mapColor2Index(mapColor);
-            CurrentColor=qRgb(255*Basic._RGB(index,0),255*Basic._RGB(index,1),255*Basic._RGB(index,2));
-            switch (depth)
-            {
-            case 0:
-                cIndex=2;break;
-            case 1:
-                cIndex=1;break;
-            case 2:
-                cIndex=0;break;
-            case 3:
-                cIndex=3;break;
-            }
-
-            PMat.block(unitL*cIndex,unitL*(Base-1),unitL,unitL).array()=CurrentColor;
-
-            //qDebug("rua!");
-        }
-    }
-    qDebug("图像mat构建完毕");
-    QRgb*CL=nullptr;
-
-    //QSize size(PMat.rows(),PMat.cols());
-    QSize size(PMat.cols(),PMat.rows());
-    QImage Pic(size,QImage::Format_ARGB32);
-    for(int r=0;r<PMat.rows();r++)
-    {
-        CL=(QRgb*)Pic.scanLine(r);
-        for(int c=0;c<PMat.cols();c++)
-        {
-            CL[c]=PMat(r,c);
-        }
-    }
-    Pic.save("D:\\240Colors.png");
-}
-#endif
-
-#ifdef putBlockList
-void MainWindow::putBlockListInfo() {
-    if(!Collected)return;
-    QString jsonDest=QFileDialog::getSaveFileName(this,
-                                                  "将方块列表保存为json","","*.json");
-    if(jsonDest.isEmpty())return;
-
-    QString imgDest=QFileDialog::getExistingDirectory(this,
-                                                      "选择输出图片的文件夹","");
-    if(imgDest.isEmpty())return;
-    imgDest.replace("\\","/");
-
-
-    switchLan(false);
-
-    queue<TokiBlock> blockQueue;
-    TokiBlock temp;
-
-    for(int r=0;r<64;r++)
-        for(int c=0;c<12;c++) {
-            if(Blocks[r][c]==NULL)
-                continue;
-            temp.setBaseColor(r);
-            temp.setId(BlockId[r][c].toStdString());
-            temp.setVersion(BlockVersion[r][c]);
-            temp.setIdOld(BlockIdfor12[r][c].toStdString());
-            temp.setNeedGlass(NeedGlass[r][c]);
-            temp.setIsGlowing(doGlow[r][c]);
-
-            temp.btn=Blocks[r][c];
-            temp.nameZH=temp.btn->text();
-
-            blockQueue.push(temp);
-        }
-
-    switchLan(true);
-
-    fstream jsonFile;
-    jsonFile.open(jsonDest.toLocal8Bit().data(),ios::out);
-    if(!jsonFile) {
-        qDebug("错误！MainWindow::putBlockListInfo中文件流jsonFile打开失败");
-        return;
-    }
-    jsonFile<<"[\n";
-
-    while(!blockQueue.empty()) {
-        blockQueue.front().nameEN=blockQueue.front().btn->text();
-        QString imgPath=imgDest+"/"+QString::fromStdString(blockQueue.front().toPureBlockId())+".png";
-        blockQueue.front().iconPath=blockQueue.front().toPureBlockId();
-        jsonFile<<blockQueue.front().toJSON().toUtf8().data();
-        jsonFile<<",\n";
-        blockQueue.front().btn->icon().pixmap(QSize(16,16)).save(imgPath);
-        blockQueue.pop();
-    }
-
-    jsonFile.close();
-    switchLan(false);
-
-}
-#endif
-*/
 void MainWindow::on_StartWithSlope_clicked() {
     ui->isMapSurvival->setChecked(true);
     turnToPage(1);
@@ -1072,13 +784,24 @@ void MainWindow::on_StartWithWall_clicked() {
     turnToPage(1);
 }
 
-void MainWindow::on_ImportPic_clicked() {
-    QString Path =QFileDialog::getOpenFileName(this,
-                                               tr("选择图片"),
-                                               "./",
-                                               tr("图片(*.png *.bmp *.jpg *.tif *.GIF )"));
-        if(Path.isEmpty())return;
+void MainWindow::on_ImportPic_clicked(QString input) {
 
+    QStringList userSelected;
+    userSelected.clear();
+
+    if(input.isEmpty()) {
+        userSelected =QFileDialog::getOpenFileNames(this,
+                                                   tr("选择图片"),
+                                                   "./",
+                                                   tr("图片(*.png *.bmp *.jpg *.tif *.GIF )"));
+    } else {
+        userSelected.emplace_back(input);
+    }
+
+    if(userSelected.isEmpty())return;
+
+    if(userSelected.size()==0) {
+        QString Path=userSelected.front();
         if(!rawPic.load(Path))
         {
             QMessageBox::information(this,tr("打开图片失败"),tr("要不试试换一张图片吧！"));
@@ -1124,6 +847,19 @@ void MainWindow::on_ImportPic_clicked() {
         updateEnables();
 
         return;
+    }
+    else {
+        if(batchOperator!=nullptr) {
+            qDebug("错误！连续打开两个BatchUi");
+            return;
+        }
+        qDebug("开始创建BatchUi");
+        batchOperator = new BatchUi(&batchOperator,this);
+        batchOperator->show();
+        batchOperator->setTasks(userSelected,true,true);
+        qDebug("Mainwindow setTasks完毕");
+        return;
+    }
 }
 
 void MainWindow::on_ImportSettings_clicked() {

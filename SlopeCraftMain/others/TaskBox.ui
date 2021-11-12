@@ -6,20 +6,89 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>128</height>
+    <width>500</width>
+    <height>132</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0" rowspan="5">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <property name="horizontalSpacing">
+    <number>6</number>
+   </property>
+   <property name="verticalSpacing">
+    <number>0</number>
+   </property>
+   <item row="2" column="3">
+    <widget class="QPushButton" name="BtnBrowseData">
+     <property name="text">
+      <string>浏览</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QLineEdit" name="liteName"/>
+   </item>
+   <item row="0" column="2">
+    <widget class="QLineEdit" name="imageName"/>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>图片：</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3">
+    <widget class="QPushButton" name="BtnBrowseLite">
+     <property name="text">
+      <string>浏览</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QCheckBox" name="ifExport3D">
+     <property name="text">
+      <string>投影/结构</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="3">
+    <widget class="QPushButton" name="browseImage">
+     <property name="text">
+      <string>浏览</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QCheckBox" name="ifExportData">
+     <property name="text">
+      <string>地图文件</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QLineEdit" name="dataName"/>
+   </item>
+   <item row="0" column="0" rowspan="4">
     <widget class="QLabel" name="preView">
      <property name="minimumSize">
       <size>
-       <width>40</width>
-       <height>40</height>
+       <width>123</width>
+       <height>123</height>
       </size>
      </property>
      <property name="autoFillBackground">
@@ -33,74 +102,6 @@
      </property>
      <property name="scaledContents">
       <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="2">
-    <widget class="QLineEdit" name="lineEdit"/>
-   </item>
-   <item row="1" column="3">
-    <widget class="QPushButton" name="pushButton">
-     <property name="text">
-      <string>打开</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="2">
-    <widget class="QLineEdit" name="imageName"/>
-   </item>
-   <item row="0" column="3">
-    <widget class="QPushButton" name="browseImage">
-     <property name="text">
-      <string>打开</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="QCheckBox" name="ifExportData">
-     <property name="text">
-      <string>地图文件</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1" colspan="2">
-    <widget class="QSpinBox" name="setMapBegSeq">
-     <property name="suffix">
-      <string> ~ </string>
-     </property>
-     <property name="prefix">
-      <string>占用的地图序号：</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="2">
-    <widget class="QLineEdit" name="lineEdit_2"/>
-   </item>
-   <item row="3" column="3">
-    <widget class="QPushButton" name="BtnResetSeqNum">
-     <property name="text">
-      <string>重设</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>图片：</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="3">
-    <widget class="QPushButton" name="pushButton_2">
-     <property name="text">
-      <string>打开</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QCheckBox" name="ifExport3D">
-     <property name="text">
-      <string>投影/结构</string>
      </property>
     </widget>
    </item>
@@ -120,6 +121,19 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item row="3" column="1" colspan="3">
+    <widget class="QSpinBox" name="setMapBegSeq">
+     <property name="suffix">
+      <string> ~ </string>
+     </property>
+     <property name="prefix">
+      <string>占用的地图序号：</string>
+     </property>
+     <property name="maximum">
+      <number>65535</number>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

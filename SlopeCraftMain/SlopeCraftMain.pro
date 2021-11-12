@@ -65,7 +65,6 @@ SOURCES += \
     ../Kernel/lossyCompressor.cpp \
     ../Kernel/simpleBlock.cpp \
     ../Kernel/tokicolor.cpp \
-    BatchOperator.cpp \
     BatchUi.cpp \
     TaskBox.cpp \
     TokiTask.cpp \
@@ -102,7 +101,6 @@ HEADERS += \
     ../Kernel/lossyCompressor.h \
     ../Kernel/object_pool.hpp \
     ../Kernel/simpleBlock.h \
-    BatchOperator.h \
     BatchUi.h \
     TaskBox.h \
     TokiTask.h \
