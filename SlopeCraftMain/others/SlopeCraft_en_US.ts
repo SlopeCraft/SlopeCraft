@@ -6,37 +6,37 @@
     <message>
         <location filename="BatchUi.ui" line="20"/>
         <source>MainWindow</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="BatchUi.ui" line="39"/>
         <source>清空所有任务</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Clear all</translation>
     </message>
     <message>
         <location filename="BatchUi.ui" line="46"/>
         <source>开始执行</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Start</translation>
     </message>
     <message>
         <location filename="BatchUi.ui" line="65"/>
         <source>添加任务</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Add task(s)</translation>
     </message>
     <message>
         <location filename="BatchUi.ui" line="78"/>
         <source>自动分配地图序号</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Allocate sequence number</translation>
     </message>
     <message>
         <location filename="../BatchUi.cpp" line="37"/>
         <source>请设置目标文件名</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Please set file name</translation>
     </message>
     <message>
         <location filename="../BatchUi.cpp" line="38"/>
         <source>请设置目标文件夹名</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Please set folder</translation>
     </message>
     <message>
         <location filename="../BatchUi.cpp" line="86"/>
@@ -174,12 +174,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="mainwindow.ui" line="942"/>
         <source>创建墙面地图画</source>
-        <translation type="unfinished"></translation>
+        <translation>Create wall maps</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="965"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;墙面地图画&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Wall-maps&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1064"/>
@@ -481,7 +481,7 @@ sequence number</translation>
     <message>
         <location filename="mainwindow.ui" line="3508"/>
         <source>地图画</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Map</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="3533"/>
@@ -525,7 +525,7 @@ sequence number</translation>
         <location filename="mainwindow.ui" line="3643"/>
         <location filename="mainwindow.ui" line="3646"/>
         <source>检查更新</source>
-        <translation type="unfinished"></translation>
+        <translation>Check updates</translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="266"/>
@@ -916,12 +916,12 @@ Try enabling lossless compression, or increase the maximun allowed height -- don
     <message>
         <location filename="../mainwindow.cpp" line="1820"/>
         <source>可用</source>
-        <translation type="unfinished"></translation>
+        <translation> </translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="1822"/>
         <source>种颜色</source>
-        <translation type="unfinished"></translation>
+        <translation> colors available.</translation>
     </message>
     <message>
         <source>https://github.com/ToKiNoBug/SlopeCraft/issues/new?assignees=&amp;labels=&amp;template=ReportBugs_ZH.md</source>
@@ -1003,14 +1003,14 @@ Try enabling lossless compression, or increase the maximun allowed height -- don
     <message>
         <location filename="../mainwindow.cpp" line="1704"/>
         <source>检查更新时遇到Json解析错误</source>
-        <translation type="unfinished"></translation>
+        <translation>Json-parsing error when checking updates</translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="1705"/>
         <location filename="../mainwindow.cpp" line="1726"/>
         <location filename="../mainwindow.cpp" line="1744"/>
         <source>网址  </source>
-        <translation type="unfinished"></translation>
+        <translation>The message that </translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="1706"/>
@@ -1021,7 +1021,12 @@ Try enabling lossless compression, or increase the maximun allowed height -- don
 
 具体的错误为：
 </source>
-        <translation type="unfinished"></translation>
+        <translation>replied failed to pass json parsing.
+
+This is just a updation-checking-error, it won&apos;t block you to use SlopeCraft.
+Click No to ignore the error; Click NoToAll will disable auto-update-checking.
+
+Error in detail: </translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="1708"/>
@@ -1031,13 +1036,16 @@ Try enabling lossless compression, or increase the maximun allowed height -- don
 
 具体回复的信息为：
 </source>
-        <translation type="unfinished"></translation>
+        <translation>
+
+Received message in detail: 
+</translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="1725"/>
         <location filename="../mainwindow.cpp" line="1743"/>
         <source>检查更新时返回信息错误</source>
-        <translation type="unfinished"></translation>
+        <translation>Received error message when checking for updates.</translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="1727"/>
@@ -1046,7 +1054,11 @@ Try enabling lossless compression, or increase the maximun allowed height -- don
 这只是检查更新时遇到的故障，但不要紧，软件该用还能用。
 点击No以忽略这个错误；点击NoToAll则不会再自动检查更新。
 </source>
-        <translation type="unfinished"></translation>
+        <translation>replied dosen&apos;t contains version info (&quot;tag_name&quot;).
+
+This is just a updation-checking-error, it won&apos;t block you to use SlopeCraft.
+Click No to ignore the error; Click NoToAll will disable auto-update-checking.
+</translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="1745"/>
@@ -1055,28 +1067,32 @@ Try enabling lossless compression, or increase the maximun allowed height -- don
 这只是检查更新时遇到的故障，但不要紧，软件该用还能用。
 点击No以忽略这个错误；点击NoToAll则不会再自动检查更新。
 </source>
-        <translation type="unfinished"></translation>
+        <translation>  replied, version tag (&quot;tag_name&quot;) is not a string.
+
+This is just a updation-checking-error, it won&apos;t block you to use SlopeCraft.
+Click No to ignore the error; Click NoToAll will disable auto-update-checking.
+</translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="1766"/>
         <source>SlopeCraft已更新</source>
-        <translation type="unfinished"></translation>
+        <translation>SlopeCraft has updated!</translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="1768"/>
         <source>好消息！好消息！SlopeCraft更新了！
 </source>
-        <translation type="unfinished"></translation>
+        <translation>Wow! SlopeCraft finally UPDATED!</translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="1769"/>
         <source>当前版本为</source>
-        <translation type="unfinished"></translation>
+        <translation>Current version: </translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="1770"/>
         <source>，检查到最新版本为</source>
-        <translation type="unfinished"></translation>
+        <translation>, latest version: </translation>
     </message>
 </context>
 <context>
@@ -1084,19 +1100,19 @@ Try enabling lossless compression, or increase the maximun allowed height -- don
     <message>
         <location filename="TaskBox.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="TaskBox.ui" line="38"/>
         <location filename="TaskBox.ui" line="48"/>
         <location filename="TaskBox.ui" line="62"/>
         <source>浏览</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Browse</translation>
     </message>
     <message>
         <location filename="TaskBox.ui" line="55"/>
         <source>投影/结构</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Litematica</translation>
     </message>
     <message>
         <location filename="TaskBox.ui" line="69"/>
@@ -1106,17 +1122,17 @@ Try enabling lossless compression, or increase the maximun allowed height -- don
     <message>
         <location filename="TaskBox.ui" line="106"/>
         <source>×</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="TaskBox.ui" line="118"/>
         <source> ~ </source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="TaskBox.ui" line="121"/>
         <source>占用的地图序号：</source>
-        <translation type="unfinished"></translation>
+        <translation>Map sequence number : </translation>
     </message>
     <message>
         <location filename="../TaskBox.cpp" line="46"/>
@@ -1136,7 +1152,7 @@ Try enabling lossless compression, or increase the maximun allowed height -- don
     <message>
         <location filename="../TaskBox.cpp" line="93"/>
         <source>请选择导出的文件夹</source>
-        <translation type="unfinished">Please select a folder for exporting.</translation>
+        <translation>Please select a folder for exporting.</translation>
     </message>
 </context>
 <context>
@@ -1170,27 +1186,27 @@ Click Yes to ignore it, Click YesToAll to ingore all these warnings; Click Close
     <message>
         <location filename="VersionDialog.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="VersionDialog.ui" line="20"/>
         <source>关闭</source>
-        <translation type="unfinished"></translation>
+        <translation>Close</translation>
     </message>
     <message>
         <location filename="VersionDialog.ui" line="27"/>
         <source>TextLabel</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="VersionDialog.ui" line="34"/>
         <source>下载最新版</source>
-        <translation type="unfinished"></translation>
+        <translation>Go to DOWNLOAD</translation>
     </message>
     <message>
         <location filename="VersionDialog.ui" line="44"/>
         <source>关闭，且不再提醒</source>
-        <translation type="unfinished"></translation>
+        <translation>Don&apos;t remind me</translation>
     </message>
 </context>
 <context>

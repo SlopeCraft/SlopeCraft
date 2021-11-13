@@ -111,6 +111,7 @@ private:
     static const double crossoverProb;
     static const double mutateProb;
     static const double initializeNonZeroRatio;
+    static const uint reportRate;
 
     void runGenetic();
 

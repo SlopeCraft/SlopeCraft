@@ -31,6 +31,7 @@ ushort LossyCompressor::maxGeneration=600;
 const double LossyCompressor::crossoverProb=0.9;
 const double LossyCompressor::mutateProb=0.01;
 const double LossyCompressor::initializeNonZeroRatio=0.05;
+const uint LossyCompressor::reportRate=50;
 
 double randD(){
     static std::default_random_engine generator(std::time(NULL));
@@ -151,6 +152,7 @@ void LossyCompressor::select() {
 void LossyCompressor::crossover() {
     std::vector<ushort> crossoverQueue;
     crossoverQueue.clear();
+    crossoverQueue.reserve(population.size());
     for(ushort i=0;i<popSize;i++) {
         if(i==eliteIdx)
             continue;
@@ -191,33 +193,23 @@ void LossyCompressor::runGenetic() {
     generation=0;
     emit progressRangeSet(0,maxGeneration,0);
     while(true) {
-        emit keepAwake();
-        //std::cerr<<"start!\n";
         caculateFitness();
-        //std::cerr<<"caculateFitness\n";
         select();
-        //std::cerr<<"select\n";
         if(population[eliteIdx].getFitness()>0&&failTimes>=maxFailTimes) {
-            //std::cerr<<"iteration success"<<std::endl;
             break;
         }
         if(generation>=maxGeneration) {
-            /*
-            if(population[eliteIdx].getFitness()>0)
-                std::cerr<<"iteration success"<<std::endl;
-            else
-                std::cerr<<"iteration failed"<<std::endl;
-                */
             break;
         }
 
         crossover();
-        //std::cerr<<"crossover\n";
         mutate();
-        //std::cerr<<"mutate\n";
         generation++;
-        //std::cerr<<"generation"<<generation<<std::endl;
-        emit progressAdd(1);
+
+        if(generation%reportRate==0) {
+            emit keepAwake();
+            emit progressAdd(1*reportRate);
+        }
     }
     std::cerr<<"result fitness="<<getResult().getFitness()<<std::endl;
     emit progressRangeSet(0,maxGeneration,maxGeneration);
