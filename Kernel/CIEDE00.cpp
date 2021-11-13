@@ -29,23 +29,23 @@ This file is part of SlopeCraft.
 #define kH 1.0
 
 
-inline double square(double x)
+inline float square(float x)
 {
     return x*x;
 }
 
 float Lab00( float L1, float a1, float b1, float L2, float a2, float b2)
 {
-    double C1sab=std::sqrt(a1*a1+b1*b1);
-    double C2sab=std::sqrt(a2*a2+b2*b2);
-    double mCsab=(C1sab+C2sab)/2;
-    double && pow_mCsab_7=std::pow(mCsab,7);
-    double G=0.5*(1-std::sqrt(pow_mCsab_7/(pow_mCsab_7+std::pow(25,7))));
-    double a1p=(1+G)*a1;
-    double a2p=(1+G)*a2;
-    double C1p=std::sqrt(a1p*a1p+b1*b1);
-    double C2p=std::sqrt(a2p*a2p+b2*b2);
-    double h1p,h2p;
+    float C1sab=std::sqrt(a1*a1+b1*b1);
+    float C2sab=std::sqrt(a2*a2+b2*b2);
+    float mCsab=(C1sab+C2sab)/2;
+    float && pow_mCsab_7=std::pow(mCsab,7);
+    float G=0.5*(1-std::sqrt(pow_mCsab_7/(pow_mCsab_7+std::pow(25,7))));
+    float a1p=(1+G)*a1;
+    float a2p=(1+G)*a2;
+    float C1p=std::sqrt(a1p*a1p+b1*b1);
+    float C2p=std::sqrt(a2p*a2p+b2*b2);
+    float h1p,h2p;
     if(b1==0&&a1p==0)h1p=0;
     else h1p=std::atan2(b1,a1p);
     if(h1p<0)h1p+=2*M_PI;
@@ -54,9 +54,9 @@ float Lab00( float L1, float a1, float b1, float L2, float a2, float b2)
     else h2p=std::atan2(b2,a2p);
     if(h2p<0)h2p+=2*M_PI;
 
-    double dLp=L2-L1;
-    double dCp=C2p-C1p;
-    double dhp;
+    float dLp=L2-L1;
+    float dCp=C2p-C1p;
+    float dhp;
     if(C1p*C2p==0)
     {
         dhp=0;
@@ -75,13 +75,13 @@ float Lab00( float L1, float a1, float b1, float L2, float a2, float b2)
         }
     }
 
-    double dHp=2*sqrt(C1p*C2p)*std::sin(dhp/2.0);
+    float dHp=2*sqrt(C1p*C2p)*std::sin(dhp/2.0);
 
 
 
-    double mLp=(L1+L2)/2;
-    double mCp=(C1p+C2p)/2;
-    double mhp;
+    float mLp=(L1+L2)/2;
+    float mCp=(C1p+C2p)/2;
+    float mhp;
     if(C1p*C2p==0)
     {
         mhp=(h1p+h2p);
@@ -99,21 +99,21 @@ float Lab00( float L1, float a1, float b1, float L2, float a2, float b2)
         mhp=(h1p+h2p-deg2rad(360))/2;
     }
 
-    double T=1-0.17*std::cos(mhp-deg2rad(30))+0.24*cos(2*mhp)+0.32*cos(3*mhp+deg2rad(6))-0.20*cos(4*mhp-deg2rad(63));
+    float T=1-0.17*std::cos(mhp-deg2rad(30))+0.24*cos(2*mhp)+0.32*cos(3*mhp+deg2rad(6))-0.20*cos(4*mhp-deg2rad(63));
 
-    double dTheta=deg2rad(30)*exp(-square((mhp-deg2rad(275))/deg2rad(25)));
+    float dTheta=deg2rad(30)*exp(-square((mhp-deg2rad(275))/deg2rad(25)));
 
-    double RC=2*sqrt(pow(mCp,7)/(pow(25,7)+pow(mCp,7)));
-    double && square_mLp_minus_50=square(mLp-50);
-    double SL=1+0.015*square_mLp_minus_50/sqrt(20+square_mLp_minus_50);
+    float RC=2*sqrt(pow(mCp,7)/(pow(25,7)+pow(mCp,7)));
+    float && square_mLp_minus_50=square(mLp-50);
+    float SL=1+0.015*square_mLp_minus_50/sqrt(20+square_mLp_minus_50);
 
-    double SC=1+0.045*mCp;
+    float SC=1+0.045*mCp;
 
-    double SH=1+0.015*mCp*T;
+    float SH=1+0.015*mCp*T;
 
-    double RT=-RC*sin(2*dTheta);
+    float RT=-RC*sin(2*dTheta);
 
-    double Diffsquare=square(dLp/SL/kL)
+    float Diffsquare=square(dLp/SL/kL)
             +square(dCp/SC/kC)
             +square(dHp/SH/kH)
             +RT*(dCp/SC/kC)*(dHp/SH/kH);
@@ -138,6 +138,7 @@ float Lab00( float L1, float a1, float b1, float L2, float a2, float b2)
 
 #endif
 
-    return sqrt(Diffsquare);
+    //return sqrt(Diffsquare);
+    return Diffsquare;
 
 }
