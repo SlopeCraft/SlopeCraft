@@ -24,6 +24,15 @@ void TaskBox::updateTask() {
     ui->ifExportData->setChecked(!task.dst_liteFileName.isEmpty());
     ui->dataName->setText(task.dst_DataFileName);
 
+    onTaskTypeUpdated();
+}
+
+void TaskBox::onTaskTypeUpdated() {
+    ui->ifExport3D->setCheckable(TokiTask::canExportLite);
+    if(!TokiTask::canExportLite) {
+        ui->ifExport3D->setChecked(false);
+    }
+    ui->ifExportData->setCheckable(TokiTask::canExportData);
 }
 
 void TaskBox::on_BtnErase_clicked() {
@@ -43,7 +52,8 @@ void TaskBox::onImageChanged(QString newImgName) {
 }
 
 void TaskBox::on_browseImage_clicked() {
-    QString newImg=QFileDialog::getOpenFileName(this,
+    QString newImg=QFileDialog::getOpenFileName(
+                                                 this,
                                                  tr("选择图片"),
                                                  "./",
                                                  tr("图片(*.png *.bmp *.jpg *.tif *.GIF )"));
@@ -77,5 +87,14 @@ void TaskBox::on_setMapBegSeq_valueChanged(int curValue) {
     isBusy=true;*/
     emit seqNumChanged(this);
     //isBusy=false;
+}
+
+void TaskBox::on_BtnBrowseData_clicked() {
+    QString dstFolder=QFileDialog::getExistingDirectory(this,tr("请选择导出的文件夹"));
+    if(dstFolder.isEmpty()) {
+        return;
+    }
+    task.dst_DataFileName=dstFolder;
+    updateTask();
 }
 

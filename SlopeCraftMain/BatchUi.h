@@ -25,6 +25,9 @@ public:
                             bool exportLite,
                             bool exportData);
 
+signals:
+    void taskTypeUpdated();
+
 protected:
     void closeEvent(QCloseEvent *);
 

@@ -119,6 +119,9 @@ public:
     void putBlockListInfo();
 #endif
 
+signals:
+    void mapTypeChanged();
+
 public slots:
     void destroySubWindTrans();
     void preProcess(char pureTpStrategy='B',

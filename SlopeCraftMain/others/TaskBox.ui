@@ -42,16 +42,6 @@
    <item row="1" column="2">
     <widget class="QLineEdit" name="liteName"/>
    </item>
-   <item row="0" column="2">
-    <widget class="QLineEdit" name="imageName"/>
-   </item>
-   <item row="0" column="1">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>图片：</string>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="3">
     <widget class="QPushButton" name="BtnBrowseLite">
      <property name="text">
@@ -134,6 +124,9 @@
       <number>65535</number>
      </property>
     </widget>
+   </item>
+   <item row="0" column="1" colspan="2">
+    <widget class="QLineEdit" name="imageName"/>
    </item>
   </layout>
  </widget>

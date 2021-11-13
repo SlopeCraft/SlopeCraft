@@ -127,26 +127,26 @@ MainWindow::MainWindow(QWidget *parent)
                 this,&MainWindow::close);
     qDebug("成功connect所有的翻页按钮");
 
-    connect(ui->isGame12,&QRadioButton::clicked,
+    connect(ui->isGame12,&QRadioButton::toggled,
             this,&MainWindow::onGameVerClicked);
-    connect(ui->isGame13,&QRadioButton::clicked,
+    connect(ui->isGame13,&QRadioButton::toggled,
             this,&MainWindow::onGameVerClicked);
-    connect(ui->isGame14,&QRadioButton::clicked,
+    connect(ui->isGame14,&QRadioButton::toggled,
             this,&MainWindow::onGameVerClicked);
-    connect(ui->isGame15,&QRadioButton::clicked,
+    connect(ui->isGame15,&QRadioButton::toggled,
             this,&MainWindow::onGameVerClicked);
-    connect(ui->isGame16,&QRadioButton::clicked,
+    connect(ui->isGame16,&QRadioButton::toggled,
             this,&MainWindow::onGameVerClicked);
-    connect(ui->isGame17,&QRadioButton::clicked,
+    connect(ui->isGame17,&QRadioButton::toggled,
             this,&MainWindow::onGameVerClicked);
 
-    connect(ui->isMapCreative,&QRadioButton::clicked,
+    connect(ui->isMapCreative,&QRadioButton::toggled,
             this,&MainWindow::onMapTypeClicked);
-    connect(ui->isMapSurvival,&QRadioButton::clicked,
+    connect(ui->isMapSurvival,&QRadioButton::toggled,
             this,&MainWindow::onMapTypeClicked);
-    connect(ui->isMapWall,&QRadioButton::clicked,
+    connect(ui->isMapWall,&QRadioButton::toggled,
             this,&MainWindow::onMapTypeClicked);
-    connect(ui->isMapFlat,&QRadioButton::clicked,
+    connect(ui->isMapFlat,&QRadioButton::toggled,
             this,&MainWindow::onMapTypeClicked);
 
     connect(ui->isBLCreative,&QRadioButton::clicked,
@@ -767,20 +767,24 @@ void MainWindow::updateEnables() {
 void MainWindow::on_StartWithSlope_clicked() {
     ui->isMapSurvival->setChecked(true);
     turnToPage(1);
+    onBlockListChanged();
 }
 
 void MainWindow::on_StartWithFlat_clicked() {
     ui->isMapFlat->setChecked(true);
+    onBlockListChanged();
     turnToPage(1);
 }
 
 void MainWindow::on_StartWithNotVanilla_clicked() {
     ui->isMapCreative->setChecked(true);
+    onBlockListChanged();
     turnToPage(1);
 }
 
 void MainWindow::on_StartWithWall_clicked() {
     ui->isMapWall->setChecked(true);
+    onBlockListChanged();
     turnToPage(1);
 }
 
@@ -794,10 +798,10 @@ void MainWindow::onImportPicclicked(QString input) {
     userSelected.clear();
 
     if(input.isEmpty()) {
-        userSelected =QFileDialog::getOpenFileNames(this,
+        userSelected.emplace_back(QFileDialog::getOpenFileName(this,
                                                    tr("选择图片"),
                                                    "./",
-                                                   tr("图片(*.png *.bmp *.jpg *.tif *.GIF )"));
+                                                   tr("图片(*.png *.bmp *.jpg *.tif *.GIF )")));
     } else {
         userSelected.emplace_back(input);
     }
@@ -861,6 +865,8 @@ void MainWindow::onImportPicclicked(QString input) {
         batchOperator = new BatchUi(&batchOperator,this);
         batchOperator->show();
         batchOperator->setTasks(userSelected,true,true);
+        connect(this,&MainWindow::mapTypeChanged,
+                batchOperator,&BatchUi::taskTypeUpdated);
         qDebug("Mainwindow setTasks完毕");
         return;
     }
@@ -959,6 +965,7 @@ void MainWindow::onGameVerClicked() {
         Manager->setVersion(17);
     }
     Kernel->decreaseStep(TokiSlopeCraft::colorSetReady);
+    onBlockListChanged();
     updateEnables();
 }
 
@@ -976,6 +983,7 @@ void MainWindow::onMapTypeClicked() {
         Manager->setEnabled(12,false);
     }
     Kernel->decreaseStep(TokiSlopeCraft::colorSetReady);
+    onBlockListChanged();
     updateEnables();
 }
 
@@ -1077,6 +1085,9 @@ void MainWindow::kernelSetType() {
     Kernel->setType(type,ver,allowedBaseColor,palette);
 
     updateEnables();
+
+    TokiTask::canExportLite=Kernel->isVanilla();
+    emit mapTypeChanged();
 }
 
 void MainWindow::kernelSetImg() {
@@ -1142,7 +1153,7 @@ void MainWindow::algoProgressAdd(int deltaVal) {
 void MainWindow::on_Convert_clicked() {
 if(Kernel->queryStep()<TokiSlopeCraft::wait4Image) {
     qDebug("重新setType");
-    kernelSetType();
+    onBlockListChanged();
 if(Kernel->queryStep()<TokiSlopeCraft::wait4Image)
     return;
 }

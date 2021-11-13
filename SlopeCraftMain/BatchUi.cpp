@@ -42,6 +42,8 @@ void BatchUi::setTasks(const QStringList & fileNames,
 
         connect(box,&TaskBox::erase,this,&BatchUi::erased);
         connect(box,&TaskBox::seqNumChanged,this,&BatchUi::onBoxSeqNumChanged);
+        connect(this,&BatchUi::taskTypeUpdated,box,&TaskBox::onTaskTypeUpdated);
+
     }
     qDebug("setTasks完毕");
     taskBoxes.front()->ui->setMapBegSeq->setValue(1);

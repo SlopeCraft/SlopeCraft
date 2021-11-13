@@ -1,4 +1,8 @@
 #include "TokiTask.h"
+
+bool TokiTask::canExportLite=true;
+const bool TokiTask::canExportData=true;
+
 TokiTask::TokiTask() {
 
 }

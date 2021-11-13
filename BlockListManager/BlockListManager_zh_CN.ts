@@ -4,24 +4,24 @@
 <context>
     <name>TokiBlock</name>
     <message>
-        <location filename="TokiBlock.cpp" line="31"/>
+        <location filename="TokiBlock.cpp" line="55"/>
         <source>错误：方块对应的图像不存在或不可用</source>
         <translation>Error: image of a block not found</translation>
     </message>
     <message>
-        <location filename="TokiBlock.cpp" line="32"/>
+        <location filename="TokiBlock.cpp" line="56"/>
         <source>方块id：</source>
         <translation>Block id: </translation>
     </message>
     <message>
-        <location filename="TokiBlock.cpp" line="32"/>
+        <location filename="TokiBlock.cpp" line="56"/>
         <source>
 缺失的图像：</source>
         <translation>
 Missing image file: </translation>
     </message>
     <message>
-        <location filename="TokiBlock.cpp" line="33"/>
+        <location filename="TokiBlock.cpp" line="57"/>
         <source>
 你可以点击Yes忽略这个错误，点击YesToAll屏蔽同类的警告，或者点击Close结束程序</source>
         <translation>

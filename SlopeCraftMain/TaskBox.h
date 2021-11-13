@@ -38,6 +38,10 @@ private slots:
 
     void on_setMapBegSeq_valueChanged(int arg1);
 
+    void on_BtnBrowseData_clicked();
+
+    void onTaskTypeUpdated();
+
 private:
     Ui::TaskBox *ui;
     TokiTask task;

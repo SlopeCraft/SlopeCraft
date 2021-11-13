@@ -21,5 +21,8 @@ public:
     QString dst_DataFileName;
     uint dst_beginSeqNum;
 
+    static bool canExportLite;
+    static const bool canExportData;
+
 };
 #endif // TOKITASK_H
