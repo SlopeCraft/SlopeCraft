@@ -73,6 +73,7 @@ MainWindow::MainWindow(QWidget *parent)
     //connect(Kernel,SIGNAL(convertProgressSetRange(int,int,int)));
 
     batchOperator = nullptr;
+    verDialog = nullptr;
 
     ui->maxHeight->setValue(255);
 
@@ -1669,11 +1670,11 @@ void MainWindow::on_reportBugs_clicked() {
 void MainWindow::checkVersion() {
 
     //QtConcurrent::run(grabVersion,this);
-    grabVersion(this);
+    grabVersion();
     return;
 }
 
-void grabVersion(MainWindow * parent) {
+void MainWindow::grabVersion() {
     static bool isRunning=false;
     if(isRunning) {
         return;
@@ -1700,7 +1701,7 @@ void grabVersion(MainWindow * parent) {
     QJsonDocument jd=QJsonDocument::fromJson(result,&error);
     if(error.error!=error.NoError) {
         int userReply=
-                QMessageBox::information(parent,
+                QMessageBox::information(this,
                                          QObject::tr("检查更新时遇到Json解析错误"),
                                          QObject::tr("网址  ")+url
                                          +QObject::tr("  回复的信息无法通过json解析。\n\n这只是检查更新时遇到的故障，但不要紧，软件该用还能用。\n点击No以忽略这个错误；点击NoToAll则不会再自动检查更新。\n\n具体的错误为：\n")
@@ -1709,7 +1710,7 @@ void grabVersion(MainWindow * parent) {
                                          QMessageBox::StandardButton::No,
                                          QMessageBox::StandardButton::NoToAll);
         if(userReply==QMessageBox::StandardButton::NoToAll) {
-            parent->setAutoCheckUpdate(false);
+            setAutoCheckUpdate(false);
         }
         isRunning=false;
         return;
@@ -1721,7 +1722,7 @@ void grabVersion(MainWindow * parent) {
     bool hasKey=jo.contains("tag_name");
     if(!hasKey) {
         int userReply=
-                QMessageBox::information(parent,
+                QMessageBox::information(this,
                                          QObject::tr("检查更新时返回信息错误"),
                                          QObject::tr("网址  ")+url
                                          +QObject::tr("  回复的信息中不包含版本号（\"tag_name\"）。\n\n这只是检查更新时遇到的故障，但不要紧，软件该用还能用。\n点击No以忽略这个错误；点击NoToAll则不会再自动检查更新。\n")
@@ -1730,7 +1731,7 @@ void grabVersion(MainWindow * parent) {
                                          QMessageBox::StandardButton::No,
                                          QMessageBox::StandardButton::NoToAll);
         if(userReply==QMessageBox::StandardButton::NoToAll) {
-            parent->setAutoCheckUpdate(false);
+            setAutoCheckUpdate(false);
         }
         isRunning=false;
         return;
@@ -1739,7 +1740,7 @@ void grabVersion(MainWindow * parent) {
     bool isKeyString=jo.value("tag_name").isString();
     if(!isKeyString) {
         int userReply=
-                QMessageBox::information(parent,
+                QMessageBox::information(this,
                                          QObject::tr("检查更新时返回信息错误"),
                                          QObject::tr("网址  ")+url
                                          +QObject::tr("  回复的信息中，版本号（\"tag_name\"）不是字符串。\n\n这只是检查更新时遇到的故障，但不要紧，软件该用还能用。\n点击No以忽略这个错误；点击NoToAll则不会再自动检查更新。\n")
@@ -1748,7 +1749,7 @@ void grabVersion(MainWindow * parent) {
                                          QMessageBox::StandardButton::No,
                                          QMessageBox::StandardButton::NoToAll);
         if(userReply==QMessageBox::StandardButton::NoToAll) {
-            parent->setAutoCheckUpdate(false);
+            setAutoCheckUpdate(false);
         }
         isRunning=false;
         return;
@@ -1757,29 +1758,40 @@ void grabVersion(MainWindow * parent) {
     QString updateInfo=jo["body"].toString();
 
     QString latestVersion=jo["tag_name"].toString();
-    if(latestVersion==parent->selfVersion) {
+    if(latestVersion==selfVersion) {
         isRunning=false;
         return;
     } else {
-        VersionDialog::userChoice userReply =
-                VersionDialog::information(parent,
-                                         QObject::tr("SlopeCraft已更新"),
 
-                                         QObject::tr("好消息！好消息！SlopeCraft更新了！\n")+
-                                         QObject::tr("当前版本为")+parent->selfVersion+
-                                         QObject::tr("，检查到最新版本为")+latestVersion
-                                         //+QObject::tr("\n点击Ok前往下载；点击No关闭提示；点击NoToAll不再自动检查更新。")
-                                           ,
-                                         updateInfo
-                                         );
+        if(verDialog!=nullptr) {
+            qDebug("prevented VersionDialog to be opened twice at one time");
+            return;
+        }
 
+        verDialog = new VersionDialog(&verDialog,this);
+        verDialog->show();
+        verDialog->setTexts(QObject::tr("SlopeCraft已更新"),
+                            QObject::tr("好消息！好消息！SlopeCraft更新了！\n")+
+                            QObject::tr("当前版本为")+selfVersion+
+                            QObject::tr("，检查到最新版本为")+latestVersion,
+                            updateInfo);
+
+
+        QEventLoop EL(this);
+        connect(this,&MainWindow::closed,verDialog,&VersionDialog::close);
+        connect(verDialog,&VersionDialog::finished,&EL,&QEventLoop::quit);
+
+        EL.exec();
+
+
+        VersionDialog::userChoice userReply=verDialog->getResult();
 
         if(userReply==VersionDialog::userChoice::Yes) {
             QDesktopServices::openUrl(
                         QUrl("https://github.com/ToKiNoBug/SlopeCraft/releases/latest"));
         }
         if(userReply==VersionDialog::userChoice::NoToAll) {
-            parent->setAutoCheckUpdate(false);
+            setAutoCheckUpdate(false);
         }
 
         isRunning=false;
@@ -1822,7 +1834,11 @@ void MainWindow::onBlockListChanged() {
                 tr("种颜色"));
 }
 
+
 void MainWindow::closeEvent(QCloseEvent * event) {
     emit closed();
+    qDebug("closed Signal emitted");
     QMainWindow::closeEvent(event);
+    exit(0);
 }
+

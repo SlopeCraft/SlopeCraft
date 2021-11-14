@@ -122,6 +122,7 @@ public:
 
 signals:
     void mapTypeChanged();
+
     void closed();
 protected:
     void closeEvent(QCloseEvent*);
@@ -148,7 +149,6 @@ private slots:
     void progressRangeSet(int min,int max,int val);//设置进度条的取值范围和值
     void progressAdd(int deltaVal);
     void keepAwake();
-    //void receiveFinish(bool,QByteArray);
 
     void showError(TokiSlopeCraft::errorFlag);
     void showWorkingStatue(TokiSlopeCraft::workStatues);
@@ -223,6 +223,7 @@ private:
     tpStrategyWind * transSubWind;
     BlockListManager * Manager;
     BatchUi * batchOperator;
+    VersionDialog * verDialog;
 
     QImage rawPic;
 
@@ -256,9 +257,10 @@ private:
     QJsonArray getCustomBlockList(QString);
     QString getCustomBlockListDir(QString);
 
+    void grabVersion();
+
 };
 
-void grabVersion(MainWindow*);
 
 QJsonObject loadIni(bool=false);
 bool isValidIni(const QJsonObject & );

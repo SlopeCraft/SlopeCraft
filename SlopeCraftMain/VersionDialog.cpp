@@ -22,62 +22,83 @@ This file is part of SlopeCraft.
 
 #include "VersionDialog.h"
 
-VersionDialog::VersionDialog(QWidget *parent) :
+VersionDialog::VersionDialog(VersionDialog ** _self,QWidget *parent) :
     QDialog(parent),
     ui(new Ui::VersionDialog)
 {
     ui->setupUi(this);
     result=userChoice::No;
-    this->setAttribute(Qt::WA_QuitOnClose,false);
+    self=_self;
 }
 
 VersionDialog::~VersionDialog() {
     delete  ui;
+    *self=nullptr;
+    //deleteLater();
 }
 
 void VersionDialog::on_BtnYes_clicked() {
     result=userChoice::Yes;
-    emit finished();
+    close();
+    //emit finished();
 }
 
 void VersionDialog::on_BtnNo_clicked() {
     result=userChoice::No;
-    emit finished();
+    close();
+    //emit finished();
 }
 
 void VersionDialog::on_BtnNoToAll_clicked() {
     result=userChoice::NoToAll;
-    emit finished();
+    close();
+    //emit finished();
 }
 
 void VersionDialog::closeEvent(QCloseEvent * event) {
+    //result=userChoice::No;
     emit finished();
     QWidget::closeEvent(event);
+    deleteLater();
 }
 
-VersionDialog::userChoice VersionDialog::information(QWidget * parent,
+VersionDialog::userChoice VersionDialog::getResult() const {
+    return result;
+}
+
+void VersionDialog::setTexts(const QString &title,
+                             const QString &labelText,
+                             const QString &browserText) {
+    setWindowTitle(title);
+    ui->label->setText(labelText);
+    ui->textBrowser->setMarkdown(browserText);
+}
+
+/*
+VersionDialog::userChoice VersionDialog::information(
+                                  MainWindow * parent,
                                   const QString & title,
                                   const QString & labelText,
-                       const QString & browserText) {
-    VersionDialog * form=new VersionDialog(parent);
+                                  const QString & browserText) {
+    VersionDialog form(parent);
 
-    //QObject::connect(parent,&QWidget::destroyed,window,&VersionDialog::deleteLater);
 
-    form->show();
+    form.show();
 
-    form->setWindowTitle(title);
-    form->ui->label->setText(labelText);
-    form->ui->textBrowser->setMarkdown(browserText);
+    form.setTexts(title,labelText,browserText);
 
     //connect(parent)
 
     QEventLoop EL;
-    connect(form,&VersionDialog::finished,&EL,&QEventLoop::quit);
+    connect(parent,&MainWindow::closed,&form,&VersionDialog::finished);
+    connect(&form,&VersionDialog::finished,&EL,&QEventLoop::quit);
     EL.exec();
 
-    VersionDialog::userChoice result=form->result;
+    VersionDialog::userChoice result=form.result;
 
-    form->deleteLater();
+    form.close();
 
     return result;
 }
+
+*/

@@ -39,7 +39,7 @@ class VersionDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit VersionDialog(QWidget *parent = nullptr);
+    explicit VersionDialog(VersionDialog ** self,QWidget *parent = nullptr);
     ~VersionDialog();
     enum userChoice {
         Yes,
@@ -47,10 +47,16 @@ public:
         NoToAll
     };
 
-    static userChoice information(QWidget * parent,
+    void setTexts(const QString & title,
+                  const QString & labelText,
+                  const QString & browserText);
+    userChoice getResult() const;
+    /*
+    static userChoice information(MainWindow * parent,
                                   const QString & title,
                                   const QString & labelText,
                                   const QString & browserText);
+    */
 signals:
     void finished();
 
@@ -68,6 +74,8 @@ protected:
 private:
     Ui::VersionDialog * ui;
     userChoice result;
+
+    VersionDialog ** self;
 
 };
 
