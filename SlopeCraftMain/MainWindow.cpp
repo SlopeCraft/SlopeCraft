@@ -1821,3 +1821,8 @@ void MainWindow::onBlockListChanged() {
                 QString::number(colorCount)+
                 tr("种颜色"));
 }
+
+void MainWindow::closeEvent(QCloseEvent * event) {
+    emit closed();
+    QMainWindow::closeEvent(event);
+}

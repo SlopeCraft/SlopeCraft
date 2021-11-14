@@ -28,6 +28,7 @@ PreviewWind::PreviewWind(QWidget *parent) :
     ui(new Ui::PreviewWind)
 {
     ui->setupUi(this);
+    this->setAttribute(Qt::WA_QuitOnClose,false);
 
 }
 

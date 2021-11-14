@@ -32,6 +32,7 @@ tpStrategyWind::tpStrategyWind(QWidget *parent) :
 {
     ui->setupUi(this);
     BackGroundColor=qRgb(220,220,220);
+    this->setAttribute(Qt::WA_QuitOnClose,false);
 }
 
 void tpStrategyWind::setVal(tpS t)

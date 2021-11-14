@@ -1,47 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>VerDialog</class>
- <widget class="QWidget" name="VerDialog">
+ <class>VersionDialog</class>
+ <widget class="QDialog" name="VersionDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
-    <height>480</height>
+    <width>600</width>
+    <height>400</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Dialog</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <item row="2" column="1">
-    <widget class="QPushButton" name="BtnNo">
-     <property name="text">
-      <string>关闭</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0" colspan="3">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>TextLabel</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
+   <item row="5" column="0">
     <widget class="QPushButton" name="BtnYes">
      <property name="text">
       <string>下载最新版</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="3">
-    <widget class="QTextBrowser" name="textBrowser"/>
-   </item>
-   <item row="2" column="2">
+   <item row="5" column="2">
     <widget class="QPushButton" name="BtnNoToAll">
      <property name="text">
       <string>关闭，且不再提醒</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QPushButton" name="BtnNo">
+     <property name="text">
+      <string>关闭</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="3">
+    <widget class="QTextBrowser" name="textBrowser">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" rowspan="2" colspan="3">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>TextLabel</string>
      </property>
     </widget>
    </item>

@@ -45,6 +45,7 @@ This file is part of SlopeCraft.
 #include <QFuture>
 #include <QFileDialog>
 #include <QCryptographicHash>
+#include <QCloseEvent>
 
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
@@ -121,6 +122,9 @@ public:
 
 signals:
     void mapTypeChanged();
+    void closed();
+protected:
+    void closeEvent(QCloseEvent*);
 
 public slots:
     void destroySubWindTrans();

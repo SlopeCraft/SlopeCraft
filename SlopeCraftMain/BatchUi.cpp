@@ -7,6 +7,7 @@ BatchUi::BatchUi(BatchUi ** _self,QWidget *parent) :
 {
     ui->setupUi(this);
     self=_self;
+    this->setAttribute(Qt::WA_QuitOnClose,false);
 
 }
 

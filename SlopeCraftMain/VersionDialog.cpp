@@ -23,11 +23,12 @@ This file is part of SlopeCraft.
 #include "VersionDialog.h"
 
 VersionDialog::VersionDialog(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::VerDialog)
+    QDialog(parent),
+    ui(new Ui::VersionDialog)
 {
     ui->setupUi(this);
     result=userChoice::No;
+    this->setAttribute(Qt::WA_QuitOnClose,false);
 }
 
 VersionDialog::~VersionDialog() {
@@ -58,14 +59,12 @@ VersionDialog::userChoice VersionDialog::information(QWidget * parent,
                                   const QString & title,
                                   const QString & labelText,
                        const QString & browserText) {
-    QMainWindow window(parent);
-    VersionDialog * form=new VersionDialog(&window);
-    window.setCentralWidget(form);
+    VersionDialog * form=new VersionDialog(parent);
 
     //QObject::connect(parent,&QWidget::destroyed,window,&VersionDialog::deleteLater);
 
-    window.show();
-    window.setMinimumSize(QSize(600,400));
+    form->show();
+
     form->setWindowTitle(title);
     form->ui->label->setText(labelText);
     form->ui->textBrowser->setMarkdown(browserText);
@@ -74,12 +73,11 @@ VersionDialog::userChoice VersionDialog::information(QWidget * parent,
 
     QEventLoop EL;
     connect(form,&VersionDialog::finished,&EL,&QEventLoop::quit);
-    //connect(form,SLOT(close()),&EL,SLOT(quit()));
     EL.exec();
 
     VersionDialog::userChoice result=form->result;
 
-    window.close();
+    form->deleteLater();
 
     return result;
 }
