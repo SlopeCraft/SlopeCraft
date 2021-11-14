@@ -23,7 +23,7 @@ This file is part of SlopeCraft.
 #ifndef TOKISLOPECRAFT_H
 #define TOKISLOPECRAFT_H
 /////////////////////////////
-//#define WITH_QT
+
 /////////////////////////////
 
 #include <iostream>
@@ -222,8 +222,9 @@ signals:
     void (*reportError)(errorFlag);
     void (*reportWorkingStatue)(workStatues);
 #endif
+#ifdef WITH_QT
 private slots:
-
+#endif
 private:
     enum ColorSpace {
         R='R',H='H',L='L',X='X'
@@ -293,9 +294,9 @@ void crash();
 void matchColor(TokiColor * tColor,ARGB qColor);
 
 #ifndef WITH_QT
-void defaultProgressRangeSet(int,int,int);
-void defaultProgressAdd(int);
-void defaultKeepAwake();
+void defaultProgressRangeSet4Kernel(int,int,int);
+void defaultProgressAdd4Kernel(int);
+void defaultKeepAwake4Kernel();
 void defaultReportError(TokiSlopeCraft::errorFlag);
 void defaultReportWorkStatues(TokiSlopeCraft::workStatues);
 #endif

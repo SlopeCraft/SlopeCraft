@@ -123,4 +123,9 @@ private:
 };
 
 double randD();
+#ifndef WITH_QT
+void progressRangeSet4Lossy(int,int,int);
+void progressAdd4Lossy(int);
+void keepAwake4Lossy();
+#endif
 #endif // LOSSYCOMPRESSOR_H

@@ -24,24 +24,24 @@ This file is part of SlopeCraft.
 #define PRIMGLASSBUILDER_H
 #include "object_pool.hpp"
 
-#include <QObject>
-
+#include "defines.h"
+#ifdef WITH_QT
+    #include <QObject>
+#endif
 //using namespace Eigen;
 
 #include <iostream>
 #include <random>
 #include <vector>
 #include <queue>
+#include <list>
 #include <stack>
 #include <unordered_set>
 #include <unsupported/Eigen/CXX11/Tensor>
-#include "defines.h"
 #include "TokiColor.h"
 #include "WaterItem.h"
 
-#ifdef WITH_QT
-    #include <QObject>
-#endif
+
 
 
 //using namespace Eigen;
@@ -99,17 +99,20 @@ class PrimGlassBuilder : public QObject
 {
     Q_OBJECT
 public:
-	template <typename T, size_t S> friend class tf::ObjectPool;
-	void* _object_pool_block;
     explicit PrimGlassBuilder(QObject *parent = nullptr);
-    static const uint unitL=32;
-    static const uint reportRate=50;
 #else
 class PrimGlassBuilder
 {
 public:
     PrimGlassBuilder();
 #endif
+
+
+    template <typename T, size_t S> friend class tf::ObjectPool;
+    void* _object_pool_block;
+
+    static const uint unitL=32;
+    static const uint reportRate=50;
 	enum blockType 
     {
 		air = 0,
@@ -143,9 +146,9 @@ inline tf::ObjectPool<PrimGlassBuilder>pgb;
 
 EImage TokiMap2EImage(const TokiMap&);
 
-
-void defaultProgressRangeSet(int,int,int);
-void defaultProgressAdd(int);
-void defaultKeepAwake();
-
+#ifndef WITH_QT
+void defaultProgressRangeSet4Prim(int,int,int);
+void defaultProgressAdd4Prim(int);
+void defaultKeepAwake4Prim();
+#endif
 #endif // PRIMGLASSBUILDER_H

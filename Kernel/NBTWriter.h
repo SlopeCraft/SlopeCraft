@@ -30,7 +30,9 @@ This file is part of SlopeCraft.
 
 #include <iostream>
 #include <fstream>
-#include <QString>
+
+//#include <QString>
+
 #include <cstring>
 #include "defines.h"
 //using namespace std;

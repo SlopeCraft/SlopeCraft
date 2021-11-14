@@ -32,13 +32,12 @@ ColorSet TokiSlopeCraft::Basic;
 ColorSet TokiSlopeCraft::Allowed;
 
 #ifndef WITH_QT
-void defaultProgressRangeSet(int,int,int) {};
-void defaultProgressAdd(int){};
-void defaultKeepAwake(){};
-void defaultReportError(TokiSlopeCraft::errorFlag) {}
-void defaultReportWorkStatues(TokiSlopeCraft::workStatues) {}
+void defaultProgressRangeSet4Kernel(int,int,int) {return;};
+void defaultProgressAdd4Kernel(int) {return;};
+void defaultKeepAwake4Kernel() {return;};
+void defaultReportError(TokiSlopeCraft::errorFlag) {return;};
+void defaultReportWorkStatues(TokiSlopeCraft::workStatues) {return;};
 #endif
-
 
 #ifdef WITH_QT
 TokiSlopeCraft::TokiSlopeCraft(QObject *parent) : QObject(parent)
@@ -47,9 +46,9 @@ TokiSlopeCraft::TokiSlopeCraft()
 #endif
 {
 #ifndef WITH_QT
-    progressRangeSet=defaultProgressRangeSet;
-    progressAdd=defaultProgressAdd;
-    keepAwake=defaultKeepAwake;
+    progressRangeSet=defaultProgressRangeSet4Kernel;
+    progressAdd=defaultProgressAdd4Kernel;
+    keepAwake=defaultKeepAwake4Kernel;
     reportError=defaultReportError;
     reportWorkingStatue=defaultReportWorkStatues;
 #endif

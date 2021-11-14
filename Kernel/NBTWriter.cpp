@@ -98,7 +98,7 @@ void NBTWriter::open(const char*path)
 {
     if(isOpen)
     {
-        qDebug("NBTWriter已经打开，不能重复打开！");
+        //std::cerr<<"NBTWriter已经打开，不能重复打开！";
         return;
     }
     File=new std::fstream(path,std::ios::out|std::ios::binary);
@@ -194,7 +194,7 @@ void NBTWriter::push(char typeId,int size)
         //qDebug()<<"push成功，栈顶CLA="<<(short)CLA[top]<<"，Size="<<Size[top];
     }
     else
-    qDebug("push失败，满栈不能继续push");
+    //qDebug("push失败，满栈不能继续push");
     return;
 }
 
@@ -216,7 +216,9 @@ int NBTWriter::writeEnd()
 template <typename T>
 int NBTWriter::writeSingleTag(char typeId,const char*Name,T value)
 {
-    if (!isOpen){qDebug("文件没有打开，不能写入");return 0;}
+    if (!isOpen){
+        //qDebug("文件没有打开，不能写入");
+        return 0;}
     int ThisCount=0;short realNameL=strlen(Name),writeNameL=realNameL;
     if(!isBE)
     {
@@ -239,7 +241,8 @@ int NBTWriter::writeSingleTag(char typeId,const char*Name,T value)
 
     }
     ByteCount+=ThisCount;
-    if(!ThisCount)qDebug("writeSingleTag函数写入失败");
+    if(!ThisCount)
+        //qDebug("writeSingleTag函数写入失败");
     return ThisCount;
 }
 
@@ -247,7 +250,9 @@ int NBTWriter::writeSingleTag(char typeId,const char*Name,T value)
 
 int NBTWriter::writeLongDirectly(const char*Name,long long value)
 {
-    if (!isOpen){qDebug("文件没有打开，不能写入");return 0;}
+    if (!isOpen){
+        //qDebug("文件没有打开，不能写入");
+        return 0;}
     int ThisCount=0;short realNameL=strlen(Name),writeNameL=realNameL;
     if(!isBE)
     {
@@ -270,7 +275,9 @@ int NBTWriter::writeLongDirectly(const char*Name,long long value)
 
     }
     ByteCount+=ThisCount;
-    if(!ThisCount)qDebug("writeSingleTag函数写入失败");
+    if(!ThisCount) {
+        //qDebug("writeSingleTag函数写入失败");
+    }
     return ThisCount;
 }
 
@@ -320,13 +327,15 @@ int NBTWriter::endCompound()
         //qDebug("结束了一个文件夹");
         return ThisCount;
     }
-    qDebug("错误：这里不能结束文件夹");
+    //qDebug("错误：这里不能结束文件夹");
     return ThisCount;
 }
 
 int NBTWriter::writeListHead(const char*Name,char TypeId,int listSize)
 {
-    if(!isOpen){qDebug("失败：文件未打开");return 0;}
+    if(!isOpen){
+        //qDebug("失败：文件未打开");
+        return 0;}
     int ThisCount=0;short realNameL=strlen(Name),writeNameL=realNameL;
     int writeListSize=listSize;//listSize->readListSize
     if(!isBE){IE2BE(writeNameL);IE2BE(writeListSize);}
@@ -392,7 +401,9 @@ int NBTWriter::writeDouble(const char*Name,double value)
 
 int NBTWriter::writeLongArrayHead(const char*Name,int arraySize)
 {
-    if(!isOpen){qDebug("失败：文件未打开");return 0;}
+    if(!isOpen){
+        //qDebug("失败：文件未打开");
+        return 0;}
     int ThisCount=0;short realNameL=strlen(Name),writeNameL=realNameL;
     int writeArraySize=arraySize;//arraSize->readArraySize
     if(!isBE){IE2BE(writeNameL);IE2BE(writeArraySize);}
@@ -405,7 +416,7 @@ int NBTWriter::writeLongArrayHead(const char*Name,int arraySize)
         //File->write(&idLong,sizeof(char));ThisCount+=sizeof(char);
         File->write((char*)&writeArraySize,sizeof(int));ThisCount+=sizeof(int);
         push(idLong,arraySize);
-        qDebug("成功在文件夹中创建LongArray");
+        //qDebug("成功在文件夹中创建LongArray");
         ByteCount+=ThisCount;
         if(arraySize==0)elementWritten();
         return ThisCount;
@@ -416,18 +427,20 @@ int NBTWriter::writeLongArrayHead(const char*Name,int arraySize)
         //File->write(&idLong,sizeof(char));ThisCount+=sizeof(char);
         File->write((char*)&writeArraySize,sizeof(int));ThisCount+=sizeof(int);
         push(idLong,arraySize);
-        qDebug("成功在List中创建LongArray");
+        //qDebug("成功在List中创建LongArray");
         ByteCount+=ThisCount;
         if(arraySize==0)elementWritten();
         return ThisCount;
     }
-    qDebug("失败：未能创建LongArray");
+    //qDebug("失败：未能创建LongArray");
     return ThisCount;
 }
 
 int NBTWriter::writeByteArrayHead(const char*Name,int arraySize)
 {
-    if(!isOpen){qDebug("失败：文件未打开");return 0;}
+    if(!isOpen){
+        //qDebug("失败：文件未打开");
+        return 0;}
     int ThisCount=0;short realNameL=strlen(Name),writeNameL=realNameL;
     int writeArraySize=arraySize;//arraSize->readArraySize
     if(!isBE){IE2BE(writeNameL);IE2BE(writeArraySize);}
@@ -440,7 +453,7 @@ int NBTWriter::writeByteArrayHead(const char*Name,int arraySize)
         //File->write(&idLong,sizeof(char));ThisCount+=sizeof(char);
         File->write((char*)&writeArraySize,sizeof(int));ThisCount+=sizeof(int);
         push(idByte,arraySize);
-        qDebug("成功在文件夹中创建ByteArray");
+        //qDebug("成功在文件夹中创建ByteArray");
         ByteCount+=ThisCount;
         if(arraySize==0)elementWritten();
         return ThisCount;
@@ -451,18 +464,20 @@ int NBTWriter::writeByteArrayHead(const char*Name,int arraySize)
         //File->write(&idLong,sizeof(char));ThisCount+=sizeof(char);
         File->write((char*)&writeArraySize,sizeof(int));ThisCount+=sizeof(int);
         push(idByte,arraySize);
-        qDebug("成功在List中创建ByteArray");
+        //qDebug("成功在List中创建ByteArray");
         ByteCount+=ThisCount;
         if(arraySize==0)elementWritten();
         return ThisCount;
     }
-    qDebug("失败：未能创建ByteArray");
+    //qDebug("失败：未能创建ByteArray");
     return ThisCount;
 }
 
 int NBTWriter::writeIntArrayHead(const char*Name,int arraySize)
 {
-    if(!isOpen){qDebug("失败：文件未打开");return 0;}
+    if(!isOpen){
+        //qDebug("失败：文件未打开");
+        return 0;}
     int ThisCount=0;short realNameL=strlen(Name),writeNameL=realNameL;
     int writeArraySize=arraySize;//arraySize->readArraySize
     if(!isBE){IE2BE(writeNameL);IE2BE(writeArraySize);}
@@ -475,7 +490,7 @@ int NBTWriter::writeIntArrayHead(const char*Name,int arraySize)
 
         File->write((char*)&writeArraySize,sizeof(int));ThisCount+=sizeof(int);
         push(idInt,arraySize);
-        qDebug("成功在文件夹中创建IntArray");
+        //qDebug("成功在文件夹中创建IntArray");
         ByteCount+=ThisCount;
         if(arraySize==0)elementWritten();
         return ThisCount;
@@ -486,18 +501,20 @@ int NBTWriter::writeIntArrayHead(const char*Name,int arraySize)
         //File->write(&idLong,sizeof(char));ThisCount+=sizeof(char);
         File->write((char*)&writeArraySize,sizeof(int));ThisCount+=sizeof(int);
         push(idInt,arraySize);
-        qDebug("成功在List中创建IntArray");
+        //qDebug("成功在List中创建IntArray");
         ByteCount+=ThisCount;
         if(arraySize==0)elementWritten();
         return ThisCount;
     }
-    qDebug("失败：未能创建IntArray");
+    //qDebug("失败：未能创建IntArray");
     return ThisCount;
 }
 
 int NBTWriter::writeString(const char*Name,const char*value)
 {
-    if(!isOpen){qDebug("失败：文件未打开");return 0;}
+    if(!isOpen){
+        //qDebug("失败：文件未打开");
+        return 0;}
     int ThisCount=0;
     short realNameL=strlen(Name),writeNameL=realNameL;
     short realValL=strlen(value),writeValL=realValL;
@@ -525,7 +542,7 @@ int NBTWriter::writeString(const char*Name,const char*value)
         elementWritten();
         return ThisCount;
     }
-    qDebug("失败：未能创建String");
+    //qDebug("失败：未能创建String");
     return ThisCount;
 }
 

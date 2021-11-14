@@ -1,4 +1,8 @@
+#Use this line in WITH_QT mode
 QT       += core gui concurrent
+
+#Use this line in when compiling without qt
+#QT -= core gui
 
 INCLUDEPATH +=  D:\CppLibs\eigen-3.4.0
 
@@ -6,7 +10,7 @@ TEMPLATE = lib
 DEFINES += KERNEL_LIBRARY
 
 CONFIG += c++17
-CONFIG += staticlib
+#CONFIG += staticlib
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -28,6 +32,7 @@ SOURCES += \
 HEADERS += \
     ColorSet.h \
     HeightLine.h \
+    Kernel \
     NBTWriter.h \
     OptiChain.h \
     PrimGlassBuilder.h \

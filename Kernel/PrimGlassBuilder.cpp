@@ -28,17 +28,6 @@ const ARGB glassColor=ARGB32(192,192,192);
 
 const std::vector<TokiPos> * edge::vertexes=nullptr;
 
-
-void defaultProgressRangeSet(int,int,int) {
-
-}
-void defaultProgressAdd(int) {
-
-}
-void defaultKeepAwake() {
-
-}
-
 edge::edge() {
     //beg=TokiRC(0,0);
     //end=TokiRC(0,0);
@@ -136,6 +125,12 @@ void pairedEdge::drawEdge(glassMap & map,bool drawHead) const {
             (drawHead?PrimGlassBuilder::target:PrimGlassBuilder::air);
 }
 
+#ifndef WITH_QT
+void defaultProgressRangeSet4Prim(int,int,int) {};
+void defaultProgressAdd4Prim(int) {};
+void defaultKeepAwake4Prim() {};
+#endif
+
 #ifdef WITH_QT
 PrimGlassBuilder::PrimGlassBuilder(QObject *parent) : QObject(parent)
 #else
@@ -143,9 +138,9 @@ PrimGlassBuilder::PrimGlassBuilder()
 #endif
 {
 #ifndef WITH_QT
-    progressRangeSet=defaultProgressRangeSet;
-    progressAdd=defaultProgressAdd;
-    keepAwake=defaultKeepAwake;
+    progressRangeSet=defaultProgressRangeSet4Prim;
+    progressAdd=defaultProgressAdd4Prim;
+    keepAwake=defaultKeepAwake4Prim;
 #endif
 }
 glassMap PrimGlassBuilder::makeBridge(const TokiMap & _targetMap,
