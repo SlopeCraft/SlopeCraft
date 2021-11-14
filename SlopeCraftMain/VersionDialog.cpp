@@ -49,19 +49,23 @@ void VersionDialog::on_BtnNoToAll_clicked() {
     emit finished();
 }
 
+void VersionDialog::closeEvent(QCloseEvent * event) {
+    emit finished();
+    QWidget::closeEvent(event);
+}
 
-    VersionDialog::userChoice VersionDialog::information(QWidget * parent,
+VersionDialog::userChoice VersionDialog::information(QWidget * parent,
                                   const QString & title,
                                   const QString & labelText,
                        const QString & browserText) {
-    QMainWindow * window=new QMainWindow(parent);
-    VersionDialog * form=new VersionDialog(window);
-    window->setCentralWidget(form);
+    QMainWindow window(parent);
+    VersionDialog * form=new VersionDialog(&window);
+    window.setCentralWidget(form);
 
-    QObject::connect(parent,&QWidget::destroyed,window,&VersionDialog::deleteLater);
+    //QObject::connect(parent,&QWidget::destroyed,window,&VersionDialog::deleteLater);
 
-    window->show();
-    window->setMinimumSize(QSize(600,400));
+    window.show();
+    window.setMinimumSize(QSize(600,400));
     form->setWindowTitle(title);
     form->ui->label->setText(labelText);
     form->ui->textBrowser->setMarkdown(browserText);
@@ -75,8 +79,7 @@ void VersionDialog::on_BtnNoToAll_clicked() {
 
     VersionDialog::userChoice result=form->result;
 
-    window->close();
-    window->deleteLater();
+    window.close();
 
     return result;
 }

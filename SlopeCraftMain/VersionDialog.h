@@ -25,6 +25,7 @@ This file is part of SlopeCraft.
 
 #include <QWidget>
 #include <QEvent>
+#include <QCloseEvent>
 #include <QEventLoop>
 #include <QMainWindow>
 #include "ui_VersionDialog.h"
@@ -62,6 +63,8 @@ private slots:
     void on_BtnNoToAll_clicked();
 
 protected:
+    void closeEvent(QCloseEvent *);
+
 
 private:
     Ui::VerDialog * ui;

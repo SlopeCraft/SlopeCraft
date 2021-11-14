@@ -1537,6 +1537,7 @@ std::string TokiSlopeCraft::exportAsStructure(const std::string &TargetName) con
                     break;
                 }
     file.close();
+    emit progressRangeSet(0,100,100);
     emit reportWorkingStatue(workStatues::none);
     return unCompress;
 }
