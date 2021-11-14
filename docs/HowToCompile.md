@@ -26,9 +26,9 @@ zlib (well, any version that is not too ancient?)
    2. Edit **SOURCES** and **HEADERS** in *SlopeCraftMain.pro* as well. This step is to make sure that zlib can be included. It might be a stupid way but it works.
 4. Compile.
    
-   Remember to copy two directories *Blocks* and *Colors* into the same place where the target is generated. SlopeCraft will try to get access to them once started. If it failed to find any of these files, it will report an error and ask you to find it. If you didn't find it, SlopeCraft will terminate itself.
+   Remember to copy two directories *Blocks* and *Colors* into the same place where the target is generated. SlopeCraft will try to get access to them once started. If it failes to find any of these files, it will report an error and ask you to find it. If you don't find it, SlopeCraft will terminate itself.
 
 
 ## Notice
-1. Since Eigen has tons of compile-time optimization, your first compiling may spend several minutes and send tons of warnings. Just wait.
-2. If you meet any problem when compiling, just draw a new issue.
+1. Since Eigen has tons of compile-time optimization, your first compiling may spend several minutes and send tons of warnings. Just wait and bear it.
+2. If you meet any problem when compiling, draw a new issue.
