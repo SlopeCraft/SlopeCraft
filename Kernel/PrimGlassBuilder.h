@@ -36,7 +36,6 @@ This file is part of SlopeCraft.
 #include <queue>
 #include <list>
 #include <stack>
-#include <unordered_set>
 #include <unsupported/Eigen/CXX11/Tensor>
 #include "TokiColor.h"
 #include "WaterItem.h"

@@ -46,7 +46,6 @@ public:
                             std::string & netBlockId,
                             stringList * proName,
                             stringList * proVal);
-    void copyFrom(const simpleBlock *);
     //simpleBlock& operator =(const simpleBlock &);
 };
 

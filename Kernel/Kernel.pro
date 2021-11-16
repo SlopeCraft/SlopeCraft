@@ -29,20 +29,21 @@ SOURCES += \
     simpleBlock.cpp \
     tokicolor.cpp
 
+
 HEADERS += \
     ColorSet.h \
-    HeightLine.h \
     Kernel \
-    NBTWriter.h \
-    OptiChain.h \
-    PrimGlassBuilder.h \
     TokiColor.h \
     TokiSlopeCraft.h \
-    WaterItem.h \
     defines.h \
+    simpleBlock.h \
     lossyCompressor.h \
     object_pool.hpp \
-    simpleBlock.h
+    PrimGlassBuilder.h \
+    NBTWriter.h \
+    HeightLine.h \
+    WaterItem.h \
+    OptiChain.h
 
 # Default rules for deployment.
 unix {

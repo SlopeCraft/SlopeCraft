@@ -22,6 +22,10 @@ This file is part of SlopeCraft.
 
 #include "TokiSlopeCraft.h"
 
+#include "PrimGlassBuilder.h"
+#include "lossyCompressor.h"
+#include "NBTWriter.h"
+
 const Eigen::Array<float,2,3>TokiSlopeCraft::DitherMapLR
         ={{0.0/16.0,0.0/16.0,7.0/16.0},
            {3.0/16.0,5.0/16.0,1.0/16.0}};

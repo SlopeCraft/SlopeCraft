@@ -106,31 +106,3 @@ bool simpleBlock::dealBlockId(const std::string & id ,
     //qDebug()<<proValue->back()<<'='<<proValue->back();
     return true;
 }
-
-void simpleBlock::copyFrom(const simpleBlock * src) {
-    std::cerr<<"copy begin\n";
-    this->version=src->version;
-    std::cerr<<"version copied\n";
-    this->doGlow=src->doGlow;
-    std::cerr<<"doGlow copied\n";
-    this->needGlass=src->needGlass;
-    std::cerr<<"needGlass copied\n";
-    id=""+src->id;
-    std::cerr<<"id copied\n";
-    this->idOld=src->idOld;
-    std::cerr<<"idOld copied\n";
-}
-/*
-simpleBlock& simpleBlock::operator =(const simpleBlock & src) {
-    std::cerr<<"copy begin\n";
-    this->version=src.version;
-    std::cerr<<"version copied\n";
-    this->doGlow=src.doGlow;
-    std::cerr<<"doGlow copied\n";
-    this->needGlass=src.needGlass;
-    std::cerr<<"needGlass copied\n";
-    id=""+src.id;
-    std::cerr<<"id copied\n";
-    this->idOld=src.idOld;
-    std::cerr<<"idOld copied\n";
-}*/

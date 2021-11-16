@@ -37,13 +37,8 @@ This file is part of SlopeCraft.
 #include <unsupported/Eigen/CXX11/Tensor>
 #include "ColorSet.h"
 #include "simpleBlock.h"
-#include "OptiChain.h"
-#include "HeightLine.h"
 #include "TokiColor.h"
 #include "WaterItem.h"
-#include "NBTWriter.h"
-#include "PrimGlassBuilder.h"
-#include "lossyCompressor.h"
 
 #ifdef WITH_QT
 #include <QObject>
@@ -63,6 +58,12 @@ This file is part of SlopeCraft.
 #define mapColor2depth(mapColor) (mapColor%4)
 #define index2depth(index) (mapColor2depth(index2mapColor(index)))
 
+class PrimGlassBuilder;
+class LossyCompressor;
+
+namespace NBT {
+    class NBTWriter;
+};
 
 #ifdef WITH_QT
 class TokiSlopeCraft : public QObject
@@ -105,10 +106,10 @@ public:
         noBridge=0,withBridge=1
     };
     enum mapTypes {
-        Slope, //立体
-        Flat, //平板
-        Wall,//竖版
-        FileOnly,//纯文件
+        Slope=0, //立体
+        Flat=1, //平板
+        FileOnly=2,//纯文件
+        Wall=3,//竖版
     };
     enum step {
         nothing,//对象刚刚创建，什么都没做
@@ -229,6 +230,7 @@ private:
     enum ColorSpace {
         R='R',H='H',L='L',X='X'
     };
+
     static ColorSet Basic,Allowed;
     static const Eigen::Array<float,2,3> DitherMapLR,DitherMapRL;
     static const uint reportRate=100;

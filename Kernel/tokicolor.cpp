@@ -25,16 +25,10 @@ This file is part of SlopeCraft.
 #define Thre 1e-10f
 #include <cmath>
 #define deg2rad(deg) ((deg)*M_PI/180.0)
-
+/*
 auto atan2(Eigen::VectorXf y,Eigen::VectorXf x)
 {
     return (x.array()>0.0).select((y.array()/x.array()).atan(),(x.array()<0.0).select((y.array()>=0).select((y.array()/x.array()).atan()+M_PI,(y.array()/x.array()).atan()-M_PI),(y.array()!=0.0).select(y.array()/y.array().abs()*M_PI/2.0,0)));
-    /*x=(x.array()!=0.0).select(x,Thre);
-    auto adder=(x.array()<=0).select((y.array()<=0).select(y*0.0,2*M_PI),M_PI);
-
-    return adder.array()+(y.array()/x.array()).atan();*/
-    /*auto t=(x.array().abs()>Thre).select((y.array()/x.array()).atan(),0.0);
-    return (x.array()<0.0).select(t+M_PI,(y.array()>=0).select(t,t+2*M_PI));*/
 }
 
 auto sign(Eigen::VectorXf x)
@@ -46,6 +40,7 @@ auto AngleCvt(Eigen::VectorXf I)
 {
     return (I.array()>=0.0).select(I.array(),I.array()+2*M_PI);
 }
+*/
 
 void TokiColor::doSide(const TempVectorXf & Diff)
 {
