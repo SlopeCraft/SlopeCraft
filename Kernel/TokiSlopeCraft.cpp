@@ -42,6 +42,8 @@ void defaultProgressAdd4Kernel(int) {return;};
 void defaultKeepAwake4Kernel() {return;};
 void defaultReportError(TokiSlopeCraft::errorFlag) {return;};
 void defaultReportWorkStatues(TokiSlopeCraft::workStatues) {return;};
+void defaultAlgoProgressRangeSet4Kernel(int,int,int) {return;};
+void defaultAlgoProgressAdd4Kernel(int) {return;}
 #endif
 
 bool readFromTokiColor(const std::string & FileName,ColorList & M);
@@ -56,14 +58,6 @@ TokiSlopeCraft::TokiSlopeCraft(QObject *parent) : Kernel(parent)
 TokiSlopeCraft::TokiSlopeCraft()
 #endif
 {
-#ifndef WITH_QT
-    progressRangeSet=defaultProgressRangeSet4Kernel;
-    progressAdd=defaultProgressAdd4Kernel;
-    keepAwake=defaultKeepAwake4Kernel;
-    reportError=defaultReportError;
-    reportWorkingStatue=defaultReportWorkStatues;
-#endif
-
     kernelStep=TokiSlopeCraft::step::nothing;
     rawImage.setZero(0,0);
     /*
@@ -90,6 +84,15 @@ TokiSlopeCraft::TokiSlopeCraft()
     connect(Compressor,&LossyCompressor::keepAwake,
             this,&TokiSlopeCraft::keepAwake);
 #else
+
+    progressRangeSet=defaultProgressRangeSet4Kernel;
+    progressAdd=defaultProgressAdd4Kernel;
+    keepAwake=defaultKeepAwake4Kernel;
+    reportError=defaultReportError;
+    reportWorkingStatue=defaultReportWorkStatues;
+    algoProgressAdd=defaultAlgoProgressAdd4Kernel;
+    algoProgressRangeSet=defaultAlgoProgressRangeSet4Kernel;
+
     glassBuilder->progressAdd=this->algoProgressAdd;
     glassBuilder->progressRangeSet=this->algoProgressRangeSet;
     glassBuilder->keepAwake=this->keepAwake;
