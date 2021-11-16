@@ -1,10 +1,10 @@
 #Use this line in WITH_QT mode
-QT       += core gui concurrent
+#QT       += core gui concurrent
 
 #Use this line in when compiling without qt
-#QT -= core gui
+QT -= core gui
 
-INCLUDEPATH +=  D:\CppLibs\eigen-3.4.0
+INCLUDEPATH +=  D:/CppLibs/eigen-3.4.0
 
 TEMPLATE = lib
 DEFINES += KERNEL_LIBRARY
@@ -19,6 +19,7 @@ CONFIG += c++17
 SOURCES += \
     CIEDE00.cpp \
     HeightLine.cpp \
+    Kernel.cpp \
     NBTWriter.cpp \
     OptiChain.cpp \
     PrimGlassBuilder.cpp \
@@ -33,6 +34,8 @@ SOURCES += \
 HEADERS += \
     ColorSet.h \
     Kernel \
+    Kernel.h \
+    Kernel_global.h \
     TokiColor.h \
     TokiSlopeCraft.h \
     defines.h \

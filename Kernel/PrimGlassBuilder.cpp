@@ -125,23 +125,13 @@ void pairedEdge::drawEdge(glassMap & map,bool drawHead) const {
             (drawHead?PrimGlassBuilder::target:PrimGlassBuilder::air);
 }
 
-#ifndef WITH_QT
-void defaultProgressRangeSet4Prim(int,int,int) {};
-void defaultProgressAdd4Prim(int) {};
-void defaultKeepAwake4Prim() {};
-#endif
-
 #ifdef WITH_QT
 PrimGlassBuilder::PrimGlassBuilder(QObject *parent) : QObject(parent)
 #else
 PrimGlassBuilder::PrimGlassBuilder()
 #endif
 {
-#ifndef WITH_QT
-    progressRangeSet=defaultProgressRangeSet4Prim;
-    progressAdd=defaultProgressAdd4Prim;
-    keepAwake=defaultKeepAwake4Prim;
-#endif
+
 }
 glassMap PrimGlassBuilder::makeBridge(const TokiMap & _targetMap,
                                       walkableMap* walkable) {

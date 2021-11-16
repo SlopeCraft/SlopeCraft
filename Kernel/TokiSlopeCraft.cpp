@@ -35,6 +35,7 @@ const Eigen::Array<float,2,3>TokiSlopeCraft::DitherMapRL
 ColorSet TokiSlopeCraft::Basic;
 ColorSet TokiSlopeCraft::Allowed;
 
+
 #ifndef WITH_QT
 void defaultProgressRangeSet4Kernel(int,int,int) {return;};
 void defaultProgressAdd4Kernel(int) {return;};
@@ -43,8 +44,14 @@ void defaultReportError(TokiSlopeCraft::errorFlag) {return;};
 void defaultReportWorkStatues(TokiSlopeCraft::workStatues) {return;};
 #endif
 
+bool readFromTokiColor(const std::string & FileName,ColorList & M);
+bool readFromTokiColor(const char*src,ColorList & M);
+uchar h2d(char h);
+void crash();
+void matchColor(TokiColor * tColor,ARGB qColor);
+
 #ifdef WITH_QT
-TokiSlopeCraft::TokiSlopeCraft(QObject *parent) : QObject(parent)
+TokiSlopeCraft::TokiSlopeCraft(QObject *parent) : Kernel(parent)
 #else
 TokiSlopeCraft::TokiSlopeCraft()
 #endif
@@ -82,6 +89,13 @@ TokiSlopeCraft::TokiSlopeCraft()
             this,&TokiSlopeCraft::algoProgressAdd);
     connect(Compressor,&LossyCompressor::keepAwake,
             this,&TokiSlopeCraft::keepAwake);
+#else
+    glassBuilder->progressAdd=this->algoProgressAdd;
+    glassBuilder->progressRangeSet=this->algoProgressRangeSet;
+    glassBuilder->keepAwake=this->keepAwake;
+    Compressor->progressAdd=this->algoProgressAdd;
+    Compressor->progressRangeSet=this->algoProgressRangeSet;
+    Compressor->keepAwake=this->keepAwake;
 #endif
 }
 
@@ -191,7 +205,7 @@ TokiSlopeCraft::step TokiSlopeCraft::queryStep() const {
 bool TokiSlopeCraft::setType(mapTypes type,
                              gameVersion ver,
                              const bool * allowedBaseColor,
-                             const simpleBlock * palettes) {
+                             const AbstractBlock ** palettes) {
 
     if(kernelStep<colorSetReady) {
         emit reportError(errorFlag::HASTY_MANIPULATION);
@@ -211,7 +225,8 @@ bool TokiSlopeCraft::setType(mapTypes type,
 
     blockPalette.resize(64);
     for(short i=0;i<64;i++) {
-        blockPalette[i]=palettes[i];
+        palettes[i]->copyTo(&blockPalette[i]);
+
         if(blockPalette[i].id.find(':')==blockPalette[i].id.npos) {
             blockPalette[i].id="minecraft:"+blockPalette[i].id;
         }
@@ -283,12 +298,29 @@ bool TokiSlopeCraft::setType(mapTypes type,
     return true;
 }
 
+bool TokiSlopeCraft::setType(mapTypes type,
+                             gameVersion ver,
+                             const bool * allowedBaseColor,
+                             const simpleBlock * palettes) {
+    const AbstractBlock * temp[64];
+    for(ushort idx=0;idx<64;idx++) {
+        temp[idx]=palettes+idx;
+    }
+
+    return setType(type,ver,allowedBaseColor,temp);
+
+}
+
 ushort TokiSlopeCraft::getColorCount() const {
     if(kernelStep<wait4Image) {
         emit reportError(errorFlag::HASTY_MANIPULATION);
         return 0;
     }
     return Allowed.colorCount();
+}
+
+void TokiSlopeCraft::setRawImage(const ARGB * src, short rows,short cols) {
+    setRawImage(EImage::Map(src,rows,cols));
 }
 
 void TokiSlopeCraft::setRawImage(const EImage & _rawimg) {
@@ -312,6 +344,13 @@ bool TokiSlopeCraft::isVanilla() const {
 
 bool TokiSlopeCraft::isFlat() const {
     return mapType==Flat||mapType==Wall;
+}
+
+void TokiSlopeCraft::getAuthorURL(char **dest) const {
+    std::vector<std::string> result=getAuthorURL();
+    for(ushort i=0;i<result.size();i++) {
+        std::strcpy(dest[i],result[i].data());
+    }
 }
 
 std::vector<std::string> TokiSlopeCraft::getAuthorURL() const {
@@ -656,6 +695,15 @@ TokiSlopeCraft::ColorSpace TokiSlopeCraft::getColorSpace() const {
     return R;
 }
 
+void TokiSlopeCraft::getConvertedImage(short * rows,short * cols,ARGB * dest) const {
+    EImage result=getConovertedImage();
+    *rows=result.rows();
+    *cols=result.cols();
+    for(uint idx=0;idx<result.size();idx++) {
+        dest[idx]=result(idx);
+    }
+}
+
 EImage TokiSlopeCraft::getConovertedImage() const {
 EImage cvtedImg(sizePic(0),sizePic(1));
 cvtedImg.setZero();
@@ -697,6 +745,19 @@ short TokiSlopeCraft::getImageCols() const {
         return -1;
     }
     return rawImage.cols();
+}
+
+void TokiSlopeCraft::exportAsData(const char * FolderPath,
+                                  const int indexStart,
+                                  int* fileCount,
+                                  char ** dest) const {
+    std::vector<std::string> uFL=exportAsData(FolderPath,indexStart);
+
+    *fileCount=uFL.size();
+
+    for(ushort i=0;i<uFL.size();i++) {
+        std::strcpy(dest[i],uFL[i].data());
+    }
 }
 
 std::vector<std::string> TokiSlopeCraft::exportAsData(const std::string & FolderPath ,
@@ -1234,6 +1295,14 @@ int TokiSlopeCraft::getHeight() const {
     return size3D[1];
 }
 
+void TokiSlopeCraft::getBlockCounts(int * total, int detail[64]) const {
+    std::vector<int> temp;
+    *total=getBlockCounts(temp);
+    for(ushort idx=0;idx<temp.size();idx++) {
+        detail[idx]=temp[idx];
+    }
+}
+
 int TokiSlopeCraft::getBlockCounts(std::vector<int> & dest) const {
     if(kernelStep<builded) return -1;
     dest.resize(64);
@@ -1317,6 +1386,15 @@ void TokiSlopeCraft::writeTrash(int count,NBT::NBTWriter & Lite) const {
                         writeBlock("minecraft:redstone_wire",ProName,ProVal,Lite);
                         written++;
                     }
+}
+
+void TokiSlopeCraft::exportAsLitematic(const char *TargetName,
+                                       const char *LiteName,
+                                       const char *author,
+                                       const char *RegionName,
+                                       char *FileName) const {
+    std::string temp=exportAsLitematic(TargetName,LiteName,author,RegionName);
+    std::strcpy(temp.data(),FileName);
 }
 
 std::string TokiSlopeCraft::exportAsLitematic(const std::string & TargetName,
@@ -1457,6 +1535,12 @@ std::string TokiSlopeCraft::exportAsLitematic(const std::string & TargetName,
         return unCompressed;
 }
 
+void TokiSlopeCraft::exportAsStructure(const char *TargetName,
+                                       char *FileName) const {
+    std::string temp=exportAsStructure(TargetName);
+    std::strcpy(temp.data(),FileName);
+}
+
 std::string TokiSlopeCraft::exportAsStructure(const std::string &TargetName) const {
     if(kernelStep<builded) {
         emit reportError(errorFlag::HASTY_MANIPULATION);
@@ -1552,6 +1636,13 @@ int TokiSlopeCraft::getXRange() const {
 int TokiSlopeCraft::getZRange() const {
     if(kernelStep<builded)return -1;
     return size3D[2];
+}
+
+const unsigned char * TokiSlopeCraft::getBuild(int *xSize, int *ySize, int *zSize) const {
+    *xSize=getXRange();
+    *ySize=getHeight();
+    *zSize=getZRange();
+    return Build.data();
 }
 
 const Eigen::Tensor<uchar,3> & TokiSlopeCraft::getBuild() const {

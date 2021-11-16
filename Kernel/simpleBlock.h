@@ -22,6 +22,8 @@ This file is part of SlopeCraft.
 #ifndef SIMPLEBLOCK_H
 #define SIMPLEBLOCK_H
 
+#include "Kernel.h"
+using namespace SlopeCraft;
 #include <string>
 #include <vector>
 #include <iostream>
@@ -29,7 +31,7 @@ This file is part of SlopeCraft.
 typedef unsigned char uchar ;
 
 typedef std::vector<std::string> stringList;
-class simpleBlock
+class simpleBlock : public AbstractBlock
 {
 public:
     simpleBlock();
@@ -41,6 +43,60 @@ public:
     bool endermanPickable;
     bool burnable;
     bool wallUseable;
+
+    unsigned long long size() {
+        return sizeof(simpleBlock);
+    }
+
+    const char* getId() const {
+        return id.data();
+    };
+    unsigned char getVersion() const {
+        return version;
+    };
+    const char* getIdOld() const {
+        return idOld.data();
+    };
+    bool getNeedGlass() const {
+        return needGlass;
+    };
+    bool getDoGlow() const {
+        return doGlow;
+    };
+    bool getEndermanPickable() const {
+        return endermanPickable;
+    };
+    bool getBurnable() const {
+        return burnable;
+    };
+    bool getWallUseable() const {
+        return wallUseable;
+    };
+
+    void setId(const char* _id) {
+        id=_id;
+    };
+    void setVersion(unsigned char _ver) {
+        version=_ver;
+    };
+    void setIdOld(const char* _idOld) {
+        idOld=_idOld;
+    };
+    void setNeedGlass(bool _needGlass) {
+        needGlass=_needGlass;
+    };
+    void setDoGlow(bool _doGlow) {
+        doGlow=_doGlow;
+    };
+    void setEndermanPickable(bool _enderman) {
+        endermanPickable=_enderman;
+    };
+    void setBurnable(bool _burn) {
+        burnable=_burn;
+    };
+    void setWallUseable(bool _wall) {
+        wallUseable=_wall;
+    };
 
     static bool dealBlockId(const std::string & id ,
                             std::string & netBlockId,

@@ -145,9 +145,4 @@ inline tf::ObjectPool<PrimGlassBuilder>pgb;
 
 EImage TokiMap2EImage(const TokiMap&);
 
-#ifndef WITH_QT
-void defaultProgressRangeSet4Prim(int,int,int);
-void defaultProgressAdd4Prim(int);
-void defaultKeepAwake4Prim();
-#endif
 #endif // PRIMGLASSBUILDER_H

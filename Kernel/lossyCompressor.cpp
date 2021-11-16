@@ -39,12 +39,6 @@ double randD(){
     return rander(generator);
 }
 
-#ifndef WITH_QT
-void progressRangeSet4Lossy(int,int,int) {};
-void progressAdd4Lossy(int) {};
-void keepAwake4Lossy() {};
-#endif
-
 gene::gene() {
     fitness=unCaculatedSign;
 }
@@ -110,11 +104,6 @@ LossyCompressor::LossyCompressor()
 #endif
 {
     population.resize(popSize);
-#ifndef WITH_QT
-    progressRangeSet=progressRangeSet4Lossy;
-    progressAdd=progressAdd4Lossy;
-    keepAwake=keepAwake4Lossy;
-#endif
 }
 
 void LossyCompressor::initialize() {

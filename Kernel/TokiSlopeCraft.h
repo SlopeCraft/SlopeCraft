@@ -40,6 +40,8 @@ This file is part of SlopeCraft.
 #include "TokiColor.h"
 #include "WaterItem.h"
 
+#include "Kernel.h"
+using namespace SlopeCraft;
 #ifdef WITH_QT
 #include <QObject>
 #include <QtConcurrent>
@@ -65,110 +67,42 @@ namespace NBT {
     class NBTWriter;
 };
 
-#ifdef WITH_QT
-class TokiSlopeCraft : public QObject
+class TokiSlopeCraft : public Kernel
 {
+#ifdef WITH_QT
     Q_OBJECT
-#else
-    class TokiSlopeCraft
-{
-#endif
 public:
-#ifdef WITH_QT
     explicit TokiSlopeCraft(QObject *parent = nullptr);
 #else
+public:
     TokiSlopeCraft();
 #endif
     ~TokiSlopeCraft();
 
-    enum gameVersion {
-        ANCIENT=0,
-        MC12=12,
-        MC13=13,
-        MC14=14,
-        MC15=15,
-        MC16=16,
-        MC17=17,
-        FUTURE=255
-    };
-    enum convertAlgo {
-        RGB='r',
-        RGB_Better='R',
-        HSV='H',
-        Lab94='l',
-        Lab00='L',
-        XYZ='X'
-    };
-    enum compressSettings {
-        noCompress=0,NaturalOnly=1,ForcedOnly=2,Both=3
-    };
-    enum glassBridgeSettings {
-        noBridge=0,withBridge=1
-    };
-    enum mapTypes {
-        Slope=0, //立体
-        Flat=1, //平板
-        FileOnly=2,//纯文件
-        Wall=3,//竖版
-    };
-    enum step {
-        nothing,//对象刚刚创建，什么都没做
-        colorSetReady,//颜色表读取完毕
-        wait4Image,//等待图片
-        convertionReady,//一切就绪，等待convert
-        converted,//已经将图像转化为地图画
-        builded,//构建了三维结构
-    };
-
-    enum errorFlag {
-        NO_ERROR_OCCUR=-1,//无故障
-        HASTY_MANIPULATION=0x00,//跳步操作
-        LOSSYCOMPRESS_FAILED=0x01,//有损压缩失败
-        DEPTH_3_IN_VANILLA_MAP=0x02,//非纯文件地图画中出现深度为3的颜色
-        MAX_ALLOWED_HEIGHT_LESS_THAN_14=0x03,
-        USEABLE_COLOR_TO_LITTLE=0x04,
-        EMPTY_RAW_IMAGE=0x05,
-        PARSING_COLORMAP_RGB_FAILED=0x10,//颜色表错误
-        PARSING_COLORMAP_HSV_FAILED=0x11,
-        PARSING_COLORMAP_Lab_FAILED=0x12,
-        PARSING_COLORMAP_XYZ_FAILED=0x13,
-    };
-
-    enum workStatues {
-        none=-1,
-        collectingColors=0x00,
-        converting=0x01,
-        dithering=0x02,
-        //convertFinished=0x03,
-
-        buidingHeighMap=0x10,
-        compressing=0x11,
-        building3D=0x12,
-        constructingBridges=0x13,
-        flippingToWall=0x14,
-
-        writingMetaInfo=0x20,
-        writingBlockPalette=0x21,
-        writing3D=0x22,
-        //slopeFinished=0x16,
-
-        writingMapDataFiles=0x30,
-        //dataFilesFinished=0x31,
-    };
-
 //can do in nothing:
+    unsigned long long size() {
+        return sizeof(TokiSlopeCraft);
+    }
     void decreaseStep(step);
     bool setColorSet(const char*,const char*,const char*,const char*);
 //can do in colorSetReady:
     step queryStep() const;
+
+    bool setType(mapTypes,
+                 gameVersion,
+                 const bool [64],
+                 const AbstractBlock * [64]);
     bool setType(
         mapTypes,
         gameVersion,
         const bool [64],
-        const simpleBlock[64]);
+        const simpleBlock [64]);
+
+    void getAuthorURL(char** dest) const;
     std::vector<std::string> getAuthorURL() const;
-    void getARGB32(ARGB*) const;
+    void getARGB32(unsigned int *) const;
 //can do in wait4Image:
+    void setRawImage(const unsigned int * src, short rows,short cols);
     void setRawImage(const EImage & );
     ushort getColorCount() const;
 //can do in convertionReady:
@@ -177,29 +111,41 @@ public:
     short getImageCols() const;
     bool isVanilla() const;//判断是可以生存实装的地图画
     bool isFlat() const;//判断是平板的
-    void getTokiColorPtr(ushort,const TokiColor*[]) const;
 
 //can do in converted:
-    bool build(compressSettings=noCompress,ushort=256,
-               glassBridgeSettings=noBridge,ushort=3,
+    bool build(compressSettings=noCompress,unsigned short=256,
+               glassBridgeSettings=noBridge,unsigned short=3,
                bool fireProof=false,bool endermanProof=false);//构建三维结构
+    void getConvertedImage(short * rows,short * cols,unsigned int * dest) const;
     EImage getConovertedImage() const;
+    void exportAsData(const char *, const int, int * fileCount,char**) const;
     std::vector<std::string> exportAsData(const std::string &,int) const;
 //can do in builded:
+    void exportAsLitematic(const char * TargetName,
+                           const char * LiteName,
+                           const char * author,
+                           const char * RegionName,
+                           char * FileName)const;
     std::string exportAsLitematic(const std::string & TargetName,//Local
                                              const std::string & LiteName,//Utf8
                                              const std::string & author,//Utf8
                                              const std::string & RegionName//Utf8
                              ) const;
+
+    void exportAsStructure(const char * TargetName,char * FileName) const;
     std::string exportAsStructure(const std::string &) const;
     void get3DSize(int & x,int & y,int & z) const;
     int getHeight() const;
     int getXRange() const;
     int getZRange() const;
+
+    void getBlockCounts(int * total, int detail[64]) const;
     int getBlockCounts(std::vector<int> & ) const;
     int getBlockCounts() const;
-    const Eigen::Tensor<uchar,3> & getBuild() const;
 
+    const unsigned char * getBuild(int* xSize,int* ySize,int* zSize) const;
+    const Eigen::Tensor<uchar,3> & getBuild() const;
+/*
 #ifdef WITH_QT
 signals:
     void progressRangeSet(int min,int max,int val) const;//设置进度条的取值范围和值
@@ -223,9 +169,8 @@ signals:
     void (*reportError)(errorFlag);
     void (*reportWorkingStatue)(workStatues);
 #endif
-#ifdef WITH_QT
-private slots:
-#endif
+    */
+
 private:
     enum ColorSpace {
         R='R',H='H',L='L',X='X'
@@ -242,8 +187,6 @@ private:
     compressSettings compressMethod;
     glassBridgeSettings glassMethod;
 
-    //ColorSet Basic;
-    //ColorSet Allowed;
     std::vector<simpleBlock> blockPalette;
 
     int size3D[3];//x,y,z
@@ -274,6 +217,7 @@ private:
     int sizePic(short) const;
 
 //for build
+    void getTokiColorPtr(ushort,const TokiColor*[]) const;
     //void makeHeight_old();//构建HighMap和LowMap
     void makeHeight_new();
     //void makeHeightInLine(const ushort c);
@@ -288,19 +232,4 @@ private:
     std::string Noder(const short *src,int size) const;
 
 };
-
-bool readFromTokiColor(const std::string & FileName,ColorList & M);
-bool readFromTokiColor(const char*src,ColorList & M);
-uchar h2d(char h);
-void crash();
-void matchColor(TokiColor * tColor,ARGB qColor);
-
-#ifndef WITH_QT
-void defaultProgressRangeSet4Kernel(int,int,int);
-void defaultProgressAdd4Kernel(int);
-void defaultKeepAwake4Kernel();
-void defaultReportError(TokiSlopeCraft::errorFlag);
-void defaultReportWorkStatues(TokiSlopeCraft::workStatues);
-#endif
-
 #endif // TOKISLOPECRAFT_H
