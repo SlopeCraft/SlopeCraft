@@ -1,3 +1,25 @@
+/*
+ Copyright © 2021  TokiNoBug
+This file is part of SlopeCraft.
+
+    SlopeCraft is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    SlopeCraft is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SlopeCraft.  If not, see <https://www.gnu.org/licenses/>.
+
+    Contact with me:
+    github:https://github.com/ToKiNoBug
+    bilibili:https://space.bilibili.com/351429231
+*/
+
 #ifndef KERNEL_H
 #define KERNEL_H
 
@@ -56,10 +78,7 @@ public:
 public:
     Kernel();
 #endif
-
     virtual ~Kernel() {};
-
-
 #ifdef WITH_QT
 static Kernel *createKernel(QObject * parent=nullptr);
 #else
@@ -67,58 +86,62 @@ static Kernel * createKernel();
 #endif
 
     enum gameVersion {
-        ANCIENT=0,
-        MC12=12,
-        MC13=13,
-        MC14=14,
-        MC15=15,
-        MC16=16,
-        MC17=17,
-        FUTURE=255
+        ANCIENT=0,//older than 1.12
+        MC12=12,//1.12
+        MC13=13,//1.13
+        MC14=14,//1.14
+        MC15=15,//1.15
+        MC16=16,//1.16
+        MC17=17,//1.17
+        FUTURE=255//future version
     };
-    enum convertAlgo {
-        RGB='r',
-        RGB_Better='R',
-        HSV='H',
-        Lab94='l',
-        Lab00='L',
-        XYZ='X'
+    enum convertAlgo {//color difference formula used to match colors
+        RGB='r',//naive RGB
+        RGB_Better='R',//RGB with rotation
+        HSV='H',//naive HSV formula
+        Lab94='l',//CIELAB 1994 formula
+        Lab00='L',//CIELAB 2000 formula
+        XYZ='X'//naive XYZ formula
     };
     enum compressSettings {
-        noCompress=0,NaturalOnly=1,ForcedOnly=2,Both=3
+        noCompress=0,//don't compress
+        NaturalOnly=1,//compress in lossless only
+        ForcedOnly=2,//compress in lossy only
+        Both=3//compress with both lossless and lossy
     };
     enum glassBridgeSettings {
-        noBridge=0,withBridge=1
+        noBridge=0,//don't construce bridge
+        withBridge=1//construct bridge
     };
     enum mapTypes {
-        Slope=0, //立体
-        Flat=1, //平板
-        FileOnly=2,//纯文件
-        Wall=3,//竖版
+        Slope=0, //3D
+        Flat=1, //flat
+        FileOnly=2,//map data files
+        Wall=3,//wall
     };
     enum step {
-        nothing,//对象刚刚创建，什么都没做
-        colorSetReady,//颜色表读取完毕
-        wait4Image,//等待图片
-        convertionReady,//一切就绪，等待convert
-        converted,//已经将图像转化为地图画
-        builded,//构建了三维结构
+        nothing,//the instance is created
+        colorSetReady,//colorset is configured
+        wait4Image,//map type is set and waitting for image
+        convertionReady,//image is ready and ready for converting
+        converted,//image is converted and ready for building 3D structure, exporting as file-only map(s) can be done in this step
+        builded,//3D structure is built and ready for exporting 3d structure
     };
     enum errorFlag {
-        NO_ERROR_OCCUR=-1,//无故障
-        HASTY_MANIPULATION=0x00,//跳步操作
-        LOSSYCOMPRESS_FAILED=0x01,//有损压缩失败
-        DEPTH_3_IN_VANILLA_MAP=0x02,//非纯文件地图画中出现深度为3的颜色
+        NO_ERROR_OCCUR=-1,//no error
+        HASTY_MANIPULATION=0x00,//trying to skip steps
+        LOSSYCOMPRESS_FAILED=0x01,//failed when compressing in lossy
+        DEPTH_3_IN_VANILLA_MAP=0x02,//color in shadow 3 appears in vanilla map
         MAX_ALLOWED_HEIGHT_LESS_THAN_14=0x03,
-        USEABLE_COLOR_TO_LITTLE=0x04,
-        EMPTY_RAW_IMAGE=0x05,
-        PARSING_COLORMAP_RGB_FAILED=0x10,//颜色表错误
+        USEABLE_COLOR_TOO_FEW=0x04,//too few color to convert
+        EMPTY_RAW_IMAGE=0x05,//the original image is empty
+        PARSING_COLORMAP_RGB_FAILED=0x10,//colorsheet error
         PARSING_COLORMAP_HSV_FAILED=0x11,
         PARSING_COLORMAP_Lab_FAILED=0x12,
         PARSING_COLORMAP_XYZ_FAILED=0x13,
     };
     enum workStatues {
-        none=-1,
+        none=-1,//waitsting
         collectingColors=0x00,
         converting=0x01,
         dithering=0x02,
@@ -158,7 +181,7 @@ static Kernel * createKernel();
                      const AbstractBlock * [64])=0;
         //set map type and blocklist
 
-        virtual void getAuthorURL(char ** dest) const=0;
+        virtual void getAuthorURL(int * count,char ** dest) const=0;
         //get TokiNoBug's url
 
         virtual void getARGB32(unsigned int *) const=0;
@@ -202,20 +225,25 @@ static Kernel * createKernel();
         //export map into Structure files (*.NBT)
         virtual void get3DSize(int & x,int & y,int & z) const=0;
         //get x,y,z size
+
         virtual int getHeight() const=0;
         virtual int getXRange() const=0;
         virtual int getZRange() const=0;
+        //get 3d structure's size
 
         virtual void getBlockCounts(int * total, int detail[64]) const=0;
+        //get block count in total and in detail
         virtual int getBlockCounts() const=0;
+        //get sum block count
 
         virtual const unsigned char * getBuild(int* xSize,int* ySize,int* zSize) const=0;
+        //get 3d structure in 3d-matrix (col major)
 
     #ifdef WITH_QT
     signals:
-        void progressRangeSet(int min,int max,int val) const;//设置进度条的取值范围和值
+        void progressRangeSet(int min,int max,int val) const;
         void progressAdd(int deltaVal) const;
-        void keepAwake() const;//保持主窗口唤醒
+        void keepAwake() const;
 
         void algoProgressRangeSet(int,int,int) const;
         void algoProgressAdd(int) const;
@@ -225,14 +253,21 @@ static Kernel * createKernel();
 
     #else
         void (*progressRangeSet)(int,int,int);
+        //a function ptr to show progress of converting and exporting
         void (*progressAdd)(int);
+        //a function ptr to add progress value
         void (*keepAwake)();
+        //a function ptr to prevent window from being syncoped
 
         void (*algoProgressRangeSet)(int,int,int);
+        //a function ptr to show progress of compressing and bridge-building
         void (*algoProgressAdd)(int);
+        //a function ptr to add progress value of compressing and bridge-building
 
         void (*reportError)(errorFlag);
+        //a function ptr to report error when something wrong happens
         void (*reportWorkingStatue)(workStatues);
+        //a function ptr to report working statue especially when busy
     #endif
 
 private:

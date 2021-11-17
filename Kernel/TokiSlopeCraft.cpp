@@ -291,7 +291,7 @@ bool TokiSlopeCraft::setType(mapTypes type,
     }
 
     if(!Allowed.ApplyAllowed(&Basic,MIndex)) {
-        emit reportError(errorFlag::USEABLE_COLOR_TO_LITTLE);
+        emit reportError(errorFlag::USEABLE_COLOR_TOO_FEW);
         return false;
     }
 
@@ -349,11 +349,12 @@ bool TokiSlopeCraft::isFlat() const {
     return mapType==Flat||mapType==Wall;
 }
 
-void TokiSlopeCraft::getAuthorURL(char **dest) const {
+void TokiSlopeCraft::getAuthorURL(int * count,char **dest) const {
     std::vector<std::string> result=getAuthorURL();
     for(ushort i=0;i<result.size();i++) {
         std::strcpy(dest[i],result[i].data());
     }
+    *count=result.size();
 }
 
 std::vector<std::string> TokiSlopeCraft::getAuthorURL() const {

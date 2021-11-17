@@ -6,6 +6,23 @@ QT -= core gui
 
 INCLUDEPATH +=  D:/CppLibs/eigen-3.4.0
 
+TARGET = SlopeCraftL
+
+RC_LANG = 0x0004
+
+VERSION += 3.6.0.0
+
+QMAKE_TARGET_DESCRIPTION = SlopeCraft Library
+#描述信息
+
+QMAKE_TARGET_COPYRIGHT = TokiNoBug
+#版权信息
+
+QMAKE_TARGET_PRODUCT = SlopeCraftL
+#产品名称
+
+QMAKE_TARGET_INTERNALNAME = SlopeCraftL
+
 TEMPLATE = lib
 DEFINES += KERNEL_LIBRARY
 
@@ -53,3 +70,5 @@ unix {
     target.path = /usr/lib
 }
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES +=

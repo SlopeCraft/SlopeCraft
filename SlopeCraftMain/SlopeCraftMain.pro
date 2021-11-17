@@ -130,25 +130,3 @@ RESOURCES += \
 
 DISTFILES += \
     others/SlopeCraft.ico
-
-# Default rules for deployment.
-
-#qnx: target.path = /tmp/$${TARGET}/bin
-#else: unix:!android: target.path = /opt/$${TARGET}/bin
-#!isEmpty(target.path): INSTALLS += target
-
-#win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../Kernel/release/ -lKernel
-#else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../Kernel/debug/ -lKernel
-#else:unix: LIBS += -L$$OUT_PWD/../Kernel/ -lKernel
-
-#INCLUDEPATH += $$PWD/../Kernel
-#DEPENDPATH += $$PWD/../Kernel
-
-#win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../BlockListManager/release/ -lBlockListManager
-#else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../BlockListManager/debug/ -lBlockListManager
-#else:unix: LIBS += -L$$OUT_PWD/../BlockListManager/ -lBlockListManager
-
-#INCLUDEPATH += $$PWD/../BlockListManager
-#DEPENDPATH += $$PWD/../BlockListManager
-
-
