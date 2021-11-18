@@ -33,7 +33,8 @@ INCLUDEPATH += D:\CppLibs\zlibs \
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
-DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000
+# disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
     ../../../CppLibs/zlibs/adler32.c \
@@ -56,6 +57,7 @@ SOURCES += \
     ../BlockListManager/TokiBlock.cpp \
     ../Kernel/CIEDE00.cpp \
     ../Kernel/HeightLine.cpp \
+    ../Kernel/Kernel.cpp \
     ../Kernel/NBTWriter.cpp \
     ../Kernel/OptiChain.cpp \
     ../Kernel/PrimGlassBuilder.cpp \
@@ -91,6 +93,7 @@ HEADERS += \
     ../BlockListManager/TokiBlock.h \
     ../Kernel/ColorSet.h \
     ../Kernel/HeightLine.h \
+    ../Kernel/Kernel.h \
     ../Kernel/NBTWriter.h \
     ../Kernel/OptiChain.h \
     ../Kernel/PrimGlassBuilder.h \
@@ -130,3 +133,6 @@ RESOURCES += \
 
 DISTFILES += \
     others/SlopeCraft.ico
+
+SUBDIRS += \
+    ../Kernel/Kernel.pro

@@ -325,7 +325,7 @@ pairedEdge PrimGlassBuilder::connectSingleMaps(
 void PrimGlassBuilder::addEdgesToGraph() {
     edges.clear();
 	edge::vertexes = std::addressof(targetPoints);
-    int taskCount=(targetPoints.size()*(targetPoints.size()-1))/2;
+    //int taskCount=(targetPoints.size()*(targetPoints.size()-1))/2;
     //emit progressRangeSet(0,taskCount,0);
     for(uint i=0;i<targetPoints.size();i++) {
         for(uint j=i+1;j<targetPoints.size();j++) {

@@ -34,23 +34,23 @@ This file is part of SlopeCraft.
 #include <unordered_map>
 
 #include "defines.h"
+#include "Kernel.h"
 #include <unsupported/Eigen/CXX11/Tensor>
 #include "ColorSet.h"
 #include "simpleBlock.h"
 #include "TokiColor.h"
 #include "WaterItem.h"
 
-#include "Kernel.h"
+#include "PrimGlassBuilder.h"
+#include "lossyCompressor.h"
+#include "NBTWriter.h"
+
 using namespace SlopeCraft;
 #ifdef WITH_QT
 #include <QObject>
 #include <QtConcurrent>
 #include <QFuture>
 #endif
-
-//typedef unsigned char gameVersion;
-//using namespace Eigen;
-
 
 
 #define mapColor2Index(mapColor) (64*(mapColor%4)+(mapColor/4))
@@ -145,31 +145,6 @@ public:
 
     const unsigned char * getBuild(int* xSize,int* ySize,int* zSize) const;
     const Eigen::Tensor<uchar,3> & getBuild() const;
-/*
-#ifdef WITH_QT
-signals:
-    void progressRangeSet(int min,int max,int val) const;//设置进度条的取值范围和值
-    void progressAdd(int deltaVal) const;
-    void keepAwake() const;//保持主窗口唤醒
-
-    void algoProgressRangeSet(int,int,int) const;
-    void algoProgressAdd(int) const;
-
-    void reportError(errorFlag) const;
-    void reportWorkingStatue(workStatues) const;
-
-#else
-    void (*progressRangeSet)(int,int,int);
-    void (*progressAdd)(int);
-    void (*keepAwake)();
-
-    void (*algoProgressRangeSet)(int,int,int);
-    void (*algoProgressAdd)(int);
-
-    void (*reportError)(errorFlag);
-    void (*reportWorkingStatue)(workStatues);
-#endif
-    */
 
 private:
     enum ColorSpace {

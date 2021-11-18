@@ -1,3 +1,7 @@
+#ifdef NO_DLL
+#error INCLUDED KERNEL_GLOBAL_H WHEN USING NO_DLL
+#endif
+
 #ifndef KERNEL_GLOBAL_H
 #define KERNEL_GLOBAL_H
 

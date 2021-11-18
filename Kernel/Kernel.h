@@ -23,24 +23,31 @@ This file is part of SlopeCraft.
 #ifndef KERNEL_H
 #define KERNEL_H
 
-//#define WITH_QT
+#define WITH_QT
+#define NO_DLL
 
 #ifdef WITH_QT
 #include <QObject>
 #endif
 
+#ifndef NO_DLL
 #include "Kernel_global.h"
+#endif
 
 namespace SlopeCraft {
 
+#ifndef NO_DLL
 class KERNEL_EXPORT AbstractBlock
+#else
+class  AbstractBlock
+#endif
 {
 public:
     AbstractBlock();
     virtual ~AbstractBlock() {};
-
+#ifndef NO_DLL
     static AbstractBlock * createSimpleBlock();
-
+#endif
     virtual unsigned long long size()=0;
 
     virtual const char* getId()const=0;
@@ -62,10 +69,15 @@ public:
     virtual void setWallUseable(bool)=0;
 
     void copyTo(AbstractBlock * dst) const;
+    void setEmpty();
 };
 
 
+#ifndef NO_DLL
 class KERNEL_EXPORT Kernel
+#else
+class  Kernel
+#endif
         #ifdef WITH_QT
         : public QObject
         #endif
@@ -79,12 +91,13 @@ public:
     Kernel();
 #endif
     virtual ~Kernel() {};
+#ifndef NO_DLL
 #ifdef WITH_QT
 static Kernel *createKernel(QObject * parent=nullptr);
 #else
 static Kernel * createKernel();
 #endif
-
+#endif
     enum gameVersion {
         ANCIENT=0,//older than 1.12
         MC12=12,//1.12

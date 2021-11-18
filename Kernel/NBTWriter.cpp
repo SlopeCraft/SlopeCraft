@@ -178,8 +178,9 @@ void NBTWriter::pop()
     top--;
     //qDebug("popped");
     }
-    else
-        ;
+    else{
+
+    }
     //qDebug("结束了一个列表");
     return;
 }
@@ -244,6 +245,8 @@ int NBTWriter::writeSingleTag(char typeId,const char*Name,T value)
     if(!ThisCount)
         //qDebug("writeSingleTag函数写入失败");
     return ThisCount;
+
+    return 0;
 }
 
 

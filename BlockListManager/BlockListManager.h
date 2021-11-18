@@ -51,8 +51,8 @@ public:
     void setVersion(uchar);
 
     void getEnableList(bool*) const;
-    void getSimpleBlockList(simpleBlock*) const;
-    std::vector<simpleBlock> getSimpleBlockList() const;
+    void getSimpleBlockList(const AbstractBlock ** ) const;
+    std::vector<const AbstractBlock * > getSimpleBlockList() const;
     std::vector<const TokiBlock * >getTokiBlockList() const;
     std::vector<const QRadioButton * >getQRadioButtonList() const;
     std::vector<ushort> toPreset() const;

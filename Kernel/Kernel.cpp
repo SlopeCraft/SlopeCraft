@@ -28,12 +28,18 @@ using namespace SlopeCraft;
 
 AbstractBlock::AbstractBlock() {
 
-}
+#ifdef STRAIGHT_INCLUDE_KERNEL
+#ifndef NO_DLL
+#error YOU MUST DEFINE NO_DLL WHEN DEFINED STRAIGHT_INCLUDE_KERNEL
+#endif
+#endif
 
+}
+#ifndef NO_DLL
 AbstractBlock * AbstractBlock::createSimpleBlock() {
     return new simpleBlock;
 }
-
+#endif
 void AbstractBlock::copyTo(AbstractBlock *dst) const {
     dst->setBurnable(getBurnable());
     dst->setDoGlow(getDoGlow());
@@ -45,6 +51,17 @@ void AbstractBlock::copyTo(AbstractBlock *dst) const {
     dst->setWallUseable(getWallUseable());
 }
 
+void AbstractBlock::setEmpty() {
+    setBurnable(false);
+    setDoGlow(false);
+    setEndermanPickable(false);
+    setId("minecraft:air");
+    setIdOld("");
+    setNeedGlass(false);
+    setVersion(0);
+    setWallUseable(false);
+}
+
 #ifdef WITH_QT
 Kernel::Kernel(QObject *parent) : QObject(parent)
 #else
@@ -53,7 +70,7 @@ Kernel::Kernel()
 {
 
 }
-
+#ifndef NO_DLL
 #ifdef WITH_QT
 Kernel * createKernel(QObject * parent) {
     return new TokiSlopeCraft(parent);
@@ -62,4 +79,6 @@ Kernel * createKernel(QObject * parent) {
 Kernel * Kernel::createKernel() {
     return new TokiSlopeCraft;
 };
+#endif
+
 #endif

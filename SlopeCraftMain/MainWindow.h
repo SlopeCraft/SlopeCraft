@@ -60,12 +60,18 @@ This file is part of SlopeCraft.
 #include <unordered_map>
 #include "zlib.h"
 
+#define WITH_QT
+#define NO_DLL
+#define STRAIGHT_INCLUDE_KERNEL
+
+#include "TokiSlopeCraft.h"
+
 #include "VersionDialog.h"
 #include "tpstrategywind.h"
 #include "previewwind.h"
 #include "BlockListManager.h"
 #include "BatchUi.h"
-#include "TokiSlopeCraft.h"
+
 
 class MainWindow;
 

@@ -1,8 +1,8 @@
 #Use this line in WITH_QT mode
-#QT       += core gui concurrent
+QT       += core gui concurrent
 
 #Use this line in when compiling without qt
-QT -= core gui
+#QT -= core gui
 
 INCLUDEPATH +=  D:/CppLibs/eigen-3.4.0
 

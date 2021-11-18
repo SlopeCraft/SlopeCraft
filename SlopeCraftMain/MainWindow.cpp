@@ -1075,15 +1075,12 @@ void MainWindow::kernelSetType() {
     bool allowedBaseColor[64];
     Manager->getEnableList(allowedBaseColor);
 
-    simpleBlock palette[64];
-    Manager->getSimpleBlockList(palette);
+    std::array<const AbstractBlock *,64> palette;
+    //const AbstractBlock * palette[64];
+    Manager->getSimpleBlockList(palette.data());
 
 
-    /*for(uchar i=0;i<temp.size();i++){qDebug()<<i;
-        palette[i].copyFrom(temp[i]);}*/
-
-
-    Kernel->setType(type,ver,allowedBaseColor,palette);
+    Kernel->setType(type,ver,allowedBaseColor,palette.data());
 
     updateEnables();
 
@@ -1573,7 +1570,7 @@ void MainWindow::showError(TokiSlopeCraft::errorFlag error) {
         title=tr("严重错误：颜色表文件RGB.TokiColor损坏");
         text=tr("SlopeCraft不能正常解析颜色表文件，它是不可以被修改的！");
         break;
-    case TokiSlopeCraft::errorFlag::USEABLE_COLOR_TO_LITTLE:
+    case TokiSlopeCraft::errorFlag::USEABLE_COLOR_TOO_FEW:
         title=tr("允许使用的颜色过少");
         text=tr("你应该勾选启用尽可能多的基色，颜色太少是不行的！");
         break;

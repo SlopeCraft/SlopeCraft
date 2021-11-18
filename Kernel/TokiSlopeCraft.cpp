@@ -22,10 +22,6 @@ This file is part of SlopeCraft.
 
 #include "TokiSlopeCraft.h"
 
-#include "PrimGlassBuilder.h"
-#include "lossyCompressor.h"
-#include "NBTWriter.h"
-
 const Eigen::Array<float,2,3>TokiSlopeCraft::DitherMapLR
         ={{0.0/16.0,0.0/16.0,7.0/16.0},
            {3.0/16.0,5.0/16.0,1.0/16.0}};
@@ -214,20 +210,21 @@ bool TokiSlopeCraft::setType(mapTypes type,
         emit reportError(errorFlag::HASTY_MANIPULATION);
         return false;
     }
-/*
-    if(_rawimg.size()<=0) {
-        emit reportError(errorFlag::EMPTY_RAW_IMAGE);
-        return false;
-    }
 
-    rawImage=_rawimg;*/
     mapType=type;
     mcVer=ver;
 
     TokiColor::needFindSide=(mapType==mapTypes::Slope);
 
     blockPalette.resize(64);
+
+    //std::cerr<<__FILE__<<__LINE__<<std::endl;
     for(short i=0;i<64;i++) {
+        //std::cerr<<"Block_"<<i<<std::endl;
+        if(palettes[i]==nullptr) {
+            blockPalette[i].setEmpty();
+            continue;
+        }
         palettes[i]->copyTo(&blockPalette[i]);
 
         if(blockPalette[i].id.find(':')==blockPalette[i].id.npos) {
@@ -238,6 +235,8 @@ bool TokiSlopeCraft::setType(mapTypes type,
             blockPalette[i].idOld="minecraft:"+blockPalette[i].idOld;
         }
     }
+
+    //std::cerr<<__FILE__<<__LINE__<<std::endl;
 
     emit reportWorkingStatue(workStatues::collectingColors);
 
