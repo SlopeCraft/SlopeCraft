@@ -32,7 +32,7 @@ const ushort MainWindow::BLCheaper[64]={0,0,0,0,1,0,5,2,3,0,4,0,0,0,3,0,0,0,0,0,
 const ushort MainWindow::BLBetter[64]={0,1,1,0,0,1,0,2,0,0,3,2,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0};
 const ushort MainWindow::BLGlowing[64]={0,1,2,0,0,2,4,2,0,0,3,2,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,6,0,0,1,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0};
 
-const QString MainWindow::selfVersion="v3.6.0";
+const QString MainWindow::selfVersion="v3.6";
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -1786,6 +1786,10 @@ void MainWindow::grabVersion() {
         if(userReply==VersionDialog::userChoice::Yes) {
             QDesktopServices::openUrl(
                         QUrl("https://github.com/ToKiNoBug/SlopeCraft/releases/latest"));
+            if(trans.language()=="zh_CN") {
+                QDesktopServices::openUrl(
+                            QUrl("https://gitee.com/TokiNoBug/SlopeCraft/releases"));
+            }
         }
         if(userReply==VersionDialog::userChoice::NoToAll) {
             setAutoCheckUpdate(false);
@@ -1795,12 +1799,6 @@ void MainWindow::grabVersion() {
         return;
     }
 }
-
-/*
-void MainWindow::receiveFinish(bool ok, QByteArray data) {
-
-}
-*/
 
 void MainWindow::putSettings(const QJsonObject & jo) {
     QFile ini("./settings.json");
