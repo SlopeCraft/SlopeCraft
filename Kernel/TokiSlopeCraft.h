@@ -50,8 +50,9 @@ using namespace SlopeCraft;
 #include <QObject>
 #include <QtConcurrent>
 #include <QFuture>
+#else
+#include <thread>
 #endif
-
 
 #define mapColor2Index(mapColor) (64*(mapColor%4)+(mapColor/4))
 #define index2mapColor(index) (4*(index%64)+(index/64))

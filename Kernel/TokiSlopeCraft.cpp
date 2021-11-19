@@ -32,6 +32,7 @@ ColorSet TokiSlopeCraft::Basic;
 ColorSet TokiSlopeCraft::Allowed;
 
 
+
 #ifndef WITH_QT
 void defaultProgressRangeSet4Kernel(int,int,int) {return;};
 void defaultProgressAdd4Kernel(int) {return;};
@@ -46,7 +47,12 @@ bool readFromTokiColor(const std::string & FileName,ColorList & M);
 bool readFromTokiColor(const char*src,ColorList & M);
 uchar h2d(char h);
 void crash();
+#ifdef WITH_QT
 void matchColor(TokiColor * tColor,ARGB qColor);
+#else
+typedef std::pair<TokiColor*,ARGB> convertTask;
+void matchColor(std::vector<convertTask> * tasks);
+#endif
 
 #ifdef WITH_QT
 TokiSlopeCraft::TokiSlopeCraft(QObject *parent) : Kernel(parent)
@@ -483,8 +489,9 @@ void TokiSlopeCraft::pushToHash() {
 
 void TokiSlopeCraft::applyTokiColor() {
     auto R=&colorHash;
-    int step=sizePic(2)/R->size();
+
 #ifdef WITH_QT
+    int step=reportRate*sizePic(2)/R->size();
         std::queue<QFuture<void>> taskTracker;
         for(auto it=R->begin();it!=R->end();it++)
             taskTracker.push(QtConcurrent::run(matchColor,&it->second,it->first));
@@ -492,18 +499,48 @@ void TokiSlopeCraft::applyTokiColor() {
         while(!taskTracker.empty()) {
             taskTracker.front().waitForFinished();
             if(taskTracker.size()%reportRate==0)
-                emit progressAdd(step*reportRate);
+                emit progressAdd(step);
             taskTracker.pop();
         }
 
         std::cerr<<"Sub threads finished\n";
 #else
-    for(auto it=R->begin();it!=R->end();it++) {
-        matchColor(&it->second,it->first);
+    const uint16_t threadCount=std::thread::hardware_concurrency();
+    const uint64_t taskCount=R->size();
+    int step=threadCount*sizePic(2)/taskCount;
+
+    std::vector<std::vector<convertTask>> taskBucket;
+    taskBucket.reserve(threadCount);
+
+    for(uint16_t idx=0;idx<threadCount;idx++) {
+        taskBucket.emplace_back(std::vector<convertTask>());
+        taskBucket.back().reserve(ceil(double(taskCount)/threadCount));
+    }
+
+    {
+        uint64_t idx=0;
+        for(auto it=R->begin();it!=R->end();it++) {
+            taskBucket[idx%threadCount].emplace_back(
+                        std::make_pair(&it->second,it->first));
+            //emit progressAdd(step);
+        }
+    }
+
+    std::vector<std::thread> pool;
+
+    pool.reserve(threadCount);
+    for(uint16_t idx=0;idx<threadCount;idx++) {
+        pool.emplace_back(std::thread(matchColor,taskBucket.data()+idx));
+    }
+
+    for(uint16_t idx=0;idx<threadCount;idx++) {
+        pool[idx].join();
         emit progressAdd(step);
     }
-    std::cerr<<"color converted\n";
+    std::cerr<<"Sub threads finished\n";
 #endif
+
+    std::cerr<<"colors converted\n";
 }
 
 void TokiSlopeCraft::fillMapMat() {
@@ -660,9 +697,18 @@ void TokiSlopeCraft::Dither() {
     std::cerr<<"Inserted "<<newCount<<" colors to hash\n";
 }
 
+
+#ifdef WITH_QT
 void matchColor(TokiColor * tColor,ARGB qColor) {
     tColor->apply(qColor);
 }
+#else
+void matchColor(std::vector<convertTask> * tasks){
+    for(auto it=tasks->begin();it!=tasks->end();it++) {
+        it->first->apply(it->second);
+    }
+}
+#endif
 
 void TokiSlopeCraft::getTokiColorPtr(ushort col, const TokiColor ** dst) const {
     if(kernelStep<converted) {
@@ -1043,122 +1089,6 @@ void TokiSlopeCraft::makeHeight_new() {
     size3D[0]=2+sizePic(1);//x
     size3D[1]=HighMap.maxCoeff()+1;//y
 }
-
-/*
-void TokiSlopeCraft::makeHeight_old() {
-    Base.setConstant(sizePic(0)+1,sizePic(1),11);
-    WaterList.clear();
-    HighMap.setZero(sizePic(0)+1,sizePic(1));
-    LowMap.setZero(sizePic(0)+1,sizePic(1));
-
-    Base.block(1,0,sizePic(0),sizePic(1))=mapPic/4;
-
-    Eigen::ArrayXXi dealedDepth;
-    Eigen::ArrayXXi rawShadow=mapPic-4*(mapPic/4);
-
-    if((rawShadow>=3).any())
-    {
-        //qDebug("错误：Depth中存在深度为3的方块");
-        return;
-    }
-    dealedDepth.setZero(sizePic(0)+1,sizePic(1));
-    dealedDepth.block(1,0,sizePic(0),sizePic(1))=rawShadow-1;
-    //Depth的第一行没有意义，只是为了保持行索引一致
-
-    for(short r=0;r<Base.rows();r++)
-    {
-        for(short c=0;c<Base.cols();c++)
-        {
-            if(Base(r,c)==12)
-            {
-                WaterList[TokiRC(r,c)]=nullWater;
-                dealedDepth(r,c)=0;
-                continue;
-            }
-            if(Base(r,c)==0)
-            {
-                dealedDepth(r,c)=0;
-                continue;
-            }
-        }
-        emit progressAdd(sizePic(0));
-    }
-
-    HighMap.setZero(sizePic(0)+1,sizePic(1));
-    LowMap.setZero(sizePic(0)+1,sizePic(1));
-
-    int waterCount=WaterList.size();
-    //qDebug()<<"共有"<<waterCount<<"个水柱";
-    for(short r=0;r<sizePic(0);r++)//遍历每一行，根据高度差构建高度图
-    {
-        HighMap.row(r+1)=HighMap.row(r)+dealedDepth.row(r+1);
-        emit progressAdd(sizePic(0));
-    }
-
-    for(short c=0;c<Base.cols();c++)
-    {
-        if(Base(1,c)==0||Base(1,c)==12||rawShadow(0,c)==2)
-        {
-            Base(0,c)=0;
-            HighMap(0,c)=HighMap(1,c);
-        }
-        emit progressAdd(sizePic(1));
-    }
-
-    std::cerr<<"extra north side stones removed"<<std::endl;
-
-    LowMap=HighMap;
-
-    for(auto it=WaterList.begin();it!=WaterList.end();it++)
-    {
-        LowMap(TokiRow(it->first),TokiCol(it->first))=
-                HighMap(TokiRow(it->first),TokiCol(it->first))
-                -WaterColumnSize[rawShadow(TokiRow(it->first)-1,TokiCol(it->first))]+1;
-    }
-
-    std::cerr<<"LowMap updated"<<std::endl;
-
-    for(short c=0;c<sizePic(1);c++)
-    {
-        HighMap.col(c)-=LowMap.col(c).minCoeff();
-        LowMap.col(c)-=LowMap.col(c).minCoeff();
-        //沉降每一列
-        emit progressAdd(sizePic(1));
-    }
-
-    std::cerr<<"basic sink done"<<std::endl;
-
-    if(compressMethod==NaturalOnly)
-    {
-        //执行高度压缩
-        //OptiChain::Base=Base;
-        for(int c=0;c<sizePic(1);c++)
-        {
-            OptiChain Compressor(Base.col(c),HighMap.col(c),LowMap.col(c));
-            Compressor.divideAndCompress();
-            HighMap.col(c)=Compressor.getHighLine();
-            LowMap.col(c)=Compressor.getLowLine();
-            emit progressAdd(sizePic(1));
-        }
-    }
-
-    std::cerr<<"waterList updated again"<<std::endl;
-
-    int maxHeight=HighMap.maxCoeff();
-
-    for(auto it=WaterList.begin();it!=WaterList.end();it++)
-    {
-        int r=TokiRow(it->first),c=TokiCol(it->first);
-        it->second=TokiWater(HighMap(r,c),LowMap(r,c));
-        maxHeight=std::max(maxHeight,HighMap(r,c)+1);
-        //遮顶玻璃块
-    }
-    size3D[2]=2+sizePic(0);//z
-    size3D[0]=2+sizePic(1);//x
-    size3D[1]=1+maxHeight;//y
-    return;
-}
-*/
 
 void TokiSlopeCraft::buildHeight(bool fireProof,bool endermanProof) {
         Build.resize(size3D[0],size3D[1],size3D[2]);
