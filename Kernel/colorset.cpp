@@ -105,7 +105,7 @@ ushort ColorSet::colorCount() const {
     return _RGB.rows();
 }
 
-void GetMap(Eigen::ArrayXi &Map)
+void GetMap(MapList &Map)
 {
     Map.setZero(256);
     for(short r=0;r<256;r++)Map(r)=4*(r%64)+r/64;

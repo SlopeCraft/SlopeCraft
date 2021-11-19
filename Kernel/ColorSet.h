@@ -32,7 +32,7 @@ class ColorSet{
         ColorList  HSV;
         ColorList  Lab;
         ColorList  XYZ;
-        Eigen::ArrayXi  Map;
+        MapList  Map;
         ColorSet();
         bool ApplyAllowed(ColorSet*standard,bool *MIndex);
         ushort colorCount() const;
@@ -40,7 +40,7 @@ class ColorSet{
 
 void GetMap(unsigned char *Map);
 
-void GetMap(Eigen::ArrayXi &Map);
+void GetMap(MapList &Map);
 
 void f(float &);
 void invf(float&);

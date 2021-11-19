@@ -50,8 +50,7 @@ void crash();
 #ifdef WITH_QT
 void matchColor(TokiColor * tColor,ARGB qColor);
 #else
-typedef std::pair<TokiColor*,ARGB> convertTask;
-void matchColor(std::vector<convertTask> * tasks);
+void matchColor(uint32_t taskCount,TokiColor** tk,ARGB * argb);
 #endif
 
 #ifdef WITH_QT
@@ -467,23 +466,23 @@ int TokiSlopeCraft::sizePic(short dim) const {
 void TokiSlopeCraft::pushToHash() {
     auto R=&colorHash;
     R->clear();
-        int ColorCount=0;
         TokiColor::Allowed=&Allowed;
         TokiColor::Basic=&Basic;
 
         char Mode=ConvertAlgo;
         TokiColor::convertAlgo=Mode;
-        for(short r=0;r<sizePic(0);r++)
-        {
-            for(short c=0;c<sizePic(1);c++)
-                if(R->find(rawImage(r,c))==R->end())//找不到这个颜色
-                {
-                    ColorCount++;
-                    R->operator[](rawImage(r,c))=TokiColor(rawImage(r,c));
-                }
-            if(ColorCount%reportRate==0)
+
+        //R->reserve(sizePic(2)/4);
+
+        for(uint32_t idx=0;idx<rawImage.size();idx++) {
+            R->emplace(rawImage(idx),rawImage(idx));
+
+            if((idx/sizePic(1))%reportRate==0) {
                 emit progressAdd(reportRate*sizePic(1));
+            }
+
         }
+
         std::cerr<<"Total color count:"<<R->size()<<std::endl;
 }
 
@@ -498,8 +497,9 @@ void TokiSlopeCraft::applyTokiColor() {
 
         while(!taskTracker.empty()) {
             taskTracker.front().waitForFinished();
-            if(taskTracker.size()%reportRate==0)
+            if(taskTracker.size()%reportRate==0) {
                 emit progressAdd(step);
+            }
             taskTracker.pop();
         }
 
@@ -509,28 +509,37 @@ void TokiSlopeCraft::applyTokiColor() {
     const uint64_t taskCount=R->size();
     int step=threadCount*sizePic(2)/taskCount;
 
-    std::vector<std::vector<convertTask>> taskBucket;
-    taskBucket.reserve(threadCount);
+    std::vector<TokiColor *> task1;
+    std::vector<ARGB> task2;
+    task1.reserve(taskCount);
+    task2.reserve(taskCount);
 
-    for(uint16_t idx=0;idx<threadCount;idx++) {
-        taskBucket.emplace_back(std::vector<convertTask>());
-        taskBucket.back().reserve(ceil(double(taskCount)/threadCount));
-    }
-
-    {
-        uint64_t idx=0;
         for(auto it=R->begin();it!=R->end();it++) {
-            taskBucket[idx%threadCount].emplace_back(
-                        std::make_pair(&it->second,it->first));
-            //emit progressAdd(step);
-        }
+            task1.emplace_back(&it->second);
+            task2.emplace_back(it->first);
     }
 
     std::vector<std::thread> pool;
 
     pool.reserve(threadCount);
+    uint32_t allowcatedTaskNum=0;
+    uint32_t batchSize=taskCount/threadCount;
     for(uint16_t idx=0;idx<threadCount;idx++) {
-        pool.emplace_back(std::thread(matchColor,taskBucket.data()+idx));
+
+        uint32_t offset=allowcatedTaskNum;
+
+        if(idx+1>=threadCount) {
+        pool.emplace_back(
+                    std::thread(matchColor,
+                                taskCount-allowcatedTaskNum,
+                                task1.data()+offset,task2.data()+offset));
+        } else {
+            pool.emplace_back(
+                        std::thread(matchColor,
+                                    batchSize,
+                                    task1.data()+offset,task2.data()+offset));
+            allowcatedTaskNum+=batchSize;
+        }
     }
 
     for(uint16_t idx=0;idx<threadCount;idx++) {
@@ -615,7 +624,6 @@ void TokiSlopeCraft::Dither() {
     //TokiColor* oldColor=nullptr;
     for(short r=0;r<sizePic(0);r++)//底部一行、左右两侧不产生误差扩散，只接受误差
     {
-        emit keepAwake();
         if(isDirLR)//从左至右遍历
         {
             for(short c=0;c<sizePic(1);c++)
@@ -631,7 +639,7 @@ void TokiSlopeCraft::Dither() {
 
                 if(find==R->end())
                 {
-                    R->emplace(Current,TokiColor(Current));
+                    R->emplace(Current,Current);
                     find=R->find(Current);
                     find->second.apply(Current);
                     //装入了一个新颜色并匹配为地图色
@@ -667,7 +675,7 @@ void TokiSlopeCraft::Dither() {
                 auto find=R->find(Current);
                 if(find==R->end())
                 {
-                    R->emplace(Current,TokiColor(Current));
+                    R->emplace(Current,Current);
                     find=R->find(Current);
                     find->second.apply(Current);
                     //装入了一个新颜色并匹配为地图色
@@ -690,8 +698,10 @@ void TokiSlopeCraft::Dither() {
             }
         }
         isDirLR=!isDirLR;
-        if(r%reportRate==0)
+        if(r%reportRate==0) {
+            emit keepAwake();
             emit progressAdd(reportRate*sizePic(1));
+        }
     }
     std::cerr<<"Error diffuse finished\n";
     std::cerr<<"Inserted "<<newCount<<" colors to hash\n";
@@ -703,9 +713,9 @@ void matchColor(TokiColor * tColor,ARGB qColor) {
     tColor->apply(qColor);
 }
 #else
-void matchColor(std::vector<convertTask> * tasks){
-    for(auto it=tasks->begin();it!=tasks->end();it++) {
-        it->first->apply(it->second);
+void matchColor(uint32_t taskCount,TokiColor** tk,ARGB * argb) {
+    for(uint32_t i=0;i<taskCount;i++) {
+        tk[i]->apply(argb[i]);
     }
 }
 #endif
