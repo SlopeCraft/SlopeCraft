@@ -145,7 +145,7 @@ void BlockListManager::getEnableList(bool *dest) const {
 }
 
 void BlockListManager::getSimpleBlockList(const AbstractBlock ** SBL) const {
-    qDebug("void BlockListManager::getSimpleBlockList(simpleBlock * SBL) const");
+    //qDebug("void BlockListManager::getSimpleBlockList(simpleBlock * SBL) const");
 
     for(uchar i=0;i<64;i++) {
         SBL[i]=nullptr;
@@ -201,6 +201,15 @@ bool isValidBlockInfo(const QJsonObject & json) {
          json.contains("nameZH")&&
          json.contains("nameEN")&&
          json.contains("baseColor"));
+}
+
+void BlockListManager::getTokiBaseColors
+    (std::vector<const TokiBaseColor*> & dest) const{
+    dest.clear();
+    dest.reserve(tbcs.size());
+    for(const auto it : tbcs) {
+        dest.emplace_back(it);
+    }
 }
 
 const QString BlockListManager:: baseColorNames[64]={

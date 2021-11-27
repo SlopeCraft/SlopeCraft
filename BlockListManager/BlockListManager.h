@@ -56,6 +56,8 @@ public:
     std::vector<const TokiBlock * >getTokiBlockList() const;
     std::vector<const QRadioButton * >getQRadioButtonList() const;
     std::vector<ushort> toPreset() const;
+
+    void getTokiBaseColors(std::vector<const TokiBaseColor*> &) const;
 public slots:
 
 signals:

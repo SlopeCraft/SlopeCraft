@@ -54,6 +54,8 @@ void addTokiBlock(const QJsonObject & json,
                   const QString & imgDir);
 void makeLabel(QRgb);
 
+void getTokiBlockList(std::vector<const TokiBlock*> & ) const;
+
 static uchar mcVer;
 
 signals:

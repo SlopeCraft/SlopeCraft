@@ -46,6 +46,7 @@ This file is part of SlopeCraft.
 #include <QFileDialog>
 #include <QCryptographicHash>
 #include <QCloseEvent>
+#include <QKeyEvent>
 
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
@@ -132,6 +133,7 @@ signals:
     void closed();
 protected:
     void closeEvent(QCloseEvent*);
+    void keyPressEvent(QKeyEvent*);
 
 public slots:
     void destroySubWindTrans();
@@ -222,6 +224,14 @@ private slots:
 
     void on_StartWithWall_clicked();
 
+    void on_ExImage_clicked();
+
+    void on_FirstConcrete_clicked();
+
+    void on_FirstWool_clicked();
+
+    void on_FirstStainedGlass_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -264,6 +274,8 @@ private:
     QString getCustomBlockListDir(QString);
 
     void grabVersion();
+
+    void selectBlockByString(const std::string &);
 
 };
 

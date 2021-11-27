@@ -1837,3 +1837,76 @@ void MainWindow::closeEvent(QCloseEvent * event) {
     exit(0);
 }
 
+void MainWindow::keyPressEvent(QKeyEvent * event) {
+
+    switch (event->key()) {
+    case Qt::Key::Key_F5: {
+        QString destName=
+                QFileDialog::getSaveFileName(this,
+                                             tr("保存截屏"),
+                                             "",
+                                             tr("图片 (*.jpg *.jpeg *.tif *.bmp *.png)"));
+
+        if(destName.isEmpty()) {
+            break;
+        }
+
+        QPixmap pix=this->grab();
+        pix.save(destName);
+        break;
+    }
+    default:
+        break;
+    }
+
+    QMainWindow::keyPressEvent(event);
+}
+
+void MainWindow::on_ExImage_clicked() {
+    QPixmap image=ui->ShowPic->pixmap();
+
+    if(image.isNull()) {
+        return;
+    }
+
+    QString savePath=QFileDialog::getSaveFileName(this,
+                                                  tr("保存当前显示图片"),
+                                                  "./",
+                                                  tr("图片(*.png)"));
+
+    if(savePath.isEmpty()) {
+        return;
+    }
+
+    image.save(savePath);
+
+}
+
+void MainWindow::selectBlockByString(const std::string & key) {
+    std::vector<const TokiBaseColor*> tbcs;
+    Manager->getTokiBaseColors(tbcs);
+
+    for(uint8_t baseColor=0;baseColor<tbcs.size();baseColor++) {
+
+        std::vector<const TokiBlock * > tbs;
+        tbcs[baseColor]->getTokiBlockList(tbs);
+        for(uint16_t idx=0;idx<tbs.size();idx++) {
+            if(tbs[idx]->getSimpleBlock()->id.find(key)!=std::string::npos) {
+                Manager->setSelected(baseColor,idx);
+                continue;
+            }
+        }
+    }
+}
+
+void MainWindow::on_FirstConcrete_clicked() {
+    selectBlockByString("concrete");
+}
+
+void MainWindow::on_FirstWool_clicked() {
+    selectBlockByString("wool");
+}
+
+void MainWindow::on_FirstStainedGlass_clicked() {
+    selectBlockByString("stained_glass");
+}

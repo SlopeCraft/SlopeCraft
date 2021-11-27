@@ -180,3 +180,11 @@ bool TokiBaseColor::getEnabled() const {
 ushort TokiBaseColor::getSelected() const {
     return selected;
 }
+
+void TokiBaseColor::getTokiBlockList(std::vector<const TokiBlock*> & dest) const {
+    dest.clear();
+    dest.reserve(tbs.size());
+    for(const auto it : tbs) {
+        dest.emplace_back(it);
+    }
+}

@@ -155,9 +155,9 @@ font: 9pt &quot;微软雅黑&quot;;
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>-185</y>
+         <y>0</y>
          <width>152</width>
-         <height>675</height>
+         <height>667</height>
         </rect>
        </property>
        <property name="sizePolicy">
@@ -667,7 +667,9 @@ font: 11pt &quot;微软雅黑&quot;;
               </property>
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>11</pointsize>
+                <weight>50</weight>
                 <italic>false</italic>
                 <bold>false</bold>
                </font>
@@ -757,7 +759,9 @@ font: 11pt &quot;微软雅黑&quot;;
              <widget class="QCommandLinkButton" name="StartWithSlope">
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>11</pointsize>
+                <weight>50</weight>
                 <italic>false</italic>
                 <bold>false</bold>
                </font>
@@ -844,7 +848,9 @@ font: 11pt &quot;微软雅黑&quot;;
               </property>
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>11</pointsize>
+                <weight>50</weight>
                 <italic>false</italic>
                 <bold>false</bold>
                </font>
@@ -1801,8 +1807,8 @@ font: 11pt &quot;微软雅黑&quot;;
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>75</width>
-               <height>22</height>
+               <width>554</width>
+               <height>377</height>
               </rect>
              </property>
              <property name="sizePolicy">
@@ -3227,10 +3233,10 @@ font: 11pt &quot;微软雅黑&quot;;
           </property>
           <property name="html">
            <string notr="true">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:6px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:6px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Microsoft YaHei UI';&quot;&gt;0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="placeholderText">
            <string notr="true"/>
@@ -3496,7 +3502,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>960</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuAbout">
