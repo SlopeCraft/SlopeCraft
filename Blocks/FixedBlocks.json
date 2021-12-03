@@ -69,7 +69,8 @@
     "nameZH":"末地石砖",
     "nameEN":"Endstone bricks",
     "icon":"end_stone_bricks.png",
-    "version":0
+    "version":0,
+    "idOld":"minecraft:end_bricks"
 },
 {
     "baseColor":2,
@@ -455,7 +456,8 @@
     "nameZH":"橙色染色玻璃",
     "nameEN":"Orange glass",
     "icon":"orange_stained_glass.png",
-    "version":0
+    "version":0,
+    "idOld":"minecraft:stained_glass[color=orange]"
 },
 {
     "baseColor":15,
@@ -542,7 +544,7 @@
     "nameEN":"Magenta concrete",
     "icon":"magenta_concrete.png",
     "version":0,
-    "idOld":"minecraft:concrete[color=orange]"
+    "idOld":"minecraft:concrete[color=magenta]"
 },
 {
     "baseColor":16,

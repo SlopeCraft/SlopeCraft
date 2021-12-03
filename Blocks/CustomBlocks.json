@@ -101,7 +101,7 @@
     "nameEN":"Nether brick slab",
     "icon":"nether_bricks.png",
     "version":0,
-    "idOld":"minecraft:stone_slab[half=top,variant=stone_nether_brick]"
+    "idOld":"minecraft:stone_slab[half=top,variant=nether_brick]"
 },
 {
     "baseColor":14,
@@ -195,7 +195,7 @@
     "nameZH":"海晶石上半砖",
     "nameEN":"Prismarine slab",
     "icon":"prismarine.png",
-    "version":0,
+    "version":13,
     "idOld":"minecraft:stone_slab[half=top,variant=prismarine]"
 },
 {
@@ -204,7 +204,7 @@
     "nameZH":"海晶石砖上半砖",
     "nameEN":"Prismarine brick slab",
     "icon":"prismarine_bricks.png",
-    "version":0,
+    "version":13,
     "idOld":"minecraft:stone_slab[half=top,variant=prismarine_bricks]"
 },
 {
@@ -213,7 +213,7 @@
     "nameZH":"暗海晶石上半砖",
     "nameEN":"Dark prismarine slab",
     "icon":"dark_prismarine.png",
-    "version":0,
+    "version":13,
     "idOld":"minecraft:stone_slab[half=top,variant=dark_prismarine]"
 }
 ]
