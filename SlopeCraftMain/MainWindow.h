@@ -117,16 +117,6 @@ public:
 
     static const QString selfVersion;
 
-
-#ifdef dispDerivative
-    void checkBlockIds();
-    void makeImage(int);
-#endif
-
-#ifdef putBlockList
-    void putBlockListInfo();
-#endif
-
 signals:
     void mapTypeChanged();
 
@@ -275,7 +265,7 @@ private:
     QJsonArray getCustomBlockList(QString);
     QString getCustomBlockListDir(QString);
 
-    void grabVersion();
+    void grabVersion(bool isAuto=true);
 
     void selectBlockByString(const std::string &);
 

@@ -578,10 +578,6 @@ void MainWindow::InitializeAll()
     if(needInitialize)
     {
         needInitialize=false;
-#ifdef dispDerivative
-    //checkBlockIds();
-    makeImage(1);
-#endif
     }
     if(!Collected)
     {
@@ -1681,11 +1677,11 @@ void MainWindow::on_reportBugs_clicked() {
 void MainWindow::checkVersion() {
 
     //QtConcurrent::run(grabVersion,this);
-    grabVersion();
+    grabVersion(false);
     return;
 }
 
-void MainWindow::grabVersion() {
+void MainWindow::grabVersion(bool isAuto) {
     static bool isRunning=false;
     if(isRunning) {
         return;
@@ -1711,7 +1707,7 @@ void MainWindow::grabVersion() {
     QJsonParseError error;
     QJsonDocument jd=QJsonDocument::fromJson(result,&error);
     if(error.error!=error.NoError) {
-        int userReply=
+        QMessageBox::StandardButton userReply=
                 QMessageBox::information(this,
                                          QObject::tr("检查更新时遇到Json解析错误"),
                                          QObject::tr("网址  ")+url
@@ -1732,7 +1728,7 @@ void MainWindow::grabVersion() {
 
     bool hasKey=jo.contains("tag_name");
     if(!hasKey) {
-        int userReply=
+        QMessageBox::StandardButton userReply=
                 QMessageBox::information(this,
                                          QObject::tr("检查更新时返回信息错误"),
                                          QObject::tr("网址  ")+url
@@ -1750,7 +1746,7 @@ void MainWindow::grabVersion() {
 
     bool isKeyString=jo.value("tag_name").isString();
     if(!isKeyString) {
-        int userReply=
+        QMessageBox::StandardButton userReply=
                 QMessageBox::information(this,
                                          QObject::tr("检查更新时返回信息错误"),
                                          QObject::tr("网址  ")+url
@@ -1770,6 +1766,10 @@ void MainWindow::grabVersion() {
 
     QString latestVersion=jo["tag_name"].toString();
     if(latestVersion==selfVersion) {
+        if(!isAuto)
+        QMessageBox::information(this,
+                                 tr("检查更新完毕"),
+                                 tr("现在你正在用的就是最新版本！"));
         isRunning=false;
         return;
     } else {
