@@ -177,7 +177,7 @@ static Kernel * createKernel();
     //can do in nothing:
         virtual unsigned long long size()=0;
         virtual void decreaseStep(step)=0;
-        //revert to a previous step
+    //revert to a previous step
         virtual bool setColorSet(const char* _RGB,
                                  const char* HSV,
                                  const char* Lab,
@@ -205,6 +205,10 @@ static Kernel * createKernel();
         // set original image from ARGB32 matrix (col-major)
         virtual unsigned short getColorCount() const=0;
         //get accessible color count
+        virtual void makeTests(const AbstractBlock **,
+                           const unsigned char *,
+                           const char *,char*)=0;
+        //make a structure that includes all accessible blocks
     //can do in convertionReady:
         virtual bool convert(convertAlgo=RGB_Better,bool dither=false)=0;
         //convert original image to map

@@ -83,7 +83,7 @@ void BlockListManager::addBlocks(const QJsonArray & jArray,QString imgDir) {
             continue;
         }
         if(!temp.contains("version"))temp["version"]=0;
-        if(!temp.contains("idOld"))   temp["idOld"]="";
+        if(!temp.contains("idOld"))   temp["idOld"]=temp["id"];
         if(!temp.contains("needGlass")) temp["needGlass"]=false;
         if(!temp.contains("isGlowing")) temp["isGlowing"]=false;
         if(!temp.contains("icon")) temp["icon"]="";
@@ -210,6 +210,28 @@ void BlockListManager::getTokiBaseColors
     for(const auto it : tbcs) {
         dest.emplace_back(it);
     }
+}
+
+int BlockListManager::getBlockNum() const {
+    int result=0;
+    for(auto it : tbcs) {
+        result+=it->tbs.size();
+    }
+    return result;
+}
+
+void BlockListManager::getBlockPtrs(const AbstractBlock ** dest,
+                                    uint8_t * baseColor) const {
+    int idx=0;
+    uint8_t base=0;
+    for(auto it : tbcs) {
+        for (auto jt : it->tbs) {
+            baseColor[idx]=base;
+            dest[idx++]=jt->getSimpleBlock();
+        }
+        base++;
+    }
+    dest[idx]=nullptr;
 }
 
 const QString BlockListManager:: baseColorNames[64]={

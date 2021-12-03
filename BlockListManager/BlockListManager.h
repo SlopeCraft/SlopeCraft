@@ -58,6 +58,9 @@ public:
     std::vector<ushort> toPreset() const;
 
     void getTokiBaseColors(std::vector<const TokiBaseColor*> &) const;
+
+    int getBlockNum() const;
+    void getBlockPtrs(const AbstractBlock **,uint8_t*) const;
 public slots:
 
 signals:

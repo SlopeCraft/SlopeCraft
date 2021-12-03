@@ -86,6 +86,8 @@ public:
     }
     void decreaseStep(step);
     bool setColorSet(const char*,const char*,const char*,const char*);
+    void makeTests(const AbstractBlock **,const unsigned char *,const char *,char*);
+    std::string makeTests(const AbstractBlock **,const uint8_t *,const std::string & );
 //can do in colorSetReady:
     step queryStep() const;
 
@@ -200,11 +202,11 @@ private:
     void buildHeight(bool=false,bool=false);//构建Build
     void makeBridge();
 //for Litematic
-    void writeBlock(const std::string &netBlockId,
+    static void writeBlock(const std::string &netBlockId,
                     const std::vector<std::string>&Property,
                     const std::vector<std::string>&ProVal,
-                    NBT::NBTWriter&) const;
-    void writeTrash(int count,NBT::NBTWriter&) const;
+                    NBT::NBTWriter&);
+    static void writeTrash(int count,NBT::NBTWriter&);
     std::string Noder(const short *src,int size) const;
 
 };

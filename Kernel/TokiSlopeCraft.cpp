@@ -202,6 +202,143 @@ bool readFromTokiColor(const char*src,ColorList & M) {
     return true;
 }
 
+void TokiSlopeCraft::makeTests(const AbstractBlock ** src,
+                               const unsigned char * baseColor,
+                               const char * dst,char * _unFileName) {
+    if(kernelStep<step::wait4Image) {
+        emit reportError(errorFlag::HASTY_MANIPULATION);
+        std::strcpy(_unFileName,"");
+        return;
+    }
+
+    std::string s=makeTests(src,baseColor,std::string(dst));
+    std::strcpy(_unFileName,s.data());
+}
+
+bool endsWith(const std::string & full, const std::string & suffix) {
+    const char * full_ptr=&full.back(),*suffix_ptr=&suffix.back();
+    while(true) {
+        if(*full_ptr==*suffix_ptr) {
+            full_ptr--;
+            suffix_ptr--;
+        } else {
+            return false;
+        }
+    }
+    return true;
+}
+
+std::string TokiSlopeCraft::makeTests(const AbstractBlock ** src,
+                               const uint8_t * baseColor,
+                               const std::string & fileName) {
+
+    if(kernelStep<=step::wait4Image) {
+        emit reportError(errorFlag::HASTY_MANIPULATION);
+        return "";
+    }
+
+    if(!endsWith(fileName,".nbt")&&!endsWith(fileName,".NBT")) {
+        return "";
+    }
+
+    const simpleBlock ** realSrc=(const simpleBlock **)src;
+
+    std::vector<std::vector<int>> blocks;
+    blocks.resize(64);
+
+    int totalTypes=0;
+
+    for(auto & it : blocks) {
+        while(!it.empty()) {
+            it.clear();
+            it.reserve(16);
+        }
+    }
+    for(int idx=0;;idx++) {
+        if(src[idx]==nullptr) {
+            break;
+        }
+        blocks[baseColor[idx]].push_back(idx);
+        totalTypes++;
+    }
+
+
+    int xSize=-1;
+    static const int zSize=64,ySize=1;
+    for(const auto & it : blocks) {
+        xSize=std::max(size_t(xSize),it.size());
+    }
+
+    NBT::NBTWriter file;
+    std::string unCompress=fileName+".TokiNoBug";
+        file.open(unCompress.data());
+        file.writeListHead("entities",NBT::idByte,0);
+        file.writeListHead("size",NBT::idInt,3);
+        file.writeInt("This should never be shown",xSize);
+        file.writeInt("This should never be shown",ySize);
+        file.writeInt("This should never be shown",zSize);
+        file.writeListHead("palette",NBT::idCompound,totalTypes);
+        {
+            std::vector<std::string> ProName,ProVal;
+            std::string netBlockId;
+            simpleBlock::dealBlockId("air",netBlockId,&ProName,&ProVal);
+            writeBlock(netBlockId,ProName,ProVal,file);
+            for(const auto & it : blocks) {
+                for(const auto jt : it) {
+                    simpleBlock::dealBlockId(
+                                (mcVer>gameVersion::MC12)?
+                                    (realSrc[jt]->id):(realSrc[jt]->idOld),
+                        netBlockId,&ProName,&ProVal);
+                    writeBlock(netBlockId,ProName,ProVal,file);
+                }
+            }
+            file.writeListHead("blocks",NBT::idCompound,totalTypes);
+
+            for(uint8_t base=0;base<64;base++) {
+                for(uint32_t idx=0;idx<blocks[base].size();idx++) {
+                    int xPos=idx;
+                    int yPos=0;
+                    int zPos=base;
+                    file.writeCompound("This should never be shown");
+                    file.writeListHead("pos",NBT::idInt,3);
+                    file.writeInt("This should never be shown",xPos);
+                    file.writeInt("This should never be shown",yPos);
+                    file.writeInt("This should never be shown",zPos);
+                    file.writeInt("state",blocks[base][idx]+1);
+                    file.endCompound();
+                }
+            }
+
+        }
+                switch (mcVer)
+                {
+                case MC12:
+                    file.writeInt("DataVersion",1343);
+                    break;
+                case MC13:
+                    file.writeInt("DataVersion",1631);
+                    break;
+                case MC14:
+                    file.writeInt("DataVersion",1976);
+                    break;
+                case MC15:
+                    file.writeInt("DataVersion",2230);
+                    break;
+                case MC16:
+                    file.writeInt("DataVersion",2586);
+                    break;
+                case MC17:
+                    file.writeInt("DataVersion",2730);
+                    break;
+                default:
+                    std::cerr<<"Wrong game version!\n";
+                    break;
+                }
+    file.close();
+
+    return unCompress;
+}
+
 TokiSlopeCraft::step TokiSlopeCraft::queryStep() const {
     return kernelStep;
 }
@@ -1274,7 +1411,7 @@ int TokiSlopeCraft::getBlockCounts() const {
 void TokiSlopeCraft::writeBlock(const std::string &netBlockId,
                 const std::vector<std::string> & Property,
                 const std::vector<std::string> & ProVal,
-                NBT::NBTWriter & Lite) const {
+                NBT::NBTWriter & Lite) {
     Lite.writeCompound("ThisStringShouldNeverBeSeen");
         std::string BlockId=netBlockId;
 
@@ -1299,7 +1436,7 @@ void TokiSlopeCraft::writeBlock(const std::string &netBlockId,
         Lite.endCompound();
 }
 
-void TokiSlopeCraft::writeTrash(int count,NBT::NBTWriter & Lite) const {
+void TokiSlopeCraft::writeTrash(int count,NBT::NBTWriter & Lite) {
     std::vector<std::string> ProName(5),ProVal(5);
     //ProName:NEWSP
     //,,,,
@@ -1514,7 +1651,10 @@ std::string TokiSlopeCraft::exportAsStructure(const std::string &TargetName) con
                     writeBlock(netBlockId,ProName,ProVal,file);
                     for(short r=0;r<written;r++)
                     {
-                        simpleBlock::dealBlockId(blockPalette[r].id,netBlockId,&ProName,&ProVal);
+                        simpleBlock::dealBlockId(
+                                    (mcVer>gameVersion::MC12)?(blockPalette[r].id):(blockPalette[r].idOld),
+                                                 netBlockId,
+                                                 &ProName,&ProVal);
                         writeBlock(netBlockId,ProName,ProVal,file);
                     }//到此写入了written+1个方块，还需要写入69-written个
 

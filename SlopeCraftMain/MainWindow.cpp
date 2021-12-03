@@ -79,25 +79,25 @@ MainWindow::MainWindow(QWidget *parent)
 
     transSubWind=nullptr;
 
-        connect(ui->progressStart,&QRadioButton::clicked,this,&MainWindow::turnToPage0);
-        connect(ui->progressImPic,&QRadioButton::clicked,this,&MainWindow::turnToPage1);
-        connect(ui->progressType,&QRadioButton::clicked,this,&MainWindow::turnToPage2);
-        connect(ui->progressBL,&QRadioButton::clicked,this,&MainWindow::turnToPage3);
-        connect(ui->progressAdjPic,&QRadioButton::clicked,this,&MainWindow::turnToPage4);
-        connect(ui->progressExLite,&QRadioButton::clicked,this,&MainWindow::turnToPage5);
-        connect(ui->progressExStructure,&QRadioButton::clicked,this,&MainWindow::turnToPage5);
+        connect(ui->progressStart,&QPushButton::clicked,this,&MainWindow::turnToPage0);
+        connect(ui->progressImPic,&QPushButton::clicked,this,&MainWindow::turnToPage1);
+        connect(ui->progressType,&QPushButton::clicked,this,&MainWindow::turnToPage2);
+        connect(ui->progressBL,&QPushButton::clicked,this,&MainWindow::turnToPage3);
+        connect(ui->progressAdjPic,&QPushButton::clicked,this,&MainWindow::turnToPage4);
+        connect(ui->progressExLite,&QPushButton::clicked,this,&MainWindow::turnToPage5);
+        connect(ui->progressExStructure,&QPushButton::clicked,this,&MainWindow::turnToPage5);
         //connect(ui->menuExMcF,&QAction::trigger,this,&MainWindow::turnToPage6);
-        connect(ui->progressExData,&QRadioButton::clicked,this,&MainWindow::turnToPage7);
-        connect(ui->progressAbout,&QRadioButton::clicked,this,&MainWindow::turnToPage8);
+        connect(ui->progressExData,&QPushButton::clicked,this,&MainWindow::turnToPage7);
+        connect(ui->progressAbout,&QPushButton::clicked,this,&MainWindow::turnToPage8);
         connect(ui->actionAboutSlopeCraft,&QAction::triggered,this,&MainWindow::turnToPage8);
         connect(ui->actionChinese,&QAction::triggered,this,&MainWindow::turnCh);
         connect(ui->actionEnglish,&QAction::triggered,this,&MainWindow::turnEn);
-        connect(ui->progressChinese,&QRadioButton::clicked,this,&MainWindow::turnCh);
-        connect(ui->progressEnglish,&QRadioButton::clicked,this,&MainWindow::turnEn);
+        connect(ui->progressChinese,&QPushButton::clicked,this,&MainWindow::turnCh);
+        connect(ui->progressEnglish,&QPushButton::clicked,this,&MainWindow::turnEn);
         connect(ui->actionToki,&QAction::triggered,this,&MainWindow::contactG);
         connect(ui->actionDoki,&QAction::triggered,this,&MainWindow::contactB);
-        connect(ui->progressG,&QRadioButton::clicked,this,&MainWindow::contactG);
-        connect(ui->progressB,&QRadioButton::clicked,this,&MainWindow::contactB);
+        connect(ui->progressG,&QPushButton::clicked,this,&MainWindow::contactG);
+        connect(ui->progressB,&QPushButton::clicked,this,&MainWindow::contactB);
 
         connect(ui->contact,&QPushButton::clicked,this,&MainWindow::contactB);
         connect(ui->contact,&QPushButton::clicked,this,&MainWindow::contactG);
@@ -109,22 +109,24 @@ MainWindow::MainWindow(QWidget *parent)
     qDebug("成功connect所有的菜单");
 
 
-        connect(ui->NextPage,&QRadioButton::clicked,
+        connect(ui->NextPage,&QPushButton::clicked,
                 this,&MainWindow::turnToPage2);
-        connect(ui->NextPage2,&QRadioButton::clicked,
+        connect(ui->NextPage2,&QPushButton::clicked,
                 this,&MainWindow::turnToPage3);
-        connect(ui->NextPage3,&QRadioButton::clicked,
+        connect(ui->NextPage3,&QPushButton::clicked,
                 this,&MainWindow::turnToPage4);
-        connect(ui->ExLite,&QRadioButton::clicked,
+        connect(ui->ExLite,&QPushButton::clicked,
                 this,&MainWindow::turnToPage5);
-        //connect(ui->ExMcF,&QRadioButton::clicked,this,&MainWindow::turnToPage6);
-        connect(ui->ExData,&QRadioButton::clicked,
+        connect(ui->ExStructure,&QPushButton::clicked,
+                this,&MainWindow::turnToPage5);
+
+        connect(ui->ExData,&QPushButton::clicked,
                 this,&MainWindow::turnToPage7);
-        connect(ui->FinishExLite,&QRadioButton::clicked,
+        connect(ui->FinishExLite,&QPushButton::clicked,
                 this,&MainWindow::turnToPage8);
-        connect(ui->FinshExData,&QRadioButton::clicked,
+        connect(ui->FinshExData,&QPushButton::clicked,
                 this,&MainWindow::turnToPage8);
-        connect(ui->Exit,&QRadioButton::clicked,
+        connect(ui->Exit,&QPushButton::clicked,
                 this,&MainWindow::close);
     qDebug("成功connect所有的翻页按钮");
 
@@ -738,6 +740,7 @@ void MainWindow::updateEnables() {
 
     temp=Kernel->queryStep()>=TokiSlopeCraft::convertionReady;
     ui->ShowRaw->setEnabled(temp);
+    //ui->Convert->setEnabled(temp);
 
     temp=Kernel->queryStep()>=TokiSlopeCraft::converted;
     ui->ShowAdjed->setEnabled(temp);
