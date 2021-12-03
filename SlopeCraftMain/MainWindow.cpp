@@ -820,6 +820,11 @@ void MainWindow::onImportPicclicked(QString input) {
 
     if(userSelected.size()==1) {
         QString Path=userSelected.front();
+
+        if(Path.isEmpty()) {
+            return;
+        }
+
         if(!rawPic.load(Path))
         {
             QMessageBox::information(this,tr("打开图片失败"),tr("要不试试换一张图片吧！"));
