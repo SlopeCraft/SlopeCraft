@@ -106,6 +106,9 @@ MainWindow::MainWindow(QWidget *parent)
         connect(ui->actionCheckUpdates,&QAction::triggered,
                 this,&MainWindow::checkVersion);
 
+        connect(ui->actionTestBlockList,&QAction::triggered,
+                this,&MainWindow::testBlockList);
+
     qDebug("成功connect所有的菜单");
 
 
@@ -737,6 +740,9 @@ void MainWindow::updateEnables() {
 
     //temp=Kernel->queryStep()>=TokiSlopeCraft::convertionReady;
     ui->Convert->setEnabled(temp);
+
+    temp=Kernel->queryStep()>=TokiSlopeCraft::step::wait4Image;
+    ui->actionTestBlockList->setEnabled(temp);
 
     temp=Kernel->queryStep()>=TokiSlopeCraft::convertionReady;
     ui->ShowRaw->setEnabled(temp);
@@ -1912,4 +1918,47 @@ void MainWindow::on_FirstWool_clicked() {
 
 void MainWindow::on_FirstStainedGlass_clicked() {
     selectBlockByString("stained_glass");
+}
+
+void MainWindow::testBlockList() {
+    std::vector<const AbstractBlock *> ptr_buffer;
+    std::vector<uchar> base_buffer;
+
+    const int buffSize=Manager->getBlockNum();
+    ptr_buffer.resize(buffSize+1);
+    base_buffer.resize(buffSize+1);
+
+    Manager->getBlockPtrs(ptr_buffer.data(),base_buffer.data());
+
+    qDebug()<<"File="<<__FILE__<<" , Line="<<__LINE__;
+
+    QString targetName=QFileDialog::getSaveFileName(this,
+                                                    tr("测试方块列表的结构文件"),
+                                                    "",
+                                                    "*.nbt");
+    if(targetName.isEmpty()) {
+        return;
+    }
+
+    qDebug()<<"File="<<__FILE__<<" , Line="<<__LINE__;
+    std::string unCompressed=Kernel->makeTests(
+                ptr_buffer.data(),base_buffer.data(),targetName.toLocal8Bit().data());
+    if(unCompressed.empty()) {
+        return;
+    }
+    qDebug()<<"File="<<__FILE__<<" , Line="<<__LINE__;
+    if(!compressFile(unCompressed.data(),targetName.toLocal8Bit().data())) {
+        std::cerr<<"Compress failed\n";
+    }
+
+    qDebug()<<"File="<<__FILE__<<" , Line="<<__LINE__;
+    std::cerr<<"Compress success\n";
+
+    QFile tempFile(QString::fromLocal8Bit(unCompressed.data()));
+    if(tempFile.exists()&&!tempFile.remove()) {
+        std::cerr<<"Failed to remove temporary file."<<std::endl;
+        return;
+    }
+    qDebug()<<"File="<<__FILE__<<" , Line="<<__LINE__;
+    std::cerr<<"Succeeded to remove temporary file\n";
 }

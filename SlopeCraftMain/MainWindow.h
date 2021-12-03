@@ -232,6 +232,8 @@ private slots:
 
     void on_FirstStainedGlass_clicked();
 
+    void testBlockList();
+
 private:
     Ui::MainWindow *ui;
 

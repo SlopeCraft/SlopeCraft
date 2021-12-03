@@ -1807,8 +1807,8 @@ font: 11pt &quot;微软雅黑&quot;;
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>554</width>
-               <height>377</height>
+               <width>78</width>
+               <height>22</height>
               </rect>
              </property>
              <property name="sizePolicy">
@@ -3555,8 +3555,15 @@ p, li { white-space: pre-wrap; }
     <addaction name="menuExport"/>
     <addaction name="actionFinish"/>
    </widget>
+   <widget class="QMenu" name="menuAdvanced">
+    <property name="title">
+     <string>高级</string>
+    </property>
+    <addaction name="actionTestBlockList"/>
+   </widget>
    <addaction name="menu_2"/>
    <addaction name="menuLanguages"/>
+   <addaction name="menuAdvanced"/>
    <addaction name="menuAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -3723,6 +3730,14 @@ p, li { white-space: pre-wrap; }
     <string>完成</string>
    </property>
   </action>
+  <action name="actionTestBlockList">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>测试方块列表</string>
+   </property>
+  </action>
  </widget>
  <tabstops>
   <tabstop>isMapSurvival</tabstop>
@@ -3757,8 +3772,8 @@ p, li { white-space: pre-wrap; }
   <tabstop>NextPage2</tabstop>
  </tabstops>
  <resources>
-  <include location="BlockTextures.qrc"/>
   <include location="Pics.qrc"/>
+  <include location="BlockTextures.qrc"/>
  </resources>
  <connections/>
 </ui>

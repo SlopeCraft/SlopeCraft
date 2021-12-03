@@ -223,13 +223,12 @@ int BlockListManager::getBlockNum() const {
 void BlockListManager::getBlockPtrs(const AbstractBlock ** dest,
                                     uint8_t * baseColor) const {
     int idx=0;
-    uint8_t base=0;
     for(auto it : tbcs) {
         for (auto jt : it->tbs) {
-            baseColor[idx]=base;
-            dest[idx++]=jt->getSimpleBlock();
+            baseColor[idx]=it->baseColor;
+            dest[idx]=jt->getSimpleBlock();
+            idx++;
         }
-        base++;
     }
     dest[idx]=nullptr;
 }
