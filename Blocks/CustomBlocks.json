@@ -2,10 +2,10 @@
 "CustomBlocks":[
 {
     "baseColor":15,
-    "id":"minecraft:waxed_copper_slab[type=top,waterlogged=false]",
-    "nameZH":"涂蜡铜上半砖",
-    "nameEN":"Waxed copper slab",
-    "icon":"waxed_copper_block.png",
+    "id":"minecraft:waxed_cut_copper_slab[type=top,waterlogged=false]",
+    "nameZH":"涂蜡切制铜上半砖",
+    "nameEN":"Waxed cut copper slab",
+    "icon":"waxed_cut_copper.png",
     "version":17,
     "Hint0":"这个文件列出了所有用户自定义的方块的信息",
     "Hint1":"你可以按照这样的格式自定义添加新的方块，包括mod方块",
@@ -25,12 +25,13 @@
     "Hint15":"如果json格式出错，整个文件都会无法解析，SlopeCraft会报错。"
 },
 {
-    "baseColor":15,
-    "id":"minecraft:waxed_cut_copper_slab[type=top,waterlogged=false]",
-    "nameZH":"涂蜡切制铜上半砖",
-    "nameEN":"Waxed cut copper slab",
-    "icon":"waxed_cut_copper.png",
-    "version":17,
+    "baseColor":11,
+    "id":"minecraft:stone_slab[type=top,waterlogged=false]",
+    "nameZH":"石头上半砖",
+    "nameEN":"Stone slab",
+    "icon":"stone.png",
+    "version":0,
+    "idOld":"minecraft:stone_slab[half=top,variant=stone]",
     "Hint0":"This json file includes information of all custom blocks.",
     "Hint1":"You can add your custom block in such format, including mod-blocks.",
     "Hint2":"But always remember to follow json format",
@@ -47,15 +48,6 @@
     "Hint13":"burnable means if the block can be lit by fire, lava or lightning blot, default value is false",
     "Hint14":"All hints will be ignored",
     "Hint15":"The whole file will failed to be parsed once an error occurred in json format, then SlopeCraft will complain."
-},
-{
-    "baseColor":11,
-    "id":"minecraft:stone_slab[type=top,waterlogged=false]",
-    "nameZH":"石头上半砖",
-    "nameEN":"Stone slab",
-    "icon":"stone.png",
-    "version":0,
-    "idOld":"minecraft:stone_slab[half=top,variant=stone]"
 },
 {
     "baseColor":2,
