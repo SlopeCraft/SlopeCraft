@@ -51,7 +51,7 @@ void AbstractBlock::copyTo(AbstractBlock *dst) const {
     dst->setWallUseable(getWallUseable());
 }
 
-void AbstractBlock::setEmpty() {
+void AbstractBlock::clear() {
     setBurnable(false);
     setDoGlow(false);
     setEndermanPickable(false);

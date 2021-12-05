@@ -69,7 +69,7 @@ public:
     virtual void setWallUseable(bool)=0;
 
     void copyTo(AbstractBlock * dst) const;
-    void setEmpty();
+    void clear();
 };
 
 
@@ -149,12 +149,12 @@ static Kernel * createKernel();
         USEABLE_COLOR_TOO_FEW=0x04,//too few color to convert
         EMPTY_RAW_IMAGE=0x05,//the original image is empty
         PARSING_COLORMAP_RGB_FAILED=0x10,//colorsheet error
-        PARSING_COLORMAP_HSV_FAILED=0x11,
-        PARSING_COLORMAP_Lab_FAILED=0x12,
-        PARSING_COLORMAP_XYZ_FAILED=0x13,
+        PARSING_COLORMAP_HSV_FAILED=0x11,//colorsheet error
+        PARSING_COLORMAP_Lab_FAILED=0x12,//colorsheet error
+        PARSING_COLORMAP_XYZ_FAILED=0x13,//colorsheet error
     };
     enum workStatues {
-        none=-1,//waitsting
+        none=-1,//waiting
         collectingColors=0x00,
         converting=0x01,
         dithering=0x02,
