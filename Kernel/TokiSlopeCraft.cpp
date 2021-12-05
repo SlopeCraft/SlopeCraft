@@ -356,7 +356,7 @@ bool TokiSlopeCraft::setType(mapTypes type,
     for(short i=0;i<64;i++) {
         //std::cerr<<"Block_"<<i<<std::endl;
         if(palettes[i]==nullptr) {
-            blockPalette[i].setEmpty();
+            blockPalette[i].clear();
             continue;
         }
         palettes[i]->copyTo(&blockPalette[i]);
