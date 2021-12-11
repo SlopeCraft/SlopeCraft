@@ -68,15 +68,6 @@
     "idOld":"minecraft:stone_slab[half=top,variant=cobblestone]"
 },
 {
-    "baseColor":0,
-    "id":"minecraft:redstone_lamp[lit=false]",
-    "nameZH":"红石灯",
-    "nameEN":"Redstone lamp",
-    "icon":"redstone_lamp.png",
-    "version":0,
-    "idOld":"minecraft:redstone_lamp"
-},
-{
     "baseColor":28,
     "id":"minecraft:brick_slab[type=top,waterlogged=false]",
     "nameZH":"砖块上半砖",

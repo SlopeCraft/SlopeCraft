@@ -34,7 +34,7 @@
  - 1.13+ Command: `/give @p filled_map{map:i}` where i is the number for the map
 
 6. Can I shrink the map? 
- - Not recommended. Whether or not the map is shrinked, the pixel will always be 128x128, and the quality will be decreased, the best way to promote quality is still using multiple maps.
+ - Deprecated. Whether or not the map is shrinked, the pixel will always be 128x128, and the quality will be decreased, the best way to promote quality is still using multiple maps.
 
 7. My Litematic file wasn't able to be loaded
  - Don't put non-English characters into the **Litematic File Name** area, it will screw it up.
