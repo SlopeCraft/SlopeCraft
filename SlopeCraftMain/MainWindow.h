@@ -143,6 +143,8 @@ public slots:
 
     void setAutoCheckUpdate(bool);
 
+    void grabVersion(bool isAuto=true);
+
 private slots:    
     void progressRangeSet(int min,int max,int val);//设置进度条的取值范围和值
     void progressAdd(int deltaVal);
@@ -264,8 +266,6 @@ private:
     QString getFixedBlockListDir(QString);
     QJsonArray getCustomBlockList(QString);
     QString getCustomBlockListDir(QString);
-
-    void grabVersion(bool isAuto=true);
 
     void selectBlockByString(const std::string &);
 

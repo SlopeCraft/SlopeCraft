@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
 
     bool autoCheck=settings["autoCheckUpdates"].toBool();
     if(autoCheck) {
-        w.checkVersion();
+        w.grabVersion(true);
     }
 
     return a.exec();
