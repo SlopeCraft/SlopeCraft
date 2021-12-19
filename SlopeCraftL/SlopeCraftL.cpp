@@ -20,26 +20,19 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
-#include "Kernel.h"
+#include "SlopeCraftL.h"
 #include "simpleBlock.h"
 #include "TokiSlopeCraft.h"
-
 using namespace SlopeCraft;
 
-AbstractBlock::AbstractBlock() {
-
-#ifdef STRAIGHT_INCLUDE_KERNEL
 #ifndef NO_DLL
-#error YOU MUST DEFINE NO_DLL WHEN DEFINED STRAIGHT_INCLUDE_KERNEL
-#endif
-#endif
-
-}
-#ifndef NO_DLL
-AbstractBlock * AbstractBlock::createSimpleBlock() {
+AbstractBlock * AbstractBlock::create() {
     return new simpleBlock;
 }
 #endif
+
+AbstractBlock::AbstractBlock() {}
+
 void AbstractBlock::copyTo(AbstractBlock *dst) const {
     dst->setBurnable(getBurnable());
     dst->setDoGlow(getDoGlow());
@@ -62,23 +55,11 @@ void AbstractBlock::clear() {
     setWallUseable(false);
 }
 
-#ifdef WITH_QT
-Kernel::Kernel(QObject *parent) : QObject(parent)
-#else
-Kernel::Kernel()
-#endif
-{
-
+Kernel::Kernel() {
 }
-#ifndef NO_DLL
-#ifdef WITH_QT
-Kernel * createKernel(QObject * parent) {
-    return new TokiSlopeCraft(parent);
-};
-#else
-Kernel * Kernel::createKernel() {
-    return new TokiSlopeCraft;
-};
-#endif
 
+#ifndef NO_DLL
+Kernel * Kernel::create() {
+    return (new TokiSlopeCraft)->toBaseClassPtr();
+}
 #endif

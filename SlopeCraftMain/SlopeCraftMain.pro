@@ -29,6 +29,7 @@ QMAKE_TARGET_PRODUCT = SlopeCraft
 INCLUDEPATH += D:\CppLibs\zlibs \
                                D:\CppLibs\eigen-3.4.0 \
                                ../Kernel \
+                               ../SlopeCraftL \
                                ../BlockListManager
 
 # You can make your code fail to compile if it uses deprecated APIs.
@@ -57,7 +58,6 @@ SOURCES += \
     ../BlockListManager/TokiBlock.cpp \
     ../Kernel/CIEDE00.cpp \
     ../Kernel/HeightLine.cpp \
-    ../Kernel/Kernel.cpp \
     ../Kernel/NBTWriter.cpp \
     ../Kernel/OptiChain.cpp \
     ../Kernel/PrimGlassBuilder.cpp \
@@ -67,6 +67,7 @@ SOURCES += \
     ../Kernel/lossyCompressor.cpp \
     ../Kernel/simpleBlock.cpp \
     ../Kernel/tokicolor.cpp \
+    ../SlopeCraftL/SlopeCraftL.cpp \
     BatchUi.cpp \
     TaskBox.cpp \
     TokiTask.cpp \
@@ -93,7 +94,6 @@ HEADERS += \
     ../BlockListManager/TokiBlock.h \
     ../Kernel/ColorSet.h \
     ../Kernel/HeightLine.h \
-    ../Kernel/Kernel.h \
     ../Kernel/NBTWriter.h \
     ../Kernel/OptiChain.h \
     ../Kernel/PrimGlassBuilder.h \
@@ -104,6 +104,8 @@ HEADERS += \
     ../Kernel/lossyCompressor.h \
     ../Kernel/object_pool.hpp \
     ../Kernel/simpleBlock.h \
+    ../SlopeCraftL/SlopeCraftL.h \
+    ../SlopeCraftL/SlopeCraftL_global.h \
     BatchUi.h \
     TaskBox.h \
     TokiTask.h \

@@ -22,7 +22,7 @@ This file is part of SlopeCraft.
 #ifndef SIMPLEBLOCK_H
 #define SIMPLEBLOCK_H
 
-#include "Kernel.h"
+#include "defines.h"
 using namespace SlopeCraft;
 #include <string>
 #include <vector>
@@ -31,10 +31,12 @@ using namespace SlopeCraft;
 typedef unsigned char uchar ;
 
 typedef std::vector<std::string> stringList;
+
 class simpleBlock : public AbstractBlock
 {
 public:
     simpleBlock();
+    virtual ~simpleBlock(){};
     std::string id;
     uchar version;
     std::string idOld;
@@ -97,6 +99,10 @@ public:
     void setWallUseable(bool _wall) {
         wallUseable=_wall;
     };
+
+    void destroy() {
+        delete this;
+    }
 
     static bool dealBlockId(const std::string & id ,
                             std::string & netBlockId,

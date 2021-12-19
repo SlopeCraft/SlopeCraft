@@ -4,7 +4,7 @@
 #define EIGEN_NO_DEBUG
 #include <Eigen/Dense>
 
-#include "Kernel.h"
+#include "SlopeCraftL.h"
 
 #ifndef WITH_QT
     #define removeQt

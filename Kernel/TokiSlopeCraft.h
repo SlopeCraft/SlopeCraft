@@ -34,7 +34,6 @@ This file is part of SlopeCraft.
 #include <unordered_map>
 
 #include "defines.h"
-#include "Kernel.h"
 #include <unsupported/Eigen/CXX11/Tensor>
 #include "ColorSet.h"
 #include "simpleBlock.h"
@@ -78,11 +77,14 @@ public:
 public:
     TokiSlopeCraft();
 #endif
-    ~TokiSlopeCraft();
+    virtual ~TokiSlopeCraft();
 
 //can do in nothing:
     unsigned long long size() {
         return sizeof(TokiSlopeCraft);
+    }
+    void destroy() {
+        delete this;
     }
     void decreaseStep(step);
     bool setColorSet(const char*,const char*,const char*,const char*);
@@ -150,6 +152,7 @@ public:
     const Eigen::Tensor<uchar,3> & getBuild() const;
 
 private:
+    friend class Kernel;
     enum ColorSpace {
         R='R',H='H',L='L',X='X'
     };
@@ -208,6 +211,10 @@ private:
                     NBT::NBTWriter&);
     static void writeTrash(int count,NBT::NBTWriter&);
     std::string Noder(const short *src,int size) const;
+
+    Kernel * toBaseClassPtr() {
+        return this;
+    }
 
 };
 #endif // TOKISLOPECRAFT_H
