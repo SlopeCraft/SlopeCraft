@@ -25,8 +25,6 @@ This file is part of SlopeCraft.
 #include <QDebug>
 #include "mainwindow.h"
 
-#define bufferSize 2048
-
 const ushort MainWindow::BLCreative[64]={0,0,1,1,0,0,0,0,3,0,4,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 const ushort MainWindow::BLCheaper[64]={0,0,0,0,1,0,5,2,3,0,4,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 const ushort MainWindow::BLBetter[64]={0,1,1,0,0,1,0,2,0,0,3,2,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0};
@@ -1501,30 +1499,6 @@ void MainWindow::switchLan(Language lang) {
             qDebug("成功调整为简体中文界面");
         }
         return;
-}
-
-bool compressFile(const char*sourcePath,const char*destPath) {
-    char buf[bufferSize]={0};
-    FILE*in=NULL;
-    gzFile out=NULL;
-    int len=0;
-    fopen_s(&in,sourcePath,"rb");
-    out=gzopen(destPath,"wb");
-    if(in==NULL||out==NULL)
-        return false;
-    while(true)
-    {
-        len=(int)fread(buf,1,sizeof(buf),in);
-        if(ferror(in))return false;
-        if(len==0)break;
-        if(len!=gzwrite(out,buf,(unsigned)len))
-            return false;
-        memset(buf,0,sizeof(buf));
-    }
-    fclose(in);
-    gzclose(out);
-    qDebug("succeed");
-    return true;
 }
 
 void MainWindow::on_allowGlassBridge_stateChanged(int arg1) {

@@ -150,6 +150,8 @@ enum errorFlag {
     MAX_ALLOWED_HEIGHT_LESS_THAN_14=0x03,
     USEABLE_COLOR_TOO_FEW=0x04,//too few color to convert
     EMPTY_RAW_IMAGE=0x05,//the original image is empty
+    FAILED_TO_COMPRESS=0x06,//failed to gzip
+    FAILED_TO_REMOVE=0x07,//failed to remove uncompressed files
     PARSING_COLORMAP_RGB_FAILED=0x10,//colorsheet error
     PARSING_COLORMAP_HSV_FAILED=0x11,//colorsheet error
     PARSING_COLORMAP_Lab_FAILED=0x12,//colorsheet error
@@ -233,6 +235,12 @@ enum workStatues {
 
     virtual void getConvertedImage(short * rows,short * cols,unsigned int * dest) const=0;
     //get converted image
+
+    virtual void exportAsData(const char * FolderPath,
+                              const int indexStart,
+                              int* fileCount,
+                              char ** dest) const=0;
+
 //can do in builded:
     virtual void exportAsLitematic(const char * TargetName,
                            const char * LiteName,

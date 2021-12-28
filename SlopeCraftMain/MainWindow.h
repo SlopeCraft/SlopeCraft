@@ -59,7 +59,6 @@ This file is part of SlopeCraft.
 #include <string>
 #include <cstring>
 #include <unordered_map>
-#include "zlib.h"
 
 #define WITH_QT
 #define NO_DLL
@@ -81,7 +80,6 @@ class MainWindow;
 
 //class ColorSet;
 
-bool compressFile(const char*sourcePath,const char*destPath);
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

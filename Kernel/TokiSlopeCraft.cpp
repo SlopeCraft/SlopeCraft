@@ -21,6 +21,7 @@ This file is part of SlopeCraft.
 */
 
 #include "TokiSlopeCraft.h"
+#include "zlib.h"
 
 const Eigen::Array<float,2,3>TokiSlopeCraft::DitherMapLR
         ={{0.0/16.0,0.0/16.0,7.0/16.0},
@@ -30,18 +31,6 @@ const Eigen::Array<float,2,3>TokiSlopeCraft::DitherMapRL
            {1.0/16.0,5.0/16.0,3.0/16.0}};;
 ColorSet TokiSlopeCraft::Basic;
 ColorSet TokiSlopeCraft::Allowed;
-
-
-
-#ifndef WITH_QT
-void defaultProgressRangeSet4Kernel(int,int,int) {return;};
-void defaultProgressAdd4Kernel(int) {return;};
-void defaultKeepAwake4Kernel() {return;};
-void defaultReportError(TokiSlopeCraft::errorFlag) {return;};
-void defaultReportWorkStatues(TokiSlopeCraft::workStatues) {return;};
-void defaultAlgoProgressRangeSet4Kernel(int,int,int) {return;};
-void defaultAlgoProgressAdd4Kernel(int) {return;}
-#endif
 
 bool readFromTokiColor(const std::string & FileName,ColorList & M);
 bool readFromTokiColor(const char*src,ColorList & M);
@@ -86,13 +75,13 @@ TokiSlopeCraft::TokiSlopeCraft()
             this,&TokiSlopeCraft::keepAwake);
 #else
 
-    progressRangeSet=defaultProgressRangeSet4Kernel;
-    progressAdd=defaultProgressAdd4Kernel;
-    keepAwake=defaultKeepAwake4Kernel;
-    reportError=defaultReportError;
-    reportWorkingStatue=defaultReportWorkStatues;
-    algoProgressAdd=defaultAlgoProgressAdd4Kernel;
-    algoProgressRangeSet=defaultAlgoProgressRangeSet4Kernel;
+    progressRangeSet=[](int,int,int){};
+    progressAdd=[](int){};
+    keepAwake=[](){};
+    reportError=[](errorFlag){};
+    reportWorkingStatue=[](workStatues){};
+    algoProgressAdd=[](int){};
+    algoProgressRangeSet=[](int,int,int){};
 
     glassBuilder->progressAdd=this->algoProgressAdd;
     glassBuilder->progressRangeSet=this->algoProgressRangeSet;
@@ -201,6 +190,33 @@ bool readFromTokiColor(const char*src,ColorList & M) {
     //qDebug()<<"TokiSlopeCraft::成功加载了一个颜色表";
     return true;
 }
+
+
+#define bufferSize 2048
+bool compressFile(const char*sourcePath,const char*destPath) {
+    char buf[bufferSize]={0};
+    FILE * in=nullptr;
+    gzFile out=nullptr;
+    int len=0;
+    fopen_s(&in,sourcePath,"rb");
+    out=gzopen(destPath,"wb");
+    if(in==nullptr||out==nullptr)
+        return false;
+    while(true)
+    {
+        len=(int)fread(buf,1,sizeof(buf),in);
+        if(ferror(in))return false;
+        if(len==0)break;
+        if(len!=gzwrite(out,buf,(unsigned)len))
+            return false;
+        memset(buf,0,sizeof(buf));
+    }
+    fclose(in);
+    gzclose(out);
+    //succeed
+    return true;
+}
+
 
 void TokiSlopeCraft::makeTests(const AbstractBlock ** src,
                                const unsigned char * baseColor,
@@ -328,7 +344,17 @@ std::string TokiSlopeCraft::makeTests(const AbstractBlock ** src,
                 }
     file.close();
 
-    return unCompress;
+    if(!compressFile(unCompress.data(),fileName.data())) {
+        emit reportError(errorFlag::FAILED_TO_COMPRESS);
+        return unCompress;
+    }
+
+    if(std::remove(unCompress.data())!=0) {
+        emit reportError(errorFlag::FAILED_TO_REMOVE);
+        return unCompress;
+    }
+
+    return fileName;
 }
 
 TokiSlopeCraft::step TokiSlopeCraft::queryStep() const {
@@ -952,6 +978,8 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(const std::string & Folder
                                             int indexStart) const {
     std::vector<std::string> unCompressedFileList;
     unCompressedFileList.clear();
+    std::vector<std::string> compressedFileList;
+    compressedFileList.clear();
 
     if(kernelStep<converted) {
         emit reportError(errorFlag::HASTY_MANIPULATION);
@@ -976,8 +1004,8 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(const std::string & Folder
         {
             offset[0]=r*128;
             offset[1]=c*128;
-
-            std::string currentUn=FolderPath+"/map_"+std::to_string(currentIndex)+".dat.TokiNoBug";
+            std::string currentCn=FolderPath+"/map_"+std::to_string(currentIndex)+".dat";
+            std::string currentUn=currentCn+".TokiNoBug";
             //string currentFile=FolderPath+"/map_"+std::to_string(currentIndex)+".dat";
 
             std::cerr<<"Export map of ("<<r<<","<<c<<")"<<currentUn<<std::endl;
@@ -1070,7 +1098,8 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(const std::string & Folder
                     }
                 MapFile.endCompound();
                 MapFile.close();
-                unCompressedFileList.push_back(currentUn);
+                unCompressedFileList.emplace_back(currentUn);
+                compressedFileList.emplace_back(currentCn);
                 /*
                 if(compressFile(currentUn.data(),currentFile.data()))
                 {
@@ -1084,7 +1113,23 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(const std::string & Folder
 
     emit reportWorkingStatue(workStatues::none);
 
-    return unCompressedFileList;
+    for(uint32_t i=0;i<compressedFileList.size();i++) {
+        bool success=true;
+        success=success&&
+                compressFile(unCompressedFileList[i].data(),
+                                      compressedFileList[i].data());
+        if(!success) {
+            emit reportError(errorFlag::FAILED_TO_COMPRESS);
+            continue;
+        }
+        success=success&&(std::remove(unCompressedFileList[i].data())==0);
+        if(!success) {
+            emit reportError(errorFlag::FAILED_TO_REMOVE);
+            continue;
+        }
+    }
+
+    return compressedFileList;
 }
 
 bool TokiSlopeCraft::build(compressSettings cS, ushort mAH,
@@ -1606,7 +1651,17 @@ std::string TokiSlopeCraft::exportAsLitematic(const std::string & TargetName,
 
     emit reportWorkingStatue(workStatues::none);
 
+    if(!compressFile(unCompressed.data(),TargetName.data())) {
+        emit reportError(errorFlag::FAILED_TO_COMPRESS);
         return unCompressed;
+    }
+
+    if(std::remove(unCompressed.data())!=0) {
+        emit reportError(errorFlag::FAILED_TO_REMOVE);
+        return unCompressed;
+    }
+
+        return TargetName;
 }
 
 void TokiSlopeCraft::exportAsStructure(const char *TargetName,
@@ -1703,7 +1758,18 @@ std::string TokiSlopeCraft::exportAsStructure(const std::string &TargetName) con
     file.close();
     emit progressRangeSet(0,100,100);
     emit reportWorkingStatue(workStatues::none);
-    return unCompress;
+
+    if(!compressFile(unCompress.data(),TargetName.data())) {
+        emit reportError(errorFlag::FAILED_TO_COMPRESS);
+        return unCompress;
+    }
+
+    if(std::remove(unCompress.data())!=0) {
+        emit reportError(errorFlag::FAILED_TO_REMOVE);
+        return unCompress;
+    }
+
+        return TargetName;
 }
 
 int TokiSlopeCraft::getXRange() const {
