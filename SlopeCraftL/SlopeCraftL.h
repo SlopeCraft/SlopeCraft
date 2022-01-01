@@ -242,6 +242,9 @@ enum workStatues {
     writingMapDataFiles=0x30,
     //dataFilesFinished=0x31,
 };
+
+    static void *allowedRGB();
+    static void *allowedMap();
 //can do in nothing:
     ///real size of kernel
     virtual unsigned long long size()=0;

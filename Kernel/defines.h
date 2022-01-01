@@ -21,8 +21,8 @@ typedef unsigned char uchar;
 typedef unsigned short ushort;
 typedef unsigned int uint;
 typedef unsigned int ARGB;
-typedef Eigen::Array<uint,Eigen::Dynamic,Eigen::Dynamic> EImage;
+typedef Eigen::Array<ARGB,Eigen::Dynamic,Eigen::Dynamic> EImage;
+typedef Eigen::Array<uint8_t,Eigen::Dynamic,1,Eigen::ColMajor,256> MapList;
 typedef Eigen::Array<float,Eigen::Dynamic,3,Eigen::ColMajor,256> ColorList;
 typedef Eigen::Array<float,Eigen::Dynamic,1,Eigen::ColMajor,256> TempVectorXf;
-typedef Eigen::Array<uchar,Eigen::Dynamic,1,Eigen::ColMajor,256> MapList;
 #endif // DEFINES_H

@@ -58,6 +58,14 @@ void AbstractBlock::clear() {
 Kernel::Kernel() {
 }
 
+void * Kernel::allowedRGB() {
+    return &TokiSlopeCraft::Allowed._RGB;
+}
+
+void * Kernel::allowedMap() {
+    return &TokiSlopeCraft::Allowed.Map;
+}
+
 #ifndef NO_DLL
 Kernel * Kernel::create() {
     return (new TokiSlopeCraft)->toBaseClassPtr();

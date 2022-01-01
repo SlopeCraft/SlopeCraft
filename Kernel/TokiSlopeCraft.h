@@ -153,6 +153,8 @@ public:
 
 private:
     friend class Kernel;
+    //friend void * allowedRGB();
+    //friend void * allowedMap();
     enum ColorSpace {
         R='R',H='H',L='L',X='X'
     };
