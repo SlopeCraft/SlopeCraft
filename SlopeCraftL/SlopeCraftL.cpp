@@ -58,6 +58,12 @@ void AbstractBlock::clear() {
 Kernel::Kernel() {
 }
 
+void Kernel::getColorMapPtrs(const float** f,const unsigned char** m,int* rows) {
+    *f=TokiSlopeCraft::Allowed._RGB.data();
+    *m=TokiSlopeCraft::Allowed.Map.data();
+    *rows=TokiSlopeCraft::Allowed.Map.size();
+}
+/*
 void * Kernel::allowedRGB() {
     return &TokiSlopeCraft::Allowed._RGB;
 }
@@ -65,7 +71,7 @@ void * Kernel::allowedRGB() {
 void * Kernel::allowedMap() {
     return &TokiSlopeCraft::Allowed.Map;
 }
-
+*/
 #ifndef NO_DLL
 Kernel * Kernel::create() {
     return (new TokiSlopeCraft)->toBaseClassPtr();

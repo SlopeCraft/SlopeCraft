@@ -243,8 +243,7 @@ enum workStatues {
     //dataFilesFinished=0x31,
 };
 
-    static void *allowedRGB();
-    static void *allowedMap();
+    static void getColorMapPtrs(const float**,const unsigned char**,int*);
 //can do in nothing:
     ///real size of kernel
     virtual unsigned long long size()=0;
