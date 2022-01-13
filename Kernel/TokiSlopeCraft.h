@@ -123,6 +123,8 @@ public:
                bool fireProof=false,bool endermanProof=false);//构建三维结构
     void getConvertedImage(short * rows,short * cols,unsigned int * dest) const;
     EImage getConovertedImage() const;
+    void getConvertedMap(short * rows,short * cols,unsigned char *) const;
+    //void getConvertedMap(Eigen::Arra) const;
     void exportAsData(const char *, const int, int * fileCount,char**) const;
     std::vector<std::string> exportAsData(const std::string &,int) const;
 //can do in builded:

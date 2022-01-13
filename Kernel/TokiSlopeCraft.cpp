@@ -945,6 +945,25 @@ RGBint=(RGBint>255).select(Eigen::ArrayXXi::Constant(256,3,255),RGBint);
     return cvtedImg;
 }
 
+void TokiSlopeCraft::getConvertedMap
+    (short * rows,short * cols,unsigned char * dst) const {
+    if(rows!=nullptr) {
+        *rows=getImageRows();
+    }
+    if(cols!=nullptr) {
+        *cols=getImageCols();
+    }
+
+    Eigen::Map<Eigen::Array<uint8_t,Eigen::Dynamic,Eigen::Dynamic>>
+            dest(dst,getImageRows(),getImageCols());
+
+    for(int r=0;r<getImageRows();r++) {
+        for(int c=0;c<getImageCols();c++) {
+            dest(r,c)=colorHash.find(ditheredImage(r,c))->second.Result;
+        }
+    }
+}
+
 short TokiSlopeCraft::getImageRows() const {
     if(kernelStep<convertionReady) {
         emit reportError(errorFlag::HASTY_MANIPULATION);

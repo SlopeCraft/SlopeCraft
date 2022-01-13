@@ -304,11 +304,13 @@ enum workStatues {
 
     ///get converted image
     virtual void getConvertedImage(short * rows,short * cols,unsigned int * dest) const=0;
-    //export as map data files
+    ///export as map data files
     virtual void exportAsData(const char * FolderPath,
                               const int indexStart,
                               int* fileCount,
                               char ** dest) const=0;
+    ///get converted map(in mapColor array)
+    virtual void getConvertedMap(short * rows,short * cols,unsigned char *) const=0;
 
 //can do in builded:
     ///export map into litematica files (*.litematic)
