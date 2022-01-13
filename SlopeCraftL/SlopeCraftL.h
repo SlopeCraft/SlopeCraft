@@ -244,6 +244,8 @@ enum workStatues {
 };
 
     static void getColorMapPtrs(const float**,const unsigned char**,int*);
+    //full palette
+    static const float * getBasicColorMapPtrs();
 //can do in nothing:
     ///real size of kernel
     virtual unsigned long long size()=0;
@@ -268,7 +270,7 @@ enum workStatues {
                  const AbstractBlock * [64])=0;
     ///get TokiNoBug's url
     virtual void getAuthorURL(int * count,char ** dest) const=0;
-    ///get palette in ARGB32
+    ///get palette (base colors only) in ARGB32
     virtual void getARGB32(unsigned int *) const=0;
 
 

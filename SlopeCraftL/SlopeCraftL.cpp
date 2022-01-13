@@ -63,6 +63,10 @@ void Kernel::getColorMapPtrs(const float** f,const unsigned char** m,int* rows) 
     *m=TokiSlopeCraft::Allowed.Map.data();
     *rows=TokiSlopeCraft::Allowed.Map.size();
 }
+
+const float * Kernel::getBasicColorMapPtrs() {
+    return TokiSlopeCraft::Basic._RGB.data();
+}
 /*
 void * Kernel::allowedRGB() {
     return &TokiSlopeCraft::Allowed._RGB;
