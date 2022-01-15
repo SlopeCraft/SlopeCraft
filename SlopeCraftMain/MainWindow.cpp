@@ -780,7 +780,7 @@ void MainWindow::updateEnables() {
     ui->actionExportData->setEnabled(temp);
 
     temp=(!ui->isMapCreative->isChecked())&&
-            Kernel->queryStep()>=SlopeCraft::Kernel::converted;
+            kernel->queryStep()>=SlopeCraft::Kernel::converted;
     ui->ExLite->setEnabled(temp);
     ui->progressExLite->setEnabled(temp);
     ui->actionExportLite->setEnabled(temp);
@@ -789,7 +789,7 @@ void MainWindow::updateEnables() {
     ui->actionExportNBT->setEnabled(temp);
     ui->Build4Lite->setEnabled(temp);
 
-    temp=Kernel->queryStep()>=SlopeCraft::Kernel::builded;
+    temp=kernel->queryStep()>=SlopeCraft::Kernel::builded;
     ui->ExportLite->setEnabled(temp);
     ui->ManualPreview->setEnabled(temp);
 
@@ -888,7 +888,7 @@ void MainWindow::onImportPicclicked(QString input) {
         ui->ShowRawPic->setPixmap(QPixmap::fromImage(rawPic));
         ui->ShowPic->setPixmap(QPixmap::fromImage(rawPic));
 
-        Kernel->decreaseStep(SlopeCraft::Kernel::colorSetReady);
+        kernel->decreaseStep(SlopeCraft::Kernel::colorSetReady);
         updateEnables();
 
         return;
@@ -1001,7 +1001,7 @@ void MainWindow::onGameVerClicked() {
     if(ui->isGame17->isChecked()) {
         Manager->setVersion(17);
     }
-    Kernel->decreaseStep(SlopeCraft::Kernel::colorSetReady);
+    kernel->decreaseStep(SlopeCraft::Kernel::colorSetReady);
     onBlockListChanged();
     updateEnables();
 }
@@ -1019,14 +1019,14 @@ void MainWindow::onMapTypeClicked() {
     if(ui->isMapWall->isChecked()) {
         Manager->setEnabled(12,false);
     }
-    Kernel->decreaseStep(SlopeCraft::Kernel::colorSetReady);
+    kernel->decreaseStep(SlopeCraft::Kernel::colorSetReady);
     onBlockListChanged();
     updateEnables();
 }
 
 void MainWindow::ChangeToCustom() {
     ui->isBLCustom->setChecked(true);
-    Kernel->decreaseStep(SlopeCraft::Kernel::colorSetReady);
+    kernel->decreaseStep(SlopeCraft::Kernel::colorSetReady);
     updateEnables();
 }
 
@@ -1047,7 +1047,7 @@ void MainWindow::onPresetsClicked() {
     if(ui->isMapSurvival->isChecked())
         Manager->setEnabled(12,false);
 
-    Kernel->decreaseStep(SlopeCraft::Kernel::colorSetReady);
+    kernel->decreaseStep(SlopeCraft::Kernel::colorSetReady);
     updateEnables();
 }
 
@@ -1070,7 +1070,7 @@ void MainWindow::onAlgoClicked() {
     if(ui->isColorSpaceXYZ->isChecked())
         now=SlopeCraft::Kernel::convertAlgo::XYZ;
     if(lastChoice!=now||lastDither!=nowDither)
-        Kernel->decreaseStep(SlopeCraft::Kernel::step::convertionReady);
+        kernel->decreaseStep(SlopeCraft::Kernel::step::convertionReady);
 
     updateEnables();
     lastChoice=now;
@@ -1111,22 +1111,22 @@ void MainWindow::kernelSetType() {
     bool allowedBaseColor[64];
     Manager->getEnableList(allowedBaseColor);
 
-    std::array<const AbstractBlock *,64> palette;
+    std::array<const SlopeCraft::AbstractBlock *,64> palette;
     //const AbstractBlock * palette[64];
     Manager->getSimpleBlockList(palette.data());
 
 
-    Kernel->setType(type,ver,allowedBaseColor,palette.data());
+    kernel->setType(type,ver,allowedBaseColor,palette.data());
 
     updateEnables();
 
-    TokiTask::canExportLite=Kernel->isVanilla();
+    TokiTask::canExportLite=kernel->isVanilla();
     emit mapTypeChanged();
 }
 
 void MainWindow::kernelSetImg() {
     EImage rawImg=QImage2EImage(rawPic);
-    Kernel->setRawImage(rawImg);
+    kernel->setRawImage(rawImg.data(),rawImg.rows(),rawImg.cols());
 }
 
 EImage QImage2EImage(const QImage & qi) {
@@ -1156,46 +1156,50 @@ QImage EImage2QImage(const EImage & ei,ushort scale) {
     return qi;
 }
 
-void MainWindow::progressRangeSet(int min,int max,int val) {
+void MainWindow::progressRangeSet(void *p,int min,int max,int val) {
+    MainWindow * wind=(MainWindow*)p;
     //设置进度条的取值范围和值
-    if(proTracker==nullptr) {
+    if(wind->proTracker==nullptr) {
         qDebug("错误！proTracker==nullptr");
         return;
     }
-    proTracker->setRange(min,max);
-    proTracker->setValue(val);
+    wind->proTracker->setRange(min,max);
+    wind->proTracker->setValue(val);
 }
 
-void MainWindow::progressAdd(int deltaVal) {
-    if(proTracker==nullptr) {
+void MainWindow::progressAdd(void *p,int deltaVal) {
+    MainWindow * wind=(MainWindow*)p;
+    if(wind->proTracker==nullptr) {
         qDebug("错误！proTracker==nullptr");
         return;
     }
-    proTracker->setValue(deltaVal+
-                                    proTracker->value());
+    wind->proTracker->setValue(deltaVal+
+                                    wind->proTracker->value());
 }
 
-void MainWindow::algoProgressRangeSet(int min,int max,int val) {
-    ui->algoBar->setRange(min,max);
-    ui->algoBar->setValue(val);
+void MainWindow::algoProgressRangeSet(void *p,int min,int max,int val) {
+    MainWindow * wind=(MainWindow*)p;
+    wind->ui->algoBar->setRange(min,max);
+    wind->ui->algoBar->setValue(val);
 }
 
-void MainWindow::algoProgressAdd(int deltaVal) {
-    ui->algoBar->setValue(ui->algoBar->value()+deltaVal);
+void MainWindow::algoProgressAdd(void * p,int deltaVal) {
+    MainWindow * wind=(MainWindow*)p;
+    wind->ui->algoBar->setValue(wind->ui->algoBar->value()+deltaVal);
 }
 
 void MainWindow::on_Convert_clicked() {
-if(Kernel->queryStep()<SlopeCraft::Kernel::wait4Image) {
+if(kernel->queryStep()<SlopeCraft::Kernel::wait4Image) {
     qDebug("重新setType");
     onBlockListChanged();
-if(Kernel->queryStep()<SlopeCraft::Kernel::wait4Image)
+if(kernel->queryStep()<SlopeCraft::Kernel::wait4Image)
     return;
 }
 
-if(Kernel->queryStep()<SlopeCraft::Kernel::convertionReady) {
+if(kernel->queryStep()<SlopeCraft::Kernel::convertionReady) {
     qDebug("重新setImage");
     kernelSetImg();
-if(Kernel->queryStep()<SlopeCraft::Kernel::convertionReady)
+if(kernel->queryStep()<SlopeCraft::Kernel::convertionReady)
     return;
 }
 
@@ -1218,7 +1222,7 @@ if(ui->isColorSpaceXYZ->isChecked())
 
 proTracker=ui->ShowProgressABbar;
 
-Kernel->decreaseStep(SlopeCraft::Kernel::step::convertionReady);
+kernel->decreaseStep(SlopeCraft::Kernel::step::convertionReady);
 updateEnables();
 
 bool temp=false;
@@ -1233,7 +1237,7 @@ ui->AllowDither->setEnabled(temp);
 
 std::clock_t startTime=std::clock();
 qDebug("开始convert");
-Kernel->convert(now,nowDither);
+kernel->convert(now,nowDither);
 
 qDebug()<<"convert用时"
        <<double(std::clock()-startTime)*1000.0/CLOCKS_PER_SEC
@@ -1258,13 +1262,16 @@ void MainWindow::on_ShowRaw_clicked() {
 }
 
 void MainWindow::on_ShowAdjed_clicked() {
+    EImage ei(kernel->getImageRows(),kernel->getImageCols());
+    short a,b;
+    kernel->getConvertedImage(&a,&b,ei.data());
     ui->ShowPic->setPixmap(QPixmap::fromImage(
-                               EImage2QImage(Kernel->getConovertedImage())));
+                               EImage2QImage(ei)));
 }
 
 void MainWindow::on_ExData_clicked() {
-    int mapRows=ceil(Kernel->getImageRows()/128.0);
-    int mapCols=ceil(Kernel->getImageCols()/128.0);
+    int mapRows=ceil(kernel->getImageRows()/128.0);
+    int mapCols=ceil(kernel->getImageCols()/128.0);
     int mapCounts=mapRows*mapCols;
     ui->ShowDataRows->setText(QString::number(mapRows));
     ui->ShowDataCols->setText(QString::number(mapCols));
@@ -1294,21 +1301,21 @@ void MainWindow::on_Build4Lite_clicked() {
     SlopeCraft::Kernel::glassBridgeSettings gBS=
             allowBridge?SlopeCraft::Kernel::withBridge:SlopeCraft::Kernel::noBridge;
 
-    Kernel->decreaseStep(SlopeCraft::Kernel::step::converted);
+    kernel->decreaseStep(SlopeCraft::Kernel::step::converted);
     ui->ExportLite->setEnabled(false);
     ui->FinishExLite->setEnabled(false);
     ui->ManualPreview->setEnabled(false);
 
     proTracker=ui->ShowProgressExLite;
     qDebug()<<"ui->maxHeight->value()="<<ui->maxHeight->value();
-    Kernel->build(cS,ui->maxHeight->value(),
+    kernel->build(cS,ui->maxHeight->value(),
                   gBS,ui->glassBridgeInterval->value(),
                   ui->allowAntiFire->isChecked(),ui->allowAntiEnderman->isChecked());
 
     int size3D[3],total;
 
-    Kernel->get3DSize(size3D[0],size3D[1],size3D[2]);
-    total=Kernel->getBlockCounts();
+    kernel->get3DSize(size3D[0],size3D[1],size3D[2]);
+    total=kernel->getBlockCounts();
     ui->ShowLiteBlocks->setText(QString::number(total));
     ui->ShowLiteXYZ->setText(QString::fromStdString(
                                      "X:"+std::to_string(size3D[0])+
@@ -1360,9 +1367,9 @@ void MainWindow::onExportLiteclicked(QString path) {
         this->proTracker=ui->ShowProgressExLite;
 
         if(putStructure)
-            unCompressed=Kernel->exportAsStructure(FileName);
+            unCompressed=kernel->exportAsStructure(FileName);
         else
-            unCompressed=Kernel->exportAsLitematic(FileName,
+            unCompressed=kernel->exportAsLitematic(FileName,
                                                    ui->InputLiteName->toPlainText().toUtf8().data(),
                                                    ui->InputAuthor->toPlainText().toUtf8().data(),
                                                    (ui->InputRegionName->toPlainText()+tr("(xz坐标=-65±128×整数)")).toUtf8().data());
@@ -1408,8 +1415,8 @@ void MainWindow::on_InputDataIndex_textChanged() {
         isIndexValid=isIndexValid&&(indexStart>=0);
         if(isIndexValid)
         {
-            if(ceil(Kernel->getImageRows()/128.0f)==1&&
-                    ceil(Kernel->getImageCols()/128.0f)==1)
+            if(ceil(kernel->getImageRows()/128.0f)==1&&
+                    ceil(kernel->getImageCols()/128.0f)==1)
             ui->ShowDataFileName->setText("map_"+QString::number(indexStart)+".dat");
             else
                 ui->ShowDataFileName->setText(
@@ -1462,7 +1469,7 @@ void MainWindow::onExportDataclicked(QString path) {
         FolderPath=FolderPath.replace('\\','/');
         ProductDir=FolderPath;
 
-        auto unCompressedList=Kernel->exportAsData(FolderPath.toLocal8Bit().data(),
+        auto unCompressedList=kernel->exportAsData(FolderPath.toLocal8Bit().data(),
                                                    indexStart);
         qDebug("导出地图文件成功");
         //QString::fromLocal8Bit(unCompressed.data())
@@ -1533,7 +1540,8 @@ void MainWindow::on_allowGlassBridge_stateChanged(int arg1) {
     ui->glassBridgeInterval->setEnabled(arg1);
 }
 
-void MainWindow::showError(SlopeCraft::Kernel::errorFlag error) {
+void MainWindow::showError(void *p,SlopeCraft::Kernel::errorFlag error) {
+    MainWindow * wind=(MainWindow*)p;
     QString title,text;
     bool isFatal=false;
     switch (error) {
@@ -1586,21 +1594,30 @@ void MainWindow::showError(SlopeCraft::Kernel::errorFlag error) {
         title=tr("允许使用的颜色过少");
         text=tr("你应该勾选启用尽可能多的基色，颜色太少是不行的！");
         break;
+    case SlopeCraft::Kernel::errorFlag::FAILED_TO_COMPRESS:
+        title=tr("导出时Gzip压缩文件失败");
+        text=tr("这可能是因为路径中含有中文字符！");
+        break;
+    case SlopeCraft::Kernel::errorFlag::FAILED_TO_REMOVE:
+        title=tr("导出时删除临时文件失败");
+        text=tr("这可能是因为路径中含有中文字符！");
+        break;
     }
     if(isFatal)
-        QMessageBox::warning(this,title,text,
+        QMessageBox::warning(wind,title,text,
                          QMessageBox::StandardButton::Ok,
                          QMessageBox::StandardButton::NoButton);
     else {
-        QMessageBox::critical(this,title,text,QMessageBox::StandardButton::Close);
-        emit ui->Exit->clicked();
+        QMessageBox::critical(wind,title,text,QMessageBox::StandardButton::Close);
+        emit wind->ui->Exit->clicked();
     }
-    updateEnables();
+    wind->updateEnables();
     return;
 }
 
-void MainWindow::showWorkingStatue(SlopeCraft::Kernel::workStatues statue) {
-QString title=this->windowTitle();
+void MainWindow::showWorkingStatue(void*p,SlopeCraft::Kernel::workStatues statue) {
+    MainWindow * wind=(MainWindow*)p;
+QString title=wind->windowTitle();
 const char spacer[]="   |   ";
 if(title.contains(spacer)) {
     title=title.left(title.lastIndexOf(spacer));
@@ -1650,7 +1667,7 @@ case SlopeCraft::Kernel::workStatues::writingMetaInfo:
     break;
 }
 
-setWindowTitle(title);
+wind->setWindowTitle(title);
 return;
 }
 
