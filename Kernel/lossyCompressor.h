@@ -73,9 +73,9 @@ public:
     const gene& getResult() const;
 
     void ** windPtr;
-    void (*progressRangeSet)(void*,int min,int max,int val);
-    void (*progressAdd)(void*,int);
-    void (*keepAwake)(void*);
+    void (**progressRangeSetPtr)(void*,int min,int max,int val);
+    void (**progressAddPtr)(void*,int);
+    void (**keepAwakePtr)(void*);
 
 private:
     std::vector<const TokiColor*> source;

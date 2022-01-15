@@ -57,9 +57,12 @@ Kernel::Kernel() {
 }
 
 void Kernel::getColorMapPtrs(const float** f,const unsigned char** m,int* rows) {
-    *f=TokiSlopeCraft::Allowed._RGB.data();
-    *m=TokiSlopeCraft::Allowed.Map.data();
-    *rows=TokiSlopeCraft::Allowed.Map.size();
+    if(f!=nullptr)
+        *f=TokiSlopeCraft::Allowed._RGB.data();
+    if(m!=nullptr)
+        *m=TokiSlopeCraft::Allowed.Map.data();
+    if(rows!=nullptr)
+        *rows=TokiSlopeCraft::Allowed.Map.size();
 }
 
 const float * Kernel::getBasicColorMapPtrs() {

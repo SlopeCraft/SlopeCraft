@@ -191,7 +191,7 @@ void LossyCompressor::runGenetic() {
     initialize();
     failTimes=0;
     generation=0;
-    progressRangeSet(*windPtr,0,maxGeneration,0);
+    (*progressRangeSetPtr)(*windPtr,0,maxGeneration,0);
     while(true) {
         caculateFitness();
         select();
@@ -207,12 +207,12 @@ void LossyCompressor::runGenetic() {
         generation++;
 
         if(generation%reportRate==0) {
-            keepAwake(*windPtr);
-            progressAdd(*windPtr,1*reportRate);
+            (*keepAwakePtr)(*windPtr);
+            (*progressAddPtr)(*windPtr,1*reportRate);
         }
     }
     std::cerr<<"result fitness="<<getResult().getFitness()<<std::endl;
-    progressRangeSet(*windPtr,0,maxGeneration,maxGeneration);
+    (*progressRangeSetPtr)(*windPtr,0,maxGeneration,maxGeneration);
 }
 
 void LossyCompressor::setSource(const Eigen::ArrayXi & _base,

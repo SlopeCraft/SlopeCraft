@@ -56,14 +56,14 @@ TokiSlopeCraft::TokiSlopeCraft()
     algoProgressRangeSet=[](void*,int,int,int){};
 
     glassBuilder->windPtr=&wind;
-    glassBuilder->progressAdd=this->algoProgressAdd;
-    glassBuilder->progressRangeSet=this->algoProgressRangeSet;
-    glassBuilder->keepAwake=this->keepAwake;
+    glassBuilder->progressAddPtr=&this->algoProgressAdd;
+    glassBuilder->progressRangeSetPtr=&this->algoProgressRangeSet;
+    glassBuilder->keepAwakePtr=&this->keepAwake;
 
     Compressor->windPtr=&wind;
-    Compressor->progressAdd=this->algoProgressAdd;
-    Compressor->progressRangeSet=this->algoProgressRangeSet;
-    Compressor->keepAwake=this->keepAwake;
+    Compressor->progressAddPtr=&this->algoProgressAdd;
+    Compressor->progressRangeSetPtr=&this->algoProgressRangeSet;
+    Compressor->keepAwakePtr=&this->keepAwake;
 }
 
 TokiSlopeCraft::~TokiSlopeCraft() {
@@ -197,12 +197,15 @@ void TokiSlopeCraft::makeTests(const AbstractBlock ** src,
                                const char * dst,char * _unFileName) {
     if(kernelStep<step::wait4Image) {
         reportError(wind,errorFlag::HASTY_MANIPULATION);
-        std::strcpy(_unFileName,"");
+
+        if(_unFileName!=nullptr)
+            std::strcpy(_unFileName,"");
         return;
     }
 
     std::string s=makeTests(src,baseColor,std::string(dst));
-    std::strcpy(_unFileName,s.data());
+    if(_unFileName!=nullptr)
+        std::strcpy(_unFileName,s.data());
 }
 
 std::string TokiSlopeCraft::makeTests(const AbstractBlock ** src,
@@ -485,9 +488,11 @@ bool TokiSlopeCraft::isFlat() const {
 void TokiSlopeCraft::getAuthorURL(int * count,char **dest) const {
     std::vector<std::string> result=getAuthorURL();
     for(ushort i=0;i<result.size();i++) {
-        std::strcpy(dest[i],result[i].data());
+        if(dest!=nullptr&&dest[i]!=nullptr)
+            std::strcpy(dest[i],result[i].data());
     }
-    *count=result.size();
+    if(count!=nullptr)
+        *count=result.size();
 }
 
 std::vector<std::string> TokiSlopeCraft::getAuthorURL() const {
@@ -532,6 +537,8 @@ void TokiSlopeCraft::getARGB32(ARGB * dest) const {
         reportError(wind,errorFlag::HASTY_MANIPULATION);
         return;
     }
+    if(dest==nullptr) return;
+
     for(uchar base=0;base<64;base++)
         dest[base]=ARGB32(255*Basic._RGB(128+base,0),
                          255*Basic._RGB(128+base,1),
@@ -885,11 +892,14 @@ TokiSlopeCraft::ColorSpace TokiSlopeCraft::getColorSpace() const {
 
 void TokiSlopeCraft::getConvertedImage(short * rows,short * cols,ARGB * dest) const {
     EImage result=getConovertedImage();
-    *rows=result.rows();
-    *cols=result.cols();
-    for(uint idx=0;idx<result.size();idx++) {
-        dest[idx]=result(idx);
-    }
+    if(rows!=nullptr)
+        *rows=result.rows();
+    if(cols!=nullptr)
+        *cols=result.cols();
+    if(dest!=nullptr)
+        for(uint idx=0;idx<result.size();idx++) {
+            dest[idx]=result(idx);
+        }
 }
 
 EImage TokiSlopeCraft::getConovertedImage() const {
@@ -959,12 +969,13 @@ void TokiSlopeCraft::exportAsData(const char * FolderPath,
                                   int* fileCount,
                                   char ** dest) const {
     std::vector<std::string> uFL=exportAsData(FolderPath,indexStart);
-
-    *fileCount=uFL.size();
-
-    for(ushort i=0;i<uFL.size();i++) {
-        std::strcpy(dest[i],uFL[i].data());
-    }
+    if(fileCount!=nullptr)
+        *fileCount=uFL.size();
+    if(dest!=nullptr)
+        for(ushort i=0;i<uFL.size();i++) {
+            if(dest[i]!=nullptr)
+                std::strcpy(dest[i],uFL[i].data());
+        }
 }
 
 std::vector<std::string> TokiSlopeCraft::exportAsData(const std::string & FolderPath ,
@@ -1407,10 +1418,12 @@ int TokiSlopeCraft::getHeight() const {
 
 void TokiSlopeCraft::getBlockCounts(int * total, int detail[64]) const {
     std::vector<int> temp;
-    *total=getBlockCounts(temp);
-    for(ushort idx=0;idx<temp.size();idx++) {
-        detail[idx]=temp[idx];
-    }
+    if(total!=nullptr)
+        *total=getBlockCounts(temp);
+    if(detail!=nullptr)
+        for(ushort idx=0;idx<temp.size();idx++) {
+            detail[idx]=temp[idx];
+        }
 }
 
 int TokiSlopeCraft::getBlockCounts(std::vector<int> & dest) const {
@@ -1504,7 +1517,8 @@ void TokiSlopeCraft::exportAsLitematic(const char *TargetName,
                                        const char *RegionName,
                                        char *FileName) const {
     std::string temp=exportAsLitematic(TargetName,LiteName,author,RegionName);
-    std::strcpy(temp.data(),FileName);
+    if(FileName!=nullptr)
+        std::strcpy(temp.data(),FileName);
 }
 
 std::string TokiSlopeCraft::exportAsLitematic(const std::string & TargetName,
@@ -1654,13 +1668,14 @@ std::string TokiSlopeCraft::exportAsLitematic(const std::string & TargetName,
         return unCompressed;
     }
 
-        return TargetName;
+        return "";
 }
 
 void TokiSlopeCraft::exportAsStructure(const char *TargetName,
                                        char *FileName) const {
     std::string temp=exportAsStructure(TargetName);
-    std::strcpy(temp.data(),FileName);
+    if(FileName!=nullptr)
+        std::strcpy(temp.data(),FileName);
 }
 
 std::string TokiSlopeCraft::exportAsStructure(const std::string &TargetName) const {
@@ -1762,7 +1777,7 @@ std::string TokiSlopeCraft::exportAsStructure(const std::string &TargetName) con
         return unCompress;
     }
 
-        return TargetName;
+        return "";
 }
 
 int TokiSlopeCraft::getXRange() const {
@@ -1775,9 +1790,12 @@ int TokiSlopeCraft::getZRange() const {
 }
 
 const unsigned char * TokiSlopeCraft::getBuild(int *xSize, int *ySize, int *zSize) const {
-    *xSize=getXRange();
-    *ySize=getHeight();
-    *zSize=getZRange();
+    if(xSize!=nullptr)
+        *xSize=getXRange();
+    if(ySize!=nullptr)
+        *ySize=getHeight();
+    if(zSize!=nullptr)
+        *zSize=getZRange();
     return Build.data();
 }
 

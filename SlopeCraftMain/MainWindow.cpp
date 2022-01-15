@@ -209,8 +209,8 @@ void MainWindow::showPreview()
     if(kernel->queryStep()<kernel->builded)return;
 
     PreviewWind*preWind=new PreviewWind(this);
-    preWind->Src.resize(62);
-    preWind->BlockCount.resize(62);
+    preWind->Src.resize(64);
+    preWind->BlockCount.resize(64);
 
     preWind->Src=Manager->getQRadioButtonList();
 
@@ -240,10 +240,15 @@ void MainWindow::showPreview()
     tempE.resize(kernel->getImageRows(),kernel->getImageCols());
     short a,b;
     kernel->getConvertedImage(&a,&b,tempE.data());
+    std::cerr<<__FILE__<<" , "<<__LINE__<<std::endl;
     QImage temp=EImage2QImage(tempE);
+    std::cerr<<__FILE__<<" , "<<__LINE__<<std::endl;
     preWind->ShowMaterialList();
+    std::cerr<<__FILE__<<" , "<<__LINE__<<std::endl;
     preWind->showConvertedImage(temp);
+    std::cerr<<__FILE__<<" , "<<__LINE__<<std::endl;
     preWind->show();
+    std::cerr<<__FILE__<<" , "<<__LINE__<<std::endl;
 }
 
 void MainWindow::keepAwake(void*) {
@@ -1123,7 +1128,14 @@ void MainWindow::kernelSetType() {
 
 
     kernel->setType(type,ver,allowedBaseColor,palette.data());
-
+    const uint8_t * allowedMap;
+    int colorN=0;
+    SlopeCraft::Kernel::getColorMapPtrs(nullptr,&allowedMap,&colorN);
+    std::cout<<"\n\nAllowedMap=";
+    for(int i=0;i<colorN;i++) {
+        std::cout<<int(allowedMap[i])<<" , ";
+    }
+    std::cout<<std::endl<<std::endl;
     updateEnables();
 
     TokiTask::canExportLite=kernel->isVanilla();
@@ -1484,7 +1496,10 @@ void MainWindow::onExportDataclicked(QString path) {
         }
         int fileCount=0;
         kernel->exportAsData(FolderPath.toLocal8Bit().data(),
-                                                   indexStart,&fileCount,unCompressedBuffers.data());
+                                                   indexStart,
+                             //&fileCount,unCompressedBuffers.data()
+                             nullptr,nullptr
+                             );
         qDebug("导出地图文件成功");
 
 
@@ -1968,7 +1983,7 @@ void MainWindow::testBlockList() {
                base_buffer.data(),
                targetName.toLocal8Bit().data(),
                unCompressed);
-    if(strcmp(unCompressed,targetName.toLocal8Bit().data())==0) {
+    if(strlen(unCompressed)<=0) {
         //std::cerr<<"Success"<<std::endl;
         return;
     }

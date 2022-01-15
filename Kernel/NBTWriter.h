@@ -33,23 +33,27 @@ This file is part of SlopeCraft.
 
 
 #include <cstring>
+#include <stack>
 #include "defines.h"
 //using namespace std;
-#define TwinStackSize 128
+#define TwinStackSize 512
 namespace NBT{
-	const char idEnd=0;
-	const char idByte=1;
-	const char idShort=2;
-	const char idInt=3;
-	const char idLong=4;
-	const char idFloat=5;
-	const char idDouble=6;
-	const char idByteArray=7;
-	const char idString=8;
-	const char idList=9;
-	const char idCompound=10;
-	const char idIntArray=11;
-	const char idLongArray=12;
+
+    using tagType_t = char;
+    const tagType_t idEnd=0;
+    const tagType_t idByte=1;
+    const tagType_t idShort=2;
+    const tagType_t idInt=3;
+    const tagType_t idLong=4;
+    const tagType_t idFloat=5;
+    const tagType_t idDouble=6;
+    const tagType_t idByteArray=7;
+    const tagType_t idString=8;
+    const tagType_t idList=9;
+    const tagType_t idCompound=10;
+    const tagType_t idIntArray=11;
+    const tagType_t idLongArray=12;
+
 
     template <typename T>
     void IE2BE(T &Val);
@@ -61,27 +65,26 @@ namespace NBT{
 
 class NBTWriter
 {
+public:
 	private:
+    using stackUnit = std::pair<tagType_t,int>;
 		//Vars
 		bool isOpen;
 		bool isBE;
         std::fstream *File;
-		unsigned long long ByteCount;
-		short top;
-		char CLA[TwinStackSize];
-		int Size[TwinStackSize];
+        unsigned long long ByteCount;
+        std::stack<stackUnit> stack;
 		//StackFun
 		void pop();
-		void push(char typeId,int size);
+        void push(const stackUnit &&);
 		bool isEmpty();
 		bool isFull();
-		char readType();
-		char readSize();
+        tagType_t readType();
 		//WriterFun
 		void elementWritten();
 		void endList();
 		int writeEnd();
-		bool typeMatch(char typeId);
+        bool typeMatch(tagType_t typeId);
 		//AutoFiller
 		int emergencyFill();
 	public:
@@ -104,7 +107,7 @@ class NBTWriter
 		char CurrentType();
 		//WriteAbstractTags
 		template <typename T>
-		int writeSingleTag(char typeId,const char*Name,T value);
+        int writeSingleTag(tagType_t typeId,const char*Name,T value);
 
 		//int writeArrayHead(char typeId,const char*Name,int arraySize);
 		//WriteSpecialTags

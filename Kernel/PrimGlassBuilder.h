@@ -113,9 +113,9 @@ public:
     glassMap makeBridge(const TokiMap & _targetMap,
                         walkableMap* walkable=nullptr);
     void ** windPtr;
-    void (*progressRangeSet)(void*,int,int,int);
-    void (*progressAdd)(void*,int);
-    void (*keepAwake)(void*);
+    void (**progressRangeSetPtr)(void*,int,int,int);
+    void (**progressAddPtr)(void*,int);
+    void (**keepAwakePtr)(void*);
 private:
     std::vector<TokiPos> targetPoints;
     std::list<edge> edges;

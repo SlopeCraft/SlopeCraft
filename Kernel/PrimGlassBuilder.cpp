@@ -175,7 +175,7 @@ glassMap PrimGlassBuilder::makeBridge(const TokiMap & _targetMap,
                     algos[r][c]->make4SingleMap(targetMaps[r][c],
                                         (walkable==nullptr)?nullptr:(&walkableMaps[r][c]));
         }
-         progressRangeSet(*windPtr,0, rowCount, r);
+         (*progressRangeSetPtr)(*windPtr,0, rowCount, r);
     }
     //qDebug("每个分区内的搭桥完毕，开始在分区间搭桥");
     std::stack<pairedEdge> interRegionEdges;
@@ -234,7 +234,7 @@ glassMap PrimGlassBuilder::makeBridge(const TokiMap & _targetMap,
         for(int c=0;c<colCount;c++)
 			pgb.recycle(algos[r][c]);
 
-    progressRangeSet(*windPtr,0, 100, 100);
+    (*progressRangeSetPtr)(*windPtr,0, 100, 100);
     //qDebug()<<"用时"<<std::clock()-lastTime<<"毫秒";
 
 return result;

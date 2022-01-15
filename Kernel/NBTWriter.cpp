@@ -64,13 +64,9 @@ NBTWriter::NBTWriter(const char*path)
         char temp[3]={10,0,0};
         File->write(temp,3);ByteCount+=3;
     isOpen=true;
-    for(top=0;top<TwinStackSize;top++)
-    {
-        CLA[top]=114;
-        Size[top]=114514;
+    while(!stack.empty()) {
+        stack.pop();
     }
-
-    top=-1;
 
 }
 
@@ -83,13 +79,9 @@ NBTWriter::NBTWriter()
         //char temp[3]={10,0,0};
         //File->write(temp,3);ByteCount+=3;
     isOpen=false;
-    for(top=0;top<TwinStackSize;top++)
-    {
-        CLA[top]=114;
-        Size[top]=114514;
+    while(!stack.empty()) {
+        stack.pop();
     }
-
-    top=-1;
 
 }
 
@@ -127,22 +119,22 @@ unsigned long long NBTWriter::close()
 
 bool NBTWriter::isEmpty()
 {
-    return (top==-1);
+    return stack.empty();
 }
 
 bool NBTWriter::isFull()
 {
-    return top>=TwinStackSize;
+    return stack.size()>=TwinStackSize;
 }
 
 bool NBTWriter::isListFinished()
 {
-    return (Size[top]<=0);
+    return (stack.top().second<=0);
 }
 
-char NBTWriter::readType()
+tagType_t NBTWriter::readType()
 {
-    return CLA[top];
+    return stack.top().first;
 }
 
 bool NBTWriter::isInCompound()
@@ -174,7 +166,7 @@ void NBTWriter::endList()
 void NBTWriter::pop()
 {
     if(!isEmpty()){
-    top--;
+        stack.pop();
     //qDebug("popped");
     }
     else{
@@ -184,13 +176,11 @@ void NBTWriter::pop()
     return;
 }
 
-void NBTWriter::push(char typeId,int size)
+void NBTWriter::push(const stackUnit&& su)
 {
     if(!isFull())
     {
-        top++;
-        CLA[top]=typeId;
-        Size[top]=size;
+        stack.emplace(su);
         //qDebug()<<"push成功，栈顶CLA="<<(short)CLA[top]<<"，Size="<<Size[top];
     }
     else
@@ -201,7 +191,7 @@ void NBTWriter::push(char typeId,int size)
 void NBTWriter:: elementWritten()
 {
     if(isInList()&&!isListFinished())
-    Size[top]--;
+    stack.top().second--;
     if(isListFinished())
     endList();
     return;
@@ -297,7 +287,7 @@ int NBTWriter::writeCompound(const char*Name)
         File->write(&idCompound,sizeof(char));ThisCount+=sizeof(char);
         File->write((char*)&writeNameL,sizeof(short));ThisCount+=sizeof(short);
         File->write(Name,realNameL);ThisCount+=realNameL;
-        push(idEnd,0);
+        push(std::make_pair(idEnd,0));
         ByteCount+=ThisCount;
         return ThisCount;
     }
@@ -305,7 +295,7 @@ int NBTWriter::writeCompound(const char*Name)
     if (isInList()&&typeMatch(idCompound))
     {
         //writeNothing
-        push(idEnd,0);
+        push(std::make_pair(idEnd,0));
         ByteCount+=ThisCount;
         return ThisCount;
     }
@@ -333,7 +323,7 @@ int NBTWriter::endCompound()
     return ThisCount;
 }
 
-int NBTWriter::writeListHead(const char*Name,char TypeId,int listSize)
+int NBTWriter::writeListHead(const char*Name,tagType_t TypeId,int listSize)
 {
     if(!isOpen){
         //qDebug("失败：文件未打开");
@@ -349,7 +339,7 @@ int NBTWriter::writeListHead(const char*Name,char TypeId,int listSize)
         File->write(Name,realNameL);ThisCount+=realNameL;
         File->write(&TypeId,sizeof(char));ThisCount+=sizeof(char);
         File->write((char*)&writeListSize,sizeof(int));ThisCount+=sizeof(int);
-        push(TypeId,listSize);
+        push(std::make_pair(TypeId,listSize));
         //qDebug("成功在文件夹中创建List");
         ByteCount+=ThisCount;
         if(listSize==0)elementWritten();
@@ -360,7 +350,7 @@ int NBTWriter::writeListHead(const char*Name,char TypeId,int listSize)
     {
         File->write(&TypeId,sizeof(char));ThisCount+=sizeof(char);
         File->write((char*)&writeListSize,sizeof(int));ThisCount+=sizeof(int);
-        push(TypeId,listSize);
+        push(std::make_pair(TypeId,listSize));
         //qDebug("成功在List中创建List");
         ByteCount+=ThisCount;
         if(listSize==0)elementWritten();
@@ -417,7 +407,7 @@ int NBTWriter::writeLongArrayHead(const char*Name,int arraySize)
         File->write(Name,realNameL);ThisCount+=realNameL;
         //File->write(&idLong,sizeof(char));ThisCount+=sizeof(char);
         File->write((char*)&writeArraySize,sizeof(int));ThisCount+=sizeof(int);
-        push(idLong,arraySize);
+        push(std::make_pair(idLong,arraySize));
         //qDebug("成功在文件夹中创建LongArray");
         ByteCount+=ThisCount;
         if(arraySize==0)elementWritten();
@@ -428,7 +418,7 @@ int NBTWriter::writeLongArrayHead(const char*Name,int arraySize)
     {
         //File->write(&idLong,sizeof(char));ThisCount+=sizeof(char);
         File->write((char*)&writeArraySize,sizeof(int));ThisCount+=sizeof(int);
-        push(idLong,arraySize);
+        push(std::make_pair(idLong,arraySize));
         //qDebug("成功在List中创建LongArray");
         ByteCount+=ThisCount;
         if(arraySize==0)elementWritten();
@@ -454,7 +444,7 @@ int NBTWriter::writeByteArrayHead(const char*Name,int arraySize)
         File->write(Name,realNameL);ThisCount+=realNameL;
         //File->write(&idLong,sizeof(char));ThisCount+=sizeof(char);
         File->write((char*)&writeArraySize,sizeof(int));ThisCount+=sizeof(int);
-        push(idByte,arraySize);
+        push(std::make_pair(idByte,arraySize));
         //qDebug("成功在文件夹中创建ByteArray");
         ByteCount+=ThisCount;
         if(arraySize==0)elementWritten();
@@ -465,7 +455,7 @@ int NBTWriter::writeByteArrayHead(const char*Name,int arraySize)
     {
         //File->write(&idLong,sizeof(char));ThisCount+=sizeof(char);
         File->write((char*)&writeArraySize,sizeof(int));ThisCount+=sizeof(int);
-        push(idByte,arraySize);
+        push(std::make_pair(idByte,arraySize));
         //qDebug("成功在List中创建ByteArray");
         ByteCount+=ThisCount;
         if(arraySize==0)elementWritten();
@@ -491,7 +481,7 @@ int NBTWriter::writeIntArrayHead(const char*Name,int arraySize)
         File->write(Name,realNameL);ThisCount+=realNameL;
 
         File->write((char*)&writeArraySize,sizeof(int));ThisCount+=sizeof(int);
-        push(idInt,arraySize);
+        push(std::make_pair(idInt,arraySize));
         //qDebug("成功在文件夹中创建IntArray");
         ByteCount+=ThisCount;
         if(arraySize==0)elementWritten();
@@ -502,7 +492,7 @@ int NBTWriter::writeIntArrayHead(const char*Name,int arraySize)
     {
         //File->write(&idLong,sizeof(char));ThisCount+=sizeof(char);
         File->write((char*)&writeArraySize,sizeof(int));ThisCount+=sizeof(int);
-        push(idInt,arraySize);
+        push(std::make_pair(idInt,arraySize));
         //qDebug("成功在List中创建IntArray");
         ByteCount+=ThisCount;
         if(arraySize==0)elementWritten();
