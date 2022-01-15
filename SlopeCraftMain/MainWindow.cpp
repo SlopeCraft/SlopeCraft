@@ -618,22 +618,19 @@ std::string pri_getContact(const SlopeCraft::Kernel*k,bool isG) {
     return res;
 }
 
-void MainWindow::contactG()
-{
+void MainWindow::contactG() {
     static std::string Toki=pri_getContact(kernel,true);
     QDesktopServices::openUrl(QUrl(QString::fromStdString(Toki)));
 }
 
-void MainWindow::contactB()
-{
+void MainWindow::contactB() {
     static std::string Toki=pri_getContact(kernel,false);
     QDesktopServices::openUrl(QUrl(QString::fromStdString(Toki)));
 }
 
 #ifndef tpSDestroyer
 #define tpSDestroyer
-tpS::~tpS()
-{
+tpS::~tpS() {
 
 }
 #endif
