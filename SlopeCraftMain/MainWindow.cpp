@@ -240,15 +240,15 @@ void MainWindow::showPreview()
     tempE.resize(kernel->getImageRows(),kernel->getImageCols());
     short a,b;
     kernel->getConvertedImage(&a,&b,tempE.data());
-    std::cerr<<__FILE__<<" , "<<__LINE__<<std::endl;
+    //std::cerr<<__FILE__<<" , "<<__LINE__<<std::endl;
     QImage temp=EImage2QImage(tempE);
-    std::cerr<<__FILE__<<" , "<<__LINE__<<std::endl;
+    //std::cerr<<__FILE__<<" , "<<__LINE__<<std::endl;
     preWind->ShowMaterialList();
-    std::cerr<<__FILE__<<" , "<<__LINE__<<std::endl;
+    //std::cerr<<__FILE__<<" , "<<__LINE__<<std::endl;
     preWind->showConvertedImage(temp);
-    std::cerr<<__FILE__<<" , "<<__LINE__<<std::endl;
+    //std::cerr<<__FILE__<<" , "<<__LINE__<<std::endl;
     preWind->show();
-    std::cerr<<__FILE__<<" , "<<__LINE__<<std::endl;
+    //std::cerr<<__FILE__<<" , "<<__LINE__<<std::endl;
 }
 
 void MainWindow::keepAwake(void*) {
