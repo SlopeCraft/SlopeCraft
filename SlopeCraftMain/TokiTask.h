@@ -21,7 +21,11 @@ This file is part of SlopeCraft.
 #define TOKITASK_H
 #include <QString>
 #include <cmath>
-#include "WaterItem.h"
+
+typedef unsigned int TokiPos;
+TokiPos TokiRC(int row,int col);
+short TokiRow(TokiPos pos);
+short TokiCol(TokiPos pos);
 
 class TokiTask
 {

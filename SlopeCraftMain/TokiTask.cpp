@@ -30,6 +30,23 @@ TokiTask::~TokiTask() {
 
 }
 
+TokiPos TokiRC(int row,int col)
+{
+    /*unsigned int u;
+    *((short*)&u)=row;
+    *(((short*)&u)+1)=col;
+    return u;*/
+    return (row<<16)|(col&0x0000FFFF);
+}
+short TokiRow(TokiPos pos)
+{
+    return pos>>16;
+}
+short TokiCol(TokiPos pos)
+{
+    return pos&0x0000FFFF;
+}
+
 uint TokiTask::mapCount() const {
     return  std::ceil(rows()/128.0)*std::ceil(cols()/128.0);
 }

@@ -23,6 +23,7 @@ This file is part of SlopeCraft.
 //#pragma once
 #include <QProcess>
 #include <QDebug>
+#include <QRgb>
 #include "mainwindow.h"
 
 const ushort MainWindow::BLCreative[64]={0,0,1,1,0,0,0,0,3,0,4,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -30,7 +31,7 @@ const ushort MainWindow::BLCheaper[64]={0,0,0,0,1,0,5,2,3,0,4,0,0,0,3,0,0,0,0,0,
 const ushort MainWindow::BLBetter[64]={0,1,1,0,0,1,0,2,0,0,3,2,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0};
 const ushort MainWindow::BLGlowing[64]={0,1,2,0,0,2,4,2,0,0,3,2,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,6,0,0,1,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0};
 
-const QString MainWindow::selfVersion="v3.6";
+const QString MainWindow::selfVersion="v3.6.1";
 
 //using namespace SlopeCraft;
 
@@ -935,6 +936,15 @@ void MainWindow::ReceiveTPS(tpS t) {
     qDebug()<<"pTpS="<<t.pTpS<<"；hTpS="<<t.hTpS;
 }
 
+QRgb ComposeColor(const QRgb front,const QRgb back)
+{
+    QRgb red=(qRed(front)*qAlpha(front)+qRed(back)*(255-qAlpha(front)))/255;
+    QRgb green=(qGreen(front)*qAlpha(front)+qGreen(back)*(255-qAlpha(front)))/255;
+    QRgb blue=(qBlue(front)*qAlpha(front)+qBlue(back)*(255-qAlpha(front)))/255;
+    return qRgb(red,green,blue);
+}
+
+
 void MainWindow::preProcess(char pureTpStrategy,
                 char halfTpStrategy,
                 QRgb BGC) {
@@ -1346,7 +1356,8 @@ void MainWindow::onExportLiteclicked(QString path) {
         } else {
             FileName=path.toLocal8Bit().data();
         }
-        std::string unCompressed;
+        //std::string unCompressed;
+        char unCbuf[512]="";
         if(FileName.empty())return;
         bool putLitematic=(FileName.substr(FileName.length()-strlen(".litematic"))==".litematic");
         bool putStructure=(FileName.substr(FileName.length()-strlen(".nbt"))==".nbt");
@@ -1367,22 +1378,17 @@ void MainWindow::onExportLiteclicked(QString path) {
         this->proTracker=ui->ShowProgressExLite;
 
         if(putStructure)
-            unCompressed=kernel->exportAsStructure(FileName);
+            kernel->exportAsStructure(FileName.data(),unCbuf);
         else
-            unCompressed=kernel->exportAsLitematic(FileName,
+            kernel->exportAsLitematic(FileName.data(),
                                                    ui->InputLiteName->toPlainText().toUtf8().data(),
                                                    ui->InputAuthor->toPlainText().toUtf8().data(),
-                                                   (ui->InputRegionName->toPlainText()+tr("(xz坐标=-65±128×整数)")).toUtf8().data());
-
-        if(compressFile(unCompressed.data(),FileName.data()))
+                                                   (ui->InputRegionName->toPlainText()+tr("(xz坐标=-65±128×整数)")).toUtf8().data(),
+                                      unCbuf);
+        //unCompressed=unCbuf;
+        if(std::strlen(unCbuf)<=0)
         {
             qDebug("压缩成功");
-            QFile umComFile(QString::fromLocal8Bit(unCompressed.data()));
-            if(umComFile.remove())
-                qDebug("删除成功");
-            else
-                qDebug("删除失败");
-            qDebug()<<QString::fromLocal8Bit(unCompressed.data());
             ProductDir=QString::fromLocal8Bit(FileName.data());
             ProductDir=ProductDir.replace('\\','/');
             ProductDir=ProductDir.left(ProductDir.lastIndexOf('/'));
@@ -1422,7 +1428,9 @@ void MainWindow::on_InputDataIndex_textChanged() {
                 ui->ShowDataFileName->setText(
                             "map_"+QString::number(indexStart)+".dat"+
                             "~"+"map_"+
-                            QString::number(indexStart+ceil(Kernel->getImageRows()/128.0f)*ceil(Kernel->getImageRows()/128.0f)-1)+".dat");
+                            QString::number(
+                                indexStart+ceil(kernel->getImageRows()/128.0f)*
+                                ceil(kernel->getImageRows()/128.0f)-1)+".dat");
             ui->ExportData->setEnabled(true);
             return;
         }
@@ -1442,7 +1450,9 @@ void MainWindow::onExportDataclicked(QString path) {
         isIndexValid=isIndexValid&&(indexStart>=0);
         if(!isIndexValid)
         {
-            QMessageBox::information(this,tr("你输入的起始序号不可用"),tr("请输入大于等于0的整数！"));
+            QMessageBox::information(this,
+                                     tr("你输入的起始序号不可用"),
+                                     tr("请输入大于等于0的整数！"));
                         return;
         }
         QString FolderPath;
@@ -1454,7 +1464,9 @@ void MainWindow::onExportDataclicked(QString path) {
 
         if(FolderPath.isEmpty())
         {
-            QMessageBox::information(this,tr("你选择的文件夹不存在！"),tr("你可以选择存档中的data文件夹"));
+            QMessageBox::information(this,
+                                     tr("你选择的文件夹不存在！"),
+                                     tr("你可以选择存档中的data文件夹"));
             return;
         }
 
@@ -1468,29 +1480,17 @@ void MainWindow::onExportDataclicked(QString path) {
 
         FolderPath=FolderPath.replace('\\','/');
         ProductDir=FolderPath;
-
-        auto unCompressedList=kernel->exportAsData(FolderPath.toLocal8Bit().data(),
-                                                   indexStart);
-        qDebug("导出地图文件成功");
-        //QString::fromLocal8Bit(unCompressed.data())
-
-        for(auto it=unCompressedList.begin();it!=unCompressedList.end();it++) {
-            QString unName=QString::fromLocal8Bit(it->data());
-            QString dstName=unName.left(unName.lastIndexOf(".TokiNoBug"));
-            qDebug()<<"unName="<<unName;
-            qDebug()<<"dstName="<<dstName;
-
-            if(compressFile(unName.toLocal8Bit(),dstName.toLocal8Bit())) {
-                    QFile unFile(unName);
-                    if(unFile.remove()) {
-                        qDebug()<<"删除"<<unName<<"成功";
-                    }
-                    else {
-                        qDebug()<<"删除"<<unName<<"失败";
-                    }
-            }
-
+        const uint32_t fileNum=ceil(kernel->getImageRows()/128.0f)*
+                ceil(kernel->getImageRows()/128.0f);
+        std::vector<char*> unCompressedBuffers(fileNum);
+        for(auto & i : unCompressedBuffers) {
+            i=new char[512];
         }
+        int fileCount=0;
+        kernel->exportAsData(FolderPath.toLocal8Bit().data(),
+                                                   indexStart,&fileCount,unCompressedBuffers.data());
+        qDebug("导出地图文件成功");
+
 
         ui->InputDataIndex->setEnabled(true);
         ui->ExportData->setEnabled(true);
@@ -1849,13 +1849,13 @@ void MainWindow::setAutoCheckUpdate(bool autoCheckUpdate) {
 
 void MainWindow::onBlockListChanged() {
     //qDebug("onBlockListChanged");
-    if(Kernel->queryStep()<SlopeCraft::Kernel::step::colorSetReady) {
+    if(kernel->queryStep()<SlopeCraft::Kernel::step::colorSetReady) {
         return;
     }
 
     kernelSetType();
 
-    ushort colorCount=Kernel->getColorCount();
+    ushort colorCount=kernel->getColorCount();
     ui->IntroColorCount->setText(
                 tr("可用")+
                 QString::number(colorCount)+
@@ -1924,7 +1924,8 @@ void MainWindow::selectBlockByString(const std::string & key) {
         std::vector<const TokiBlock * > tbs;
         tbcs[baseColor]->getTokiBlockList(tbs);
         for(uint16_t idx=0;idx<tbs.size();idx++) {
-            if(tbs[idx]->getSimpleBlock()->id.find(key)!=std::string::npos) {
+            std::string curBlockId=tbs[idx]->getSimpleBlock()->getId();
+            if(curBlockId.find(key)!=std::string::npos) {
                 Manager->setSelected(baseColor,idx);
                 continue;
             }
@@ -1945,7 +1946,7 @@ void MainWindow::on_FirstStainedGlass_clicked() {
 }
 
 void MainWindow::testBlockList() {
-    std::vector<const AbstractBlock *> ptr_buffer;
+    std::vector<const SlopeCraft::AbstractBlock *> ptr_buffer;
     std::vector<uchar> base_buffer;
 
     const int buffSize=Manager->getBlockNum();
@@ -1965,20 +1966,21 @@ void MainWindow::testBlockList() {
     }
 
     qDebug()<<"File="<<__FILE__<<" , Line="<<__LINE__;
-    std::string unCompressed=Kernel->makeTests(
-                ptr_buffer.data(),base_buffer.data(),targetName.toLocal8Bit().data());
-    if(unCompressed.empty()) {
+    char unCompressed[512]="";
+   kernel->makeTests(
+                ptr_buffer.data(),
+               base_buffer.data(),
+               targetName.toLocal8Bit().data(),
+               unCompressed);
+    if(strcmp(unCompressed,targetName.toLocal8Bit().data())==0) {
+        //std::cerr<<"Success"<<std::endl;
         return;
-    }
-    qDebug()<<"File="<<__FILE__<<" , Line="<<__LINE__;
-    if(!compressFile(unCompressed.data(),targetName.toLocal8Bit().data())) {
-        std::cerr<<"Compress failed\n";
     }
 
     qDebug()<<"File="<<__FILE__<<" , Line="<<__LINE__;
     std::cerr<<"Compress success\n";
 
-    QFile tempFile(QString::fromLocal8Bit(unCompressed.data()));
+    QFile tempFile(QString::fromLocal8Bit(unCompressed));
     if(tempFile.exists()&&!tempFile.remove()) {
         std::cerr<<"Failed to remove temporary file."<<std::endl;
         return;
