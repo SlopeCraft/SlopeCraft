@@ -22,6 +22,8 @@ This file is part of SlopeCraft.
 
 #include "TokiBlock.h"
 
+using namespace SlopeCraft;
+
 TokiBlock::TokiBlock(QRadioButton * _target,
                      const QJsonObject & json,
                      const QString & imgDir,
@@ -31,14 +33,17 @@ TokiBlock::TokiBlock(QRadioButton * _target,
 self=_self;
 target=_target;
 
-block.id=json.value("id").toString().toLocal8Bit();
-block.version=json.value("version").toInt();
-block.idOld=json.value("idOld").toString().toLocal8Bit();
-block.needGlass=json.value("needGlass").toBool();
-block.doGlow=json.value("isGlowing").toBool();
-block.endermanPickable=json.value("endermanPickable").toBool();
-block.burnable=json.value("burnable").toBool();
-block.wallUseable=json.value("wallUseable").toBool();
+block=AbstractBlock::create();
+
+block->setId(json.value("id").toString().toLocal8Bit());
+
+block->setVersion(json.value("version").toInt());
+block->setIdOld(json.value("idOld").toString().toLocal8Bit());
+block->setNeedGlass(json.value("needGlass").toBool());
+block->setDoGlow(json.value("isGlowing").toBool());
+block->setEndermanPickable(json.value("endermanPickable").toBool());
+block->setBurnable(json.value("burnable").toBool());
+block->setWallUseable(json.value("wallUseable").toBool());
 nameZH=json.value("nameZH").toString();
 nameEN=json.value("nameEN").toString();
 //std::cerr<<block.id<<"\n"<<block.idOld<<"\n";
@@ -53,7 +58,8 @@ if((!QFile(imgName).exists()||QIcon(imgName).isNull())) {
     if(showLater) {
         QMessageBox::StandardButton userChoice
                 =QMessageBox::warning(nullptr,tr("错误：方块对应的图像不存在或不可用"),
-                             tr("方块id：")+QString(block.id.data())+tr("\n缺失的图像：")+imgName+
+                             tr("方块id：")+QString::fromLocal8Bit(block->getId())
+                                      +tr("\n缺失的图像：")+imgName+
                              tr("\n你可以点击Yes忽略这个错误，点击YesToAll屏蔽同类的警告，或者点击Close结束程序"),
                              {QMessageBox::StandardButton::Yes,
                              QMessageBox::StandardButton::YesToAll,
@@ -69,7 +75,7 @@ if((!QFile(imgName).exists()||QIcon(imgName).isNull())) {
             exit(0);
         }
     }
-    qDebug()<<"错误！按钮"<<QString(block.id.data())<<"对应的图像"<<imgName<<"不存在！";
+    qDebug()<<"错误！按钮"<<QString::fromLocal8Bit(block->getId())<<"对应的图像"<<imgName<<"不存在！";
     return;
 }
 target->setIcon(QIcon(imgName));
@@ -113,8 +119,8 @@ const QRadioButton * TokiBlock::getTarget() const {
     return target;
 }
 
-const simpleBlock *TokiBlock::getSimpleBlock() const {
-    return &block;
+const AbstractBlock *TokiBlock::getSimpleBlock() const {
+    return block;
 }
 
 QRadioButton * TokiBlock::getNCTarget() const {

@@ -27,7 +27,6 @@ QMAKE_TARGET_PRODUCT = SlopeCraft
 
 
 INCLUDEPATH += D:\CppLibs\eigen-3.4.0 \
-                               ../Kernel \
                                ../SlopeCraftL \
                                ../BlockListManager
 
@@ -40,18 +39,6 @@ SOURCES += \
     ../BlockListManager/BlockListManager.cpp \
     ../BlockListManager/TokiBaseColor.cpp \
     ../BlockListManager/TokiBlock.cpp \
-    ../Kernel/CIEDE00.cpp \
-    ../Kernel/HeightLine.cpp \
-    ../Kernel/NBTWriter.cpp \
-    ../Kernel/OptiChain.cpp \
-    ../Kernel/PrimGlassBuilder.cpp \
-    ../Kernel/TokiSlopeCraft.cpp \
-    ../Kernel/WaterItem.cpp \
-    ../Kernel/colorset.cpp \
-    ../Kernel/lossyCompressor.cpp \
-    ../Kernel/simpleBlock.cpp \
-    ../Kernel/tokicolor.cpp \
-    ../SlopeCraftL/SlopeCraftL.cpp \
     BatchUi.cpp \
     TaskBox.cpp \
     TokiTask.cpp \
@@ -65,18 +52,6 @@ HEADERS += \
     ../BlockListManager/BlockListManager.h \
     ../BlockListManager/TokiBaseColor.h \
     ../BlockListManager/TokiBlock.h \
-    ../Kernel/ColorSet.h \
-    ../Kernel/HeightLine.h \
-    ../Kernel/NBTWriter.h \
-    ../Kernel/OptiChain.h \
-    ../Kernel/PrimGlassBuilder.h \
-    ../Kernel/TokiColor.h \
-    ../Kernel/TokiSlopeCraft.h \
-    ../Kernel/WaterItem.h \
-    ../Kernel/defines.h \
-    ../Kernel/lossyCompressor.h \
-    ../Kernel/object_pool.hpp \
-    ../Kernel/simpleBlock.h \
     ../SlopeCraftL/SlopeCraftL.h \
     ../SlopeCraftL/SlopeCraftL_global.h \
     BatchUi.h \
@@ -109,5 +84,8 @@ RESOURCES += \
 DISTFILES += \
     others/SlopeCraft.ico
 
-SUBDIRS += \
-    ../Kernel/Kernel.pro
+#SUBDIRS += \
+#    ../Kernel/Kernel.pro
+
+
+LIBS += D:\Git\build-SlopeCraft-Desktop_Qt_6_2_1_MinGW_64_bit-Release\SlopeCraftL\release\SlopeCraftL3.dll

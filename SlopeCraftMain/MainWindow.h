@@ -60,11 +60,8 @@ This file is part of SlopeCraft.
 #include <cstring>
 #include <unordered_map>
 
-#define WITH_QT
-#define NO_DLL
-#define STRAIGHT_INCLUDE_KERNEL
-
-#include "TokiSlopeCraft.h"
+#include <Eigen/Dense>
+#include "SlopeCraftL.h"
 
 #include "VersionDialog.h"
 #include "tpstrategywind.h"
@@ -143,16 +140,7 @@ public slots:
 
     void grabVersion(bool isAuto=true);
 
-private slots:    
-    void progressRangeSet(int min,int max,int val);//设置进度条的取值范围和值
-    void progressAdd(int deltaVal);
-    void keepAwake();
-
-    void showError(TokiSlopeCraft::errorFlag);
-    void showWorkingStatue(TokiSlopeCraft::workStatues);
-
-    void algoProgressRangeSet(int min,int max,int val);
-    void algoProgressAdd(int deltaVal);
+private slots:
 
     void contactG();
     void contactB();
@@ -227,7 +215,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    TokiSlopeCraft * Kernel;
+    SlopeCraft::Kernel * kernel;
     tpStrategyWind * transSubWind;
     BlockListManager * Manager;
     BatchUi * batchOperator;
@@ -267,11 +255,24 @@ private:
 
     void selectBlockByString(const std::string &);
 
+
+    static void progressRangeSet(void*,int min,int max,int val);//设置进度条的取值范围和值
+    static void progressAdd(void*,int deltaVal);
+    static void keepAwake(void*);
+
+    static void showError(void*,SlopeCraft::Kernel::errorFlag);
+    static void showWorkingStatue(void*,SlopeCraft::Kernel::workStatues);
+
+    static void algoProgressRangeSet(void*,int min,int max,int val);
+    static void algoProgressAdd(void*,int deltaVal);
+
 };
 
 
 QJsonObject loadIni(bool=false);
 bool isValidIni(const QJsonObject & );
+
+using EImage = Eigen::ArrayXX<uint32_t>;
 
 EImage QImage2EImage(const QImage &);
 QImage EImage2QImage(const EImage &,ushort scale=1);

@@ -25,11 +25,9 @@ This file is part of SlopeCraft.
 #include "TokiSlopeCraft.h"
 using namespace SlopeCraft;
 
-#ifndef NO_DLL
 AbstractBlock * AbstractBlock::create() {
     return new simpleBlock;
 }
-#endif
 
 AbstractBlock::AbstractBlock() {}
 
@@ -67,17 +65,7 @@ void Kernel::getColorMapPtrs(const float** f,const unsigned char** m,int* rows) 
 const float * Kernel::getBasicColorMapPtrs() {
     return TokiSlopeCraft::Basic._RGB.data();
 }
-/*
-void * Kernel::allowedRGB() {
-    return &TokiSlopeCraft::Allowed._RGB;
-}
 
-void * Kernel::allowedMap() {
-    return &TokiSlopeCraft::Allowed.Map;
-}
-*/
-#ifndef NO_DLL
 Kernel * Kernel::create() {
     return (new TokiSlopeCraft)->toBaseClassPtr();
 }
-#endif

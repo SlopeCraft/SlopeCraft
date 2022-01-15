@@ -22,18 +22,10 @@ This file is part of SlopeCraft.
 
 #ifndef KERNEL_H
 #define KERNEL_H
-//#define WITH_QT
-//#define NO_DLL
 
-#ifdef WITH_QT
-    #include <QObject>
-    #define NO_DLL
-#endif
 
-#ifndef NO_DLL
-    #include "SlopeCraftL_global.h"
-    #define SCL_EXPORT SLOPECRAFTL_EXPORT
-#endif
+#include "SlopeCraftL_global.h"
+#define SCL_EXPORT SLOPECRAFTL_EXPORT
 
 namespace SlopeCraft {
 
@@ -46,10 +38,8 @@ class AbstractBlock
 public:
     AbstractBlock();
     //virtual ~AbstractBlock() {};
-#ifndef NO_DLL
     ///create a block
     static AbstractBlock * create();
-#endif
     ///real size of this block
     virtual unsigned long long size()=0;
     ///id of this block
@@ -94,29 +84,14 @@ public:
 };
 
 
-#ifndef NO_DLL
 class SCL_EXPORT Kernel
-#else
-class  Kernel
-#endif
-        #ifdef WITH_QT
-        : public QObject
-        #endif
 {
-#ifdef WITH_QT
-    Q_OBJECT
-public:
-    explicit Kernel(QObject *parent = nullptr);
-#else
 public:
     Kernel();
-#endif
     //virtual ~Kernel() {};
 
-#ifndef NO_DLL
-    ///create a kernel object
+///create a kernel object
 static Kernel * create();
-#endif
 
 enum gameVersion {
     ///older than 1.12
@@ -338,36 +313,24 @@ enum workStatues {
     ///get 3d structure in 3d-matrix (col major)
     virtual const unsigned char * getBuild(int* xSize,int* ySize,int* zSize) const=0;
 
-#ifdef WITH_QT
-signals:
-    void progressRangeSet(int min,int max,int val) const;
-    void progressAdd(int deltaVal) const;
-    void keepAwake() const;
-
-    void algoProgressRangeSet(int,int,int) const;
-    void algoProgressAdd(int) const;
-
-    void reportError(errorFlag) const;
-    void reportWorkingStatue(workStatues) const;
-
-#else
+    ///function ptr to window object
+    void * wind;
     ///a function ptr to show progress of converting and exporting
-    void (*progressRangeSet)(int,int,int);
+    void (*progressRangeSet)(void*,int,int,int);
     ///a function ptr to add progress value
-    void (*progressAdd)(int);
+    void (*progressAdd)(void*,int);
     ///a function ptr to prevent window from being syncoped
-    void (*keepAwake)();
+    void (*keepAwake)(void*);
 
     ///a function ptr to show progress of compressing and bridge-building
-    void (*algoProgressRangeSet)(int,int,int);
+    void (*algoProgressRangeSet)(void*,int,int,int);
     ///a function ptr to add progress value of compressing and bridge-building
-    void (*algoProgressAdd)(int);
+    void (*algoProgressAdd)(void*,int);
 
     ///a function ptr to report error when something wrong happens
-    void (*reportError)(errorFlag);
+    void (*reportError)(void*,errorFlag);
     ///a function ptr to report working statue especially when busy
-    void (*reportWorkingStatue)(workStatues);
-#endif
+    void (*reportWorkingStatue)(void*,workStatues);
 
 protected:
     ///calling delete is deprecated, use void Kernel::destroy() instead

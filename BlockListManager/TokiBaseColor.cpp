@@ -65,7 +65,7 @@ void TokiBaseColor::addTokiBlock(const QJsonObject & json,
     TokiBlock * tb=new TokiBlock(qrb,json,imgDir,tbs.size());
     tbs.push_back(tb);
 
-    if(tb->getSimpleBlock()->version>mcVer)
+    if(tb->getSimpleBlock()->getVersion()>mcVer)
     {
         tb->getNCTarget()->setEnabled(false);
         tb->getNCTarget()->setChecked(false);
@@ -101,7 +101,7 @@ void TokiBaseColor::receiveClicked(ushort _selected) {
 bool TokiBaseColor::isAllOverVersion() const {//判断是否所有方块都超版本了
     bool isAllOver=true;
     for(auto it=tbs.cbegin();it!=tbs.cend();it++) {
-        isAllOver&=((*it)->block.version>mcVer);
+        isAllOver&=((*it)->block->getVersion()>mcVer);
     }
     return isAllOver;
 }
@@ -124,7 +124,7 @@ void TokiBaseColor::versionCheck() {
     }
     std::vector<short>scores(tbs.size());
     for(ushort idx=0;idx<tbs.size();idx++) {
-        if(tbs[idx]->getSimpleBlock()->version<=mcVer) {
+        if(tbs[idx]->getSimpleBlock()->getVersion()<=mcVer) {
             scores[idx]=(tbs[idx]->getTarget()->isChecked())?100:51;
             tbs[idx]->getNCTarget()->setEnabled(true);
         }

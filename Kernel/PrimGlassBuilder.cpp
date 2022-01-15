@@ -175,7 +175,7 @@ glassMap PrimGlassBuilder::makeBridge(const TokiMap & _targetMap,
                     algos[r][c]->make4SingleMap(targetMaps[r][c],
                                         (walkable==nullptr)?nullptr:(&walkableMaps[r][c]));
         }
-         emit progressRangeSet(0, rowCount, r);
+         progressRangeSet(*windPtr,0, rowCount, r);
     }
     //qDebug("每个分区内的搭桥完毕，开始在分区间搭桥");
     std::stack<pairedEdge> interRegionEdges;
@@ -234,7 +234,7 @@ glassMap PrimGlassBuilder::makeBridge(const TokiMap & _targetMap,
         for(int c=0;c<colCount;c++)
 			pgb.recycle(algos[r][c]);
 
-    emit progressRangeSet(0, 100, 100);
+    progressRangeSet(*windPtr,0, 100, 100);
     //qDebug()<<"用时"<<std::clock()-lastTime<<"毫秒";
 
 return result;
@@ -326,7 +326,7 @@ void PrimGlassBuilder::addEdgesToGraph() {
     edges.clear();
 	edge::vertexes = std::addressof(targetPoints);
     //int taskCount=(targetPoints.size()*(targetPoints.size()-1))/2;
-    //emit progressRangeSet(0,taskCount,0);
+    //progressRangeSet(*windPtr,0,taskCount,0);
     for(uint i=0;i<targetPoints.size();i++) {
         for(uint j=i+1;j<targetPoints.size();j++) {
 			edges.emplace_back(edge(i, j));
@@ -345,7 +345,7 @@ void PrimGlassBuilder::runPrim() {
 
     uint foundCount=1;
 
-    //emit progressRangeSet(0,targetPoints.size(),0);
+    //progressRangeSet(*windPtr,0,targetPoints.size(),0);
 
     std::stack<std::list<edge>::iterator> eraseTask;
 
@@ -424,7 +424,7 @@ void PrimGlassBuilder::runPrim() {
             tree.emplace_back(*selectedEdge);
         }
         //if(foundCount%reportRate==0) {
-        //    //emit progressRangeSet(0,targetPoints.size(),foundCount);
+        //    //progressRangeSet(*windPtr,0,targetPoints.size(),foundCount);
         //    emit keepAwake();
         //}
     }

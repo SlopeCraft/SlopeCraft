@@ -8,20 +8,18 @@ DEFINES += BLOCKLISTMANAGER_LIBRARY
 CONFIG += c++17
 CONFIG += staticlib
 
-INCLUDEPATH += ../Kernel
+INCLUDEPATH += ../SlopeCraftL
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    ../Kernel/simpleBlock.cpp \
     BlockListManager.cpp \
     TokiBaseColor.cpp \
     TokiBlock.cpp
 
 HEADERS += \
-    ../Kernel/simpleBlock.h \
     BlockListManager_global.h \
     BlockListManager.h \
     TokiBaseColor.h \
@@ -29,6 +27,8 @@ HEADERS += \
 
 TRANSLATIONS += \
     BlockListManager_zh_CN.ts
+
+LIBS += D:\Git\build-SlopeCraft-Desktop_Qt_6_2_1_MinGW_64_bit-Release\SlopeCraftL\release\SlopeCraftL3.dll
 
 # Default rules for deployment.
 #unix {

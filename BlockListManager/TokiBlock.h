@@ -29,7 +29,7 @@ This file is part of SlopeCraft.
 #include <QJsonObject>
 #include <QFile>
 #include <QMessageBox>
-#include "simpleBlock.h"
+#include "SlopeCraftL.h"
 
 enum Language {
     ZH,EN
@@ -49,7 +49,7 @@ public:
                        QObject *parent = nullptr);
     ~TokiBlock();
     const QRadioButton * getTarget() const;
-    const simpleBlock * getSimpleBlock() const;
+    const SlopeCraft::AbstractBlock * getSimpleBlock() const;
 signals:
     void radioBtnClicked(ushort);
 private:
@@ -57,7 +57,7 @@ private:
     QRadioButton * target;
     QString nameZH;
     QString nameEN;
-    simpleBlock block;
+    SlopeCraft::AbstractBlock * block;
     QRadioButton * getNCTarget() const;
 private slots:
     void translate(Language);

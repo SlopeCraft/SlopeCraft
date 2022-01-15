@@ -32,6 +32,8 @@ const ushort MainWindow::BLGlowing[64]={0,1,2,0,0,2,4,2,0,0,3,2,0,0,2,0,0,0,0,0,
 
 const QString MainWindow::selfVersion="v3.6";
 
+//using namespace SlopeCraft;
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -40,22 +42,17 @@ MainWindow::MainWindow(QWidget *parent)
     qDebug("成功setupUi");
     Collected=false;
 
-    Kernel=new TokiSlopeCraft(this);
+    kernel=SlopeCraft::Kernel::create();
     qDebug("成功创建内核");
-    connect(Kernel,&TokiSlopeCraft::keepAwake,this,
-            &MainWindow::keepAwake);
-    connect(Kernel,&TokiSlopeCraft::progressRangeSet,
-            this,&MainWindow::progressRangeSet);
-    connect(Kernel,&TokiSlopeCraft::progressAdd,
-            this,&MainWindow::progressAdd);
-    connect(Kernel,&TokiSlopeCraft::algoProgressRangeSet,
-            this,&MainWindow::algoProgressRangeSet);
-    connect(Kernel,&TokiSlopeCraft::algoProgressAdd,
-            this,&MainWindow::algoProgressAdd);
-    connect(Kernel,&TokiSlopeCraft::reportError,
-            this,&MainWindow::showError);
-    connect(Kernel,&TokiSlopeCraft::reportWorkingStatue,
-            this,&MainWindow::showWorkingStatue);
+    kernel->wind=this;
+    kernel->keepAwake=keepAwake;
+    kernel->progressRangeSet=progressRangeSet;
+    kernel->progressAdd=progressAdd;
+    kernel->algoProgressRangeSet=algoProgressRangeSet;
+    kernel->algoProgressAdd=algoProgressAdd;
+    kernel->reportError=showError;
+    kernel->reportWorkingStatue=showWorkingStatue;
+
     proTracker=nullptr;
 
     ProductDir="";
@@ -202,14 +199,14 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    delete Kernel;
+    kernel->destroy();
     delete Manager;
     delete ui;
 }
 
 void MainWindow::showPreview()
 {
-    if(Kernel->queryStep()<Kernel->builded)return;
+    if(kernel->queryStep()<kernel->builded)return;
 
     PreviewWind*preWind=new PreviewWind(this);
     preWind->Src.resize(62);
@@ -217,7 +214,8 @@ void MainWindow::showPreview()
 
     preWind->Src=Manager->getQRadioButtonList();
 
-    Kernel->getBlockCounts(preWind->BlockCount);
+    int totalNum=0;
+    kernel->getBlockCounts(&totalNum,preWind->BlockCount.data());
 
     qDebug()<<"去重前有："<<preWind->Src.size()<<"个元素";
     auto iS=preWind->Src.begin();
@@ -232,20 +230,23 @@ void MainWindow::showPreview()
         ib=preWind->BlockCount.erase(ib);
         iS=preWind->Src.erase(iS);
     }
-    Kernel->get3DSize(preWind->size[0],preWind->size[1],preWind->size[2]);
+    kernel->get3DSize(preWind->size[0],preWind->size[1],preWind->size[2]);
 
     qDebug()<<"去重后有："<<preWind->Src.size()<<"个元素";
     //preWind->Water=Blocks[12][0];
     preWind->Water=Manager->getQRadioButtonList()[12];
     //preWind->Src[1]=Blocks[1][0];preWind->BlockCount[1]=1919810;
-
-    QImage temp=EImage2QImage(Kernel->getConovertedImage());
+    EImage tempE;
+    tempE.resize(kernel->getImageRows(),kernel->getImageCols());
+    short a,b;
+    kernel->getConvertedImage(&a,&b,tempE.data());
+    QImage temp=EImage2QImage(tempE);
     preWind->ShowMaterialList();
     preWind->showConvertedImage(temp);
     preWind->show();
 }
 
-void MainWindow::keepAwake() {
+void MainWindow::keepAwake(void*) {
     QCoreApplication::processEvents();
 }
 
@@ -314,7 +315,7 @@ void MainWindow::loadColormap() {
     X=parseColormap("./Colors/XYZ.TokiColor","XYZ.TokiColor",
                     "6551171faf62961e3ae6bc3c2ee8d051");
 
-    if(Kernel->setColorSet(R.data(),H.data(),L.data(),X.data()))
+    if(kernel->setColorSet(R.data(),H.data(),L.data(),X.data()))
         qDebug("成功载入颜色");
     else
         qDebug("载入颜色失败");
@@ -560,9 +561,9 @@ void MainWindow::loadBlockList() {
 
     Manager->addBlocks(ja,Dir);
 
-    if(Kernel->queryStep()>=TokiSlopeCraft::colorSetReady) {
+    if(kernel->queryStep()>=SlopeCraft::Kernel::colorSetReady) {
         QRgb colors[64];
-        Kernel->getARGB32(colors);
+        kernel->getARGB32(colors);
         Manager->setLabelColors(colors);
     }
     //applyPre(BLBetter);
@@ -583,22 +584,49 @@ void MainWindow::InitializeAll()
         qDebug("颜色表加载完毕");
         loadBlockList();
         qDebug("方块列表加载完毕");
-        Manager->setVersion(TokiSlopeCraft::MC17);
+        Manager->setVersion(SlopeCraft::Kernel::MC17);
         onPresetsClicked();
         Collected=true;
     }
 
 }
 
+std::string pri_getContact(const SlopeCraft::Kernel*k,bool isG) {
+    std::string res;
+    char buf[512];
+    std::vector<char*> buff(512);
+    for(auto & i : buff) {
+        i=buf;
+    }
+    int Num=0;
+    k->getAuthorURL(&Num,buff.data());
+    buff.resize(Num);
+    for(auto & i : buff) {
+        i=new char[512];
+    }
+    k->getAuthorURL(&Num,buff.data());
+
+    if(isG) {
+        res=buff[0];
+    } else {
+        res=buff[1];
+    }
+
+    for(auto & i : buff) {
+        delete i;
+    }
+    return res;
+}
+
 void MainWindow::contactG()
 {
-    static std::string Toki=Kernel->getAuthorURL()[1];
+    static std::string Toki=pri_getContact(kernel,true);
     QDesktopServices::openUrl(QUrl(QString::fromStdString(Toki)));
 }
 
 void MainWindow::contactB()
 {
-    static std::string Toki=Kernel->getAuthorURL()[0];
+    static std::string Toki=pri_getContact(kernel,false);
     QDesktopServices::openUrl(QUrl(QString::fromStdString(Toki)));
 }
 
@@ -726,23 +754,23 @@ void MainWindow::turnToPage8() {
 }
 
 void MainWindow::updateEnables() {
-    bool temp=Kernel->queryStep()>=TokiSlopeCraft::colorSetReady;
+    bool temp=kernel->queryStep()>=SlopeCraft::Kernel::colorSetReady;
     ui->StartWithFlat->setEnabled(temp);
     ui->StartWithNotVanilla->setEnabled(temp);
     ui->StartWithNotVanilla->setEnabled(temp);
 
 
-    //temp=Kernel->queryStep()>=TokiSlopeCraft::convertionReady;
+    //temp=Kernel->queryStep()>=SlopeCraft::Kernel::convertionReady;
     ui->Convert->setEnabled(temp);
 
-    temp=Kernel->queryStep()>=TokiSlopeCraft::step::wait4Image;
+    temp=kernel->queryStep()>=SlopeCraft::Kernel::step::wait4Image;
     ui->actionTestBlockList->setEnabled(temp);
 
-    temp=Kernel->queryStep()>=TokiSlopeCraft::convertionReady;
+    temp=kernel->queryStep()>=SlopeCraft::Kernel::convertionReady;
     ui->ShowRaw->setEnabled(temp);
     //ui->Convert->setEnabled(temp);
 
-    temp=Kernel->queryStep()>=TokiSlopeCraft::converted;
+    temp=kernel->queryStep()>=SlopeCraft::Kernel::converted;
     ui->ShowAdjed->setEnabled(temp);
     ui->ExportData->setEnabled(temp);
     ui->progressEx->setEnabled(temp);
@@ -752,7 +780,7 @@ void MainWindow::updateEnables() {
     ui->actionExportData->setEnabled(temp);
 
     temp=(!ui->isMapCreative->isChecked())&&
-            Kernel->queryStep()>=TokiSlopeCraft::converted;
+            Kernel->queryStep()>=SlopeCraft::Kernel::converted;
     ui->ExLite->setEnabled(temp);
     ui->progressExLite->setEnabled(temp);
     ui->actionExportLite->setEnabled(temp);
@@ -761,7 +789,7 @@ void MainWindow::updateEnables() {
     ui->actionExportNBT->setEnabled(temp);
     ui->Build4Lite->setEnabled(temp);
 
-    temp=Kernel->queryStep()>=TokiSlopeCraft::builded;
+    temp=Kernel->queryStep()>=SlopeCraft::Kernel::builded;
     ui->ExportLite->setEnabled(temp);
     ui->ManualPreview->setEnabled(temp);
 
@@ -860,7 +888,7 @@ void MainWindow::onImportPicclicked(QString input) {
         ui->ShowRawPic->setPixmap(QPixmap::fromImage(rawPic));
         ui->ShowPic->setPixmap(QPixmap::fromImage(rawPic));
 
-        Kernel->decreaseStep(TokiSlopeCraft::colorSetReady);
+        Kernel->decreaseStep(SlopeCraft::Kernel::colorSetReady);
         updateEnables();
 
         return;
@@ -973,7 +1001,7 @@ void MainWindow::onGameVerClicked() {
     if(ui->isGame17->isChecked()) {
         Manager->setVersion(17);
     }
-    Kernel->decreaseStep(TokiSlopeCraft::colorSetReady);
+    Kernel->decreaseStep(SlopeCraft::Kernel::colorSetReady);
     onBlockListChanged();
     updateEnables();
 }
@@ -991,14 +1019,14 @@ void MainWindow::onMapTypeClicked() {
     if(ui->isMapWall->isChecked()) {
         Manager->setEnabled(12,false);
     }
-    Kernel->decreaseStep(TokiSlopeCraft::colorSetReady);
+    Kernel->decreaseStep(SlopeCraft::Kernel::colorSetReady);
     onBlockListChanged();
     updateEnables();
 }
 
 void MainWindow::ChangeToCustom() {
     ui->isBLCustom->setChecked(true);
-    Kernel->decreaseStep(TokiSlopeCraft::colorSetReady);
+    Kernel->decreaseStep(SlopeCraft::Kernel::colorSetReady);
     updateEnables();
 }
 
@@ -1019,30 +1047,30 @@ void MainWindow::onPresetsClicked() {
     if(ui->isMapSurvival->isChecked())
         Manager->setEnabled(12,false);
 
-    Kernel->decreaseStep(TokiSlopeCraft::colorSetReady);
+    Kernel->decreaseStep(SlopeCraft::Kernel::colorSetReady);
     updateEnables();
 }
 
 void MainWindow::onAlgoClicked() {
-    static TokiSlopeCraft::convertAlgo lastChoice=TokiSlopeCraft::convertAlgo::RGB_Better;
+    static SlopeCraft::Kernel::convertAlgo lastChoice=SlopeCraft::Kernel::convertAlgo::RGB_Better;
     static bool lastDither=false;
 
-    TokiSlopeCraft::convertAlgo now;
+    SlopeCraft::Kernel::convertAlgo now;
     bool nowDither=ui->AllowDither->isChecked();
     if(ui->isColorSpaceRGBOld->isChecked())
-        now=TokiSlopeCraft::convertAlgo::RGB;
+        now=SlopeCraft::Kernel::convertAlgo::RGB;
     if(ui->isColorSpaceRGB->isChecked())
-        now=TokiSlopeCraft::convertAlgo::RGB_Better;
+        now=SlopeCraft::Kernel::convertAlgo::RGB_Better;
     if(ui->isColorSpaceHSV->isChecked())
-        now=TokiSlopeCraft::convertAlgo::HSV;
+        now=SlopeCraft::Kernel::convertAlgo::HSV;
     if(ui->isColorSpaceLab94->isChecked())
-        now=TokiSlopeCraft::convertAlgo::Lab94;
+        now=SlopeCraft::Kernel::convertAlgo::Lab94;
     if(ui->isColorSpaceLab00->isChecked())
-        now=TokiSlopeCraft::convertAlgo::Lab00;
+        now=SlopeCraft::Kernel::convertAlgo::Lab00;
     if(ui->isColorSpaceXYZ->isChecked())
-        now=TokiSlopeCraft::convertAlgo::XYZ;
+        now=SlopeCraft::Kernel::convertAlgo::XYZ;
     if(lastChoice!=now||lastDither!=nowDither)
-        Kernel->decreaseStep(TokiSlopeCraft::step::convertionReady);
+        Kernel->decreaseStep(SlopeCraft::Kernel::step::convertionReady);
 
     updateEnables();
     lastChoice=now;
@@ -1051,33 +1079,33 @@ void MainWindow::onAlgoClicked() {
 
 void MainWindow::kernelSetType() {
 
-    TokiSlopeCraft::mapTypes type=TokiSlopeCraft::mapTypes::Slope;
+    SlopeCraft::Kernel::mapTypes type=SlopeCraft::Kernel::mapTypes::Slope;
     {
     if(ui->isMapCreative->isChecked())
-        type=TokiSlopeCraft::mapTypes::FileOnly;
+        type=SlopeCraft::Kernel::mapTypes::FileOnly;
     if(ui->isMapFlat->isChecked())
-        type=TokiSlopeCraft::mapTypes::Flat;
+        type=SlopeCraft::Kernel::mapTypes::Flat;
     if(ui->isMapSurvival->isChecked())
-        type=TokiSlopeCraft::mapTypes::Slope;
+        type=SlopeCraft::Kernel::mapTypes::Slope;
     if(ui->isMapWall->isChecked())
-        type=TokiSlopeCraft::mapTypes::Wall;
+        type=SlopeCraft::Kernel::mapTypes::Wall;
     }
 
 
-    TokiSlopeCraft::gameVersion ver=TokiSlopeCraft::gameVersion::MC17;
+    SlopeCraft::Kernel::gameVersion ver=SlopeCraft::Kernel::gameVersion::MC17;
     {
     if(ui->isGame12->isChecked())
-        ver=TokiSlopeCraft::gameVersion::MC12;
+        ver=SlopeCraft::Kernel::gameVersion::MC12;
     if(ui->isGame13->isChecked())
-        ver=TokiSlopeCraft::gameVersion::MC13;
+        ver=SlopeCraft::Kernel::gameVersion::MC13;
     if(ui->isGame14->isChecked())
-        ver=TokiSlopeCraft::gameVersion::MC14;
+        ver=SlopeCraft::Kernel::gameVersion::MC14;
     if(ui->isGame15->isChecked())
-        ver=TokiSlopeCraft::gameVersion::MC15;
+        ver=SlopeCraft::Kernel::gameVersion::MC15;
     if(ui->isGame16->isChecked())
-        ver=TokiSlopeCraft::gameVersion::MC16;
+        ver=SlopeCraft::Kernel::gameVersion::MC16;
     if(ui->isGame17->isChecked())
-        ver=TokiSlopeCraft::gameVersion::MC17;
+        ver=SlopeCraft::Kernel::gameVersion::MC17;
     }
 
     bool allowedBaseColor[64];
@@ -1157,40 +1185,40 @@ void MainWindow::algoProgressAdd(int deltaVal) {
 }
 
 void MainWindow::on_Convert_clicked() {
-if(Kernel->queryStep()<TokiSlopeCraft::wait4Image) {
+if(Kernel->queryStep()<SlopeCraft::Kernel::wait4Image) {
     qDebug("重新setType");
     onBlockListChanged();
-if(Kernel->queryStep()<TokiSlopeCraft::wait4Image)
+if(Kernel->queryStep()<SlopeCraft::Kernel::wait4Image)
     return;
 }
 
-if(Kernel->queryStep()<TokiSlopeCraft::convertionReady) {
+if(Kernel->queryStep()<SlopeCraft::Kernel::convertionReady) {
     qDebug("重新setImage");
     kernelSetImg();
-if(Kernel->queryStep()<TokiSlopeCraft::convertionReady)
+if(Kernel->queryStep()<SlopeCraft::Kernel::convertionReady)
     return;
 }
 
-TokiSlopeCraft::convertAlgo now;
+SlopeCraft::Kernel::convertAlgo now;
 bool nowDither=ui->AllowDither->isChecked();
 {
 if(ui->isColorSpaceRGBOld->isChecked())
-    now=TokiSlopeCraft::convertAlgo::RGB;
+    now=SlopeCraft::Kernel::convertAlgo::RGB;
 if(ui->isColorSpaceRGB->isChecked())
-    now=TokiSlopeCraft::convertAlgo::RGB_Better;
+    now=SlopeCraft::Kernel::convertAlgo::RGB_Better;
 if(ui->isColorSpaceHSV->isChecked())
-    now=TokiSlopeCraft::convertAlgo::HSV;
+    now=SlopeCraft::Kernel::convertAlgo::HSV;
 if(ui->isColorSpaceLab94->isChecked())
-    now=TokiSlopeCraft::convertAlgo::Lab94;
+    now=SlopeCraft::Kernel::convertAlgo::Lab94;
 if(ui->isColorSpaceLab00->isChecked())
-    now=TokiSlopeCraft::convertAlgo::Lab00;
+    now=SlopeCraft::Kernel::convertAlgo::Lab00;
 if(ui->isColorSpaceXYZ->isChecked())
-    now=TokiSlopeCraft::convertAlgo::XYZ;
+    now=SlopeCraft::Kernel::convertAlgo::XYZ;
 }
 
 proTracker=ui->ShowProgressABbar;
 
-Kernel->decreaseStep(TokiSlopeCraft::step::convertionReady);
+Kernel->decreaseStep(SlopeCraft::Kernel::step::convertionReady);
 updateEnables();
 
 bool temp=false;
@@ -1250,23 +1278,23 @@ void MainWindow::on_Build4Lite_clicked() {
 
     bool naturalCompress=ui->AllowNaturalOpti->isChecked();
     bool forcedCompress=ui->AllowForcedOpti->isChecked();
-    TokiSlopeCraft::compressSettings cS;
+    SlopeCraft::Kernel::compressSettings cS;
     if(naturalCompress) {
         if(forcedCompress)
-            cS=TokiSlopeCraft::compressSettings::Both;
+            cS=SlopeCraft::Kernel::compressSettings::Both;
         else
-            cS=TokiSlopeCraft::compressSettings::NaturalOnly;
+            cS=SlopeCraft::Kernel::compressSettings::NaturalOnly;
     } else {
         if(forcedCompress)
-            cS=TokiSlopeCraft::compressSettings::ForcedOnly;
-        else cS=TokiSlopeCraft::compressSettings::noCompress;
+            cS=SlopeCraft::Kernel::compressSettings::ForcedOnly;
+        else cS=SlopeCraft::Kernel::compressSettings::noCompress;
     }
 
     bool allowBridge=ui->allowGlassBridge->isChecked();
-    TokiSlopeCraft::glassBridgeSettings gBS=
-            allowBridge?TokiSlopeCraft::withBridge:TokiSlopeCraft::noBridge;
+    SlopeCraft::Kernel::glassBridgeSettings gBS=
+            allowBridge?SlopeCraft::Kernel::withBridge:SlopeCraft::Kernel::noBridge;
 
-    Kernel->decreaseStep(TokiSlopeCraft::step::converted);
+    Kernel->decreaseStep(SlopeCraft::Kernel::step::converted);
     ui->ExportLite->setEnabled(false);
     ui->FinishExLite->setEnabled(false);
     ui->ManualPreview->setEnabled(false);
@@ -1505,56 +1533,56 @@ void MainWindow::on_allowGlassBridge_stateChanged(int arg1) {
     ui->glassBridgeInterval->setEnabled(arg1);
 }
 
-void MainWindow::showError(TokiSlopeCraft::errorFlag error) {
+void MainWindow::showError(SlopeCraft::Kernel::errorFlag error) {
     QString title,text;
     bool isFatal=false;
     switch (error) {
-    case TokiSlopeCraft::errorFlag::NO_ERROR_OCCUR:
+    case SlopeCraft::Kernel::errorFlag::NO_ERROR_OCCUR:
         return;
-    case TokiSlopeCraft::errorFlag::EMPTY_RAW_IMAGE:
+    case SlopeCraft::Kernel::errorFlag::EMPTY_RAW_IMAGE:
         title=tr("转化原图为地图画时出错");
         text=tr("原图为空！你可能没有导入原图！");
         break;
-    case TokiSlopeCraft::errorFlag::DEPTH_3_IN_VANILLA_MAP:
+    case SlopeCraft::Kernel::errorFlag::DEPTH_3_IN_VANILLA_MAP:
         title=tr("构建高度矩阵时出现错误");
         text=tr("原版地图画不允许出现第三个阴影（不存在的几何关系不可能生存实装！）\n" \
         "请检查你的地图画类型，纯文件地图画不可以导出为投影！");
         break;
-    case TokiSlopeCraft::errorFlag::HASTY_MANIPULATION:
+    case SlopeCraft::Kernel::errorFlag::HASTY_MANIPULATION:
         title=tr("跳步操作");
         text=tr("SlopeCraft不允许你跳步操作，请按照左侧竖边栏的顺序操作！");
         break;
-    case TokiSlopeCraft::errorFlag::LOSSYCOMPRESS_FAILED:
+    case SlopeCraft::Kernel::errorFlag::LOSSYCOMPRESS_FAILED:
         title=tr("有损压缩失败");
         text=tr("在构建高度矩阵时，有损压缩失败，没能将地图画压缩到目标高度。 \
         这可能是因为地图画行数过大。 \
         尝试启用无损压缩，或者提高最大允许高度——不要给软件地图画太大的压力！");
         break;
-    case TokiSlopeCraft::errorFlag::MAX_ALLOWED_HEIGHT_LESS_THAN_14:
+    case SlopeCraft::Kernel::errorFlag::MAX_ALLOWED_HEIGHT_LESS_THAN_14:
         title=tr("最大允许高度太小了");
         text=tr("有损压缩的最大允许不要低于14，否则很容易压缩失败");
         break;
-    case TokiSlopeCraft::errorFlag::PARSING_COLORMAP_HSV_FAILED:
+    case SlopeCraft::Kernel::errorFlag::PARSING_COLORMAP_HSV_FAILED:
         isFatal=true;
         title=tr("严重错误：颜色表文件HSV.TokiColor损坏");
         text=tr("SlopeCraft不能正常解析颜色表文件，它是不可以被修改的！");
         break;
-    case TokiSlopeCraft::errorFlag::PARSING_COLORMAP_Lab_FAILED:
+    case SlopeCraft::Kernel::errorFlag::PARSING_COLORMAP_Lab_FAILED:
         isFatal=true;
         title=tr("严重错误：颜色表文件Lab.TokiColor损坏");
         text=tr("SlopeCraft不能正常解析颜色表文件，它是不可以被修改的！");
         break;
-    case TokiSlopeCraft::errorFlag::PARSING_COLORMAP_XYZ_FAILED:
+    case SlopeCraft::Kernel::errorFlag::PARSING_COLORMAP_XYZ_FAILED:
         isFatal=true;
         title=tr("严重错误：颜色表文件XYZ.TokiColor损坏");
         text=tr("SlopeCraft不能正常解析颜色表文件，它是不可以被修改的！");
         break;
-    case TokiSlopeCraft::errorFlag::PARSING_COLORMAP_RGB_FAILED:
+    case SlopeCraft::Kernel::errorFlag::PARSING_COLORMAP_RGB_FAILED:
         isFatal=true;
         title=tr("严重错误：颜色表文件RGB.TokiColor损坏");
         text=tr("SlopeCraft不能正常解析颜色表文件，它是不可以被修改的！");
         break;
-    case TokiSlopeCraft::errorFlag::USEABLE_COLOR_TOO_FEW:
+    case SlopeCraft::Kernel::errorFlag::USEABLE_COLOR_TOO_FEW:
         title=tr("允许使用的颜色过少");
         text=tr("你应该勾选启用尽可能多的基色，颜色太少是不行的！");
         break;
@@ -1571,53 +1599,53 @@ void MainWindow::showError(TokiSlopeCraft::errorFlag error) {
     return;
 }
 
-void MainWindow::showWorkingStatue(TokiSlopeCraft::workStatues statue) {
+void MainWindow::showWorkingStatue(SlopeCraft::Kernel::workStatues statue) {
 QString title=this->windowTitle();
 const char spacer[]="   |   ";
 if(title.contains(spacer)) {
     title=title.left(title.lastIndexOf(spacer));
 }
 
-if(statue!=TokiSlopeCraft::workStatues::none)
+if(statue!=SlopeCraft::Kernel::workStatues::none)
     title+= spacer;
 
 switch (statue) {
-case TokiSlopeCraft::workStatues::none:
+case SlopeCraft::Kernel::workStatues::none:
     break;
-case TokiSlopeCraft::workStatues::buidingHeighMap:
+case SlopeCraft::Kernel::workStatues::buidingHeighMap:
     title+=tr("正在构建高度矩阵");
     break;
-case TokiSlopeCraft::workStatues::building3D:
+case SlopeCraft::Kernel::workStatues::building3D:
     title+=tr("正在构建三维结构");
     break;
-case TokiSlopeCraft::workStatues::collectingColors:
+case SlopeCraft::Kernel::workStatues::collectingColors:
     title+=tr("正在收集整张图片的颜色");
     break;
-case TokiSlopeCraft::workStatues::compressing:
+case SlopeCraft::Kernel::workStatues::compressing:
     title+=tr("正在压缩立体地图画");
     break;
-case TokiSlopeCraft::workStatues::constructingBridges:
+case SlopeCraft::Kernel::workStatues::constructingBridges:
     title+=tr("正在为立体地图画搭桥");
     break;
-case TokiSlopeCraft::workStatues::converting:
+case SlopeCraft::Kernel::workStatues::converting:
     title+=tr("正在匹配颜色");
     break;
-case TokiSlopeCraft::workStatues::dithering:
+case SlopeCraft::Kernel::workStatues::dithering:
     title+=tr("正在使用抖动仿色");
     break;
-case TokiSlopeCraft::workStatues::flippingToWall:
+case SlopeCraft::Kernel::workStatues::flippingToWall:
     title+=tr("正在将平板地图画变为墙面地图画");
     break;
-case TokiSlopeCraft::workStatues::writing3D:
+case SlopeCraft::Kernel::workStatues::writing3D:
     title+=tr("正在写入三维结构");
     break;
-case TokiSlopeCraft::workStatues::writingBlockPalette:
+case SlopeCraft::Kernel::workStatues::writingBlockPalette:
     title+=tr("正在写入方块列表");
     break;
-case TokiSlopeCraft::workStatues::writingMapDataFiles:
+case SlopeCraft::Kernel::workStatues::writingMapDataFiles:
     title+=tr("正在写入地图数据文件");
     break;
-case TokiSlopeCraft::workStatues::writingMetaInfo:
+case SlopeCraft::Kernel::workStatues::writingMetaInfo:
     title+=tr("正在写入基础信息");
     break;
 }
@@ -1804,7 +1832,7 @@ void MainWindow::setAutoCheckUpdate(bool autoCheckUpdate) {
 
 void MainWindow::onBlockListChanged() {
     //qDebug("onBlockListChanged");
-    if(Kernel->queryStep()<TokiSlopeCraft::step::colorSetReady) {
+    if(Kernel->queryStep()<SlopeCraft::Kernel::step::colorSetReady) {
         return;
     }
 

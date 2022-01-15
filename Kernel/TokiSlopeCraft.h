@@ -45,13 +45,7 @@ This file is part of SlopeCraft.
 #include "NBTWriter.h"
 
 using namespace SlopeCraft;
-#ifdef WITH_QT
-#include <QObject>
-#include <QtConcurrent>
-#include <QFuture>
-#else
 #include <thread>
-#endif
 
 #define mapColor2Index(mapColor) (64*(mapColor%4)+(mapColor/4))
 #define index2mapColor(index) (4*(index%64)+(index/64))
@@ -69,14 +63,8 @@ namespace NBT {
 
 class TokiSlopeCraft : public Kernel
 {
-#ifdef WITH_QT
-    Q_OBJECT
-public:
-    explicit TokiSlopeCraft(QObject *parent = nullptr);
-#else
 public:
     TokiSlopeCraft();
-#endif
     virtual ~TokiSlopeCraft();
 
 //can do in nothing:

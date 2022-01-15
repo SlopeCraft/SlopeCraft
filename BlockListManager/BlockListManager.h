@@ -51,8 +51,8 @@ public:
     void setVersion(uchar);
 
     void getEnableList(bool*) const;
-    void getSimpleBlockList(const AbstractBlock ** ) const;
-    std::vector<const AbstractBlock * > getSimpleBlockList() const;
+    void getSimpleBlockList(const SlopeCraft::AbstractBlock ** ) const;
+    std::vector<const SlopeCraft::AbstractBlock * > getSimpleBlockList() const;
     std::vector<const TokiBlock * >getTokiBlockList() const;
     std::vector<const QRadioButton * >getQRadioButtonList() const;
     std::vector<ushort> toPreset() const;
@@ -60,7 +60,7 @@ public:
     void getTokiBaseColors(std::vector<const TokiBaseColor*> &) const;
 
     int getBlockNum() const;
-    void getBlockPtrs(const AbstractBlock **,uint8_t*) const;
+    void getBlockPtrs(const SlopeCraft::AbstractBlock **,uint8_t*) const;
 public slots:
 
 signals:

@@ -144,7 +144,7 @@ void BlockListManager::getEnableList(bool *dest) const {
         dest[i]=tbcs[i]->getEnabled();
 }
 
-void BlockListManager::getSimpleBlockList(const AbstractBlock ** SBL) const {
+void BlockListManager::getSimpleBlockList(const SlopeCraft::AbstractBlock ** SBL) const {
     //qDebug("void BlockListManager::getSimpleBlockList(simpleBlock * SBL) const");
 
     for(uchar i=0;i<64;i++) {
@@ -154,9 +154,9 @@ void BlockListManager::getSimpleBlockList(const AbstractBlock ** SBL) const {
             SBL[i]=(tbcs[i]->getTokiBlock()->getSimpleBlock());
     }
 }
-std::vector<const AbstractBlock * > BlockListManager::getSimpleBlockList() const {
-    std::vector<const AbstractBlock * > SBL(64);
-    const simpleBlock * p;
+std::vector<const SlopeCraft::AbstractBlock * > BlockListManager::getSimpleBlockList() const {
+    std::vector<const SlopeCraft::AbstractBlock * > SBL(64);
+    const SlopeCraft::AbstractBlock * p;
     for(uchar i=0;i<tbcs.size();i++) {
         p=tbcs[i]->getTokiBlock()->getSimpleBlock();
             SBL[i]=p;
@@ -220,7 +220,7 @@ int BlockListManager::getBlockNum() const {
     return result;
 }
 
-void BlockListManager::getBlockPtrs(const AbstractBlock ** dest,
+void BlockListManager::getBlockPtrs(const SlopeCraft::AbstractBlock ** dest,
                                     uint8_t * baseColor) const {
     int idx=0;
     for(auto it : tbcs) {

@@ -38,11 +38,6 @@ This file is part of SlopeCraft.
 #include "ColorSet.h"
 #include "HeightLine.h"
 
-
-#ifdef WITH_QT
-    #include <QObject>
-#endif
-
 class gene
 {
 public:
@@ -69,32 +64,19 @@ private:
     static const uchar mutateMap[3][2];
 };
 
-#ifdef WITH_QT
-class LossyCompressor : public QObject
-{
-    Q_OBJECT
-public:
-    explicit LossyCompressor(QObject *parent = nullptr);
-#else
 class LossyCompressor
 {
 public:
     LossyCompressor();
-#endif
 
     void setSource(const Eigen::ArrayXi & ,const TokiColor *[]);
     bool compress(ushort maxHeight,bool allowNaturalCompress=false);
     const gene& getResult() const;
-#ifdef WITH_QT
-signals:
-    void progressRangeSet(int min,int max,int val);
-    void progressAdd(int);
-    void keepAwake();
-#else
-    void (*progressRangeSet)(int min,int max,int val);
-    void (*progressAdd)(int);
-    void (*keepAwake)();
-#endif
+
+    void ** windPtr;
+    void (*progressRangeSet)(void*,int min,int max,int val);
+    void (*progressAdd)(void*,int);
+    void (*keepAwake)(void*);
 
 private:
     std::vector<const TokiColor*> source;

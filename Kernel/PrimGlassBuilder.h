@@ -93,19 +93,11 @@ glassMap connectBetweenLayers(const TokiMap & ,const TokiMap & ,
                           walkableMap* walkable);
 //返回值是架构在相对较高的一层上的，walkable是各层俯视图叠加
 
-#ifdef WITH_QT
-class PrimGlassBuilder : public QObject
-{
-    Q_OBJECT
-public:
-    explicit PrimGlassBuilder(QObject *parent = nullptr);
-#else
+
 class PrimGlassBuilder
 {
 public:
     PrimGlassBuilder();
-#endif
-
 
     template <typename T, size_t S> friend class tf::ObjectPool;
     void* _object_pool_block;
@@ -120,16 +112,10 @@ public:
 	};
     glassMap makeBridge(const TokiMap & _targetMap,
                         walkableMap* walkable=nullptr);
-#ifdef WITH_QT
-signals:
-    void progressRangeSet(int min,int max,int val);
-    void progressAdd(int);
-    void keepAwake();
-#else
-    void (*progressRangeSet)(int,int,int);
-    void (*progressAdd)(int);
-    void (*keepAwake)();
-#endif
+    void ** windPtr;
+    void (*progressRangeSet)(void*,int,int,int);
+    void (*progressAdd)(void*,int);
+    void (*keepAwake)(void*);
 private:
     std::vector<TokiPos> targetPoints;
     std::list<edge> edges;
