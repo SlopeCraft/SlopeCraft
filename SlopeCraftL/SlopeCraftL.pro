@@ -11,7 +11,7 @@ INCLUDEPATH += D:/Git/SlopeCraft/Kernel \
 
 RC_LANG = 0x0004
 
-VERSION += 3.6.0.0
+VERSION += 3.6.1.0
 
 QMAKE_TARGET_DESCRIPTION = SlopeCraft Library
 #描述信息

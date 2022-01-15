@@ -33,7 +33,7 @@
    <font/>
   </property>
   <property name="windowTitle">
-   <string notr="true">SlopeCraft v3.6  Copyright © 2021 TokiNoBug</string>
+   <string notr="true">SlopeCraft v3.6.1  Copyright © 2021-2022 TokiNoBug</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -982,7 +982,7 @@ font: 11pt &quot;微软雅黑&quot;;
            <string notr="true">font: 9pt &quot;Tekton Pro&quot;;</string>
           </property>
           <property name="text">
-           <string notr="true">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:36pt; font-style:italic; color:#ffffff;&quot;&gt;SlopeCraft &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic; color:#ffffff;&quot;&gt;v3.6&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:14pt; font-style:italic; color:#ffff00;&quot;&gt;Copyright © 2021 TokiNoBug&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string notr="true">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:36pt; font-style:italic; color:#ffffff;&quot;&gt;SlopeCraft &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic; color:#ffffff;&quot;&gt;v3.6.1&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:14pt; font-style:italic; color:#ffff00;&quot;&gt;Copyright © 2021 TokiNoBug&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
