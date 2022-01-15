@@ -1,5 +1,5 @@
 /*
- Copyright © 2021  TokiNoBug
+ Copyright © 2021-2022  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -19,6 +19,7 @@ This file is part of SlopeCraft.
     github:https://github.com/ToKiNoBug
     bilibili:https://space.bilibili.com/351429231
 */
+
 #ifndef colorset_cpp
 #define colorset_cpp
 #include "ColorSet.h"

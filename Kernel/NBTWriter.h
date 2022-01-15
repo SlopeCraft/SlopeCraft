@@ -1,5 +1,5 @@
 /*
- Copyright © 2021  TokiNoBug
+ Copyright © 2021-2022  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@ This file is part of SlopeCraft.
 
     You should have received a copy of the GNU General Public License
     along with SlopeCraft.  If not, see <https://www.gnu.org/licenses/>.
-    
+
     Contact with me:
     github:https://github.com/ToKiNoBug
     bilibili:https://space.bilibili.com/351429231
@@ -31,7 +31,6 @@ This file is part of SlopeCraft.
 #include <iostream>
 #include <fstream>
 
-//#include <QString>
 
 #include <cstring>
 #include "defines.h"
