@@ -56,6 +56,10 @@ void AbstractBlock::clear() {
 Kernel::Kernel() {
 }
 
+const char * Kernel::getSCLVersion() {
+    return "v3.6.1";
+}
+
 void Kernel::getColorMapPtrs(const float** f,const unsigned char** m,int* rows) {
     if(f!=nullptr)
         *f=TokiSlopeCraft::Allowed._RGB.data();

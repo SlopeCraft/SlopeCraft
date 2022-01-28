@@ -44,7 +44,9 @@ This file is part of SlopeCraft.
 #include "lossyCompressor.h"
 #include "NBTWriter.h"
 
+#ifdef SLOPECRAFTL_WITH_AICVETR
 #include "AiConverterInterface.h"
+#endif
 
 using namespace SlopeCraft;
 #include <thread>
@@ -202,7 +204,9 @@ private:
     ushort bridgeInterval;
     PrimGlassBuilder * glassBuilder;
     LossyCompressor * Compressor;
+#ifdef SLOPECRAFTL_WITH_AICVETR
     AiConverterInterface * AiCvter;
+#endif
     Eigen::ArrayXXi mapPic;//stores mapColor
     Eigen::ArrayXXi Base;
     Eigen::ArrayXXi HighMap;
@@ -211,7 +215,10 @@ private:
     Eigen::Tensor<uchar,3>Build;//x,y,z
 
 //for setType:
+
+#ifdef SLOPECRAFTL_WITH_AICVETR
     void configAiCvter();
+#endif
 //for setImage:
 
 //for convert:

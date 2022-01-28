@@ -13,7 +13,7 @@ RC_LANG = 0x0004
 
 VERSION += 3.6.1.0
 
-QMAKE_TARGET_DESCRIPTION = SlopeCraft Library
+QMAKE_TARGET_DESCRIPTION = SlopeCraft Library (without AiConverter)
 #描述信息
 
 QMAKE_TARGET_COPYRIGHT = TokiNoBug
@@ -29,13 +29,9 @@ DEFINES += SLOPECRAFTL_LIBRARY
 
 CONFIG += c++17
 
-
-
-# You can make your code fail to compile if it uses deprecated APIs.
-# In order to do so, uncomment the following line.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
-
-LIBS += D:\Git\build-SlopeCraft-Desktop_Qt_6_2_1_MinGW_64_bit-Release\SlopeCraftL\release\AiCvterLib.dll
+#Comment following lines if you compile without AiConverter
+#LIBS += D:\Git\build-SlopeCraft-Desktop_Qt_6_2_1_MinGW_64_bit-Release\SlopeCraftL\release\AiCvterLib.dll
+#DEFINES += SLOPECRAFTL_WITH_AICVETR
 
 SOURCES += \
     ../../../CppLibs/zlibs/adler32.c \

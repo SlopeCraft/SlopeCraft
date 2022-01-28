@@ -33,12 +33,6 @@ This file is part of SlopeCraft.
     #define emit ;
 #endif
 
-#ifdef STRAIGHT_INCLUDE_KERNEL
-#ifndef NO_DLL
-#error YOU MUST DEFINE NO_DLL WHEN DEFINED STRAIGHT_INCLUDE_KERNEL
-#endif
-#endif
-
 typedef unsigned char uchar;
 typedef unsigned short ushort;
 typedef unsigned int uint;

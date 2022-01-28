@@ -62,6 +62,8 @@ This file is part of SlopeCraft.
 #include <unordered_map>
 
 #include <Eigen/Dense>
+
+#define SLOPECRAFTL_WITH_AICVETR
 #include "SlopeCraftL.h"
 
 #include "VersionDialog.h"

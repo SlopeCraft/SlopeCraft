@@ -30,7 +30,7 @@ const ushort MainWindow::BLCheaper[64]={0,0,0,0,1,0,5,2,3,0,4,0,0,0,3,0,0,0,0,0,
 const ushort MainWindow::BLBetter[64]={0,1,1,0,0,1,0,2,0,0,3,2,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0};
 const ushort MainWindow::BLGlowing[64]={0,1,2,0,0,2,4,2,0,0,3,2,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,6,0,0,1,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0};
 
-const QString MainWindow::selfVersion="v3.6.1";
+const QString MainWindow::selfVersion=SlopeCraft::Kernel::getSCLVersion();
 
 //using namespace SlopeCraft;
 
@@ -1494,7 +1494,7 @@ void MainWindow::onExportDataclicked(QString path) {
         for(auto & i : unCompressedBuffers) {
             i=new char[512];
         }
-        int fileCount=0;
+        //int fileCount=0;
         kernel->exportAsData(FolderPath.toLocal8Bit().data(),
                                                    indexStart,
                              //&fileCount,unCompressedBuffers.data()

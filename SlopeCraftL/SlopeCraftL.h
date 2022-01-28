@@ -222,6 +222,9 @@ enum workStatues {
     static void getColorMapPtrs(const float**,const unsigned char**,int*);
     //full palette
     static const float * getBasicColorMapPtrs();
+
+    static const char * getSCLVersion();
+
 //can do in nothing:
     ///real size of kernel
     virtual unsigned long long size()=0;

@@ -87,4 +87,4 @@ DISTFILES += \
 #    ../Kernel/Kernel.pro
 
 
-LIBS += D:\Git\build-SlopeCraft-Desktop_Qt_6_2_1_MinGW_64_bit-Release\SlopeCraftL\release\SlopeCraftL3.dll
+LIBS += D:\Git\build-SlopeCraft-Desktop_Qt_6_1_0_MinGW_64_bit-Release\SlopeCraftL\release\SlopeCraftL3.dll

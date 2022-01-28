@@ -46,8 +46,9 @@ TokiSlopeCraft::TokiSlopeCraft()
 
     glassBuilder=new PrimGlassBuilder;
     Compressor=new LossyCompressor;
+#ifdef SLOPECRAFTL_WITH_AICVETR
     AiCvter=AiConverterInterface::create();
-
+#endif
     setProgressRangeSet([](void*,int,int,int){});
     setProgressAdd([](void*,int){});
     setKeepAwake([](void*){});
@@ -70,24 +71,32 @@ TokiSlopeCraft::TokiSlopeCraft()
 TokiSlopeCraft::~TokiSlopeCraft() {
     delete Compressor;
     delete glassBuilder;
+#ifdef SLOPECRAFTL_WITH_AICVETR
     AiCvter->destroy();
+#endif
 }
 
 
 ///function ptr to window object
 void TokiSlopeCraft::setWindPtr(void * _w) {
     wind=_w;
+#ifdef SLOPECRAFTL_WITH_AICVETR
     AiCvter->setUiPtr(_w);
+#endif
 }
 ///a function ptr to show progress of converting and exporting
 void TokiSlopeCraft::setProgressRangeSet(void(*prs)(void*,int,int,int)) {
     progressRangeSet=prs;
+#ifdef SLOPECRAFTL_WITH_AICVETR
     AiCvter->setProgressRangeFun(prs);
+#endif
 }
 ///a function ptr to add progress value
 void TokiSlopeCraft::setProgressAdd(void(*pa)(void*,int)) {
     progressAdd=pa;
+#ifdef SLOPECRAFTL_WITH_AICVETR
     AiCvter->setProgressAddFun(pa);
+#endif
 }
 ///a function ptr to prevent window from being syncoped
 void TokiSlopeCraft::setKeepAwake(void(*ka)(void*)) {
@@ -491,12 +500,14 @@ bool TokiSlopeCraft::setType(mapTypes type,
 
 }
 
+#ifdef SLOPECRAFTL_WITH_AICVETR
 void TokiSlopeCraft::configAiCvter() {
     AiCvter->loadColorSheet(Allowed._RGB.data(),
                             Allowed.Map.data(),
                             Allowed.Map.size());
     AiCvter->loadImage(rawImage.data(),rawImage.rows(),rawImage.cols());
 }
+#endif
 
 ushort TokiSlopeCraft::getColorCount() const {
     if(kernelStep<wait4Image) {
@@ -522,7 +533,9 @@ void TokiSlopeCraft::setRawImage(const EImage & _rawimg) {
 
     rawImage=_rawimg;
     kernelStep=convertionReady;
+#ifdef SLOPECRAFTL_WITH_AICVETR
     configAiCvter();
+#endif
     return;
 }
 
@@ -602,6 +615,7 @@ bool TokiSlopeCraft::convert(convertAlgo algo,bool dither) {
     }
 
     if(algo==convertAlgo::AiCvter) {
+#ifdef SLOPECRAFTL_WITH_AICVETR
         convertAlgo algos[6]={RGB,RGB_Better,HSV,Lab94,Lab00,XYZ};
         const uint8_t * seed[6];
         Eigen::ArrayXX<uint8_t> CvtedMap[6];
@@ -614,6 +628,9 @@ bool TokiSlopeCraft::convert(convertAlgo algo,bool dither) {
         AiCvter->setSeed(seed,6);
         algo=convertAlgo::RGB_Better;
         //run AiCvter here
+#else
+        algo=convertAlgo::RGB_Better;
+#endif
     }
 
     ConvertAlgo=algo;
@@ -1260,7 +1277,7 @@ bool TokiSlopeCraft::build(compressSettings cS, ushort mAH,
 
     if(mapType==mapTypes::Wall) {
         reportWorkingStatue(wind,workStatues::flippingToWall);
-        Eigen::Tensor<uchar,3> temp=Build;
+        Eigen::Tensor<uchar,3> temp=Eigen::Tensor<uchar,3>(Build);
         Eigen::array<int,3> perm={1,2,0};
         Build=temp.shuffle(perm);
 
