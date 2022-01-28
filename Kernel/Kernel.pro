@@ -1,6 +1,9 @@
 INCLUDEPATH += D:/CppLibs/eigen-3.4.0 \
                                D:/CppLibs/zlibs \
-                               ../SlopeCraftL
+                               ../SlopeCraftL \
+                               ../AiCvterInterface
+
+LIBS += D:\Git\build-SlopeCraft-Desktop_Qt_6_2_1_MinGW_64_bit-Release\SlopeCraftL\release\AiCvterLib.dll
 
 HEADERS += \
     ../../../CppLibs/zlibs/crc32.h \
@@ -14,6 +17,8 @@ HEADERS += \
     ../../../CppLibs/zlibs/zconf.h \
     ../../../CppLibs/zlibs/zlib.h \
     ../../../CppLibs/zlibs/zutil.h \
+    ../AiCvterInterface/AiConverterInterface.h \
+    ../AiCvterInterface/AiCvterLib_global.h \
     ../SlopeCraftL/SlopeCraftL.h \
     ../SlopeCraftL/SlopeCraftL_global.h \
     ColorSet.h \

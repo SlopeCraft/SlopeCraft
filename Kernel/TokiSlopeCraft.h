@@ -44,6 +44,8 @@ This file is part of SlopeCraft.
 #include "lossyCompressor.h"
 #include "NBTWriter.h"
 
+#include "AiConverterInterface.h"
+
 using namespace SlopeCraft;
 #include <thread>
 
@@ -68,6 +70,24 @@ public:
     virtual ~TokiSlopeCraft();
 
 //can do in nothing:
+    ///function ptr to window object
+    void setWindPtr(void *);
+    ///a function ptr to show progress of converting and exporting
+    void setProgressRangeSet(void(*)(void*,int,int,int));
+    ///a function ptr to add progress value
+    void setProgressAdd(void(*)(void*,int));
+    ///a function ptr to prevent window from being syncoped
+    void setKeepAwake(void(*)(void*));
+
+    ///a function ptr to show progress of compressing and bridge-building
+    void setAlgoProgressRangeSet(void(*)(void*,int,int,int));
+    ///a function ptr to add progress value of compressing and bridge-building
+    void setAlgoProgressAdd(void(*)(void*,int));
+
+    ///a function ptr to report error when something wrong happens
+    void setReportError(void(*)(void*,errorFlag));
+    ///a function ptr to report working statue especially when busy
+    void setReportWorkingStatue(void(*)(void*,workStatues));
     unsigned long long size() {
         return sizeof(TokiSlopeCraft);
     }
@@ -153,6 +173,15 @@ private:
     static const Eigen::Array<float,2,3> DitherMapLR,DitherMapRL;
     static const uint reportRate=100;
 
+    void * wind;
+    void (*progressRangeSet)(void*,int,int,int);
+    void (*progressAdd)(void*,int);
+    void (*keepAwake)(void*);
+    void (*algoProgressRangeSet)(void*,int,int,int);
+    void (*algoProgressAdd)(void*,int);
+    void (*reportError)(void*,errorFlag);
+    void (*reportWorkingStatue)(void*,workStatues);
+
     gameVersion mcVer;//12,13,14,15,16,17
     mapTypes mapType;
     step kernelStep;
@@ -173,6 +202,7 @@ private:
     ushort bridgeInterval;
     PrimGlassBuilder * glassBuilder;
     LossyCompressor * Compressor;
+    AiConverterInterface * AiCvter;
     Eigen::ArrayXXi mapPic;//stores mapColor
     Eigen::ArrayXXi Base;
     Eigen::ArrayXXi HighMap;
@@ -181,6 +211,9 @@ private:
     Eigen::Tensor<uchar,3>Build;//x,y,z
 
 //for setType:
+    void configAiCvter();
+//for setImage:
+
 //for convert:
     ColorSpace getColorSpace() const;
     void pushToHash();

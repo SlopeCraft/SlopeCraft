@@ -44,14 +44,14 @@ MainWindow::MainWindow(QWidget *parent)
 
     kernel=SlopeCraft::Kernel::create();
     qDebug("成功创建内核");
-    kernel->wind=this;
-    kernel->keepAwake=keepAwake;
-    kernel->progressRangeSet=progressRangeSet;
-    kernel->progressAdd=progressAdd;
-    kernel->algoProgressRangeSet=algoProgressRangeSet;
-    kernel->algoProgressAdd=algoProgressAdd;
-    kernel->reportError=showError;
-    kernel->reportWorkingStatue=showWorkingStatue;
+    kernel->setWindPtr(this);
+    kernel->setKeepAwake(keepAwake);
+    kernel->setProgressRangeSet(progressRangeSet);
+    kernel->setProgressAdd(progressAdd);
+    kernel->setAlgoProgressRangeSet(algoProgressRangeSet);
+    kernel->setAlgoProgressAdd(algoProgressAdd);
+    kernel->setReportError(showError);
+    kernel->setReportWorkingStatue(showWorkingStatue);
 
     proTracker=nullptr;
 

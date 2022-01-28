@@ -124,7 +124,8 @@ enum convertAlgo {
     ///CIELAB 2000 formula
     Lab00='L',
     ///naive XYZ formula
-    XYZ='X'
+    XYZ='X',
+    AiCvter='A'
 };
 enum compressSettings {
     ///don't compress
@@ -314,23 +315,23 @@ enum workStatues {
     virtual const unsigned char * getBuild(int* xSize,int* ySize,int* zSize) const=0;
 
     ///function ptr to window object
-    void * wind;
+    virtual void setWindPtr(void *)=0;
     ///a function ptr to show progress of converting and exporting
-    void (*progressRangeSet)(void*,int,int,int);
+    virtual void setProgressRangeSet(void(*)(void*,int,int,int))=0;
     ///a function ptr to add progress value
-    void (*progressAdd)(void*,int);
+    virtual void setProgressAdd(void(*)(void*,int))=0;
     ///a function ptr to prevent window from being syncoped
-    void (*keepAwake)(void*);
+    virtual void setKeepAwake(void(*)(void*))=0;
 
     ///a function ptr to show progress of compressing and bridge-building
-    void (*algoProgressRangeSet)(void*,int,int,int);
+    virtual void setAlgoProgressRangeSet(void(*)(void*,int,int,int))=0;
     ///a function ptr to add progress value of compressing and bridge-building
-    void (*algoProgressAdd)(void*,int);
+    virtual void setAlgoProgressAdd(void(*)(void*,int))=0;
 
     ///a function ptr to report error when something wrong happens
-    void (*reportError)(void*,errorFlag);
+    virtual void setReportError(void(*)(void*,errorFlag))=0;
     ///a function ptr to report working statue especially when busy
-    void (*reportWorkingStatue)(void*,workStatues);
+    virtual void setReportWorkingStatue(void(*)(void*,workStatues))=0;
 
 protected:
     ///calling delete is deprecated, use void Kernel::destroy() instead

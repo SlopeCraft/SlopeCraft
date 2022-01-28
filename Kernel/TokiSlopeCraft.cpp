@@ -46,14 +46,15 @@ TokiSlopeCraft::TokiSlopeCraft()
 
     glassBuilder=new PrimGlassBuilder;
     Compressor=new LossyCompressor;
+    AiCvter=AiConverterInterface::create();
 
-    progressRangeSet=[](void*,int,int,int){};
-    progressAdd=[](void*,int){};
-    keepAwake=[](void*){};
-    reportError=[](void*,errorFlag){};
-    reportWorkingStatue=[](void*,workStatues){};
-    algoProgressAdd=[](void*,int){};
-    algoProgressRangeSet=[](void*,int,int,int){};
+    setProgressRangeSet([](void*,int,int,int){});
+    setProgressAdd([](void*,int){});
+    setKeepAwake([](void*){});
+    setReportError([](void*,errorFlag){});
+    setReportWorkingStatue([](void*,workStatues){});
+    setAlgoProgressAdd([](void*,int){});
+    setAlgoProgressRangeSet([](void*,int,int,int){});
 
     glassBuilder->windPtr=&wind;
     glassBuilder->progressAddPtr=&this->algoProgressAdd;
@@ -69,6 +70,46 @@ TokiSlopeCraft::TokiSlopeCraft()
 TokiSlopeCraft::~TokiSlopeCraft() {
     delete Compressor;
     delete glassBuilder;
+    AiCvter->destroy();
+}
+
+
+///function ptr to window object
+void TokiSlopeCraft::setWindPtr(void * _w) {
+    wind=_w;
+    AiCvter->setUiPtr(_w);
+}
+///a function ptr to show progress of converting and exporting
+void TokiSlopeCraft::setProgressRangeSet(void(*prs)(void*,int,int,int)) {
+    progressRangeSet=prs;
+    AiCvter->setProgressRangeFun(prs);
+}
+///a function ptr to add progress value
+void TokiSlopeCraft::setProgressAdd(void(*pa)(void*,int)) {
+    progressAdd=pa;
+    AiCvter->setProgressAddFun(pa);
+}
+///a function ptr to prevent window from being syncoped
+void TokiSlopeCraft::setKeepAwake(void(*ka)(void*)) {
+    keepAwake=ka;
+}
+
+///a function ptr to show progress of compressing and bridge-building
+void TokiSlopeCraft::setAlgoProgressRangeSet(void(*aprs)(void*,int,int,int)) {
+    algoProgressRangeSet=aprs;
+}
+///a function ptr to add progress value of compressing and bridge-building
+void TokiSlopeCraft::setAlgoProgressAdd(void(*apa)(void*,int)) {
+    algoProgressAdd=apa;
+}
+
+///a function ptr to report error when something wrong happens
+void TokiSlopeCraft::setReportError(void(*re)(void*,errorFlag)) {
+    reportError=re;
+}
+///a function ptr to report working statue especially when busy
+void TokiSlopeCraft::setReportWorkingStatue(void(*rws)(void*,workStatues)) {
+    reportWorkingStatue=rws;
 }
 
 void TokiSlopeCraft::decreaseStep(TokiSlopeCraft::step _step) {
@@ -450,6 +491,13 @@ bool TokiSlopeCraft::setType(mapTypes type,
 
 }
 
+void TokiSlopeCraft::configAiCvter() {
+    AiCvter->loadColorSheet(Allowed._RGB.data(),
+                            Allowed.Map.data(),
+                            Allowed.Map.size());
+    AiCvter->loadImage(rawImage.data(),rawImage.rows(),rawImage.cols());
+}
+
 ushort TokiSlopeCraft::getColorCount() const {
     if(kernelStep<wait4Image) {
         reportError(wind,errorFlag::HASTY_MANIPULATION);
@@ -474,6 +522,7 @@ void TokiSlopeCraft::setRawImage(const EImage & _rawimg) {
 
     rawImage=_rawimg;
     kernelStep=convertionReady;
+    configAiCvter();
     return;
 }
 
@@ -551,6 +600,22 @@ bool TokiSlopeCraft::convert(convertAlgo algo,bool dither) {
         reportError(wind,errorFlag::HASTY_MANIPULATION);
         return false;
     }
+
+    if(algo==convertAlgo::AiCvter) {
+        convertAlgo algos[6]={RGB,RGB_Better,HSV,Lab94,Lab00,XYZ};
+        const uint8_t * seed[6];
+        Eigen::ArrayXX<uint8_t> CvtedMap[6];
+        for(int a=0;a<6;a++) {
+            this->convert(algos[a]);
+            CvtedMap[a].resize(getImageRows(),getImageCols());
+            this->getConvertedMap(nullptr,nullptr,CvtedMap[a].data());
+            seed[a]=CvtedMap[a].data();
+        }
+        AiCvter->setSeed(seed,6);
+        algo=convertAlgo::RGB_Better;
+        //run AiCvter here
+    }
+
     ConvertAlgo=algo;
     colorHash.clear();
 
@@ -886,6 +951,8 @@ TokiSlopeCraft::ColorSpace TokiSlopeCraft::getColorSpace() const {
         return L;
     case XYZ:
         return X;
+    case convertAlgo::AiCvter:
+        return R;
     }
     return R;
 }
