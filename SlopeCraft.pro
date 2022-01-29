@@ -2,6 +2,6 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
     BlockListManager \
-    Kernel \
+    #Kernel \
     SlopeCraftL \
     SlopeCraftMain

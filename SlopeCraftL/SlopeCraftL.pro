@@ -4,8 +4,7 @@ CONFIG -= qt
 #Use this line when in with-qt mode
 #CONFIG += qt core gui concurrent
 
-INCLUDEPATH += D:/Git/SlopeCraft/Kernel \
-                               D:/CppLibs/zlibs \
+INCLUDEPATH += D:/CppLibs/zlib-1.2.11 \
                                D:/CppLibs/eigen-3.4.0 \
                                ../AiCvterInterface
 
@@ -34,58 +33,58 @@ CONFIG += c++17
 #DEFINES += SLOPECRAFTL_WITH_AICVETR
 
 SOURCES += \
-    ../../../CppLibs/zlibs/adler32.c \
-    ../../../CppLibs/zlibs/compress.c \
-    ../../../CppLibs/zlibs/crc32.c \
-    ../../../CppLibs/zlibs/deflate.c \
-    ../../../CppLibs/zlibs/gzclose.c \
-    ../../../CppLibs/zlibs/gzlib.c \
-    ../../../CppLibs/zlibs/gzread.c \
-    ../../../CppLibs/zlibs/gzwrite.c \
-    ../../../CppLibs/zlibs/infback.c \
-    ../../../CppLibs/zlibs/inffast.c \
-    ../../../CppLibs/zlibs/inflate.c \
-    ../../../CppLibs/zlibs/inftrees.c \
-    ../../../CppLibs/zlibs/trees.c \
-    ../../../CppLibs/zlibs/uncompr.c \
-    ../../../CppLibs/zlibs/zutil.c \
-    ../Kernel/CIEDE00.cpp \
-    ../Kernel/HeightLine.cpp \
-    ../Kernel/NBTWriter.cpp \
-    ../Kernel/OptiChain.cpp \
-    ../Kernel/PrimGlassBuilder.cpp \
-    ../Kernel/TokiSlopeCraft.cpp \
-    ../Kernel/WaterItem.cpp \
-    ../Kernel/colorset.cpp \
-    ../Kernel/lossyCompressor.cpp \
-    ../Kernel/simpleBlock.cpp \
-    ../Kernel/tokicolor.cpp \
+    ../../../CppLibs/zlib-1.2.11/adler32.c \
+    ../../../CppLibs/zlib-1.2.11/compress.c \
+    ../../../CppLibs/zlib-1.2.11/crc32.c \
+    ../../../CppLibs/zlib-1.2.11/deflate.c \
+    ../../../CppLibs/zlib-1.2.11/gzclose.c \
+    ../../../CppLibs/zlib-1.2.11/gzlib.c \
+    ../../../CppLibs/zlib-1.2.11/gzread.c \
+    ../../../CppLibs/zlib-1.2.11/gzwrite.c \
+    ../../../CppLibs/zlib-1.2.11/infback.c \
+    ../../../CppLibs/zlib-1.2.11/inffast.c \
+    ../../../CppLibs/zlib-1.2.11/inflate.c \
+    ../../../CppLibs/zlib-1.2.11/inftrees.c \
+    ../../../CppLibs/zlib-1.2.11/trees.c \
+    ../../../CppLibs/zlib-1.2.11/uncompr.c \
+    ../../../CppLibs/zlib-1.2.11/zutil.c \
+    CIEDE00.cpp \
+    HeightLine.cpp \
+    NBTWriter.cpp \
+    OptiChain.cpp \
+    PrimGlassBuilder.cpp \
+    TokiSlopeCraft.cpp \
+    WaterItem.cpp \
+    colorset.cpp \
+    lossyCompressor.cpp \
+    simpleBlock.cpp \
+    tokicolor.cpp \
     SlopeCraftL.cpp
 
 HEADERS += \
-    ../../../CppLibs/zlibs/crc32.h \
-    ../../../CppLibs/zlibs/deflate.h \
-    ../../../CppLibs/zlibs/gzguts.h \
-    ../../../CppLibs/zlibs/inffast.h \
-    ../../../CppLibs/zlibs/inffixed.h \
-    ../../../CppLibs/zlibs/inflate.h \
-    ../../../CppLibs/zlibs/inftrees.h \
-    ../../../CppLibs/zlibs/trees.h \
-    ../../../CppLibs/zlibs/zconf.h \
-    ../../../CppLibs/zlibs/zlib.h \
-    ../../../CppLibs/zlibs/zutil.h \
-    ../Kernel/ColorSet.h \
-    ../Kernel/HeightLine.h \
-    ../Kernel/NBTWriter.h \
-    ../Kernel/OptiChain.h \
-    ../Kernel/PrimGlassBuilder.h \
-    ../Kernel/TokiColor.h \
-    ../Kernel/TokiSlopeCraft.h \
-    ../Kernel/WaterItem.h \
-    ../Kernel/defines.h \
-    ../Kernel/lossyCompressor.h \
-    ../Kernel/object_pool.hpp \
-    ../Kernel/simpleBlock.h \
+    ../../../CppLibs/zlib-1.2.11/crc32.h \
+    ../../../CppLibs/zlib-1.2.11/deflate.h \
+    ../../../CppLibs/zlib-1.2.11/gzguts.h \
+    ../../../CppLibs/zlib-1.2.11/inffast.h \
+    ../../../CppLibs/zlib-1.2.11/inffixed.h \
+    ../../../CppLibs/zlib-1.2.11/inflate.h \
+    ../../../CppLibs/zlib-1.2.11/inftrees.h \
+    ../../../CppLibs/zlib-1.2.11/trees.h \
+    ../../../CppLibs/zlib-1.2.11/zconf.h \
+    ../../../CppLibs/zlib-1.2.11/zlib.h \
+    ../../../CppLibs/zlib-1.2.11/zutil.h \
+    ColorSet.h \
+    HeightLine.h \
+    NBTWriter.h \
+    OptiChain.h \
+    PrimGlassBuilder.h \
+    TokiColor.h \
+    TokiSlopeCraft.h \
+    WaterItem.h \
+    defines.h \
+    lossyCompressor.h \
+    object_pool.hpp \
+    simpleBlock.h \
     SlopeCraftL.h \
     SlopeCraftL_global.h
 
