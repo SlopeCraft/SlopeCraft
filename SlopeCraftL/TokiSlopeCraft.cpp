@@ -705,67 +705,37 @@ void TokiSlopeCraft::pushToHash() {
 }
 
 void TokiSlopeCraft::applyTokiColor() {
-    auto R=&colorHash;
+    static const uint64_t threadCount=std::thread::hardware_concurrency();
+    const uint64_t taskCount=colorHash.size();
 
-#ifdef WITH_QT
-    int step=reportRate*sizePic(2)/R->size();
-        std::queue<QFuture<void>> taskTracker;
-        for(auto it=R->begin();it!=R->end();it++)
-            taskTracker.push(QtConcurrent::run(matchColor,&it->second,it->first));
+    //int step=threadCount*sizePic(2)/taskCount;
+    //int step=threadCount*sizePic(2)/reportRate;
 
-        while(!taskTracker.empty()) {
-            taskTracker.front().waitForFinished();
-            if(taskTracker.size()%reportRate==0) {
-                progressAdd(wind,step);
+    std::vector<std::pair<const ARGB,TokiColor>*> tasks;
+
+    tasks.clear();
+    tasks.reserve(taskCount);
+
+    for(auto it=colorHash.begin();it!=colorHash.end();++it) {
+        tasks.emplace_back(&*it);
+    }
+
+    static const std::clock_t interval=1*CLOCKS_PER_SEC;
+    std::clock_t prevClock=std::clock();
+#pragma omp parallel for
+    for(uint64_t begIdx=0;begIdx<threadCount;begIdx++) {
+        //
+        for(uint64_t idx=begIdx;idx<taskCount;idx+=threadCount) {
+            tasks[idx]->second.apply(tasks[idx]->first);
+            if(idx%reportRate==0) {
+                std::clock_t curClock=std::clock();
+                if(curClock-prevClock>interval) {
+                    prevClock=curClock;
+                    progressRangeSet(wind,0,4*sizePic(2),sizePic(2)+idx);
+                }
             }
-            taskTracker.pop();
-        }
-
-        std::cerr<<"Sub threads finished\n";
-#else
-    const uint16_t threadCount=std::thread::hardware_concurrency();
-    const uint64_t taskCount=R->size();
-    int step=threadCount*sizePic(2)/taskCount;
-
-    std::vector<TokiColor *> task1;
-    std::vector<ARGB> task2;
-    task1.reserve(taskCount);
-    task2.reserve(taskCount);
-
-        for(auto it=R->begin();it!=R->end();it++) {
-            task1.emplace_back(&it->second);
-            task2.emplace_back(it->first);
-    }
-
-    std::vector<std::thread> pool;
-
-    pool.reserve(threadCount);
-    uint32_t allowcatedTaskNum=0;
-    uint32_t batchSize=taskCount/threadCount;
-    for(uint16_t idx=0;idx<threadCount;idx++) {
-
-        uint32_t offset=allowcatedTaskNum;
-
-        if(idx+1>=threadCount) {
-        pool.emplace_back(
-                    std::thread(matchColor,
-                                taskCount-allowcatedTaskNum,
-                                task1.data()+offset,task2.data()+offset));
-        } else {
-            pool.emplace_back(
-                        std::thread(matchColor,
-                                    batchSize,
-                                    task1.data()+offset,task2.data()+offset));
-            allowcatedTaskNum+=batchSize;
         }
     }
-
-    for(uint16_t idx=0;idx<threadCount;idx++) {
-        pool[idx].join();
-        progressAdd(wind,step);
-    }
-    std::cerr<<"Sub threads finished\n";
-#endif
 
     std::cerr<<"colors converted\n";
 }
