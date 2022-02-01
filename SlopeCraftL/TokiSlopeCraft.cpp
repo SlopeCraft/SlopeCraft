@@ -1288,7 +1288,7 @@ void TokiSlopeCraft::makeHeight_new() {
 
     for(ushort c=0;c<sizePic(1);c++) {
 
-        std::cerr<<"Coloumn "<<c<<std::endl;
+        //std::cerr<<"Coloumn "<<c<<std::endl;
         HeightLine HL;
         //getTokiColorPtr(c,&src[0]);
         HL.make(mapPic.col(c),allowNaturalCompress);
@@ -1309,7 +1309,7 @@ void TokiSlopeCraft::makeHeight_new() {
                 return;
             }
             Eigen::ArrayXi temp;
-            HL.make(&ptr[0],Compressor->getResult().getDNA(),
+            HL.make(&ptr[0],Compressor->getResult(),
                     allowNaturalCompress,&temp);
             mapPic.col(c)=temp;
 

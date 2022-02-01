@@ -71,7 +71,7 @@ public:
     static const size_t idx_allowNaturalCompress=2;
     static const size_t idx_maxHeight=3;
     static const size_t idx_CompressorPtr=4;
-    static const size_t idx_prevColock=5;
+    static const size_t idx_prevClock=5;
 
     using Var_t = Eigen::ArrayX<uchar>;
     static void iFun(Var_t * v,const ArgsType * arg) {
@@ -120,10 +120,17 @@ public:
                       size_t generation,
                       size_t,
                       const OptimT::GAOption*) {
-
+        if(generation%reportRate==0) {
+            std::clock_t & prevClock=std::get<idx_prevClock>(*arg);
+            std::clock_t curClock=std::clock();
+            if(curClock-prevClock>=CLOCKS_PER_SEC/2) {
+                prevClock=curClock;
+                (*std::get<idx_CompressorPtr>(*arg)->
+                        progressRangeSetPtr)(*(std::get<idx_CompressorPtr>(*arg)->windPtr),
+                                             0,LossyCompressor::maxGeneration,generation);
+            }
+        }
     }
-
-
 
 };
 
@@ -162,18 +169,17 @@ void LossyCompressor::runGenetic(ushort maxHeight,bool allowNaturalCompress) {
         std::get<solver_t::idx_allowNaturalCompress>(args)=allowNaturalCompress;
         std::get<solver_t::idx_maxHeight>(args)=maxHeight;
         std::get<solver_t::idx_CompressorPtr>(args)=this;
-        std::get<solver_t::idx_prevColock>(args)=std::clock();
+        std::get<solver_t::idx_prevClock>(args)=std::clock();
 
 
         solver->initialize(solver_t::iFun,solver_t::fFun,solver_t::cFun,solver_t::mFun,
-                           nullptr,opt,args);
+                           solver_t::ooFun,opt,args);
     }
 
     solver->run();
 }
 
 bool LossyCompressor::compress(ushort maxHeight,bool allowNaturalCompress) {
-
 
     (*progressRangeSetPtr)(*windPtr,0,maxGeneration,0);
 
@@ -189,4 +195,12 @@ bool LossyCompressor::compress(ushort maxHeight,bool allowNaturalCompress) {
         else
             break;
     }
+}
+
+const Eigen::ArrayX<uchar> & LossyCompressor::getResult() const {
+    return solver->result();
+}
+
+double LossyCompressor::resultFitness() const {
+    return solver->bestFitness();
 }

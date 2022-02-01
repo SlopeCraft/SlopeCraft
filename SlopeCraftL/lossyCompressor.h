@@ -56,6 +56,7 @@ public:
     void (**keepAwakePtr)(void*);
 
 private:
+    friend class solver_t;
     solver_t * solver;
     std::vector<const TokiColor*> source;
 
