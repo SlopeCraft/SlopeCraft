@@ -32,7 +32,7 @@ const uchar mutateMap[3][2]={{1,2},{0,2},{0,1}};
 const double initializeNonZeroRatio=0.05;
 
 const ushort popSize=50;
-const ushort maxFailTimes=30;
+ushort maxFailTimes=30;
 ushort LossyCompressor::maxGeneration=600;
 const double crossoverProb=0.9;
 const double mutateProb=0.01;
@@ -41,7 +41,7 @@ const uint reportRate=50;
 class solver_t
     : public OptimT::SOGA<
         Eigen::ArrayX<uchar>,
-        OptimT::FitnessOption::FITNESS_LESS_BETTER,
+        OptimT::FitnessOption::FITNESS_GREATER_BETTER,
         OptimT::RecordOption::DONT_RECORD_FITNESS,
         size_t,  //dim
         const TokiColor **,  // src
@@ -54,7 +54,7 @@ class solver_t
 public:
     using Base_t = OptimT::SOGA<
     Eigen::ArrayX<uchar>,
-    OptimT::FitnessOption::FITNESS_LESS_BETTER,
+    OptimT::FitnessOption::FITNESS_GREATER_BETTER,
     OptimT::RecordOption::DONT_RECORD_FITNESS,
     size_t,  //dim
     const TokiColor **,  // src
@@ -185,16 +185,19 @@ bool LossyCompressor::compress(ushort maxHeight,bool allowNaturalCompress) {
 
     //std::cerr<<"Genetic algorithm started\n";
     ushort tryTimes=0;
+    maxFailTimes=30;
     maxGeneration=200;
     while(tryTimes<3) {
         runGenetic(maxHeight,allowNaturalCompress);
         if(resultFitness()<=0) {
             tryTimes++;
+            maxFailTimes=-1;
             maxGeneration*=2;
         }
         else
             break;
     }
+    return tryTimes<3;
 }
 
 const Eigen::ArrayX<uchar> & LossyCompressor::getResult() const {
