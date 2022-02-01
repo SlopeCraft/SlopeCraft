@@ -22,197 +22,117 @@ This file is part of SlopeCraft.
 
 #include "lossyCompressor.h"
 
-const float gene::unCaculatedSign=-65536*2;
-const uchar gene::mutateMap[3][2]={{1,2},{0,2},{0,1}};
+#define OptimT_NO_OUTPUT
+#define OptimT_DO_PARALLELIZE
+#include <OptimTemplates/Genetic>
 
-const ushort LossyCompressor::popSize=50;
-const ushort LossyCompressor::maxFailTimes=30;
+OptimT_MAKE_GLOBAL
+
+const uchar mutateMap[3][2]={{1,2},{0,2},{0,1}};
+const double initializeNonZeroRatio=0.05;
+
+const ushort popSize=50;
+const ushort maxFailTimes=30;
 ushort LossyCompressor::maxGeneration=600;
-const double LossyCompressor::crossoverProb=0.9;
-const double LossyCompressor::mutateProb=0.01;
-const double LossyCompressor::initializeNonZeroRatio=0.05;
-const uint LossyCompressor::reportRate=50;
+const double crossoverProb=0.9;
+const double mutateProb=0.01;
+const uint reportRate=50;
 
-double randD(){
-    static std::default_random_engine generator(std::time(NULL));
-    static std::uniform_real_distribution<double> rander(0,1);
-    return rander(generator);
-}
-
-gene::gene() {
-    fitness=unCaculatedSign;
-}
-
-gene::gene(ushort size) {
-    DNA.setZero(size);
-    fitness=unCaculatedSign;
-}
-
-bool gene::isCaculated() const {
-    return fitness>unCaculatedSign;
-}
-
-float gene::getFitness() const {
-    return fitness;
-}
-
-ushort gene::size() const {
-    return DNA.size();
-}
-
-const Eigen::Array<uchar,Eigen::Dynamic,1> & gene::getDNA() const {
-    return DNA;
-}
-
-void gene::initialize(ushort size) {
-    fitness=unCaculatedSign;
-    DNA.setZero(size);
-}
-void gene::caculateFitness(const TokiColor** src,ushort maxHeight,
-                           bool allowNaturalCompress) {
-    if(isCaculated())return;
-
-    HeightLine HL;
-    //std::cerr<<"start to make\n";
-    float meanColorDiff=HL.make(src,DNA,allowNaturalCompress);
-
-    meanColorDiff/=size();
-
-    //std::cerr<<"sumColorDiff="<<sumColorDiff<<std::endl;
-
-    if(HL.maxHeight()>maxHeight) {
-        fitness=maxHeight-HL.maxHeight()-1;
-    } else {
-        fitness=100.0/(1e-4f+meanColorDiff);
-    }
-}
-void gene::crossover(gene* a,gene* b,ushort idx) {
-    a->DNA.segment(0,idx).swap(b->DNA.segment(0,idx));
-    a->fitness=unCaculatedSign;
-    b->fitness=unCaculatedSign;
-    // 0<idx<length-1
-}
-void gene::mutate(ushort idx) {
-    DNA(idx)=mutateMap[DNA(idx)][rand()%2];
-    fitness=unCaculatedSign;
-}
-
-#ifdef WITH_QT
-LossyCompressor::LossyCompressor(QObject *parent) : QObject(parent)
-#else
-LossyCompressor::LossyCompressor()
-#endif
+class solver_t
+    : public OptimT::SOGA<
+        Eigen::ArrayX<uchar>,
+        OptimT::FitnessOption::FITNESS_LESS_BETTER,
+        OptimT::RecordOption::DONT_RECORD_FITNESS,
+        size_t,  //dim
+        const TokiColor **,  // src
+        bool,    //  allowNaturalCompress
+        size_t,  //  maxHeight
+        const LossyCompressor * ,   //  ptr
+        std::clock_t    //  prevClock
+        >
 {
-    population.resize(popSize);
-}
+public:
+    using Base_t = OptimT::SOGA<
+    Eigen::ArrayX<uchar>,
+    OptimT::FitnessOption::FITNESS_LESS_BETTER,
+    OptimT::RecordOption::DONT_RECORD_FITNESS,
+    size_t,  //dim
+    const TokiColor **,  // src
+    bool,    //  allowNaturalCompress
+    size_t,  //  maxHeight
+    const LossyCompressor * ,   //  ptr
+    std::clock_t    //  prevClock
+    >;
 
-void LossyCompressor::initialize() {
-    //maxGeneration=200;
-    population.resize(popSize);
-    for(ushort i=0;i<popSize;i++) {
-        population[i].initialize(source.size());
-        for(ushort r=0;r<source.size();r++) {
-            if(randD()<initializeNonZeroRatio)
-                population[i].mutate(r);
+    OptimT_MAKE_GABASE_TYPES
+
+    static const size_t idx_Dim=0;
+    static const size_t idx_Src=1;
+    static const size_t idx_allowNaturalCompress=2;
+    static const size_t idx_maxHeight=3;
+    static const size_t idx_CompressorPtr=4;
+    static const size_t idx_prevColock=5;
+
+    using Var_t = Eigen::ArrayX<uchar>;
+    static void iFun(Var_t * v,const ArgsType * arg) {
+        v->setZero(std::get<idx_Dim>(*arg));
+        for(auto & i : *v) {
+            if(OptimT::randD()<=initializeNonZeroRatio) {
+                i=1+std::rand()%2;
+            }
         }
     }
-    //std::cerr<<"population initialized\n";
-}
 
-void LossyCompressor::caculateFitness() {
-    for(ushort i=0;i<popSize;i++)
-        population[i].caculateFitness(&source[0],maxHeight,allowNaturalCompress);
-    //std::cerr<<"population fitnesses caculated\n";
-}
+    static void fFun(const Var_t * v,const ArgsType * arg,double * fitness) {
+        HeightLine HL;
+        const TokiColor ** src=std::get<idx_Src>(*arg);
+        const bool allowNaturalCompress=std::get<idx_allowNaturalCompress>(*arg);
+        float meanColorDiff=HL.make(src,*v,allowNaturalCompress);
+        meanColorDiff/=v->size();
 
-void LossyCompressor::select() {
-    ushort minIdx=0,maxIdx=0;
-    float minFitness=population[0].getFitness(),
-            maxFitness=population[0].getFitness();
-    float temp;
-    for(ushort idx=0;idx<popSize;idx++) {
-        temp=population[idx].getFitness();
-        if(temp>maxFitness) {
-            maxFitness=temp;
-            maxIdx=idx;
+        if(HL.maxHeight()>std::get<idx_maxHeight>(*arg)) {
+            *fitness=double(std::get<idx_maxHeight>(*arg))-double(HL.maxHeight())-1.0;
         }
-        if(temp<minFitness) {
-            minFitness=temp;
-            minIdx=idx;
+        else {
+            *fitness=100.0/(1e-4f+meanColorDiff);
         }
     }
-    if(eliteIdx==maxIdx)
-        failTimes++;
-    else
-        failTimes=0;
-    eliteIdx=maxIdx;
-    population[minIdx]=population[maxIdx];
+
+    static void cFun(const Var_t * p1,const Var_t * p2,
+                     Var_t * c1,Var_t * c2,const ArgsType * arg) {
+       const size_t dim=std::get<idx_Dim>(*arg);
+       const size_t idx=OptimT::randD(0,dim);
+       c1->resize(dim,1);
+       c2->resize(dim,1);
+       c1->segment(0,idx)=((std::rand()%2)?p1:p2)->segment(0,idx);
+       c1->segment(idx,dim-idx)=((std::rand()%2)?p1:p2)->segment(idx,dim-idx);
+       c2->segment(0,idx)=((std::rand()%2)?p1:p2)->segment(0,idx);
+       c2->segment(idx,dim-idx)=((std::rand()%2)?p1:p2)->segment(idx,dim-idx);
+    }
+
+    static void mFun(Var_t * v,const ArgsType*) {
+        const size_t idx=OptimT::randD(0,v->size());
+        v->operator[](idx)=mutateMap[v->operator[](idx)][std::rand()%2];
+    }
+
+    static void ooFun(ArgsType* arg,
+                      std::list<typename Base_t::Gene>*,
+                      size_t generation,
+                      size_t,
+                      const OptimT::GAOption*) {
+
+    }
+
+
+
+};
+
+LossyCompressor::LossyCompressor() {
+    solver=new solver_t;
 }
 
-void LossyCompressor::crossover() {
-    std::vector<ushort> crossoverQueue;
-    crossoverQueue.clear();
-    crossoverQueue.reserve(population.size());
-    for(ushort i=0;i<popSize;i++) {
-        if(i==eliteIdx)
-            continue;
-        if(randD()<crossoverProb)
-            crossoverQueue.push_back(i);
-    }
-    std::random_device rd;
-    std::mt19937 rng(rd());
-    std::shuffle(crossoverQueue.begin(),crossoverQueue.end(),rng);
-    if(crossoverQueue.size()%2==1)
-        crossoverQueue.pop_back();
-
-    for(ushort i=0;i<crossoverQueue.size()/2;i++) {
-        ushort a=crossoverQueue[2*i];
-        ushort b=crossoverQueue[2*i+1];
-        // 1<=idx<=length-2
-        ushort idx=int(randD()*65535)%(source.size()-2)+1;
-
-        gene::crossover(&population[a],
-                        &population[b],idx);
-    }
-}
-
-void LossyCompressor::mutate() {
-    for(ushort i=0;i<popSize;i++) {
-        if(i==eliteIdx)
-            continue;
-        if(randD()<mutateProb) {
-            ushort idx=int(randD()*65535)%(source.size());
-            population[i].mutate(idx);
-        }
-    }
-}
-
-void LossyCompressor::runGenetic() {
-    initialize();
-    failTimes=0;
-    generation=0;
-    (*progressRangeSetPtr)(*windPtr,0,maxGeneration,0);
-    while(true) {
-        caculateFitness();
-        select();
-        if(population[eliteIdx].getFitness()>0&&failTimes>=maxFailTimes) {
-            break;
-        }
-        if(generation>=maxGeneration) {
-            break;
-        }
-
-        crossover();
-        mutate();
-        generation++;
-
-        if(generation%reportRate==0) {
-            (*keepAwakePtr)(*windPtr);
-            (*progressAddPtr)(*windPtr,1*reportRate);
-        }
-    }
-    std::cerr<<"result fitness="<<getResult().getFitness()<<std::endl;
-    (*progressRangeSetPtr)(*windPtr,0,maxGeneration,maxGeneration);
+LossyCompressor::~LossyCompressor() {
+    delete solver;
 }
 
 void LossyCompressor::setSource(const Eigen::ArrayXi & _base,
@@ -224,29 +144,49 @@ void LossyCompressor::setSource(const Eigen::ArrayXi & _base,
         source[idx]=src[idx];
     }
     source.shrink_to_fit();
+
     //std::cerr<<"source set\n";
 }
 
+void LossyCompressor::runGenetic(ushort maxHeight,bool allowNaturalCompress) {
+    {
+        static OptimT::GAOption opt;
+        opt.crossoverProb=crossoverProb;
+        opt.maxFailTimes=maxFailTimes;
+        opt.maxGenerations=maxGeneration;
+        opt.mutateProb=mutateProb;
+        opt.populationSize=popSize;
+        solver_t::ArgsType args;
+        std::get<solver_t::idx_Dim>(args)=source.size();
+        std::get<solver_t::idx_Src>(args)=source.data();
+        std::get<solver_t::idx_allowNaturalCompress>(args)=allowNaturalCompress;
+        std::get<solver_t::idx_maxHeight>(args)=maxHeight;
+        std::get<solver_t::idx_CompressorPtr>(args)=this;
+        std::get<solver_t::idx_prevColock>(args)=std::clock();
 
-bool LossyCompressor::compress(ushort _maxHeight,bool _allowNaturalCompress) {
-    allowNaturalCompress=_allowNaturalCompress;
-    maxHeight=_maxHeight;
-    eliteIdx=65535;
+
+        solver->initialize(solver_t::iFun,solver_t::fFun,solver_t::cFun,solver_t::mFun,
+                           nullptr,opt,args);
+    }
+
+    solver->run();
+}
+
+bool LossyCompressor::compress(ushort maxHeight,bool allowNaturalCompress) {
+
+
+    (*progressRangeSetPtr)(*windPtr,0,maxGeneration,0);
+
     //std::cerr<<"Genetic algorithm started\n";
     ushort tryTimes=0;
     maxGeneration=200;
     while(tryTimes<3) {
-        runGenetic();
-        if(getResult().getFitness()<=0) {
+        runGenetic(maxHeight,allowNaturalCompress);
+        if(resultFitness()<=0) {
             tryTimes++;
             maxGeneration*=2;
         }
         else
             break;
     }
-    return getResult().getFitness()>0;
-}
-
-const gene& LossyCompressor::getResult() const {
-    return population[eliteIdx];
 }

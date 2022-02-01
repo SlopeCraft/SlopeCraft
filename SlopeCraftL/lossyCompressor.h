@@ -37,40 +37,18 @@ This file is part of SlopeCraft.
 #include "ColorSet.h"
 #include "HeightLine.h"
 
-class gene
-{
-public:
-    gene();
-    gene(ushort);
-
-
-    bool isCaculated() const;
-    float getFitness() const;
-    ushort size() const;
-    const Eigen::Array<uchar,Eigen::Dynamic,1> & getDNA() const;
-    //Eigen::ArrayXi toMapColor() const;
-
-    void initialize(ushort size);
-    void caculateFitness(const TokiColor**,ushort maxHeight,bool allowNaturalCompress);
-    static void crossover(gene* ,gene*,ushort idx);
-    void mutate(ushort idx);
-    //void setDNAValue(uchar val,ushort idx);
-private:
-    float fitness;
-    Eigen::Array<uchar,Eigen::Dynamic,1> DNA;
-
-    static const float unCaculatedSign;
-    static const uchar mutateMap[3][2];
-};
+//Eigen::Array<uchar,Eigen::Dynamic,1>
+class solver_t;
 
 class LossyCompressor
 {
 public:
     LossyCompressor();
-
+    ~LossyCompressor();
     void setSource(const Eigen::ArrayXi & ,const TokiColor *[]);
     bool compress(ushort maxHeight,bool allowNaturalCompress=false);
-    const gene& getResult() const;
+    const Eigen::ArrayX<uchar> & getResult() const;
+    double resultFitness() const;
 
     void ** windPtr;
     void (**progressRangeSetPtr)(void*,int min,int max,int val);
@@ -78,29 +56,12 @@ public:
     void (**keepAwakePtr)(void*);
 
 private:
+    solver_t * solver;
     std::vector<const TokiColor*> source;
-    std::vector<gene> population;
-    bool allowNaturalCompress;
-    ushort maxHeight;
-    ushort eliteIdx;
-    ushort generation;
-    ushort failTimes;
 
-    static const ushort popSize;
-    static const ushort maxFailTimes;
     static ushort maxGeneration;
-    static const double crossoverProb;
-    static const double mutateProb;
-    static const double initializeNonZeroRatio;
-    static const uint reportRate;
 
-    void runGenetic();
-
-    void initialize();
-    void caculateFitness();
-    void select();
-    void crossover();
-    void mutate();
+    void runGenetic(ushort maxHeight,bool allowNaturalCompress);
 };
 
 double randD();

@@ -6,7 +6,8 @@ CONFIG -= qt
 
 INCLUDEPATH += D:/CppLibs/zlib-1.2.11 \
                                D:/CppLibs/eigen-3.4.0 \
-                               ../AiCvterInterface
+                               ../AiCvterInterface \
+                               D:/CppLibs/OptimTemplates-1.3.1
 
 RC_LANG = 0x0004
 
