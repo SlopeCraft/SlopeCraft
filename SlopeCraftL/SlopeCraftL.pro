@@ -11,7 +11,7 @@ INCLUDEPATH += D:/CppLibs/zlib-1.2.11 \
 
 RC_LANG = 0x0004
 
-VERSION += 3.6.1.0
+VERSION += 3.6.2.0
 
 QMAKE_TARGET_DESCRIPTION = SlopeCraft Library (without AiConverter)
 #描述信息

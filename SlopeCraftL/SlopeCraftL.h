@@ -92,7 +92,9 @@ public:
 
 ///create a kernel object
 static Kernel * create();
-
+/**
+ * @brief Minecraft game version
+ */
 enum gameVersion {
     ///older than 1.12
     ANCIENT=0,
@@ -108,6 +110,8 @@ enum gameVersion {
     MC16=16,
     ///1.17
     MC17=17,
+    ///1.18
+    MC18=18,
     ///future version
     FUTURE=255
 };
@@ -219,11 +223,14 @@ enum workStatues {
     //dataFilesFinished=0x31,
 };
 
+public:
     static void getColorMapPtrs(const float**,const unsigned char**,int*);
     //full palette
     static const float * getBasicColorMapPtrs();
 
     static const char * getSCLVersion();
+
+    static unsigned long long mcVersion2VersionNumber(gameVersion);
 
 //can do in nothing:
     ///real size of kernel

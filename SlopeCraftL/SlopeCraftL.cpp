@@ -57,7 +57,7 @@ Kernel::Kernel() {
 }
 
 const char * Kernel::getSCLVersion() {
-    return "v3.6.1";
+    return "v3.6.2";
 }
 
 void Kernel::getColorMapPtrs(const float** f,const unsigned char** m,int* rows) {
@@ -75,4 +75,27 @@ const float * Kernel::getBasicColorMapPtrs() {
 
 Kernel * Kernel::create() {
     return (new TokiSlopeCraft)->toBaseClassPtr();
+}
+
+uint64_t Kernel::mcVersion2VersionNumber(Kernel::gameVersion g) {
+    switch (g) {
+    case Kernel::gameVersion::ANCIENT:
+        return 114514;
+    case Kernel::gameVersion::MC12:
+        return 1631;
+    case Kernel::gameVersion::MC13:
+        return 1976;
+    case Kernel::gameVersion::MC14:
+        return 2230;
+    case Kernel::gameVersion::MC15:
+        return 2230;
+    case Kernel::gameVersion::MC16:
+        return 2586;
+    case Kernel::gameVersion::MC17:
+        return 2730;
+    case Kernel::gameVersion::MC18:
+        return 2865;
+    default:
+        return 1919810;
+    }
 }
