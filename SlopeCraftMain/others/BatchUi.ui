@@ -27,14 +27,7 @@
     </size>
    </property>
    <layout class="QGridLayout" name="gridLayout_2">
-    <item row="2" column="2">
-     <widget class="QCommandLinkButton" name="BtnExecute">
-      <property name="text">
-       <string>开始执行</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0" colspan="3">
+    <item row="2" column="0" colspan="3">
      <widget class="QScrollArea" name="scrollArea">
       <property name="widgetResizable">
        <bool>true</bool>
@@ -45,7 +38,7 @@
          <x>0</x>
          <y>0</y>
          <width>620</width>
-         <height>385</height>
+         <height>353</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="scrollLayout">
@@ -62,7 +55,7 @@
       </widget>
      </widget>
     </item>
-    <item row="2" column="0" colspan="2">
+    <item row="3" column="0" colspan="2">
      <widget class="QLabel" name="LabelShowInfo">
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
@@ -78,12 +71,22 @@
       </property>
      </widget>
     </item>
+    <item row="3" column="2">
+     <widget class="QCommandLinkButton" name="BtnExecute">
+      <property name="text">
+       <string>开始执行</string>
+      </property>
+     </widget>
+    </item>
     <item row="0" column="0" colspan="3">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QRadioButton" name="setTypeLite">
         <property name="text">
          <string>Litematics</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -98,6 +101,27 @@
        <widget class="QRadioButton" name="setTypeData">
         <property name="text">
          <string>Map data files</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="1" column="0" colspan="3">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>地图文件输出位置</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="setDataFolder"/>
+      </item>
+      <item>
+       <widget class="QPushButton" name="BtnBrowseDataFolder">
+        <property name="text">
+         <string>浏览</string>
         </property>
        </widget>
       </item>

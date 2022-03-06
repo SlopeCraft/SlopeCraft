@@ -42,11 +42,10 @@ class BatchUi : public QMainWindow
 public:
     explicit BatchUi(BatchUi **,QWidget *parent = nullptr);
     ~BatchUi();
-    void setTasks(const QStringList & ,
-                            TaskType);
+    void setTasks(const QStringList &);
 
 signals:
-    void taskTypeUpdated();
+
 
 protected:
     void closeEvent(QCloseEvent *);
@@ -54,6 +53,7 @@ protected:
 private slots:
     void erased(TaskBox*);
     void onBoxSeqNumChanged();
+    void onTaskTypeChanged();
 
     void on_BtnExecute_clicked();
 

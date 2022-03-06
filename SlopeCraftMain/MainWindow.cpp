@@ -23,7 +23,7 @@ This file is part of SlopeCraft.
 #include <QProcess>
 #include <QDebug>
 #include <QRgb>
-#include "mainwindow.h"
+#include "MainWindow.h"
 
 const ushort MainWindow::BLCreative[64]={0,0,1,1,0,0,0,0,3,0,4,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 const ushort MainWindow::BLCheaper[64]={0,0,0,0,1,0,5,2,3,0,4,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -897,9 +897,11 @@ void MainWindow::on_ImportPic_clicked() {
         qDebug("开始创建BatchUi");
         batchOperator = new BatchUi(&batchOperator,this);
         batchOperator->show();
-        batchOperator->setTasks(userSelected,Litematica);
+        batchOperator->setTasks(userSelected);
+        /*
         connect(this,&MainWindow::mapTypeChanged,
                 batchOperator,&BatchUi::taskTypeUpdated);
+                */
         qDebug("Mainwindow setTasks完毕");
         return;
     }

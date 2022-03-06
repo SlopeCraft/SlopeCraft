@@ -31,6 +31,10 @@ BatchUi::BatchUi(BatchUi ** _self,QWidget *parent) :
     self=_self;
     this->setAttribute(Qt::WA_QuitOnClose,false);
 
+    connect(ui->setTypeData,&QRadioButton::clicked,this,&BatchUi::onTaskTypeChanged);
+    connect(ui->setTypeLite,&QRadioButton::clicked,this,&BatchUi::onTaskTypeChanged);
+    connect(ui->setTypeStructure,&QRadioButton::clicked,this,&BatchUi::onTaskTypeChanged);
+
 }
 
 void BatchUi::closeEvent(QCloseEvent * event) {
@@ -44,11 +48,9 @@ BatchUi::~BatchUi()
     delete ui;
 }
 
-void BatchUi::setTasks(const QStringList & fileNames,
-                                       TaskType tt) {
+void BatchUi::setTasks(const QStringList & fileNames) {
 
     taskBoxes.reserve(fileNames.size());
-    TaskBox::taskType=tt;
 
     for(ushort idx=0;idx<fileNames.size();idx++) {
         TaskBox * box = new TaskBox(this);
@@ -109,4 +111,18 @@ void BatchUi::onBoxSeqNumChanged() {
 
 void BatchUi::on_BtnExecute_clicked() {
 
+}
+
+void BatchUi::onTaskTypeChanged() {
+    qDebug("void BatchUi::onTaskTypeChanged");
+    if(ui->setTypeData->isChecked())
+        TaskBox::taskType=TaskType::Data;
+    if(ui->setTypeLite->isChecked())
+        TaskBox::taskType=TaskType::Litematica;
+
+    TaskBox::taskType=TaskType::Structure;
+
+    for(auto i : taskBoxes) {
+        i->updateTaskType();
+    }
 }

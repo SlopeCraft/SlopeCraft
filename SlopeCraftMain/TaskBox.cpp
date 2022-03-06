@@ -22,7 +22,7 @@ This file is part of SlopeCraft.
 
 #include "TaskBox.h"
 
-TaskType TaskBox::taskType=Litematica;
+volatile TaskType TaskBox::taskType=Litematica;
 
 TaskBox::TaskBox(QWidget *parent) :
     QWidget(parent),

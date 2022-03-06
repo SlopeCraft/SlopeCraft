@@ -51,6 +51,13 @@ public:
         return mapRows*mapCols;
     }
 
+    inline void updateTaskType() {
+        qDebug("void TaskBox::updateTaskType");
+        ui->liteName->setText(rawImgPath()+liteSuffix());
+        //ui->liteName->setEnabled(taskType!=TaskType::Data);
+        //ui->setMapBegSeq->setEnabled(taskType==TaskType::Data);
+    }
+
     void setTask(const QString & rawImg) {
         QImage img;
         uint32_t prevMapSize=mapSize();
@@ -65,7 +72,8 @@ public:
         ui->preView->setPixmap(QPixmap::fromImage(img));
         ui->preView->setText("");
         ui->imageName->setText(rawImg);
-        ui->liteName->setText(rawImgPath()+liteSuffix());
+
+        updateTaskType();
 
         if(prevMapSize!=mapSize()&&taskType==Data) {
             emit seqNumChanged(this);
@@ -84,13 +92,13 @@ public:
     inline uint32_t begSeqNum() const {
         return ui->setMapBegSeq->value();
     }
-    static TaskType taskType;
+    volatile static TaskType taskType;
 
     inline static QString liteSuffix() {
         switch (taskType) {
-        case Litematica:
+        case TaskType::Litematica:
             return ".litematic";
-        case Structure:
+        case TaskType::Structure:
             return ".nbt";
         default:
             return ".ERROR_TASK_TYPE";
