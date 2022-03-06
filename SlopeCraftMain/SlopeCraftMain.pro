@@ -40,7 +40,6 @@ SOURCES += \
     ../BlockListManager/TokiBlock.cpp \
     BatchUi.cpp \
     TaskBox.cpp \
-    TokiTask.cpp \
     VersionDialog.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -55,7 +54,6 @@ HEADERS += \
     ../SlopeCraftL/SlopeCraftL_global.h \
     BatchUi.h \
     TaskBox.h \
-    TokiTask.h \
     VersionDialog.h \
     mainwindow.h \
     previewwind.h \
