@@ -122,12 +122,13 @@ signals:
 protected:
     void closeEvent(QCloseEvent*);
     void keyPressEvent(QKeyEvent*);
+public:
 
-public slots:
-    void destroySubWindTrans();
-    void preProcess(char pureTpStrategy='B',
+    inline void preProcess(char pureTpStrategy='B',
                     char halfTpStrategy='C',
                     QRgb BGC=qRgb(220,220,220));
+public slots:
+    void destroySubWindTrans();
     void ReceiveTPS(tpS);
     //透明像素处理策略：B->替换为背景色；A->空气；W->暂缓，等待处理
     //半透明像素处理策略：B->替换为背景色；C->与背景色叠加；R->保留颜色；W->暂缓，等待处理
@@ -165,7 +166,6 @@ private slots:
 
     //for Page1
     void on_ImportPic_clicked();
-    void onImportPicclicked(QString);
     void on_ImportSettings_clicked();
 
     //for Page2
@@ -246,6 +246,7 @@ private:
     void loadColormap();
     void turnToPage(int);
     void updateEnables();
+    void preprocessImage(const QString &);
     void switchLan(Language);
     void kernelSetType();
     void kernelSetImg();

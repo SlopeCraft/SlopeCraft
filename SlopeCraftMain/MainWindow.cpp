@@ -822,23 +822,59 @@ void MainWindow::on_StartWithWall_clicked() {
     turnToPage(1);
 }
 
-void MainWindow::on_ImportPic_clicked() {
-    onImportPicclicked("");
+void MainWindow::preprocessImage(const QString & Path) {
+
+    if(!rawPic.load(Path))
+    {
+        QMessageBox::information(this,tr("打开图片失败"),tr("要不试试换一张图片吧！"));
+                    return;
+    }
+    bool needSearch=rawPic.hasAlphaChannel();
+    rawPic=rawPic.convertToFormat(QImage::Format_ARGB32);
+    bool OriginHasTp=false;
+    if(needSearch)
+    {
+        QRgb*CL=nullptr;
+        for(short r=0;r<rawPic.height();r++)
+        {
+            CL=(QRgb*)rawPic.scanLine(r);
+            for(short c=0;c<rawPic.width();c++)
+            {
+                if(qAlpha(CL[c])<255)
+                {
+                    r=rawPic.height()+1;
+                    OriginHasTp=true;
+                    break;
+                }
+            }
+        }
+    }
+
+    //ui->ShowRawPic->setPixmap(QPixmap::fromImage(rawPic));
+
+    ui->IntroPicInfo->setText(tr("图片尺寸：")+QString::number(rawPic.height())+"×"+QString::number(rawPic.width())+tr("像素"));
+    if(OriginHasTp)
+    {
+        preProcess(Strategy.pTpS,Strategy.hTpS,Strategy.BGC);
+        ui->IntroPicInfo->setText(ui->IntroPicInfo->text()+"\n"+tr("图片中存在透明/半透明像素，已处理，您可以点击“设置”重新选择处理透明/半透明像素的方式。\n重新设置处理方式后，需要重新导入一次。"));
+    }
+    else
+    {
+        rawPic=rawPic.copy();
+    }
+    ui->ShowRawPic->setPixmap(QPixmap::fromImage(rawPic));
+    ui->ShowPic->setPixmap(QPixmap::fromImage(rawPic));
+
+    kernel->decreaseStep(SlopeCraft::Kernel::colorSetReady);
+    updateEnables();
 }
 
-void MainWindow::onImportPicclicked(QString input) {
+void MainWindow::on_ImportPic_clicked() {
 
-    QStringList userSelected;
-    userSelected.clear();
-
-    if(input.isEmpty()) {
-        userSelected.emplace_back(QFileDialog::getOpenFileName(this,
+    QStringList userSelected=QFileDialog::getOpenFileNames(this,
                                                    tr("选择图片"),
                                                    "./",
-                                                   tr("图片(*.png *.bmp *.jpg *.tif *.GIF )")));
-    } else {
-        userSelected.emplace_back(input);
-    }
+                                                   tr("图片(*.png *.bmp *.jpg *.tif *.GIF )"));
 
     if(userSelected.isEmpty())return;
 
@@ -849,49 +885,7 @@ void MainWindow::onImportPicclicked(QString input) {
             return;
         }
 
-        if(!rawPic.load(Path))
-        {
-            QMessageBox::information(this,tr("打开图片失败"),tr("要不试试换一张图片吧！"));
-                        return;
-        }
-        bool needSearch=rawPic.hasAlphaChannel();
-        rawPic=rawPic.convertToFormat(QImage::Format_ARGB32);
-        bool OriginHasTp=false;
-        if(needSearch)
-        {
-            QRgb*CL=nullptr;
-            for(short r=0;r<rawPic.height();r++)
-            {
-                CL=(QRgb*)rawPic.scanLine(r);
-                for(short c=0;c<rawPic.width();c++)
-                {
-                    if(qAlpha(CL[c])<255)
-                    {
-                        r=rawPic.height()+1;
-                        OriginHasTp=true;
-                        break;
-                    }
-                }
-            }
-        }
-
-        //ui->ShowRawPic->setPixmap(QPixmap::fromImage(rawPic));
-
-        ui->IntroPicInfo->setText(tr("图片尺寸：")+QString::number(rawPic.height())+"×"+QString::number(rawPic.width())+tr("像素"));
-        if(OriginHasTp)
-        {
-            preProcess(Strategy.pTpS,Strategy.hTpS,Strategy.BGC);
-            ui->IntroPicInfo->setText(ui->IntroPicInfo->text()+"\n"+tr("图片中存在透明/半透明像素，已处理，您可以点击“设置”重新选择处理透明/半透明像素的方式。\n重新设置处理方式后，需要重新导入一次。"));
-        }
-        else
-        {
-            rawPic=rawPic.copy();
-        }
-        ui->ShowRawPic->setPixmap(QPixmap::fromImage(rawPic));
-        ui->ShowPic->setPixmap(QPixmap::fromImage(rawPic));
-
-        kernel->decreaseStep(SlopeCraft::Kernel::colorSetReady);
-        updateEnables();
+        preprocessImage(Path);
 
         return;
     }
@@ -903,7 +897,7 @@ void MainWindow::onImportPicclicked(QString input) {
         qDebug("开始创建BatchUi");
         batchOperator = new BatchUi(&batchOperator,this);
         batchOperator->show();
-        batchOperator->setTasks(userSelected,true,true);
+        batchOperator->setTasks(userSelected,Litematica);
         connect(this,&MainWindow::mapTypeChanged,
                 batchOperator,&BatchUi::taskTypeUpdated);
         qDebug("Mainwindow setTasks完毕");
@@ -946,7 +940,7 @@ QRgb ComposeColor(const QRgb front,const QRgb back)
 }
 
 
-void MainWindow::preProcess(char pureTpStrategy,
+inline void MainWindow::preProcess(char pureTpStrategy,
                 char halfTpStrategy,
                 QRgb BGC) {
     qDebug("调用了preProcess");
@@ -1138,7 +1132,7 @@ void MainWindow::kernelSetType() {
     std::cout<<std::endl<<std::endl;
     updateEnables();
 
-    TokiTask::canExportLite=kernel->isVanilla();
+    //TokiTask::canExportLite=kernel->isVanilla();
     emit mapTypeChanged();
 }
 

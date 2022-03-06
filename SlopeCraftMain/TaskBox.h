@@ -25,7 +25,6 @@ This file is part of SlopeCraft.
 
 #include <QWidget>
 #include <QFileDialog>
-#include "TokiTask.h"
 #include "ui_TaskBox.h"
 
 namespace Ui{
@@ -34,39 +33,105 @@ class TaskBox;
 
 class BatchUi;
 
+enum TaskType{
+    Litematica,
+    Structure,
+    Data
+};
+
 class TaskBox : public QWidget
 {
     Q_OBJECT
-    friend class BatchUi;
+    //friend class BatchUi;
 public:
     explicit TaskBox(QWidget *parent = nullptr);
+    ~TaskBox();
 
-    void updateTask();
+    inline uint32_t mapSize() const {
+        return mapRows*mapCols;
+    }
+
+    void setTask(const QString & rawImg) {
+        QImage img;
+        uint32_t prevMapSize=mapSize();
+        if(!img.load(rawImg)) {
+            mapRows=0;
+            mapCols=0;
+            ui->preView->setPixmap(QPixmap());
+            ui->preView->setText(tr("图片格式损坏"));
+        }
+        mapRows=std::ceil(img.height()/128.0);
+        mapCols=std::ceil(img.width()/128.0);
+        ui->preView->setPixmap(QPixmap::fromImage(img));
+        ui->preView->setText("");
+        ui->imageName->setText(rawImg);
+        ui->liteName->setText(rawImgPath()+liteSuffix());
+
+        if(prevMapSize!=mapSize()&&taskType==Data) {
+            emit seqNumChanged(this);
+        }
+    }
+
+
+    inline QString rawImgPath() const {
+        return ui->imageName->text();
+    }
+
+    inline QString liteName() const {
+        return ui->liteName->text();
+    }
+
+    inline uint32_t begSeqNum() const {
+        return ui->setMapBegSeq->value();
+    }
+    static TaskType taskType;
+
+    inline static QString liteSuffix() {
+        switch (taskType) {
+        case Litematica:
+            return ".litematic";
+        case Structure:
+            return ".nbt";
+        default:
+            return ".ERROR_TASK_TYPE";
+        }
+    }
+
+    inline void setMapBegSeqReadOnly(bool mbsro) {
+        ui->setMapBegSeq->setReadOnly(mbsro);
+    }
+
+    inline void setMapBegSeqMinVal(uint32_t mbsmv) {
+        ui->setMapBegSeq->setMaximum(mbsmv);
+    }
+
+    inline void setMapBegSeq(uint32_t mbs) {
+        ui->setMapBegSeq->setValue(mbs);
+        ui->setMapBegSeq->setSuffix(" ~ "+QString::number(mbs+mapSize()-1));
+    }
 
 signals:
     void erase(TaskBox *);
     void seqNumChanged(TaskBox *);
 
 private slots:
+    void on_imageName_editingFinished() {
+        setTask(ui->imageName->text());
+    }
+
+    void on_setMapBegSeq_valueChanged(int) {
+        if(!ui->setMapBegSeq->isReadOnly()) {
+            emit seqNumChanged(this);
+        }
+    }
+
     void on_BtnErase_clicked();
-
-    void onImageChanged(QString);
-
-    void on_browseImage_clicked();
-
-    void on_ifExport3D_stateChanged(int arg1);
-
-    void on_ifExportData_stateChanged(int arg1);
-
-    void on_setMapBegSeq_valueChanged(int arg1);
-
-    void on_BtnBrowseData_clicked();
-
-    void onTaskTypeUpdated();
 
 private:
     Ui::TaskBox *ui;
-    TokiTask task;
+    uint16_t mapRows;
+    uint16_t mapCols;
+
 };
 
 #endif // TASKBOX_H

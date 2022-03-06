@@ -27,7 +27,6 @@ This file is part of SlopeCraft.
 #include <vector>
 #include <QCloseEvent>
 
-#include "TokiTask.h"
 #include "TaskBox.h"
 #include "ui_BatchUi.h"
 
@@ -44,8 +43,7 @@ public:
     explicit BatchUi(BatchUi **,QWidget *parent = nullptr);
     ~BatchUi();
     void setTasks(const QStringList & ,
-                            bool exportLite,
-                            bool exportData);
+                            TaskType);
 
 signals:
     void taskTypeUpdated();
@@ -55,11 +53,7 @@ protected:
 
 private slots:
     void erased(TaskBox*);
-    void onBoxSeqNumChanged(TaskBox *);
-
-    void on_BtnAddTask_clicked();
-
-    void on_BtnClearTask_clicked();
+    void onBoxSeqNumChanged();
 
     void on_BtnExecute_clicked();
 
@@ -72,8 +66,6 @@ private:
     auto ptr2It(TaskBox * ) const;
 
     void allocateMapSeqNum(ushort);
-
-    void dispTasks() const;
 
 };
 
