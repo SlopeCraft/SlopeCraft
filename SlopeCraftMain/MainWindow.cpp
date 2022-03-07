@@ -23,7 +23,7 @@ This file is part of SlopeCraft.
 #include <QProcess>
 #include <QDebug>
 #include <QRgb>
-#include "MainWindow.h"
+#include "./MainWindow.h"
 
 const ushort MainWindow::BLCreative[64]={0,0,1,1,0,0,0,0,3,0,4,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 const ushort MainWindow::BLCheaper[64]={0,0,0,0,1,0,5,2,3,0,4,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -103,6 +103,9 @@ MainWindow::MainWindow(QWidget *parent)
 
         connect(ui->actionTestBlockList,&QAction::triggered,
                 this,&MainWindow::testBlockList);
+        connect(ui->actionSetBuildParameters,&QAction::triggered,
+                this,&MainWindow::onActionSetBuildParameterTriggered);
+
 
     qDebug("成功connect所有的菜单");
 
@@ -639,6 +642,10 @@ tpS::~tpS() {
 
 }
 #endif
+
+void MainWindow::onActionSetBuildParameterTriggered() {
+    turnToPage5();
+}
 
 void MainWindow::turnToPage(int page)
 {

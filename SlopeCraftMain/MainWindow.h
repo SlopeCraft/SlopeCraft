@@ -164,6 +164,8 @@ private slots:
     void turnToPage7();
     void turnToPage8();
 
+    void onActionSetBuildParameterTriggered();
+
     //for Page0
     void on_StartWithSlope_clicked();
     void on_StartWithFlat_clicked();
