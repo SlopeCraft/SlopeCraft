@@ -127,6 +127,11 @@ public:
     inline void preProcess(char pureTpStrategy='B',
                     char halfTpStrategy='C',
                     QRgb BGC=qRgb(220,220,220));
+
+    inline auto kernelPtr() const {
+        return kernel;
+    }
+
 public slots:
     void destroySubWindTrans();
     void ReceiveTPS(tpS);

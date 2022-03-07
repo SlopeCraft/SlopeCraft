@@ -40,7 +40,7 @@ class BatchUi : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit BatchUi(BatchUi **,QWidget *parent = nullptr);
+    explicit BatchUi(BatchUi **,QWidget *parent);
     ~BatchUi();
     void setTasks(const QStringList &);
 
@@ -56,6 +56,10 @@ private slots:
     void onTaskTypeChanged();
 
     void on_BtnExecute_clicked();
+
+    void on_BtnBrowseDataFolder_clicked();
+
+    void checkExecutable();
 
 private:
     Ui::BatchUi *ui;

@@ -47,20 +47,22 @@ public:
     explicit TaskBox(QWidget *parent = nullptr);
     ~TaskBox();
 
-    inline uint32_t mapSize() const {
+    static TaskType taskType;
+
+    inline int32_t mapSize() const {
         return mapRows*mapCols;
     }
 
     inline void updateTaskType() {
-        qDebug("void TaskBox::updateTaskType");
         ui->liteName->setText(rawImgPath()+liteSuffix());
-        //ui->liteName->setEnabled(taskType!=TaskType::Data);
-        //ui->setMapBegSeq->setEnabled(taskType==TaskType::Data);
+        ui->DenoteLiteName->setEnabled(taskType!=TaskType::Data);
+        ui->liteName->setEnabled(taskType!=TaskType::Data);
+        ui->setMapBegSeq->setEnabled(taskType==TaskType::Data);
     }
 
     void setTask(const QString & rawImg) {
         QImage img;
-        uint32_t prevMapSize=mapSize();
+        int32_t prevMapSize=mapSize();
         if(!img.load(rawImg)) {
             mapRows=0;
             mapCols=0;
@@ -69,7 +71,7 @@ public:
         }
         mapRows=std::ceil(img.height()/128.0);
         mapCols=std::ceil(img.width()/128.0);
-        ui->preView->setPixmap(QPixmap::fromImage(img));
+        ui->preView->setPixmap(QPixmap::fromImage(img.scaledToWidth(128)));
         ui->preView->setText("");
         ui->imageName->setText(rawImg);
 
@@ -89,19 +91,18 @@ public:
         return ui->liteName->text();
     }
 
-    inline uint32_t begSeqNum() const {
+    inline int32_t begSeqNum() const {
         return ui->setMapBegSeq->value();
     }
-    volatile static TaskType taskType;
 
-    inline static QString liteSuffix() {
+    inline static const char * liteSuffix() {
         switch (taskType) {
-        case TaskType::Litematica:
-            return ".litematic";
-        case TaskType::Structure:
-            return ".nbt";
-        default:
-            return ".ERROR_TASK_TYPE";
+            case TaskType::Litematica:
+                return ".litematic";
+            case TaskType::Structure:
+                return ".nbt";
+            default:
+                return ".ERROR_TASK_TYPE";
         }
     }
 
@@ -109,11 +110,7 @@ public:
         ui->setMapBegSeq->setReadOnly(mbsro);
     }
 
-    inline void setMapBegSeqMinVal(uint32_t mbsmv) {
-        ui->setMapBegSeq->setMaximum(mbsmv);
-    }
-
-    inline void setMapBegSeq(uint32_t mbs) {
+    inline void setMapBegSeq(int32_t mbs) {
         ui->setMapBegSeq->setValue(mbs);
         ui->setMapBegSeq->setSuffix(" ~ "+QString::number(mbs+mapSize()-1));
     }
@@ -133,12 +130,14 @@ private slots:
         }
     }
 
-    void on_BtnErase_clicked();
+    void on_BtnErase_clicked() {
+        emit erase(this);
+    }
 
 private:
     Ui::TaskBox *ui;
-    uint16_t mapRows;
-    uint16_t mapCols;
+    int16_t mapRows;
+    int16_t mapCols;
 
 };
 

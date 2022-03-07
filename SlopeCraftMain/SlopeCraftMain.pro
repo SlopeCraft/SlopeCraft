@@ -42,7 +42,7 @@ SOURCES += \
     TaskBox.cpp \
     VersionDialog.cpp \
     main.cpp \
-    mainwindow.cpp \
+    MainWindow.cpp \
     previewwind.cpp \
     tpstrategywind.cpp
 
@@ -55,7 +55,7 @@ HEADERS += \
     BatchUi.h \
     TaskBox.h \
     VersionDialog.h \
-    mainwindow.h \
+    MainWindow.h \
     previewwind.h \
     tpstrategywind.h
 

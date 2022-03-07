@@ -22,7 +22,7 @@ This file is part of SlopeCraft.
 
 #include "TaskBox.h"
 
-volatile TaskType TaskBox::taskType=Litematica;
+TaskType TaskBox::taskType=TaskType::Litematica;
 
 TaskBox::TaskBox(QWidget *parent) :
     QWidget(parent),
@@ -36,10 +36,5 @@ TaskBox::TaskBox(QWidget *parent) :
 TaskBox::~TaskBox()
 {
     delete ui;
-}
-
-
-void TaskBox::on_BtnErase_clicked() {
-    emit erase(this);
 }
 

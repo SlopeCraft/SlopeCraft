@@ -37,8 +37,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>620</width>
-         <height>353</height>
+         <width>626</width>
+         <height>374</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="scrollLayout">
@@ -109,17 +109,27 @@
     <item row="1" column="0" colspan="3">
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
-       <widget class="QLabel" name="label">
+       <widget class="QLabel" name="labelDenoteDstFolder">
         <property name="text">
          <string>地图文件输出位置</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="setDataFolder"/>
+       <widget class="QLineEdit" name="setDataFolder">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="readOnly">
+         <bool>false</bool>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QPushButton" name="BtnBrowseDataFolder">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="text">
          <string>浏览</string>
         </property>

@@ -23,6 +23,8 @@ This file is part of SlopeCraft.
 #include "BatchUi.h"
 #include "ui_BatchUi.h"
 
+#include "MainWindow.h"
+
 BatchUi::BatchUi(BatchUi ** _self,QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::BatchUi)
@@ -31,10 +33,16 @@ BatchUi::BatchUi(BatchUi ** _self,QWidget *parent) :
     self=_self;
     this->setAttribute(Qt::WA_QuitOnClose,false);
 
-    connect(ui->setTypeData,&QRadioButton::clicked,this,&BatchUi::onTaskTypeChanged);
-    connect(ui->setTypeLite,&QRadioButton::clicked,this,&BatchUi::onTaskTypeChanged);
-    connect(ui->setTypeStructure,&QRadioButton::clicked,this,&BatchUi::onTaskTypeChanged);
-
+    connect(ui->setTypeData,&QRadioButton::clicked,
+            this,&BatchUi::onTaskTypeChanged);
+    connect(ui->setTypeLite,&QRadioButton::clicked,
+            this,&BatchUi::onTaskTypeChanged);
+    connect(ui->setTypeStructure,&QRadioButton::clicked,
+            this,&BatchUi::onTaskTypeChanged);
+    connect(ui->setDataFolder,&QLineEdit::textEdited,
+            ui->setDataFolder,&QLineEdit::textChanged);
+    connect(ui->setDataFolder,&QLineEdit::textChanged,
+            this,&BatchUi::checkExecutable);
 }
 
 void BatchUi::closeEvent(QCloseEvent * event) {
@@ -103,6 +111,7 @@ void BatchUi::erased(TaskBox* widgetPtr) {
 
 void BatchUi::onBoxSeqNumChanged() {
     uint32_t curBeg=taskBoxes.front()->begSeqNum();
+    taskBoxes.front()->setMapBegSeq(curBeg);
     for(size_t idx=1;idx<taskBoxes.size();idx++) {
         taskBoxes[idx]->setMapBegSeq(curBeg+taskBoxes[idx-1]->mapSize());
         curBeg+=taskBoxes[idx-1]->mapSize();
@@ -119,10 +128,49 @@ void BatchUi::onTaskTypeChanged() {
         TaskBox::taskType=TaskType::Data;
     if(ui->setTypeLite->isChecked())
         TaskBox::taskType=TaskType::Litematica;
+    if(ui->setTypeStructure->isChecked())
+        TaskBox::taskType=TaskType::Structure;
 
-    TaskBox::taskType=TaskType::Structure;
+    ui->setDataFolder->setEnabled(TaskBox::taskType==TaskType::Data);
+    ui->BtnBrowseDataFolder->setEnabled(TaskBox::taskType==TaskType::Data);
+    ui->labelDenoteDstFolder->setEnabled(TaskBox::taskType==TaskType::Data);
 
     for(auto i : taskBoxes) {
         i->updateTaskType();
     }
+
+    checkExecutable();
 }
+
+void BatchUi::on_BtnBrowseDataFolder_clicked() {
+    QString path=QFileDialog::getExistingDirectory(this,
+                                                   tr("选择输出文件夹"),
+                                                   ui->setDataFolder->text());
+    if(path.isEmpty())
+        return;
+    path.replace("\\\\","/");
+    path.replace('\\','/');
+    ui->setDataFolder->setText(path);
+}
+
+void BatchUi::checkExecutable() {
+    bool executable=true;
+    ui->LabelShowInfo->setText("");
+    if(TaskBox::taskType==TaskType::Data) {
+        QString dstFolder=ui->setDataFolder->text();
+        if(!QDir(dstFolder).exists()) {
+            ui->LabelShowInfo->setText(tr("目标文件夹不可用"));
+            executable=false;
+        }
+
+
+    }
+    else {
+        if(!qobject_cast<MainWindow * >(parent())->kernelPtr()->isVanilla()) {
+            ui->LabelShowInfo->setText(tr("主窗体中选择了纯文件地图画，冲突"));
+            executable=false;
+        }
+    }
+    ui->BtnExecute->setEnabled(executable);
+}
+
