@@ -38,3 +38,14 @@ TaskBox::~TaskBox()
     delete ui;
 }
 
+
+void TaskBox::on_browseImage_clicked() {
+    QString imgPath=QFileDialog::getOpenFileName(this,
+                                                  tr("选择图片"),
+                                                  "./",
+                                                  tr("图片(*.png *.bmp *.jpg *.tif *.GIF )"));
+    if(imgPath.isEmpty())
+        return;
+    setTask(imgPath);
+}
+

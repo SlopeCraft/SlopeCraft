@@ -33,6 +33,8 @@ BatchUi::BatchUi(BatchUi ** _self,QWidget *parent) :
     self=_self;
     this->setAttribute(Qt::WA_QuitOnClose,false);
 
+    //ui->setTypeLite->setChecked(false);
+
     connect(ui->setTypeData,&QRadioButton::clicked,
             this,&BatchUi::onTaskTypeChanged);
     connect(ui->setTypeLite,&QRadioButton::clicked,
@@ -76,6 +78,8 @@ void BatchUi::setTasks(const QStringList & fileNames) {
     taskBoxes.front()->setMapBegSeqReadOnly(false);
     onBoxSeqNumChanged();
 
+    emit ui->setTypeLite->clicked();
+
 }
 
 auto BatchUi::ptr2It(TaskBox * widgetPtr) const {
@@ -86,14 +90,6 @@ auto BatchUi::ptr2It(TaskBox * widgetPtr) const {
         }
     }
     return taskBoxes.end();
-}
-
-ushort BatchUi::ptr2Index(TaskBox * widgetPtr) const {
-    for(ushort idx=0;idx<taskBoxes.size();idx++) {
-        if(taskBoxes[idx]==widgetPtr)
-            return idx;
-    }
-    return 0;
 }
 
 void BatchUi::erased(TaskBox* widgetPtr) {

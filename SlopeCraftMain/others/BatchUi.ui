@@ -64,7 +64,7 @@
        <enum>QFrame::Plain</enum>
       </property>
       <property name="text">
-       <string notr="true">TextLabel</string>
+       <string notr="true"/>
       </property>
       <property name="wordWrap">
        <bool>true</bool>
@@ -73,6 +73,9 @@
     </item>
     <item row="3" column="2">
      <widget class="QCommandLinkButton" name="BtnExecute">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="text">
        <string>开始执行</string>
       </property>

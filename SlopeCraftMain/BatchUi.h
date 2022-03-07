@@ -65,12 +65,7 @@ private:
     Ui::BatchUi *ui;
     std::vector<TaskBox*> taskBoxes;
     BatchUi ** self;
-
-    ushort ptr2Index(TaskBox * ) const;
-    auto ptr2It(TaskBox * ) const;
-
-    void allocateMapSeqNum(ushort);
-
+auto ptr2It(TaskBox * widgetPtr) const;
 };
 
 #endif // BATCHUI_H

@@ -134,6 +134,8 @@ private slots:
         emit erase(this);
     }
 
+    void on_browseImage_clicked();
+
 private:
     Ui::TaskBox *ui;
     int16_t mapRows;
