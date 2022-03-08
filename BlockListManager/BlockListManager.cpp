@@ -21,6 +21,7 @@ This file is part of SlopeCraft.
 */
 
 #include "BlockListManager.h"
+#include <QJsonDocument>
 
 BlockListManager::BlockListManager(QHBoxLayout * _area,
                                    QObject *parent) : QObject(parent)
@@ -204,11 +205,11 @@ bool isValidBlockInfo(const QJsonObject & json) {
 }
 
 void BlockListManager::getTokiBaseColors
-    (std::vector<const TokiBaseColor*> & dest) const{
-    dest.clear();
-    dest.reserve(tbcs.size());
+    (std::vector<const TokiBaseColor*> * dest) const{
+    dest->clear();
+    dest->reserve(tbcs.size());
     for(const auto it : tbcs) {
-        dest.emplace_back(it);
+        dest->emplace_back(it);
     }
 }
 
@@ -231,6 +232,32 @@ void BlockListManager::getBlockPtrs(const SlopeCraft::AbstractBlock ** dest,
         }
     }
     dest[idx]=nullptr;
+}
+
+bool BlockListManager::savePreset(const QString & path) const {
+    if(path.isEmpty())
+        return false;
+
+    QJsonArray ja;
+    QJsonObject jo;
+    jo.insert("baseColor",QJsonValue(0));
+    jo.insert("blockId","minecraft:air");
+    for(uint8_t baseC=0;baseC<tbcs.size();baseC++) {
+        jo["baseColor"]=baseC;
+        jo["blockId"]=tbcs[baseC]->selectedBlock()->getSimpleBlock()->getId();
+        ja.push_back(jo);
+    }
+
+    QJsonDocument jd(ja);
+
+    QFile dst(path);
+    if(!dst.open(QFile::OpenModeFlag::WriteOnly)) {
+        return false;
+    }
+    dst.write(jd.toJson());
+    dst.close();
+
+    return true;
 }
 
 const QString BlockListManager:: baseColorNames[64]={

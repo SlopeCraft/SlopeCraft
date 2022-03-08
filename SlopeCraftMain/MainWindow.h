@@ -184,6 +184,8 @@ private slots:
     void onPresetsClicked();
     void onBlockListChanged();
 
+    void onActionSavePreset();
+
     //for Page4
     void onAlgoClicked();
     void on_Convert_clicked();

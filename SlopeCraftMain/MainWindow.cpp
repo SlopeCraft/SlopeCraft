@@ -195,6 +195,8 @@ MainWindow::MainWindow(QWidget *parent)
             ui->progressExData,&QPushButton::clicked);
     connect(ui->actionFinish,&QAction::triggered,
             ui->progressAbout,&QPushButton::clicked);
+    connect(ui->actionSavePreset,&QAction::triggered,
+            this,&MainWindow::onActionSavePreset);
 
     turnToPage(0);
 
@@ -1928,7 +1930,7 @@ void MainWindow::on_ExImage_clicked() {
 
 void MainWindow::selectBlockByString(const std::string & key) {
     std::vector<const TokiBaseColor*> tbcs;
-    Manager->getTokiBaseColors(tbcs);
+    Manager->getTokiBaseColors(&tbcs);
 
     for(uint8_t baseColor=0;baseColor<tbcs.size();baseColor++) {
 
@@ -1942,6 +1944,14 @@ void MainWindow::selectBlockByString(const std::string & key) {
             }
         }
     }
+}
+
+void MainWindow::onActionSavePreset() {
+    QString dst=QFileDialog::getSaveFileName(this,tr("保存预设"),"","*.scPreset.json");
+    if(dst.isEmpty())
+        return;
+    bool success=Manager->savePreset(dst);
+    qDebug()<<(success?"success":"failed");
 }
 
 void MainWindow::on_FirstConcrete_clicked() {

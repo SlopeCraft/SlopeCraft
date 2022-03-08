@@ -57,10 +57,13 @@ public:
     std::vector<const QRadioButton * >getQRadioButtonList() const;
     std::vector<ushort> toPreset() const;
 
-    void getTokiBaseColors(std::vector<const TokiBaseColor*> &) const;
+    void getTokiBaseColors(std::vector<const TokiBaseColor*> *) const;
 
     int getBlockNum() const;
     void getBlockPtrs(const SlopeCraft::AbstractBlock **,uint8_t*) const;
+
+    bool savePreset(const QString & path) const;
+
 public slots:
 
 signals:

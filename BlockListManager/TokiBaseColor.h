@@ -44,17 +44,19 @@ public:
                            QObject *parent = nullptr);
     ~TokiBaseColor();
 
-const TokiBlock* getTokiBlock() const;
+    const TokiBlock* getTokiBlock() const;
 
-bool getEnabled() const;
+    bool getEnabled() const;
 
-ushort getSelected() const;
+    ushort getSelected() const;
 
-void addTokiBlock(const QJsonObject & json,
+    void addTokiBlock(const QJsonObject & json,
                   const QString & imgDir);
-void makeLabel(QRgb);
+    void makeLabel(QRgb);
 
-void getTokiBlockList(std::vector<const TokiBlock*> & ) const;
+    void getTokiBlockList(std::vector<const TokiBlock*> & ) const;
+
+    const TokiBlock * selectedBlock() const;
 
 static uchar mcVer;
 
