@@ -34,8 +34,6 @@ const QString MainWindow::selfVersion=SlopeCraft::Kernel::getSCLVersion();
 
 bool MainWindow::isBatchOperating=false;
 
-//using namespace SlopeCraft;
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)

@@ -22,7 +22,7 @@ This file is part of SlopeCraft.
 
 #ifndef TpStrategyWind_CPP
 #define TpStrategyWind_CPP
-#include "mainwindow.h"
+#include "MainWindow.h"
 #include "tpstrategywind.h"
 #include "ui_tpstrategywind.h"
 #include <QDialog>

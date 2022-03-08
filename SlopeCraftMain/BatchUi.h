@@ -73,8 +73,8 @@ private:
     Ui::BatchUi *ui;
     std::vector<TaskBox*> taskBoxes;
     BatchUi ** self;
-    auto ptr2It(TaskBox * widgetPtr) const;
 
+    auto ptr2It(TaskBox * widgetPtr) const;
     MainWindow * wind() const;
     SlopeCraft::Kernel * kernel() const;
 };
