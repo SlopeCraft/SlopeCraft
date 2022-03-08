@@ -4,7 +4,7 @@ CONFIG -= qt
 #Use this line when in with-qt mode
 #CONFIG += qt core gui concurrent
 
-INCLUDEPATH += D:/CppLibs/zlib-1.2.11 \
+INCLUDEPATH += \
                                D:/CppLibs/eigen-3.4.0 \
                                ../AiCvterInterface \
                                D:\CppLibs\HeuristicFlow-1.3.3
@@ -38,21 +38,6 @@ CONFIG += c++17
 #DEFINES += SLOPECRAFTL_WITH_AICVETR
 
 SOURCES += \
-    ../../../CppLibs/zlib-1.2.11/adler32.c \
-    ../../../CppLibs/zlib-1.2.11/compress.c \
-    ../../../CppLibs/zlib-1.2.11/crc32.c \
-    ../../../CppLibs/zlib-1.2.11/deflate.c \
-    ../../../CppLibs/zlib-1.2.11/gzclose.c \
-    ../../../CppLibs/zlib-1.2.11/gzlib.c \
-    ../../../CppLibs/zlib-1.2.11/gzread.c \
-    ../../../CppLibs/zlib-1.2.11/gzwrite.c \
-    ../../../CppLibs/zlib-1.2.11/infback.c \
-    ../../../CppLibs/zlib-1.2.11/inffast.c \
-    ../../../CppLibs/zlib-1.2.11/inflate.c \
-    ../../../CppLibs/zlib-1.2.11/inftrees.c \
-    ../../../CppLibs/zlib-1.2.11/trees.c \
-    ../../../CppLibs/zlib-1.2.11/uncompr.c \
-    ../../../CppLibs/zlib-1.2.11/zutil.c \
     CIEDE00.cpp \
     HeightLine.cpp \
     NBTWriter.cpp \
@@ -67,17 +52,6 @@ SOURCES += \
     SlopeCraftL.cpp
 
 HEADERS += \
-    ../../../CppLibs/zlib-1.2.11/crc32.h \
-    ../../../CppLibs/zlib-1.2.11/deflate.h \
-    ../../../CppLibs/zlib-1.2.11/gzguts.h \
-    ../../../CppLibs/zlib-1.2.11/inffast.h \
-    ../../../CppLibs/zlib-1.2.11/inffixed.h \
-    ../../../CppLibs/zlib-1.2.11/inflate.h \
-    ../../../CppLibs/zlib-1.2.11/inftrees.h \
-    ../../../CppLibs/zlib-1.2.11/trees.h \
-    ../../../CppLibs/zlib-1.2.11/zconf.h \
-    ../../../CppLibs/zlib-1.2.11/zlib.h \
-    ../../../CppLibs/zlib-1.2.11/zutil.h \
     ColorSet.h \
     HeightLine.h \
     NBTWriter.h \
