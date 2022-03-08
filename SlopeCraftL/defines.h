@@ -28,17 +28,13 @@ This file is part of SlopeCraft.
 
 #include "SlopeCraftL.h"
 
-#ifndef WITH_QT
-    #define removeQt
-    #define emit ;
+#ifndef M_PI
+#define M_PI		3.14159265358979323846
 #endif
 
-typedef unsigned char uchar;
-typedef unsigned short ushort;
-typedef unsigned int uint;
-typedef unsigned int ARGB;
-typedef Eigen::Array<ARGB,Eigen::Dynamic,Eigen::Dynamic> EImage;
-typedef Eigen::Array<uint8_t,Eigen::Dynamic,1,Eigen::ColMajor,256> MapList;
-typedef Eigen::Array<float,Eigen::Dynamic,3,Eigen::ColMajor,256> ColorList;
-typedef Eigen::Array<float,Eigen::Dynamic,1,Eigen::ColMajor,256> TempVectorXf;
+using ARGB = uint32_t;
+using EImage = Eigen::Array<ARGB,Eigen::Dynamic,Eigen::Dynamic>;
+using MapList = Eigen::Array<uint8_t,Eigen::Dynamic,1,Eigen::ColMajor,256>;
+using ColorList = Eigen::Array<float,Eigen::Dynamic,3,Eigen::ColMajor,256>;
+using TempVectorXf = Eigen::Array<float,Eigen::Dynamic,1,Eigen::ColMajor,256>;
 #endif // DEFINES_H

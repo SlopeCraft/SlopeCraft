@@ -37,7 +37,7 @@ This file is part of SlopeCraft.
 #include "ColorSet.h"
 #include "HeightLine.h"
 
-//Eigen::Array<uchar,Eigen::Dynamic,1>
+//Eigen::Array<uint8_t,Eigen::Dynamic,1>
 class solver_t;
 
 class LossyCompressor
@@ -46,8 +46,8 @@ public:
     LossyCompressor();
     ~LossyCompressor();
     void setSource(const Eigen::ArrayXi & ,const TokiColor *[]);
-    bool compress(ushort maxHeight,bool allowNaturalCompress=false);
-    const Eigen::ArrayX<uchar> & getResult() const;
+    bool compress(uint16_t maxHeight,bool allowNaturalCompress=false);
+    const Eigen::ArrayX<uint8_t> & getResult() const;
     double resultFitness() const;
 
     void ** windPtr;
@@ -60,9 +60,9 @@ private:
     solver_t * solver;
     std::vector<const TokiColor*> source;
 
-    static ushort maxGeneration;
+    static uint16_t maxGeneration;
 
-    void runGenetic(ushort maxHeight,bool allowNaturalCompress);
+    void runGenetic(uint16_t maxHeight,bool allowNaturalCompress);
 };
 
 double randD();

@@ -32,12 +32,12 @@ HeightLine::HeightLine() {
 }
 
 float HeightLine::make(const TokiColor **src,
-                       const Eigen::Array<uchar, Eigen::Dynamic, 1> & g,
+                       const Eigen::Array<uint8_t, Eigen::Dynamic, 1> & g,
                        bool allowNaturalCompress, Eigen::ArrayXi* dst) {
     float sumDiff=0;
     Eigen::ArrayXi mapColorCol(g.rows());
 
-    for(ushort r=0;r<g.rows();r++) {
+    for(uint16_t r=0;r<g.rows();r++) {
 
         if(src[r]==nullptr) {
             std::cerr<<"Fatal Error! nullptr found in src\n";
@@ -71,7 +71,7 @@ void HeightLine::make(const Eigen::ArrayXi &mapColorCol,
                       bool allowNaturalCompress) {
     ///////////////////////1
     waterMap.clear();
-    const ushort picRows=mapColorCol.rows();
+    const uint16_t picRows=mapColorCol.rows();
     base.setConstant(1+picRows,11);
     HighLine.setZero(1+picRows);
     LowLine.setZero(1+picRows);
@@ -97,7 +97,7 @@ void HeightLine::make(const Eigen::ArrayXi &mapColorCol,
         base(0)=0;
         dealedDepth(1)=0;
     }
-    for(ushort r=1;r<picRows;r++) {
+    for(uint16_t r=1;r<picRows;r++) {
         if(base(r+1)==0) {
             dealedDepth(r+1)=0;
             continue;
@@ -108,7 +108,7 @@ void HeightLine::make(const Eigen::ArrayXi &mapColorCol,
         }
     }
     ///////////////////////3
-    for(ushort r=0;r<picRows;r++) {
+    for(uint16_t r=0;r<picRows;r++) {
         //HighMap.row(r+1)=HighMap.row(r)+dealedDepth.row(r+1);
         HighLine(r+1)=HighLine(r)+dealedDepth(r+1);
     }
@@ -139,13 +139,13 @@ void HeightLine::make(const Eigen::ArrayXi &mapColorCol,
     }
 }
 
-ushort HeightLine::maxHeight() const {
+uint16_t HeightLine::maxHeight() const {
     return HighLine.maxCoeff()-LowLine.minCoeff()+1;
 }
 
 void HeightLine::updateWaterMap() {
     waterMap.clear();
-    for(ushort r=1;r<base.rows();r++) {
+    for(uint16_t r=1;r<base.rows();r++) {
         if(base(r)!=12)
             continue;
         waterMap[r]=TokiWater(HighLine(r)-1,LowLine(r));
@@ -163,7 +163,7 @@ const Eigen::ArrayXi & HeightLine::getBase() const {
     return base;
 }
 
-const std::map<ushort,waterItem> & HeightLine::getWaterMap() const {
+const std::map<uint16_t,waterItem> & HeightLine::getWaterMap() const {
     return waterMap;
 }
 
@@ -172,7 +172,7 @@ EImage HeightLine::toImg() const {
     EImage img(maxHeight(),HighLine.size());
     img.setConstant(AirColor);
     short y=0,r=rMax-y;
-    for(ushort x=0;x<HighLine.size();x++) {
+    for(uint16_t x=0;x<HighLine.size();x++) {
         y=HighLine(x);
         r=rMax-y;
         if(base(x)) {

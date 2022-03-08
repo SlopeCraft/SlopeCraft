@@ -24,10 +24,10 @@ This file is part of SlopeCraft.
 #define colorset_cpp
 #include "ColorSet.h"
 
-ColorSet* TokiColor::Allowed=NULL;
-ColorSet*TokiColor::Basic=NULL;
+ColorSet* TokiColor::Allowed=nullptr;
+ColorSet*TokiColor::Basic=nullptr;
 //short TokiColor::DepthIndexEnd[4]={63,127,191,255};
-uchar TokiColor::DepthCount[4]={64,64,64,64};
+uint8_t TokiColor::DepthCount[4]={64,64,64,64};
 bool TokiColor::needFindSide=false;
 char TokiColor::convertAlgo='R';
 
@@ -102,7 +102,7 @@ void GetMap(unsigned char *Map)
     return;
 }
 
-ushort ColorSet::colorCount() const {
+uint16_t ColorSet::colorCount() const {
     return _RGB.rows();
 }
 

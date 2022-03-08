@@ -119,7 +119,7 @@ public:
 //can do in wait4Image:
     void setRawImage(const unsigned int * src, short rows,short cols);
     void setRawImage(const EImage & );
-    ushort getColorCount() const;
+    uint16_t getColorCount() const;
 //can do in convertionReady:
     bool convert(convertAlgo=RGB_Better,bool dither=false);
     short getImageRows() const;
@@ -173,7 +173,7 @@ private:
 
     static ColorSet Basic,Allowed;
     static const Eigen::Array<float,2,3> DitherMapLR,DitherMapRL;
-    static const uint reportRate=100;
+    static const uint32_t reportRate=100;
 
     void * wind;
     void (*progressRangeSet)(void*,int,int,int);
@@ -200,8 +200,8 @@ private:
 
     std::unordered_map<ARGB,TokiColor> colorHash;
 
-    ushort maxAllowedHeight;
-    ushort bridgeInterval;
+    uint16_t maxAllowedHeight;
+    uint16_t bridgeInterval;
     PrimGlassBuilder * glassBuilder;
     LossyCompressor * Compressor;
 #ifdef SLOPECRAFTL_WITH_AICVETR
@@ -230,10 +230,10 @@ private:
     int sizePic(short) const;
 
 //for build
-    void getTokiColorPtr(ushort,const TokiColor*[]) const;
+    void getTokiColorPtr(uint16_t,const TokiColor*[]) const;
     //void makeHeight_old();//构建HighMap和LowMap
     void makeHeight_new();
-    //void makeHeightInLine(const ushort c);
+    //void makeHeightInLine(const uint16_t c);
     void buildHeight(bool=false,bool=false);//构建Build
     void makeBridge();
 //for Litematic

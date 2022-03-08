@@ -49,7 +49,7 @@ extern const ARGB airColor;
 extern const ARGB targetColor;
 extern const ARGB glassColor;
 
-typedef Eigen::Array<uchar, Eigen::Dynamic, Eigen::Dynamic> TokiMap;
+typedef Eigen::Array<uint8_t, Eigen::Dynamic, Eigen::Dynamic> TokiMap;
 typedef TokiMap glassMap;
 typedef TokiMap walkableMap;
 
@@ -58,12 +58,12 @@ class edge
 {
 public:
     edge();
-    edge(uint begIdx,uint endIdx);
-    //edge(uint begIdx,uint endIdx);
+    edge(uint32_t begIdx,uint32_t endIdx);
+    //edge(uint32_t begIdx,uint32_t endIdx);
     //edge(TokiPos,TokiPos);
-    //edge(ushort r1,ushort c1,ushort r2,ushort c2);
-    uint begIdx;
-    uint endIdx;
+    //edge(uint16_t r1,uint16_t c1,uint16_t r2,uint16_t c2);
+    uint32_t begIdx;
+    uint32_t endIdx;
     int lengthSquare;
 
     static const std::vector<TokiPos> * vertexes;
@@ -79,7 +79,7 @@ class pairedEdge : public std::pair<TokiPos,TokiPos>
 public:
     pairedEdge();
     pairedEdge(TokiPos,TokiPos);
-    pairedEdge(ushort r1,ushort c1,ushort r2,ushort c2);
+    pairedEdge(uint16_t r1,uint16_t c1,uint16_t r2,uint16_t c2);
     pairedEdge(const edge &);
     int lengthSquare;
 
@@ -87,7 +87,7 @@ public:
     void drawEdge(glassMap &,bool drawHead=false) const;
 };
 
-TokiMap ySlice2TokiMap(const Eigen::Tensor<uchar,3>&);
+TokiMap ySlice2TokiMap(const Eigen::Tensor<uint8_t,3>&);
 
 glassMap connectBetweenLayers(const TokiMap & ,const TokiMap & ,
                           walkableMap* walkable);
@@ -102,8 +102,8 @@ public:
     template <typename T, size_t S> friend class tf::ObjectPool;
     void* _object_pool_block;
 
-    static const uint unitL=32;
-    static const uint reportRate=50;
+    static const uint32_t unitL=32;
+    static const uint32_t reportRate=50;
 	enum blockType 
     {
 		air = 0,

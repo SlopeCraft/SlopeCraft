@@ -36,7 +36,7 @@ class ColorSet{
         MapList  Map;
         ColorSet();
         bool ApplyAllowed(ColorSet*standard,bool *MIndex);
-        ushort colorCount() const;
+        uint16_t colorCount() const;
 };
 
 void GetMap(unsigned char *Map);
@@ -61,5 +61,5 @@ ARGB Lab2ARGB(float,float,float);
 ARGB ComposeColor(const ARGB&front,const ARGB&back);
 bool readFromFile(const char*FileName,Eigen::ArrayXXf & M);
 bool readFromTokiColor(const char*,Eigen::ArrayXXf &,const std::string &);
-uchar h2d(char);
+uint8_t h2d(char);
 #endif // COLORSET_H

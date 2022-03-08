@@ -35,15 +35,15 @@ class HeightLine
 {
 public:
     HeightLine();
-    float make(const TokiColor*[], const Eigen::Array<uchar,Eigen::Dynamic,1>&
+    float make(const TokiColor*[], const Eigen::Array<uint8_t,Eigen::Dynamic,1>&
                ,bool allowNaturalCompress, Eigen::ArrayXi* dst=nullptr);
     void make(const Eigen::ArrayXi & mapColorCol,bool allowNaturalCompress);
     void updateWaterMap();
-    ushort maxHeight() const;
+    uint16_t maxHeight() const;
     const Eigen::ArrayXi & getHighLine() const;
     const Eigen::ArrayXi & getLowLine() const;
     const Eigen::ArrayXi & getBase() const;
-    const std::map<ushort,waterItem> & getWaterMap() const;
+    const std::map<uint16_t,waterItem> & getWaterMap() const;
     EImage toImg() const;
 
     static const ARGB BlockColor;
@@ -55,7 +55,7 @@ private:
     Eigen::ArrayXi base;
     Eigen::ArrayXi HighLine;
     Eigen::ArrayXi LowLine;
-    std::map<ushort,waterItem> waterMap;
+    std::map<uint16_t,waterItem> waterMap;
 };
 
 #endif // HEIGHTLINE_H

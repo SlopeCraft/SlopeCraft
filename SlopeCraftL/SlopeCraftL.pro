@@ -24,14 +24,14 @@ QMAKE_TARGET_PRODUCT = SlopeCraftL
 
 QMAKE_TARGET_INTERNALNAME = SlopeCraftL
 
-QMAKE_CXXFLAGS += -fopenmp
+QMAKE_CXXFLAGS += -fopenmp -std=c++2a
 
 LIBS += -fopenmp
 
 TEMPLATE = lib
 DEFINES += SLOPECRAFTL_LIBRARY
 
-CONFIG += c++17
+CONFIG += std::c++20
 
 LIBS += D:\Git\build-SlopeCraft-Desktop_Qt_6_1_0_MinGW_64_bit-Release\SlopeCraftL\release\libzlibstatic.a
 

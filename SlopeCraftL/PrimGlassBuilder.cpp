@@ -36,7 +36,7 @@ edge::edge() {
     lengthSquare=0;
 }
 
-edge::edge(uint _begIdx,uint _endIdx) {
+edge::edge(uint32_t _begIdx,uint32_t _endIdx) {
     begIdx=_begIdx;
     endIdx=_endIdx;
     int r1=TokiRow(beg()),c1=TokiCol(beg());
@@ -70,7 +70,7 @@ pairedEdge::pairedEdge(TokiPos A,TokiPos B) {
     lengthSquare=(rowSpan*rowSpan+colSpan*colSpan);
 }
 
-pairedEdge::pairedEdge(ushort r1,ushort c1,ushort r2,ushort c2) {
+pairedEdge::pairedEdge(uint16_t r1,uint16_t c1,uint16_t r2,uint16_t c2) {
     first=TokiRC(r1,c1);
     second=TokiRC(r2,c2);
     int rowSpan=r1-r2;
@@ -298,10 +298,10 @@ pairedEdge PrimGlassBuilder::connectSingleMaps(
     if(map1->targetPoints.size()<=0||map2->targetPoints.size()<=0)
         return pairedEdge();
 
-    ushort offsetR1=TokiRow(offset1),offsetC1=TokiCol(offset1);
-    ushort offsetR2=TokiRow(offset2),offsetC2=TokiCol(offset2);
+    uint16_t offsetR1=TokiRow(offset1),offsetC1=TokiCol(offset1);
+    uint16_t offsetR2=TokiRow(offset2),offsetC2=TokiCol(offset2);
 
-    ushort r1,r2,c1,c2;
+    uint16_t r1,r2,c1,c2;
 
     pairedEdge current;
 
@@ -327,8 +327,8 @@ void PrimGlassBuilder::addEdgesToGraph() {
 	edge::vertexes = std::addressof(targetPoints);
     //int taskCount=(targetPoints.size()*(targetPoints.size()-1))/2;
     //progressRangeSet(*windPtr,0,taskCount,0);
-    for(uint i=0;i<targetPoints.size();i++) {
-        for(uint j=i+1;j<targetPoints.size();j++) {
+    for(uint32_t i=0;i<targetPoints.size();i++) {
+        for(uint32_t j=i+1;j<targetPoints.size();j++) {
 			edges.emplace_back(edge(i, j));
         }        
         //emit keepAwake();
@@ -343,7 +343,7 @@ void PrimGlassBuilder::runPrim() {
     std::vector<bool> isFound(targetPoints.size(),false);
     isFound[0]=true;
 
-    uint foundCount=1;
+    uint32_t foundCount=1;
 
     //progressRangeSet(*windPtr,0,targetPoints.size(),0);
 
@@ -434,8 +434,8 @@ void PrimGlassBuilder::runPrim() {
 EImage TokiMap2EImage(const TokiMap& tm) {
     EImage result(tm.rows(),tm.cols());
     result.setConstant(airColor);
-    for(ushort r=0;r<tm.rows();r++)
-        for(ushort c=0;c<tm.cols();c++) {
+    for(uint16_t r=0;r<tm.rows();r++)
+        for(uint16_t c=0;c<tm.cols();c++) {
             if(tm(r,c)==1)
                 result(r,c)=glassColor;
             if(tm(r,c)>1)
@@ -493,7 +493,7 @@ glassMap connectBetweenLayers(const TokiMap & map1,const TokiMap & map2,
     return result;
 }
 
-TokiMap ySlice2TokiMap(const Eigen::Tensor<uchar,3>& raw) {
+TokiMap ySlice2TokiMap(const Eigen::Tensor<uint8_t,3>& raw) {
     TokiMap result(raw.dimension(0),raw.dimension(2));
     result.setZero();
     for(int i=0;i<raw.size();i++)

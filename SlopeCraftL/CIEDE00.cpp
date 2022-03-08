@@ -22,21 +22,18 @@ This file is part of SlopeCraft.
 
 #include "TokiColor.h"
 #include <cmath>
-
 #define deg2rad(deg) ((deg)*M_PI/180.0)
 #define rad2deg(rad) ((rad)*180.0/M_PI)
-#define kL 1.0
-#define kC 1.0
-#define kH 1.0
+const float kL=1.0;
+const float kC=1.0;
+const float kH=1.0;
 
 
-inline float square(float x)
-{
+inline float square(float x) {
     return x*x;
 }
 
-float Lab00( float L1, float a1, float b1, float L2, float a2, float b2)
-{
+float Lab00( float L1, float a1, float b1, float L2, float a2, float b2) {
     float C1sab=std::sqrt(a1*a1+b1*b1);
     float C2sab=std::sqrt(a2*a2+b2*b2);
     float mCsab=(C1sab+C2sab)/2;

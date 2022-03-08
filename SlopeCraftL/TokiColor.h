@@ -27,11 +27,11 @@ This file is part of SlopeCraft.
 
 //#define dispFunCalled
 
-ARGB ARGB32(uint r,uint g,uint b,uint a=255);
-uchar getA(ARGB);
-uchar getR(ARGB);
-uchar getG(ARGB);
-uchar getB(ARGB);
+ARGB ARGB32(uint32_t r,uint32_t g,uint32_t b,uint32_t a=255);
+uint8_t getA(ARGB);
+uint8_t getR(ARGB);
+uint8_t getG(ARGB);
+uint8_t getB(ARGB);
 
 
 class ColorSet;

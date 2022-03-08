@@ -492,7 +492,7 @@ bool TokiSlopeCraft::setType(mapTypes type,
                              const bool * allowedBaseColor,
                              const simpleBlock * palettes) {
     const AbstractBlock * temp[64];
-    for(ushort idx=0;idx<64;idx++) {
+    for(uint16_t idx=0;idx<64;idx++) {
         temp[idx]=palettes+idx;
     }
 
@@ -509,7 +509,7 @@ void TokiSlopeCraft::configAiCvter() {
 }
 #endif
 
-ushort TokiSlopeCraft::getColorCount() const {
+uint16_t TokiSlopeCraft::getColorCount() const {
     if(kernelStep<wait4Image) {
         reportError(wind,errorFlag::HASTY_MANIPULATION);
         return 0;
@@ -549,7 +549,7 @@ bool TokiSlopeCraft::isFlat() const {
 
 void TokiSlopeCraft::getAuthorURL(int * count,char **dest) const {
     std::vector<std::string> result=getAuthorURL();
-    for(ushort i=0;i<result.size();i++) {
+    for(uint16_t i=0;i<result.size();i++) {
         if(dest!=nullptr&&dest[i]!=nullptr)
             std::strcpy(dest[i],result[i].data());
     }
@@ -908,13 +908,13 @@ void matchColor(uint32_t taskCount,TokiColor** tk,ARGB * argb) {
 }
 #endif
 
-void TokiSlopeCraft::getTokiColorPtr(ushort col, const TokiColor ** dst) const {
+void TokiSlopeCraft::getTokiColorPtr(uint16_t col, const TokiColor ** dst) const {
     if(kernelStep<converted) {
         std::cerr<<"Too hasty! export after you converted the map!"<<std::endl;
         reportError(wind,errorFlag::HASTY_MANIPULATION);
         return ;
     }
-    for(ushort r=0;r<ditheredImage.rows();r++) {
+    for(uint16_t r=0;r<ditheredImage.rows();r++) {
         auto i=colorHash.find(ditheredImage(r,col));
 
         if(i==colorHash.end())
@@ -951,7 +951,7 @@ void TokiSlopeCraft::getConvertedImage(short * rows,short * cols,ARGB * dest) co
     if(cols!=nullptr)
         *cols=result.cols();
     if(dest!=nullptr)
-        for(uint idx=0;idx<result.size();idx++) {
+        for(uint32_t idx=0;idx<result.size();idx++) {
             dest[idx]=result(idx);
         }
 }
@@ -1026,7 +1026,7 @@ void TokiSlopeCraft::exportAsData(const char * FolderPath,
     if(fileCount!=nullptr)
         *fileCount=uFL.size();
     if(dest!=nullptr)
-        for(ushort i=0;i<uFL.size();i++) {
+        for(uint16_t i=0;i<uFL.size();i++) {
             if(dest[i]!=nullptr)
                 std::strcpy(dest[i],uFL[i].data());
         }
@@ -1200,8 +1200,8 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(const std::string & Folder
     return compressedFileList;
 }
 
-bool TokiSlopeCraft::build(compressSettings cS, ushort mAH,
-                           glassBridgeSettings gBS,ushort bI,
+bool TokiSlopeCraft::build(compressSettings cS, uint16_t mAH,
+                           glassBridgeSettings gBS,uint16_t bI,
                            bool fireProof,bool endermanProof) {
     if(kernelStep<converted){
         reportError(wind,errorFlag::HASTY_MANIPULATION);
@@ -1232,8 +1232,8 @@ bool TokiSlopeCraft::build(compressSettings cS, ushort mAH,
     std::cerr<<"start makeHeight"<<std::endl;
 
     mapPic.setZero(sizePic(0),sizePic(1));
-    for(ushort r=0;r<sizePic(0);r++) {
-        for(ushort c=0;c<sizePic(1);c++) {
+    for(uint16_t r=0;r<sizePic(0);r++) {
+        for(uint16_t c=0;c<sizePic(1);c++) {
             mapPic(r,c)=colorHash[ditheredImage(r,c)].Result;
         }
         progressAdd(wind,sizePic(1));
@@ -1261,9 +1261,9 @@ bool TokiSlopeCraft::build(compressSettings cS, ushort mAH,
         Eigen::array<int,3> perm={1,2,0};
         Build=temp.shuffle(perm);
 
-        for(ushort x=0;x<Build.dimension(0);x++)
-            for(ushort z=0;z<Build.dimension(2);z++)
-                for(ushort y=0;y<Build.dimension(1)/2;y++) {
+        for(uint16_t x=0;x<Build.dimension(0);x++)
+            for(uint16_t z=0;z<Build.dimension(2);z++)
+                for(uint16_t y=0;y<Build.dimension(1)/2;y++) {
                     std::swap(Build(x,y,z),Build(x,Build.dimension(1)-y-1,z));
                 }
 
@@ -1296,7 +1296,7 @@ void TokiSlopeCraft::makeHeight_new() {
         return;
     }
 
-    for(ushort c=0;c<sizePic(1);c++) {
+    for(uint16_t c=0;c<sizePic(1);c++) {
 
         std::cerr<<"Coloumn "<<c<<'\n';
         HeightLine HL;
@@ -1428,7 +1428,7 @@ void TokiSlopeCraft::makeBridge() {
 
     algoProgressRangeSet(wind,0,100,0);
 
-    for(uint y=0;y<Build.dimension(1);y++) {
+    for(uint32_t y=0;y<Build.dimension(1);y++) {
         keepAwake(wind);
         progressAdd(wind,step);
         if(y%(bridgeInterval+1)==0) {
@@ -1485,7 +1485,7 @@ void TokiSlopeCraft::getBlockCounts(int * total, int detail[64]) const {
     if(total!=nullptr)
         *total=getBlockCounts(temp);
     if(detail!=nullptr)
-        for(ushort idx=0;idx<temp.size();idx++) {
+        for(uint16_t idx=0;idx<temp.size();idx++) {
             detail[idx]=temp[idx];
         }
 }
