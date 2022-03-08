@@ -28,7 +28,11 @@ This file is part of SlopeCraft.
 #define SCL_EXPORT SLOPECRAFTL_EXPORT
 
 namespace SlopeCraft {
+#ifdef SLOPECRAFTL_CAPI
+struct AbstractBlock;
+#else
 class AbstractBlock;
+#endif
 }   //  namespace SlopeCraft
 
 #ifdef SLOPECRAFTL_CAPI
@@ -134,6 +138,16 @@ public:
 };
 #endif  //  ifndef SLOPECRAFT_CAPI
 
+namespace SlopeCraft {
+#ifdef SLOPECRAFTL_CAPI
+struct Kernel;
+#else
+class Kernel;
+#endif
+}
+
+
+#ifndef SLOPECRAFTL_CAPI
 class SCL_EXPORT Kernel
 {
 public:
@@ -398,5 +412,6 @@ protected:
     void operator delete(void*) {}
 
 };
+#endif
 }
 #endif // KERNEL_H

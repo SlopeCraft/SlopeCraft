@@ -35,7 +35,7 @@ typedef std::vector<std::string> stringList;
 
 namespace SlopeCraft {
 #ifdef SLOPECRAFTL_CAPI
-class AbstractBlock
+struct AbstractBlock
 {
 public:
     AbstractBlock();
