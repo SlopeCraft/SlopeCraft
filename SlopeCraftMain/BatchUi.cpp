@@ -169,6 +169,8 @@ void BatchUi::checkExecutable() {
             executable=false;
         }
     }
+
+    ui->LabelShowInfo->setText(tr("就绪"));
     ui->BtnExecute->setEnabled(executable);
 }
 
