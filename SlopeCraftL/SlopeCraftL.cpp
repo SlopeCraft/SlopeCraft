@@ -77,6 +77,7 @@ Kernel * Kernel::create() {
     return (new TokiSlopeCraft)->toBaseClassPtr();
 }
 
+
 uint64_t Kernel::mcVersion2VersionNumber(Kernel::gameVersion g) {
     switch (g) {
     case Kernel::gameVersion::ANCIENT:

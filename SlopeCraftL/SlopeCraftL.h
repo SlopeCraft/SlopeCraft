@@ -28,12 +28,62 @@ This file is part of SlopeCraft.
 #define SCL_EXPORT SLOPECRAFTL_EXPORT
 
 namespace SlopeCraft {
+class AbstractBlock;
+}   //  namespace SlopeCraft
 
-#ifndef NO_DLL
-class SCL_EXPORT AbstractBlock
-#else
-class AbstractBlock
+#ifdef SLOPECRAFTL_CAPI
+extern "C" {
+
+SlopeCraft::AbstractBlock * SCL_EXPORT createBlock();
+unsigned long long SCL_EXPORT size(const SlopeCraft::AbstractBlock *);
+
+///id of this block
+const char* SCL_EXPORT getId(const SlopeCraft::AbstractBlock *);
+
+///first version
+unsigned char SCL_EXPORT getVersion(const SlopeCraft::AbstractBlock *);
+///id in 1.12
+const char* SCL_EXPORT getIdOld(const SlopeCraft::AbstractBlock *);
+///if this block needs a glass block under it
+bool SCL_EXPORT getNeedGlass(const SlopeCraft::AbstractBlock *);
+///if this block emits light
+bool SCL_EXPORT getDoGlow(const SlopeCraft::AbstractBlock *);
+///if this block can be stolen by enderman
+bool SCL_EXPORT getEndermanPickable(const SlopeCraft::AbstractBlock *);
+///if this block can be burnt
+bool SCL_EXPORT getBurnable(const SlopeCraft::AbstractBlock *);
+///if this block can be used in wall-map
+bool SCL_EXPORT getWallUseable(const SlopeCraft::AbstractBlock *);
+
+///set block id
+void SCL_EXPORT setId(SlopeCraft::AbstractBlock *,const char*);
+///set first version
+void SCL_EXPORT setVersion(SlopeCraft::AbstractBlock *,unsigned char);
+///set id in 1.12
+void SCL_EXPORT setIdOld(SlopeCraft::AbstractBlock *,const char*);
+///set if this block needs a glass block under it
+void SCL_EXPORT setNeedGlass(SlopeCraft::AbstractBlock *,bool);
+///set if this block emits light
+void SCL_EXPORT setDoGlow(SlopeCraft::AbstractBlock *,bool);
+///set if this block can be stolen by enderman
+void SCL_EXPORT setEndermanPickable(SlopeCraft::AbstractBlock *,bool);
+///set if this block can be burnt
+void SCL_EXPORT setBurnable(SlopeCraft::AbstractBlock *,bool);
+///set if this block can be used in wall-map
+void SCL_EXPORT setWallUseable(SlopeCraft::AbstractBlock *,bool);
+///let *b equal to *this
+void SCL_EXPORT copyTo(SlopeCraft::AbstractBlock *,SlopeCraft::AbstractBlock * b) ;
+///set this block to air
+void SCL_EXPORT clear(SlopeCraft::AbstractBlock *);
+///replacement for operator delete
+void SCL_EXPORT destroy(SlopeCraft::AbstractBlock *);
+
+}
 #endif
+
+namespace SlopeCraft {
+#ifndef SLOPECRAFTL_CAPI
+class SCL_EXPORT AbstractBlock
 {
 public:
     AbstractBlock();
@@ -41,7 +91,7 @@ public:
     ///create a block
     static AbstractBlock * create();
     ///real size of this block
-    virtual unsigned long long size()=0;
+    virtual unsigned long long size()const=0;
     ///id of this block
     virtual const char* getId()const=0;
     ///first version
@@ -82,7 +132,7 @@ public:
     ///replacement for operator delete
     virtual void destroy()=0;
 };
-
+#endif  //  ifndef SLOPECRAFT_CAPI
 
 class SCL_EXPORT Kernel
 {

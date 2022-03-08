@@ -39,12 +39,15 @@ LIBS += D:\Git\build-SlopeCraft-Desktop_Qt_6_1_0_MinGW_64_bit-Release\SlopeCraft
 #LIBS += D:\Git\build-SlopeCraft-Desktop_Qt_6_2_1_MinGW_64_bit-Release\SlopeCraftL\release\AiCvterLib.dll
 #DEFINES += SLOPECRAFTL_WITH_AICVETR
 
+#DEFINES += SLOPECRAFTL_CAPI
+
 SOURCES += \
     CIEDE00.cpp \
     HeightLine.cpp \
     NBTWriter.cpp \
     OptiChain.cpp \
     PrimGlassBuilder.cpp \
+    SlopeCraftL_CAPI.cpp \
     TokiSlopeCraft.cpp \
     WaterItem.cpp \
     colorset.cpp \

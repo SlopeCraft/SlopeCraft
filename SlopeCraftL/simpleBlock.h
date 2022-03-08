@@ -33,6 +33,60 @@ typedef unsigned char uchar ;
 
 typedef std::vector<std::string> stringList;
 
+namespace SlopeCraft {
+#ifdef SLOPECRAFTL_CAPI
+class AbstractBlock
+{
+public:
+    AbstractBlock();
+    //virtual ~AbstractBlock() {};
+    ///create a block
+    static AbstractBlock * create();
+    ///real size of this block
+    virtual unsigned long long size()const=0;
+    ///id of this block
+    virtual const char* getId()const=0;
+    ///first version
+    virtual unsigned char getVersion()const=0;
+    ///id in 1.12
+    virtual const char* getIdOld()const=0;
+    ///if this block needs a glass block under it
+    virtual bool getNeedGlass()const=0;
+    ///if this block emits light
+    virtual bool getDoGlow()const=0;
+    ///if this block can be stolen by enderman
+    virtual bool getEndermanPickable()const=0;
+    ///if this block can be burnt
+    virtual bool getBurnable()const=0;
+    ///if this block can be used in wall-map
+    virtual bool getWallUseable()const=0;
+
+    ///set block id
+    virtual void setId(const char*)=0;
+    ///set first version
+    virtual void setVersion(unsigned char)=0;
+    ///set id in 1.12
+    virtual void setIdOld(const char*)=0;
+    ///set if this block needs a glass block under it
+    virtual void setNeedGlass(bool)=0;
+    ///set if this block emits light
+    virtual void setDoGlow(bool)=0;
+    ///set if this block can be stolen by enderman
+    virtual void setEndermanPickable(bool)=0;
+    ///set if this block can be burnt
+    virtual void setBurnable(bool)=0;
+    ///set if this block can be used in wall-map
+    virtual void setWallUseable(bool)=0;
+    ///let *b equal to *this
+    void copyTo(AbstractBlock * b) const;
+    ///set this block to air
+    void clear();
+    ///replacement for operator delete
+    virtual void destroy()=0;
+};
+#endif  //  ifndef SLOPECRAFT_CAPI
+}
+
 class simpleBlock : public AbstractBlock
 {
 public:
@@ -47,7 +101,7 @@ public:
     bool burnable;
     bool wallUseable;
 
-    unsigned long long size() {
+    unsigned long long size() const {
         return sizeof(simpleBlock);
     }
 
