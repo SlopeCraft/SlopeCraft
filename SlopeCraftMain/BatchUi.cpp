@@ -114,10 +114,6 @@ void BatchUi::onBoxSeqNumChanged() {
     }
 }
 
-void BatchUi::on_BtnExecute_clicked() {
-
-}
-
 void BatchUi::onTaskTypeChanged() {
     qDebug("void BatchUi::onTaskTypeChanged");
     if(ui->setTypeData->isChecked())
@@ -149,6 +145,14 @@ void BatchUi::on_BtnBrowseDataFolder_clicked() {
     ui->setDataFolder->setText(path);
 }
 
+MainWindow * BatchUi::wind() const {
+    return qobject_cast<MainWindow * >(parent());
+}
+
+SlopeCraft::Kernel * BatchUi::kernel() const {
+    return wind()->kernelPtr();
+}
+
 void BatchUi::checkExecutable() {
     bool executable=true;
     ui->LabelShowInfo->setText("");
@@ -158,11 +162,9 @@ void BatchUi::checkExecutable() {
             ui->LabelShowInfo->setText(tr("目标文件夹不可用"));
             executable=false;
         }
-
-
     }
     else {
-        if(!qobject_cast<MainWindow * >(parent())->kernelPtr()->isVanilla()) {
+        if(!kernel()->isVanilla()) {
             ui->LabelShowInfo->setText(tr("主窗体中选择了纯文件地图画，冲突"));
             executable=false;
         }
@@ -170,3 +172,58 @@ void BatchUi::checkExecutable() {
     ui->BtnExecute->setEnabled(executable);
 }
 
+void BatchUi::eraseAllTasks() {
+    for(auto widgetPtr : taskBoxes) {
+
+        ui->scrollLayout->removeWidget(widgetPtr);
+        widgetPtr->deleteLater();
+    }
+    taskBoxes.clear();
+}
+
+void BatchUi::on_BtnExecute_clicked() {
+    MainWindow::isBatchOperating=true;
+    for(size_t idx=0;idx<taskBoxes.size();idx++) {
+        TaskBox * curTask=taskBoxes[idx];
+        if(curTask->mapSize()<=0) {
+            continue;
+        }
+        QString prefix=tr("批量处理中：")+
+                QString::number(idx+1)+
+                " / "+
+                QString::number(taskBoxes.size())+
+                '\n';
+        ui->LabelShowInfo->setText(prefix);
+
+        wind()->turnToPage(1);
+        wind()->preprocessImage(curTask->rawImgPath());
+        wind()->kernelSetType();
+        wind()->kernelSetImg();
+        wind()->turnToPage(4);
+
+        ui->LabelShowInfo->setText(prefix+tr("正在转化为地图画"));
+        wind()->on_Convert_clicked();
+
+        if(TaskBox::taskType!=TaskType::Data) {
+            wind()->turnToPage(5);
+            ui->LabelShowInfo->setText(prefix+tr("正在构建三维结构"));
+            wind()->on_Build4Lite_clicked();
+            ui->LabelShowInfo->setText(prefix+tr("正在导出三维结构"));
+            wind()->onExportLiteclicked(curTask->liteName());
+        }
+        else {
+            wind()->turnToPage(7);
+            ui->LabelShowInfo->setText(prefix+tr("正在导出地图文件"));
+            wind()->ui->InputDataIndex->setText(QString::number(curTask->begSeqNum()));
+            wind()->onExportDataclicked(ui->setDataFolder->text());
+            //export as data
+        }
+
+    }
+    eraseAllTasks();
+
+    ui->LabelShowInfo->setText(tr("批量处理完成"));
+    wind()->turnToPage(8);
+    qDebug("finished");
+    MainWindow::isBatchOperating=false;
+}

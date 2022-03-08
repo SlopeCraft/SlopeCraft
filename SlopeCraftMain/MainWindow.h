@@ -105,6 +105,7 @@ public:
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+    friend class BatchUi;
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -163,8 +164,6 @@ private slots:
     void turnToPage6();
     void turnToPage7();
     void turnToPage8();
-
-    void onActionSetBuildParameterTriggered();
 
     //for Page0
     void on_StartWithSlope_clicked();
@@ -239,6 +238,8 @@ private:
     static const ushort BLCheaper[64];
     static const ushort BLBetter[64];
     static const ushort BLGlowing[64];
+
+    static bool isBatchOperating;
 
     tpS Strategy;
 

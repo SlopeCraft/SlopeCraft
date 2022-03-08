@@ -22,11 +22,11 @@ This file is part of SlopeCraft.
 
 #include "lossyCompressor.h"
 
-#define OptimT_NO_OUTPUT
-#define OptimT_DO_PARALLELIZE
-#include <OptimTemplates/Genetic>
+#define Heu_NO_OUTPUT
+#define Heu_USE_THREADS
+#include <HeuristicFlow/Genetic>
 
-OptimT_MAKE_GLOBAL
+Heu_MAKE_GLOBAL
 
 const uchar mutateMap[3][2]={{1,2},{0,2},{0,1}};
 const double initializeNonZeroRatio=0.05;
@@ -39,10 +39,11 @@ const double mutateProb=0.01;
 const uint reportRate=50;
 
 class solver_t
-    : public OptimT::SOGA<
+    : public Heu::SOGA<
         Eigen::ArrayX<uchar>,
-        OptimT::FitnessOption::FITNESS_GREATER_BETTER,
-        OptimT::RecordOption::DONT_RECORD_FITNESS,
+        Heu::FitnessOption::FITNESS_GREATER_BETTER,
+        Heu::RecordOption::DONT_RECORD_FITNESS,
+        std::tuple<
         size_t,  //dim
         const TokiColor **,  // src
         bool,    //  allowNaturalCompress
@@ -50,21 +51,24 @@ class solver_t
         const LossyCompressor * ,   //  ptr
         std::clock_t    //  prevClock
         >
+        >
 {
 public:
-    using Base_t = OptimT::SOGA<
+    using Base_t = Heu::SOGA<
     Eigen::ArrayX<uchar>,
-    OptimT::FitnessOption::FITNESS_GREATER_BETTER,
-    OptimT::RecordOption::DONT_RECORD_FITNESS,
+    Heu::FitnessOption::FITNESS_GREATER_BETTER,
+    Heu::RecordOption::DONT_RECORD_FITNESS,
+    std::tuple<
     size_t,  //dim
     const TokiColor **,  // src
     bool,    //  allowNaturalCompress
     size_t,  //  maxHeight
     const LossyCompressor * ,   //  ptr
     std::clock_t    //  prevClock
+    >
     >;
 
-    OptimT_MAKE_GABASE_TYPES
+    Heu_MAKE_GABASE_TYPES
 
     static const size_t idx_Dim=0;
     static const size_t idx_Src=1;
@@ -77,7 +81,7 @@ public:
     static void iFun(Var_t * v,const ArgsType * arg) {
         v->setZero(std::get<idx_Dim>(*arg));
         for(auto & i : *v) {
-            if(OptimT::randD()<=initializeNonZeroRatio) {
+            if(Heu::randD()<=initializeNonZeroRatio) {
                 i=1+std::rand()%2;
             }
         }
@@ -101,7 +105,7 @@ public:
     static void cFun(const Var_t * p1,const Var_t * p2,
                      Var_t * c1,Var_t * c2,const ArgsType * arg) {
        const size_t dim=std::get<idx_Dim>(*arg);
-       const size_t idx=OptimT::randD(0,dim);
+       const size_t idx=Heu::randD(0,dim);
        c1->resize(dim,1);
        c2->resize(dim,1);
        c1->segment(0,idx)=((std::rand()%2)?p1:p2)->segment(0,idx);
@@ -111,26 +115,23 @@ public:
     }
 
     static void mFun(Var_t * v,const ArgsType*) {
-        const size_t idx=OptimT::randD(0,v->size());
+        const size_t idx=Heu::randD(0,v->size());
         v->operator[](idx)=mutateMap[v->operator[](idx)][std::rand()%2];
     }
 
-    static void ooFun(ArgsType* arg,
-                      std::list<typename Base_t::Gene>*,
-                      size_t generation,
-                      size_t,
-                      const OptimT::GAOption*) {
-        if(generation%reportRate==0) {
-            std::clock_t & prevClock=std::get<idx_prevClock>(*arg);
+    void customOptAfterEachGeneration() {
+        if(this->generation()%reportRate==0) {
+            std::clock_t & prevClock=std::get<idx_prevClock>(this->_args);
             std::clock_t curClock=std::clock();
             if(curClock-prevClock>=CLOCKS_PER_SEC/2) {
                 prevClock=curClock;
-                (*std::get<idx_CompressorPtr>(*arg)->
-                        progressRangeSetPtr)(*(std::get<idx_CompressorPtr>(*arg)->windPtr),
-                                             0,LossyCompressor::maxGeneration,generation);
+                (*std::get<idx_CompressorPtr>(this->_args)->
+                        progressRangeSetPtr)(*(std::get<idx_CompressorPtr>(this->_args)->windPtr),
+                                             0,LossyCompressor::maxGeneration,this->generation());
             }
         }
     }
+
 
 };
 
@@ -157,7 +158,7 @@ void LossyCompressor::setSource(const Eigen::ArrayXi & _base,
 
 void LossyCompressor::runGenetic(ushort maxHeight,bool allowNaturalCompress) {
     {
-        static OptimT::GAOption opt;
+        static Heu::GAOption opt;
         opt.crossoverProb=crossoverProb;
         opt.maxFailTimes=maxFailTimes;
         opt.maxGenerations=maxGeneration;
@@ -171,9 +172,13 @@ void LossyCompressor::runGenetic(ushort maxHeight,bool allowNaturalCompress) {
         std::get<solver_t::idx_CompressorPtr>(args)=this;
         std::get<solver_t::idx_prevClock>(args)=std::clock();
 
-
-        solver->initialize(solver_t::iFun,solver_t::fFun,solver_t::cFun,solver_t::mFun,
-                           solver_t::ooFun,opt,args);
+        solver->setiFun(solver_t::iFun);
+        solver->setfFun(solver_t::fFun);
+        solver->setcFun(solver_t::cFun);
+        solver->setmFun(solver_t::mFun);
+        solver->setOption(opt);
+        solver->setArgs(args);
+        solver->initializePop();
     }
 
     solver->run();

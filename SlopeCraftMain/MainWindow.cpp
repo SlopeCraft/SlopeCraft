@@ -32,6 +32,8 @@ const ushort MainWindow::BLGlowing[64]={0,1,2,0,0,2,4,2,0,0,3,2,0,0,2,0,0,0,0,0,
 
 const QString MainWindow::selfVersion=SlopeCraft::Kernel::getSCLVersion();
 
+bool MainWindow::isBatchOperating=false;
+
 //using namespace SlopeCraft;
 
 MainWindow::MainWindow(QWidget *parent)
@@ -104,7 +106,7 @@ MainWindow::MainWindow(QWidget *parent)
         connect(ui->actionTestBlockList,&QAction::triggered,
                 this,&MainWindow::testBlockList);
         connect(ui->actionSetBuildParameters,&QAction::triggered,
-                this,&MainWindow::onActionSetBuildParameterTriggered);
+                this,&MainWindow::turnToPage5);
 
 
     qDebug("成功connect所有的菜单");
@@ -643,14 +645,10 @@ tpS::~tpS() {
 }
 #endif
 
-void MainWindow::onActionSetBuildParameterTriggered() {
-    turnToPage5();
-}
-
 void MainWindow::turnToPage(int page)
 {
     page%=9;
-    QString newtitle="SlopeCraft v3.6.1 Copyright © 2021-2022 TokiNoBug    ";
+    QString newtitle="SlopeCraft v3.7.0 Copyright © 2021-2022 TokiNoBug    ";
     switch (page)
     {
         case 0:
@@ -891,9 +889,7 @@ void MainWindow::on_ImportPic_clicked() {
         if(Path.isEmpty()) {
             return;
         }
-
         preprocessImage(Path);
-
         return;
     }
     else {
@@ -1134,11 +1130,13 @@ void MainWindow::kernelSetType() {
     const uint8_t * allowedMap;
     int colorN=0;
     SlopeCraft::Kernel::getColorMapPtrs(nullptr,&allowedMap,&colorN);
+    /*
     std::cout<<"\n\nAllowedMap=";
     for(int i=0;i<colorN;i++) {
         std::cout<<int(allowedMap[i])<<" , ";
     }
     std::cout<<std::endl<<std::endl;
+    */
     updateEnables();
 
     //TokiTask::canExportLite=kernel->isVanilla();
@@ -1344,7 +1342,8 @@ void MainWindow::on_Build4Lite_clicked() {
                 "  × Z:"+std::to_string(size3D[2])));
     proTracker=nullptr;
     updateEnables();
-    showPreview();
+    if(!isBatchOperating)
+        showPreview();
 }
 
 void MainWindow::on_ManualPreview_clicked() {

@@ -35,6 +35,12 @@ namespace Ui {
 class BatchUi;
 }
 
+class MainWindow;
+
+namespace SlopeCraft {
+class Kernel;
+}
+
 class BatchUi : public QMainWindow
 {
     Q_OBJECT
@@ -61,11 +67,16 @@ private slots:
 
     void checkExecutable();
 
+    void eraseAllTasks();
+
 private:
     Ui::BatchUi *ui;
     std::vector<TaskBox*> taskBoxes;
     BatchUi ** self;
-auto ptr2It(TaskBox * widgetPtr) const;
+    auto ptr2It(TaskBox * widgetPtr) const;
+
+    MainWindow * wind() const;
+    SlopeCraft::Kernel * kernel() const;
 };
 
 #endif // BATCHUI_H
