@@ -56,8 +56,6 @@ public:
 
     void getTokiBlockList(std::vector<const TokiBlock*> & ) const;
 
-    const TokiBlock * selectedBlock() const;
-
 static uchar mcVer;
 
 signals:

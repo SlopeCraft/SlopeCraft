@@ -63,6 +63,7 @@ public:
     void getBlockPtrs(const SlopeCraft::AbstractBlock **,uint8_t*) const;
 
     bool savePreset(const QString & path) const;
+    bool loadPreset(const QString & path);
 
 public slots:
 

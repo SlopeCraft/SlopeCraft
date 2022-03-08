@@ -197,6 +197,8 @@ MainWindow::MainWindow(QWidget *parent)
             ui->progressAbout,&QPushButton::clicked);
     connect(ui->actionSavePreset,&QAction::triggered,
             this,&MainWindow::onActionSavePreset);
+    connect(ui->actionLoadPreset,&QAction::triggered,
+            this,&MainWindow::onActionLoadPreset);
 
     turnToPage(0);
 
@@ -1950,8 +1952,14 @@ void MainWindow::onActionSavePreset() {
     QString dst=QFileDialog::getSaveFileName(this,tr("保存预设"),"","*.scPreset.json");
     if(dst.isEmpty())
         return;
-    bool success=Manager->savePreset(dst);
-    qDebug()<<(success?"success":"failed");
+    Manager->savePreset(dst);
+}
+
+void MainWindow::onActionLoadPreset() {
+    QString src=QFileDialog::getOpenFileName(this,tr("选择预设文件"),"","*.scPreset.json");
+    if(src.isEmpty())
+        return;
+    Manager->loadPreset(src);
 }
 
 void MainWindow::on_FirstConcrete_clicked() {

@@ -240,11 +240,13 @@ bool BlockListManager::savePreset(const QString & path) const {
 
     QJsonArray ja;
     QJsonObject jo;
+    jo.insert("enabled",true);
     jo.insert("baseColor",QJsonValue(0));
     jo.insert("blockId","minecraft:air");
     for(uint8_t baseC=0;baseC<tbcs.size();baseC++) {
+        jo["enabled"]=tbcs[baseC]->isEnabled;
         jo["baseColor"]=baseC;
-        jo["blockId"]=tbcs[baseC]->selectedBlock()->getSimpleBlock()->getId();
+        jo["blockId"]=tbcs[baseC]->getTokiBlock()->getSimpleBlock()->getId();
         ja.push_back(jo);
     }
 
@@ -256,6 +258,68 @@ bool BlockListManager::savePreset(const QString & path) const {
     }
     dst.write(jd.toJson());
     dst.close();
+
+    return true;
+}
+
+bool BlockListManager::loadPreset(const QString &path) {
+    if(!QFile(path).exists()) {
+        return false;
+    }
+
+
+    QJsonDocument jd;
+    {
+        QFile f(path);
+        f.open(QFile::OpenModeFlag::ReadOnly);
+        QByteArray qba=f.readAll();
+        f.close();
+        QJsonParseError pe;
+        jd=QJsonDocument::fromJson(qba,&pe);
+        if(pe.error!=QJsonParseError::ParseError::NoError) {
+            QMessageBox::information(nullptr,
+                                     tr("预设文件格式错误"),
+                                     tr("解析预设文件时遇到json格式错误：")+
+                                     '\n'+
+                                     pe.errorString()+" , "+
+                                     "offset="+QString::number(pe.offset));
+            return false;
+        }
+    }
+
+
+    QJsonArray ja=jd.array();
+    std::vector<const TokiBlock * >tbs;
+    for(int idx=0;idx<ja.size();idx++) {
+        bool enabled=ja.at(idx)["enabled"].toBool();
+        uint8_t baseC=ja.at(idx)["baseColor"].toInt();
+        std::string id=ja.at(idx)["blockId"].toString().toStdString();
+        if(baseC>=tbcs.size())
+            continue;
+
+
+        if(baseC!=0) {
+            tbcs[baseC]->checkBox->setChecked(enabled);
+            emit tbcs[baseC]->checkBox->toggled(enabled);
+        }
+        tbcs[baseC]->getTokiBlockList(tbs);
+        uint16_t match=-1;
+        for(uint16_t i=0;i<tbs.size();i++) {
+            if(std::string(tbs[i]->getSimpleBlock()->getId())==id) {
+                match=i;
+                break;
+            }
+        }
+        if(match==uint16_t(-1)) {
+            QMessageBox::information(nullptr,tr("预设文件中包含未知方块"),
+                                     tr("预设文件中基色")
+                                     +QString::number(baseC)+tr("对应的方块id")
+                                     +QString::fromStdString(id)+tr("在方块列表中不存在")+'\n'
+                                     +tr("将为这个启用默认选项"));
+            match=0;
+        }
+        setSelected(baseC,match);
+    }
 
     return true;
 }

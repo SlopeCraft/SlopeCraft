@@ -188,7 +188,3 @@ void TokiBaseColor::getTokiBlockList(std::vector<const TokiBlock*> & dest) const
         dest.emplace_back(it);
     }
 }
-
-const TokiBlock * TokiBaseColor::selectedBlock() const {
-    return tbs[selected];
-}
