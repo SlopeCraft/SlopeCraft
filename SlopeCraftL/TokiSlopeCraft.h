@@ -66,7 +66,6 @@ namespace NBT {
 };
 
 #ifdef SLOPECRAFTL_CAPI
-namespace SlopeCraft {
 struct Kernel
 {
 public:
@@ -201,7 +200,6 @@ protected:
     void operator delete(void*) {}
 
 };
-}
 #endif  //  #ifndef SLOPECRAFTL_CAPI
 
 class TokiSlopeCraft : public Kernel
@@ -303,7 +301,11 @@ public:
     const Eigen::Tensor<uchar,3> & getBuild() const;
 
 private:
+#ifdef SLOPECRAFTL_CAPI
+    friend struct Kernel;
+#else
     friend class Kernel;
+#endif  //  #ifdef SLOPECRAFTL_CAPI
     //friend void * allowedRGB();
     //friend void * allowedMap();
     enum ColorSpace {

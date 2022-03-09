@@ -51,7 +51,7 @@ void RGB2XYZ(float R, float G, float B, float &X, float &Y, float &Z);
 void XYZ2Lab(float X, float Y, float Z, float &L, float &a, float &b);
 void Lab2XYZ(float L,float a,float b,float&X,float&Y,float&Z);
 
-float Lab00(float,float,float,float,float,float);
+float Lab00_diff(float,float,float,float,float,float);
 
 float squeeze01(float);
 ARGB RGB2ARGB(float,float,float);

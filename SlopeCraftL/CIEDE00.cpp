@@ -33,7 +33,7 @@ inline float square(float x) {
     return x*x;
 }
 
-float Lab00( float L1, float a1, float b1, float L2, float a2, float b2) {
+float Lab00_diff( float L1, float a1, float b1, float L2, float a2, float b2) {
     float C1sab=std::sqrt(a1*a1+b1*b1);
     float C2sab=std::sqrt(a2*a2+b2*b2);
     float mCsab=(C1sab+C2sab)/2;

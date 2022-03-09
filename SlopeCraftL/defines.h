@@ -32,6 +32,10 @@ This file is part of SlopeCraft.
 #define M_PI		3.14159265358979323846
 #endif
 
+namespace SlopeCraft {
+
+}
+
 using ARGB = uint32_t;
 using EImage = Eigen::Array<ARGB,Eigen::Dynamic,Eigen::Dynamic>;
 using MapList = Eigen::Array<uint8_t,Eigen::Dynamic,1,Eigen::ColMajor,256>;

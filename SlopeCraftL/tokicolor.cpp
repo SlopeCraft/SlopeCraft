@@ -516,7 +516,7 @@ unsigned char TokiColor::applyLab_new() {
     TempVectorXf Diff(allow.rows());
 
     for(short i=0;i<allow.rows();i++) {
-        Diff(i)=Lab00(L1s,a1s,b1s,allow(i,0),allow(i,1),allow(i,2));
+        Diff(i)=Lab00_diff(L1s,a1s,b1s,allow(i,0),allow(i,1),allow(i,2));
     }
 
     /*

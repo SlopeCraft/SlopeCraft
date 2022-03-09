@@ -33,7 +33,6 @@ typedef unsigned char uchar ;
 
 typedef std::vector<std::string> stringList;
 
-namespace SlopeCraft {
 #ifdef SLOPECRAFTL_CAPI
 struct AbstractBlock
 {
@@ -85,7 +84,8 @@ public:
     virtual void destroy()=0;
 };
 #endif  //  ifndef SLOPECRAFT_CAPI
-}
+
+
 
 class simpleBlock : public AbstractBlock
 {
