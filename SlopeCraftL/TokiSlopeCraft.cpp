@@ -41,7 +41,7 @@ void matchColor(uint32_t taskCount,TokiColor** tk,ARGB * argb);
 
 TokiSlopeCraft::TokiSlopeCraft()
 {
-    kernelStep=TokiSlopeCraft::step::nothing;
+    kernelStep=step::nothing;
     rawImage.setZero(0,0);
 
     glassBuilder=new PrimGlassBuilder;
@@ -121,7 +121,7 @@ void TokiSlopeCraft::setReportWorkingStatue(void(*rws)(void*,workStatues)) {
     reportWorkingStatue=rws;
 }
 
-void TokiSlopeCraft::decreaseStep(TokiSlopeCraft::step _step) {
+void TokiSlopeCraft::decreaseStep(step _step) {
     if(kernelStep<=_step)return;
     kernelStep=_step;
 }
@@ -384,7 +384,7 @@ std::string TokiSlopeCraft::makeTests(const AbstractBlock ** src,
     return fileName;
 }
 
-TokiSlopeCraft::step TokiSlopeCraft::queryStep() const {
+step TokiSlopeCraft::queryStep() const {
     return kernelStep;
 }
 
@@ -934,7 +934,7 @@ TokiSlopeCraft::ColorSpace TokiSlopeCraft::getColorSpace() const {
         return H;
     case Lab94:
         return L;
-    case Lab00:
+    case convertAlgo::Lab00:
         return L;
     case XYZ:
         return X;
