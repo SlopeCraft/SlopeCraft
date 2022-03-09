@@ -14,3 +14,4 @@ AiCvterInterface/AiCvterInterface.7z
 AiCvterInterface/AiConverterInterface.h
 AiCvterInterface/AiCvterLib_global.h
 *.a
+*.dll

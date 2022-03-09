@@ -28,7 +28,7 @@ using namespace SlopeCraft;
 #ifdef SLOPECRAFTL_CAPI
 extern "C" {
 AbstractBlock * SCL_EXPORT SCL_createBlock() {
-    return new simpleBlock;
+    return AbstractBlock::create();
 }
 
 unsigned long long SCL_EXPORT SCL_blockSize(const AbstractBlock * t) {
