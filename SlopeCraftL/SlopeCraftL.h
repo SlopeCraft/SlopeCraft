@@ -27,6 +27,7 @@ This file is part of SlopeCraft.
 #include "SlopeCraftL_global.h"
 #define SCL_EXPORT SLOPECRAFTL_EXPORT
 
+//#define SLOPECRAFTL_CAPI
 
 namespace SlopeCraft {
 #ifdef SLOPECRAFTL_CAPI

@@ -275,8 +275,8 @@ private:
     static void progressAdd(void*,int deltaVal);
     static void keepAwake(void*);
 
-    static void showError(void*,SlopeCraft::Kernel::errorFlag);
-    static void showWorkingStatue(void*,SlopeCraft::Kernel::workStatues);
+    static void showError(void*,SlopeCraft::errorFlag);
+    static void showWorkingStatue(void*,SlopeCraft::workStatues);
 
     static void algoProgressRangeSet(void*,int min,int max,int val);
     static void algoProgressAdd(void*,int deltaVal);

@@ -24,7 +24,7 @@ QMAKE_TARGET_PRODUCT = SlopeCraftL
 
 QMAKE_TARGET_INTERNALNAME = SlopeCraftL
 
-QMAKE_CXXFLAGS += -fopenmp -std=c++2a
+QMAKE_CXXFLAGS += -fopenmp
 
 LIBS += -fopenmp
 
@@ -38,8 +38,6 @@ LIBS += D:\Git\build-SlopeCraft-Desktop_Qt_6_1_0_MinGW_64_bit-Release\SlopeCraft
 #Comment following lines if you compile without AiConverter
 #LIBS += D:\Git\build-SlopeCraft-Desktop_Qt_6_2_1_MinGW_64_bit-Release\SlopeCraftL\release\AiCvterLib.dll
 #DEFINES += SLOPECRAFTL_WITH_AICVETR
-
-DEFINES += SLOPECRAFTL_CAPI
 
 SOURCES += \
     CIEDE00.cpp \
