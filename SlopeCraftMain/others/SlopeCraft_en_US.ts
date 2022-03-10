@@ -6,37 +6,37 @@
     <message>
         <location filename="AiCvterParameterDialog.ui" line="14"/>
         <source>Ai转化器参数</source>
-        <translation type="unfinished"></translation>
+        <translation>Set AiConverter parameters</translation>
     </message>
     <message>
         <location filename="AiCvterParameterDialog.ui" line="20"/>
         <source>允许提前收敛</source>
-        <translation type="unfinished"></translation>
+        <translation>Enable fail times</translation>
     </message>
     <message>
         <location filename="AiCvterParameterDialog.ui" line="30"/>
         <source>最大提前收敛代数：</source>
-        <translation type="unfinished"></translation>
+        <translation>Max fail times : </translation>
     </message>
     <message>
         <location filename="AiCvterParameterDialog.ui" line="46"/>
         <source>交叉概率：</source>
-        <translation type="unfinished"></translation>
+        <translation>Crossover prob : </translation>
     </message>
     <message>
         <location filename="AiCvterParameterDialog.ui" line="74"/>
         <source>种群数量：</source>
-        <translation type="unfinished"></translation>
+        <translation>Population size : </translation>
     </message>
     <message>
         <location filename="AiCvterParameterDialog.ui" line="99"/>
         <source>最大进化代数：</source>
-        <translation type="unfinished"></translation>
+        <translation>Max generation : </translation>
     </message>
     <message>
         <location filename="AiCvterParameterDialog.ui" line="118"/>
         <source>变异概率：</source>
-        <translation type="unfinished"></translation>
+        <translation>Mutation prob : </translation>
     </message>
 </context>
 <context>
@@ -48,7 +48,7 @@
     <message>
         <location filename="BatchUi.ui" line="20"/>
         <source>SlopeCraft批量操作</source>
-        <translation type="unfinished"></translation>
+        <translation>SlopeCraft batch operation</translation>
     </message>
     <message>
         <location filename="BatchUi.ui" line="80"/>
@@ -58,32 +58,32 @@
     <message>
         <location filename="BatchUi.ui" line="89"/>
         <source>导出格式</source>
-        <translation type="unfinished"></translation>
+        <translation>Export format</translation>
     </message>
     <message>
         <location filename="BatchUi.ui" line="102"/>
         <source>Litematica投影文件</source>
-        <translation type="unfinished"></translation>
+        <translation>Litematica</translation>
     </message>
     <message>
         <location filename="BatchUi.ui" line="118"/>
         <source>原版结构方块文件</source>
-        <translation type="unfinished"></translation>
+        <translation>Vanilla structure</translation>
     </message>
     <message>
         <location filename="BatchUi.ui" line="131"/>
         <source>地图文件</source>
-        <translation type="unfinished">Map data files</translation>
+        <translation>Map data files</translation>
     </message>
     <message>
         <location filename="BatchUi.ui" line="142"/>
         <source>地图文件输出位置</source>
-        <translation type="unfinished"></translation>
+        <translation>Map data files directory</translation>
     </message>
     <message>
         <location filename="BatchUi.ui" line="162"/>
         <source>浏览</source>
-        <translation type="unfinished">Browse</translation>
+        <translation>Browse</translation>
     </message>
     <message>
         <source>添加任务</source>
@@ -112,52 +112,52 @@
     <message>
         <location filename="../BatchUi.cpp" line="139"/>
         <source>选择输出文件夹</source>
-        <translation type="unfinished"></translation>
+        <translation>Select a directory</translation>
     </message>
     <message>
         <location filename="../BatchUi.cpp" line="162"/>
         <source>目标文件夹不可用</source>
-        <translation type="unfinished"></translation>
+        <translation>Invalid directory</translation>
     </message>
     <message>
         <location filename="../BatchUi.cpp" line="168"/>
         <source>主窗体中选择了纯文件地图画，冲突</source>
-        <translation type="unfinished"></translation>
+        <translation>Confilction : you assigned file-only maps in main window</translation>
     </message>
     <message>
         <location filename="../BatchUi.cpp" line="173"/>
         <source>就绪</source>
-        <translation type="unfinished"></translation>
+        <translation>Ready</translation>
     </message>
     <message>
         <location filename="../BatchUi.cpp" line="193"/>
         <source>批量处理中：</source>
-        <translation type="unfinished"></translation>
+        <translation>Batch operation working ......</translation>
     </message>
     <message>
         <location filename="../BatchUi.cpp" line="206"/>
         <source>正在转化为地图画</source>
-        <translation type="unfinished"></translation>
+        <translation>Converting image to map</translation>
     </message>
     <message>
         <location filename="../BatchUi.cpp" line="211"/>
         <source>正在构建三维结构</source>
-        <translation type="unfinished">Building 3D structure</translation>
+        <translation>Building 3D structure</translation>
     </message>
     <message>
         <location filename="../BatchUi.cpp" line="213"/>
         <source>正在导出三维结构</source>
-        <translation type="unfinished"></translation>
+        <translation>Exporting 3D structure</translation>
     </message>
     <message>
         <location filename="../BatchUi.cpp" line="218"/>
         <source>正在导出地图文件</source>
-        <translation type="unfinished"></translation>
+        <translation>Exporting map data files</translation>
     </message>
     <message>
         <location filename="../BatchUi.cpp" line="227"/>
         <source>批量处理完成</source>
-        <translation type="unfinished"></translation>
+        <translation>All tasks finished</translation>
     </message>
 </context>
 <context>
@@ -165,37 +165,37 @@
     <message>
         <location filename="../../BlockListManager/BlockListManager.cpp" line="281"/>
         <source>预设文件格式错误</source>
-        <translation type="unfinished"></translation>
+        <translation>Syntax error in your preset file</translation>
     </message>
     <message>
         <location filename="../../BlockListManager/BlockListManager.cpp" line="282"/>
         <source>解析预设文件时遇到json格式错误：</source>
-        <translation type="unfinished"></translation>
+        <translation>A json format error occurred when parsing preset files:</translation>
     </message>
     <message>
         <location filename="../../BlockListManager/BlockListManager.cpp" line="314"/>
         <source>预设文件中包含未知方块</source>
-        <translation type="unfinished"></translation>
+        <translation>Unknown block in preset</translation>
     </message>
     <message>
         <location filename="../../BlockListManager/BlockListManager.cpp" line="315"/>
         <source>预设文件中基色</source>
-        <translation type="unfinished"></translation>
+        <translation>In your preset, base color </translation>
     </message>
     <message>
         <location filename="../../BlockListManager/BlockListManager.cpp" line="316"/>
         <source>对应的方块id</source>
-        <translation type="unfinished"></translation>
+        <translation> &apos;s corresponding block id </translation>
     </message>
     <message>
         <location filename="../../BlockListManager/BlockListManager.cpp" line="317"/>
         <source>在方块列表中不存在</source>
-        <translation type="unfinished"></translation>
+        <translation> doesn&apos;t exist in the block palette.</translation>
     </message>
     <message>
         <location filename="../../BlockListManager/BlockListManager.cpp" line="318"/>
         <source>将为这个启用默认选项</source>
-        <translation type="unfinished"></translation>
+        <translation>Default block will be selected for this base color.</translation>
     </message>
 </context>
 <context>
@@ -360,7 +360,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="mainwindow.ui" line="1409"/>
         <source>1.18</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1479"/>
@@ -464,7 +464,7 @@ map files</translation>
     <message>
         <location filename="mainwindow.ui" line="2320"/>
         <source>AiCvter</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="2336"/>
@@ -650,12 +650,12 @@ sequence number</translation>
     <message>
         <location filename="mainwindow.ui" line="3572"/>
         <source>批量操作</source>
-        <translation type="unfinished"></translation>
+        <translation>Batch operation</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="3578"/>
         <source>方块列表预设</source>
-        <translation type="unfinished"></translation>
+        <translation>Blocklist preset</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="3596"/>
@@ -702,23 +702,23 @@ sequence number</translation>
     <message>
         <location filename="mainwindow.ui" line="3767"/>
         <source>设置导出参数</source>
-        <translation type="unfinished"></translation>
+        <translation>Set exporting parameters</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="3772"/>
         <location filename="../MainWindow.cpp" line="1970"/>
         <source>保存预设</source>
-        <translation type="unfinished"></translation>
+        <translation>Save preset</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="3777"/>
         <source>加载预设</source>
-        <translation type="unfinished"></translation>
+        <translation>Load preset</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="3782"/>
         <source>Ai转化器参数</source>
-        <translation type="unfinished"></translation>
+        <translation>Ai converter parameters</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="482"/>
@@ -1173,7 +1173,7 @@ Try enabling lossless compression, or increase the maximun allowed height -- don
     <message>
         <location filename="../MainWindow.cpp" line="1977"/>
         <source>选择预设文件</source>
-        <translation type="unfinished"></translation>
+        <translation>Select a preset file</translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="2015"/>
@@ -1380,7 +1380,7 @@ Click No to ignore the error; Click NoToAll will disable auto-update-checking.
     <message>
         <location filename="TaskBox.ui" line="86"/>
         <source>投影/结构文件名</source>
-        <translation type="unfinished"></translation>
+        <translation>Schematic name</translation>
     </message>
     <message>
         <location filename="TaskBox.ui" line="98"/>
@@ -1400,7 +1400,7 @@ Click No to ignore the error; Click NoToAll will disable auto-update-checking.
     <message>
         <location filename="TaskBox.ui" line="138"/>
         <source>FileName</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../TaskBox.cpp" line="44"/>
@@ -1419,7 +1419,7 @@ Click No to ignore the error; Click NoToAll will disable auto-update-checking.
     <message>
         <location filename="../TaskBox.h" line="70"/>
         <source>图片格式损坏</source>
-        <translation type="unfinished"></translation>
+        <translation>Damaged image</translation>
     </message>
 </context>
 <context>
