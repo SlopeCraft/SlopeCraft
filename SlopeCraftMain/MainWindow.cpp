@@ -144,6 +144,8 @@ MainWindow::MainWindow(QWidget *parent)
             this,&MainWindow::onGameVerClicked);
     connect(ui->isGame17,&QRadioButton::toggled,
             this,&MainWindow::onGameVerClicked);
+    connect(ui->isGame18,&QRadioButton::toggled,
+            this,&MainWindow::onGameVerClicked);
 
     connect(ui->isMapCreative,&QRadioButton::toggled,
             this,&MainWindow::onMapTypeClicked);
@@ -1017,6 +1019,9 @@ void MainWindow::onGameVerClicked() {
     }
     if(ui->isGame17->isChecked()) {
         Manager->setVersion(17);
+    }
+    if(ui->isGame18->isChecked()) {
+        Manager->setVersion(18);
     }
     kernel->decreaseStep(SlopeCraft::colorSetReady);
     onBlockListChanged();

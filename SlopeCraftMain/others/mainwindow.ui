@@ -1327,6 +1327,52 @@ font: 11pt &quot;微软雅黑&quot;;
            <string>游戏版本</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_10">
+           <item row="1" column="1">
+            <widget class="QRadioButton" name="isGame15">
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true">1.15</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QRadioButton" name="isGame16">
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true">1.16</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QRadioButton" name="isGame17">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="font">
+              <font/>
+             </property>
+             <property name="text">
+              <string notr="true">1.17</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
            <item row="0" column="1">
             <widget class="QRadioButton" name="isGame13">
              <property name="font">
@@ -1347,21 +1393,6 @@ font: 11pt &quot;微软雅黑&quot;;
              </property>
             </widget>
            </item>
-           <item row="3" column="0">
-            <widget class="QRadioButton" name="isGame16">
-             <property name="font">
-              <font>
-               <pointsize>9</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string notr="true">1.16</string>
-             </property>
-             <property name="checked">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
            <item row="1" column="0">
             <widget class="QRadioButton" name="isGame14">
              <property name="font">
@@ -1372,34 +1403,10 @@ font: 11pt &quot;微软雅黑&quot;;
              </property>
             </widget>
            </item>
-           <item row="1" column="1">
-            <widget class="QRadioButton" name="isGame15">
-             <property name="font">
-              <font>
-               <pointsize>9</pointsize>
-              </font>
-             </property>
+           <item row="4" column="0">
+            <widget class="QRadioButton" name="isGame18">
              <property name="text">
-              <string notr="true">1.15</string>
-             </property>
-             <property name="checked">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QRadioButton" name="isGame17">
-             <property name="enabled">
-              <bool>true</bool>
-             </property>
-             <property name="font">
-              <font/>
-             </property>
-             <property name="text">
-              <string notr="true">1.17</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
+              <string>1.18</string>
              </property>
             </widget>
            </item>
@@ -1801,8 +1808,8 @@ font: 11pt &quot;微软雅黑&quot;;
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>562</width>
-               <height>382</height>
+               <width>82</width>
+               <height>22</height>
               </rect>
              </property>
              <property name="sizePolicy">
@@ -3772,7 +3779,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionAiCvterOption">
    <property name="text">
-    <string>Ai调色算法参数</string>
+    <string>Ai转化器参数</string>
    </property>
   </action>
  </widget>

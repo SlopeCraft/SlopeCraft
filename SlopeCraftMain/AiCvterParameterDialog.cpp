@@ -70,7 +70,7 @@ void AiCvterParameterDialog::on_buttonBox_accepted() {
 }
 
 
-void AiCvterParameterDialog::on_buttonBox_clicked(QAbstractButton *button) {
+void AiCvterParameterDialog::on_buttonBox_clicked(QAbstractButton *) {
     deleteLater();
 }
 

@@ -348,22 +348,25 @@ std::string TokiSlopeCraft::makeTests(const AbstractBlock ** src,
                 switch (mcVer)
                 {
                 case MC12:
-                    file.writeInt("DataVersion",1343);
+                    file.writeInt("DataVersion",Kernel::mcVersion2VersionNumber(mcVer));
                     break;
                 case MC13:
-                    file.writeInt("DataVersion",1631);
+                    file.writeInt("DataVersion",Kernel::mcVersion2VersionNumber(mcVer));
                     break;
                 case MC14:
-                    file.writeInt("DataVersion",1976);
+                    file.writeInt("DataVersion",Kernel::mcVersion2VersionNumber(mcVer));
                     break;
                 case MC15:
-                    file.writeInt("DataVersion",2230);
+                    file.writeInt("DataVersion",Kernel::mcVersion2VersionNumber(mcVer));
                     break;
                 case MC16:
-                    file.writeInt("DataVersion",2586);
+                    file.writeInt("DataVersion",Kernel::mcVersion2VersionNumber(mcVer));
                     break;
                 case MC17:
-                    file.writeInt("DataVersion",2730);
+                    file.writeInt("DataVersion",Kernel::mcVersion2VersionNumber(mcVer));
+                    break;
+                case MC18:
+                    file.writeInt("DataVersion",Kernel::mcVersion2VersionNumber(mcVer));
                     break;
                 default:
                     std::cerr<<"Wrong game version!\n";
@@ -393,7 +396,7 @@ void TokiSlopeCraft::setAiCvterOpt(const AiCvterOpt * _a) {
 }
 
 const AiCvterOpt * TokiSlopeCraft::aiCvterOpt() const {
-    return & AiOpt;
+    return &AiOpt;
 }
 
 bool TokiSlopeCraft::setType(mapTypes type,
