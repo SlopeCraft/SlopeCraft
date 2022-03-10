@@ -25,8 +25,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>786</width>
-         <height>531</height>
+         <width>780</width>
+         <height>516</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_3">
@@ -74,7 +74,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>17</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuStart">
@@ -97,22 +97,22 @@
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionLoadImage">
    <property name="text">
-    <string>loadImage</string>
+    <string>加载图片</string>
    </property>
   </action>
   <action name="actionResize">
    <property name="text">
-    <string>resize</string>
+    <string>缩放</string>
    </property>
   </action>
   <action name="actionCut">
    <property name="text">
-    <string>cut</string>
+    <string>图片分块</string>
    </property>
   </action>
   <action name="actionSaveImage">
    <property name="text">
-    <string>saveImage</string>
+    <string>保存图片</string>
    </property>
   </action>
  </widget>
