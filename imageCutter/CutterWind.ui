@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>CutterWind</string>
+   <string>图片预处理</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
@@ -79,8 +79,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>780</width>
-         <height>511</height>
+         <width>786</width>
+         <height>521</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_3">
@@ -172,7 +172,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>17</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuStart">
