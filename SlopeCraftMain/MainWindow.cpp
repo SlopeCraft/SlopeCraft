@@ -1089,6 +1089,9 @@ void MainWindow::onAlgoClicked() {
     if(ui->isColorSpaceAi->isChecked())
         now=SlopeCraft::convertAlgo::AiCvter;
 
+    if(lastChoice==SlopeCraft::convertAlgo::AiCvter)
+        kernelSetImg();
+
     if(lastChoice!=now||lastDither!=nowDither)
         kernel->decreaseStep(SlopeCraft::step::convertionReady);
 
