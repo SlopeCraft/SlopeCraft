@@ -69,6 +69,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     batchOperator = nullptr;
     verDialog = nullptr;
+    acpDialog=nullptr;
 
     ui->maxHeight->setValue(255);
 
@@ -199,6 +200,8 @@ MainWindow::MainWindow(QWidget *parent)
             this,&MainWindow::onActionSavePreset);
     connect(ui->actionLoadPreset,&QAction::triggered,
             this,&MainWindow::onActionLoadPreset);
+    connect(ui->actionAiCvterOption,&QAction::triggered,
+            this,&MainWindow::onActionAiCvterParameters);
 
     turnToPage(0);
 
@@ -1960,6 +1963,13 @@ void MainWindow::onActionLoadPreset() {
     if(src.isEmpty())
         return;
     Manager->loadPreset(src);
+}
+
+void MainWindow::onActionAiCvterParameters() {
+    if(acpDialog==nullptr) {
+    acpDialog =new AiCvterParameterDialog(&acpDialog,this);
+    }
+    acpDialog->show();
 }
 
 void MainWindow::on_FirstConcrete_clicked() {

@@ -71,6 +71,7 @@ This file is part of SlopeCraft.
 #include "previewwind.h"
 #include "BlockListManager.h"
 #include "BatchUi.h"
+#include "AiCvterParameterDialog.h"
 
 
 class MainWindow;
@@ -194,6 +195,8 @@ private slots:
     void on_ShowAdjed_clicked();
     void on_ExData_clicked();
 
+    void onActionAiCvterParameters();
+
     //for Page5
     void on_Build4Lite_clicked();
     void on_ManualPreview_clicked();
@@ -232,6 +235,7 @@ private:
     BlockListManager * Manager;
     BatchUi * batchOperator;
     VersionDialog * verDialog;
+    AiCvterParameterDialog * acpDialog;
 
     QImage rawPic;
 
