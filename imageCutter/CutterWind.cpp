@@ -17,16 +17,16 @@ CutterWind::CutterWind(QWidget *parent)
     connect(ui->actionCut,&QAction::triggered,
             this,&CutterWind::cutImg);
 
-    ui->boxAspectRatioMode->addItem("IgnoreAspectRatio",
+    ui->boxAspectRatioMode->addItem(tr("不保持比例"),
                                     Qt::AspectRatioMode::IgnoreAspectRatio);
-    ui->boxAspectRatioMode->addItem("KeepAspectRatio",
+    ui->boxAspectRatioMode->addItem(tr("保持比例缩小"),
                                     Qt::AspectRatioMode::KeepAspectRatio);
-    ui->boxAspectRatioMode->addItem("KeepAspectRatioByExpanding",
+    ui->boxAspectRatioMode->addItem(tr("保持比例扩张"),
                                     Qt::AspectRatioMode::KeepAspectRatioByExpanding);
 
-    ui->boxTransformationMode->addItem("FastTransformation",
+    ui->boxTransformationMode->addItem(tr("快速变换"),
                                        Qt::TransformationMode::FastTransformation);
-    ui->boxTransformationMode->addItem("SmoothTransformation",
+    ui->boxTransformationMode->addItem(tr("平滑变换"),
                                        Qt::TransformationMode::SmoothTransformation);
 
 }

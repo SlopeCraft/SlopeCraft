@@ -67,6 +67,31 @@
         <translation>Save image</translation>
     </message>
     <message>
+        <location filename="CutterWind.cpp" line="20"/>
+        <source>不保持比例</source>
+        <translation>IgnoreAspectRatio</translation>
+    </message>
+    <message>
+        <location filename="CutterWind.cpp" line="22"/>
+        <source>保持比例缩小</source>
+        <translation>KeepAspectRatio</translation>
+    </message>
+    <message>
+        <location filename="CutterWind.cpp" line="24"/>
+        <source>保持比例扩张</source>
+        <translation>KeepAspectRatioByExpanding</translation>
+    </message>
+    <message>
+        <location filename="CutterWind.cpp" line="27"/>
+        <source>快速变换</source>
+        <translation>FastTransformation</translation>
+    </message>
+    <message>
+        <location filename="CutterWind.cpp" line="29"/>
+        <source>平滑变换</source>
+        <translation>SmoothTransformation</translation>
+    </message>
+    <message>
         <location filename="CutterWind.cpp" line="41"/>
         <source>选择图片</source>
         <translation>Select image</translation>
