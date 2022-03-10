@@ -13,9 +13,108 @@
   <property name="windowTitle">
    <string>CutterWind</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
-  <widget class="QMenuBar" name="menubar"/>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="0" column="0">
+     <widget class="QScrollArea" name="scrollArea">
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>786</width>
+         <height>531</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0">
+         <widget class="QLabel" name="imgDisplay">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Plain</enum>
+          </property>
+          <property name="text">
+           <string>请加载图片</string>
+          </property>
+          <property name="textFormat">
+           <enum>Qt::PlainText</enum>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="labelShowSize">
+      <property name="text">
+       <string>图片尺寸（方块）：</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuStart">
+    <property name="title">
+     <string>开始</string>
+    </property>
+    <addaction name="actionLoadImage"/>
+    <addaction name="actionSaveImage"/>
+   </widget>
+   <widget class="QMenu" name="menuChangeImage">
+    <property name="title">
+     <string>图片变换</string>
+    </property>
+    <addaction name="actionResize"/>
+    <addaction name="actionCut"/>
+   </widget>
+   <addaction name="menuStart"/>
+   <addaction name="menuChangeImage"/>
+  </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionLoadImage">
+   <property name="text">
+    <string>loadImage</string>
+   </property>
+  </action>
+  <action name="actionResize">
+   <property name="text">
+    <string>resize</string>
+   </property>
+  </action>
+  <action name="actionCut">
+   <property name="text">
+    <string>cut</string>
+   </property>
+  </action>
+  <action name="actionSaveImage">
+   <property name="text">
+    <string>saveImage</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
