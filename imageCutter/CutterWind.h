@@ -16,12 +16,16 @@ public:
     ~CutterWind();
 private slots:
     void loadImg();
-    void saveImg() const;
+    void saveImg();
+
+    void cutImg();
 
 private:
     void updateImg() const;
     void resizeImg();
     QImage img;
+    QString netRawFileName;
+    QString rawFileSuffix;
     Ui::CutterWind *ui;
 };
 #endif // CUTTERWIND_H

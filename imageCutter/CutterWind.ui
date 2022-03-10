@@ -15,7 +15,61 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
-    <item row="0" column="0">
+    <item row="1" column="3">
+     <widget class="QSpinBox" name="scaledCols">
+      <property name="minimumSize">
+       <size>
+        <width>100</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="suffix">
+       <string>列</string>
+      </property>
+      <property name="minimum">
+       <number>1</number>
+      </property>
+      <property name="maximum">
+       <number>65536</number>
+      </property>
+      <property name="singleStep">
+       <number>32</number>
+      </property>
+      <property name="value">
+       <number>256</number>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>缩放至：</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="labelShowSize">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>150</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>图片尺寸（方块）：</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0" colspan="6">
      <widget class="QScrollArea" name="scrollArea">
       <property name="widgetResizable">
        <bool>true</bool>
@@ -26,7 +80,7 @@
          <x>0</x>
          <y>0</y>
          <width>780</width>
-         <height>516</height>
+         <height>511</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_3">
@@ -59,10 +113,54 @@
       </widget>
      </widget>
     </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="labelShowSize">
-      <property name="text">
-       <string>图片尺寸（方块）：</string>
+    <item row="1" column="5">
+     <widget class="QComboBox" name="boxTransformationMode">
+      <property name="minimumSize">
+       <size>
+        <width>100</width>
+        <height>0</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="4">
+     <widget class="QComboBox" name="boxAspectRatioMode">
+      <property name="minimumSize">
+       <size>
+        <width>100</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="editable">
+       <bool>false</bool>
+      </property>
+      <property name="currentIndex">
+       <number>-1</number>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QSpinBox" name="scaledRows">
+      <property name="minimumSize">
+       <size>
+        <width>100</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="suffix">
+       <string> 行</string>
+      </property>
+      <property name="minimum">
+       <number>1</number>
+      </property>
+      <property name="maximum">
+       <number>65536</number>
+      </property>
+      <property name="singleStep">
+       <number>32</number>
+      </property>
+      <property name="value">
+       <number>256</number>
       </property>
      </widget>
     </item>
