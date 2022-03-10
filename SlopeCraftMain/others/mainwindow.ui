@@ -156,8 +156,8 @@ font: 9pt &quot;微软雅黑&quot;;
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>152</width>
-         <height>675</height>
+         <width>150</width>
+         <height>617</height>
         </rect>
        </property>
        <property name="sizePolicy">
@@ -1801,8 +1801,8 @@ font: 11pt &quot;微软雅黑&quot;;
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>75</width>
-               <height>22</height>
+               <width>562</width>
+               <height>382</height>
               </rect>
              </property>
              <property name="sizePolicy">
@@ -2304,6 +2304,13 @@ font: 11pt &quot;微软雅黑&quot;;
                </property>
                <property name="text">
                 <string notr="true">XYZ</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="isColorSpaceAi">
+               <property name="text">
+                <string>AiCvter</string>
                </property>
               </widget>
              </item>
@@ -3496,7 +3503,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>960</width>
-     <height>22</height>
+     <height>17</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuAbout">

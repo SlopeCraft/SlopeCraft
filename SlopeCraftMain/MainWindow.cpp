@@ -175,6 +175,8 @@ MainWindow::MainWindow(QWidget *parent)
             this,&MainWindow::onAlgoClicked);
     connect(ui->isColorSpaceXYZ,&QRadioButton::clicked,
             this,&MainWindow::onAlgoClicked);
+    connect(ui->isColorSpaceAi,&QRadioButton::clicked,
+            this,&MainWindow::onAlgoClicked);
     connect(ui->AllowDither,&QCheckBox::clicked,
             this,&MainWindow::onAlgoClicked);
 
@@ -1084,6 +1086,9 @@ void MainWindow::onAlgoClicked() {
         now=SlopeCraft::convertAlgo::Lab00;
     if(ui->isColorSpaceXYZ->isChecked())
         now=SlopeCraft::convertAlgo::XYZ;
+    if(ui->isColorSpaceAi->isChecked())
+        now=SlopeCraft::convertAlgo::AiCvter;
+
     if(lastChoice!=now||lastDither!=nowDither)
         kernel->decreaseStep(SlopeCraft::step::convertionReady);
 
@@ -1242,6 +1247,8 @@ if(ui->isColorSpaceLab00->isChecked())
     now=SlopeCraft::convertAlgo::Lab00;
 if(ui->isColorSpaceXYZ->isChecked())
     now=SlopeCraft::convertAlgo::XYZ;
+if(ui->isColorSpaceAi->isChecked())
+    now=SlopeCraft::convertAlgo::AiCvter;
 }
 
 proTracker=ui->ShowProgressABbar;
