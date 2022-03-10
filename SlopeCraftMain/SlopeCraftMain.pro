@@ -38,6 +38,7 @@ SOURCES += \
     ../BlockListManager/BlockListManager.cpp \
     ../BlockListManager/TokiBaseColor.cpp \
     ../BlockListManager/TokiBlock.cpp \
+    AiCvterParameterDialog.cpp \
     BatchUi.cpp \
     TaskBox.cpp \
     VersionDialog.cpp \
@@ -52,6 +53,7 @@ HEADERS += \
     ../BlockListManager/TokiBlock.h \
     ../SlopeCraftL/SlopeCraftL.h \
     ../SlopeCraftL/SlopeCraftL_global.h \
+    AiCvterParameterDialog.h \
     BatchUi.h \
     TaskBox.h \
     VersionDialog.h \
@@ -60,6 +62,7 @@ HEADERS += \
     tpstrategywind.h
 
 FORMS += \
+    AiCvterParameterDialog.ui \
     others/BatchUi.ui \
     others/TaskBox.ui \
     others/VersionDialog.ui \
