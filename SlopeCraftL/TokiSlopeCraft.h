@@ -44,6 +44,8 @@ This file is part of SlopeCraft.
 #include "lossyCompressor.h"
 #include "NBTWriter.h"
 
+#include "AiCvterOpt.h"
+
 #ifdef SLOPECRAFTL_WITH_AICVETR
 #include "AiConverterInterface.h"
 #endif
@@ -96,6 +98,8 @@ public:
                              const char* HSV,
                              const char* Lab,
                              const char* XYZ)=0;
+    virtual void setAiCvterOpt(const AiCvterOpt *)=0;
+    virtual const AiCvterOpt * aiCvterOpt() const=0;
 
 
 //can do in colorSetReady:
@@ -237,6 +241,10 @@ public:
     bool setColorSet(const char*,const char*,const char*,const char*);
     void makeTests(const AbstractBlock **,const unsigned char *,const char *,char*);
     std::string makeTests(const AbstractBlock **,const uint8_t *,const std::string & );
+    void setAiCvterOpt(const AiCvterOpt *);
+    const AiCvterOpt * aiCvterOpt() const;
+
+
 //can do in colorSetReady:
     step queryStep() const;
 
@@ -348,6 +356,7 @@ private:
 #ifdef SLOPECRAFTL_WITH_AICVETR
     AiConverterInterface * AiCvter;
 #endif
+    AiCvterOpt AiOpt;
     Eigen::ArrayXXi mapPic;//stores mapColor
     Eigen::ArrayXXi Base;
     Eigen::ArrayXXi HighMap;

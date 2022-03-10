@@ -3569,6 +3569,7 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionTestBlockList"/>
     <addaction name="menuBatchOp"/>
     <addaction name="menuBlockListPreset"/>
+    <addaction name="actionAiCvterOption"/>
    </widget>
    <addaction name="menu_2"/>
    <addaction name="menuLanguages"/>
@@ -3760,6 +3761,11 @@ p, li { white-space: pre-wrap; }
   <action name="actionLoadPreset">
    <property name="text">
     <string>加载预设</string>
+   </property>
+  </action>
+  <action name="actionAiCvterOption">
+   <property name="text">
+    <string>Ai调色算法参数</string>
    </property>
   </action>
  </widget>

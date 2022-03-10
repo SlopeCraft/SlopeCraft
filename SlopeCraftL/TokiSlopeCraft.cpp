@@ -388,6 +388,14 @@ step TokiSlopeCraft::queryStep() const {
     return kernelStep;
 }
 
+void TokiSlopeCraft::setAiCvterOpt(const AiCvterOpt * _a) {
+    AiOpt=*_a;
+}
+
+const AiCvterOpt * TokiSlopeCraft::aiCvterOpt() const {
+    return & AiOpt;
+}
+
 bool TokiSlopeCraft::setType(mapTypes type,
                              gameVersion ver,
                              const bool * allowedBaseColor,
@@ -617,7 +625,7 @@ bool TokiSlopeCraft::convert(convertAlgo algo,bool dither) {
     if(algo==convertAlgo::AiCvter) {
 #ifdef SLOPECRAFTL_WITH_AICVETR
         convertAlgo algos[6]={RGB,RGB_Better,HSV,Lab94,Lab00,XYZ};
-        const uint8_t * seed[6];
+        std::array<const uint8_t *,6> seed;
         Eigen::ArrayXX<uint8_t> CvtedMap[6];
         for(int a=0;a<6;a++) {
             this->convert(algos[a]);
@@ -625,9 +633,21 @@ bool TokiSlopeCraft::convert(convertAlgo algo,bool dither) {
             this->getConvertedMap(nullptr,nullptr,CvtedMap[a].data());
             seed[a]=CvtedMap[a].data();
         }
-        AiCvter->setSeed(seed,6);
+
+        AiCvter->setCrossoverProb(AiOpt.crossoverProb);
+        AiCvter->setMutatteProb(AiOpt.mutationProb);
+        AiCvter->setMaxGeneration(AiOpt.maxGeneration);
+        AiCvter->setMaxFailTime(AiOpt.maxFailTimes);
+        AiCvter->setPopSize(AiOpt.popSize);
+        AiCvter->setSeed(seed.data(),seed.size());
+
+        AiCvter->run();
+
+        //replace raw image with ai result
+        AiCvter->resultImage(rawImage.data());
+
         algo=convertAlgo::RGB_Better;
-        //run AiCvter here
+
 #else
         algo=convertAlgo::RGB_Better;
 #endif

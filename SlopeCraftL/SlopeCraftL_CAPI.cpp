@@ -25,8 +25,8 @@ This file is part of SlopeCraft.
 #include "TokiSlopeCraft.h"
 using namespace SlopeCraft;
 
-#ifdef SLOPECRAFTL_CAPI
 extern "C" {
+#ifdef SLOPECRAFTL_CAPI
 AbstractBlock * SCL_EXPORT SCL_createBlock() {
     return AbstractBlock::create();
 }
@@ -156,6 +156,15 @@ bool SCL_EXPORT SCL_setColorSet(Kernel * k,
                          const char* Lab,
                             const char* XYZ) {
     k->setColorSet(_RGB,HSV,Lab,XYZ);
+}
+
+
+void SCL_EXPORT SCL_setAiCvterOpt(Kernel * k,const AiCvterOpt * a) {
+    k->setAiCvterOpt(a);
+}
+
+const AiCvterOpt * SCL_EXPORT SCL_getAiCvterOpt(const Kernel * k) {
+    return k->aiCvterOpt();
 }
 
 
@@ -338,7 +347,47 @@ void SCL_EXPORT SCL_setReportWorkingStatue(Kernel * k,void(*p)(void*,workStatues
     k->setReportWorkingStatue(p);
 }
 
+#endif  //  ifdef SLOPECRAFTL_CAPI
+
+AiCvterOpt * SCL_EXPORT SCL_createAiCvterOpt() {
+    return new AiCvterOpt;
+}
+void SCL_EXPORT SCL_destroyAiCvterOpt(AiCvterOpt * a) {
+    delete a;
+}
+
+void SCL_EXPORT SCL_setPopSize(AiCvterOpt * a,unsigned int p) {
+    a->popSize=p;
+}
+void SCL_EXPORT SCL_setMaxGeneration(AiCvterOpt * a,unsigned int p) {
+    a->maxGeneration=p;
+}
+void SCL_EXPORT SCL_setMaxFailTimes(AiCvterOpt * a,unsigned int p) {
+    a->maxFailTimes=p;
+}
+void SCL_EXPORT SCL_setCrossoverProb(AiCvterOpt * a,double p) {
+    a->crossoverProb=p;
+}
+void SCL_EXPORT SCL_setMutationProb(AiCvterOpt * a,double p) {
+    a->mutationProb=p;
+}
+
+unsigned int SCL_EXPORT SCL_getPopSize(const AiCvterOpt * a) {
+    return a->popSize;
+}
+unsigned int SCL_EXPORT SCL_getMaxGeneration(const AiCvterOpt * a) {
+    return a->maxGeneration;
+}
+unsigned int SCL_EXPORT SCL_getMaxFailTimes(const AiCvterOpt * a) {
+    return a->maxFailTimes;
+}
+double SCL_EXPORT SCL_getCrossoverProb(const AiCvterOpt * a){
+    return a->crossoverProb;
+}
+double SCL_EXPORT SCL_getMutationProb(const AiCvterOpt * a){
+    return a->mutationProb;
+}
+
 
 }   //  extern "C"
 
-#endif  //  ifdef SLOPECRAFTL_CAPI

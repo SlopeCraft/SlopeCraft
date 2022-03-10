@@ -11,9 +11,9 @@ INCLUDEPATH += \
 
 RC_LANG = 0x0004
 
-VERSION += 3.6.2.0
+VERSION += 3.7.0.0
 
-QMAKE_TARGET_DESCRIPTION = SlopeCraft Library (without AiConverter)
+QMAKE_TARGET_DESCRIPTION = SlopeCraft Library (with AiConverter)
 #描述信息
 
 QMAKE_TARGET_COPYRIGHT = TokiNoBug
@@ -36,10 +36,11 @@ CONFIG += std::c++20
 LIBS += D:\Git\build-SlopeCraft-Desktop_Qt_6_1_0_MinGW_64_bit-Release\SlopeCraftL\release\libzlibstatic.a
 
 #Comment following lines if you compile without AiConverter
-#LIBS += D:\Git\build-SlopeCraft-Desktop_Qt_6_2_1_MinGW_64_bit-Release\SlopeCraftL\release\AiCvterLib.dll
-#DEFINES += SLOPECRAFTL_WITH_AICVETR
+LIBS += D:\Git\build-SlopeCraft-Desktop_Qt_6_1_0_MinGW_64_bit-Release\SlopeCraftL\release\AiCvterLib.dll
+DEFINES += SLOPECRAFTL_WITH_AICVETR
 
 SOURCES += \
+    AiCvterOpt.cpp \
     CIEDE00.cpp \
     HeightLine.cpp \
     NBTWriter.cpp \
@@ -55,6 +56,7 @@ SOURCES += \
     SlopeCraftL.cpp
 
 HEADERS += \
+    AiCvterOpt.h \
     ColorSet.h \
     HeightLine.h \
     NBTWriter.h \

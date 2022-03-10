@@ -27,7 +27,7 @@ This file is part of SlopeCraft.
 #include "SlopeCraftL_global.h"
 #define SCL_EXPORT SLOPECRAFTL_EXPORT
 
-#define SLOPECRAFTL_CAPI
+//#define SLOPECRAFTL_CAPI
 
 #ifdef SLOPECRAFTL_CAPI
 struct AbstractBlock;
@@ -36,6 +36,15 @@ namespace SlopeCraft{
 class AbstractBlock;
 }
 #endif
+
+#ifdef SLOPECRAFTL_CAPI
+struct AiCvterOpt;
+#else
+namespace SlopeCraft{
+struct AiCvterOpt;
+}
+#endif
+
 
 #ifdef SLOPECRAFTL_CAPI
 #ifdef __has_cpp_attribute
@@ -325,6 +334,8 @@ public:
                              const char* HSV,
                              const char* Lab,
                              const char* XYZ)=0;
+    virtual void setAiCvterOpt(const AiCvterOpt *)=0;
+    virtual const AiCvterOpt * aiCvterOpt() const=0;
 
 
 //can do in colorSetReady:
@@ -460,6 +471,8 @@ extern "C" {
                              const char* HSV,
                              const char* Lab,
                              const char* XYZ);
+    void SCL_EXPORT SCL_setAiCvterOpt(Kernel * k,const AiCvterOpt * a);
+    const AiCvterOpt * SCL_EXPORT SCL_getAiCvterOpt(const Kernel * k);
 
 
 //can do in colorSetReady:
@@ -566,5 +579,31 @@ extern "C" {
 }   //  extern C
 #endif  //  #ifdef __has_cpp_attribute
 #endif  //  #ifdef SLOPECRAFTL_CAPI
+
+extern "C" {
+#ifndef SLOPECRAFTL_CAPI
+namespace SlopeCraft{
+#endif
+
+AiCvterOpt * SCL_EXPORT SCL_createAiCvterOpt();
+void SCL_EXPORT SCL_destroyAiCvterOpt(AiCvterOpt *);
+
+void SCL_EXPORT SCL_setPopSize(AiCvterOpt *,unsigned int p);
+void SCL_EXPORT SCL_setMaxGeneration(AiCvterOpt *,unsigned int p);
+void SCL_EXPORT SCL_setMaxFailTimes(AiCvterOpt *,unsigned int p);
+void SCL_EXPORT SCL_setCrossoverProb(AiCvterOpt *,double p);
+void SCL_EXPORT SCL_setMutationProb(AiCvterOpt *,double p);
+
+unsigned int SCL_EXPORT SCL_getPopSize(const AiCvterOpt *);
+unsigned int SCL_EXPORT SCL_getMaxGeneration(const AiCvterOpt *);
+unsigned int SCL_EXPORT SCL_getMaxFailTimes(const AiCvterOpt *);
+double SCL_EXPORT SCL_getCrossoverProb(const AiCvterOpt *);
+double SCL_EXPORT SCL_getMutationProb(const AiCvterOpt *);
+
+#ifndef SLOPECRAFTL_CAPI
+}   //  namespace SlopeCraft
+#endif
+
+}   //  extern "C"
 
 #endif // KERNEL_H

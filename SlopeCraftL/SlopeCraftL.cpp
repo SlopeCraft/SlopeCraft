@@ -100,3 +100,4 @@ uint64_t Kernel::mcVersion2VersionNumber(gameVersion g) {
         return 1919810;
     }
 }
+
