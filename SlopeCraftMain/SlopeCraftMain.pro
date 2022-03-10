@@ -62,7 +62,7 @@ HEADERS += \
     tpstrategywind.h
 
 FORMS += \
-    AiCvterParameterDialog.ui \
+    others/AiCvterParameterDialog.ui \
     others/BatchUi.ui \
     others/TaskBox.ui \
     others/VersionDialog.ui \
