@@ -158,7 +158,7 @@ void BatchUi::checkExecutable() {
     ui->LabelShowInfo->setText("");
     if(TaskBox::taskType==TaskType::Data) {
         QString dstFolder=ui->setDataFolder->text();
-        if(!QDir(dstFolder).exists()) {
+        if(dstFolder.isEmpty()||!QDir(dstFolder).exists()) {
             ui->LabelShowInfo->setText(tr("目标文件夹不可用"));
             executable=false;
         }
