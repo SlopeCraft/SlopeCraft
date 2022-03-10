@@ -2,6 +2,44 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN">
 <context>
+    <name>BlockListManager</name>
+    <message>
+        <location filename="BlockListManager.cpp" line="281"/>
+        <source>预设文件格式错误</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="BlockListManager.cpp" line="282"/>
+        <source>解析预设文件时遇到json格式错误：</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="BlockListManager.cpp" line="314"/>
+        <source>预设文件中包含未知方块</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="BlockListManager.cpp" line="315"/>
+        <source>预设文件中基色</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="BlockListManager.cpp" line="316"/>
+        <source>对应的方块id</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="BlockListManager.cpp" line="317"/>
+        <source>在方块列表中不存在</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="BlockListManager.cpp" line="318"/>
+        <source>将为这个启用默认选项</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>TokiBlock</name>
     <message>
         <location filename="TokiBlock.cpp" line="60"/>
