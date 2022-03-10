@@ -11,12 +11,12 @@ RC_ICONS = others/SlopeCraft.ico
 
 RC_LANG = 0x0004
 
-VERSION += 3.6.2.0
+VERSION += 3.7.0.0
 
 #QMAKE_TARGET_COMPANY = TokiNoBug
 #公司名称
 
-QMAKE_TARGET_DESCRIPTION = Map Pixel Art Generator
+QMAKE_TARGET_DESCRIPTION = Map Pixel Art Tool
 #描述信息
 
 QMAKE_TARGET_COPYRIGHT = TokiNoBug

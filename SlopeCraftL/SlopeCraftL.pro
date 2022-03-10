@@ -36,7 +36,7 @@ CONFIG += std::c++20
 LIBS += D:\Git\build-SlopeCraft-Desktop_Qt_6_1_0_MinGW_64_bit-Release\SlopeCraftL\release\libzlibstatic.a
 
 #Comment following lines if you compile without AiConverter
-LIBS += D:\Git\build-SlopeCraft-Desktop_Qt_6_1_0_MinGW_64_bit-Release\SlopeCraftL\release\AiCvterLib.dll
+LIBS += D:\Git\build-SlopeCraft-Desktop_Qt_6_1_0_MinGW_64_bit-Release\SlopeCraftL\release\AiCvterLib3.dll
 DEFINES += SLOPECRAFTL_WITH_AICVETR
 
 SOURCES += \
