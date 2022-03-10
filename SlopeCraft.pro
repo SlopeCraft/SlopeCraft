@@ -4,4 +4,5 @@ SUBDIRS += \
     BlockListManager \
     #Kernel \
     SlopeCraftL \
-    SlopeCraftMain
+    SlopeCraftMain \
+    imageCutter
