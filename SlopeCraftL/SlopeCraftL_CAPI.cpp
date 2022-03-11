@@ -155,7 +155,7 @@ bool SCL_EXPORT SCL_setColorSet(Kernel * k,
                          const char* HSV,
                          const char* Lab,
                             const char* XYZ) {
-    k->setColorSet(_RGB,HSV,Lab,XYZ);
+    return k->setColorSet(_RGB,HSV,Lab,XYZ);
 }
 
 
@@ -210,7 +210,7 @@ void SCL_EXPORT SCL_makeTests(Kernel * k,const AbstractBlock **a,
 //can do in convertionReady:
 ///convert original image to map
 bool SCL_EXPORT SCL_convert(Kernel * k,convertAlgo ca,bool dither) {
-    k->convert(ca,dither);
+    return k->convert(ca,dither);
 }
 ///get image rows
 short SCL_EXPORT SCL_getImageRows(const Kernel * k) {
