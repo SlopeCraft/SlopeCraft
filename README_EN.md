@@ -22,6 +22,8 @@
 * [SlopeCraftv3.1 Tutorial](https://github.com/ToKiNoBug/SlopeCraftTutorial/blob/main/v3.1Tutorial/v3.1Tutorial.md)
 * [SlopeCraftv3.1 使用教程](https://github.com/ToKiNoBug/SlopeCraftTutorial/blob/main/v3.1Tutorial/v3.1%E6%95%99%E7%A8%8B%E4%B8%AD%E6%96%87%E7%89%88.md)
 * [SlopeCraft傻瓜级使用教程](https://github.com/ToKiNoBug/SlopeCraftTutorial/blob/main/v3.0Tutorial/%E5%82%BB%E7%93%9C%E7%BA%A7%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B.md)
+* [SlopeCraft v3.6 UserGuide](https://github.com/ToKiNoBug/SlopeCraftTutorial/blob/v3.6/v3.6/v3.6%E6%95%99%E7%A8%8B.tex)
+* [SlopeCraft v3.7 UserGuide](https://github.com/ToKiNoBug/SlopeCraftTutorial/blob/v3.7/en_US/v3.7/v3.7Tutorial.tex)
 
 # FAQ：
 
