@@ -7,7 +7,7 @@ CONFIG -= qt
 INCLUDEPATH += \
                                D:/CppLibs/eigen-3.4.0 \
                                ../AiCvterInterface \
-                               D:\CppLibs\HeuristicFlow-1.3.3
+                               D:\CppLibs\HeuristicFlow-1.4.0
 
 RC_LANG = 0x0004
 

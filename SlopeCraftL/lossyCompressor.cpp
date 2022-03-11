@@ -38,86 +38,64 @@ const double crossoverProb=0.9;
 const double mutateProb=0.01;
 const uint32_t reportRate=50;
 
+using Var_t = Eigen::ArrayX<uint8_t>;
+using args_t = std::tuple<
+size_t,  //dim
+const TokiColor **,  // src
+bool,    //  allowNaturalCompress
+size_t,  //  maxHeight
+const LossyCompressor * ,   //  ptr
+std::clock_t    //  prevClock
+>;
+
+static const size_t idx_Dim=0;
+static const size_t idx_Src=1;
+static const size_t idx_allowNaturalCompress=2;
+static const size_t idx_maxHeight=3;
+static const size_t idx_CompressorPtr=4;
+static const size_t idx_prevClock=5;
+
+void iFun(Var_t * v,const args_t * arg) {
+    v->setZero(std::get<idx_Dim>(*arg));
+    for(auto & i : *v) {
+        if(Heu::randD()<=initializeNonZeroRatio) {
+            i=1+std::rand()%2;
+        }
+    }
+}
+
+void fFun(const Var_t * v,const args_t * arg,double * fitness) {
+    HeightLine HL;
+    const TokiColor ** src=std::get<idx_Src>(*arg);
+    const bool allowNaturalCompress=std::get<idx_allowNaturalCompress>(*arg);
+    float meanColorDiff=HL.make(src,*v,allowNaturalCompress);
+    meanColorDiff/=v->size();
+
+    if(HL.maxHeight()>std::get<idx_maxHeight>(*arg)) {
+        *fitness=double(std::get<idx_maxHeight>(*arg))-double(HL.maxHeight())-1.0;
+    }
+    else {
+        *fitness=100.0/(1e-4f+meanColorDiff);
+    }
+}
+
+void mFun(Var_t * v,const args_t*) {
+    const size_t idx=Heu::randD(0,v->size());
+    v->operator[](idx)=mutateMap[v->operator[](idx)][std::rand()%2];
+}
+
 class solver_t
     : public Heu::SOGA<
         Eigen::ArrayX<uint8_t>,
         Heu::FitnessOption::FITNESS_GREATER_BETTER,
         Heu::RecordOption::DONT_RECORD_FITNESS,
-        std::tuple<
-        size_t,  //dim
-        const TokiColor **,  // src
-        bool,    //  allowNaturalCompress
-        size_t,  //  maxHeight
-        const LossyCompressor * ,   //  ptr
-        std::clock_t    //  prevClock
-        >
+        args_t,
+        iFun,fFun,
+        Heu::GADefaults<Var_t,Heu::DoubleVectorOption::Eigen,args_t>::cFunSwapXs
+        ,mFun
         >
 {
 public:
-    using Base_t = Heu::SOGA<
-    Eigen::ArrayX<uint8_t>,
-    Heu::FitnessOption::FITNESS_GREATER_BETTER,
-    Heu::RecordOption::DONT_RECORD_FITNESS,
-    std::tuple<
-    size_t,  //dim
-    const TokiColor **,  // src
-    bool,    //  allowNaturalCompress
-    size_t,  //  maxHeight
-    const LossyCompressor * ,   //  ptr
-    std::clock_t    //  prevClock
-    >
-    >;
-
-    Heu_MAKE_GABASE_TYPES
-
-    static const size_t idx_Dim=0;
-    static const size_t idx_Src=1;
-    static const size_t idx_allowNaturalCompress=2;
-    static const size_t idx_maxHeight=3;
-    static const size_t idx_CompressorPtr=4;
-    static const size_t idx_prevClock=5;
-
-    using Var_t = Eigen::ArrayX<uint8_t>;
-    static void iFun(Var_t * v,const ArgsType * arg) {
-        v->setZero(std::get<idx_Dim>(*arg));
-        for(auto & i : *v) {
-            if(Heu::randD()<=initializeNonZeroRatio) {
-                i=1+std::rand()%2;
-            }
-        }
-    }
-
-    static void fFun(const Var_t * v,const ArgsType * arg,double * fitness) {
-        HeightLine HL;
-        const TokiColor ** src=std::get<idx_Src>(*arg);
-        const bool allowNaturalCompress=std::get<idx_allowNaturalCompress>(*arg);
-        float meanColorDiff=HL.make(src,*v,allowNaturalCompress);
-        meanColorDiff/=v->size();
-
-        if(HL.maxHeight()>std::get<idx_maxHeight>(*arg)) {
-            *fitness=double(std::get<idx_maxHeight>(*arg))-double(HL.maxHeight())-1.0;
-        }
-        else {
-            *fitness=100.0/(1e-4f+meanColorDiff);
-        }
-    }
-
-    static void cFun(const Var_t * p1,const Var_t * p2,
-                     Var_t * c1,Var_t * c2,const ArgsType * arg) {
-       const size_t dim=std::get<idx_Dim>(*arg);
-       const size_t idx=Heu::randD(0,dim);
-       c1->resize(dim,1);
-       c2->resize(dim,1);
-       c1->segment(0,idx)=((std::rand()%2)?p1:p2)->segment(0,idx);
-       c1->segment(idx,dim-idx)=((std::rand()%2)?p1:p2)->segment(idx,dim-idx);
-       c2->segment(0,idx)=((std::rand()%2)?p1:p2)->segment(0,idx);
-       c2->segment(idx,dim-idx)=((std::rand()%2)?p1:p2)->segment(idx,dim-idx);
-    }
-
-    static void mFun(Var_t * v,const ArgsType*) {
-        const size_t idx=Heu::randD(0,v->size());
-        v->operator[](idx)=mutateMap[v->operator[](idx)][std::rand()%2];
-    }
 
     void customOptAfterEachGeneration() {
         if(this->generation()%reportRate==0) {
@@ -165,17 +143,13 @@ void LossyCompressor::runGenetic(uint16_t maxHeight,bool allowNaturalCompress) {
         opt.mutateProb=mutateProb;
         opt.populationSize=popSize;
         solver_t::ArgsType args;
-        std::get<solver_t::idx_Dim>(args)=source.size();
-        std::get<solver_t::idx_Src>(args)=source.data();
-        std::get<solver_t::idx_allowNaturalCompress>(args)=allowNaturalCompress;
-        std::get<solver_t::idx_maxHeight>(args)=maxHeight;
-        std::get<solver_t::idx_CompressorPtr>(args)=this;
-        std::get<solver_t::idx_prevClock>(args)=std::clock();
+        std::get<idx_Dim>(args)=source.size();
+        std::get<idx_Src>(args)=source.data();
+        std::get<idx_allowNaturalCompress>(args)=allowNaturalCompress;
+        std::get<idx_maxHeight>(args)=maxHeight;
+        std::get<idx_CompressorPtr>(args)=this;
+        std::get<idx_prevClock>(args)=std::clock();
 
-        solver->setiFun(solver_t::iFun);
-        solver->setfFun(solver_t::fFun);
-        solver->setcFun(solver_t::cFun);
-        solver->setmFun(solver_t::mFun);
         solver->setOption(opt);
         solver->setArgs(args);
         solver->initializePop();
