@@ -1,6 +1,6 @@
 # SlopeCraft
 
-![](https://img.shields.io/badge/C%2B%2B-11-blue?style=plastic) ![](https://img.shields.io/badge/Qt-v6.1.0-brightgreen?style=plastic) ![](https://img.shields.io/badge/Eigen-v3.4.0-yellowgreen?style=plastic) 
+![](https://img.shields.io/badge/C%2B%2B-17-blue?style=plastic) ![](https://img.shields.io/badge/Qt-v6.1.0-brightgreen?style=plastic) ![](https://img.shields.io/badge/Eigen-v3.4.0-yellowgreen?style=plastic) 
 
 ![](https://img.shields.io/badge/Minecraft-1.12~1.17-orange?style=plastic) 
 
@@ -110,3 +110,4 @@ SlopeCraft包含以下核心功能：
 * [SlopeCraftCompressLib](https://github.com/ToKiNoBug/SlopeCraftCompressLib) 无损压缩库，也承担了构建高度矩阵的功能
 * [SlopeCraftLossyCompression](https://github.com/ToKiNoBug/SlopeCraftLossyCompression) 有损压缩库，基于无损压缩库实现
 * [SlopeCraftGlassBuilder](https://github.com/ToKiNoBug/SlopeCraftGlassBuilder) 搭桥库
+* [HeuristicFlow](https://github.com/TokiNoBug/HeuristicFlow) 遗传算法实现
