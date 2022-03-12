@@ -342,7 +342,7 @@ private:
 
     std::vector<simpleBlock> blockPalette;
 
-    int size3D[3];//x,y,z
+    std::array<int,3> size3D;//x,y,z
 
     EImage rawImage;
     EImage ditheredImage;

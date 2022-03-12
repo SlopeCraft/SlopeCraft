@@ -1366,7 +1366,7 @@ void TokiSlopeCraft::makeHeight_new() {
 }
 
 void TokiSlopeCraft::buildHeight(bool fireProof,bool endermanProof) {
-        Build.resize(size3D[0],size3D[1],size3D[2]);
+        Build.resize(std::array<int64_t,3>({size3D[0],size3D[1],size3D[2]}));
         Build.setZero();
         //Base(r+1,c)<->High(r+1,c)<->Build(c+1,High(r+1,c),r+1)
         //为了区分玻璃与空气，张量中存储的是Base+1.所以元素为1对应着玻璃，0对应空气
