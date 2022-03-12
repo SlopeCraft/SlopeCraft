@@ -27,7 +27,7 @@ This file is part of SlopeCraft.
 #include "SlopeCraftL_global.h"
 #define SCL_EXPORT SLOPECRAFTL_EXPORT
 
-//#define SLOPECRAFTL_CAPI
+#define SLOPECRAFTL_CAPI
 
 #ifdef SLOPECRAFTL_CAPI
 struct AbstractBlock;
