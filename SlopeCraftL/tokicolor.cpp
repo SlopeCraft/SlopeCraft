@@ -300,26 +300,6 @@ default:
 Result=0;
 }
 
-ARGB ARGB32(uint32_t r,uint32_t g,uint32_t b,uint32_t a) {
-    return ((a&0xFF)<<24)|((r&0xFF)<<16)|((g&0xFF)<<8)|(b&0xFF);
-}
-
-uint8_t getA(ARGB argb) {
-    return (argb>>24);
-}
-
-uint8_t getR(ARGB argb) {
-    return (argb&0x00FF0000)>>16;
-}
-
-uint8_t getG(ARGB argb) {
-    return (argb&0x0000FF00)>>8;
-}
-
-uint8_t getB(ARGB argb) {
-    return (argb&0x000000FF);
-}
-
 unsigned char TokiColor::apply(ARGB Color) {
     if(getA(Color)<=0)
     {

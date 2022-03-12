@@ -50,6 +50,7 @@ SOURCES += \
     TokiSlopeCraft.cpp \
     WaterItem.cpp \
     colorset.cpp \
+    imagePreprocess.cpp \
     lossyCompressor.cpp \
     simpleBlock.cpp \
     tokicolor.cpp \

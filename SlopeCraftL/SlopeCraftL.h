@@ -298,6 +298,26 @@ enum workStatues {
     //dataFilesFinished=0x31,
 };
 
+/**
+ * @brief Pure transparent pixel processing strategy of SCL
+ */
+enum SCL_PureTpPixelSt
+{
+    ReplaceWithBackGround='B',
+    ReserveAsAir='A'
+};
+
+/**
+ * @brief The SCL_HalfTpPixelSt enum
+ */
+enum SCL_HalfTpPixelSt
+{
+    ReplaceWithBackGround_='B',
+    ComposeWithBackGround='C',
+    IgnoreAlpha='R'
+};
+
+
 #ifndef SLOPECRAFTL_CAPI
 }   //  namespace SlopeCraft
 #endif  //  #ifndef SLOPECRAFTL_CAPI
@@ -599,6 +619,12 @@ unsigned int SCL_EXPORT SCL_getMaxGeneration(const AiCvterOpt *);
 unsigned int SCL_EXPORT SCL_getMaxFailTimes(const AiCvterOpt *);
 double SCL_EXPORT SCL_getCrossoverProb(const AiCvterOpt *);
 double SCL_EXPORT SCL_getMutationProb(const AiCvterOpt *);
+
+void SCL_EXPORT SCL_preprocessImage(unsigned int * ARGB32ptr,
+                                    const unsigned long long imageSize,
+                                    const SCL_PureTpPixelSt=SCL_PureTpPixelSt::ReplaceWithBackGround,
+                                    const SCL_HalfTpPixelSt=SCL_HalfTpPixelSt::ComposeWithBackGround,
+                                    unsigned int backGround=0xFFFFFFFF);
 
 #ifndef SLOPECRAFTL_CAPI
 }   //  namespace SlopeCraft
