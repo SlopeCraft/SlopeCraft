@@ -600,6 +600,7 @@ extern "C" {
 #endif  //  #ifdef __has_cpp_attribute
 #endif  //  #ifdef SLOPECRAFTL_CAPI
 
+
 extern "C" {
 #ifndef SLOPECRAFTL_CAPI
 namespace SlopeCraft{
