@@ -481,6 +481,8 @@ extern "C" {
 //can do in nothing:
     ///real size of Kernel
     unsigned long long SCL_EXPORT SCL_kernelSize(Kernel * k);
+    ///get current step
+    step SCL_EXPORT SCL_queryStep(const Kernel * k);
     ///revert to a previous step
     void SCL_EXPORT SCL_decreaseStep(Kernel * k,step);
     ///replacement for operator delete
@@ -494,10 +496,26 @@ extern "C" {
     void SCL_EXPORT SCL_setAiCvterOpt(Kernel * k,const AiCvterOpt * a);
     const AiCvterOpt * SCL_EXPORT SCL_getAiCvterOpt(const Kernel * k);
 
+    ///function ptr to window object
+    void SCL_EXPORT SCL_setWindPtr(Kernel * k,void *);
+    ///a function ptr to show progress of converting and exporting
+    void SCL_EXPORT SCL_setProgressRangeSet(Kernel * k,void(*)(void*,int,int,int));
+    ///a function ptr to add progress value
+    void SCL_EXPORT SCL_setProgressAdd(Kernel * k,void(*)(void*,int));
+    ///a function ptr to prevent window from being syncoped
+    void SCL_EXPORT SCL_setKeepAwake(Kernel * k,void(*)(void*));
+
+    ///a function ptr to show progress of compressing and bridge-building
+    void SCL_EXPORT SCL_setAlgoProgressRangeSet(Kernel * k,void(*)(void*,int,int,int));
+    ///a function ptr to add progress value of compressing and bridge-building
+    void SCL_EXPORT SCL_setAlgoProgressAdd(Kernel * k,void(*)(void*,int));
+
+    ///a function ptr to report error when something wrong happens
+    void SCL_EXPORT SCL_setReportError(Kernel * k,void(*)(void*,errorFlag));
+    ///a function ptr to report working statue especially when busy
+    void SCL_EXPORT SCL_setReportWorkingStatue(Kernel * k,void(*)(void*,workStatues));
 
 //can do in colorSetReady:
-    ///get current step
-    step SCL_EXPORT SCL_queryStep(const Kernel * k);
     ///set map type and blocklist
     bool SCL_EXPORT SCL_setType(Kernel * k,
                  mapTypes,
@@ -577,24 +595,6 @@ extern "C" {
     ///get 3d structure in 3d-matrix (col major)
     const unsigned char * SCL_EXPORT SCL_getBuild(const Kernel * k,int* xSize,int* ySize,int* zSize);
 
-    ///function ptr to window object
-    void SCL_EXPORT SCL_setWindPtr(Kernel * k,void *);
-    ///a function ptr to show progress of converting and exporting
-    void SCL_EXPORT SCL_setProgressRangeSet(Kernel * k,void(*)(void*,int,int,int));
-    ///a function ptr to add progress value
-    void SCL_EXPORT SCL_setProgressAdd(Kernel * k,void(*)(void*,int));
-    ///a function ptr to prevent window from being syncoped
-    void SCL_EXPORT SCL_setKeepAwake(Kernel * k,void(*)(void*));
-
-    ///a function ptr to show progress of compressing and bridge-building
-    void SCL_EXPORT SCL_setAlgoProgressRangeSet(Kernel * k,void(*)(void*,int,int,int));
-    ///a function ptr to add progress value of compressing and bridge-building
-    void SCL_EXPORT SCL_setAlgoProgressAdd(Kernel * k,void(*)(void*,int));
-
-    ///a function ptr to report error when something wrong happens
-    void SCL_EXPORT SCL_setReportError(Kernel * k,void(*)(void*,errorFlag));
-    ///a function ptr to report working statue especially when busy
-    void SCL_EXPORT SCL_setReportWorkingStatue(Kernel * k,void(*)(void*,workStatues));
 #ifdef __has_cpp_attribute
 }   //  extern C
 #endif  //  #ifdef __has_cpp_attribute
