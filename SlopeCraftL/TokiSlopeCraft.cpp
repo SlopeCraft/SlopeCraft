@@ -52,7 +52,7 @@ TokiSlopeCraft::TokiSlopeCraft()
     setProgressRangeSet([](void*,int,int,int){});
     setProgressAdd([](void*,int){});
     setKeepAwake([](void*){});
-    setReportError([](void*,errorFlag){});
+    setReportError([](void*,errorFlag,const char *){});
     setReportWorkingStatue([](void*,workStatues){});
     setAlgoProgressAdd([](void*,int){});
     setAlgoProgressRangeSet([](void*,int,int,int){});
@@ -113,7 +113,7 @@ void TokiSlopeCraft::setAlgoProgressAdd(void(*apa)(void*,int)) {
 }
 
 ///a function ptr to report error when something wrong happens
-void TokiSlopeCraft::setReportError(void(*re)(void*,errorFlag)) {
+void TokiSlopeCraft::setReportError(void(*re)(void*,errorFlag,const char*)) {
     reportError=re;
 }
 ///a function ptr to report working statue especially when busy
@@ -128,26 +128,30 @@ void TokiSlopeCraft::decreaseStep(step _step) {
 
 bool TokiSlopeCraft::setColorSet(const char*R,const char*H,const char*L,const char*X) {
     if(!readFromTokiColor(R,Basic._RGB)) {
-        reportError(wind,errorFlag::PARSING_COLORMAP_RGB_FAILED);
-        std::cerr<<"Failed to read colormap RGB\n";
+        reportError(wind,errorFlag::PARSING_COLORMAP_RGB_FAILED,
+                    "Failed to parse colormap RGB\n");
+        std::cerr<<"Failed to parse colormap RGB\n";
         //crash();
         return false;
     }
     if(!readFromTokiColor(H,Basic.HSV)) {
-        reportError(wind,errorFlag::PARSING_COLORMAP_HSV_FAILED);
-        std::cerr<<"Failed to read colormap HSV\n";
+        reportError(wind,errorFlag::PARSING_COLORMAP_HSV_FAILED,
+                    "Failed to parse colormap HSV\n");
+        std::cerr<<"Failed to parse colormap HSV\n";
         //crash();
         return false;
     }
     if(!readFromTokiColor(L,Basic.Lab)) {
-        reportError(wind,errorFlag::PARSING_COLORMAP_Lab_FAILED);
-        std::cerr<<"Failed to read colormap Lab\n";
+        reportError(wind,errorFlag::PARSING_COLORMAP_Lab_FAILED,
+                    "Failed to parse colormap Lab\n");
+        std::cerr<<"Failed to parse colormap Lab\n";
         //crash();
         return false;
     }
     if(!readFromTokiColor(X,Basic.XYZ)) {
-        reportError(wind,errorFlag::PARSING_COLORMAP_XYZ_FAILED);
-        std::cerr<<"Failed to read colormap XYZ\n";
+        reportError(wind,errorFlag::PARSING_COLORMAP_XYZ_FAILED,
+                    "Failed to parse colormap XYZ\n");
+        std::cerr<<"Failed to parse colormap XYZ\n";
         //crash();
         return false;
     }
@@ -186,17 +190,6 @@ bool readFromTokiColor(const std::string & FileName,ColorList & M) {
 
 bool readFromTokiColor(const char*src,ColorList & M) {
     const char * buf=src;
-    /*
-    string fileMD5=
-    QCryptographicHash::hash(buf,QCryptographicHash::Md5).toHex().toStdString();
-    //cout<<FileName<<",hash="<<fileMD5<<endl;
-    if(fileMD5!=MD5) {
-#ifdef WITH_QT
-        qDebug("颜色表文件哈希校验失败");
-#endif
-        delete [] buf;
-        return false;
-    }*/
     float temp;
     uchar * wp=(uchar*)&temp;
     uchar * rp=(uchar*)buf;
@@ -246,7 +239,8 @@ void TokiSlopeCraft::makeTests(const AbstractBlock ** src,
                                const unsigned char * baseColor,
                                const char * dst,char * _unFileName) {
     if(kernelStep<step::wait4Image) {
-        reportError(wind,errorFlag::HASTY_MANIPULATION);
+        reportError(wind,errorFlag::HASTY_MANIPULATION,
+                    "Skipping is not allowed.\nYou can only make tests only after you finished the map type and gameversion.");
 
         if(_unFileName!=nullptr)
             std::strcpy(_unFileName,"");
@@ -261,11 +255,6 @@ void TokiSlopeCraft::makeTests(const AbstractBlock ** src,
 std::string TokiSlopeCraft::makeTests(const AbstractBlock ** src,
                                const uint8_t * src_baseColor,
                                const std::string & fileName) {
-
-    if(kernelStep<step::wait4Image) {
-        reportError(wind,errorFlag::HASTY_MANIPULATION);
-        return "";
-    }
 
     if(fileName.find_last_of(".nbt")==std::string::npos) {
         return "";
@@ -375,12 +364,14 @@ std::string TokiSlopeCraft::makeTests(const AbstractBlock ** src,
     file.close();
 
     if(!compressFile(unCompress.data(),fileName.data())) {
-        reportError(wind,errorFlag::FAILED_TO_COMPRESS);
+        std::string msg="Failed to compress temporary file "+unCompress+" to "+fileName;
+        reportError(wind,errorFlag::FAILED_TO_COMPRESS,msg.data());
         return unCompress;
     }
 
     if(std::remove(unCompress.data())!=0) {
-        reportError(wind,errorFlag::FAILED_TO_REMOVE);
+        std::string msg="Failed to remove temporary file "+unCompress;
+        reportError(wind,errorFlag::FAILED_TO_REMOVE,msg.data());
         return unCompress;
     }
 
@@ -405,7 +396,8 @@ bool TokiSlopeCraft::setType(mapTypes type,
                              const AbstractBlock ** palettes) {
 
     if(kernelStep<colorSetReady) {
-        reportError(wind,errorFlag::HASTY_MANIPULATION);
+        reportError(wind,errorFlag::HASTY_MANIPULATION,
+                    "You must load colorset before you set the map type.");
         return false;
     }
 
@@ -488,7 +480,12 @@ bool TokiSlopeCraft::setType(mapTypes type,
     }
 
     if(!Allowed.ApplyAllowed(&Basic,MIndex)) {
-        reportError(wind,errorFlag::USEABLE_COLOR_TOO_FEW);
+        std::string msg="Too few usable color(s) : only "+std::to_string(Allowed._RGB.rows())+" colors\n";
+        msg += "Avaliable base color(s) : ";
+        for(auto i : Allowed.Map) {
+            msg+=std::to_string(i)+" , ";
+        }
+        reportError(wind,errorFlag::USEABLE_COLOR_TOO_FEW,msg.data());
         return false;
     }
 
@@ -522,7 +519,8 @@ void TokiSlopeCraft::configAiCvter() {
 
 uint16_t TokiSlopeCraft::getColorCount() const {
     if(kernelStep<wait4Image) {
-        reportError(wind,errorFlag::HASTY_MANIPULATION);
+        reportError(wind,errorFlag::HASTY_MANIPULATION,
+                    "You can only query for avaliable color count after you set the map type and gameversion");
         return 0;
     }
     return Allowed.colorCount();
@@ -534,11 +532,13 @@ void TokiSlopeCraft::setRawImage(const ARGB * src, short rows,short cols) {
 
 void TokiSlopeCraft::setRawImage(const EImage & _rawimg) {
     if(kernelStep<wait4Image) {
-        reportError(wind,errorFlag::HASTY_MANIPULATION);
+        reportError(wind,errorFlag::HASTY_MANIPULATION,
+                    "You can only import the raw image count after you set the map type and gameversion");
         return;
     }
     if(_rawimg.size()<=0) {
-        reportError(wind,errorFlag::EMPTY_RAW_IMAGE);
+        reportError(wind,errorFlag::EMPTY_RAW_IMAGE,
+                    "The size of your raw image is 0. You loaded an empty image.");
         return;
     }
 
@@ -570,7 +570,8 @@ void TokiSlopeCraft::getAuthorURL(int * count,char **dest) const {
 
 std::vector<std::string> TokiSlopeCraft::getAuthorURL() const {
     if(kernelStep<colorSetReady) {
-        reportError(wind,errorFlag::HASTY_MANIPULATION);
+        reportError(wind,errorFlag::HASTY_MANIPULATION,
+                    "You can call getAuthorURL only after you set the colorset.");
         std::vector<std::string> error(2);
         error[0]="Too hasty operation!";
         error[1]="make sure that you've deployed the colormap!";
@@ -607,7 +608,8 @@ std::string TokiSlopeCraft::Noder(const short *src,int size) const {
 
 void TokiSlopeCraft::getARGB32(ARGB * dest) const {
     if(kernelStep<colorSetReady) {
-        reportError(wind,errorFlag::HASTY_MANIPULATION);
+        reportError(wind,errorFlag::HASTY_MANIPULATION,
+                    "You can call getARGB32 only after you loaded the colorset.");
         return;
     }
     if(dest==nullptr) return;
@@ -621,7 +623,8 @@ void TokiSlopeCraft::getARGB32(ARGB * dest) const {
 
 bool TokiSlopeCraft::convert(convertAlgo algo,bool dither) {
     if(kernelStep<convertionReady) {
-        reportError(wind,errorFlag::HASTY_MANIPULATION);
+        reportError(wind,errorFlag::HASTY_MANIPULATION,
+                    "You can call convert only after you imported the raw image");
         return false;
     }
 
@@ -934,7 +937,8 @@ void matchColor(uint32_t taskCount,TokiColor** tk,ARGB * argb) {
 void TokiSlopeCraft::getTokiColorPtr(uint16_t col, const TokiColor ** dst) const {
     if(kernelStep<converted) {
         std::cerr<<"Too hasty! export after you converted the map!"<<std::endl;
-        reportError(wind,errorFlag::HASTY_MANIPULATION);
+        reportError(wind,errorFlag::HASTY_MANIPULATION,
+                    "You can export only after you converted a map.");
         return ;
     }
     for(uint16_t r=0;r<ditheredImage.rows();r++) {
@@ -983,7 +987,8 @@ EImage TokiSlopeCraft::getConovertedImage() const {
 EImage cvtedImg(sizePic(0),sizePic(1));
 cvtedImg.setZero();
 if(kernelStep<converted) {
-    reportError(wind,errorFlag::HASTY_MANIPULATION);
+    reportError(wind,errorFlag::HASTY_MANIPULATION,
+                "You can get the converted image only after you converted a map.");
     return cvtedImg;
 }
 Eigen::ArrayXXi RGBint=(255.0f*Basic._RGB).cast<int>();
@@ -1027,7 +1032,8 @@ void TokiSlopeCraft::getConvertedMap
 
 short TokiSlopeCraft::getImageRows() const {
     if(kernelStep<convertionReady) {
-        reportError(wind,errorFlag::HASTY_MANIPULATION);
+        reportError(wind,errorFlag::HASTY_MANIPULATION,
+                    "You can call getImageRows only after you imported the raw image.");
         return -1;
     }
     return rawImage.rows();
@@ -1035,7 +1041,8 @@ short TokiSlopeCraft::getImageRows() const {
 
 short TokiSlopeCraft::getImageCols() const {
     if(kernelStep<convertionReady) {
-        reportError(wind,errorFlag::HASTY_MANIPULATION);
+        reportError(wind,errorFlag::HASTY_MANIPULATION,
+                    "You can call getImageRows only after you imported the raw image.");
         return -1;
     }
     return rawImage.cols();
@@ -1063,7 +1070,8 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(const std::string & Folder
     compressedFileList.clear();
 
     if(kernelStep<converted) {
-        reportError(wind,errorFlag::HASTY_MANIPULATION);
+        reportError(wind,errorFlag::HASTY_MANIPULATION,
+                    "You can export the map as map data files only after the image is converted.");
         unCompressedFileList.push_back("Too hasty! export after you converted the map!");
         return unCompressedFileList;
     }
@@ -1209,13 +1217,15 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(const std::string & Folder
         success=success&&
                 compressFile(unCompressedFileList[i].data(),
                                       compressedFileList[i].data());
+        std::string msg="Failed to compress temporary file : "+unCompressedFileList[i]+" to "+compressedFileList[i];
         if(!success) {
-            reportError(wind,errorFlag::FAILED_TO_COMPRESS);
+            reportError(wind,errorFlag::FAILED_TO_COMPRESS,msg.data());
             continue;
         }
         success=success&&(std::remove(unCompressedFileList[i].data())==0);
         if(!success) {
-            reportError(wind,errorFlag::FAILED_TO_REMOVE);
+            std::string msg="Failed to remove temporary file : "+unCompressedFileList[i];
+            reportError(wind,errorFlag::FAILED_TO_REMOVE,msg.data());
             continue;
         }
     }
@@ -1227,13 +1237,15 @@ bool TokiSlopeCraft::build(compressSettings cS, uint16_t mAH,
                            glassBridgeSettings gBS,uint16_t bI,
                            bool fireProof,bool endermanProof) {
     if(kernelStep<converted){
-        reportError(wind,errorFlag::HASTY_MANIPULATION);
+        reportError(wind,errorFlag::HASTY_MANIPULATION,
+                    "You can build 3D strcuture only after you converted the raw image.");
         std::cerr<<"hasty!"<<std::endl;
         return false;
     }
     if(mAH<14){
         std::cerr<<"maxAllowedHeight<14!"<<std::endl;
-        reportError(wind,errorFlag::MAX_ALLOWED_HEIGHT_LESS_THAN_14);
+        reportError(wind,errorFlag::MAX_ALLOWED_HEIGHT_LESS_THAN_14,
+                    "Your maximum allowed height is less than 14, which made lossy compressing almost impossible.");
         return false;
     }
     std::cerr<<"ready to build"<<std::endl;
@@ -1315,7 +1327,17 @@ void TokiSlopeCraft::makeHeight_new() {
     std::cerr<<"makeHeight_new\n";
 
     if((mapPic-4*(mapPic/4)>=3).any()) {
-        reportError(wind,errorFlag::DEPTH_3_IN_VANILLA_MAP);
+        std::string msg="Fatal error : SlopeCraftLib3 found map color with depth 3 in a vanilla map.\n Map contents (map color matrix in col-major) :\n[";
+
+        for(int c=0;c<mapPic.cols();c++) {
+            for(int r=0;r<mapPic.rows();r++) {
+                msg+=std::to_string(mapPic(r,c))+',';
+            }
+            msg+=";\n";
+        }
+        msg+="];\n";
+
+        reportError(wind,errorFlag::DEPTH_3_IN_VANILLA_MAP,msg.data());
         return;
     }
 
@@ -1338,7 +1360,9 @@ void TokiSlopeCraft::makeHeight_new() {
             bool success=Compressor->compress(maxAllowedHeight,
                                               allowNaturalCompress);
             if(!success) {
-                reportError(wind,LOSSYCOMPRESS_FAILED);
+                std::string msg="Failed to compress the 3D structure at coloum "+std::to_string(c);
+                reportError(wind,LOSSYCOMPRESS_FAILED,
+                            msg.data());
                 return;
             }
             Eigen::ArrayXi temp;
@@ -1615,7 +1639,8 @@ std::string TokiSlopeCraft::exportAsLitematic(const std::string & TargetName,
                                          const std::string & author,
                                          const std::string & RegionName) const {
     if(kernelStep<builded) {
-        reportError(wind,errorFlag::HASTY_MANIPULATION);
+        reportError(wind,errorFlag::HASTY_MANIPULATION,
+                    "You can only export a map to litematic after you build the 3D structure.");
         return "Too hasty! export litematic after you built!";
     }
     reportWorkingStatue(wind,workStatues::writingMetaInfo);
@@ -1769,13 +1794,15 @@ std::string TokiSlopeCraft::exportAsLitematic(const std::string & TargetName,
     reportWorkingStatue(wind,workStatues::none);
 
     if(!compressFile(unCompressed.data(),TargetName.data())) {
-        reportError(wind,errorFlag::FAILED_TO_COMPRESS);
+        std::string msg="Failed to compress temporary file :"+unCompressed+" to "+TargetName;
+        reportError(wind,errorFlag::FAILED_TO_COMPRESS,msg.data());
         return unCompressed;
     }
     std::cerr<<__FILE__<<" , "<<__LINE__<<std::endl;
 
     if(std::remove(unCompressed.data())!=0) {
-        reportError(wind,errorFlag::FAILED_TO_REMOVE);
+        std::string msg="Failed to remove temporary file : "+unCompressed;
+        reportError(wind,errorFlag::FAILED_TO_REMOVE,msg.data());
         return unCompressed;
     }
 
@@ -1794,7 +1821,8 @@ void TokiSlopeCraft::exportAsStructure(const char *TargetName,
 
 std::string TokiSlopeCraft::exportAsStructure(const std::string &TargetName) const {
     if(kernelStep<builded) {
-        reportError(wind,errorFlag::HASTY_MANIPULATION);
+        reportError(wind,errorFlag::HASTY_MANIPULATION,
+                    "You can only export a map to structure after you build the 3D structure.");
         return "Too hasty! export structure after you built!";
     }
     //std::cerr<<__FILE__<<" , "<<__LINE__<<std::endl;
@@ -1893,13 +1921,15 @@ std::string TokiSlopeCraft::exportAsStructure(const std::string &TargetName) con
     reportWorkingStatue(wind,workStatues::none);
 
     if(!compressFile(unCompress.data(),TargetName.data())) {
-        reportError(wind,errorFlag::FAILED_TO_COMPRESS);
+        std::string msg="Failed to compress temporary file :"+unCompress+" to "+TargetName;
+        reportError(wind,errorFlag::FAILED_TO_COMPRESS,msg.data());
         return unCompress;
     }
     //std::cerr<<__FILE__<<" , "<<__LINE__<<std::endl;
 
     if(std::remove(unCompress.data())!=0) {
-        reportError(wind,errorFlag::FAILED_TO_REMOVE);
+        std::string msg="Failed to remove temporary file : "+unCompress;
+        reportError(wind,errorFlag::FAILED_TO_REMOVE,msg.data());
         return unCompress;
     }
 

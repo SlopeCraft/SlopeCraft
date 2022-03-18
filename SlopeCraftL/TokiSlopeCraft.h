@@ -195,7 +195,7 @@ public:
     virtual void setAlgoProgressAdd(void(*)(void*,int))=0;
 
     ///a function ptr to report error when something wrong happens
-    virtual void setReportError(void(*)(void*,errorFlag))=0;
+    virtual void setReportError(void(*)(void*,errorFlag,const char *))=0;
     ///a function ptr to report working statue especially when busy
     virtual void setReportWorkingStatue(void(*)(void*,workStatues))=0;
 
@@ -228,7 +228,7 @@ public:
     void setAlgoProgressAdd(void(*)(void*,int));
 
     ///a function ptr to report error when something wrong happens
-    void setReportError(void(*)(void*,errorFlag));
+    void setReportError(void(*)(void*,errorFlag,const char *));
     ///a function ptr to report working statue especially when busy
     void setReportWorkingStatue(void(*)(void*,workStatues));
     unsigned long long size() {
@@ -330,7 +330,7 @@ private:
     void (*keepAwake)(void*);
     void (*algoProgressRangeSet)(void*,int,int,int);
     void (*algoProgressAdd)(void*,int);
-    void (*reportError)(void*,errorFlag);
+    void (*reportError)(void*,errorFlag,const char *);
     void (*reportWorkingStatue)(void*,workStatues);
 
     gameVersion mcVer;//12,13,14,15,16,17

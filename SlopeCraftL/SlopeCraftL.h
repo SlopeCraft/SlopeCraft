@@ -27,7 +27,7 @@ This file is part of SlopeCraft.
 #include "SlopeCraftL_global.h"
 #define SCL_EXPORT SLOPECRAFTL_EXPORT
 
-#define SLOPECRAFTL_CAPI
+//#define SLOPECRAFTL_CAPI
 
 #ifdef SLOPECRAFTL_CAPI
 struct AbstractBlock;
@@ -342,6 +342,29 @@ public:
 
     static unsigned long long mcVersion2VersionNumber(gameVersion);
 
+    ///function ptr to window object
+    virtual void setWindPtr(void *)=0;
+    ///a function ptr to show progress of converting and exporting
+    virtual void setProgressRangeSet(void(*)(void*,int,int,int))=0;
+    ///a function ptr to add progress value
+    virtual void setProgressAdd(void(*)(void*,int))=0;
+    ///a function ptr to prevent window from being syncoped
+    virtual void setKeepAwake(void(*)(void*))=0;
+
+    ///a function ptr to show progress of compressing and bridge-building
+    virtual void setAlgoProgressRangeSet(void(*)(void*,int,int,int))=0;
+    ///a function ptr to add progress value of compressing and bridge-building
+    virtual void setAlgoProgressAdd(void(*)(void*,int))=0;
+
+    ///a function ptr to report error when something wrong happens
+    virtual void setReportError(void(*)(void*,errorFlag,const char *))=0;
+    ///a function ptr to report working statue especially when busy
+    virtual void setReportWorkingStatue(void(*)(void*,workStatues))=0;
+
+    virtual void setAiCvterOpt(const AiCvterOpt *)=0;
+
+    virtual const AiCvterOpt * aiCvterOpt() const=0;
+
 //can do in nothing:
     ///real size of kernel
     virtual unsigned long long size()=0;
@@ -354,8 +377,6 @@ public:
                              const char* HSV,
                              const char* Lab,
                              const char* XYZ)=0;
-    virtual void setAiCvterOpt(const AiCvterOpt *)=0;
-    virtual const AiCvterOpt * aiCvterOpt() const=0;
 
 
 //can do in colorSetReady:
@@ -436,25 +457,6 @@ public:
     ///get 3d structure in 3d-matrix (col major)
     virtual const unsigned char * getBuild(int* xSize,int* ySize,int* zSize) const=0;
 
-    ///function ptr to window object
-    virtual void setWindPtr(void *)=0;
-    ///a function ptr to show progress of converting and exporting
-    virtual void setProgressRangeSet(void(*)(void*,int,int,int))=0;
-    ///a function ptr to add progress value
-    virtual void setProgressAdd(void(*)(void*,int))=0;
-    ///a function ptr to prevent window from being syncoped
-    virtual void setKeepAwake(void(*)(void*))=0;
-
-    ///a function ptr to show progress of compressing and bridge-building
-    virtual void setAlgoProgressRangeSet(void(*)(void*,int,int,int))=0;
-    ///a function ptr to add progress value of compressing and bridge-building
-    virtual void setAlgoProgressAdd(void(*)(void*,int))=0;
-
-    ///a function ptr to report error when something wrong happens
-    virtual void setReportError(void(*)(void*,errorFlag))=0;
-    ///a function ptr to report working statue especially when busy
-    virtual void setReportWorkingStatue(void(*)(void*,workStatues))=0;
-
 protected:
     ///calling delete is deprecated, use void Kernel::destroy() instead
     void operator delete(void*) {}
@@ -511,7 +513,7 @@ extern "C" {
     void SCL_EXPORT SCL_setAlgoProgressAdd(Kernel * k,void(*)(void*,int));
 
     ///a function ptr to report error when something wrong happens
-    void SCL_EXPORT SCL_setReportError(Kernel * k,void(*)(void*,errorFlag));
+    void SCL_EXPORT SCL_setReportError(Kernel * k,void(*)(void*,errorFlag,const char *));
     ///a function ptr to report working statue especially when busy
     void SCL_EXPORT SCL_setReportWorkingStatue(Kernel * k,void(*)(void*,workStatues));
 
