@@ -466,6 +466,11 @@ bool TokiSlopeCraft::setType(mapTypes type,
     {
       blockPalette[i].id = "minecraft:" + blockPalette[i].id;
     }
+
+    if(blockPalette[i].idOld.empty()) {
+        blockPalette[i].idOld=blockPalette[i].id;
+    }
+
     if (blockPalette[i].idOld.size() > 0 && (blockPalette[i].idOld.find(':') == blockPalette[i].idOld.npos))
     {
       blockPalette[i].idOld = "minecraft:" + blockPalette[i].idOld;

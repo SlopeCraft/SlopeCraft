@@ -7,7 +7,7 @@ CONFIG -= qt
 INCLUDEPATH += \
                                D:/CppLibs/eigen-3.4.0 \
                                ../AiCvterInterface \
-                               D:\CppLibs\HeuristicFlow-1.4.0
+                               D:\CppLibs\HeuristicFlow-1.5.0
 
 RC_LANG = 0x0004
 
@@ -31,13 +31,13 @@ LIBS += -fopenmp
 TEMPLATE = lib
 DEFINES += SLOPECRAFTL_LIBRARY
 
-CONFIG += std::c++20
+CONFIG += std::c++17
 
-LIBS += D:\Git\build-SlopeCraft-Desktop_Qt_6_1_0_MinGW_64_bit-Release\SlopeCraftL\release\libzlibstatic.a
+LIBS += D:\CppLibs\zlib\lib\libzlibstatic.a
 
 #Comment following lines if you compile without AiConverter
-LIBS += D:\Git\build-SlopeCraft-Desktop_Qt_6_1_0_MinGW_64_bit-Release\SlopeCraftL\release\AiCvterLib3.dll
-DEFINES += SLOPECRAFTL_WITH_AICVETR
+#LIBS += D:\Git\build-SlopeCraft-Desktop_Qt_6_1_0_MinGW_64_bit-Release\SlopeCraftL\release\AiCvterLib3.dll
+#DEFINES += SLOPECRAFTL_WITH_AICVETR
 
 SOURCES += \
     AiCvterOpt.cpp \

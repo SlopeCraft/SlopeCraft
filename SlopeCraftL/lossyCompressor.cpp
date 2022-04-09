@@ -22,11 +22,11 @@ This file is part of SlopeCraft.
 
 #include "lossyCompressor.h"
 
-#define Heu_NO_OUTPUT
-#define Heu_USE_THREADS
+#define heu_NO_OUTPUT
+#define heu_USE_THREADS
+
 #include <HeuristicFlow/Genetic>
 
-Heu_MAKE_GLOBAL
 
 const uint8_t mutateMap[3][2]={{1,2},{0,2},{0,1}};
 const double initializeNonZeroRatio=0.05;
@@ -58,7 +58,7 @@ static const size_t idx_prevClock=5;
 void iFun(Var_t * v,const args_t * arg) {
     v->setZero(std::get<idx_Dim>(*arg));
     for(auto & i : *v) {
-        if(Heu::randD()<=initializeNonZeroRatio) {
+        if(heu::randD()<=initializeNonZeroRatio) {
             i=1+std::rand()%2;
         }
     }
@@ -79,19 +79,20 @@ void fFun(const Var_t * v,const args_t * arg,double * fitness) {
     }
 }
 
-void mFun(Var_t * v,const args_t*) {
-    const size_t idx=Heu::randD(0,v->size());
+void mFun(const Var_t * src,Var_t * v,const args_t*) {
+    *v=*src;
+    const size_t idx=heu::randD(0,v->size());
     v->operator[](idx)=mutateMap[v->operator[](idx)][std::rand()%2];
 }
 
 class solver_t
-    : public Heu::SOGA<
+    : public heu::SOGA<
         Eigen::ArrayX<uint8_t>,
-        Heu::FitnessOption::FITNESS_GREATER_BETTER,
-        Heu::RecordOption::DONT_RECORD_FITNESS,
+        heu::FitnessOption::FITNESS_GREATER_BETTER,
+        heu::RecordOption::DONT_RECORD_FITNESS,
         args_t,
         iFun,fFun,
-        Heu::GADefaults<Var_t,Heu::DoubleVectorOption::Eigen,args_t>::cFunSwapXs
+        heu::GADefaults<Var_t,args_t,heu::ContainerOption::Eigen>::cFunSwapXs
         ,mFun
         >
 {
@@ -136,7 +137,7 @@ void LossyCompressor::setSource(const Eigen::ArrayXi & _base,
 
 void LossyCompressor::runGenetic(uint16_t maxHeight,bool allowNaturalCompress) {
     {
-        static Heu::GAOption opt;
+        static heu::GAOption opt;
         opt.crossoverProb=crossoverProb;
         opt.maxFailTimes=maxFailTimes;
         opt.maxGenerations=maxGeneration;
