@@ -30,9 +30,14 @@ namespace SlopeCraft
 {
 const ColorList *const Basic4External=(ColorList *)BasicalRGBList4AiCvters();
 const ColorList *const Allowed4External=(ColorList *)AllowedRGBList4AiCvters();
+const MapList *const AllowedMapList4External=(MapList *)AllowedMapList4AiCvters();
 
 void * SCL_EXPORT AllowedRGBList4AiCvters() {
     return &TokiSlopeCraft::Allowed._RGB;
+}
+
+void * SCL_EXPORT AllowedMapList4AiCvters() {
+    return &TokiSlopeCraft::Allowed.Map;
 }
 
 void * SCL_EXPORT BasicalRGBList4AiCvters() {

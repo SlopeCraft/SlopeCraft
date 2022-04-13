@@ -53,6 +53,7 @@ This file is part of SlopeCraft.
 namespace SlopeCraft
 {
 void * AllowedRGBList4AiCvters();
+void * AllowedMapList4AiCvters();
 void * BasicalRGBList4AiCvters();
 }
 
@@ -324,6 +325,7 @@ private:
 #endif //  #ifdef SLOPECRAFTL_CAPI
   friend class TokiColor;
   friend void * SlopeCraft::AllowedRGBList4AiCvters();
+  friend void * SlopeCraft::AllowedMapList4AiCvters();
   friend void * SlopeCraft::BasicalRGBList4AiCvters();
   // friend void * allowedRGB();
   // friend void * allowedMap();

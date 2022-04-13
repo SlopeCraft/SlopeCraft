@@ -43,6 +43,7 @@ class ColorSet{
 namespace SlopeCraft {
 extern const ColorList *const Basic4External;
 extern const ColorList *const Allowed4External;
+extern const MapList *const AllowedMapList4External;
 }
 
 void GetMap(unsigned char *Map);

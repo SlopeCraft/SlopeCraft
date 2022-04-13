@@ -105,6 +105,7 @@ void SCL_EXPORT SCL_destroyBlock(AbstractBlock *);
 namespace SlopeCraft {
 
 void * SCL_EXPORT AllowedRGBList4AiCvters();
+void * SCL_EXPORT AllowedMapList4AiCvters();
 
 void * SCL_EXPORT BasicalRGBList4AiCvters();
 
