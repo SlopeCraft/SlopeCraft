@@ -62,10 +62,10 @@ public:
     unsigned char Result;//最终调色结果
     float ResultDiff;
     static bool needFindSide;
-    static ColorSet * Basic;
-    static ColorSet * Allowed;
     //static short DepthIndexEnd[4];
-    static unsigned char DepthCount[4];
+    static std::array<uint8_t,4> DepthCount;
+    static const ColorSet * const Allowed;
+    static const ColorSet * const  Basic;
     unsigned char apply(ARGB);
 private:
     unsigned char apply();

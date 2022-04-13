@@ -23,13 +23,15 @@ This file is part of SlopeCraft.
 #ifndef colorset_cpp
 #define colorset_cpp
 #include "ColorSet.h"
+#include "TokiSlopeCraft.h"
 
-ColorSet* TokiColor::Allowed=nullptr;
-ColorSet*TokiColor::Basic=nullptr;
+const ColorSet * const  TokiColor::Allowed = &TokiSlopeCraft::Allowed;
+const ColorSet * const  TokiColor::Basic = &TokiSlopeCraft::Basic;
 //short TokiColor::DepthIndexEnd[4]={63,127,191,255};
-uint8_t TokiColor::DepthCount[4]={64,64,64,64};
+std::array<uint8_t,4> TokiColor::DepthCount={64,64,64,64};
 bool TokiColor::needFindSide=false;
 char TokiColor::convertAlgo='R';
+
 
 ColorSet::ColorSet()
 {
@@ -38,6 +40,15 @@ ColorSet::ColorSet()
     HSV.setZero(256,3);
     Lab.setZero(256,3);
     XYZ.setZero(256,3);
+}
+
+ColorSet::ColorSet(int Num) {
+    GetMap(Map);
+    assert(Num<=256);
+    _RGB.setZero(Num,3);
+    HSV.setZero(Num,3);
+    Lab.setZero(Num,3);
+    XYZ.setZero(Num,3);
 }
 
 bool ColorSet::ApplyAllowed(ColorSet*standard,bool *MIndex)

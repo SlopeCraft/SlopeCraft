@@ -25,6 +25,21 @@ This file is part of SlopeCraft.
 #include "TokiSlopeCraft.h"
 using namespace SlopeCraft;
 
+
+namespace SlopeCraft
+{
+const ColorList *const Basic4External=(ColorList *)BasicalRGBList4AiCvters();
+const ColorList *const Allowed4External=(ColorList *)AllowedRGBList4AiCvters();
+
+void * SCL_EXPORT AllowedRGBList4AiCvters() {
+    return &TokiSlopeCraft::Allowed._RGB;
+}
+
+void * SCL_EXPORT BasicalRGBList4AiCvters() {
+    return &TokiSlopeCraft::Basic._RGB;
+}
+}   //  end namespace SlopeCraft
+
 AbstractBlock * AbstractBlock::create() {
     return new simpleBlock;
 }

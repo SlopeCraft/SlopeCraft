@@ -29,15 +29,21 @@ This file is part of SlopeCraft.
 
 class ColorSet{
     public:
+        explicit ColorSet();
+        explicit ColorSet(int ColorNum);
         ColorList _RGB;
         ColorList  HSV;
         ColorList  Lab;
         ColorList  XYZ;
         MapList  Map;
-        ColorSet();
         bool ApplyAllowed(ColorSet*standard,bool *MIndex);
         uint16_t colorCount() const;
 };
+
+namespace SlopeCraft {
+extern const ColorList *const Basic4External;
+extern const ColorList *const Allowed4External;
+}
 
 void GetMap(unsigned char *Map);
 

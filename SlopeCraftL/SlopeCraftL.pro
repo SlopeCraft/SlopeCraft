@@ -11,9 +11,9 @@ INCLUDEPATH += \
 
 RC_LANG = 0x0004
 
-VERSION += 3.7.0.0
+VERSION += 3.7.1.0
 
-QMAKE_TARGET_DESCRIPTION = SlopeCraft Library (with AiConverter)
+QMAKE_TARGET_DESCRIPTION = SlopeCraft Library# (with AiConverter)
 #描述信息
 
 QMAKE_TARGET_COPYRIGHT = TokiNoBug

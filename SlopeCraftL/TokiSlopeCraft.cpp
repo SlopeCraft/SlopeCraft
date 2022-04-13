@@ -27,9 +27,9 @@ const Eigen::Array<float, 2, 3> TokiSlopeCraft::DitherMapLR = {{0.0 / 16.0, 0.0 
                                                                {3.0 / 16.0, 5.0 / 16.0, 1.0 / 16.0}};
 const Eigen::Array<float, 2, 3> TokiSlopeCraft::DitherMapRL = {{7.0 / 16.0, 0.0 / 16.0, 0.0 / 16.0},
                                                                {1.0 / 16.0, 5.0 / 16.0, 3.0 / 16.0}};
-;
-ColorSet TokiSlopeCraft::Basic;
-ColorSet TokiSlopeCraft::Allowed;
+
+ColorSet TokiSlopeCraft::Basic(0);
+ColorSet TokiSlopeCraft::Allowed(0);
 
 gameVersion TokiSlopeCraft::mcVer; // 12,13,14,15,16,17
 mapTypes TokiSlopeCraft::mapType;
@@ -139,8 +139,23 @@ void TokiSlopeCraft::decreaseStep(step _step)
   kernelStep = _step;
 }
 
+void TokiSlopeCraft::trySkipStep(step s) {
+    if(this->kernelStep>=s) {
+        return;
+    }
+
+    if(Basic._RGB.rows()!=0) {
+        this->kernelStep=step::colorSetReady;
+    }
+    if(Allowed._RGB.rows()!=0&&blockPalette.size()!=0) {
+        this->kernelStep=step::wait4Image;
+    }
+}
+
 bool TokiSlopeCraft::setColorSet(const char *R, const char *H, const char *L, const char *X)
 {
+    static std::mutex lock;
+    lock.lock();
   if (!readFromTokiColor(R, Basic._RGB))
   {
     reportError(wind, errorFlag::PARSING_COLORMAP_RGB_FAILED,
@@ -174,6 +189,8 @@ bool TokiSlopeCraft::setColorSet(const char *R, const char *H, const char *L, co
     return false;
   }
   kernelStep = colorSetReady;
+
+  lock.unlock();
   return true;
 }
 
@@ -436,6 +453,8 @@ bool TokiSlopeCraft::setType(mapTypes type,
                              const bool *allowedBaseColor,
                              const AbstractBlock **palettes)
 {
+  static std::mutex lock;
+  lock.lock();
 
   if (kernelStep < colorSetReady)
   {
@@ -550,12 +569,15 @@ bool TokiSlopeCraft::setType(mapTypes type,
       msg += std::to_string(i) + " , ";
     }
     reportError(wind, errorFlag::USEABLE_COLOR_TOO_FEW, msg.data());
+    lock.unlock();
     return false;
   }
 
   reportWorkingStatue(wind, workStatues::none);
 
   kernelStep = wait4Image;
+
+  lock.unlock();
   return true;
 }
 
@@ -840,8 +862,6 @@ void TokiSlopeCraft::pushToHash()
 {
   auto R = &colorHash;
   R->clear();
-  TokiColor::Allowed = &Allowed;
-  TokiColor::Basic = &Basic;
 
   char Mode = ConvertAlgo;
   TokiColor::convertAlgo = Mode;

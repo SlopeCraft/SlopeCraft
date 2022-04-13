@@ -375,7 +375,7 @@ unsigned char TokiColor::applyRGB_plus() {
     if(Result)
         return Result;
     int tempIndex=0;
-    ColorList &allowedColors=Allowed->_RGB;
+    const ColorList &allowedColors=Allowed->_RGB;
     float R=c3[0];
     float g=c3[1];
     float b=c3[2];
@@ -423,7 +423,7 @@ unsigned char TokiColor::applyHSV() {
     if(Result)
         return Result;
     int tempIndex=0;
-    ColorList &allowedColors=Allowed->HSV;
+    const ColorList &allowedColors=Allowed->HSV;
 
     auto S_times_V=allowedColors.col(1)*allowedColors.col(2);
     float && s_times_v=c3[1]*c3[2];
@@ -466,7 +466,7 @@ unsigned char TokiColor::applyLab_old() {
     float L=c3[0];
     float a=c3[1];
     float b=c3[2];
-    ColorList &allowedColors=Allowed->Lab;
+    const ColorList &allowedColors=Allowed->Lab;
     auto deltaL_2=(allowedColors.col(0)-L).square();
     float C1_2=a*a+b*b;
     TempVectorXf C2_2=allowedColors.col(1).square()+allowedColors.col(2).square();
@@ -492,7 +492,7 @@ unsigned char TokiColor::applyLab_new() {
     float L1s=c3[0];
     float a1s=c3[1];
     float b1s=c3[2];
-    ColorList & allow=Allowed->Lab;
+    const ColorList & allow=Allowed->Lab;
     TempVectorXf Diff(allow.rows());
 
     for(short i=0;i<allow.rows();i++) {

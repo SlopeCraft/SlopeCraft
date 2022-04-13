@@ -50,6 +50,12 @@ This file is part of SlopeCraft.
 #include "AiConverterInterface.h"
 #endif
 
+namespace SlopeCraft
+{
+void * AllowedRGBList4AiCvters();
+void * BasicalRGBList4AiCvters();
+}
+
 using namespace SlopeCraft;
 #include <thread>
 
@@ -213,6 +219,7 @@ public:
   virtual ~TokiSlopeCraft();
 
   // can do in nothing:
+  void trySkipStep(step);
   /// function ptr to window object
   void setWindPtr(void *);
   /// a function ptr to show progress of converting and exporting
@@ -315,6 +322,9 @@ private:
 #else
   friend class Kernel;
 #endif //  #ifdef SLOPECRAFTL_CAPI
+  friend class TokiColor;
+  friend void * SlopeCraft::AllowedRGBList4AiCvters();
+  friend void * SlopeCraft::BasicalRGBList4AiCvters();
   // friend void * allowedRGB();
   // friend void * allowedMap();
   enum ColorSpace

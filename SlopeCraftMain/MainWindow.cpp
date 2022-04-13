@@ -1573,7 +1573,7 @@ void MainWindow::on_allowGlassBridge_stateChanged(int arg1) {
     ui->glassBridgeInterval->setEnabled(arg1);
 }
 
-void MainWindow::showError(void *p,SlopeCraft::errorFlag error) {
+void MainWindow::showError(void *p,SlopeCraft::errorFlag error,const char *) {
     MainWindow * wind=(MainWindow*)p;
     QString title,text;
     bool isFatal=false;
