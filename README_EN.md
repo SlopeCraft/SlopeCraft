@@ -15,15 +15,14 @@
 > Get your pixel painting in minecraft(all kinds of them!).
 
 # Principles
-* [Pinciple of Map Pixel Arts](https://github.com/ToKiNoBug/SlopeCraftTutorial/blob/main/BasicPrinciple/Principle%20of%20map%20pixel%20arts_EN.md)
+* [Pinciple of Map Pixel Arts](https://tokinobug.github.io/SlopeCraftTutorial/en_US/BasicPrinciple/)
 
 # Tutorials:
 
-* [SlopeCraftv3.1 Tutorial](https://github.com/ToKiNoBug/SlopeCraftTutorial/blob/main/v3.1Tutorial/v3.1Tutorial.md)
-* [SlopeCraftv3.1 使用教程](https://github.com/ToKiNoBug/SlopeCraftTutorial/blob/main/v3.1Tutorial/v3.1%E6%95%99%E7%A8%8B%E4%B8%AD%E6%96%87%E7%89%88.md)
-* [SlopeCraft傻瓜级使用教程](https://github.com/ToKiNoBug/SlopeCraftTutorial/blob/main/v3.0Tutorial/%E5%82%BB%E7%93%9C%E7%BA%A7%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B.md)
-* [SlopeCraft v3.6 UserGuide](https://github.com/ToKiNoBug/SlopeCraftTutorial/blob/v3.6/v3.6/v3.6%E6%95%99%E7%A8%8B.tex)
-* [SlopeCraft v3.7 UserGuide](https://github.com/ToKiNoBug/SlopeCraftTutorial/blob/v3.7/en_US/v3.7/v3.7Tutorial.tex)
+* [SlopeCraftv3.1 Tutorial](https://tokinobug.github.io/SlopeCraftTutorial/en_US/v3.1/)
+* [SlopeCraftv3.1 使用教程](https://tokinobug.github.io/SlopeCraftTutorial/zh_CN/v3.1/)
+* [SlopeCraft傻瓜级使用教程](https://tokinobug.github.io/SlopeCraftTutorial/zh_CN/v3.0/)
+* [SlopeCraft v3.7 UserGuide](https://github.com/ToKiNoBug/SlopeCraftTutorial/blob/main/en_US/v3.7/v3.7Tutorial.tex)
 
 # FAQ：
 
