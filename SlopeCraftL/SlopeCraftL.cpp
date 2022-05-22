@@ -41,7 +41,7 @@ void * SCL_EXPORT AllowedMapList4AiCvters() {
 }
 
 void * SCL_EXPORT BasicalRGBList4AiCvters() {
-    return &TokiSlopeCraft::Basic._RGB;
+    return const_cast<ColorList*>(&TokiSlopeCraft::Basic._RGB);
 }
 }   //  end namespace SlopeCraft
 

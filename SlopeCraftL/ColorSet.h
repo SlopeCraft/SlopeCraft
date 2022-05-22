@@ -25,25 +25,28 @@ This file is part of SlopeCraft.
 #include "defines.h"
 #include "TokiColor.h"
 
-//using namespace Eigen;
+// using namespace Eigen;
 
-class ColorSet{
-    public:
-        explicit ColorSet();
-        explicit ColorSet(int ColorNum);
-        ColorList _RGB;
-        ColorList  HSV;
-        ColorList  Lab;
-        ColorList  XYZ;
-        MapList  Map;
-        bool ApplyAllowed(ColorSet*standard,bool *MIndex);
-        uint16_t colorCount() const;
+class ColorSet
+{
+public:
+    explicit ColorSet();
+    explicit ColorSet(int ColorNum);
+    explicit ColorSet(const float *rgbSrc);
+    ColorList _RGB;
+    ColorList HSV;
+    ColorList Lab;
+    ColorList XYZ;
+    MapList Map;
+    bool ApplyAllowed(const ColorSet & standard, bool *MIndex);
+    uint16_t colorCount() const;
 };
 
-namespace SlopeCraft {
-extern const ColorList *const Basic4External;
-extern const ColorList *const Allowed4External;
-extern const MapList *const AllowedMapList4External;
+namespace SlopeCraft
+{
+    extern const ColorList *const Basic4External;
+    extern const ColorList *const Allowed4External;
+    extern const MapList *const AllowedMapList4External;
 }
 
 void GetMap(unsigned char *Map);
@@ -51,22 +54,22 @@ void GetMap(unsigned char *Map);
 void GetMap(MapList &Map);
 
 void f(float &);
-void invf(float&);
-void RGB2HSV(float, float, float,  float &, float &, float &);
-void HSV2RGB(float,float,float,float&,float&,float&);
+void invf(float &);
+void RGB2HSV(float, float, float, float &, float &, float &);
+void HSV2RGB(float, float, float, float &, float &, float &);
 void RGB2XYZ(float R, float G, float B, float &X, float &Y, float &Z);
 void XYZ2Lab(float X, float Y, float Z, float &L, float &a, float &b);
-void Lab2XYZ(float L,float a,float b,float&X,float&Y,float&Z);
+void Lab2XYZ(float L, float a, float b, float &X, float &Y, float &Z);
 
-float Lab00_diff(float,float,float,float,float,float);
+float Lab00_diff(float, float, float, float, float, float);
 
 float squeeze01(float);
-ARGB RGB2ARGB(float,float,float);
-ARGB HSV2ARGB(float,float,float);
-ARGB XYZ2ARGB(float,float,float);
-ARGB Lab2ARGB(float,float,float);
-ARGB ComposeColor(const ARGB&front,const ARGB&back);
-bool readFromFile(const char*FileName,Eigen::ArrayXXf & M);
-bool readFromTokiColor(const char*,Eigen::ArrayXXf &,const std::string &);
+ARGB RGB2ARGB(float, float, float);
+ARGB HSV2ARGB(float, float, float);
+ARGB XYZ2ARGB(float, float, float);
+ARGB Lab2ARGB(float, float, float);
+ARGB ComposeColor(const ARGB &front, const ARGB &back);
+bool readFromFile(const char *FileName, Eigen::ArrayXXf &M);
+bool readFromTokiColor(const char *, Eigen::ArrayXXf &, const std::string &);
 uint8_t h2d(char);
 #endif // COLORSET_H
