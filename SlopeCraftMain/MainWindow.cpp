@@ -338,6 +338,14 @@ void MainWindow::loadColormap() {
         qDebug("成功载入颜色");
     else
         qDebug("载入颜色失败");
+
+    /*
+    Eigen::Map<const Eigen::Array<float,256,3>> temp(kernel->getBasicColorMapPtrs());
+    qDebug()<<"RawColorMap=\n";
+    for(int i=0;i<temp.size();i++) {
+        qDebug()<<temp(i)<<",";
+    }
+    */
 }
 
 QJsonArray MainWindow::getFixedBlocksList(QString Path) {

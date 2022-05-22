@@ -42,6 +42,7 @@ LIBS += D:\CppLibs\zlib\lib\libzlibstatic.a
 SOURCES += \
     AiCvterOpt.cpp \
     CIEDE00.cpp \
+    ColorSource.cpp \
     HeightLine.cpp \
     NBTWriter.cpp \
     OptiChain.cpp \

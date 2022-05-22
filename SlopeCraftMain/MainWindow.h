@@ -76,6 +76,8 @@ This file is part of SlopeCraft.
 
 class MainWindow;
 
+using std::cout, std::endl, std::cerr;
+
 #include <QColor>
 #include <QRgb>
 

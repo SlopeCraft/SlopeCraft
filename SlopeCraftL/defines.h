@@ -34,6 +34,8 @@ This file is part of SlopeCraft.
 
 namespace SlopeCraft {
 
+extern const float RGBBasicSource[256*3];
+
 }
 
 using ARGB = uint32_t;
@@ -41,4 +43,5 @@ using EImage = Eigen::Array<ARGB,Eigen::Dynamic,Eigen::Dynamic>;
 using MapList = Eigen::Array<uint8_t,Eigen::Dynamic,1,Eigen::ColMajor,256>;
 using ColorList = Eigen::Array<float,Eigen::Dynamic,3,Eigen::ColMajor,256>;
 using TempVectorXf = Eigen::Array<float,Eigen::Dynamic,1,Eigen::ColMajor,256>;
+
 #endif // DEFINES_H
