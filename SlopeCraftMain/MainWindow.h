@@ -260,7 +260,6 @@ private:
 
 private:
     void loadBlockList();
-    void loadColormap();
     void turnToPage(int);
     void updateEnables();
     void preprocessImage(const QString &);

@@ -319,35 +319,6 @@ QByteArray MainWindow::parseColormap(QString FilePath,
     return dst;
 }
 
-void MainWindow::loadColormap() {
-
-    QByteArray R,H,L,X;
-    R=parseColormap("./Colors/RGB.TokiColor","RGB.TokiColor",
-                    "ba56d5af2ba89d9ba3362a72778e1624");
-
-    H=parseColormap("./Colors/HSV.TokiColor","HSV.TokiColor",
-                    "db47a74d0b32fa682d1256cce60bf574");
-
-    L=parseColormap("./Colors/Lab.TokiColor","Lab.TokiColor",
-                    "2aec9d79b920745472c0ccf56cbb7669");
-
-    X=parseColormap("./Colors/XYZ.TokiColor","XYZ.TokiColor",
-                    "6551171faf62961e3ae6bc3c2ee8d051");
-
-    if(kernel->setColorSet(R.data(),H.data(),L.data(),X.data()))
-        qDebug("成功载入颜色");
-    else
-        qDebug("载入颜色失败");
-
-    /*
-    Eigen::Map<const Eigen::Array<float,256,3>> temp(kernel->getBasicColorMapPtrs());
-    qDebug()<<"RawColorMap=\n";
-    for(int i=0;i<temp.size();i++) {
-        qDebug()<<temp(i)<<",";
-    }
-    */
-}
-
 QJsonArray MainWindow::getFixedBlocksList(QString Path) {
     QJsonDocument jd;
     while(true) {
@@ -588,11 +559,9 @@ void MainWindow::loadBlockList() {
 
     Manager->addBlocks(ja,Dir);
 
-    if(kernel->queryStep()>=SlopeCraft::colorSetReady) {
         QRgb colors[64];
         kernel->getARGB32(colors);
         Manager->setLabelColors(colors);
-    }
     //applyPre(BLBetter);
     Manager->applyPreset(BLBetter);
 }
@@ -607,8 +576,6 @@ void MainWindow::InitializeAll()
     }
     if(!Collected)
     {
-        loadColormap();
-        qDebug("颜色表加载完毕");
         loadBlockList();
         qDebug("方块列表加载完毕");
         Manager->setVersion(SlopeCraft::MC17);
@@ -618,41 +585,13 @@ void MainWindow::InitializeAll()
 
 }
 
-std::string pri_getContact(const SlopeCraft::Kernel*k,bool isG) {
-    std::string res;
-    char buf[512];
-    std::vector<char*> buff(512);
-    for(auto & i : buff) {
-        i=buf;
-    }
-    int Num=0;
-    k->getAuthorURL(&Num,buff.data());
-    buff.resize(Num);
-    for(auto & i : buff) {
-        i=new char[512];
-    }
-    k->getAuthorURL(&Num,buff.data());
-
-    if(isG) {
-        res=buff[0];
-    } else {
-        res=buff[1];
-    }
-
-    for(auto & i : buff) {
-        delete i;
-    }
-    return res;
-}
 
 void MainWindow::contactG() {
-    static std::string Toki=pri_getContact(kernel,true);
-    QDesktopServices::openUrl(QUrl(QString::fromStdString(Toki)));
+    QDesktopServices::openUrl(QUrl("github.com/ToKiNoBug"));
 }
 
 void MainWindow::contactB() {
-    static std::string Toki=pri_getContact(kernel,false);
-    QDesktopServices::openUrl(QUrl(QString::fromStdString(Toki)));
+    QDesktopServices::openUrl(QUrl("space.bilibili.com/351429231"));
 }
 
 #ifndef tpSDestroyer
@@ -778,7 +717,7 @@ void MainWindow::turnToPage8() {
 }
 
 void MainWindow::updateEnables() {
-    bool temp=kernel->queryStep()>=SlopeCraft::colorSetReady;
+    bool temp=true;
     ui->StartWithFlat->setEnabled(temp);
     ui->StartWithNotVanilla->setEnabled(temp);
     ui->StartWithNotVanilla->setEnabled(temp);
@@ -887,7 +826,7 @@ void MainWindow::preprocessImage(const QString & Path) {
     ui->ShowRawPic->setPixmap(QPixmap::fromImage(rawPic));
     ui->ShowPic->setPixmap(QPixmap::fromImage(rawPic));
 
-    kernel->decreaseStep(SlopeCraft::colorSetReady);
+    kernel->decreaseStep(SlopeCraft::nothing);
     updateEnables();
 }
 
@@ -1031,7 +970,7 @@ void MainWindow::onGameVerClicked() {
     if(ui->isGame18->isChecked()) {
         Manager->setVersion(18);
     }
-    kernel->decreaseStep(SlopeCraft::colorSetReady);
+    kernel->decreaseStep(SlopeCraft::nothing);
     onBlockListChanged();
     updateEnables();
 }
@@ -1049,14 +988,14 @@ void MainWindow::onMapTypeClicked() {
     if(ui->isMapWall->isChecked()) {
         Manager->setEnabled(12,false);
     }
-    kernel->decreaseStep(SlopeCraft::colorSetReady);
+    kernel->decreaseStep(SlopeCraft::nothing);
     onBlockListChanged();
     updateEnables();
 }
 
 void MainWindow::ChangeToCustom() {
     ui->isBLCustom->setChecked(true);
-    kernel->decreaseStep(SlopeCraft::colorSetReady);
+    kernel->decreaseStep(SlopeCraft::nothing);
     updateEnables();
 }
 
@@ -1077,7 +1016,7 @@ void MainWindow::onPresetsClicked() {
     if(ui->isMapSurvival->isChecked())
         Manager->setEnabled(12,false);
 
-    kernel->decreaseStep(SlopeCraft::colorSetReady);
+    kernel->decreaseStep(SlopeCraft::nothing);
     updateEnables();
 }
 
@@ -1890,7 +1829,7 @@ void MainWindow::setAutoCheckUpdate(bool autoCheckUpdate) {
 
 void MainWindow::onBlockListChanged() {
     //qDebug("onBlockListChanged");
-    if(kernel->queryStep()<SlopeCraft::step::colorSetReady) {
+    if(kernel->queryStep()<SlopeCraft::step::nothing) {
         return;
     }
 
