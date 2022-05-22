@@ -259,8 +259,6 @@ public:
         const bool[64],
         const simpleBlock[64]);
 
-    void getAuthorURL(int *count, char **dest) const;
-    std::vector<std::string> getAuthorURL() const;
     void getARGB32(unsigned int *) const;
     // can do in wait4Image:
     void setRawImage(const unsigned int *src, short rows, short cols);
