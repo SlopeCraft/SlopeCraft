@@ -2,7 +2,7 @@
 
 ![](https://img.shields.io/badge/C%2B%2B-17-blue?style=plastic) ![](https://img.shields.io/badge/Qt-v6.1.0-brightgreen?style=plastic) ![](https://img.shields.io/badge/Eigen-v3.4.0-yellowgreen?style=plastic) 
 
-![](https://img.shields.io/badge/Minecraft-1.12~1.17-orange?style=plastic) 
+![](https://img.shields.io/badge/Minecraft-1.12~1.18-orange?style=plastic) 
 
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/TokiNoBug/SlopeCraft?style=plastic) ![GitHub](https://img.shields.io/github/license/TokiNoBug/SlopeCraft?style=plastic)
 
@@ -97,10 +97,10 @@ No Installation Required
 See tutorials listed above.
 
 # Other Related Repos
-* [SlopeCraftR](https://github.com/Van-Nya/SlopeCraftR) A rebuild version using python, but not finished now (The hope of cross-platform SlopeCraft)
 * [NBTWriter](https://github.com/ToKiNoBug/NBTWriter-of-Toki) A lib to write nbt files.
 * [SlopeCraftTutorial](https://github.com/ToKiNoBug/SlopeCraftTutorial) Tutorials
 * [SlopeCraftCompressLib](https://github.com/ToKiNoBug/SlopeCraftCompressLib) Lib for building height map and lossless compression lib.
 * [SlopeCraftLossyCompression](https://github.com/ToKiNoBug/SlopeCraftLossyCompression) Lossy compression lib, based on SlopeCraftCompressLib.
 * [SlopeCraftGlassBuilder](https://github.com/ToKiNoBug/SlopeCraftGlassBuilder) Glass bridge building lib.
 * [HeuristicFlow](https://github.com/TokiNoBug/HeuristicFlow) GA implementation.
+* [SlopeCraft for Linux macOS](https://github.com/HMUniversity/SlopeCraft-for-Linux-macOS) Adpative and releases for Linux and MacOS.

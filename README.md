@@ -2,7 +2,7 @@
 
 ![](https://img.shields.io/badge/C%2B%2B-17-blue?style=plastic) ![](https://img.shields.io/badge/Qt-v6.1.0-brightgreen?style=plastic) ![](https://img.shields.io/badge/Eigen-v3.4.0-yellowgreen?style=plastic) 
 
-![](https://img.shields.io/badge/Minecraft-1.12~1.17-orange?style=plastic) 
+![](https://img.shields.io/badge/Minecraft-1.12~1.18-orange?style=plastic) 
 
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/TokiNoBug/SlopeCraft?style=plastic) ![GitHub](https://img.shields.io/github/license/TokiNoBug/SlopeCraft?style=plastic)
 
@@ -106,10 +106,10 @@ SlopeCraft包含以下核心功能：
 
 
 # 其他相关仓库
-* [SlopeCraftR](https://github.com/Van-Nya/SlopeCraftR) （外壳使用python的重制版，但尚未完成）（跨平台的艰巨任务交给它了）
 * [NBTWriter](https://github.com/ToKiNoBug/NBTWriter-of-Toki) 写NBT文件的库（自己写的，功能比较弱，满足自己的需求就够了）
 * [SlopeCraftTutorial](https://github.com/ToKiNoBug/SlopeCraftTutorial) 专门存放教程
 * [SlopeCraftCompressLib](https://github.com/ToKiNoBug/SlopeCraftCompressLib) 无损压缩库，也承担了构建高度矩阵的功能
 * [SlopeCraftLossyCompression](https://github.com/ToKiNoBug/SlopeCraftLossyCompression) 有损压缩库，基于无损压缩库实现
 * [SlopeCraftGlassBuilder](https://github.com/ToKiNoBug/SlopeCraftGlassBuilder) 搭桥库
 * [HeuristicFlow](https://github.com/TokiNoBug/HeuristicFlow) 遗传算法实现
+* [SlopeCraft for Linux macOS](https://github.com/HMUniversity/SlopeCraft-for-Linux-macOS) Linux和MacOS上的适配和releases
