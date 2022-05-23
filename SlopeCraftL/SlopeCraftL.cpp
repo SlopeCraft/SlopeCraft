@@ -28,9 +28,9 @@ using namespace SlopeCraft;
 
 namespace SlopeCraft
 {
-const ColorList *const Basic4External=(ColorList *)BasicalRGBList4AiCvters();
-const ColorList *const Allowed4External=(ColorList *)AllowedRGBList4AiCvters();
-const MapList *const AllowedMapList4External=(MapList *)AllowedMapList4AiCvters();
+const ColorList *const Basic4External=reinterpret_cast<ColorList *>(BasicalRGBList4AiCvters());
+const ColorList *const Allowed4External=reinterpret_cast<ColorList *>(AllowedRGBList4AiCvters());
+const MapList *const AllowedMapList4External=reinterpret_cast<MapList *>(AllowedMapList4AiCvters());
 
 void * SCL_EXPORT AllowedRGBList4AiCvters() {
     return &TokiSlopeCraft::Allowed._RGB;
