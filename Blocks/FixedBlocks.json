@@ -83,6 +83,15 @@
     "wallUseable":false
 },
 {
+	"baseColor":2,
+	"id":"minecraft:ochre_froglight[axis=y]",
+	"nameZH":"黄色蛙鸣灯",
+	"nameEN":"Ochre Froglight",
+	"icon":"ochre_froglight_top.png",
+	"version":"19",
+	"isGlowing":true
+},
+{
     "baseColor":3,
     "id":"minecraft:mushroom_stem[east=true,west=true,north=true,south=true,up=true,down=true]",
     "nameZH":"蘑菇柄",
@@ -344,6 +353,14 @@
     "version":0,
     "idOld":"minecraft:dirt[variant=dirt,snowy=false]",
     "endermanPickable":true
+},
+{
+	"baseColor":10,
+	"id":"minecraft:packed_mud",
+	"nameZH":"泥坯",
+	"nameEN":"Packed mud",
+	"icon":"packed_mud.png",
+	"version":19
 },
 {
     "baseColor":11,
@@ -689,6 +706,15 @@
     "idOld":"minecraft:stained_glass[color=pink]"
 },
 {
+	"baseColor":20,
+	"id":"minecraft:pearlescent_froglight[axis=y]",
+	"nameZH":"紫色蛙鸣灯",
+	"nameEN":"Verdant Froglight",
+	"icon":"pearlescent_froglight_top.png",
+	"version":"19",
+	"isGlowing":true
+},
+{
     "baseColor":21,
     "id":"minecraft:gray_concrete",
     "nameZH":"灰色混凝土",
@@ -788,6 +814,14 @@
     "icon":"prismarine.png",
     "version":0,
     "idOld":"minecraft:prismarine[variant=prismarine]"
+},
+{
+	"baseColor":23,
+	"id":"minecraft_sculk_sensor[power=0,sculk_sensor_phase=inactive,waterlogged=false]",
+	"nameZH":"潜声传感器",
+	"nameEN":"Sculk sensor",
+	"icon":"sculk_sensor_side.png",
+	"version":19
 },
 {
     "baseColor":24,
@@ -1008,6 +1042,15 @@
     "isGlowing":true
 },
 {
+	"baseColor":28,
+	"id":"minecraft:mangrove_planks",
+	"nameZH":"红树木板",
+	"nameEN":"Mangrove planks",
+	"icon":"mangrove_planks.png",
+	"version":19,
+	"burnable":true
+},
+{
     "baseColor":29,
     "id":"minecraft:black_concrete",
     "nameZH":"黑色混凝土",
@@ -1066,6 +1109,39 @@
     "nameEN":"Polished blackstone",
     "icon":"polished_blackstone.png",
     "version":16
+},
+{
+    "baseColor":29,
+    "id":"minecraft:sculk",
+    "nameZH":"潜声方块",
+    "nameEN":"Sculk block",
+    "icon":"sculk.png",
+    "version":19
+},
+{
+    "baseColor":29,
+    "id":"minecraft:sculk_catalyst[bloom=false]",
+    "nameZH":"潜声催化剂",
+    "nameEN":"Sculk catalyst",
+    "icon":"sculk_catalyst_top.png",
+    "version":19
+},
+{
+    "baseColor":29,
+    "id":"minecraft:sculk_shrieker[shrieking=false,waterlogged=false]",
+    "nameZH":"潜声尖啸体",
+    "nameEN":"Sculk shrieker",
+    "icon":"sculk_shrieker_side.png",
+    "version":19
+},
+{
+    "baseColor":29,
+    "id":"minecraft:sculk_vein[down=true,east=false,north=false,south=false,up=false,waterlogged=false,west=false]",
+    "nameZH":"潜声藤蔓",
+    "nameEN":"Sculk vein",
+    "icon":"sculk_vein.png",
+    "version":19,
+    "needGlass":true
 },
 {
     "baseColor":30,
@@ -1296,6 +1372,14 @@
     "version":17
 },
 {
+	"baseColor":44,
+	"id":"minecraft:mud_bricks",
+	"nameZH":"泥砖",
+	"nameEN":"Mud bricks",
+	"icon":"mud_bricks.png",
+	"version":19
+},
+{
     "baseColor":45,
     "id":"minecraft:cyan_terracotta",
     "nameZH":"青色陶瓦",
@@ -1303,6 +1387,14 @@
     "icon":"cyan_terracotta.png",
     "version":0,
     "idOld":"minecraft:stained_hardened_clay[color=cyan]"
+},
+{
+	"baseColor":45,
+	"id":"minecraft:mud",
+	"nameZH":"泥巴",
+	"nameEN":"Mud",
+	"icon":"mud.png",
+	"version":19
 },
 {
     "baseColor":46,
@@ -1565,5 +1657,14 @@
     "isGlowing":true,
     "burnable":true,
     "wallUseable":false
+},
+{
+	"baseColor":61,
+	"id":"minecraft:verdant_froglight[axis=y]",
+	"nameZH":"绿色蛙鸣灯",
+	"nameEN":"Verdant Froglight",
+	"icon":"verdant_froglight_top.png",
+	"version":"19",
+	"isGlowing":true
 }
 ]}
