@@ -17,6 +17,9 @@
 # Principles
 * [Pinciple of Map Pixel Arts](https://github.com/ToKiNoBug/SlopeCraftTutorial/blob/main/en_US/BasicPrinciple/README.md)
 
+# For Other Platforms
+* [SlopeCraft for Linux macOS](https://github.com/HMUniversity/SlopeCraft-for-Linux-macOS) Adpative and releases for Linux and MacOS.
+
 # Tutorials:
 
 * [SlopeCraftv3.1 Tutorial](https://github.com/ToKiNoBug/SlopeCraftTutorial/tree/v3.7/en_US/v3.1)

@@ -17,6 +17,9 @@
 # 原理介绍
 * [地图画原理](github.com/ToKiNoBug/SlopeCraftTutorial/tree/main/BasicPrinciple)
 
+# 其他平台上的发行版
+* [SlopeCraft for Linux macOS](https://github.com/HMUniversity/SlopeCraft-for-Linux-macOS) Linux和MacOS上的适配和release
+
 # 使用教程
 
 * [SlopeCraft傻瓜级使用教程v3.0](https://github.com/ToKiNoBug/SlopeCraftTutorial/tree/v3.7/zh_CN/v3.0)
