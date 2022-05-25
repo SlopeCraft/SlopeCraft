@@ -1642,6 +1642,23 @@ void MainWindow::checkVersion() {
     return;
 }
 
+QJsonObject MainWindow::GithubAPIJson2Latest3xVer(const QJsonArray & ja) {
+    for(const auto & jvref : ja) {
+        const QJsonObject & jo=jvref.toObject();
+        const QString tagName=jo["tag_name"].toString();
+        qDebug().noquote().nospace()<<"tagName="<<tagName;
+        if(jo["prerelease"]==true)
+            continue;
+        if(jo["draft"]==true)
+            continue;
+        if(tagName.startsWith("v3.",Qt::CaseInsensitive)) {
+            qDebug()<<"chosen latest version : "<<tagName;
+            return jo;
+        }
+    }
+    return ja.first().toObject();
+}
+
 void MainWindow::grabVersion(bool isAuto) {
     static bool isRunning=false;
     if(isRunning) {
@@ -1649,7 +1666,7 @@ void MainWindow::grabVersion(bool isAuto) {
     }
     isRunning=true;
 
-    static const QString url="https://api.github.com/repos/TokiNoBug/SlopeCraft/releases/latest";
+    static const QString url="https://api.github.com/repos/TokiNoBug/SlopeCraft/releases";
 
     QEventLoop tempLoop;
     QNetworkAccessManager * manager=new QNetworkAccessManager;
@@ -1685,9 +1702,9 @@ void MainWindow::grabVersion(bool isAuto) {
     }
 
 
-    QJsonObject jo=jd.object();
+    QJsonArray ja=jd.array();
 
-    bool hasKey=jo.contains("tag_name");
+    bool hasKey=ja.first().toObject().contains("tag_name");
     if(!hasKey) {
         QMessageBox::StandardButton userReply=
                 QMessageBox::information(this,
@@ -1705,7 +1722,7 @@ void MainWindow::grabVersion(bool isAuto) {
         return;
     }
 
-    bool isKeyString=jo.value("tag_name").isString();
+    bool isKeyString=ja.first().toObject().value("tag_name").isString();
     if(!isKeyString) {
         QMessageBox::StandardButton userReply=
                 QMessageBox::information(this,
@@ -1723,9 +1740,11 @@ void MainWindow::grabVersion(bool isAuto) {
         return;
     }
 
-    QString updateInfo=jo["body"].toString();
+    QJsonObject latest3xJo=GithubAPIJson2Latest3xVer(ja);
 
-    QString latestVersion=jo["tag_name"].toString();
+    QString updateInfo=latest3xJo["body"].toString();
+
+    QString latestVersion=latest3xJo["tag_name"].toString();
     if(latestVersion==selfVersion) {
         if(!isAuto)
         QMessageBox::information(this,
@@ -1760,11 +1779,13 @@ void MainWindow::grabVersion(bool isAuto) {
 
         if(userReply==VersionDialog::userChoice::Yes) {
             QDesktopServices::openUrl(
-                        QUrl("https://github.com/ToKiNoBug/SlopeCraft/releases/latest"));
+                        QUrl(latest3xJo["url"].toString()));
+            /*
             if(trans.language()=="zh_CN") {
                 QDesktopServices::openUrl(
                             QUrl("https://gitee.com/TokiNoBug/SlopeCraft/releases"));
             }
+            */
         }
         if(userReply==VersionDialog::userChoice::NoToAll) {
             setAutoCheckUpdate(false);
