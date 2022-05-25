@@ -301,24 +301,13 @@ std::string TokiSlopeCraft::makeTests(const AbstractBlock **src,
     switch (mcVer)
     {
     case MC12:
-        file.writeInt("DataVersion", Kernel::mcVersion2VersionNumber(mcVer));
-        break;
     case MC13:
-        file.writeInt("DataVersion", Kernel::mcVersion2VersionNumber(mcVer));
-        break;
     case MC14:
-        file.writeInt("DataVersion", Kernel::mcVersion2VersionNumber(mcVer));
-        break;
     case MC15:
-        file.writeInt("DataVersion", Kernel::mcVersion2VersionNumber(mcVer));
-        break;
     case MC16:
-        file.writeInt("DataVersion", Kernel::mcVersion2VersionNumber(mcVer));
-        break;
     case MC17:
-        file.writeInt("DataVersion", Kernel::mcVersion2VersionNumber(mcVer));
-        break;
     case MC18:
+    case MC19:
         file.writeInt("DataVersion", Kernel::mcVersion2VersionNumber(mcVer));
         break;
     default:
@@ -1115,22 +1104,14 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(const std::string &FolderP
             switch (mcVer)
             {
             case MC12:
-                break;
             case MC13:
                 break;
             case MC14:
-                MapFile.writeInt("DataVersion", mcVersion2VersionNumber(mcVer));
-                break;
             case MC15:
-                MapFile.writeInt("DataVersion", mcVersion2VersionNumber(mcVer));
-                break;
             case MC16:
-                MapFile.writeInt("DataVersion", mcVersion2VersionNumber(mcVer));
-                break;
             case MC17:
-                MapFile.writeInt("DataVersion", mcVersion2VersionNumber(mcVer));
-                break;
             case MC18:
+            case MC19:
                 MapFile.writeInt("DataVersion", mcVersion2VersionNumber(mcVer));
                 break;
             default:
@@ -1170,18 +1151,9 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(const std::string &FolderP
                 MapFile.writeByte("locked", 1);
                 break;
             case MC16:
-                MapFile.writeListHead("banners", NBT::idCompound, 0);
-                MapFile.writeListHead("frames", NBT::idCompound, 0);
-                MapFile.writeString("dimension", "minecraft:overworld");
-                MapFile.writeByte("locked", 1);
-                break;
             case MC17:
-                MapFile.writeListHead("banners", NBT::idCompound, 0);
-                MapFile.writeListHead("frames", NBT::idCompound, 0);
-                MapFile.writeString("dimension", "minecraft:overworld");
-                MapFile.writeByte("locked", 1);
-                break;
             case MC18:
+            case MC19:
                 MapFile.writeListHead("banners", NBT::idCompound, 0);
                 MapFile.writeListHead("frames", NBT::idCompound, 0);
                 MapFile.writeString("dimension", "minecraft:overworld");
@@ -1821,26 +1793,12 @@ std::string TokiSlopeCraft::exportAsLitematic(const std::string &TargetName,
         Lite.writeInt("Version", 4);
         break;
     case MC13:
-        Lite.writeInt("MinecraftDataVersion", mcVersion2VersionNumber(mcVer));
-        Lite.writeInt("Version", 5);
-        break;
     case MC14:
-        Lite.writeInt("MinecraftDataVersion", mcVersion2VersionNumber(mcVer));
-        Lite.writeInt("Version", 5);
-        break;
     case MC15:
-        Lite.writeInt("MinecraftDataVersion", mcVersion2VersionNumber(mcVer));
-        Lite.writeInt("Version", 5);
-        break;
     case MC16:
-        Lite.writeInt("MinecraftDataVersion", mcVersion2VersionNumber(mcVer));
-        Lite.writeInt("Version", 5);
-        break;
     case MC17:
-        Lite.writeInt("MinecraftDataVersion", mcVersion2VersionNumber(mcVer));
-        Lite.writeInt("Version", 5);
-        break;
     case MC18:
+    case MC19:
         Lite.writeInt("MinecraftDataVersion", mcVersion2VersionNumber(mcVer));
         Lite.writeInt("Version", 5);
         break;
@@ -1960,24 +1918,13 @@ std::string TokiSlopeCraft::exportAsStructure(const std::string &TargetName) con
     switch (mcVer)
     {
     case MC12:
-        file.writeInt("MinecraftDataVersion", mcVersion2VersionNumber(mcVer));
-        break;
     case MC13:
-        file.writeInt("MinecraftDataVersion", mcVersion2VersionNumber(mcVer));
-        break;
     case MC14:
-        file.writeInt("MinecraftDataVersion", mcVersion2VersionNumber(mcVer));
-        break;
     case MC15:
-        file.writeInt("MinecraftDataVersion", mcVersion2VersionNumber(mcVer));
-        break;
     case MC16:
-        file.writeInt("MinecraftDataVersion", mcVersion2VersionNumber(mcVer));
-        break;
     case MC17:
-        file.writeInt("MinecraftDataVersion", mcVersion2VersionNumber(mcVer));
-        break;
     case MC18:
+    case MC19:
         file.writeInt("MinecraftDataVersion", mcVersion2VersionNumber(mcVer));
         break;
     default:

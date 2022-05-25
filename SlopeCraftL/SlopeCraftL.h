@@ -196,6 +196,8 @@ namespace SlopeCraft
         MC17 = 17,
         /// 1.18
         MC18 = 18,
+        /// 1.19
+        MC19 = 19,
         /// future version
         FUTURE = 255
     };
@@ -242,8 +244,7 @@ namespace SlopeCraft
         Flat = 1,
         /// map data files
         FileOnly = 2,
-        /// wall
-        Wall = 3,
+        Wall=3
     };
     enum step
     {
