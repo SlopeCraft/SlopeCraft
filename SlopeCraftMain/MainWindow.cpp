@@ -257,15 +257,15 @@ void MainWindow::showPreview()
     tempE.resize(kernel->getImageRows(),kernel->getImageCols());
     short a,b;
     kernel->getConvertedImage(&a,&b,tempE.data());
-    //std::cerr<<__FILE__<<" , "<<__LINE__<<std::endl;
+    //cerr<<__FILE__<<" , "<<__LINE__<<endl;
     QImage temp=EImage2QImage(tempE);
-    //std::cerr<<__FILE__<<" , "<<__LINE__<<std::endl;
+    //cerr<<__FILE__<<" , "<<__LINE__<<endl;
     preWind->ShowMaterialList();
-    //std::cerr<<__FILE__<<" , "<<__LINE__<<std::endl;
+    //cerr<<__FILE__<<" , "<<__LINE__<<endl;
     preWind->showConvertedImage(temp);
-    //std::cerr<<__FILE__<<" , "<<__LINE__<<std::endl;
+    //cerr<<__FILE__<<" , "<<__LINE__<<endl;
     preWind->show();
-    //std::cerr<<__FILE__<<" , "<<__LINE__<<std::endl;
+    //cerr<<__FILE__<<" , "<<__LINE__<<endl;
 }
 
 void MainWindow::keepAwake(void*) {
@@ -1058,11 +1058,11 @@ void MainWindow::kernelSetType() {
     int colorN=0;
     SlopeCraft::Kernel::getColorMapPtrs(nullptr,&allowedMap,&colorN);
     /*
-    std::cout<<"\n\nAllowedMap=";
+    cout<<"\n\nAllowedMap=";
     for(int i=0;i<colorN;i++) {
-        std::cout<<int(allowedMap[i])<<" , ";
+        cout<<int(allowedMap[i])<<" , ";
     }
-    std::cout<<std::endl<<std::endl;
+    cout<<endl<<endl;
     */
     updateEnables();
 
@@ -1307,7 +1307,7 @@ void MainWindow::onExportLiteclicked(QString path) {
             return;
         }
         qDebug("开始导出投影");
-        std::cout<<FileName<<std::endl;
+        cout<<FileName<<endl;
 
 
         ui->FinishExLite->setEnabled(false);
@@ -1957,19 +1957,19 @@ void MainWindow::testBlockList() {
                targetName.toLocal8Bit().data(),
                unCompressed);
     if(strlen(unCompressed)<=0) {
-        //std::cerr<<"Success"<<std::endl;
+        //cerr<<"Success"<<endl;
         return;
     }
 
     qDebug()<<"File="<<__FILE__<<" , Line="<<__LINE__;
-    std::cerr<<"Compress success\n";
+    cerr<<"Compress success\n";
     /*
     QFile tempFile(QString::fromLocal8Bit(unCompressed));
     if(tempFile.exists()&&!tempFile.remove()) {
-        std::cerr<<"Failed to remove temporary file."<<std::endl;
+        cerr<<"Failed to remove temporary file."<<endl;
         return;
     }
     qDebug()<<"File="<<__FILE__<<" , Line="<<__LINE__;
-    std::cerr<<"Succeeded to remove temporary file\n"<<tempFile.fileName().toLocal8Bit().data();
+    cerr<<"Succeeded to remove temporary file\n"<<tempFile.fileName().toLocal8Bit().data();
     */
 }
