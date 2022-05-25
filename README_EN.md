@@ -17,8 +17,8 @@
 # Principles
 * [Pinciple of Map Pixel Arts](https://github.com/ToKiNoBug/SlopeCraftTutorial/blob/main/en_US/BasicPrinciple/README.md)
 
-# For Other Platforms
-* [SlopeCraft for Linux macOS](https://github.com/HMUniversity/SlopeCraft-for-Linux-macOS) Adpative and releases for Linux and MacOS.
+# Builds for Other Platforms
+* [SlopeCraft for macOS](https://github.com/iXORTech/SlopeCraft-for-macOS) - Compatibility changes and builds for macOS
 
 # Tutorials:
 
@@ -100,10 +100,10 @@ No Installation Required
 See tutorials listed above.
 
 # Other Related Repos
-* [NBTWriter](https://github.com/ToKiNoBug/NBTWriter-of-Toki) A lib to write nbt files.
-* [SlopeCraftTutorial](https://github.com/ToKiNoBug/SlopeCraftTutorial) Tutorials
-* [SlopeCraftCompressLib](https://github.com/ToKiNoBug/SlopeCraftCompressLib) Lib for building height map and lossless compression lib.
-* [SlopeCraftLossyCompression](https://github.com/ToKiNoBug/SlopeCraftLossyCompression) Lossy compression lib, based on SlopeCraftCompressLib.
-* [SlopeCraftGlassBuilder](https://github.com/ToKiNoBug/SlopeCraftGlassBuilder) Glass bridge building lib.
-* [HeuristicFlow](https://github.com/TokiNoBug/HeuristicFlow) GA implementation.
-* [SlopeCraft for Linux macOS](https://github.com/HMUniversity/SlopeCraft-for-Linux-macOS) Adpative and releases for Linux and MacOS.
+* [NBTWriter](https://github.com/ToKiNoBug/NBTWriter-of-Toki) - Lib for writing NBT files.
+* [SlopeCraftTutorial](https://github.com/ToKiNoBug/SlopeCraftTutorial) - Tutorials
+* [SlopeCraftCompressLib](https://github.com/ToKiNoBug/SlopeCraftCompressLib) - Lib for building height map and lossless compression lib.
+* [SlopeCraftLossyCompression](https://github.com/ToKiNoBug/SlopeCraftLossyCompression) - Lossy compression lib, based on SlopeCraftCompressLib.
+* [SlopeCraftGlassBuilder](https://github.com/ToKiNoBug/SlopeCraftGlassBuilder) - Glass bridge building lib.
+* [HeuristicFlow](https://github.com/TokiNoBug/HeuristicFlow) - GA implementation.
+* [SlopeCraft for macOS](https://github.com/iXORTech/SlopeCraft-for-macOS) - Compatibility changes and builds for macOS
