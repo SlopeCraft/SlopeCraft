@@ -217,7 +217,7 @@ private slots:
 
     void on_reportBugs_clicked();
 
-    void on_StartWithWall_clicked();
+    //void on_StartWithWall_clicked();
 
     void on_ExImage_clicked();
 

@@ -88,7 +88,7 @@
 	"nameZH":"黄色蛙鸣灯",
 	"nameEN":"Ochre Froglight",
 	"icon":"ochre_froglight_top.png",
-	"version":"19",
+	"version":19,
 	"isGlowing":true
 },
 {
@@ -711,7 +711,7 @@
 	"nameZH":"紫色蛙鸣灯",
 	"nameEN":"Verdant Froglight",
 	"icon":"pearlescent_froglight_top.png",
-	"version":"19",
+	"version":19,
 	"isGlowing":true
 },
 {
@@ -1664,7 +1664,7 @@
 	"nameZH":"绿色蛙鸣灯",
 	"nameEN":"Verdant Froglight",
 	"icon":"verdant_froglight_top.png",
-	"version":"19",
+	"version":19,
 	"isGlowing":true
 }
 ]}

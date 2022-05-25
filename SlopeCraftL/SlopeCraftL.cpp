@@ -77,7 +77,7 @@ Kernel::Kernel() {
 }
 
 const char * Kernel::getSCLVersion() {
-    return "v3.7.0";
+    return "v3.8.0";
 }
 
 void Kernel::getColorMapPtrs(const float** f,const unsigned char** m,int* rows) {
@@ -118,7 +118,7 @@ uint64_t Kernel::mcVersion2VersionNumber(gameVersion g) {
         return 2865;
 #warning The full version of MC1.19 has not been released yet. Remind to update the version number later.
     case gameVersion::MC19:
-        return 3098;// 1.19-pre1
+        return 3099;// 1.19-pre1
     default:
         return 1919810;
     }

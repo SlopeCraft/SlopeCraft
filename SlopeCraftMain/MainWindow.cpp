@@ -23,7 +23,7 @@ This file is part of SlopeCraft.
 #include <QProcess>
 #include <QDebug>
 #include <QRgb>
-#include "./MainWindow.h"
+#include "MainWindow.h"
 
 const ushort MainWindow::BLCreative[64]={0,0,1,1,0,0,0,0,3,0,4,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 const ushort MainWindow::BLCheaper[64]={0,0,0,0,1,0,5,2,3,0,4,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -146,13 +146,16 @@ MainWindow::MainWindow(QWidget *parent)
             this,&MainWindow::onGameVerClicked);
     connect(ui->isGame18,&QRadioButton::toggled,
             this,&MainWindow::onGameVerClicked);
+    connect(ui->isGame19,&QRadioButton::toggled,
+            this,&MainWindow::onGameVerClicked);
 
     connect(ui->isMapCreative,&QRadioButton::toggled,
             this,&MainWindow::onMapTypeClicked);
     connect(ui->isMapSurvival,&QRadioButton::toggled,
             this,&MainWindow::onMapTypeClicked);
+    /*
     connect(ui->isMapWall,&QRadioButton::toggled,
-            this,&MainWindow::onMapTypeClicked);
+            this,&MainWindow::onMapTypeClicked);*/
     connect(ui->isMapFlat,&QRadioButton::toggled,
             this,&MainWindow::onMapTypeClicked);
 
@@ -269,55 +272,6 @@ void MainWindow::keepAwake(void*) {
     QCoreApplication::processEvents();
 }
 
-QByteArray MainWindow::parseColormap(QString FilePath,
-                                     const QString & rawName,
-                                     const char * pattern) {
-    QByteArray dst;
-    QString title,text;
-        while(true) {
-            qDebug("225");
-            QFile temp(FilePath);
-            if(temp.exists()) {
-                temp.open(QFile::OpenModeFlag::ReadOnly);
-                dst=temp.readAll();
-
-                if(QCryptographicHash::hash(
-                            dst,QCryptographicHash::Algorithm::Md5).toHex()
-                    ==pattern) {
-                    break;
-                } else {
-                    //如果文件存在但校验失败
-                    title=tr("颜色表文件")+rawName+tr("被篡改");
-                    text=tr("这是程序运行所必须的文件，且绝对不允许篡改，请重新下载最新版的SlopeCraft，或者重新寻找它。");
-                }
-            } else {
-                //如果文件不存在
-                title=tr("颜色表文件")+rawName+tr("不存在");
-                text=tr("这是程序运行所必须的文件，请重新寻找");
-            }
-
-            int userChoice=QMessageBox::critical(this,title,text,QMessageBox::StandardButton::Retry,
-                                  QMessageBox::StandardButton::No);
-            if(userChoice==QMessageBox::StandardButton::Retry) {
-                FilePath=QFileDialog::getOpenFileName(this,
-                                            tr("颜色表文件")+rawName+tr("不存在或被篡改，请手动寻找")
-                                            ,"./Colors",rawName);
-                if(FilePath.isEmpty()) {
-                    qDebug("252");
-                    exit(0);
-                    return QByteArray();
-                } else {
-                    qDebug("255");
-                    continue;
-                }
-            } else {
-                qDebug("259");
-                exit(0);
-                return QByteArray();
-            }
-        }
-    return dst;
-}
 
 QJsonArray MainWindow::getFixedBlocksList(QString Path) {
     QJsonDocument jd;
@@ -604,7 +558,7 @@ tpS::~tpS() {
 void MainWindow::turnToPage(int page)
 {
     page%=9;
-    QString newtitle="SlopeCraft v3.7.0 Copyright © 2021-2022 TokiNoBug    ";
+    QString newtitle="SlopeCraft v3.8.0 Copyright © 2021-2022 TokiNoBug    ";
     switch (page)
     {
         case 0:
@@ -776,12 +730,13 @@ void MainWindow::on_StartWithNotVanilla_clicked() {
     onBlockListChanged();
     turnToPage(1);
 }
-
+/*
 void MainWindow::on_StartWithWall_clicked() {
     ui->isMapWall->setChecked(true);
     onBlockListChanged();
     turnToPage(1);
 }
+*/
 
 void MainWindow::preprocessImage(const QString & Path) {
 
@@ -970,6 +925,9 @@ void MainWindow::onGameVerClicked() {
     if(ui->isGame18->isChecked()) {
         Manager->setVersion(18);
     }
+    if(ui->isGame19->isChecked()) {
+        Manager->setVersion(19);
+    }
     kernel->decreaseStep(SlopeCraft::nothing);
     onBlockListChanged();
     updateEnables();
@@ -985,9 +943,10 @@ void MainWindow::onMapTypeClicked() {
     if(ui->isMapSurvival->isChecked()) {
         Manager->setEnabled(12,false);
     }
+    /*
     if(ui->isMapWall->isChecked()) {
         Manager->setEnabled(12,false);
-    }
+    }*/
     kernel->decreaseStep(SlopeCraft::nothing);
     onBlockListChanged();
     updateEnables();
@@ -1062,12 +1021,13 @@ void MainWindow::kernelSetType() {
         type=SlopeCraft::mapTypes::Flat;
     if(ui->isMapSurvival->isChecked())
         type=SlopeCraft::mapTypes::Slope;
+    /*
     if(ui->isMapWall->isChecked())
-        type=SlopeCraft::mapTypes::Wall;
+        type=SlopeCraft::mapTypes::Wall;*/
     }
 
 
-    SlopeCraft::gameVersion ver=SlopeCraft::gameVersion::MC17;
+    SlopeCraft::gameVersion ver=SlopeCraft::gameVersion::MC19;
     {
     if(ui->isGame12->isChecked())
         ver=SlopeCraft::gameVersion::MC12;
@@ -1081,6 +1041,8 @@ void MainWindow::kernelSetType() {
         ver=SlopeCraft::gameVersion::MC16;
     if(ui->isGame17->isChecked())
         ver=SlopeCraft::gameVersion::MC17;
+    if(ui->isGame18->isChecked())
+        ver=SlopeCraft::gameVersion::MC18;
     }
 
     bool allowedBaseColor[64];
@@ -1980,12 +1942,13 @@ void MainWindow::testBlockList() {
 
     qDebug()<<"File="<<__FILE__<<" , Line="<<__LINE__;
     std::cerr<<"Compress success\n";
-
+    /*
     QFile tempFile(QString::fromLocal8Bit(unCompressed));
     if(tempFile.exists()&&!tempFile.remove()) {
         std::cerr<<"Failed to remove temporary file."<<std::endl;
         return;
     }
     qDebug()<<"File="<<__FILE__<<" , Line="<<__LINE__;
-    std::cerr<<"Succeeded to remove temporary file\n";
+    std::cerr<<"Succeeded to remove temporary file\n"<<tempFile.fileName().toLocal8Bit().data();
+    */
 }
