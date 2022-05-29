@@ -31,7 +31,7 @@ LIBS += -fopenmp
 TEMPLATE = lib
 DEFINES += SLOPECRAFTL_LIBRARY
 
-CONFIG += std::c++17
+CONFIG += c++17
 
 LIBS += D:\CppLibs\zlib\lib\libzlibstatic.a
 
@@ -75,7 +75,9 @@ HEADERS += \
     SlopeCraftL_global.h
 
 # Default rules for deployment.
-unix {
-    target.path = /usr/lib
-}
-!isEmpty(target.path): INSTALLS += target
+#unix {
+#    target.path = /usr/lib
+#}
+#!isEmpty(target.path): INSTALLS += target
+
+

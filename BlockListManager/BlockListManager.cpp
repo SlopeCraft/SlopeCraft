@@ -20,8 +20,10 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
-#include "BlockListManager.h"
 #include <QJsonDocument>
+#include "BlockListManager.h"
+#include "TokiBaseColor.h"
+#include "TokiBlock.h"
 
 BlockListManager::BlockListManager(QHBoxLayout * _area,
                                    QObject *parent) : QObject(parent)
@@ -60,7 +62,7 @@ BlockListManager::~BlockListManager() {
 }
 
 void BlockListManager::setVersion(uchar _ver) {
-    if(_ver<12||_ver>19)return;
+    if(_ver<12||_ver>SlopeCraft::SCL_maxAvailableVersion())return;
     TokiBaseColor::mcVer=_ver;
     for(uchar i=0;i<tbcs.size();i++)
         tbcs[i]->versionCheck();

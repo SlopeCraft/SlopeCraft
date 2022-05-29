@@ -29,7 +29,16 @@ This file is part of SlopeCraft.
 #include <QGroupBox>
 #include <QHBoxLayout>
 #include <QJsonArray>
+#include <QRadioButton>
+
+
+
+#include "SlopeCraftL.h"
+
+#include "TokiBlock.h"
 #include "TokiBaseColor.h"
+
+
 class BlockListManager : public QObject
 {
     Q_OBJECT

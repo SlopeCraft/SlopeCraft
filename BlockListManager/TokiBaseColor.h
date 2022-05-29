@@ -30,6 +30,7 @@ This file is part of SlopeCraft.
 #include <QCheckBox>
 #include <vector>
 #include <cmath>
+
 #include "TokiBlock.h"
 
 class BlockListManager;

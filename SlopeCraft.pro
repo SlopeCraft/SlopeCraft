@@ -1,8 +1,10 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    BlockListManager \
-    #Kernel \
     SlopeCraftL \
+    BlockListManager \
     SlopeCraftMain \
     imageCutter
+
+BlockListManager.depends = SlopeCraftL
+SlopeCraftMain.depends = BlockListManager SlopeCraftL

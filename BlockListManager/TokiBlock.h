@@ -29,13 +29,15 @@ This file is part of SlopeCraft.
 #include <QJsonObject>
 #include <QFile>
 #include <QMessageBox>
+//#include "BlockListManager.h"
 #include "SlopeCraftL.h"
+
+class TokiBaseColor;
+
 
 enum Language {
     ZH,EN
 };
-
-class TokiBaseColor;
 
 class TokiBlock : public QObject
 {
