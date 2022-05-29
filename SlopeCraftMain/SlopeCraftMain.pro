@@ -11,7 +11,7 @@ RC_ICONS = others/SlopeCraft.ico
 
 RC_LANG = 0x0004
 
-VERSION += 3.8.0.0
+VERSION += 3.8.1.0
 
 #QMAKE_TARGET_COMPANY = TokiNoBug
 #公司名称

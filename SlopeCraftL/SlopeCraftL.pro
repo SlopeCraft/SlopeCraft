@@ -11,7 +11,7 @@ INCLUDEPATH += \
 
 RC_LANG = 0x0004
 
-VERSION += 3.8.0.0
+VERSION += 3.8.1.0
 
 QMAKE_TARGET_DESCRIPTION = SlopeCraft Library# (with AiConverter)
 #描述信息

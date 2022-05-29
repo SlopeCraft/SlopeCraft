@@ -33,7 +33,7 @@
    <font/>
   </property>
   <property name="windowTitle">
-   <string notr="true">SlopeCraft v3.8.0  Copyright © 2021-2022 TokiNoBug</string>
+   <string notr="true">SlopeCraft v3.8.1  Copyright © 2021-2022 TokiNoBug</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -902,7 +902,7 @@ font: 11pt &quot;微软雅黑&quot;;
            <string notr="true">font: 9pt &quot;Tekton Pro&quot;;</string>
           </property>
           <property name="text">
-           <string notr="true">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:36pt; font-weight:700; font-style:italic; color:#ffffff;&quot;&gt;SlopeCraft &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:700; font-style:italic; color:#ffffff;&quot;&gt;v3.8.0&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:14pt; font-weight:700; font-style:italic; color:#ffff00;&quot;&gt;Copyright © 2021-2022 TokiNoBug&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string notr="true">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:36pt; font-weight:700; font-style:italic; color:#ffffff;&quot;&gt;SlopeCraft &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:700; font-style:italic; color:#ffffff;&quot;&gt;v3.8.1&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:14pt; font-weight:700; font-style:italic; color:#ffff00;&quot;&gt;Copyright © 2021-2022 TokiNoBug&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
@@ -1728,8 +1728,8 @@ font: 11pt &quot;微软雅黑&quot;;
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>551</width>
-               <height>378</height>
+               <width>75</width>
+               <height>22</height>
               </rect>
              </property>
              <property name="sizePolicy">

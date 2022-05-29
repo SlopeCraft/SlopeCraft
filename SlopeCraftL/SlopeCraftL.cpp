@@ -77,7 +77,7 @@ Kernel::Kernel() {
 }
 
 const char * Kernel::getSCLVersion() {
-    return "v3.8.0";
+    return "v3.8.1";
 }
 
 void Kernel::getColorMapPtrs(const float** f,const unsigned char** m,int* rows) {
