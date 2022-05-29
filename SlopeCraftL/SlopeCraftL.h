@@ -629,6 +629,8 @@ extern "C"
                                             const SCL_HalfTpPixelSt = SCL_HalfTpPixelSt::ComposeWithBackGround,
                                             unsigned int backGround = 0xFFFFFFFF);
 
+        unsigned char SCL_EXPORT SCL_maxAvaliableVersion();
+
 #ifndef SLOPECRAFTL_CAPI
     } //  namespace SlopeCraft
 #endif

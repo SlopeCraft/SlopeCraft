@@ -1043,6 +1043,8 @@ void MainWindow::kernelSetType() {
         ver=SlopeCraft::gameVersion::MC17;
     if(ui->isGame18->isChecked())
         ver=SlopeCraft::gameVersion::MC18;
+    if(ui->isGame19->isChecked())
+        ver=SlopeCraft::gameVersion::MC19;
     }
 
     bool allowedBaseColor[64];

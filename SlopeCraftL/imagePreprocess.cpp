@@ -50,3 +50,8 @@ void SCL_EXPORT SCL_preprocessImage(ARGB * data,
         }
     }
 }
+
+
+unsigned char SCL_EXPORT SCL_maxAvaliableVersion() {
+    return 19;
+}

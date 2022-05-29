@@ -60,7 +60,7 @@ BlockListManager::~BlockListManager() {
 }
 
 void BlockListManager::setVersion(uchar _ver) {
-    if(_ver<12||_ver>=18)return;
+    if(_ver<12||_ver>19)return;
     TokiBaseColor::mcVer=_ver;
     for(uchar i=0;i<tbcs.size();i++)
         tbcs[i]->versionCheck();
