@@ -1,8 +1,5 @@
-#Use this line when in non-qt mode
 CONFIG -= qt
 
-#Use this line when in with-qt mode
-#CONFIG += qt core gui concurrent
 
 INCLUDEPATH += \
                                D:/CppLibs/eigen-3.4.0 \

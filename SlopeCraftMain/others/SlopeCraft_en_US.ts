@@ -163,39 +163,32 @@
 <context>
     <name>BlockListManager</name>
     <message>
-        <location filename="../../BlockListManager/BlockListManager.cpp" line="281"/>
         <source>预设文件格式错误</source>
-        <translation>Syntax error in your preset file</translation>
+        <translation type="vanished">Syntax error in your preset file</translation>
     </message>
     <message>
-        <location filename="../../BlockListManager/BlockListManager.cpp" line="282"/>
         <source>解析预设文件时遇到json格式错误：</source>
-        <translation>A json format error occurred when parsing preset files:</translation>
+        <translation type="vanished">A json format error occurred when parsing preset files:</translation>
     </message>
     <message>
-        <location filename="../../BlockListManager/BlockListManager.cpp" line="314"/>
         <source>预设文件中包含未知方块</source>
-        <translation>Unknown block in preset</translation>
+        <translation type="vanished">Unknown block in preset</translation>
     </message>
     <message>
-        <location filename="../../BlockListManager/BlockListManager.cpp" line="315"/>
         <source>预设文件中基色</source>
-        <translation>In your preset, base color </translation>
+        <translation type="vanished">In your preset, base color </translation>
     </message>
     <message>
-        <location filename="../../BlockListManager/BlockListManager.cpp" line="316"/>
         <source>对应的方块id</source>
-        <translation> &apos;s corresponding block id </translation>
+        <translation type="vanished"> &apos;s corresponding block id </translation>
     </message>
     <message>
-        <location filename="../../BlockListManager/BlockListManager.cpp" line="317"/>
         <source>在方块列表中不存在</source>
-        <translation> doesn&apos;t exist in the block palette.</translation>
+        <translation type="vanished"> doesn&apos;t exist in the block palette.</translation>
     </message>
     <message>
-        <location filename="../../BlockListManager/BlockListManager.cpp" line="318"/>
         <source>将为这个启用默认选项</source>
-        <translation>Default block will be selected for this base color.</translation>
+        <translation type="vanished">Default block will be selected for this base color.</translation>
     </message>
 </context>
 <context>
@@ -567,7 +560,7 @@ map files</translation>
     <message>
         <location filename="mainwindow.ui" line="2759"/>
         <location filename="mainwindow.ui" line="3303"/>
-        <location filename="../MainWindow.cpp" line="1440"/>
+        <location filename="../MainWindow.cpp" line="1442"/>
         <source>导出</source>
         <translation>Export</translation>
     </message>
@@ -630,8 +623,9 @@ sequence number</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="3414"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:700; color:#ffffff;&quot;&gt;地图画生成完毕！&lt;/span&gt;&lt;br/&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:11pt; font-weight:700; color:#ffffff;&quot;&gt;关于SlopeCraft&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;感谢你使用SlopeCraft，我是开发者TokiNoBug。SlopeCraft是由我开发的一款立体地图画生成器，主要用于在minecraft中制造可以生存实装的立体地图画（但同样支持传统的平板地图画）。立体地图画的优势在于拥有更高的“画质”，此处不再详述。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;你正在使用的是SlopeCraft的第三代版本，在开发时使用了Qt，zlib和eigen，对上述库的开发者表示感谢。也感谢Mojang，整个软件就是为minecraft而设计的。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;你可以访问：&lt;/span&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/SlopeCraft/&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;SlopeCraft的github&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;，&lt;/span&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;我的github主页&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;，&lt;/span&gt;&lt;a href=&quot;https://space.bilibili.com/351429231&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;我的bilibili&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;本软件遵循GPL-3.0及以后版本(GPL-3.0 or later)协议开放源代码。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Copyright © 2021 TokiNoBug&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:700; color:#ffffff;&quot;&gt;Your map is finished!&lt;/span&gt;&lt;br/&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:11pt; font-weight:700; color:#ffffff;&quot;&gt;关于SlopeCraft&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Thank you for using SlopeCraft, I&apos;m TokiNoBug, the developer. SlopeCraft is a minecraft map generator, supporting many kinds of maps.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;You are currently using the 3rd generation of SlopeCraft, based on Qt, Eigen and zlib. I&apos;m grateful to developers of thest libs. Also thanks Mojang, the whole software is developed for minecraft&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Contact with me:&lt;/span&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/SlopeCraft/&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;SlopeCraft的github&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;，&lt;/span&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;My homepage on GitHub:&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;，&lt;/span&gt;&lt;a href=&quot;https://space.bilibili.com/351429231&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;bilibili:&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;This program is released under license GPL-3.0 or later.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Copyright © 2021 TokiNoBug&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:700; color:#ffffff;&quot;&gt;地图画生成完毕！&lt;/span&gt;&lt;br/&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:11pt; font-weight:700; color:#ffffff;&quot;&gt;关于SlopeCraft&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;感谢你使用SlopeCraft，我是开发者TokiNoBug。SlopeCraft是由我开发的一款立体地图画生成器，主要用于在minecraft中制造可以生存实装的立体地图画（但同样支持传统的平板地图画）。立体地图画的优势在于拥有更高的“画质”，此处不再详述。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;你正在使用的是SlopeCraft的第三代版本，在开发时使用了Qt，zlib和eigen，对上述库的开发者表示感谢。也感谢Mojang，整个软件就是为minecraft而设计的。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;AbrasiveBoar902（PopChrono）为本软件的设计和优化贡献了不少力量，并编写了基于SlopeCraftL核心的全新界面；Cubik65536和67au为本软件在MacOS和Linux的适配做出了贡献。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;你可以访问：&lt;/span&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/SlopeCraft/&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;SlopeCraft的github&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;，&lt;/span&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;我的github主页&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;，&lt;/span&gt;&lt;a href=&quot;https://space.bilibili.com/351429231&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;我的bilibili&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;本软件遵循GPL-3.0及以后版本(GPL-3.0 or later)协议开放源代码。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Copyright © 2021-2022 TokiNoBug&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <oldsource>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:700; color:#ffffff;&quot;&gt;地图画生成完毕！&lt;/span&gt;&lt;br/&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:11pt; font-weight:700; color:#ffffff;&quot;&gt;关于SlopeCraft&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;感谢你使用SlopeCraft，我是开发者TokiNoBug。SlopeCraft是由我开发的一款立体地图画生成器，主要用于在minecraft中制造可以生存实装的立体地图画（但同样支持传统的平板地图画）。立体地图画的优势在于拥有更高的“画质”，此处不再详述。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;你正在使用的是SlopeCraft的第三代版本，在开发时使用了Qt，zlib和eigen，对上述库的开发者表示感谢。也感谢Mojang，整个软件就是为minecraft而设计的。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;你可以访问：&lt;/span&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/SlopeCraft/&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;SlopeCraft的github&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;，&lt;/span&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;我的github主页&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;，&lt;/span&gt;&lt;a href=&quot;https://space.bilibili.com/351429231&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;我的bilibili&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;本软件遵循GPL-3.0及以后版本(GPL-3.0 or later)协议开放源代码。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Copyright © 2021 TokiNoBug&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</oldsource>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:700; color:#ffffff;&quot;&gt;Your map is finished!&lt;/span&gt;&lt;br/&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:11pt; font-weight:700; color:#ffffff;&quot;&gt;About SlopeCraft&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Thank you for using SlopeCraft, I&apos;m TokiNoBug, the developer. SlopeCraft is a minecraft map generator, supporting many kinds of maps.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;You are currently using the 3rd generation of SlopeCraft, based on Qt, Eigen and zlib. I&apos;m grateful to developers of thest libs. Also thanks Mojang, the whole software is developed for minecraft.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;AbrasiveBoar902(PopChrono) made great effort to the designing and optimization, and also developed a brand-new interface based on SlopeCraft&apos;s kernel. Besides, Cubik65536 and 67au made contribution to the adaption on MacOS and Linux platforms respectively.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Contact with me:&lt;/span&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/SlopeCraft/&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;SlopeCraft on github&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;，&lt;/span&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;My homepage on GitHub&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;，&lt;/span&gt;&lt;a href=&quot;https://space.bilibili.com/351429231&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;bilibili&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;This program is released under license GPL-3.0 or later.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Copyright © 2021-2022 TokiNoBug&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="3441"/>
@@ -707,7 +701,7 @@ sequence number</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="3695"/>
-        <location filename="../MainWindow.cpp" line="1879"/>
+        <location filename="../MainWindow.cpp" line="1902"/>
         <source>保存预设</source>
         <translation>Save preset</translation>
     </message>
@@ -896,281 +890,281 @@ Click Retry to find this directory; Click Ignore to ignore it; Click Close to ex
 After you reset the strategy, load the image again.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1291"/>
+        <location filename="../MainWindow.cpp" line="1293"/>
         <source>导出为投影/结构方块文件</source>
         <translation>Export as litematic or structure</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1293"/>
+        <location filename="../MainWindow.cpp" line="1295"/>
         <source>投影文件(*.litematic) ;; 结构方块文件(*.nbt)</source>
         <translation>Litematic(*.litematic) ;; Structure(*.nbt)</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1325"/>
+        <location filename="../MainWindow.cpp" line="1327"/>
         <source>(xz坐标=-65±128×整数)</source>
         <translation>(xz coordinates=-65±128×any integer)</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1341"/>
+        <location filename="../MainWindow.cpp" line="1343"/>
         <source>投影文件导出失败</source>
         <translation>Failed to export as litematic.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1342"/>
+        <location filename="../MainWindow.cpp" line="1344"/>
         <source>这可能是汉字编码错误造成的。请检查路径中是否有汉字</source>
         <translation>There might be sth wrong with characters&apos; encoding, check if the filepath includes non-English characters.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1377"/>
+        <location filename="../MainWindow.cpp" line="1379"/>
         <source>你输入的起始序号不可用，请输入大于等于0的整数！</source>
         <translation>Invalid sequence number. Please input a INTEGER greater than or equal to zero!</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1393"/>
+        <location filename="../MainWindow.cpp" line="1395"/>
         <source>你输入的起始序号不可用</source>
         <translation>Invalid sequence number.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1394"/>
+        <location filename="../MainWindow.cpp" line="1396"/>
         <source>请输入大于等于0的整数！</source>
         <translation>Please input a INTEGER greater than or equal to zero!</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1400"/>
+        <location filename="../MainWindow.cpp" line="1402"/>
         <source>请选择导出的文件夹</source>
         <translation>Please select a folder for exporting.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1407"/>
+        <location filename="../MainWindow.cpp" line="1409"/>
         <source>你选择的文件夹不存在！</source>
         <translation>Folder dosen&apos;t exist!</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1408"/>
+        <location filename="../MainWindow.cpp" line="1410"/>
         <source>你可以选择存档中的data文件夹</source>
         <translation>You can just select the folder called data under your saves.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1416"/>
+        <location filename="../MainWindow.cpp" line="1418"/>
         <source>请稍等</source>
         <translation>Please wait</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1493"/>
+        <location filename="../MainWindow.cpp" line="1495"/>
         <source>转化原图为地图画时出错</source>
         <translation>Error occurred when converting image to map</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1494"/>
+        <location filename="../MainWindow.cpp" line="1496"/>
         <source>原图为空！你可能没有导入原图！</source>
         <translation>Your source image is empty! You might have forgot to import source image!</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1497"/>
+        <location filename="../MainWindow.cpp" line="1499"/>
         <source>构建高度矩阵时出现错误</source>
         <translation>Error occurred when making height martix</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1498"/>
+        <location filename="../MainWindow.cpp" line="1500"/>
         <source>原版地图画不允许出现第三个阴影（不存在的几何关系不可能生存实装！）
 请检查你的地图画类型，纯文件地图画不可以导出为投影！</source>
         <translation>The third shadow shouldn&apos;t apper in vanilla map!
 Check your map type, remember that file-only map can&apos;t be exported as litematic!</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1502"/>
+        <location filename="../MainWindow.cpp" line="1504"/>
         <source>跳步操作</source>
         <translation>You skipped a step</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1503"/>
+        <location filename="../MainWindow.cpp" line="1505"/>
         <source>SlopeCraft不允许你跳步操作，请按照左侧竖边栏的顺序操作！</source>
         <translation>Skipping operation is not allowed. Please follow the order shown in the sidebar!</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1506"/>
+        <location filename="../MainWindow.cpp" line="1508"/>
         <source>有损压缩失败</source>
         <translation>Inteligent lossy compression failed</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1507"/>
+        <location filename="../MainWindow.cpp" line="1509"/>
         <source>在构建高度矩阵时，有损压缩失败，没能将地图画压缩到目标高度。         这可能是因为地图画行数过大。         尝试启用无损压缩，或者提高最大允许高度——不要给软件地图画太大的压力！</source>
         <translation>Lossy compressor failed to deflate the maximum height down to your minmium allowed height.
 It&apos;s probably because your image is too large.
 Try enabling lossless compression, or increase the maximun allowed height -- don&apos;t push it too hard!</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1512"/>
+        <location filename="../MainWindow.cpp" line="1514"/>
         <source>最大允许高度太小了</source>
         <translation>The maxmium allowed height is too low</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1513"/>
+        <location filename="../MainWindow.cpp" line="1515"/>
         <source>有损压缩的最大允许不要低于14，否则很容易压缩失败</source>
         <translation>The maximum allowed height should be no less than 14, otherwise lossy compressor seldom succeeds.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1517"/>
+        <location filename="../MainWindow.cpp" line="1519"/>
         <source>严重错误：颜色表文件HSV.TokiColor损坏</source>
         <translation>Fatal Error: colormap file HSV.TokiColor is corrupted</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1518"/>
-        <location filename="../MainWindow.cpp" line="1523"/>
-        <location filename="../MainWindow.cpp" line="1528"/>
-        <location filename="../MainWindow.cpp" line="1533"/>
+        <location filename="../MainWindow.cpp" line="1520"/>
+        <location filename="../MainWindow.cpp" line="1525"/>
+        <location filename="../MainWindow.cpp" line="1530"/>
+        <location filename="../MainWindow.cpp" line="1535"/>
         <source>SlopeCraft不能正常解析颜色表文件，它是不可以被修改的！</source>
         <translation>SlopeCraft failed to parse the colormap file, it mustn&apos;t be modified!</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1522"/>
+        <location filename="../MainWindow.cpp" line="1524"/>
         <source>严重错误：颜色表文件Lab.TokiColor损坏</source>
         <translation>Fatal Error: colormap file Lab.TokiColor is corrupted</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1527"/>
+        <location filename="../MainWindow.cpp" line="1529"/>
         <source>严重错误：颜色表文件XYZ.TokiColor损坏</source>
         <translation>Fatal Error: colormap file XYZ.TokiColor is corrupted</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1532"/>
+        <location filename="../MainWindow.cpp" line="1534"/>
         <source>严重错误：颜色表文件RGB.TokiColor损坏</source>
         <translation>Fatal Error: colormap file RGB.TokiColor is corrupted</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1536"/>
+        <location filename="../MainWindow.cpp" line="1538"/>
         <source>允许使用的颜色过少</source>
         <translation>Too few colors allowed!</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1537"/>
+        <location filename="../MainWindow.cpp" line="1539"/>
         <source>你应该勾选启用尽可能多的基色，颜色太少是不行的！</source>
         <translation>You should enable as much base colors as possible.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1540"/>
+        <location filename="../MainWindow.cpp" line="1542"/>
         <source>导出时Gzip压缩文件失败</source>
         <translation>Failed to gzip when exporting.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1541"/>
-        <location filename="../MainWindow.cpp" line="1545"/>
+        <location filename="../MainWindow.cpp" line="1543"/>
+        <location filename="../MainWindow.cpp" line="1547"/>
         <source>这可能是因为路径中含有中文字符！</source>
         <translation>This might because of non-English characters in filename of path.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1544"/>
+        <location filename="../MainWindow.cpp" line="1546"/>
         <source>导出时删除临时文件失败</source>
         <translation>Failed to remove temporary file when exporting.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1575"/>
+        <location filename="../MainWindow.cpp" line="1577"/>
         <source>正在构建高度矩阵</source>
         <translation>Making height matrix</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1578"/>
+        <location filename="../MainWindow.cpp" line="1580"/>
         <source>正在构建三维结构</source>
         <translation>Building 3D structure</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1581"/>
+        <location filename="../MainWindow.cpp" line="1583"/>
         <source>正在收集整张图片的颜色</source>
         <translation>Collecting colors of the whole image</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1584"/>
+        <location filename="../MainWindow.cpp" line="1586"/>
         <source>正在压缩立体地图画</source>
         <translation>Compressing 3D map pixel arts</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1587"/>
+        <location filename="../MainWindow.cpp" line="1589"/>
         <source>正在为立体地图画搭桥</source>
         <translation>Constructing glass bridge</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1590"/>
+        <location filename="../MainWindow.cpp" line="1592"/>
         <source>正在匹配颜色</source>
         <translation>Matching colors</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1593"/>
+        <location filename="../MainWindow.cpp" line="1595"/>
         <source>正在使用抖动仿色</source>
         <translation>Dithering</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1596"/>
+        <location filename="../MainWindow.cpp" line="1598"/>
         <source>正在将平板地图画变为墙面地图画</source>
         <translation>Converting flat map art to wall map art</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1599"/>
+        <location filename="../MainWindow.cpp" line="1601"/>
         <source>正在写入三维结构</source>
         <translation>Writing 3D structure</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1602"/>
+        <location filename="../MainWindow.cpp" line="1604"/>
         <source>正在写入方块列表</source>
         <translation>Writing block palette</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1605"/>
+        <location filename="../MainWindow.cpp" line="1607"/>
         <source>正在写入地图数据文件</source>
         <translation>Writing map data</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1608"/>
+        <location filename="../MainWindow.cpp" line="1610"/>
         <source>正在写入基础信息</source>
         <translation>Writing meta data</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1732"/>
+        <location filename="../MainWindow.cpp" line="1753"/>
         <source>检查更新完毕</source>
         <translation>Check for update</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1733"/>
+        <location filename="../MainWindow.cpp" line="1754"/>
         <source>现在你正在用的就是最新版本！</source>
         <translation>You are currently using the latest version!</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1802"/>
+        <location filename="../MainWindow.cpp" line="1825"/>
         <source>可用</source>
         <translation> </translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1804"/>
+        <location filename="../MainWindow.cpp" line="1827"/>
         <source>种颜色</source>
         <translation> colors available.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1821"/>
+        <location filename="../MainWindow.cpp" line="1844"/>
         <source>保存截屏</source>
         <translation>Save screenshot</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1823"/>
+        <location filename="../MainWindow.cpp" line="1846"/>
         <source>图片 (*.jpg *.jpeg *.tif *.bmp *.png)</source>
         <translation>Image (*.jpg *.jpeg *.tif *.bmp *.png)</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1971"/>
-        <location filename="../MainWindow.cpp" line="1848"/>
+        <location filename="../MainWindow.cpp" line="1871"/>
         <source>保存当前显示图片</source>
         <translation>Save current image</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1850"/>
+        <location filename="../MainWindow.cpp" line="1873"/>
         <source>图片(*.png)</source>
         <translation>Image(*.png)</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1886"/>
+        <location filename="../MainWindow.cpp" line="1909"/>
         <source>选择预设文件</source>
         <translation>Select a preset file</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1924"/>
+        <location filename="../MainWindow.cpp" line="1947"/>
         <source>测试方块列表的结构文件</source>
         <translation>Svae structure file for blocklist testing</translation>
     </message>
@@ -1256,19 +1250,19 @@ Try enabling lossless compression, or increase the maximun allowed height -- don
         <translation>stacks</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1673"/>
+        <location filename="../MainWindow.cpp" line="1692"/>
         <source>检查更新时遇到Json解析错误</source>
         <translation>Json-parsing error when checking updates</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1674"/>
-        <location filename="../MainWindow.cpp" line="1695"/>
-        <location filename="../MainWindow.cpp" line="1713"/>
+        <location filename="../MainWindow.cpp" line="1693"/>
+        <location filename="../MainWindow.cpp" line="1714"/>
+        <location filename="../MainWindow.cpp" line="1732"/>
         <source>网址  </source>
         <translation>The message that </translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1675"/>
+        <location filename="../MainWindow.cpp" line="1694"/>
         <source>  回复的信息无法通过json解析。
 
 这只是检查更新时遇到的故障，但不要紧，软件该用还能用。
@@ -1284,9 +1278,9 @@ Click No to ignore the error; Click NoToAll will disable auto-update-checking.
 Error in detail: </translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1677"/>
-        <location filename="../MainWindow.cpp" line="1698"/>
-        <location filename="../MainWindow.cpp" line="1715"/>
+        <location filename="../MainWindow.cpp" line="1696"/>
+        <location filename="../MainWindow.cpp" line="1717"/>
+        <location filename="../MainWindow.cpp" line="1734"/>
         <source>
 
 具体回复的信息为：
@@ -1297,13 +1291,13 @@ Received message in detail:
 </translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1694"/>
-        <location filename="../MainWindow.cpp" line="1712"/>
+        <location filename="../MainWindow.cpp" line="1713"/>
+        <location filename="../MainWindow.cpp" line="1731"/>
         <source>检查更新时返回信息错误</source>
         <translation>Received error message when checking for updates.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1696"/>
+        <location filename="../MainWindow.cpp" line="1715"/>
         <source>  回复的信息中不包含版本号（&quot;tag_name&quot;）。
 
 这只是检查更新时遇到的故障，但不要紧，软件该用还能用。
@@ -1316,7 +1310,7 @@ Click No to ignore the error; Click NoToAll will disable auto-update-checking.
 </translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1714"/>
+        <location filename="../MainWindow.cpp" line="1733"/>
         <source>  回复的信息中，版本号（&quot;tag_name&quot;）不是字符串。
 
 这只是检查更新时遇到的故障，但不要紧，软件该用还能用。
@@ -1329,24 +1323,24 @@ Click No to ignore the error; Click NoToAll will disable auto-update-checking.
 </translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1745"/>
+        <location filename="../MainWindow.cpp" line="1766"/>
         <source>SlopeCraft已更新</source>
         <translation>SlopeCraft has updated!</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1746"/>
+        <location filename="../MainWindow.cpp" line="1767"/>
         <source>好消息！好消息！SlopeCraft更新了！
 </source>
         <translation>Wow! SlopeCraft finally UPDATED!
 </translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1747"/>
+        <location filename="../MainWindow.cpp" line="1768"/>
         <source>当前版本为</source>
         <translation>Current version: </translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1748"/>
+        <location filename="../MainWindow.cpp" line="1769"/>
         <source>，检查到最新版本为</source>
         <translation>, latest version: </translation>
     </message>
@@ -1419,26 +1413,22 @@ Click No to ignore the error; Click NoToAll will disable auto-update-checking.
 <context>
     <name>TokiBlock</name>
     <message>
-        <location filename="../../BlockListManager/TokiBlock.cpp" line="60"/>
         <source>错误：方块对应的图像不存在或不可用</source>
-        <translation>Error: image of a block doesn&apos;t exist of is damaged</translation>
+        <translation type="vanished">Error: image of a block doesn&apos;t exist of is damaged</translation>
     </message>
     <message>
-        <location filename="../../BlockListManager/TokiBlock.cpp" line="61"/>
         <source>方块id：</source>
-        <translation>Block id: </translation>
+        <translation type="vanished">Block id: </translation>
     </message>
     <message>
-        <location filename="../../BlockListManager/TokiBlock.cpp" line="62"/>
         <source>
 缺失的图像：</source>
-        <translation>Corresponding image file: </translation>
+        <translation type="vanished">Corresponding image file: </translation>
     </message>
     <message>
-        <location filename="../../BlockListManager/TokiBlock.cpp" line="63"/>
         <source>
 你可以点击Yes忽略这个错误，点击YesToAll屏蔽同类的警告，或者点击Close结束程序</source>
-        <translation>
+        <translation type="vanished">
 Click Yes to ignore it, Click YesToAll to ingore all these warnings; Click Close to exit.</translation>
     </message>
 </context>

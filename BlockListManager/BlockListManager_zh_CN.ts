@@ -4,37 +4,37 @@
 <context>
     <name>BlockListManager</name>
     <message>
-        <location filename="BlockListManager.cpp" line="281"/>
+        <location filename="BlockListManager.cpp" line="283"/>
         <source>预设文件格式错误</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="BlockListManager.cpp" line="282"/>
+        <location filename="BlockListManager.cpp" line="284"/>
         <source>解析预设文件时遇到json格式错误：</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="BlockListManager.cpp" line="314"/>
+        <location filename="BlockListManager.cpp" line="316"/>
         <source>预设文件中包含未知方块</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="BlockListManager.cpp" line="315"/>
+        <location filename="BlockListManager.cpp" line="317"/>
         <source>预设文件中基色</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="BlockListManager.cpp" line="316"/>
+        <location filename="BlockListManager.cpp" line="318"/>
         <source>对应的方块id</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="BlockListManager.cpp" line="317"/>
+        <location filename="BlockListManager.cpp" line="319"/>
         <source>在方块列表中不存在</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="BlockListManager.cpp" line="318"/>
+        <location filename="BlockListManager.cpp" line="320"/>
         <source>将为这个启用默认选项</source>
         <translation type="unfinished"></translation>
     </message>
