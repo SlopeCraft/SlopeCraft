@@ -2,7 +2,7 @@
 
 ![](https://img.shields.io/badge/C%2B%2B-17-blue?style=plastic) ![](https://img.shields.io/badge/Qt-v6.1.0-brightgreen?style=plastic) ![](https://img.shields.io/badge/Eigen-v3.4.0-yellowgreen?style=plastic) 
 
-![](https://img.shields.io/badge/Minecraft-1.12~1.18-orange?style=plastic) 
+![](https://img.shields.io/badge/Minecraft-1.12~1.19-orange?style=plastic) 
 
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/TokiNoBug/SlopeCraft?style=plastic) ![GitHub](https://img.shields.io/github/license/TokiNoBug/SlopeCraft?style=plastic)
 
