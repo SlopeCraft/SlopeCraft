@@ -48,6 +48,8 @@ inline uint32_t getB(ARGB argb) {
 }
 
 class ColorSet;
+class ConstColorSet;
+
 class TokiColor
 {
 public:
@@ -65,7 +67,7 @@ public:
     //static short DepthIndexEnd[4];
     static std::array<uint8_t,4> DepthCount;
     static const ColorSet * const Allowed;
-    static const ColorSet * const  Basic;
+    static const ConstColorSet * const  Basic;
     unsigned char apply(ARGB);
 private:
     unsigned char apply();

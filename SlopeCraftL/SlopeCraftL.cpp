@@ -28,21 +28,10 @@ using namespace SlopeCraft;
 
 namespace SlopeCraft
 {
-const ColorList *const Basic4External=reinterpret_cast<ColorList *>(BasicalRGBList4AiCvters());
-const ColorList *const Allowed4External=reinterpret_cast<ColorList *>(AllowedRGBList4AiCvters());
-const MapList *const AllowedMapList4External=reinterpret_cast<MapList *>(AllowedMapList4AiCvters());
+const Eigen::Array<float,256,3> & Basic4External=TokiSlopeCraft::Basic._RGB;
+const ColorList & Allowed4External=TokiSlopeCraft::Allowed._RGB;
+const MapList & AllowedMapList4External=TokiSlopeCraft::Allowed.Map;
 
-void * SCL_EXPORT AllowedRGBList4AiCvters() {
-    return &TokiSlopeCraft::Allowed._RGB;
-}
-
-void * SCL_EXPORT AllowedMapList4AiCvters() {
-    return &TokiSlopeCraft::Allowed.Map;
-}
-
-void * SCL_EXPORT BasicalRGBList4AiCvters() {
-    return const_cast<ColorList*>(&TokiSlopeCraft::Basic._RGB);
-}
 }   //  end namespace SlopeCraft
 
 AbstractBlock * AbstractBlock::create() {

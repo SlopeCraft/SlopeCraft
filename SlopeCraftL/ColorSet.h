@@ -27,31 +27,39 @@ This file is part of SlopeCraft.
 
 // using namespace Eigen;
 
+class ConstColorSet
+{
+public:
+    explicit ConstColorSet()=default;
+    explicit ConstColorSet(const float *rgbSrc);
+
+    Eigen::Array<float,256,3> _RGB;
+    Eigen::Array<float,256,3> HSV;
+    Eigen::Array<float,256,3> Lab;
+    Eigen::Array<float,256,3> XYZ;
+    Eigen::Array<uint8_t,256,1> Map;
+};
+
 class ColorSet
 {
 public:
     explicit ColorSet();
     explicit ColorSet(int ColorNum);
-    explicit ColorSet(const float *rgbSrc);
     ColorList _RGB;
     ColorList HSV;
     ColorList Lab;
     ColorList XYZ;
     MapList Map;
-    bool ApplyAllowed(const ColorSet & standard, bool *MIndex);
+    bool ApplyAllowed(const ConstColorSet & standard, bool *MIndex);
     uint16_t colorCount() const;
 };
 
 namespace SlopeCraft
 {
-    extern const ColorList *const Basic4External;
-    extern const ColorList *const Allowed4External;
-    extern const MapList *const AllowedMapList4External;
+    extern const Eigen::Array<float,256,3> & Basic4External;
+    extern const ColorList & Allowed4External;
+    extern const MapList & AllowedMapList4External;
 }
-
-void GetMap(unsigned char *Map);
-
-void GetMap(MapList &Map);
 
 void f(float &);
 void invf(float &);

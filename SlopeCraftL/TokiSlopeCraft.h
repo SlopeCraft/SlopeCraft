@@ -49,13 +49,14 @@ This file is part of SlopeCraft.
 #ifdef SLOPECRAFTL_WITH_AICVETR
 #include "AiConverterInterface.h"
 #endif
-
+/*
 namespace SlopeCraft
 {
     void *AllowedRGBList4AiCvters();
     void *AllowedMapList4AiCvters();
     void *BasicalRGBList4AiCvters();
 }
+*/
 
 using namespace SlopeCraft;
 #include <thread>
@@ -209,6 +210,10 @@ protected:
 class TokiSlopeCraft : public Kernel
 {
 public:
+    const static ConstColorSet Basic;
+    static ColorSet Allowed;
+
+public:
     TokiSlopeCraft();
     virtual ~TokiSlopeCraft();
 
@@ -314,9 +319,6 @@ private:
     friend class Kernel;
 #endif //  #ifdef SLOPECRAFTL_CAPI
     friend class TokiColor;
-    friend void *SlopeCraft::AllowedRGBList4AiCvters();
-    friend void *SlopeCraft::AllowedMapList4AiCvters();
-    friend void *SlopeCraft::BasicalRGBList4AiCvters();
     // friend void * allowedRGB();
     // friend void * allowedMap();
     enum ColorSpace
@@ -326,8 +328,6 @@ private:
         L = 'L',
         X = 'X'
     };
-    const static ColorSet Basic;
-    static ColorSet Allowed;
     static const Eigen::Array<float, 2, 3> DitherMapLR, DitherMapRL;
     static const uint32_t reportRate = 100;
 

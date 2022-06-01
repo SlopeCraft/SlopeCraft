@@ -26,7 +26,7 @@ This file is part of SlopeCraft.
 #include "TokiSlopeCraft.h"
 
 const ColorSet *const TokiColor::Allowed = &TokiSlopeCraft::Allowed;
-const ColorSet *const TokiColor::Basic = &TokiSlopeCraft::Basic;
+const ConstColorSet *const TokiColor::Basic = &TokiSlopeCraft::Basic;
 // short TokiColor::DepthIndexEnd[4]={63,127,191,255};
 std::array<uint8_t, 4> TokiColor::DepthCount = {64, 64, 64, 64};
 bool TokiColor::needFindSide = false;
@@ -34,7 +34,7 @@ char TokiColor::convertAlgo = 'R';
 
 ColorSet::ColorSet()
 {
-    GetMap(Map);
+    Map.setZero(256,3);
     _RGB.setZero(256, 3);
     HSV.setZero(256, 3);
     Lab.setZero(256, 3);
@@ -43,7 +43,7 @@ ColorSet::ColorSet()
 
 ColorSet::ColorSet(int Num)
 {
-    GetMap(Map);
+    Map.setZero(Num,3);
     assert(Num <= 256);
     _RGB.setZero(Num, 3);
     HSV.setZero(Num, 3);
@@ -51,9 +51,11 @@ ColorSet::ColorSet(int Num)
     XYZ.setZero(Num, 3);
 }
 
-ColorSet::ColorSet(const float *rgbSrc)
+ConstColorSet::ConstColorSet(const float *rgbSrc)
 {
-    GetMap(Map);
+    for (short r = 0; r < 256; r++)
+        Map(r) = 4 * (r % 64) + r / 64;
+
     _RGB.setZero(256, 3);
     HSV.setZero(256, 3);
     Lab.setZero(256, 3);
@@ -73,7 +75,7 @@ ColorSet::ColorSet(const float *rgbSrc)
     }
 }
 
-bool ColorSet::ApplyAllowed(const ColorSet & standard, bool *MIndex)
+bool ColorSet::ApplyAllowed(const ConstColorSet & standard, bool *MIndex)
 {
     TokiColor::DepthCount[0] = 0;
     TokiColor::DepthCount[1] = 0;
@@ -141,13 +143,6 @@ uint16_t ColorSet::colorCount() const
     return _RGB.rows();
 }
 
-void GetMap(MapList &Map)
-{
-    Map.setZero(256);
-    for (short r = 0; r < 256; r++)
-        Map(r) = 4 * (r % 64) + r / 64;
-    return;
-}
 
 ARGB ComposeColor(const ARGB &front, const ARGB &back)
 {
