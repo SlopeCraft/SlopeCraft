@@ -24,7 +24,7 @@ This file is part of SlopeCraft.
 #define PRIMGLASSBUILDER_H
 #include "object_pool.hpp"
 
-#include "defines.h"
+#include "SCLDefines.h"
 #ifdef WITH_QT
     #include <QObject>
 #endif

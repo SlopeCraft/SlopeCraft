@@ -26,7 +26,7 @@ This file is part of SlopeCraft.
 #include <iostream>
 #include <vector>
 #include <map>
-#include "defines.h"
+#include "SCLDefines.h"
 #include "ColorSet.h"
 #include "WaterItem.h"
 #include "OptiChain.h"

@@ -20,8 +20,8 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
-#ifndef DEFINES_H
-#define DEFINES_H
+#ifndef SCLDEFINES_H
+#define SCLDEFINES_H
 
 #define EIGEN_NO_DEBUG
 #include <Eigen/Dense>
@@ -46,4 +46,4 @@ using MapList = Eigen::Array<uint8_t,Eigen::Dynamic,1,Eigen::ColMajor,256>;
 using ColorList = Eigen::Array<float,Eigen::Dynamic,3,Eigen::ColMajor,256>;
 using TempVectorXf = Eigen::Array<float,Eigen::Dynamic,1,Eigen::ColMajor,256>;
 
-#endif // DEFINES_H
+#endif // SCLDEFINES_H

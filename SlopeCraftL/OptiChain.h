@@ -30,7 +30,7 @@ This file is part of SlopeCraft.
 #include <string>
 #include <list>
 #include <queue>
-#include "defines.h"
+#include "SCLDefines.h"
 
 //using namespace std;
 //using namespace Eigen;

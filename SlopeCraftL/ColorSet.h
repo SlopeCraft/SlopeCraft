@@ -22,7 +22,7 @@ This file is part of SlopeCraft.
 
 #ifndef COLORSET_H
 #define COLORSET_H
-#include "defines.h"
+#include "SCLDefines.h"
 #include "TokiColor.h"
 
 // using namespace Eigen;

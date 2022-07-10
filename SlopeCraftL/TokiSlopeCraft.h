@@ -33,7 +33,7 @@ This file is part of SlopeCraft.
 #include <queue>
 #include <unordered_map>
 
-#include "defines.h"
+#include "SCLDefines.h"
 #include <unsupported/Eigen/CXX11/Tensor>
 #include "ColorSet.h"
 #include "simpleBlock.h"
@@ -47,7 +47,7 @@ This file is part of SlopeCraft.
 #include "AiCvterOpt.h"
 
 #ifdef SLOPECRAFTL_WITH_AICVETR
-#include "AiConverterInterface.h"
+#include "../GAConverter/GAConverter.h"
 #endif
 /*
 namespace SlopeCraft
@@ -361,7 +361,7 @@ private:
     PrimGlassBuilder *glassBuilder;
     LossyCompressor *Compressor;
 #ifdef SLOPECRAFTL_WITH_AICVETR
-    AiConverterInterface *AiCvter;
+    GACvter::GAConverter * GAConverter;
 #endif
     AiCvterOpt AiOpt;
     Eigen::ArrayXXi mapPic; // stores mapColor
@@ -374,7 +374,7 @@ private:
     // for setType:
 
 #ifdef SLOPECRAFTL_WITH_AICVETR
-    void configAiCvter();
+    void configGAConverter();
 #endif
     // for setImage:
 

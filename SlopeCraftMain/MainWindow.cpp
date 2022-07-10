@@ -998,9 +998,9 @@ void MainWindow::onAlgoClicked() {
     if(ui->isColorSpaceXYZ->isChecked())
         now=SlopeCraft::convertAlgo::XYZ;
     if(ui->isColorSpaceAi->isChecked())
-        now=SlopeCraft::convertAlgo::AiCvter;
+        now=SlopeCraft::convertAlgo::GACvter;
 
-    if(lastChoice==SlopeCraft::convertAlgo::AiCvter)
+    if(lastChoice==SlopeCraft::convertAlgo::GACvter)
         kernelSetImg();
 
     if(lastChoice!=now||lastDither!=nowDither)
@@ -1151,7 +1151,7 @@ if(kernel->queryStep()<SlopeCraft::convertionReady)
     return;
 }
 
-SlopeCraft::convertAlgo now;
+SlopeCraft::convertAlgo now=SlopeCraft::convertAlgo::RGB;
 bool nowDither=ui->AllowDither->isChecked();
 {
 if(ui->isColorSpaceRGBOld->isChecked())
@@ -1167,7 +1167,7 @@ if(ui->isColorSpaceLab00->isChecked())
 if(ui->isColorSpaceXYZ->isChecked())
     now=SlopeCraft::convertAlgo::XYZ;
 if(ui->isColorSpaceAi->isChecked())
-    now=SlopeCraft::convertAlgo::AiCvter;
+    now=SlopeCraft::convertAlgo::GACvter;
 }
 
 proTracker=ui->ShowProgressABbar;

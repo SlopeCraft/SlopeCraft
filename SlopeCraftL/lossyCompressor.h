@@ -32,7 +32,7 @@ This file is part of SlopeCraft.
 #include <algorithm>
 #include <random>
 
-#include "defines.h"
+#include "SCLDefines.h"
 #include "WaterItem.h"
 #include "ColorSet.h"
 #include "HeightLine.h"

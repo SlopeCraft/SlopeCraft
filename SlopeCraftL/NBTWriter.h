@@ -33,7 +33,7 @@ This file is part of SlopeCraft.
 
 
 #include <cstring>
-#include "defines.h"
+#include "SCLDefines.h"
 //using namespace std;
 #define TwinStackSize 128
 namespace NBT{

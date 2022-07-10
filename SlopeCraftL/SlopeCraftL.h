@@ -210,7 +210,8 @@ namespace SlopeCraft
         Lab00 = 'L',
         /// naive XYZ formula
         XYZ = 'X',
-        AiCvter = 'A'
+        /// Genetic Algorithm
+        GACvter = 'A'
     };
     enum compressSettings
     {

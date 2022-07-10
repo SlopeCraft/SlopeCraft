@@ -1,4 +1,4 @@
-#include "defines.h"
+#include "SCLDefines.h"
 #include "SlopeCraftL.h"
 #include "TokiColor.h"
 using namespace SlopeCraft;

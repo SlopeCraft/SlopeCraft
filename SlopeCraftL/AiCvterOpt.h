@@ -1,7 +1,7 @@
 #ifndef AICVTEROPT_H
 #define AICVTEROPT_H
 #include "SlopeCraftL.h"
-#include "defines.h"
+#include "SCLDefines.h"
 
 #ifndef SLOPECRAFTL_CAPI
 namespace SlopeCraft{

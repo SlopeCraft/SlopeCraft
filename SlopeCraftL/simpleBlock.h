@@ -23,7 +23,7 @@ This file is part of SlopeCraft.
 #ifndef SIMPLEBLOCK_H
 #define SIMPLEBLOCK_H
 
-#include "defines.h"
+#include "SCLDefines.h"
 using namespace SlopeCraft;
 #include <string>
 #include <vector>

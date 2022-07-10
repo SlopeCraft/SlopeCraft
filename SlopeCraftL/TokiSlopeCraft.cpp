@@ -47,7 +47,7 @@ TokiSlopeCraft::TokiSlopeCraft()
     glassBuilder = new PrimGlassBuilder;
     Compressor = new LossyCompressor;
 #ifdef SLOPECRAFTL_WITH_AICVETR
-    AiCvter = AiConverterInterface::create();
+    GAConverter = new GACvter::GAConverter;
 #endif
     setProgressRangeSet([](void *, int, int, int) {});
     setProgressAdd([](void *, int) {});
@@ -73,7 +73,7 @@ TokiSlopeCraft::~TokiSlopeCraft()
     delete Compressor;
     delete glassBuilder;
 #ifdef SLOPECRAFTL_WITH_AICVETR
-    AiCvter->destroy();
+    delete GAConverter;
 #endif
 }
 
@@ -82,7 +82,7 @@ void TokiSlopeCraft::setWindPtr(void *_w)
 {
     wind = _w;
 #ifdef SLOPECRAFTL_WITH_AICVETR
-    AiCvter->setUiPtr(_w);
+    GAConverter->setUiPtr(_w);
 #endif
 }
 /// a function ptr to show progress of converting and exporting
@@ -90,7 +90,7 @@ void TokiSlopeCraft::setProgressRangeSet(void (*prs)(void *, int, int, int))
 {
     progressRangeSet = prs;
 #ifdef SLOPECRAFTL_WITH_AICVETR
-    AiCvter->setProgressRangeFun(prs);
+    GAConverter->setProgressRangeFun(prs);
 #endif
 }
 /// a function ptr to add progress value
@@ -98,7 +98,7 @@ void TokiSlopeCraft::setProgressAdd(void (*pa)(void *, int))
 {
     progressAdd = pa;
 #ifdef SLOPECRAFTL_WITH_AICVETR
-    AiCvter->setProgressAddFun(pa);
+    GAConverter->setProgressAddFun(pa);
 #endif
 }
 /// a function ptr to prevent window from being syncoped
@@ -495,12 +495,11 @@ bool TokiSlopeCraft::setType(mapTypes type,
 }
 
 #ifdef SLOPECRAFTL_WITH_AICVETR
-void TokiSlopeCraft::configAiCvter()
+void TokiSlopeCraft::configGAConverter()
 {
-    AiCvter->loadColorSheet(Allowed._RGB.data(),
-                            Allowed.Map.data(),
-                            Allowed.Map.size());
-    AiCvter->loadImage(rawImage.data(), rawImage.rows(), rawImage.cols());
+    GACvter::updateMapColor2GrayLUT();
+
+    GAConverter->setRawImage(rawImage);
 }
 #endif
 
@@ -538,7 +537,7 @@ void TokiSlopeCraft::setRawImage(const EImage &_rawimg)
     rawImage = _rawimg;
     kernelStep = convertionReady;
 #ifdef SLOPECRAFTL_WITH_AICVETR
-    configAiCvter();
+    configGAConverter();
 #endif
     return;
 }
@@ -581,31 +580,35 @@ bool TokiSlopeCraft::convert(convertAlgo algo, bool dither)
         return false;
     }
 
-    if (algo == convertAlgo::AiCvter)
+    if (algo == convertAlgo::GACvter)
     {
 #ifdef SLOPECRAFTL_WITH_AICVETR
         convertAlgo algos[6] = {RGB, RGB_Better, HSV, Lab94, Lab00, XYZ};
-        std::array<const uint8_t *, 6> seed;
         Eigen::ArrayXX<uint8_t> CvtedMap[6];
-        for (int a = 0; a < 6; a++)
-        {
+        std::vector<const Eigen::ArrayXX<uint8_t> *> seeds(6);
+        for (int a = 0; a < 6; a++) {
             this->convert(algos[a]);
             CvtedMap[a].resize(getImageRows(), getImageCols());
             this->getConvertedMap(nullptr, nullptr, CvtedMap[a].data());
-            seed[a] = CvtedMap[a].data();
+            seeds[a] =& CvtedMap[a];
         }
 
-        AiCvter->setCrossoverProb(AiOpt.crossoverProb);
-        AiCvter->setMutatteProb(AiOpt.mutationProb);
-        AiCvter->setMaxGeneration(AiOpt.maxGeneration);
-        AiCvter->setMaxFailTime(AiOpt.maxFailTimes);
-        AiCvter->setPopSize(AiOpt.popSize);
-        AiCvter->setSeed(seed.data(), seed.size());
 
-        AiCvter->run();
+        {
+            heu::GAOption opt;
+            opt.crossoverProb=AiOpt.crossoverProb;
+            opt.mutateProb=AiOpt.mutationProb;
+            opt.maxGenerations=AiOpt.maxGeneration;
+            opt.maxFailTimes=AiOpt.maxFailTimes;
+            opt.populationSize=AiOpt.popSize;
+            GAConverter->setOption(opt);
+        }
+        GAConverter->setSeeds(seeds);
+
+        GAConverter->run();
 
         // replace raw image with ai result
-        AiCvter->resultImage(rawImage.data());
+        GAConverter->resultImage(&rawImage);
 
         algo = convertAlgo::RGB_Better;
 
@@ -941,7 +944,7 @@ TokiSlopeCraft::ColorSpace TokiSlopeCraft::getColorSpace() const
         return L;
     case XYZ:
         return X;
-    case convertAlgo::AiCvter:
+    case convertAlgo::GACvter:
         return R;
     }
     return R;

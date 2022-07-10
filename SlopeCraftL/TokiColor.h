@@ -23,27 +23,27 @@ This file is part of SlopeCraft.
 #ifndef TOKICOLOR_H
 #define TOKICOLOR_H
 #include <iostream>
-#include "defines.h"
+#include "SCLDefines.h"
 
 //#define dispFunCalled
 
-inline ARGB ARGB32(uint32_t r,uint32_t g,uint32_t b,uint32_t a=255) {
+inline ARGB ARGB32(uint32_t r,uint32_t g,uint32_t b,uint32_t a=255) noexcept {
     return ((a&0xFF)<<24)|((r&0xFF)<<16)|((g&0xFF)<<8)|(b&0xFF);
 }
 
-inline uint32_t getA(ARGB argb) {
+inline uint32_t getA(ARGB argb) noexcept {
     return (argb>>24);
 }
 
-inline uint32_t getR(ARGB argb) {
+inline uint32_t getR(ARGB argb) noexcept {
     return (argb&0x00FF0000)>>16;
 }
 
-inline uint32_t getG(ARGB argb) {
+inline uint32_t getG(ARGB argb) noexcept {
     return (argb&0x0000FF00)>>8;
 }
 
-inline uint32_t getB(ARGB argb) {
+inline uint32_t getB(ARGB argb) noexcept {
     return (argb&0x000000FF);
 }
 
