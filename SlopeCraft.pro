@@ -8,4 +8,5 @@ SUBDIRS += \
     imageCutter
 
 BlockListManager.depends = SlopeCraftL
+SlopeL.depends = GAConverter
 SlopeCraftMain.depends = BlockListManager SlopeCraftL

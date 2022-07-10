@@ -573,16 +573,17 @@ void TokiSlopeCraft::getARGB32(ARGB *dest) const
 
 bool TokiSlopeCraft::convert(convertAlgo algo, bool dither)
 {
-    if (kernelStep < convertionReady)
-    {
+    if (kernelStep < convertionReady) {
         reportError(wind, errorFlag::HASTY_MANIPULATION,
                     "You can call convert only after you imported the raw image");
         return false;
     }
 
+
     if (algo == convertAlgo::GACvter)
     {
 #ifdef SLOPECRAFTL_WITH_AICVETR
+
         convertAlgo algos[6] = {RGB, RGB_Better, HSV, Lab94, Lab00, XYZ};
         Eigen::ArrayXX<uint8_t> CvtedMap[6];
         std::vector<const Eigen::ArrayXX<uint8_t> *> seeds(6);
@@ -594,6 +595,7 @@ bool TokiSlopeCraft::convert(convertAlgo algo, bool dither)
         }
 
 
+
         {
             heu::GAOption opt;
             opt.crossoverProb=AiOpt.crossoverProb;
@@ -603,12 +605,16 @@ bool TokiSlopeCraft::convert(convertAlgo algo, bool dither)
             opt.populationSize=AiOpt.popSize;
             GAConverter->setOption(opt);
         }
+
         GAConverter->setSeeds(seeds);
+
 
         GAConverter->run();
 
+
         // replace raw image with ai result
         GAConverter->resultImage(&rawImage);
+
 
         algo = convertAlgo::RGB_Better;
 

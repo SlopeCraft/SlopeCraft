@@ -62,41 +62,57 @@ void privateMutateFun(const Var_t * parent, Var_t * child,
         for(int idx=0;idx<arg->rawImageCache.size();idx++) {
             if(randMat(idx)<=Threshold) {
                 child->operator()(idx)=mutateMap(parent->operator()(idx),
-                                                 heu::randIdx(OrderMax));
+                                                 heu::randIdx(OrderMax-1));
             }
         }
     }
     else {  //  weak mutation
         const int idx = heu::randIdx(parent->size());
         child->operator()(idx)=mutateMap(parent->operator()(idx),
-                                         heu::randIdx(OrderMax));
+                                         heu::randIdx(OrderMax-1));
     }
 }
 
 void GACvter::iFun(Var_t * v, const CvterInfo * arg) noexcept {
+
+
     v->setZero(arg->rawImageCache.rows(),arg->rawImageCache.cols());
+
+
     if(heu::randD()<1.0/3) {    //  generate by random
+
+
         std::unordered_map<ARGB,order_t> iniToolCpy = arg->iniTool;
         for (auto & i : iniToolCpy) {
             i.second=heu::randIdx(OrderMax);
         }
+
+
         for(int64_t i=0;i<arg->rawImageCache.size();i++) {
             v->operator()(i) = iniToolCpy[arg->rawImageCache(i)];
         }
+
     } else {    //  generate by seed and mutation
 
+
         if (heu::randD()<0.4) { //  strong mutation
+
             privateMutateFun<true>(&arg->seeds[heu::randIdx(arg->seeds.size())],
                     v,arg);
+
         }
         else {  //  weak mutation
+
             privateMutateFun<false>(&arg->seeds[heu::randIdx(arg->seeds.size())],
                     v,arg);
+
         }
     }
+
 }
 
 void GACvter::fFun(const Var_t * v,const CvterInfo * arg,double * f) noexcept {
+
 
   GrayImage gray(arg->rawImageCache.rows(), arg->rawImageCache.cols()), edged;
   for (int64_t i = 0; i < arg->rawImageCache.size(); i++) {
@@ -110,10 +126,12 @@ void GACvter::fFun(const Var_t * v,const CvterInfo * arg,double * f) noexcept {
   double edgeScore = double((gray - arg->edgeFeatureMap).abs().sum());
   edgeScore /= arg->rawImageCache.size();
   *f = std::log10(edgeScore);
+
 }
 
 void GACvter::cFun(const Var_t *p1, const Var_t *p2,
                    Var_t *c1, Var_t *c2, const CvterInfo * arg) noexcept {
+
   const uint32_t rows = arg->rawImageCache.rows();
   const uint32_t cols = arg->rawImageCache.cols();
   const uint32_t rS = heu::randD(1, rows - 2);
@@ -134,15 +152,18 @@ void GACvter::cFun(const Var_t *p1, const Var_t *p2,
     srcIdx = heu::randD() < 0.5;
     dst[i]->block(rS, cS, rows - rS, cols - cS) = src[srcIdx]->block(rS, cS, rows - rS, cols - cS);
   }
+
 }
 
 void GACvter::mFun(const Var_t * parent,Var_t * child, const CvterInfo * arg) noexcept {
+
     if(arg->strongMutation) {
         privateMutateFun<true>(parent,child,arg);
     }
     else {
         privateMutateFun<false>(parent,child,arg);
     }
+
 }
 
 void GACvter::GAConverter::setUiPack(const uiPack & _u) noexcept {
@@ -209,7 +230,11 @@ void GACvter::GAConverter::run() {
     this->_args.prevClock=std::clock();
     this->_args.strongMutation=true;
 
+
+    this->initializePop();
+
     this->template __impl_run<GACvter::GAConverter>();
+
 }
 
 void GACvter::GAConverter::resultImage(EImage * dst) {
