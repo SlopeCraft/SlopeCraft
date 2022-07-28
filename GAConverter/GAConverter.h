@@ -17,12 +17,14 @@ void updateMapColor2GrayLUT();
 class GAConverter : private heu::SOGA<Var_t,
         heu::FitnessOption::FITNESS_LESS_BETTER,
         heu::RecordOption::DONT_RECORD_FITNESS,
+        heu::SelectMethod::Tournament,
         CvterInfo,
         iFun, fFun, cFun, mFun>
 {
     using Base_t = heu::SOGA<Var_t,
     FitnessOption::FITNESS_LESS_BETTER,
     RecordOption::DONT_RECORD_FITNESS,
+    heu::SelectMethod::Tournament,
     CvterInfo,
     ::GACvter::iFun,::GACvter::fFun,::GACvter::cFun,::GACvter::mFun>;
 public:

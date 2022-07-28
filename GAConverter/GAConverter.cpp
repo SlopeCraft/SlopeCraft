@@ -23,8 +23,8 @@ inline ARGB mapColor2ARGB32(const mapColor_t mC) noexcept {
 
 }
 
-GAConverter::GAConverter()
-{
+GAConverter::GAConverter() {
+    this->setTournamentSize(3);
 }
 
 void GACvter::updateMapColor2GrayLUT() {

@@ -6,7 +6,7 @@ CONFIG += staticlib
 CONFIG += c++17
 
 INCLUDEPATH += D:/CppLibs/eigen-3.4.0 \
-                               D:/CppLibs/HeuristicFlow-1.6.1
+                               D:/CppLibs/HeuristicFlow-1.6.2.1
 
 
 QMAKE_CXXFLAGS += -fopenmp

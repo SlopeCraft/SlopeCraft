@@ -4,7 +4,7 @@ CONFIG -= qt
 INCLUDEPATH += \
                                D:/CppLibs/eigen-3.4.0 \
                                ../GAConverter \
-                               D:/CppLibs/HeuristicFlow-1.6.1
+                               D:/CppLibs/HeuristicFlow-1.6.2.1
 
 RC_LANG = 0x0004
 

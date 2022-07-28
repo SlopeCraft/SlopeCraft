@@ -42,8 +42,7 @@ using Var_t = Eigen::ArrayX<uint8_t>;
 template <typename Scalar_t, ContainerOption DVO = ContainerOption::Std, bool isFixedRange = false, Scalar_t MinCT = 0,
           Scalar_t MaxCT = 1>
 */
-struct args_t : public heu::BoxXsS<uint8_t,heu::ContainerOption::Eigen,true,0,2>
-{
+struct args_t : public heu::FixedDiscreteBox<Var_t,0,2> {
     const TokiColor ** src;
     bool allowNaturalCompress;
     size_t maxHeight;
@@ -84,11 +83,12 @@ class solver_t
         Eigen::ArrayX<uint8_t>,
         heu::FitnessOption::FITNESS_GREATER_BETTER,
         heu::RecordOption::DONT_RECORD_FITNESS,
+        heu::SelectMethod::Tournament,
         args_t,
         iFun,
         fFun,
-        heu::GADefaults<Var_t,args_t,heu::ContainerOption::Eigen>::cFunSwapXs
-        ,heu::GADefaults<Var_t,args_t,heu::ContainerOption::Eigen>::mFun_s
+        heu::GADefaults<Var_t,args_t>::cFunSwapXs
+        ,heu::GADefaults<Var_t,args_t>::mFun
         >
 {
 public:
@@ -111,6 +111,7 @@ public:
 
 LossyCompressor::LossyCompressor() {
     solver=new solver_t;
+    solver->setTournamentSize(3);
 }
 
 LossyCompressor::~LossyCompressor() {
