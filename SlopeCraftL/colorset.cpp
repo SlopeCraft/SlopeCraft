@@ -144,7 +144,7 @@ uint16_t ColorSet::colorCount() const
 }
 
 
-ARGB ComposeColor(const ARGB &front, const ARGB &back)
+ARGB ComposeColor(const ARGB front, const ARGB back)
 {
     int red = (getR(front) * getA(front) + getR(back) * (255 - getA(front))) / 255;
     int green = (getG(front) * getA(front) + getG(back) * (255 - getA(front))) / 255;

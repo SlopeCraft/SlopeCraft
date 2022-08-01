@@ -23,7 +23,10 @@ This file is part of SlopeCraft.
 #ifndef TOKICOLOR_CPP
 #define TOKICOLOR_CPP
 #include "ColorSet.h"
-#define Thre 1e-10f
+//#define threshold 1e-10f
+
+static constexpr float threshold = 1e-10f;
+
 #include <cmath>
 #define deg2rad(deg) ((deg)*M_PI/180.0)
 /*
@@ -34,7 +37,7 @@ auto atan2(Eigen::VectorXf y,Eigen::VectorXf x)
 
 auto sign(Eigen::VectorXf x)
 {
-    return x.array()/(x.array().abs()+Thre);
+    return x.array()/(x.array().abs()+threshold);
 }
 
 auto AngleCvt(Eigen::VectorXf I)
@@ -144,9 +147,10 @@ void RGB2HSV(float r, float g, float b,  float &h, float &s, float &v)
         K = -2.0f / 6.0f - K;
     }
     float chroma = r - std::min(g, b);
-    h = fabs(K + (g - b) / (6.0f * chroma + Thre));
-    s = chroma / (r + Thre);
+    h = fabs(K + (g - b) / (6.0f * chroma + threshold));
+    s = chroma / (r + threshold);
     v = r;
+#warning The range of h, s and v is not certain.
 
     return;
 }
@@ -280,9 +284,9 @@ switch (convertAlgo)
 {
 case 'r':
 case 'R':
-    c3[0]=std::max(getR(rawColor)/255.0f,Thre);
-    c3[1]=std::max(getG(rawColor)/255.0f,Thre);
-    c3[2]=std::max(getB(rawColor)/255.0f,Thre);
+    c3[0]=std::max(getR(rawColor)/255.0f,threshold);
+    c3[1]=std::max(getG(rawColor)/255.0f,threshold);
+    c3[2]=std::max(getB(rawColor)/255.0f,threshold);
     break;
 case 'H':
     RGB2HSV(getR(rawColor)/255.0f,getG(rawColor)/255.0f,getB(rawColor)/255.0f,c3[0],c3[1],c3[2]);
@@ -361,7 +365,7 @@ unsigned char TokiColor::applyRGB() {
     TempVectorXf Diff=Diff0_2+Diff1_2+Diff2_2;
     //Data.CurrentColor-=allowedColors;
 
-    ResultDiff=Diff.minCoeff(&tempIndex)+Thre;
+    ResultDiff=Diff.minCoeff(&tempIndex)+threshold;
     //Diff.minCoeff(tempIndex,u);
     Result=Allowed->Map(tempIndex);
     //qDebug("调色完毕");
@@ -385,15 +389,15 @@ unsigned char TokiColor::applyRGB_plus() {
     auto deltaG=(g-allowedColors.col(1));
     auto deltaB=(b-allowedColors.col(2));
     auto SigmaRGB=(R+g+b+allowedColors.col(0)+allowedColors.col(1)+allowedColors.col(2))/3.0f;
-    auto S_r=((allowedColors.col(0)+R)<SigmaRGB).select((allowedColors.col(0)+R)/(SigmaRGB+Thre),1.0f);
-    auto S_g=((allowedColors.col(1)+g)<SigmaRGB).select((allowedColors.col(1)+g)/(SigmaRGB+Thre),1.0f);
-    auto S_b=((allowedColors.col(2)+b)<SigmaRGB).select((allowedColors.col(2)+b)/(SigmaRGB+Thre),1.0f);
+    auto S_r=((allowedColors.col(0)+R)<SigmaRGB).select((allowedColors.col(0)+R)/(SigmaRGB+threshold),1.0f);
+    auto S_g=((allowedColors.col(1)+g)<SigmaRGB).select((allowedColors.col(1)+g)/(SigmaRGB+threshold),1.0f);
+    auto S_b=((allowedColors.col(2)+b)<SigmaRGB).select((allowedColors.col(2)+b)/(SigmaRGB+threshold),1.0f);
     auto sumRGBsquare=R*allowedColors.col(0)+g*allowedColors.col(1)+b*allowedColors.col(2);
-    auto theta=2.0/M_PI*(sumRGBsquare/(SqrModSquare+Thre)/1.01f).acos();
-    auto OnedDeltaR=deltaR.abs()/(R+allowedColors.col(0)+Thre);
-    auto OnedDeltaG=deltaG.abs()/(g+allowedColors.col(1)+Thre);
-    auto OnedDeltaB=deltaB.abs()/(b+allowedColors.col(2)+Thre);
-    auto sumOnedDelta=OnedDeltaR+OnedDeltaG+OnedDeltaB+Thre;
+    auto theta=2.0/M_PI*(sumRGBsquare/(SqrModSquare+threshold)/1.01f).acos();
+    auto OnedDeltaR=deltaR.abs()/(R+allowedColors.col(0)+threshold);
+    auto OnedDeltaG=deltaG.abs()/(g+allowedColors.col(1)+threshold);
+    auto OnedDeltaB=deltaB.abs()/(b+allowedColors.col(2)+threshold);
+    auto sumOnedDelta=OnedDeltaR+OnedDeltaG+OnedDeltaB+threshold;
     auto S_tr=OnedDeltaR/sumOnedDelta*S_r.square();
     auto S_tg=OnedDeltaG/sumOnedDelta*S_g.square();
     auto S_tb=OnedDeltaB/sumOnedDelta*S_b.square();
@@ -426,7 +430,7 @@ unsigned char TokiColor::applyHSV() {
     const ColorList &allowedColors=Allowed->HSV;
 
     auto S_times_V=allowedColors.col(1)*allowedColors.col(2);
-    float && s_times_v=c3[1]*c3[2];
+    const float  s_times_v=c3[1]*c3[2];
     auto deltaX=50.0f*(allowedColors.col(0).cos()*S_times_V-s_times_v*std::cos(c3[0]));
     auto deltaY=50.0f*(allowedColors.col(0).sin()*S_times_V-s_times_v*std::sin(c3[0]));
     auto deltaZ=86.60254f*(allowedColors.col(2)-c3[2]);
