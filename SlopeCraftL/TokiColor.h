@@ -53,7 +53,7 @@ class ConstColorSet;
 class TokiColor
 {
 public:
-    TokiColor(ARGB);
+    explicit TokiColor(ARGB);
     TokiColor();
     //QRgb Raw;//相当于Key
     //float c3[3];//三通道的颜色值。可能为RGB,HSV,Lab,XYZ

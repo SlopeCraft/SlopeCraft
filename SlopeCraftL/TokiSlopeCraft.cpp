@@ -23,10 +23,12 @@ This file is part of SlopeCraft.
 #include "TokiSlopeCraft.h"
 #include "zlib.h"
 
-const Eigen::Array<float, 2, 3> TokiSlopeCraft::DitherMapLR = {{0.0 / 16.0, 0.0 / 16.0, 7.0 / 16.0},
-                                                               {3.0 / 16.0, 5.0 / 16.0, 1.0 / 16.0}};
-const Eigen::Array<float, 2, 3> TokiSlopeCraft::DitherMapRL = {{7.0 / 16.0, 0.0 / 16.0, 0.0 / 16.0},
-                                                               {1.0 / 16.0, 5.0 / 16.0, 3.0 / 16.0}};
+const Eigen::Array<float, 2, 3> TokiSlopeCraft::DitherMapLR =
+{{0.0 / 16.0, 0.0 / 16.0, 7.0 / 16.0},
+{3.0 / 16.0, 5.0 / 16.0, 1.0 / 16.0}};
+const Eigen::Array<float, 2, 3> TokiSlopeCraft::DitherMapRL =
+{{7.0 / 16.0, 0.0 / 16.0, 0.0 / 16.0},
+{1.0 / 16.0, 5.0 / 16.0, 3.0 / 16.0}};
 
 const ConstColorSet TokiSlopeCraft::Basic(SlopeCraft::RGBBasicSource);
 ColorSet TokiSlopeCraft::Allowed(0);
@@ -773,32 +775,31 @@ void TokiSlopeCraft::Dither()
 
     ditheredImage.setZero(sizePic(0), sizePic(1));
 
-    const ColorList *ColorMap = nullptr;
+    const Eigen::Array<float,256,3> *ColorMap = nullptr;
     ARGB Current;
-    ARGB(*CvtFun)
-    (float, float, float);
+    ARGB(*CvtFun)    (float, float, float);
     switch (ConvertAlgo)
     {
     case 'R':
     case 'r':
-        ColorMap = &Allowed._RGB;
+        ColorMap = &Basic._RGB;
         CvtFun = RGB2ARGB;
         break;
     case 'H':
-        ColorMap = &Allowed.HSV;
+        ColorMap = &Basic.HSV;
         CvtFun = HSV2ARGB;
         break;
     case 'L':
     case 'l':
-        ColorMap = &Allowed.Lab;
+        ColorMap = &Basic.Lab;
         CvtFun = Lab2ARGB;
         break;
     default:
-        ColorMap = &Allowed.XYZ;
+        ColorMap = &Basic.XYZ;
         CvtFun = XYZ2ARGB;
         break;
     }
-    const ColorList &CM = *ColorMap;
+    const Eigen::Array<float,256,3> &CM = *ColorMap;
 
     // int t=sizeof(Eigen::Array3f);
 
@@ -834,7 +835,7 @@ void TokiSlopeCraft::Dither()
 
                 if (find == R->end())
                 {
-                    R->emplace(Current, Current);
+                    R->emplace(Current, TokiColor(Current));
                     find = R->find(Current);
                     find->second.apply(Current);
                     //装入了一个新颜色并匹配为地图色
