@@ -20,109 +20,116 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
-// Made by TokiNoBug
+
+//Made by TokiNoBug
 
 #ifndef _NBTWRITER_H
 #define _NBTWRITER_H
 
 #pragma once
 
-#include <fstream>
 #include <iostream>
+#include <fstream>
 
-#include "SCLDefines.h"
+
 #include <cstring>
-
-// using namespace std;
+#include "SCLDefines.h"
+//using namespace std;
 #define TwinStackSize 128
-namespace NBT {
-const char idEnd = 0;
-const char idByte = 1;
-const char idShort = 2;
-const char idInt = 3;
-const char idLong = 4;
-const char idFloat = 5;
-const char idDouble = 6;
-const char idByteArray = 7;
-const char idString = 8;
-const char idList = 9;
-const char idCompound = 10;
-const char idIntArray = 11;
-const char idLongArray = 12;
+namespace NBT{
+	const char idEnd=0;
+	const char idByte=1;
+	const char idShort=2;
+	const char idInt=3;
+	const char idLong=4;
+	const char idFloat=5;
+	const char idDouble=6;
+	const char idByteArray=7;
+	const char idString=8;
+	const char idList=9;
+	const char idCompound=10;
+	const char idIntArray=11;
+	const char idLongArray=12;
 
-template <typename T> void IE2BE(T &Val);
+    template <typename T>
+    void IE2BE(T &Val);
 
-template <typename T> T IE2BE(T *Val);
+    template <typename T>
+    T IE2BE(T *Val);
 
-bool isSysBE();
+    bool isSysBE();
 
-class NBTWriter {
-private:
-  // Vars
-  bool isOpen;
-  bool isBE;
-  std::fstream *File;
-  unsigned long long ByteCount;
-  short top;
-  char CLA[TwinStackSize];
-  int Size[TwinStackSize];
-  // StackFun
-  void pop();
-  void push(char typeId, int size);
-  bool isEmpty();
-  bool isFull();
-  char readType();
-  char readSize();
-  // WriterFun
-  void elementWritten();
-  void endList();
-  int writeEnd();
-  bool typeMatch(char typeId);
-  // AutoFiller
-  int emergencyFill();
+class NBTWriter
+{
+	private:
+		//Vars
+		bool isOpen;
+		bool isBE;
+        std::fstream *File;
+		unsigned long long ByteCount;
+		short top;
+		char CLA[TwinStackSize];
+		int Size[TwinStackSize];
+		//StackFun
+		void pop();
+		void push(char typeId,int size);
+		bool isEmpty();
+		bool isFull();
+		char readType();
+		char readSize();
+		//WriterFun
+		void elementWritten();
+		void endList();
+		int writeEnd();
+		bool typeMatch(char typeId);
+		//AutoFiller
+		int emergencyFill();
+	public:
+		//Construct&deConstruct
+		NBTWriter(const char*path);
+		~NBTWriter();
+        NBTWriter();
+        void open(const char*path);
+		//Vars
+		bool allowEmergencyFill;
+		//WriterFun
 
-public:
-  // Construct&deConstruct
-  NBTWriter(const char *path);
-  ~NBTWriter();
-  NBTWriter();
-  void open(const char *path);
-  // Vars
-  bool allowEmergencyFill;
-  // WriterFun
 
-  int writeLongDirectly(const char *Name, long long value);
+        int writeLongDirectly(const char*Name,long long value);
 
-  bool isInList();
-  bool isInCompound();
-  unsigned long long close();
-  bool isListFinished();
-  char CurrentType();
-  // WriteAbstractTags
-  template <typename T>
-  int writeSingleTag(char typeId, const char *Name, T value);
+		bool isInList();
+		bool isInCompound();
+		unsigned long long close();
+		bool isListFinished();
+		char CurrentType();
+		//WriteAbstractTags
+		template <typename T>
+		int writeSingleTag(char typeId,const char*Name,T value);
 
-  // int writeArrayHead(char typeId,const char*Name,int arraySize);
-  // WriteSpecialTags
-  int writeCompound(const char *Name);
-  int writeListHead(const char *Name, char typeId, int listSize);
-  int endCompound();
-  int writeString(const char *Name, const char *value);
-  // WriteRealSingleTags
-  int writeByte(const char *Name, char value);
-  int writeShort(const char *Name, short value);
-  int writeInt(const char *Name, int value);
-  int writeLong(const char *Name, long long value);
-  int writeFloat(const char *Name, float value);
-  int writeDouble(const char *Name, double value);
-  // WriteArrayHeads
-  int writeLongArrayHead(const char *Name, int arraySize);
-  int writeByteArrayHead(const char *Name, int arraySize);
-  int writeIntArrayHead(const char *Name, int arraySize);
-  unsigned long long getByteCount();
+		//int writeArrayHead(char typeId,const char*Name,int arraySize);
+		//WriteSpecialTags
+		int writeCompound(const char*Name);
+		int writeListHead(const char*Name,char typeId,int listSize);
+		int endCompound();
+		int writeString(const char*Name,const char*value);
+		//WriteRealSingleTags
+		int writeByte(const char*Name,char value);
+		int writeShort(const char*Name,short value);
+		int writeInt(const char*Name,int value);
+		int writeLong(const char*Name,long long value);
+		int writeFloat(const char*Name,float value);
+		int writeDouble(const char*Name,double value);
+		//WriteArrayHeads
+		int writeLongArrayHead(const char*Name,int arraySize);
+		int writeByteArrayHead(const char*Name,int arraySize);
+		int writeIntArrayHead(const char*Name,int arraySize);
+        unsigned long long getByteCount();
 };
 
-// NameSpace NBT ends here
-} // namespace NBT
+
+
+//NameSpace NBT ends here
+}
+
 
 #endif

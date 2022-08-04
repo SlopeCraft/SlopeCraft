@@ -27,36 +27,39 @@ This file is part of SlopeCraft.
 
 // using namespace Eigen;
 
-class ConstColorSet {
+class ConstColorSet
+{
 public:
-  explicit ConstColorSet() = default;
-  explicit ConstColorSet(const float *rgbSrc);
+    explicit ConstColorSet()=default;
+    explicit ConstColorSet(const float *rgbSrc);
 
-  Eigen::Array<float, 256, 3> _RGB;
-  Eigen::Array<float, 256, 3> HSV;
-  Eigen::Array<float, 256, 3> Lab;
-  Eigen::Array<float, 256, 3> XYZ;
-  Eigen::Array<uint8_t, 256, 1> Map;
+    Eigen::Array<float,256,3> _RGB;
+    Eigen::Array<float,256,3> HSV;
+    Eigen::Array<float,256,3> Lab;
+    Eigen::Array<float,256,3> XYZ;
+    Eigen::Array<uint8_t,256,1> Map;
 };
 
-class ColorSet {
+class ColorSet
+{
 public:
-  explicit ColorSet();
-  explicit ColorSet(int ColorNum);
-  ColorList _RGB;
-  ColorList HSV;
-  ColorList Lab;
-  ColorList XYZ;
-  MapList Map;
-  bool ApplyAllowed(const ConstColorSet &standard, bool *MIndex);
-  uint16_t colorCount() const;
+    explicit ColorSet();
+    explicit ColorSet(int ColorNum);
+    ColorList _RGB;
+    ColorList HSV;
+    ColorList Lab;
+    ColorList XYZ;
+    MapList Map;
+    bool ApplyAllowed(const ConstColorSet & standard, bool *MIndex);
+    uint16_t colorCount() const;
 };
 
-namespace SlopeCraft {
-extern const Eigen::Array<float, 256, 3> &Basic4External;
-extern const ColorList &Allowed4External;
-extern const MapList &AllowedMapList4External;
-} // namespace SlopeCraft
+namespace SlopeCraft
+{
+    extern const Eigen::Array<float,256,3> & Basic4External;
+    extern const ColorList & Allowed4External;
+    extern const MapList & AllowedMapList4External;
+}
 
 void f(float &);
 void invf(float &);

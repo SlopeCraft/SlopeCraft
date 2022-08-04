@@ -22,166 +22,177 @@ This file is part of SlopeCraft.
 
 #include "HeightLine.h"
 
-const ARGB HeightLine::BlockColor = ARGB32(0, 0, 0);
-const ARGB HeightLine::AirColor = ARGB32(255, 255, 255);
-const ARGB HeightLine::WaterColor = ARGB32(0, 64, 255);
-const ARGB HeightLine::greyColor = ARGB32(192, 192, 192);
+const ARGB HeightLine::BlockColor=ARGB32(0,0,0);
+const ARGB HeightLine::AirColor=ARGB32(255,255,255);
+const ARGB HeightLine::WaterColor=ARGB32(0,64,255);
+const ARGB HeightLine::greyColor=ARGB32(192,192,192);
 
-HeightLine::HeightLine() {}
+HeightLine::HeightLine() {
+
+}
 
 float HeightLine::make(const TokiColor **src,
-                       const Eigen::Array<uint8_t, Eigen::Dynamic, 1> &g,
-                       bool allowNaturalCompress, Eigen::ArrayXi *dst) {
-  float sumDiff = 0;
-  Eigen::ArrayXi mapColorCol(g.rows());
+                       const Eigen::Array<uint8_t, Eigen::Dynamic, 1> & g,
+                       bool allowNaturalCompress, Eigen::ArrayXi* dst) {
+    float sumDiff=0;
+    Eigen::ArrayXi mapColorCol(g.rows());
 
-  for (uint16_t r = 0; r < g.rows(); r++) {
+    for(uint16_t r=0;r<g.rows();r++) {
 
-    if (src[r] == nullptr) {
-      std::cerr << "Fatal Error! nullptr found in src\n";
-      return 0;
+        if(src[r]==nullptr) {
+            std::cerr<<"Fatal Error! nullptr found in src\n";
+            return 0;
+        }
+        switch (g(r)) {
+        case 0:
+            mapColorCol(r)=src[r]->Result;
+            sumDiff+=src[r]->ResultDiff;
+            break;
+        case 1:
+            mapColorCol(r)=src[r]->sideResult[0];
+            sumDiff+=src[r]->sideSelectivity[0];
+            break;
+        default:
+            mapColorCol(r)=src[r]->sideResult[1];
+            sumDiff+=src[r]->sideSelectivity[1];
+            break;
+        }
     }
-    switch (g(r)) {
-    case 0:
-      mapColorCol(r) = src[r]->Result;
-      sumDiff += src[r]->ResultDiff;
-      break;
-    case 1:
-      mapColorCol(r) = src[r]->sideResult[0];
-      sumDiff += src[r]->sideSelectivity[0];
-      break;
-    default:
-      mapColorCol(r) = src[r]->sideResult[1];
-      sumDiff += src[r]->sideSelectivity[1];
-      break;
-    }
-  }
 
-  if (dst != nullptr)
-    *dst = mapColorCol;
 
-  make(mapColorCol, allowNaturalCompress);
-  return sumDiff;
+    if(dst!=nullptr)
+        *dst=mapColorCol;
+
+    make(mapColorCol,allowNaturalCompress);
+    return sumDiff;
 }
 
 void HeightLine::make(const Eigen::ArrayXi &mapColorCol,
                       bool allowNaturalCompress) {
-  ///////////////////////1
-  waterMap.clear();
-  const uint16_t picRows = mapColorCol.rows();
-  base.setConstant(1 + picRows, 11);
-  HighLine.setZero(1 + picRows);
-  LowLine.setZero(1 + picRows);
-  // qDebug("初始化完毕");
+    ///////////////////////1
+    waterMap.clear();
+    const uint16_t picRows=mapColorCol.rows();
+    base.setConstant(1+picRows,11);
+    HighLine.setZero(1+picRows);
+    LowLine.setZero(1+picRows);
+    //qDebug("初始化完毕");
 
-  //////////////////////////////2
-  // qDebug()<<"size(base.segment(1,picRows))=["<<base.segment(1,picRows).rows()<<','<<base.segment(1,picRows).cols()<<']';
-  // qDebug()<<"size(mapColorCol)=["<<mapColorCol.rows()<<','<<mapColorCol.cols()<<']';
-  base.segment(1, picRows) = mapColorCol / 4;
-  Eigen::ArrayXi rawShadow = mapColorCol - 4 * (mapColorCol / 4);
+    //////////////////////////////2
+    //qDebug()<<"size(base.segment(1,picRows))=["<<base.segment(1,picRows).rows()<<','<<base.segment(1,picRows).cols()<<']';
+    //qDebug()<<"size(mapColorCol)=["<<mapColorCol.rows()<<','<<mapColorCol.cols()<<']';
+    base.segment(1,picRows)=mapColorCol/4;
+    Eigen::ArrayXi rawShadow=mapColorCol-4*(mapColorCol/4);
 
-  if ((rawShadow >= 3).any()) {
-    std::cerr << "Fatal Error: depth=3 in vanilla map!" << std::endl;
-    std::cerr << "SlopeCraft will crash." << std::endl;
-    delete &rawShadow;
-    return;
-  }
-  Eigen::ArrayXi dealedDepth(picRows + 1);
-  dealedDepth.setZero();
-  dealedDepth.segment(1, picRows) = rawShadow - 1;
-
-  if (base(1) == 12 || base(1) == 0 || rawShadow(0) == 2) {
-    base(0) = 0;
-    dealedDepth(1) = 0;
-  }
-  for (uint16_t r = 1; r < picRows; r++) {
-    if (base(r + 1) == 0) {
-      dealedDepth(r + 1) = 0;
-      continue;
+    if((rawShadow>=3).any()) {
+        std::cerr<<"Fatal Error: depth=3 in vanilla map!"<<std::endl;
+        std::cerr<<"SlopeCraft will crash."<<std::endl;
+        delete &rawShadow;
+        return;
     }
-    if (base(r + 1) == 12) {
-      dealedDepth(r + 1) = 0;
-      waterMap[r + 1] = nullWater;
+    Eigen::ArrayXi dealedDepth(picRows+1);
+    dealedDepth.setZero();
+    dealedDepth.segment(1,picRows)=rawShadow-1;
+
+    if(base(1)==12||base(1)==0||rawShadow(0)==2) {
+        base(0)=0;
+        dealedDepth(1)=0;
     }
-  }
-  ///////////////////////3
-  for (uint16_t r = 0; r < picRows; r++) {
-    // HighMap.row(r+1)=HighMap.row(r)+dealedDepth.row(r+1);
-    HighLine(r + 1) = HighLine(r) + dealedDepth(r + 1);
-  }
-  //////////////////4
-  LowLine = HighLine;
-  for (auto it = waterMap.cbegin(); it != waterMap.cend(); it++) {
-    /*
-    LowMap(TokiRow(it->first),TokiCol(it->first))=
-            HighMap(TokiRow(it->first),TokiCol(it->first))
-            -WaterColumnSize[rawShadow(TokiRow(it->first)-1,TokiCol(it->first))]+1;
+    for(uint16_t r=1;r<picRows;r++) {
+        if(base(r+1)==0) {
+            dealedDepth(r+1)=0;
+            continue;
+        }
+        if(base(r+1)==12) {
+            dealedDepth(r+1)=0;
+            waterMap[r+1]=nullWater;
+        }
+    }
+    ///////////////////////3
+    for(uint16_t r=0;r<picRows;r++) {
+        //HighMap.row(r+1)=HighMap.row(r)+dealedDepth.row(r+1);
+        HighLine(r+1)=HighLine(r)+dealedDepth(r+1);
+    }
+    //////////////////4
+    LowLine=HighLine;
+    for(auto it=waterMap.cbegin();it!=waterMap.cend();it++) {
+        /*
+        LowMap(TokiRow(it->first),TokiCol(it->first))=
+                HighMap(TokiRow(it->first),TokiCol(it->first))
+                -WaterColumnSize[rawShadow(TokiRow(it->first)-1,TokiCol(it->first))]+1;
 */
-    LowLine(it->first) =
-        HighLine(it->first) - WaterColumnSize[rawShadow(it->first - 1)] + 1;
-  }
-  /////////////////5
-  HighLine -= LowLine.minCoeff();
-  LowLine -= LowLine.minCoeff();
+        LowLine(it->first)=HighLine(it->first)-WaterColumnSize[rawShadow(it->first-1)]+1;
+    }
+    /////////////////5
+    HighLine-=LowLine.minCoeff();
+    LowLine-=LowLine.minCoeff();
 
-  if (allowNaturalCompress) {
-    OptiChain OC(base, HighLine, LowLine);
-    OC.divideAndCompress();
-    HighLine = OC.getHighLine();
-    LowLine = OC.getLowLine();
-  }
-  for (auto it = waterMap.begin(); it != waterMap.end(); it++) {
-    waterMap[it->first] = TokiWater(HighLine(it->first), LowLine(it->first));
-    HighLine(it->first) += 1;
-  }
+    if(allowNaturalCompress) {
+        OptiChain OC(base,HighLine,LowLine);
+        OC.divideAndCompress();
+        HighLine=OC.getHighLine();
+        LowLine=OC.getLowLine();
+    }
+    for(auto it=waterMap.begin();it!=waterMap.end();it++) {
+        waterMap[it->first]=TokiWater(HighLine(it->first),
+                                      LowLine(it->first));
+        HighLine(it->first)+=1;
+    }
 }
 
 uint16_t HeightLine::maxHeight() const {
-  return HighLine.maxCoeff() - LowLine.minCoeff() + 1;
+    return HighLine.maxCoeff()-LowLine.minCoeff()+1;
 }
 
 void HeightLine::updateWaterMap() {
-  waterMap.clear();
-  for (uint16_t r = 1; r < base.rows(); r++) {
-    if (base(r) != 12)
-      continue;
-    waterMap[r] = TokiWater(HighLine(r) - 1, LowLine(r));
-  }
+    waterMap.clear();
+    for(uint16_t r=1;r<base.rows();r++) {
+        if(base(r)!=12)
+            continue;
+        waterMap[r]=TokiWater(HighLine(r)-1,LowLine(r));
+    }
 }
 
-const Eigen::ArrayXi &HeightLine::getHighLine() const { return HighLine; }
-const Eigen::ArrayXi &HeightLine::getLowLine() const { return LowLine; }
+const Eigen::ArrayXi & HeightLine::getHighLine() const {
+    return HighLine;
+}
+const Eigen::ArrayXi & HeightLine::getLowLine() const {
+    return LowLine;
+}
 
-const Eigen::ArrayXi &HeightLine::getBase() const { return base; }
+const Eigen::ArrayXi & HeightLine::getBase() const {
+    return base;
+}
 
-const std::map<uint16_t, waterItem> &HeightLine::getWaterMap() const {
-  return waterMap;
+const std::map<uint16_t,waterItem> & HeightLine::getWaterMap() const {
+    return waterMap;
 }
 
 EImage HeightLine::toImg() const {
-  const short rMax = maxHeight() - 1;
-  EImage img(maxHeight(), HighLine.size());
-  img.setConstant(AirColor);
-  short y = 0, r = rMax - y;
-  for (uint16_t x = 0; x < HighLine.size(); x++) {
-    y = HighLine(x);
-    r = rMax - y;
-    if (base(x)) {
-      if (base(x) != 12) {
-        img(r, x) = BlockColor;
-      } else {
-        img(r, x) = greyColor;
-        short rmin = rMax - LowLine(x);
-        r++;
-        img.col(x).segment(r, rmin - r + 1) = WaterColor;
-        if (rmin < rMax) {
-          rmin++;
-          img(rmin, x) = greyColor;
+    const short rMax=maxHeight()-1;
+    EImage img(maxHeight(),HighLine.size());
+    img.setConstant(AirColor);
+    short y=0,r=rMax-y;
+    for(uint16_t x=0;x<HighLine.size();x++) {
+        y=HighLine(x);
+        r=rMax-y;
+        if(base(x)) {
+            if(base(x)!=12) {
+                img(r,x)=BlockColor;
+            } else {
+                img(r,x)=greyColor;
+                short rmin=rMax-LowLine(x);
+                r++;
+                img.col(x).segment(r,rmin-r+1)=WaterColor;
+                if(rmin<rMax) {
+                    rmin++;
+                    img(rmin,x)=greyColor;
+                }
+
+            }
         }
-      }
+
     }
-  }
-  return img;
+    return img;
 }
 
 /*
