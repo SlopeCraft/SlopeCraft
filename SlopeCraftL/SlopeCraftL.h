@@ -196,7 +196,7 @@ namespace SlopeCraft
         FUTURE = 255
     };
     /// color difference formula used to match colors
-    enum convertAlgo
+    enum convertAlgo : char
     {
         /// naive RGB
         RGB = 'r',

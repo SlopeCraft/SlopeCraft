@@ -682,7 +682,7 @@ void TokiSlopeCraft::pushToHash()
     auto R = &colorHash;
     R->clear();
 
-    char Mode = ConvertAlgo;
+    ::SlopeCraft::convertAlgo Mode = ConvertAlgo;
     TokiColor::convertAlgo = Mode;
 
     // R->reserve(sizePic(2)/4);
@@ -780,17 +780,17 @@ void TokiSlopeCraft::Dither()
     ARGB(*CvtFun)    (float, float, float);
     switch (ConvertAlgo)
     {
-    case 'R':
-    case 'r':
+    case ::SlopeCraft::convertAlgo::RGB:
+    case ::SlopeCraft::convertAlgo::RGB_Better:
         ColorMap = &Basic._RGB;
         CvtFun = RGB2ARGB;
         break;
-    case 'H':
+    case ::SlopeCraft::convertAlgo::HSV:
         ColorMap = &Basic.HSV;
         CvtFun = HSV2ARGB;
         break;
-    case 'L':
-    case 'l':
+    case ::SlopeCraft::convertAlgo::Lab00:
+    case ::SlopeCraft::convertAlgo::Lab94:
         ColorMap = &Basic.Lab;
         CvtFun = Lab2ARGB;
         break;

@@ -60,7 +60,7 @@ public:
     Eigen::Array3f c3;
     float sideSelectivity[2];//记录与result的深度值不同的两个有损优化候选色选择系数（升序排列），Depth=3时无效
     unsigned char sideResult[2];//记录与result的深度值不同的两个有损优化候选色（升序排列），Depth=3时无效
-    static char convertAlgo;
+    static ::SlopeCraft::convertAlgo convertAlgo;
     unsigned char Result;//最终调色结果
     float ResultDiff;
     static bool needFindSide;
