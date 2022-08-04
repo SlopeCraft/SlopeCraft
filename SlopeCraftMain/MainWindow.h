@@ -1,3 +1,4 @@
+
 /*
  Copyright © 2021-2022  TokiNoBug
 This file is part of SlopeCraft.
@@ -196,6 +197,8 @@ private slots:
     void on_ShowRaw_clicked();
     void on_ShowAdjed_clicked();
     void on_ExData_clicked();
+    void on_ExportFlatDiagram_clicked();
+    //void on_ExFlatDiagram_clicked();
 
     void onActionAiCvterParameters();
 

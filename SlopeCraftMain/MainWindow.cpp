@@ -82,8 +82,11 @@ MainWindow::MainWindow(QWidget *parent)
         connect(ui->progressAdjPic,&QPushButton::clicked,this,&MainWindow::turnToPage4);
         connect(ui->progressExLite,&QPushButton::clicked,this,&MainWindow::turnToPage5);
         connect(ui->progressExStructure,&QPushButton::clicked,this,&MainWindow::turnToPage5);
+        connect(ui->progressExFlatDiagram,&QPushButton::clicked,this,&MainWindow::turnToPage5);
         //connect(ui->menuExMcF,&QAction::trigger,this,&MainWindow::turnToPage6);
         connect(ui->progressExData,&QPushButton::clicked,this,&MainWindow::turnToPage7);
+
+
         connect(ui->progressAbout,&QPushButton::clicked,this,&MainWindow::turnToPage8);
         connect(ui->actionAboutSlopeCraft,&QAction::triggered,this,&MainWindow::turnToPage8);
         connect(ui->actionChinese,&QAction::triggered,this,&MainWindow::turnCh);
@@ -703,12 +706,15 @@ void MainWindow::updateEnables() {
     ui->actionExportLite->setEnabled(temp);
     ui->ExStructure->setEnabled(temp);
     ui->progressExStructure->setEnabled(temp);
+    ui->progressExFlatDiagram->setEnabled(temp);
     ui->actionExportNBT->setEnabled(temp);
     ui->Build4Lite->setEnabled(temp);
 
     temp=kernel->queryStep()>=SlopeCraft::builded;
     ui->ExportLite->setEnabled(temp);
     ui->ManualPreview->setEnabled(temp);
+    ui->ExportFlatDiagram->setEnabled(temp&&(kernel->isFlat()));
+
 
 
 }
@@ -1227,6 +1233,38 @@ void MainWindow::on_ExData_clicked() {
     ui->ShowDataCols->setText(QString::number(mapCols));
     ui->ShowDataCounts->setText(QString::number(mapCounts));
     ui->InputDataIndex->setText("0");
+}
+
+
+void MainWindow::on_ExportFlatDiagram_clicked() {
+    constexpr int charHeight=14;
+    constexpr int charWidth = 10;
+    constexpr int leftSpace=2;
+    constexpr int topSpace=2;
+
+    const int imgCols = kernel->getImageCols();
+    const int imgRows = kernel->getImageRows();
+
+    constexpr int blockRowsCols=16;
+    using blockEImg_t = Eigen::Array<uint32_t,blockRowsCols,blockRowsCols,Eigen::RowMajor>;
+    std::vector<blockEImg_t>
+            blockImgs16;
+    blockImgs16.reserve(64);
+    {
+        auto tokiBlockList = Manager->getTokiBlockList();
+        for(auto tokiBlock : tokiBlockList) {
+            if(tokiBlock==nullptr) {
+                break;
+            }
+            QImage tempImg = tokiBlock->getTarget()->
+                    icon().pixmap(blockRowsCols,blockRowsCols).toImage().convertToFormat(QImage::Format_ARGB32);
+            Eigen::Map<blockEImg_t> map(reinterpret_cast<uint32_t*>(tempImg.scanLine(0)));
+            blockImgs16.emplace_back(map);
+        }
+    }
+
+    cout<<"Size of blockImgs16 = "<<blockImgs16.size()<<endl;
+
 }
 
 //Page5
