@@ -23,6 +23,8 @@ This file is part of SlopeCraft.
 #include <QProcess>
 #include <QDebug>
 #include <QRgb>
+#include <unsupported/Eigen/CXX11/Tensor>
+
 #include "MainWindow.h"
 
 const ushort MainWindow::BLCreative[64]={0,0,1,1,0,0,0,0,3,0,4,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -33,6 +35,15 @@ const ushort MainWindow::BLGlowing[64]={0,1,2,0,0,2,4,2,0,0,3,2,0,0,2,0,0,0,0,0,
 const QString MainWindow::selfVersion=SlopeCraft::Kernel::getSCLVersion();
 
 bool MainWindow::isBatchOperating=false;
+
+inline uint32_t inverseColor(uint32_t raw) noexcept {
+    const uint32_t ASeg = raw&(0xFF000000);
+    const uint32_t R = 255-((raw&0x00FF0000)>>16);
+    const uint32_t G = 255-((raw&0x0000FF00)>>8);
+    const uint32_t B = 255-(raw&0x000000FF);
+
+    return ASeg|(R<<16)|(G<<8)|(B);
+}
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -1237,19 +1248,73 @@ void MainWindow::on_ExData_clicked() {
 
 
 void MainWindow::on_ExportFlatDiagram_clicked() {
+
+    const QString path = QFileDialog::getSaveFileName(this,"保存为平面示意图","","*.png");
+
+    if(path.isEmpty())
+        return;
+
+    this->proTracker=ui->ShowProgressExLite;
+    //ui->ShowProgressExLite->setValue(0);
+
     constexpr int charHeight=14;
     constexpr int charWidth = 10;
+    constexpr int charSpace = 1;
     constexpr int leftSpace=2;
     constexpr int topSpace=2;
 
-    const int imgCols = kernel->getImageCols();
-    const int imgRows = kernel->getImageRows();
+/*
+here [] means an blank pixel
+left border : [][]char[]char[]...char[]Blocks
 
+top border :
+[]
+[]
+char
+[]
+char
+[]
+...
+char
+[]
+Blocks
+*/
+
+
+
+    const int buildRows = kernel->getZRange();
+    const int buildCols = kernel->getXRange();
+
+    /// pixel rows and cols of single block
     constexpr int blockRowsCols=16;
-    using blockEImg_t = Eigen::Array<uint32_t,blockRowsCols,blockRowsCols,Eigen::RowMajor>;
+
+
+
+    const int numberRowsDigits = std::ceil(std::log10(1e-2+buildRows));
+    const int numberColsDigits = std::ceil(std::log10(1e-2+buildCols));
+
+    const int leftBorderWidth =leftSpace+numberColsDigits*(charWidth+charSpace);
+    const int topBorderWidth = topSpace + numberRowsDigits*(charHeight+charSpace);
+
+    /// the height of exported image
+    const int diagramRows = blockRowsCols*buildRows+topBorderWidth;
+    /// the width of exported image
+    const int diagramCols = blockRowsCols*buildCols+leftBorderWidth;
+
+
+    //progress bar range: 0~ rows + cols + pixNum + rows + cols + pixNum/10
+    const int progressMax = buildRows+buildCols + buildRows*buildCols + buildRows+buildCols + buildRows*buildCols/10;
+    //ui->ShowProgressExLite->setRange(0,progressMax);
+    progressRangeSet(this,0,progressMax,0);
+
+
+    using blockEImg_t = Eigen::Array<uint32_t,
+        blockRowsCols,blockRowsCols,Eigen::RowMajor>;
     std::vector<blockEImg_t>
             blockImgs16;
     blockImgs16.reserve(64);
+
+    // fill blockImgs16 with images of each block
     {
         auto tokiBlockList = Manager->getTokiBlockList();
         for(auto tokiBlock : tokiBlockList) {
@@ -1259,12 +1324,134 @@ void MainWindow::on_ExportFlatDiagram_clicked() {
             QImage tempImg = tokiBlock->getTarget()->
                     icon().pixmap(blockRowsCols,blockRowsCols).toImage().convertToFormat(QImage::Format_ARGB32);
             Eigen::Map<blockEImg_t> map(reinterpret_cast<uint32_t*>(tempImg.scanLine(0)));
+            SlopeCraft::SCL_preprocessImage(map.data(),map.size());
             blockImgs16.emplace_back(map);
+
         }
     }
 
-    cout<<"Size of blockImgs16 = "<<blockImgs16.size()<<endl;
 
+    using charEImg_t = Eigen::Array<uint32_t,charHeight,charWidth,Eigen::RowMajor>;
+
+    std::vector<charEImg_t> numberImgs(10);
+    // fill numberImgs with images of each number
+    {
+        QImage tempImg = QImage(":/new/Pic/MCStyledNumbers.png").convertToFormat(QImage::Format_ARGB32);
+        Eigen::Map<Eigen::Array<uint32_t,Eigen::Dynamic,Eigen::Dynamic,Eigen::RowMajor>>
+                mappedTempImg(reinterpret_cast<uint32_t*>(tempImg.scanLine(0)),tempImg.height(),tempImg.width());
+        for(int idx=0;idx<10;idx++) {
+            numberImgs[idx]=mappedTempImg.block<charHeight,charWidth>(0,idx*charWidth);
+        }
+    }
+    //cout<<"Size of blockImgs16 = "<<blockImgs16.size()<<endl;
+
+    Eigen::Array<uint32_t,Eigen::Dynamic,Eigen::Dynamic,Eigen::RowMajor> EDiagram;
+
+    EDiagram.setConstant(diagramRows,diagramCols,0xFFFFFFFFU);
+
+    //write row numbers
+    for(int row=0;row<buildRows;row++) {
+        const std::string str=std::to_string(row);
+
+        const int rowOffset = topBorderWidth + blockRowsCols*row
+                +(blockRowsCols-charHeight)/2;
+        //cout<<"\n\nrowOffset = "<<rowOffset<<"\n";
+        // write inversly
+        for(int invIdx=0;invIdx<numberRowsDigits;invIdx++) {
+            if(invIdx>=(int)str.size())
+                break;
+
+            // the reverse idx
+            const char curChar = str[str.size()-1-invIdx];
+            const int curCharIdx=curChar-'0';
+
+            const int colOffset =leftBorderWidth - (invIdx+1)*(charWidth+charSpace);
+
+            //cout<<"colOffset = "<<colOffset<<'\n';
+
+            EDiagram.block<charHeight,charWidth>(rowOffset,colOffset)
+                    =numberImgs[curCharIdx];
+        }
+    }
+
+    progressAdd(this,buildRows);
+    //cout<<endl;
+    // write col numbers
+    for(int col=0;col<buildCols;col++) {
+        const std::string str = std::to_string(col);
+        const int colOffset = leftBorderWidth + blockRowsCols*col
+                + (blockRowsCols-charWidth)/2;
+        for(int invIdx=0;invIdx<numberColsDigits;invIdx++) {
+            if(invIdx>=(int)str.size())
+                break;
+            const int curCharIdx = str[str.size()-1-invIdx]-'0';
+
+            const int rowOffset = topBorderWidth - (invIdx+1)*(charHeight+charSpace);
+            EDiagram.block<charHeight,charWidth>(rowOffset,colOffset)
+                    =numberImgs[curCharIdx];
+        }
+    }
+
+    progressAdd(this,buildCols);
+
+    const Eigen::TensorMap<const Eigen::Tensor<uint8_t,3>>
+            build(kernel->getBuild(),
+                  kernel->getXRange(),kernel->getHeight(),kernel->getZRange());
+
+    static constexpr int reportInterval=512;
+
+    // fill diagram with blocks
+    for(int bRow=0;bRow<buildRows;bRow++) {
+        constexpr int yPos=0;
+        const int rowOffset = topBorderWidth + blockRowsCols*bRow;
+        const int zPos=bRow;
+        for(int bCol=0;bCol<buildCols;bCol++) {
+            const int xPos = bCol;
+            const int eleIdx = &build(xPos,yPos,zPos)-build.data();
+
+            if(eleIdx%reportInterval==0) {
+                progressAdd(this,reportInterval);
+            }
+
+            if(build(xPos,yPos,zPos)<=0)
+                continue;
+
+            const int blockIdx = build(xPos,yPos,zPos)-1;
+
+            const int colOffset = leftBorderWidth + blockRowsCols * bCol;
+
+            EDiagram.block<blockRowsCols,blockRowsCols>(rowOffset,colOffset)
+                    =blockImgs16[blockIdx];
+        }
+    }
+
+
+    // draw horizontal lines
+    for(int lineRows=1;lineRows<buildRows;lineRows+=16) {
+        const int row= topBorderWidth+blockRowsCols*lineRows;
+        for(int col=leftBorderWidth;col<diagramCols;col++) {
+            EDiagram(row,col)=inverseColor(EDiagram(row,col));
+        }
+    }
+    progressAdd(this,buildRows);
+
+    //draw vertical lines
+    for(int lineCols=1;lineCols<buildCols;lineCols+=16) {
+        const int col = leftBorderWidth + blockRowsCols*lineCols;
+        for(int row=topBorderWidth;row<diagramRows;row++) {
+            //if((row-topBorderWidth)%(blockRowsCols*16)==0)                continue;
+
+            EDiagram(row,col)=inverseColor(EDiagram(row,col));
+        }
+    }
+    progressAdd(this,buildCols);
+
+    QImage(reinterpret_cast<uint8_t*>(EDiagram.data()),diagramCols,diagramRows,
+           QImage::Format_ARGB32).save(path);
+
+    progressRangeSet(this,0,progressMax,progressMax);
+
+    this->proTracker=nullptr;
 }
 
 //Page5
