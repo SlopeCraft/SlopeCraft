@@ -1254,6 +1254,11 @@ void MainWindow::on_ExportFlatDiagram_clicked() {
     if(path.isEmpty())
         return;
 
+    ui->ExportFlatDiagram->setEnabled(false);
+    ui->progressExFlatDiagram->setEnabled(false);
+    ui->ExportLite->setEnabled(false);
+    ui->progressExLite->setEnabled(false);
+
     this->proTracker=ui->ShowProgressExLite;
     //ui->ShowProgressExLite->setValue(0);
 
@@ -1375,6 +1380,7 @@ Blocks
     }
 
     progressAdd(this,buildRows);
+    keepAwake(this);
     //cout<<endl;
     // write col numbers
     for(int col=0;col<buildCols;col++) {
@@ -1393,6 +1399,7 @@ Blocks
     }
 
     progressAdd(this,buildCols);
+    keepAwake(this);
 
     const Eigen::TensorMap<const Eigen::Tensor<uint8_t,3>>
             build(kernel->getBuild(),
@@ -1411,6 +1418,7 @@ Blocks
 
             if(eleIdx%reportInterval==0) {
                 progressAdd(this,reportInterval);
+                keepAwake(this);
             }
 
             if(build(xPos,yPos,zPos)<=0)
@@ -1445,13 +1453,28 @@ Blocks
         }
     }
     progressAdd(this,buildCols);
+    keepAwake(this);
 
     QImage(reinterpret_cast<uint8_t*>(EDiagram.data()),diagramCols,diagramRows,
            QImage::Format_ARGB32).save(path);
 
     progressRangeSet(this,0,progressMax,progressMax);
+    keepAwake(this);
 
     this->proTracker=nullptr;
+
+    ui->FinishExLite->setEnabled(true);
+
+
+
+    this->ProductDir=path;
+
+    ProductDir=ProductDir.replace('\\','/');
+    ProductDir=ProductDir.left(ProductDir.lastIndexOf('/'));
+
+    ui->seeExported->setEnabled(true);
+
+    updateEnables();
 }
 
 //Page5
