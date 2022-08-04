@@ -1,24 +1,24 @@
 #ifndef AICVTEROPT_H
 #define AICVTEROPT_H
-#include "SlopeCraftL.h"
 #include "SCLDefines.h"
+#include "SlopeCraftL.h"
+
 
 #ifndef SLOPECRAFTL_CAPI
-namespace SlopeCraft{
+namespace SlopeCraft {
 #endif
 
-struct AiCvterOpt
-{
-    AiCvterOpt();
-    size_t popSize;
-    size_t maxGeneration;
-    size_t maxFailTimes;
-    double crossoverProb;
-    double mutationProb;
+struct AiCvterOpt {
+  AiCvterOpt();
+  size_t popSize;
+  size_t maxGeneration;
+  size_t maxFailTimes;
+  double crossoverProb;
+  double mutationProb;
 };
 
 #ifndef SLOPECRAFTL_CAPI
-}   //  namespace SlopeCraft
+} //  namespace SlopeCraft
 #endif
 
 #endif // AICVTEROPT_H

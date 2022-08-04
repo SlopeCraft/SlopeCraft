@@ -28,11 +28,11 @@ typedef unsigned int waterItem;
 extern const TokiPos nullPos;
 extern const waterItem nullWater;
 extern const short WaterColumnSize[3];
-TokiPos TokiRC(int row,int col);//前16bit存储row，后16bit存储col
+TokiPos TokiRC(int row, int col); //前16bit存储row，后16bit存储col
 short TokiRow(TokiPos);
 short TokiCol(TokiPos);
 
-extern waterItem (*TokiWater)(int,int);
+extern waterItem (*TokiWater)(int, int);
 extern short (*waterHigh)(waterItem);
 extern short (*waterLow)(waterItem);
 /*
