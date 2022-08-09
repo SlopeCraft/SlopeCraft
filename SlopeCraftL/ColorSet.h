@@ -27,40 +27,38 @@ This file is part of SlopeCraft.
 
 // using namespace Eigen;
 
-class ConstColorSet
-{
+class ConstColorSet {
 public:
-    explicit ConstColorSet()=default;
-    explicit ConstColorSet(const float *rgbSrc);
+  explicit ConstColorSet() = default;
+  explicit ConstColorSet(const float *rgbSrc);
 
-    Eigen::Array<float,256,3> _RGB;
-    Eigen::Array<float,256,3> HSV;
-    Eigen::Array<float,256,3> Lab;
-    Eigen::Array<float,256,3> XYZ;
-    Eigen::Array<uint8_t,256,1> Map;
+  Eigen::Array<float, 256, 3> _RGB;
+  Eigen::Array<float, 256, 3> HSV;
+  Eigen::Array<float, 256, 3> Lab;
+  Eigen::Array<float, 256, 3> XYZ;
+  Eigen::Array<uint8_t, 256, 1> Map;
 };
 
-class ColorSet
-{
+class ColorSet {
 public:
-    explicit ColorSet();
-    explicit ColorSet(int ColorNum);
-    ColorList _RGB;
-    ColorList HSV;
-    ColorList Lab;
-    ColorList XYZ;
-    MapList Map;
-    bool ApplyAllowed(const ConstColorSet & standard, bool *MIndex);
-    uint16_t colorCount() const;
+  explicit ColorSet();
+  explicit ColorSet(int ColorNum);
+  ColorList _RGB;
+  ColorList HSV;
+  ColorList Lab;
+  ColorList XYZ;
+  MapList Map;
+  bool ApplyAllowed(const ConstColorSet &standard, bool *MIndex);
+  uint16_t colorCount() const;
 };
 
-namespace SlopeCraft
-{
-    extern const Eigen::Array<float,256,3> & Basic4External;
-    extern const ColorList & Allowed4External;
-    extern const MapList & AllowedMapList4External;
-}
+namespace SlopeCraft {
+extern const Eigen::Array<float, 256, 3> &Basic4External;
+extern const ColorList &Allowed4External;
+extern const MapList &AllowedMapList4External;
+} // namespace SlopeCraft
 
+extern "C" {
 void f(float &);
 void invf(float &);
 void RGB2HSV(float, float, float, float &, float &, float &);
@@ -76,8 +74,10 @@ ARGB RGB2ARGB(float, float, float);
 ARGB HSV2ARGB(float, float, float);
 ARGB XYZ2ARGB(float, float, float);
 ARGB Lab2ARGB(float, float, float);
-ARGB ComposeColor(const ARGB &front, const ARGB &back);
+ARGB ComposeColor(const ARGB front, const ARGB back);
+}
+
 bool readFromFile(const char *FileName, Eigen::ArrayXXf &M);
 bool readFromTokiColor(const char *, Eigen::ArrayXXf &, const std::string &);
-uint8_t h2d(char);
+
 #endif // COLORSET_H

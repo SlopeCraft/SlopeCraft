@@ -23,6 +23,8 @@ This file is part of SlopeCraft.
 #ifndef SCLDEFINES_H
 #define SCLDEFINES_H
 
+#include <omp.h>
+
 #define EIGEN_NO_DEBUG
 #include <Eigen/Dense>
 #include <iostream>
