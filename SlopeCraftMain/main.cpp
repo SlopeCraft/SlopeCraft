@@ -28,16 +28,8 @@ This file is part of SlopeCraft.
 
 int main(int argc, char *argv[])
 {
-    /*
-    QImage img=QImage(":/new/Pic/MCStyledNumbers.png").convertToFormat(QImage::Format::Format_ARGB32);
 
-    cout<<"img.isNull() = "<<img.isNull()<<endl;
-
-    cout<<"img.height() = "<<img.height()<<" , img.width() = "<<img.width()<<endl;
-
-    */
-
-    SlopeCraft::SCL_testHSV();
+    //SlopeCraft::SCL_testHSV();
 
 
     QApplication a(argc, argv);

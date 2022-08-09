@@ -291,7 +291,7 @@ unsigned char TokiColor::applyHSV() {
                          s_times_v * std::cos(c3[0]));
   auto deltaY = 50.0f * (allowedColors.col(0).sin() * S_times_V -
                          s_times_v * std::sin(c3[0]));
-  auto deltaZ = 86.60254f * (allowedColors.col(2) - c3[2]);
+  auto deltaZ = 50.0f * (allowedColors.col(2) - c3[2]);
   TempVectorXf Diff = deltaX.square() + deltaY.square() + deltaZ.square();
 
   // std::cerr<<"Diff.isNaN().count()="<<Diff.isNaN().count()<<"\n";

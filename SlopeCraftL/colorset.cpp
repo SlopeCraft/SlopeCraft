@@ -26,6 +26,7 @@ This file is part of SlopeCraft.
 #include "TokiSlopeCraft.h"
 
 #include <stdio.h>
+#include <math.h>
 
 static constexpr float threshold = 1e-10f;
 
@@ -149,37 +150,70 @@ ARGB ComposeColor(const ARGB front, const ARGB back) {
   return ARGB32(red, green, blue);
 }
 
-void f(float &I) {
-  if (I > 0.008856f)
-    I = std::pow(I, 1.0f / 3.0f);
-  else
-    I = 7.787f * I + 16.0f / 116.0f;
-  return;
-}
+inline void mySwapFloat(float & fa,float & fb) {
+    int32_t & a=(int32_t&)fa;
+    int32_t & b=(int32_t&)(fb);
 
-void invf(float &I) {
-  if (I > std::pow(0.008856, 1.0 / 3.0))
-    I = I * I * I;
-  else
-    I = (I - 16.0 / 116.0) / 7.787;
-  return;
+    a=a^b;
+    b=a^b;
+    a=a^b;
 }
 
 void RGB2HSV(float r, float g, float b, float &h, float &s, float &v) {
+    /*
   float K = 0.0f;
   if (g < b) {
-    std::swap(g, b);
+    mySwapFloat(g, b);
     K = -1.0f;
   }
   if (r < g) {
-    std::swap(r, g);
+    mySwapFloat(r, g);
     K = -2.0f / 6.0f - K;
   }
-  float chroma = r - std::min(g, b);
+  float chroma = r - fmin(g, b);
   h = fabs(K + (g - b) / (6.0f * chroma + threshold));
   s = chroma / (r + threshold);
   v = r;
 #warning The range of h, s and v is not certain.
+  */
+
+    float K=0.0f;
+
+    if(g>b) {
+        K=2.0f;
+    }
+    else {
+        mySwapFloat(g,b);
+        K=4.0f;
+    }
+
+    if(r>g) {
+        K=6.0f;
+    }
+    else {
+        mySwapFloat(r,g);
+
+        if(K==2.0f) {
+            mySwapFloat(g,b);
+        }
+    }
+
+    const float delta = r-fmin(g,b);
+
+    // Here we represent R,G,B as the original value before swap, and r,g,b as the variable after swapping.
+    // Now R has the greatest value, and when :
+    // When R is max, g=G and b=B, so g-b = G-B; K=6; while h = pi/3*((G-B)/delta+6)
+    // When G is max, g=B and b=R, so g-b = B-R; K=2; while h = pi/3*((B-G)/delta+2)
+    // When B is max, g=R and b=G, so g-b = R-G; K=4; while h = pi/3*((R-G)/delta+2)
+    //
+    // r = max(R,G,B), and min(R,G,B) is in either g or b.
+    // So we have delta = r-min(g,b)
+    // and h=pi/3*((g-b)/delta+K)
+
+    h = M_PI/3.0f*((g-b)/(delta+threshold)+K);
+    s = delta/(r+threshold);
+    v = r;
+
 
   return;
 }
@@ -231,6 +265,23 @@ void RGB2XYZ(float R, float G, float B, float &X, float &Y, float &Z) {
   Z = 0.019334f * R + 0.119193f * G + 0.950227f * B;
   return;
 }
+
+void f(float &I) {
+  if (I > 0.008856f)
+    I = pow(I, 1.0f / 3.0f);
+  else
+    I = 7.787f * I + 16.0f / 116.0f;
+  return;
+}
+
+void invf(float &I) {
+  if (I > pow(0.008856, 1.0 / 3.0))
+    I = I * I * I;
+  else
+    I = (I - 16.0 / 116.0) / 7.787;
+  return;
+}
+
 
 void XYZ2Lab(float X, float Y, float Z, float &L, float &a, float &b) {
   X /= 0.9504f;
@@ -298,20 +349,24 @@ ARGB HSV2ARGB(float H, float S, float V) {
   return RGB2ARGB(r, g, b);
 }
 
-void SCL_EXPORT SCL_testHSV() {
+void SCL_testHSV() {
   const float rgb[][3] = {{0, 0, 0}, {1, 1, 1}, {0.99, 0, 0}, {0, 1, 0},
                           {0, 0, 1}, {1, 1, 0}, {1, 0, 1},    {0, 1, 1}};
 
   const int N = sizeof(rgb) / sizeof(float[3]);
 
-  float hsv[N][3];
+  float hsv[N][3],irgb[N][3];
 
   for (int r = 0; r < N; r++) {
     RGB2HSV(rgb[r][0], rgb[r][1], rgb[r][2], hsv[r][0], hsv[r][1], hsv[r][2]);
 
+    HSV2RGB(hsv[r][0], hsv[r][1], hsv[r][2],irgb[r][0], irgb[r][1], irgb[r][2]);
+
     printf("RGB = [%f, %f, %f] , ", rgb[r][0], rgb[r][1], rgb[r][2]);
-    printf("HSV = [%f, %f, %f]\n", hsv[r][0], hsv[r][1], hsv[r][2]);
+    printf("HSV = [%f, %f, %f] , ", hsv[r][0], hsv[r][1], hsv[r][2]);
+    printf("iRGB = [%f, %f, %f]\n", irgb[r][0],irgb[r][1], irgb[r][2]);
   }
 }
+
 }
 #endif

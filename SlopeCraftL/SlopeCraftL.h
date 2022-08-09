@@ -603,7 +603,7 @@ void SCL_EXPORT SCL_preprocessImage(
 
 unsigned char SCL_EXPORT SCL_maxAvailableVersion();
 
-void SCL_EXPORT SCL_testHSV();
+//void SCL_EXPORT SCL_testHSV();
 
 #ifndef SLOPECRAFTL_CAPI
 } //  namespace SlopeCraft
