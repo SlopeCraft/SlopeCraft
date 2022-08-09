@@ -570,7 +570,11 @@ tpS::~tpS() {}
 
 void MainWindow::turnToPage(int page) {
   page %= 9;
-  QString newtitle = "SlopeCraft v3.8.1 Copyright © 2021-2022 TokiNoBug    ";
+  QString newtitle = "SlopeCraft ";
+
+          newtitle += SlopeCraft::Kernel::getSCLVersion();
+
+          newtitle += " Copyright © 2021-2022 TokiNoBug    ";
   switch (page) {
   case 0:
     newtitle += "Step 0 / 6";
