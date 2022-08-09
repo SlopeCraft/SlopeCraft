@@ -13,6 +13,16 @@
   <property name="windowTitle">
    <string>图片预处理</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../SlopeCraftMain/others/imageCutterIconNew.ico</normaloff>../SlopeCraftMain/others/imageCutterIconNew.ico</iconset>
+  </property>
+  <property name="iconSize">
+   <size>
+    <width>64</width>
+    <height>64</height>
+   </size>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="1" column="3">
@@ -79,8 +89,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>786</width>
-         <height>521</height>
+         <width>780</width>
+         <height>511</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_3">
@@ -172,7 +182,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>17</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuStart">

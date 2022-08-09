@@ -6,11 +6,11 @@ CONFIG += c++17
 
 TARGET = imageCutter
 
-RC_ICONS = ../SlopeCraftMain/others/SlopeCraft.ico
+RC_ICONS = ../SlopeCraftMain/others/imageCutterIconNew.ico
 
 RC_LANG = 0x0004
 
-VERSION += 3.8.1.0
+VERSION += 3.9.0
 
 #QMAKE_TARGET_COMPANY = TokiNoBug
 #公司名称
