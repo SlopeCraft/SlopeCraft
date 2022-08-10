@@ -16,7 +16,7 @@
 
 2. 想在服务器里造，但服务端没装**投影mod**
    - 首先强调，本软件的界面及一切文档中，投影mod一律指**Litematica mod**，开发者为Masa。其他任何含“投影”字样或类似功能的mod，都不是本软件需要的。
-   - Litematica mod是**客户端mod**，不需要服务端安装它。只需要客户端安装了Litematica和它依赖的前置mod Malilib，即可正常使用投影mod。所以不要再问这种蠢问题了。
+   - Litematica mod是**客户端mod**，**不需要服务端安装**它。只需要客户端安装了Litematica和它依赖的前置mod Malilib，即可正常使用投影mod。所以不要再问这种蠢问题了。
    - [Litematica Mod - CurseForge](https://www.curseforge.com/minecraft/mc-mods/litematica)
    - [Litematica Mod - MC百科](https://www.mcmod.cn/class/2261.html)
 
@@ -32,7 +32,7 @@
 
 5. 该怎么制作非方形的地图画？
    - 为什么有人会认为SlopeCraft不能制作非方形的呢？
-   - SlopeCraft从来不会缩放你的图片，而是忠实的还原每一个像素。你可以制作任何尺寸的地图画，照常处理就行。
+   - SlopeCraft**从来不会缩放你的图片**，而是忠实的还原每一个像素。**你可以制作任何尺寸的地图画，照常处理就行**。
 
 6. SlopeCraft 点了调整颜色之后图片几乎是灰的？/为什么颜色不理想/……
    - 有哪几种颜色是 Mojang 钦定的，有一些颜色就是没有特别相似的地图色，比如浅蓝、灰蓝、浅粉、浅紫，只能寻找差别不是太大的颜色。
