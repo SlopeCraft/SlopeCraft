@@ -228,12 +228,12 @@ std::string TokiSlopeCraft::makeTests(const AbstractBlock **src,
   NBT::NBTWriter file;
   std::string unCompress = fileName + ".TokiNoBug";
   file.open(unCompress.data());
-  file.writeListHead("entities", NBT::idByte, 0);
-  file.writeListHead("size", NBT::idInt, 3);
+  file.writeListHead("entities", NBT::Byte, 0);
+  file.writeListHead("size", NBT::Int, 3);
   file.writeInt("This should never be shown", xSize);
   file.writeInt("This should never be shown", ySize);
   file.writeInt("This should never be shown", zSize);
-  file.writeListHead("palette", NBT::idCompound, realSrc.size() + 1);
+  file.writeListHead("palette", NBT::Compound, realSrc.size() + 1);
   {
     std::vector<std::string> ProName, ProVal;
     std::string netBlockId;
@@ -248,7 +248,7 @@ std::string TokiSlopeCraft::makeTests(const AbstractBlock **src,
         writeBlock(netBlockId, ProName, ProVal, file);
       }
     }
-    file.writeListHead("blocks", NBT::idCompound, realSrc.size());
+    file.writeListHead("blocks", NBT::Compound, realSrc.size());
 
     for (uint8_t base = 0; base < 64; base++) {
       for (uint32_t idx = 0; idx < blocks[base].size(); idx++) {
@@ -256,7 +256,7 @@ std::string TokiSlopeCraft::makeTests(const AbstractBlock **src,
         int yPos = 0;
         int zPos = base;
         file.writeCompound("This should never be shown");
-        file.writeListHead("pos", NBT::idInt, 3);
+        file.writeListHead("pos", NBT::Int, 3);
         file.writeInt("This should never be shown", xPos);
         file.writeInt("This should never be shown", yPos);
         file.writeInt("This should never be shown", zPos);
@@ -1016,19 +1016,19 @@ TokiSlopeCraft::exportAsData(const std::string &FolderPath,
         MapFile.writeShort("width", 128);
         break;
       case MC13:
-        MapFile.writeListHead("banners", NBT::idCompound, 0);
-        MapFile.writeListHead("frames", NBT::idCompound, 0);
+        MapFile.writeListHead("banners", NBT::Compound, 0);
+        MapFile.writeListHead("frames", NBT::Compound, 0);
         MapFile.writeInt("dimension", 889464);
         break;
       case MC14:
-        MapFile.writeListHead("banners", NBT::idCompound, 0);
-        MapFile.writeListHead("frames", NBT::idCompound, 0);
+        MapFile.writeListHead("banners", NBT::Compound, 0);
+        MapFile.writeListHead("frames", NBT::Compound, 0);
         MapFile.writeInt("dimension", 0);
         MapFile.writeByte("locked", 1);
         break;
       case MC15:
-        MapFile.writeListHead("banners", NBT::idCompound, 0);
-        MapFile.writeListHead("frames", NBT::idCompound, 0);
+        MapFile.writeListHead("banners", NBT::Compound, 0);
+        MapFile.writeListHead("frames", NBT::Compound, 0);
         MapFile.writeInt("dimension", 0);
         MapFile.writeByte("locked", 1);
         break;
@@ -1036,8 +1036,8 @@ TokiSlopeCraft::exportAsData(const std::string &FolderPath,
       case MC17:
       case MC18:
       case MC19:
-        MapFile.writeListHead("banners", NBT::idCompound, 0);
-        MapFile.writeListHead("frames", NBT::idCompound, 0);
+        MapFile.writeListHead("banners", NBT::Compound, 0);
+        MapFile.writeListHead("frames", NBT::Compound, 0);
         MapFile.writeString("dimension", "minecraft:overworld");
         MapFile.writeByte("locked", 1);
         break;
@@ -1488,7 +1488,7 @@ void TokiSlopeCraft::writeTrash(int count, NBT::NBTWriter &Lite) {
           for (short Power = 0; Power < 16; Power++) {
             if (written >= count)
               return;
-            if (!Lite.isInList())
+            if (!Lite.isInListOrArray())
               return;
             ProVal.at(0) = dir[North];
             ProVal.at(1) = dir[East];
@@ -1574,7 +1574,7 @@ std::string TokiSlopeCraft::exportAsLitematic(
 
   reportWorkingStatue(wind, workStatues::writingBlockPalette);
 
-  Lite.writeListHead("BlockStatePalette", NBT::idCompound, 131);
+  Lite.writeListHead("BlockStatePalette", NBT::Compound, 131);
   {
     short written = ((mcVer >= MC16) ? 59 : 52);
     if (mcVer >= 17)
@@ -1595,10 +1595,10 @@ std::string TokiSlopeCraft::exportAsLitematic(
 
     writeTrash(130 - written, Lite);
   }
-  Lite.writeListHead("Entities", NBT::idCompound, 0);
-  Lite.writeListHead("PendingBlockTicks", NBT::idCompound, 0);
-  Lite.writeListHead("PendingFluidTiccks", NBT::idCompound, 0);
-  Lite.writeListHead("TileEntities", NBT::idCompound, 0);
+  Lite.writeListHead("Entities", NBT::Compound, 0);
+  Lite.writeListHead("PendingBlockTicks", NBT::Compound, 0);
+  Lite.writeListHead("PendingFluidTiccks", NBT::Compound, 0);
+  Lite.writeListHead("TileEntities", NBT::Compound, 0);
   {
     int ArraySize;
     // Lite.writeLong("aLong",1145141919810);
@@ -1618,14 +1618,16 @@ std::string TokiSlopeCraft::exportAsLitematic(
 
           if (inverserIndex < 0) {
             inverserIndex = 7;
-            Lite.writeLongDirectly("id", HackyVal);
+            Lite.writeSingleTag<int64_t,false>(NBT::Long,"id",HackyVal);
+            //Lite.writeLongDirectly("id", HackyVal);
           }
         }
         progressAdd(wind, size3D[0]);
       }
 
-    if (!Lite.isListFinished())
-      Lite.writeLongDirectly("id", HackyVal);
+    if (!Lite.isListOrArrayFinished())
+        Lite.writeSingleTag<int64_t,false>(NBT::Long,"id",HackyVal);
+      //Lite.writeLongDirectly("id", HackyVal);
   }
   Lite.endCompound();
 
@@ -1695,15 +1697,15 @@ TokiSlopeCraft::exportAsStructure(const std::string &TargetName) const {
   std::string unCompress = TargetName + ".TokiNoBug";
   file.open(unCompress.data());
 
-  file.writeListHead("entities", NBT::idByte, 0);
-  file.writeListHead("size", NBT::idInt, 3);
+  file.writeListHead("entities", NBT::Byte, 0);
+  file.writeListHead("size", NBT::Int, 3);
   file.writeInt("This should never be shown", size3D[0]);
   file.writeInt("This should never be shown", size3D[1]);
   file.writeInt("This should never be shown", size3D[2]);
 
   reportWorkingStatue(wind, workStatues::writingBlockPalette);
 
-  file.writeListHead("palette", NBT::idCompound, 70);
+  file.writeListHead("palette", NBT::Compound, 70);
   {
     short written = ((mcVer >= MC16) ? 59 : 52);
     if (mcVer >= MC17)
@@ -1732,14 +1734,14 @@ TokiSlopeCraft::exportAsStructure(const std::string &TargetName) const {
 
   reportWorkingStatue(wind, workStatues::writing3D);
 
-  file.writeListHead("blocks", NBT::idCompound, BlockCount);
+  file.writeListHead("blocks", NBT::Compound, BlockCount);
   for (int x = 0; x < size3D[0]; x++)
     for (int y = 0; y < size3D[1]; y++) {
       for (int z = 0; z < size3D[2]; z++) {
         if (!Build(x, y, z))
           continue;
         file.writeCompound("This should never be shown");
-        file.writeListHead("pos", NBT::idInt, 3);
+        file.writeListHead("pos", NBT::Int, 3);
         file.writeInt("This should never be shown", x);
         file.writeInt("This should never be shown", y);
         file.writeInt("This should never be shown", z);

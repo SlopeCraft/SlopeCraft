@@ -104,9 +104,11 @@ win32: {
     QMAKE_PRE_LINK+= cd /d $${OUT_PWD}/.. &
 
     CONFIG(release,debug|release): {
+        #QMAKE_PRE_LINK += del .\SlopeCraftMain\release\SlopeCraftL3.dll
         QMAKE_PRE_LINK+=copy /Y .\SlopeCraftL\release\SlopeCraftL3.dll .\SlopeCraftMain\release
     }
     else: {
+        #QMAKE_PRE_LINK += del .\SlopeCraftMain\debug\SlopeCraftL3.dll
         QMAKE_PRE_LINK+=copy /Y .\SlopeCraftL\debug\SlopeCraftL3.dll .\SlopeCraftMain\debug
     }
 #message($$QMAKE_PRE_LINK)

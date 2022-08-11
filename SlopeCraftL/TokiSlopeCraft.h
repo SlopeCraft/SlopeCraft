@@ -42,7 +42,9 @@ This file is part of SlopeCraft.
 
 #include "PrimGlassBuilder.h"
 #include "lossyCompressor.h"
-#include "NBTWriter.h"
+//#include "NBTWriter.h"
+
+#include "newNBTWriter.hpp"
 
 #include "AiCvterOpt.h"
 

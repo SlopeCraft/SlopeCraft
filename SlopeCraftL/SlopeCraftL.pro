@@ -39,7 +39,6 @@ SOURCES += \
     CIEDE00.cpp \
     ColorSource.cpp \
     HeightLine.cpp \
-    NBTWriter.cpp \
     OptiChain.cpp \
     PrimGlassBuilder.cpp \
     SlopeCraftL_CAPI.cpp \
@@ -56,7 +55,7 @@ HEADERS += \
     AiCvterOpt.h \
     ColorSet.h \
     HeightLine.h \
-    NBTWriter.h \
+    newNBTWriter.hpp \
     OptiChain.h \
     PrimGlassBuilder.h \
     SCLDefines.h \
