@@ -68,6 +68,11 @@ enum tagType : char {
   LongArray = idLongArray
 };
 
+/**
+ * \brief Convert variables via little endian and big endian.
+ * \param t To be converted
+ * \return Converted
+ */
 template <typename T> inline T convertLEBE(T t) {
 
   uint8_t *ptr = reinterpret_cast<uint8_t *>(&t);
@@ -80,7 +85,7 @@ template <typename T> inline T convertLEBE(T t) {
 }
 
 /**
- * @brief The NBTWriter class
+ * \brief The NBTWriter class
  */
 class NBTWriter {
 public:
@@ -100,19 +105,32 @@ private:
 
 public:
   /**
-   * @brief Default constructor
+   * \brief Default constructor
    */
   NBTWriter() : file(nullptr), tasks(), bytesWritten(0) {}
+
+  /**
+   * \brief Construct and open a file
+   * \param fileName The file to be opened.
+   */
   NBTWriter(const char * fileName): file(nullptr), tasks(), bytesWritten(0) {
       open(fileName);
   }
 
+  /**
+   * \brief Close the file and destruct
+   */
   ~NBTWriter() {
     if (isOpen()) {
       close();
     }
   }
 
+  /**
+   * \brief open a file
+   * \param newFileName the file to be opened
+   * \return If openning succeeds
+   */
   bool open(const char *newFileName) {
     if (file != nullptr) {
       return false;
@@ -135,12 +153,28 @@ public:
     return true;
   }
 
+  /**
+   * \brief If is file opened
+   * \return If is file opened
+   */
   inline bool isOpen() const { return file != nullptr; }
 
+  /**
+   * \brief file pointer
+   * \return file pointer
+   */
   inline FILE *filePtr() { return file; }
 
+  /**
+   * \brief file pointer
+   * \return constant file pointer
+   */
   inline const FILE *filePtr() const { return file; }
 
+  /**
+   * \brief Close the file and automatically fill nbts.
+   * \return If closing succeeds
+   */
   bool close() {
       // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
       
@@ -166,6 +200,10 @@ public:
     return true;
   }
 
+  /**
+   * \brief emergencyFill fils unfinished nbt tags automatically so that the NBT file can be loaded at least.
+   * \return Bytes written
+   */
   int emergencyFill() {
 
       // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
@@ -187,7 +225,7 @@ public:
       }
       // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
-      cout<<"tasks.size() = "<<tasks.size()<<endl;
+      // cout<<"tasks.size() = "<<tasks.size()<<endl;
 
       switch (currentType()) {
       case End:
@@ -292,12 +330,25 @@ private:
   }
 
 public:
+  /**
+   * \brief Whether the NBTWriter is finishing a compound tag
+   * \return Whether the NBTWriter is finishing a compound tag
+   */
   inline bool isInCompound() const {
     return tasks.empty() || (tasks.top().currentTagType == tagType::End);
   }
 
+  /**
+   * \brief Whether the NBTWriter is finishing a list tag or array tag
+   * \return Whether the NBTWriter is finishing a list tag or array tag
+   */
   inline bool isInListOrArray() const { return !isInCompound(); }
 
+  /**
+   * \brief Tell if you can write this tag into current list/ array.
+   * \param type The tag type you want to write in
+   * \return Whether you can write
+   */
   inline bool typeMatch(const tagType type) const {
     return type == tasks.top().currentTagType;
   }
@@ -329,7 +380,7 @@ private:
     }
 
     while(!tasks.empty()) {
-    cout<<"stack size = "<<tasks.size()<<endl;
+    //cout<<"stack size = "<<tasks.size()<<endl;
       if(!isInListOrArray()) {
         return;
       }
@@ -351,6 +402,16 @@ private:
   }
 
 public:
+  /**
+   * \brief writeSingleTag Write a byte, short, int, long, float or double tag
+   *
+   * \tparam T Type of variable to be written
+   *
+   * \param type Type of nbt tag
+   * \param Name The name of nbt tag
+   * \param value The value of nbt tag
+   * \return Bytes written.
+   */
   template <typename T, bool convertToBE = true>
   int writeSingleTag(const tagType type, const char *Name, T value) {
     static_assert(std::is_trivial_v<T>);
@@ -398,30 +459,71 @@ public:
     return bytes;
   }
 
+  /**
+   * \brief Write a byte tag
+   * \param Name Name of tag
+   * \param value Value of tag
+   * \return Bytes written
+   */
   inline int writeByte(const char *Name, int8_t value) {
     return writeSingleTag(tagType::Byte, Name, value);
   }
 
+  /**
+   * \brief Write a short tag
+   * \param Name Name of tag
+   * \param value Value of tag
+   * \return Bytes written
+   */
   inline int writeShort(const char *Name, int16_t value) {
     return writeSingleTag(tagType::Short, Name, value);
   }
 
+  /**
+   * \brief Write a int tag
+   * \param Name Name of tag
+   * \param value Value of tag
+   * \return Bytes written
+   */
   inline int writeInt(const char *Name, int32_t value) {
     return writeSingleTag(tagType::Int, Name, value);
   }
 
+  /**
+   * \brief Write a long tag
+   * \param Name Name of tag
+   * \param value Value of tag
+   * \return Bytes written
+   */
   inline int writeLong(const char *Name, int64_t value) {
     return writeSingleTag(tagType::Long, Name, value);
   }
 
+  /**
+   * \brief Write a float tag
+   * \param Name Name of tag
+   * \param value Value of tag
+   * \return Bytes written
+   */
   inline int writeFloat(const char *Name, float value) {
     return writeSingleTag(tagType::Float, Name, value);
   }
 
+  /**
+   * \brief Write a double tag
+   * \param Name Name of tag
+   * \param value Value of tag
+   * \return Bytes written
+   */
   inline int writeDouble(const char *Name, double value) {
     return writeSingleTag(tagType::Double, Name, value);
   }
 
+  /**
+   * \brief Write a compound tag
+   * \param Name Name of tag
+   * \return Bytes written
+   */
   int writeCompound(const char *Name = "") {
     if (!isOpen())
       return 0;
@@ -448,6 +550,10 @@ public:
     return bytes;
   }
 
+  /**
+   * \brief Terminate current compound tag
+   * \return Bytes written
+   */
   int endCompound() {
     if (!isOpen())
       return 0;
@@ -469,6 +575,13 @@ public:
     return bytes;
   }
 
+  /**
+   * \brief Write the head of a list
+   * \param Name Name of the list tag
+   * \param elementType Type of list element
+   * \param listSize Size of list
+   * \return Bytes written
+   */
   int writeListHead(const char *Name, tagType elementType, const int listSize) {
     if (!isOpen()) {
       return 0;
@@ -601,18 +714,42 @@ private:
   }
 
 public:
+  /**
+   * \brief Start to write a byte array
+   * \param Name Name of the array
+   * \param arraySize Elements of the array
+   * \return Bytes written
+   */
   inline int writeByteArrayHead(const char *Name, const int arraySize) {
     return writeArrayHead<tagType::Byte>(Name, arraySize);
   }
 
+  /**
+   * \brief Start to write a int array
+   * \param Name Name of the array
+   * \param arraySize Elements of the array
+   * \return Bytes written
+   */
   inline int writeIntArrayHead(const char *Name, const int arraySize) {
     return writeArrayHead<tagType::Int>(Name, arraySize);
   }
 
+  /**
+   * \brief Start to write a long array
+   * \param Name Name of the array
+   * \param arraySize Elements of the array
+   * \return Bytes written
+   */
   inline int writeLongArrayHead(const char *Name, const int arraySize) {
     return writeArrayHead<tagType::Long>(Name, arraySize);
   }
 
+  /**
+   * \brief Write a string tag
+   * \param Name Name of a string
+   * \param value Value of a string
+   * \return Bytes written
+   */
   int writeString(const char *Name, const char *value) {
     if (!isOpen()) {
       return 0;
@@ -650,8 +787,16 @@ public:
     return 0;
   }
 
+  /**
+   * \brief Current type you can write into a list/array
+   * \return Current type
+   */
   inline tagType currentType() const { return tasks.top().currentTagType; }
 
+  /**
+   * \brief Bytes that have been written to the file.
+   * \return Bytes written
+   */
   inline size_t byteCount() const { return bytesWritten; }
 };
 
