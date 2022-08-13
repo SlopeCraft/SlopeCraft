@@ -86,7 +86,8 @@ void HeightLine::make(const Eigen::ArrayXi &mapColorCol,
     if((rawShadow>=3).any()) {
         std::cerr<<"Fatal Error: depth=3 in vanilla map!"<<std::endl;
         std::cerr<<"SlopeCraft will crash."<<std::endl;
-        delete &rawShadow;
+        exit(1);
+        //delete &rawShadow;
         return;
     }
     Eigen::ArrayXi dealedDepth(picRows+1);

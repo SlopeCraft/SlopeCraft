@@ -83,7 +83,8 @@ const float * Kernel::getBasicColorMapPtrs() {
 }
 
 Kernel * Kernel::create() {
-    return (new TokiSlopeCraft)->toBaseClassPtr();
+    //return (new TokiSlopeCraft)->toBaseClassPtr();
+    return static_cast<Kernel*>(new TokiSlopeCraft);
 }
 
 

@@ -6,7 +6,7 @@ TEMPLATE = lib
 DEFINES += BLOCKLISTMANAGER_LIBRARY
 
 CONFIG += c++17
-CONFIG += staticlib
+CONFIG += static
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.

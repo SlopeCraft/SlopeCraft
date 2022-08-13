@@ -135,11 +135,6 @@ void TokiSlopeCraft::trySkipStep(step s) {
   }
 }
 
-void crash() {
-  int i;
-  delete &i;
-  return;
-}
 
 #define bufferSize 2048
 bool compressFile(const char *sourcePath, const char *destPath) {

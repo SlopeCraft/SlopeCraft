@@ -1,8 +1,11 @@
 CONFIG -= qt
 
+TEMPLATE = lib
+CONFIG += shared
+CONFIG += c++17
 
 INCLUDEPATH += \
-                               D:/CppLibs/eigen-3.4.0 \
+                               D:/CppLibs/libEigen3/include/eigen3 \
                                ../GAConverter \
                                D:/CppLibs/HeuristicFlow-1.6.2.1
 
@@ -23,14 +26,12 @@ QMAKE_TARGET_INTERNALNAME = SlopeCraftL
 
 QMAKE_CXXFLAGS += -fopenmp
 
-LIBS += -fopenmp
+LIBS += -fopenmp -lz
 
-TEMPLATE = lib
 DEFINES += SLOPECRAFTL_LIBRARY
 
-CONFIG += c++17
 
-LIBS += D:\CppLibs\zlib\lib\libzlibstatic.a
+#LIBS += D:\CppLibs\zlib\lib\libzlibstatic.a
 
 DEFINES += SLOPECRAFTL_WITH_AICVETR
 

@@ -26,7 +26,7 @@ QMAKE_TARGET_PRODUCT = SlopeCraft
 #产品名称
 
 
-INCLUDEPATH += D:\CppLibs\eigen-3.4.0
+INCLUDEPATH += D:/CppLibs/libEigen3/include/eigen3
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -101,20 +101,34 @@ DEPENDPATH += $$PWD/../SlopeCraftL
 
 
 win32: {
-    QMAKE_PRE_LINK+= cd /d $${OUT_PWD}/.. &
-
+    SlopeCraft_blocks_dir=$$PWD/../blocks
     CONFIG(release,debug|release): {
+
+    SlopeCraftMain_exe_dir=$$OUT_PWD/../SlopeCraftMain/release
+    SlopeCraftL_shared_dir=$$OUT_PWD/../SlopeCraftL/release
+
         #QMAKE_PRE_LINK += del .\SlopeCraftMain\release\SlopeCraftL3.dll
-        QMAKE_PRE_LINK+=copy /Y .\SlopeCraftL\release\SlopeCraftL3.dll .\SlopeCraftMain\release
+        #QMAKE_PRE_LINK+=copy /Y $$SlopeCraftMain_exe_dir\SlopeCraftL3.dll $$SlopeCraftMain_exe_dir
+        #QMAKE_PRE_LINK+=Xcopy $$PWD\..\Blocks
     }
     else: {
+    SlopeCraftMain_exe_dir=$$OUT_PWD/../SlopeCraftMain/debug
+    SlopeCraftL_shared_dir=$$OUT_PWD/../SlopeCraftL/debug
         #QMAKE_PRE_LINK += del .\SlopeCraftMain\debug\SlopeCraftL3.dll
-        QMAKE_PRE_LINK+=copy /Y .\SlopeCraftL\debug\SlopeCraftL3.dll .\SlopeCraftMain\debug
+        #QMAKE_PRE_LINK+=copy /Y .\SlopeCraftL\debug\SlopeCraftL3.dll .\SlopeCraftMain\debug
     }
-#message($$QMAKE_PRE_LINK)
+    QMAKE_PRE_LINK+=copy /Y \"$$SlopeCraftL_shared_dir\SlopeCraftL3.dll\" \"$$SlopeCraftMain_exe_dir\"
+    QMAKE_PRE_LINK+= & Xcopy \"$$SlopeCraft_blocks_dir\" \"$$SlopeCraftMain_exe_dir/blocks\" /Y /E /K /I
+#message("SlopeCraftMain_exe_dir = "$$SlopeCraftMain_exe_dir)
+#message("SlopeCraftL_shared_dir = "$$SlopeCraftL_shared_dir)
+message("command = "$$QMAKE_PRE_LINK)
 }
 else: {
     message(Copying and pasting SlopeCraftL3.dll on other platforms is not implemented yet. \
         Remind to copy this dynamic linked library manually)
 }
 
+message("SlopeCraft_blocks_dir = "$$SlopeCraft_blocks_dir)
+
+#message("PWD = ")
+#message($$PWD)

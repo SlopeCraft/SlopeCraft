@@ -5,7 +5,7 @@ CONFIG += staticlib
 
 CONFIG += c++17
 
-INCLUDEPATH += D:/CppLibs/eigen-3.4.0 \
+INCLUDEPATH += D:/CppLibs/libEigen3/include/eigen3 \
                                D:/CppLibs/HeuristicFlow-1.6.2.1
 
 
