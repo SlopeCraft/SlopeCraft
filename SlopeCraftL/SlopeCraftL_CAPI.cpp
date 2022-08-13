@@ -397,7 +397,7 @@ extern "C"
 
 #endif //  ifdef SLOPECRAFTL_CAPI
 
-    AiCvterOpt *SCL_EXPORT SCL_createAiCvterOpt()
+    SCL_EXPORT AiCvterOpt * SCL_createAiCvterOpt()
     {
         return new AiCvterOpt;
     }

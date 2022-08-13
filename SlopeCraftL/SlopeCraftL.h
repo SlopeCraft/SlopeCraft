@@ -580,7 +580,7 @@ extern "C" {
 namespace SlopeCraft {
 #endif
 
-AiCvterOpt *SCL_EXPORT SCL_createAiCvterOpt();
+SCL_EXPORT AiCvterOpt * SCL_createAiCvterOpt();
 void SCL_EXPORT SCL_destroyAiCvterOpt(AiCvterOpt *);
 
 void SCL_EXPORT SCL_setPopSize(AiCvterOpt *, unsigned int p);

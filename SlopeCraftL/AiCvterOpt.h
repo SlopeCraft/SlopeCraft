@@ -7,6 +7,7 @@
 namespace SlopeCraft{
 #endif
 
+
 struct AiCvterOpt
 {
     AiCvterOpt();

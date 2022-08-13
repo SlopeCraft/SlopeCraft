@@ -1,6 +1,9 @@
 #ifndef GACVTERDEFINES_H
 #define GACVTERDEFINES_H
 
+#ifndef _USE_MATH_DEFINES
+    #define _USE_MATH_DEFINES
+#endif
 
 #include <Eigen/Dense>
 #include <HeuristicFlow/Global>
