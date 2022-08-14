@@ -37,4 +37,16 @@ This file is part of SlopeCraft.
 #  define SLOPECRAFTL_EXPORT Q_DECL_IMPORT
 #endif
 
+
+#define SCL_EXPORT SLOPECRAFTL_EXPORT
+
+
+#ifndef SCL_external_class
+    #ifdef SCL_CAPI
+        #define SCL_external_class struct
+    #else
+        #define SCL_external_class class SCL_EXPORT
+    #endif
+#endif
+
 #endif // SLOPECRAFTL_GLOBAL_H

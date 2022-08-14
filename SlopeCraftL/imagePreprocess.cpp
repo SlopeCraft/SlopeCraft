@@ -11,7 +11,7 @@ inline ARGB composeColor(const ARGB front,const ARGB back) {
 }
 
 
-#ifndef SLOPECRAFTL_CAPI
+#ifndef SCL_CAPI
     namespace SlopeCraft
     {
 #endif
@@ -63,6 +63,6 @@ unsigned char SCL_EXPORT SCL_maxAvailableVersion() {
 }
 
 
-#ifndef SLOPECRAFTL_CAPI
-    } //  namespace SlopeCraft
+#ifndef SCL_CAPI
+} //  namespace SlopeCraft
 #endif

@@ -27,7 +27,7 @@ using namespace SlopeCraft;
 
 extern "C"
 {
-#ifdef SLOPECRAFTL_CAPI
+#ifdef SCL_CAPI
     AbstractBlock *SCL_EXPORT SCL_createBlock()
     {
         return AbstractBlock::create();
@@ -74,11 +74,12 @@ extern "C"
     {
         return t->getBurnable();
     }
-    /// if this block can be used in wall-map
+    /* if this block can be used in wall-map
     bool SCL_EXPORT SCL_getWallUseable(const AbstractBlock *t)
     {
         return t->getWallUseable();
     }
+    */
 
     /// set block id
     void SCL_EXPORT SCL_setId(AbstractBlock *t, const char *id)
@@ -115,11 +116,12 @@ extern "C"
     {
         t->setBurnable(b);
     }
-    /// set if this block can be used in wall-map
+    /* set if this block can be used in wall-map
     void SCL_EXPORT SCL_setWallUseable(AbstractBlock *t, bool wu)
     {
         t->setWallUseable(wu);
     }
+    */
     /// let *b equal to *this
     void SCL_EXPORT SCL_copyTo(AbstractBlock *t, AbstractBlock *b)
     {
@@ -212,7 +214,8 @@ extern "C"
 
     // can do in wait4Image:
     /// set original image from ARGB32 matrix (col-major)
-    void SCL_EXPORT SCL_setRawImage(Kernel *k, const unsigned int *src, short rows, short cols)
+    void SCL_EXPORT SCL_setRawImage(Kernel *k, const unsigned int *src,
+                                    int rows,int cols)
     {
         k->setRawImage(src, rows, cols);
     }
@@ -236,12 +239,12 @@ extern "C"
         return k->convert(ca, dither);
     }
     /// get image rows
-    short SCL_EXPORT SCL_getImageRows(const Kernel *k)
+    int SCL_EXPORT SCL_getImageRows(const Kernel *k)
     {
         return k->getImageRows();
     }
     /// get image cols
-    short SCL_EXPORT SCL_getImageCols(const Kernel *k)
+    int SCL_EXPORT SCL_getImageCols(const Kernel *k)
     {
         return k->getImageCols();
     }
@@ -270,8 +273,8 @@ extern "C"
 
     /// get converted image
     void SCL_EXPORT SCL_getConvertedImage(const Kernel *k,
-                                          short *rows,
-                                          short *cols,
+                                          int *rows,
+                                          int *cols,
                                           unsigned int *dest)
     {
         k->getConvertedImage(rows, cols, dest);
@@ -285,7 +288,8 @@ extern "C"
         k->exportAsData(FolderPath, indexStart, fileCount, dest);
     }
     /// get converted map(in mapColor array)
-    void SCL_EXPORT SCL_getConvertedMap(const Kernel *k, short *rows, short *cols, unsigned char *c)
+    void SCL_EXPORT SCL_getConvertedMap(const Kernel *k,
+                                        int *rows, int *cols, unsigned char *c)
     {
         k->getConvertedMap(rows, cols, c);
     }
@@ -311,14 +315,7 @@ extern "C"
     /// get x,y,z size
     void SCL_EXPORT SCL_get3DSize(const Kernel *k, int *x, int *y, int *z)
     {
-        int _x, _y, _z;
-        k->get3DSize(_x, _y, _z);
-        if (x != nullptr)
-            *x = _x;
-        if (y != nullptr)
-            *y = _y;
-        if (z != nullptr)
-            *z = _z;
+        k->get3DSize(x,y,z);
     }
 
     /// get 3d structure's size
@@ -385,7 +382,7 @@ extern "C"
     }
 
     /// a function ptr to report error when something wrong happens
-    void SCL_EXPORT SCL_setReportError(Kernel *k, void (*p)(void *, errorFlag))
+    void SCL_EXPORT SCL_setReportError(Kernel *k, void (*p)(void *, SCL_errorFlag,const char *))
     {
         k->setReportError(p);
     }

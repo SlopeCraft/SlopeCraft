@@ -48,7 +48,7 @@ void AbstractBlock::copyTo(AbstractBlock *dst) const {
     dst->setIdOld(getIdOld());
     dst->setNeedGlass(getNeedGlass());
     dst->setVersion(getVersion());
-    dst->setWallUseable(getWallUseable());
+    //dst->setWallUseable(getWallUseable());
 }
 
 void AbstractBlock::clear() {
@@ -59,7 +59,7 @@ void AbstractBlock::clear() {
     setIdOld("");
     setNeedGlass(false);
     setVersion(0);
-    setWallUseable(false);
+    //setWallUseable(false);
 }
 
 Kernel::Kernel() {

@@ -34,6 +34,8 @@ This file is part of SlopeCraft.
 #include <iostream>
 
 #include "SlopeCraftL.h"
+#include "defines_of_extern_classes.h"
+
 
 #ifndef M_PI
 #define M_PI		3.14159265358979323846

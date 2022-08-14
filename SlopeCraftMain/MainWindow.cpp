@@ -273,7 +273,7 @@ void MainWindow::showPreview() {
     ib = preWind->BlockCount.erase(ib);
     iS = preWind->Src.erase(iS);
   }
-  kernel->get3DSize(preWind->size[0], preWind->size[1], preWind->size[2]);
+  kernel->get3DSize(&preWind->size[0], &preWind->size[1], &preWind->size[2]);
 
   qDebug() << "去重后有：" << preWind->Src.size() << "个元素";
   // preWind->Water=Blocks[12][0];
@@ -281,7 +281,7 @@ void MainWindow::showPreview() {
   // preWind->Src[1]=Blocks[1][0];preWind->BlockCount[1]=1919810;
   EImage tempE;
   tempE.resize(kernel->getImageRows(), kernel->getImageCols());
-  short a, b;
+  int a, b;
   kernel->getConvertedImage(&a, &b, tempE.data());
   // cerr<<__FILE__<<" , "<<__LINE__<<endl;
   QImage temp = EImage2QImage(tempE);
@@ -1223,7 +1223,7 @@ void MainWindow::on_ShowRaw_clicked() {
 
 void MainWindow::on_ShowAdjed_clicked() {
   EImage ei(kernel->getImageRows(), kernel->getImageCols());
-  short a, b;
+  int a, b;
   kernel->getConvertedImage(&a, &b, ei.data());
   ui->ShowPic->setPixmap(QPixmap::fromImage(EImage2QImage(ei)));
 }
@@ -1509,7 +1509,7 @@ void MainWindow::on_Build4Lite_clicked() {
 
   int size3D[3], total;
 
-  kernel->get3DSize(size3D[0], size3D[1], size3D[2]);
+  kernel->get3DSize(&size3D[0], &size3D[1], &size3D[2]);
   total = kernel->getBlockCounts();
   ui->ShowLiteBlocks->setText(QString::number(total));
   ui->ShowLiteXYZ->setText(QString::fromStdString(

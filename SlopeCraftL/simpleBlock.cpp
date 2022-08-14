@@ -31,7 +31,7 @@ simpleBlock::simpleBlock()
     doGlow=false;
     endermanPickable=false;
     burnable=false;
-    wallUseable=true;
+    //wallUseable=true;
 /*
     std::string id;
     uchar version;

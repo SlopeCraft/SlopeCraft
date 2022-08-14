@@ -33,7 +33,6 @@ DEFINES += SLOPECRAFTL_LIBRARY
 
 #LIBS += D:\CppLibs\zlib\lib\libzlibstatic.a
 
-DEFINES += SLOPECRAFTL_WITH_AICVETR
 
 SOURCES += \
     AiCvterOpt.cpp \
@@ -44,6 +43,8 @@ SOURCES += \
     PrimGlassBuilder.cpp \
     SlopeCraftL_CAPI.cpp \
     TokiSlopeCraft.cpp \
+    TokiSlopeCraft_build.cpp \
+    TokiSlopeCraft_convert.cpp \
     WaterItem.cpp \
     colorset.cpp \
     imagePreprocess.cpp \
@@ -67,7 +68,8 @@ HEADERS += \
     object_pool.hpp \
     simpleBlock.h \
     SlopeCraftL.h \
-    SlopeCraftL_global.h
+    SlopeCraftL_global.h \
+    defines_of_extern_classes.h
 
 # Default rules for deployment.
 #unix {
