@@ -25,6 +25,8 @@ This file is part of SlopeCraft.
 #include "TokiBaseColor.h"
 #include "TokiBlock.h"
 
+#include <iostream>
+
 BlockListManager::BlockListManager(QHBoxLayout * _area,
                                    QObject *parent) : QObject(parent)
 {
@@ -79,7 +81,9 @@ void BlockListManager::addBlocks(const QJsonArray & jArray,QString imgDir) {
     uchar baseColor;
     qDebug()<<"jArray.size()="<<jArray.size();
     for(unsigned int i=0;i<jArray.size();i++) {
+        //DispLine
         temp=jArray[i].toObject();
+
 
         if(!isValidBlockInfo(temp)) {
             qDebug()<<"出现不合法的json信息："<<temp;

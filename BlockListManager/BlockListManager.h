@@ -38,6 +38,7 @@ This file is part of SlopeCraft.
 #include "TokiBlock.h"
 #include "TokiBaseColor.h"
 
+#define DispLine qDebug()<<"File = "<<__FILE__<<" , Line = "<<__LINE__;
 
 class BlockListManager : public QObject
 {

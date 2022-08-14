@@ -43,7 +43,7 @@ block->setNeedGlass(json.value("needGlass").toBool());
 block->setDoGlow(json.value("isGlowing").toBool());
 block->setEndermanPickable(json.value("endermanPickable").toBool());
 block->setBurnable(json.value("burnable").toBool());
-block->setWallUseable(json.value("wallUseable").toBool());
+//block->setWallUseable(json.value("wallUseable").toBool());
 nameZH=json.value("nameZH").toString();
 nameEN=json.value("nameEN").toString();
 //std::cerr<<block.id<<"\n"<<block.idOld<<"\n";

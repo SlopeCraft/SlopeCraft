@@ -549,7 +549,7 @@ void MainWindow::InitializeAll() {
   if (!Collected) {
     loadBlockList();
     qDebug("方块列表加载完毕");
-    Manager->setVersion(SlopeCraft::MC17);
+    Manager->setVersion(SlopeCraft::gameVersion::MC17);
     onPresetsClicked();
     Collected = true;
   }
@@ -697,11 +697,11 @@ void MainWindow::updateEnables() {
   temp = kernel->queryStep() >= SlopeCraft::step::wait4Image;
   ui->actionTestBlockList->setEnabled(temp);
 
-  temp = kernel->queryStep() >= SlopeCraft::convertionReady;
+  temp = kernel->queryStep() >= SlopeCraft::step::convertionReady;
   ui->ShowRaw->setEnabled(temp);
   // ui->Convert->setEnabled(temp);
 
-  temp = kernel->queryStep() >= SlopeCraft::converted;
+  temp = kernel->queryStep() >= SlopeCraft::step::converted;
   ui->ShowAdjed->setEnabled(temp);
   ui->ExportData->setEnabled(temp);
   ui->progressEx->setEnabled(temp);
@@ -711,7 +711,7 @@ void MainWindow::updateEnables() {
   ui->actionExportData->setEnabled(temp);
 
   temp = (!ui->isMapCreative->isChecked()) &&
-         kernel->queryStep() >= SlopeCraft::converted;
+         kernel->queryStep() >= SlopeCraft::step::converted;
   ui->ExLite->setEnabled(temp);
   ui->progressExLite->setEnabled(temp);
   ui->actionExportLite->setEnabled(temp);
@@ -721,7 +721,7 @@ void MainWindow::updateEnables() {
   ui->actionExportNBT->setEnabled(temp);
   ui->Build4Lite->setEnabled(temp);
 
-  temp = kernel->queryStep() >= SlopeCraft::builded;
+  temp = kernel->queryStep() >= SlopeCraft::step::builded;
   ui->ExportLite->setEnabled(temp);
   ui->ManualPreview->setEnabled(temp);
   ui->ExportFlatDiagram->setEnabled(temp && (kernel->isFlat()));
@@ -794,7 +794,7 @@ void MainWindow::preprocessImage(const QString &Path) {
   ui->ShowRawPic->setPixmap(QPixmap::fromImage(rawPic));
   ui->ShowPic->setPixmap(QPixmap::fromImage(rawPic));
 
-  kernel->decreaseStep(SlopeCraft::nothing);
+  kernel->decreaseStep(SlopeCraft::step::nothing);
   updateEnables();
 }
 
@@ -939,7 +939,7 @@ void MainWindow::onGameVerClicked() {
   if (ui->isGame19->isChecked()) {
     Manager->setVersion(19);
   }
-  kernel->decreaseStep(SlopeCraft::nothing);
+  kernel->decreaseStep(SlopeCraft::step::nothing);
   onBlockListChanged();
   updateEnables();
 }
@@ -958,14 +958,14 @@ void MainWindow::onMapTypeClicked() {
   if(ui->isMapWall->isChecked()) {
       Manager->setEnabled(12,false);
   }*/
-  kernel->decreaseStep(SlopeCraft::nothing);
+  kernel->decreaseStep(SlopeCraft::step::nothing);
   onBlockListChanged();
   updateEnables();
 }
 
 void MainWindow::ChangeToCustom() {
   ui->isBLCustom->setChecked(true);
-  kernel->decreaseStep(SlopeCraft::nothing);
+  kernel->decreaseStep(SlopeCraft::step::nothing);
   updateEnables();
 }
 
@@ -986,7 +986,7 @@ void MainWindow::onPresetsClicked() {
   if (ui->isMapSurvival->isChecked())
     Manager->setEnabled(12, false);
 
-  kernel->decreaseStep(SlopeCraft::nothing);
+  kernel->decreaseStep(SlopeCraft::step::nothing);
   updateEnables();
 }
 
@@ -1010,9 +1010,9 @@ void MainWindow::onAlgoClicked() {
   if (ui->isColorSpaceXYZ->isChecked())
     now = SlopeCraft::convertAlgo::XYZ;
   if (ui->isColorSpaceAi->isChecked())
-    now = SlopeCraft::convertAlgo::GACvter;
+    now = SlopeCraft::convertAlgo::gaCvter;
 
-  if (lastChoice == SlopeCraft::convertAlgo::GACvter)
+  if (lastChoice == SlopeCraft::convertAlgo::gaCvter)
     kernelSetImg();
 
   if (lastChoice != now || lastDither != nowDither)
@@ -1147,17 +1147,17 @@ void MainWindow::algoProgressAdd(void *p, int deltaVal) {
 }
 
 void MainWindow::on_Convert_clicked() {
-  if (kernel->queryStep() < SlopeCraft::wait4Image) {
+  if (kernel->queryStep() < SlopeCraft::step::wait4Image) {
     qDebug("重新setType");
     onBlockListChanged();
-    if (kernel->queryStep() < SlopeCraft::wait4Image)
+    if (kernel->queryStep() < SlopeCraft::step::wait4Image)
       return;
   }
 
-  if (kernel->queryStep() < SlopeCraft::convertionReady) {
+  if (kernel->queryStep() < SlopeCraft::step::convertionReady) {
     qDebug("重新setImage");
     kernelSetImg();
-    if (kernel->queryStep() < SlopeCraft::convertionReady)
+    if (kernel->queryStep() < SlopeCraft::step::convertionReady)
       return;
   }
 
@@ -1177,7 +1177,7 @@ void MainWindow::on_Convert_clicked() {
     if (ui->isColorSpaceXYZ->isChecked())
       now = SlopeCraft::convertAlgo::XYZ;
     if (ui->isColorSpaceAi->isChecked())
-      now = SlopeCraft::convertAlgo::GACvter;
+      now = SlopeCraft::convertAlgo::gaCvter;
   }
 
   proTracker = ui->ShowProgressABbar;
@@ -1494,7 +1494,7 @@ void MainWindow::on_Build4Lite_clicked() {
 
   bool allowBridge = ui->allowGlassBridge->isChecked();
   SlopeCraft::glassBridgeSettings gBS =
-      allowBridge ? SlopeCraft::withBridge : SlopeCraft::noBridge;
+      allowBridge ? SlopeCraft::glassBridgeSettings::withBridge : SlopeCraft::glassBridgeSettings::noBridge;
 
   kernel->decreaseStep(SlopeCraft::step::converted);
   ui->ExportLite->setEnabled(false);
