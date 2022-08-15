@@ -77,7 +77,7 @@ MainWindow::MainWindow(QWidget *parent)
 
   proTracker = nullptr;
 
-  ProductDir = "";
+  ProductDir="";
 
   Manager = new BlockListManager(
       (QHBoxLayout *)ui->scrollAreaWidgetContents->layout());
@@ -1531,7 +1531,7 @@ void MainWindow::onExportLiteclicked(QString path) {
   if (path.isEmpty()) {
     FileName = QFileDialog::getSaveFileName(
                    this, tr("导出为投影/结构方块文件"), "",
-                   tr("投影文件(*.litematic) ;; 结构方块文件(*.nbt)"))
+                   tr("投影文件(*.litematic) ;; 结构方块文件(*.nbt);;WorldEdit原理图(*.schem)"))
                    .toLocal8Bit()
                    .data();
   } else {
@@ -1541,12 +1541,14 @@ void MainWindow::onExportLiteclicked(QString path) {
   char unCbuf[512] = "";
   if (FileName.empty())
     return;
-  bool putLitematic = (FileName.substr(FileName.length() -
+  const bool putLitematic = (FileName.substr(FileName.length() -
                                        strlen(".litematic")) == ".litematic");
-  bool putStructure =
+  const bool putStructure =
       (FileName.substr(FileName.length() - strlen(".nbt")) == ".nbt");
+  const bool putWESchem=
+          (FileName.substr(FileName.length() - strlen(".schem")) == ".schem");
 
-  if (!putLitematic && !putStructure) {
+  if (!putLitematic && !putStructure&&!putWESchem) {
     qDebug("得到的文件路径有错！");
     return;
   }
@@ -1561,14 +1563,48 @@ void MainWindow::onExportLiteclicked(QString path) {
 
   if (putStructure)
     kernel->exportAsStructure(FileName.data(), unCbuf);
-  else
+  else if(putLitematic)
     kernel->exportAsLitematic(
-        FileName.data(), ui->InputLiteName->toPlainText().toUtf8().data(),
-        ui->InputAuthor->toPlainText().toUtf8().data(),
-        (ui->InputRegionName->toPlainText() + tr("(xz坐标=-65±128×整数)"))
+        FileName.data(), ui->InputLiteName->text().toUtf8().data(),
+        (ui->InputRegionName->text() + tr("(xz坐标=-65±128×整数)"))
             .toUtf8()
             .data(),
         unCbuf);
+
+  else {
+      int offset[3]={0,0,0},weOffset[3]={0,0,0};
+      QString dependModsListString=ui->schem_required_mods->toPlainText();
+      QStringList modList=dependModsListString.split('\n');
+
+      std::vector<std::string> stdStrList(modList.size());
+      std::vector<const char*> charPtrs;
+      for(int idx=0;idx<int(stdStrList.size());idx++) {
+          stdStrList[idx]=modList[idx].toUtf8().data();
+          charPtrs.emplace_back(stdStrList[idx].data());
+      }
+
+      const std::array<const QLineEdit*,3> offsetSrc
+              ({ui->schem_offsetX,ui->schem_offsetY,ui->schem_offsetZ});
+      const std::array<const QLineEdit*,3> weOffsetSrc
+              ({ui->schem_weOffsetX,ui->schem_weOffsetY,ui->schem_weOffsetZ});
+
+      for(int d=0;d<3;d++) {
+          bool ok=true;
+          int result=offsetSrc[d]->text().toInt(&ok);
+          if(ok)
+              offset[d]=result;
+
+          result=weOffsetSrc[d]->text().toInt(&ok);
+          if(ok)
+              weOffset[d]=result;
+      }
+
+      kernel->exportAsWESchem(FileName.data(),
+                              offset,weOffset,
+                              ui->schem_name->text().toUtf8().data(),
+                              charPtrs.data(),charPtrs.size(),unCbuf);
+  }
+
   // unCompressed=unCbuf;
   if (std::strlen(unCbuf) <= 0) {
     qDebug("压缩成功");
@@ -1708,10 +1744,13 @@ void MainWindow::on_allowGlassBridge_stateChanged(int arg1) {
   ui->glassBridgeInterval->setEnabled(arg1);
 }
 
-void MainWindow::showError(void *p, SlopeCraft::errorFlag error, const char *) {
+void MainWindow::showError(void *p, SlopeCraft::errorFlag error, const char * msg) {
   MainWindow *wind = (MainWindow *)p;
   QString title, text;
   bool isFatal = false;
+
+  const QString detail=(msg==nullptr)?(""):(tr("\n具体信息：")+QString::fromStdString(msg));
+
   switch (error) {
   case SlopeCraft::errorFlag::NO_ERROR_OCCUR:
     return;
@@ -1769,15 +1808,15 @@ void MainWindow::showError(void *p, SlopeCraft::errorFlag error, const char *) {
     text = tr("这可能是因为路径中含有中文字符！");
     break;
   case SlopeCraft::errorFlag::FAILED_TO_REMOVE:
-    title = tr("导出时删除临时文件失败");
+    title = tr("删除临时文件失败");
     text = tr("这可能是因为路径中含有中文字符！");
     break;
   }
   if (isFatal)
-    QMessageBox::warning(wind, title, text, QMessageBox::StandardButton::Ok,
+    QMessageBox::warning(wind, title, text+detail, QMessageBox::StandardButton::Ok,
                          QMessageBox::StandardButton::NoButton);
   else {
-    QMessageBox::critical(wind, title, text,
+    QMessageBox::critical(wind, title, text+detail,
                           QMessageBox::StandardButton::Close);
     emit wind->ui->Exit->clicked();
   }

@@ -125,28 +125,38 @@ void TokiSlopeCraft::trySkipStep(step s) {
 
 
 bool compressFile(const char *sourcePath, const char *destPath) {
-    constexpr int bufferSize=2048;
+  constexpr int bufferSize=2048;
   char buf[bufferSize] = {0};
   FILE *in = nullptr;
   gzFile out = nullptr;
   int len = 0;
+
   fopen_s(&in, sourcePath, "rb");
+
   out = gzopen(destPath, "wb");
-  if (in == nullptr || out == nullptr)
-    return false;
+  if (in == nullptr || out == nullptr) {
+
+      return false;
+  }
+
   while (true) {
     len = (int)fread(buf, 1, sizeof(buf), in);
-    if (ferror(in))
-      return false;
+    if (ferror(in)) {
+
+                return false;
+    }
     if (len == 0)
       break;
-    if (len != gzwrite(out, buf, (unsigned)len))
-      return false;
+    if (len != gzwrite(out, buf, (unsigned)len)) {
+
+        return false;
+    }
     memset(buf, 0, sizeof(buf));
   }
   fclose(in);
   gzclose(out);
   // succeed
+
   return true;
 }
 
@@ -559,4 +569,15 @@ const unsigned char *TokiSlopeCraft::getBuild(int *xSize, int *ySize,
 
 const Eigen::Tensor<uchar, 3> &TokiSlopeCraft::getBuild() const {
   return Build;
+}
+
+int TokiSlopeCraft::getXRange() const {
+  if (kernelStep < builded)
+    return -1;
+  return size3D[0];
+}
+int TokiSlopeCraft::getZRange() const {
+  if (kernelStep < builded)
+    return -1;
+  return size3D[2];
 }

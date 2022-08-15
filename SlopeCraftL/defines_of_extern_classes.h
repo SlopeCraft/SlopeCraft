@@ -168,12 +168,20 @@ public:
 
   // can do in builded:
   /// export map into litematica files (*.litematic)
-  virtual void exportAsLitematic(const char *TargetName, const char *LiteName,
-                                 const char *author, const char *RegionName,
-                                 char *FileName) const = 0;
+  virtual void exportAsLitematic(const char *localEncoding_TargetName,
+                                 const char *utf8_LiteName,
+                                 const char *utf8_RegionName,
+                                 char *localEncoding_returnVal) const = 0;
   /// export map into Structure files (*.NBT)
-  virtual void exportAsStructure(const char *TargetName,
-                                 char *FileName) const = 0;
+  virtual void exportAsStructure(const char *localEncoding_TargetName,
+                                 char *localEncoding_FileName) const = 0;
+  virtual void exportAsWESchem(const char * localEncoding_fileName,
+                               const int (&offset)[3]={0,0,0},
+                               const int (&weOffset)[3]={0,0,0},
+                                 const char * utf8_Name="",
+                                 const char *const*const utf8_requiredMods=nullptr,
+                                 const int requiredModsCount=0,
+                                 char * localEncoding_returnVal=nullptr) const=0;
 
   /// get x,y,z size
   virtual void get3DSize(int *x, int *y, int *z) const = 0;

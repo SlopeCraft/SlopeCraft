@@ -158,17 +158,25 @@ public:
     // can do in builded:
     void exportAsLitematic(const char *TargetName,
                            const char *LiteName,
-                           const char *author,
                            const char *RegionName,
                            char *FileName) const;
     std::string exportAsLitematic(const std::string &TargetName, // Local
                                   const std::string &LiteName,   // Utf8
-                                  const std::string &author,     // Utf8
                                   const std::string &RegionName  // Utf8
     ) const;
 
     void exportAsStructure(const char *TargetName, char *FileName) const;
     std::string exportAsStructure(const std::string &) const;
+
+    void exportAsWESchem(const char * fileName,
+                         const int (&offset)[3],const int (&weOffset)[3],const char * Name,
+    const char *const*const requiredMods,const int requiredModsCount,char * returnVal) const;
+
+    std::string exportAsWESchem(const std::string &,const std::array<int,3> & offset,
+                                const std::array<int,3> & weOffset,
+                                const char * Name,
+                                const std::vector<const char *> & requiredMods) const;
+
     void get3DSize(int *x, int *y, int *z) const;
     int getHeight() const;
     int getXRange() const;

@@ -275,7 +275,7 @@ const AiCvterOpt *SCL_EXPORT SCL_getAiCvterOpt(const Kernel *k);
 void SCL_EXPORT SCL_setWindPtr(Kernel *k, void *);
 /// a function ptr to show progress of converting and exporting
 void SCL_EXPORT SCL_setProgressRangeSet(Kernel *k,
-                                        void (*)(void *, int, int, int));
+                                        void (*)(void *, int min, int max, int val));
 /// a function ptr to add progress value
 void SCL_EXPORT SCL_setProgressAdd(Kernel *k, void (*)(void *, int));
 /// a function ptr to prevent window from being syncoped
