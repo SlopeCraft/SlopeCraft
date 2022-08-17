@@ -2,6 +2,7 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
     GAConverter \
+    MapViewer \
     SlopeCraftL \
     BlockListManager \
     SlopeCraftMain \
