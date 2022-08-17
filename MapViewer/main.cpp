@@ -9,7 +9,7 @@
 
 int main(int argc, char *argv[])
 {
-
+/*
     std::vector<uint8_t> uncompressed_file;
 
     uncompress_map_file("D:\\map_3.dat",&uncompressed_file);
@@ -36,6 +36,7 @@ int main(int argc, char *argv[])
         }
         cout<<endl;
     }
+    */
 
     QApplication a(argc, argv);
 

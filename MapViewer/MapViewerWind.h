@@ -10,6 +10,8 @@
 
 #include <iostream>
 
+#include <memory>
+
 using std::cout,std::endl;
 
 QT_BEGIN_NAMESPACE
@@ -26,9 +28,33 @@ extern const std::array<ARGB,256> map_color_to_ARGB;
 
 struct map
 {
+public:
+    map() : map_content(new Eigen::Array<uint8_t,128,128,Eigen::RowMajor>){};
+    ~map()=default;
+    map(map&&)=default;
+    map(const map & another) : filename(another.filename), image(another.image) {
+        *map_content=*another.map_content;
+    }
+
+    map & operator=(const map & another) {
+        filename=another.filename;
+        image=another.image;
+        memcpy(map_content->data(),another.map_content->data(),128*128);
+
+        return *this;
+    }
+
     QString filename;
-    Eigen::ArrayXX<uint8_t> map_content;
+    std::unique_ptr<Eigen::Array<uint8_t,128,128,Eigen::RowMajor>> map_content;
     QPixmap image;
+
+    inline Eigen::Array<uint8_t,128,128,Eigen::RowMajor>& content() {
+        return *map_content;
+    }
+
+    inline const Eigen::Array<uint8_t,128,128,Eigen::RowMajor>& content() const {
+        return *map_content;
+    }
 };
 
 class MapViewerWind : public QMainWindow
@@ -42,11 +68,13 @@ public:
 private:
     Ui::MapViewerWind *ui;
 
-    std::vector<QString> map_filenames;
+    std::vector<map> maps;
 
 private slots:
+    void update_contents();
     void reshape_tables();
     void clear_all();
+    void on_button_load_maps_clicked();
 };
 
 
