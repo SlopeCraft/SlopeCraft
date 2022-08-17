@@ -21,10 +21,15 @@ bool uncompress_map_file(const char * filename,std::vector<uint8_t>*const dest) 
 
     dest->clear();
 
-    const int source_size=std::filesystem::file_size(filename);
+    const size_t source_size=std::filesystem::file_size(filename);
     dest->reserve(4*source_size);
 
     gzFile gz_file=::gzopen(filename,"rb");
+
+    if(gz_file==nullptr) {
+        return false;
+    }
+
     while(true) {
         dest->emplace_back();
         if(::gzfread(&dest->back(),1,1,gz_file)<=0) {
@@ -36,39 +41,37 @@ bool uncompress_map_file(const char * filename,std::vector<uint8_t>*const dest) 
     ::gzclose(gz_file);
     dest->shrink_to_fit();
 
-/*
-    std::vector<uint8_t> source;
-    source.resize(sourceSize);
-
-    {
-        std::fstream file;
-        file.open(filename,std::ios::in|std::ios::binary);
-        file.read((char*)source.data(),sourceSize);
-        file.close();
-    }
-
-    dest->reserve(2.5*sourceSize);
-    uLongf destLength=dest->capacity();
-    while(true) {
-        int error=::uncompress(dest->data(),&destLength,source.data(),source.size());
-        switch (error) {
-        case Z_OK:
-        break;
-        case Z_BUF_ERROR:
-            dest->reserve(dest->capacity()*2);
-            destLength=dest->capacity();
-            continue;
-        default:
-            std::cout<<"Failed to inflate file : "<<filename<<" , error code is "<<error<<std::endl;
-            exit(1);
-            break;
-        }
-        break;
-    }
-
-    if(destLength<=dest->capacity()) {
-        dest->resize(destLength);
-    }*/
-
     return true;
+}
+
+const uint8_t * find_color_begin(const std::vector<uint8_t>&inflated) {
+    if(inflated.size()<=128*128*sizeof(char)) {
+        return nullptr;
+    }
+
+    //std::vector<const uint8_t *> possiblePtrs;
+
+    constexpr uint8_t feature[]={0x63,0x6F,0x6C,0x6F,0x73,0x00,0x00,0x40,0x00};
+    constexpr size_t feature_length=sizeof(feature)/sizeof(uint8_t);
+    for(const uint8_t * ptr=inflated.data();ptr!=inflated.data()+inflated.size();ptr++) {
+        if(*ptr!=*feature) {
+            continue;
+        }
+        bool same=true;
+        for(size_t idx=1;idx<feature_length;idx++) {
+            same=same&&(ptr[idx]==feature[idx]);
+        }
+
+        if(same) {
+            const size_t left_bytes=inflated.data()+inflated.size()-ptr-feature_length;
+            if(left_bytes>=128*128*sizeof(uint8_t)) {
+                return ptr+feature_length;
+            }
+        }
+        else {
+            continue;
+        }
+    }
+
+    return nullptr;
 }
