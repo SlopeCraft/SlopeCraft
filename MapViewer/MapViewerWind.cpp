@@ -9,7 +9,6 @@
 #include <list>
 #include <mutex>
 
-#include <omp.h>
 
 std::array<ARGB,256> make_map_LUT();
 
@@ -63,6 +62,7 @@ MapViewerWind::~MapViewerWind()
 
 void MapViewerWind::update_contents() {
     reshape_tables();
+    ui->label_show_map_count->setText(tr("地图数：")+QString::number(this->maps.size()));
 }
 
 void MapViewerWind::reshape_tables() {
@@ -80,6 +80,7 @@ void MapViewerWind::reshape_tables() {
         const int c=(is_col_major)?(idx/rows):(idx%cols);
 
         QTableWidgetItem * item=new QTableWidgetItem(this->maps[idx].filename);
+
         ui->table_display_filename->setItem(r,c,item);
     }
 
@@ -103,8 +104,6 @@ void MapViewerWind::on_button_load_maps_clicked() {
 
     std::list<std::pair<QString,std::string>> error_list;
     std::mutex lock;
-
-
 #pragma omp parallel for
     for(int idx=0;idx<filenames.size();idx++) {
 

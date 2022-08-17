@@ -21,7 +21,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab_load_maps">
        <attribute name="title">
@@ -132,7 +132,7 @@
          </spacer>
         </item>
         <item row="4" column="1">
-         <widget class="QLabel" name="label">
+         <widget class="QLabel" name="label_show_map_count">
           <property name="text">
            <string>地图数：0</string>
           </property>
@@ -152,7 +152,22 @@
          </spacer>
         </item>
         <item row="0" column="0" rowspan="8">
-         <widget class="QTableWidget" name="table_display_filename"/>
+         <widget class="QTableWidget" name="table_display_filename">
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Plain</enum>
+          </property>
+          <property name="rowCount">
+           <number>1</number>
+          </property>
+          <property name="columnCount">
+           <number>1</number>
+          </property>
+          <row/>
+          <column/>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -160,6 +175,43 @@
        <attribute name="title">
         <string>查看图像</string>
        </attribute>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="1">
+         <widget class="QCheckBox" name="checkbox_show_base_color">
+          <property name="text">
+           <string>显示基色</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QComboBox" name="combobox_select_map"/>
+        </item>
+        <item row="0" column="2">
+         <widget class="QCheckBox" name="checkbox_show_shade">
+          <property name="text">
+           <string>显示阴影</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QCheckBox" name="checkbox_show_map_color">
+          <property name="text">
+           <string>只显示地图色</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0" colspan="4">
+         <widget class="QGroupBox" name="groupbox_single_map">
+          <property name="title">
+           <string>地图内容</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_6"/>
+         </widget>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="tab_compose_maps">
        <attribute name="title">
@@ -176,7 +228,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>17</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
