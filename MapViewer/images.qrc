@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/new/images">
+        <file>unknown_basecolor.png</file>
+    </qresource>
+</RCC>

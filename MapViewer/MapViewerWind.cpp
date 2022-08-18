@@ -17,10 +17,13 @@ static const int current_max_base_color=61;
 
 std::array<ARGB,256> make_map_LUT();
 std::array<ARGB,256> make_inverse_map_LUT(const std::array<ARGB,256> &);
+QImage get_unknown_basecolor();
 
 const std::array<ARGB,256> map_color_to_ARGB=make_map_LUT();
 const std::array<ARGB,256> inverse_map_color_to_ARGB
     =make_inverse_map_LUT(map_color_to_ARGB);
+
+const QImage unknown_basecolor_16px=get_unknown_basecolor();
 
 std::array<ARGB,256> make_map_LUT() {
     std::array<ARGB,256> result;
@@ -42,7 +45,10 @@ std::array<ARGB,256> make_map_LUT() {
         g=std::min(255U,uint32_t(255*src(row_idx,1)));
         b=std::min(255U,uint32_t(255*src(row_idx,2)));
 
-        a=(base_color!=0)?(255):(0);
+        a=255;
+        if(base_color==0) {
+            a=0;r=255;g=255;b=255;
+        }
 
         result[map_color]=(a<<24)|(r<<16)|(g<<8)|(b);
     }
@@ -63,6 +69,22 @@ std::array<ARGB,256> make_inverse_map_LUT(const std::array<ARGB,256> & src) {
         b=255-b;
         result[idx]=(0xFF<<24)|(r<<16)|(g<<8)|(b);
     }
+    return result;
+}
+
+QImage get_unknown_basecolor() {
+    QImage result(QStringLiteral(":/new/images/unknown_basecolor.png"));
+
+    if(result.isNull()) {
+        exit(1);
+        return result;
+    }
+
+    if(result.width()!=16||result.height()!=16) {
+        exit(2);
+        return result;
+    }
+
     return result;
 }
 
@@ -203,6 +225,7 @@ void MapViewerWind::render_single_image() {
     const int pixel_size=ui->spinbox_pixel_size->value();
     const int rows=pixel_size*128,cols=pixel_size*128;
     const uint8_t show_grid=ui->checkbox_single_map_show_grid->isChecked();
+    const bool is_map_changed=(current_idx!=prev_idx);
 
     const bool is_color_only_image_changed=
             (pixel_size!=prev_pixel_size)||(prev_idx!=current_idx)||(show_grid!=prev_show_grid);
@@ -220,9 +243,20 @@ void MapViewerWind::render_single_image() {
         //cout<<"Don't repaint"<<endl;
     }
 
+    const QImage scaled_unknown=::unknown_basecolor_16px.scaled(pixel_size,pixel_size,
+                                                          Qt::IgnoreAspectRatio,
+                                                          Qt::TransformationMode::SmoothTransformation)
+            .convertToFormat(QImage::Format::Format_ARGB32);
+    const Eigen::Map<const Eigen::Array<ARGB,Eigen::Dynamic,Eigen::Dynamic,Eigen::RowMajor>>
+            map_unknown(reinterpret_cast<const ARGB*>(scaled_unknown.scanLine(0)),
+                        pixel_size,pixel_size);
+
+    std::list<std::pair<int,int>> error_list;
+
     if(is_color_only_image_changed) { // if color only image is changed, repaint it
         new_image=QImage(cols,rows,QImage::Format_ARGB32);
         new_image.fill(QColor(255,255,255,255));
+
 
         Eigen::Map<Eigen::Array<ARGB,Eigen::Dynamic,Eigen::Dynamic,Eigen::RowMajor>>
                 map_new_image(reinterpret_cast<ARGB*>(new_image.scanLine(0)),rows,cols);
@@ -234,6 +268,12 @@ void MapViewerWind::render_single_image() {
             for(int r=0;r<image_map.rows();r++) {
                 map_new_image.block(pixel_size*r,pixel_size*c,pixel_size,pixel_size)
                         .fill(image_map(r,c));
+                const int basecolor=this->maps[current_idx].content()(r,c)/4;
+
+                if(basecolor>::current_max_base_color) {    //  unlikely
+                    map_new_image.block(pixel_size*r,pixel_size*c,pixel_size,pixel_size)=map_unknown;
+                    error_list.emplace_back(std::make_pair(r,c));
+                }
             }
         }
 
@@ -260,6 +300,23 @@ void MapViewerWind::render_single_image() {
     }
 
     ui->label_show_single_map->setPixmap(QPixmap::fromImage(new_image));
+
+
+    //cout<<"error_list.size() = "<<error_list.size()<<endl;
+
+    if(!error_list.empty()&&is_map_changed) {
+        //cout<<"display error"<<endl;
+        QString info=tr("有")+QString::number(error_list.size())
+                +tr("个像素点出现未知的基色，它们使用了Mojang未定义的基色。这可能是因为软件版本较旧而游戏版本太新，或者地图文件损坏。\n其行、列坐标分别为：");
+        info+="\n[";
+        for(const auto & pair : error_list) {
+            info+='('+QString::number(pair.first)+", "+QString::number(pair.second)+"), ";
+        }
+        info+="]";
+
+        QMessageBox::information(this,tr("地图中有Mojang未定义基色"),
+                                 info);
+    }
 
     // determine the value of draw_type
     single_map_draw_type draw_type=color_only;
@@ -384,6 +441,8 @@ void MapViewerWind::render_single_image() {
 
 
     ui->label_show_single_map->setPixmap(temp_image);
+
+
 }
 
 void MapViewerWind::render_composed() {
