@@ -9,30 +9,56 @@
 #include <list>
 #include <mutex>
 
+static const int current_max_base_color=61;
 
 std::array<ARGB,256> make_map_LUT();
+std::array<ARGB,256> make_inverse_map_LUT(const std::array<ARGB,256> &);
 
 const std::array<ARGB,256> map_color_to_ARGB=make_map_LUT();
+const std::array<ARGB,256> inverse_map_color_to_ARGB
+    =make_inverse_map_LUT(map_color_to_ARGB);
 
 std::array<ARGB,256> make_map_LUT() {
     std::array<ARGB,256> result;
 
+    result.fill(0x7FFF0000);
 
     const Eigen::Map<const Eigen::Array<float,256,3>> src(SlopeCraft::RGBBasicSource);
 
     for(int row_idx=0;row_idx<256;row_idx++) {
         ARGB a,r,g,b;
-        const int map_color=(row_idx<<2)|(row_idx>>6);
+        const int base_color=row_idx%64;
+        const int shade=row_idx/64;
+        const int map_color=base_color*4+shade;
 
+        if(base_color>current_max_base_color) {
+            continue;
+        }
         r=std::min(255U,uint32_t(255*src(row_idx,0)));
         g=std::min(255U,uint32_t(255*src(row_idx,1)));
         b=std::min(255U,uint32_t(255*src(row_idx,2)));
 
-        a=(map_color&0b11111100)?(255):(0);
+        a=(base_color!=0)?(255):(0);
 
         result[map_color]=(a<<24)|(r<<16)|(g<<8)|(b);
     }
 
+    return result;
+}
+
+std::array<ARGB,256> make_inverse_map_LUT(const std::array<ARGB,256> & src) {
+    std::array<ARGB,256> result;
+    for(size_t idx=0;idx<src.size();idx++) {
+        const ARGB argb=src[idx];
+        ARGB r=(argb>>16)&0xFF;
+        ARGB g=(argb>>8)&0xFF;
+        ARGB b=(argb)&0xFF;
+
+        r=255-r;
+        g=255-g;
+        b=255-b;
+        result[idx]=(0xFF<<24)|(r<<16)|(g<<8)|(b);
+    }
     return result;
 }
 
@@ -53,6 +79,22 @@ MapViewerWind::MapViewerWind(QWidget *parent)
 
     connect(ui->botton_clear,&QPushButton::clicked,
             this,&MapViewerWind::clear_all);
+
+    connect(ui->combobox_select_map,&QComboBox::currentIndexChanged,
+            this,&MapViewerWind::render_single_image);
+    connect(ui->spinbox_pixel_size,&QSpinBox::valueChanged,
+            this,&MapViewerWind::render_single_image);
+    connect(ui->radio_show_base_color,&QRadioButton::clicked,
+            this,&MapViewerWind::render_single_image);
+    connect(ui->radio_show_color_only,&QRadioButton::clicked,
+            this,&MapViewerWind::render_single_image);
+    connect(ui->radio_show_map_color,&QRadioButton::clicked,
+            this,&MapViewerWind::render_single_image);
+    connect(ui->radio_show_shade,&QRadioButton::clicked,
+            this,&MapViewerWind::render_single_image);
+    connect(ui->checkbox_single_map_show_grid,&QCheckBox::clicked,
+            this,&MapViewerWind::render_single_image);
+
 }
 
 MapViewerWind::~MapViewerWind()
@@ -63,6 +105,12 @@ MapViewerWind::~MapViewerWind()
 void MapViewerWind::update_contents() {
     reshape_tables();
     ui->label_show_map_count->setText(tr("地图数：")+QString::number(this->maps.size()));
+
+    //update combo box
+    ui->combobox_select_map->clear();
+    for(auto & map : this->maps) {
+        ui->combobox_select_map->addItem(map.filename);
+    }
 }
 
 void MapViewerWind::reshape_tables() {
@@ -88,6 +136,87 @@ void MapViewerWind::reshape_tables() {
 
 void MapViewerWind::clear_all() {
     ui->table_display_filename->clearContents();
+    ui->combobox_select_map->clear();
+    ui->label_show_single_map->setPixmap(QPixmap());
+    ui->label_show_map_count->setText(tr("请选择地图文件"));
+}
+
+
+void MapViewerWind::render_single_image() {
+    //ui->label_show_single_map->setPixmap(QPixmap());
+
+    static int prev_pixel_size=-1;
+    static int prev_idx=-1;
+    static uint8_t prev_show_grid=2;
+
+    const int current_idx=ui->combobox_select_map->currentIndex();
+    if(current_idx<0 || current_idx>=int(this->maps.size())) {
+        ui->label_show_single_map->setPixmap(QPixmap());
+        prev_idx=-1;
+        return;
+    }
+
+    const int pixel_size=ui->spinbox_pixel_size->value();
+    const int rows=pixel_size*128,cols=pixel_size*128;
+    const uint8_t show_grid=ui->checkbox_single_map_show_grid->isChecked();
+
+    const bool is_color_only_image_changed=
+            (pixel_size!=prev_pixel_size)||(prev_idx!=current_idx)||(show_grid!=prev_show_grid);
+    // update previous
+    prev_pixel_size=pixel_size;
+    prev_idx=current_idx;
+    prev_show_grid=show_grid;
+
+    static QImage new_image;
+
+    if(is_color_only_image_changed) {
+        //cout<<"repaint"<<endl;
+    }
+    else {
+        //cout<<"Don't repaint"<<endl;
+    }
+
+    if(is_color_only_image_changed) { // if color only image is changed, repaint it
+        new_image=QImage(cols,rows,QImage::Format_ARGB32);
+        new_image.fill(QColor(255,255,255,255));
+
+        Eigen::Map<Eigen::Array<ARGB,Eigen::Dynamic,Eigen::Dynamic,Eigen::RowMajor>>
+                map_new_image(reinterpret_cast<ARGB*>(new_image.scanLine(0)),rows,cols);
+
+        const Eigen::Map<const Eigen::Array<ARGB,128,128,Eigen::RowMajor>>
+                image_map(reinterpret_cast<ARGB*>(this->maps[current_idx].image.scanLine(0)));
+
+        for(int c=0;c<image_map.cols();c++) {
+            for(int r=0;r<image_map.rows();r++) {
+                map_new_image.block(pixel_size*r,pixel_size*c,pixel_size,pixel_size)
+                        .fill(image_map(r,c));
+            }
+        }
+
+        if(pixel_size>=4&&show_grid) {
+            for(int map_r_idx=0;map_r_idx<128;map_r_idx++) {
+                for(int img_c_idx=0;img_c_idx<cols;img_c_idx++) {
+                    const uint8_t map_color=
+                            this->maps[current_idx].content()(map_r_idx,img_c_idx/pixel_size);
+                    map_new_image(map_r_idx*pixel_size,img_c_idx)=
+                            ::inverse_map_color_to_ARGB[map_color];
+                }
+            }
+
+
+            for(int map_c_idx=0;map_c_idx<128;map_c_idx++) {
+                for(int img_r_idx=0;img_r_idx<rows;img_r_idx++) {
+                    const uint8_t map_color=
+                            this->maps[current_idx].content()(img_r_idx/pixel_size,map_c_idx);
+                    map_new_image(img_r_idx,map_c_idx*pixel_size)=
+                            ::inverse_map_color_to_ARGB[map_color];
+                }
+            }
+        }
+    }
+
+    ui->label_show_single_map->setPixmap(QPixmap::fromImage(new_image));
+
 }
 
 void MapViewerWind::on_button_load_maps_clicked() {
@@ -104,6 +233,7 @@ void MapViewerWind::on_button_load_maps_clicked() {
 
     std::list<std::pair<QString,std::string>> error_list;
     std::mutex lock;
+
 #pragma omp parallel for
     for(int idx=0;idx<filenames.size();idx++) {
 
@@ -154,6 +284,17 @@ void MapViewerWind::on_button_load_maps_clicked() {
             ++it;
         }
     }
+
+#pragma omp parallel for
+    for(map & map : this->maps) {
+        map.image=QImage(128,128,QImage::Format::Format_ARGB32);
+        Eigen::Map<Eigen::Array<ARGB,128,128,Eigen::RowMajor>>
+                image_map(reinterpret_cast<ARGB*>(map.image.scanLine(0)));
+        for(int64_t idx=0;idx<map.map_content->size();idx++) {
+            image_map(idx)=map_color_to_ARGB[map.map_content->operator()(idx)];
+        }
+    }
+
 
     update_contents();
 

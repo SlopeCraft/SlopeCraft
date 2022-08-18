@@ -176,39 +176,118 @@
         <string>查看图像</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="1">
-         <widget class="QCheckBox" name="checkbox_show_base_color">
-          <property name="text">
-           <string>显示基色</string>
+        <item row="1" column="0" colspan="3">
+         <widget class="QGroupBox" name="groupBox_2">
+          <property name="title">
+           <string>显示像素信息</string>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QRadioButton" name="radio_show_color_only">
+             <property name="text">
+              <string>仅颜色</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radio_show_map_color">
+             <property name="text">
+              <string>地图色</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radio_show_shade">
+             <property name="text">
+              <string>阴影</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radio_show_base_color">
+             <property name="text">
+              <string>基色</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="4">
+         <widget class="QSpinBox" name="spinbox_pixel_size">
+          <property name="prefix">
+           <string>放大倍数：</string>
+          </property>
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>128</number>
           </property>
          </widget>
         </item>
-        <item row="0" column="3">
-         <widget class="QComboBox" name="combobox_select_map"/>
-        </item>
-        <item row="0" column="2">
-         <widget class="QCheckBox" name="checkbox_show_shade">
-          <property name="text">
-           <string>显示阴影</string>
+        <item row="1" column="5">
+         <widget class="QComboBox" name="combobox_select_map">
+          <property name="maxVisibleItems">
+           <number>256</number>
           </property>
          </widget>
         </item>
-        <item row="0" column="0">
-         <widget class="QCheckBox" name="checkbox_show_map_color">
-          <property name="text">
-           <string>只显示地图色</string>
+        <item row="2" column="0" colspan="6">
+         <widget class="QScrollArea" name="area_show_single_map">
+          <property name="verticalScrollBarPolicy">
+           <enum>Qt::ScrollBarAsNeeded</enum>
           </property>
-          <property name="checked">
+          <property name="horizontalScrollBarPolicy">
+           <enum>Qt::ScrollBarAsNeeded</enum>
+          </property>
+          <property name="sizeAdjustPolicy">
+           <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
+          </property>
+          <property name="widgetResizable">
            <bool>true</bool>
           </property>
+          <widget class="QWidget" name="area_show_single_map_widget_contents">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>756</width>
+             <height>449</height>
+            </rect>
+           </property>
+           <layout class="QGridLayout" name="area_show_single_map_layout">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_show_single_map">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="scaledContents">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
          </widget>
         </item>
-        <item row="1" column="0" colspan="4">
-         <widget class="QGroupBox" name="groupbox_single_map">
-          <property name="title">
-           <string>地图内容</string>
+        <item row="1" column="3">
+         <widget class="QCheckBox" name="checkbox_single_map_show_grid">
+          <property name="text">
+           <string>显示网格</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout_6"/>
          </widget>
         </item>
        </layout>

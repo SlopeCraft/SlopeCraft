@@ -46,7 +46,7 @@ public:
 
     QString filename;
     std::unique_ptr<Eigen::Array<uint8_t,128,128,Eigen::RowMajor>> map_content;
-    QPixmap image;
+    QImage image;
 
     inline Eigen::Array<uint8_t,128,128,Eigen::RowMajor>& content() {
         return *map_content;
@@ -73,6 +73,7 @@ private:
 private slots:
     void update_contents();
     void reshape_tables();
+    void render_single_image();
     void clear_all();
     void on_button_load_maps_clicked();
 };
