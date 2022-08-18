@@ -6,6 +6,10 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
+#include <QPainter>
+#include <QPen>
+#include <QFont>
+
 #include <list>
 #include <mutex>
 
@@ -95,15 +99,21 @@ MapViewerWind::MapViewerWind(QWidget *parent)
     connect(ui->checkbox_single_map_show_grid,&QCheckBox::clicked,
             this,&MapViewerWind::render_single_image);
 
+    connect(ui->slider_resize_image,&QSlider::valueChanged,
+            this,&MapViewerWind::render_composed);
 }
 
 MapViewerWind::~MapViewerWind()
 {
+    for(QLabel * label : this->labels) {
+        if(label!=nullptr)
+            delete label;
+    }
     delete ui;
 }
 
 void MapViewerWind::update_contents() {
-    reshape_tables();
+    this->reshape_tables();
     ui->label_show_map_count->setText(tr("地图数：")+QString::number(this->maps.size()));
 
     //update combo box
@@ -111,6 +121,8 @@ void MapViewerWind::update_contents() {
     for(auto & map : this->maps) {
         ui->combobox_select_map->addItem(map.filename);
     }
+
+    this->render_composed();
 }
 
 void MapViewerWind::reshape_tables() {
@@ -126,10 +138,33 @@ void MapViewerWind::reshape_tables() {
     for(int idx=0;idx<int(this->maps.size());idx++) {
         const int r=(is_col_major)?(idx%rows):(idx/cols);
         const int c=(is_col_major)?(idx/rows):(idx%cols);
+        if(r>=rows||c>=cols)
+            continue;
 
         QTableWidgetItem * item=new QTableWidgetItem(this->maps[idx].filename);
 
         ui->table_display_filename->setItem(r,c,item);
+    }
+
+    for(QLabel * label : this->labels) {//detach label and layout
+        if(ui->grid_layout_compose_maps->indexOf(label)>=0) {
+            ui->grid_layout_compose_maps->removeWidget(label);
+        }
+        label->hide();
+    }
+
+    while(this->labels.size()<this->maps.size()) {
+        this->labels.emplace_back(new QLabel(this));
+        this->labels.back()->hide();
+        this->labels.back()->update();
+    }
+
+    for(int idx=0;idx<int(this->maps.size());idx++) {
+        const int r=(is_col_major)?(idx%rows):(idx/cols);
+        const int c=(is_col_major)?(idx/rows):(idx%cols);
+        if(r>=rows||c>=cols)
+            continue;
+        ui->grid_layout_compose_maps->addWidget(this->labels[idx],r,c);
     }
 
 }
@@ -139,6 +174,13 @@ void MapViewerWind::clear_all() {
     ui->combobox_select_map->clear();
     ui->label_show_single_map->setPixmap(QPixmap());
     ui->label_show_map_count->setText(tr("请选择地图文件"));
+
+    for(QLabel * label : this->labels) {
+        if(ui->grid_layout_compose_maps->indexOf(label)>=0) {
+            ui->grid_layout_compose_maps->removeWidget(label);
+        }
+        label->hide();
+    }
 }
 
 
@@ -148,6 +190,8 @@ void MapViewerWind::render_single_image() {
     static int prev_pixel_size=-1;
     static int prev_idx=-1;
     static uint8_t prev_show_grid=2;
+
+    //static single_map_draw_type prev_draw_type=color_only;
 
     const int current_idx=ui->combobox_select_map->currentIndex();
     if(current_idx<0 || current_idx>=int(this->maps.size())) {
@@ -217,6 +261,159 @@ void MapViewerWind::render_single_image() {
 
     ui->label_show_single_map->setPixmap(QPixmap::fromImage(new_image));
 
+    // determine the value of draw_type
+    single_map_draw_type draw_type=color_only;
+    {
+        if(ui->radio_show_base_color->isChecked())
+            (draw_type)=base_color;
+        if(ui->radio_show_map_color->isChecked())
+            (draw_type)=map_color;
+        if(ui->radio_show_shade->isChecked())
+            (draw_type)=shade;
+    }
+
+    //cout<<"draw type = "<<draw_type<<endl;
+
+    const int number_digits=int(draw_type);
+
+    if(draw_type==color_only) {
+        return;
+    }
+
+
+
+    const int avaliable_pixels_by_height=(pixel_size-6);
+
+    const int avaliable_pixels_by_width=(number_digits==0)?(-1):
+            ((pixel_size-4)/number_digits*2);
+
+    const int avaliable_pixels=std::min(avaliable_pixels_by_height,avaliable_pixels_by_width);
+
+    static constexpr int minimum_text_height=8;
+
+    if(avaliable_pixels<minimum_text_height) {
+        return;
+    }
+
+
+
+    std::unique_ptr<u8Array128RowMajor>
+            displayed_numbers(new u8Array128RowMajor);
+
+
+    switch (draw_type) {
+    case map_color:
+        //*displayed_numbers=this->maps[current_idx].content();
+        memcpy(displayed_numbers->data(),this->maps[current_idx].content().data(),
+               this->maps[current_idx].content().size());
+        break;
+    case base_color:
+        *displayed_numbers=(this->maps[current_idx].content())/4;
+        break;
+    case shade:
+        memcpy(displayed_numbers->data(),this->maps[current_idx].content().data(),
+               this->maps[current_idx].content().size());
+
+        constexpr uint64_t mask=0b0000001100000011000000110000001100000011000000110000001100000011;
+
+        for(uint32_t idx=0;
+            idx<displayed_numbers->size()*sizeof(uint8_t)/sizeof(uint64_t);
+            idx++) {
+            uint64_t & val=*(idx+reinterpret_cast<uint64_t*>(displayed_numbers->data()));
+            val=val&mask;
+        }
+        /*
+        for(int64_t idx=0;idx<displayed_numbers->size();idx++) {
+            displayed_numbers->operator()(idx)
+                    =displayed_numbers->operator()(idx)%4;
+        }
+        */
+        break;
+    }
+
+
+
+    QPixmap temp_image=QPixmap::fromImage(new_image);
+
+    // begin to draw numbers
+    QPainter painter(&temp_image);
+    if(!painter.isActive()) {
+        cout<<"not active"<<endl;
+        return;
+    }
+    painter.setRenderHint(QPainter::RenderHint::Antialiasing,true);
+
+    {
+        QFont font;
+        font.setPixelSize(avaliable_pixels);
+        painter.setFont(font);
+    }
+
+
+    QString text;
+    text.resize(number_digits,'0');
+
+
+    for(int r=0;r<128;r++) {
+        for(int c=0;c<128;c++) {
+            const ARGB invcolor=
+                    ::inverse_map_color_to_ARGB[this->maps[current_idx].content()(r,c)];
+            painter.setPen(QColor(invcolor));
+            QRect rect(c*pixel_size,r*pixel_size,pixel_size,pixel_size);
+            uint8_t cur_number=(*displayed_numbers)(r,c);
+
+            switch (draw_type) {
+                case map_color:
+                    text[0]=char((cur_number/100)+'0');
+                    cur_number-=(cur_number/100)*100;
+                    text[1]=char((cur_number/10)+'0');
+                    text[2]=char((cur_number%10)+'0');
+                break;
+            case base_color:
+                    text[0]=char(cur_number/10+'0');
+                    text[1]=char(cur_number%10+'0');
+                break;
+            default:
+                    text[0]=char((cur_number&0b11)+'0');
+                            break;
+            }
+
+            painter.drawText(rect,Qt::AlignVCenter|Qt::AlignHCenter,text);
+        }
+    }
+
+
+    ui->label_show_single_map->setPixmap(temp_image);
+}
+
+void MapViewerWind::render_composed() {
+    const int scale=ui->slider_resize_image->value();
+    ui->label_show_compose_scaling->setText(QStringLiteral("×")+QString::number(scale));
+
+    const int rows=ui->spinbox_rows->value();
+    const int cols=ui->spinbox_cols->value();
+    const bool is_col_major=ui->radio_is_col_major->isChecked();
+
+    for(int idx=0;idx<int(this->maps.size());idx++) {
+        const int r=(is_col_major)?(idx%rows):(idx/cols);
+        const int c=(is_col_major)?(idx/rows):(idx%cols);
+        if(scale<=1) {
+            this->labels[idx]->setPixmap(QPixmap::fromImage(this->maps[idx].image));
+        }
+        else {
+            this->labels[idx]->setPixmap(QPixmap::fromImage(
+                                            (this->maps[idx].image.scaled(128*scale,128*scale)
+                                            )));
+        }
+
+        if(r>=rows||c>=cols) {
+            this->labels[idx]->hide();
+        }
+        else {
+            this->labels[idx]->show();
+        }
+
+    }
 }
 
 void MapViewerWind::on_button_load_maps_clicked() {
@@ -297,6 +494,80 @@ void MapViewerWind::on_button_load_maps_clicked() {
 
 
     update_contents();
+
+}
+
+void MapViewerWind::on_checkbox_composed_show_spacing_toggled(bool is_checked) {
+    const int spacing=(is_checked)?(6):(0);
+    ui->grid_layout_compose_maps->setHorizontalSpacing(spacing);
+    ui->grid_layout_compose_maps->setVerticalSpacing(spacing);
+}
+
+
+void MapViewerWind::on_button_save_single_clicked() {
+    if(this->maps.size()<=0)
+        return;
+
+    if(ui->label_show_single_map->pixmap().isNull()) {
+        return;
+    }
+
+    QPixmap pixmap=ui->label_show_single_map->pixmap();
+
+    const QString dest=
+            QFileDialog::getSaveFileName(this,tr("保存为图片"),"","*.png;;*.jpg;;*.gif");
+
+    if(dest.isEmpty()) {
+        return;
+    }
+
+    pixmap.save(dest);
+}
+
+
+void MapViewerWind::on_button_save_composed_clicked() {
+    if(this->maps.size()<=0)
+        return;
+
+    const QString dest=
+            QFileDialog::getSaveFileName(this,tr("保存为图片"),"","*.png;;*.jpg;;*.gif");
+    if(dest.isEmpty())
+        return;
+
+    const int map_rows=ui->spinbox_rows->value();
+    const int map_cols=ui->spinbox_cols->value();
+    const bool is_col_major=ui->radio_is_col_major->isChecked();
+
+    const int pixel_rows=128*map_rows;
+    const int pixel_cols=128*map_cols;
+
+    QImage result(pixel_cols,pixel_rows,QImage::Format_ARGB32);
+
+    if(result.isNull()) {
+        cout<<"Failed to export image."<<endl;
+        return;
+    }
+
+    Eigen::Map<Eigen::Array<ARGB,Eigen::Dynamic,Eigen::Dynamic,Eigen::RowMajor>>
+            emap_result(reinterpret_cast<ARGB*>(result.scanLine(0)),
+                        pixel_rows,pixel_cols);
+
+    emap_result.fill(0);
+
+    for(int map_idx=0;map_idx<int(this->maps.size());map_idx++) {
+        const int map_r=(is_col_major)?(map_idx%map_rows):(map_idx/map_cols);
+        const int map_c=(is_col_major)?(map_idx/map_rows):(map_idx%map_cols);
+
+        if(map_r>=map_rows||map_c>=map_cols) {
+            continue;
+        }
+
+        Eigen::Map<const u32Array128RowMajor>
+                emap_qimg(reinterpret_cast<ARGB*>(this->maps[map_idx].image.scanLine(0)));
+        emap_result.block<128,128>(128*map_r,128*map_c)=emap_qimg;
+    }
+
+    result.save(dest);
 
 }
 

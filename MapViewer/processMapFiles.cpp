@@ -29,6 +29,7 @@ bool uncompress_map_file(const char * filename,std::vector<uint8_t>*const dest,
             *error_info="Failed to open map data file ";
             *error_info+=filename;
             *error_info+=", the file may be invalid.";
+            *error_info+="\nThis error may also be caused by non-English characters in the filename of path.";
         }
         return false;
     }
