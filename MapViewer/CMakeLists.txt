@@ -48,7 +48,7 @@ target_link_libraries(MapViewer
     -lz
     Qt${QT_VERSION_MAJOR}::Widgets)
 
-    set_target_properties(MapViewer PROPERTIES
+set_target_properties(MapViewer PROPERTIES
     VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_GUI_IDENTIFIER "github.com/ToKiNoBug/SlopeCraft"
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}

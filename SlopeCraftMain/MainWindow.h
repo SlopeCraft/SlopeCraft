@@ -30,50 +30,52 @@ This file is part of SlopeCraft.
 //#define putBlockList
 #include "ui_mainwindow.h"
 
-#include <QMainWindow>
 #include <QButtonGroup>
+#include <QCloseEvent>
+#include <QCryptographicHash>
+#include <QDesktopServices>
+#include <QFileDialog>
+#include <QFuture>
+#include <QHash>
+#include <QImage>
+#include <QKeyEvent>
+#include <QMainWindow>
+#include <QMessageBox>
+#include <QProgressBar>
 #include <QScrollArea>
 #include <QScrollBar>
-#include <QTranslator>
-#include <QProgressBar>
-#include <QHash>
 #include <QString>
-#include <QImage>
 #include <QThread>
-#include <QDesktopServices>
-#include <QMessageBox>
+#include <QTranslator>
 #include <QUrl>
-#include <QtConcurrent>
-#include <QFuture>
-#include <QFileDialog>
-#include <QCryptographicHash>
-#include <QCloseEvent>
-#include <QKeyEvent>
+
+#include <QJsonArray>
+#include <QJsonDocument>
+//#include <QJsonError>
+#include <QJsonObject>
 
 #include <QNetworkAccessManager>
-#include <QNetworkRequest>
 #include <QNetworkReply>
-#include <QtConcurrent>
+#include <QNetworkRequest>
 
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <string>
 #include <cstring>
+#include <fstream>
+#include <iostream>
+#include <string>
 #include <unordered_map>
+#include <vector>
 
 #include <Eigen/Dense>
 
 //#define SLOPECRAFTL_WITH_AICVETR
 #include "SlopeCraftL.h"
 
-#include "VersionDialog.h"
-#include "tpstrategywind.h"
-#include "previewwind.h"
-#include "BlockListManager.h"
-#include "BatchUi.h"
 #include "AiCvterParameterDialog.h"
-
+#include "BatchUi.h"
+#include "BlockListManager.h"
+#include "VersionDialog.h"
+#include "previewwind.h"
+#include "tpstrategywind.h"
 
 class MainWindow;
 
@@ -82,222 +84,220 @@ using std::cout, std::endl, std::cerr;
 #include <QColor>
 #include <QRgb>
 
-//class ColorSet;
-
+// class ColorSet;
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
+namespace Ui {
+class MainWindow;
+}
 QT_END_NAMESPACE
 
 class tpStrategyWind;
 
 #ifndef TPS__
 #define TPS__
-class tpS{
+class tpS {
 public:
-    tpS(char _pTpS='B',char _hTpS='C',QRgb _BGC=qRgb(220,220,220)){
-            pTpS=_pTpS;
-            hTpS=_hTpS;
-            BGC=_BGC;    }
-    ~tpS();
-    char pTpS;
-    char hTpS;
-    QRgb BGC;
+  tpS(char _pTpS = 'B', char _hTpS = 'C', QRgb _BGC = qRgb(220, 220, 220)) {
+    pTpS = _pTpS;
+    hTpS = _hTpS;
+    BGC = _BGC;
+  }
+  ~tpS();
+  char pTpS;
+  char hTpS;
+  QRgb BGC;
 };
 #endif
 
-class MainWindow : public QMainWindow
-{
-    Q_OBJECT
-    friend class BatchUi;
+class MainWindow : public QMainWindow {
+  Q_OBJECT
+  friend class BatchUi;
+
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+  MainWindow(QWidget *parent = nullptr);
+  ~MainWindow();
 
-    //初始化方块列表用
-    void InitializeAll();
-    static void putSettings(const QJsonObject & jo);
+  //初始化方块列表用
+  void InitializeAll();
+  static void putSettings(const QJsonObject &jo);
 
-    static const QString selfVersion;
+  static const QString selfVersion;
 
 signals:
-    void mapTypeChanged();
+  void mapTypeChanged();
 
-    void closed();
+  void closed();
+
 protected:
-    void closeEvent(QCloseEvent*);
-    void keyPressEvent(QKeyEvent*);
+  void closeEvent(QCloseEvent *);
+  void keyPressEvent(QKeyEvent *);
+
 public:
+  inline void preProcess(char pureTpStrategy = 'B', char halfTpStrategy = 'C',
+                         QRgb BGC = qRgb(220, 220, 220));
 
-    inline void preProcess(char pureTpStrategy='B',
-                    char halfTpStrategy='C',
-                    QRgb BGC=qRgb(220,220,220));
-
-    inline auto kernelPtr() const {
-        return kernel;
-    }
+  inline auto kernelPtr() const { return kernel; }
 
 public slots:
-    void destroySubWindTrans();
-    void ReceiveTPS(tpS);
-    //透明像素处理策略：B->替换为背景色；A->空气；W->暂缓，等待处理
-    //半透明像素处理策略：B->替换为背景色；C->与背景色叠加；R->保留颜色；W->暂缓，等待处理
+  void destroySubWindTrans();
+  void ReceiveTPS(tpS);
+  //透明像素处理策略：B->替换为背景色；A->空气；W->暂缓，等待处理
+  //半透明像素处理策略：B->替换为背景色；C->与背景色叠加；R->保留颜色；W->暂缓，等待处理
 
-    void showPreview();
-    //语言槽
-    void turnCh();
-    void turnEn();
+  void showPreview();
+  //语言槽
+  void turnCh();
+  void turnEn();
 
-    void checkVersion();
+  void checkVersion();
 
-    void setAutoCheckUpdate(bool);
+  void setAutoCheckUpdate(bool);
 
-    void grabVersion(bool isAuto=true);
+  void grabVersion(bool isAuto = true);
 
 private slots:
 
-    void contactG();
-    void contactB();
-    //翻页的自定义槽
-    void turnToPage0();
-    void turnToPage1();
-    void turnToPage2();
-    void turnToPage3();
-    void turnToPage4();
-    void turnToPage5();
-    void turnToPage6();
-    void turnToPage7();
-    void turnToPage8();
+  void contactG();
+  void contactB();
+  //翻页的自定义槽
+  void turnToPage0();
+  void turnToPage1();
+  void turnToPage2();
+  void turnToPage3();
+  void turnToPage4();
+  void turnToPage5();
+  void turnToPage6();
+  void turnToPage7();
+  void turnToPage8();
 
-    //for Page0
-    void on_StartWithSlope_clicked();
-    void on_StartWithFlat_clicked();
-    void on_StartWithNotVanilla_clicked();
+  // for Page0
+  void on_StartWithSlope_clicked();
+  void on_StartWithFlat_clicked();
+  void on_StartWithNotVanilla_clicked();
 
-    //for Page1
-    void on_ImportPic_clicked();
-    void on_ImportSettings_clicked();
+  // for Page1
+  void on_ImportPic_clicked();
+  void on_ImportSettings_clicked();
 
-    //for Page2
-    void onGameVerClicked();
-    void onMapTypeClicked();
+  // for Page2
+  void onGameVerClicked();
+  void onMapTypeClicked();
 
-    //for Page3
-    //应用预设方块列表的自定义槽
-    void ChangeToCustom();
-    void onPresetsClicked();
-    void onBlockListChanged();
+  // for Page3
+  //应用预设方块列表的自定义槽
+  void ChangeToCustom();
+  void onPresetsClicked();
+  void onBlockListChanged();
 
-    void onActionSavePreset();
-    void onActionLoadPreset();
+  void onActionSavePreset();
+  void onActionLoadPreset();
 
-    //for Page4
-    void onAlgoClicked();
-    void on_Convert_clicked();
-    void on_ShowRaw_clicked();
-    void on_ShowAdjed_clicked();
-    void on_ExData_clicked();
-    void on_ExportFlatDiagram_clicked();
-    //void on_ExFlatDiagram_clicked();
+  // for Page4
+  void onAlgoClicked();
+  void on_Convert_clicked();
+  void on_ShowRaw_clicked();
+  void on_ShowAdjed_clicked();
+  void on_ExData_clicked();
+  void on_ExportFlatDiagram_clicked();
+  // void on_ExFlatDiagram_clicked();
 
-    void onActionAiCvterParameters();
+  void onActionAiCvterParameters();
 
-    //for Page5
-    void on_Build4Lite_clicked();
-    void on_ManualPreview_clicked();
-    void on_ExportLite_clicked();
-    void onExportLiteclicked(QString);
-    void on_allowGlassBridge_stateChanged(int arg1);
+  // for Page5
+  void on_Build4Lite_clicked();
+  void on_ManualPreview_clicked();
+  void on_ExportLite_clicked();
+  void onExportLiteclicked(QString);
+  void on_allowGlassBridge_stateChanged(int arg1);
 
-    //for Page7
-    void on_InputDataIndex_textChanged();
-    void on_ExportData_clicked();
-    void onExportDataclicked(QString);
+  // for Page7
+  void on_InputDataIndex_textChanged();
+  void on_ExportData_clicked();
+  void onExportDataclicked(QString);
 
-    void on_seeExported_clicked();
+  void on_seeExported_clicked();
 
-    void on_AllowForcedOpti_stateChanged(int arg1);
+  void on_AllowForcedOpti_stateChanged(int arg1);
 
-    void on_reportBugs_clicked();
+  void on_reportBugs_clicked();
 
-    //void on_StartWithWall_clicked();
+  // void on_StartWithWall_clicked();
 
-    void on_ExImage_clicked();
+  void on_ExImage_clicked();
 
-    void on_FirstConcrete_clicked();
+  void on_FirstConcrete_clicked();
 
-    void on_FirstWool_clicked();
+  void on_FirstWool_clicked();
 
-    void on_FirstStainedGlass_clicked();
+  void on_FirstStainedGlass_clicked();
 
-    void testBlockList();
-
-private:
-    Ui::MainWindow *ui;
-
-    SlopeCraft::Kernel * kernel;
-    tpStrategyWind * transSubWind;
-    BlockListManager * Manager;
-    BatchUi * batchOperator;
-    VersionDialog * verDialog;
-    AiCvterParameterDialog * acpDialog;
-
-    QImage rawPic;
-
-    //QTranslator translater;
-    //bool Enabled[64];//被启动的方块列表，相当于最终的MIndex
-    static const ushort BLCreative[64];
-    static const ushort BLCheaper[64];
-    static const ushort BLBetter[64];
-    static const ushort BLGlowing[64];
-
-    static bool isBatchOperating;
-
-    tpS Strategy;
-
-    QString ProductDir;
-    QTranslator trans;
-    bool Collected;
-    QProgressBar * proTracker;
-    //void applyPre(ushort*BL);
+  void testBlockList();
 
 private:
-    void loadBlockList();
-    void turnToPage(int);
-    void updateEnables();
-    void preprocessImage(const QString &);
-    void switchLan(Language);
-    void kernelSetType();
-    void kernelSetImg();
+  Ui::MainWindow *ui;
 
-    QJsonArray getFixedBlocksList(QString);
-    QString getFixedBlockListDir(QString);
-    QJsonArray getCustomBlockList(QString);
-    QString getCustomBlockListDir(QString);
+  SlopeCraft::Kernel *kernel;
+  tpStrategyWind *transSubWind;
+  BlockListManager *Manager;
+  BatchUi *batchOperator;
+  VersionDialog *verDialog;
+  AiCvterParameterDialog *acpDialog;
 
-    void selectBlockByString(const std::string &);
+  QImage rawPic;
 
+  // QTranslator translater;
+  // bool Enabled[64];//被启动的方块列表，相当于最终的MIndex
+  static const ushort BLCreative[64];
+  static const ushort BLCheaper[64];
+  static const ushort BLBetter[64];
+  static const ushort BLGlowing[64];
 
-    static void progressRangeSet(void*,int min,int max,int val);//设置进度条的取值范围和值
-    static void progressAdd(void*,int deltaVal);
-    static void keepAwake(void*);
+  static bool isBatchOperating;
 
-    static void showError(void*,SlopeCraft::errorFlag,const char * errInfo);
-    static void showWorkingStatue(void*,SlopeCraft::workStatues);
+  tpS Strategy;
 
-    static void algoProgressRangeSet(void*,int min,int max,int val);
-    static void algoProgressAdd(void*,int deltaVal);
+  QString ProductDir;
+  QTranslator trans;
+  bool Collected;
+  QProgressBar *proTracker;
+  // void applyPre(ushort*BL);
 
-    static QJsonObject GithubAPIJson2Latest3xVer(const QJsonArray &);
+private:
+  void loadBlockList();
+  void turnToPage(int);
+  void updateEnables();
+  void preprocessImage(const QString &);
+  void switchLan(Language);
+  void kernelSetType();
+  void kernelSetImg();
 
+  QJsonArray getFixedBlocksList(QString);
+  QString getFixedBlockListDir(QString);
+  QJsonArray getCustomBlockList(QString);
+  QString getCustomBlockListDir(QString);
+
+  void selectBlockByString(const std::string &);
+
+  static void progressRangeSet(void *, int min, int max,
+                               int val); //设置进度条的取值范围和值
+  static void progressAdd(void *, int deltaVal);
+  static void keepAwake(void *);
+
+  static void showError(void *, SlopeCraft::errorFlag, const char *errInfo);
+  static void showWorkingStatue(void *, SlopeCraft::workStatues);
+
+  static void algoProgressRangeSet(void *, int min, int max, int val);
+  static void algoProgressAdd(void *, int deltaVal);
+
+  static QJsonObject GithubAPIJson2Latest3xVer(const QJsonArray &);
 };
 
-
-QJsonObject loadIni(bool=false);
-bool isValidIni(const QJsonObject & );
+QJsonObject loadIni(bool = false);
+bool isValidIni(const QJsonObject &);
 
 using EImage = Eigen::ArrayXX<uint32_t>;
 
 EImage QImage2EImage(const QImage &);
-QImage EImage2QImage(const EImage &,ushort scale=1);
+QImage EImage2QImage(const EImage &, ushort scale = 1);
 #endif // MAINWINDOW_H
