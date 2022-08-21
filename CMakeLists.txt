@@ -34,10 +34,11 @@ add_subdirectory(GAConverter)
 add_subdirectory(SlopeCraftL)
 add_subdirectory(imageCutter)
 add_subdirectory(BlockListManager)
+add_subdirectory(MapViewer)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-install(TARGETS SlopeCraftL imageCutter
+install(TARGETS SlopeCraftL imageCutter MapViewer
     RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
     LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/please_delete_this_folder
