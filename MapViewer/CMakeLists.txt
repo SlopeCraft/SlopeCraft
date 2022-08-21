@@ -61,3 +61,6 @@ set_target_properties(MapViewer PROPERTIES
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(MapViewer)
 endif()
+
+install(TARGETS MapViewer
+    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX})

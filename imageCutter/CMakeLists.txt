@@ -58,3 +58,7 @@ set_target_properties(imageCutter PROPERTIES
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(imageCutter)
 endif()
+
+
+install(TARGETS imageCutter
+    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX})

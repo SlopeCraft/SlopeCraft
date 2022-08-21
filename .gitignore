@@ -2,3 +2,4 @@
 *.idx
 compile_commands.json
 *.qm
+CMakeLists.txt.user
