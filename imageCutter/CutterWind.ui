@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>../SlopeCraftMain/others/imageCutterIconNew.ico</normaloff>../SlopeCraftMain/others/imageCutterIconNew.ico</iconset>
+    <normaloff>../icons/Windows/imageCutterIconNew.ico</normaloff>../icons/Windows/imageCutterIconNew.ico</iconset>
   </property>
   <property name="iconSize">
    <size>

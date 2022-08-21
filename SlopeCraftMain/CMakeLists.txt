@@ -16,6 +16,13 @@ set(CMAKE_AUTORCC ON)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools Network Concurrent REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools Network Concurrent REQUIRED)
 
+set(SlopeCraftMain_windows_rc_file)
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+	message("Configuring on Windows.")
+    set(SlopeCraftMain_windows_rc_file others/SlopeCraft.rc)
+endif()
+
 set(SlopeCraftMain_ts_files
     SlopeCraft_en_US.ts
     SlopeCraft_zh_CN.ts)
@@ -54,6 +61,7 @@ set(SlopeCraftMain_project_sources
     ${SlopeCraftMain_ts_files}
     ${SlopeCraftMain_ui_files}
     ${SlopeCraftMain_qrc_files}
+    ${SlopeCraftMain_windows_rc_file}
     )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

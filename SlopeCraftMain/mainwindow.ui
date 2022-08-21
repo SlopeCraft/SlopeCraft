@@ -37,7 +37,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>SlopeCraftIconNew.ico</normaloff>SlopeCraftIconNew.ico</iconset>
+    <normaloff>others/SlopeCraftIconNew.ico</normaloff>others/SlopeCraftIconNew.ico</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
@@ -223,7 +223,7 @@ p, li { white-space: pre-wrap; }
            <string>开始</string>
           </property>
           <property name="icon">
-           <iconset resource="BlockTextures.qrc">
+           <iconset resource="others/BlockTextures.qrc">
             <normaloff>:/new/Textures/Slope/block/grass_block.png</normaloff>:/new/Textures/Slope/block/grass_block.png</iconset>
           </property>
          </widget>
@@ -240,7 +240,7 @@ p, li { white-space: pre-wrap; }
            <string>导入图片</string>
           </property>
           <property name="icon">
-           <iconset resource="BlockTextures.qrc">
+           <iconset resource="others/BlockTextures.qrc">
             <normaloff>:/new/Textures/Slope/items/book.png</normaloff>:/new/Textures/Slope/items/book.png</iconset>
           </property>
          </widget>
@@ -263,7 +263,7 @@ p, li { white-space: pre-wrap; }
            <string>地图画类型</string>
           </property>
           <property name="icon">
-           <iconset resource="BlockTextures.qrc">
+           <iconset resource="others/BlockTextures.qrc">
             <normaloff>:/new/Textures/Slope/items/map.png</normaloff>:/new/Textures/Slope/items/map.png</iconset>
           </property>
          </widget>
@@ -280,7 +280,7 @@ p, li { white-space: pre-wrap; }
            <string>方块列表</string>
           </property>
           <property name="icon">
-           <iconset resource="BlockTextures.qrc">
+           <iconset resource="others/BlockTextures.qrc">
             <normaloff>:/new/Textures/Slope/block/waxed_cut_copper.png</normaloff>:/new/Textures/Slope/block/waxed_cut_copper.png</iconset>
           </property>
          </widget>
@@ -297,7 +297,7 @@ p, li { white-space: pre-wrap; }
            <string>调整颜色</string>
           </property>
           <property name="icon">
-           <iconset resource="BlockTextures.qrc">
+           <iconset resource="others/BlockTextures.qrc">
             <normaloff>:/new/Textures/Slope/items/amethyst_shard.png</normaloff>:/new/Textures/Slope/items/amethyst_shard.png</iconset>
           </property>
          </widget>
@@ -314,7 +314,7 @@ p, li { white-space: pre-wrap; }
            <string>导出为</string>
           </property>
           <property name="icon">
-           <iconset resource="BlockTextures.qrc">
+           <iconset resource="others/BlockTextures.qrc">
             <normaloff>:/new/Textures/Slope/items/iron_pickaxe.png</normaloff>:/new/Textures/Slope/items/iron_pickaxe.png</iconset>
           </property>
          </widget>
@@ -428,7 +428,7 @@ p, li { white-space: pre-wrap; }
            <string>完成</string>
           </property>
           <property name="icon">
-           <iconset resource="BlockTextures.qrc">
+           <iconset resource="others/BlockTextures.qrc">
             <normaloff>:/new/Textures/Slope/items/diamond.png</normaloff>:/new/Textures/Slope/items/diamond.png</iconset>
           </property>
          </widget>
@@ -676,7 +676,7 @@ font: 11pt &quot;微软雅黑&quot;;
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="Pics.qrc">:/new/Pic/cover_Flat.jpg</pixmap>
+               <pixmap resource="others/Pics.qrc">:/new/Pic/cover_Flat.jpg</pixmap>
               </property>
               <property name="scaledContents">
                <bool>true</bool>
@@ -766,7 +766,7 @@ font: 11pt &quot;微软雅黑&quot;;
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="Pics.qrc">:/new/Pic/cover_3D.jpg</pixmap>
+               <pixmap resource="others/Pics.qrc">:/new/Pic/cover_3D.jpg</pixmap>
               </property>
               <property name="scaledContents">
                <bool>true</bool>
@@ -856,7 +856,7 @@ font: 11pt &quot;微软雅黑&quot;;
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="Pics.qrc">:/new/Pic/cover_Data.jpg</pixmap>
+               <pixmap resource="others/Pics.qrc">:/new/Pic/cover_Data.jpg</pixmap>
               </property>
               <property name="scaledContents">
                <bool>true</bool>
@@ -1409,7 +1409,7 @@ font: 11pt &quot;微软雅黑&quot;;
            <string/>
           </property>
           <property name="pixmap">
-           <pixmap resource="Pics.qrc">:/new/Pic/BG3.png</pixmap>
+           <pixmap resource="others/Pics.qrc">:/new/Pic/BG3.png</pixmap>
           </property>
           <property name="scaledContents">
            <bool>true</bool>
@@ -1781,8 +1781,8 @@ font: 11pt &quot;微软雅黑&quot;;
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>16</width>
-               <height>16</height>
+               <width>540</width>
+               <height>378</height>
               </rect>
              </property>
              <property name="sizePolicy">
@@ -3963,8 +3963,9 @@ p, li { white-space: pre-wrap; }
   <tabstop>NextPage2</tabstop>
  </tabstops>
  <resources>
-  <include location="BlockTextures.qrc"/>
-  <include location="Pics.qrc"/>
+  <include location="others/BlockTextures.qrc"/>
+  <include location="others/Pics.qrc"/>
+  <include location="others/Pics.qrc"/>
  </resources>
  <connections/>
 </ui>
