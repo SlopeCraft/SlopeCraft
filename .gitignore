@@ -1,18 +1,4 @@
 
-BlockListManager/BlockListManager_zh_CN.qm
-others/Slope_zh_CN.qm
-others/Slope_en_US.qm
-SlopeCraftMain/others/SlopeCraft_en_US.qm
-SlopeCraftMain/others/SlopeCraft_zh_CN.qm
-docs/FAQ.html
-docs/FAQ_EN.html
-docs/FAQ.pdf
-docs/FAQ_EN.pdf
-SlopeCraft.pro.user
-AiCvterInterface/AiCvterLib.dll
-AiCvterInterface/AiCvterInterface.7z
-AiCvterInterface/AiConverterInterface.h
-AiCvterInterface/AiCvterLib_global.h
-*.a
-*.dll
+*.idx
+compile_commands.json
 *.qm
