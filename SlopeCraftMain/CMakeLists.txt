@@ -100,3 +100,6 @@ set_target_properties(SlopeCraft PROPERTIES
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(SlopeCraft)
 endif()
+
+install(TARGETS SlopeCraft
+    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX})
