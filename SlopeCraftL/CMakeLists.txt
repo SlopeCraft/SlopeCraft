@@ -7,6 +7,13 @@ include_directories(${SlopeCraft_Eigen3_include_dir}
     ../GAConverter
 )
 
+set(SlopeCraft_SCL_windows_rc_files)
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+	message("Configuring on Windows.")
+    set(SlopeCraft_SCL_windows_rc_files others/SlopeCraftL.rc)
+endif()
+
+
 set(SlopeCraft_SCL_sources 
     AiCvterOpt.h 
     ColorSet.h 
@@ -41,7 +48,10 @@ set(SlopeCraft_SCL_sources
     lossyCompressor.cpp 
     simpleBlock.cpp 
     tokicolor.cpp 
-    SlopeCraftL.cpp)
+    SlopeCraftL.cpp
+    
+    ${SlopeCraft_SCL_windows_rc_files}
+    )
 
 add_definitions(-DSLOPECRAFTL_LIBRARY)
 

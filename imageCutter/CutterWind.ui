@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>../icons/Windows/imageCutterIconNew.ico</normaloff>../icons/Windows/imageCutterIconNew.ico</iconset>
+    <normaloff>others/imageCutterIconNew.ico</normaloff>others/imageCutterIconNew.ico</iconset>
   </property>
   <property name="iconSize">
    <size>

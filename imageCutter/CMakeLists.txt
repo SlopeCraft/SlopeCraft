@@ -13,6 +13,12 @@ set(CMAKE_AUTORCC ON)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools REQUIRED)
 
+set(imageCutter_windows_rc_files)
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+	message("Configuring on Windows.")
+    set(imageCutter_windows_rc_files others/imageCutter.rc)
+endif()
+
 set(imageCutter_ts_files 
     imageCutter_en_US.ts)
 
@@ -21,7 +27,8 @@ set(imageCutter_project_sources
     CutterWind.cpp 
     main.cpp
     CutterWind.ui 
-    ${imageCutter_ts_files}    
+    ${imageCutter_ts_files}
+    ${imageCutter_windows_rc_files}
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
