@@ -130,8 +130,8 @@ signals:
   void closed();
 
 protected:
-  void closeEvent(QCloseEvent *);
-  void keyPressEvent(QKeyEvent *);
+  void closeEvent(QCloseEvent *) override;
+  void keyPressEvent(QKeyEvent *) override;
 
 public:
   inline void preProcess(char pureTpStrategy = 'B', char halfTpStrategy = 'C',

@@ -23,11 +23,12 @@ This file is part of SlopeCraft.
 #ifndef VERSIONDIALOG_H
 #define VERSIONDIALOG_H
 
+#include "ui_VersionDialog.h"
+#include <QCloseEvent>
 #include <QDialog>
 #include <QEvent>
-#include <QCloseEvent>
 #include <QEventLoop>
-#include "ui_VersionDialog.h"
+
 
 namespace Ui {
 class VersionDialog;
@@ -35,48 +36,40 @@ class VersionDialog;
 
 class QWidget;
 
-class VersionDialog : public QDialog
-{
-    Q_OBJECT
+class VersionDialog : public QDialog {
+  Q_OBJECT
 public:
-    explicit VersionDialog(VersionDialog ** self,QWidget *parent = nullptr);
-    ~VersionDialog();
-    enum userChoice {
-        Yes,
-        No,
-        NoToAll
-    };
+  explicit VersionDialog(VersionDialog **self, QWidget *parent = nullptr);
+  ~VersionDialog();
+  enum userChoice { Yes, No, NoToAll };
 
-    void setTexts(const QString & title,
-                  const QString & labelText,
-                  const QString & browserText);
-    userChoice getResult() const;
-    /*
-    static userChoice information(MainWindow * parent,
-                                  const QString & title,
-                                  const QString & labelText,
-                                  const QString & browserText);
-    */
+  void setTexts(const QString &title, const QString &labelText,
+                const QString &browserText);
+  userChoice getResult() const;
+  /*
+  static userChoice information(MainWindow * parent,
+                                const QString & title,
+                                const QString & labelText,
+                                const QString & browserText);
+  */
 signals:
-    void finished();
+  void finished();
 
 private slots:
-    void on_BtnYes_clicked();
+  void on_BtnYes_clicked();
 
-    void on_BtnNo_clicked();
+  void on_BtnNo_clicked();
 
-    void on_BtnNoToAll_clicked();
+  void on_BtnNoToAll_clicked();
 
 protected:
-    void closeEvent(QCloseEvent *);
-
+  void closeEvent(QCloseEvent *) override;
 
 private:
-    Ui::VersionDialog * ui;
-    userChoice result;
+  Ui::VersionDialog *ui;
+  userChoice result;
 
-    VersionDialog ** self;
-
+  VersionDialog **self;
 };
 
 #endif // VERSIONDIALOG_H

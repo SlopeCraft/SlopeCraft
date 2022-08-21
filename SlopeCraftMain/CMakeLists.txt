@@ -57,20 +57,20 @@ set(SlopeCraftMain_project_sources
     )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(SlopeCraftMain 
+    qt_add_executable(SlopeCraft 
         MANUAL_FINALIZATION
         ${SlopeCraftMain_project_sources})
     qt_create_translation(SlopeCraftMain_qm_files ${CMAKE_SOURCE_DIR} ${SlopeCraftMain_ts_files})
 
 else()
     if(ANDROID)
-        add_library(SlopeCraftMain SHARED ${SlopeCraftMain_project_sources})
+        add_library(SlopeCraft SHARED ${SlopeCraftMain_project_sources})
     else()
-        add_executable(SlopeCraftMain ${SlopeCraftMain_project_sources})
+        add_executable(SlopeCraft ${SlopeCraftMain_project_sources})
     endif()
 endif()
 
-target_link_libraries(SlopeCraftMain
+target_link_libraries(SlopeCraft
     PRIVATE
     BlockListManager
     SlopeCraftL
@@ -79,7 +79,7 @@ target_link_libraries(SlopeCraftMain
     Qt${QT_VERSION_MAJOR}::Concurrent
     )
 
-set_target_properties(SlopeCraftMain PROPERTIES
+set_target_properties(SlopeCraft PROPERTIES
     VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_GUI_IDENTIFIER "github.com/ToKiNoBug/SlopeCraft"
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
@@ -90,5 +90,5 @@ set_target_properties(SlopeCraftMain PROPERTIES
 
 
 if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(SlopeCraftMain)
+    qt_finalize_executable(SlopeCraft)
 endif()

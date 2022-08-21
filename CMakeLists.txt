@@ -39,8 +39,28 @@ add_subdirectory(MapViewer)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-install(TARGETS SlopeCraftL imageCutter MapViewer
+install(TARGETS SlopeCraftL imageCutter MapViewer SlopeCraft
     RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
     LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/please_delete_this_folder
 )
+
+file(GLOB SlopeCraft_install_jsons
+    "Blocks/*.json"
+    "Blocks/*.md")
+install(FILES ${SlopeCraft_install_jsons}
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/Blocks)
+
+file(GLOB SlopeCraft_install_png_fixedblocks
+    "Blocks/FixedBlocks/*.png")
+install(FILES ${SlopeCraft_install_png_fixedblocks}
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/Blocks/FixedBlocks)
+
+file(GLOB SlopeCraft_install_png_customblocks
+    "Blocks/CustomBlocks/*.png")
+install(FILES ${SlopeCraft_install_png_customblocks}
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/Blocks/CustomBlocks)
+
+#message(${SlopeCraft_install_files})
+
+

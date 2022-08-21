@@ -23,13 +23,13 @@ This file is part of SlopeCraft.
 #ifndef BATCHUI_H
 #define BATCHUI_H
 
+#include <QCloseEvent>
 #include <QMainWindow>
 #include <vector>
-#include <QCloseEvent>
+
 
 #include "TaskBox.h"
 #include "ui_BatchUi.h"
-
 
 namespace Ui {
 class BatchUi;
@@ -41,42 +41,40 @@ namespace SlopeCraft {
 class Kernel;
 }
 
-class BatchUi : public QMainWindow
-{
-    Q_OBJECT
+class BatchUi : public QMainWindow {
+  Q_OBJECT
 
 public:
-    explicit BatchUi(BatchUi **,QWidget *parent);
-    ~BatchUi();
-    void setTasks(const QStringList &);
+  explicit BatchUi(BatchUi **, QWidget *parent);
+  ~BatchUi();
+  void setTasks(const QStringList &);
 
 signals:
 
-
 protected:
-    void closeEvent(QCloseEvent *);
+  void closeEvent(QCloseEvent *) override;
 
 private slots:
-    void erased(TaskBox*);
-    void onBoxSeqNumChanged();
-    void onTaskTypeChanged();
+  void erased(TaskBox *);
+  void onBoxSeqNumChanged();
+  void onTaskTypeChanged();
 
-    void on_BtnExecute_clicked();
+  void on_BtnExecute_clicked();
 
-    void on_BtnBrowseDataFolder_clicked();
+  void on_BtnBrowseDataFolder_clicked();
 
-    void checkExecutable();
+  void checkExecutable();
 
-    void eraseAllTasks();
+  void eraseAllTasks();
 
 private:
-    Ui::BatchUi *ui;
-    std::vector<TaskBox*> taskBoxes;
-    BatchUi ** self;
+  Ui::BatchUi *ui;
+  std::vector<TaskBox *> taskBoxes;
+  BatchUi **self;
 
-    auto ptr2It(TaskBox * widgetPtr) const;
-    MainWindow * wind() const;
-    SlopeCraft::Kernel * kernel() const;
+  auto ptr2It(TaskBox *widgetPtr) const;
+  MainWindow *wind() const;
+  SlopeCraft::Kernel *kernel() const;
 };
 
 #endif // BATCHUI_H
