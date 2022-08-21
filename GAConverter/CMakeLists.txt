@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(GAConverter VERSION 3.9.0 LANGUAGES CXX)
+project(SlopeCraft_GAConverter VERSION 3.9.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD_REQUIRED 17)
 
 include_directories(${SlopeCraft_Eigen3_include_dir}

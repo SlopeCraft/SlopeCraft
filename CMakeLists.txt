@@ -33,6 +33,7 @@ set(QT_QMAKE_EXECUTABLE ${SlopeCraft_Qt_root_dir}/bin/qmake.exe)
 add_subdirectory(GAConverter)
 add_subdirectory(SlopeCraftL)
 add_subdirectory(imageCutter)
+add_subdirectory(BlockListManager)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 

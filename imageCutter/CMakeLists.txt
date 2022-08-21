@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(SC_imageCutter VERSION 3.9.0)
+project(SlopeCraft_imageCutter VERSION 3.9.0)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -21,7 +21,7 @@ set(imageCutter_project_sources
     CutterWind.cpp 
     main.cpp
     CutterWind.ui 
-    ${imageCutter_en_US.ts}    
+    ${imageCutter_ts_files}    
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
