@@ -1,5 +1,7 @@
-
 *.idx
 compile_commands.json
 *.qm
 CMakeLists.txt.user
+
+# macOS File System
+.DS_Store
