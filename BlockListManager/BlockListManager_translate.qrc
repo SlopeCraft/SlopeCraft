@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/i18n">
+        <file>BlockListManager_en_US.qm</file>
+        <file>BlockListManager_zh_CN.qm</file>
+    </qresource>
+</RCC>

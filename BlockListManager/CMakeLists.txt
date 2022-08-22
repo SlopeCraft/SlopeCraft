@@ -13,7 +13,14 @@ find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools REQUIRED)
 
 set(BlockListManager_ts_files 
-    BlockListManager_zh_CN.ts)
+    ${CMAKE_CURRENT_SOURCE_DIR}/BlockListManager_zh_CN.ts
+    ${CMAKE_CURRENT_SOURCE_DIR}/BlockListManager_en_US.ts
+    )
+
+execute_process(COMMAND ${SlopeCraft_Qt_lrelease_executable} ${BlockListManager_ts_files}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+
 
 set(BlockListManaer_project_sources
     BlockListManager.h
@@ -25,6 +32,7 @@ set(BlockListManaer_project_sources
     TokiBaseColor.cpp
     TokiBlock.cpp
     ${BlockListManager_ts_files}
+    BlockListManager_translate.qrc
 )
 
 include_directories(../SlopeCraftL)

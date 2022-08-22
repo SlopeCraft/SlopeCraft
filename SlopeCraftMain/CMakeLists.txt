@@ -29,8 +29,7 @@ set(SlopeCraftMain_ts_files
 
 execute_process(COMMAND ${SlopeCraft_Qt_lrelease_executable} ${SlopeCraftMain_ts_files}
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/others
-    OUTPUT_VARIABLE output)
-message("SlopeCraftMain_qm_files = " ${output})
+    )
 
 set(SlopeCraftMain_ui_files
     AiCvterParameterDialog.ui
