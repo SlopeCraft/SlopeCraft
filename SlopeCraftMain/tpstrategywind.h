@@ -23,7 +23,7 @@ This file is part of SlopeCraft.
 #ifndef TPSTRATEGYWIND_H
 #define TPSTRATEGYWIND_H
 
-#include "mainwindow.h"
+#include "MainWindow.h"
 #include <QMainWindow>
 
 namespace Ui {
