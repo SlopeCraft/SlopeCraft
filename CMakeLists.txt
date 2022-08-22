@@ -9,19 +9,19 @@ set(CMAKE_INSTALL_BINDIR ${CMAKE_INSTALL_PREFIX})
 
 
 # manage the include dir of HeuristicFlow
-set(SlopeCraft_HeuristicFlow_include_dir D:/CppLibs/HeuristicFlow-1.6.2.1)
+set(SlopeCraft_HeuristicFlow_include_dir /usr/local/lib/HeuristicFlow-1.6.2.1)
 if(NOT DEFINED SlopeCraft_HeuristicFlow_include_dir)
     message(FATAL_ERROR "Please set the variable \"SlopeCraft_HeuristicFlow_include_dir\". Otherwise cmake can\'t find HeuristicFlow")
 endif()
 
 # manage the include dir of Eigen
-set(SlopeCraft_Eigen3_include_dir D:/CppLibs/libEigen3/include/eigen3)
+set(SlopeCraft_Eigen3_include_dir /usr/local/Cellar/eigen/3.4.0_1/include/eigen3)
 if(NOT DEFINED SlopeCraft_Eigen3_include_dir)
     message(FATAL_ERROR "Please set the variable \"SlopeCraft_Eigen3_include_dir\". Otherwise cmake can\'t find Eigen")
 endif()
 
 # manage the directory of Qt
-set(SlopeCraft_Qt_root_dir D:/Qt/6.1.0/gcc12-shared)
+set(SlopeCraft_Qt_root_dir /usr/local/Cellar/qt/6.3.1_1)
 if(NOT DEFINED SlopeCraft_Qt_root_dir)
     message(FATAL_ERROR "Please set the variable \"SlopeCraft_Qt_root_dir\". Otherwise cmake can\'t find Qt6")
 endif()
