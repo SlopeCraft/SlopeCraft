@@ -124,6 +124,7 @@ void TokiSlopeCraft::trySkipStep(step s) {
 
 
 
+/*
 bool compressFile(const char *sourcePath, const char *destPath) {
   constexpr int bufferSize=2048;
   char buf[bufferSize] = {0};
@@ -158,6 +159,24 @@ bool compressFile(const char *sourcePath, const char *destPath) {
   // succeed
 
   return true;
+}
+*/
+
+bool compressFile(const char *inputPath, const char *outputPath) {
+    const size_t BUFFER_SIZE = 2048;
+    std::ifstream fin;
+    fin.open(inputPath, std::ifstream::binary | std::ifstream::in);
+    if (!fin)
+        return false;
+    std::vector<char> buffer (BUFFER_SIZE, 0);
+    gzFile fout = gzopen(outputPath, "wb");
+    while (!fin.eof()) {
+        fin.read(buffer.data(), buffer.size());
+        std::streamsize s = fin.gcount();
+        gzwrite(fout, buffer.data(), s);
+    }
+    gzclose(fout);
+    return true;
 }
 
 
