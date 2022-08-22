@@ -14,17 +14,40 @@ set(CMAKE_AUTORCC ON)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools REQUIRED)
 
+set(MapViewer_header_files
+
+    MapViewerWind.h 
+    processMapFiles.h 
+    )
+
+set(MapViewer_source_files
+
+    main.cpp 
+    ../SlopeCraftL/ColorSource.cpp
+    processMapFiles.cpp
+    MapViewerWind.cpp     
+    )
+
 set(MapViewer_ts_files
     MapViewer_en_US.ts)
 
+
+if(${SlopeCraft_update_ts_files})
+    execute_process(
+        COMMAND ${SlopeCraft_Qt_lupdate_executable} MapViewerWind.ui ${MapViewer_header_files} ${MapViewer_source_files} "-ts" ${MapViewer_ts_files}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        )
+endif()
+
+execute_process(COMMAND ${SlopeCraft_Qt_lrelease_executable} ${MapViewer_ts_files}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+
+
 set(MapViewer_project_sources
-    main.cpp 
-    ../SlopeCraftL/ColorSource.cpp
-    processMapFiles.h 
-    processMapFiles.cpp
-    MapViewerWind.h 
-    MapViewerWind.cpp 
-    MapViewerWind.ui 
+    ${MapViewer_header_files}
+    ${MapViewer_source_files}
+    MapViewerWind.ui
     images.qrc
     ${MapViewer_ts_files}
     )
@@ -33,7 +56,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(MapViewer
         MANUAL_FINALIZATION
         ${MapViewer_project_sources})
-    qt_create_translation(MapViewer_qm_files ${CMAKE_SOURCE_DIR} ${MapViewer_ts_files})
+    #qt_create_translation(MapViewer_qm_files ${CMAKE_SOURCE_DIR} ${MapViewer_ts_files})
 
 else()
     if(ANDROID)
