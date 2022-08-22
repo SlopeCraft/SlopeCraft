@@ -33,7 +33,24 @@ endif()
 set(CMAKE_PREFIX_PATH ${SlopeCraft_Qt_root_dir})
 set(QT_DIR ${SlopeCraft_Qt_root_dir}/lib/cmake/Qt6)
 set(QT_QMAKE_EXECUTABLE ${SlopeCraft_Qt_root_dir}/bin/qmake.exe)
+
+# The executable to generate .qm files
 set(SlopeCraft_Qt_lrelease_executable ${SlopeCraft_Qt_root_dir}/bin/lrelease)
+message("Testing lrelease : ")
+message("The executable of lrelease is : " ${SlopeCraft_Qt_lrelease_executable})
+execute_process(COMMAND ${SlopeCraft_Qt_lrelease_executable} -version
+    OUTPUT_VARIABLE SlopeCraft_output_variable)
+message("The output is : " ${SlopeCraft_output_variable})
+
+set(SlopeCraft_Qt_lupdate_executable ${SlopeCraft_Qt_root_dir}/bin/lupdate)
+message("Testing lupdate : ")
+message("The executable of lupdate is : " ${SlopeCraft_Qt_lupdate_executable})
+execute_process(COMMAND ${SlopeCraft_Qt_lupdate_executable} -version
+    OUTPUT_VARIABLE SlopeCraft_output_variable)
+message("The output is : " ${SlopeCraft_output_variable})
+
+set(SlopeCraft_update_ts_files ON)
+
 
 add_subdirectory(imageCutter)
 add_subdirectory(GAConverter)
