@@ -153,8 +153,8 @@ glassMap PrimGlassBuilder::makeBridge(const TokiMap & _targetMap,
         for(int c=0;c<colCount;c++) {
 
             targetMaps[r][c]=_targetMap.block(unitL*r,unitL*c,
-                                              std::min((long long)(unitL),_targetMap.rows()-r*unitL),
-                                              std::min((long long)(unitL),_targetMap.cols()-c*unitL));
+                                              std::min((long)(unitL),_targetMap.rows()-r*unitL),
+                                              std::min((long)(unitL),_targetMap.cols()-c*unitL));
 
 			algos[r][c] = pgb.animate();
 //#ifdef WITH_QT
