@@ -13,6 +13,15 @@ set(CMAKE_AUTORCC ON)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools REQUIRED)
 
+set(imageCutter_header_files 
+    CutterWind.h
+    )
+
+set(imageCutter_source_files 
+    CutterWind.cpp 
+    main.cpp
+    )
+
 set(imageCutter_windows_rc_files)
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 	message("Configuring on Windows.")
@@ -22,6 +31,17 @@ endif()
 set(imageCutter_ts_files 
     imageCutter_en_US.ts)
 
+if(${SlopeCraft_update_ts_files})
+    execute_process(
+        COMMAND ${SlopeCraft_Qt_lupdate_executable} CutterWind.ui ${imageCutter_header_files} ${imageCutter_source_files} "-ts" ${imageCutter_ts_files}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        )
+endif()
+
+execute_process(COMMAND ${SlopeCraft_Qt_lrelease_executable} ${imageCutter_ts_files}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+
 set(imageCutter_project_sources
     CutterWind.h 
     CutterWind.cpp 
@@ -29,6 +49,7 @@ set(imageCutter_project_sources
     CutterWind.ui 
     ${imageCutter_ts_files}
     ${imageCutter_windows_rc_files}
+    imageCutter_translate.qrc
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -36,7 +57,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${imageCutter_project_sources}
     )
-    qt_create_translation(imageCutter_qm_files ${CMAKE_SOURCE_DIR} ${imageCutter_ts_files})
+    #qt_create_translation(imageCutter_qm_files ${CMAKE_SOURCE_DIR} ${imageCutter_ts_files})
 
 else()
     if(ANDROID)

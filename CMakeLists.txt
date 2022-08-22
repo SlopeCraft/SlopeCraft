@@ -21,7 +21,11 @@ if(NOT DEFINED SlopeCraft_Eigen3_include_dir)
 endif()
 
 # manage the directory of Qt
-set(SlopeCraft_Qt_root_dir /usr/local/Cellar/qt/6.3.1_1)
+if(DEFINED Qt6_DIR)
+    set(SlopeCraft_Qt_root_dir ${Qt6_DIR})
+else()
+    set(SlopeCraft_Qt_root_dir /usr/local/Cellar/qt/6.3.1_1)
+endif()
 if(NOT DEFINED SlopeCraft_Qt_root_dir)
     message(FATAL_ERROR "Please set the variable \"SlopeCraft_Qt_root_dir\". Otherwise cmake can\'t find Qt6")
 endif()
@@ -29,6 +33,26 @@ endif()
 set(CMAKE_PREFIX_PATH ${SlopeCraft_Qt_root_dir})
 set(QT_DIR ${SlopeCraft_Qt_root_dir}/lib/cmake/Qt6)
 set(QT_QMAKE_EXECUTABLE ${SlopeCraft_Qt_root_dir}/bin/qmake.exe)
+
+# The executable to generate .qm files from .qm files
+set(SlopeCraft_Qt_lrelease_executable ${SlopeCraft_Qt_root_dir}/bin/lrelease)
+message("Testing lrelease : ")
+message("The executable of lrelease is : " ${SlopeCraft_Qt_lrelease_executable})
+execute_process(COMMAND ${SlopeCraft_Qt_lrelease_executable} -version
+    OUTPUT_VARIABLE SlopeCraft_output_variable)
+message("The output is : " ${SlopeCraft_output_variable})
+
+# The executable to update .ts files
+set(SlopeCraft_Qt_lupdate_executable ${SlopeCraft_Qt_root_dir}/bin/lupdate)
+message("Testing lupdate : ")
+message("The executable of lupdate is : " ${SlopeCraft_Qt_lupdate_executable})
+execute_process(COMMAND ${SlopeCraft_Qt_lupdate_executable} -version
+    OUTPUT_VARIABLE SlopeCraft_output_variable)
+message("The output is : " ${SlopeCraft_output_variable})
+
+# If it is set to ON, everytime CMake reconfigure the project, all .ts files will be updated.
+set(SlopeCraft_update_ts_files OFF)
+
 
 add_subdirectory(imageCutter)
 add_subdirectory(GAConverter)

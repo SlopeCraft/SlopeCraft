@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/i18n">
+        <file>SlopeCraft_en_US.qm</file>
+        <file>SlopeCraft_zh_CN.qm</file>
+    </qresource>
+</RCC>

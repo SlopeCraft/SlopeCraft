@@ -23,40 +23,64 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     set(SlopeCraftMain_windows_rc_file others/SlopeCraft.rc)
 endif()
 
-set(SlopeCraftMain_ts_files
-    SlopeCraft_en_US.ts
-    SlopeCraft_zh_CN.ts)
+set(SlopeCraftMain_header_files 
+    ${CMAKE_CURRENT_SOURCE_DIR}/AiCvterParameterDialog.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/BatchUi.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/TaskBox.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/VersionDialog.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/MainWindow.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/previewwind.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/tpstrategywind.h
+    )
+
+set(SlopeCraftMain_source_files
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/AiCvterParameterDialog.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/BatchUi.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/TaskBox.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/VersionDialog.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/MainWindow.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/previewwind.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/tpstrategywind.cpp
+    )
+
 
 set(SlopeCraftMain_ui_files
-    AiCvterParameterDialog.ui
-    BatchUi.ui
-    mainwindow.ui
-    previewwind.ui
-    TaskBox.ui
-    tpstrategywind.ui
-    VersionDialog.ui)
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/AiCvterParameterDialog.ui
+    ${CMAKE_CURRENT_SOURCE_DIR}/BatchUi.ui
+    ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.ui
+    ${CMAKE_CURRENT_SOURCE_DIR}/previewwind.ui
+    ${CMAKE_CURRENT_SOURCE_DIR}/TaskBox.ui
+    ${CMAKE_CURRENT_SOURCE_DIR}/tpstrategywind.ui
+    ${CMAKE_CURRENT_SOURCE_DIR}/VersionDialog.ui)
+
+
+set(SlopeCraftMain_ts_files
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/others/SlopeCraft_en_US.ts
+    ${CMAKE_CURRENT_SOURCE_DIR}/others/SlopeCraft_zh_CN.ts)
+
+if(${SlopeCraft_update_ts_files})
+    execute_process(
+        COMMAND ${SlopeCraft_Qt_lupdate_executable} ${SlopeCraftMain_header_files} ${SlopeCraftMain_source_files} ${SlopeCraftMain_ui_files} "-ts" ${SlopeCraftMain_ts_files}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/others
+        )
+endif()
+
+execute_process(COMMAND ${SlopeCraft_Qt_lrelease_executable} ${SlopeCraftMain_ts_files}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/others
+    )
 
 set(SlopeCraftMain_qrc_files
-    ${CMAKE_SOURCE_DIR}/SlopeCraftMain/others/BlockTextures.qrc
-    ${CMAKE_SOURCE_DIR}/SlopeCraftMain/others/Pics.qrc)
+    ${CMAKE_CURRENT_SOURCE_DIR}/others/BlockTextures.qrc
+    ${CMAKE_CURRENT_SOURCE_DIR}/others/Pics.qrc
+    ${CMAKE_CURRENT_SOURCE_DIR}/others/SlopeCraft_translation.qrc)
 
 set(SlopeCraftMain_project_sources
-    AiCvterParameterDialog.h
-    BatchUi.h
-    TaskBox.h
-    VersionDialog.h
-    MainWindow.h
-    previewwind.h
-    tpstrategywind.h
-
-    AiCvterParameterDialog.cpp
-    BatchUi.cpp
-    TaskBox.cpp
-    VersionDialog.cpp
-    main.cpp
-    MainWindow.cpp
-    previewwind.cpp
-    tpstrategywind.cpp
+    ${SlopeCraftMain_header_files}
+    ${SlopeCraftMain_source_files}
     
     ${SlopeCraftMain_ts_files}
     ${SlopeCraftMain_ui_files}
@@ -68,7 +92,14 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(SlopeCraft 
         MANUAL_FINALIZATION
         ${SlopeCraftMain_project_sources})
-    qt_create_translation(SlopeCraftMain_qm_files ${CMAKE_SOURCE_DIR} ${SlopeCraftMain_ts_files})
+    #execute_process(COMMAND "pause")
+    #qt_create_translation(SlopeCraftMain_qm_files ${CMAKE_CURRENT_SOURCE_DIR} ${SlopeCraftMain_ts_files})
+
+    #qt6_add_resources(SlopeCraft "translation"
+    #    PREFIX "/i18n"
+    #    FILES 
+    #    ${SlopeCraftMain_qm_files}
+    #    ${CMAKE_SOURCE_DIR}/CMakeLists.txt)
 
 else()
     if(ANDROID)

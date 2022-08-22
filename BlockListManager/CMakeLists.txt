@@ -12,19 +12,42 @@ set(CMAKE_AUTORCC ON)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools REQUIRED)
 
-set(BlockListManager_ts_files 
-    BlockListManager_zh_CN.ts)
+set(BlockListManager_header_files
 
-set(BlockListManaer_project_sources
     BlockListManager.h
     BlockListManager_global.h 
     TokiBaseColor.h 
-    TokiBlock.h
+    TokiBlock.h)
+
+set(BlockListManager_source_files
 
     BlockListManager.cpp
     TokiBaseColor.cpp
-    TokiBlock.cpp
+    TokiBlock.cpp)
+
+
+set(BlockListManager_ts_files 
+    ${CMAKE_CURRENT_SOURCE_DIR}/BlockListManager_zh_CN.ts
+    ${CMAKE_CURRENT_SOURCE_DIR}/BlockListManager_en_US.ts
+    )
+
+if(${SlopeCraft_update_ts_files})
+    execute_process(
+        COMMAND ${SlopeCraft_Qt_lupdate_executable} ${BlockListManager_header_files} ${BlockListManager_source_files} "-ts" ${BlockListManager_ts_files}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        )
+endif()
+
+execute_process(COMMAND ${SlopeCraft_Qt_lrelease_executable} ${BlockListManager_ts_files}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+
+
+set(BlockListManaer_project_sources
+    ${BlockListManager_header_files}
+    ${BlockListManager_source_files}
     ${BlockListManager_ts_files}
+    BlockListManager_translate.qrc
 )
 
 include_directories(../SlopeCraftL)

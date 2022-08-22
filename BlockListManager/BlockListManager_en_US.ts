@@ -5,31 +5,31 @@
     <name>BlockListManager</name>
     <message>
         <source>预设文件格式错误</source>
-        <translation type="unfinished"></translation>
+        <translation>Wrong preset files: syntax error!</translation>
     </message>
     <message>
         <source>解析预设文件时遇到json格式错误：</source>
-        <translation type="unfinished"></translation>
+        <translation>Json error when parsing preset file:</translation>
     </message>
     <message>
         <source>预设文件中包含未知方块</source>
-        <translation type="unfinished"></translation>
+        <translation>Preset file contains unknown block.</translation>
     </message>
     <message>
         <source>预设文件中基色</source>
-        <translation type="unfinished"></translation>
+        <translation>In the preset file, base color </translation>
     </message>
     <message>
         <source>对应的方块id</source>
-        <translation type="unfinished"></translation>
+        <translation>corresponding block id </translation>
     </message>
     <message>
         <source>在方块列表中不存在</source>
-        <translation type="unfinished"></translation>
+        <translation>doesn&apos;t exist in the block list.</translation>
     </message>
     <message>
         <source>将为这个启用默认选项</source>
-        <translation type="unfinished"></translation>
+        <translation>SlopeCraft will use the default option for this.</translation>
     </message>
 </context>
 <context>
