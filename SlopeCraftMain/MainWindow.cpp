@@ -1720,6 +1720,12 @@ void MainWindow::turnEn() { switchLan(EN); }
 void MainWindow::switchLan(Language lang) {
   qDebug("开始调整语言");
   emit Manager->translate(lang);
+
+  if(QFile(":/new/Pic/BG3.png").exists()) {
+      qDebug("File exists.");
+  }else
+      qDebug("File doesn't exists.");
+
   if (lang == EN) {
     if (!trans.load(":/i18n/SlopeCraft_en_US.qm")) {
       qDebug("载入\":/i18n/SlopeCraft_en_US.qm\"失败");

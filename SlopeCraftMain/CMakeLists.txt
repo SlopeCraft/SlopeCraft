@@ -24,8 +24,13 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 endif()
 
 set(SlopeCraftMain_ts_files
-    SlopeCraft_en_US.ts
-    SlopeCraft_zh_CN.ts)
+    ${CMAKE_SOURCE_DIR}/SlopeCraftMain/others/SlopeCraft_en_US.ts
+    ${CMAKE_SOURCE_DIR}/SlopeCraftMain/others/SlopeCraft_zh_CN.ts)
+
+execute_process(COMMAND ${SlopeCraft_Qt_lrelease_executable} ${SlopeCraftMain_ts_files}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/others
+    OUTPUT_VARIABLE output)
+message("SlopeCraftMain_qm_files = " ${output})
 
 set(SlopeCraftMain_ui_files
     AiCvterParameterDialog.ui
@@ -38,7 +43,8 @@ set(SlopeCraftMain_ui_files
 
 set(SlopeCraftMain_qrc_files
     ${CMAKE_SOURCE_DIR}/SlopeCraftMain/others/BlockTextures.qrc
-    ${CMAKE_SOURCE_DIR}/SlopeCraftMain/others/Pics.qrc)
+    ${CMAKE_SOURCE_DIR}/SlopeCraftMain/others/Pics.qrc
+    ${CMAKE_SOURCE_DIR}/SlopeCraftMain/others/SlopeCraft_translation.qrc)
 
 set(SlopeCraftMain_project_sources
     AiCvterParameterDialog.h
@@ -68,7 +74,14 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(SlopeCraft 
         MANUAL_FINALIZATION
         ${SlopeCraftMain_project_sources})
-    qt_create_translation(SlopeCraftMain_qm_files ${CMAKE_SOURCE_DIR} ${SlopeCraftMain_ts_files})
+    #execute_process(COMMAND "pause")
+    #qt_create_translation(SlopeCraftMain_qm_files ${CMAKE_SOURCE_DIR}/SlopeCraftMain ${SlopeCraftMain_ts_files})
+
+    #qt6_add_resources(SlopeCraft "translation"
+    #    PREFIX "/i18n"
+    #    FILES 
+    #    ${SlopeCraftMain_qm_files}
+    #    ${CMAKE_SOURCE_DIR}/CMakeLists.txt)
 
 else()
     if(ANDROID)

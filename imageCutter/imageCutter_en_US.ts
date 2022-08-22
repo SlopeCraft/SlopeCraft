@@ -2294,7 +2294,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../SlopeCraftMain/mainwindow.ui" line="2033"/>
         <location filename="../archived/mcMap/Page4.cpp" line="44"/>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2123"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2129"/>
         <source>保存当前显示图片</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2510,7 +2510,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="../SlopeCraftMain/mainwindow.ui" line="3916"/>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2153"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2159"/>
         <source>保存预设</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2633,7 +2633,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="../archived/mcMap/Page3.cpp" line="300"/>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2084"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2090"/>
         <source>种颜色</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2797,213 +2797,213 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1752"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1758"/>
         <source>
 具体信息：</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1758"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1764"/>
         <source>转化原图为地图画时出错</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1759"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1765"/>
         <source>原图为空！你可能没有导入原图！</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1762"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1768"/>
         <source>构建高度矩阵时出现错误</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1763"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1769"/>
         <source>原版地图画不允许出现第三个阴影（不存在的几何关系不可能生存实装！）
 请检查你的地图画类型，纯文件地图画不可以导出为投影！</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1768"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1774"/>
         <source>跳步操作</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1769"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1775"/>
         <source>SlopeCraft不允许你跳步操作，请按照左侧竖边栏的顺序操作！</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1772"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1778"/>
         <source>有损压缩失败</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1773"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1779"/>
         <source>在构建高度矩阵时，有损压缩失败，没能将地图画压缩到目标高度。         这可能是因为地图画行数过大。         尝试启用无损压缩，或者提高最大允许高度——不要给软件地图画太大的压力！</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1779"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1785"/>
         <source>最大允许高度太小了</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1780"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1786"/>
         <source>有损压缩的最大允许不要低于14，否则很容易压缩失败</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1784"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1790"/>
         <source>严重错误：颜色表文件HSV.TokiColor损坏</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1785"/>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1790"/>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1795"/>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1800"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1791"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1796"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1801"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1806"/>
         <source>SlopeCraft不能正常解析颜色表文件，它是不可以被修改的！</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1789"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1795"/>
         <source>严重错误：颜色表文件Lab.TokiColor损坏</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1794"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1800"/>
         <source>严重错误：颜色表文件XYZ.TokiColor损坏</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1799"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1805"/>
         <source>严重错误：颜色表文件RGB.TokiColor损坏</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1803"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1809"/>
         <source>允许使用的颜色过少</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1804"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1810"/>
         <source>你应该勾选启用尽可能多的基色，颜色太少是不行的！</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1807"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1813"/>
         <source>导出时Gzip压缩文件失败</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1808"/>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1812"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1814"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1818"/>
         <source>这可能是因为路径中含有中文字符！</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1811"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1817"/>
         <source>删除临时文件失败</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1842"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1848"/>
         <source>正在构建高度矩阵</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1845"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1851"/>
         <source>正在构建三维结构</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1848"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1854"/>
         <source>正在收集整张图片的颜色</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1851"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1857"/>
         <source>正在压缩立体地图画</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1854"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1860"/>
         <source>正在为立体地图画搭桥</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1857"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1863"/>
         <source>正在匹配颜色</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1860"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1866"/>
         <source>正在使用抖动仿色</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1863"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1869"/>
         <source>正在将平板地图画变为墙面地图画</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1866"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1872"/>
         <source>正在写入三维结构</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1869"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1875"/>
         <source>正在写入方块列表</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1872"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1878"/>
         <source>正在写入地图数据文件</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1875"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1881"/>
         <source>正在写入基础信息</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2015"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2021"/>
         <source>检查更新完毕</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2016"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2022"/>
         <source>现在你正在用的就是最新版本！</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2083"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2089"/>
         <source>可用</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2099"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2105"/>
         <source>保存截屏</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2099"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2105"/>
         <source>图片 (*.jpg *.jpeg *.tif *.bmp *.png)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2124"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2130"/>
         <source>图片(*.png)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2160"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2166"/>
         <source>选择预设文件</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2195"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2201"/>
         <source>测试方块列表的结构文件</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3245,19 +3245,19 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1951"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1957"/>
         <source>检查更新时遇到Json解析错误</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1952"/>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1974"/>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1993"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1958"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1980"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1999"/>
         <source>网址  </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1953"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1959"/>
         <source>  回复的信息无法通过json解析。
 
 这只是检查更新时遇到的故障，但不要紧，软件该用还能用。
@@ -3268,9 +3268,9 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1958"/>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1980"/>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1999"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1964"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1986"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2005"/>
         <source>
 
 具体回复的信息为：
@@ -3278,13 +3278,13 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1973"/>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1992"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1979"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1998"/>
         <source>检查更新时返回信息错误</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1975"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1981"/>
         <source>  回复的信息中不包含版本号（&quot;tag_name&quot;）。
 
 这只是检查更新时遇到的故障，但不要紧，软件该用还能用。
@@ -3293,7 +3293,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="1994"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2000"/>
         <source>  回复的信息中，版本号（&quot;tag_name&quot;）不是字符串。
 
 这只是检查更新时遇到的故障，但不要紧，软件该用还能用。
@@ -3302,23 +3302,23 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2028"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2034"/>
         <source>SlopeCraft已更新</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2029"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2035"/>
         <source>好消息！好消息！SlopeCraft更新了！
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2030"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2036"/>
         <source>当前版本为</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2031"/>
+        <location filename="../SlopeCraftMain/MainWindow.cpp" line="2037"/>
         <source>，检查到最新版本为</source>
         <translation type="unfinished"></translation>
     </message>
