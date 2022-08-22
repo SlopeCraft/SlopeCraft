@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/i18n">
+        <file>imageCutter_en_US.qm</file>
+    </qresource>
+</RCC>

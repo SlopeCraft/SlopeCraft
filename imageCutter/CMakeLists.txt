@@ -22,6 +22,10 @@ endif()
 set(imageCutter_ts_files 
     imageCutter_en_US.ts)
 
+execute_process(COMMAND ${SlopeCraft_Qt_lrelease_executable} ${imageCutter_ts_files}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+
 set(imageCutter_project_sources
     CutterWind.h 
     CutterWind.cpp 
@@ -29,6 +33,7 @@ set(imageCutter_project_sources
     CutterWind.ui 
     ${imageCutter_ts_files}
     ${imageCutter_windows_rc_files}
+    imageCutter_translate.qrc
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -36,7 +41,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${imageCutter_project_sources}
     )
-    qt_create_translation(imageCutter_qm_files ${CMAKE_SOURCE_DIR} ${imageCutter_ts_files})
+    #qt_create_translation(imageCutter_qm_files ${CMAKE_SOURCE_DIR} ${imageCutter_ts_files})
 
 else()
     if(ANDROID)

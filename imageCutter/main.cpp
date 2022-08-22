@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include <QDesktopServices>
 #include <QUrl>
+#include <QFile>
 
 int main(int argc, char *argv[])
 {
@@ -15,6 +16,11 @@ int main(int argc, char *argv[])
     QTranslator translator;
     const QStringList uiLanguages = QLocale::system().uiLanguages();
 
+    if(QFile(":/i18n/imageCutter_en_US.qm").exists())
+        qDebug("成功找到资源文件");
+    else
+        qDebug("没有找到资源文件");
+
     if(uiLanguages.contains("zh-CN"))
         goto makeWindow;
 
@@ -23,6 +29,7 @@ int main(int argc, char *argv[])
         const QString baseName = "imageCutter_" + QLocale(locale).name();
         if (translator.load(":/i18n/" + baseName)) {
             a.installTranslator(&translator);
+            qDebug("成功加载翻译文件");
             break;
         }
     }
