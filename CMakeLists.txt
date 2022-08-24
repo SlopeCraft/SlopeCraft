@@ -65,6 +65,12 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # Install icon for macOS
 if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    # imageCutter.app
+    file(GLOB imageCutter_Icon
+    "imageCutter/others/imageCutterIconNew.icns")
+    install(FILES ${imageCutter_Icon}
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/imageCutter.app/Contents/Resources)
+    # SlopeCraft.app
     file(GLOB SlopeCraft_Icon
     "SlopeCraftMain/others/SlopeCraftIconNew.icns")
     install(FILES ${SlopeCraft_Icon}
