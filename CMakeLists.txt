@@ -63,6 +63,14 @@ add_subdirectory(SlopeCraftMain)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+# Install icon for macOS
+if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    file(GLOB SlopeCraft_Icon
+    "SlopeCraftMain/others/SlopeCraftIconNew.icns")
+    install(FILES ${SlopeCraft_Icon}
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/SlopeCraft.app/Contents/Resources)
+endif()
+
 # Install Blocks
 if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     # Install for macOS
