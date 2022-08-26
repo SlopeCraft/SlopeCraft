@@ -10,45 +10,46 @@ include_directories(${SlopeCraft_Eigen3_include_dir}
 set(SlopeCraft_SCL_windows_rc_files)
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 	message("Configuring on Windows.")
-    set(SlopeCraft_SCL_windows_rc_files others/SlopeCraftL.rc)
+    set(SlopeCraft_SCL_windows_rc_files 
+        ${CMAKE_CURRENT_SOURCE_DIR}/others/SlopeCraftL.rc)
 endif()
 
 
 set(SlopeCraft_SCL_sources 
-    AiCvterOpt.h 
-    ColorSet.h 
-    HeightLine.h 
-    newNBTWriter.hpp 
-    OptiChain.h 
-    PrimGlassBuilder.h 
-    SCLDefines.h 
-    TokiColor.h 
-    TokiSlopeCraft.h 
-    WaterItem.h 
-    lossyCompressor.h 
-    object_pool.hpp 
-    simpleBlock.h 
-    SlopeCraftL.h 
-    SlopeCraftL_global.h 
-    defines_of_extern_classes.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/AiCvterOpt.h 
+    ${CMAKE_CURRENT_SOURCE_DIR}/ColorSet.h 
+    ${CMAKE_CURRENT_SOURCE_DIR}/HeightLine.h 
+    ${CMAKE_CURRENT_SOURCE_DIR}/newNBTWriter.hpp 
+    ${CMAKE_CURRENT_SOURCE_DIR}/OptiChain.h 
+    ${CMAKE_CURRENT_SOURCE_DIR}/PrimGlassBuilder.h 
+    ${CMAKE_CURRENT_SOURCE_DIR}/SCLDefines.h 
+    ${CMAKE_CURRENT_SOURCE_DIR}/TokiColor.h 
+    ${CMAKE_CURRENT_SOURCE_DIR}/TokiSlopeCraft.h 
+    ${CMAKE_CURRENT_SOURCE_DIR}/WaterItem.h 
+    ${CMAKE_CURRENT_SOURCE_DIR}/lossyCompressor.h 
+    ${CMAKE_CURRENT_SOURCE_DIR}/object_pool.hpp 
+    ${CMAKE_CURRENT_SOURCE_DIR}/simpleBlock.h 
+    ${CMAKE_CURRENT_SOURCE_DIR}/SlopeCraftL.h 
+    ${CMAKE_CURRENT_SOURCE_DIR}/SlopeCraftL_global.h 
+    ${CMAKE_CURRENT_SOURCE_DIR}/defines_of_extern_classes.h
 
-    AiCvterOpt.cpp 
-    CIEDE00.cpp 
-    ColorSource.cpp 
-    HeightLine.cpp 
-    OptiChain.cpp 
-    PrimGlassBuilder.cpp 
-    SlopeCraftL_CAPI.cpp 
-    TokiSlopeCraft.cpp 
-    TokiSlopeCraft_build.cpp 
-    TokiSlopeCraft_convert.cpp 
-    WaterItem.cpp 
-    colorset.cpp 
-    imagePreprocess.cpp 
-    lossyCompressor.cpp 
-    simpleBlock.cpp 
-    tokicolor.cpp 
-    SlopeCraftL.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/AiCvterOpt.cpp 
+    ${CMAKE_CURRENT_SOURCE_DIR}/CIEDE00.cpp 
+    ${CMAKE_CURRENT_SOURCE_DIR}/ColorSource.cpp 
+    ${CMAKE_CURRENT_SOURCE_DIR}/HeightLine.cpp 
+    ${CMAKE_CURRENT_SOURCE_DIR}/OptiChain.cpp 
+    ${CMAKE_CURRENT_SOURCE_DIR}/PrimGlassBuilder.cpp 
+    ${CMAKE_CURRENT_SOURCE_DIR}/SlopeCraftL_CAPI.cpp 
+    ${CMAKE_CURRENT_SOURCE_DIR}/TokiSlopeCraft.cpp 
+    ${CMAKE_CURRENT_SOURCE_DIR}/TokiSlopeCraft_build.cpp 
+    ${CMAKE_CURRENT_SOURCE_DIR}/TokiSlopeCraft_convert.cpp 
+    ${CMAKE_CURRENT_SOURCE_DIR}/WaterItem.cpp 
+    ${CMAKE_CURRENT_SOURCE_DIR}/colorset.cpp 
+    ${CMAKE_CURRENT_SOURCE_DIR}/imagePreprocess.cpp 
+    ${CMAKE_CURRENT_SOURCE_DIR}/lossyCompressor.cpp 
+    ${CMAKE_CURRENT_SOURCE_DIR}/simpleBlock.cpp 
+    ${CMAKE_CURRENT_SOURCE_DIR}/tokicolor.cpp 
+    ${CMAKE_CURRENT_SOURCE_DIR}/SlopeCraftL.cpp
     
     ${SlopeCraft_SCL_windows_rc_files}
     )
@@ -62,12 +63,30 @@ target_link_libraries(SlopeCraftL PUBLIC GAConverter -lz)
 set_target_properties(SlopeCraftL PROPERTIES
     PREFIX ""
     VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_GUI_IDENTIFIER "github.com/ToKiNoBug/SlopeCraft"
+    MACOSX_BUNDLE_GUI_IDENTIFIER "github.com.ToKiNoBug.SlopeCraft"
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
 )
 
 install(TARGETS SlopeCraftL 
-    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/please_delete_this_folder)
+    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX} 
+    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX})
+
+
+install(TARGETS SlopeCraftL 
+    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/Cpp/lib
+    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/Cpp/lib)
+
+set(SlopeCraft_SCL_Cpp_include_files 
+    
+    SlopeCraftL.h 
+    SlopeCraftL_global.h 
+    defines_of_extern_classes.h
+    )
+
+install(FILES ${SlopeCraft_SCL_Cpp_include_files}
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/Cpp/include)
+
+
+add_subdirectory(SCL_C)
