@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
-project(SlopeCraft VERSION 3.9.0 LANGUAGES CXX)
+
+set(SlopeCraft_version 3.9.0)
+
+project(SlopeCraft VERSION ${SlopeCraft_version} LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 
 # manage the install prefix
