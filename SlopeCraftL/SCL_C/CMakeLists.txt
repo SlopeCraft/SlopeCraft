@@ -34,7 +34,7 @@ install(TARGETS SlopeCraftL_C
 set(SlopeCraft_SCL_C_include_files 
     
     ../SlopeCraftL.h 
-    ../SlopeCraftL_global.h 
+    SlopeCraftL_global.h # a copy from ../SlopeCraft_global.h, an extra line `#define SCL_CAPI` is added in this file 
     )
 
 install(FILES ${SlopeCraft_SCL_C_include_files}
