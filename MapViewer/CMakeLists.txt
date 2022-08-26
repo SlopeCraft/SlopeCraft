@@ -28,6 +28,12 @@ set(MapViewer_source_files
     MapViewerWind.cpp     
     )
 
+set(MapViewer_windows_rc_files)
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    message("Configuring on Windows.")
+    set(MapViewer_windows_rc_files others/MapViewer.rc)
+endif()
+
 set(MapViewer_ts_files
     MapViewer_en_US.ts)
 
@@ -50,6 +56,7 @@ set(MapViewer_project_sources
     MapViewerWind.ui
     images.qrc
     ${MapViewer_ts_files}
+    ${MapViewer_windows_rc_files}
     )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -73,7 +80,8 @@ target_link_libraries(MapViewer
 
 set_target_properties(MapViewer PROPERTIES
     VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_GUI_IDENTIFIER "github.com/ToKiNoBug/SlopeCraft"
+    MACOSX_BUNDLE_ICON_FILE MapViewer.icns
+    MACOSX_BUNDLE_GUI_IDENTIFIER "com.github.ToKiNoBug.SlopeCraft"
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE

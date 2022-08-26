@@ -13,6 +13,16 @@
   <property name="windowTitle">
    <string>SlopeCraft MapViewer</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>others/MapViewer_16.png</normaloff>others/MapViewer_16.png</iconset>
+  </property>
+  <property name="iconSize">
+   <size>
+    <width>16</width>
+    <height>16</height>
+   </size>
+  </property>
   <property name="unifiedTitleAndToolBarOnMac">
    <bool>true</bool>
   </property>
@@ -302,8 +312,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>756</width>
-             <height>449</height>
+             <width>98</width>
+             <height>33</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="area_show_single_map_layout">
@@ -344,8 +354,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>756</width>
-             <height>462</height>
+             <width>98</width>
+             <height>44</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_5">
