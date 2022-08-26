@@ -25,8 +25,9 @@ This file is part of SlopeCraft.
 #include <QRgb>
 #include <unsupported/Eigen/CXX11/Tensor>
 
-
 #include "MainWindow.h"
+
+#include <QPushButton>
 
 const ushort MainWindow::BLCreative[64] = {
     0, 0, 1, 1, 0, 0, 0, 0, 3, 0, 4, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
@@ -77,7 +78,7 @@ MainWindow::MainWindow(QWidget *parent)
 
   proTracker = nullptr;
 
-  ProductDir="";
+  ProductDir = "";
 
   Manager = new BlockListManager(
       (QHBoxLayout *)ui->scrollAreaWidgetContents->layout());
@@ -572,9 +573,16 @@ void MainWindow::turnToPage(int page) {
   page %= 9;
   QString newtitle = "SlopeCraft ";
 
-          newtitle += SlopeCraft::Kernel::getSCLVersion();
+  newtitle += SlopeCraft::Kernel::getSCLVersion();
+#ifdef WIN32
+  newtitle += " Copyright © 2021-2022 TokiNoBug    "; // windows
+#elif defined(_MAC) || defined(__APPLE__)
+  newtitle +=
+      " Copyright © 2021-2022 TokiNoBug,AbrasiveBoar, Cubik65536   "; // macOs
+#else
+  newtitle += " Copyright © 2021-2022 TokiNoBug    "; // unknown platform
+#endif
 
-          newtitle += " Copyright © 2021-2022 TokiNoBug    ";
   switch (page) {
   case 0:
     newtitle += "Step 0 / 6";
@@ -1494,7 +1502,8 @@ void MainWindow::on_Build4Lite_clicked() {
 
   bool allowBridge = ui->allowGlassBridge->isChecked();
   SlopeCraft::glassBridgeSettings gBS =
-      allowBridge ? SlopeCraft::glassBridgeSettings::withBridge : SlopeCraft::glassBridgeSettings::noBridge;
+      allowBridge ? SlopeCraft::glassBridgeSettings::withBridge
+                  : SlopeCraft::glassBridgeSettings::noBridge;
 
   kernel->decreaseStep(SlopeCraft::step::converted);
   ui->ExportLite->setEnabled(false);
@@ -1531,7 +1540,8 @@ void MainWindow::onExportLiteclicked(QString path) {
   if (path.isEmpty()) {
     FileName = QFileDialog::getSaveFileName(
                    this, tr("导出为投影/结构方块文件"), "",
-                   tr("投影文件(*.litematic) ;; 结构方块文件(*.nbt);;WorldEdit原理图(*.schem)"))
+                   tr("投影文件(*.litematic) ;; "
+                      "结构方块文件(*.nbt);;WorldEdit原理图(*.schem)"))
                    .toLocal8Bit()
                    .data();
   } else {
@@ -1541,14 +1551,15 @@ void MainWindow::onExportLiteclicked(QString path) {
   char unCbuf[512] = "";
   if (FileName.empty())
     return;
-  const bool putLitematic = (FileName.substr(FileName.length() -
-                                       strlen(".litematic")) == ".litematic");
+  const bool putLitematic =
+      (FileName.substr(FileName.length() - strlen(".litematic")) ==
+       ".litematic");
   const bool putStructure =
       (FileName.substr(FileName.length() - strlen(".nbt")) == ".nbt");
-  const bool putWESchem=
-          (FileName.substr(FileName.length() - strlen(".schem")) == ".schem");
+  const bool putWESchem =
+      (FileName.substr(FileName.length() - strlen(".schem")) == ".schem");
 
-  if (!putLitematic && !putStructure&&!putWESchem) {
+  if (!putLitematic && !putStructure && !putWESchem) {
     qDebug("得到的文件路径有错！");
     return;
   }
@@ -1563,7 +1574,7 @@ void MainWindow::onExportLiteclicked(QString path) {
 
   if (putStructure)
     kernel->exportAsStructure(FileName.data(), unCbuf);
-  else if(putLitematic)
+  else if (putLitematic)
     kernel->exportAsLitematic(
         FileName.data(), ui->InputLiteName->text().toUtf8().data(),
         (ui->InputRegionName->text() + tr("(xz坐标=-65±128×整数)"))
@@ -1572,37 +1583,36 @@ void MainWindow::onExportLiteclicked(QString path) {
         unCbuf);
 
   else {
-      int offset[3]={0,0,0},weOffset[3]={0,0,0};
-      QString dependModsListString=ui->schem_required_mods->toPlainText();
-      QStringList modList=dependModsListString.split('\n');
+    int offset[3] = {0, 0, 0}, weOffset[3] = {0, 0, 0};
+    QString dependModsListString = ui->schem_required_mods->toPlainText();
+    QStringList modList = dependModsListString.split('\n');
 
-      std::vector<std::string> stdStrList(modList.size());
-      std::vector<const char*> charPtrs;
-      for(int idx=0;idx<int(stdStrList.size());idx++) {
-          stdStrList[idx]=modList[idx].toUtf8().data();
-          charPtrs.emplace_back(stdStrList[idx].data());
-      }
+    std::vector<std::string> stdStrList(modList.size());
+    std::vector<const char *> charPtrs;
+    for (int idx = 0; idx < int(stdStrList.size()); idx++) {
+      stdStrList[idx] = modList[idx].toUtf8().data();
+      charPtrs.emplace_back(stdStrList[idx].data());
+    }
 
-      const std::array<const QLineEdit*,3> offsetSrc
-              ({ui->schem_offsetX,ui->schem_offsetY,ui->schem_offsetZ});
-      const std::array<const QLineEdit*,3> weOffsetSrc
-              ({ui->schem_weOffsetX,ui->schem_weOffsetY,ui->schem_weOffsetZ});
+    const std::array<const QLineEdit *, 3> offsetSrc(
+        {ui->schem_offsetX, ui->schem_offsetY, ui->schem_offsetZ});
+    const std::array<const QLineEdit *, 3> weOffsetSrc(
+        {ui->schem_weOffsetX, ui->schem_weOffsetY, ui->schem_weOffsetZ});
 
-      for(int d=0;d<3;d++) {
-          bool ok=true;
-          int result=offsetSrc[d]->text().toInt(&ok);
-          if(ok)
-              offset[d]=result;
+    for (int d = 0; d < 3; d++) {
+      bool ok = true;
+      int result = offsetSrc[d]->text().toInt(&ok);
+      if (ok)
+        offset[d] = result;
 
-          result=weOffsetSrc[d]->text().toInt(&ok);
-          if(ok)
-              weOffset[d]=result;
-      }
+      result = weOffsetSrc[d]->text().toInt(&ok);
+      if (ok)
+        weOffset[d] = result;
+    }
 
-      kernel->exportAsWESchem(FileName.data(),
-                              offset,weOffset,
-                              ui->schem_name->text().toUtf8().data(),
-                              charPtrs.data(),charPtrs.size(),unCbuf);
+    kernel->exportAsWESchem(FileName.data(), offset, weOffset,
+                            ui->schem_name->text().toUtf8().data(),
+                            charPtrs.data(), charPtrs.size(), unCbuf);
   }
 
   // unCompressed=unCbuf;
@@ -1721,10 +1731,10 @@ void MainWindow::switchLan(Language lang) {
   qDebug("开始调整语言");
   emit Manager->translate(lang);
 
-  if(QFile(":/new/Pic/BG3.png").exists()) {
-      qDebug("File exists.");
-  }else
-      qDebug("File doesn't exists.");
+  if (QFile(":/new/Pic/BG3.png").exists()) {
+    qDebug("File exists.");
+  } else
+    qDebug("File doesn't exists.");
 
   if (lang == EN) {
     if (!trans.load(":/i18n/SlopeCraft_en_US.qm")) {
@@ -1750,12 +1760,15 @@ void MainWindow::on_allowGlassBridge_stateChanged(int arg1) {
   ui->glassBridgeInterval->setEnabled(arg1);
 }
 
-void MainWindow::showError(void *p, SlopeCraft::errorFlag error, const char * msg) {
+void MainWindow::showError(void *p, SlopeCraft::errorFlag error,
+                           const char *msg) {
   MainWindow *wind = (MainWindow *)p;
   QString title, text;
   bool isFatal = false;
 
-  const QString detail=(msg==nullptr)?(""):(tr("\n具体信息：")+QString::fromStdString(msg));
+  const QString detail =
+      (msg == nullptr) ? ("")
+                       : (tr("\n具体信息：") + QString::fromStdString(msg));
 
   switch (error) {
   case SlopeCraft::errorFlag::NO_ERROR_OCCUR:
@@ -1819,10 +1832,11 @@ void MainWindow::showError(void *p, SlopeCraft::errorFlag error, const char * ms
     break;
   }
   if (isFatal)
-    QMessageBox::warning(wind, title, text+detail, QMessageBox::StandardButton::Ok,
+    QMessageBox::warning(wind, title, text + detail,
+                         QMessageBox::StandardButton::Ok,
                          QMessageBox::StandardButton::NoButton);
   else {
-    QMessageBox::critical(wind, title, text+detail,
+    QMessageBox::critical(wind, title, text + detail,
                           QMessageBox::StandardButton::Close);
     emit wind->ui->Exit->clicked();
   }
