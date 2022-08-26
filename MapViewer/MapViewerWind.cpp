@@ -10,7 +10,6 @@
 #include <QPainter>
 #include <QPen>
 
-
 #include <list>
 #include <mutex>
 
@@ -61,6 +60,21 @@ std::array<ARGB, 256> make_map_LUT() {
   return result;
 }
 
+void RGB2XYZ(const double R, const double G, const double B, double *const X,
+             double *const Y, double *const Z) noexcept {
+  *X = 0.412453 * R + 0.357580 * G + 0.180423 * B;
+  *Y = 0.212671 * R + 0.715160 * G + 0.072169 * B;
+  *Z = 0.019334 * R + 0.119193 * G + 0.950227 * B;
+  return;
+}
+
+void XYZ2RGB(const double x, const double y, const double z, double *const r,
+             double *const g, double *const b) noexcept {
+  *r = 3.2404814 * x - 1.5371516 * y - 0.4985363 * z,
+  *g = -0.9692550 * x + 1.8759900 * y + 0.0415559 * z,
+  *b = 0.0556466 * x - 0.2040413 * y + 1.0573111 * z;
+}
+
 std::array<ARGB, 256> make_inverse_map_LUT(const std::array<ARGB, 256> &src) {
   std::array<ARGB, 256> result;
   for (size_t idx = 0; idx < src.size(); idx++) {
@@ -69,9 +83,17 @@ std::array<ARGB, 256> make_inverse_map_LUT(const std::array<ARGB, 256> &src) {
     ARGB g = (argb >> 8) & 0xFF;
     ARGB b = (argb)&0xFF;
 
+    double x, y, z, _r, _g, _b;
+    RGB2XYZ(r / 255.0, g / 255.0, g / 255.0, &x, &y, &z);
+    XYZ2RGB(1 - x, 1 - y, 1 - z, &_r, &_g, &_b);
+    r = ARGB(std::max(std::min(_r * 255, 255.0), 0.0));
+    g = ARGB(std::max(std::min(_g * 255, 255.0), 0.0));
+    b = ARGB(std::max(std::min(_b * 255, 255.0), 0.0));
+    /*
     r = 255 - r;
     g = 255 - g;
     b = 255 - b;
+    */
     result[idx] = (0xFF << 24) | (r << 16) | (g << 8) | (b);
   }
   return result;
