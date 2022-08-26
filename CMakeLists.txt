@@ -120,3 +120,14 @@ else()
     install(FILES ${SlopeCraft_install_png_customblocks}
     DESTINATION ${CMAKE_INSTALL_PREFIX}/Blocks/CustomBlocks)
 endif()
+
+set(SlopeCraft_readme_and_license_files
+    
+    LICENSE 
+    README.md 
+    README_EN.md
+    docs/简体中文版协议.txt
+    )
+
+install(FILES ${SlopeCraft_readme_and_license_files}
+    DESTINATION ${CMAKE_INSTALL_PREFIX})
