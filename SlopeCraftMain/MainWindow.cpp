@@ -155,6 +155,9 @@ MainWindow::MainWindow(QWidget *parent)
   connect(ui->ExLite, &QPushButton::clicked, this, &MainWindow::turnToPage5);
   connect(ui->ExStructure, &QPushButton::clicked, this,
           &MainWindow::turnToPage5);
+  connect(ui->ExWESchem, &QPushButton::clicked, this, &MainWindow::turnToPage5);
+  connect(ui->ExportFlatDiagram, &QPushButton::clicked, this,
+          &MainWindow::turnToPage5);
 
   connect(ui->ExData, &QPushButton::clicked, this, &MainWindow::turnToPage7);
   connect(ui->FinishExLite, &QPushButton::clicked, this,
@@ -2263,6 +2266,13 @@ void MainWindow::testBlockList() {
 }
 
 void MainWindow::on_ExLite_clicked() {
-
+  ui->tabExport3DInfo->setCurrentIndex(0);
 }
 
+void MainWindow::on_ExStructure_clicked() {
+  ui->tabExport3DInfo->setCurrentIndex(1);
+}
+
+void MainWindow::on_ExWESchem_clicked() {
+  ui->tabExport3DInfo->setCurrentIndex(2);
+}

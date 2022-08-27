@@ -204,6 +204,12 @@ private slots:
 
   void onActionAiCvterParameters();
 
+  void on_ExLite_clicked();
+
+  void on_ExStructure_clicked();
+
+  void on_ExWESchem_clicked();
+
   // for Page5
   void on_Build4Lite_clicked();
   void on_ManualPreview_clicked();
