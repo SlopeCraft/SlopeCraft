@@ -17,7 +17,7 @@ endif()
 
 set(SlopeCraft_SCL_windows_rc_files)
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-	message("Configuring on Windows.")
+	message("Configuring on Windows. Adding rc file to " ${PROJECT_NAME})
     set(SlopeCraft_SCL_windows_rc_files 
         ${CMAKE_CURRENT_SOURCE_DIR}/others/SlopeCraftL.rc)
 endif()
