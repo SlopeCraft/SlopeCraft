@@ -144,8 +144,8 @@ bool SCL_EXPORT SCL_setType(Kernel *k, mapTypes a, gameVersion b,
   return k->setType(a, b, c, d);
 }
 /// get palette (base colors only) in ARGB32
-void SCL_EXPORT SCL_getARGB32(const Kernel *k, unsigned int *a) {
-  k->getARGB32(a);
+void SCL_EXPORT SCL_getBaseColorsInARGB32(const Kernel *k, unsigned int *a) {
+  k->getBaseColorInARGB32(a);
 }
 
 // can do in wait4Image:
@@ -157,6 +157,10 @@ void SCL_EXPORT SCL_setRawImage(Kernel *k, const unsigned int *src, int rows,
 /// get accessible color count
 unsigned short SCL_EXPORT SCL_getColorCount(const Kernel *k) {
   return k->getColorCount();
+}
+void SCL_EXPORT getAvailableColors(const Kernel *k, unsigned int *const dest,
+                                   int *const num) {
+  k->getAvailableColors(dest, num);
 }
 /// make a structure that includes all accessible blocks
 void SCL_EXPORT SCL_makeTests(Kernel *k, const AbstractBlock **a,

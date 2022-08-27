@@ -6,26 +6,25 @@
 namespace SlopeCraft {
 
 #ifndef SCL_CAPI
-    using AbstractBlock=::SlopeCraft::AbstractBlock;
-    using AiCvterOpt=::SlopeCraft::AiCvterOpt;
-    using Kernel=::SlopeCraft::Kernel;
-#endif  //  #ifndef SCL_CAPI
+using AbstractBlock = ::SlopeCraft::AbstractBlock;
+using AiCvterOpt = ::SlopeCraft::AiCvterOpt;
+using Kernel = ::SlopeCraft::Kernel;
+#endif //  #ifndef SCL_CAPI
 
-    using step=::SCL_step;
-    using mapTypes=::SCL_mapTypes;
-    using compressSettings=::SCL_compressSettings;
-    using convertAlgo=::SCL_convertAlgo;
-    using glassBridgeSettings=::SCL_glassBridgeSettings;
-    using gameVersion=::SCL_gameVersion;
-    using workStatues=::SCL_workStatues;
-    using errorFlag=::SCL_errorFlag;
+using step = ::SCL_step;
+using mapTypes = ::SCL_mapTypes;
+using compressSettings = ::SCL_compressSettings;
+using convertAlgo = ::SCL_convertAlgo;
+using glassBridgeSettings = ::SCL_glassBridgeSettings;
+using gameVersion = ::SCL_gameVersion;
+using workStatues = ::SCL_workStatues;
+using errorFlag = ::SCL_errorFlag;
 
 }; // namespace SlopeCraft
 
-
 #ifndef SCL_CAPI
 namespace SlopeCraft {
-#endif  //  #ifndef SCL_CAPI
+#endif //  #ifndef SCL_CAPI
 
 SCL_external_class AbstractBlock {
 public:
@@ -65,7 +64,7 @@ public:
   /// set if this block can be burnt
   virtual void setBurnable(bool) = 0;
   /// let *b equal to *this
-  void copyTo(AbstractBlock *b) const;
+  void copyTo(AbstractBlock * b) const;
   /// set this block to air
   void clear();
   /// replacement for operator delete
@@ -104,7 +103,8 @@ public:
   virtual void setAlgoProgressAdd(void (*)(void *, int)) = 0;
 
   /// a function ptr to report error when something wrong happens
-  virtual void setReportError(void (*)(void *, ::SCL_errorFlag, const char *)) = 0;
+  virtual void setReportError(
+      void (*)(void *, ::SCL_errorFlag, const char *)) = 0;
   /// a function ptr to report working statue especially when busy
   virtual void setReportWorkingStatue(void (*)(void *, ::SCL_workStatues)) = 0;
 
@@ -127,20 +127,24 @@ public:
   virtual bool setType(::SCL_mapTypes, ::SCL_gameVersion, const bool[64],
                        const AbstractBlock *[64]) = 0;
   /// get palette (base colors only) in ARGB32
-  virtual void getARGB32(unsigned int *) const = 0;
+  virtual void getBaseColorInARGB32(unsigned int *const) const = 0;
 
   // can do in wait4Image:
   /// set original image from ARGB32 matrix (col-major)
   virtual void setRawImage(const unsigned int *src, int rows, int cols) = 0;
   /// get accessible color count
   virtual unsigned short getColorCount() const = 0;
+  /// get usable colors in ARGB32
+  virtual void getAvailableColors(unsigned int *const dest,
+                                  int *const num = nullptr) const = 0;
   /// make a structure that includes all accessible blocks
   virtual void makeTests(const AbstractBlock **, const unsigned char *,
                          const char *, char *) = 0;
 
   // can do in convertionReady:
   /// convert original image to map
-  virtual bool convert(::SCL_convertAlgo = ::SCL_convertAlgo::RGB_Better, bool dither = false) = 0;
+  virtual bool convert(::SCL_convertAlgo = ::SCL_convertAlgo::RGB_Better,
+                       bool dither = false) = 0;
   /// get image rows
   virtual int getImageRows() const = 0;
   /// get image cols
@@ -152,36 +156,36 @@ public:
 
   // can do in converted:
   /// construct 3D structure
-  virtual bool build(::SCL_compressSettings = ::SCL_compressSettings::noCompress, unsigned short = 256,
-                     ::SCL_glassBridgeSettings = ::SCL_glassBridgeSettings::noBridge, unsigned short = 3,
-                     bool fireProof = false, bool endermanProof = false) = 0;
+  virtual bool build(
+      ::SCL_compressSettings = ::SCL_compressSettings::noCompress,
+      unsigned short = 256,
+      ::SCL_glassBridgeSettings = ::SCL_glassBridgeSettings::noBridge,
+      unsigned short = 3, bool fireProof = false,
+      bool endermanProof = false) = 0;
 
   /// get converted image
-  virtual void getConvertedImage(int *rows, int *cols,
-                                 unsigned int *dest) const = 0;
+  virtual void getConvertedImage(int *rows, int *cols, unsigned int *dest)
+      const = 0;
   /// export as map data files
   virtual void exportAsData(const char *FolderPath, const int indexStart,
                             int *fileCount, char **dest) const = 0;
   /// get converted map(in mapColor array)
-  virtual void getConvertedMap(int *rows, int *cols,
-                               unsigned char *) const = 0;
+  virtual void getConvertedMap(int *rows, int *cols, unsigned char *) const = 0;
 
   // can do in builded:
   /// export map into litematica files (*.litematic)
-  virtual void exportAsLitematic(const char *localEncoding_TargetName,
-                                 const char *utf8_LiteName,
-                                 const char *utf8_RegionName,
-                                 char *localEncoding_returnVal) const = 0;
+  virtual void exportAsLitematic(
+      const char *localEncoding_TargetName, const char *utf8_LiteName,
+      const char *utf8_RegionName, char *localEncoding_returnVal) const = 0;
   /// export map into Structure files (*.NBT)
   virtual void exportAsStructure(const char *localEncoding_TargetName,
                                  char *localEncoding_FileName) const = 0;
-  virtual void exportAsWESchem(const char * localEncoding_fileName,
-                               const int (&offset)[3]={0,0,0},
-                               const int (&weOffset)[3]={0,0,0},
-                                 const char * utf8_Name="",
-                                 const char *const*const utf8_requiredMods=nullptr,
-                                 const int requiredModsCount=0,
-                                 char * localEncoding_returnVal=nullptr) const=0;
+  virtual void exportAsWESchem(
+      const char *localEncoding_fileName, const int(&offset)[3] = {0, 0, 0},
+      const int(&weOffset)[3] = {0, 0, 0}, const char *utf8_Name = "",
+      const char *const *const utf8_requiredMods = nullptr,
+      const int requiredModsCount = 0, char *localEncoding_returnVal = nullptr)
+      const = 0;
 
   /// get x,y,z size
   virtual void get3DSize(int *x, int *y, int *z) const = 0;

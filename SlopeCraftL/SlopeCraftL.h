@@ -298,7 +298,7 @@ void SCL_EXPORT SCL_setReportWorkingStatue(Kernel *k,
 bool SCL_EXPORT SCL_setType(Kernel *k, SCL_mapTypes, SCL_gameVersion,
                             const bool[64], const AbstractBlock *[64]);
 /// get palette (base colors only) in ARGB32
-void SCL_EXPORT SCL_getARGB32(const Kernel *k, unsigned int *);
+void SCL_EXPORT SCL_getBaseColorsInARGB32(const Kernel *k, unsigned int *);
 
 // can do in wait4Image:
 /// set original image from ARGB32 matrix (col-major)
@@ -309,6 +309,9 @@ unsigned short SCL_EXPORT SCL_getColorCount(const Kernel *k);
 /// make a structure that includes all accessible blocks
 void SCL_EXPORT SCL_makeTests(Kernel *k, const AbstractBlock **,
                               const unsigned char *, const char *, char *);
+/// get avaliable colors in argb32
+void SCL_EXPORT getAvailableColors(const Kernel *k, unsigned int *const dest,
+                                   int *const num);
 
 // can do in convertionReady:
 /// convert original image to map

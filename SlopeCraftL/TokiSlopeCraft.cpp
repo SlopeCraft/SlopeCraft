@@ -332,6 +332,30 @@ uint16_t TokiSlopeCraft::getColorCount() const {
   return Allowed.colorCount();
 }
 
+void TokiSlopeCraft::getAvailableColors(ARGB *const dest,
+                                        int *const num) const {
+  if (num != nullptr) {
+    *num = getColorCount();
+  }
+  if (dest == nullptr) {
+    return;
+  }
+
+  for (int idx = 0; idx < TokiSlopeCraft::Allowed._RGB.rows(); idx++) {
+    ARGB r, g, b, a;
+    if (mapColor2baseColor(Allowed.Map[idx]) != 0)
+      a = 255;
+    else
+      a = 0;
+
+    r = ARGB(Allowed._RGB(idx, 0) * 255);
+    g = ARGB(Allowed._RGB(idx, 1) * 255);
+    b = ARGB(Allowed._RGB(idx, 2) * 255);
+
+    dest[idx] = (a << 24) | (r << 16) | (g << 8) | (b);
+  }
+}
+
 void TokiSlopeCraft::setRawImage(const ARGB *src, int rows, int cols) {
   setRawImage(EImage::Map(src, rows, cols));
 }
@@ -361,15 +385,7 @@ bool TokiSlopeCraft::isFlat() const {
   return mapType == Flat || mapType == Wall;
 }
 
-void TokiSlopeCraft::getARGB32(ARGB *dest) const {
-  /*
-  if (kernelStep < colorSetReady)
-  {
-      reportError(wind, errorFlag::HASTY_MANIPULATION,
-                  "You can call getARGB32 only after you loaded the colorset.");
-      return;
-  }
-  */
+void TokiSlopeCraft::getBaseColorInARGB32(ARGB *const dest) const {
   if (dest == nullptr)
     return;
 

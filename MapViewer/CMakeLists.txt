@@ -10,6 +10,14 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
+
+find_package(ZLIB 1.2.11)
+
+#message("ZLIB_INCLUDE_DIR = " ${ZLIB_INCLUDE_DIR})
+if(ZLIB_FOUND)
+    include_directories(ZLIB_INCLUDE_DIR)
+endif()
+
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools REQUIRED)
 

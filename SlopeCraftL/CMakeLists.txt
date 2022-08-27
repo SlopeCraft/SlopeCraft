@@ -7,6 +7,14 @@ include_directories(${SlopeCraft_Eigen3_include_dir}
     ../GAConverter
 )
 
+
+find_package(ZLIB 1.2.11)
+
+#message("ZLIB_INCLUDE_DIR = " ${ZLIB_INCLUDE_DIR})
+if(ZLIB_FOUND)
+    include_directories(ZLIB_INCLUDE_DIR)
+endif()
+
 set(SlopeCraft_SCL_windows_rc_files)
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 	message("Configuring on Windows.")
