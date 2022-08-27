@@ -3,8 +3,8 @@
 IDI_ICON1	ICON	"MapViewer.ico"
 
 VS_VERSION_INFO VERSIONINFO
-	FILEVERSION 3,9,0,0
-	PRODUCTVERSION 3,9,0,0
+	FILEVERSION 3,10,0,0
+	PRODUCTVERSION 3,10,0,0
 	FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
 	FILEFLAGS VS_FF_DEBUG
@@ -21,11 +21,11 @@ VS_VERSION_INFO VERSIONINFO
 			BEGIN
 				VALUE "CompanyName", "\0"
 				VALUE "FileDescription", "SlopeCraft MapViewer\0"
-				VALUE "FileVersion", "3.9.0.0\0"
+				VALUE "FileVersion", "3.10.0.0\0"
 				VALUE "LegalCopyright", "TokiNoBug\0"
 				VALUE "OriginalFilename", "MapViewer.exe\0"
 				VALUE "ProductName", "MapViewer\0"
-				VALUE "ProductVersion", "3.9.0.0\0"
+				VALUE "ProductVersion", "3.10.0.0\0"
 				VALUE "InternalName", "MapViewer\0"
 				VALUE "Comments", "SlopeCraft Tools\0"
 				VALUE "LegalTrademarks", "\0"

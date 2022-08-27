@@ -21,95 +21,88 @@ This file is part of SlopeCraft.
 */
 
 #include "SlopeCraftL.h"
-#include "simpleBlock.h"
 #include "TokiSlopeCraft.h"
+#include "simpleBlock.h"
+
 using namespace SlopeCraft;
 
+namespace SlopeCraft {
+const Eigen::Array<float, 256, 3> &Basic4External = TokiSlopeCraft::Basic._RGB;
+const ColorList &Allowed4External = TokiSlopeCraft::Allowed._RGB;
+const MapList &AllowedMapList4External = TokiSlopeCraft::Allowed.Map;
 
-namespace SlopeCraft
-{
-const Eigen::Array<float,256,3> & Basic4External=TokiSlopeCraft::Basic._RGB;
-const ColorList & Allowed4External=TokiSlopeCraft::Allowed._RGB;
-const MapList & AllowedMapList4External=TokiSlopeCraft::Allowed.Map;
+} //  end namespace SlopeCraft
 
-}   //  end namespace SlopeCraft
-
-AbstractBlock * AbstractBlock::create() {
-    return new simpleBlock;
-}
+AbstractBlock *AbstractBlock::create() { return new simpleBlock; }
 
 AbstractBlock::AbstractBlock() {}
 
 void AbstractBlock::copyTo(AbstractBlock *dst) const {
-    dst->setBurnable(getBurnable());
-    dst->setDoGlow(getDoGlow());
-    dst->setEndermanPickable(getEndermanPickable());
-    dst->setId(getId());
-    dst->setIdOld(getIdOld());
-    dst->setNeedGlass(getNeedGlass());
-    dst->setVersion(getVersion());
-    //dst->setWallUseable(getWallUseable());
+  dst->setBurnable(getBurnable());
+  dst->setDoGlow(getDoGlow());
+  dst->setEndermanPickable(getEndermanPickable());
+  dst->setId(getId());
+  dst->setIdOld(getIdOld());
+  dst->setNeedGlass(getNeedGlass());
+  dst->setVersion(getVersion());
+  // dst->setWallUseable(getWallUseable());
 }
 
 void AbstractBlock::clear() {
-    setBurnable(false);
-    setDoGlow(false);
-    setEndermanPickable(false);
-    setId("minecraft:air");
-    setIdOld("");
-    setNeedGlass(false);
-    setVersion(0);
-    //setWallUseable(false);
+  setBurnable(false);
+  setDoGlow(false);
+  setEndermanPickable(false);
+  setId("minecraft:air");
+  setIdOld("");
+  setNeedGlass(false);
+  setVersion(0);
+  // setWallUseable(false);
 }
 
-Kernel::Kernel() {
+Kernel::Kernel() {}
+
+const char *Kernel::getSCLVersion() { return "v3.10.0"; }
+
+void Kernel::getColorMapPtrs(const float **f, const unsigned char **m,
+                             int *rows) {
+  if (f != nullptr)
+    *f = TokiSlopeCraft::Allowed._RGB.data();
+  if (m != nullptr)
+    *m = TokiSlopeCraft::Allowed.Map.data();
+  if (rows != nullptr)
+    *rows = TokiSlopeCraft::Allowed.Map.size();
 }
 
-const char * Kernel::getSCLVersion() {
-    return "v3.9.0";
+const float *Kernel::getBasicColorMapPtrs() {
+  return TokiSlopeCraft::Basic._RGB.data();
 }
 
-void Kernel::getColorMapPtrs(const float** f,const unsigned char** m,int* rows) {
-    if(f!=nullptr)
-        *f=TokiSlopeCraft::Allowed._RGB.data();
-    if(m!=nullptr)
-        *m=TokiSlopeCraft::Allowed.Map.data();
-    if(rows!=nullptr)
-        *rows=TokiSlopeCraft::Allowed.Map.size();
+Kernel *Kernel::create() {
+  // return (new TokiSlopeCraft)->toBaseClassPtr();
+  return static_cast<Kernel *>(new TokiSlopeCraft);
 }
-
-const float * Kernel::getBasicColorMapPtrs() {
-    return TokiSlopeCraft::Basic._RGB.data();
-}
-
-Kernel * Kernel::create() {
-    //return (new TokiSlopeCraft)->toBaseClassPtr();
-    return static_cast<Kernel*>(new TokiSlopeCraft);
-}
-
 
 uint64_t Kernel::mcVersion2VersionNumber(gameVersion g) {
-    switch (g) {
-    case gameVersion::ANCIENT:
-        return 114514;
-    case gameVersion::MC12:
-        return 1631;
-    case gameVersion::MC13:
-        return 1976;
-    case gameVersion::MC14:
-        return 2230;
-    case gameVersion::MC15:
-        return 2230;
-    case gameVersion::MC16:
-        return 2586;
-    case gameVersion::MC17:
-        return 2730;
-    case gameVersion::MC18:
-        return 2865;
-    case gameVersion::MC19:
-        return 3105;    // 1.19.0
-    default:
-        return 1919810;
-    }
+  switch (g) {
+  case gameVersion::ANCIENT:
+    return 114514;
+  case gameVersion::MC12:
+    return 1631;
+  case gameVersion::MC13:
+    return 1976;
+  case gameVersion::MC14:
+    return 2230;
+  case gameVersion::MC15:
+    return 2230;
+  case gameVersion::MC16:
+    return 2586;
+  case gameVersion::MC17:
+    return 2730;
+  case gameVersion::MC18:
+    return 2865;
+  case gameVersion::MC19:
+    return 3105; // 1.19.0
+  default:
+    return 1919810;
+  }
 }
-

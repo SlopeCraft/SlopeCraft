@@ -21,7 +21,7 @@ This file is part of SlopeCraft.
 */
 
 #include "TokiSlopeCraft.h"
-#include "zlib.h"
+#include <zlib.h>
 
 const Eigen::Array<float, 2, 3> TokiSlopeCraft::DitherMapLR = {
     {0.0 / 16.0, 0.0 / 16.0, 7.0 / 16.0}, {3.0 / 16.0, 5.0 / 16.0, 1.0 / 16.0}};
@@ -34,7 +34,6 @@ ColorSet TokiSlopeCraft::Allowed(0);
 gameVersion TokiSlopeCraft::mcVer; // 12,13,14,15,16,17
 mapTypes TokiSlopeCraft::mapType;
 std::vector<simpleBlock> TokiSlopeCraft::blockPalette(0);
-
 
 TokiSlopeCraft::TokiSlopeCraft() {
   kernelStep = step::nothing;
@@ -122,8 +121,6 @@ void TokiSlopeCraft::trySkipStep(step s) {
   }
 }
 
-
-
 /*
 bool compressFile(const char *sourcePath, const char *destPath) {
   constexpr int bufferSize=2048;
@@ -163,22 +160,21 @@ bool compressFile(const char *sourcePath, const char *destPath) {
 */
 
 bool compressFile(const char *inputPath, const char *outputPath) {
-    const size_t BUFFER_SIZE = 2048;
-    std::ifstream fin;
-    fin.open(inputPath, std::ifstream::binary | std::ifstream::in);
-    if (!fin)
-        return false;
-    std::vector<char> buffer (BUFFER_SIZE, 0);
-    gzFile fout = gzopen(outputPath, "wb");
-    while (!fin.eof()) {
-        fin.read(buffer.data(), buffer.size());
-        std::streamsize s = fin.gcount();
-        gzwrite(fout, buffer.data(), s);
-    }
-    gzclose(fout);
-    return true;
+  const size_t BUFFER_SIZE = 2048;
+  std::ifstream fin;
+  fin.open(inputPath, std::ifstream::binary | std::ifstream::in);
+  if (!fin)
+    return false;
+  std::vector<char> buffer(BUFFER_SIZE, 0);
+  gzFile fout = gzopen(outputPath, "wb");
+  while (!fin.eof()) {
+    fin.read(buffer.data(), buffer.size());
+    std::streamsize s = fin.gcount();
+    gzwrite(fout, buffer.data(), s);
+  }
+  gzclose(fout);
+  return true;
 }
-
 
 step TokiSlopeCraft::queryStep() const { return kernelStep; }
 
@@ -320,13 +316,11 @@ bool TokiSlopeCraft::setType(mapTypes type, gameVersion ver,
   return setType(type, ver, allowedBaseColor, temp);
 }
 
-
 void TokiSlopeCraft::configGAConverter() {
   GACvter::updateMapColor2GrayLUT();
 
   GAConverter->setRawImage(rawImage);
 }
-
 
 uint16_t TokiSlopeCraft::getColorCount() const {
   if (kernelStep < wait4Image) {
@@ -385,7 +379,6 @@ void TokiSlopeCraft::getARGB32(ARGB *dest) const {
                255 * Basic._RGB(128 + base, 2), 255);
 }
 
-
 int64_t TokiSlopeCraft::sizePic(short dim) const {
   if (dim == 0)
     return rawImage.rows();
@@ -393,8 +386,6 @@ int64_t TokiSlopeCraft::sizePic(short dim) const {
     return rawImage.cols();
   return rawImage.size();
 }
-
-
 
 void TokiSlopeCraft::getTokiColorPtr(uint16_t col,
                                      const TokiColor **dst) const {
@@ -434,8 +425,7 @@ TokiSlopeCraft::ColorSpace TokiSlopeCraft::getColorSpace() const {
   return R;
 }
 
-void TokiSlopeCraft::getConvertedImage(int *rows, int *cols,
-                                       ARGB *dest) const {
+void TokiSlopeCraft::getConvertedImage(int *rows, int *cols, ARGB *dest) const {
   EImage result = getConovertedImage();
   if (rows != nullptr)
     *rows = result.rows();
@@ -514,15 +504,14 @@ int TokiSlopeCraft::getImageCols() const {
   return rawImage.cols();
 }
 
-
 void TokiSlopeCraft::get3DSize(int *x, int *y, int *z) const {
   if (kernelStep < builded)
     return;
-  if(x!=nullptr)
+  if (x != nullptr)
     *x = size3D[0];
-  if(y!=nullptr)
+  if (y != nullptr)
     *y = size3D[1];
-  if(z!=nullptr)
+  if (z != nullptr)
     *z = size3D[2];
   return;
 }
@@ -544,9 +533,9 @@ void TokiSlopeCraft::getBlockCounts(int *total, int detail[64]) const {
 }
 
 int64_t TokiSlopeCraft::getBlockCounts(std::vector<int64_t> *dest) const {
-    if(dest==nullptr) {
-        return -1;
-    }
+  if (dest == nullptr) {
+    return -1;
+  }
   if (kernelStep < builded)
     return -1;
   dest->resize(64);
@@ -572,8 +561,6 @@ int64_t TokiSlopeCraft::getBlockCounts() const {
   }
   return totalCount;
 }
-
-
 
 const unsigned char *TokiSlopeCraft::getBuild(int *xSize, int *ySize,
                                               int *zSize) const {

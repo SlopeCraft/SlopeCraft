@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 project(SlopeCraft_MapViewer VERSION ${SlopeCraft_version})
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include_directories(${SlopeCraft_Eigen3_include_dir})
 
