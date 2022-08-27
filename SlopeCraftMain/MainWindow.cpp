@@ -146,6 +146,8 @@ MainWindow::MainWindow(QWidget *parent)
           &MainWindow::testBlockList);
   connect(ui->actionSetBuildParameters, &QAction::triggered, this,
           &MainWindow::turnToPage5);
+  connect(ui->action_export_avaliable_color_list, &QAction::triggered, this,
+          &MainWindow::exportAvailableColors);
 
   qDebug("成功connect所有的菜单");
 
@@ -702,18 +704,18 @@ void MainWindow::turnToPage8() {
 }
 
 void MainWindow::updateEnables() {
+
   bool temp = true;
   ui->StartWithFlat->setEnabled(temp);
   ui->StartWithNotVanilla->setEnabled(temp);
   ui->StartWithNotVanilla->setEnabled(temp);
 
-  // temp=Kernel->queryStep()>=SlopeCraft::Kernel::convertionReady;
-  ui->Convert->setEnabled(temp);
-
   temp = kernel->queryStep() >= SlopeCraft::step::wait4Image;
   ui->actionTestBlockList->setEnabled(temp);
+  ui->action_export_avaliable_color_list->setEnabled(temp);
 
   temp = kernel->queryStep() >= SlopeCraft::step::convertionReady;
+  ui->Convert->setEnabled(temp);
   ui->ShowRaw->setEnabled(temp);
   // ui->Convert->setEnabled(temp);
 
@@ -963,7 +965,7 @@ void MainWindow::onGameVerClicked() {
   }
   kernel->decreaseStep(SlopeCraft::step::nothing);
   onBlockListChanged();
-  updateEnables();
+  this->kernelSetType();
 }
 
 void MainWindow::onMapTypeClicked() {
@@ -982,7 +984,8 @@ void MainWindow::onMapTypeClicked() {
   }*/
   kernel->decreaseStep(SlopeCraft::step::nothing);
   onBlockListChanged();
-  updateEnables();
+
+  this->kernelSetType();
 }
 
 void MainWindow::ChangeToCustom() {
@@ -1107,6 +1110,7 @@ void MainWindow::kernelSetType() {
 void MainWindow::kernelSetImg() {
   EImage rawImg = QImage2EImage(rawPic);
   kernel->setRawImage(rawImg.data(), rawImg.rows(), rawImg.cols());
+  this->updateEnables();
 }
 
 EImage QImage2EImage(const QImage &qi) {
@@ -2275,4 +2279,59 @@ void MainWindow::on_ExStructure_clicked() {
 
 void MainWindow::on_ExWESchem_clicked() {
   ui->tabExport3DInfo->setCurrentIndex(2);
+}
+
+void MainWindow::exportAvailableColors() {
+
+  constexpr int basecolors_per_row = 4;
+  constexpr int basecolors_per_col = 16;
+
+  static_assert(basecolors_per_row * basecolors_per_col == 64);
+
+  constexpr int row_pixels = basecolors_per_row * 4;
+  constexpr int col_pixels = basecolors_per_col * 1;
+
+  static_assert(row_pixels * col_pixels == 256);
+
+  const QString dest_file =
+      QFileDialog::getSaveFileName(this, tr("保存颜色表"), "", "*.png");
+
+  if (dest_file.isEmpty()) {
+    return;
+  }
+
+  QImage img(row_pixels, col_pixels, QImage::Format::Format_ARGB32);
+
+  img.fill(0x00FFFFFFU);
+
+  if (img.isNull()) {
+    std::cout << "File " << __FILE__ << ", Line " << __LINE__
+              << ", the image is null, memory allocation failed" << endl;
+    return;
+  }
+
+  Eigen::Map<
+      Eigen::Array<uint32_t, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>
+      map(reinterpret_cast<uint32_t *>(img.scanLine(0)), row_pixels,
+          col_pixels);
+
+  uint32_t argb_colors[256];
+  uint8_t map_colors[256];
+  const int available_colors = kernel->getColorCount();
+  kernel->getAvailableColors(argb_colors, map_colors);
+
+  for (int cidx = 0; cidx < available_colors; cidx++) {
+    /*
+    const int basecolor = (map_colors[cidx] / 4);
+    const int shade = (map_colors[cidx] % 4);
+    const int pixel_row = basecolor / basecolors_per_col;
+    const int pixel_col = (basecolor % basecolors_per_col) * 4 + shade;
+    */
+    map(map_colors[cidx]) = argb_colors[cidx];
+  }
+
+  if (img.save(dest_file)) {
+    this->ProductDir = dest_file;
+  }
+  return;
 }

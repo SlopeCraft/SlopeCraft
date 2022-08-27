@@ -310,7 +310,9 @@ unsigned short SCL_EXPORT SCL_getColorCount(const Kernel *k);
 void SCL_EXPORT SCL_makeTests(Kernel *k, const AbstractBlock **,
                               const unsigned char *, const char *, char *);
 /// get avaliable colors in argb32
-void SCL_EXPORT getAvailableColors(const Kernel *k, unsigned int *const dest,
+void SCL_EXPORT getAvailableColors(const Kernel *k,
+                                   unsigned int *const dest_ARGB32,
+                                   unsigned char *const dest_map_color,
                                    int *const num);
 
 // can do in convertionReady:

@@ -193,6 +193,8 @@ private slots:
   void onActionSavePreset();
   void onActionLoadPreset();
 
+  void exportAvailableColors();
+
   // for Page4
   void onAlgoClicked();
   void on_Convert_clicked();

@@ -158,9 +158,11 @@ void SCL_EXPORT SCL_setRawImage(Kernel *k, const unsigned int *src, int rows,
 unsigned short SCL_EXPORT SCL_getColorCount(const Kernel *k) {
   return k->getColorCount();
 }
-void SCL_EXPORT getAvailableColors(const Kernel *k, unsigned int *const dest,
+void SCL_EXPORT getAvailableColors(const Kernel *k,
+                                   unsigned int *const dest_ARGB32,
+                                   unsigned char *const dest_map_color,
                                    int *const num) {
-  k->getAvailableColors(dest, num);
+  k->getAvailableColors(dest_ARGB32, dest_map_color, num);
 }
 /// make a structure that includes all accessible blocks
 void SCL_EXPORT SCL_makeTests(Kernel *k, const AbstractBlock **a,

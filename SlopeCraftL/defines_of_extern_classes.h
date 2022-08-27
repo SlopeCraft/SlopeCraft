@@ -135,7 +135,8 @@ public:
   /// get accessible color count
   virtual unsigned short getColorCount() const = 0;
   /// get usable colors in ARGB32
-  virtual void getAvailableColors(unsigned int *const dest,
+  virtual void getAvailableColors(unsigned int *const ARGB32_dest = nullptr,
+                                  unsigned char *const map_color_dest = nullptr,
                                   int *const num = nullptr) const = 0;
   /// make a structure that includes all accessible blocks
   virtual void makeTests(const AbstractBlock **, const unsigned char *,

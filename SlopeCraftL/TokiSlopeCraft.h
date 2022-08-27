@@ -126,7 +126,8 @@ public:
   void setRawImage(const unsigned int *src, int rows, int cols);
   void setRawImage(const EImage &);
   uint16_t getColorCount() const;
-  void getAvailableColors(ARGB *const, int *const num = nullptr) const;
+  void getAvailableColors(ARGB *const, uint8_t *const,
+                          int *const num = nullptr) const;
   // can do in convertionReady:
   bool convert(convertAlgo = RGB_Better, bool dither = false);
   int getImageRows() const;

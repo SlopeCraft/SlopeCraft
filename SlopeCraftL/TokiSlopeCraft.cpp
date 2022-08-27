@@ -332,27 +332,32 @@ uint16_t TokiSlopeCraft::getColorCount() const {
   return Allowed.colorCount();
 }
 
-void TokiSlopeCraft::getAvailableColors(ARGB *const dest,
+void TokiSlopeCraft::getAvailableColors(ARGB *const ARGBDest,
+                                        uint8_t *const mapColorDest,
                                         int *const num) const {
   if (num != nullptr) {
     *num = getColorCount();
   }
-  if (dest == nullptr) {
-    return;
-  }
 
   for (int idx = 0; idx < TokiSlopeCraft::Allowed._RGB.rows(); idx++) {
-    ARGB r, g, b, a;
-    if (mapColor2baseColor(Allowed.Map[idx]) != 0)
-      a = 255;
-    else
-      a = 0;
 
-    r = ARGB(Allowed._RGB(idx, 0) * 255);
-    g = ARGB(Allowed._RGB(idx, 1) * 255);
-    b = ARGB(Allowed._RGB(idx, 2) * 255);
+    if (mapColorDest != nullptr) {
+      mapColorDest[idx] = Allowed.Map[idx];
+    }
 
-    dest[idx] = (a << 24) | (r << 16) | (g << 8) | (b);
+    if (ARGBDest != nullptr) {
+      ARGB r, g, b, a;
+      if (mapColor2baseColor(Allowed.Map[idx]) != 0)
+        a = 255;
+      else
+        a = 0;
+
+      r = ARGB(Allowed._RGB(idx, 0) * 255);
+      g = ARGB(Allowed._RGB(idx, 1) * 255);
+      b = ARGB(Allowed._RGB(idx, 2) * 255);
+
+      ARGBDest[idx] = (a << 24) | (r << 16) | (g << 8) | (b);
+    }
   }
 }
 
