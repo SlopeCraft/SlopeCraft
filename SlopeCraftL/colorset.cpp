@@ -25,21 +25,27 @@ This file is part of SlopeCraft.
 #include "ColorSet.h"
 #include "TokiSlopeCraft.h"
 
-#include <stdio.h>
 #include <math.h>
+#include <stdio.h>
 
 static constexpr float threshold = 1e-10f;
 
 #define deg2rad(deg) ((deg)*M_PI / 180.0)
+/*
+class ColorSet_t : public colorset_new<false, true, 256> {};
+class ConstColorSet_t : public colorset_new<true, true, 256> {};
+*/
 
-const ColorSet *const TokiColor::Allowed = &TokiSlopeCraft::Allowed;
-const ConstColorSet *const TokiColor::Basic = &TokiSlopeCraft::Basic;
+const colorset_new<false, true, 256> *const TokiColor::Allowed =
+    &TokiSlopeCraft::Allowed;
+const colorset_new<true, true, 256> *const TokiColor::Basic =
+    &TokiSlopeCraft::Basic;
 // short TokiColor::DepthIndexEnd[4]={63,127,191,255};
 std::array<uint8_t, 4> TokiColor::DepthCount = {64, 64, 64, 64};
 bool TokiColor::needFindSide = false;
 ::SlopeCraft::convertAlgo TokiColor::convertAlgo =
     ::SlopeCraft::convertAlgo::RGB_Better;
-
+/*
 ColorSet::ColorSet() {
   Map.setZero(256, 3);
   _RGB.setZero(256, 3);
@@ -91,44 +97,40 @@ bool ColorSet::ApplyAllowed(const ConstColorSet &standard, bool *MIndex) {
     TokiColor::DepthCount[(4 * (r % 64) + (r / 64)) % 4] += MIndex[r];
     //(4*(r%64)+(r/64))
   }
-  /*
-  TokiColor::DepthIndexEnd[0]=TokiColor::DepthCount[0]-1;
-  TokiColor::DepthIndexEnd[1]=TokiColor::DepthIndexEnd[0]+TokiColor::DepthCount[1];
-  TokiColor::DepthIndexEnd[2]=TokiColor::DepthIndexEnd[1]+TokiColor::DepthCount[2];
-  TokiColor::DepthIndexEnd[3]=TokiColor::DepthIndexEnd[2]+TokiColor::DepthCount[3];
-*/
-  if (totalAllowColorCount <= 1) {
-    std::cerr << "Too few color allowed!\n";
-    _RGB.setZero(1, 3);
-    HSV.setZero(1, 3);
-    Lab.setZero(1, 3);
-    XYZ.setZero(1, 3);
-    Map.setZero(1);
-    return false;
-  }
-  std::cerr << totalAllowColorCount << "colors allowed.\n";
 
-  _RGB.setZero(totalAllowColorCount, 3);
-  HSV.setZero(totalAllowColorCount, 3);
-  Lab.setZero(totalAllowColorCount, 3);
-  XYZ.setZero(totalAllowColorCount, 3);
-  Map.setZero(totalAllowColorCount, 1);
-  short write = 0;
-  for (short readIndex = 0; readIndex <= 256; readIndex++) {
 
-    if (write >= totalAllowColorCount)
-      break;
-    if (MIndex[readIndex]) {
-      _RGB.row(write) = standard._RGB.row(readIndex);
-      HSV.row(write) = standard.HSV.row(readIndex);
-      Lab.row(write) = standard.Lab.row(readIndex);
-      XYZ.row(write) = standard.XYZ.row(readIndex);
-      Map(write) = standard.Map(readIndex);
-      write++;
-    }
+if (totalAllowColorCount <= 1) {
+  std::cerr << "Too few color allowed!\n";
+  _RGB.setZero(1, 3);
+  HSV.setZero(1, 3);
+  Lab.setZero(1, 3);
+  XYZ.setZero(1, 3);
+  Map.setZero(1);
+  return false;
+}
+std::cerr << totalAllowColorCount << "colors allowed.\n";
+
+_RGB.setZero(totalAllowColorCount, 3);
+HSV.setZero(totalAllowColorCount, 3);
+Lab.setZero(totalAllowColorCount, 3);
+XYZ.setZero(totalAllowColorCount, 3);
+Map.setZero(totalAllowColorCount, 1);
+short write = 0;
+for (short readIndex = 0; readIndex <= 256; readIndex++) {
+
+  if (write >= totalAllowColorCount)
+    break;
+  if (MIndex[readIndex]) {
+    _RGB.row(write) = standard._RGB.row(readIndex);
+    HSV.row(write) = standard.HSV.row(readIndex);
+    Lab.row(write) = standard.Lab.row(readIndex);
+    XYZ.row(write) = standard.XYZ.row(readIndex);
+    Map(write) = standard.Map(readIndex);
+    write++;
   }
-  // std::cout<<Map<<std::endl;
-  return true;
+}
+// std::cout<<Map<<std::endl;
+return true;
 }
 
 void GetMap(unsigned char *Map) {
@@ -138,7 +140,7 @@ void GetMap(unsigned char *Map) {
 }
 
 uint16_t ColorSet::colorCount() const { return _RGB.rows(); }
-
+*/
 extern "C" {
 ARGB ComposeColor(const ARGB front, const ARGB back) {
   int red =
@@ -150,70 +152,50 @@ ARGB ComposeColor(const ARGB front, const ARGB back) {
   return ARGB32(red, green, blue);
 }
 
-inline void mySwapFloat(float & fa,float & fb) {
-    int32_t & a=(int32_t&)fa;
-    int32_t & b=(int32_t&)(fb);
+inline void mySwapFloat(float &fa, float &fb) {
+  int32_t &a = (int32_t &)fa;
+  int32_t &b = (int32_t &)(fb);
 
-    a=a^b;
-    b=a^b;
-    a=a^b;
+  a = a ^ b;
+  b = a ^ b;
+  a = a ^ b;
 }
 
 void RGB2HSV(float r, float g, float b, float &h, float &s, float &v) {
-    /*
   float K = 0.0f;
-  if (g < b) {
+
+  if (g > b) {
+    K = 2.0f;
+  } else {
     mySwapFloat(g, b);
-    K = -1.0f;
+    K = 4.0f;
   }
-  if (r < g) {
+
+  if (r > g) {
+    K = 6.0f;
+  } else {
     mySwapFloat(r, g);
-    K = -2.0f / 6.0f - K;
+
+    if (K == 2.0f) {
+      mySwapFloat(g, b);
+    }
   }
-  float chroma = r - fmin(g, b);
-  h = fabs(K + (g - b) / (6.0f * chroma + threshold));
-  s = chroma / (r + threshold);
+
+  const float delta = r - fmin(g, b);
+
+  // Here we represent R,G,B as the original value before swap, and r,g,b as the
+  // variable after swapping. Now R has the greatest value, and when : When R is
+  // max, g=G and b=B, so g-b = G-B; K=6; while h = pi/3*((G-B)/delta+6) When G
+  // is max, g=B and b=R, so g-b = B-R; K=2; while h = pi/3*((B-G)/delta+2) When
+  // B is max, g=R and b=G, so g-b = R-G; K=4; while h = pi/3*((R-G)/delta+2)
+  //
+  // r = max(R,G,B), and min(R,G,B) is in either g or b.
+  // So we have delta = r-min(g,b)
+  // and h=pi/3*((g-b)/delta+K)
+
+  h = M_PI / 3.0f * ((g - b) / (delta + threshold) + K);
+  s = delta / (r + threshold);
   v = r;
-#warning The range of h, s and v is not certain.
-  */
-
-    float K=0.0f;
-
-    if(g>b) {
-        K=2.0f;
-    }
-    else {
-        mySwapFloat(g,b);
-        K=4.0f;
-    }
-
-    if(r>g) {
-        K=6.0f;
-    }
-    else {
-        mySwapFloat(r,g);
-
-        if(K==2.0f) {
-            mySwapFloat(g,b);
-        }
-    }
-
-    const float delta = r-fmin(g,b);
-
-    // Here we represent R,G,B as the original value before swap, and r,g,b as the variable after swapping.
-    // Now R has the greatest value, and when :
-    // When R is max, g=G and b=B, so g-b = G-B; K=6; while h = pi/3*((G-B)/delta+6)
-    // When G is max, g=B and b=R, so g-b = B-R; K=2; while h = pi/3*((B-G)/delta+2)
-    // When B is max, g=R and b=G, so g-b = R-G; K=4; while h = pi/3*((R-G)/delta+2)
-    //
-    // r = max(R,G,B), and min(R,G,B) is in either g or b.
-    // So we have delta = r-min(g,b)
-    // and h=pi/3*((g-b)/delta+K)
-
-    h = M_PI/3.0f*((g-b)/(delta+threshold)+K);
-    s = delta/(r+threshold);
-    v = r;
-
 
   return;
 }
@@ -281,7 +263,6 @@ void invf(float &I) {
     I = (I - 16.0 / 116.0) / 7.787;
   return;
 }
-
 
 void XYZ2Lab(float X, float Y, float Z, float &L, float &a, float &b) {
   X /= 0.9504f;
@@ -355,18 +336,18 @@ void SCL_testHSV() {
 
   const int N = sizeof(rgb) / sizeof(float[3]);
 
-  float hsv[N][3],irgb[N][3];
+  float hsv[N][3], irgb[N][3];
 
   for (int r = 0; r < N; r++) {
     RGB2HSV(rgb[r][0], rgb[r][1], rgb[r][2], hsv[r][0], hsv[r][1], hsv[r][2]);
 
-    HSV2RGB(hsv[r][0], hsv[r][1], hsv[r][2],irgb[r][0], irgb[r][1], irgb[r][2]);
+    HSV2RGB(hsv[r][0], hsv[r][1], hsv[r][2], irgb[r][0], irgb[r][1],
+            irgb[r][2]);
 
     printf("RGB = [%f, %f, %f] , ", rgb[r][0], rgb[r][1], rgb[r][2]);
     printf("HSV = [%f, %f, %f] , ", hsv[r][0], hsv[r][1], hsv[r][2]);
-    printf("iRGB = [%f, %f, %f]\n", irgb[r][0],irgb[r][1], irgb[r][2]);
+    printf("iRGB = [%f, %f, %f]\n", irgb[r][0], irgb[r][1], irgb[r][2]);
   }
 }
-
 }
 #endif

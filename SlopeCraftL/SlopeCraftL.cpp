@@ -27,9 +27,27 @@ This file is part of SlopeCraft.
 using namespace SlopeCraft;
 
 namespace SlopeCraft {
+int colorCount4External() { return TokiSlopeCraft::Allowed.colorCount(); }
 const Eigen::Array<float, 256, 3> &Basic4External = TokiSlopeCraft::Basic._RGB;
-const ColorList &Allowed4External = TokiSlopeCraft::Allowed._RGB;
-const MapList &AllowedMapList4External = TokiSlopeCraft::Allowed.Map;
+
+extern Eigen::Map<const Eigen::ArrayXf> BasicRGB4External(int channel) {
+  return Eigen::Map<const Eigen::ArrayXf>(
+      &TokiSlopeCraft::Basic._RGB(0, channel),
+      TokiSlopeCraft::Basic.colorCount());
+}
+
+Eigen::Map<const Eigen::ArrayXf> AllowedRGB4External(int channel) {
+  return Eigen::Map<const Eigen::ArrayXf>(
+      TokiSlopeCraft::Allowed._rgb[channel].data(), colorCount4External());
+}
+
+extern Eigen::Map<const Eigen::Array<uint8_t, Dynamic, 1>>
+AllowedMapList4External() {
+  return Eigen::Map<const Eigen::Array<uint8_t, Dynamic, 1>>(
+      TokiSlopeCraft::Allowed.Map.data(), colorCount4External());
+}
+// const ColorList &Allowed4External = TokiSlopeCraft::Allowed._RGB;
+// const MapList &AllowedMapList4External = TokiSlopeCraft::Allowed.Map;
 
 } //  end namespace SlopeCraft
 
@@ -66,7 +84,7 @@ const char *Kernel::getSCLVersion() { return "v3.10.0"; }
 void Kernel::getColorMapPtrs(const float **f, const unsigned char **m,
                              int *rows) {
   if (f != nullptr)
-    *f = TokiSlopeCraft::Allowed._RGB.data();
+    *f = TokiSlopeCraft::Allowed._rgb[0].data();
   if (m != nullptr)
     *m = TokiSlopeCraft::Allowed.Map.data();
   if (rows != nullptr)

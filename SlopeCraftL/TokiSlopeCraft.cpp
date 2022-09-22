@@ -28,8 +28,9 @@ const Eigen::Array<float, 2, 3> TokiSlopeCraft::DitherMapLR = {
 const Eigen::Array<float, 2, 3> TokiSlopeCraft::DitherMapRL = {
     {7.0 / 16.0, 0.0 / 16.0, 0.0 / 16.0}, {1.0 / 16.0, 5.0 / 16.0, 3.0 / 16.0}};
 
-const ConstColorSet TokiSlopeCraft::Basic(SlopeCraft::RGBBasicSource);
-ColorSet TokiSlopeCraft::Allowed(0);
+const colorset_new<true, true, 256>
+    TokiSlopeCraft::Basic(SlopeCraft::RGBBasicSource);
+colorset_new<false, true, 256> TokiSlopeCraft::Allowed(0);
 
 gameVersion TokiSlopeCraft::mcVer; // 12,13,14,15,16,17
 mapTypes TokiSlopeCraft::mapType;
@@ -116,7 +117,7 @@ void TokiSlopeCraft::trySkipStep(step s) {
     return;
   }
 
-  if (Allowed._RGB.rows() != 0 && blockPalette.size() != 0) {
+  if (Allowed.colorCount() != 0 && blockPalette.size() != 0) {
     this->kernelStep = step::wait4Image;
   }
 }
@@ -160,7 +161,7 @@ bool compressFile(const char *sourcePath, const char *destPath) {
 */
 
 bool compressFile(const char *inputPath, const char *outputPath) {
-  const size_t BUFFER_SIZE = 2048;
+  const size_t BUFFER_SIZE = 4096;
   std::ifstream fin;
   fin.open(inputPath, std::ifstream::binary | std::ifstream::in);
   if (!fin)
@@ -285,9 +286,9 @@ bool TokiSlopeCraft::setType(mapTypes type, gameVersion ver,
     }
   }
 
-  if (!Allowed.ApplyAllowed(Basic, MIndex)) {
+  if (!Allowed.applyAllowed(Basic, MIndex)) {
     std::string msg = "Too few usable color(s) : only " +
-                      std::to_string(Allowed._RGB.rows()) + " colors\n";
+                      std::to_string(Allowed.colorCount()) + " colors\n";
     msg += "Avaliable base color(s) : ";
     for (auto i : Allowed.Map) {
       msg += std::to_string(i) + " , ";
@@ -339,7 +340,7 @@ void TokiSlopeCraft::getAvailableColors(ARGB *const ARGBDest,
     *num = getColorCount();
   }
 
-  for (int idx = 0; idx < TokiSlopeCraft::Allowed._RGB.rows(); idx++) {
+  for (int idx = 0; idx < TokiSlopeCraft::Allowed.colorCount(); idx++) {
 
     if (mapColorDest != nullptr) {
       mapColorDest[idx] = Allowed.Map[idx];
@@ -352,9 +353,9 @@ void TokiSlopeCraft::getAvailableColors(ARGB *const ARGBDest,
       else
         a = 0;
 
-      r = ARGB(Allowed._RGB(idx, 0) * 255);
-      g = ARGB(Allowed._RGB(idx, 1) * 255);
-      b = ARGB(Allowed._RGB(idx, 2) * 255);
+      r = ARGB(Allowed.RGB(idx, 0) * 255);
+      g = ARGB(Allowed.RGB(idx, 1) * 255);
+      b = ARGB(Allowed.RGB(idx, 2) * 255);
 
       ARGBDest[idx] = (a << 24) | (r << 16) | (g << 8) | (b);
     }

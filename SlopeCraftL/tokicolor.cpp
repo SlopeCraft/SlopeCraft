@@ -195,9 +195,9 @@ unsigned char TokiColor::applyRGB() {
   if (Result)
     return Result;
   int tempIndex = 0;
-  auto Diff0_2 = (Allowed->_RGB.col(0) - c3[0]).square();
-  auto Diff1_2 = (Allowed->_RGB.col(1) - c3[1]).square();
-  auto Diff2_2 = (Allowed->_RGB.col(2) - c3[2]).square();
+  auto Diff0_2 = (Allowed->rgb(0) - c3[0]).square();
+  auto Diff1_2 = (Allowed->rgb(1) - c3[1]).square();
+  auto Diff2_2 = (Allowed->rgb(2) - c3[2]).square();
 
   TempVectorXf Diff = Diff0_2 + Diff1_2 + Diff2_2;
   // Data.CurrentColor-=allowedColors;
@@ -216,44 +216,46 @@ unsigned char TokiColor::applyRGB_plus() {
   if (Result)
     return Result;
   int tempIndex = 0;
-  const ColorList &allowedColors = Allowed->_RGB;
+  // const ColorList &allowedColors = Allowed->_RGB;
   float R = c3[0];
   float g = c3[1];
   float b = c3[2];
   float w_r = 1.0f, w_g = 2.0f, w_b = 1.0f;
-  auto SqrModSquare =
-      ((R * R + g * g + b * b) *
-       (allowedColors.col(0).square() + allowedColors.col(1).square() +
-        allowedColors.col(2).square()))
-          .sqrt();
-  auto deltaR = (R - allowedColors.col(0));
-  auto deltaG = (g - allowedColors.col(1));
-  auto deltaB = (b - allowedColors.col(2));
-  auto SigmaRGB = (R + g + b + allowedColors.col(0) + allowedColors.col(1) +
-                   allowedColors.col(2)) /
-                  3.0f;
-  auto S_r =
-      ((allowedColors.col(0) + R) < SigmaRGB)
-          .select((allowedColors.col(0) + R) / (SigmaRGB + threshold), 1.0f);
-  auto S_g =
-      ((allowedColors.col(1) + g) < SigmaRGB)
-          .select((allowedColors.col(1) + g) / (SigmaRGB + threshold), 1.0f);
-  auto S_b =
-      ((allowedColors.col(2) + b) < SigmaRGB)
-          .select((allowedColors.col(2) + b) / (SigmaRGB + threshold), 1.0f);
-  auto sumRGBsquare = R * allowedColors.col(0) + g * allowedColors.col(1) +
-                      b * allowedColors.col(2);
+  auto SqrModSquare = ((R * R + g * g + b * b) *
+                       (Allowed->rgb(0).square() + Allowed->rgb(1).square() +
+                        Allowed->rgb(2).square()))
+                          .sqrt();
+  auto deltaR = (R - Allowed->rgb(0));
+  auto deltaG = (g - Allowed->rgb(1));
+  auto deltaB = (b - Allowed->rgb(2));
+  auto SigmaRGB =
+      (R + g + b + Allowed->rgb(0) + Allowed->rgb(1) + Allowed->rgb(2)) / 3.0f;
+  auto S_r = ((Allowed->rgb(0) + R) < SigmaRGB)
+                 .select((Allowed->rgb(0) + R) / (SigmaRGB + threshold), 1.0f);
+  auto S_g = ((Allowed->rgb(1) + g) < SigmaRGB)
+                 .select((Allowed->rgb(1) + g) / (SigmaRGB + threshold), 1.0f);
+  auto S_b = ((Allowed->rgb(2) + b) < SigmaRGB)
+                 .select((Allowed->rgb(2) + b) / (SigmaRGB + threshold), 1.0f);
+  auto sumRGBsquare =
+      R * Allowed->rgb(0) + g * Allowed->rgb(1) + b * Allowed->rgb(2);
   auto theta =
       2.0 / M_PI * (sumRGBsquare / (SqrModSquare + threshold) / 1.01f).acos();
-  auto OnedDeltaR = deltaR.abs() / (R + allowedColors.col(0) + threshold);
-  auto OnedDeltaG = deltaG.abs() / (g + allowedColors.col(1) + threshold);
-  auto OnedDeltaB = deltaB.abs() / (b + allowedColors.col(2) + threshold);
+  auto OnedDeltaR = deltaR.abs() / (R + Allowed->rgb(0) + threshold);
+  auto OnedDeltaG = deltaG.abs() / (g + Allowed->rgb(1) + threshold);
+  auto OnedDeltaB = deltaB.abs() / (b + Allowed->rgb(2) + threshold);
   auto sumOnedDelta = OnedDeltaR + OnedDeltaG + OnedDeltaB + threshold;
   auto S_tr = OnedDeltaR / sumOnedDelta * S_r.square();
   auto S_tg = OnedDeltaG / sumOnedDelta * S_g.square();
   auto S_tb = OnedDeltaB / sumOnedDelta * S_b.square();
   auto S_theta = S_tr + S_tg + S_tb;
-  auto Rmax = allowedColors.rowwise().maxCoeff();
+  /*
+  Eigen::Array<float, 1, 3> Rmax(Allowed->rgb(0).maxCoeff(),
+                                 Allowed->rgb(1).maxCoeff(),
+                                 Allowed->rgb(2).maxCoeff());
+                                 */
+  auto Rmax =
+      Allowed->rgb(0).max(Allowed->rgb(1)).max(Allowed->rgb(2)).max(threshold);
+  // auto Rmax = allowedColors.rowwise().maxCoeff();
   auto S_ratio = Rmax.max(std::max(R, std::max(g, b)));
 
   TempVectorXf dist =
@@ -283,15 +285,15 @@ unsigned char TokiColor::applyHSV() {
   if (Result)
     return Result;
   int tempIndex = 0;
-  const ColorList &allowedColors = Allowed->HSV;
+  // const ColorList &allowedColors = Allowed->HSV;
 
-  auto S_times_V = allowedColors.col(1) * allowedColors.col(2);
+  auto S_times_V = Allowed->hsv(1) * Allowed->hsv(2);
   const float s_times_v = c3[1] * c3[2];
-  auto deltaX = 50.0f * (allowedColors.col(0).cos() * S_times_V -
-                         s_times_v * std::cos(c3[0]));
-  auto deltaY = 50.0f * (allowedColors.col(0).sin() * S_times_V -
-                         s_times_v * std::sin(c3[0]));
-  auto deltaZ = 50.0f * (allowedColors.col(2) - c3[2]);
+  auto deltaX =
+      50.0f * (Allowed->hsv(0).cos() * S_times_V - s_times_v * std::cos(c3[0]));
+  auto deltaY =
+      50.0f * (Allowed->hsv(0).sin() * S_times_V - s_times_v * std::sin(c3[0]));
+  auto deltaZ = 50.0f * (Allowed->hsv(2) - c3[2]);
   TempVectorXf Diff = deltaX.square() + deltaY.square() + deltaZ.square();
 
   // std::cerr<<"Diff.isNaN().count()="<<Diff.isNaN().count()<<"\n";
@@ -307,9 +309,9 @@ unsigned char TokiColor::applyXYZ() {
   if (Result)
     return Result;
   int tempIndex = 0;
-  auto Diff0_2 = (Allowed->XYZ.col(0) - c3[0]).square();
-  auto Diff1_2 = (Allowed->XYZ.col(1) - c3[1]).square();
-  auto Diff2_2 = (Allowed->XYZ.col(2) - c3[2]).square();
+  auto Diff0_2 = (Allowed->xyz(0) - c3[0]).square();
+  auto Diff1_2 = (Allowed->xyz(1) - c3[1]).square();
+  auto Diff2_2 = (Allowed->xyz(2) - c3[2]).square();
 
   TempVectorXf Diff = Diff0_2 + Diff1_2 + Diff2_2;
   // Data.CurrentColor-=allowedColors;
@@ -328,14 +330,13 @@ unsigned char TokiColor::applyLab_old() {
   float L = c3[0];
   float a = c3[1];
   float b = c3[2];
-  const ColorList &allowedColors = Allowed->Lab;
-  auto deltaL_2 = (allowedColors.col(0) - L).square();
+  // const ColorList &allowedColors = Allowed->Lab;
+  auto deltaL_2 = (Allowed->lab(0) - L).square();
   float C1_2 = a * a + b * b;
-  TempVectorXf C2_2 =
-      allowedColors.col(1).square() + allowedColors.col(2).square();
+  TempVectorXf C2_2 = Allowed->lab(1).square() + Allowed->lab(2).square();
   auto deltaCab_2 = (sqrt(C1_2) - C2_2.sqrt()).square();
-  auto deltaHab_2 = (allowedColors.col(1) - a).square() +
-                    (allowedColors.col(2) - b).square() - deltaCab_2;
+  auto deltaHab_2 = (Allowed->lab(1) - a).square() +
+                    (Allowed->lab(2) - b).square() - deltaCab_2;
   // SL=1,kL=1
   // K1=0.045f
   // K2=0.015f
@@ -356,11 +357,12 @@ unsigned char TokiColor::applyLab_new() {
   float L1s = c3[0];
   float a1s = c3[1];
   float b1s = c3[2];
-  const ColorList &allow = Allowed->Lab;
-  TempVectorXf Diff(allow.rows());
+  // const ColorList &allow = Allowed->Lab;
+  TempVectorXf Diff(Allowed->colorCount());
 
-  for (short i = 0; i < allow.rows(); i++) {
-    Diff(i) = Lab00_diff(L1s, a1s, b1s, allow(i, 0), allow(i, 1), allow(i, 2));
+  for (short i = 0; i < Allowed->colorCount(); i++) {
+    Diff(i) = Lab00_diff(L1s, a1s, b1s, Allowed->HSV(i, 0), Allowed->HSV(i, 1),
+                         Allowed->HSV(i, 2));
   }
 
   /*

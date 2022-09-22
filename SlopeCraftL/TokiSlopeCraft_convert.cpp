@@ -22,8 +22,6 @@ This file is part of SlopeCraft.
 
 #include "TokiSlopeCraft.h"
 
-
-
 void matchColor(uint32_t taskCount, TokiColor **tk, ARGB *argb);
 
 bool TokiSlopeCraft::convert(convertAlgo algo, bool dither) {
@@ -63,7 +61,6 @@ bool TokiSlopeCraft::convert(convertAlgo algo, bool dither) {
     GAConverter->resultImage(&rawImage);
 
     algo = convertAlgo::RGB_Better;
-
   }
 
   ConvertAlgo = algo;
@@ -193,30 +190,24 @@ void TokiSlopeCraft::Dither() {
 
   ditheredImage.setZero(sizePic(0), sizePic(1));
 
-  const Eigen::Array<float, 256, 3> *ColorMap = nullptr;
   ARGB Current;
   ARGB (*CvtFun)(float, float, float);
   switch (ConvertAlgo) {
   case ::SlopeCraft::convertAlgo::RGB:
   case ::SlopeCraft::convertAlgo::RGB_Better:
-    ColorMap = &Basic._RGB;
     CvtFun = RGB2ARGB;
     break;
   case ::SlopeCraft::convertAlgo::HSV:
-    ColorMap = &Basic.HSV;
     CvtFun = HSV2ARGB;
     break;
   case ::SlopeCraft::convertAlgo::Lab00:
   case ::SlopeCraft::convertAlgo::Lab94:
-    ColorMap = &Basic.Lab;
     CvtFun = Lab2ARGB;
     break;
   default:
-    ColorMap = &Basic.XYZ;
     CvtFun = XYZ2ARGB;
     break;
   }
-  const Eigen::Array<float, 256, 3> &CM = *ColorMap;
 
   // int t=sizeof(Eigen::Array3f);
 
@@ -259,8 +250,11 @@ void TokiSlopeCraft::Dither() {
         TokiColor &oldColor = find->second;
         mapPic(r, c) = oldColor.Result;
         index = mapColor2Index(mapPic(r, c));
-
-        Error = oldColor.c3 - CM.row(index).transpose();
+        for (int _c = 0; _c < 3; _c++) {
+          Error[_c] =
+              oldColor.c3[_c] - Basic.color_value(this->ConvertAlgo, index, _c);
+        }
+        // Error = oldColor.c3 - CM.row(index).transpose();
         /*
         Error[0]=oldColor->c3[0]-CM(index,0);
         Error[1]=oldColor->c3[1]-CM(index,1);
@@ -293,8 +287,12 @@ void TokiSlopeCraft::Dither() {
         TokiColor &oldColor = find->second;
         mapPic(r, c) = oldColor.Result;
         index = mapColor2Index(mapPic(r, c));
+        for (int _c = 0; _c < 3; _c++) {
+          Error[_c] =
+              oldColor.c3[_c] - Basic.color_value(this->ConvertAlgo, index, _c);
+        }
 
-        Error = oldColor.c3 - CM.row(index).transpose();
+        // Error = oldColor.c3 - CM.row(index).transpose();
         /*
         Error[0]=oldColor->c3[0]-CM(index,0);
         Error[1]=oldColor->c3[1]-CM(index,1);
@@ -322,7 +320,6 @@ void matchColor(uint32_t taskCount, TokiColor **tk, ARGB *argb) {
   }
 }
 
-
 void TokiSlopeCraft::exportAsData(const char *FolderPath, const int indexStart,
                                   int *fileCount, char **dest) const {
   std::vector<std::string> uFL = exportAsData(FolderPath, indexStart);
@@ -335,7 +332,8 @@ void TokiSlopeCraft::exportAsData(const char *FolderPath, const int indexStart,
     }
 }
 
-std::vector<std::string> TokiSlopeCraft::exportAsData(const std::string &FolderPath,
+std::vector<std::string>
+TokiSlopeCraft::exportAsData(const std::string &FolderPath,
                              int indexStart) const {
   std::vector<std::string> unCompressedFileList;
   unCompressedFileList.clear();

@@ -819,6 +819,8 @@ void MainWindow::preprocessImage(const QString &Path) {
   ui->ShowPic->setPixmap(QPixmap::fromImage(rawPic));
 
   kernel->decreaseStep(SlopeCraft::step::nothing);
+  kernelSetType();
+  kernelSetImg();
   updateEnables();
 }
 
@@ -837,6 +839,7 @@ void MainWindow::on_ImportPic_clicked() {
       return;
     }
     preprocessImage(Path);
+
     return;
   } else {
     if (batchOperator != nullptr) {

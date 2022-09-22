@@ -45,7 +45,6 @@ This file is part of SlopeCraft.
 #include <QScrollArea>
 #include <QScrollBar>
 #include <QString>
-#include <QThread>
 #include <QTranslator>
 #include <QUrl>
 

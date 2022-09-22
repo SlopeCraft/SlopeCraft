@@ -40,6 +40,7 @@ set(SlopeCraft_SCL_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/SlopeCraftL.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/SlopeCraftL_global.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/defines_of_extern_classes.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/newColorSet.hpp
 
     ${CMAKE_CURRENT_SOURCE_DIR}/AiCvterOpt.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/CIEDE00.cpp 

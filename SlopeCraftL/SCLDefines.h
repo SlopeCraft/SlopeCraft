@@ -24,7 +24,7 @@ This file is part of SlopeCraft.
 #define SCLDEFINES_H
 
 #ifndef _USE_MATH_DEFINES
-    #define _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES
 #endif
 
 //#include <omp.h>
@@ -36,23 +36,24 @@ This file is part of SlopeCraft.
 #include "SlopeCraftL.h"
 #include "defines_of_extern_classes.h"
 
-
 #ifndef M_PI
-#define M_PI		3.14159265358979323846
+#define M_PI 3.14159265358979323846
 #endif
 
-using std::cout,std::cerr,std::endl;
+using std::cout, std::cerr, std::endl;
+
+using Eigen::Dynamic;
 
 namespace SlopeCraft {
 
-extern const float RGBBasicSource[256*3];
+extern const float RGBBasicSource[256 * 3];
 
 }
 
 using ARGB = uint32_t;
-using EImage = Eigen::Array<ARGB,Eigen::Dynamic,Eigen::Dynamic>;
-using MapList = Eigen::Array<uint8_t,Eigen::Dynamic,1,Eigen::ColMajor,256>;
-using ColorList = Eigen::Array<float,Eigen::Dynamic,3,Eigen::ColMajor,256>;
-using TempVectorXf = Eigen::Array<float,Eigen::Dynamic,1,Eigen::ColMajor,256>;
+using EImage = Eigen::Array<ARGB, Dynamic, Dynamic>;
+using MapList = Eigen::Array<uint8_t, Dynamic, 1, Eigen::ColMajor, 256>;
+using ColorList = Eigen::Array<float, Dynamic, 3, Eigen::ColMajor, 256>;
+using TempVectorXf = Eigen::Array<float, Dynamic, 1, Eigen::ColMajor, 256>;
 
 #endif // SCLDEFINES_H

@@ -47,6 +47,8 @@ This file is part of SlopeCraft.
 
 #include "AiCvterOpt.h"
 
+#include "newColorSet.hpp"
+
 #include "../GAConverter/GAConverter.h"
 
 /*
@@ -77,8 +79,8 @@ class NBTWriter;
 
 class TokiSlopeCraft : public Kernel {
 public:
-  const static ConstColorSet Basic;
-  static ColorSet Allowed;
+  static const colorset_new<true, true, 256> Basic;
+  static colorset_new<false, true, 256> Allowed;
 
 public:
   TokiSlopeCraft();
