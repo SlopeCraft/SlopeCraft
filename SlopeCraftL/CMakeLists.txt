@@ -27,13 +27,12 @@ endif()
 
 set(SlopeCraft_SCL_sources 
     ${CMAKE_CURRENT_SOURCE_DIR}/AiCvterOpt.h 
-    ${CMAKE_CURRENT_SOURCE_DIR}/ColorSet.h 
+    ${CMAKE_CURRENT_SOURCE_DIR}/Colors.h
     ${CMAKE_CURRENT_SOURCE_DIR}/HeightLine.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/newNBTWriter.hpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/OptiChain.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/PrimGlassBuilder.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/SCLDefines.h 
-    ${CMAKE_CURRENT_SOURCE_DIR}/TokiColor.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/TokiSlopeCraft.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/WaterItem.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/lossyCompressor.h 
@@ -45,7 +44,7 @@ set(SlopeCraft_SCL_sources
     #${CMAKE_CURRENT_SOURCE_DIR}/newColorSet.hpp
 
     ${CMAKE_CURRENT_SOURCE_DIR}/AiCvterOpt.cpp 
-    #${CMAKE_CURRENT_SOURCE_DIR}/CIEDE00.cpp 
+    ${CMAKE_CURRENT_SOURCE_DIR}/Colors.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ColorSource.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/HeightLine.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/OptiChain.cpp 
@@ -55,11 +54,9 @@ set(SlopeCraft_SCL_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/TokiSlopeCraft_build.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/TokiSlopeCraft_convert.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/WaterItem.cpp 
-    ${CMAKE_CURRENT_SOURCE_DIR}/colorset.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/imagePreprocess.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/lossyCompressor.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/simpleBlock.cpp 
-    ${CMAKE_CURRENT_SOURCE_DIR}/tokicolor.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/SlopeCraftL.cpp
     
     ${SlopeCraft_SCL_windows_rc_files}

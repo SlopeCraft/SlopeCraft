@@ -9,11 +9,8 @@
 #include <HeuristicFlow/Genetic>
 #include <HeuristicFlow/Global>
 
-
-#include "../SlopeCraftL/ColorSet.h"
+#include "../SlopeCraftL/Colors.h"
 #include "../SlopeCraftL/SCLDefines.h"
-#include "../SlopeCraftL/TokiColor.h"
-
 
 namespace SlopeCraft {
 /*

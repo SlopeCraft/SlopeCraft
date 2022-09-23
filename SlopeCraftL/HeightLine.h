@@ -23,15 +23,13 @@ This file is part of SlopeCraft.
 #ifndef HEIGHTLINE_H
 #define HEIGHTLINE_H
 
-#include "ColorSet.h"
+#include "Colors.h"
 #include "OptiChain.h"
 #include "SCLDefines.h"
-#include "TokiColor.h"
 #include "WaterItem.h"
 #include <iostream>
 #include <map>
 #include <vector>
-
 
 class HeightLine {
 public:

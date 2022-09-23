@@ -20,10 +20,30 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
-#include "TokiColor.h"
-#include "TokiSlopeCraft.h"
+#ifndef SCL_COLORS_H
+#define SCL_COLORS_H
+#include "../ColorManip/newColorSet.hpp"
+#include "../ColorManip/newTokiColor.hpp"
 
-template <>
-const colorset_allowed_t *const TokiColor::Allowed = &TokiSlopeCraft::Allowed;
-template <>
-const colorset_basic_t *const TokiColor::Basic = &TokiSlopeCraft::Basic;
+#include "SCLDefines.h"
+#include <iostream>
+
+#include "SCLDefines.h"
+
+using colorset_allowed_t = colorset_new<false, true>;
+using colorset_basic_t = colorset_new<true, true>;
+
+using TokiColor = newTokiColor<true, colorset_basic_t, colorset_allowed_t>;
+
+namespace SlopeCraft {
+extern int colorCount4External();
+
+extern Eigen::Map<const Eigen::ArrayXf> BasicRGB4External(int channel);
+
+extern Eigen::Map<const Eigen::ArrayXf> AllowedRGB4External(int channel);
+
+extern Eigen::Map<const Eigen::Array<uint8_t, Dynamic, 1>>
+AllowedMapList4External();
+} // namespace SlopeCraft
+
+#endif // SCL_COLORS_H

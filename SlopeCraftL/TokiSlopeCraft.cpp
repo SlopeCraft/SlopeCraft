@@ -28,9 +28,8 @@ const Eigen::Array<float, 2, 3> TokiSlopeCraft::DitherMapLR = {
 const Eigen::Array<float, 2, 3> TokiSlopeCraft::DitherMapRL = {
     {7.0 / 16.0, 0.0 / 16.0, 0.0 / 16.0}, {1.0 / 16.0, 5.0 / 16.0, 3.0 / 16.0}};
 
-const colorset_new<true, true, 256>
-    TokiSlopeCraft::Basic(SlopeCraft::RGBBasicSource);
-colorset_new<false, true, 256> TokiSlopeCraft::Allowed(0);
+const colorset_basic_t TokiSlopeCraft::Basic(SlopeCraft::RGBBasicSource);
+colorset_allowed_t TokiSlopeCraft::Allowed;
 
 gameVersion TokiSlopeCraft::mcVer; // 12,13,14,15,16,17
 mapTypes TokiSlopeCraft::mapType;
@@ -117,7 +116,7 @@ void TokiSlopeCraft::trySkipStep(step s) {
     return;
   }
 
-  if (Allowed.colorCount() != 0 && blockPalette.size() != 0) {
+  if (Allowed.color_count() != 0 && blockPalette.size() != 0) {
     this->kernelStep = step::wait4Image;
   }
 }
@@ -286,13 +285,15 @@ bool TokiSlopeCraft::setType(mapTypes type, gameVersion ver,
     }
   }
 
-  if (!Allowed.applyAllowed(Basic, MIndex)) {
+  if (!Allowed.apply_allowed(Basic, MIndex)) {
     std::string msg = "Too few usable color(s) : only " +
-                      std::to_string(Allowed.colorCount()) + " colors\n";
+                      std::to_string(Allowed.color_count()) + " colors\n";
     msg += "Avaliable base color(s) : ";
-    for (auto i : Allowed.Map) {
-      msg += std::to_string(i) + " , ";
+
+    for (int idx = 0; idx < Allowed.color_count(); idx++) {
+      msg += std::to_string(Allowed.Map(idx)) + ", ";
     }
+
     reportError(wind, errorFlag::USEABLE_COLOR_TOO_FEW, msg.data());
     lock.unlock();
     return false;
@@ -330,7 +331,7 @@ uint16_t TokiSlopeCraft::getColorCount() const {
                 "the map type and gameversion");
     return 0;
   }
-  return Allowed.colorCount();
+  return Allowed.color_count();
 }
 
 void TokiSlopeCraft::getAvailableColors(ARGB *const ARGBDest,
@@ -340,15 +341,15 @@ void TokiSlopeCraft::getAvailableColors(ARGB *const ARGBDest,
     *num = getColorCount();
   }
 
-  for (int idx = 0; idx < TokiSlopeCraft::Allowed.colorCount(); idx++) {
+  for (int idx = 0; idx < TokiSlopeCraft::Allowed.color_count(); idx++) {
 
     if (mapColorDest != nullptr) {
-      mapColorDest[idx] = Allowed.Map[idx];
+      mapColorDest[idx] = Allowed.Map(idx);
     }
 
     if (ARGBDest != nullptr) {
       ARGB r, g, b, a;
-      if (mapColor2baseColor(Allowed.Map[idx]) != 0)
+      if (mapColor2baseColor(Allowed.Map(idx)) != 0)
         a = 255;
       else
         a = 0;
@@ -397,8 +398,8 @@ void TokiSlopeCraft::getBaseColorInARGB32(ARGB *const dest) const {
 
   for (uchar base = 0; base < 64; base++)
     dest[base] =
-        ARGB32(255 * Basic._RGB(128 + base, 0), 255 * Basic._RGB(128 + base, 1),
-               255 * Basic._RGB(128 + base, 2), 255);
+        ARGB32(255 * Basic.RGB(128 + base, 0), 255 * Basic.RGB(128 + base, 1),
+               255 * Basic.RGB(128 + base, 2), 255);
 }
 
 int64_t TokiSlopeCraft::sizePic(short dim) const {
@@ -468,7 +469,7 @@ EImage TokiSlopeCraft::getConovertedImage() const {
         "You can get the converted image only after you converted a map.");
     return cvtedImg;
   }
-  Eigen::Array<int, Dynamic, 3> RGBint = (255.0f * Basic._RGB).cast<int>();
+  Eigen::Array<int, Dynamic, 3> RGBint = (255.0f * Basic.RGB_mat()).cast<int>();
   for (int idx = 0; idx < RGBint.size(); idx++) {
     RGBint(idx) = std::max(0, std::min(RGBint(idx), 255));
   }

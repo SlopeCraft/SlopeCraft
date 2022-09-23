@@ -20,16 +20,13 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
-#include "ColorSet.h"
-#include "TokiColor.h"
+#include "Colors.h"
 #include "TokiSlopeCraft.h"
 
-#include <math.h>
-#include <stdio.h>
-
-static constexpr float threshold = 1e-10f;
-
-#define deg2rad(deg) ((deg)*M_PI / 180.0)
+template <>
+const colorset_allowed_t *const TokiColor::Allowed = &TokiSlopeCraft::Allowed;
+template <>
+const colorset_basic_t *const TokiColor::Basic = &TokiSlopeCraft::Basic;
 
 void SCL_testHSV() {
   const float rgb[][3] = {{0, 0, 0}, {1, 1, 1}, {0.99, 0, 0}, {0, 1, 0},

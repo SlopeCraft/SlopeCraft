@@ -6,54 +6,24 @@
 #include <Eigen/Dense>
 #include <cmath>
 
+#include "colorset_maptical.hpp"
+#include "colorset_optical.hpp"
+
 using Eigen::Dynamic;
 
-template <bool isColorFixed, bool has_map_color, int max_color_count>
-class colorset_new;
-
-template <bool is_not_optical> class newTokiColorBase {
-public:
-  using TempVectorXf_t = Eigen::ArrayXf;
-  using uintN_t = uint16_t;
-  static constexpr uintN_t label_uncomputed = ~uintN_t(0);
-  uintN_t result_color_id{label_uncomputed}; // the final color index
-
-  inline bool is_result_computed() const noexcept {
-    return (result_color_id != label_uncomputed);
-  }
-};
-
-template <> class newTokiColorBase<true> {
-public:
-  using TempVectorXf_t = Eigen::Array<float, Dynamic, 1, Eigen::ColMajor, 256>;
-  //记录与result的深度值不同的两个有损优化候选色选择系数（升序排列），Depth=3时无效
-
-  using uintN_t = uint8_t;
-  std::array<float, 2> sideSelectivity;
-  //记录与result的深度值不同的两个有损优化候选色（升序排列），Depth=3时无效
-
-  std::array<uint8_t, 2> sideResult;
-
-  uint8_t Result; //最终调色结果
-
-public:
-  static bool needFindSide;
-  static std::array<uint8_t, 4> DepthCount;
-  // static ::SCL_convertAlgo convertAlgo;
-
-public:
-  inline bool is_result_computed() const noexcept { return (Result != 0); }
-};
-
 template <bool is_not_optical, class basic_t, class allowed_t>
-class newTokiColor : public newTokiColorBase<is_not_optical> {
+class newTokiColor
+    : public ::std::conditional_t<is_not_optical, newtokicolor_base_maptical,
+                                  newtokicolor_base_optical> {
 private:
   static constexpr float threshold = 1e-10f;
 
 public:
-  using Base_t = newTokiColorBase<is_not_optical>;
+  using Base_t =
+      ::std::conditional_t<is_not_optical, newtokicolor_base_maptical,
+                           newtokicolor_base_optical>;
   using TempVectorXf_t = typename Base_t::TempVectorXf_t;
-  using result_t = typename Base_t::uintN_t;
+  using result_t = typename Base_t::result_t;
 
   Eigen::Array3f c3; //   color in some colorspace
   float ResultDiff;  // color diff for the result
@@ -62,6 +32,7 @@ public:
     static ::SCL_convertAlgo val = SCL_convertAlgo::RGB_Better;
     return val;
   }
+
   // These two members must be defined by caller
   static const basic_t *const Basic;
   static const allowed_t *const Allowed;
@@ -102,7 +73,7 @@ public:
     }
   }
 
-  result_t compute(ARGB argb) noexcept {
+  auto compute(ARGB argb) noexcept {
     if (getA(argb) == 0) {
       if constexpr (is_not_optical) {
         this->Result = 0;
@@ -138,11 +109,27 @@ public:
 
     default:
       exit(1);
-      return 0;
+      return result_t(0);
     }
   }
 
 private:
+  auto find_result(const TempVectorXf_t &diff) noexcept {
+    int tempidx = 0;
+    this->ResultDiff = diff.minCoeff(&tempidx);
+
+    if constexpr (is_not_optical) {
+      this->Result = Allowed->Map(tempidx);
+      if (Base_t::needFindSide)
+        doSide(diff);
+
+      return this->Result;
+    } else {
+      this->result_color_id = Allowed->color_id(tempidx);
+      return this->color_id();
+    }
+  }
+
   template <typename = void> void doSide(const TempVectorXf_t &Diff) {
     static_assert(is_not_optical, "");
 
@@ -220,9 +207,7 @@ private:
     return;
   }
 
-  result_t applyRGB() noexcept {
-
-    int tempIndex = 0; // the index of best color
+  auto applyRGB() noexcept {
 
     auto Diff0_2 = (Allowed->rgb(0) - c3[0]).square();
     auto Diff1_2 = (Allowed->rgb(1) - c3[1]).square();
@@ -231,23 +216,10 @@ private:
     TempVectorXf_t Diff = Diff0_2 + Diff1_2 + Diff2_2;
     // Data.CurrentColor-=allowedColors;
 
-    ResultDiff = Diff.minCoeff(&tempIndex) + threshold;
-    // Diff.minCoeff(tempIndex,u);
-    if constexpr (is_not_optical) {
-      this->Result = Allowed->Map(tempIndex);
-      if (Base_t::needFindSide)
-        doSide(Diff);
-      return this->Result;
-    } else {
-      static_assert(is_not_optical, "Not implemented here.");
-
-      return 0;
-    }
+    return find_result(Diff);
   }
 
-  result_t applyRGB_plus() noexcept {
-
-    int tempIndex = 0;
+  auto applyRGB_plus() noexcept {
     // const ColorList &allowedColors = Allowed->_RGB;
     float R = c3[0];
     float g = c3[1];
@@ -299,32 +271,11 @@ private:
             (w_r + w_g + w_b) +
         S_theta * S_ratio * theta.square(); //+S_theta*S_ratio*theta.square()
 
-    ResultDiff = dist.minCoeff(&tempIndex);
-    /*if(dist.isNaN().any()){
-        qDebug("出现Nan");
-            if(SqrModSquare.isNaN().any())      qDebug("SqrModSquare出现Nan");
-            if(theta.isNaN().any())                      qDebug("theta出现Nan");
-            if(sumOnedDelta.isNaN().any())      qDebug("sumOnedDelta出现Nan");
-            if(S_ratio.isNaN().any())                  qDebug("S_ratio出现Nan");
-
-    }*/
-
-    if constexpr (is_not_optical) {
-      this->Result = Allowed->Map(tempIndex);
-      if (Base_t::needFindSide)
-        doSide(dist);
-
-      return this->Result;
-    } else {
-      static_assert(is_not_optical, "Not implemented here.");
-
-      return 0;
-    }
+    return find_result(dist);
   }
 
-  result_t applyHSV() noexcept {
+  auto applyHSV() noexcept {
 
-    int tempIndex = 0;
     // const ColorList &allowedColors = Allowed->HSV;
 
     auto S_times_V = Allowed->hsv(1) * Allowed->hsv(2);
@@ -336,44 +287,22 @@ private:
     auto deltaZ = 50.0f * (Allowed->hsv(2) - c3[2]);
     TempVectorXf_t Diff = deltaX.square() + deltaY.square() + deltaZ.square();
 
-    ResultDiff = Diff.minCoeff(&tempIndex);
-
-    if constexpr (is_not_optical) {
-      this->Result = Allowed->Map(tempIndex);
-      if (Base_t::needFindSide)
-        doSide(Diff);
-      return this->Result;
-    } else {
-      static_assert(is_not_optical, "Not implemented here.");
-
-      return 0;
-    }
+    return find_result(Diff);
   }
 
-  result_t applyXYZ() noexcept {
-    int tempIndex = 0;
+  auto applyXYZ() noexcept {
+
     auto Diff0_2 = (Allowed->xyz(0) - c3[0]).square();
     auto Diff1_2 = (Allowed->xyz(1) - c3[1]).square();
     auto Diff2_2 = (Allowed->xyz(2) - c3[2]).square();
 
     TempVectorXf_t Diff = Diff0_2 + Diff1_2 + Diff2_2;
     // Data.CurrentColor-=allowedColors;
-    ResultDiff = Diff.minCoeff(&tempIndex);
-
-    if constexpr (is_not_optical) {
-      this->Result = Allowed->Map(tempIndex);
-      if (Base_t::needFindSide)
-        doSide(Diff);
-      return this->Result;
-    } else {
-      static_assert(is_not_optical, "Not implemented here.");
-
-      return 0;
-    }
+    return find_result(Diff);
   }
 
-  result_t applyLab94() noexcept {
-    int tempIndex = 0;
+  auto applyLab94() noexcept {
+
     float L = c3[0];
     float a = c3[1];
     float b = c3[2];
@@ -390,43 +319,24 @@ private:
     float SC_2 = (sqrt(C1_2) * 0.045f + 1.0f) * (sqrt(C1_2) * 0.045f + 1.0f);
     auto SH_2 = (C2_2.sqrt() * 0.015f + 1.0f).square();
     TempVectorXf_t Diff = deltaL_2 + deltaCab_2 / SC_2 + deltaHab_2 / SH_2;
-    ResultDiff = Diff.minCoeff(&tempIndex);
 
-    if constexpr (is_not_optical) {
-      this->Result = Allowed->Map(tempIndex);
-      if (Base_t::needFindSide)
-        doSide(Diff);
-      return this->Result;
-    } else {
-      static_assert(is_not_optical, "Not implemented here.");
-
-      return 0;
-    }
+    return find_result(Diff);
   }
 
-  result_t applyLab00() noexcept {
+  auto applyLab00() noexcept {
     int tempIndex = 0;
     float L1s = c3[0];
     float a1s = c3[1];
     float b1s = c3[2];
     // const ColorList &allow = Allowed->Lab;
-    TempVectorXf_t Diff(Allowed->colorCount());
+    TempVectorXf_t Diff(Allowed->color_count());
 
-    for (short i = 0; i < Allowed->colorCount(); i++) {
+    for (short i = 0; i < Allowed->color_count(); i++) {
       Diff(i) = Lab00_diff(L1s, a1s, b1s, Allowed->Lab(i, 0),
                            Allowed->Lab(i, 1), Allowed->Lab(i, 2));
     }
 
-    if constexpr (is_not_optical) {
-      this->Result = Allowed->Map(tempIndex);
-      if (Base_t::needFindSide)
-        doSide(Diff);
-      return this->Result;
-    } else {
-      static_assert(is_not_optical, "Not implemented here.");
-
-      return 0;
-    }
+    return find_result(Diff);
   }
 };
 

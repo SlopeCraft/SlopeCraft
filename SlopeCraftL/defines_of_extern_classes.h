@@ -80,7 +80,9 @@ public:
   static Kernel *create();
 
 public:
-  static void getColorMapPtrs(const float **, const unsigned char **, int *);
+  static void getColorMapPtrs(
+      const float **const rdata, const float **const gdata,
+      const float **const bdata, const unsigned char **, int *);
   // full palette
   static const float *getBasicColorMapPtrs();
 

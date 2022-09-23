@@ -27,24 +27,23 @@ This file is part of SlopeCraft.
 using namespace SlopeCraft;
 
 namespace SlopeCraft {
-int colorCount4External() { return TokiSlopeCraft::Allowed.colorCount(); }
-const Eigen::Array<float, 256, 3> &Basic4External = TokiSlopeCraft::Basic._RGB;
+int colorCount4External() { return TokiSlopeCraft::Allowed.color_count(); }
 
 extern Eigen::Map<const Eigen::ArrayXf> BasicRGB4External(int channel) {
   return Eigen::Map<const Eigen::ArrayXf>(
-      &TokiSlopeCraft::Basic._RGB(0, channel),
-      TokiSlopeCraft::Basic.colorCount());
+      TokiSlopeCraft::Basic.RGB_mat().data() + channel * sizeof(float[256]),
+      TokiSlopeCraft::Basic.color_count());
 }
 
 Eigen::Map<const Eigen::ArrayXf> AllowedRGB4External(int channel) {
   return Eigen::Map<const Eigen::ArrayXf>(
-      TokiSlopeCraft::Allowed._rgb[channel].data(), colorCount4External());
+      TokiSlopeCraft::Allowed.rgb_data(channel), colorCount4External());
 }
 
 extern Eigen::Map<const Eigen::Array<uint8_t, Dynamic, 1>>
 AllowedMapList4External() {
   return Eigen::Map<const Eigen::Array<uint8_t, Dynamic, 1>>(
-      TokiSlopeCraft::Allowed.Map.data(), colorCount4External());
+      TokiSlopeCraft::Allowed.map_data(), colorCount4External());
 }
 // const ColorList &Allowed4External = TokiSlopeCraft::Allowed._RGB;
 // const MapList &AllowedMapList4External = TokiSlopeCraft::Allowed.Map;
@@ -81,18 +80,24 @@ Kernel::Kernel() {}
 
 const char *Kernel::getSCLVersion() { return "v3.10.0"; }
 
-void Kernel::getColorMapPtrs(const float **f, const unsigned char **m,
+void Kernel::getColorMapPtrs(const float **const r, const float **const g,
+                             const float **const b, const unsigned char **m,
                              int *rows) {
-  if (f != nullptr)
-    *f = TokiSlopeCraft::Allowed._rgb[0].data();
+  if (r != nullptr)
+    *r = TokiSlopeCraft::Allowed.rgb_data(0);
+  if (g != nullptr)
+    *g = TokiSlopeCraft::Allowed.rgb_data(1);
+  if (b != nullptr)
+    *b = TokiSlopeCraft::Allowed.rgb_data(2);
+
   if (m != nullptr)
-    *m = TokiSlopeCraft::Allowed.Map.data();
+    *m = TokiSlopeCraft::Allowed.map_data();
   if (rows != nullptr)
-    *rows = TokiSlopeCraft::Allowed.Map.size();
+    *rows = TokiSlopeCraft::Allowed.color_count();
 }
 
 const float *Kernel::getBasicColorMapPtrs() {
-  return TokiSlopeCraft::Basic._RGB.data();
+  return TokiSlopeCraft::Basic.RGB_mat().data();
 }
 
 Kernel *Kernel::create() {

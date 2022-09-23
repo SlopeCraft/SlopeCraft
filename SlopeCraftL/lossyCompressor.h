@@ -23,46 +23,46 @@ This file is part of SlopeCraft.
 #ifndef LOSSYCOMPRESSOR_H
 #define LOSSYCOMPRESSOR_H
 
-
-#include <iostream>
-#include <vector>
-#include <list>
+#include <algorithm>
 #include <cmath>
 #include <ctime>
-#include <algorithm>
+#include <iostream>
+#include <list>
 #include <random>
+#include <vector>
 
+
+#include "Colors.h"
+#include "HeightLine.h"
 #include "SCLDefines.h"
 #include "WaterItem.h"
-#include "ColorSet.h"
-#include "HeightLine.h"
 
-//Eigen::Array<uint8_t,Eigen::Dynamic,1>
+
+// Eigen::Array<uint8_t,Eigen::Dynamic,1>
 class solver_t;
 
-class LossyCompressor
-{
+class LossyCompressor {
 public:
-    LossyCompressor();
-    ~LossyCompressor();
-    void setSource(const Eigen::ArrayXi & ,const TokiColor *[]);
-    bool compress(uint16_t maxHeight,bool allowNaturalCompress=false);
-    const Eigen::ArrayX<uint8_t> & getResult() const;
-    double resultFitness() const;
+  LossyCompressor();
+  ~LossyCompressor();
+  void setSource(const Eigen::ArrayXi &, const TokiColor *[]);
+  bool compress(uint16_t maxHeight, bool allowNaturalCompress = false);
+  const Eigen::ArrayX<uint8_t> &getResult() const;
+  double resultFitness() const;
 
-    void ** windPtr;
-    void (**progressRangeSetPtr)(void*,int min,int max,int val);
-    void (**progressAddPtr)(void*,int);
-    void (**keepAwakePtr)(void*);
+  void **windPtr;
+  void (**progressRangeSetPtr)(void *, int min, int max, int val);
+  void (**progressAddPtr)(void *, int);
+  void (**keepAwakePtr)(void *);
 
 private:
-    friend class solver_t;
-    solver_t * solver;
-    std::vector<const TokiColor*> source;
+  friend class solver_t;
+  solver_t *solver;
+  std::vector<const TokiColor *> source;
 
-    static uint16_t maxGeneration;
+  static uint16_t maxGeneration;
 
-    void runGenetic(uint16_t maxHeight,bool allowNaturalCompress);
+  void runGenetic(uint16_t maxHeight, bool allowNaturalCompress);
 };
 
 double randD();

@@ -33,12 +33,12 @@ This file is part of SlopeCraft.
 #include <unordered_map>
 #include <vector>
 
-#include "ColorSet.h"
+#include "Colors.h"
 #include "SCLDefines.h"
-#include "TokiColor.h"
 #include "WaterItem.h"
 #include "simpleBlock.h"
 #include <unsupported/Eigen/CXX11/Tensor>
+
 
 #include "PrimGlassBuilder.h"
 #include "lossyCompressor.h"
@@ -79,8 +79,8 @@ class NBTWriter;
 
 class TokiSlopeCraft : public Kernel {
 public:
-  static const colorset_new<true, true, 256> Basic;
-  static colorset_new<false, true, 256> Allowed;
+  static const colorset_basic_t Basic;
+  static colorset_allowed_t Allowed;
 
 public:
   TokiSlopeCraft();
