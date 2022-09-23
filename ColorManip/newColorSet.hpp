@@ -1,14 +1,17 @@
 #ifndef SCL_NEWCOLORSET_HPP
 #define SCL_NEWCOLORSET_HPP
 
-#include "SCLDefines.h"
-#include "TokiColor.h"
+#include "ColorManip.h"
+#include "newTokiColor.hpp"
+#include <Eigen/Dense>
+#include <cmath>
+#include <type_traits>
 
-extern "C" {
-void RGB2HSV(float, float, float, float &, float &, float &);
-void RGB2XYZ(float R, float G, float B, float &X, float &Y, float &Z);
-void XYZ2Lab(float X, float Y, float Z, float &L, float &a, float &b);
-}
+#if __cplusplus < 201703L
+#error "C++17 required"
+#endif
+
+using Eigen::Dynamic;
 
 class colorset_u8array {
 public:
@@ -22,18 +25,8 @@ public:
 
 struct heu_empty_struct00 {};
 
-inline constexpr float my_ceil(float fl) {
-  const int64_t leq = fl;
-  const int64_t geq = fl + 1;
-  if (float(leq) == fl) {
-    return fl;
-  } else {
-    return geq;
-  }
-}
-
-template <bool isColorCountFixed, bool has_map_color, int max_color_count>
-class colorset_new : public std::conditional_t<has_map_color, colorset_u8array,
+template <bool is_basical, bool is_not_optical, int max_color_count>
+class colorset_new : public std::conditional_t<is_not_optical, colorset_u8array,
                                                heu_empty_struct00> {
 public:
   static constexpr int align_bytes = 32;
@@ -68,13 +61,13 @@ public:
 
   template <typename = void> inline auto map() const {
     static_assert(
-        has_map_color,
-        "Function colorset_new::map() is only valid when has_map_color==true");
+        is_not_optical,
+        "Function colorset_new::map() is only valid when is_not_optical==true");
     return this->Map.head(_colorCount);
   }
 
   bool
-  applyAllowed(const colorset_new<true, has_map_color, max_color_count> &src,
+  applyAllowed(const colorset_new<true, is_not_optical, max_color_count> &src,
                const bool *const MIndex) {
     if (MIndex == nullptr) {
       return false;
@@ -105,30 +98,13 @@ public:
         _lab[c][writerow] = src.Lab(readrow, c);
         _xyz[c][writerow] = src.XYZ(readrow, c);
       }
-      if constexpr (has_map_color) {
+      if constexpr (is_not_optical) {
         this->Map[writerow] = src.Map[readrow];
       }
       writerow++;
     }
-    /*
-    for (int row = 0; row < new_colornum; row++) {
-      const int base = (row & 0b111111);
-      if (base == 0) {
-        continue;
-      }
-      for (int c = 0; c < 3; c++) {
-        _rgb[c][row] = src._RGB(row, c);
-        _hsv[c][row] = src.HSV(row, c);
-        _lab[c][row] = src.Lab(row, c);
-        _xyz[c][row] = src.XYZ(row, c);
-      }
-      if constexpr (has_map_color) {
-        this->Map[row] = src.Map[row];
-      }
-    }
-    */
 
-    if constexpr (has_map_color) {
+    if constexpr (is_not_optical) {
       update_depthcount();
     }
 
@@ -151,25 +127,25 @@ private:
       _hsv[c].setZero();
       _xyz[c].setZero();
     }
-    if constexpr (has_map_color) {
+    if constexpr (is_not_optical) {
       this->Map.setZero();
     }
   }
 
   template <typename = void> void update_depthcount() {
-    static_assert(has_map_color, "");
+    static_assert(is_not_optical, "");
     static_assert(max_color_count == 256, "");
 
-    TokiColor::DepthCount[0] = 0;
-    TokiColor::DepthCount[1] = 0;
-    TokiColor::DepthCount[2] = 0;
-    TokiColor::DepthCount[3] = 0;
+    newTokiColorBase<true>::DepthCount[0] = 0;
+    newTokiColorBase<true>::DepthCount[1] = 0;
+    newTokiColorBase<true>::DepthCount[2] = 0;
+    newTokiColorBase<true>::DepthCount[3] = 0;
     for (int idx = 0; idx < this->colorCount(); idx++) {
       const uint8_t mapcolor = this->Map[idx];
       const uint8_t base = mapcolor >> 2;
       if (base != 0) {
         const uint8_t depth = mapcolor & 0b11;
-        TokiColor::DepthCount[depth]++;
+        newTokiColorBase<true>::DepthCount[depth]++;
       }
     }
   }
@@ -177,9 +153,9 @@ private:
 
 /// used for basic color set (colorsource), usually works as global constant
 /// object.
-template <bool has_map_color, int color_count>
-class colorset_new<true, has_map_color, color_count>
-    : public std::conditional_t<has_map_color, colorset_u8array,
+template <bool is_not_optical, int color_count>
+class colorset_new<true, is_not_optical, color_count>
+    : public std::conditional_t<is_not_optical, colorset_u8array,
                                 heu_empty_struct00> {
   static_assert(color_count > 0, "");
 

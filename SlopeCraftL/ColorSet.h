@@ -22,9 +22,9 @@ This file is part of SlopeCraft.
 
 #ifndef COLORSET_H
 #define COLORSET_H
+#include "../ColorManip/newColorSet.hpp"
 #include "SCLDefines.h"
-#include "TokiColor.h"
-#include "newColorSet.hpp"
+
 // using namespace Eigen;
 /*
 class ConstColorSet {
@@ -54,6 +54,9 @@ public:
 
 */
 
+using colorset_allowed_t = colorset_new<false, true, 256>;
+using colorset_basic_t = colorset_new<true, true, 256>;
+
 namespace SlopeCraft {
 extern int colorCount4External();
 // extern const Eigen::Array<float, 256, 3> &BasicRGB4External;
@@ -67,26 +70,7 @@ extern Eigen::Map<const Eigen::Array<uint8_t, Dynamic, 1>>
 AllowedMapList4External();
 } // namespace SlopeCraft
 
-extern "C" {
-void f(float &);
-void invf(float &);
-void RGB2HSV(float, float, float, float &, float &, float &);
-void HSV2RGB(float, float, float, float &, float &, float &);
-void RGB2XYZ(float R, float G, float B, float &X, float &Y, float &Z);
-void XYZ2Lab(float X, float Y, float Z, float &L, float &a, float &b);
-void Lab2XYZ(float L, float a, float b, float &X, float &Y, float &Z);
-
-float Lab00_diff(float, float, float, float, float, float);
-
-float squeeze01(float);
-ARGB RGB2ARGB(float, float, float);
-ARGB HSV2ARGB(float, float, float);
-ARGB XYZ2ARGB(float, float, float);
-ARGB Lab2ARGB(float, float, float);
-ARGB ComposeColor(const ARGB front, const ARGB back);
-}
-
-bool readFromFile(const char *FileName, Eigen::ArrayXXf &M);
-bool readFromTokiColor(const char *, Eigen::ArrayXXf &, const std::string &);
+// bool readFromFile(const char *FileName, Eigen::ArrayXXf &M);
+// bool readFromTokiColor(const char *, Eigen::ArrayXXf &, const std::string &);
 
 #endif // COLORSET_H

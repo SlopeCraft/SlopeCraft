@@ -22,8 +22,6 @@ This file is part of SlopeCraft.
 
 #include "TokiSlopeCraft.h"
 
-void matchColor(uint32_t taskCount, TokiColor **tk, ARGB *argb);
-
 bool TokiSlopeCraft::convert(convertAlgo algo, bool dither) {
   if (kernelStep < convertionReady) {
     reportError(wind, errorFlag::HASTY_MANIPULATION,
@@ -110,7 +108,7 @@ void TokiSlopeCraft::pushToHash() {
   R->clear();
 
   ::SlopeCraft::convertAlgo Mode = ConvertAlgo;
-  TokiColor::convertAlgo = Mode;
+  TokiColor::convertAlgo() = Mode;
 
   // R->reserve(sizePic(2)/4);
 
@@ -147,7 +145,7 @@ void TokiSlopeCraft::applyTokiColor() {
   for (uint64_t begIdx = 0; begIdx < threadCount; begIdx++) {
     //
     for (uint64_t idx = begIdx; idx < taskCount; idx += threadCount) {
-      tasks[idx]->second.apply(tasks[idx]->first);
+      tasks[idx]->second.compute(tasks[idx]->first);
       if (idx % reportRate == 0) {
         std::clock_t curClock = std::clock();
         if (curClock - prevClock > interval) {
@@ -246,7 +244,7 @@ void TokiSlopeCraft::Dither() {
         if (find == R->end()) {
           R->emplace(Current, TokiColor(Current));
           find = R->find(Current);
-          find->second.apply(Current);
+          find->second.compute(Current);
           //装入了一个新颜色并匹配为地图色
           newCount++;
         }
@@ -283,7 +281,7 @@ void TokiSlopeCraft::Dither() {
         if (find == R->end()) {
           R->emplace(Current, Current);
           find = R->find(Current);
-          find->second.apply(Current);
+          find->second.compute(Current);
           //装入了一个新颜色并匹配为地图色
           newCount++;
         }
@@ -315,12 +313,6 @@ void TokiSlopeCraft::Dither() {
   }
   cerr << "Error diffuse finished\n";
   cerr << "Inserted " << newCount << " colors to hash\n";
-}
-
-void matchColor(uint32_t taskCount, TokiColor **tk, ARGB *argb) {
-  for (uint32_t i = 0; i < taskCount; i++) {
-    tk[i]->apply(argb[i]);
-  }
 }
 
 void TokiSlopeCraft::exportAsData(const char *FolderPath, const int indexStart,

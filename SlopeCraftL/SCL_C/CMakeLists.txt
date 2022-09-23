@@ -27,7 +27,8 @@ set_target_properties(SlopeCraftL_C PROPERTIES
 
 install(TARGETS SlopeCraftL_C
     RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/C/lib 
-    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/C/lib)
+    #LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/C/lib
+    )
 
 
 

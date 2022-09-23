@@ -47,7 +47,7 @@ This file is part of SlopeCraft.
 
 #include "AiCvterOpt.h"
 
-#include "newColorSet.hpp"
+#include "../ColorManip/newColorSet.hpp"
 
 #include "../GAConverter/GAConverter.h"
 
@@ -186,9 +186,9 @@ private:
 #else
   friend class Kernel;
 #endif //  #ifdef SLOPECRAFTL_CAPI
-  friend class TokiColor;
-  // friend void * allowedRGB();
-  // friend void * allowedMap();
+  // friend class TokiColor;
+  //  friend void * allowedRGB();
+  //  friend void * allowedMap();
   enum ColorSpace { R = 'R', H = 'H', L = 'L', X = 'X' };
   static const Eigen::Array<float, 2, 3> DitherMapLR, DitherMapRL;
   static const uint32_t reportRate = 100;

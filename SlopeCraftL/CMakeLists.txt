@@ -10,6 +10,8 @@ include_directories(${SlopeCraft_Eigen3_include_dir}
 
 find_package(ZLIB 1.2.11)
 
+#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/ColorManip)
+
 #message("ZLIB_INCLUDE_DIR = " ${ZLIB_INCLUDE_DIR})
 if(ZLIB_FOUND)
     include_directories(ZLIB_INCLUDE_DIR)
@@ -40,10 +42,10 @@ set(SlopeCraft_SCL_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/SlopeCraftL.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/SlopeCraftL_global.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/defines_of_extern_classes.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/newColorSet.hpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/newColorSet.hpp
 
     ${CMAKE_CURRENT_SOURCE_DIR}/AiCvterOpt.cpp 
-    ${CMAKE_CURRENT_SOURCE_DIR}/CIEDE00.cpp 
+    #${CMAKE_CURRENT_SOURCE_DIR}/CIEDE00.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/ColorSource.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/HeightLine.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/OptiChain.cpp 
@@ -67,7 +69,7 @@ add_definitions(-DSLOPECRAFTL_LIBRARY)
 
 add_library(SlopeCraftL SHARED ${SlopeCraft_SCL_sources})
 # link SlopeCraftL with GAConverter and zlib
-target_link_libraries(SlopeCraftL PUBLIC GAConverter -lz)
+target_link_libraries(SlopeCraftL PUBLIC GAConverter -lz ColorManip)
 
 set_target_properties(SlopeCraftL PROPERTIES
     PREFIX ""

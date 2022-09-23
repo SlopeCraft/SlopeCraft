@@ -56,6 +56,7 @@ message("The output is : " ${SlopeCraft_output_variable})
 # If it is set to ON, everytime CMake reconfigure the project, all .ts files will be updated.
 set(SlopeCraft_update_ts_files OFF)
 
+add_definitions("-D_USE_MATH_DEFINES")
 
 add_subdirectory(imageCutter)
 add_subdirectory(GAConverter)
@@ -63,6 +64,7 @@ add_subdirectory(SlopeCraftL)
 add_subdirectory(BlockListManager)
 add_subdirectory(SlopeCraftMain)
 add_subdirectory(MapViewer)
+add_subdirectory(ColorManip)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 

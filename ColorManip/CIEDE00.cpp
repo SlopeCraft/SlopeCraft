@@ -20,7 +20,7 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
-#include "TokiColor.h"
+#include "ColorManip.h"
 #include <cmath>
 #define deg2rad(deg) ((deg)*M_PI / 180.0)
 #define rad2deg(rad) ((rad)*180.0 / M_PI)
@@ -28,11 +28,10 @@ const float kL = 1.0;
 const float kC = 1.0;
 const float kH = 1.0;
 
-extern "C" {
-
 inline float square(float x) { return x * x; }
 
-float Lab00_diff(float L1, float a1, float b1, float L2, float a2, float b2) {
+float Lab00_diff(float L1, float a1, float b1, float L2, float a2,
+                 float b2) noexcept {
   float C1sab = std::sqrt(a1 * a1 + b1 * b1);
   float C2sab = std::sqrt(a2 * a2 + b2 * b2);
   float mCsab = (C1sab + C2sab) / 2;
@@ -130,5 +129,4 @@ float Lab00_diff(float L1, float a1, float b1, float L2, float a2, float b2) {
 
   // return sqrt(Diffsquare);
   return Diffsquare;
-}
 }
