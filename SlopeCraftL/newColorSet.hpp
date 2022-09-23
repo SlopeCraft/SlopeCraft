@@ -83,13 +83,39 @@ public:
     Eigen::Map<const Eigen::Array<bool, Dynamic, 1>> allow_list(
         MIndex, max_color_count);
 
-    const int new_colornum = (allow_list == true).count();
+    // const int new_colornum = (allow_list == true).count();
+    int new_colornum = 0;
+    for (int idx = 0; idx < max_color_count; idx++) {
+      new_colornum += (idx & 0b111111) && MIndex[idx];
+    }
 
     fillzero();
 
     _colorCount = new_colornum;
+    for (int readrow = 0, writerow = 0; readrow < max_color_count; readrow++) {
+      const int base = readrow & 0b111111; //  readrow means index
+      if (base == 0) {
+        continue;
+      }
 
+      for (int c = 0; c < 3; c++) {
+
+        _rgb[c][writerow] = src._RGB(readrow, c);
+        _hsv[c][writerow] = src.HSV(readrow, c);
+        _lab[c][writerow] = src.Lab(readrow, c);
+        _xyz[c][writerow] = src.XYZ(readrow, c);
+      }
+      if constexpr (has_map_color) {
+        this->Map[writerow] = src.Map[readrow];
+      }
+      writerow++;
+    }
+    /*
     for (int row = 0; row < new_colornum; row++) {
+      const int base = (row & 0b111111);
+      if (base == 0) {
+        continue;
+      }
       for (int c = 0; c < 3; c++) {
         _rgb[c][row] = src._RGB(row, c);
         _hsv[c][row] = src.HSV(row, c);
@@ -100,9 +126,10 @@ public:
         this->Map[row] = src.Map[row];
       }
     }
+    */
 
     if constexpr (has_map_color) {
-      update_depthcount(src, MIndex);
+      update_depthcount();
     }
 
     return true;
@@ -129,10 +156,7 @@ private:
     }
   }
 
-  template <typename = void>
-  void update_depthcount(
-      const colorset_new<true, has_map_color, max_color_count> &src,
-      const bool *const MIndex) {
+  template <typename = void> void update_depthcount() {
     static_assert(has_map_color, "");
     static_assert(max_color_count == 256, "");
 
@@ -140,9 +164,13 @@ private:
     TokiColor::DepthCount[1] = 0;
     TokiColor::DepthCount[2] = 0;
     TokiColor::DepthCount[3] = 0;
-    for (int r = 0; r < 256; r++) {
-      TokiColor::DepthCount[(4 * (r % 64) + (r / 64)) % 4] += MIndex[r];
-      //(4*(r%64)+(r/64))
+    for (int idx = 0; idx < this->colorCount(); idx++) {
+      const uint8_t mapcolor = this->Map[idx];
+      const uint8_t base = mapcolor >> 2;
+      if (base != 0) {
+        const uint8_t depth = mapcolor & 0b11;
+        TokiColor::DepthCount[depth]++;
+      }
     }
   }
 };
@@ -174,7 +202,7 @@ public:
     Lab.setZero();
     XYZ.setZero();
 
-    for (int i = 0; i < 256 * 3; i++) {
+    for (int i = 0; i < color_count * 3; i++) {
       _RGB(i) = rgbsrc[i];
     }
 

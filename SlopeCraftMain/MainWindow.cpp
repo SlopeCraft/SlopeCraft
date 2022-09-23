@@ -276,7 +276,11 @@ void MainWindow::showPreview() {
   auto iS = preWind->Src.begin();
   for (auto ib = preWind->BlockCount.begin();
        ib != preWind->BlockCount.end();) {
-    if (*ib > 0) {
+      if(*iS==nullptr) {
+          ib = preWind->BlockCount.erase(ib);
+          iS = preWind->Src.erase(iS);
+      }
+    if (*ib > 0) {  //  if the block is used, keep it. otherwise erase it.
       ib++;
       iS++;
       continue;
@@ -284,6 +288,7 @@ void MainWindow::showPreview() {
     ib = preWind->BlockCount.erase(ib);
     iS = preWind->Src.erase(iS);
   }
+
   kernel->get3DSize(&preWind->size[0], &preWind->size[1], &preWind->size[2]);
 
   qDebug() << "去重后有：" << preWind->Src.size() << "个元素";
@@ -819,9 +824,9 @@ void MainWindow::preprocessImage(const QString &Path) {
   ui->ShowPic->setPixmap(QPixmap::fromImage(rawPic));
 
   kernel->decreaseStep(SlopeCraft::step::nothing);
-  kernelSetType();
-  kernelSetImg();
-  updateEnables();
+  this->kernelSetType();
+  this->kernelSetImg();
+  this->updateEnables();
 }
 
 void MainWindow::on_ImportPic_clicked() {
@@ -968,7 +973,12 @@ void MainWindow::onGameVerClicked() {
   }
   kernel->decreaseStep(SlopeCraft::step::nothing);
   onBlockListChanged();
+
   this->kernelSetType();
+  if (!this->rawPic.isNull()) {
+    kernelSetImg();
+  }
+  this->updateEnables();
 }
 
 void MainWindow::onMapTypeClicked() {
@@ -989,6 +999,10 @@ void MainWindow::onMapTypeClicked() {
   onBlockListChanged();
 
   this->kernelSetType();
+  if (!this->rawPic.isNull()) {
+    kernelSetImg();
+  }
+  this->updateEnables();
 }
 
 void MainWindow::ChangeToCustom() {
@@ -1104,7 +1118,7 @@ void MainWindow::kernelSetType() {
   }
   cout<<endl<<endl;
   */
-  updateEnables();
+  // updateEnables();
 
   // TokiTask::canExportLite=kernel->isVanilla();
   emit mapTypeChanged();
@@ -1113,7 +1127,7 @@ void MainWindow::kernelSetType() {
 void MainWindow::kernelSetImg() {
   EImage rawImg = QImage2EImage(rawPic);
   kernel->setRawImage(rawImg.data(), rawImg.rows(), rawImg.cols());
-  this->updateEnables();
+  // this->updateEnables();
 }
 
 EImage QImage2EImage(const QImage &qi) {
@@ -2129,7 +2143,11 @@ void MainWindow::onBlockListChanged() {
     return;
   }
 
-  kernelSetType();
+  this->kernelSetType();
+  if (!this->rawPic.isNull()) {
+    this->kernelSetImg();
+  }
+  this->updateEnables();
 
   ushort colorCount = kernel->getColorCount();
   ui->IntroColorCount->setText(tr("可用") + QString::number(colorCount) +

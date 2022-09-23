@@ -468,17 +468,20 @@ EImage TokiSlopeCraft::getConovertedImage() const {
         "You can get the converted image only after you converted a map.");
     return cvtedImg;
   }
-  Eigen::ArrayXXi RGBint = (255.0f * Basic._RGB).cast<int>();
-  RGBint =
-      (RGBint > 255).select(Eigen::ArrayXXi::Constant(256, 3, 255), RGBint);
-  short Index;
+  Eigen::Array<int, Dynamic, 3> RGBint = (255.0f * Basic._RGB).cast<int>();
+  for (int idx = 0; idx < RGBint.size(); idx++) {
+    RGBint(idx) = std::max(0, std::min(RGBint(idx), 255));
+  }
+  // RGBint =(RGBint > 255).select(Eigen::ArrayXXi::Constant(256, 3, 255),
+  // RGBint);
+  // short Index;
   for (short r = 0; r < sizePic(0); r++) {
     for (short c = 0; c < sizePic(1); c++) {
-      if (mapPic(r, c) <= 3) {
+      if (mapColor2baseColor(this->mapPic(r, c)) == 0) { //  if base ==0
         cvtedImg(r, c) = ARGB32(0, 0, 0, 0);
         continue;
       }
-      Index = mapColor2Index(mapPic(r, c));
+      const int Index = mapColor2Index(this->mapPic(r, c));
 
       cvtedImg(r, c) =
           ARGB32(RGBint(Index, 0), RGBint(Index, 1), RGBint(Index, 2));

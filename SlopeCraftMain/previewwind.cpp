@@ -74,7 +74,10 @@ void PreviewWind::ShowMaterialList() {
         area->addWidget(idShower=new QLabel("Test2"),rows,colOffset);
         area->addWidget(countShower=new QLabel("Test3"),rows,colOffset+1);
 
-        iconShower->setPixmap(Src[i]->icon().pixmap(Src[i]->iconSize()));
+            auto icon=Src[i]->icon();
+            auto iconsize=Src[i]->iconSize();
+            auto pixmap=icon.pixmap(iconsize);
+        iconShower->setPixmap(pixmap);
 
         iconShower->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
         idShower->setText("      "+Src[i]->text());

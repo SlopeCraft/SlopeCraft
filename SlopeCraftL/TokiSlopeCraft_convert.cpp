@@ -126,7 +126,7 @@ void TokiSlopeCraft::pushToHash() {
 }
 
 void TokiSlopeCraft::applyTokiColor() {
-  static const uint64_t threadCount = std::thread::hardware_concurrency();
+  static const uint64_t threadCount = 4 * std::thread::hardware_concurrency();
   const uint64_t taskCount = colorHash.size();
 
   // int step=threadCount*sizePic(2)/taskCount;
@@ -157,8 +157,11 @@ void TokiSlopeCraft::applyTokiColor() {
       }
     }
   }
-
-  cerr << "colors converted\n";
+  /*
+cout << "colors converted in "
+     << float(std::clock() - prevClock) * 1000 / CLOCKS_PER_SEC
+     << " miliseconds\n";
+     */
 }
 
 void TokiSlopeCraft::fillMapMat() {
