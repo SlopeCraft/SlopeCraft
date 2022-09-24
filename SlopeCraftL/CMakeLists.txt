@@ -29,7 +29,7 @@ set(SlopeCraft_SCL_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/AiCvterOpt.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/Colors.h
     ${CMAKE_CURRENT_SOURCE_DIR}/HeightLine.h 
-    ${CMAKE_CURRENT_SOURCE_DIR}/newNBTWriter.hpp 
+    #${CMAKE_CURRENT_SOURCE_DIR}/newNBTWriter.hpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/OptiChain.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/PrimGlassBuilder.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/SCLDefines.h 
@@ -66,7 +66,7 @@ add_definitions(-DSLOPECRAFTL_LIBRARY)
 
 add_library(SlopeCraftL SHARED ${SlopeCraft_SCL_sources})
 # link SlopeCraftL with GAConverter and zlib
-target_link_libraries(SlopeCraftL PUBLIC GAConverter -lz ColorManip)
+target_link_libraries(SlopeCraftL PUBLIC GAConverter -lz ColorManip NBTWriter)
 
 set_target_properties(SlopeCraftL PROPERTIES
     PREFIX ""

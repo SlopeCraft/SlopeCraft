@@ -13,7 +13,7 @@ add_definitions(-DSCL_CAPI)
 
 add_library(SlopeCraftL_C SHARED ${SlopeCraft_SCL_sources})
 # link SlopeCraftL with GAConverter and zlib
-target_link_libraries(SlopeCraftL_C PUBLIC GAConverter -lz ColorManip)
+target_link_libraries(SlopeCraftL_C PUBLIC GAConverter -lz ColorManip NBTWriter)
 
 set_target_properties(SlopeCraftL_C PROPERTIES
     PREFIX ""

@@ -22,7 +22,6 @@ This file is part of SlopeCraft.
 
 #include "TokiSlopeCraft.h"
 
-
 void TokiSlopeCraft::makeTests(const AbstractBlock **src,
                                const unsigned char *baseColor, const char *dst,
                                char *_unFileName) {
@@ -81,7 +80,7 @@ std::string TokiSlopeCraft::makeTests(const AbstractBlock **src,
     xSize = std::max(size_t(xSize), it.size());
   }
 
-  NBT::NBTWriter file;
+  NBT::NBTWriter<false> file;
   std::string unCompress = fileName + ".TokiNoBug";
   file.open(unCompress.data());
   file.writeListHead("entities", NBT::Byte, 0);
@@ -154,11 +153,10 @@ std::string TokiSlopeCraft::makeTests(const AbstractBlock **src,
   return fileName;
 }
 
-
 void TokiSlopeCraft::writeBlock(const std::string &netBlockId,
                                 const std::vector<std::string> &Property,
                                 const std::vector<std::string> &ProVal,
-                                NBT::NBTWriter &Lite) {
+                                NBT::NBTWriter<false> &Lite) {
   Lite.writeCompound("ThisStringShouldNeverBeSeen");
   std::string BlockId = netBlockId;
 
@@ -181,7 +179,7 @@ void TokiSlopeCraft::writeBlock(const std::string &netBlockId,
   Lite.endCompound();
 }
 
-void TokiSlopeCraft::writeTrash(int count, NBT::NBTWriter &Lite) {
+void TokiSlopeCraft::writeTrash(int count, NBT::NBTWriter<false> &Lite) {
   std::vector<std::string> ProName(5), ProVal(5);
   // ProName:NEWSP
   //,,,,
@@ -219,16 +217,16 @@ void TokiSlopeCraft::exportAsLitematic(const char *TargetName,
                                        const char *RegionName,
                                        char *FileName) const {
   cerr << __FILE__ << " , " << __LINE__ << endl;
-  std::string temp =
-      exportAsLitematic(TargetName, LiteName, RegionName);
+  std::string temp = exportAsLitematic(TargetName, LiteName, RegionName);
   cerr << __FILE__ << " , " << __LINE__ << endl;
   if (FileName != nullptr)
     std::strcpy(temp.data(), FileName);
 }
 
-std::string TokiSlopeCraft::exportAsLitematic(
-    const std::string &TargetName, const std::string &LiteName,
-        const std::string &RegionName) const {
+std::string
+TokiSlopeCraft::exportAsLitematic(const std::string &TargetName,
+                                  const std::string &LiteName,
+                                  const std::string &RegionName) const {
   if (kernelStep < builded) {
     reportError(wind, errorFlag::HASTY_MANIPULATION,
                 "You can only export a map to litematic after you build the 3D "
@@ -237,7 +235,7 @@ std::string TokiSlopeCraft::exportAsLitematic(
   }
   reportWorkingStatue(wind, workStatues::writingMetaInfo);
   progressRangeSet(wind, 0, 100 + Build.size(), 0);
-  NBT::NBTWriter Lite;
+  NBT::NBTWriter<false> Lite;
 
   std::string unCompressed = TargetName + ".TokiNoBug";
   Lite.open(unCompressed.data());
@@ -250,7 +248,8 @@ std::string TokiSlopeCraft::exportAsLitematic(
   Lite.writeInt("y", size3D[1]);
   Lite.writeInt("z", size3D[2]);
   Lite.endCompound();
-    const std::string author=std::string("SlopeCraft ")+Kernel::getSCLVersion();
+  const std::string author =
+      std::string("SlopeCraft ") + Kernel::getSCLVersion();
   Lite.writeString("Author", author.data());
 
   static const std::string Description =
@@ -332,16 +331,16 @@ std::string TokiSlopeCraft::exportAsLitematic(
 
           if (inverserIndex < 0) {
             inverserIndex = 7;
-            Lite.writeSingleTag<int64_t,false>(NBT::Long,"id",HackyVal);
-            //Lite.writeLongDirectly("id", HackyVal);
+            Lite.writeSingleTag<int64_t, false>(NBT::Long, "id", HackyVal);
+            // Lite.writeLongDirectly("id", HackyVal);
           }
         }
         progressAdd(wind, size3D[0]);
       }
 
     if (!Lite.isListOrArrayFinished())
-        Lite.writeSingleTag<int64_t,false>(NBT::Long,"id",HackyVal);
-      //Lite.writeLongDirectly("id", HackyVal);
+      Lite.writeSingleTag<int64_t, false>(NBT::Long, "id", HackyVal);
+    // Lite.writeLongDirectly("id", HackyVal);
   }
   Lite.endCompound();
 
@@ -385,7 +384,6 @@ std::string TokiSlopeCraft::exportAsLitematic(
 
   return "";
 }
-
 
 bool TokiSlopeCraft::build(compressSettings cS, uint16_t mAH,
                            glassBridgeSettings gBS, uint16_t bI, bool fireProof,
@@ -678,7 +676,6 @@ void TokiSlopeCraft::makeBridge() {
   cerr << "makeBridge finished\n";
 }
 
-
 void TokiSlopeCraft::exportAsStructure(const char *TargetName,
                                        char *FileName) const {
 
@@ -699,7 +696,7 @@ TokiSlopeCraft::exportAsStructure(const std::string &TargetName) const {
 
   reportWorkingStatue(wind, workStatues::writingMetaInfo);
   progressRangeSet(wind, 0, 100 + Build.size(), 0);
-  NBT::NBTWriter file;
+  NBT::NBTWriter<false> file;
 
   std::string unCompress = TargetName + ".TokiNoBug";
   file.open(unCompress.data());
@@ -794,148 +791,149 @@ TokiSlopeCraft::exportAsStructure(const std::string &TargetName) const {
   return "";
 }
 
-void TokiSlopeCraft::exportAsWESchem(const char * fileName,
-                     const int (&offset)[3],const int (&weOffset)[3],const char * Name,
-const char *const*const requiredMods,const int requiredModsCount,char * returnVal) const {
+void TokiSlopeCraft::exportAsWESchem(const char *fileName,
+                                     const int (&offset)[3],
+                                     const int (&weOffset)[3], const char *Name,
+                                     const char *const *const requiredMods,
+                                     const int requiredModsCount,
+                                     char *returnVal) const {
 
-    if(fileName==nullptr||strlen(fileName)==0) {
-        return;
-    }
-
-    const std::array<int,3> _offset({offset[0],offset[1],offset[2]});
-    const std::array<int,3> _weOffset({weOffset[0],weOffset[1],weOffset[2]});
-
-    std::vector<const char *> _reqMods;
-    _reqMods.reserve(requiredModsCount);
-    if(requiredMods!=nullptr)
-        for(int idx=0;idx<requiredModsCount;idx++) {
-            if(requiredMods[idx]==nullptr)
-                continue;
-            _reqMods.emplace_back(requiredMods[idx]);
-        }
-
-    const std::string retVal=this->exportAsWESchem(std::string(fileName),
-                                                   _offset,_weOffset,Name,
-                                                   _reqMods);
-    if(returnVal!=nullptr) {
-        strcpy(returnVal,retVal.data());
-    }
+  if (fileName == nullptr || strlen(fileName) == 0) {
     return;
+  }
+
+  const std::array<int, 3> _offset({offset[0], offset[1], offset[2]});
+  const std::array<int, 3> _weOffset({weOffset[0], weOffset[1], weOffset[2]});
+
+  std::vector<const char *> _reqMods;
+  _reqMods.reserve(requiredModsCount);
+  if (requiredMods != nullptr)
+    for (int idx = 0; idx < requiredModsCount; idx++) {
+      if (requiredMods[idx] == nullptr)
+        continue;
+      _reqMods.emplace_back(requiredMods[idx]);
+    }
+
+  const std::string retVal = this->exportAsWESchem(
+      std::string(fileName), _offset, _weOffset, Name, _reqMods);
+  if (returnVal != nullptr) {
+    strcpy(returnVal, retVal.data());
+  }
+  return;
 }
 
-std::string TokiSlopeCraft::exportAsWESchem(const std::string &targetName,
-                                            const std::array<int,3>& offset,
-                                            const std::array<int,3>& weOffset,
-                                            const char * Name,
-                                            const std::vector<const char *> & requiredMods) const {
-    if (kernelStep < builded) {
-      reportError(wind, errorFlag::HASTY_MANIPULATION,
-                  "You can only export a map to structure after you build the 3D "
-                  "structure.");
-      return "Too hasty! export structure after you built!";
+std::string TokiSlopeCraft::exportAsWESchem(
+    const std::string &targetName, const std::array<int, 3> &offset,
+    const std::array<int, 3> &weOffset, const char *Name,
+    const std::vector<const char *> &requiredMods) const {
+  if (kernelStep < builded) {
+    reportError(wind, errorFlag::HASTY_MANIPULATION,
+                "You can only export a map to structure after you build the 3D "
+                "structure.");
+    return "Too hasty! export structure after you built!";
+  }
+
+  // progress bar value : 10(open+others) + 64(palette) + Build + 10
+  // (others+compress+remove)
+
+  const int progressMax = 10 + 64 + Build.size() + 10;
+
+  progressRangeSet(wind, 0, progressMax, 0);
+
+  NBT::NBTWriter<false> file;
+  const std::string unCompressed = targetName + ".TokiNoBug";
+  if (!file.open(unCompressed.data())) {
+    cout << "Failed to open file " << unCompressed << endl;
+    return "Failed to open file";
+  }
+
+  // write metadata
+  file.writeCompound("Metadata");
+  file.writeInt("WEOffsetX", weOffset[0]);
+  file.writeInt("WEOffsetY", weOffset[1]);
+  file.writeInt("WEOffsetZ", weOffset[2]);
+  file.writeString("Name", Name);
+  file.writeString(
+      "Author", (std::string("SlopeCraft ") + Kernel::getSCLVersion()).data());
+  file.writeLong("Date", std::time(nullptr) * 1000);
+
+  file.writeListHead("RequiredMods", NBT::String, requiredMods.size());
+  for (const char *str : requiredMods) {
+    file.writeString("", str);
+  }
+  file.endCompound();
+
+  int paletteMax = ((mcVer >= MC16) ? 59 : 52);
+  if (mcVer >= 17)
+    paletteMax = 62;
+
+  progressAdd(wind, 10);
+
+  file.writeCompound("Palette");
+  {
+    int blockIdx = 0;
+    file.writeInt("minecraft:air", 0);
+    for (const simpleBlock &block : blockPalette) {
+      blockIdx++;
+      if (blockIdx >= paletteMax)
+        break;
+      file.writeInt(block.getId(), blockIdx);
     }
+  }
+  file.endCompound();
 
-    //progress bar value : 10(open+others) + 64(palette) + Build + 10 (others+compress+remove)
+  file.writeListHead("BlockEntities", NBT::Compound, 0);
 
-    const int progressMax=10+64+Build.size()+10;
+  file.writeInt("DataVersion", Kernel::mcVersion2VersionNumber(this->mcVer));
 
-    progressRangeSet(wind,0,progressMax,0);
+  file.writeShort("Width", this->size3D[0]);
+  file.writeShort("Height", this->size3D[1]);
+  file.writeShort("Length", this->size3D[2]);
 
-    NBT::NBTWriter file;
-    const std::string unCompressed = targetName + ".TokiNoBug";
-    if(!file.open(unCompressed.data())) {
-        cout<<"Failed to open file "<<unCompressed<<endl;
-        return "Failed to open file";
+  file.writeInt("Version", 2);
+
+  file.writeInt("PaletteMax", paletteMax);
+
+  progressAdd(wind, 64);
+
+  file.writeByteArrayHead("BlockData", this->Build.size());
+  for (int y = 0; y < size3D[1]; y++) {
+    for (int z = 0; z < size3D[2]; z++) {
+      for (int x = 0; x < size3D[0]; x++) {
+        file.writeByte("", this->Build(x, y, z));
+      }
     }
+    progressAdd(wind, size3D[2] * size3D[0]);
+  }
 
-    // write metadata
-    file.writeCompound("Metadata");
-        file.writeInt("WEOffsetX",weOffset[0]);
-        file.writeInt("WEOffsetY",weOffset[1]);
-        file.writeInt("WEOffsetZ",weOffset[2]);
-        file.writeString("Name",Name);
-        file.writeString("Author",(std::string("SlopeCraft ")+Kernel::getSCLVersion()).data());
-        file.writeLong("Date",std::time(nullptr)*1000);
+  file.writeIntArrayHead("Offset", 3);
+  {
+    file.writeInt("x", offset[0]);
+    file.writeInt("y", offset[1]);
+    file.writeInt("z", offset[2]);
+  }
 
-        file.writeListHead("RequiredMods",NBT::String,requiredMods.size());
-            for(const char * str : requiredMods) {
-                file.writeString("",str);
-            }
-   file.endCompound();
+  if (!file.close()) {
+    cout << "Failed to close file" << endl;
+    return "Failed to close file";
+  }
 
-   int paletteMax = ((mcVer >= MC16) ? 59 : 52);
-   if (mcVer >= 17)
-     paletteMax = 62;
+  progressAdd(wind, 5);
 
-   progressAdd(wind,10);
+  if (!compressFile(unCompressed.data(), targetName.data())) {
+    const std::string msg = "Failed to gzip compress file : " + unCompressed;
+    cout << "Failed to gzip compress file " << unCompressed << endl;
+    this->reportError(this->wind, errorFlag::FAILED_TO_COMPRESS, msg.data());
+    return unCompressed;
+  }
 
-   file.writeCompound("Palette");
-   {
-       int blockIdx=0;
-       file.writeInt("minecraft:air",0);
-       for(const simpleBlock & block : blockPalette) {
-           blockIdx++;
-           if(blockIdx>=paletteMax)
-               break;
-           file.writeInt(block.getId(),blockIdx);
-       }
-   }
-   file.endCompound();
+  if (std::remove(unCompressed.data()) != 0) {
+    std::string msg = "Failed to remove temporary file : " + unCompressed;
+    reportError(wind, errorFlag::FAILED_TO_REMOVE, msg.data());
+    return unCompressed;
+  }
 
+  progressRangeSet(wind, 0, progressMax, progressMax);
 
-   file.writeListHead("BlockEntities",NBT::Compound,0);
-
-   file.writeInt("DataVersion",Kernel::mcVersion2VersionNumber(this->mcVer));
-
-   file.writeShort("Width",this->size3D[0]);
-   file.writeShort("Height",this->size3D[1]);
-   file.writeShort("Length",this->size3D[2]);
-
-   file.writeInt("Version",2);
-
-   file.writeInt("PaletteMax",paletteMax);
-
-   progressAdd(wind,64);
-
-   file.writeByteArrayHead("BlockData",this->Build.size());
-       for (int y = 0; y < size3D[1]; y++) {
-         for (int z = 0; z < size3D[2]; z++) {
-           for (int x = 0; x < size3D[0]; x++) {
-               file.writeByte("",this->Build(x,y,z));
-           }
-         }
-         progressAdd(wind,size3D[2]*size3D[0]);
-       }
-
-   file.writeIntArrayHead("Offset",3);
-   {
-       file.writeInt("x",offset[0]);
-       file.writeInt("y",offset[1]);
-       file.writeInt("z",offset[2]);
-   }
-
-   if(!file.close()) {
-       cout<<"Failed to close file"<<endl;
-       return "Failed to close file";
-   }
-
-   progressAdd(wind,5);
-
-   if(!compressFile(unCompressed.data(),targetName.data())) {
-       const std::string msg="Failed to gzip compress file : "+unCompressed;
-       cout<<"Failed to gzip compress file "<<unCompressed<<endl;
-       this->reportError(this->wind,errorFlag::FAILED_TO_COMPRESS,
-                         msg.data());
-       return unCompressed;
-   }
-
-   if (std::remove(unCompressed.data()) != 0) {
-     std::string msg = "Failed to remove temporary file : " + unCompressed;
-     reportError(wind, errorFlag::FAILED_TO_REMOVE, msg.data());
-     return unCompressed;
-   }
-
-   progressRangeSet(wind,0,progressMax,progressMax);
-
-   return "";
+  return "";
 }

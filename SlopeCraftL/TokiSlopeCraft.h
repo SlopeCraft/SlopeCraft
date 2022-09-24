@@ -42,7 +42,7 @@ This file is part of SlopeCraft.
 #include "PrimGlassBuilder.h"
 #include "lossyCompressor.h"
 
-#include "newNBTWriter.hpp"
+#include <NBTWriter/NBTWriter.h>
 
 #include "AiCvterOpt.h"
 
@@ -73,7 +73,7 @@ class PrimGlassBuilder;
 class LossyCompressor;
 
 namespace NBT {
-class NBTWriter;
+template <bool> class NBTWriter;
 };
 
 class TokiSlopeCraft : public Kernel {
@@ -257,8 +257,8 @@ private:
   static void writeBlock(const std::string &netBlockId,
                          const std::vector<std::string> &Property,
                          const std::vector<std::string> &ProVal,
-                         NBT::NBTWriter &);
-  static void writeTrash(int count, NBT::NBTWriter &);
+                         NBT::NBTWriter<false> &);
+  static void writeTrash(int count, NBT::NBTWriter<false> &);
   std::string Noder(const short *src, int size) const;
 
   Kernel *toBaseClassPtr() { return this; }

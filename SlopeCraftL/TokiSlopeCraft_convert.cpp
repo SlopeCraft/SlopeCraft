@@ -367,7 +367,7 @@ TokiSlopeCraft::exportAsData(const std::string &FolderPath,
 
       cerr << "Export map of (" << r << "," << c << ")" << currentUn << endl;
 
-      NBT::NBTWriter MapFile(currentUn.data());
+      NBT::NBTWriter<false> MapFile(currentUn.data());
 
       switch (mcVer) {
       case MC12:

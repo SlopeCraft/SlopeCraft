@@ -1583,8 +1583,10 @@ void MainWindow::onExportLiteclicked(QString path) {
     QString suffix = suffixes[first_format_idx];
 
     for (int idx = 0; idx < suffixes.size(); idx++) {
-      if (idx != first_format_idx)
+      if (idx != first_format_idx) {
+        suffix += ";;";
         suffix += suffixes[idx];
+      }
     }
 
     FileName = QFileDialog::getSaveFileName(this, tr("导出为投影/结构方块文件"),
