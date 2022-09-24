@@ -23,7 +23,7 @@ This file is part of SlopeCraft.
 #include "Colors.h"
 #include "TokiSlopeCraft.h"
 
-#include "../ExternalConverters/ExternalConverterStaticInterface.h"
+#include <ExternalConverters/ExternalConverterStaticInterface.h>
 
 template <>
 const colorset_allowed_t *const TokiColor::Allowed = &TokiSlopeCraft::Allowed;

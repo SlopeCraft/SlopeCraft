@@ -46,9 +46,9 @@ This file is part of SlopeCraft.
 
 #include "AiCvterOpt.h"
 
-#include "../ColorManip/newColorSet.hpp"
+#include <ColorManip/newColorSet.hpp>
 
-#include <GAConverter/GAConverter.h>
+#include <ExternalConverters/GAConverter/GAConverter.h>
 
 /*
 namespace SlopeCraft

@@ -22,8 +22,8 @@ This file is part of SlopeCraft.
 
 #ifndef SCL_COLORS_H
 #define SCL_COLORS_H
-#include "../ColorManip/newColorSet.hpp"
-#include "../ColorManip/newTokiColor.hpp"
+#include <ColorManip/newColorSet.hpp>
+#include <ColorManip/newTokiColor.hpp>
 
 #include "SCLDefines.h"
 #include <iostream>

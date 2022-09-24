@@ -1,7 +1,7 @@
 #ifndef NEWTOKICOLOR_HPP
 #define NEWTOKICOLOR_HPP
 
-#include "../SlopeCraftL/SlopeCraftL.h"
+#include "../../SlopeCraftL/SlopeCraftL.h"
 #include "ColorManip.h"
 #include <Eigen/Dense>
 #include <cmath>

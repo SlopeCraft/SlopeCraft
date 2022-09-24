@@ -58,13 +58,15 @@ set(SlopeCraft_update_ts_files OFF)
 
 add_definitions("-D_USE_MATH_DEFINES")
 
+add_subdirectory(utilities)
 add_subdirectory(imageCutter)
-add_subdirectory(ExternalConverters)
 add_subdirectory(SlopeCraftL)
-add_subdirectory(BlockListManager)
 add_subdirectory(SlopeCraftMain)
 add_subdirectory(MapViewer)
-add_subdirectory(ColorManip)
+#add_subdirectory(ColorManip)
+#add_subdirectory(Schem)
+#add_subdirectory(BlockListManager)
+#add_subdirectory(ExternalConverters)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 

@@ -1,6 +1,7 @@
-#include "../ColorManip/ColorManip.h"
 #include "SCLDefines.h"
 #include "SlopeCraftL.h"
+#include <ColorManip/ColorManip.h>
+
 
 using namespace SlopeCraft;
 

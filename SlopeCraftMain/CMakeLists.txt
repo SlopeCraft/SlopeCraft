@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 include_directories(${SlopeCraft_Eigen3_include_dir}
     ${CMAKE_SOURCE_DIR}/SlopeCraftL
-    ${CMAKE_SOURCE_DIR}/BlockListManager)
+    ${CMAKE_SOURCE_DIR}/utilities/BlockListManager)
 
     
 set(CMAKE_INCLUDE_CURRENT_DIR ON)

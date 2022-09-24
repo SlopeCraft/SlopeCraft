@@ -1770,9 +1770,9 @@ void MainWindow::onExportDataclicked(QString path) {
   updateEnables();
 }
 
-void MainWindow::turnCh() { switchLan(ZH); }
+void MainWindow::turnCh() { switchLan(Language::ZH); }
 
-void MainWindow::turnEn() { switchLan(EN); }
+void MainWindow::turnEn() { switchLan(Language::EN); }
 
 void MainWindow::switchLan(Language lang) {
   qDebug("开始调整语言");
@@ -1783,7 +1783,7 @@ void MainWindow::switchLan(Language lang) {
   } else
     qDebug("File doesn't exists.");
 
-  if (lang == EN) {
+  if (lang == Language::EN) {
     if (!trans.load(":/i18n/SlopeCraft_en_US.qm")) {
       qDebug("载入\":/i18n/SlopeCraft_en_US.qm\"失败");
       return;

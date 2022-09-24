@@ -1,0 +1,4 @@
+add_subdirectory(BlockListManager)
+add_subdirectory(ColorManip)
+add_subdirectory(ExternalConverters)
+add_subdirectory(Schem)
