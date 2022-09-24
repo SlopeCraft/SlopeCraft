@@ -104,9 +104,11 @@ void SCL_EXPORT SCL_destroyBlock(AbstractBlock *t) { t->destroy(); }
 /// create a Kernel object
 Kernel *SCL_EXPORT SCL_createKernel() { return Kernel::create(); }
 
-void SCL_EXPORT SCL_getColorMapPtrs(const float **a, const unsigned char **b,
-                                    int *c) {
-  Kernel::getColorMapPtrs(a, b, c);
+void SCL_EXPORT SCL_getColorMapPtrs(const float **const r,
+                                    const float **const g,
+                                    const float **const b,
+                                    const unsigned char **x, int *y) {
+  Kernel::getColorMapPtrs(r, g, b, x, y);
 }
 // full palette
 const float *SCL_EXPORT SCL_getBasicColorMapPtrs() {

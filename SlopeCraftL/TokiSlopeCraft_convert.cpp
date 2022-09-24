@@ -124,7 +124,7 @@ void TokiSlopeCraft::pushToHash() {
 }
 
 void TokiSlopeCraft::applyTokiColor() {
-  static const uint64_t threadCount = 4 * std::thread::hardware_concurrency();
+  static const uint64_t threadCount = std::thread::hardware_concurrency();
   const uint64_t taskCount = colorHash.size();
 
   // int step=threadCount*sizePic(2)/taskCount;

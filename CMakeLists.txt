@@ -59,7 +59,7 @@ set(SlopeCraft_update_ts_files OFF)
 add_definitions("-D_USE_MATH_DEFINES")
 
 add_subdirectory(imageCutter)
-add_subdirectory(GAConverter)
+add_subdirectory(ExternalConverters)
 add_subdirectory(SlopeCraftL)
 add_subdirectory(BlockListManager)
 add_subdirectory(SlopeCraftMain)

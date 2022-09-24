@@ -26,7 +26,7 @@ public:
   //记录与result的深度值不同的两个有损优化候选色（升序排列），Depth=3时无效
   std::array<uint8_t, 2> sideResult;
 
-  uint8_t Result; //最终调色结果
+  uint8_t Result{0}; //最终调色结果
 
 public:
   static bool needFindSide;

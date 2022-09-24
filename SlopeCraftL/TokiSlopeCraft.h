@@ -39,7 +39,6 @@ This file is part of SlopeCraft.
 #include "simpleBlock.h"
 #include <unsupported/Eigen/CXX11/Tensor>
 
-
 #include "PrimGlassBuilder.h"
 #include "lossyCompressor.h"
 
@@ -49,7 +48,7 @@ This file is part of SlopeCraft.
 
 #include "../ColorManip/newColorSet.hpp"
 
-#include "../GAConverter/GAConverter.h"
+#include <GAConverter/GAConverter.h>
 
 /*
 namespace SlopeCraft

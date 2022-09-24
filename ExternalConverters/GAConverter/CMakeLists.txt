@@ -4,10 +4,13 @@ set(CMAKE_CXX_STANDARD 17)
 
 include_directories(${SlopeCraft_Eigen3_include_dir}
     ${SlopeCraft_HeuristicFlow_include_dir}
-    ../SlopeCraftL
+    ../../ColorManip
 )
 
 set(SlopeCraft_GAConverter_sources 
+
+    ../ExternalConverterStaticInterface.h
+
     GAConverter.h
     GACvterDefines.hpp
     sortColor.h
@@ -17,3 +20,5 @@ set(SlopeCraft_GAConverter_sources
     )
 
 add_library(GAConverter STATIC ${SlopeCraft_GAConverter_sources})
+
+target_compile_options(GAConverter BEFORE PUBLIC "-std=c++17")

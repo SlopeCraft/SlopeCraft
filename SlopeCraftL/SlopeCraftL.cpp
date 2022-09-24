@@ -26,30 +26,6 @@ This file is part of SlopeCraft.
 
 using namespace SlopeCraft;
 
-namespace SlopeCraft {
-int colorCount4External() { return TokiSlopeCraft::Allowed.color_count(); }
-
-extern Eigen::Map<const Eigen::ArrayXf> BasicRGB4External(int channel) {
-  return Eigen::Map<const Eigen::ArrayXf>(
-      TokiSlopeCraft::Basic.RGB_mat().data() + channel * sizeof(float[256]),
-      TokiSlopeCraft::Basic.color_count());
-}
-
-Eigen::Map<const Eigen::ArrayXf> AllowedRGB4External(int channel) {
-  return Eigen::Map<const Eigen::ArrayXf>(
-      TokiSlopeCraft::Allowed.rgb_data(channel), colorCount4External());
-}
-
-extern Eigen::Map<const Eigen::Array<uint8_t, Dynamic, 1>>
-AllowedMapList4External() {
-  return Eigen::Map<const Eigen::Array<uint8_t, Dynamic, 1>>(
-      TokiSlopeCraft::Allowed.map_data(), colorCount4External());
-}
-// const ColorList &Allowed4External = TokiSlopeCraft::Allowed._RGB;
-// const MapList &AllowedMapList4External = TokiSlopeCraft::Allowed.Map;
-
-} //  end namespace SlopeCraft
-
 AbstractBlock *AbstractBlock::create() { return new simpleBlock; }
 
 AbstractBlock::AbstractBlock() {}

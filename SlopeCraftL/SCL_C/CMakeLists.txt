@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED 17)
 
 include_directories(${SlopeCraft_Eigen3_include_dir}
     ${SlopeCraft_HeuristicFlow_include_dir}
-    ../../GAConverter
+    ../../ExternalConverters
 )
 
 
@@ -13,7 +13,7 @@ add_definitions(-DSCL_CAPI)
 
 add_library(SlopeCraftL_C SHARED ${SlopeCraft_SCL_sources})
 # link SlopeCraftL with GAConverter and zlib
-target_link_libraries(SlopeCraftL_C PUBLIC GAConverter -lz)
+target_link_libraries(SlopeCraftL_C PUBLIC GAConverter -lz ColorManip)
 
 set_target_properties(SlopeCraftL_C PROPERTIES
     PREFIX ""

@@ -248,8 +248,10 @@ void SCL_EXPORT SCL_destroyBlock(AbstractBlock *);
 /// create a Kernel object
 Kernel *SCL_EXPORT SCL_createKernel();
 
-void SCL_EXPORT SCL_getColorMapPtrs(const float **, const unsigned char **,
-                                    int *);
+void SCL_EXPORT SCL_getColorMapPtrs(const float **const rdata,
+                                    const float **const gdata,
+                                    const float **const bdata,
+                                    const unsigned char **, int *);
 // full palette
 const float *SCL_EXPORT SCL_getBasicColorMapPtrs();
 

@@ -17,8 +17,8 @@ void sortColor::calculate(ARGB rgb) noexcept {
 
   TempVectorXf diff = diffR.square() + diffG.square() + diffB.square();
 
-  int tempIdx = 0;
   for (order_t o = 0; o < OrderMax; o++) {
+    int tempIdx = 0;
     // errors[o]=
     diff.minCoeff(&tempIdx);
     mapCs[o] = SlopeCraft::AllowedMapList4External()[tempIdx];

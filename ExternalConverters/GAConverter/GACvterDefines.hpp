@@ -9,27 +9,7 @@
 #include <HeuristicFlow/Genetic>
 #include <HeuristicFlow/Global>
 
-#include "../SlopeCraftL/Colors.h"
-#include "../SlopeCraftL/SCLDefines.h"
-
-namespace SlopeCraft {
-/*
-extern const Eigen::Array<float,256,3> & Basic4External;
-extern const ColorList & Allowed4External;
-extern const MapList & AllowedMapList4External;
-*/
-extern int colorCount4External();
-// extern const Eigen::Array<float, 256, 3> &BasicRGB4External;
-extern Eigen::Map<const Eigen::ArrayXf> BasicRGB4External(int channel);
-
-extern Eigen::Map<const Eigen::ArrayXf> AllowedRGB4External(int channel);
-// extern const ColorList &Allowed4External;
-// extern Eigen::Map<const Eigen::Array<float, Dynamic, 3>> Allowed4External();
-// extern const MapList &AllowedMapList4External;
-extern Eigen::Map<const Eigen::Array<uint8_t, Dynamic, 1>>
-AllowedMapList4External();
-
-} // namespace SlopeCraft
+#include "../ExternalConverterStaticInterface.h"
 
 // using namespace SlopeCraft;
 namespace GACvter {

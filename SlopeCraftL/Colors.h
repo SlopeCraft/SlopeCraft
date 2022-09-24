@@ -35,15 +35,4 @@ using colorset_basic_t = colorset_new<true, true>;
 
 using TokiColor = newTokiColor<true, colorset_basic_t, colorset_allowed_t>;
 
-namespace SlopeCraft {
-extern int colorCount4External();
-
-extern Eigen::Map<const Eigen::ArrayXf> BasicRGB4External(int channel);
-
-extern Eigen::Map<const Eigen::ArrayXf> AllowedRGB4External(int channel);
-
-extern Eigen::Map<const Eigen::Array<uint8_t, Dynamic, 1>>
-AllowedMapList4External();
-} // namespace SlopeCraft
-
 #endif // SCL_COLORS_H

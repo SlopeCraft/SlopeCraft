@@ -23,10 +23,34 @@ This file is part of SlopeCraft.
 #include "Colors.h"
 #include "TokiSlopeCraft.h"
 
+#include "../ExternalConverters/ExternalConverterStaticInterface.h"
+
 template <>
 const colorset_allowed_t *const TokiColor::Allowed = &TokiSlopeCraft::Allowed;
 template <>
 const colorset_basic_t *const TokiColor::Basic = &TokiSlopeCraft::Basic;
+
+namespace SlopeCraft {
+int colorCount4External() { return TokiSlopeCraft::Allowed.color_count(); }
+
+extern Eigen::Map<const Eigen::ArrayXf> BasicRGB4External(int channel) {
+  return Eigen::Map<const Eigen::ArrayXf>(
+      &TokiSlopeCraft::Basic.RGB_mat()(0, channel),
+      TokiSlopeCraft::Basic.color_count());
+}
+
+Eigen::Map<const Eigen::ArrayXf> AllowedRGB4External(int channel) {
+  return Eigen::Map<const Eigen::ArrayXf>(
+      TokiSlopeCraft::Allowed.rgb_data(channel), colorCount4External());
+}
+
+extern Eigen::Map<const Eigen::Array<uint8_t, Dynamic, 1>>
+AllowedMapList4External() {
+  return Eigen::Map<const Eigen::Array<uint8_t, Dynamic, 1>>(
+      TokiSlopeCraft::Allowed.map_data(), colorCount4External());
+}
+
+} //  end namespace SlopeCraft
 
 void SCL_testHSV() {
   const float rgb[][3] = {{0, 0, 0}, {1, 1, 1}, {0.99, 0, 0}, {0, 1, 0},

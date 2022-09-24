@@ -5,8 +5,8 @@
 using namespace GACvter;
 // using namespace SlopeCraft;
 
-#define mapColor2Index(mapColor) (64 * (mapColor % 4) + (mapColor / 4))
-#define index2mapColor(index) (4 * (index % 64) + (index / 64))
+#define mapColor2Index(mapColor) (64 * ((mapColor) % 4) + ((mapColor) / 4))
+#define index2mapColor(index) (4 * ((index) % 64) + ((index) / 64))
 
 namespace GACvter {
 
@@ -18,12 +18,10 @@ inline ARGB mapColor2ARGB32(const mapColor_t mC) noexcept {
   const int rIdx = mapColor2Index(mC);
   Eigen::Array<uint8_t, 3, 1> rgb;
   for (int channel = 0; channel < 3; channel++) {
-    rgb[channel] = SlopeCraft::BasicRGB4External(channel)[rIdx] * 255;
+    int temp = SlopeCraft::BasicRGB4External(channel)[rIdx] * 255;
+
+    rgb[channel] = std::max(0, std::min(temp, 255));
   }
-  /*
-    const Eigen::Array<uint8_t, 3, 1> rgb =
-        (SlopeCraft::Basic4External.row(rIdx) *
-    255).cast<uint8_t>().transpose();*/
 
   return ARGB32(rgb(0), rgb(1), rgb(2), (mC < 4) ? 0 : 255);
 }
@@ -41,7 +39,7 @@ void GACvter::updateMapColor2GrayLUT() {
     lock.unlock();
     return;
   } else {
-    for (int row = 0; row < SlopeCraft::colorCount4External(); row++) {
+    for (int row = 0; row < 256; row++) {
       const mapColor_t mC = index2mapColor(row);
       const float r = SlopeCraft::BasicRGB4External(0)[row];
       const float g = SlopeCraft::BasicRGB4External(1)[row];
@@ -244,28 +242,3 @@ void GACvter::GAConverter::resultImage(EImage *dst) {
     dst->operator()(pixIdx) = pixColor;
   }
 }
-
-/*void Converter::getResult(unsigned char *mapDest, double *error) const
-{
-  if (error != nullptr)
-  {
-    *error = solver.bestFitness();
-  }
-  const Var_t &result = solver.result();
-  for (int idx = 0; idx < result.size(); idx++)
-  {
-    mapDest[idx] = colorMap(idx).mapColor(result(idx));
-  }
-}
-
-void Converter::resultImage(unsigned int *dst) const
-{
-  Eigen::ArrayXX<uint8_t> map(rawImg.rows(), rawImg.cols());
-  getResult(map.data());
-
-  for (int i = 0; i < map.size(); i++)
-  {
-    dst[i] = mapColor2ARGB[map(i)];
-  }
-}
-*/

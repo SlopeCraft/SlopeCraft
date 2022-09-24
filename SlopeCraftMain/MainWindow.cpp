@@ -276,11 +276,11 @@ void MainWindow::showPreview() {
   auto iS = preWind->Src.begin();
   for (auto ib = preWind->BlockCount.begin();
        ib != preWind->BlockCount.end();) {
-      if(*iS==nullptr) {
-          ib = preWind->BlockCount.erase(ib);
-          iS = preWind->Src.erase(iS);
-      }
-    if (*ib > 0) {  //  if the block is used, keep it. otherwise erase it.
+    if (*iS == nullptr) {
+      ib = preWind->BlockCount.erase(ib);
+      iS = preWind->Src.erase(iS);
+    }
+    if (*ib > 0) { //  if the block is used, keep it. otherwise erase it.
       ib++;
       iS++;
       continue;
@@ -1110,7 +1110,8 @@ void MainWindow::kernelSetType() {
   kernel->setType(type, ver, allowedBaseColor, palette.data());
   const uint8_t *allowedMap;
   int colorN = 0;
-  SlopeCraft::Kernel::getColorMapPtrs(nullptr, &allowedMap, &colorN);
+  SlopeCraft::Kernel::getColorMapPtrs(nullptr, nullptr, nullptr, &allowedMap,
+                                      &colorN);
   /*
   cout<<"\n\nAllowedMap=";
   for(int i=0;i<colorN;i++) {
