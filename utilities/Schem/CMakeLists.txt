@@ -8,4 +8,11 @@ add_library(Schem
      
     Schem.h 
 
-    SChem.cpp)
+    SChem.cpp 
+    bit_shrink.h 
+    bit_shrink.cpp)
+
+
+target_compile_options(Schem BEFORE PUBLIC -std=c++17)
+
+target_link_libraries(Schem PRIVATE NBTWriter)
