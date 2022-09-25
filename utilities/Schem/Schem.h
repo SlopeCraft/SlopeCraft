@@ -45,7 +45,7 @@ public:
     if (x < 0 || y < 0 || z < 0) {
       return;
     }
-    xzy.resize(x, y, z);
+    xzy.resize(x, z, y);
   }
 
   inline ele_t &operator()(int64_t x, int64_t y, int64_t z) noexcept {

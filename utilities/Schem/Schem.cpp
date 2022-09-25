@@ -100,23 +100,22 @@ bool Schem::export_litematic(const std::string_view filename,
 
         for (const char *const block_string : this->block_id_list) {
           process_block_id(block_string, &pure_block_id, &properties);
-        }
-
-        // write a block
-        lite.writeCompound("ThisStringShouldNeverBeSeen");
-        {
-          lite.writeString("Name", pure_block_id.data());
-          if (properties.size()) {
-            lite.writeCompound("Properties");
-            {
-              for (const auto &prop : properties) {
-                lite.writeString(prop.first.data(), prop.second.data());
+          // write a block
+          lite.writeCompound("ThisStringShouldNeverBeSeen");
+          {
+            lite.writeString("Name", pure_block_id.data());
+            if (properties.size()) {
+              lite.writeCompound("Properties");
+              {
+                for (const auto &prop : properties) {
+                  lite.writeString(prop.first.data(), prop.second.data());
+                }
               }
+              lite.endCompound();
             }
-            lite.endCompound();
           }
+          lite.endCompound();
         }
-        lite.endCompound();
       }
 
       lite.writeListHead("Entities", NBT::Compound, 0);
@@ -130,8 +129,8 @@ bool Schem::export_litematic(const std::string_view filename,
 
       lite.writeLongArrayHead("BlockStates", shrinked.size());
       {
-        for (int64_t idx = 0; idx < this->xzy.size(); idx++) {
-          lite.writeSingleTag<int64_t, false>(
+        for (int64_t idx = 0; idx < shrinked.size(); idx++) {
+          lite.writeSingleTag<int64_t, true>(
               NBT::Long, "id", reinterpret_cast<int64_t &>(shrinked[idx]));
         }
       }
