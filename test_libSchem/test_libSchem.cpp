@@ -31,9 +31,15 @@ int main() {
 
   ids[0] = "minecraft:air";
   ids.reserve(trash_id.size() + 1);
+
+  while (ids.size() < 254) {
+    ids.emplace_back(trash_id[ids.size() - 1].data());
+  }
+  /*
   for (const auto &id : trash_id) {
     ids.emplace_back(id.data());
   }
+  */
   /*
   ids[1] = "minecraft:glass";
   ids[2] = "minecraft:white_stained_glass";
@@ -58,11 +64,9 @@ int main() {
 
   // test_bit_shrink(&schem(0), schem.size(), schem.block_types());
 
-  if (!
-      // schem.export_litematic("test.litematic", info)
-      schem.export_structure("test9.nbt", true)
-      // schem.export_WESchem("test10.schem", weinfo)
-  ) {
+  if (!(schem.export_litematic("test12.litematic", info) &&
+        schem.export_structure("test12.nbt", true) &&
+        schem.export_WESchem("test12.schem", weinfo))) {
     cout << "Failed to export." << endl;
   } else {
     cout << "Succeeded to export." << endl;
