@@ -373,8 +373,8 @@ void SCL_EXPORT SCL_getBlockCountsInTypes(const Kernel *k, int *total,
 /// get sum block count
 int SCL_EXPORT SCL_getBlockCounts(const Kernel *k);
 /// get 3d structure in 3d-matrix (col major)
-const unsigned char *SCL_EXPORT SCL_getBuild(const Kernel *k, int *xSize,
-                                             int *ySize, int *zSize);
+const unsigned short *SCL_EXPORT SCL_getBuild(const Kernel *k, int *xSize,
+                                              int *ySize, int *zSize);
 
 } //  extern "C"
 #endif //  ifdef SCL_CAPI

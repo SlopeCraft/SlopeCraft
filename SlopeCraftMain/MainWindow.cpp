@@ -1443,7 +1443,7 @@ void MainWindow::on_ExportFlatDiagram_clicked() {
   progressAdd(this, buildCols);
   keepAwake(this);
 
-  const Eigen::TensorMap<const Eigen::Tensor<uint8_t, 3>> build(
+  const Eigen::TensorMap<const Eigen::Tensor<uint16_t, 3>> build(
       kernel->getBuild(), kernel->getXRange(), kernel->getHeight(),
       kernel->getZRange());
 

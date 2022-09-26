@@ -49,6 +49,7 @@ This file is part of SlopeCraft.
 #include <ColorManip/newColorSet.hpp>
 
 #include <ExternalConverters/GAConverter/GAConverter.h>
+#include <Schem/Schem.h>
 
 /*
 namespace SlopeCraft
@@ -88,96 +89,101 @@ public:
   // can do in nothing:
   void trySkipStep(step);
   /// function ptr to window object
-  void setWindPtr(void *);
+  void setWindPtr(void *) override;
   /// a function ptr to show progress of converting and exporting
-  void setProgressRangeSet(void (*)(void *, int, int, int));
+  void setProgressRangeSet(void (*)(void *, int, int, int)) override;
   /// a function ptr to add progress value
-  void setProgressAdd(void (*)(void *, int));
+  void setProgressAdd(void (*)(void *, int)) override;
   /// a function ptr to prevent window from being syncoped
-  void setKeepAwake(void (*)(void *));
+  void setKeepAwake(void (*)(void *)) override;
 
   /// a function ptr to show progress of compressing and bridge-building
-  void setAlgoProgressRangeSet(void (*)(void *, int, int, int));
+  void setAlgoProgressRangeSet(void (*)(void *, int, int, int)) override;
   /// a function ptr to add progress value of compressing and bridge-building
-  void setAlgoProgressAdd(void (*)(void *, int));
+  void setAlgoProgressAdd(void (*)(void *, int)) override;
 
   /// a function ptr to report error when something wrong happens
-  void setReportError(void (*)(void *, errorFlag, const char *));
+  void setReportError(void (*)(void *, errorFlag, const char *)) override;
   /// a function ptr to report working statue especially when busy
-  void setReportWorkingStatue(void (*)(void *, workStatues));
-  unsigned long long size() { return sizeof(TokiSlopeCraft); }
-  void destroy() { delete this; }
-  void decreaseStep(step);
+  void setReportWorkingStatue(void (*)(void *, workStatues)) override;
+  unsigned long long size() override { return sizeof(TokiSlopeCraft); }
+  void destroy() override { delete this; }
+  void decreaseStep(step) override;
   void makeTests(const AbstractBlock **, const unsigned char *, const char *,
-                 char *);
+                 char *) override;
   std::string makeTests(const AbstractBlock **, const uint8_t *,
                         const std::string &);
-  void setAiCvterOpt(const AiCvterOpt *);
-  const AiCvterOpt *aiCvterOpt() const;
+  void setAiCvterOpt(const AiCvterOpt *) override;
+  const AiCvterOpt *aiCvterOpt() const override;
 
   // can do in colorSetReady:
-  step queryStep() const;
+  step queryStep() const override;
 
   bool setType(mapTypes, gameVersion, const bool[64],
-               const AbstractBlock *[64]);
+               const AbstractBlock *[64]) override;
   bool setType(mapTypes, gameVersion, const bool[64], const simpleBlock[64]);
 
-  void getBaseColorInARGB32(unsigned int *const) const;
+  void getBaseColorInARGB32(unsigned int *const) const override;
   // can do in wait4Image:
-  void setRawImage(const unsigned int *src, int rows, int cols);
+  void setRawImage(const unsigned int *src, int rows, int cols) override;
   void setRawImage(const EImage &);
-  uint16_t getColorCount() const;
+  uint16_t getColorCount() const override;
   void getAvailableColors(ARGB *const, uint8_t *const,
-                          int *const num = nullptr) const;
+                          int *const num = nullptr) const override;
   // can do in convertionReady:
-  bool convert(convertAlgo = RGB_Better, bool dither = false);
-  int getImageRows() const;
-  int getImageCols() const;
-  bool isVanilla() const; //判断是可以生存实装的地图画
-  bool isFlat() const;    //判断是平板的
+  bool convert(convertAlgo = RGB_Better, bool dither = false) override;
+  int getImageRows() const override;
+  int getImageCols() const override;
+  bool isVanilla() const override; //判断是可以生存实装的地图画
+  bool isFlat() const override;    //判断是平板的
 
   // can do in converted:
   bool build(compressSettings = noCompress, unsigned short = 256,
              glassBridgeSettings = noBridge, unsigned short = 3,
-             bool fireProof = false, bool endermanProof = false); //构建三维结构
-  void getConvertedImage(int *rows, int *cols, unsigned int *dest) const;
+             bool fireProof = false,
+             bool endermanProof = false) override; //构建三维结构
+  void getConvertedImage(int *rows, int *cols,
+                         unsigned int *dest) const override;
   EImage getConovertedImage() const;
-  void getConvertedMap(int *rows, int *cols, unsigned char *) const;
+  void getConvertedMap(int *rows, int *cols, unsigned char *) const override;
   // void getConvertedMap(Eigen::Arra) const;
-  void exportAsData(const char *, const int, int *fileCount, char **) const;
+  void exportAsData(const char *, const int, int *fileCount,
+                    char **) const override;
   std::vector<std::string> exportAsData(const std::string &, int) const;
   // can do in builded:
   void exportAsLitematic(const char *TargetName, const char *LiteName,
-                         const char *RegionName, char *FileName) const;
+                         const char *RegionName, char *FileName) const override;
   std::string exportAsLitematic(const std::string &TargetName, // Local
                                 const std::string &LiteName,   // Utf8
                                 const std::string &RegionName  // Utf8
   ) const;
 
-  void exportAsStructure(const char *TargetName, char *FileName) const;
+  void exportAsStructure(const char *TargetName, char *FileName) const override;
   std::string exportAsStructure(const std::string &) const;
 
   void exportAsWESchem(const char *fileName, const int (&offset)[3],
                        const int (&weOffset)[3], const char *Name,
                        const char *const *const requiredMods,
-                       const int requiredModsCount, char *returnVal) const;
+                       const int requiredModsCount,
+                       char *returnVal) const override;
 
   std::string
   exportAsWESchem(const std::string &, const std::array<int, 3> &offset,
                   const std::array<int, 3> &weOffset, const char *Name,
                   const std::vector<const char *> &requiredMods) const;
 
-  void get3DSize(int *x, int *y, int *z) const;
-  int getHeight() const;
-  int getXRange() const;
-  int getZRange() const;
+  void get3DSize(int *x, int *y, int *z) const override;
+  int getHeight() const override;
+  int getXRange() const override;
+  int getZRange() const override;
 
-  void getBlockCounts(int *total, int detail[64]) const;
+  void getBlockCounts(int *total, int detail[64]) const override;
   int64_t getBlockCounts(std::vector<int64_t> *) const;
-  int64_t getBlockCounts() const;
+  int64_t getBlockCounts() const override;
 
-  const unsigned char *getBuild(int *xSize, int *ySize, int *zSize) const;
-  const Eigen::Tensor<uchar, 3> &getBuild() const;
+  const unsigned short *getBuild(int *xSize, int *ySize,
+                                 int *zSize) const override;
+  // const Eigen::Tensor<uchar, 3> &getBuild() const;
 
 private:
 #ifdef SCL_CAPI
@@ -205,20 +211,19 @@ private:
   static mapTypes mapType;
   static std::vector<simpleBlock> blockPalette;
 
+private:
+  static std::unordered_set<TokiSlopeCraft *> kernel_hash_set;
+
+public:
   step kernelStep;
   convertAlgo ConvertAlgo;
-  compressSettings compressMethod;
-  glassBridgeSettings glassMethod;
-
-  std::array<int, 3> size3D; // x,y,z
 
   EImage rawImage;
   EImage ditheredImage;
 
   std::unordered_map<ARGB, TokiColor> colorHash;
 
-  uint16_t maxAllowedHeight;
-  uint16_t bridgeInterval;
+  // std::array<int, 3> size3D; // x,y,z
   PrimGlassBuilder *glassBuilder;
   LossyCompressor *Compressor;
 
@@ -230,7 +235,12 @@ private:
   Eigen::ArrayXXi HighMap;
   Eigen::ArrayXXi LowMap;
   std::unordered_map<TokiPos, waterItem> WaterList;
-  Eigen::Tensor<uchar, 3> Build; // x,y,z
+  uint16_t maxAllowedHeight;
+  uint16_t bridgeInterval;
+  compressSettings compressMethod;
+  glassBridgeSettings glassMethod;
+  libSchem::Schem schem;
+  // Eigen::Tensor<uchar, 3> Build; // x,y,z
 
   // for setType:
 
@@ -254,11 +264,13 @@ private:
   void buildHeight(bool = false, bool = false); //构建Build
   void makeBridge();
   // for Litematic
+  /*
   static void writeBlock(const std::string &netBlockId,
                          const std::vector<std::string> &Property,
                          const std::vector<std::string> &ProVal,
                          NBT::NBTWriter<false> &);
   static void writeTrash(int count, NBT::NBTWriter<false> &);
+  */
   std::string Noder(const short *src, int size) const;
 
   Kernel *toBaseClassPtr() { return this; }

@@ -35,6 +35,8 @@ gameVersion TokiSlopeCraft::mcVer; // 12,13,14,15,16,17
 mapTypes TokiSlopeCraft::mapType;
 std::vector<simpleBlock> TokiSlopeCraft::blockPalette(0);
 
+std::unordered_set<TokiSlopeCraft *> TokiSlopeCraft::kernel_hash_set;
+
 TokiSlopeCraft::TokiSlopeCraft() {
   kernelStep = step::nothing;
   rawImage.setZero(0, 0);
@@ -59,12 +61,16 @@ TokiSlopeCraft::TokiSlopeCraft() {
   Compressor->progressAddPtr = &this->algoProgressAdd;
   Compressor->progressRangeSetPtr = &this->algoProgressRangeSet;
   Compressor->keepAwakePtr = &this->keepAwake;
+
+  TokiSlopeCraft::kernel_hash_set.emplace(this);
 }
 
 TokiSlopeCraft::~TokiSlopeCraft() {
   delete Compressor;
   delete glassBuilder;
   delete GAConverter;
+
+  TokiSlopeCraft::kernel_hash_set.erase(this);
 }
 
 /// function ptr to window object
@@ -121,44 +127,6 @@ void TokiSlopeCraft::trySkipStep(step s) {
   }
 }
 
-/*
-bool compressFile(const char *sourcePath, const char *destPath) {
-  constexpr int bufferSize=2048;
-  char buf[bufferSize] = {0};
-  FILE *in = nullptr;
-  gzFile out = nullptr;
-  int len = 0;
-
-  fopen_s(&in, sourcePath, "rb");
-
-  out = gzopen(destPath, "wb");
-  if (in == nullptr || out == nullptr) {
-
-      return false;
-  }
-
-  while (true) {
-    len = (int)fread(buf, 1, sizeof(buf), in);
-    if (ferror(in)) {
-
-                return false;
-    }
-    if (len == 0)
-      break;
-    if (len != gzwrite(out, buf, (unsigned)len)) {
-
-        return false;
-    }
-    memset(buf, 0, sizeof(buf));
-  }
-  fclose(in);
-  gzclose(out);
-  // succeed
-
-  return true;
-}
-*/
-
 bool compressFile(const char *inputPath, const char *outputPath) {
   const size_t BUFFER_SIZE = 4096;
   std::ifstream fin;
@@ -196,33 +164,37 @@ bool TokiSlopeCraft::setType(mapTypes type, gameVersion ver,
   }
   */
 
-  mapType = type;
-  mcVer = ver;
+  TokiSlopeCraft::mapType = type;
+  TokiSlopeCraft::mcVer = ver;
 
-  TokiColor::needFindSide = (mapType == mapTypes::Slope);
+  TokiColor::needFindSide = (TokiSlopeCraft::mapType == mapTypes::Slope);
 
-  blockPalette.resize(64);
+  TokiSlopeCraft::blockPalette.resize(64);
 
   // cerr<<__FILE__<<__LINE__<<endl;
   for (short i = 0; i < 64; i++) {
     // cerr<<"Block_"<<i<<endl;
     if (palettes[i] == nullptr) {
-      blockPalette[i].clear();
+      TokiSlopeCraft::blockPalette[i].clear();
       continue;
     }
-    palettes[i]->copyTo(&blockPalette[i]);
+    palettes[i]->copyTo(&TokiSlopeCraft::blockPalette[i]);
 
-    if (blockPalette[i].id.find(':') == blockPalette[i].id.npos) {
-      blockPalette[i].id = "minecraft:" + blockPalette[i].id;
+    if (TokiSlopeCraft::blockPalette[i].id.find(':') ==
+        TokiSlopeCraft::blockPalette[i].id.npos) {
+      TokiSlopeCraft::blockPalette[i].id =
+          "minecraft:" + TokiSlopeCraft::blockPalette[i].id;
     }
 
-    if (blockPalette[i].idOld.empty()) {
-      blockPalette[i].idOld = blockPalette[i].id;
+    if (TokiSlopeCraft::blockPalette[i].idOld.empty()) {
+      TokiSlopeCraft::blockPalette[i].idOld = blockPalette[i].id;
     }
 
-    if (blockPalette[i].idOld.size() > 0 &&
-        (blockPalette[i].idOld.find(':') == blockPalette[i].idOld.npos)) {
-      blockPalette[i].idOld = "minecraft:" + blockPalette[i].idOld;
+    if (TokiSlopeCraft::blockPalette[i].idOld.size() > 0 &&
+        (TokiSlopeCraft::blockPalette[i].idOld.find(':') ==
+         TokiSlopeCraft::blockPalette[i].idOld.npos)) {
+      TokiSlopeCraft::blockPalette[i].idOld =
+          "minecraft:" + TokiSlopeCraft::blockPalette[i].idOld;
     }
   }
 
@@ -254,7 +226,8 @@ bool TokiSlopeCraft::setType(mapTypes type, gameVersion ver,
       MIndex[index] = false;
       continue;
     }
-    if (blockPalette[index2baseColor(index)].id.empty()) { //空id
+    if (TokiSlopeCraft::blockPalette[index2baseColor(index)]
+            .id.empty()) { //空id
       MIndex[index] = false;
       continue;
     }
@@ -272,8 +245,8 @@ bool TokiSlopeCraft::setType(mapTypes type, gameVersion ver,
       continue;
     }
     if (index2baseColor(index) == 12 &&
-        mapType != mapTypes::Wall) {             //如果是水且非墙面
-      if (isFlat() && index2depth(index) != 2) { //平板且水深不是1格
+        TokiSlopeCraft::mapType != mapTypes::Wall) { //如果是水且非墙面
+      if (isFlat() && index2depth(index) != 2) {     //平板且水深不是1格
         MIndex[index] = false;
         continue;
       }
@@ -285,7 +258,7 @@ bool TokiSlopeCraft::setType(mapTypes type, gameVersion ver,
     }
   }
 
-  if (!Allowed.apply_allowed(Basic, MIndex)) {
+  if (!TokiSlopeCraft::Allowed.apply_allowed(Basic, MIndex)) {
     std::string msg = "Too few usable color(s) : only " +
                       std::to_string(Allowed.color_count()) + " colors\n";
     msg += "Avaliable base color(s) : ";
@@ -300,8 +273,9 @@ bool TokiSlopeCraft::setType(mapTypes type, gameVersion ver,
   }
 
   reportWorkingStatue(wind, workStatues::none);
-
-  kernelStep = wait4Image;
+  for (auto kernel_ptr : TokiSlopeCraft::kernel_hash_set) {
+    kernel_ptr->kernelStep = wait4Image;
+  }
 
   lock.unlock();
   return true;
@@ -534,18 +508,18 @@ void TokiSlopeCraft::get3DSize(int *x, int *y, int *z) const {
   if (kernelStep < builded)
     return;
   if (x != nullptr)
-    *x = size3D[0];
+    *x = schem.x_range();
   if (y != nullptr)
-    *y = size3D[1];
+    *y = schem.y_range();
   if (z != nullptr)
-    *z = size3D[2];
+    *z = schem.z_range();
   return;
 }
 
 int TokiSlopeCraft::getHeight() const {
   if (kernelStep < builded)
     return -1;
-  return size3D[1];
+  return schem.y_range();
 }
 
 void TokiSlopeCraft::getBlockCounts(int *total, int detail[64]) const {
@@ -567,9 +541,9 @@ int64_t TokiSlopeCraft::getBlockCounts(std::vector<int64_t> *dest) const {
   dest->resize(64);
   for (int i = 0; i < 64; i++)
     (*dest)[i] = 0;
-  for (int i = 0; i < Build.size(); i++) {
-    if (Build(i))
-      (*dest)[Build(i) - 1]++;
+  for (int i = 0; i < schem.size(); i++) {
+    if (schem(i))
+      (*dest)[schem(i) - 1]++;
   }
   int totalBlockCount = 0;
   for (int i = 0; i < 64; i++)
@@ -581,35 +555,31 @@ int64_t TokiSlopeCraft::getBlockCounts() const {
   if (kernelStep < builded)
     return -1;
   int totalCount = 0;
-  for (int i = 0; i < Build.size(); i++) {
-    if (Build(i))
+  for (int i = 0; i < schem.size(); i++) {
+    if (schem(i))
       totalCount++;
   }
   return totalCount;
 }
 
-const unsigned char *TokiSlopeCraft::getBuild(int *xSize, int *ySize,
-                                              int *zSize) const {
+const uint16_t *TokiSlopeCraft::getBuild(int *xSize, int *ySize,
+                                         int *zSize) const {
   if (xSize != nullptr)
     *xSize = getXRange();
   if (ySize != nullptr)
     *ySize = getHeight();
   if (zSize != nullptr)
     *zSize = getZRange();
-  return Build.data();
-}
-
-const Eigen::Tensor<uchar, 3> &TokiSlopeCraft::getBuild() const {
-  return Build;
+  return schem.data();
 }
 
 int TokiSlopeCraft::getXRange() const {
   if (kernelStep < builded)
     return -1;
-  return size3D[0];
+  return schem.x_range();
 }
 int TokiSlopeCraft::getZRange() const {
   if (kernelStep < builded)
     return -1;
-  return size3D[2];
+  return schem.x_range();
 }

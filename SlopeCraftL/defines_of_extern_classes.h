@@ -204,9 +204,9 @@ public:
   /// get sum block count
   virtual long long int getBlockCounts() const = 0;
   /// get 3d structure in 3d-matrix (col major)
-  virtual const unsigned char *getBuild(int *xSize = nullptr,
-                                        int *ySize = nullptr,
-                                        int *zSize = nullptr) const = 0;
+  virtual const unsigned short *getBuild(int *xSize = nullptr,
+                                         int *ySize = nullptr,
+                                         int *zSize = nullptr) const = 0;
 
 protected:
   /// calling delete is deprecated, use void Kernel::destroy() instead

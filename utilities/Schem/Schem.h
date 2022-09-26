@@ -50,12 +50,20 @@ public:
     xzy.setZero();
   }
 
+  inline void set_zero() noexcept { xzy.setZero(); }
+
+  inline ele_t *data() noexcept { return xzy.data(); }
+
+  inline const ele_t *data() const noexcept { return xzy.data(); }
+
   inline void resize(int64_t x, int64_t y, int64_t z) noexcept {
     if (x < 0 || y < 0 || z < 0) {
       return;
     }
     xzy.resize(x, z, y);
   }
+
+  inline const auto &tensor() const noexcept { return this->xzy; }
 
   inline const auto &block_list() const noexcept { return this->block_id_list; }
 

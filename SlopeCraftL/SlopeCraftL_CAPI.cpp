@@ -245,8 +245,8 @@ int SCL_EXPORT SCL_getBlockCounts(const Kernel *k) {
   return k->getBlockCounts();
 }
 /// get 3d structure in 3d-matrix (col major)
-const unsigned char *SCL_EXPORT SCL_getBuild(const Kernel *k, int *xSize,
-                                             int *ySize, int *zSize) {
+const unsigned short *SCL_EXPORT SCL_getBuild(const Kernel *k, int *xSize,
+                                              int *ySize, int *zSize) {
   return k->getBuild(xSize, ySize, zSize);
 }
 
