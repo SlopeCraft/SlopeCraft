@@ -23,4 +23,8 @@ bool process_block_id(
     const std::string_view id, std::string *const pure_id,
     std::vector<std::pair<std::string, std::string>> *const traits);
 
+void shrink_bytes_weSchem(const uint16_t *src, const size_t src_count,
+                          const int palette_max,
+                          std::vector<uint8_t> *const dest) noexcept;
+
 #endif // SCHEM_BITSHRINK_H

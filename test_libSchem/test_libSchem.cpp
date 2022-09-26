@@ -9,6 +9,10 @@ using std::cout, std::endl;
 void test_bit_shrink(const uint16_t *const, const size_t u16_num,
                      size_t block_types);
 
+std::vector<std::string> generate_trash();
+
+const std::vector<std::string> trash_id = generate_trash();
+
 int main() {
 
   libSchem::Schem schem;
@@ -16,32 +20,49 @@ int main() {
   schem.set_MC_major_version_number(18);
   schem.set_MC_version_number(2865);
 
-  schem.resize(2, 3, 4);
+  schem.resize(12, 9, 12);
 
   std::vector<const char *> ids; //= {"minecraft:air", "minecraft:glass"};
 
-  ids.resize(5);
+  ids.resize(1);
   for (auto &id : ids) {
     id = "minecraft:air";
   }
 
   ids[0] = "minecraft:air";
+  ids.reserve(trash_id.size() + 1);
+  for (const auto &id : trash_id) {
+    ids.emplace_back(id.data());
+  }
+  /*
   ids[1] = "minecraft:glass";
   ids[2] = "minecraft:white_stained_glass";
   ids[3] = "minecraft:stone";
   ids[4] = "minecraft:lime_stained_glass";
+  ids.emplace_back("minecraft:grass_block[snowy=false]");
+  ids.emplace_back("minecraft:sandstone[type=smooth_sandstone]");
+  ids.emplace_back("minecraft:mushroom_stem[east=true,west=true,north=true,"
+                   "south=true,up=true,down=true]");
+                   */
+
+  std::vector<std::string> vecs;
 
   for (int idx = 0; idx < schem.size(); idx++) {
-    schem(idx) = idx % ids.size();
+    schem(idx) = idx % ids.size() + 1;
   }
 
   schem.set_block_id(ids.data(), ids.size());
 
   libSchem::litematic_info info;
+  libSchem::WorldEditSchem_info weinfo;
 
   // test_bit_shrink(&schem(0), schem.size(), schem.block_types());
 
-  if (!schem.export_litematic("test.litematic", info)) {
+  if (!
+      // schem.export_litematic("test.litematic", info)
+      schem.export_structure("test9.nbt", true)
+      // schem.export_WESchem("test10.schem", weinfo)
+  ) {
     cout << "Failed to export." << endl;
   } else {
     cout << "Succeeded to export." << endl;
@@ -87,4 +108,46 @@ void test_bit_shrink(const uint16_t *const src, const size_t u16_num,
     cout << ' ';
   }
   cout << endl;
+}
+
+std::vector<std::string> generate_trash() {
+  std::vector<std::string> result;
+  result.reserve(2000);
+
+  const std::array<std::string_view, 4> direct_names = {"north", "east", "west",
+                                                        "south"};
+  const std::array<std::string_view, 3> direct_values = {"none", "side", "up"};
+  const std::array<std::string_view, 16> power_values = {
+      "0", "1", "2",  "3",  "4",  "5",  "6",  "7",
+      "8", "9", "10", "11", "12", "13", "14", "15"};
+
+  const std::string base_id = "minecraft:redstone_wire[";
+
+  std::string id;
+  id.reserve(1024);
+  for (int power = 0; power < 16; power++) {
+    for (int north = 0; north < 3; north++) {
+      for (int east = 0; east < 3; east++) {
+        for (int west = 0; west < 3; west++) {
+          for (int south = 0; south < 3; south++) {
+            id = base_id;
+            const std::array<int, 4> dir_temp = {north, east, west, south};
+            for (int dir = 0; dir < 4; dir++) {
+              id += direct_names[dir];
+              id += '=';
+              id += direct_values[dir_temp[dir]];
+              id += ',';
+            }
+
+            id += "power=";
+            id += power_values[power];
+            id += "]";
+            result.emplace_back(id);
+          }
+        }
+      }
+    }
+  }
+
+  return result;
 }

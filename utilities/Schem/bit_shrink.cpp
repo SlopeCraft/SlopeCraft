@@ -120,7 +120,7 @@ void shrink_bits(const uint16_t *const src, const size_t src_count,
 inline bool is_seperator(const char ch) noexcept {
   switch (ch) {
   case '[':
-  case ':':
+  case ',':
   case ']':
     return true;
   default:
@@ -149,6 +149,7 @@ bool process_block_id(
   }
 
   const int traits_beg_idx = id.find_first_of('[');
+  *pure_id = id.substr(0, traits_beg_idx);
 
   std::vector<int> keychars;
   keychars.reserve(id.size() / 3);
@@ -187,4 +188,32 @@ bool process_block_id(
   }
 
   return true;
+}
+
+void shrink_bytes_weSchem(const uint16_t *src, const size_t src_count,
+                          const int palette_max,
+                          std::vector<uint8_t> *const dest) noexcept {
+  if (palette_max <= 255) {
+    dest->resize(src_count);
+    for (size_t idx = 0; idx < src_count; idx++) {
+      dest->at(idx) = src[idx] & 0xFF;
+    }
+    return;
+  }
+
+  dest->reserve(src_count * 2);
+  dest->clear();
+
+  for (size_t idx = 0; idx < src_count; idx++) {
+    uint16_t temp = src[idx];
+    if (temp < 128) {
+      dest->emplace_back(temp);
+    } else {
+      uint8_t byte = temp & 0x7F;
+      byte |= 0b10000000;
+      dest->emplace_back(byte);
+      byte = temp / 128;
+      dest->emplace_back(byte);
+    }
+  }
 }

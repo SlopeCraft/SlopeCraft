@@ -188,7 +188,7 @@ void TokiSlopeCraft::writeTrash(int count, NBT::NBTWriter<false> &Lite) {
   ProName.at(2) = "west";
   ProName.at(3) = "south";
   ProName.at(4) = "power";
-  std::string dir[3] = {"none", "size", "up"};
+  std::string dir[3] = {"none", "side", "up"};
   std::string power[16];
   for (short i = 0; i < 15; i++)
     power[i] = std::to_string(i);
