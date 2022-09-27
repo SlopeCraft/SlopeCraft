@@ -103,7 +103,17 @@ public:
     return __xyz(r, c);
   }
 
-  inline uint8_t Map(const int r) const noexcept { return (r >> 6) | (r << 2); }
+  static inline uint8_t Map(const int r) noexcept {
+    return (r >> 6) | (r << 2);
+  }
+
+  static inline uint8_t colorid_at_index(const uint8_t color_idx) noexcept {
+    return Map(color_idx);
+  }
+
+  static inline uint8_t colorindex_of_coloid(const uint8_t color_id) noexcept {
+    return (color_id << 6) | (color_id >> 2);
+  }
 };
 
 class colorset_maptical_allowed {

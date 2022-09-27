@@ -215,7 +215,7 @@ void TokiSlopeCraft::Dither() {
   int index = 0;
   for (short r = 0; r < sizePic(0); r++) {
     for (short c = 0; c < sizePic(1); c++) {
-      TokiColor &&temp = std::move(R->operator[](rawImage(r, c)));
+      const TokiColor &temp = (R->operator[](rawImage(r, c)));
       Dither[0](r + 1, c + 1) = temp.c3[0];
       Dither[1](r + 1, c + 1) = temp.c3[1];
       Dither[2](r + 1, c + 1) = temp.c3[2];

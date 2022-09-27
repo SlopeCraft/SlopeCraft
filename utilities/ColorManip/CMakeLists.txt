@@ -1,9 +1,13 @@
 project(ColorManip VERSION ${SlopeCraft_version} LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 
-include_directories(${SlopeCraft_Eigen3_include_dir})
+include_directories(
+    ${SlopeCraft_Eigen3_include_dir}
+    ${CMAKE_SOURCE_DIR}/utilities)
 
 #include_directories(../SlopeCraftL)
+
+find_package(OpenMP REQUIRED)
 
 add_library(ColorManip 
     

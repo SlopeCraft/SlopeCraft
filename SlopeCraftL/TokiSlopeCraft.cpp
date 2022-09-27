@@ -37,6 +37,8 @@ std::vector<simpleBlock> TokiSlopeCraft::blockPalette(0);
 
 std::unordered_set<TokiSlopeCraft *> TokiSlopeCraft::kernel_hash_set;
 
+std::mutex SCL_internal_lock;
+
 TokiSlopeCraft::TokiSlopeCraft() {
   kernelStep = step::nothing;
   rawImage.setZero(0, 0);
@@ -62,7 +64,9 @@ TokiSlopeCraft::TokiSlopeCraft() {
   Compressor->progressRangeSetPtr = &this->algoProgressRangeSet;
   Compressor->keepAwakePtr = &this->keepAwake;
 
+  ::SCL_internal_lock.lock();
   TokiSlopeCraft::kernel_hash_set.emplace(this);
+  ::SCL_internal_lock.unlock();
 }
 
 TokiSlopeCraft::~TokiSlopeCraft() {
@@ -70,7 +74,9 @@ TokiSlopeCraft::~TokiSlopeCraft() {
   delete glassBuilder;
   delete GAConverter;
 
+  ::SCL_internal_lock.lock();
   TokiSlopeCraft::kernel_hash_set.erase(this);
+  ::SCL_internal_lock.unlock();
 }
 
 /// function ptr to window object
@@ -153,8 +159,7 @@ const AiCvterOpt *TokiSlopeCraft::aiCvterOpt() const { return &AiOpt; }
 bool TokiSlopeCraft::setType(mapTypes type, gameVersion ver,
                              const bool *allowedBaseColor,
                              const AbstractBlock **palettes) {
-  static std::mutex lock;
-  lock.lock();
+  ::SCL_internal_lock.lock();
   /*
   if (kernelStep < colorSetReady)
   {
@@ -268,7 +273,7 @@ bool TokiSlopeCraft::setType(mapTypes type, gameVersion ver,
     }
 
     reportError(wind, errorFlag::USEABLE_COLOR_TOO_FEW, msg.data());
-    lock.unlock();
+    ::SCL_internal_lock.unlock();
     return false;
   }
 
@@ -277,7 +282,7 @@ bool TokiSlopeCraft::setType(mapTypes type, gameVersion ver,
     kernel_ptr->kernelStep = wait4Image;
   }
 
-  lock.unlock();
+  ::SCL_internal_lock.unlock();
   return true;
 }
 

@@ -76,7 +76,7 @@ protected:
 class colorset_optical_basic : public colorset_optical_base {
 public:
   /// in the basic colorset, id=idx;
-  inline uint32_t color_id(uint32_t idx) const noexcept { return idx; }
+  inline uint16_t color_id(uint16_t idx) const noexcept { return idx; }
   colorset_optical_basic() { this->resize(0); }
 
   bool set_colors(const float *const rgbsrc_colwise,
@@ -116,13 +116,21 @@ public:
 
     return true;
   }
+
+  inline uint16_t colorid_at_index(const uint16_t color_idx) const noexcept {
+    return color_idx;
+  }
+
+  inline uint16_t colorindex_of_id(const uint16_t color_id) const noexcept {
+    return color_id;
+  }
 };
 class colorset_optical_allowed : public colorset_optical_base {
 public:
-  static constexpr uint32_t invalid_color_id = ~uint32_t(0);
+  static constexpr uint16_t invalid_color_id = ~uint16_t(0);
 
 private:
-  Eigen::Array<uint32_t, Eigen::Dynamic, 1> __color_id;
+  Eigen::Array<uint16_t, Eigen::Dynamic, 1> __color_id;
 
   void resize(int new_color_count) {
     colorset_optical_base::resize(new_color_count);
@@ -171,14 +179,14 @@ public:
     return true;
   }
 
-  inline uint32_t color_id(uint32_t idx) const noexcept {
+  inline uint16_t color_id(uint16_t idx) const noexcept {
     return __color_id[idx];
   }
 };
 
 class newtokicolor_base_optical {
   using TempVectorXf_t = Eigen::ArrayXf;
-  using result_t = uint32_t;
+  using result_t = uint16_t;
 
 protected:
   result_t result_color_id{
