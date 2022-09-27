@@ -55,6 +55,14 @@ public:
     return val;
   }
 
+  inline auto color_id() const noexcept {
+    if constexpr (is_not_optical) {
+      return this->Result;
+    } else {
+      return this->result_color_id;
+    }
+  }
+
   // These two members must be defined by caller
   static const basic_t *const Basic;
   static const allowed_t *const Allowed;
