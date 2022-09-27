@@ -68,7 +68,7 @@ add_subdirectory(imageCutter)
 add_subdirectory(SlopeCraftL)
 add_subdirectory(SlopeCraftMain)
 add_subdirectory(MapViewer)
-add_subdirectory(test_libSchem)
+add_subdirectory(tests)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
