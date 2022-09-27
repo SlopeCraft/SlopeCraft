@@ -80,7 +80,8 @@ set(SlopeCraft_SCL_link_libs
     GAConverter 
     ColorManip 
     NBTWriter 
-    Schem)
+    Schem
+    MapImageCvter)
 
 # link to dependents
 target_link_libraries(SlopeCraftL PUBLIC ${SlopeCraft_SCL_link_libs})

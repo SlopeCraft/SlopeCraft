@@ -24,6 +24,7 @@ This file is part of SlopeCraft.
 #define COLORMANIP_IMAGECONVERT_HPP
 
 #include <Eigen/Dense>
+#include <memory>
 #include <thread>
 #include <type_traits>
 #include <unordered_map>
@@ -34,7 +35,7 @@ This file is part of SlopeCraft.
 
 #include "../SC_GlobalEnums.h"
 
-#warning GACvter is not useable currently
+#include <uiPack/uiPack.h>
 
 namespace libImageCvt {
 
@@ -63,23 +64,25 @@ public:
 
 protected:
   Eigen::ArrayXX<ARGB> _raw_image;
-  std::unordered_map<ARGB, TokiColor_t> _color_hash;
+  ::SCL_convertAlgo algo;
+  std::unordered_map<convert_unit, TokiColor_t, ::hash_cvt_unit> _color_hash;
 
   Eigen::ArrayXX<ARGB> _dithered_image;
   // Eigen::ArrayXX<colorid_t> colorid_matrix;
 
 public:
+  uiPack ui;
   // SCL_convertAlgo convert_algo{SCL_convertAlgo::RGB_Better};
 
-  void reset() noexcept {
+  void clear_images() noexcept {
     this->_raw_image.resize(0, 0);
-    this->_color_hash.clear();
-    this->colorid_matrix.resize(0, 0);
+    this->_dithered_image.resize(0, 0);
   }
 
-  static inline ::SCL_convertAlgo convert_algo() noexcept {
-    return TokiColor_t::convertAlgo();
-  }
+  /// Call this function when the color set is changed.
+  void clear_color_hash() noexcept { this->_color_hash.clear(); }
+
+  inline ::SCL_convertAlgo convert_algo() const noexcept { return this->algo; }
 
   inline int64_t rows() const noexcept { return _raw_image.rows(); }
   inline int64_t cols() const noexcept { return _raw_image.cols(); }
@@ -111,12 +114,21 @@ public:
     }
   }
 
-  void convert_image(bool dither) noexcept {
+  void convert_image(::SCL_convertAlgo __algo, bool dither) noexcept {
+
+    if (__algo == ::SCL_convertAlgo::gaCvter) {
+      __algo = ::SCL_convertAlgo::RGB_Better;
+    }
+
+    ui.rangeSet(0, 100, 0);
+    this->algo = __algo;
     this->add_colors_to_hash();
+    ui.rangeSet(0, 100, 25);
     this->match_all_TokiColors();
+    ui.rangeSet(0, 100, 50);
 
     if (dither) {
-      switch (TokiColor_t::convertAlgo()) {
+      switch (this->algo) {
 
       case ::SCL_convertAlgo::RGB:
         this->template __impl_dither<::SCL_convertAlgo::RGB>();
@@ -144,6 +156,7 @@ public:
     } else {
       this->_dithered_image = this->_raw_image;
     }
+    ui.rangeSet(0, 100, 100);
 
     // fill_coloridmat_by_hash(this->colorid_matrix);
   }
@@ -153,7 +166,8 @@ public:
     result.setZero(this->rows(), this->cols());
 
     for (int64_t idx = 0; idx < this->size(); idx++) {
-      auto it = this->_color_hash.find(this->_dithered_image(idx));
+      auto it = this->_color_hash.find(
+          convert_unit(this->_dithered_image(idx), this->algo));
 
       if (it == this->_color_hash.end()) {
         exit(1);
@@ -209,8 +223,10 @@ private:
   void add_colors_to_hash() noexcept {
     this->_color_hash.clear();
 
-    for (ARGB argb : this->_raw_image) {
-      this->_color_hash.emplace(argb, TokiColor_t(argb));
+    for (int64_t idx = 0; idx < this->_raw_image.size(); idx++) {
+      const ARGB argb = this->_raw_image(argb);
+      convert_unit cu(argb, this->algo);
+      this->_color_hash.emplace(cu, TokiColor_t(cu));
     }
   }
 
@@ -219,7 +235,7 @@ private:
     static const int threadCount = 4 * std::thread::hardware_concurrency();
     const uint64_t taskCount = _color_hash.size();
 
-    std::vector<std::pair<const ARGB, TokiColor_t> *> tasks;
+    std::vector<std::pair<const convert_unit, TokiColor_t> *> tasks;
     tasks.reserve(_color_hash.size());
     tasks.clear();
 
@@ -288,14 +304,15 @@ private:
 
     for (int64_t r = 0; r < this->rows(); r++) {
       for (int64_t c = 0; c < this->cols(); c++) {
-        auto it = this->_color_hash.find(this->_raw_image(r, c));
+        auto it = this->_color_hash.find(
+            convert_unit(this->_raw_image(r, c), this->algo));
         if (it == this->_color_hash.end()) {
           // unreachable
           exit(1);
           return;
         }
         for (int ch = 0; ch < 3; ch++) {
-          dither_c3[ch](r + 1, c + 1) = it->c3[ch];
+          dither_c3[ch](r + 1, c + 1) = it->second.c3[ch];
         }
       }
     }
@@ -314,13 +331,14 @@ private:
               dither_c3[2](row + 1, col + 1));
           // ditheredImage(r, c) = Current;
           this->_dithered_image(row, col) = current_argb;
-          auto it = this->_color_hash.find(current_argb);
+          auto it =
+              this->_color_hash.find(convert_unit(current_argb, this->algo));
           // if this color isn't matched, match it.
           if (it == this->_color_hash.end()) {
-            auto ret = this->_color_hash.emplace(current_argb,
-                                                 TokiColor_t(current_argb));
+            convert_unit cu(current_argb, this->algo);
+            auto ret = this->_color_hash.emplace(cu, TokiColor_t(cu));
             it = ret.first;
-            it->second.compute(current_argb);
+            it->second.compute(cu);
             inserted_count++;
           }
 
@@ -353,13 +371,13 @@ private:
               dither_c3[0](row + 1, col + 1), dither_c3[1](row + 1, col + 1),
               dither_c3[2](row + 1, col + 1));
           this->_dithered_image(row, col) = current_argb;
-          auto it = this->_color_hash.find(current_argb);
+          convert_unit cu(current_argb, this->algo);
+          auto it = this->_color_hash.find(cu);
           // if this color isn't matched, match it.
           if (it == this->_color_hash.end()) {
-            auto ret = this->_color_hash.emplace(current_argb,
-                                                 TokiColor_t(current_argb));
+            auto ret = this->_color_hash.emplace(cu, TokiColor_t(cu));
             it = ret.first;
-            it->second.compute(current_argb);
+            it->second.compute(cu);
             inserted_count++;
           }
 
@@ -386,37 +404,6 @@ private:
       is_dir_LR = !is_dir_LR;
 
       // report
-    }
-  }
-};
-
-class ImageCvter_maptical : public ImageCvter<true> {
-public:
-  inline Eigen::ArrayXX<uint8_t> basecolor_matrix() const noexcept {
-    return this->color_id() / 4;
-  }
-
-  inline Eigen::ArrayXX<uint8_t> shade_matrix() const noexcept {
-    Eigen::ArrayXX<uint8_t> result = this->color_id();
-    for (int64_t idx = 0; idx < result.size(); idx++) {
-      result(idx) &= 0b11;
-    }
-    return result;
-  }
-
-  void col_TokiColor_ptrs(int64_t col,
-                          const TokiColor_t **const dest) const noexcept {
-    if (dest == nullptr) {
-      return;
-    }
-
-    if (col < 0 || col > this->cols()) {
-      return;
-    }
-
-    for (int64_t r = 0; r < this->rows(); r++) {
-      auto it = this->_color_hash.find(this->_dithered_image(r, col));
-      dest[r] = &it->second;
     }
   }
 };

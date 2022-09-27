@@ -25,13 +25,31 @@ This file is part of SlopeCraft.
 
 #include "../../SlopeCraftL/SlopeCraftL.h"
 #include "ColorManip.h"
-#include <Eigen/Dense>
-#include <cmath>
-
 #include "colorset_maptical.hpp"
 #include "colorset_optical.hpp"
+#include <Eigen/Dense>
+#include <cmath>
+#include <functional>
 
-using Eigen::Dynamic;
+// using Eigen::Dynamic;
+
+struct convert_unit {
+  convert_unit(ARGB _a, ::SCL_convertAlgo _c) : ARGB(_a), algo(_c) {}
+  ARGB ARGB;
+  ::SCL_convertAlgo algo;
+
+  inline bool operator==(const convert_unit another) const noexcept {
+    return (ARGB == another.ARGB) && (algo == another.algo);
+  }
+};
+
+struct hash_cvt_unit {
+public:
+  inline size_t operator()(const convert_unit cu) const noexcept {
+    return std::hash<uint32_t>()(cu.ARGB) ^
+           std::hash<uint8_t>()(uint8_t(cu.algo));
+  }
+};
 
 template <bool is_not_optical, class basic_t, class allowed_t>
 class newTokiColor
@@ -50,11 +68,6 @@ public:
   Eigen::Array3f c3; //   color in some colorspace
   float ResultDiff;  // color diff for the result
 
-  static inline ::SCL_convertAlgo &convertAlgo() noexcept {
-    static ::SCL_convertAlgo val = SCL_convertAlgo::RGB_Better;
-    return val;
-  }
-
   inline auto color_id() const noexcept {
     if constexpr (is_not_optical) {
       return this->Result;
@@ -68,8 +81,9 @@ public:
   static const allowed_t *const Allowed;
 
 public:
-  explicit newTokiColor(ARGB rawColor) {
-    switch (convertAlgo()) {
+  explicit newTokiColor(convert_unit cu) {
+    const ARGB rawColor = cu.ARGB;
+    switch (cu.algo) {
     case ::SCL_convertAlgo::RGB:
     case ::SCL_convertAlgo::RGB_Better:
     case ::SCL_convertAlgo::gaCvter:
@@ -103,8 +117,8 @@ public:
     }
   }
 
-  auto compute(ARGB argb) noexcept {
-    if (getA(argb) == 0) {
+  auto compute(convert_unit cu) noexcept {
+    if (getA(cu.ARGB) == 0) {
       if constexpr (is_not_optical) {
         this->Result = 0;
         return this->Result;
@@ -123,7 +137,7 @@ public:
       }
     }
 
-    switch (convertAlgo()) {
+    switch (cu.algo) {
     case ::SCL_convertAlgo::RGB:
       return applyRGB();
     case ::SCL_convertAlgo::RGB_Better:

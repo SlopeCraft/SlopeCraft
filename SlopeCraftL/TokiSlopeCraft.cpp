@@ -39,13 +39,23 @@ std::unordered_set<TokiSlopeCraft *> TokiSlopeCraft::kernel_hash_set;
 
 std::mutex SCL_internal_lock;
 
+template <>
+const colorset_basic_t &libImageCvt::ImageCvter<true>::basic_colorset =
+    TokiSlopeCraft::Basic;
+
+template <>
+const colorset_allowed_t &libImageCvt::ImageCvter<true>::allowed_colorset =
+    TokiSlopeCraft::Allowed;
+
 TokiSlopeCraft::TokiSlopeCraft() {
   kernelStep = step::nothing;
-  rawImage.setZero(0, 0);
+  this->image_cvter.clear_images();
+  this->image_cvter.clear_color_hash();
+  // rawImage.setZero(0, 0);
 
   glassBuilder = new PrimGlassBuilder;
   Compressor = new LossyCompressor;
-  GAConverter = new GACvter::GAConverter;
+  // GAConverter = new GACvter::GAConverter;
   setProgressRangeSet([](void *, int, int, int) {});
   setProgressAdd([](void *, int) {});
   setKeepAwake([](void *) {});
@@ -72,7 +82,7 @@ TokiSlopeCraft::TokiSlopeCraft() {
 TokiSlopeCraft::~TokiSlopeCraft() {
   delete Compressor;
   delete glassBuilder;
-  delete GAConverter;
+  // delete GAConverter;
 
   ::SCL_internal_lock.lock();
   TokiSlopeCraft::kernel_hash_set.erase(this);
@@ -82,17 +92,20 @@ TokiSlopeCraft::~TokiSlopeCraft() {
 /// function ptr to window object
 void TokiSlopeCraft::setWindPtr(void *_w) {
   wind = _w;
-  GAConverter->setUiPtr(_w);
+  this->image_cvter.ui._uiPtr = _w;
+  // GAConverter->setUiPtr(_w);
 }
 /// a function ptr to show progress of converting and exporting
 void TokiSlopeCraft::setProgressRangeSet(void (*prs)(void *, int, int, int)) {
   progressRangeSet = prs;
-  GAConverter->setProgressRangeFun(prs);
+  this->image_cvter.ui.progressRangeSet = prs;
+  // GAConverter->setProgressRangeFun(prs);
 }
 /// a function ptr to add progress value
 void TokiSlopeCraft::setProgressAdd(void (*pa)(void *, int)) {
   progressAdd = pa;
-  GAConverter->setProgressAddFun(pa);
+  this->image_cvter.ui.progressAdd = pa;
+  // GAConverter->setProgressAddFun(pa);
 }
 /// a function ptr to prevent window from being syncoped
 void TokiSlopeCraft::setKeepAwake(void (*ka)(void *)) { keepAwake = ka; }
@@ -277,6 +290,8 @@ bool TokiSlopeCraft::setType(mapTypes type, gameVersion ver,
     return false;
   }
 
+  GACvter::updateMapColor2GrayLUT();
+
   reportWorkingStatue(wind, workStatues::none);
   for (auto kernel_ptr : TokiSlopeCraft::kernel_hash_set) {
     kernel_ptr->kernelStep = wait4Image;
@@ -295,12 +310,6 @@ bool TokiSlopeCraft::setType(mapTypes type, gameVersion ver,
   }
 
   return setType(type, ver, allowedBaseColor, temp);
-}
-
-void TokiSlopeCraft::configGAConverter() {
-  GACvter::updateMapColor2GrayLUT();
-
-  GAConverter->setRawImage(rawImage);
 }
 
 uint16_t TokiSlopeCraft::getColorCount() const {
@@ -343,25 +352,22 @@ void TokiSlopeCraft::getAvailableColors(ARGB *const ARGBDest,
 }
 
 void TokiSlopeCraft::setRawImage(const ARGB *src, int rows, int cols) {
-  setRawImage(EImage::Map(src, rows, cols));
-}
-
-void TokiSlopeCraft::setRawImage(const EImage &_rawimg) {
   if (kernelStep < wait4Image) {
     reportError(wind, errorFlag::HASTY_MANIPULATION,
                 "You can only import the raw image count after you set the map "
                 "type and gameversion");
     return;
   }
-  if (_rawimg.size() <= 0) {
+  if (rows <= 0 || cols <= 0) {
     reportError(wind, errorFlag::EMPTY_RAW_IMAGE,
                 "The size of your raw image is 0. You loaded an empty image.");
     return;
   }
 
-  rawImage = _rawimg;
+  this->image_cvter.set_raw_image(src, rows, cols);
+
   kernelStep = convertionReady;
-  configGAConverter();
+
   return;
 }
 
@@ -383,32 +389,14 @@ void TokiSlopeCraft::getBaseColorInARGB32(ARGB *const dest) const {
 
 int64_t TokiSlopeCraft::sizePic(short dim) const {
   if (dim == 0)
-    return rawImage.rows();
+    return this->image_cvter.rows();
   if (dim == 1)
-    return rawImage.cols();
-  return rawImage.size();
-}
-
-void TokiSlopeCraft::getTokiColorPtr(uint16_t col,
-                                     const TokiColor **dst) const {
-  if (kernelStep < converted) {
-    cerr << "Too hasty! export after you converted the map!" << endl;
-    reportError(wind, errorFlag::HASTY_MANIPULATION,
-                "You can export only after you converted a map.");
-    return;
-  }
-  for (uint16_t r = 0; r < ditheredImage.rows(); r++) {
-    auto i = colorHash.find(ditheredImage(r, col));
-
-    if (i == colorHash.end())
-      dst[r] = nullptr;
-    else
-      dst[r] = (const TokiColor *)&(colorHash.at(ditheredImage(r, col)));
-  }
+    return this->image_cvter.cols();
+  return this->image_cvter.size();
 }
 
 TokiSlopeCraft::ColorSpace TokiSlopeCraft::getColorSpace() const {
-  switch (ConvertAlgo) {
+  switch (this->image_cvter.convert_algo()) {
   case RGB:
     return R;
   case RGB_Better:
@@ -473,20 +461,16 @@ EImage TokiSlopeCraft::getConovertedImage() const {
 void TokiSlopeCraft::getConvertedMap(int *rows, int *cols,
                                      unsigned char *dst) const {
   if (rows != nullptr) {
-    *rows = getImageRows();
+    *rows = this->image_cvter.rows();
   }
   if (cols != nullptr) {
-    *cols = getImageCols();
+    *cols = this->image_cvter.cols();
   }
 
   Eigen::Map<Eigen::Array<uint8_t, Eigen::Dynamic, Eigen::Dynamic>> dest(
       dst, getImageRows(), getImageCols());
 
-  for (int r = 0; r < getImageRows(); r++) {
-    for (int c = 0; c < getImageCols(); c++) {
-      dest(r, c) = colorHash.find(ditheredImage(r, c))->second.Result;
-    }
-  }
+  dest = this->image_cvter.color_id();
 }
 
 int TokiSlopeCraft::getImageRows() const {
@@ -496,7 +480,7 @@ int TokiSlopeCraft::getImageRows() const {
         "You can call getImageRows only after you imported the raw image.");
     return -1;
   }
-  return rawImage.rows();
+  return this->image_cvter.rows();
 }
 
 int TokiSlopeCraft::getImageCols() const {
@@ -506,7 +490,7 @@ int TokiSlopeCraft::getImageCols() const {
         "You can call getImageRows only after you imported the raw image.");
     return -1;
   }
-  return rawImage.cols();
+  return this->image_cvter.cols();
 }
 
 void TokiSlopeCraft::get3DSize(int *x, int *y, int *z) const {

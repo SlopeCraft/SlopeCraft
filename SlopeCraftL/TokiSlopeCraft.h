@@ -29,6 +29,7 @@ This file is part of SlopeCraft.
 #include <cmath>
 #include <fstream>
 #include <iostream>
+#include <memory>
 #include <queue>
 #include <unordered_map>
 #include <vector>
@@ -46,9 +47,10 @@ This file is part of SlopeCraft.
 
 #include "AiCvterOpt.h"
 
+#include <ColorManip/ImageConvert.hpp>
 #include <ColorManip/newColorSet.hpp>
-
 #include <ExternalConverters/GAConverter/GAConverter.h>
+#include <MapImageCvter/MapImageCvter.h>
 #include <Schem/Schem.h>
 
 /*
@@ -126,7 +128,7 @@ public:
   void getBaseColorInARGB32(unsigned int *const) const override;
   // can do in wait4Image:
   void setRawImage(const unsigned int *src, int rows, int cols) override;
-  void setRawImage(const EImage &);
+
   uint16_t getColorCount() const override;
   void getAvailableColors(ARGB *const, uint8_t *const,
                           int *const num = nullptr) const override;
@@ -216,18 +218,15 @@ private:
 
 public:
   step kernelStep;
-  convertAlgo ConvertAlgo;
+  // convertAlgo ConvertAlgo;
 
-  EImage rawImage;
-  EImage ditheredImage;
-
-  std::unordered_map<ARGB, TokiColor> colorHash;
+  libMapImageCvt::MapImageCvter image_cvter;
 
   // std::array<int, 3> size3D; // x,y,z
   PrimGlassBuilder *glassBuilder;
   LossyCompressor *Compressor;
 
-  GACvter::GAConverter *GAConverter;
+  // std::shared_ptr<GACvter::GAConverter> GAConverter{nullptr};
 
   AiCvterOpt AiOpt;
   Eigen::ArrayXXi mapPic; // stores mapColor
@@ -244,20 +243,13 @@ public:
 
   // for setType:
 
-  void configGAConverter();
-
   // for setImage:
 
   // for convert:
   ColorSpace getColorSpace() const;
-  void pushToHash();
-  void applyTokiColor();
-  void fillMapMat();
-  void Dither();
   int64_t sizePic(short dim) const;
 
   // for build
-  void getTokiColorPtr(uint16_t, const TokiColor *[]) const;
   // void makeHeight_old();//构建HighMap和LowMap
   void makeHeight_new();
   // void makeHeightInLine(const uint16_t c);

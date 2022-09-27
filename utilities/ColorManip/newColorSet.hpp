@@ -47,10 +47,6 @@ public:
                   "This initialization requires colorset type to be basic.");
     static_assert(is_not_optical,
                   "This initialization requires colorset type to be maptical.");
-    /*
-static_cast<colorset_maptical_basic &>(*this) =
-colorset_maptical_basic(src);
-*/
   }
 
   colorset_new() = default;

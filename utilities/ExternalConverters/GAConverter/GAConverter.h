@@ -20,8 +20,8 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
-#ifndef GACONVERTER_H
-#define GACONVERTER_H
+#ifndef SCL_GACVTER_GACONVERTER_H
+#define SCL_GACVTER_GACONVERTER_H
 
 #include "GACvterDefines.hpp"
 #include "sortColor.h"
@@ -111,4 +111,4 @@ protected:
 
 } // namespace GACvter
 
-#endif // GACONVERTER_H
+#endif // SCL_GACVTER_GACONVERTER_H

@@ -221,13 +221,8 @@ bool TokiSlopeCraft::build(compressSettings cS, uint16_t mAH,
   progressRangeSet(wind, 0, 9 * sizePic(2), 0);
   cerr << "start makeHeight" << endl;
 
-  mapPic.setZero(sizePic(0), sizePic(1));
-  for (uint16_t r = 0; r < sizePic(0); r++) {
-    for (uint16_t c = 0; c < sizePic(1); c++) {
-      mapPic(r, c) = colorHash[ditheredImage(r, c)].Result;
-    }
-    progressAdd(wind, sizePic(1));
-  }
+  mapPic = this->image_cvter.mapcolor_matrix().cast<int>();
+  progressAdd(wind, sizePic(2));
 
   makeHeight_new();
   cerr << "makeHeight finished" << endl;
@@ -292,7 +287,8 @@ void TokiSlopeCraft::makeHeight_new() {
 
       std::vector<const TokiColor *> ptr(getImageRows());
 
-      getTokiColorPtr(c, &ptr[0]);
+      this->image_cvter.col_TokiColor_ptrs(c, ptr.data());
+      // getTokiColorPtr(c, &ptr[0]);
 
       Compressor->setSource(HL.getBase(), &ptr[0]);
       bool success =
