@@ -97,6 +97,7 @@ std::string TokiSlopeCraft::makeTests(const AbstractBlock **src,
     xSize = std::max(size_t(xSize), it.size());
   }
   test.resize(xSize, ySize, zSize);
+  test.set_zero();
 
   for (uint8_t base = 0; base < 64; base++) {
     for (uint32_t idx = 0; idx < blocks[base].size(); idx++) {
@@ -145,12 +146,16 @@ TokiSlopeCraft::exportAsLitematic(const std::string &TargetName,
   info.litename_utf8 = LiteName;
   info.regionname_utf8 = RegionName;
 
-  const bool success = schem.export_litematic(TargetName, info);
+  errorFlag flag = errorFlag::NO_ERROR_OCCUR;
+  std::string error_string;
+  const bool success =
+      schem.export_litematic(TargetName, info, &flag, &error_string);
 
   if (!success) {
-// this->reportError(this->wind,errorFlag::)
-#warning We should report an error here, and new error enums should be defined.
-    return "Failed to export as litematic.";
+    // this->reportError(this->wind,errorFlag::)
+    this->reportError(this->wind, flag, error_string.data());
+
+    return "Failed to export as litematic.\n" + error_string;
   }
 
   progressRangeSet(wind, 0, 100, 100);
@@ -316,6 +321,7 @@ void TokiSlopeCraft::makeHeight_new() {
   }
   cerr << "makeHeight_new finished\n";
   schem.resize(2 + sizePic(1), HighMap.maxCoeff() + 1, 2 + sizePic(0));
+  schem.set_zero();
   // schem.z_range() = 2 + sizePic(0);         // z
   // schem.x_range() = 2 + sizePic(1);         // x
   // schem.y_range() = HighMap.maxCoeff() + 1; // y
@@ -483,11 +489,14 @@ TokiSlopeCraft::exportAsStructure(const std::string &TargetName) const {
   reportWorkingStatue(wind, workStatues::writingMetaInfo);
   progressRangeSet(wind, 0, 100 + schem.size(), 0);
 
-  const bool success = schem.export_structure(TargetName, true);
+  errorFlag flag = errorFlag::NO_ERROR_OCCUR;
+  std::string error_string;
+  const bool success =
+      schem.export_structure(TargetName, true, &flag, &error_string);
 
   if (!success) {
-#warning here
-    return "Failed to export structure.";
+    this->reportError(this->wind, flag, error_string.data());
+    return "Failed to export structure.\n" + error_string;
   }
 
   progressRangeSet(wind, 0, 100, 100);
@@ -556,11 +565,14 @@ std::string TokiSlopeCraft::exportAsWESchem(
 
   progressRangeSet(wind, 0, 100, 5);
 
-  const bool success = schem.export_WESchem(targetName, info);
+  errorFlag flag = errorFlag::NO_ERROR_OCCUR;
+  std::string error_string;
+  const bool success =
+      schem.export_WESchem(targetName, info, &flag, &error_string);
 
   if (!success) {
-#warning here
-    return "Failed to export as WE schem files.";
+    this->reportError(this->wind, flag, error_string.data());
+    return "Failed to export as WE schem files.\n" + error_string;
   }
 
   progressRangeSet(wind, 0, 100, 100);

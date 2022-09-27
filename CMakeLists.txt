@@ -10,6 +10,10 @@ set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install_app)
 set(CMAKE_INSTALL_LIBDIR ${CMAKE_INSTALL_PREFIX})
 set(CMAKE_INSTALL_BINDIR ${CMAKE_INSTALL_PREFIX})
 
+if(EXISTS ${CMAKE_SOURCE_DIR}/compile_commands.json)
+    #delete files here
+    file(REMOVE ${CMAKE_SOURCE_DIR}/compile_commands.json)
+endif()
 
 # manage the include dir of HeuristicFlow
 set(SlopeCraft_HeuristicFlow_include_dir D:/CppLibs/HeuristicFlow-1.6.2.1)
@@ -57,6 +61,7 @@ message("The output is : " ${SlopeCraft_output_variable})
 set(SlopeCraft_update_ts_files OFF)
 
 add_definitions("-D_USE_MATH_DEFINES")
+add_definitions("-DSCL_FIND_GlobalEnums_BY_PATH")
 
 add_subdirectory(utilities)
 add_subdirectory(imageCutter)
@@ -64,10 +69,6 @@ add_subdirectory(SlopeCraftL)
 add_subdirectory(SlopeCraftMain)
 add_subdirectory(MapViewer)
 add_subdirectory(test_libSchem)
-#add_subdirectory(ColorManip)
-#add_subdirectory(Schem)
-#add_subdirectory(BlockListManager)
-#add_subdirectory(ExternalConverters)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 

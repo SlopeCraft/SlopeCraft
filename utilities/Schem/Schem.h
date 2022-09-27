@@ -29,6 +29,8 @@ This file is part of SlopeCraft.
 #include <unsupported/Eigen/CXX11/Tensor>
 #include <vector>
 
+#include "SC_GlobalEnums.h"
+
 namespace libSchem {
 // template <int64_t max_block_count = 256>
 
@@ -87,7 +89,7 @@ public:
 
   inline const auto &tensor() const noexcept { return this->xzy; }
 
-  inline const auto &block_list() const noexcept { return this->block_id_list; }
+  inline const auto &palette() const noexcept { return this->block_id_list; }
 
   inline ele_t &operator()(int64_t x, int64_t y, int64_t z) noexcept {
     return xzy(x, z, y);
@@ -112,11 +114,24 @@ public:
     return block_id_list[xzy(idx)];
   }
 
+  inline ele_t *begin() noexcept { return xzy.data(); }
+
+  inline const ele_t *begin() const noexcept { return xzy.data(); }
+
+  inline ele_t *end() noexcept { return xzy.data() + xzy.size(); }
+  inline const ele_t *end() const noexcept { return xzy.data() + xzy.size(); }
+
+  inline void fill(const ele_t _) noexcept {
+    for (uint16_t &val : *this) {
+      val = _;
+    }
+  }
+
   inline int64_t x_range() const noexcept { return xzy.dimension(0); }
   inline int64_t y_range() const noexcept { return xzy.dimension(2); }
   inline int64_t z_range() const noexcept { return xzy.dimension(1); }
 
-  inline int block_types() const noexcept { return block_id_list.size(); }
+  inline int palette_size() const noexcept { return block_id_list.size(); }
 
   inline int64_t size() const noexcept { return xzy.size(); }
 
@@ -139,17 +154,49 @@ public:
     this->MC_major_ver_number = _;
   }
 
+  /**
+   * \brief Search for invalid block.
+   *
+   * \note Invalid block are blocks which has an id(uint16_t) greater than or
+   * equal to the block type number. For example, if there are only 5 kinds of
+   * blocks, then id 5 and greater are invalid.
+   *
+   * \param first_invalid_block_idx The index of the first invalid block
+   * \return true The schem contains invalid block(s)
+   * \return false The schem don't contain any invalid block.
+   */
+  bool
+  have_invalid_block(int64_t *first_invalid_block_idx = nullptr) const noexcept;
+
+  /**
+   * \brief Search for invalid block.
+   *
+   * \param first_invalid_block_x_pos The x position of the first invalid block
+   * \param first_invalid_block_y_pos The y position of the first invalid block
+   * \param first_invalid_block_z_pos The z position of the first invalid block
+   * \return true The schem contains invalid block(s)
+   * \return false The schem don't contain any invalid block.
+   */
+  bool have_invalid_block(
+      int64_t *first_invalid_block_x_pos = nullptr,
+      int64_t *first_invalid_block_y_pos = nullptr,
+      int64_t *first_invalid_block_z_pos = nullptr) const noexcept;
+
 public:
-  bool export_litematic(
-      std::string_view filename,
-      const litematic_info &info = litematic_info()) const noexcept;
+  bool export_litematic(std::string_view filename,
+                        const litematic_info &info = litematic_info(),
+                        SCL_errorFlag *const error_flag = nullptr,
+                        std::string *const error_str = nullptr) const noexcept;
 
   bool export_structure(std::string_view filename,
-                        const bool is_air_structure_void = true) const noexcept;
+                        const bool is_air_structure_void = true,
+                        SCL_errorFlag *const error_flag = nullptr,
+                        std::string *const error_str = nullptr) const noexcept;
 
-  bool export_WESchem(
-      std::string_view filename,
-      const WorldEditSchem_info &info = WorldEditSchem_info()) const noexcept;
+  bool export_WESchem(std::string_view filename,
+                      const WorldEditSchem_info &info = WorldEditSchem_info(),
+                      SCL_errorFlag *const error_flag = nullptr,
+                      std::string *const error_str = nullptr) const noexcept;
 };
 
 } // namespace libSchem

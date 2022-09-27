@@ -1,3 +1,5 @@
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
 add_subdirectory(BlockListManager)
 add_subdirectory(ColorManip)
 add_subdirectory(ExternalConverters)

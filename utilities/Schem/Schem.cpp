@@ -54,20 +54,87 @@ int64_t Schem::non_zero_count() const noexcept {
   return val;
 }
 
-bool Schem::export_litematic(std::string_view filename,
-                             const litematic_info &info) const noexcept {
-  if (filename.empty()) {
-    return false;
+bool Schem::have_invalid_block(
+    int64_t *first_invalid_block_idx) const noexcept {
+  for (int64_t idx = 0; idx < xzy.size(); idx++) {
+    if (xzy(idx) >= block_id_list.size()) {
+      if (first_invalid_block_idx != nullptr) {
+        *first_invalid_block_idx = idx;
+      }
+      return true;
+    }
   }
+  return false;
+}
+
+bool Schem::have_invalid_block(
+    int64_t *first_invalid_block_x_pos, int64_t *first_invalid_block_y_pos,
+    int64_t *first_invalid_block_z_pos) const noexcept {
+  for (int64_t y = 0; y < x_range(); y++) {
+    for (int64_t z = 0; z < z_range(); z++) {
+      for (int64_t x = 0; x < x_range(); x++) {
+        if (this->operator()(x, y, z) >= block_id_list.size()) {
+          if (first_invalid_block_x_pos != nullptr) {
+            *first_invalid_block_x_pos = x;
+          }
+          if (first_invalid_block_y_pos != nullptr) {
+            *first_invalid_block_y_pos = y;
+          }
+          if (first_invalid_block_z_pos != nullptr) {
+            *first_invalid_block_z_pos = z;
+          }
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
+bool Schem::export_litematic(std::string_view filename,
+                             const litematic_info &info,
+                             SCL_errorFlag *const error_flag,
+                             std::string *const error_str) const noexcept {
 
   if (std::filesystem::path(filename).extension() != ".litematic") {
     // wrong extension
+
+    if (error_flag != nullptr) {
+      *error_flag = SCL_errorFlag::EXPORT_SCHEM_WRONG_EXTENSION;
+    }
+    if (error_str != nullptr) {
+      *error_str = "The filename externsion must be \".litematic\".";
+    }
     return false;
+  }
+  // check for invalid blocks
+  {
+    std::array<int64_t, 3> pos;
+    if (this->have_invalid_block(&pos[0], &pos[1], &pos[2])) {
+
+      if (error_flag != nullptr) {
+        *error_flag = SCL_errorFlag::EXPORT_SCHEM_HAS_INVALID_BLOCKS;
+      }
+      if (error_str != nullptr) {
+        *error_str = "The first invalid block is at x=";
+        *error_str += std::to_string(pos[0]) + ", y=";
+        *error_str += std::to_string(pos[1]) + ", z=";
+        *error_str += std::to_string(pos[2]);
+      }
+      return false;
+    }
   }
 
   NBT::NBTWriter<true> lite;
 
   if (!lite.open(filename.data())) {
+    if (error_flag != nullptr) {
+      *error_flag = SCL_errorFlag::EXPORT_SCHEM_FAILED_TO_CREATE_FILE;
+    }
+    if (error_str != nullptr) {
+      *error_str = "Failed to open file : ";
+      *error_str += filename;
+    }
     return false;
   }
 
@@ -122,7 +189,7 @@ bool Schem::export_litematic(std::string_view filename,
       // reportWorkingStatue(wind, workStatues::writingBlockPalette);
       // write block palette
       lite.writeListHead("BlockStatePalette", NBT::Compound,
-                         this->block_types());
+                         this->palette_size());
       {
         std::string pure_block_id;
         pure_block_id.reserve(1024);
@@ -157,7 +224,8 @@ bool Schem::export_litematic(std::string_view filename,
 
       // write 3D
       std::vector<uint64_t> shrinked;
-      shrink_bits(this->xzy.data(), xzy.size(), this->block_types(), &shrinked);
+      shrink_bits(this->xzy.data(), xzy.size(), this->palette_size(),
+                  &shrinked);
 
       lite.writeLongArrayHead("BlockStates", shrinked.size());
       {
@@ -190,23 +258,60 @@ bool Schem::export_litematic(std::string_view filename,
   default:
     std::cerr << "Wrong game version!" << std::endl;
     lite.close();
+    if (error_flag != nullptr) {
+      *error_flag = SCL_errorFlag::UNKNOWN_MAJOR_GAME_VERSION;
+    }
+    if (error_str != nullptr) {
+      *error_str = "Unknown major game version! Only 1.12 to 1.19 is "
+                   "supported, but given value " +
+                   std::to_string(this->MC_major_ver_number);
+    }
     return false;
-    break;
   }
   lite.close();
+
+  if (error_flag != nullptr) {
+    *error_flag = SCL_errorFlag::NO_ERROR_OCCUR;
+  }
+  if (error_str != nullptr) {
+    *error_str = "";
+  }
   return true;
 }
 
 bool Schem::export_structure(std::string_view filename,
-                             const bool is_air_structure_void) const noexcept {
-
-  if (filename.empty()) {
-    return false;
-  }
+                             const bool is_air_structure_void,
+                             SCL_errorFlag *const error_flag,
+                             std::string *const error_str) const noexcept {
 
   if (std::filesystem::path(filename).extension() != ".nbt") {
     // wrong extension
+
+    if (error_flag != nullptr) {
+      *error_flag = SCL_errorFlag::EXPORT_SCHEM_WRONG_EXTENSION;
+    }
+    if (error_str != nullptr) {
+      *error_str = "The filename externsion must be \".nbt\".";
+    }
     return false;
+  }
+
+  // check for invalid blocks
+  {
+    std::array<int64_t, 3> pos;
+    if (this->have_invalid_block(&pos[0], &pos[1], &pos[2])) {
+
+      if (error_flag != nullptr) {
+        *error_flag = SCL_errorFlag::EXPORT_SCHEM_HAS_INVALID_BLOCKS;
+      }
+      if (error_str != nullptr) {
+        *error_str = "The first invalid block is at x=";
+        *error_str += std::to_string(pos[0]) + ", y=";
+        *error_str += std::to_string(pos[1]) + ", z=";
+        *error_str += std::to_string(pos[2]);
+      }
+      return false;
+    }
   }
 
   uint16_t number_of_air;
@@ -222,6 +327,14 @@ bool Schem::export_structure(std::string_view filename,
     std::cerr << "You assigned is_air_structure_void=false, but there is no "
                  "minecraft:air in your block palette."
               << std::endl;
+
+    if (error_flag != nullptr) {
+      *error_flag = SCL_errorFlag::EXPORT_SCHEM_STRUCTURE_REQUIRES_AIR;
+    }
+    if (error_str != nullptr) {
+      *error_str = "You assigned is_air_structure_void=false, but there is no "
+                   "minecraft:air in your block palette.";
+    }
     return false;
   }
 
@@ -232,6 +345,13 @@ bool Schem::export_structure(std::string_view filename,
 
   NBT::NBTWriter<true> file;
   if (!file.open(filename.data())) {
+    if (error_flag != nullptr) {
+      *error_flag = SCL_errorFlag::EXPORT_SCHEM_FAILED_TO_CREATE_FILE;
+    }
+    if (error_str != nullptr) {
+      *error_str = "Failed to open file : ";
+      *error_str += filename;
+    }
     return false;
   }
 
@@ -243,7 +363,7 @@ bool Schem::export_structure(std::string_view filename,
     file.writeInt("This should never be shown", z_range());
   }
   // reportWorkingStatue(wind, workStatues::writingBlockPalette);
-  file.writeListHead("palette", NBT::Compound, block_types());
+  file.writeListHead("palette", NBT::Compound, palette_size());
   {
     std::string pure_block_id;
     pure_block_id.reserve(1024);
@@ -332,29 +452,73 @@ bool Schem::export_structure(std::string_view filename,
     default:
       std::cerr << "Wrong game version!" << std::endl;
       file.close();
+      if (error_flag != nullptr) {
+        *error_flag = SCL_errorFlag::UNKNOWN_MAJOR_GAME_VERSION;
+      }
+      if (error_str != nullptr) {
+        *error_str = "Unknown major game version! Only 1.12 to 1.19 is "
+                     "supported, but given value " +
+                     std::to_string(this->MC_major_ver_number);
+      }
       return false;
     }
   }
   file.close();
 
+  if (error_flag != nullptr) {
+    *error_flag = SCL_errorFlag::NO_ERROR_OCCUR;
+  }
+  if (error_str != nullptr) {
+    *error_str = "";
+  }
   return true;
 }
 
 bool Schem::export_WESchem(std::string_view filename,
-                           const WorldEditSchem_info &info) const noexcept {
-
-  if (filename.empty()) {
-    return false;
-  }
+                           const WorldEditSchem_info &info,
+                           SCL_errorFlag *const error_flag,
+                           std::string *const error_str) const noexcept {
 
   if (std::filesystem::path(filename).extension() != ".schem") {
     // wrong extension
+
+    if (error_flag != nullptr) {
+      *error_flag = SCL_errorFlag::EXPORT_SCHEM_WRONG_EXTENSION;
+    }
+    if (error_str != nullptr) {
+      *error_str = "The filename externsion must be \".schem\".";
+    }
     return false;
+  }
+
+  // check for invalid blocks
+  {
+    std::array<int64_t, 3> pos;
+    if (this->have_invalid_block(&pos[0], &pos[1], &pos[2])) {
+
+      if (error_flag != nullptr) {
+        *error_flag = SCL_errorFlag::EXPORT_SCHEM_HAS_INVALID_BLOCKS;
+      }
+      if (error_str != nullptr) {
+        *error_str = "The first invalid block is at x=";
+        *error_str += std::to_string(pos[0]) + ", y=";
+        *error_str += std::to_string(pos[1]) + ", z=";
+        *error_str += std::to_string(pos[2]);
+      }
+      return false;
+    }
   }
 
   NBT::NBTWriter<true> file;
 
   if (!file.open(filename.data())) {
+    if (error_flag != nullptr) {
+      *error_flag = SCL_errorFlag::EXPORT_SCHEM_FAILED_TO_CREATE_FILE;
+    }
+    if (error_str != nullptr) {
+      *error_str = "Failed to open file : ";
+      *error_str += filename;
+    }
     return false;
   }
 
@@ -419,5 +583,11 @@ bool Schem::export_WESchem(std::string_view filename,
   } // end array
 
   file.close();
+  if (error_flag != nullptr) {
+    *error_flag = SCL_errorFlag::NO_ERROR_OCCUR;
+  }
+  if (error_str != nullptr) {
+    *error_str = "";
+  }
   return true;
 }
