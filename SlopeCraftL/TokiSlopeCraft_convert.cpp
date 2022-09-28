@@ -112,6 +112,7 @@ bool TokiSlopeCraft::convert(convertAlgo algo, bool dither) {
       Dither();
     }
     */
+  this->mapPic=this->image_cvter.mapcolor_matrix().cast<int>();
   progressRangeSet(wind, 0, 4 * sizePic(2), 4 * sizePic(2));
   keepAwake(wind);
 

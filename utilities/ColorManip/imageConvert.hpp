@@ -154,6 +154,7 @@ public:
         return;
       }
     } else {
+
       this->_dithered_image = this->_raw_image;
     }
     ui.rangeSet(0, 100, 100);
@@ -201,7 +202,7 @@ public:
           const int64_t idx =
               (is_dest_col_major) ? (c * rows() + r) : (r * cols() + c);
           const ARGB argb = this->_dithered_image(r, c);
-          auto it = this->_color_hash.find(argb);
+          auto it = this->_color_hash.find(convert_unit(argb, this->algo));
           if (it == this->_color_hash.end()) {
             exit(1);
             return;
@@ -224,7 +225,7 @@ private:
     this->_color_hash.clear();
 
     for (int64_t idx = 0; idx < this->_raw_image.size(); idx++) {
-      const ARGB argb = this->_raw_image(argb);
+      const ARGB argb = this->_raw_image(idx);
       convert_unit cu(argb, this->algo);
       this->_color_hash.emplace(cu, TokiColor_t(cu));
     }
@@ -285,7 +286,7 @@ private:
     case ::SCL_convertAlgo::Lab00:
     case ::SCL_convertAlgo::Lab94:
       return Lab2ARGB(c0, c1, c2);
-    case ::SlopeCraft::convertAlgo::XYZ:
+    case ::SCL_convertAlgo::XYZ:
       return XYZ2ARGB(c0, c1, c2);
     }
     // unreachable
@@ -357,7 +358,7 @@ private:
             const float color_error =
                 old_color.c3[ch] -
                 basic_colorset.color_value(cvt_algo, coloridx, ch);
-            dither_c3[ch].block<2, 3>(row + 1, col + 1) +=
+            dither_c3[ch].block<2, 3>(row + 1, col + 1 - 1) +=
                 color_error * dithermap_LR;
           }
         }
@@ -396,7 +397,7 @@ private:
             const float color_error =
                 old_color.c3[ch] -
                 basic_colorset.color_value(cvt_algo, coloridx, ch);
-            dither_c3[ch].block<2, 3>(row + 1, col + 1) +=
+            dither_c3[ch].block<2, 3>(row + 1, col + 1 - 1) +=
                 color_error * dithermap_RL;
           }
         }
@@ -405,6 +406,7 @@ private:
 
       // report
     }
+    return;
   }
 };
 
