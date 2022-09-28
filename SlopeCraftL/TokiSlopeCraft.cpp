@@ -172,6 +172,13 @@ const AiCvterOpt *TokiSlopeCraft::aiCvterOpt() const { return &AiOpt; }
 bool TokiSlopeCraft::setType(mapTypes type, gameVersion ver,
                              const bool *allowedBaseColor,
                              const AbstractBlock **palettes) {
+  return __impl_setType(type, ver, allowedBaseColor, palettes, this);
+}
+
+bool TokiSlopeCraft::__impl_setType(mapTypes type, gameVersion ver,
+                                    const bool allowedBaseColor[64],
+                                    const AbstractBlock *palettes[64],
+                                    const TokiSlopeCraft *reporter) noexcept {
   ::SCL_internal_lock.lock();
   /*
   if (kernelStep < colorSetReady)
@@ -218,7 +225,7 @@ bool TokiSlopeCraft::setType(mapTypes type, gameVersion ver,
 
   // cerr<<__FILE__<<__LINE__<<endl;
 
-  reportWorkingStatue(wind, workStatues::collectingColors);
+  reporter->reportWorkingStatue(reporter->wind, workStatues::collectingColors);
 
   Eigen::ArrayXi baseColorVer(64); //基色对应的版本
   baseColorVer.setConstant(FUTURE);
@@ -257,19 +264,19 @@ bool TokiSlopeCraft::setType(mapTypes type, gameVersion ver,
       MIndex[index] = false;
       continue;
     }*/
-    if (isVanilla() &&
+    if (is_vanilla_static() &&
         (index2depth(index) >= 3)) { //可实装的地图画不允许第四种阴影
       MIndex[index] = false;
       continue;
     }
     if (index2baseColor(index) == 12 &&
         TokiSlopeCraft::mapType != mapTypes::Wall) { //如果是水且非墙面
-      if (isFlat() && index2depth(index) != 2) {     //平板且水深不是1格
+      if (is_flat_static() && index2depth(index) != 2) { //平板且水深不是1格
         MIndex[index] = false;
         continue;
       }
     } else {
-      if (isFlat() && index2depth(index) != 1) { //平板且阴影不为1
+      if (is_flat_static() && index2depth(index) != 1) { //平板且阴影不为1
         MIndex[index] = false;
         continue;
       }
@@ -285,32 +292,22 @@ bool TokiSlopeCraft::setType(mapTypes type, gameVersion ver,
       msg += std::to_string(Allowed.Map(idx)) + ", ";
     }
 
-    reportError(wind, errorFlag::USEABLE_COLOR_TOO_FEW, msg.data());
+    reporter->reportError(reporter->wind, errorFlag::USEABLE_COLOR_TOO_FEW,
+                          msg.data());
     ::SCL_internal_lock.unlock();
     return false;
   }
 
   GACvter::updateMapColor2GrayLUT();
 
-  reportWorkingStatue(wind, workStatues::none);
+  reporter->reportWorkingStatue(reporter->wind, workStatues::none);
   for (auto kernel_ptr : TokiSlopeCraft::kernel_hash_set) {
-    this->image_cvter.on_color_set_changed();
+    kernel_ptr->image_cvter.on_color_set_changed();
     kernel_ptr->kernelStep = wait4Image;
   }
 
   ::SCL_internal_lock.unlock();
   return true;
-}
-
-bool TokiSlopeCraft::setType(mapTypes type, gameVersion ver,
-                             const bool *allowedBaseColor,
-                             const simpleBlock *palettes) {
-  const AbstractBlock *temp[64];
-  for (uint16_t idx = 0; idx < 64; idx++) {
-    temp[idx] = palettes + idx;
-  }
-
-  return setType(type, ver, allowedBaseColor, temp);
 }
 
 uint16_t TokiSlopeCraft::getColorCount() const {
@@ -370,12 +367,6 @@ void TokiSlopeCraft::setRawImage(const ARGB *src, int rows, int cols) {
   kernelStep = convertionReady;
 
   return;
-}
-
-bool TokiSlopeCraft::isVanilla() const { return mapType != FileOnly; }
-
-bool TokiSlopeCraft::isFlat() const {
-  return mapType == Flat || mapType == Wall;
 }
 
 void TokiSlopeCraft::getBaseColorInARGB32(ARGB *const dest) const {

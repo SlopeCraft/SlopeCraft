@@ -47,7 +47,7 @@ This file is part of SlopeCraft.
 
 #include "AiCvterOpt.h"
 
-#include <ColorManip/ImageConvert.hpp>
+#include <ColorManip/imageConvert.hpp>
 #include <ColorManip/newColorSet.hpp>
 #include <ExternalConverters/GAConverter/GAConverter.h>
 #include <MapImageCvter/MapImageCvter.h>
@@ -123,8 +123,13 @@ public:
 
   bool setType(mapTypes, gameVersion, const bool[64],
                const AbstractBlock *[64]) override;
-  bool setType(mapTypes, gameVersion, const bool[64], const simpleBlock[64]);
 
+private:
+  static bool __impl_setType(mapTypes, gameVersion, const bool[64],
+                             const AbstractBlock *[64],
+                             const TokiSlopeCraft *reporter) noexcept;
+
+public:
   void getBaseColorInARGB32(unsigned int *const) const override;
   // can do in wait4Image:
   void setRawImage(const unsigned int *src, int rows, int cols) override;
@@ -136,8 +141,16 @@ public:
   bool convert(convertAlgo = RGB_Better, bool dither = false) override;
   int getImageRows() const override;
   int getImageCols() const override;
-  bool isVanilla() const override; //判断是可以生存实装的地图画
-  bool isFlat() const override;    //判断是平板的
+
+  bool isVanilla() const override { return is_vanilla_static(); }
+  static inline bool is_vanilla_static() noexcept {
+    return mapType != FileOnly;
+  }
+
+  bool isFlat() const override { return is_flat_static(); }
+  static inline bool is_flat_static() noexcept {
+    return mapType == Flat || mapType == Wall;
+  }
 
   // can do in converted:
   bool build(compressSettings = noCompress, unsigned short = 256,
