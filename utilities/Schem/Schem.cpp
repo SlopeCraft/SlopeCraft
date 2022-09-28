@@ -24,11 +24,18 @@ This file is part of SlopeCraft.
 #include "../NBTWriter/NBTWriter.h"
 #include "bit_shrink.h"
 
+#include <ctime>
 #include <filesystem>
 #include <iostream>
 #include <memory.h>
 
 using namespace libSchem;
+
+WorldEditSchem_info::WorldEditSchem_info() : date(std::time(nullptr) * 1000) {}
+
+litematic_info::litematic_info()
+    : time_created(std::time(nullptr) * 1000),
+      time_modified(std::time(nullptr) * 1000) {}
 
 void Schem::set_block_id(const char *const *const block_ids,
                          const int num) noexcept {
@@ -155,8 +162,8 @@ bool Schem::export_litematic(std::string_view filename,
     lite.writeString("Name", info.litename_utf8.data());
 
     lite.writeInt("RegionCount", 1);
-    lite.writeLong("TimeCreated", 114514);
-    lite.writeLong("TimeModified", 1919810);
+    lite.writeLong("TimeCreated", info.time_created);
+    lite.writeLong("TimeModified", info.time_modified);
     lite.writeInt("TotalBlocks", this->non_zero_count());
     lite.writeInt("TotalVolume", this->size());
   }
@@ -530,7 +537,7 @@ bool Schem::export_WESchem(std::string_view filename,
     file.writeInt("WEOffsetZ", info.WE_offset[2]);
     file.writeString("Name", info.schem_name_utf8.data());
     file.writeString("Author", info.author_utf8.data());
-    file.writeLong("Date", std::time(nullptr) * 1000);
+    file.writeLong("Date", info.date);
 
     file.writeListHead("RequiredMods", NBT::String,
                        info.required_mods_utf8.size());
