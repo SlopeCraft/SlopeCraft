@@ -151,7 +151,7 @@ public:
   // void getConvertedMap(Eigen::Arra) const;
   void exportAsData(const char *, const int, int *fileCount,
                     char **) const override;
-  std::vector<std::string> exportAsData(const std::string &, int) const;
+  std::vector<std::string> exportAsData(std::string, int) const;
   // can do in builded:
   void exportAsLitematic(const char *TargetName, const char *LiteName,
                          const char *RegionName, char *FileName) const override;

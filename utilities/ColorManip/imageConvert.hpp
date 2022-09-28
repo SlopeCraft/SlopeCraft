@@ -74,13 +74,16 @@ public:
   uiPack ui;
   // SCL_convertAlgo convert_algo{SCL_convertAlgo::RGB_Better};
 
-  void clear_images() noexcept {
+  inline void clear_images() noexcept {
     this->_raw_image.resize(0, 0);
     this->_dithered_image.resize(0, 0);
   }
 
+  /// When the colorset is changed, the hash must be cleared.
+  inline void on_color_set_changed() noexcept { this->clear_color_hash(); }
+
   /// Call this function when the color set is changed.
-  void clear_color_hash() noexcept { this->_color_hash.clear(); }
+  inline void clear_color_hash() noexcept { this->_color_hash.clear(); }
 
   inline ::SCL_convertAlgo convert_algo() const noexcept { return this->algo; }
 
@@ -222,28 +225,33 @@ public:
 
 private:
   void add_colors_to_hash() noexcept {
-    this->_color_hash.clear();
+    // this->_color_hash.clear();
 
     for (int64_t idx = 0; idx < this->_raw_image.size(); idx++) {
       const ARGB argb = this->_raw_image(idx);
       convert_unit cu(argb, this->algo);
-      this->_color_hash.emplace(cu, TokiColor_t(cu));
+      auto it = _color_hash.find(cu);
+
+      // this key isn't inserted
+      if (it == _color_hash.end())
+        this->_color_hash.emplace(cu, TokiColor_t(cu));
     }
   }
 
   void match_all_TokiColors() noexcept {
 
     static const int threadCount = 4 * std::thread::hardware_concurrency();
-    const uint64_t taskCount = _color_hash.size();
+
 
     std::vector<std::pair<const convert_unit, TokiColor_t> *> tasks;
     tasks.reserve(_color_hash.size());
     tasks.clear();
 
     for (auto &pair : _color_hash) {
-      tasks.emplace_back(&pair);
+      if (!pair.second.is_result_computed())
+        tasks.emplace_back(&pair);
     }
-
+    const uint64_t taskCount = tasks.size();
 #pragma omp parallel for
     for (int thIdx = 0; thIdx < threadCount; thIdx++) {
       for (uint64_t taskIdx = thIdx; taskIdx < taskCount;

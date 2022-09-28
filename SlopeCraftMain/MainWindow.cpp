@@ -1192,14 +1192,14 @@ void MainWindow::algoProgressAdd(void *p, int deltaVal) {
 
 void MainWindow::on_Convert_clicked() {
   if (kernel->queryStep() < SlopeCraft::step::wait4Image) {
-    qDebug("重新setType");
+    qDebug("setType again");
     onBlockListChanged();
     if (kernel->queryStep() < SlopeCraft::step::wait4Image)
       return;
   }
 
   if (kernel->queryStep() < SlopeCraft::step::convertionReady) {
-    qDebug("重新setImage");
+    qDebug("setImage again");
     kernelSetImg();
     if (kernel->queryStep() < SlopeCraft::step::convertionReady)
       return;
@@ -1237,15 +1237,16 @@ void MainWindow::on_Convert_clicked() {
   ui->isColorSpaceLab00->setEnabled(temp);
   ui->isColorSpaceXYZ->setEnabled(temp);
   ui->isColorSpaceRGBOld->setEnabled(temp);
+  ui->isColorSpaceAi->setEnabled(temp);
   ui->AllowDither->setEnabled(temp);
 
   std::clock_t startTime = std::clock();
-  qDebug("开始convert");
+  qDebug("Start to convert");
   kernel->convert(now, nowDither);
 
-  qDebug() << "convert用时"
+  qDebug() << "Convertion finished in "
            << double(std::clock() - startTime) * 1000.0 / CLOCKS_PER_SEC
-           << "毫秒";
+           << " miliseconds.";
   proTracker = nullptr;
 
   temp = true;
@@ -1256,6 +1257,7 @@ void MainWindow::on_Convert_clicked() {
   ui->isColorSpaceLab00->setEnabled(temp);
   ui->isColorSpaceXYZ->setEnabled(temp);
   ui->isColorSpaceRGBOld->setEnabled(temp);
+  ui->isColorSpaceAi->setEnabled(temp);
   ui->AllowDither->setEnabled(temp);
   on_ShowAdjed_clicked();
   updateEnables();
@@ -1267,8 +1269,8 @@ void MainWindow::on_ShowRaw_clicked() {
 
 void MainWindow::on_ShowAdjed_clicked() {
   EImage ei(kernel->getImageRows(), kernel->getImageCols());
-  int a, b;
-  kernel->getConvertedImage(&a, &b, ei.data());
+  // int a, b;
+  kernel->getConvertedImage(nullptr, nullptr, ei.data());
   ui->ShowPic->setPixmap(QPixmap::fromImage(EImage2QImage(ei)));
 }
 

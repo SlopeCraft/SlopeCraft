@@ -294,6 +294,7 @@ bool TokiSlopeCraft::setType(mapTypes type, gameVersion ver,
 
   reportWorkingStatue(wind, workStatues::none);
   for (auto kernel_ptr : TokiSlopeCraft::kernel_hash_set) {
+    this->image_cvter.on_color_set_changed();
     kernel_ptr->kernelStep = wait4Image;
   }
 

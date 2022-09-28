@@ -21,6 +21,7 @@ This file is part of SlopeCraft.
 */
 
 #include "TokiSlopeCraft.h"
+#include <filesystem>
 
 bool TokiSlopeCraft::convert(convertAlgo algo, bool dither) {
   if (kernelStep < convertionReady) {
@@ -112,7 +113,7 @@ bool TokiSlopeCraft::convert(convertAlgo algo, bool dither) {
       Dither();
     }
     */
-  this->mapPic=this->image_cvter.mapcolor_matrix().cast<int>();
+  this->mapPic = this->image_cvter.mapcolor_matrix().cast<int>();
   progressRangeSet(wind, 0, 4 * sizePic(2), 4 * sizePic(2));
   keepAwake(wind);
 
@@ -134,23 +135,23 @@ void TokiSlopeCraft::exportAsData(const char *FolderPath, const int indexStart,
     }
 }
 
-std::vector<std::string>
-TokiSlopeCraft::exportAsData(const std::string &FolderPath,
-                             int indexStart) const {
-  std::vector<std::string> unCompressedFileList;
-  unCompressedFileList.clear();
-  std::vector<std::string> compressedFileList;
-  compressedFileList.clear();
+std::vector<std::string> TokiSlopeCraft::exportAsData(std::string FolderPath,
+                                                      int indexStart) const {
+
+  std::vector<std::string> failed_file_list;
 
   if (kernelStep < converted) {
     reportError(wind, errorFlag::HASTY_MANIPULATION,
                 "You can export the map as map data files only after the image "
                 "is converted.");
-    unCompressedFileList.push_back(
+    failed_file_list.push_back(
         "Too hasty! export after you converted the map!");
-    return unCompressedFileList;
+    return failed_file_list;
   }
 
+  if (FolderPath.back() == '/') {
+    FolderPath.pop_back();
+  }
   const int rows = ceil(mapPic.rows() / 128.0f);
   const int cols = ceil(mapPic.cols() / 128.0f);
   // const int maxrr=rows*128;
@@ -166,15 +167,21 @@ TokiSlopeCraft::exportAsData(const std::string &FolderPath,
     for (int r = 0; r < rows; r++) {
       offset[0] = r * 128;
       offset[1] = c * 128;
-      std::string currentCn =
+      std::string current_filename =
           FolderPath + "/map_" + std::to_string(currentIndex) + ".dat";
-      std::string currentUn = currentCn + ".TokiNoBug";
       // string
       // currentFile=FolderPath+"/map_"+std::to_string(currentIndex)+".dat";
 
-      cerr << "Export map of (" << r << "," << c << ")" << currentUn << endl;
+      cerr << "Export map of (" << r << "," << c << ")" << current_filename
+           << endl;
 
-      NBT::NBTWriter<false> MapFile(currentUn.data());
+      NBT::NBTWriter<true> MapFile;
+
+      if (!MapFile.open(current_filename.data())) {
+        cerr << "Failed to create nbt file " << current_filename << endl;
+        failed_file_list.emplace_back(current_filename);
+        continue;
+      }
 
       switch (mcVer) {
       case MC12:
@@ -197,96 +204,76 @@ TokiSlopeCraft::exportAsData(const std::string &FolderPath,
           ", developed by TokiNoBug";
       MapFile.writeString("ExportedBy", ExportedBy.data());
       MapFile.writeCompound("data");
-      MapFile.writeByte("scale", 0);
-      MapFile.writeByte("trackingPosition", 0);
-      MapFile.writeByte("unlimitedTracking", 0);
-      MapFile.writeInt("xCenter", 0);
-      MapFile.writeInt("zCenter", 0);
-      switch (mcVer) {
-      case MC12:
-        MapFile.writeByte("dimension", 114);
-        MapFile.writeShort("height", 128);
-        MapFile.writeShort("width", 128);
-        break;
-      case MC13:
-        MapFile.writeListHead("banners", NBT::Compound, 0);
-        MapFile.writeListHead("frames", NBT::Compound, 0);
-        MapFile.writeInt("dimension", 889464);
-        break;
-      case MC14:
-        MapFile.writeListHead("banners", NBT::Compound, 0);
-        MapFile.writeListHead("frames", NBT::Compound, 0);
-        MapFile.writeInt("dimension", 0);
-        MapFile.writeByte("locked", 1);
-        break;
-      case MC15:
-        MapFile.writeListHead("banners", NBT::Compound, 0);
-        MapFile.writeListHead("frames", NBT::Compound, 0);
-        MapFile.writeInt("dimension", 0);
-        MapFile.writeByte("locked", 1);
-        break;
-      case MC16:
-      case MC17:
-      case MC18:
-      case MC19:
-        MapFile.writeListHead("banners", NBT::Compound, 0);
-        MapFile.writeListHead("frames", NBT::Compound, 0);
-        MapFile.writeString("dimension", "minecraft:overworld");
-        MapFile.writeByte("locked", 1);
-        break;
-      default:
-        cerr << "Wrong game version!\n";
-        break;
-      }
-
-      MapFile.writeByteArrayHead("colors", 16384);
-      uchar ColorCur = 0;
-      for (short rr = 0; rr < 128; rr++) {
-        for (short cc = 0; cc < 128; cc++) {
-          if (rr + offset[0] < mapPic.rows() && cc + offset[1] < mapPic.cols())
-            ColorCur = mapPic(rr + offset[0], cc + offset[1]);
-          else
-            ColorCur = 0;
-          MapFile.writeByte("this should never be seen", ColorCur);
+      {
+        MapFile.writeByte("scale", 0);
+        MapFile.writeByte("trackingPosition", 0);
+        MapFile.writeByte("unlimitedTracking", 0);
+        MapFile.writeInt("xCenter", 0);
+        MapFile.writeInt("zCenter", 0);
+        switch (mcVer) {
+        case MC12:
+          MapFile.writeByte("dimension", 114);
+          MapFile.writeShort("height", 128);
+          MapFile.writeShort("width", 128);
+          break;
+        case MC13:
+          MapFile.writeListHead("banners", NBT::Compound, 0);
+          MapFile.writeListHead("frames", NBT::Compound, 0);
+          MapFile.writeInt("dimension", 889464);
+          break;
+        case MC14:
+          MapFile.writeListHead("banners", NBT::Compound, 0);
+          MapFile.writeListHead("frames", NBT::Compound, 0);
+          MapFile.writeInt("dimension", 0);
+          MapFile.writeByte("locked", 1);
+          break;
+        case MC15:
+          MapFile.writeListHead("banners", NBT::Compound, 0);
+          MapFile.writeListHead("frames", NBT::Compound, 0);
+          MapFile.writeInt("dimension", 0);
+          MapFile.writeByte("locked", 1);
+          break;
+        case MC16:
+        case MC17:
+        case MC18:
+        case MC19:
+          MapFile.writeListHead("banners", NBT::Compound, 0);
+          MapFile.writeListHead("frames", NBT::Compound, 0);
+          MapFile.writeString("dimension", "minecraft:overworld");
+          MapFile.writeByte("locked", 1);
+          break;
+        default:
+          cerr << "Wrong game version!\n";
+          this->reportError(this->wind, errorFlag::UNKNOWN_MAJOR_GAME_VERSION,
+                            "Unknown major game version!");
+          failed_file_list.emplace_back(current_filename);
+          continue;
         }
-        progressAdd(wind, 1);
+
+        MapFile.writeByteArrayHead("colors", 16384);
+        {
+          uchar ColorCur = 0;
+          for (short rr = 0; rr < 128; rr++) {
+            for (short cc = 0; cc < 128; cc++) {
+              if (rr + offset[0] < mapPic.rows() &&
+                  cc + offset[1] < mapPic.cols())
+                ColorCur = mapPic(rr + offset[0], cc + offset[1]);
+              else
+                ColorCur = 0;
+              MapFile.writeByte("this should never be seen", ColorCur);
+            }
+            progressAdd(wind, 1);
+          }
+        }
       }
       MapFile.endCompound();
       MapFile.close();
-      unCompressedFileList.emplace_back(currentUn);
-      compressedFileList.emplace_back(currentCn);
-      /*
-      if(compressFile(currentUn.data(),currentFile.data()))
-      {
-          qDebug("压缩成功");
-          QFile umComFile(QString::fromStdString(currentUn));
-          umComFile.remove();
-      }*/
+
       currentIndex++;
     }
   }
 
   reportWorkingStatue(wind, workStatues::none);
 
-  for (uint32_t i = 0; i < compressedFileList.size(); i++) {
-    bool success = true;
-    success = success && compressFile(unCompressedFileList[i].data(),
-                                      compressedFileList[i].data());
-    std::string msg =
-        "Failed to compress temporary file : " + unCompressedFileList[i] +
-        " to " + compressedFileList[i];
-    if (!success) {
-      reportError(wind, errorFlag::FAILED_TO_COMPRESS, msg.data());
-      continue;
-    }
-    success = success && (std::remove(unCompressedFileList[i].data()) == 0);
-    if (!success) {
-      std::string msg =
-          "Failed to remove temporary file : " + unCompressedFileList[i];
-      reportError(wind, errorFlag::FAILED_TO_REMOVE, msg.data());
-      continue;
-    }
-  }
-
-  return compressedFileList;
+  return failed_file_list;
 }

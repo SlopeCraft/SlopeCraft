@@ -34,7 +34,7 @@ This file is part of SlopeCraft.
 // using Eigen::Dynamic;
 
 struct convert_unit {
-  convert_unit(ARGB _a, ::SCL_convertAlgo _c) : ARGB(_a), algo(_c) {}
+  explicit convert_unit(ARGB _a, ::SCL_convertAlgo _c) : ARGB(_a), algo(_c) {}
   ARGB ARGB;
   ::SCL_convertAlgo algo;
 

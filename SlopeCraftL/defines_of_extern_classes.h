@@ -191,7 +191,7 @@ public:
   /// get converted image
   virtual void getConvertedImage(int *rows, int *cols, unsigned int *dest)
       const = 0;
-  /// export as map data files
+  /// export as map data files, returns failed files.
   virtual void exportAsData(const char *FolderPath, const int indexStart,
                             int *fileCount, char **dest) const = 0;
   /// get converted map(in mapColor array)
