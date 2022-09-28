@@ -60,8 +60,31 @@ message("The output is : " ${SlopeCraft_output_variable})
 # If it is set to ON, everytime CMake reconfigure the project, all .ts files will be updated.
 set(SlopeCraft_update_ts_files OFF)
 
+if(NOT DEFINED SlopeCraft_use_Eigen_vectorize)
+    set(SlopeCraft_use_Eigen_vectorize OFF)
+endif()
+
 add_definitions("-D_USE_MATH_DEFINES")
 add_definitions("-DSCL_FIND_GlobalEnums_BY_PATH")
+
+# if don't vectorize, or no suitable flag found, this variable will be empty
+set(SlopeCraft_vectorize_flags) 
+if(${SlopeCraft_use_Eigen_vectorize})
+    include(CheckCXXCompilerFlag)
+
+    check_cxx_compiler_flag("-march=native" _march_native_works)
+    check_cxx_compiler_flag("-xHost" _xhost_works)
+    
+    if(${_march_native_works})
+        message(STATUS "Vectorize using -march=native")
+        set(SlopeCraft_vectorize_flags "-march=native")
+    elseif(${_xhost_works})
+        message(STATUS "Vectorize using -xHost")
+        set(SlopeCraft_vectorize_flags "-xHost")
+    else()
+        message(STATUS "No suitable compiler flag found for vectorization")
+    endif()
+endif()
 
 add_subdirectory(utilities)
 add_subdirectory(imageCutter)
