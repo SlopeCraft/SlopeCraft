@@ -114,6 +114,7 @@ public:
     if constexpr (is_not_optical) {
       this->Result = 0;
     } else {
+      this->result_color_id = colorset_optical_allowed::invalid_color_id;
     }
   }
 

@@ -177,10 +177,9 @@ public:
    * \return true The schem contains invalid block(s)
    * \return false The schem don't contain any invalid block.
    */
-  bool have_invalid_block(
-      int64_t *first_invalid_block_x_pos = nullptr,
-      int64_t *first_invalid_block_y_pos = nullptr,
-      int64_t *first_invalid_block_z_pos = nullptr) const noexcept;
+  bool have_invalid_block(int64_t *first_invalid_block_x_pos,
+                          int64_t *first_invalid_block_y_pos,
+                          int64_t *first_invalid_block_z_pos) const noexcept;
 
 public:
   bool export_litematic(std::string_view filename,

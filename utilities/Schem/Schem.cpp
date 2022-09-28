@@ -70,10 +70,10 @@ bool Schem::have_invalid_block(
 bool Schem::have_invalid_block(
     int64_t *first_invalid_block_x_pos, int64_t *first_invalid_block_y_pos,
     int64_t *first_invalid_block_z_pos) const noexcept {
-  for (int64_t y = 0; y < x_range(); y++) {
+  for (int64_t y = 0; y < y_range(); y++) {
     for (int64_t z = 0; z < z_range(); z++) {
       for (int64_t x = 0; x < x_range(); x++) {
-        if (this->operator()(x, y, z) >= block_id_list.size()) {
+        if (this->xzy(x, z, y) >= block_id_list.size()) {
           if (first_invalid_block_x_pos != nullptr) {
             *first_invalid_block_x_pos = x;
           }

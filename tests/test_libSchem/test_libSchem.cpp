@@ -73,25 +73,45 @@ int main() {
                    "south=true,up=true,down=true]");
                    */
 
-  std::vector<std::string> vecs;
-
-  for (int idx = 0; idx < schem.size(); idx++) {
-    schem(idx) = idx % ids.size() + 1;
-  }
+  // std::vector<std::string> vecs;
 
   schem.set_block_id(ids.data(), ids.size());
+
+  for (int idx = 0; idx < schem.size(); idx++) {
+    schem(idx) = (idx % schem.palette_size());
+  }
+
+  int64_t err_idx;
+  const bool has_error = schem.have_invalid_block(&err_idx);
+
+  if (has_error) {
+    cout << "error idx = " << err_idx << endl;
+  }
 
   libSchem::litematic_info info;
   libSchem::WorldEditSchem_info weinfo;
 
   // test_bit_shrink(&schem(0), schem.size(), schem.block_types());
 
-  if (!(schem.export_litematic("test12.litematic", info) &&
-        schem.export_structure("test12.nbt", true) &&
-        schem.export_WESchem("test12.schem", weinfo))) {
-    cout << "Failed to export." << endl;
-  } else {
-    cout << "Succeeded to export." << endl;
+  SCL_errorFlag flag;
+  std::string error_str;
+  if (!schem.export_litematic("test12.litematic", info, nullptr, &error_str)) {
+
+    cout << "Failed to export file "
+         << "test12.litematic" << endl;
+    cout << "Error info = " << error_str << endl;
+  }
+
+  if (!schem.export_structure("test12.nbt", true, nullptr, &error_str)) {
+    cout << "Failed to export file "
+         << "test12.nbt" << endl;
+    cout << "Error info = " << error_str << endl;
+  }
+
+  if (!schem.export_WESchem("test12.schem", weinfo, nullptr, &error_str)) {
+    cout << "Failed to export file "
+         << "test12.schem" << endl;
+    cout << "Error info = " << error_str << endl;
   }
 
   return 0;
