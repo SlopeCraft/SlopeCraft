@@ -145,7 +145,7 @@ void TokiSlopeCraft::trySkipStep(step s) {
     this->kernelStep = step::wait4Image;
   }
 }
-
+/*
 bool compressFile(const char *inputPath, const char *outputPath) {
   const size_t BUFFER_SIZE = 4096;
   std::ifstream fin;
@@ -162,6 +162,8 @@ bool compressFile(const char *inputPath, const char *outputPath) {
   gzclose(fout);
   return true;
 }
+
+*/
 
 step TokiSlopeCraft::queryStep() const { return kernelStep; }
 

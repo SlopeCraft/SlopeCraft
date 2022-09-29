@@ -24,6 +24,7 @@ This file is part of SlopeCraft.
 
 #include <math.h>
 #include <stdio.h>
+#include <utility>
 
 static constexpr float threshold = 1e-10f;
 
@@ -39,32 +40,23 @@ ARGB ComposeColor(const ARGB front, const ARGB back) noexcept {
   return ARGB32(red, green, blue);
 }
 
-inline void mySwapFloat(float &fa, float &fb) noexcept {
-  int32_t &a = (int32_t &)fa;
-  int32_t &b = (int32_t &)(fb);
-
-  a = a ^ b;
-  b = a ^ b;
-  a = a ^ b;
-}
-
 void RGB2HSV(float r, float g, float b, float &h, float &s, float &v) noexcept {
   float K = 0.0f;
 
   if (g > b) {
     K = 2.0f;
   } else {
-    mySwapFloat(g, b);
+    std::swap(g, b);
     K = 4.0f;
   }
 
   if (r > g) {
     K = 6.0f;
   } else {
-    mySwapFloat(r, g);
+    std::swap(r, g);
 
     if (K == 2.0f) {
-      mySwapFloat(g, b);
+      std::swap(g, b);
     }
   }
 

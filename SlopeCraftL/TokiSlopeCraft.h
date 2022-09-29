@@ -281,5 +281,5 @@ public:
   Kernel *toBaseClassPtr() { return this; }
 };
 
-bool compressFile(const char *sourcePath, const char *destPath);
+// bool compressFile(const char *sourcePath, const char *destPath);
 #endif // TOKISLOPECRAFT_H

@@ -22,5 +22,6 @@ add_library(ColorManip
     newTokiColor.hpp
     StaticMembers.cpp)
 
+target_link_libraries(ColorManip PRIVATE OpenMP::OpenMP_CXX)
 #target_compile_options(ColorManip BEFORE PUBLIC "-std=c++17")
 target_compile_options(ColorManip PRIVATE ${SlopeCraft_vectorize_flags})

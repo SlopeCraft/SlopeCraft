@@ -25,6 +25,8 @@ public:
 
   using TokiColor_t = typename Base_t::TokiColor_t;
 
+  static constexpr int size_of_tokicolor = sizeof(TokiColor_t);
+
   explicit MapImageCvter();
 
   ~MapImageCvter() = default;

@@ -7,6 +7,9 @@ include_directories(${SlopeCraft_Eigen3_include_dir}
     ../../ColorManip
 )
 
+
+find_package(OpenMP REQUIRED)
+
 set(SlopeCraft_GAConverter_sources 
 
     ../ExternalConverterStaticInterface.h
@@ -20,5 +23,5 @@ set(SlopeCraft_GAConverter_sources
     )
 
 add_library(GAConverter STATIC ${SlopeCraft_GAConverter_sources})
-
+target_link_libraries(GAConverter PRIVATE OpenMP::OpenMP_CXX)
 #target_compile_options(GAConverter BEFORE PUBLIC "-std=c++17")

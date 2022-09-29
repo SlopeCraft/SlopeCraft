@@ -11,7 +11,8 @@ include_directories(
 
 
 
-find_package(ZLIB 1.2.11)
+find_package(ZLIB 1.2.11 REQUIRED)
+find_package(OpenMP REQUIRED)
 
 #include_directories(${CMAKE_CURRENT_SOURCE_DIR}/ColorManip)
 
@@ -77,6 +78,7 @@ target_compile_definitions(SlopeCraftL_C PRIVATE -DSCL_CAPI)
 set(SlopeCraft_SCL_link_libs 
 
     -lz
+    OpenMP::OpenMP_CXX
     GAConverter 
     ColorManip 
     NBTWriter 
