@@ -4,6 +4,12 @@
 #include <iostream>
 #include <vector>
 
+#include <cmath>
+#include <ctime>
+#include <random>
+
+std::mt19937 mt(std::hash<time_t>()(std::time(nullptr)));
+
 using std::cout, std::endl;
 
 int main() {
@@ -41,9 +47,32 @@ int main() {
   }
 
   cout << "current step : " << kernel->queryStep() << endl;
+
+  {
+    // in col-major
+    uint32_t *const img_data = new uint32_t[256 * 256];
+    if (img_data == nullptr) {
+      return 1;
+    }
+    constexpr int mt19937_result_bytes = sizeof(decltype(mt()));
+
+    // generate a random image
+    for (int idx = 0; idx < 256 * 256; idx++) {
+      img_data[idx] = (0xFFU << 24) & mt();
+    }
+
+    kernel->setRawImage(img_data, 256, 256);
+
+    delete[] img_data;
+  }
+  cout << "current step : " << kernel->queryStep() << endl;
+
+  kernel->convert(::SCL_convertAlgo::RGB, false);
+  cout << "current step : " << kernel->queryStep() << endl;
+
+  kernel->exportAsData("./", 0, nullptr, nullptr);
+
   kernel->destroy();
-
   cout << "testing finished" << endl;
-
   return 0;
 }

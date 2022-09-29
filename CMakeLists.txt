@@ -27,6 +27,7 @@ if(NOT DEFINED SlopeCraft_Eigen3_include_dir)
     message(FATAL_ERROR "Please set the variable \"SlopeCraft_Eigen3_include_dir\". Otherwise cmake can\'t find Eigen")
 endif()
 
+#set(Qt6_DIR "D:\\Qt\\6.2.4\\msvc2022-shared")
 # manage the directory of Qt
 if(DEFINED Qt6_DIR)
     set(SlopeCraft_Qt_root_dir ${Qt6_DIR})
