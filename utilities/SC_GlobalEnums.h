@@ -74,8 +74,7 @@ enum SCL_mapTypes : int {
   /// flat
   Flat = 1,
   /// map data files
-  FileOnly = 2,
-  Wall = 3
+  FileOnly = 2
 };
 
 enum SCL_step : int {

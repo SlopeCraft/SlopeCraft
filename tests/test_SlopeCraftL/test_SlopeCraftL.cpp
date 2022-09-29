@@ -39,7 +39,7 @@ int main() {
       blocks[idx]->setEndermanPickable(false);
       blocks[idx]->setNeedGlass(false);
     }
-    kernel->setType(FileOnly, MC19, midx.data(), blocks.data());
+    kernel->setType(::SCL_mapTypes::Slope, MC19, midx.data(), blocks.data());
 
     for (auto i : blocks) {
       i->destroy();

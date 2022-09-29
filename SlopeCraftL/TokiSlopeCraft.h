@@ -148,9 +148,7 @@ public:
   }
 
   bool isFlat() const override { return is_flat_static(); }
-  static inline bool is_flat_static() noexcept {
-    return mapType == Flat || mapType == Wall;
-  }
+  static inline bool is_flat_static() noexcept { return mapType == Flat; }
 
   // can do in converted:
   bool build(compressSettings = noCompress, unsigned short = 256,

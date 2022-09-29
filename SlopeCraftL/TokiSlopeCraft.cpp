@@ -271,8 +271,7 @@ bool TokiSlopeCraft::__impl_setType(mapTypes type, gameVersion ver,
       MIndex[index] = false;
       continue;
     }
-    if (index2baseColor(index) == 12 &&
-        TokiSlopeCraft::mapType != mapTypes::Wall) { //如果是水且非墙面
+    if (index2baseColor(index) == 12) { //如果是水且非墙面
       if (is_flat_static() && index2depth(index) != 2) { //平板且水深不是1格
         MIndex[index] = false;
         continue;
