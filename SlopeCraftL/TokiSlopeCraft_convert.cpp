@@ -172,8 +172,8 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(std::string FolderPath,
       // string
       // currentFile=FolderPath+"/map_"+std::to_string(currentIndex)+".dat";
 
-      cerr << "Export map of (" << r << "," << c << ")" << current_filename
-           << endl;
+      // cerr << "Export map of (" << r << "," << c << ")" << current_filename
+      // << endl;
 
       NBT::NBTWriter<true> MapFile;
 

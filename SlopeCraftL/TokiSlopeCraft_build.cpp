@@ -122,9 +122,9 @@ void TokiSlopeCraft::exportAsLitematic(const char *TargetName,
                                        const char *LiteName,
                                        const char *RegionName,
                                        char *FileName) const {
-  cerr << __FILE__ << " , " << __LINE__ << endl;
+
   std::string temp = exportAsLitematic(TargetName, LiteName, RegionName);
-  cerr << __FILE__ << " , " << __LINE__ << endl;
+
   if (FileName != nullptr)
     std::strcpy(temp.data(), FileName);
 }
@@ -175,13 +175,13 @@ bool TokiSlopeCraft::build(compressSettings cS, uint16_t mAH,
     return false;
   }
   if (mAH < 14) {
-    cerr << "maxAllowedHeight<14!" << endl;
+    cerr << "maxAllowedHeight is less than 14!" << endl;
     reportError(wind, errorFlag::MAX_ALLOWED_HEIGHT_LESS_THAN_14,
                 "Your maximum allowed height is less than 14, which made lossy "
                 "compressing almost impossible.");
     return false;
   }
-  cerr << "Setting block palette..." << endl;
+  // cerr << "Setting block palette..." << endl;
   {
     std::vector<const char *> temp;
     temp.reserve(64);
@@ -204,7 +204,7 @@ bool TokiSlopeCraft::build(compressSettings cS, uint16_t mAH,
   schem.set_MC_version_number(
       TokiSlopeCraft::mcVersion2VersionNumber(TokiSlopeCraft::mcVer));
 
-  cerr << "ready to build" << endl;
+  // cerr << "ready to build" << endl;
 
   compressMethod = cS;
   glassMethod = gBS;
@@ -219,25 +219,25 @@ bool TokiSlopeCraft::build(compressSettings cS, uint16_t mAH,
   reportWorkingStatue(wind, workStatues::buidingHeighMap);
 
   progressRangeSet(wind, 0, 9 * sizePic(2), 0);
-  cerr << "start makeHeight" << endl;
+  // cerr << "start makeHeight" << endl;
 
   mapPic = this->image_cvter.mapcolor_matrix().cast<int>();
   progressAdd(wind, sizePic(2));
 
   makeHeight_new();
-  cerr << "makeHeight finished" << endl;
+  // cerr << "makeHeight finished" << endl;
   progressRangeSet(wind, 0, 9 * sizePic(2), 5 * sizePic(2));
 
   reportWorkingStatue(wind, workStatues::building3D);
-  cerr << "start buildHeight" << endl;
+  // cerr << "start buildHeight" << endl;
   buildHeight(fireProof, endermanProof);
-  cerr << "buildHeight finished" << endl;
+  // cerr << "buildHeight finished" << endl;
   progressRangeSet(wind, 0, 9 * sizePic(2), 8 * sizePic(2));
 
   reportWorkingStatue(wind, workStatues::constructingBridges);
-  cerr << "start makeBridge" << endl;
+  // cerr << "start makeBridge" << endl;
   makeBridge();
-  cerr << "makeBridge finished" << endl;
+  // cerr << "makeBridge finished" << endl;
   progressRangeSet(wind, 0, 9 * sizePic(2), 9 * sizePic(2));
 
   reportWorkingStatue(wind, workStatues::none);
@@ -255,7 +255,7 @@ void TokiSlopeCraft::makeHeight_new() {
   bool allowNaturalCompress = compressMethod == compressSettings::Both ||
                               compressMethod == compressSettings::NaturalOnly;
   // std::vector<const TokiColor*> src;
-  cerr << "makeHeight_new\n";
+  // cerr << "makeHeight_new\n";
 
   if ((mapPic - 4 * (mapPic / 4) >= 3).any()) {
     std::string msg =
@@ -315,7 +315,7 @@ void TokiSlopeCraft::makeHeight_new() {
 
     progressAdd(wind, 4 * sizePic(0));
   }
-  cerr << "makeHeight_new finished\n";
+  // cerr << "makeHeight_new finished\n";
   schem.resize(2 + sizePic(1), HighMap.maxCoeff() + 1, 2 + sizePic(0));
   schem.set_zero();
   // schem.z_range() = 2 + sizePic(0);         // z
@@ -336,7 +336,7 @@ schem.z_range()}); Build.resize(tempSize3D);
   int x = 0, y = 0, z = 0;
   int yLow = 0;
 
-  cerr << WaterList.size() << " water columns in map\n";
+  // cerr << WaterList.size() << " water columns in map\n";
   for (auto it = WaterList.begin(); it != WaterList.end();
        it++) //水柱周围的玻璃
   {

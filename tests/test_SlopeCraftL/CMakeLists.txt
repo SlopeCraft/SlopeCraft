@@ -7,3 +7,6 @@ add_executable(test_SlopeCraftL
 )
 
 target_link_libraries(test_SlopeCraftL PRIVATE SlopeCraftL)
+
+install(TARGETS SlopeCraftL 
+    RUNTIME DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

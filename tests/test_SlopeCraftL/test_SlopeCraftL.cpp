@@ -5,8 +5,10 @@
 #include <vector>
 
 #include <cmath>
+#include <cstring>
 #include <ctime>
 #include <random>
+
 
 std::mt19937 mt(std::hash<time_t>()(std::time(nullptr)));
 
@@ -71,6 +73,23 @@ int main() {
   cout << "current step : " << kernel->queryStep() << endl;
 
   kernel->exportAsData("./", 0, nullptr, nullptr);
+
+  cout << "current step : " << kernel->queryStep() << endl;
+
+  kernel->build(::SCL_compressSettings::noCompress);
+
+  cout << "current step : " << kernel->queryStep() << endl;
+
+  char return_buffer[1024] = "";
+  kernel->exportAsLitematic("test.litematic", "my_litematic", "42",
+                            return_buffer);
+
+  if (std::strlen(return_buffer) <= 0) {
+    cout << "Succeed in exporting as litematic" << endl;
+  } else {
+    cout << "Failed to export as litematic, error message : " << return_buffer
+         << endl;
+  }
 
   kernel->destroy();
   cout << "testing finished" << endl;
