@@ -1599,7 +1599,7 @@ void MainWindow::onExportLiteclicked(QString path) {
     FileName = path.toLocal8Bit().data();
   }
   // std::string unCompressed;
-  char unCbuf[512] = "";
+  char failed_file_name[512] = "";
   if (FileName.empty())
     return;
   const bool putLitematic =
@@ -1611,11 +1611,12 @@ void MainWindow::onExportLiteclicked(QString path) {
       (FileName.substr(FileName.length() - strlen(".schem")) == ".schem");
 
   if (!putLitematic && !putStructure && !putWESchem) {
-    qDebug("得到的文件路径有错！");
+    qDebug("Invalid save file name : ");
+    qDebug() << FileName.data();
     return;
   }
-  qDebug("开始导出投影");
-  cout << FileName << endl;
+  // qDebug("开始导出投影");
+  // cout << FileName << endl;
 
   ui->FinishExLite->setEnabled(false);
   ui->seeExported->setEnabled(false);
@@ -1624,14 +1625,14 @@ void MainWindow::onExportLiteclicked(QString path) {
   this->proTracker = ui->ShowProgressExLite;
 
   if (putStructure)
-    kernel->exportAsStructure(FileName.data(), unCbuf);
+    kernel->exportAsStructure(FileName.data(), failed_file_name);
   else if (putLitematic)
     kernel->exportAsLitematic(
         FileName.data(), ui->InputLiteName->text().toUtf8().data(),
         (ui->InputRegionName->text() + tr("(xz坐标=-65±128×整数)"))
             .toUtf8()
             .data(),
-        unCbuf);
+        failed_file_name);
 
   else {
     int offset[3] = {0, 0, 0}, weOffset[3] = {0, 0, 0};
@@ -1663,12 +1664,12 @@ void MainWindow::onExportLiteclicked(QString path) {
 
     kernel->exportAsWESchem(FileName.data(), offset, weOffset,
                             ui->schem_name->text().toUtf8().data(),
-                            charPtrs.data(), charPtrs.size(), unCbuf);
+                            charPtrs.data(), charPtrs.size(), failed_file_name);
   }
 
-  // unCompressed=unCbuf;
-  if (std::strlen(unCbuf) <= 0) {
-    qDebug("压缩成功");
+  if (std::strlen(failed_file_name) <= 0) {
+    // success
+    // qDebug("压缩成功");
     ProductDir = QString::fromLocal8Bit(FileName.data());
     ProductDir = ProductDir.replace('\\', '/');
     ProductDir = ProductDir.left(ProductDir.lastIndexOf('/'));
@@ -1676,10 +1677,11 @@ void MainWindow::onExportLiteclicked(QString path) {
     qDebug() << "ProductDir=" << ProductDir;
 
   } else {
-    qDebug("压缩失败");
+    qDebug("Failed to export.");
     QMessageBox::warning(
         this, tr("投影文件导出失败"),
-        tr("这可能是汉字编码错误造成的。请检查路径中是否有汉字"));
+        tr("这可能是汉字编码错误造成的。请检查路径中是否有汉字") + '\n' +
+            tr("错误信息：") + '\n' + failed_file_name);
     return;
   };
 
@@ -1689,7 +1691,8 @@ void MainWindow::onExportLiteclicked(QString path) {
 
   updateEnables();
   this->proTracker = nullptr;
-  qDebug("导出为投影成功");
+  // success
+  // qDebug("导出为投影成功");
   return;
 }
 
@@ -1764,7 +1767,7 @@ void MainWindow::onExportDataclicked(QString path) {
   kernel->exportAsData(FolderPath.toLocal8Bit().data(), indexStart,
                        //&fileCount,unCompressedBuffers.data()
                        nullptr, nullptr);
-  qDebug("导出地图文件成功");
+  // qDebug("导出地图文件成功");
 
   ui->InputDataIndex->setEnabled(true);
   ui->ExportData->setEnabled(true);
@@ -1779,7 +1782,7 @@ void MainWindow::turnCh() { switchLan(Language::ZH); }
 void MainWindow::turnEn() { switchLan(Language::EN); }
 
 void MainWindow::switchLan(Language lang) {
-  qDebug("开始调整语言");
+
   emit Manager->translate(lang);
 
   if (QFile(":/new/Pic/BG3.png").exists()) {
@@ -1789,20 +1792,20 @@ void MainWindow::switchLan(Language lang) {
 
   if (lang == Language::EN) {
     if (!trans.load(":/i18n/SlopeCraft_en_US.qm")) {
-      qDebug("载入\":/i18n/SlopeCraft_en_US.qm\"失败");
+      qDebug("Failed to load \":/i18n/SlopeCraft_en_US.qm\"");
       return;
     }
     qApp->installTranslator(&trans);
     ui->retranslateUi(this);
-    qDebug("成功调整为英语界面");
+    qDebug("Changed language to English");
   } else {
     if (!trans.load(":/i18n/SlopeCraft_zh_CN.qm")) {
-      qDebug("载入\":/i18n/SlopeCraft_zh_CN.qm\"失败");
+      qDebug("Failed to load \":/i18n/SlopeCraft_zh_CN.qm\"");
       return;
     }
     qApp->installTranslator(&trans);
     ui->retranslateUi(this);
-    qDebug("成功调整为简体中文界面");
+    qDebug("Changed language to Chinese");
   }
   return;
 }
@@ -1824,6 +1827,38 @@ void MainWindow::showError(void *p, SlopeCraft::errorFlag error,
   switch (error) {
   case SlopeCraft::errorFlag::NO_ERROR_OCCUR:
     return;
+  case SlopeCraft::errorFlag::UNKNOWN_MAJOR_GAME_VERSION:
+    title = tr("未知游戏版本");
+    text = detail;
+    break;
+  case SlopeCraft::errorFlag::EXPORT_SCHEM_BLOCK_PALETTE_OVERFLOW:
+    title = tr("导出原理图失败");
+    text = tr("方块种类超出上限。") + detail;
+    break;
+  case SlopeCraft::errorFlag::EXPORT_SCHEM_WRONG_EXTENSION:
+    title = tr("导出原理图失败");
+    text = tr("错误的文件扩展名") + detail;
+    break;
+  case SlopeCraft::errorFlag::EXPORT_SCHEM_HAS_INVALID_BLOCKS:
+    title = tr("导出原理图失败");
+    text = tr("三维结构中存在错误的方块") + detail;
+    break;
+  case SlopeCraft::errorFlag::EXPORT_SCHEM_FAILED_TO_CREATE_FILE:
+    title = tr("导出原理图失败");
+    text = tr("无法创建/打开文件") + detail;
+    break;
+  case SlopeCraft::errorFlag::EXPORT_SCHEM_MC12_NOT_SUPPORTED:
+    title = tr("导出WorldEdit原理图失败");
+    text = tr("不支持导出1.12 "
+              "WorldEdit原理图（.schematic格式），仅支持.schem格式") +
+           detail;
+    break;
+  case SlopeCraft::errorFlag::EXPORT_SCHEM_STRUCTURE_REQUIRES_AIR:
+    title = tr("导出原版结构方块文件失败");
+    text = tr("导出时指定不使用结构空位表示空气，但方块列表中不包含空气。") +
+           detail;
+    break;
+
   case SlopeCraft::errorFlag::EMPTY_RAW_IMAGE:
     title = tr("转化原图为地图画时出错");
     text = tr("原图为空！你可能没有导入原图！");
@@ -1843,31 +1878,11 @@ void MainWindow::showError(void *p, SlopeCraft::errorFlag error,
     text = tr(
         "在构建高度矩阵时，有损压缩失败，没能将地图画压缩到目标高度。 \
         这可能是因为地图画行数过大。 \
-        尝试启用无损压缩，或者提高最大允许高度——不要给软件地图画太大的压力！");
+        尝试启用无损压缩，或者提高最大允许高度");
     break;
   case SlopeCraft::errorFlag::MAX_ALLOWED_HEIGHT_LESS_THAN_14:
     title = tr("最大允许高度太小了");
     text = tr("有损压缩的最大允许不要低于14，否则很容易压缩失败");
-    break;
-  case SlopeCraft::errorFlag::PARSING_COLORMAP_HSV_FAILED:
-    isFatal = true;
-    title = tr("严重错误：颜色表文件HSV.TokiColor损坏");
-    text = tr("SlopeCraft不能正常解析颜色表文件，它是不可以被修改的！");
-    break;
-  case SlopeCraft::errorFlag::PARSING_COLORMAP_Lab_FAILED:
-    isFatal = true;
-    title = tr("严重错误：颜色表文件Lab.TokiColor损坏");
-    text = tr("SlopeCraft不能正常解析颜色表文件，它是不可以被修改的！");
-    break;
-  case SlopeCraft::errorFlag::PARSING_COLORMAP_XYZ_FAILED:
-    isFatal = true;
-    title = tr("严重错误：颜色表文件XYZ.TokiColor损坏");
-    text = tr("SlopeCraft不能正常解析颜色表文件，它是不可以被修改的！");
-    break;
-  case SlopeCraft::errorFlag::PARSING_COLORMAP_RGB_FAILED:
-    isFatal = true;
-    title = tr("严重错误：颜色表文件RGB.TokiColor损坏");
-    text = tr("SlopeCraft不能正常解析颜色表文件，它是不可以被修改的！");
     break;
   case SlopeCraft::errorFlag::USEABLE_COLOR_TOO_FEW:
     title = tr("允许使用的颜色过少");

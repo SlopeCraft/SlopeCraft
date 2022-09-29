@@ -149,7 +149,7 @@ public:
   virtual ::SCL_step queryStep() const = 0;
   /// set map type and blocklist
   virtual bool setType(::SCL_mapTypes, ::SCL_gameVersion, const bool[64],
-                       const AbstractBlock *[64]) = 0;
+                       const AbstractBlock *const *const) = 0;
   /// get palette (base colors only) in ARGB32
   virtual void getBaseColorInARGB32(unsigned int *const) const = 0;
 

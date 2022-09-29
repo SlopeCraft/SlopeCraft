@@ -171,13 +171,13 @@ const AiCvterOpt *TokiSlopeCraft::aiCvterOpt() const { return &AiOpt; }
 
 bool TokiSlopeCraft::setType(mapTypes type, gameVersion ver,
                              const bool *allowedBaseColor,
-                             const AbstractBlock **palettes) {
+                             const AbstractBlock *const *const palettes) {
   return __impl_setType(type, ver, allowedBaseColor, palettes, this);
 }
 
 bool TokiSlopeCraft::__impl_setType(mapTypes type, gameVersion ver,
                                     const bool allowedBaseColor[64],
-                                    const AbstractBlock *palettes[64],
+                                    const AbstractBlock *const *const palettes,
                                     const TokiSlopeCraft *reporter) noexcept {
   ::SCL_internal_lock.lock();
   /*

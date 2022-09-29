@@ -122,11 +122,11 @@ public:
   step queryStep() const override;
 
   bool setType(mapTypes, gameVersion, const bool[64],
-               const AbstractBlock *[64]) override;
+               const AbstractBlock *const *const) override;
 
 private:
   static bool __impl_setType(mapTypes, gameVersion, const bool[64],
-                             const AbstractBlock *[64],
+                             const AbstractBlock *const *const,
                              const TokiSlopeCraft *reporter) noexcept;
 
 public:

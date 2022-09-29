@@ -70,7 +70,7 @@ private:
 
   int MC_ver_number;
 
-  uint8_t MC_major_ver_number;
+  ::SCL_gameVersion MC_major_ver_number;
 
 public:
   Schem() { xzy.resize(0, 0, 0); }
@@ -151,11 +151,11 @@ public:
     this->MC_ver_number = _;
   }
 
-  inline uint8_t MC_major_version_number() const noexcept {
+  inline ::SCL_gameVersion MC_major_version_number() const noexcept {
     return this->MC_major_ver_number;
   }
 
-  inline void set_MC_major_version_number(const uint8_t _) noexcept {
+  inline void set_MC_major_version_number(const ::SCL_gameVersion _) noexcept {
     this->MC_major_ver_number = _;
   }
 

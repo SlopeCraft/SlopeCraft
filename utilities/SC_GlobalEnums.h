@@ -126,15 +126,10 @@ enum SCL_errorFlag : int {
   EXPORT_SCHEM_STRUCTURE_REQUIRES_AIR = 0x0C,
   /// the major game version is less that MC12 or greater than MC19
   UNKNOWN_MAJOR_GAME_VERSION = 0x0D,
+  /// Exporting as WESchem doesn't support MC12, since the format of schematic
+  /// is greatly different.
+  EXPORT_SCHEM_MC12_NOT_SUPPORTED = 0x0E,
 
-  /// colorsheet error
-  PARSING_COLORMAP_RGB_FAILED = 0x10,
-  /// colorsheet error
-  PARSING_COLORMAP_HSV_FAILED = 0x11,
-  /// colorsheet error
-  PARSING_COLORMAP_Lab_FAILED = 0x12,
-  /// colorsheet error
-  PARSING_COLORMAP_XYZ_FAILED = 0x13,
 };
 
 enum SCL_workStatues : int {

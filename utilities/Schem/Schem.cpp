@@ -248,17 +248,17 @@ bool Schem::export_litematic(std::string_view filename,
   lite.endCompound(); // end all regions
 
   switch (this->MC_major_ver_number) {
-  case 12:
+  case ::SCL_gameVersion::MC12:
     lite.writeInt("MinecraftDataVersion", this->MC_version_number());
     lite.writeInt("Version", 4);
     break;
-  case 13:
-  case 14:
-  case 15:
-  case 16:
-  case 17:
-  case 18:
-  case 19:
+  case ::SCL_gameVersion::MC13:
+  case ::SCL_gameVersion::MC14:
+  case ::SCL_gameVersion::MC15:
+  case ::SCL_gameVersion::MC16:
+  case ::SCL_gameVersion::MC17:
+  case ::SCL_gameVersion::MC18:
+  case ::SCL_gameVersion::MC19:
     lite.writeInt("MinecraftDataVersion", this->MC_version_number());
     lite.writeInt("Version", 5);
     break;
@@ -446,14 +446,14 @@ bool Schem::export_structure(std::string_view filename,
     // finish writting the whole 3D array
 
     switch (this->MC_major_ver_number) {
-    case 12:
-    case 13:
-    case 14:
-    case 15:
-    case 16:
-    case 17:
-    case 18:
-    case 19:
+    case ::SCL_gameVersion::MC12:
+    case ::SCL_gameVersion::MC13:
+    case ::SCL_gameVersion::MC14:
+    case ::SCL_gameVersion::MC15:
+    case ::SCL_gameVersion::MC16:
+    case ::SCL_gameVersion::MC17:
+    case ::SCL_gameVersion::MC18:
+    case ::SCL_gameVersion::MC19:
       file.writeInt("MinecraftDataVersion", this->MC_ver_number);
       break;
     default:
@@ -514,6 +514,17 @@ bool Schem::export_WESchem(std::string_view filename,
       }
       return false;
     }
+  }
+
+  if (this->MC_major_ver_number <= MC12) {
+    if (error_flag != nullptr) {
+      *error_flag = ::SCL_errorFlag::EXPORT_SCHEM_MC12_NOT_SUPPORTED;
+    }
+    if (error_str != nullptr) {
+      *error_str = "Exporting a schematic as 1.12 WorldEdit .schematic format "
+                   "is not supported. Try other tools.";
+    }
+    return false;
   }
 
   NBT::NBTWriter<true> file;

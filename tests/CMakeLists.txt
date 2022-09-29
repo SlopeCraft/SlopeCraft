@@ -1,1 +1,2 @@
 add_subdirectory(test_libSchem)
+add_subdirectory(test_SlopeCraftL)
