@@ -1,4 +1,4 @@
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 include_directories(${SlopeCraft_Eigen3_include_dir})
 include_directories(${CMAKE_SOURCE_DIR}/utilities)
 

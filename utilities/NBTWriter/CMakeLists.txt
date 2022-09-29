@@ -1,4 +1,4 @@
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 find_package(ZLIB 1.2.11 REQUIRED)
 
@@ -13,5 +13,5 @@ add_library(NBTWriter
 
 target_link_libraries(NBTWriter PRIVATE z)
 
-target_compile_options(NBTWriter BEFORE PUBLIC -std=c++17)
+#target_compile_options(NBTWriter BEFORE PUBLIC -std=c++17)
 

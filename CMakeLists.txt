@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 set(SlopeCraft_version 3.10.0)
 
 project(SlopeCraft VERSION ${SlopeCraft_version} LANGUAGES CXX)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 # manage the install prefix
 set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install_app)
@@ -84,6 +84,8 @@ if(${SlopeCraft_use_Eigen_vectorize})
     else()
         message(STATUS "No suitable compiler flag found for vectorization")
     endif()
+
+    list(APPEND SlopeCraft_vectorize_flags "-O3")
 endif()
 
 add_subdirectory(utilities)

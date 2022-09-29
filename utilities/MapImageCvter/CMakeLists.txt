@@ -1,4 +1,4 @@
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/utilities
@@ -12,3 +12,4 @@ add_library(MapImageCvter
     MapImageCvter.cpp)
 
 target_link_libraries(MapImageCvter PUBLIC ColorManip GAConverter)
+target_compile_options(MapImageCvter PRIVATE ${SlopeCraft_vectorize_flags})

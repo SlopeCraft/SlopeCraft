@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 project(SlopeCraft_GAConverter VERSION ${SlopeCraft_version} LANGUAGES CXX)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 include_directories(${SlopeCraft_Eigen3_include_dir}
     ${SlopeCraft_HeuristicFlow_include_dir}
@@ -21,4 +21,4 @@ set(SlopeCraft_GAConverter_sources
 
 add_library(GAConverter STATIC ${SlopeCraft_GAConverter_sources})
 
-target_compile_options(GAConverter BEFORE PUBLIC "-std=c++17")
+#target_compile_options(GAConverter BEFORE PUBLIC "-std=c++17")
