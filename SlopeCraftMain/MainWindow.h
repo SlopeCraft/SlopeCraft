@@ -244,7 +244,7 @@ private slots:
 private:
   Ui::MainWindow *ui;
 
-  SlopeCraft::Kernel *kernel;
+  SlopeCraft::Kernel *const kernel;
   tpStrategyWind *transSubWind;
   BlockListManager *Manager;
   BatchUi *batchOperator;

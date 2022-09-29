@@ -60,13 +60,13 @@ inline uint32_t inverseColor(uint32_t raw) noexcept {
 }
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow) {
+    : QMainWindow(parent), ui(new Ui::MainWindow),
+      kernel(SlopeCraft::Kernel::create()) {
   ui->setupUi(this);
-  qDebug("成功setupUi");
+  // qDebug("成功setupUi");
   Collected = false;
 
-  kernel = SlopeCraft::Kernel::create();
-  qDebug("成功创建内核");
+  // qDebug("成功创建内核");
   kernel->setWindPtr(this);
   kernel->setKeepAwake(keepAwake);
   kernel->setProgressRangeSet(progressRangeSet);
@@ -83,7 +83,7 @@ MainWindow::MainWindow(QWidget *parent)
   Manager = new BlockListManager(
       (QHBoxLayout *)ui->scrollAreaWidgetContents->layout());
 
-  qDebug("成功创建方块列表管理者");
+  // qDebug("成功创建方块列表管理者");
   connect(Manager, &BlockListManager::switchToCustom, this,
           &MainWindow::ChangeToCustom);
   connect(Manager, &BlockListManager::blockListChanged, this,
@@ -299,15 +299,14 @@ void MainWindow::showPreview() {
   tempE.resize(kernel->getImageRows(), kernel->getImageCols());
   int a, b;
   kernel->getConvertedImage(&a, &b, tempE.data());
-  // cerr<<__FILE__<<" , "<<__LINE__<<endl;
+
   QImage temp = EImage2QImage(tempE);
-  // cerr<<__FILE__<<" , "<<__LINE__<<endl;
+
   preWind->ShowMaterialList();
-  // cerr<<__FILE__<<" , "<<__LINE__<<endl;
+
   preWind->showConvertedImage(temp);
-  // cerr<<__FILE__<<" , "<<__LINE__<<endl;
+
   preWind->show();
-  // cerr<<__FILE__<<" , "<<__LINE__<<endl;
 }
 
 void MainWindow::keepAwake(void *) { QCoreApplication::processEvents(); }
@@ -564,7 +563,7 @@ void MainWindow::InitializeAll() {
   }
   if (!Collected) {
     loadBlockList();
-    qDebug("方块列表加载完毕");
+    // qDebug("方块列表加载完毕");
     Manager->setVersion(SlopeCraft::gameVersion::MC17);
     onPresetsClicked();
     Collected = true;
@@ -851,7 +850,7 @@ void MainWindow::on_ImportPic_clicked() {
       qDebug("错误！连续打开两个BatchUi");
       return;
     }
-    qDebug("开始创建BatchUi");
+    // qDebug("开始创建BatchUi");
     batchOperator = new BatchUi(&batchOperator, this);
     batchOperator->show();
     batchOperator->setTasks(userSelected);
@@ -859,7 +858,7 @@ void MainWindow::on_ImportPic_clicked() {
     connect(this,&MainWindow::mapTypeChanged,
             batchOperator,&BatchUi::taskTypeUpdated);
             */
-    qDebug("Mainwindow setTasks完毕");
+    // qDebug("Mainwindow setTasks完毕");
     return;
   }
 }
@@ -2279,35 +2278,26 @@ void MainWindow::testBlockList() {
 
   Manager->getBlockPtrs(ptr_buffer.data(), base_buffer.data());
 
-  qDebug() << "File=" << __FILE__ << " , Line=" << __LINE__;
-
   QString targetName = QFileDialog::getSaveFileName(
       this, tr("测试方块列表的结构文件"), "", "*.nbt");
   if (targetName.isEmpty()) {
     return;
   }
 
-  qDebug() << "File=" << __FILE__ << " , Line=" << __LINE__;
-  char unCompressed[512] = "";
+  char failed_file_name[512] = "";
   kernel->makeTests(ptr_buffer.data(), base_buffer.data(),
-                    targetName.toLocal8Bit().data(), unCompressed);
-  if (strlen(unCompressed) <= 0) {
+                    targetName.toLocal8Bit().data(), failed_file_name);
+  if (strlen(failed_file_name) <= 0) {
     // cerr<<"Success"<<endl;
     return;
+  } else {
+    cerr << "Failed to export test file : error info = " << failed_file_name
+         << endl;
+    QMessageBox::warning(this, tr("测试方块列表失败"),
+                         tr("具体信息：") + failed_file_name);
   }
 
-  qDebug() << "File=" << __FILE__ << " , Line=" << __LINE__;
-  cerr << "Compress success\n";
-  /*
-  QFile tempFile(QString::fromLocal8Bit(unCompressed));
-  if(tempFile.exists()&&!tempFile.remove()) {
-      cerr<<"Failed to remove temporary file."<<endl;
-      return;
-  }
-  qDebug()<<"File="<<__FILE__<<" , Line="<<__LINE__;
-  cerr<<"Succeeded to remove temporary
-  file\n"<<tempFile.fileName().toLocal8Bit().data();
-  */
+  // cerr << "Compress success\n";
 }
 
 void MainWindow::on_ExLite_clicked() {
