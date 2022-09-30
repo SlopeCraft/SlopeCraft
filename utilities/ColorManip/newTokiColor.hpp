@@ -32,7 +32,9 @@ This file is part of SlopeCraft.
 #include <functional>
 
 // using Eigen::Dynamic;
-
+namespace {
+static constexpr float threshold = 1e-10f;
+}
 struct convert_unit {
   explicit convert_unit(ARGB _a, ::SCL_convertAlgo _c) : ARGB(_a), algo(_c) {}
   ARGB ARGB;
@@ -41,49 +43,12 @@ struct convert_unit {
   inline bool operator==(const convert_unit another) const noexcept {
     return (ARGB == another.ARGB) && (algo == another.algo);
   }
-};
 
-struct hash_cvt_unit {
-public:
-  inline size_t operator()(const convert_unit cu) const noexcept {
-    return std::hash<uint32_t>()(cu.ARGB) ^
-           std::hash<uint8_t>()(uint8_t(cu.algo));
-  }
-};
+  inline Eigen::Array3f to_c3() const noexcept {
 
-template <bool is_not_optical, class basic_t, class allowed_t>
-class newTokiColor
-    : public ::std::conditional_t<is_not_optical, newtokicolor_base_maptical,
-                                  newtokicolor_base_optical> {
-private:
-  static constexpr float threshold = 1e-10f;
-
-public:
-  using Base_t =
-      ::std::conditional_t<is_not_optical, newtokicolor_base_maptical,
-                           newtokicolor_base_optical>;
-  using TempVectorXf_t = typename Base_t::TempVectorXf_t;
-  using result_t = typename Base_t::result_t;
-
-  Eigen::Array3f c3; //   color in some colorspace
-  float ResultDiff;  // color diff for the result
-
-  inline auto color_id() const noexcept {
-    if constexpr (is_not_optical) {
-      return this->Result;
-    } else {
-      return this->result_color_id;
-    }
-  }
-
-  // These two members must be defined by caller
-  static const basic_t *const Basic;
-  static const allowed_t *const Allowed;
-
-public:
-  explicit newTokiColor(convert_unit cu) {
-    const ARGB rawColor = cu.ARGB;
-    switch (cu.algo) {
+    Eigen::Array3f c3;
+    const ::ARGB rawColor = this->ARGB;
+    switch (this->algo) {
     case ::SCL_convertAlgo::RGB:
     case ::SCL_convertAlgo::RGB_Better:
     case ::SCL_convertAlgo::gaCvter:
@@ -108,9 +73,39 @@ public:
               getB(rawColor) / 255.0f, c3[0], c3[1], c3[2]);
       break;
     }
+    return c3;
   }
+};
 
-  newTokiColor() {
+struct hash_cvt_unit {
+public:
+  inline size_t operator()(const convert_unit cu) const noexcept {
+    return std::hash<uint32_t>()(cu.ARGB) ^
+           std::hash<uint8_t>()(uint8_t(cu.algo));
+  }
+};
+
+template <bool is_not_optical, class basic_t, class allowed_t>
+class newTokiColor
+    : public ::std::conditional_t<is_not_optical, newtokicolor_base_maptical,
+                                  newtokicolor_base_optical> {
+
+public:
+  using Base_t =
+      ::std::conditional_t<is_not_optical, newtokicolor_base_maptical,
+                           newtokicolor_base_optical>;
+  using TempVectorXf_t = typename Base_t::TempVectorXf_t;
+  using result_t = typename Base_t::result_t;
+
+  // Eigen::Array3f c3; //   color in some colorspace
+  float ResultDiff; // color diff for the result
+
+  // These two members must be defined by caller
+  static const basic_t *const Basic;
+  static const allowed_t *const Allowed;
+
+public:
+  explicit newTokiColor() {
     if constexpr (is_not_optical) {
       this->Result = 0;
     } else {
@@ -138,23 +133,33 @@ public:
       }
     }
 
+    const Eigen::Array3f c3 = cu.to_c3();
+
     switch (cu.algo) {
     case ::SCL_convertAlgo::RGB:
-      return applyRGB();
+      return applyRGB(c3);
     case ::SCL_convertAlgo::RGB_Better:
-      return applyRGB_plus();
+      return applyRGB_plus(c3);
     case ::SCL_convertAlgo::HSV:
-      return applyHSV();
+      return applyHSV(c3);
     case ::SCL_convertAlgo::Lab94:
-      return applyLab94();
+      return applyLab94(c3);
     case ::SCL_convertAlgo::Lab00:
-      return applyLab00();
+      return applyLab00(c3);
     case ::SCL_convertAlgo::XYZ:
-      return applyXYZ();
+      return applyXYZ(c3);
 
     default:
       exit(1);
       return result_t(0);
+    }
+  }
+
+  inline auto color_id() const noexcept {
+    if constexpr (is_not_optical) {
+      return this->Result;
+    } else {
+      return this->result_color_id;
     }
   }
 
@@ -176,7 +181,7 @@ private:
   }
 
   template <typename = void> void doSide(const TempVectorXf_t &Diff) {
-    static_assert(is_not_optical, "");
+    static_assert(is_not_optical);
 
     int tempIndex = 0;
     // Diff.array()+=10.0;ResultDiff+=10.0;
@@ -252,7 +257,7 @@ private:
     return;
   }
 
-  auto applyRGB() noexcept {
+  auto applyRGB(const Eigen::Array3f &c3) noexcept {
 
     auto Diff0_2 = (Allowed->rgb(0) - c3[0]).square();
     auto Diff1_2 = (Allowed->rgb(1) - c3[1]).square();
@@ -264,7 +269,7 @@ private:
     return find_result(Diff);
   }
 
-  auto applyRGB_plus() noexcept {
+  auto applyRGB_plus(const Eigen::Array3f &c3) noexcept {
     // const ColorList &allowedColors = Allowed->_RGB;
     float R = c3[0];
     float g = c3[1];
@@ -319,7 +324,7 @@ private:
     return find_result(dist);
   }
 
-  auto applyHSV() noexcept {
+  auto applyHSV(const Eigen::Array3f &c3) noexcept {
 
     // const ColorList &allowedColors = Allowed->HSV;
 
@@ -335,7 +340,7 @@ private:
     return find_result(Diff);
   }
 
-  auto applyXYZ() noexcept {
+  auto applyXYZ(const Eigen::Array3f &c3) noexcept {
 
     auto Diff0_2 = (Allowed->xyz(0) - c3[0]).square();
     auto Diff1_2 = (Allowed->xyz(1) - c3[1]).square();
@@ -346,7 +351,7 @@ private:
     return find_result(Diff);
   }
 
-  auto applyLab94() noexcept {
+  auto applyLab94(const Eigen::Array3f &c3) noexcept {
 
     float L = c3[0];
     float a = c3[1];
@@ -368,7 +373,7 @@ private:
     return find_result(Diff);
   }
 
-  auto applyLab00() noexcept {
+  auto applyLab00(const Eigen::Array3f &c3) noexcept {
     int tempIndex = 0;
     float L1s = c3[0];
     float a1s = c3[1];

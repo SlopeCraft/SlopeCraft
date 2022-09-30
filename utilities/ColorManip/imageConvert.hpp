@@ -234,14 +234,13 @@ private:
 
       // this key isn't inserted
       if (it == _color_hash.end())
-        this->_color_hash.emplace(cu, TokiColor_t(cu));
+        this->_color_hash.emplace(cu, TokiColor_t());
     }
   }
 
   void match_all_TokiColors() noexcept {
 
     static const int threadCount = 4 * std::thread::hardware_concurrency();
-
 
     std::vector<std::pair<const convert_unit, TokiColor_t> *> tasks;
     tasks.reserve(_color_hash.size());
@@ -321,7 +320,7 @@ private:
           return;
         }
         for (int ch = 0; ch < 3; ch++) {
-          dither_c3[ch](r + 1, c + 1) = it->second.c3[ch];
+          dither_c3[ch](r + 1, c + 1) = it->first.to_c3()[ch];
         }
       }
     }
@@ -340,18 +339,18 @@ private:
               dither_c3[2](row + 1, col + 1));
           // ditheredImage(r, c) = Current;
           this->_dithered_image(row, col) = current_argb;
-          auto it =
+          auto it_to_old_color =
               this->_color_hash.find(convert_unit(current_argb, this->algo));
           // if this color isn't matched, match it.
-          if (it == this->_color_hash.end()) {
+          if (it_to_old_color == this->_color_hash.end()) {
             convert_unit cu(current_argb, this->algo);
-            auto ret = this->_color_hash.emplace(cu, TokiColor_t(cu));
-            it = ret.first;
-            it->second.compute(cu);
+            auto ret = this->_color_hash.emplace(cu, TokiColor_t());
+            it_to_old_color = ret.first;
+            it_to_old_color->second.compute(cu);
             inserted_count++;
           }
 
-          TokiColor_t &old_color = it->second;
+          TokiColor_t &old_color = it_to_old_color->second;
           // mapPic(r, c) = oldColor.Result;
 
           coloridx_t coloridx;
@@ -364,7 +363,7 @@ private:
 
           for (int ch = 0; ch < 3; ch++) {
             const float color_error =
-                old_color.c3[ch] -
+                it_to_old_color->first.to_c3()[ch] -
                 basic_colorset.color_value(cvt_algo, coloridx, ch);
             dither_c3[ch].block<2, 3>(row + 1, col + 1 - 1) +=
                 color_error * dithermap_LR;
@@ -381,16 +380,16 @@ private:
               dither_c3[2](row + 1, col + 1));
           this->_dithered_image(row, col) = current_argb;
           convert_unit cu(current_argb, this->algo);
-          auto it = this->_color_hash.find(cu);
+          auto it_to_old_color = this->_color_hash.find(cu);
           // if this color isn't matched, match it.
-          if (it == this->_color_hash.end()) {
-            auto ret = this->_color_hash.emplace(cu, TokiColor_t(cu));
-            it = ret.first;
-            it->second.compute(cu);
+          if (it_to_old_color == this->_color_hash.end()) {
+            auto ret = this->_color_hash.emplace(cu, TokiColor_t());
+            it_to_old_color = ret.first;
+            it_to_old_color->second.compute(cu);
             inserted_count++;
           }
 
-          TokiColor_t &old_color = it->second;
+          TokiColor_t &old_color = it_to_old_color->second;
           // mapPic(r, c) = oldColor.Result;
 
           coloridx_t coloridx;
@@ -403,7 +402,7 @@ private:
 
           for (int ch = 0; ch < 3; ch++) {
             const float color_error =
-                old_color.c3[ch] -
+                it_to_old_color->first.to_c3()[ch] -
                 basic_colorset.color_value(cvt_algo, coloridx, ch);
             dither_c3[ch].block<2, 3>(row + 1, col + 1 - 1) +=
                 color_error * dithermap_RL;
