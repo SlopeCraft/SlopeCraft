@@ -186,6 +186,8 @@ public:
                           int64_t *first_invalid_block_y_pos,
                           int64_t *first_invalid_block_z_pos) const noexcept;
 
+  void process_mushroom_states() noexcept;
+
 public:
   bool export_litematic(std::string_view filename,
                         const litematic_info &info = litematic_info(),

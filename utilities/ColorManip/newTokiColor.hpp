@@ -274,7 +274,7 @@ private:
     float R = c3[0];
     float g = c3[1];
     float b = c3[2];
-    float w_r = 1.0f, w_g = 2.0f, w_b = 1.0f;
+    constexpr float w_r = 1.0f, w_g = 2.0f, w_b = 1.0f;
     auto SqrModSquare = ((R * R + g * g + b * b) *
                          (Allowed->rgb(0).square() + Allowed->rgb(1).square() +
                           Allowed->rgb(2).square()))

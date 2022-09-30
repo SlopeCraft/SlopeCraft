@@ -98,6 +98,19 @@ bool Schem::have_invalid_block(
   return false;
 }
 
+enum class __mushroom_type : uint8_t {
+  not_mushroom = 0,
+  red_mushroom = 1,
+  brown_mushroom = 2,
+  mushroom_stem = 3
+};
+
+void Schem::process_mushroom_states() noexcept {
+  std::vector<__mushroom_type> is_mushroom_LUT;
+  is_mushroom_LUT.reserve(this->palette_size() + 64 * 3);
+#warning not finished yet
+}
+
 bool Schem::export_litematic(std::string_view filename,
                              const litematic_info &info,
                              SCL_errorFlag *const error_flag,

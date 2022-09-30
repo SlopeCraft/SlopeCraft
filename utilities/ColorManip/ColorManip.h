@@ -57,4 +57,8 @@ inline uint8_t getG(ARGB argb) noexcept { return (argb & 0x0000FF00) >> 8; }
 inline uint8_t getB(ARGB argb) noexcept { return argb & 0xFF; }
 inline uint8_t getA(ARGB argb) noexcept { return argb >> 24; }
 
+float color_diff_RGB_plus(const float r1, const float g1, const float b1,
+                          const float r2, const float g2,
+                          const float b2) noexcept;
+
 #endif
