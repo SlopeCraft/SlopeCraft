@@ -106,9 +106,148 @@ enum class __mushroom_type : uint8_t {
 };
 
 void Schem::process_mushroom_states() noexcept {
+
+  static const std::string id_red = "minecraft:red_mushroom_block";
+  static const std::string id_brown = "minecraft:brown_mushroom_block";
+  static const std::string id_stem = "minecraft:mushroom_stem";
+
+  // map __mushroom_state(u6) to ele_t
+  std::array<ele_t, 64> u6_to_ele_red;
+  u6_to_ele_red.fill(invalid_ele_t);
+  std::array<ele_t, 64> u6_to_ele_brown;
+  u6_to_ele_brown.fill(invalid_ele_t);
+  std::array<ele_t, 64> u6_to_ele_stem;
+  u6_to_ele_stem.fill(invalid_ele_t);
+
+  // find exisiting mushroom blocks
+  for (ele_t idx = 0; idx < ele_t(this->palette_size()); idx++) {
+    const auto &block_id = this->block_id_list[idx];
+    const auto pure_id = ::to_pure_block_id(block_id);
+    if (pure_id == id_red || pure_id == id_brown || pure_id == id_stem) {
+    } else {
+      continue;
+    }
+
+    const __mushroom_sides side = __mushroom_sides::from_block_id(block_id);
+    if (pure_id == id_red) {
+      u6_to_ele_red[side.u6()] = idx;
+    } else if (pure_id == id_brown) {
+      u6_to_ele_brown[side.u6()] = idx;
+    } else {
+      u6_to_ele_stem[side.u6()] = idx;
+    }
+  }
+
+  for (uint8_t u6 = 0; u6 < 64; u6++) {
+    const __mushroom_sides side(u6);
+    if (u6_to_ele_red[u6] == invalid_ele_t) {
+      this->block_id_list.emplace_back(side.to_blockid(id_red));
+      u6_to_ele_red[u6] = this->block_id_list.size() - 1;
+    }
+    if (u6_to_ele_brown[u6] == invalid_ele_t) {
+      this->block_id_list.emplace_back(side.to_blockid(id_brown));
+      u6_to_ele_brown[u6] = this->block_id_list.size() - 1;
+    }
+    if (u6_to_ele_stem[u6] == invalid_ele_t) {
+      this->block_id_list.emplace_back(side.to_blockid(id_stem));
+      u6_to_ele_stem[u6] = this->block_id_list.size() - 1;
+    }
+  }
   std::vector<__mushroom_type> is_mushroom_LUT;
-  is_mushroom_LUT.reserve(this->palette_size() + 64 * 3);
-#warning not finished yet
+  is_mushroom_LUT.resize(this->block_id_list.size());
+
+  for (int blockidx = 0; blockidx < this->block_id_list.size(); blockidx++) {
+    const auto &block_id = this->block_id_list[blockidx];
+    const auto pure_id = ::to_pure_block_id(block_id);
+    if (pure_id == id_red) {
+      is_mushroom_LUT[blockidx] = __mushroom_type::red_mushroom;
+      continue;
+    }
+    if (pure_id == id_brown) {
+      is_mushroom_LUT[blockidx] = __mushroom_type::brown_mushroom;
+      continue;
+    }
+    if (pure_id == id_stem) {
+      is_mushroom_LUT[blockidx] = __mushroom_type::mushroom_stem;
+      continue;
+    }
+    is_mushroom_LUT[blockidx] = __mushroom_type::not_mushroom;
+  }
+
+  // fix the correct state
+  for (int64_t y = 0; y < y_range(); y++) {
+    for (int64_t z = 0; z < z_range(); z++) {
+      for (int64_t x = 0; x < x_range(); x++) {
+        // if current block is not mushroom, continue
+        const __mushroom_type current_mushroom_type =
+            is_mushroom_LUT[this->operator()(x, y, z)];
+        if (current_mushroom_type == __mushroom_type::not_mushroom) {
+          continue;
+        }
+
+        __mushroom_sides side;
+        // match the correct side
+        if (x + 1 < x_range()) {
+          const ele_t ele_of_side = this->operator()(x + 1, y, z);
+          if (is_mushroom_LUT[ele_of_side] != __mushroom_type::not_mushroom) {
+            side.east() = false;
+          }
+        }
+
+        if (x - 1 >= 0) {
+          const ele_t ele_of_side = this->operator()(x - 1, y, z);
+          if (is_mushroom_LUT[ele_of_side] != __mushroom_type::not_mushroom) {
+            side.west() = false;
+          }
+        }
+
+        if (y + 1 < y_range()) {
+          const ele_t ele_of_side = this->operator()(x, y + 1, z);
+          if (is_mushroom_LUT[ele_of_side] != __mushroom_type::not_mushroom) {
+            side.up() = false;
+          }
+        }
+
+        if (y - 1 >= 0) {
+          const ele_t ele_of_side = this->operator()(x, y - 1, z);
+          if (is_mushroom_LUT[ele_of_side] != __mushroom_type::not_mushroom) {
+            side.down() = false;
+          }
+        }
+
+        if (z + 1 < z_range()) {
+          const ele_t ele_of_side = this->operator()(x, y, z + 1);
+          if (is_mushroom_LUT[ele_of_side] != __mushroom_type::not_mushroom) {
+            side.south() = false;
+          }
+        }
+
+        if (z - 1 >= 0) {
+          const ele_t ele_of_side = this->operator()(x, y, z - 1);
+          if (is_mushroom_LUT[ele_of_side] != __mushroom_type::not_mushroom) {
+            side.north() = false;
+          }
+        }
+
+        // write in the correct value of ele_t
+        ele_t corrected_ele = invalid_ele_t;
+        switch (current_mushroom_type) {
+        case __mushroom_type::brown_mushroom:
+          corrected_ele = u6_to_ele_brown[side.u6()];
+          break;
+        case __mushroom_type::red_mushroom:
+          corrected_ele = u6_to_ele_red[side.u6()];
+          break;
+        default:
+          corrected_ele = u6_to_ele_stem[side.u6()];
+          break;
+        }
+
+        this->operator()(x, y, z) = corrected_ele;
+      }
+    }
+  }
+  return;
 }
 
 bool Schem::export_litematic(std::string_view filename,
@@ -217,7 +356,7 @@ bool Schem::export_litematic(std::string_view filename,
         std::vector<std::pair<std::string, std::string>> properties;
         properties.reserve(64);
 
-        for (const char *const block_string : this->block_id_list) {
+        for (const auto &block_string : this->block_id_list) {
           process_block_id(block_string, &pure_block_id, &properties);
           // write a block
           lite.writeCompound("ThisStringShouldNeverBeSeen");
@@ -337,7 +476,8 @@ bool Schem::export_structure(std::string_view filename,
   uint16_t number_of_air;
   for (number_of_air = 0; number_of_air < this->block_id_list.size();
        number_of_air++) {
-    if (0 == std::strcmp("minecraft:air", block_id_list[number_of_air])) {
+    if (0 ==
+        std::strcmp("minecraft:air", block_id_list[number_of_air].c_str())) {
       break;
     }
   }
@@ -390,7 +530,7 @@ bool Schem::export_structure(std::string_view filename,
     memset(pure_block_id.data(), 0, pure_block_id.capacity());
     std::vector<std::pair<std::string, std::string>> properties;
     properties.reserve(64);
-    for (const char *const block_string : this->block_id_list) {
+    for (const auto &block_string : this->block_id_list) {
       process_block_id(block_string, &pure_block_id, &properties);
       // write a block
       file.writeCompound("ThisStringShouldNeverBeSeen");
@@ -577,7 +717,7 @@ bool Schem::export_WESchem(std::string_view filename,
   file.writeCompound("Palette");
   {
     for (int idx = 0; idx < block_id_list.size(); idx++) {
-      file.writeInt(block_id_list[idx], idx);
+      file.writeInt(block_id_list[idx].c_str(), idx);
     }
   } // finished palette
   file.endCompound();

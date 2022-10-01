@@ -61,12 +61,14 @@ public:
   // uint8_t>;
   using ele_t = uint16_t;
 
+  static constexpr ele_t invalid_ele_t = ~ele_t(0);
+
 private:
   /// The 3 indices are stored in [x][z][y] col-major, and in minecraft the
   /// best storage is [y][z][x] row-major
   Eigen::Tensor<ele_t, 3> xzy;
 
-  std::vector<const char *> block_id_list;
+  std::vector<std::string> block_id_list;
 
   int MC_ver_number;
 
@@ -112,11 +114,11 @@ public:
   }
 
   inline const char *id_at(int64_t x, int64_t y, int64_t z) const noexcept {
-    return block_id_list[xzy(x, z, y)];
+    return block_id_list[xzy(x, z, y)].c_str();
   }
 
   inline const char *id_at(int64_t idx) const noexcept {
-    return block_id_list[xzy(idx)];
+    return block_id_list[xzy(idx)].c_str();
   }
 
   inline ele_t *begin() noexcept { return xzy.data(); }
@@ -142,7 +144,7 @@ public:
 
   int64_t non_zero_count() const noexcept;
 
-  /// Schem don't have the ownership to these strings
+  /// Schem will copy these strings
   void set_block_id(const char *const *const block_ids, const int num) noexcept;
 
   inline int MC_version_number() const noexcept { return this->MC_ver_number; }
