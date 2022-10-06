@@ -194,4 +194,11 @@ enum SCL_HalfTpPixelSt : char {
   IgnoreAlpha = 'R'
 };
 
+enum VCL_Kernel_step : int {
+  VCL_none,
+  VCL_wait_for_image,
+  VCL_converted,
+  VCL_built
+};
+
 #endif
