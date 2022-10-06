@@ -481,30 +481,33 @@ p, li { white-space: pre-wrap; }
         <location filename="../mainwindow.ui" line="431"/>
         <location filename="../mainwindow.ui" line="3994"/>
         <source>WE原理图</source>
-        <translation type="unfinished"></translation>
+        <translation>WESchem</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="1967"/>
         <source>保存当前图片</source>
-        <translation type="unfinished"></translation>
+        <translation>Save current image</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="2025"/>
         <source>导出为
 原版结构文件</source>
-        <translation type="unfinished"></translation>
+        <translation>Export as 
+structure</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="2116"/>
         <source>导出为
 WorldEdit原理图</source>
-        <translation type="unfinished"></translation>
+        <translation>Export as
+WE Schematic</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="2153"/>
         <source>导出为
 Litematica投影</source>
-        <translation type="unfinished"></translation>
+        <translation>Export as
+Litematic</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="3059"/>
@@ -628,7 +631,7 @@ Litematica投影</source>
     <message>
         <location filename="../mainwindow.ui" line="3989"/>
         <source>输出当前颜色表</source>
-        <translation type="unfinished"></translation>
+        <translation>Export current color palette</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="1063"/>
@@ -926,17 +929,17 @@ Litematica投影</source>
     <message>
         <location filename="../MainWindow.cpp" line="1555"/>
         <source>投影文件(*.litematic)</source>
-        <translation type="unfinished"></translation>
+        <translation>Litematic files(*.litematic)</translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1556"/>
         <source>结构方块文件(*.nbt)</source>
-        <translation type="unfinished"></translation>
+        <translation>Structure block file(*.nbt)</translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1557"/>
         <source>WorldEdit原理图(*.schem)</source>
-        <translation type="unfinished"></translation>
+        <translation>WorldEdit schematic(*.schem)</translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1568"/>
@@ -1122,7 +1125,7 @@ Litematica投影</source>
     <message>
         <location filename="../MainWindow.cpp" line="1896"/>
         <source>正在压缩立体地图画</source>
-        <translation></translation>
+        <translation>Compressing the map</translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1899"/>

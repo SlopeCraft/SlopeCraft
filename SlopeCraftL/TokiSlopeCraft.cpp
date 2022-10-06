@@ -76,6 +76,12 @@ TokiSlopeCraft::TokiSlopeCraft() {
 
   ::SCL_internal_lock.lock();
   TokiSlopeCraft::kernel_hash_set.emplace(this);
+  for (auto kptr : kernel_hash_set) {
+    if (kptr->kernelStep >= step::wait4Image) {
+      this->kernelStep = step::wait4Image;
+      break;
+    }
+  }
   ::SCL_internal_lock.unlock();
 }
 
