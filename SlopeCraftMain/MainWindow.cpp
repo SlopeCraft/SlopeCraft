@@ -1998,7 +1998,8 @@ QJsonObject MainWindow::GithubAPIJson2Latest3xVer(const QJsonArray &ja) {
       continue;
     if (jo["draft"] == true)
       continue;
-    if (tagName.startsWith("v3.", Qt::CaseInsensitive)) {
+    if (tagName.startsWith("v3.", Qt::CaseInsensitive) ||
+        tagName.startsWith("v5.", Qt::CaseInsensitive)) {
       qDebug() << "chosen latest version : " << tagName;
       return jo;
     }
