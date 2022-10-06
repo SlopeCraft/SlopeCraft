@@ -36,9 +36,9 @@ TokiPos TokiRC(int row, int col); //前16bit存储row，后16bit存储col
 short TokiRow(TokiPos);
 short TokiCol(TokiPos);
 
-extern waterItem (*TokiWater)(int, int);
-extern short (*waterHigh)(waterItem);
-extern short (*waterLow)(waterItem);
+constexpr waterItem (*TokiWater)(int, int) = TokiRC;
+constexpr short (*waterHigh)(waterItem) = TokiRow;
+constexpr short (*waterLow)(waterItem) = TokiCol;
 /*
 waterItem TokiWater(short high,short low);//前两字节存储high，后两字节存储low
 short waterHigh(waterItem);

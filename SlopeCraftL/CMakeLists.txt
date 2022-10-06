@@ -41,7 +41,7 @@ set(SlopeCraft_SCL_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/TokiSlopeCraft.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/WaterItem.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/lossyCompressor.h 
-    ${CMAKE_CURRENT_SOURCE_DIR}/object_pool.hpp 
+    #${CMAKE_CURRENT_SOURCE_DIR}/object_pool.hpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/simpleBlock.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/SlopeCraftL.h 
     ${CMAKE_CURRENT_SOURCE_DIR}/SlopeCraftL_global.h 

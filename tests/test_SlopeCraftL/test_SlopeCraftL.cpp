@@ -1,3 +1,25 @@
+/*
+ Copyright © 2021-2022  TokiNoBug
+This file is part of SlopeCraft.
+
+    SlopeCraft is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    SlopeCraft is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SlopeCraft.  If not, see <https://www.gnu.org/licenses/>.
+
+    Contact with me:
+    github:https://github.com/ToKiNoBug
+    bilibili:https://space.bilibili.com/351429231
+*/
+
 #include <SlopeCraftL/SlopeCraftL.h>
 
 #include <array>
@@ -8,7 +30,6 @@
 #include <cstring>
 #include <ctime>
 #include <random>
-
 
 std::mt19937 mt(std::hash<time_t>()(std::time(nullptr)));
 
@@ -60,7 +81,7 @@ int main() {
 
     // generate a random image
     for (int idx = 0; idx < 256 * 256; idx++) {
-      img_data[idx] = (0xFFU << 24) & mt();
+      img_data[idx] = (0xFFU << 24) | mt();
     }
 
     kernel->setRawImage(img_data, 256, 256);
