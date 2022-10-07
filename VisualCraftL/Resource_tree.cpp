@@ -21,7 +21,7 @@ auto split_by_slash(std::string_view str) noexcept {
       substr_start = cur_slash += 1;
     }
   }
-
+  // if (str.back() != '/')
   result.emplace_back(str.substr(substr_start));
 
   return result;
@@ -60,15 +60,17 @@ zipped_folder zipped_folder::from_zip(std::string_view zipname) noexcept {
 
     zipped_folder *curfolder = &result;
     zipped_file *destfile = nullptr;
-    for (int idx = 0; idx < splited.size(); idx++) {
+    for (int idx = 0; idx + 1 < splited.size(); idx++) {
       if (idx + 1 < splited.size()) {
         // is folder name
         curfolder = &curfolder->subfolders[std::string(splited.at(idx))];
-      } else {
-        // is file name
-        auto ret = curfolder->files.emplace(splited.at(idx), zipped_file());
-        destfile = &ret.first->second;
       }
+    }
+
+    if (std::string_view(::zip_get_name(zip, entry_idx, ZIP_FL_ENC_GUESS))
+            .back() != '/') {
+      auto ret = curfolder->files.emplace(splited.back(), zipped_file());
+      destfile = &ret.first->second;
     }
 
     if (destfile == nullptr) {
