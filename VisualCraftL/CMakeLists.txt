@@ -28,3 +28,7 @@ target_link_libraries(VisualCraftL PRIVATE libzip::zip z)
 
 
 target_compile_definitions(VisualCraftL PRIVATE BEFORE "-DVISUALCRAFTL_BUILD")
+
+add_executable(test_VCL test_lib.cpp)
+
+target_link_libraries(test_VCL PRIVATE VisualCraftL)

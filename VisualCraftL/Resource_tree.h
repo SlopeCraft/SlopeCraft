@@ -13,6 +13,7 @@ private:
   std::vector<uint8_t> __data;
 
 public:
+  friend class zipped_folder;
   inline int64_t file_size() const noexcept { return __data.size(); }
 
   inline uint8_t *data() noexcept { return __data.data(); }
