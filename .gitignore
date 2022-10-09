@@ -60,3 +60,6 @@ install/
 
 ### macOS File System ###
 .DS_Store
+
+### 3rdParty libs ###
+3rdParty/*

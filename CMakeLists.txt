@@ -5,6 +5,7 @@ set(SlopeCraft_version 3.10.0)
 project(SlopeCraft VERSION ${SlopeCraft_version} LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 
+
 # manage the install prefix
 set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install_app)
 set(CMAKE_INSTALL_LIBDIR ${CMAKE_INSTALL_PREFIX})
@@ -17,15 +18,15 @@ endif()
 
 # manage the include dir of HeuristicFlow
 set(SlopeCraft_HeuristicFlow_include_dir D:/CppLibs/HeuristicFlow-1.6.2.1)
-if(NOT DEFINED SlopeCraft_HeuristicFlow_include_dir)
-    message(FATAL_ERROR "Please set the variable \"SlopeCraft_HeuristicFlow_include_dir\". Otherwise cmake can\'t find HeuristicFlow")
-endif()
+
 
 # manage the include dir of Eigen
-set(SlopeCraft_Eigen3_include_dir D:/CppLibs/libEigen3/include/eigen3)
-if(NOT DEFINED SlopeCraft_Eigen3_include_dir)
-    message(FATAL_ERROR "Please set the variable \"SlopeCraft_Eigen3_include_dir\". Otherwise cmake can\'t find Eigen")
-endif()
+#set(SlopeCraft_Eigen3_include_dir D:/CppLibs/libEigen3/include/eigen3)
+
+
+include(cmake/find_nlohmann_json.cmake)
+include(cmake/find_Eigen3.cmake)
+include(cmake/find_HeuristicFlow.cmake)
 
 #set(Qt6_DIR "D:\\Qt\\6.2.4\\msvc2022-shared")
 # manage the directory of Qt
@@ -42,21 +43,9 @@ set(CMAKE_PREFIX_PATH ${SlopeCraft_Qt_root_dir})
 set(QT_DIR ${SlopeCraft_Qt_root_dir}/lib/cmake/Qt6)
 set(QT_QMAKE_EXECUTABLE ${SlopeCraft_Qt_root_dir}/bin/qmake.exe)
 
-# The executable to generate .qm files from .qm files
-set(SlopeCraft_Qt_lrelease_executable ${SlopeCraft_Qt_root_dir}/bin/lrelease)
-message("Testing lrelease : ")
-message("The executable of lrelease is : " ${SlopeCraft_Qt_lrelease_executable})
-execute_process(COMMAND ${SlopeCraft_Qt_lrelease_executable} -version
-    OUTPUT_VARIABLE SlopeCraft_output_variable)
-message("The output is : " ${SlopeCraft_output_variable})
+# find lupdate and lrelease of qt
+include(cmake/find_qt_translate.cmake)
 
-# The executable to update .ts files
-set(SlopeCraft_Qt_lupdate_executable ${SlopeCraft_Qt_root_dir}/bin/lupdate)
-message("Testing lupdate : ")
-message("The executable of lupdate is : " ${SlopeCraft_Qt_lupdate_executable})
-execute_process(COMMAND ${SlopeCraft_Qt_lupdate_executable} -version
-    OUTPUT_VARIABLE SlopeCraft_output_variable)
-message("The output is : " ${SlopeCraft_output_variable})
 
 # If it is set to ON, everytime CMake reconfigure the project, all .ts files will be updated.
 set(SlopeCraft_update_ts_files OFF)
