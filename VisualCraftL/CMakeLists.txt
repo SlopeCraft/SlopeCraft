@@ -20,7 +20,8 @@ add_library(VisualCraftL SHARED
     Resource_tree.h 
     Resource_tree.cpp
     ParseResourcePack.h 
-    ParseResourcePack.cpp)
+    ParseResourcePack.cpp
+    test_fun.cpp)
 
 find_package(libzip REQUIRED)
 find_package(ZLIB REQUIRED)
@@ -28,7 +29,7 @@ find_package(png REQUIRED)
 
 include_directories(${ZLIB_INCLUDE_DIR})
 
-target_link_libraries(VisualCraftL PRIVATE libzip::zip z png)
+target_link_libraries(VisualCraftL PRIVATE libzip::zip z png ColorManip)
 
 
 target_compile_definitions(VisualCraftL PRIVATE BEFORE "-DVISUALCRAFTL_BUILD")

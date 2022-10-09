@@ -8,6 +8,10 @@
 
 #include <unordered_map>
 
+bool parse_png(
+    const void *const data, const int64_t length,
+    Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> *img);
+
 std::unordered_map<std::string, Eigen::Array<ARGB, Eigen::Dynamic,
                                              Eigen::Dynamic, Eigen::RowMajor>>
 folder_to_images(const zipped_folder &src, bool *const error = nullptr,
