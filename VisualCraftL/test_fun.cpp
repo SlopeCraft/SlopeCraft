@@ -95,7 +95,7 @@ VCL_EXPORT void test_VCL() {
   cout << "size of png : " << png_to_read.file_size() << endl;
   */
 
-  const char *filename = "src_ARGB64.png";
+  const char *filename = "src_idx8_aplha.png";
 
   FILE *fp = NULL;
   ::fopen_s(&fp, filename, "rb");
@@ -108,10 +108,17 @@ VCL_EXPORT void test_VCL() {
   Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> img;
 
   parse_png(buffer, filesize, &img);
-
+  /*
   printf("The 1st pixel is : %#X\n", img(0));
   printf("The 2nd pixel is : %#X\n", img(1));
   printf("The 3rd pixel is : %#X\n", img(2));
+  */
+
+  printf("The first 4 pixel in hex :\n");
+  for (int i = 0; i < 4 * 4; i++) {
+    printf("%hX,", ((uint8_t *)img.data())[i]);
+  }
+  printf("\n\n");
 
   rewrite_png("test_rewrite.png", img);
 

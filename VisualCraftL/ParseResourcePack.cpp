@@ -79,27 +79,26 @@ bool parse_png(
     png_set_expand(png);
 
   switch (color_type) {
-  case PNG_COLOR_TYPE_GRAY:
-
+  case PNG_COLOR_TYPE_GRAY: // fixed
     png_set_gray_to_rgb(png);
     cout << "PNG_COLOR_TYPE_GRAY";
     break;
   case PNG_COLOR_TYPE_PALETTE:
+#warning indexed color has not been fixed yet
     png_set_palette_to_rgb(png);
     cout << "PNG_COLOR_TYPE_PALETTE";
     break;
-  case PNG_COLOR_TYPE_RGB:
+  case PNG_COLOR_TYPE_RGB: // fixed
     png_set_bgr(png);
-
     cout << "PNG_COLOR_TYPE_RGB";
     break;
   case PNG_COLOR_TYPE_RGB_ALPHA: // fixed
     png_set_bgr(png);
     cout << "PNG_COLOR_TYPE_RGB_ALPHA";
     break;
-  case PNG_COLOR_TYPE_GRAY_ALPHA:
+  case PNG_COLOR_TYPE_GRAY_ALPHA: // fixed
     png_set_gray_to_rgb(png);
-    png_set_swap_alpha(png);
+    // png_set_swap_alpha(png);
     cout << "PNG_COLOR_TYPE_GRAY_ALPHA";
     break;
   default:
@@ -119,16 +118,15 @@ bool parse_png(
 
   png_read_image(png, row_ptrs.data());
 
-  if (color_type == PNG_COLOR_TYPE_RGB) {
-    // add alpha to RGB, convert RGB to RGBA
+  if (color_type == PNG_COLOR_TYPE_RGB ||
+      color_type == PNG_COLOR_TYPE_GRAY) { // add alpha manually
     for (int r = 0; r < height; r++) {
-
       uint8_t *const data = reinterpret_cast<uint8_t *>(&(*img)(r, 0));
       for (int pixel_idx = img->cols() - 1; pixel_idx > 0; pixel_idx--) {
         const uint8_t *const data_src = data + pixel_idx * 3;
         uint8_t *const data_dest = data + pixel_idx * 4;
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 2; i >= 0; i--) {
           data_dest[i] = data_src[i];
         }
         data_dest[3] = 0xFF;
