@@ -36,18 +36,18 @@ namespace {
 static constexpr float threshold = 1e-10f;
 }
 struct convert_unit {
-  explicit convert_unit(ARGB _a, ::SCL_convertAlgo _c) : ARGB(_a), algo(_c) {}
-  ARGB ARGB;
+  explicit convert_unit(ARGB _a, ::SCL_convertAlgo _c) : _ARGB(_a), algo(_c) {}
+  ARGB _ARGB;
   ::SCL_convertAlgo algo;
 
   inline bool operator==(const convert_unit another) const noexcept {
-    return (ARGB == another.ARGB) && (algo == another.algo);
+    return (_ARGB == another._ARGB) && (algo == another.algo);
   }
 
   inline Eigen::Array3f to_c3() const noexcept {
 
     Eigen::Array3f c3;
-    const ::ARGB rawColor = this->ARGB;
+    const ::ARGB rawColor = this->_ARGB;
     switch (this->algo) {
     case ::SCL_convertAlgo::RGB:
     case ::SCL_convertAlgo::RGB_Better:
@@ -80,7 +80,7 @@ struct convert_unit {
 struct hash_cvt_unit {
 public:
   inline size_t operator()(const convert_unit cu) const noexcept {
-    return std::hash<uint32_t>()(cu.ARGB) ^
+    return std::hash<uint32_t>()(cu._ARGB) ^
            std::hash<uint8_t>()(uint8_t(cu.algo));
   }
 };
@@ -114,7 +114,7 @@ public:
   }
 
   auto compute(convert_unit cu) noexcept {
-    if (getA(cu.ARGB) == 0) {
+    if (getA(cu._ARGB) == 0) {
       if constexpr (is_not_optical) {
         this->Result = 0;
         return this->Result;
