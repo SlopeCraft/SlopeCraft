@@ -73,27 +73,70 @@ bool parse_png(
   cout << "\nbit_depth = " << bit_depth;
   cout << "\ncolor_type = " << color_type << " (";
 
+  if (bit_depth > 8)
+    png_set_strip_16(png);
+  if (bit_depth < 8)
+    png_set_expand(png);
+
   switch (color_type) {
   case PNG_COLOR_TYPE_GRAY:
+
+    png_set_gray_to_rgb(png);
     cout << "PNG_COLOR_TYPE_GRAY";
     break;
   case PNG_COLOR_TYPE_PALETTE:
+    png_set_palette_to_rgb(png);
     cout << "PNG_COLOR_TYPE_PALETTE";
     break;
   case PNG_COLOR_TYPE_RGB:
+    png_set_bgr(png);
+
     cout << "PNG_COLOR_TYPE_RGB";
     break;
-  case PNG_COLOR_TYPE_RGB_ALPHA:
+  case PNG_COLOR_TYPE_RGB_ALPHA: // fixed
+    png_set_bgr(png);
     cout << "PNG_COLOR_TYPE_RGB_ALPHA";
     break;
   case PNG_COLOR_TYPE_GRAY_ALPHA:
+    png_set_gray_to_rgb(png);
+    png_set_swap_alpha(png);
     cout << "PNG_COLOR_TYPE_GRAY_ALPHA";
     break;
   default:
     cout << "uknown color type";
   }
   cout << ")\n";
-#warning here
+  //#warning here
+
+  img->resize(height, width);
+
+  std::vector<uint8_t *> row_ptrs;
+  row_ptrs.resize(height);
+
+  for (int r = 0; r < height; r++) {
+    row_ptrs[r] = reinterpret_cast<uint8_t *>(&(*img)(r, 0));
+  }
+
+  png_read_image(png, row_ptrs.data());
+
+  if (color_type == PNG_COLOR_TYPE_RGB) {
+    // add alpha to RGB, convert RGB to RGBA
+    for (int r = 0; r < height; r++) {
+
+      uint8_t *const data = reinterpret_cast<uint8_t *>(&(*img)(r, 0));
+      for (int pixel_idx = img->cols() - 1; pixel_idx > 0; pixel_idx--) {
+        const uint8_t *const data_src = data + pixel_idx * 3;
+        uint8_t *const data_dest = data + pixel_idx * 4;
+
+        for (int i = 0; i < 3; i++) {
+          data_dest[i] = data_src[i];
+        }
+        data_dest[3] = 0xFF;
+      }
+      data[3] = 0xFF;
+    }
+  }
+
   // png_destroy_info_struct(png, &info);
   png_destroy_read_struct(&png, &info, &info_end);
 
