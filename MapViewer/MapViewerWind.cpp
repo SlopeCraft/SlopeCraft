@@ -24,9 +24,9 @@ This file is part of SlopeCraft.
 #include "ui_MapViewerWind.h"
 
 #include "processMapFiles.h"
-
 #include <QFileDialog>
 #include <QMessageBox>
+#include <iostream>
 
 #include <QFont>
 #include <QPainter>
@@ -125,11 +125,20 @@ QImage get_unknown_basecolor() {
   QImage result(QStringLiteral(":/new/images/unknown_basecolor.png"));
 
   if (result.isNull()) {
+    std::cerr
+        << "QImage failed to load \":/new/images/unknown_basecolor.png\", the "
+           "image is null.  MapViewer will exit."
+        << endl;
     exit(1);
     return result;
   }
 
   if (result.width() != 16 || result.height() != 16) {
+    std::cerr
+        << "QImage loaded \":/new/images/unknown_basecolor.png\", however the "
+           "image size is not 16x16 but "
+        << result.width() << "x" << result.height() << ", MapViewer will exit."
+        << endl;
     exit(2);
     return result;
   }
