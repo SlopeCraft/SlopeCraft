@@ -25,7 +25,7 @@ add_library(VisualCraftL SHARED
 
 find_package(libzip REQUIRED)
 find_package(ZLIB REQUIRED)
-find_package(png REQUIRED)
+find_package(PNG REQUIRED)
 
 include_directories(${ZLIB_INCLUDE_DIR})
 

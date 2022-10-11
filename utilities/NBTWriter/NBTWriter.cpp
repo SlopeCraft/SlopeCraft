@@ -34,7 +34,7 @@ bool NBTWriterBase_nocompress::open(const char *newFileName) noexcept {
   // FILE *newfile = ::fopen(newFileName, "wb");
 
   FILE *newfile = NULL;
-  ::fopen_s(&newfile, newFileName, "wb");
+  fopen_s(&newfile, newFileName, "wb");
 
   if (newfile == NULL) {
     return false;
@@ -51,13 +51,13 @@ bool NBTWriterBase_nocompress::open(const char *newFileName) noexcept {
   return true;
 }
 
-bool NBTWriterBase_gzip::open(const char *newFileName) noexcept {
+bool NBTWriterBase_gzipopen(const char *newFileName) noexcept {
 
   if (file != nullptr) {
     return false;
   }
 
-  gzFile newfile = ::gzopen(newFileName, "wb");
+  gzFile newfile = gzopen(newFileName, "wb");
 
   if (newfile == NULL) {
     return false;
@@ -76,7 +76,7 @@ bool NBTWriterBase_gzip::open(const char *newFileName) noexcept {
 
 int NBTWriterBase_nocompress::write_data(const void *data,
                                          const size_t bytes) noexcept {
-  ::fwrite(data, sizeof(char), bytes, file);
+  fwrite(data, sizeof(char), bytes, file);
 
   bytesWritten += bytes;
 
@@ -85,7 +85,7 @@ int NBTWriterBase_nocompress::write_data(const void *data,
 
 int NBTWriterBase_gzip::write_data(const void *data,
                                    const size_t bytes) noexcept {
-  ::gzfwrite(data, sizeof(char), bytes, file);
+  gzfwrite(data, sizeof(char), bytes, file);
 
   bytesWritten += bytes;
 
