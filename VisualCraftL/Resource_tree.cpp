@@ -6,7 +6,7 @@
 
 //#include "VisualCraftL.h"
 
-using std::cout, std::endl;
+using std::cout, std::endl, std::cerr;
 
 auto split_by_slash(std::string_view str) noexcept {
   std::vector<std::basic_string_view<char>> result;
@@ -32,14 +32,17 @@ zipped_folder zipped_folder::from_zip(std::string_view zipname) noexcept {
   {
     std::filesystem::path path = zipname;
     if (zipname.empty()) {
+      cerr << "The filename  of zip is empty." << endl;
       return result;
     }
 
     if (!std::filesystem::is_regular_file(path)) {
+      cerr << "The filename does not refer to a regular file." << endl;
       return result;
     }
 
     if (path.extension() != ".zip") {
+      cerr << "The file extension name is not .zip" << endl;
       return result;
     }
   }
@@ -47,7 +50,7 @@ zipped_folder zipped_folder::from_zip(std::string_view zipname) noexcept {
   zip_t *const zip = zip_open(zipname.data(), ZIP_RDONLY, &errorcode);
 
   if (zip == NULL) {
-    cout << "Failed to open zip file : " << zipname
+    cerr << "Failed to open zip file : " << zipname
          << ", error code = " << errorcode << endl;
     return result;
   }
@@ -83,7 +86,7 @@ zipped_folder zipped_folder::from_zip(std::string_view zipname) noexcept {
     destfile->__data.resize(stat.size);
     zip_file_t *const zfile = zip_fopen_index(zip, entry_idx, ZIP_FL_UNCHANGED);
     if (zfile == NULL) {
-      cout << "Failed to open file in zip. index : " << entry_idx
+      cerr << "Failed to open file in zip. index : " << entry_idx
            << "file name : " << ::zip_get_name(zip, entry_idx, ZIP_FL_ENC_GUESS)
            << endl;
       continue;

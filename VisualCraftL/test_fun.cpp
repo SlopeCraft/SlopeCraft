@@ -120,7 +120,7 @@ void test_VCL_single_image() {
 
 void test_VCL_full_zip() {
 
-  zipped_folder folder = zipped_folder::from_zip("test.zip");
+  zipped_folder folder = zipped_folder::from_zip("Vanilla_1_19_2.zip");
 
   bool is_ok;
   std::string error_message;
