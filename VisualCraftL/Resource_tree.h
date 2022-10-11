@@ -34,6 +34,25 @@ public:
     return nullptr;
   }
 
+  inline zipped_folder *subfolder(std::string_view fdname) noexcept {
+    auto it = subfolders.find(std::string(fdname));
+    if (it == subfolders.end()) {
+      return nullptr;
+    } else {
+      return &it->second;
+    }
+  }
+
+  inline const zipped_folder *
+  subfolder(std::string_view fdname) const noexcept {
+    auto it = subfolders.find(std::string(fdname));
+    if (it == subfolders.end()) {
+      return nullptr;
+    } else {
+      return &it->second;
+    }
+  }
+
   static zipped_folder from_zip(std::string_view zipname) noexcept;
 };
 

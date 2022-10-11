@@ -9,6 +9,9 @@
 #include <stdio.h>
 
 using std::cout, std::endl;
+void test_VCL_single_image();
+void test_VCL_full_zip();
+void test_VCL_single_img_in_zip();
 
 void display_folder(const zipped_folder &folder, const int offset = 0) {
   std::string spaces;
@@ -78,24 +81,14 @@ bool rewrite_png(const char *const filename,
 
   return true;
 }
-
 VCL_EXPORT void test_VCL() {
-  /*
-  zipped_folder folder = zipped_folder::from_zip("test.zip");
+  test_VCL_full_zip();
+  // test_VCL_single_image();
+  // test_VCL_single_img_in_zip();
+}
 
-  // display_folder(folder);
-  // cout << endl;
-
-  const zipped_file &png_to_read = folder.subfolders["assets"]
-                                       .subfolders["minecraft"]
-                                       .subfolders["textures"]
-                                       .subfolders["block"]
-                                       .files["weathered_copper_waxed.png"];
-
-  cout << "size of png : " << png_to_read.file_size() << endl;
-  */
-
-  const char *filename = "src_idx8_noaplha.png";
+void test_VCL_single_image() {
+  const char *filename = "anvil.png";
 
   FILE *fp = NULL;
   ::fopen_s(&fp, filename, "rb");
@@ -123,4 +116,53 @@ VCL_EXPORT void test_VCL() {
   rewrite_png("test_rewrite.png", img);
 
   free(buffer);
+}
+
+void test_VCL_full_zip() {
+
+  zipped_folder folder = zipped_folder::from_zip("test.zip");
+
+  bool is_ok;
+  std::string error_message;
+
+  std::unordered_map<std::string, Eigen::Array<ARGB, Eigen::Dynamic,
+                                               Eigen::Dynamic, Eigen::RowMajor>>
+      images = folder_to_images(folder, &is_ok, &error_message);
+
+  cout << error_message << endl;
+
+  cout << "size of images = " << images.size() << endl;
+
+  cout << "Exporting images again..." << endl;
+
+  for (const auto &file : images) {
+    rewrite_png(("test/" + file.first).c_str(), file.second);
+  }
+
+  cout << "Finished." << endl;
+}
+
+void test_VCL_single_img_in_zip() {
+
+  zipped_folder folder = zipped_folder::from_zip("test.zip");
+  zipped_folder *const block_dir = folder.subfolder("assets")
+                                       ->subfolder("minecraft")
+                                       ->subfolder("textures")
+                                       ->subfolder("block");
+  const zipped_file &file = block_dir->files.find("anvil.png")->second;
+  cout << "Found anvil.png" << endl;
+  cout << "size of png file : " << file.file_size() << endl;
+
+  Eigen::Array<ARGB, -1, -1, Eigen::RowMajor> img;
+
+  const bool success = parse_png(file.data(), file.file_size(), &img);
+
+  cout << "success = " << success << endl;
+
+  printf("The first 4 pixel in hex :\n");
+  for (int i = 0; i < 4 * 4; i++) {
+    printf("%hX,", ((uint8_t *)img.data())[i]);
+  }
+  printf("\n\n");
+  rewrite_png("rewrite_anvil.png", img);
 }

@@ -33,13 +33,13 @@ bool parse_png(
   png_struct *png =
       png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
   if (png == NULL) {
-    cout << "Failed to create png read struct." << endl;
+    ::std::cerr << "Failed to create png read struct." << endl;
     return false;
   }
 
   png_info *info = png_create_info_struct(png);
   if (info == NULL) {
-    cout << "Failed to create png info struct." << endl;
+    ::std::cerr << "Failed to create png info struct." << endl;
     png_destroy_read_struct(&png, &info, NULL);
     return false;
   }
@@ -47,7 +47,7 @@ bool parse_png(
   png_info *info_end = png_create_info_struct(png);
   if (info_end == NULL) {
 
-    cout << "Failed to create png info_end struct." << endl;
+    ::std::cerr << "Failed to create png info_end struct." << endl;
     png_destroy_read_struct(&png, &info, &info_end);
     return false;
   }
@@ -69,13 +69,14 @@ bool parse_png(
   png_get_IHDR(png, info, &width, &height, &bit_depth, &color_type,
                &interlace_method, &compress_method, &filter_method);
 
-  cout << "\nwidth = " << width;
-  cout << "\nheight = " << height;
-  cout << "\nbit_depth = " << bit_depth;
-  cout << "\ncolor_type = " << color_type << " (";
+  // cout << "\nwidth = " << width;
+  // cout << "\nheight = " << height;
+  // cout << "\nbit_depth = " << bit_depth;
+  // cout << "\ncolor_type = " << color_type << " (";
 
-  if (bit_depth > 8)
+  if (bit_depth > 8) {
     png_set_strip_16(png);
+  }
   if (bit_depth < 8)
     png_set_expand(png);
 
@@ -83,38 +84,43 @@ bool parse_png(
   case PNG_COLOR_TYPE_GRAY: // fixed
     png_set_gray_to_rgb(png);
     add_alpha = true;
-    cout << "PNG_COLOR_TYPE_GRAY";
+    // cout << "PNG_COLOR_TYPE_GRAY";
     break;
   case PNG_COLOR_TYPE_PALETTE: // fixed
 
     png_set_palette_to_rgb(png);
     png_set_bgr(png);
-    int num_trans;
-    png_get_tRNS(png, info, NULL, &num_trans, NULL);
-    if (num_trans <= 0) {
-      add_alpha = true;
+    {
+      int num_trans = 0;
+      png_get_tRNS(png, info, NULL, &num_trans, NULL);
+      if (num_trans <= 0) {
+        add_alpha = true;
+      }
+      // cout << "num_trans = " << num_trans << endl;
     }
-    cout << "num_trans = " << num_trans << endl;
-    cout << "PNG_COLOR_TYPE_PALETTE";
+
+    // cout << "PNG_COLOR_TYPE_PALETTE";
     break;
   case PNG_COLOR_TYPE_RGB: // fixed
     png_set_bgr(png);
     add_alpha = true;
-    cout << "PNG_COLOR_TYPE_RGB";
+    // cout << "PNG_COLOR_TYPE_RGB";
     break;
   case PNG_COLOR_TYPE_RGB_ALPHA: // fixed
     png_set_bgr(png);
-    cout << "PNG_COLOR_TYPE_RGB_ALPHA";
+    // cout << "PNG_COLOR_TYPE_RGB_ALPHA";
     break;
   case PNG_COLOR_TYPE_GRAY_ALPHA: // fixed
     png_set_gray_to_rgb(png);
     // png_set_swap_alpha(png);
-    cout << "PNG_COLOR_TYPE_GRAY_ALPHA";
+    // cout << "PNG_COLOR_TYPE_GRAY_ALPHA";
     break;
   default:
-    cout << "uknown color type";
+    ::std::cerr << "Unknown color type " << color_type << endl;
+    png_destroy_read_struct(&png, &info, &info_end);
+    return false;
   }
-  cout << ")\n";
+  // cout << ")\n";
   //#warning here
 
   img->resize(height, width);
@@ -152,7 +158,7 @@ bool parse_png(
 
 std::unordered_map<std::string, Eigen::Array<ARGB, Eigen::Dynamic,
                                              Eigen::Dynamic, Eigen::RowMajor>>
-folder_to_images(const zipped_folder &src, bool *const error,
+folder_to_images(const zipped_folder &src, bool *const is_ok,
                  std::string *const error_string) noexcept {
 
   std::unordered_map<std::string, Eigen::Array<ARGB, Eigen::Dynamic,
@@ -160,47 +166,54 @@ folder_to_images(const zipped_folder &src, bool *const error,
       result;
 
   const zipped_folder *folder_ptr = &src;
-  {
-    auto it = src.subfolders.find("assets");
-
-    if (it != src.subfolders.end()) {
-      folder_ptr = &it->second;
-      it = folder_ptr->subfolders.find("minecraft");
-      if (it != folder_ptr->subfolders.end()) {
-
-        folder_ptr = &it->second;
-        it = folder_ptr->subfolders.find("textures");
-        if (it != folder_ptr->subfolders.end()) {
-          folder_ptr = &it->second;
-          // success fully located assets/minecraft/textures
-        }
-      } else {
-        folder_ptr = nullptr;
-      }
-    } else {
-      folder_ptr = nullptr;
-    }
+  folder_ptr = folder_ptr->subfolder("assets");
+  if (folder_ptr != nullptr) {
+    folder_ptr = folder_ptr->subfolder("minecraft");
   }
-
+  if (folder_ptr != nullptr) {
+    folder_ptr = folder_ptr->subfolder("textures");
+  }
+  if (folder_ptr != nullptr) {
+    folder_ptr = folder_ptr->subfolder("block");
+    std::cout << "Found assets/minecraft/textures/block" << endl;
+  }
   // the folder is empty
   if (folder_ptr == nullptr) {
-    if (error != nullptr) {
-      *error = true;
+    if (is_ok != nullptr) {
+      *is_ok = true;
     }
     if (error_string != nullptr) {
-      *error_string = "";
+      *error_string = "The folder is empty";
     }
     return result;
   }
+
+  std::cout << "Parsing png files" << endl;
+
+  std::cout << "file num = " << folder_ptr->files.size() << endl;
 
   // go through the folder
   result.reserve(folder_ptr->files.size());
   for (const auto &file : folder_ptr->files) {
     Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> img;
+
+    if (file.first.substr(file.first.size() - 4, 4) != ".png") {
+      continue;
+    }
+
+    const bool success =
+        parse_png(file.second.data(), file.second.file_size(), &img);
+    if (!success) {
+      ::std::cerr << "Failed to read " << file.first
+                  << ", this file will be skipped." << endl;
+      continue;
+    }
+
+    result.emplace(file.first, std::move(img));
   }
 
-  if (error != nullptr) {
-    *error = true;
+  if (is_ok != nullptr) {
+    *is_ok = true;
   }
   if (error_string != nullptr) {
     *error_string = "";
