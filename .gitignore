@@ -53,6 +53,7 @@ _deps
 ### Compiled Files ###
 moc*
 qrc*
+ui_*.h
 
 ### CMake Install ###
 install/
