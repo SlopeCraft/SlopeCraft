@@ -64,6 +64,7 @@ bool parse_png(
 
   uint32_t width, height;
   int bit_depth, color_type, interlace_method, compress_method, filter_method;
+  bool add_alpha = false;
 
   png_get_IHDR(png, info, &width, &height, &bit_depth, &color_type,
                &interlace_method, &compress_method, &filter_method);
@@ -81,15 +82,24 @@ bool parse_png(
   switch (color_type) {
   case PNG_COLOR_TYPE_GRAY: // fixed
     png_set_gray_to_rgb(png);
+    add_alpha = true;
     cout << "PNG_COLOR_TYPE_GRAY";
     break;
-  case PNG_COLOR_TYPE_PALETTE:
-#warning indexed color has not been fixed yet
+  case PNG_COLOR_TYPE_PALETTE: // fixed
+
     png_set_palette_to_rgb(png);
+    png_set_bgr(png);
+    int num_trans;
+    png_get_tRNS(png, info, NULL, &num_trans, NULL);
+    if (num_trans <= 0) {
+      add_alpha = true;
+    }
+    cout << "num_trans = " << num_trans << endl;
     cout << "PNG_COLOR_TYPE_PALETTE";
     break;
   case PNG_COLOR_TYPE_RGB: // fixed
     png_set_bgr(png);
+    add_alpha = true;
     cout << "PNG_COLOR_TYPE_RGB";
     break;
   case PNG_COLOR_TYPE_RGB_ALPHA: // fixed
@@ -118,8 +128,7 @@ bool parse_png(
 
   png_read_image(png, row_ptrs.data());
 
-  if (color_type == PNG_COLOR_TYPE_RGB ||
-      color_type == PNG_COLOR_TYPE_GRAY) { // add alpha manually
+  if (add_alpha) { // add alpha manually
     for (int r = 0; r < height; r++) {
       uint8_t *const data = reinterpret_cast<uint8_t *>(&(*img)(r, 0));
       for (int pixel_idx = img->cols() - 1; pixel_idx > 0; pixel_idx--) {

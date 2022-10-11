@@ -95,7 +95,7 @@ VCL_EXPORT void test_VCL() {
   cout << "size of png : " << png_to_read.file_size() << endl;
   */
 
-  const char *filename = "src_idx8_aplha.png";
+  const char *filename = "src_idx8_noaplha.png";
 
   FILE *fp = NULL;
   ::fopen_s(&fp, filename, "rb");
