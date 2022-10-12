@@ -24,7 +24,7 @@ This file is part of SlopeCraft.
 #define SCL_MAPIMAGECVTER_MAPIMAGECVTER_H
 
 #include <ColorManip/ColorManip.h>
-#include <ColorManip/ImageConvert.hpp>
+#include <ColorManip/imageConvert.hpp>
 
 #include <memory>
 

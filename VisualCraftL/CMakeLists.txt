@@ -20,7 +20,7 @@ add_library(VisualCraftL SHARED
     Resource_tree.h 
     Resource_tree.cpp
     ParseResourcePack.h 
-    ParseResourcePack.cpp
+    ParseResourcePack_png.cpp
     test_fun.cpp)
 
 find_package(libzip REQUIRED)

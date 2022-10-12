@@ -1,7 +1,4 @@
 <RCC>
-    <qresource prefix="/new/images">
-        <file>unknown_basecolor.png</file>
-    </qresource>
     <qresource prefix="/i18n">
         <file>MapViewer_en_US.qm</file>
     </qresource>

@@ -51,9 +51,9 @@ bool NBTWriterBase_nocompress::open(const char *newFileName) noexcept {
   return true;
 }
 
-bool NBTWriterBase_gzipopen(const char *newFileName) noexcept {
+bool NBTWriterBase_gzip::open(const char *newFileName) noexcept {
 
-  if (file != nullptr) {
+  if (this->file != nullptr) {
     return false;
   }
 
@@ -63,7 +63,7 @@ bool NBTWriterBase_gzipopen(const char *newFileName) noexcept {
     return false;
   }
 
-  file = newfile;
+  this->file = newfile;
 
   bytesWritten = 0;
 

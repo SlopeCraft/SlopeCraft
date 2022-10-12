@@ -121,8 +121,12 @@ std::array<ARGB, 256> make_inverse_map_LUT(const std::array<ARGB, 256> &src) {
   return result;
 }
 
+extern const uint8_t data_unknown_base_color[];
+extern const size_t png_size;
+
 QImage get_unknown_basecolor() {
-  QImage result(QStringLiteral(":/new/images/unknown_basecolor.png"));
+  QImage result;
+  result.loadFromData(data_unknown_base_color, png_size, ".png");
 
   if (result.isNull()) {
     std::cerr

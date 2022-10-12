@@ -32,7 +32,8 @@ set(MapViewer_source_files
     main.cpp 
     ../SlopeCraftL/ColorSource.cpp
     processMapFiles.cpp
-    MapViewerWind.cpp     
+    MapViewerWind.cpp
+    resource_manually.cpp     
     )
 
 set(MapViewer_windows_rc_files)
