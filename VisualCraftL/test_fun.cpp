@@ -82,9 +82,9 @@ bool rewrite_png(const char *const filename,
   return true;
 }
 VCL_EXPORT void test_VCL() {
-  test_VCL_full_zip();
-  // test_VCL_single_image();
-  // test_VCL_single_img_in_zip();
+  // test_VCL_full_zip();
+  test_VCL_single_image();
+  //  test_VCL_single_img_in_zip();
 }
 
 void test_VCL_single_image() {
@@ -101,6 +101,7 @@ void test_VCL_single_image() {
   Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> img;
 
   parse_png(buffer, filesize, &img);
+  img = resize_image_nearest(img, 60, 32);
   /*
   printf("The 1st pixel is : %#X\n", img(0));
   printf("The 2nd pixel is : %#X\n", img(1));

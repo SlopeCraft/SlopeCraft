@@ -4,7 +4,7 @@
 #include <iostream>
 #include <png.h>
 
-using std::cout, std::endl;
+using std::endl;
 
 struct read_buffer_wrapper {
   const void *data;
@@ -218,5 +218,34 @@ folder_to_images(const zipped_folder &src, bool *const is_ok,
   if (error_string != nullptr) {
     *error_string = "";
   }
+  return result;
+}
+
+Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
+resize_image_nearest(const Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic,
+                                        Eigen::RowMajor> &src,
+                     int rows, int cols) noexcept {
+  Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> result(0,
+                                                                             0);
+  if (rows <= 0 || cols <= 0 || src.size() <= 0)
+    return result;
+  result.resize(rows, cols);
+  result.setZero();
+
+  for (int row = 0; row < rows; row++) {
+    for (int col = 0; col < cols; col++) {
+      int src_row = std::min((int)std::round(float(row * src.rows()) / rows),
+                             (int)src.rows() - 1);
+      int src_col = std::min((int)std::round(float(col * src.cols()) / cols),
+                             (int)src.cols() - 1);
+      /*
+std::cout << "row = " << row << ", col = " << col
+<< ", src_row = " << src_row << ", src_col = " << src_col
+<< endl;
+*/
+      result(row, col) = src(src_row, src_col);
+    }
+  }
+
   return result;
 }
