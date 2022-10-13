@@ -249,3 +249,36 @@ std::cout << "row = " << row << ", col = " << col
 
   return result;
 }
+
+Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
+resize_image_nearest(
+    const decltype(Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic,
+                                Eigen::RowMajor>()
+                       .block(0, 0, 1, 1)) src_block,
+    int rows, int cols) noexcept {
+  Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> result(0,
+                                                                             0);
+  if (rows <= 0 || cols <= 0 || src_block.size() <= 0)
+    return result;
+  result.resize(rows, cols);
+  result.setZero();
+
+  for (int row = 0; row < rows; row++) {
+    for (int col = 0; col < cols; col++) {
+      int src_row =
+          std::min((int)std::round(float(row * src_block.rows()) / rows),
+                   (int)src_block.rows() - 1);
+      int src_col =
+          std::min((int)std::round(float(col * src_block.cols()) / cols),
+                   (int)src_block.cols() - 1);
+      /*
+std::cout << "row = " << row << ", col = " << col
+<< ", src_row = " << src_row << ", src_col = " << src_col
+<< endl;
+*/
+      result(row, col) = src_block(src_row, src_col);
+    }
+  }
+
+  return result;
+}
