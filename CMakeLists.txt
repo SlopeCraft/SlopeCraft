@@ -17,7 +17,7 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/compile_commands.json)
 endif()
 
 # manage the include dir of HeuristicFlow
-set(SlopeCraft_HeuristicFlow_include_dir D:/CppLibs/HeuristicFlow-1.6.2.1)
+# set(SlopeCraft_HeuristicFlow_include_dir D:/CppLibs/HeuristicFlow-1.6.2.1)
 
 
 # manage the include dir of Eigen
@@ -33,8 +33,11 @@ include(cmake/find_HeuristicFlow.cmake)
 if(DEFINED Qt6_DIR)
     set(SlopeCraft_Qt_root_dir ${Qt6_DIR})
 else()
-    set(SlopeCraft_Qt_root_dir D:/Qt/6.1.0/gcc12-shared)
+    set(SlopeCraft_Qt_root_dir "D:\\ProgramFiles\\Qt\\Qt\\Qt6.2.4-gcc12-shared")
 endif()
+
+message("SlopeCraft_Qt_root_dir = " ${SlopeCraft_Qt_root_dir})
+
 if(NOT DEFINED SlopeCraft_Qt_root_dir)
     message(FATAL_ERROR "Please set the variable \"SlopeCraft_Qt_root_dir\". Otherwise cmake can\'t find Qt6")
 endif()

@@ -136,6 +136,7 @@ void element::intersect_points(
   if (!this->face(f).is_hidden) {
     intersect.coordinate = crossover_point(this->plane(f), ray);
     intersect.face_ptr = &this->face(f);
+
 #warning compute uv here
   }
 }

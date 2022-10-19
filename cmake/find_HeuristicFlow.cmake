@@ -27,7 +27,7 @@ endif()
 
 # download
 if(${SlopeCraft_download_HeuristicFlow})
-
+    #if()
     message(STATUS "Cloning HeuristicFlow...")
     execute_process(
         COMMAND git clone https://github.com/ToKiNoBug/HeuristicFlow.git
