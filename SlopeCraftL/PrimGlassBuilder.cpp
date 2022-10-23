@@ -496,7 +496,9 @@ glassMap connectBetweenLayers(const TokiMap &map1, const TokiMap &map2,
 }
 
 TokiMap ySlice2TokiMap(const Eigen::Tensor<uint8_t, 3> &raw) {
-  TokiMap result(raw.dimension(0), raw.dimension(2));
+  assert(raw.dimension(2)==1);
+    
+  TokiMap result(raw.dimension(0), raw.dimension(1));
   result.setZero();
   for (int i = 0; i < raw.size(); i++)
     if (raw(i) > 1)

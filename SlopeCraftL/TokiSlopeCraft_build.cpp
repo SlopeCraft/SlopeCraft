@@ -418,13 +418,13 @@ void TokiSlopeCraft::makeBridge() {
     keepAwake(wind);
     progressAdd(wind, step);
     if (y % (bridgeInterval + 1) == 0) {
-      std::array<int, 3> start, extension;
+      std::array<int, 3> start, extension;//x,z,y
       start[0] = 0;
-      start[1] = y;
-      start[2] = 0;
+      start[1] = 0;
+      start[2] = y;
       extension[0] = schem.x_range();
-      extension[1] = 1;
-      extension[2] = schem.z_range();
+      extension[1] = schem.z_range();
+      extension[2] = 1;
       TokiMap targetMap = ySlice2TokiMap(
           schem.tensor().slice(start, extension).cast<uint8_t>());
       glassMap glass;
