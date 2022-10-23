@@ -37,9 +37,9 @@ if(${SlopeCraft_download_HeuristicFlow})
         ECHO_OUTPUT_VARIABLE
     )
 
-    message(STATUS "Successfully cloned Eigen. Checking out to tag v1.6.2.1")
+    message(STATUS "Successfully cloned HeuristicFlow. Checking out to tag v1.6.2.2")
     execute_process(
-        COMMAND git checkout v1.6.2.1
+        COMMAND git checkout v1.6.2.2
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/3rdParty/HeuristicFlow
         COMMAND_ERROR_IS_FATAL ANY
         ECHO_ERROR_VARIABLE

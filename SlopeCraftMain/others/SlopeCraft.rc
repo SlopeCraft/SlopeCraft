@@ -3,8 +3,8 @@
 IDI_ICON1	ICON	"SlopeCraftIconNew.ico"
 
 VS_VERSION_INFO VERSIONINFO
-	FILEVERSION 3,10,0,0
-	PRODUCTVERSION 3,10,0,0
+	FILEVERSION 3,10,1,0
+	PRODUCTVERSION 3,10,1,0
 	FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
 	FILEFLAGS VS_FF_DEBUG
@@ -21,11 +21,11 @@ VS_VERSION_INFO VERSIONINFO
 			BEGIN
 				VALUE "CompanyName", "\0"
 				VALUE "FileDescription", "Minecraft Map Pixel Art Tool\0"
-				VALUE "FileVersion", "3.10.0.0\0"
+				VALUE "FileVersion", "3.10.1.0\0"
 				VALUE "LegalCopyright", "Copyright TokiNoBug 2021-2022\0"
 				VALUE "OriginalFilename", "SlopeCraft.exe\0"
 				VALUE "ProductName", "SlopeCraft\0"
-				VALUE "ProductVersion", "3.10.0.0\0"
+				VALUE "ProductVersion", "3.10.1.0\0"
 				VALUE "InternalName", "SlopeCraft\0"
 				VALUE "Comments", "Main program of SlopeCraft\0"
 				VALUE "LegalTrademarks", "Published under GPLv3 license\0"

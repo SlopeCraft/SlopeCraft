@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-set(SlopeCraft_version 3.10.0)
+set(SlopeCraft_version 3.10.1)
 
 project(SlopeCraft VERSION ${SlopeCraft_version} LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
@@ -61,7 +61,7 @@ add_definitions("-D_USE_MATH_DEFINES")
 add_definitions("-DSCL_FIND_GlobalEnums_BY_PATH")
 
 # if don't vectorize, or no suitable flag found, this variable will be empty
-set(SlopeCraft_vectorize_flags) 
+set(SlopeCraft_vectorize_flags)
 if(${SlopeCraft_use_Eigen_vectorize})
     include(CheckCXXCompilerFlag)
 
@@ -87,7 +87,7 @@ add_subdirectory(SlopeCraftL)
 add_subdirectory(SlopeCraftMain)
 add_subdirectory(MapViewer)
 add_subdirectory(tests)
-add_subdirectory(VisualCraftL)
+#add_subdirectory(VisualCraftL)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
