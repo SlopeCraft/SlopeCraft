@@ -264,6 +264,7 @@ private:
 
   tpS Strategy;
 
+  QString prevOpenedDir{"./"};
   QString ProductDir;
   QTranslator trans;
   bool Collected;

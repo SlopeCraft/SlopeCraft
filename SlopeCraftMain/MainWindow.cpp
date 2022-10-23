@@ -831,10 +831,13 @@ void MainWindow::preprocessImage(const QString &Path) {
 void MainWindow::on_ImportPic_clicked() {
 
   QStringList userSelected = QFileDialog::getOpenFileNames(
-      this, tr("选择图片"), "./", tr("图片(*.png *.bmp *.jpg *.tif *.GIF )"));
+      this, tr("选择图片"), this->prevOpenedDir, tr("图片(*.png *.bmp *.jpg *.tif *.GIF )"));
 
   if (userSelected.isEmpty())
     return;
+
+
+  this->prevOpenedDir=QFileInfo(userSelected.front()).filePath();
 
   if (userSelected.size() == 1) {
     QString Path = userSelected.front();
@@ -1737,7 +1740,7 @@ void MainWindow::onExportDataclicked(QString path) {
 
   if (path.isEmpty())
     FolderPath =
-        (QFileDialog::getExistingDirectory(this, tr("请选择导出的文件夹")));
+        (QFileDialog::getExistingDirectory(this, tr("请选择导出的文件夹"),this->prevOpenedDir));
   else
     FolderPath = path;
 
@@ -1746,6 +1749,8 @@ void MainWindow::onExportDataclicked(QString path) {
                              tr("你可以选择存档中的data文件夹"));
     return;
   }
+
+  this->prevOpenedDir=FolderPath;
 
   ui->InputDataIndex->setEnabled(false);
   ui->ExportData->setEnabled(false);
@@ -2247,10 +2252,12 @@ void MainWindow::onActionSavePreset() {
 }
 
 void MainWindow::onActionLoadPreset() {
-  QString src = QFileDialog::getOpenFileName(this, tr("选择预设文件"), "",
+  QString src = QFileDialog::getOpenFileName(this, tr("选择预设文件"), this->prevOpenedDir,
                                              "*.scPreset.json");
   if (src.isEmpty())
     return;
+
+  this->prevOpenedDir=QFileInfo(src).filePath();
   Manager->loadPreset(src);
 }
 
