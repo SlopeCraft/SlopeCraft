@@ -143,7 +143,12 @@ install(TARGETS SlopeCraft
 
 # Install Blocks
 if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
-    # Install for macOS
+    # Install for macOS、
+    # Install icons
+    file(GLOB SlopeCraft_Icon ${CMAKE_SOURCE_DIR}/SlopeCraftMain/others/SlopeCraftIconNew.icns)
+    install(FILES ${SlopeCraft_Icon}
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/SlopeCraft.app/Contents/Resources)
+    
     # Install FixedBlocks.json, CustomBlocks.json and README.md
     file(GLOB SlopeCraft_install_jsons
     "${CMAKE_SOURCE_DIR}/Blocks/*.json"

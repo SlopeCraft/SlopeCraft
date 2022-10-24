@@ -105,3 +105,11 @@ install(TARGETS MapViewer
     RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
     BUNDLE  DESTINATION ${CMAKE_INSTALL_PREFIX}
     )
+
+# Install icon for macOS
+if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    # MapViewer.app
+    file(GLOB MapViewer_Icon ${CMAKE_SOURCE_DIR}/MapViewer/others/MapViewer.icns)
+    install(FILES ${MapViewer_Icon}
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/MapViewer.app/Contents/Resources)
+endif()
