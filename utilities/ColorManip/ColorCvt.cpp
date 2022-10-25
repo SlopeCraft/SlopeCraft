@@ -40,6 +40,30 @@ ARGB ComposeColor(const ARGB front, const ARGB back) noexcept {
   return ARGB32(red, green, blue);
 }
 
+ARGB ComposeColor_background_half_transparent(const ARGB front,
+                                              const ARGB back) noexcept {
+  int alpha_front = getA(front);
+  int alpha_back = getA(back);
+
+  int result_alpha = alpha_front + alpha_back - alpha_back * alpha_front / 255;
+
+  if (result_alpha <= 0) {
+    return 0;
+  }
+
+  int result_red = (getR(front) * alpha_front * (255 - alpha_back) +
+                    getR(back) * alpha_back * 255) /
+                   255 / result_alpha;
+  int result_green = (getG(front) * alpha_front * (255 - alpha_back) +
+                      getG(back) * alpha_back * 255) /
+                     255 / result_alpha;
+  int result_blue = (getB(front) * alpha_front * (255 - alpha_back) +
+                     getB(back) * alpha_back * 255) /
+                    255 / result_alpha;
+
+  return ARGB32(result_red, result_green, result_blue, result_alpha);
+}
+
 void RGB2HSV(float r, float g, float b, float &h, float &s, float &v) noexcept {
   float K = 0.0f;
 

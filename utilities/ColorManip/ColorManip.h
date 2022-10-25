@@ -24,7 +24,7 @@ This file is part of SlopeCraft.
 #define COLORMANIP_COLORMANIP_H
 
 #include <stdint.h>
-//#include <Eigen/Dense>
+// #include <Eigen/Dense>
 
 using ARGB = uint32_t;
 // using Eigen::Dynamic;
@@ -45,7 +45,10 @@ ARGB RGB2ARGB(float, float, float) noexcept;
 ARGB HSV2ARGB(float, float, float) noexcept;
 ARGB XYZ2ARGB(float, float, float) noexcept;
 ARGB Lab2ARGB(float, float, float) noexcept;
-ARGB ComposeColor(const ARGB front, const ARGB back) noexcept;
+ARGB ComposeColor(const ARGB front,
+                  const ARGB background_not_transparent) noexcept;
+ARGB ComposeColor_background_half_transparent(
+    const ARGB front, const ARGB background_can_be_transparent) noexcept;
 
 inline ARGB ARGB32(uint32_t r, uint32_t g, uint32_t b,
                    uint32_t a = 255) noexcept {

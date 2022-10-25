@@ -262,5 +262,75 @@ void element::intersect_points(
   }
   }
 
+  intersect.distance = (intersect.coordinate - ray.x0y0z0).square().sum();
+
   dest->emplace_back(intersect);
+}
+
+inline bool intersect_compare_fun(const intersect_point &a,
+                                  const intersect_point &b) noexcept {
+  return a.distance < b.distance;
+}
+
+EImgRowMajor_t model::projection_image(face_idx fidx) const noexcept {
+  EImgRowMajor_t result(16, 16);
+
+  result.fill(0x00000000);
+
+  std::vector<intersect_point> intersects;
+  intersects.reserve(this->elements.size() * 2);
+
+  ray_t ray(fidx);
+  for (int r = 0; r < 16; r++) {
+    for (int c = 0; c < 16; c++) {
+      intersects.clear();
+
+      // set the origin point of a ray
+      switch (fidx) {
+      case face_idx::face_up:
+        ray.x0y0z0 = {c + 0.5f, 128.0f, r + 0.5f};
+        break;
+      case face_idx::face_down:
+        ray.x0y0z0 = {c + 0.5f, -128.0f, 15.5f - r};
+        break;
+
+      case face_idx::face_east:
+        // r->y-, c->z-,x=128
+        ray.x0y0z0 = {128.0f, 15.5f - r, 15.5f - c};
+        break;
+      case face_idx::face_west:
+        // r->y-, c->z+, x=-128
+        ray.x0y0z0 = {-128.0f, 15.5f - r, c + 0.5f};
+        break;
+      case face_idx::face_south:
+        // r->y-, c->x+, z=128
+        ray.x0y0z0 = {c + 0.5f, 15.5f - r, 128.0f};
+        break;
+      case face_idx::face_north:
+        // r->y-, c->x-, z=-128
+        ray.x0y0z0 = {15.5f - c, 15.5f - r, -128.0f};
+        break;
+      }
+
+      for (const element ele : this->elements) {
+
+        ele.intersect_points(fidx, ray, &intersects);
+        ele.intersect_points(inverse_face(fidx), ray, &intersects);
+      }
+
+      std::sort(intersects.begin(), intersects.end(), intersect_compare_fun);
+
+      ARGB color = 0x00000000;
+
+      for (intersect_point &ip : intersects) {
+        if (getA(color) >= 255)
+          break;
+        color = ComposeColor_background_half_transparent(color, ip.color());
+      }
+
+      result(r, c) = color;
+    }
+  }
+
+  return result;
 }

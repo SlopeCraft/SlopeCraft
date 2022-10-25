@@ -82,6 +82,8 @@ constexpr inline face_idx inverse_face(const face_idx fi) noexcept {
   case face_idx::face_west:
     return face_idx::face_east;
   }
+
+  return face_idx::face_up;
 }
 
 constexpr inline bool is_parallel(const face_idx fiA,
@@ -127,6 +129,10 @@ struct intersect_point {
   Eigen::Array3f coordinate;
   const face_t *face_ptr;
   std::array<int16_t, 2> uv;
+
+  inline ARGB color() const noexcept {
+    return face_ptr->texture->operator()(uv[1], uv[0]);
+  }
 };
 
 /// A 3d box to be displayed
