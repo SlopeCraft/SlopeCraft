@@ -103,9 +103,8 @@ Array3f crossover_point(const plane_t &plane, const ray_t &ray) noexcept {
 void element::intersect_points(
     const face_idx f, const ray_t &ray,
     std::vector<intersect_point> *const dest) const noexcept {
-  if (dest == nullptr) {
+  if (dest == nullptr)
     return;
-  }
 
   const Array3f &start_point = ray.x0y0z0;
   /*  switch (f) {
@@ -132,11 +131,136 @@ void element::intersect_points(
     }
   */
 
-  intersect_point intersect;
-  if (!this->face(f).is_hidden) {
-    intersect.coordinate = crossover_point(this->plane(f), ray);
-    intersect.face_ptr = &this->face(f);
+  if (this->face(f).is_hidden)
+    return;
 
-#warning compute uv here
+  switch (f) {
+  case face_x_neg:
+  case face_x_pos:
+    if (this->x_range_abs() < 1e-4f)
+      return;
+  case face_y_neg:
+  case face_y_pos:
+    if (this->y_range_abs() < 1e-4f)
+      return;
+  case face_z_neg:
+  case face_z_pos:
+    if (this->z_range_abs() < 1e-4f)
+      return;
   }
+
+  intersect_point intersect;
+  intersect.coordinate = crossover_point(this->plane(f), ray);
+
+  if (!this->is_not_outside(intersect.coordinate))
+    return;
+
+  intersect.face_ptr = &this->face(f);
+
+  const Array3f min_pos = this->xyz_minpos();
+  const Array3f max_pos = this->xyz_maxpos();
+
+  // u is col and v is row
+  Array3f uv_start, uv_end;
+  // #warning compute uv here
+
+  switch (f) {
+  case face_idx::face_up:
+    uv_start = {min_pos[0], max_pos[1], min_pos[0]};
+    // uv_end=max_pos;
+
+    // here u <-> x+
+    intersect.uv[0] =
+        (intersect.coordinate[2] - uv_start[2]) * 16 / this->z_range_abs();
+    // here v<-> z+
+    intersect.uv[1] =
+        (intersect.coordinate[1] - uv_start[1]) * 16 / this->x_range_abs();
+    break;
+
+  case face_idx::face_down:
+    uv_start = {min_pos[0], min_pos[1], max_pos[2]};
+    uv_end = {max_pos[0], min_pos[1], min_pos[2]};
+    // here u <-> x+
+    intersect.uv[0] =
+        16 * (intersect.coordinate[0] - uv_start[0]) / this->x_range_abs();
+    // here v <-> z-
+    intersect.uv[1] =
+        16 * (uv_end[2] - intersect.coordinate[2]) / this->z_range_abs();
+    break;
+
+  case face_idx::face_east:
+    // uv_start=max_pos;
+    uv_end = {max_pos[0], min_pos[1], min_pos[2]};
+    // here u <-> z-
+    intersect.uv[0] =
+        16 * (uv_end[2] - intersect.coordinate[2]) / this->z_range_abs();
+    // here v <-> y-
+    intersect.uv[1] =
+        16 * (uv_end[1] - intersect.coordinate[1]) / this->y_range_abs();
+    break;
+
+  case face_idx::face_west:
+    uv_start = {min_pos[0], max_pos[1], min_pos[2]};
+    uv_end = {min_pos[0], min_pos[1], max_pos[2]};
+
+    // here u <-> z+
+    intersect.uv[0] =
+        16 * (intersect.coordinate[2] - uv_start[2]) / this->z_range_abs();
+    // here v <-> y-
+    intersect.uv[1] =
+        16 * (uv_end[1] - intersect.coordinate[1]) / this->y_range_abs();
+    break;
+
+  case face_idx::face_south:
+    uv_start = {min_pos[0], max_pos[1], max_pos[2]};
+    uv_end = {max_pos[0], min_pos[1], max_pos[2]};
+
+    // here u <-> x+
+    intersect.uv[0] =
+        16 * (intersect.coordinate[0] - uv_start[0]) / this->x_range_abs();
+    // here v <-> y-
+    intersect.uv[1] =
+        16 * (uv_end[1] - intersect.coordinate[1]) / this->y_range_abs();
+    break;
+
+  case face_idx::face_north:
+    // uv_start={max_pos[0],max_pos[0],min_pos[0]};
+    uv_end = min_pos;
+
+    // here u <-> x-
+    intersect.uv[0] =
+        16 * (uv_end[0] - intersect.coordinate[0]) / this->x_range_abs();
+    // here v <-> y-
+    intersect.uv[1] =
+        16 * (uv_end[1] - intersect.coordinate[1]) / this->y_range_abs();
+    break;
+  }
+
+  for (auto &uv : intersect.uv) {
+    uv = std::max<int16_t>(std::min<int16_t>(uv, 16), 0);
+  }
+
+  switch (intersect.face_ptr->rot) {
+  case face_rot::face_rot_0:
+    break;
+  case face_rot::face_rot_90: {
+    int16_t temp_u = intersect.uv[0];
+    intersect.uv[0] = intersect.uv[1];
+    intersect.uv[1] = 16 - temp_u;
+  } break;
+
+  case face_rot::face_rot_180:
+    intersect.uv[0] = 16 - intersect.uv[0];
+    intersect.uv[1] = 16 - intersect.uv[1];
+    break;
+
+  case face_rot::face_rot_270: {
+    int16_t temp_u = intersect.uv[0];
+    intersect.uv[0] = 16 - intersect.uv[1];
+    intersect.uv[1] = temp_u;
+    break;
+  }
+  }
+
+  dest->emplace_back(intersect);
 }

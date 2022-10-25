@@ -148,8 +148,20 @@ public:
   inline float y_range() const noexcept { return _to[1] - _from[1]; }
   inline float z_range() const noexcept { return _to[2] - _from[2]; }
 
+  inline float x_range_abs() const noexcept { return std::abs(x_range()); }
+  inline float y_range_abs() const noexcept { return std::abs(y_range()); }
+  inline float z_range_abs() const noexcept { return std::abs(z_range()); }
+
+  inline Eigen::Array3f xyz_minpos() const noexcept {
+    return this->_from.min(this->_to);
+  }
+
+  inline Eigen::Array3f xyz_maxpos() const noexcept {
+    return this->_from.max(this->_to);
+  }
+
   inline float volume() const noexcept {
-    return x_range() * y_range() * z_range();
+    return std::abs(x_range() * y_range() * z_range());
   }
 
   inline int shown_face_num() const noexcept {
@@ -159,6 +171,11 @@ public:
         result++;
     }
     return result;
+  }
+
+  inline bool is_not_outside(const Eigen::Array3f &point) const noexcept {
+    return (point >= this->xyz_minpos()).all() &&
+           (point <= this->xyz_maxpos()).all();
   }
 
   void
