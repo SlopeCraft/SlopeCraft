@@ -145,67 +145,67 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="../mainwindow.ui" line="223"/>
-        <location filename="../mainwindow.ui" line="3910"/>
-        <location filename="../MainWindow.cpp" line="598"/>
+        <location filename="../mainwindow.ui" line="3914"/>
+        <location filename="../MainWindow.cpp" line="604"/>
         <source>开始</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="240"/>
-        <location filename="../mainwindow.ui" line="1182"/>
-        <location filename="../mainwindow.ui" line="3915"/>
-        <location filename="../MainWindow.cpp" line="605"/>
+        <location filename="../mainwindow.ui" line="1185"/>
+        <location filename="../mainwindow.ui" line="3919"/>
+        <location filename="../MainWindow.cpp" line="611"/>
         <source>导入图片</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="263"/>
-        <location filename="../mainwindow.ui" line="1451"/>
-        <location filename="../mainwindow.ui" line="3920"/>
+        <location filename="../mainwindow.ui" line="1454"/>
+        <location filename="../mainwindow.ui" line="3924"/>
         <source>地图画类型</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="280"/>
-        <location filename="../mainwindow.ui" line="3925"/>
+        <location filename="../mainwindow.ui" line="3929"/>
         <source>方块列表</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="297"/>
-        <location filename="../mainwindow.ui" line="3930"/>
-        <location filename="../MainWindow.cpp" line="623"/>
+        <location filename="../mainwindow.ui" line="3934"/>
+        <location filename="../MainWindow.cpp" line="629"/>
         <source>调整颜色</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="314"/>
-        <location filename="../mainwindow.ui" line="3746"/>
+        <location filename="../mainwindow.ui" line="3750"/>
         <source>导出为</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="380"/>
-        <location filename="../mainwindow.ui" line="3935"/>
+        <location filename="../mainwindow.ui" line="3939"/>
         <source>投影文件</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="361"/>
-        <location filename="../mainwindow.ui" line="3945"/>
+        <location filename="../mainwindow.ui" line="3949"/>
         <source>地图文件</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="399"/>
-        <location filename="../mainwindow.ui" line="3940"/>
+        <location filename="../mainwindow.ui" line="3944"/>
         <source>结构文件</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="446"/>
-        <location filename="../mainwindow.ui" line="3524"/>
-        <location filename="../mainwindow.ui" line="3950"/>
+        <location filename="../mainwindow.ui" line="3528"/>
+        <location filename="../mainwindow.ui" line="3954"/>
         <source>完成</source>
         <translation></translation>
     </message>
@@ -216,22 +216,22 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="../mainwindow.ui" line="542"/>
-        <location filename="../mainwindow.ui" line="3891"/>
+        <location filename="../mainwindow.ui" line="3895"/>
         <source>反馈Bug</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="720"/>
+        <location filename="../mainwindow.ui" line="721"/>
         <source>创建平板地图画</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="743"/>
+        <location filename="../mainwindow.ui" line="744"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;传统的地图画样式&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="813"/>
+        <location filename="../mainwindow.ui" line="815"/>
         <source>创建立体地图画</source>
         <translation></translation>
     </message>
@@ -241,979 +241,1024 @@ p, li { white-space: pre-wrap; }
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="836"/>
+        <location filename="../mainwindow.ui" line="838"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;原版生存的最高画质&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="903"/>
+        <location filename="../mainwindow.ui" line="906"/>
         <source>创建纯文件地图画</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="929"/>
+        <location filename="../mainwindow.ui" line="932"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;地图画质的极限！但需要修改存档。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1066"/>
+        <location filename="../mainwindow.ui" line="1069"/>
         <source>设置</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1124"/>
-        <location filename="../mainwindow.ui" line="1270"/>
-        <location filename="../mainwindow.ui" line="1668"/>
+        <location filename="../mainwindow.ui" line="1127"/>
+        <location filename="../mainwindow.ui" line="1273"/>
+        <location filename="../mainwindow.ui" line="1671"/>
         <source>下一步</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1140"/>
+        <location filename="../mainwindow.ui" line="1143"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;第一步，点击“导入图片“按钮，选择你要制作为地图画的图片。&lt;/p&gt;&lt;p&gt;图片的长宽（以像素为单位）最好是128的整倍数。&lt;/p&gt;&lt;p&gt;如果要生存实装，那么图片不要太大，我推荐128×128或者256×256。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1232"/>
+        <location filename="../mainwindow.ui" line="1235"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;第二步，选择好你要什么样的地图画。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;请选择好地图画对应的游戏版本，以及地图画的类型。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;立体地图画如右图，是我们的核心功能；&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;平板地图画颜色相对少，但更容易建造；&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;纯文件地图画拥有最丰富的的颜色，但不可建造。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1303"/>
+        <location filename="../mainwindow.ui" line="1306"/>
         <source>游戏版本</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1385"/>
+        <location filename="../mainwindow.ui" line="1388"/>
         <source>1.18</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1392"/>
+        <location filename="../mainwindow.ui" line="1395"/>
         <source>1.19</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1462"/>
+        <location filename="../mainwindow.ui" line="1465"/>
         <source>立体地图画</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1477"/>
+        <location filename="../mainwindow.ui" line="1480"/>
         <source>平板地图画</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1489"/>
+        <location filename="../mainwindow.ui" line="1492"/>
         <source>纯文件地图画</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1525"/>
+        <location filename="../mainwindow.ui" line="1528"/>
         <source>预设方块列表</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1717"/>
+        <location filename="../mainwindow.ui" line="1720"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;第三步，给每一种颜色设置对应的方块，我们有四种预设。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;你也可以在右侧的滚动条里自定义。每一列方块对应一种颜色，每种颜色只能选择一种方块。你也可以勾掉启用，禁用任何一种颜色。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1738"/>
+        <location filename="../mainwindow.ui" line="1741"/>
         <source>优先混凝土</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1756"/>
+        <location filename="../mainwindow.ui" line="1759"/>
         <source>优先羊毛</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1774"/>
+        <location filename="../mainwindow.ui" line="1777"/>
         <source>优先染色玻璃</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2173"/>
+        <location filename="../mainwindow.ui" line="2176"/>
         <source>第四步，调整颜色。地图支持的颜色有限，你的图片必须也只能由地图允许的颜色组成。
 六种算法对应不同的调整颜色的方式，你可以挨个试一试。如果开启“抖动仿色”，SlopeCraft会尝试用相近的颜色混合，更好的贴近原图。
 调整颜色可能会比较慢，下面的进度条指示了进度。</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2087"/>
+        <location filename="../mainwindow.ui" line="2090"/>
         <source>导出为
 地图文件</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2056"/>
+        <location filename="../mainwindow.ui" line="2059"/>
         <source>显示原图</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1997"/>
+        <location filename="../mainwindow.ui" line="2000"/>
         <source>显示地图画</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1936"/>
+        <location filename="../mainwindow.ui" line="1939"/>
         <source>转换为地图画</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2208"/>
+        <location filename="../mainwindow.ui" line="2211"/>
         <source>算法</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2385"/>
+        <location filename="../mainwindow.ui" line="2388"/>
         <source>抖动仿色</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2498"/>
+        <location filename="../mainwindow.ui" line="2501"/>
         <source>无损压缩</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2668"/>
+        <location filename="../mainwindow.ui" line="2671"/>
         <source>最大允许高度：</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2563"/>
+        <location filename="../mainwindow.ui" line="2566"/>
         <source>智能有损压缩</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2731"/>
+        <location filename="../mainwindow.ui" line="2734"/>
         <source>投影名称</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2703"/>
+        <location filename="../mainwindow.ui" line="2706"/>
         <source>总方块数</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2531"/>
+        <location filename="../mainwindow.ui" line="2534"/>
         <source>压缩高度</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2518"/>
+        <location filename="../mainwindow.ui" line="2521"/>
         <source>防火</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2687"/>
+        <location filename="../mainwindow.ui" line="2690"/>
         <source>  层</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2690"/>
+        <location filename="../mainwindow.ui" line="2693"/>
         <source>搭桥间隔:  </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2621"/>
+        <location filename="../mainwindow.ui" line="2624"/>
         <source>投影尺寸</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2479"/>
+        <location filename="../mainwindow.ui" line="2482"/>
         <source>允许搭桥</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2544"/>
+        <location filename="../mainwindow.ui" line="2547"/>
         <source>防末影人</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2750"/>
+        <location filename="../mainwindow.ui" line="2753"/>
         <source>投影区域名称</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2462"/>
+        <location filename="../mainwindow.ui" line="2465"/>
         <source>其他选项</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2469"/>
+        <location filename="../mainwindow.ui" line="2472"/>
         <source>搭桥</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2582"/>
+        <location filename="../mainwindow.ui" line="2585"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;最后一步，将立体地图画导出为投影文件，这很方便生存实装，是不是？&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;左侧的三个栏是投影文件的一些属性，空着不填也完全没问题。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;如果您启用了“允许压缩高度”，SlopeCraft会在构建三维结构时尝试依据地图绘制的规律压缩立体地图画的高度，这可以有效避免超过限高（但未必能成功）。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;下面的两个栏显示了立体地图画的信息，以供参考。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;这个过程可能会很慢，请关注进度条&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2938"/>
-        <location filename="../MainWindow.cpp" line="647"/>
+        <location filename="../mainwindow.ui" line="2941"/>
+        <location filename="../MainWindow.cpp" line="653"/>
         <source>结束</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3005"/>
+        <location filename="../mainwindow.ui" line="3008"/>
         <source>导出平面示意图</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3024"/>
+        <location filename="../mainwindow.ui" line="3027"/>
         <source>导出三维结构</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3574"/>
-        <location filename="../MainWindow.cpp" line="1746"/>
+        <location filename="../mainwindow.ui" line="3578"/>
+        <location filename="../MainWindow.cpp" line="1779"/>
         <source>导出</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3040"/>
+        <location filename="../mainwindow.ui" line="3043"/>
         <source>预览</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="431"/>
-        <location filename="../mainwindow.ui" line="3994"/>
+        <location filename="../mainwindow.ui" line="3998"/>
         <source>WE原理图</source>
         <translation>WESchem</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1967"/>
+        <location filename="../mainwindow.ui" line="1970"/>
         <source>保存当前图片</source>
         <translation>Save current image</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2025"/>
+        <location filename="../mainwindow.ui" line="2028"/>
         <source>导出为
 原版结构文件</source>
         <translation>Export as 
 structure</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2116"/>
+        <location filename="../mainwindow.ui" line="2119"/>
         <source>导出为
 WorldEdit原理图</source>
         <translation>Export as
 WE Schematic</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2153"/>
+        <location filename="../mainwindow.ui" line="2156"/>
         <source>导出为
 Litematica投影</source>
         <translation>Export as
 Litematic</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3059"/>
+        <location filename="../mainwindow.ui" line="3062"/>
         <source>构建三维结构</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3495"/>
+        <location filename="../mainwindow.ui" line="3499"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;最后一步，导出为地图文件。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;地图文件的文件名形如map_3.dat，是minecraft用于存储地图内容的文件。其中3表示地图文件的序号,地图的序号从0开始。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;地图文件存储于存档中的data文件夹下，你需要一定的权限才能修改它们。如果你既不是单机游戏，又不是服主，那你应该选择导出为投影，而不是地图文件。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;每张地图只能显示128×128的画面，大图片可能会有多个地图，对应多个地图文件。它们会占用连续的一段序号。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;例如，你可以使用/give @s filled_map{map:3}来获得map_3.dat的地图。&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;1.12版请使用/give @p filled_map 1 3&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;这种方法适合以最高画质展示大图片，但不适合服务器。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3583"/>
+        <location filename="../mainwindow.ui" line="3587"/>
         <source>导出的文件名</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3596"/>
+        <location filename="../mainwindow.ui" line="3600"/>
         <source>地图文件起始序号</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3603"/>
+        <location filename="../mainwindow.ui" line="3607"/>
         <source>地图画行数</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3610"/>
+        <location filename="../mainwindow.ui" line="3614"/>
         <source>地图画列数</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3617"/>
+        <location filename="../mainwindow.ui" line="3621"/>
         <source>地图文件数量</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3637"/>
+        <location filename="../mainwindow.ui" line="3641"/>
         <source>查看导出的文件</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3656"/>
-        <location filename="../mainwindow.ui" line="3716"/>
+        <location filename="../mainwindow.ui" line="3660"/>
+        <location filename="../mainwindow.ui" line="3720"/>
         <source>联系作者</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3672"/>
+        <location filename="../mainwindow.ui" line="3676"/>
         <source>退出</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3685"/>
+        <location filename="../mainwindow.ui" line="3689"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:700; color:#ffffff;&quot;&gt;地图画生成完毕！&lt;/span&gt;&lt;br/&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:11pt; font-weight:700; color:#ffffff;&quot;&gt;关于SlopeCraft&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;感谢你使用SlopeCraft，我是开发者TokiNoBug。SlopeCraft是由我开发的一款立体地图画生成器，主要用于在minecraft中制造可以生存实装的立体地图画（但同样支持传统的平板地图画）。立体地图画的优势在于拥有更高的“画质”，此处不再详述。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;你正在使用的是SlopeCraft的第三代版本，在开发时使用了Qt，zlib和eigen，对上述库的开发者表示感谢。也感谢Mojang，整个软件就是为minecraft而设计的。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;AbrasiveBoar902（PopChrono）为本软件的设计和优化贡献了不少力量，并编写了基于SlopeCraftL核心的全新界面；Cubik65536和67au为本软件在MacOS和Linux的适配做出了贡献。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;你可以访问：&lt;/span&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/SlopeCraft/&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;SlopeCraft的github&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;，&lt;/span&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;我的github主页&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;，&lt;/span&gt;&lt;a href=&quot;https://space.bilibili.com/351429231&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;我的bilibili&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;本软件遵循GPL-3.0及以后版本(GPL-3.0 or later)协议开放源代码。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Copyright © 2021-2022 TokiNoBug&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <oldsource>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:700; color:#ffffff;&quot;&gt;地图画生成完毕！&lt;/span&gt;&lt;br/&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:11pt; font-weight:700; color:#ffffff;&quot;&gt;关于SlopeCraft&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;感谢你使用SlopeCraft，我是开发者TokiNoBug。SlopeCraft是由我开发的一款立体地图画生成器，主要用于在minecraft中制造可以生存实装的立体地图画（但同样支持传统的平板地图画）。立体地图画的优势在于拥有更高的“画质”，此处不再详述。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;你正在使用的是SlopeCraft的第三代版本，在开发时使用了Qt，zlib和eigen，对上述库的开发者表示感谢。也感谢Mojang，整个软件就是为minecraft而设计的。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;你可以访问：&lt;/span&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/SlopeCraft/&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;SlopeCraft的github&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;，&lt;/span&gt;&lt;a href=&quot;https://github.com/ToKiNoBug/&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;我的github主页&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;，&lt;/span&gt;&lt;a href=&quot;https://space.bilibili.com/351429231&quot;&gt;&lt;span style=&quot; font-weight:700; text-decoration: underline; color:#ffffff;&quot;&gt;我的bilibili&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;本软件遵循GPL-3.0及以后版本(GPL-3.0 or later)协议开放源代码。&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#ffffff;&quot;&gt;Copyright © 2021 TokiNoBug&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</oldsource>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3712"/>
+        <location filename="../mainwindow.ui" line="3716"/>
         <source>关于</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3742"/>
+        <location filename="../mainwindow.ui" line="3746"/>
         <source>地图画</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3763"/>
+        <location filename="../mainwindow.ui" line="3767"/>
         <source>高级</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3767"/>
+        <location filename="../mainwindow.ui" line="3771"/>
         <source>批量操作</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3773"/>
+        <location filename="../mainwindow.ui" line="3777"/>
         <source>方块列表预设</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3792"/>
-        <location filename="../mainwindow.ui" line="3797"/>
-        <location filename="../mainwindow.ui" line="3802"/>
-        <location filename="../mainwindow.ui" line="3807"/>
-        <location filename="../mainwindow.ui" line="3812"/>
-        <location filename="../mainwindow.ui" line="3817"/>
-        <location filename="../mainwindow.ui" line="3822"/>
+        <location filename="../mainwindow.ui" line="3796"/>
+        <location filename="../mainwindow.ui" line="3801"/>
+        <location filename="../mainwindow.ui" line="3806"/>
+        <location filename="../mainwindow.ui" line="3811"/>
+        <location filename="../mainwindow.ui" line="3816"/>
+        <location filename="../mainwindow.ui" line="3821"/>
+        <location filename="../mainwindow.ui" line="3826"/>
         <source>转到页面</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3830"/>
-        <location filename="../mainwindow.ui" line="3833"/>
-        <location filename="../mainwindow.ui" line="3836"/>
-        <location filename="../MainWindow.cpp" line="629"/>
+        <location filename="../mainwindow.ui" line="3834"/>
+        <location filename="../mainwindow.ui" line="3837"/>
+        <location filename="../mainwindow.ui" line="3840"/>
+        <location filename="../MainWindow.cpp" line="635"/>
         <source>导出为投影文件</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3844"/>
-        <location filename="../mainwindow.ui" line="3847"/>
-        <location filename="../MainWindow.cpp" line="635"/>
+        <location filename="../mainwindow.ui" line="3848"/>
+        <location filename="../mainwindow.ui" line="3851"/>
+        <location filename="../MainWindow.cpp" line="641"/>
         <source>导出为mcfunction</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3858"/>
-        <location filename="../MainWindow.cpp" line="641"/>
+        <location filename="../mainwindow.ui" line="3862"/>
+        <location filename="../MainWindow.cpp" line="647"/>
         <source>导出为地图文件</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3866"/>
+        <location filename="../mainwindow.ui" line="3870"/>
         <source>关于SlopeCraft</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3989"/>
+        <location filename="../mainwindow.ui" line="3993"/>
         <source>输出当前颜色表</source>
         <translation>Export current color palette</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1063"/>
+        <location filename="../mainwindow.ui" line="1066"/>
         <source>透明度相关设置</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1539"/>
+        <location filename="../mainwindow.ui" line="1542"/>
         <source>适合创造</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1554"/>
+        <location filename="../mainwindow.ui" line="1557"/>
         <source>适合生存早期</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1569"/>
+        <location filename="../mainwindow.ui" line="1572"/>
         <source>适合生存后期</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1587"/>
+        <location filename="../mainwindow.ui" line="1590"/>
         <source>适合光影</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1602"/>
+        <location filename="../mainwindow.ui" line="1605"/>
         <source>自定义</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2240"/>
+        <location filename="../mainwindow.ui" line="2243"/>
         <source>RGB欧式距离</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2259"/>
+        <location filename="../mainwindow.ui" line="2262"/>
         <source>更好的RGB色差公式</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2283"/>
+        <location filename="../mainwindow.ui" line="2286"/>
         <source>不是简单的欧式距离</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2304"/>
+        <location filename="../mainwindow.ui" line="2307"/>
         <source>Lab1994公式</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2326"/>
+        <location filename="../mainwindow.ui" line="2329"/>
         <source>Lab2000公式</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2347"/>
+        <location filename="../mainwindow.ui" line="2350"/>
         <source>XYZ欧式距离</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2363"/>
+        <location filename="../mainwindow.ui" line="2366"/>
         <source>遗传算法</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2366"/>
+        <location filename="../mainwindow.ui" line="2369"/>
         <source>GACvter</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2382"/>
+        <location filename="../mainwindow.ui" line="2385"/>
         <source>用分辨率换颜色</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2476"/>
+        <location filename="../mainwindow.ui" line="2479"/>
         <source>方便建造，耗费玻璃</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2489"/>
+        <location filename="../mainwindow.ui" line="2492"/>
         <source>降低总高度，破坏连续性</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2515"/>
+        <location filename="../mainwindow.ui" line="2518"/>
         <source>用玻璃包围防火方块</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2541"/>
+        <location filename="../mainwindow.ui" line="2544"/>
         <source>用玻璃包围可偷方块</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2560"/>
+        <location filename="../mainwindow.ui" line="2563"/>
         <source>降低总高度，微调颜色</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2784"/>
+        <location filename="../mainwindow.ui" line="2787"/>
         <source>节省大量存储空间</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2793"/>
+        <location filename="../mainwindow.ui" line="2796"/>
         <source>用结构空位代替</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2803"/>
+        <location filename="../mainwindow.ui" line="2806"/>
         <source>空气处理方式</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2879"/>
+        <location filename="../mainwindow.ui" line="2882"/>
         <source>原理图名称</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2893"/>
+        <location filename="../mainwindow.ui" line="2896"/>
         <source>依赖mod名称</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3958"/>
+        <location filename="../mainwindow.ui" line="3962"/>
         <source>测试方块列表</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3963"/>
+        <location filename="../mainwindow.ui" line="3967"/>
         <source>设置导出参数</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3968"/>
-        <location filename="../MainWindow.cpp" line="2198"/>
+        <location filename="../mainwindow.ui" line="3972"/>
+        <location filename="../MainWindow.cpp" line="2248"/>
         <source>保存预设</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3973"/>
+        <location filename="../mainwindow.ui" line="3977"/>
         <source>加载预设</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3978"/>
-        <location filename="../mainwindow.ui" line="3981"/>
-        <location filename="../mainwindow.ui" line="3984"/>
+        <location filename="../mainwindow.ui" line="3982"/>
+        <location filename="../mainwindow.ui" line="3985"/>
+        <location filename="../mainwindow.ui" line="3988"/>
         <source>GACvter参数</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="529"/>
-        <location filename="../mainwindow.ui" line="3899"/>
-        <location filename="../mainwindow.ui" line="3902"/>
-        <location filename="../mainwindow.ui" line="3905"/>
+        <location filename="../mainwindow.ui" line="3903"/>
+        <location filename="../mainwindow.ui" line="3906"/>
+        <location filename="../mainwindow.ui" line="3909"/>
         <source>检查更新</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="327"/>
+        <location filename="../MainWindow.cpp" line="333"/>
         <source>错误：默认方块列表的JSON格式有错</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="328"/>
-        <location filename="../MainWindow.cpp" line="423"/>
+        <location filename="../MainWindow.cpp" line="334"/>
+        <location filename="../MainWindow.cpp" line="429"/>
         <source>JSON错误原因：</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="329"/>
+        <location filename="../MainWindow.cpp" line="335"/>
         <source>
 默认方块列表记录了SlopeCraft最基础的常用方块，是程序运行必须的。
 请点击Yes手动寻找它，或者点击No退出程序，重新下载最新版SlopeCraft/修复错误后再启动程序。</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="349"/>
+        <location filename="../MainWindow.cpp" line="355"/>
         <source>错误：找不到默认方块列表</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="350"/>
+        <location filename="../MainWindow.cpp" line="356"/>
         <source>默认方块列表记录了SlopeCraft最基础的常用方块，是程序运行必须的。
 请点击Yes手动寻找它，或者点击No退出程序，重新下载最新版SlopeCraft后再启动程序。</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="377"/>
+        <location filename="../MainWindow.cpp" line="383"/>
         <source>错误：存放默认方块图标的文件夹FixedBlocks不存在</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="378"/>
+        <location filename="../MainWindow.cpp" line="384"/>
         <source>FixedBlocks文件夹存储了默认方块列表所有方块对应的图片。
 这个错误不致命，可以忽略，但最好重新下载SlopeCraft。
 点击Retry重新寻找这个文件夹，点击Ignore忽略这个错误，点击Close退出程序</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="389"/>
+        <location filename="../MainWindow.cpp" line="395"/>
         <source>重新寻找默认方块图标文件夹FixedBlocks</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="422"/>
+        <location filename="../MainWindow.cpp" line="428"/>
         <source>错误：自定义方块列表的JSON格式有错</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="424"/>
+        <location filename="../MainWindow.cpp" line="430"/>
         <source>
 自定义方块列表记录了SlopeCraft额外添加的可选方块，不是程序运行必须的。
 请点击Yes手动寻找它，或点击Ignore忽略这个错误，或者点击Close退出程序，重新下载最新版SlopeCraft/修复错误后再启动程序。</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="458"/>
+        <location filename="../MainWindow.cpp" line="464"/>
         <source>错误：自定义方块列表文件CustomBlocks.json不存在</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="459"/>
+        <location filename="../MainWindow.cpp" line="465"/>
         <source>自定义方块列表记录了SlopeCraft额外添加的可选方块，不是程序运行必须的。
 请点击Yes手动寻找它，或点击Ignore忽略这个错误，或者点击Close退出程序，重新下载最新版SlopeCraft/修复错误后再启动程序。</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="500"/>
+        <location filename="../MainWindow.cpp" line="506"/>
         <source>错误：存放自定义方块图标的文件夹CustomBlocks不存在</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="501"/>
+        <location filename="../MainWindow.cpp" line="507"/>
         <source>CustomBlocks文件夹存储了用户自定义方块列表所有方块对应的图片。
 这个错误不致命，可以忽略，但最好重新下载SlopeCraft。
 点击Retry重新寻找这个文件夹，点击Ignore忽略这个错误，点击Close退出程序</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="511"/>
+        <location filename="../MainWindow.cpp" line="517"/>
         <source>重新寻找自定义方块图标文件夹CustomBlocks</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="611"/>
+        <location filename="../MainWindow.cpp" line="617"/>
         <source>设置地图画类型</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="617"/>
+        <location filename="../MainWindow.cpp" line="623"/>
         <source>设置方块列表</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="826"/>
+        <location filename="../MainWindow.cpp" line="834"/>
         <source>选择图片</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="826"/>
+        <location filename="../MainWindow.cpp" line="834"/>
         <source>图片(*.png *.bmp *.jpg *.tif *.GIF )</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="780"/>
+        <location filename="../MainWindow.cpp" line="786"/>
         <source>打开图片失败</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="781"/>
+        <location filename="../MainWindow.cpp" line="787"/>
         <source>要不试试换一张图片吧！</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="803"/>
+        <location filename="../MainWindow.cpp" line="809"/>
         <source>图片尺寸：</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="805"/>
+        <location filename="../MainWindow.cpp" line="811"/>
         <source>像素</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="810"/>
+        <location filename="../MainWindow.cpp" line="816"/>
         <source>图片中存在透明/半透明像素，已处理，您可以点击“设置”重新选择处理透明/半透明像素的方式。
 重新设置处理方式后，需要重新导入一次。</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1555"/>
+        <location filename="../MainWindow.cpp" line="1581"/>
         <source>投影文件(*.litematic)</source>
         <translation>Litematic files(*.litematic)</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1556"/>
+        <location filename="../MainWindow.cpp" line="1582"/>
         <source>结构方块文件(*.nbt)</source>
         <translation>Structure block file(*.nbt)</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1557"/>
+        <location filename="../MainWindow.cpp" line="1583"/>
         <source>WorldEdit原理图(*.schem)</source>
         <translation>WorldEdit schematic(*.schem)</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1568"/>
+        <location filename="../MainWindow.cpp" line="1596"/>
         <source>导出为投影/结构方块文件</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1605"/>
+        <location filename="../MainWindow.cpp" line="1634"/>
         <source>(xz坐标=-65±128×整数)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1655"/>
+        <location filename="../MainWindow.cpp" line="1684"/>
         <source>投影文件导出失败</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1656"/>
+        <location filename="../MainWindow.cpp" line="1685"/>
         <source>这可能是汉字编码错误造成的。请检查路径中是否有汉字</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1692"/>
+        <location filename="../MainWindow.cpp" line="1686"/>
+        <source>错误信息：</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../MainWindow.cpp" line="1723"/>
         <source>你输入的起始序号不可用，请输入大于等于0的整数！</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1704"/>
+        <location filename="../MainWindow.cpp" line="1735"/>
         <source>你输入的起始序号不可用</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1705"/>
+        <location filename="../MainWindow.cpp" line="1736"/>
         <source>请输入大于等于0的整数！</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1712"/>
+        <location filename="../MainWindow.cpp" line="1743"/>
         <source>请选择导出的文件夹</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1717"/>
+        <location filename="../MainWindow.cpp" line="1748"/>
         <source>你选择的文件夹不存在！</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1718"/>
+        <location filename="../MainWindow.cpp" line="1749"/>
         <source>你可以选择存档中的data文件夹</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1725"/>
+        <location filename="../MainWindow.cpp" line="1758"/>
         <source>请稍等</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1796"/>
+        <location filename="../MainWindow.cpp" line="1829"/>
         <source>
 具体信息：</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1802"/>
+        <location filename="../MainWindow.cpp" line="1835"/>
+        <source>未知游戏版本</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../MainWindow.cpp" line="1839"/>
+        <location filename="../MainWindow.cpp" line="1843"/>
+        <location filename="../MainWindow.cpp" line="1847"/>
+        <location filename="../MainWindow.cpp" line="1851"/>
+        <source>导出原理图失败</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../MainWindow.cpp" line="1840"/>
+        <source>方块种类超出上限。</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../MainWindow.cpp" line="1844"/>
+        <source>错误的文件扩展名</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../MainWindow.cpp" line="1848"/>
+        <source>三维结构中存在错误的方块</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../MainWindow.cpp" line="1852"/>
+        <source>无法创建/打开文件</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../MainWindow.cpp" line="1855"/>
+        <source>导出WorldEdit原理图失败</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../MainWindow.cpp" line="1856"/>
+        <source>不支持导出1.12 WorldEdit原理图（.schematic格式），仅支持.schem格式</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../MainWindow.cpp" line="1861"/>
+        <source>导出原版结构方块文件失败</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../MainWindow.cpp" line="1862"/>
+        <source>导出时指定不使用结构空位表示空气，但方块列表中不包含空气。</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../MainWindow.cpp" line="1867"/>
         <source>转化原图为地图画时出错</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1803"/>
+        <location filename="../MainWindow.cpp" line="1868"/>
         <source>原图为空！你可能没有导入原图！</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1806"/>
+        <location filename="../MainWindow.cpp" line="1871"/>
         <source>构建高度矩阵时出现错误</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1807"/>
+        <location filename="../MainWindow.cpp" line="1872"/>
         <source>原版地图画不允许出现第三个阴影（不存在的几何关系不可能生存实装！）
 请检查你的地图画类型，纯文件地图画不可以导出为投影！</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1812"/>
+        <location filename="../MainWindow.cpp" line="1877"/>
         <source>跳步操作</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1813"/>
+        <location filename="../MainWindow.cpp" line="1878"/>
         <source>SlopeCraft不允许你跳步操作，请按照左侧竖边栏的顺序操作！</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1816"/>
+        <location filename="../MainWindow.cpp" line="1881"/>
         <source>有损压缩失败</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1817"/>
-        <source>在构建高度矩阵时，有损压缩失败，没能将地图画压缩到目标高度。         这可能是因为地图画行数过大。         尝试启用无损压缩，或者提高最大允许高度——不要给软件地图画太大的压力！</source>
-        <translation></translation>
+        <location filename="../MainWindow.cpp" line="1882"/>
+        <source>在构建高度矩阵时，有损压缩失败，没能将地图画压缩到目标高度。         这可能是因为地图画行数过大。         尝试启用无损压缩，或者提高最大允许高度</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1823"/>
+        <location filename="../MainWindow.cpp" line="2304"/>
+        <source>测试方块列表失败</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../MainWindow.cpp" line="2305"/>
+        <source>具体信息：</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../MainWindow.cpp" line="2336"/>
+        <source>保存颜色表</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../MainWindow.cpp" line="1888"/>
         <source>最大允许高度太小了</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1824"/>
+        <location filename="../MainWindow.cpp" line="1889"/>
         <source>有损压缩的最大允许不要低于14，否则很容易压缩失败</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1828"/>
-        <source>严重错误：颜色表文件HSV.TokiColor损坏</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../MainWindow.cpp" line="1829"/>
-        <location filename="../MainWindow.cpp" line="1834"/>
-        <location filename="../MainWindow.cpp" line="1839"/>
-        <location filename="../MainWindow.cpp" line="1844"/>
-        <source>SlopeCraft不能正常解析颜色表文件，它是不可以被修改的！</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../MainWindow.cpp" line="1833"/>
-        <source>严重错误：颜色表文件Lab.TokiColor损坏</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../MainWindow.cpp" line="1838"/>
-        <source>严重错误：颜色表文件XYZ.TokiColor损坏</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../MainWindow.cpp" line="1843"/>
-        <source>严重错误：颜色表文件RGB.TokiColor损坏</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../MainWindow.cpp" line="1847"/>
+        <location filename="../MainWindow.cpp" line="1892"/>
         <source>允许使用的颜色过少</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1848"/>
+        <location filename="../MainWindow.cpp" line="1893"/>
         <source>你应该勾选启用尽可能多的基色，颜色太少是不行的！</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1851"/>
+        <location filename="../MainWindow.cpp" line="1896"/>
         <source>导出时Gzip压缩文件失败</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1852"/>
-        <location filename="../MainWindow.cpp" line="1856"/>
+        <location filename="../MainWindow.cpp" line="1897"/>
+        <location filename="../MainWindow.cpp" line="1901"/>
         <source>这可能是因为路径中含有中文字符！</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1855"/>
+        <location filename="../MainWindow.cpp" line="1900"/>
         <source>删除临时文件失败</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1887"/>
+        <location filename="../MainWindow.cpp" line="1932"/>
         <source>正在构建高度矩阵</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1890"/>
+        <location filename="../MainWindow.cpp" line="1935"/>
         <source>正在构建三维结构</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1893"/>
+        <location filename="../MainWindow.cpp" line="1938"/>
         <source>正在收集整张图片的颜色</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1896"/>
+        <location filename="../MainWindow.cpp" line="1941"/>
         <source>正在压缩立体地图画</source>
         <translation>Compressing the map</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1899"/>
+        <location filename="../MainWindow.cpp" line="1944"/>
         <source>正在为立体地图画搭桥</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1902"/>
+        <location filename="../MainWindow.cpp" line="1947"/>
         <source>正在匹配颜色</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1905"/>
+        <location filename="../MainWindow.cpp" line="1950"/>
         <source>正在使用抖动仿色</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1908"/>
+        <location filename="../MainWindow.cpp" line="1953"/>
         <source>正在将平板地图画变为墙面地图画</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1911"/>
+        <location filename="../MainWindow.cpp" line="1956"/>
         <source>正在写入三维结构</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1914"/>
+        <location filename="../MainWindow.cpp" line="1959"/>
         <source>正在写入方块列表</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1917"/>
+        <location filename="../MainWindow.cpp" line="1962"/>
         <source>正在写入地图数据文件</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1920"/>
+        <location filename="../MainWindow.cpp" line="1965"/>
         <source>正在写入基础信息</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2060"/>
+        <location filename="../MainWindow.cpp" line="2106"/>
         <source>检查更新完毕</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2061"/>
+        <location filename="../MainWindow.cpp" line="2107"/>
         <source>现在你正在用的就是最新版本！</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2128"/>
+        <location filename="../MainWindow.cpp" line="2178"/>
         <source>可用</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2129"/>
+        <location filename="../MainWindow.cpp" line="2179"/>
         <source>种颜色</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2144"/>
+        <location filename="../MainWindow.cpp" line="2194"/>
         <source>保存截屏</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2144"/>
+        <location filename="../MainWindow.cpp" line="2194"/>
         <source>图片 (*.jpg *.jpeg *.tif *.bmp *.png)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2168"/>
+        <location filename="../MainWindow.cpp" line="2218"/>
         <source>保存当前显示图片</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2169"/>
+        <location filename="../MainWindow.cpp" line="2219"/>
         <source>图片(*.png)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2205"/>
+        <location filename="../MainWindow.cpp" line="2255"/>
         <source>选择预设文件</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2240"/>
+        <location filename="../MainWindow.cpp" line="2290"/>
         <source>测试方块列表的结构文件</source>
         <translation></translation>
     </message>
@@ -1291,19 +1336,19 @@ Litematic</translation>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1996"/>
+        <location filename="../MainWindow.cpp" line="2042"/>
         <source>检查更新时遇到Json解析错误</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1997"/>
-        <location filename="../MainWindow.cpp" line="2019"/>
-        <location filename="../MainWindow.cpp" line="2038"/>
+        <location filename="../MainWindow.cpp" line="2043"/>
+        <location filename="../MainWindow.cpp" line="2065"/>
+        <location filename="../MainWindow.cpp" line="2084"/>
         <source>网址  </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1998"/>
+        <location filename="../MainWindow.cpp" line="2044"/>
         <source>  回复的信息无法通过json解析。
 
 这只是检查更新时遇到的故障，但不要紧，软件该用还能用。
@@ -1314,9 +1359,9 @@ Litematic</translation>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2003"/>
-        <location filename="../MainWindow.cpp" line="2025"/>
-        <location filename="../MainWindow.cpp" line="2044"/>
+        <location filename="../MainWindow.cpp" line="2049"/>
+        <location filename="../MainWindow.cpp" line="2071"/>
+        <location filename="../MainWindow.cpp" line="2090"/>
         <source>
 
 具体回复的信息为：
@@ -1324,13 +1369,13 @@ Litematic</translation>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2018"/>
-        <location filename="../MainWindow.cpp" line="2037"/>
+        <location filename="../MainWindow.cpp" line="2064"/>
+        <location filename="../MainWindow.cpp" line="2083"/>
         <source>检查更新时返回信息错误</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2020"/>
+        <location filename="../MainWindow.cpp" line="2066"/>
         <source>  回复的信息中不包含版本号（&quot;tag_name&quot;）。
 
 这只是检查更新时遇到的故障，但不要紧，软件该用还能用。
@@ -1339,7 +1384,7 @@ Litematic</translation>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2039"/>
+        <location filename="../MainWindow.cpp" line="2085"/>
         <source>  回复的信息中，版本号（&quot;tag_name&quot;）不是字符串。
 
 这只是检查更新时遇到的故障，但不要紧，软件该用还能用。
@@ -1348,23 +1393,23 @@ Litematic</translation>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2073"/>
+        <location filename="../MainWindow.cpp" line="2119"/>
         <source>SlopeCraft已更新</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2074"/>
+        <location filename="../MainWindow.cpp" line="2120"/>
         <source>好消息！好消息！SlopeCraft更新了！
 </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2075"/>
+        <location filename="../MainWindow.cpp" line="2121"/>
         <source>当前版本为</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2076"/>
+        <location filename="../MainWindow.cpp" line="2122"/>
         <source>，检查到最新版本为</source>
         <translation></translation>
     </message>

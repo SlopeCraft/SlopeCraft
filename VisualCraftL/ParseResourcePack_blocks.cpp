@@ -150,9 +150,10 @@ void element::intersect_points(
   }
 
   intersect_point intersect;
-  intersect.coordinate = crossover_point(this->plane(f), ray);
+  Array3f coordinate;
+  coordinate = crossover_point(this->plane(f), ray);
 
-  if (!this->is_not_outside(intersect.coordinate))
+  if (!this->is_not_outside(coordinate))
     return;
 
   intersect.face_ptr = &this->face(f);
@@ -170,33 +171,27 @@ void element::intersect_points(
     // uv_end=max_pos;
 
     // here u <-> x+
-    intersect.uv[0] =
-        (intersect.coordinate[2] - uv_start[2]) * 16 / this->z_range_abs();
+    intersect.uv[0] = (coordinate[2] - uv_start[2]) / this->z_range_abs();
     // here v<-> z+
-    intersect.uv[1] =
-        (intersect.coordinate[1] - uv_start[1]) * 16 / this->x_range_abs();
+    intersect.uv[1] = (coordinate[1] - uv_start[1]) / this->x_range_abs();
     break;
 
   case face_idx::face_down:
     uv_start = {min_pos[0], min_pos[1], max_pos[2]};
     uv_end = {max_pos[0], min_pos[1], min_pos[2]};
     // here u <-> x+
-    intersect.uv[0] =
-        16 * (intersect.coordinate[0] - uv_start[0]) / this->x_range_abs();
+    intersect.uv[0] = (coordinate[0] - uv_start[0]) / this->x_range_abs();
     // here v <-> z-
-    intersect.uv[1] =
-        16 * (uv_end[2] - intersect.coordinate[2]) / this->z_range_abs();
+    intersect.uv[1] = (uv_end[2] - coordinate[2]) / this->z_range_abs();
     break;
 
   case face_idx::face_east:
     // uv_start=max_pos;
     uv_end = {max_pos[0], min_pos[1], min_pos[2]};
     // here u <-> z-
-    intersect.uv[0] =
-        16 * (uv_end[2] - intersect.coordinate[2]) / this->z_range_abs();
+    intersect.uv[0] = (uv_end[2] - coordinate[2]) / this->z_range_abs();
     // here v <-> y-
-    intersect.uv[1] =
-        16 * (uv_end[1] - intersect.coordinate[1]) / this->y_range_abs();
+    intersect.uv[1] = (uv_end[1] - coordinate[1]) / this->y_range_abs();
     break;
 
   case face_idx::face_west:
@@ -204,11 +199,9 @@ void element::intersect_points(
     uv_end = {min_pos[0], min_pos[1], max_pos[2]};
 
     // here u <-> z+
-    intersect.uv[0] =
-        16 * (intersect.coordinate[2] - uv_start[2]) / this->z_range_abs();
+    intersect.uv[0] = (coordinate[2] - uv_start[2]) / this->z_range_abs();
     // here v <-> y-
-    intersect.uv[1] =
-        16 * (uv_end[1] - intersect.coordinate[1]) / this->y_range_abs();
+    intersect.uv[1] = (uv_end[1] - coordinate[1]) / this->y_range_abs();
     break;
 
   case face_idx::face_south:
@@ -216,11 +209,9 @@ void element::intersect_points(
     uv_end = {max_pos[0], min_pos[1], max_pos[2]};
 
     // here u <-> x+
-    intersect.uv[0] =
-        16 * (intersect.coordinate[0] - uv_start[0]) / this->x_range_abs();
+    intersect.uv[0] = (coordinate[0] - uv_start[0]) / this->x_range_abs();
     // here v <-> y-
-    intersect.uv[1] =
-        16 * (uv_end[1] - intersect.coordinate[1]) / this->y_range_abs();
+    intersect.uv[1] = (uv_end[1] - coordinate[1]) / this->y_range_abs();
     break;
 
   case face_idx::face_north:
@@ -228,41 +219,39 @@ void element::intersect_points(
     uv_end = min_pos;
 
     // here u <-> x-
-    intersect.uv[0] =
-        16 * (uv_end[0] - intersect.coordinate[0]) / this->x_range_abs();
+    intersect.uv[0] = (uv_end[0] - coordinate[0]) / this->x_range_abs();
     // here v <-> y-
-    intersect.uv[1] =
-        16 * (uv_end[1] - intersect.coordinate[1]) / this->y_range_abs();
+    intersect.uv[1] = (uv_end[1] - coordinate[1]) / this->y_range_abs();
     break;
   }
 
   for (auto &uv : intersect.uv) {
-    uv = std::max<int16_t>(std::min<int16_t>(uv, 16), 0);
+    uv = std::max<float>(std::min<float>(uv, 16), 0);
   }
 
   switch (intersect.face_ptr->rot) {
   case face_rot::face_rot_0:
     break;
   case face_rot::face_rot_90: {
-    int16_t temp_u = intersect.uv[0];
+    float temp_u = intersect.uv[0];
     intersect.uv[0] = intersect.uv[1];
-    intersect.uv[1] = 16 - temp_u;
+    intersect.uv[1] = 1 - temp_u;
   } break;
 
   case face_rot::face_rot_180:
-    intersect.uv[0] = 16 - intersect.uv[0];
-    intersect.uv[1] = 16 - intersect.uv[1];
+    intersect.uv[0] = 1 - intersect.uv[0];
+    intersect.uv[1] = 1 - intersect.uv[1];
     break;
 
   case face_rot::face_rot_270: {
-    int16_t temp_u = intersect.uv[0];
-    intersect.uv[0] = 16 - intersect.uv[1];
+    float temp_u = intersect.uv[0];
+    intersect.uv[0] = 1 - intersect.uv[1];
     intersect.uv[1] = temp_u;
     break;
   }
   }
 
-  intersect.distance = (intersect.coordinate - ray.x0y0z0).square().sum();
+  intersect.distance = (coordinate - ray.x0y0z0).square().sum();
 
   dest->emplace_back(intersect);
 }

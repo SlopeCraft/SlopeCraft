@@ -17,7 +17,7 @@
     </message>
     <message>
         <location filename="CutterWind.ui" line="37"/>
-        <location filename="CutterWind.cpp" line="74"/>
+        <location filename="CutterWind.cpp" line="84"/>
         <source>列</source>
         <translation> cols</translation>
     </message>
@@ -28,7 +28,7 @@
     </message>
     <message>
         <location filename="CutterWind.ui" line="78"/>
-        <location filename="CutterWind.cpp" line="70"/>
+        <location filename="CutterWind.cpp" line="82"/>
         <source>图片尺寸（方块）：</source>
         <translation>Image size (blocks) : </translation>
     </message>
@@ -69,63 +69,63 @@
     </message>
     <message>
         <location filename="CutterWind.ui" line="223"/>
-        <location filename="CutterWind.cpp" line="79"/>
+        <location filename="CutterWind.cpp" line="89"/>
         <source>保存图片</source>
         <translation>Save image</translation>
     </message>
     <message>
-        <location filename="CutterWind.cpp" line="20"/>
+        <location filename="CutterWind.cpp" line="37"/>
         <source>不保持比例</source>
         <translation>IgnoreAspectRatio</translation>
     </message>
     <message>
-        <location filename="CutterWind.cpp" line="22"/>
+        <location filename="CutterWind.cpp" line="39"/>
         <source>保持比例缩小</source>
         <translation>KeepAspectRatio</translation>
     </message>
     <message>
-        <location filename="CutterWind.cpp" line="24"/>
+        <location filename="CutterWind.cpp" line="42"/>
         <source>保持比例扩张</source>
         <translation>KeepAspectRatioByExpanding</translation>
     </message>
     <message>
-        <location filename="CutterWind.cpp" line="27"/>
+        <location filename="CutterWind.cpp" line="45"/>
         <source>快速变换</source>
         <translation>FastTransformation</translation>
     </message>
     <message>
-        <location filename="CutterWind.cpp" line="29"/>
+        <location filename="CutterWind.cpp" line="47"/>
         <source>平滑变换</source>
         <translation>SmoothTransformation</translation>
     </message>
     <message>
-        <location filename="CutterWind.cpp" line="41"/>
+        <location filename="CutterWind.cpp" line="54"/>
         <source>选择图片</source>
         <translation>Select image</translation>
     </message>
     <message>
-        <location filename="CutterWind.cpp" line="43"/>
-        <location filename="CutterWind.cpp" line="81"/>
+        <location filename="CutterWind.cpp" line="54"/>
+        <location filename="CutterWind.cpp" line="89"/>
         <source>图片(*.png *.bmp *.jpg *.tif)</source>
         <translation>Images (*.png *.bmp *.jpg *.tif)</translation>
     </message>
     <message>
-        <location filename="CutterWind.cpp" line="50"/>
+        <location filename="CutterWind.cpp" line="61"/>
         <source>打开图片失败</source>
         <translation>Failed to load image</translation>
     </message>
     <message>
-        <location filename="CutterWind.cpp" line="50"/>
+        <location filename="CutterWind.cpp" line="62"/>
         <source>图片格式损坏，或者图片过于巨大。</source>
         <translation>The image might be damaged, or it&apos;s too huge.</translation>
     </message>
     <message>
-        <location filename="CutterWind.cpp" line="72"/>
+        <location filename="CutterWind.cpp" line="83"/>
         <source>行 , </source>
         <translation> rows, </translation>
     </message>
     <message>
-        <location filename="CutterWind.cpp" line="105"/>
+        <location filename="CutterWind.cpp" line="113"/>
         <source>选择输出文件夹</source>
         <translation>Select output directory</translation>
     </message>

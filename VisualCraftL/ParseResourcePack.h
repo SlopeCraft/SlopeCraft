@@ -122,16 +122,43 @@ public:
   std::array<int16_t, 2> uv_end{16, 16};
   face_rot rot{face_rot::face_rot_0};
   bool is_hidden{false};
+
+  inline bool is_uv_whole_texture() const noexcept {
+    return (uv_start[0] == 0 && uv_start[1] == 0) &&
+           (uv_end[0] == 16 && uv_end[1] == 16);
+  }
 };
+
+inline ARGB color_at_relative_idx(const EImgRowMajor_t &img, const float r_f,
+                                  const float c_f) noexcept {
+  const int r_i = std::min<int>(std::max(int(std::round(r_f * img.rows())), 0),
+                                img.rows() - 1);
+  const int c_i = std::min<int>(std::max(int(std::round(c_f * img.cols())), 0),
+                                img.cols() - 1);
+
+  return img(r_i, c_i);
+}
 
 struct intersect_point {
   float distance;
-  Eigen::Array3f coordinate;
+  std::array<float, 2> uv;
+  // Eigen::Array3f coordinate;
   const face_t *face_ptr;
-  std::array<int16_t, 2> uv;
+
+  ///(u,v) in range[0,1]. corresponding to (c,r)
 
   inline ARGB color() const noexcept {
-    return face_ptr->texture->operator()(uv[1], uv[0]);
+    // compute uv in range [0,1]
+    const float u_in_01 =
+        (face_ptr->uv_start[0] +
+         uv[0] * (face_ptr->uv_end[0] - face_ptr->uv_start[0])) /
+        16;
+    const float v_in_01 =
+        (face_ptr->uv_start[1] +
+         uv[1] * (face_ptr->uv_end[1] - face_ptr->uv_start[1])) /
+        16;
+
+    return color_at_relative_idx(*(face_ptr->texture), v_in_01, u_in_01);
   }
 };
 

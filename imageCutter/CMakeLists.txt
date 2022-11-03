@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.5)
 project(SlopeCraft_imageCutter VERSION ${SlopeCraft_version})
 set(CMAKE_CXX_STANDARD 17)
 
-
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOUIC ON)
@@ -12,40 +11,45 @@ set(CMAKE_AUTORCC ON)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools REQUIRED)
 
-set(imageCutter_header_files 
+set(imageCutter_header_files
     CutterWind.h
-    )
+)
 
-set(imageCutter_source_files 
-    CutterWind.cpp 
+set(imageCutter_source_files
+    CutterWind.cpp
     main.cpp
-    )
+)
 
 set(imageCutter_windows_rc_files)
+
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     message("Configuring on Windows. Adding rc file to " ${PROJECT_NAME})
     set(imageCutter_windows_rc_files others/imageCutter.rc)
 endif()
 
-set(imageCutter_ts_files 
+set(imageCutter_ts_files
     imageCutter_en_US.ts)
 
 if(${SlopeCraft_update_ts_files})
+    # qt_add_lupdate(imageCutter TSFILES ${imageCutter_ts_files} CutterWind.ui SOURCES ${imageCutter_header_files} ${imageCutter_source_files})
     execute_process(
         COMMAND ${SlopeCraft_Qt_lupdate_executable} CutterWind.ui ${imageCutter_header_files} ${imageCutter_source_files} "-ts" ${imageCutter_ts_files}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        )
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 endif()
 
-execute_process(COMMAND ${SlopeCraft_Qt_lrelease_executable} ${imageCutter_ts_files}
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    )
+# message(STATUS "releasing resource files : " ${imageCutter_ts_files})
+set_source_files_properties(${imageCutter_ts_files}
+    PROPERTIES OUTPUT_LOCATION ${CMAKE_CURRENT_SOURCE_DIR})
+qt_add_translation(TEMP ${imageCutter_ts_files})
 
+# message(STATUS "TEMP = " ${TEMP})
+
+# execute_process(COMMAND ${SlopeCraft_Qt_lrelease_executable} ${imageCutter_ts_files} WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 set(imageCutter_project_sources
-    CutterWind.h 
-    CutterWind.cpp 
+    CutterWind.h
+    CutterWind.cpp
     main.cpp
-    CutterWind.ui 
+    CutterWind.ui
     ${imageCutter_ts_files}
     ${imageCutter_windows_rc_files}
     imageCutter_translate.qrc
@@ -56,8 +60,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${imageCutter_project_sources}
     )
-    #qt_create_translation(imageCutter_qm_files ${CMAKE_SOURCE_DIR} ${imageCutter_ts_files})
 
+# qt_create_translation(imageCutter_qm_files ${CMAKE_SOURCE_DIR} ${imageCutter_ts_files})
 else()
     if(ANDROID)
         add_library(imageCutter SHARED ${imageCutter_project_sources})
@@ -68,8 +72,8 @@ else()
     qt5_create_translation(imageCutter_qm_files ${CMAKE_SOURCE_DIR} ${imageCutter_ts_files})
 endif()
 
-target_link_libraries(imageCutter 
-    PRIVATE 
+target_link_libraries(imageCutter
+    PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets)
 
 set_target_properties(imageCutter PROPERTIES
@@ -82,22 +86,18 @@ set_target_properties(imageCutter PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
-
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(imageCutter)
 endif()
 
-
 install(TARGETS imageCutter
     RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
-    BUNDLE  DESTINATION ${CMAKE_INSTALL_PREFIX}
-    )
+    BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX}
+)
 
-    
 # Install icon for macOS
-if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
-
-file(GLOB imageCutter_Icon ${CMAKE_SOURCE_DIR}/imageCutter/others/imageCutterIconNew.icns)
-install(FILES ${imageCutter_Icon}
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/imageCutter.app/Contents/Resources)
+if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    file(GLOB imageCutter_Icon ${CMAKE_SOURCE_DIR}/imageCutter/others/imageCutterIconNew.icns)
+    install(FILES ${imageCutter_Icon}
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/imageCutter.app/Contents/Resources)
 endif()

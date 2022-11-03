@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.5)
 project(SlopeCraft_BlockListManager VERSION ${SlopeCraft_version} LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 
-
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOUIC ON)
@@ -17,8 +16,8 @@ include_directories(${CMAKE_SOURCE_DIR})
 set(BlockListManager_header_files
 
     BlockListManager.h
-    BlockListManager_global.h 
-    TokiBaseColor.h 
+    BlockListManager_global.h
+    TokiBaseColor.h
     TokiBlock.h)
 
 set(BlockListManager_source_files
@@ -27,23 +26,21 @@ set(BlockListManager_source_files
     TokiBaseColor.cpp
     TokiBlock.cpp)
 
-
-set(BlockListManager_ts_files 
+set(BlockListManager_ts_files
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockListManager_zh_CN.ts
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockListManager_en_US.ts
-    )
+)
 
 if(${SlopeCraft_update_ts_files})
     execute_process(
         COMMAND ${SlopeCraft_Qt_lupdate_executable} ${BlockListManager_header_files} ${BlockListManager_source_files} "-ts" ${BlockListManager_ts_files}
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        )
+    )
 endif()
 
-execute_process(COMMAND ${SlopeCraft_Qt_lrelease_executable} ${BlockListManager_ts_files}
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    )
-
+set_source_files_properties(${BlockListManager_ts_files}
+    PROPERTIES OUTPUT_LOCATION ${CMAKE_CURRENT_SOURCE_DIR})
+qt_add_translation(TEMP ${BlockListManager_ts_files})
 
 set(BlockListManaer_project_sources
     ${BlockListManager_header_files}
@@ -60,12 +57,8 @@ target_link_libraries(BlockListManager PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
 target_compile_definitions(BlockListManager PRIVATE BlockListManager_LIBRARY)
 
-#add_library(cmake_qt_lib STATIC  Cmake_qt_lib.cpp  Cmake_qt_lib.h)
+# add_library(cmake_qt_lib STATIC  Cmake_qt_lib.cpp  Cmake_qt_lib.h)
 
-#target_link_libraries(cmake_qt_lib PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+# target_link_libraries(cmake_qt_lib PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
-#target_compile_definitions(cmake_qt_lib PRIVATE CMAKE_QT_LIB_LIBRARY)
-
-
-
-
+# target_compile_definitions(cmake_qt_lib PRIVATE CMAKE_QT_LIB_LIBRARY)

@@ -6,13 +6,11 @@ include_directories(${SlopeCraft_Eigen3_include_dir}
     ${CMAKE_SOURCE_DIR}/SlopeCraftL
     ${CMAKE_SOURCE_DIR}/utilities/BlockListManager)
 
-    
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
-
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools Network Concurrent REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools Network Concurrent REQUIRED)
@@ -20,11 +18,11 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools Network Conc
 set(SlopeCraftMain_windows_rc_file)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-	message("Configuring on Windows. Adding rc file to " ${PROJECT_NAME})
+    message("Configuring on Windows. Adding rc file to " ${PROJECT_NAME})
     set(SlopeCraftMain_windows_rc_file others/SlopeCraft.rc)
 endif()
 
-set(SlopeCraftMain_header_files 
+set(SlopeCraftMain_header_files
     ${CMAKE_CURRENT_SOURCE_DIR}/AiCvterParameterDialog.h
     ${CMAKE_CURRENT_SOURCE_DIR}/BatchUi.h
     ${CMAKE_CURRENT_SOURCE_DIR}/TaskBox.h
@@ -32,7 +30,7 @@ set(SlopeCraftMain_header_files
     ${CMAKE_CURRENT_SOURCE_DIR}/MainWindow.h
     ${CMAKE_CURRENT_SOURCE_DIR}/previewwind.h
     ${CMAKE_CURRENT_SOURCE_DIR}/tpstrategywind.h
-    )
+)
 
 set(SlopeCraftMain_source_files
 
@@ -44,8 +42,7 @@ set(SlopeCraftMain_source_files
     ${CMAKE_CURRENT_SOURCE_DIR}/MainWindow.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/previewwind.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/tpstrategywind.cpp
-    )
-
+)
 
 set(SlopeCraftMain_ui_files
 
@@ -57,7 +54,6 @@ set(SlopeCraftMain_ui_files
     ${CMAKE_CURRENT_SOURCE_DIR}/tpstrategywind.ui
     ${CMAKE_CURRENT_SOURCE_DIR}/VersionDialog.ui)
 
-
 set(SlopeCraftMain_ts_files
 
     ${CMAKE_CURRENT_SOURCE_DIR}/others/SlopeCraft_en_US.ts
@@ -67,12 +63,12 @@ if(${SlopeCraft_update_ts_files})
     execute_process(
         COMMAND ${SlopeCraft_Qt_lupdate_executable} ${SlopeCraftMain_header_files} ${SlopeCraftMain_source_files} ${SlopeCraftMain_ui_files} "-ts" ${SlopeCraftMain_ts_files}
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/others
-        )
+    )
 endif()
 
-execute_process(COMMAND ${SlopeCraft_Qt_lrelease_executable} ${SlopeCraftMain_ts_files}
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/others
-    )
+set_source_files_properties(${SlopeCraftMain_ts_files}
+    PROPERTIES OUTPUT_LOCATION ${CMAKE_CURRENT_SOURCE_DIR})
+qt_add_translation(TEMP ${SlopeCraftMain_ts_files})
 
 set(SlopeCraftMain_qrc_files
     ${CMAKE_CURRENT_SOURCE_DIR}/others/BlockTextures.qrc
@@ -82,26 +78,26 @@ set(SlopeCraftMain_qrc_files
 set(SlopeCraftMain_project_sources
     ${SlopeCraftMain_header_files}
     ${SlopeCraftMain_source_files}
-    
+
     ${SlopeCraftMain_ts_files}
     ${SlopeCraftMain_ui_files}
     ${SlopeCraftMain_qrc_files}
     ${SlopeCraftMain_windows_rc_file}
-    )
+)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(SlopeCraft 
+    qt_add_executable(SlopeCraft
         MANUAL_FINALIZATION
         ${SlopeCraftMain_project_sources})
-    #execute_process(COMMAND "pause")
-    #qt_create_translation(SlopeCraftMain_qm_files ${CMAKE_CURRENT_SOURCE_DIR} ${SlopeCraftMain_ts_files})
 
-    #qt6_add_resources(SlopeCraft "translation"
-    #    PREFIX "/i18n"
-    #    FILES 
-    #    ${SlopeCraftMain_qm_files}
-    #    ${CMAKE_SOURCE_DIR}/CMakeLists.txt)
+# execute_process(COMMAND "pause")
+# qt_create_translation(SlopeCraftMain_qm_files ${CMAKE_CURRENT_SOURCE_DIR} ${SlopeCraftMain_ts_files})
 
+# qt6_add_resources(SlopeCraft "translation"
+# PREFIX "/i18n"
+# FILES
+# ${SlopeCraftMain_qm_files}
+# ${CMAKE_SOURCE_DIR}/CMakeLists.txt)
 else()
     if(ANDROID)
         add_library(SlopeCraft SHARED ${SlopeCraftMain_project_sources})
@@ -114,10 +110,10 @@ target_link_libraries(SlopeCraft
     PRIVATE
     BlockListManager
     SlopeCraftL
-    Qt${QT_VERSION_MAJOR}::Widgets 
-    Qt${QT_VERSION_MAJOR}::Network 
+    Qt${QT_VERSION_MAJOR}::Widgets
+    Qt${QT_VERSION_MAJOR}::Network
     Qt${QT_VERSION_MAJOR}::Concurrent
-    )
+)
 
 set_target_properties(SlopeCraft PROPERTIES
     VERSION ${PROJECT_VERSION}
@@ -129,45 +125,43 @@ set_target_properties(SlopeCraft PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
-
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(SlopeCraft)
 endif()
 
 install(TARGETS SlopeCraft
     RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
-    BUNDLE  DESTINATION ${CMAKE_INSTALL_PREFIX}
-    )
-
-
+    BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX}
+)
 
 # Install Blocks
-if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
+if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     # Install for macOS、
     # Install icons
     file(GLOB SlopeCraft_Icon ${CMAKE_SOURCE_DIR}/SlopeCraftMain/others/SlopeCraftIconNew.icns)
     install(FILES ${SlopeCraft_Icon}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/SlopeCraft.app/Contents/Resources)
-    
+
     # Install FixedBlocks.json, CustomBlocks.json and README.md
     file(GLOB SlopeCraft_install_jsons
-    "${CMAKE_SOURCE_DIR}/Blocks/*.json"
-    "${CMAKE_SOURCE_DIR}/Blocks/*.md")
+        "${CMAKE_SOURCE_DIR}/Blocks/*.json"
+        "${CMAKE_SOURCE_DIR}/Blocks/*.md")
     install(FILES ${SlopeCraft_install_jsons}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/SlopeCraft.app/Contents/MacOS/Blocks)
     install(FILES ${SlopeCraft_install_jsons}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/SlopeCraft.app/Contents/MacOS/Blocks)
-    
+
     # Install all png files of fixedblocks
     file(GLOB SlopeCraft_install_png_fixedblocks
-    "${CMAKE_SOURCE_DIR}/Blocks/FixedBlocks/*.png")
+        "${CMAKE_SOURCE_DIR}/Blocks/FixedBlocks/*.png")
     install(FILES ${SlopeCraft_install_png_fixedblocks}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/SlopeCraft.app/Contents/MacOS/Blocks/FixedBlocks)
     install(FILES ${SlopeCraft_install_png_fixedblocks}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/SlopeCraft.app/Contents/MacOS/Blocks/FixedBlocks)
+
     # Install all png files of customblocks
     file(GLOB SlopeCraft_install_png_customblocks
-    "${CMAKE_SOURCE_DIR}/Blocks/CustomBlocks/*.png")
+        "${CMAKE_SOURCE_DIR}/Blocks/CustomBlocks/*.png")
     install(FILES ${SlopeCraft_install_png_customblocks}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/SlopeCraft.app/Contents/MacOS/Blocks/CustomBlocks)
     install(FILES ${SlopeCraft_install_png_customblocks}
@@ -176,22 +170,24 @@ else()
     # Install for Windows OS. Linux OS and Unix OS probably works too.
     # Install FixedBlocks.json, CustomBlocks.json and README.md
     file(GLOB SlopeCraft_install_jsons
-    "${CMAKE_SOURCE_DIR}/Blocks/*.json"
-    "${CMAKE_SOURCE_DIR}/Blocks/*.md")
+        "${CMAKE_SOURCE_DIR}/Blocks/*.json"
+        "${CMAKE_SOURCE_DIR}/Blocks/*.md")
     install(FILES ${SlopeCraft_install_jsons}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/Blocks)
     install(FILES ${SlopeCraft_install_jsons}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Blocks)
+
     # Install all png files of fixedblocks
     file(GLOB SlopeCraft_install_png_fixedblocks
-    "${CMAKE_SOURCE_DIR}/Blocks/FixedBlocks/*.png")
+        "${CMAKE_SOURCE_DIR}/Blocks/FixedBlocks/*.png")
     install(FILES ${SlopeCraft_install_png_fixedblocks}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/Blocks/FixedBlocks)
     install(FILES ${SlopeCraft_install_png_fixedblocks}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Blocks/FixedBlocks)
+
     # Install all png files of customblocks
     file(GLOB SlopeCraft_install_png_customblocks
-    "${CMAKE_SOURCE_DIR}/Blocks/CustomBlocks/*.png")
+        "${CMAKE_SOURCE_DIR}/Blocks/CustomBlocks/*.png")
     install(FILES ${SlopeCraft_install_png_customblocks}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/Blocks/CustomBlocks)
     install(FILES ${SlopeCraft_install_png_customblocks}

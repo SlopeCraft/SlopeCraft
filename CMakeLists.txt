@@ -5,53 +5,48 @@ set(SlopeCraft_version 3.10.1)
 project(SlopeCraft VERSION ${SlopeCraft_version} LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 
-
 # manage the install prefix
 set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install_app)
 set(CMAKE_INSTALL_LIBDIR ${CMAKE_INSTALL_PREFIX})
 set(CMAKE_INSTALL_BINDIR ${CMAKE_INSTALL_PREFIX})
 
 if(EXISTS ${CMAKE_SOURCE_DIR}/compile_commands.json)
-    #delete files here
+    # delete files here
     file(REMOVE ${CMAKE_SOURCE_DIR}/compile_commands.json)
 endif()
 
 # manage the include dir of HeuristicFlow
 # set(SlopeCraft_HeuristicFlow_include_dir D:/CppLibs/HeuristicFlow-1.6.2.1)
 
-
 # manage the include dir of Eigen
-#set(SlopeCraft_Eigen3_include_dir D:/CppLibs/libEigen3/include/eigen3)
-
-
+# set(SlopeCraft_Eigen3_include_dir D:/CppLibs/libEigen3/include/eigen3)
 include(cmake/find_nlohmann_json.cmake)
 include(cmake/find_Eigen3.cmake)
 include(cmake/find_HeuristicFlow.cmake)
 
-#set(Qt6_DIR "D:\\Qt\\6.2.4\\msvc2022-shared")
-# manage the directory of Qt
-if(DEFINED Qt6_DIR)
-    set(SlopeCraft_Qt_root_dir ${Qt6_DIR})
-else()
-    set(SlopeCraft_Qt_root_dir "D:\\ProgramFiles\\Qt\\Qt\\Qt6.2.4-gcc12-shared")
+if(NOT DEFINED SlopeCraft_Qt_root_dir)
+    set(SlopeCraft_Qt_root_dir "D:/ProgramFiles/Qt/Qt/Qt6.2.4-gcc12-shared")
 endif()
+
+message(STATUS "SlopeCraft_Qt_root_dir = " ${SlopeCraft_Qt_root_dir})
+
+include(cmake/find_qt6.cmake)
 
 message("SlopeCraft_Qt_root_dir = " ${SlopeCraft_Qt_root_dir})
 
-if(NOT DEFINED SlopeCraft_Qt_root_dir)
-    message(FATAL_ERROR "Please set the variable \"SlopeCraft_Qt_root_dir\". Otherwise cmake can\'t find Qt6")
-endif()
-
-set(CMAKE_PREFIX_PATH ${SlopeCraft_Qt_root_dir})
-set(QT_DIR ${SlopeCraft_Qt_root_dir}/lib/cmake/Qt6)
-set(QT_QMAKE_EXECUTABLE ${SlopeCraft_Qt_root_dir}/bin/qmake.exe)
-
 # find lupdate and lrelease of qt
-include(cmake/find_qt_translate.cmake)
-
+# include(cmake/find_qt_translate.cmake)
 
 # If it is set to ON, everytime CMake reconfigure the project, all .ts files will be updated.
 set(SlopeCraft_update_ts_files OFF)
+
+if(${SlopeCraft_update_ts_files} AND NOT DEFINED SlopeCraft_Qt_lupdate_executable)
+    if(NOT DEFINED SlopeCraft_Qt_root_dir)
+        message(FATAL_ERROR "Please set the variable \"SlopeCraft_Qt_root_dir\". Otherwise cmake can\'t find lupdate")
+    endif()
+
+    set(SlopeCraft_Qt_lupdate_executable ${SlopeCraft_Qt_root_dir}/bin/lupdate)
+endif()
 
 if(NOT DEFINED SlopeCraft_use_Eigen_vectorize)
     set(SlopeCraft_use_Eigen_vectorize OFF)
@@ -62,12 +57,13 @@ add_definitions("-DSCL_FIND_GlobalEnums_BY_PATH")
 
 # if don't vectorize, or no suitable flag found, this variable will be empty
 set(SlopeCraft_vectorize_flags)
+
 if(${SlopeCraft_use_Eigen_vectorize})
     include(CheckCXXCompilerFlag)
 
     check_cxx_compiler_flag("-march=native" _march_native_works)
     check_cxx_compiler_flag("-xHost" _xhost_works)
-    
+
     if(${_march_native_works})
         message(STATUS "Vectorize using -march=native")
         set(SlopeCraft_vectorize_flags "-march=native")
@@ -88,19 +84,15 @@ add_subdirectory(SlopeCraftMain)
 add_subdirectory(MapViewer)
 add_subdirectory(tests)
 add_subdirectory(VisualCraftL)
-
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-
-
-
 set(SlopeCraft_readme_and_license_files
-    
-    LICENSE 
-    README.md 
+
+    LICENSE
+    README.md
     README_EN.md
     docs/简体中文版协议.txt
-    )
+)
 
 install(FILES ${SlopeCraft_readme_and_license_files}
     DESTINATION ${CMAKE_INSTALL_PREFIX})

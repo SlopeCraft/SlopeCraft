@@ -1,6 +1,7 @@
 #include "ParseResourcePack.h"
 #include "Resource_tree.h"
 #include "VisualCraftL.h"
+#include "VisualCraftL/ParseResourcePack.h"
 
 #include <filesystem>
 #include <iostream>
@@ -12,6 +13,15 @@ using std::cout, std::endl;
 void test_VCL_single_image();
 void test_VCL_full_zip();
 void test_VCL_single_img_in_zip();
+
+void test_VCL_block_model_full_block();
+
+VCL_EXPORT void test_VCL() {
+  // test_VCL_full_zip();
+  // test_VCL_single_image();
+  //  test_VCL_single_img_in_zip();
+  test_VCL_block_model_full_block();
+}
 
 void display_folder(const zipped_folder &folder, const int offset = 0) {
   std::string spaces;
@@ -80,11 +90,6 @@ bool rewrite_png(const char *const filename,
   fclose(fp);
 
   return true;
-}
-VCL_EXPORT void test_VCL() {
-  // test_VCL_full_zip();
-  test_VCL_single_image();
-  //  test_VCL_single_img_in_zip();
 }
 
 void test_VCL_single_image() {
@@ -166,4 +171,59 @@ void test_VCL_single_img_in_zip() {
   }
   printf("\n\n");
   rewrite_png("rewrite_anvil.png", img);
+}
+
+void export_projection_images(block_model::model m,
+                              const std::string filenameprefix) {
+  rewrite_png((filenameprefix + "_up.png").data(),
+              m.projection_image(block_model::face_idx::face_up));
+  /*
+rewrite_png((filenameprefix + "_down.png").data(),
+  m.projection_image(block_model::face_idx::face_down));
+rewrite_png((filenameprefix + "_east.png").data(),
+  m.projection_image(block_model::face_idx::face_east));
+rewrite_png((filenameprefix + "_west.png").data(),
+  m.projection_image(block_model::face_idx::face_west));
+rewrite_png((filenameprefix + "_north.png").data(),
+  m.projection_image(block_model::face_idx::face_north));
+rewrite_png((filenameprefix + "_south.png").data(),
+  m.projection_image(block_model::face_idx::face_south));
+  */
+}
+
+void test_VCL_block_model_full_block() {
+  zipped_folder vanilla = zipped_folder::from_zip("Vanilla_1_19_2.zip");
+
+  Eigen::Array<ARGB, -1, -1, Eigen::RowMajor> texture;
+
+  const auto &images = vanilla.folder_at("assets")
+                           ->subfolder("minecraft")
+                           ->subfolder("textures")
+                           ->subfolder("block")
+                           ->files;
+  const bool success =
+      parse_png(images.at("smooth_stone.png").data(),
+                images.at("smooth_stone.png").file_size(), &texture);
+
+  if (!success) {
+    cout << "Failed to parse smooth_stone.png" << endl;
+    return;
+  }
+
+  block_model::model smooth_stone;
+  {
+    block_model::element element;
+    element._from = {0, 0, 0};
+    element._to = {16, 16, 16};
+    block_model::face_t face;
+    face.texture = &texture;
+
+    element.faces.fill(face);
+
+    smooth_stone.elements.emplace_back(element);
+  }
+
+  export_projection_images(smooth_stone, "test_block_model/smooth_stone");
+
+  cout << "success" << endl;
 }

@@ -39,6 +39,7 @@ compile_commands.json
 ### CMake ###
 .qt/
 CMakeLists.txt.user
+CMakeLists.txt.user.*
 CMakeCache.txt
 CMakeFiles
 CMakeScripts
