@@ -8,30 +8,29 @@ include_directories(
     ${SlopeCraft_HeuristicFlow_include_dir}
     ${SlopeCraft_Nlohmann_json_include_dir}
     ${CMAKE_SOURCE_DIR}/utilities
-    )
+)
 
 add_library(VisualCraftL SHARED
 
     VisualCraftL_global.h
-    VisualCraftL.h 
+    VisualCraftL.h
     VisualCraftL.cpp
     TokiVC.h
-    TokiVC.cpp  
-    Resource_tree.h 
+    TokiVC.cpp
+    Resource_tree.h
     Resource_tree.cpp
-    ParseResourcePack.h 
+    ParseResourcePack.h
     ParseResourcePack_png.cpp
     ParseResourcePack_blocks.cpp
     test_fun.cpp)
 
 find_package(libzip REQUIRED)
-find_package(ZLIB REQUIRED)
+find_package(ZLIB 1.2.11 REQUIRED)
 find_package(PNG REQUIRED)
 
 include_directories(${ZLIB_INCLUDE_DIR})
 
 target_link_libraries(VisualCraftL PRIVATE libzip::zip z png ColorManip)
-
 
 target_compile_definitions(VisualCraftL PRIVATE BEFORE "-DVISUALCRAFTL_BUILD")
 

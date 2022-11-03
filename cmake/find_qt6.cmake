@@ -1,4 +1,3 @@
-
 set(temp_is_SQrd_valid OFF)
 
 if(DEFINED SlopeCraft_Qt_root_dir)
@@ -14,7 +13,7 @@ if(${temp_is_SQrd_valid})
     list(PREPEND CMAKE_PREFIX_PATH ${SlopeCraft_Qt_root_dir})
 endif()
 
-message(STATUS "Finding Qt6. CMAKE_PREIFX_PATH = ${CMAKE_PREIFX_PATH}")
+message(STATUS "Searching for Qt6. CMAKE_PREFIX_PATH = " ${CMAKE_PREFIX_PATH})
 find_package(QT NAMES Qt6 COMPONENTS Widgets LinguistTools REQUIRED)
 
 if(NOT ${QT_FOUND})

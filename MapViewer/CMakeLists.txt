@@ -81,7 +81,7 @@ endif()
 
 target_link_libraries(MapViewer
     PRIVATE
-    -lz
+    z
     Qt${QT_VERSION_MAJOR}::Widgets)
 
 set_target_properties(MapViewer PROPERTIES

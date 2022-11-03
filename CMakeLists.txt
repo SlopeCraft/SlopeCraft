@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.20)
 
 set(SlopeCraft_version 3.10.1)
 
@@ -14,6 +14,10 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/compile_commands.json)
     # delete files here
     file(REMOVE ${CMAKE_SOURCE_DIR}/compile_commands.json)
 endif()
+
+include(cmake/add_compiler_path_to_prefix.cmake)
+
+list(LENGTH CMAKE_PREFIX_PATH temp_L)
 
 # manage the include dir of HeuristicFlow
 # set(SlopeCraft_HeuristicFlow_include_dir D:/CppLibs/HeuristicFlow-1.6.2.1)
@@ -33,6 +37,8 @@ message(STATUS "SlopeCraft_Qt_root_dir = " ${SlopeCraft_Qt_root_dir})
 include(cmake/find_qt6.cmake)
 
 message("SlopeCraft_Qt_root_dir = " ${SlopeCraft_Qt_root_dir})
+
+message("Length of CMAKE_PREFIX_PATH = " ${temp_L})
 
 # find lupdate and lrelease of qt
 # include(cmake/find_qt_translate.cmake)
