@@ -174,6 +174,7 @@ public:
   virtual int getImageRows() const = 0;
   /// get image cols
   virtual int getImageCols() const = 0;
+  virtual const unsigned int *getRawImage() const = 0;
   /// query if map is buildable in vanilla survival
   virtual bool isVanilla() const = 0;
   /// query if map is a flat one

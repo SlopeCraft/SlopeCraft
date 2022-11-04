@@ -139,6 +139,9 @@ public:
                           int *const num = nullptr) const override;
   // can do in convertionReady:
   bool convert(convertAlgo = RGB_Better, bool dither = false) override;
+  const uint32_t *getRawImage() const override {
+    return this->image_cvter.raw_image().data();
+  }
   int getImageRows() const override;
   int getImageCols() const override;
 
@@ -154,7 +157,7 @@ public:
   bool build(compressSettings = noCompress, unsigned short = 256,
              glassBridgeSettings = noBridge, unsigned short = 3,
              bool fireProof = false,
-             bool endermanProof = false) override; //构建三维结构
+             bool endermanProof = false) override; // 构建三维结构
   void getConvertedImage(int *rows, int *cols,
                          unsigned int *dest) const override;
   EImage getConovertedImage() const;
@@ -264,7 +267,7 @@ public:
   // void makeHeight_old();//构建HighMap和LowMap
   void makeHeight_new();
   // void makeHeightInLine(const uint16_t c);
-  void buildHeight(bool = false, bool = false); //构建Build
+  void buildHeight(bool = false, bool = false); // 构建Build
   void makeBridge();
   // for Litematic
   /*
