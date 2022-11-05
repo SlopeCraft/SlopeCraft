@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stddef.h>
 
 extern const uint8_t data_unknown_base_color[];
 extern const size_t png_size;

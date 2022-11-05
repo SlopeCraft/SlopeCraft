@@ -23,6 +23,7 @@ This file is part of SlopeCraft.
 #ifndef DEFINES_OF_EXTERN_CLASSES_H
 #define DEFINES_OF_EXTERN_CLASSES_H
 
+#include <stdint.h>
 #include "SlopeCraftL_global.h"
 
 namespace SlopeCraft {
@@ -110,7 +111,7 @@ public:
 
   static const char *getSCLVersion();
 
-  static unsigned long long mcVersion2VersionNumber(::SCL_gameVersion);
+  static uint64_t mcVersion2VersionNumber(::SCL_gameVersion);
 
   /// function ptr to window object
   virtual void setWindPtr(void *) = 0;
@@ -225,7 +226,7 @@ public:
   /// get block count in total and in detail
   virtual void getBlockCounts(int *total, int detail[64]) const = 0;
   /// get sum block count
-  virtual long long int getBlockCounts() const = 0;
+  virtual int64_t getBlockCounts() const = 0;
   /// get 3d structure in 3d-matrix (col major)
   virtual const unsigned short *getBuild(int *xSize = nullptr,
                                          int *ySize = nullptr,

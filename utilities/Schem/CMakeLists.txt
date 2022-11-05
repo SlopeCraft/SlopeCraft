@@ -8,7 +8,7 @@ add_library(Schem
      
     Schem.h 
 
-    SChem.cpp 
+    Schem.cpp 
     bit_shrink.h 
     bit_shrink.cpp)
 

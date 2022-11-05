@@ -65,3 +65,6 @@ install/
 ### 3rdParty libs ###
 3rdParty/*
 .vscode/settings.json
+
+### build
+build/*

@@ -83,14 +83,20 @@ if(${SlopeCraft_use_Eigen_vectorize})
     list(APPEND SlopeCraft_vectorize_flags "-O3")
 endif()
 
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+    add_compile_options(-fPIC)
+endif()
+
+set(CMAKE_INSTALL_RPATH ".")
+
 add_subdirectory(utilities)
 add_subdirectory(imageCutter)
 add_subdirectory(SlopeCraftL)
 add_subdirectory(SlopeCraftMain)
 add_subdirectory(MapViewer)
 add_subdirectory(tests)
-add_subdirectory(VisualCraftL)
 
+# add_subdirectory(VisualCraftL)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(SlopeCraft_readme_and_license_files

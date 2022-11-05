@@ -63,7 +63,7 @@ bool rewrite_png(const char *const filename,
   }
 
   FILE *fp = NULL;
-  fopen_s(&fp, filename, "wb");
+  fp=fopen(filename, "wb");
 
   if (fp == NULL) {
     png_destroy_write_struct(&png, &info);
@@ -96,7 +96,7 @@ void test_VCL_single_image() {
   const char *filename = "anvil.png";
 
   FILE *fp = NULL;
-  ::fopen_s(&fp, filename, "rb");
+  fp=::fopen(filename, "rb");
 
   size_t filesize = std::filesystem::file_size(filename);
   cout << "size of png file : " << filesize << endl;

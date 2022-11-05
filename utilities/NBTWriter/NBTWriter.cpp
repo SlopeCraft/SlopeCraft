@@ -22,6 +22,7 @@ This file is part of SlopeCraft.
 
 #include "NBTWriter.h"
 #include <zlib.h>
+#include <stdio.h>
 
 using namespace NBT::internal;
 
@@ -34,7 +35,7 @@ bool NBTWriterBase_nocompress::open(const char *newFileName) noexcept {
   // FILE *newfile = ::fopen(newFileName, "wb");
 
   FILE *newfile = NULL;
-  fopen_s(&newfile, newFileName, "wb");
+  newfile=fopen(newFileName, "wb");
 
   if (newfile == NULL) {
     return false;

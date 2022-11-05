@@ -32,6 +32,8 @@ This file is part of SlopeCraft.
 #include <type_traits>
 #include <vector>
 
+#include <stdlib.h>
+
 //#include <iostream>
 
 // using std::cout,std::endl;

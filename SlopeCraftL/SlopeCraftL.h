@@ -22,7 +22,8 @@ This file is part of SlopeCraft.
 
 #ifndef KERNEL_H
 #define KERNEL_H
-
+#include <stdint.h>
+#include <stddef.h>
 //#define SCL_CAPI
 
 #include "SlopeCraftL_global.h"
@@ -256,7 +257,7 @@ double SCL_EXPORT SCL_getCrossoverProb(const AiCvterOpt *);
 double SCL_EXPORT SCL_getMutationProb(const AiCvterOpt *);
 
 void SCL_EXPORT
-SCL_preprocessImage(unsigned int *ARGB32ptr, const unsigned long long imageSize,
+SCL_preprocessImage(unsigned int *ARGB32ptr, const uint64_t imageSize,
                     const SCL_PureTpPixelSt = ReplaceWithBackGround,
                     const SCL_HalfTpPixelSt = ComposeWithBackGround,
                     unsigned int backGround = 0xFFFFFFFF);
