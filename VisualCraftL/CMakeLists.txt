@@ -34,6 +34,10 @@ target_link_libraries(VisualCraftL PRIVATE libzip::zip z png ColorManip)
 
 target_compile_definitions(VisualCraftL PRIVATE BEFORE "-DVISUALCRAFTL_BUILD")
 
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+    target_compile_options(VisualCraftL PUBLIC "-fvisibility=hidden")
+endif()
+
 add_executable(test_VCL test_lib.cpp)
 
 target_link_libraries(test_VCL PRIVATE VisualCraftL)

@@ -94,8 +94,8 @@ add_subdirectory(SlopeCraftL)
 add_subdirectory(SlopeCraftMain)
 add_subdirectory(MapViewer)
 add_subdirectory(tests)
+add_subdirectory(VisualCraftL)
 
-# add_subdirectory(VisualCraftL)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(SlopeCraft_readme_and_license_files
