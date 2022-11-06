@@ -29,7 +29,7 @@ include(cmake/find_Eigen3.cmake)
 include(cmake/find_HeuristicFlow.cmake)
 
 if(NOT DEFINED SlopeCraft_Qt_root_dir)
-    set(SlopeCraft_Qt_root_dir "D:/ProgramFiles/Qt/Qt/Qt6.2.4-gcc12-shared")
+    # set(SlopeCraft_Qt_root_dir "D:/ProgramFiles/Qt/Qt/Qt6.2.4-gcc12-shared")
 endif()
 
 message(STATUS "SlopeCraft_Qt_root_dir = " ${SlopeCraft_Qt_root_dir})
@@ -85,9 +85,8 @@ endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     add_compile_options(-fPIC)
+    set(CMAKE_INSTALL_RPATH ".")
 endif()
-
-set(CMAKE_INSTALL_RPATH ".")
 
 add_subdirectory(utilities)
 add_subdirectory(imageCutter)
