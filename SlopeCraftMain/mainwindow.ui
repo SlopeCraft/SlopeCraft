@@ -65,7 +65,7 @@
     </sizepolicy>
    </property>
    <property name="styleSheet">
-    <string notr="true">QWidget#centralwidget{border-image: url(:/new/Pic/BG4.jpg);}</string>
+    <string notr="true">QWidget#centralwidget{border-image: url(&quot;:/new/Pic/BG4.jpg&quot;);}</string>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_2">
     <property name="sizeConstraint">
@@ -159,8 +159,8 @@ font: 9pt &quot;微软雅黑&quot;;
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>151</width>
-         <height>706</height>
+         <width>150</width>
+         <height>675</height>
         </rect>
        </property>
        <property name="sizePolicy">
@@ -1802,8 +1802,8 @@ font: 11pt &quot;微软雅黑&quot;;
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>80</width>
-               <height>22</height>
+               <width>20</width>
+               <height>16</height>
               </rect>
              </property>
              <property name="sizePolicy">
@@ -3708,7 +3708,7 @@ hr { height: 1px; border-width: 0; }
      <x>0</x>
      <y>0</y>
      <width>960</width>
-     <height>19</height>
+     <height>17</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuAbout">
