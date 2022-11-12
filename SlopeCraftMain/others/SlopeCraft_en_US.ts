@@ -735,30 +735,33 @@ map files</translation>
         <location filename="../mainwindow.ui" line="431"/>
         <location filename="../mainwindow.ui" line="3998"/>
         <source>WE原理图</source>
-        <translation type="unfinished"></translation>
+        <translation>WE Schem</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="1970"/>
         <source>保存当前图片</source>
-        <translation type="unfinished"></translation>
+        <translation>Save current Image</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="2028"/>
         <source>导出为
 原版结构文件</source>
-        <translation type="unfinished"></translation>
+        <translation>Export
+ Vanilla structure</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="2119"/>
         <source>导出为
 WorldEdit原理图</source>
-        <translation type="unfinished"></translation>
+        <translation>Export
+WE Schem</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="2156"/>
         <source>导出为
 Litematica投影</source>
-        <translation type="unfinished"></translation>
+        <translation>Export
+Litematic</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="3499"/>
@@ -899,7 +902,7 @@ sequence number</translation>
     <message>
         <location filename="../mainwindow.ui" line="3993"/>
         <source>输出当前颜色表</source>
-        <translation type="unfinished"></translation>
+        <translation>Export current colorset</translation>
     </message>
     <message>
         <source>Ai转化器参数</source>
@@ -1082,17 +1085,17 @@ After you reset the strategy, load the image again.</translation>
     <message>
         <location filename="../MainWindow.cpp" line="1581"/>
         <source>投影文件(*.litematic)</source>
-        <translation type="unfinished"></translation>
+        <translation>Litematica schematics(*.litematic)</translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1582"/>
         <source>结构方块文件(*.nbt)</source>
-        <translation type="unfinished"></translation>
+        <translation>Vanilla structure file(*.nbt)</translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1583"/>
         <source>WorldEdit原理图(*.schem)</source>
-        <translation type="unfinished"></translation>
+        <translation>WorldEdit Schematic(*.schem)</translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1596"/>
@@ -1121,7 +1124,7 @@ After you reset the strategy, load the image again.</translation>
     <message>
         <location filename="../MainWindow.cpp" line="1686"/>
         <source>错误信息：</source>
-        <translation type="unfinished"></translation>
+        <translation>Error details :</translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1723"/>
@@ -1171,7 +1174,7 @@ After you reset the strategy, load the image again.</translation>
     <message>
         <location filename="../MainWindow.cpp" line="1835"/>
         <source>未知游戏版本</source>
-        <translation type="unfinished"></translation>
+        <translation>Unknown game version</translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1839"/>
@@ -1179,47 +1182,47 @@ After you reset the strategy, load the image again.</translation>
         <location filename="../MainWindow.cpp" line="1847"/>
         <location filename="../MainWindow.cpp" line="1851"/>
         <source>导出原理图失败</source>
-        <translation type="unfinished"></translation>
+        <translation>Failed to export.</translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1840"/>
         <source>方块种类超出上限。</source>
-        <translation type="unfinished"></translation>
+        <translation>The types of blocks overflow.</translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1844"/>
         <source>错误的文件扩展名</source>
-        <translation type="unfinished"></translation>
+        <translation>Invalid file extension name</translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1848"/>
         <source>三维结构中存在错误的方块</source>
-        <translation type="unfinished"></translation>
+        <translation>Wrong block in 3D structure.</translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1852"/>
         <source>无法创建/打开文件</source>
-        <translation type="unfinished"></translation>
+        <translation>Failed to create/open file</translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1855"/>
         <source>导出WorldEdit原理图失败</source>
-        <translation type="unfinished"></translation>
+        <translation>Failed to export WE schematic</translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1856"/>
         <source>不支持导出1.12 WorldEdit原理图（.schematic格式），仅支持.schem格式</source>
-        <translation type="unfinished"></translation>
+        <translation>Exporting as 1.12 WorldEdit schematic(*.schematic) is not supported, support .schem only</translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1861"/>
         <source>导出原版结构方块文件失败</source>
-        <translation type="unfinished"></translation>
+        <translation>Failed to export vanilla structure file.</translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1862"/>
         <source>导出时指定不使用结构空位表示空气，但方块列表中不包含空气。</source>
-        <translation type="unfinished"></translation>
+        <translation>When exporting as structure, you assigned not to replace air with structure void, but there is no air in the block palette.</translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1867"/>
@@ -1327,7 +1330,7 @@ Try enabling lossless compression, or increase the maximun allowed height -- don
     <message>
         <location filename="../MainWindow.cpp" line="1882"/>
         <source>在构建高度矩阵时，有损压缩失败，没能将地图画压缩到目标高度。         这可能是因为地图画行数过大。         尝试启用无损压缩，或者提高最大允许高度</source>
-        <translation type="unfinished"></translation>
+        <translation>Lossy compression failed to compress the maximun height down to max allowed hehight when computing height map. This may be caused by a too large image. Try enabling lossless compression, or enlarge max allowed height.</translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1932"/>
@@ -1442,17 +1445,17 @@ Try enabling lossless compression, or increase the maximun allowed height -- don
     <message>
         <location filename="../MainWindow.cpp" line="2304"/>
         <source>测试方块列表失败</source>
-        <translation type="unfinished"></translation>
+        <translation>Failed to test the block list.</translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="2305"/>
         <source>具体信息：</source>
-        <translation type="unfinished"></translation>
+        <translation>Detailed information:</translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="2336"/>
         <source>保存颜色表</source>
-        <translation type="unfinished"></translation>
+        <translation>Save palette</translation>
     </message>
     <message>
         <source>图片(*.png *.bmp *.jpg)</source>
