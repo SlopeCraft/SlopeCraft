@@ -11,6 +11,7 @@ list(FIND CMAKE_PREFIX_PATH temp out_temp)
 if(${out_temp} LESS 0)
     message(STATUS "Added the root directory of compiler to CMAKE_PREFIX_PATH")
     list(APPEND CMAKE_PREFIX_PATH ${temp})
+    #set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH};${temp})
     message("CMAKE_PREFIX_PATH = ${CMAKE_PREFIX_PATH}")
 endif()
 

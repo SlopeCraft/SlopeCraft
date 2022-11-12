@@ -92,6 +92,11 @@ target_link_libraries(SlopeCraftL_C PUBLIC ${SlopeCraft_SCL_link_libs})
 target_compile_options(SlopeCraftL PRIVATE ${SlopeCraft_vectorize_flags})
 target_compile_options(SlopeCraftL_C PRIVATE ${SlopeCraft_vectorize_flags})
 
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+    target_compile_options(SlopeCraftL PRIVATE "-fvisibility=hidden")
+    target_compile_options(SlopeCraftL_C PRIVATE "-fvisibility=hidden")
+endif()
+
 # set shared-lib properties
 set_target_properties(SlopeCraftL PROPERTIES
     PREFIX ""
