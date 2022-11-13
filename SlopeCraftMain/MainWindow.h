@@ -299,6 +299,8 @@ private:
   static void algoProgressAdd(void *, int deltaVal);
 
   static QJsonObject GithubAPIJson2Latest3xVer(const QJsonArray &);
+
+  void useLocalFiles();
 };
 
 QJsonObject loadIni(bool = false);

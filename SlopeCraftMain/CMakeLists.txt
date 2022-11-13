@@ -134,62 +134,82 @@ install(TARGETS SlopeCraft
     BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX}
 )
 
+file(GLOB SlopeCraft_Icon ${CMAKE_SOURCE_DIR}/SlopeCraftMain/others/SlopeCraftIconNew.icns)
+file(GLOB SlopeCraft_install_jsons
+    "${CMAKE_SOURCE_DIR}/Blocks/*.json"
+    "${CMAKE_SOURCE_DIR}/Blocks/*.md")
+file(GLOB SlopeCraft_install_png_fixedblocks
+    "${CMAKE_SOURCE_DIR}/Blocks/FixedBlocks/*.png")
+file(GLOB SlopeCraft_install_png_customblocks
+    "${CMAKE_SOURCE_DIR}/Blocks/CustomBlocks/*.png")
+set(SlopeCraft_SlopeCraftMain_images
+    #${CMAKE_CURRENT_SOURCE_DIR}/others/BG3.png
+    #${CMAKE_CURRENT_SOURCE_DIR}/others/BG4.jpg
+    #${CMAKE_CURRENT_SOURCE_DIR}/others/cover_3D.jpg
+    #${CMAKE_CURRENT_SOURCE_DIR}/others/cover_Data.jpg
+    #${CMAKE_CURRENT_SOURCE_DIR}/others/cover_Wall.jpg
+    #${CMAKE_CURRENT_SOURCE_DIR}/others/MCStyledNumbers.png
+    #${CMAKE_CURRENT_SOURCE_DIR}/others/Transparent.png
+    )
+
 # Install Blocks
 if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     # Install for macOS、
     # Install icons
-    file(GLOB SlopeCraft_Icon ${CMAKE_SOURCE_DIR}/SlopeCraftMain/others/SlopeCraftIconNew.icns)
     install(FILES ${SlopeCraft_Icon}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/SlopeCraft.app/Contents/Resources)
 
     # Install FixedBlocks.json, CustomBlocks.json and README.md
-    file(GLOB SlopeCraft_install_jsons
-        "${CMAKE_SOURCE_DIR}/Blocks/*.json"
-        "${CMAKE_SOURCE_DIR}/Blocks/*.md")
     install(FILES ${SlopeCraft_install_jsons}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/SlopeCraft.app/Contents/MacOS/Blocks)
     install(FILES ${SlopeCraft_install_jsons}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/SlopeCraft.app/Contents/MacOS/Blocks)
 
     # Install all png files of fixedblocks
-    file(GLOB SlopeCraft_install_png_fixedblocks
-        "${CMAKE_SOURCE_DIR}/Blocks/FixedBlocks/*.png")
     install(FILES ${SlopeCraft_install_png_fixedblocks}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/SlopeCraft.app/Contents/MacOS/Blocks/FixedBlocks)
     install(FILES ${SlopeCraft_install_png_fixedblocks}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/SlopeCraft.app/Contents/MacOS/Blocks/FixedBlocks)
 
     # Install all png files of customblocks
-    file(GLOB SlopeCraft_install_png_customblocks
-        "${CMAKE_SOURCE_DIR}/Blocks/CustomBlocks/*.png")
     install(FILES ${SlopeCraft_install_png_customblocks}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/SlopeCraft.app/Contents/MacOS/Blocks/CustomBlocks)
     install(FILES ${SlopeCraft_install_png_customblocks}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/SlopeCraft.app/Contents/MacOS/Blocks/CustomBlocks)
-else()
-    # Install for Windows OS. Linux OS and Unix OS probably works too.
+
+
+    # Install images for SlopeCraftMain
+    install(FILES ${SlopeCraft_SlopeCraftMain_images} 
+        DESTINATION {CMAKE_INSTALL_PREFIX}/SlopeCraft.app/Contents/MacOS/images/SlopeCraft)
+    install(FILES ${SlopeCraft_SlopeCraftMain_images} 
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/images/SlopeCraft)
+
+
+elseif((CMAKE_SYSTEM_NAME MATCHES "Windows") OR (CMAKE_SYSTEM_NAME MATCHES "Linux"))
+    # Install for Windows. Linux and Unix probably works too.
     # Install FixedBlocks.json, CustomBlocks.json and README.md
-    file(GLOB SlopeCraft_install_jsons
-        "${CMAKE_SOURCE_DIR}/Blocks/*.json"
-        "${CMAKE_SOURCE_DIR}/Blocks/*.md")
     install(FILES ${SlopeCraft_install_jsons}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/Blocks)
     install(FILES ${SlopeCraft_install_jsons}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Blocks)
 
     # Install all png files of fixedblocks
-    file(GLOB SlopeCraft_install_png_fixedblocks
-        "${CMAKE_SOURCE_DIR}/Blocks/FixedBlocks/*.png")
     install(FILES ${SlopeCraft_install_png_fixedblocks}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/Blocks/FixedBlocks)
     install(FILES ${SlopeCraft_install_png_fixedblocks}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Blocks/FixedBlocks)
 
     # Install all png files of customblocks
-    file(GLOB SlopeCraft_install_png_customblocks
-        "${CMAKE_SOURCE_DIR}/Blocks/CustomBlocks/*.png")
     install(FILES ${SlopeCraft_install_png_customblocks}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/Blocks/CustomBlocks)
     install(FILES ${SlopeCraft_install_png_customblocks}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Blocks/CustomBlocks)
+
+    # Install images for SlopeCraftMain
+    install(FILES ${SlopeCraft_SlopeCraftMain_images} 
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/images/SlopeCraft)
+    install(FILES ${SlopeCraft_SlopeCraftMain_images} 
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/images/SlopeCraft)
+elseif()
+    message(WARNING "No rule to install SlopeCraft and images, because the system is not windows, linux or MacOS.")
 endif()

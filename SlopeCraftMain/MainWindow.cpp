@@ -23,6 +23,7 @@ This file is part of SlopeCraft.
 #include <QDebug>
 #include <QProcess>
 #include <QRgb>
+#include <qcoreapplication.h>
 #include <unsupported/Eigen/CXX11/Tensor>
 
 #include "MainWindow.h"
@@ -65,6 +66,8 @@ MainWindow::MainWindow(QWidget *parent)
   ui->setupUi(this);
   // qDebug("成功setupUi");
   Collected = false;
+
+  useLocalFiles();
 
   // qDebug("成功创建内核");
   kernel->setWindPtr(this);
@@ -2373,4 +2376,15 @@ void MainWindow::exportAvailableColors() {
     this->ProductDir = dest_file;
   }
   return;
+}
+
+void MainWindow::useLocalFiles() {
+  if(!QFile::exists(":/new/Pic/BG4.jpg")) {
+  }
+
+  QString currentDir=QCoreApplication::applicationDirPath();
+  cout<<"Using local BG4.jpg"<<endl;
+  //ui->centralwidget->setStyleSheet("QWidget#centralwidget{border-image: url(\""+currentDir+"/images/SlopeCraft/BG4.jpg\");}");
+  cout<<"style sheet = "<<ui->centralwidget->styleSheet().toStdString()<<endl;
+
 }
