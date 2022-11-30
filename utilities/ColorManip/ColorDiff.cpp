@@ -60,7 +60,7 @@ float color_diff_RGB_plus(const float r1, const float g1, const float b1,
   const float S_tr = OnedDeltaR / sumOnedDelta * S_r * S_r;
   const float S_tg = OnedDeltaG / sumOnedDelta * S_g * S_g;
   const float S_tb = OnedDeltaB / sumOnedDelta * S_b * S_b;
-  const float S_theta = S_tr + S_tg + S_b;
+  const float S_theta = S_tr + S_tg + S_tb;
 
   const float S_ratio =
       std::max(std::max(r1, r2), std::max(std::max(g1, g2), std::max(b1, b2)));

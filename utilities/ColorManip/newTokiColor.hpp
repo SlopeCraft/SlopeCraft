@@ -25,6 +25,7 @@ This file is part of SlopeCraft.
 
 #include "../../SlopeCraftL/SlopeCraftL.h"
 #include "ColorManip.h"
+#include "ColorManip/ColorManip.h"
 #include "colorset_maptical.hpp"
 #include "colorset_optical.hpp"
 #include <Eigen/Dense>
@@ -33,6 +34,8 @@ This file is part of SlopeCraft.
 
 #ifdef SC_VECTORIZE_AVX2
 #include <immintrin.h>
+#include <xmmintrin.h>
+// #warning rua~
 #endif
 
 // using Eigen::Dynamic;
@@ -314,11 +317,146 @@ private:
 
   auto applyRGB_plus(const Eigen::Array3f &c3) noexcept {
     // const ColorList &allowedColors = Allowed->_RGB;
+    constexpr float w_r = 1.0f, w_g = 2.0f, w_b = 1.0f;
+#ifdef SC_VECTORIZE_AVX2
+
+    TempVectorXf_t dist(Allowed->color_count(), 1);
+
+    const float _r2 = c3[0], _g2 = c3[1], _b2 = c3[2];
+
+    const __m256 r2 = _mm256_set1_ps(_r2), g2 = _mm256_set1_ps(_g2),
+                 b2 = _mm256_set1_ps(_b2);
+    const __m256 thre = _mm256_set1_ps(threshold);
+
+    const float rr_plus_gg_plus_bb_2 = (_r2 * _r2 + _g2 * _g2 + _b2 * _b2);
+    int i;
+    for (i = 0; i < Allowed->color_count(); i += num_float_per_m256) {
+      __m256 r1 = _mm256_load_ps(Allowed->rgb_data(0) + i);
+      __m256 g1 = _mm256_load_ps(Allowed->rgb_data(1) + i);
+      __m256 b1 = _mm256_load_ps(Allowed->rgb_data(2) + i);
+
+      __m256 deltaR = _mm256_sub_ps(r1, r2);
+      __m256 deltaG = _mm256_sub_ps(g1, g2);
+      __m256 deltaB = _mm256_sub_ps(b1, b2);
+
+      __m256 SqrModSquare;
+      {
+        __m256 temp_r = _mm256_mul_ps(r1, r1);
+        __m256 temp_g = _mm256_mul_ps(g1, g1);
+        __m256 temp_b = _mm256_mul_ps(b1, b1);
+
+        SqrModSquare = _mm256_add_ps(
+            _mm256_add_ps(temp_r, temp_g),
+            _mm256_add_ps(temp_b, _mm256_set1_ps(rr_plus_gg_plus_bb_2)));
+      }
+
+      __m256 sigma_rgb;
+      {
+        __m256 temp1 = _mm256_add_ps(r1, g1);
+        __m256 temp2 = _mm256_add_ps(g1, _mm256_set1_ps(_r2 + _g2 + _b2));
+        sigma_rgb = _mm256_mul_ps(_mm256_add_ps(temp1, temp2),
+                                  _mm256_set1_ps(1.0f / 3));
+      }
+      __m256 sigma_rgb_plus_thre =
+          _mm256_add_ps(sigma_rgb, _mm256_set1_ps(threshold));
+
+      const __m256 r1_plus_r2 = _mm256_add_ps(r1, r2);
+      const __m256 g1_plus_g2 = _mm256_add_ps(g1, g2);
+      const __m256 b1_plus_b2 = _mm256_add_ps(b1, b2);
+      __m256 S_r, S_g, S_b;
+      {
+        const __m256 m256_1f = _mm256_set1_ps(1.0f);
+        __m256 temp_r = _mm256_div_ps(r1_plus_r2, sigma_rgb_plus_thre);
+        __m256 temp_g = _mm256_div_ps(g1_plus_g2, sigma_rgb_plus_thre);
+        __m256 temp_b = _mm256_div_ps(b1_plus_b2, sigma_rgb_plus_thre);
+
+        S_r = _mm256_min_ps(temp_r, m256_1f);
+        S_g = _mm256_min_ps(temp_g, m256_1f);
+        S_b = _mm256_min_ps(temp_b, m256_1f);
+      }
+
+      __m256 sumRGBsquare;
+      {
+        __m256 r1r2 = _mm256_mul_ps(r1, r2);
+        __m256 g1g2 = _mm256_mul_ps(g1, g2);
+        __m256 b1b2 = _mm256_mul_ps(b1, b2);
+        sumRGBsquare = _mm256_add_ps(r1r2, _mm256_add_ps(g1g2, b1b2));
+      }
+
+      __m256 theta;
+      {
+        __m256 temp1 =
+            _mm256_div_ps(sumRGBsquare, _mm256_add_ps(SqrModSquare, thre));
+        temp1 = _mm256_div_ps(temp1, _mm256_set1_ps(1.01f));
+
+        __m256 temp2 = _mm256_acos_ps(temp1);
+        theta = _mm256_mul_ps(temp2, _mm256_set1_ps(2.0f / M_PI));
+      }
+
+      __m256 OnedDeltaR =
+          _mm256_div_ps(_mm256_abs_ps(deltaR), _mm256_add_ps(r1_plus_r2, thre));
+      __m256 OnedDeltaG =
+          _mm256_div_ps(_mm256_abs_ps(deltaG), _mm256_add_ps(g1_plus_g2, thre));
+      __m256 OnedDeltaB =
+          _mm256_div_ps(_mm256_abs_ps(deltaB), _mm256_add_ps(b1_plus_b2, thre));
+
+      __m256 sumOnedDelta = _mm256_add_ps(_mm256_add_ps(OnedDeltaR, OnedDeltaG),
+                                          _mm256_add_ps(OnedDeltaB, thre));
+
+      __m256 S_tr = _mm256_div_ps(
+          OnedDeltaR, _mm256_mul_ps(sumOnedDelta, _mm256_mul_ps(S_r, S_r)));
+      __m256 S_tg = _mm256_div_ps(
+          OnedDeltaG, _mm256_mul_ps(sumOnedDelta, _mm256_mul_ps(S_g, S_g)));
+      __m256 S_tb = _mm256_div_ps(
+          OnedDeltaB, _mm256_mul_ps(sumOnedDelta, _mm256_mul_ps(S_b, S_b)));
+
+      __m256 S_theta = _mm256_add_ps(S_tr, _mm256_add_ps(S_tg, S_tb));
+
+      __m256 S_ratio;
+      {
+        __m256 max_r = _mm256_max_ps(r1, r2);
+        __m256 max_g = _mm256_max_ps(g1, g2);
+        __m256 max_b = _mm256_max_ps(b1, b2);
+        S_ratio = _mm256_max_ps(max_r, _mm256_max_ps(max_g, max_b));
+      }
+
+      __m256 diff;
+      {
+        __m256 temp_r =
+            _mm256_mul_ps(_mm256_mul_ps(_mm256_mul_ps(S_r, S_r),
+                                        _mm256_mul_ps(deltaR, deltaR)),
+                          _mm256_set1_ps(w_r));
+        __m256 temp_g =
+            _mm256_mul_ps(_mm256_mul_ps(_mm256_mul_ps(S_g, S_g),
+                                        _mm256_mul_ps(deltaG, deltaG)),
+                          _mm256_set1_ps(w_g));
+        __m256 temp_b =
+            _mm256_mul_ps(_mm256_mul_ps(_mm256_mul_ps(S_b, S_b),
+                                        _mm256_mul_ps(deltaB, deltaB)),
+                          _mm256_set1_ps(w_b));
+        __m256 wr_plus_wr_plus_wb = _mm256_set1_ps(w_r + w_b + w_g);
+        __m256 temp_X =
+            _mm256_div_ps(_mm256_add_ps(_mm256_add_ps(temp_r, temp_g), temp_b),
+                          wr_plus_wr_plus_wb);
+
+        __m256 temp_Y = _mm256_mul_ps(_mm256_mul_ps(S_theta, S_ratio),
+                                      _mm256_mul_ps(theta, theta));
+
+        diff = _mm256_add_ps(temp_X, temp_Y);
+      }
+
+      _mm256_store_ps(dist.data() + i, diff);
+    }
+
+    for (; i < Allowed->color_count(); i++) {
+      dist(i) = color_diff_RGB_plus(Allowed->RGB(i, 0), Allowed->RGB(i, 1),
+                                    Allowed->RGB(i, 2), _r2, _g2, _b2);
+    }
+
+#else
     float R = c3[0];
     float g = c3[1];
     float b = c3[2];
-    constexpr float w_r = 1.0f, w_g = 2.0f, w_b = 1.0f;
-#ifndef SC_VECTORIZE_AVX2_NO
     auto SqrModSquare = ((R * R + g * g + b * b) *
                          (Allowed->rgb(0).square() + Allowed->rgb(1).square() +
                           Allowed->rgb(2).square()))
@@ -364,8 +502,6 @@ private:
          S_b.square() * w_b * deltaB.square()) /
             (w_r + w_g + w_b) +
         S_theta * S_ratio * theta.square(); //+S_theta*S_ratio*theta.square()
-#else
-    TempVectorXf_t dist(Allowed->color_count(), 1);
 #endif
     return find_result(dist);
   }
@@ -436,7 +572,117 @@ private:
   }
 
   auto applyLab94(const Eigen::Array3f &c3) noexcept {
+#ifdef SC_VECTORIZE_AVX2
+    TempVectorXf_t Diff(Allowed->color_count(), 1);
 
+    __m256 L2 = _mm256_set1_ps(c3[0]);
+    __m256 a2 = _mm256_set1_ps(c3[1]);
+    __m256 b2 = _mm256_set1_ps(c3[2]);
+    __m256 C1_2, SC_2, sqrt_C1_2;
+    {
+      float L = c3[0];
+      float a = c3[1];
+      float b = c3[2];
+      float _C1_2 = a * a + b * b;
+      float _SC_2 =
+          (sqrt(_C1_2) * 0.045f + 1.0f) * (sqrt(_C1_2) * 0.045f + 1.0f);
+
+      C1_2 = _mm256_set1_ps(_C1_2);
+      SC_2 = _mm256_set1_ps(_SC_2);
+      sqrt_C1_2 = _mm256_set1_ps(sqrt(_C1_2));
+    }
+
+    int i;
+    for (i = 0; i < Allowed->color_count(); i += num_float_per_m256) {
+
+      __m256 L1 = _mm256_load_ps(Allowed->lab_data(0) + i);
+      __m256 a1 = _mm256_load_ps(Allowed->lab_data(1) + i);
+      __m256 b1 = _mm256_load_ps(Allowed->lab_data(2) + i);
+      //      auto deltaL_2 = (Allowed->lab(0) - L).square();
+
+      __m256 deltaL_2;
+      {
+        __m256 Ldiff = _mm256_sub_ps(L1, L2);
+        deltaL_2 = _mm256_mul_ps(Ldiff, Ldiff);
+      }
+
+      __m256 C2_2 = _mm256_add_ps(_mm256_mul_ps(a1, a1), _mm256_mul_ps(b1, b1));
+
+      __m256 deltaCab_2;
+      {
+        __m256 temp = _mm256_sub_ps(sqrt_C1_2, _mm256_sqrt_ps(C2_2));
+        deltaCab_2 = _mm256_mul_ps(temp, temp);
+      }
+
+      __m256 deltaHab_2;
+      {
+        __m256 a_diff = _mm256_sub_ps(a1, a2);
+        __m256 b_diff = _mm256_sub_ps(b1, b2);
+
+        deltaHab_2 = _mm256_add_ps(_mm256_mul_ps(a_diff, a_diff),
+                                   _mm256_mul_ps(b_diff, b_diff));
+        deltaHab_2 = _mm256_sub_ps(deltaHab_2, deltaCab_2);
+      }
+
+      constexpr float SL = 1, kL = 1;
+      constexpr float K1 = 0.045f;
+      constexpr float K2 = 0.015f;
+
+      __m256 SH_2;
+      {
+        __m256 temp = _mm256_add_ps(
+            _mm256_mul_ps(_mm256_sqrt_ps(C2_2), _mm256_set1_ps(K2)),
+            _mm256_set1_ps(1.0f));
+        SH_2 = _mm256_mul_ps(temp, temp);
+      }
+
+      __m256 diff;
+      {
+        __m256 temp_C = _mm256_div_ps(deltaCab_2, SC_2);
+        __m256 temp_H = _mm256_div_ps(deltaHab_2, SH_2);
+        diff = _mm256_add_ps(deltaL_2, _mm256_add_ps(temp_C, temp_H));
+      }
+
+      _mm256_store_ps(Diff.data() + i, diff);
+    }
+
+    const float L = c3[0];
+    const float a = c3[1];
+    const float b = c3[2];
+    float _C1_2 = a * a + b * b;
+    float _SC_2 = (sqrt(_C1_2) * 0.045f + 1.0f) * (sqrt(_C1_2) * 0.045f + 1.0f);
+
+    for (; i < Allowed->color_count(); i++) {
+      // auto deltaL_2 = (Allowed->lab(0) - L).square();
+
+      const float deltaL_2 =
+          (Allowed->Lab(i, 0) - L) * (Allowed->Lab(i, 0) - L);
+
+      const float C2_2 = Allowed->Lab(i, 1) * Allowed->Lab(i, 1) +
+                         Allowed->Lab(i, 2) * Allowed->Lab(i, 2);
+      float deltaCab_2;
+      {
+        float temp = sqrt(_C1_2) - sqrt(C2_2);
+        deltaCab_2 = temp * temp;
+      }
+
+      float deltaHab_2;
+      {
+        float diff_a = Allowed->Lab(i, 1) - a;
+        float diff_b = Allowed->Lab(i, 2) - b;
+        deltaHab_2 = diff_a * diff_a + diff_b * diff_b;
+      }
+
+      float SH_2;
+      {
+        float temp = sqrt(C2_2) * 0.015f + 1.0f;
+        SH_2 = temp * temp;
+      }
+      // delete &SH_2;
+      Diff(i) = deltaL_2 + deltaCab_2 / _SC_2 + deltaHab_2 / SH_2;
+    }
+
+#else
     float L = c3[0];
     float a = c3[1];
     float b = c3[2];
@@ -453,7 +699,7 @@ private:
     float SC_2 = (sqrt(C1_2) * 0.045f + 1.0f) * (sqrt(C1_2) * 0.045f + 1.0f);
     auto SH_2 = (C2_2.sqrt() * 0.015f + 1.0f).square();
     TempVectorXf_t Diff = deltaL_2 + deltaCab_2 / SC_2 + deltaHab_2 / SH_2;
-
+#endif
     return find_result(Diff);
   }
 

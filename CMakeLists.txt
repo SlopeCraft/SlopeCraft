@@ -69,12 +69,12 @@ if(${SlopeCraft_vectorize})
 
     add_definitions("-DSC_VECTORIZE_AVX2")
 
-    check_cxx_compiler_flag("-march=native" _march_native_works)
+    check_cxx_compiler_flag("-mavx2" _march_native_works)
     check_cxx_compiler_flag("-xHost" _xhost_works)
 
     if(${_march_native_works})
-        message(STATUS "Vectorize using -march=native")
-        set(SlopeCraft_vectorize_flags "-march=native")
+        message(STATUS "Vectorize using -mavx2")
+        set(SlopeCraft_vectorize_flags "-mavx2")
     elseif(${_xhost_works})
         message(STATUS "Vectorize using -xHost")
         set(SlopeCraft_vectorize_flags "-xHost")
