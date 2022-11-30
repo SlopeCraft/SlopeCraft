@@ -54,8 +54,8 @@ if(${SlopeCraft_update_ts_files} AND NOT DEFINED SlopeCraft_Qt_lupdate_executabl
     set(SlopeCraft_Qt_lupdate_executable ${SlopeCraft_Qt_root_dir}/bin/lupdate)
 endif()
 
-if(NOT DEFINED SlopeCraft_use_Eigen_vectorize)
-    set(SlopeCraft_use_Eigen_vectorize OFF)
+if(NOT DEFINED SlopeCraft_vectorize)
+    set(SlopeCraft_vectorize ON)
 endif()
 
 add_definitions("-D_USE_MATH_DEFINES")
@@ -64,8 +64,10 @@ add_definitions("-DSCL_FIND_GlobalEnums_BY_PATH")
 # if don't vectorize, or no suitable flag found, this variable will be empty
 set(SlopeCraft_vectorize_flags)
 
-if(${SlopeCraft_use_Eigen_vectorize})
+if(${SlopeCraft_vectorize})
     include(CheckCXXCompilerFlag)
+
+    add_definitions("-DSC_VECTORIZE_AVX2")
 
     check_cxx_compiler_flag("-march=native" _march_native_works)
     check_cxx_compiler_flag("-xHost" _xhost_works)
@@ -84,8 +86,12 @@ if(${SlopeCraft_use_Eigen_vectorize})
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    #add_compile_options(-fPIC)
+    # add_compile_options(-fPIC)
     set(CMAKE_INSTALL_RPATH ".")
+endif()
+
+if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+    add_compile_definitions("_CRT_SECURE_NO_WARNINGS")
 endif()
 
 add_subdirectory(utilities)

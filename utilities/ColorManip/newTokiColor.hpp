@@ -31,10 +31,17 @@ This file is part of SlopeCraft.
 #include <cmath>
 #include <functional>
 
+#ifdef SC_VECTORIZE_AVX2
+#include <immintrin.h>
+#endif
+
 // using Eigen::Dynamic;
 namespace {
 static constexpr float threshold = 1e-10f;
-}
+
+constexpr int num_float_per_m256 = 256 / 32;
+
+} // namespace
 struct convert_unit {
   explicit convert_unit(ARGB _a, ::SCL_convertAlgo _c) : _ARGB(_a), algo(_c) {}
   ARGB _ARGB;
@@ -258,12 +265,46 @@ private:
   }
 
   auto applyRGB(const Eigen::Array3f &c3) noexcept {
+#ifdef SC_VECTORIZE_AVX2
+    TempVectorXf_t Diff(Allowed->color_count(), 1);
 
+    __m256 r2 = _mm256_set1_ps(c3[0]);
+    __m256 g2 = _mm256_set1_ps(c3[1]);
+    __m256 b2 = _mm256_set1_ps(c3[2]);
+
+    __m256 *const destp = (__m256 *)Diff.data();
+
+    for (int i = 0; i * num_float_per_m256 < Allowed->color_count(); i++) {
+
+      __m256 r1 = _mm256_load_ps(Allowed->rgb_data(0) + i * num_float_per_m256);
+      __m256 g1 = _mm256_load_ps(Allowed->rgb_data(1) + i * num_float_per_m256);
+      __m256 b1 = _mm256_load_ps(Allowed->rgb_data(2) + i * num_float_per_m256);
+
+      __m256 dr = _mm256_sub_ps(r1, r2);
+      __m256 dg = _mm256_sub_ps(g1, g2);
+      __m256 db = _mm256_sub_ps(b1, b2);
+
+      dr = _mm256_mul_ps(dr, dr);
+      dg = _mm256_mul_ps(dg, dg);
+      db = _mm256_mul_ps(db, db);
+
+      destp[i] = _mm256_add_ps(dr, _mm256_add_ps(dg, db));
+    }
+
+    for (int i =
+             (Allowed->color_count() / num_float_per_m256) * num_float_per_m256;
+         i < Allowed->color_count(); i++) {
+      Diff(i) = (Allowed->RGB(i, 0) - c3[0]) * (Allowed->RGB(i, 0) - c3[0]) +
+                (Allowed->RGB(i, 1) - c3[1]) * (Allowed->RGB(i, 1) - c3[1]) +
+                (Allowed->RGB(i, 2) - c3[2]) * (Allowed->RGB(i, 2) - c3[2]);
+    }
+#else
     auto Diff0_2 = (Allowed->rgb(0) - c3[0]).square();
     auto Diff1_2 = (Allowed->rgb(1) - c3[1]).square();
     auto Diff2_2 = (Allowed->rgb(2) - c3[2]).square();
-
     TempVectorXf_t Diff = Diff0_2 + Diff1_2 + Diff2_2;
+#endif
+
     // Data.CurrentColor-=allowedColors;
 
     return find_result(Diff);
@@ -341,12 +382,48 @@ private:
   }
 
   auto applyXYZ(const Eigen::Array3f &c3) noexcept {
+#ifdef SC_VECTORIZE_AVX2
+    TempVectorXf_t Diff(Allowed->color_count(), 1);
+    // const __m256 *const x1p = (const __m256 *)Allowed->xyz_data(0);
+    // const __m256 *const y1p = (const __m256 *)Allowed->xyz_data(1);
+    // const __m256 *const z1p = (const __m256 *)Allowed->xyz_data(2);
 
+    __m256 x2 = _mm256_set1_ps(c3[0]);
+    __m256 y2 = _mm256_set1_ps(c3[1]);
+    __m256 z2 = _mm256_set1_ps(c3[2]);
+
+    __m256 *const destp = (__m256 *)Diff.data();
+
+    for (int i = 0; i * num_float_per_m256 < Allowed->color_count(); i++) {
+      __m256 x1 = _mm256_load_ps(Allowed->xyz_data(0) + i * num_float_per_m256);
+      __m256 y1 = _mm256_load_ps(Allowed->xyz_data(1) + i * num_float_per_m256);
+      __m256 z1 = _mm256_load_ps(Allowed->xyz_data(2) + i * num_float_per_m256);
+
+      __m256 dx = _mm256_sub_ps(x1, x2);
+      __m256 dy = _mm256_sub_ps(y1, y2);
+      __m256 dz = _mm256_sub_ps(z1, z2);
+
+      dx = _mm256_mul_ps(dx, dx);
+      dy = _mm256_mul_ps(dy, dy);
+      dz = _mm256_mul_ps(dz, dz);
+
+      destp[i] = _mm256_add_ps(dx, _mm256_add_ps(dy, dz));
+    }
+
+    for (int i =
+             (Allowed->color_count() / num_float_per_m256) * num_float_per_m256;
+         i < Allowed->color_count(); i++) {
+      Diff(i) = (Allowed->XYZ(i, 0) - c3[0]) * (Allowed->XYZ(i, 0) - c3[0]) +
+                (Allowed->XYZ(i, 1) - c3[1]) * (Allowed->XYZ(i, 1) - c3[1]) +
+                (Allowed->XYZ(i, 2) - c3[2]) * (Allowed->XYZ(i, 2) - c3[2]);
+    }
+#else
     auto Diff0_2 = (Allowed->xyz(0) - c3[0]).square();
     auto Diff1_2 = (Allowed->xyz(1) - c3[1]).square();
     auto Diff2_2 = (Allowed->xyz(2) - c3[2]).square();
 
     TempVectorXf_t Diff = Diff0_2 + Diff1_2 + Diff2_2;
+#endif
     // Data.CurrentColor-=allowedColors;
     return find_result(Diff);
   }

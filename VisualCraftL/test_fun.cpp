@@ -63,7 +63,7 @@ bool rewrite_png(const char *const filename,
   }
 
   FILE *fp = NULL;
-  fp=fopen(filename, "wb");
+  fp = fopen(filename, "wb");
 
   if (fp == NULL) {
     png_destroy_write_struct(&png, &info);
@@ -96,7 +96,7 @@ void test_VCL_single_image() {
   const char *filename = "anvil.png";
 
   FILE *fp = NULL;
-  fp=::fopen(filename, "rb");
+  fp = ::fopen(filename, "rb");
 
   size_t filesize = std::filesystem::file_size(filename);
   cout << "size of png file : " << filesize << endl;
@@ -202,11 +202,11 @@ void test_VCL_block_model_full_block() {
                            ->subfolder("block")
                            ->files;
   const bool success =
-      parse_png(images.at("smooth_stone.png").data(),
-                images.at("smooth_stone.png").file_size(), &texture);
+      parse_png(images.at("gold_block.png").data(),
+                images.at("gold_block.png").file_size(), &texture);
 
   if (!success) {
-    cout << "Failed to parse smooth_stone.png" << endl;
+    cout << "Failed to parse gold_block.png" << endl;
     return;
   }
 
@@ -223,7 +223,7 @@ void test_VCL_block_model_full_block() {
     smooth_stone.elements.emplace_back(element);
   }
 
-  export_projection_images(smooth_stone, "test_block_model/smooth_stone");
+  export_projection_images(smooth_stone, "test_block_model/gold_block");
 
   cout << "success" << endl;
 }

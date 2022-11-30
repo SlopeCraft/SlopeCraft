@@ -31,34 +31,28 @@ find_package(PNG REQUIRED)
 include_directories(${ZLIB_INCLUDE_DIR})
 
 if(NOT ${libzip_FOUND})
-    message("Lib zip not found")
+    message(FATAL_ERROR "libzip not found")
 endif()
-
 
 target_link_libraries(VisualCraftL PRIVATE z png libzip::zip ColorManip)
 
 target_compile_definitions(VisualCraftL PRIVATE BEFORE "-DVISUALCRAFTL_BUILD")
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+    # message("libzip_LIBRARY = " ${libzip_LIBRARY})
+    # if (NOT DEFINED libzip_LIBRARY)
+    # find_library(sc_libzip_lib NAMES libzip.so PATHS ${CMAKE_PREIFX_PATH})
+    # else()
+    # set(sc_libzip_lib ${libzip_LIBRARY})
+    # endif()
 
-
-    #message("libzip_LIBRARY = " ${libzip_LIBRARY})
-    #if (NOT DEFINED libzip_LIBRARY)
-    #    find_library(sc_libzip_lib NAMES libzip.so PATHS ${CMAKE_PREIFX_PATH})
-    #else()
-    #    set(sc_libzip_lib ${libzip_LIBRARY})
-    #endif()
-
-    #message("sc_libzip_lib = " ${sc_libzip_lib})
-
-
-
-    target_compile_options(VisualCraftL 
+    # message("sc_libzip_lib = " ${sc_libzip_lib})
+    target_compile_options(VisualCraftL
         PUBLIC "-fvisibility=hidden"
-        #PUBLIC "-rpath-link"
-        )
-endif()
 
+        # PUBLIC "-rpath-link"
+    )
+endif()
 
 add_executable(test_VCL test_lib.cpp)
 

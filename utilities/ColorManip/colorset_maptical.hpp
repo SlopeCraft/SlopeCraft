@@ -42,13 +42,13 @@ public:
       Eigen::Array<float, Eigen::Dynamic, 1, Eigen::ColMajor, 256>;
 
   using result_t = uint8_t;
-  //记录与result的深度值不同的两个有损优化候选色选择系数（升序排列），Depth=3时无效
+  // 记录与result的深度值不同的两个有损优化候选色选择系数（升序排列），Depth=3时无效
   std::array<float, 2> sideSelectivity;
 
-  //记录与result的深度值不同的两个有损优化候选色（升序排列），Depth=3时无效
+  // 记录与result的深度值不同的两个有损优化候选色（升序排列），Depth=3时无效
   std::array<uint8_t, 2> sideResult;
 
-  uint8_t Result{0}; //最终调色结果
+  uint8_t Result{0}; // 最终调色结果
 
 public:
   static bool needFindSide;
@@ -59,7 +59,7 @@ public:
   inline bool is_result_computed() const noexcept { return (Result != 0); }
 };
 
-class colorset_maptical_basic {
+class alignas(32) colorset_maptical_basic {
 private:
   Eigen::Array<float, 256, 3> __rgb;
   Eigen::Array<float, 256, 3> __hsv;
@@ -116,7 +116,7 @@ public:
   }
 };
 
-class colorset_maptical_allowed {
+class alignas(32) colorset_maptical_allowed {
 public:
   using color_col = Eigen::Array<float, 256, 1>;
 

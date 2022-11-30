@@ -27,15 +27,15 @@ This file is part of SlopeCraft.
 #include <Eigen/Dense>
 #include <cmath>
 
-class colorset_optical_base {
-private:
-  int _color_count;
-
+class alignas(32) colorset_optical_base {
 protected:
   std::array<Eigen::ArrayXf, 3> __rgb;
   std::array<Eigen::ArrayXf, 3> __hsv;
   std::array<Eigen::ArrayXf, 3> __lab;
   std::array<Eigen::ArrayXf, 3> __xyz;
+
+private:
+  int _color_count;
 
 public:
   inline int color_count() const noexcept { return _color_count; }
