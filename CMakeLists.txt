@@ -84,7 +84,7 @@ if(${SlopeCraft_use_Eigen_vectorize})
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    add_compile_options(-fPIC)
+    #add_compile_options(-fPIC)
     set(CMAKE_INSTALL_RPATH ".")
 endif()
 

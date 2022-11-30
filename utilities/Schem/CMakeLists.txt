@@ -16,3 +16,8 @@ add_library(Schem
 #target_compile_options(Schem BEFORE PUBLIC -std=c++17)
 
 target_link_libraries(Schem PRIVATE NBTWriter)
+
+
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+    target_compile_options(Schem PUBLIC "-fvisibility=hidden")
+endif()

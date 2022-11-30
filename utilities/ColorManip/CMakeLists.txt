@@ -25,3 +25,8 @@ add_library(ColorManip
 target_link_libraries(ColorManip PRIVATE OpenMP::OpenMP_CXX)
 #target_compile_options(ColorManip BEFORE PUBLIC "-std=c++17")
 target_compile_options(ColorManip PRIVATE ${SlopeCraft_vectorize_flags})
+
+
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+    target_compile_options(ColorManip PUBLIC "-fPIC")
+endif()

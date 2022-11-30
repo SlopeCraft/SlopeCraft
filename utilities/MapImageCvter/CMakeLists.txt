@@ -15,3 +15,8 @@ add_library(MapImageCvter
 
 target_link_libraries(MapImageCvter PUBLIC ColorManip GAConverter OpenMP::OpenMP_CXX)
 target_compile_options(MapImageCvter PRIVATE ${SlopeCraft_vectorize_flags})
+
+
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+    target_compile_options(MapImageCvter PUBLIC "-fvisibility=hidden")
+endif()

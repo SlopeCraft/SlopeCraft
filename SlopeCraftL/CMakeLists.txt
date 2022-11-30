@@ -93,8 +93,8 @@ target_compile_options(SlopeCraftL PRIVATE ${SlopeCraft_vectorize_flags})
 target_compile_options(SlopeCraftL_C PRIVATE ${SlopeCraft_vectorize_flags})
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    target_compile_options(SlopeCraftL PRIVATE "-fvisibility=hidden")
-    target_compile_options(SlopeCraftL_C PRIVATE "-fvisibility=hidden")
+    target_compile_options(SlopeCraftL PRIVATE "-fvisibility=hidden" "-fPIC")
+    target_compile_options(SlopeCraftL_C PRIVATE "-fvisibility=hidden" "-fPIC")
 endif()
 
 # set shared-lib properties

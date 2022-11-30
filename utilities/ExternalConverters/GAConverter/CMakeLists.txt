@@ -21,7 +21,12 @@ set(SlopeCraft_GAConverter_sources
     sortColor.cpp
 )
 
+
 add_library(GAConverter STATIC ${SlopeCraft_GAConverter_sources})
 target_link_libraries(GAConverter PRIVATE OpenMP::OpenMP_CXX)
+
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+    target_compile_options(GAConverter PUBLIC "-fPIC" "-fvisibility=hidden")
+endif()
 
 # target_compile_options(GAConverter BEFORE PUBLIC "-std=c++17")
