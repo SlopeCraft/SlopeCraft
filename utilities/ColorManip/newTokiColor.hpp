@@ -272,7 +272,7 @@ private:
     __m256 g2 = _mm256_set1_ps(c3[1]);
     __m256 b2 = _mm256_set1_ps(c3[2]);
 
-    __m256 *const destp = (__m256 *)Diff.data();
+    //__m256 *const destp = (__m256 *)Diff.data();
 
     for (int i = 0; i * num_float_per_m256 < Allowed->color_count(); i++) {
 
@@ -288,7 +288,9 @@ private:
       dg = _mm256_mul_ps(dg, dg);
       db = _mm256_mul_ps(db, db);
 
-      destp[i] = _mm256_add_ps(dr, _mm256_add_ps(dg, db));
+      _mm256_store_ps(Diff.data() + i * num_float_per_m256,
+                      _mm256_add_ps(dr, _mm256_add_ps(dg, db)));
+      // destp[i] = ;
     }
 
     for (int i =
@@ -316,6 +318,7 @@ private:
     float g = c3[1];
     float b = c3[2];
     constexpr float w_r = 1.0f, w_g = 2.0f, w_b = 1.0f;
+#ifndef SC_VECTORIZE_AVX2_NO
     auto SqrModSquare = ((R * R + g * g + b * b) *
                          (Allowed->rgb(0).square() + Allowed->rgb(1).square() +
                           Allowed->rgb(2).square()))
@@ -361,7 +364,9 @@ private:
          S_b.square() * w_b * deltaB.square()) /
             (w_r + w_g + w_b) +
         S_theta * S_ratio * theta.square(); //+S_theta*S_ratio*theta.square()
-
+#else
+    TempVectorXf_t dist(Allowed->color_count(), 1);
+#endif
     return find_result(dist);
   }
 
@@ -392,7 +397,7 @@ private:
     __m256 y2 = _mm256_set1_ps(c3[1]);
     __m256 z2 = _mm256_set1_ps(c3[2]);
 
-    __m256 *const destp = (__m256 *)Diff.data();
+    //__m256 *const destp = (__m256 *)Diff.data();
 
     for (int i = 0; i * num_float_per_m256 < Allowed->color_count(); i++) {
       __m256 x1 = _mm256_load_ps(Allowed->xyz_data(0) + i * num_float_per_m256);
@@ -407,7 +412,9 @@ private:
       dy = _mm256_mul_ps(dy, dy);
       dz = _mm256_mul_ps(dz, dz);
 
-      destp[i] = _mm256_add_ps(dx, _mm256_add_ps(dy, dz));
+      _mm256_store_ps(Diff.data() + i * num_float_per_m256,
+                      _mm256_add_ps(dx, _mm256_add_ps(dy, dz)));
+      // destp[i] = _mm256_add_ps(dx, _mm256_add_ps(dy, dz));
     }
 
     for (int i =
