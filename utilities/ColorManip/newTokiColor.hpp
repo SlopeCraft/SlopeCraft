@@ -35,14 +35,37 @@ This file is part of SlopeCraft.
 #ifdef SC_VECTORIZE_AVX2
 #include <immintrin.h>
 #include <xmmintrin.h>
+
+constexpr int num_float_per_m256 = 256 / 32;
+inline __m256 _mm256_abs_ps(__m256 x) noexcept {
+  alignas(32) float y[num_float_per_m256];
+
+  _mm256_store_ps(y, x);
+
+  for (int i = 0; i < 8; i++) {
+    y[i] = std::abs(y[i]);
+  }
+
+  return _mm256_load_ps(y);
+}
+inline __m256 _mm256_acos_ps(__m256 x) noexcept {
+  alignas(32) float y[num_float_per_m256];
+
+  _mm256_store_ps(y, x);
+
+  for (int i = 0; i < 8; i++) {
+    y[i] = std::acos(y[i]);
+  }
+
+  return _mm256_load_ps(y);
+}
+
 // #warning rua~
 #endif
 
 // using Eigen::Dynamic;
 namespace {
 static constexpr float threshold = 1e-10f;
-
-constexpr int num_float_per_m256 = 256 / 32;
 
 } // namespace
 struct convert_unit {
