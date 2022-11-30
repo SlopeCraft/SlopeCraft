@@ -44,7 +44,7 @@ message("Length of CMAKE_PREFIX_PATH = " ${temp_L})
 # include(cmake/find_qt_translate.cmake)
 
 # If it is set to ON, everytime CMake reconfigure the project, all .ts files will be updated.
-set(SlopeCraft_update_ts_files OFF)
+set(SlopeCraft_update_ts_files ON)
 
 if(${SlopeCraft_update_ts_files} AND NOT DEFINED SlopeCraft_Qt_lupdate_executable)
     if(NOT DEFINED SlopeCraft_Qt_root_dir)
