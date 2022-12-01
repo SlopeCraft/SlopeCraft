@@ -136,6 +136,8 @@ inline ARGB color_at_relative_idx(const EImgRowMajor_t &img, const float r_f,
   const int c_i = std::min<int>(std::max(int(std::round(c_f * img.cols())), 0),
                                 img.cols() - 1);
 
+  // printf("\ncolor_at_relative_idx : r_i = %i, c_i = %i", r_i, c_i);
+
   return img(r_i, c_i);
 }
 
@@ -158,6 +160,14 @@ struct intersect_point {
          uv[1] * (face_ptr->uv_end[1] - face_ptr->uv_start[1])) /
         16;
 
+    // printf("u_in_")
+    /*
+    printf("\nintersect_point::color : ");
+    printf("uv_start = [%i, %i]; uv_end = [%i, %i]; ", face_ptr->uv_start[0],
+           face_ptr->uv_start[1], face_ptr->uv_end[0], face_ptr->uv_end[1]);
+
+    printf("uv = [%f, %f]; ", uv[0], uv[1]);
+    printf("u_in_01 = %f, v_in_01 = %f; ", u_in_01, v_in_01);*/
     return color_at_relative_idx(*(face_ptr->texture), v_in_01, u_in_01);
   }
 };

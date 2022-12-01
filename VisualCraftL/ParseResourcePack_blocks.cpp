@@ -160,68 +160,83 @@ void element::intersect_points(
 
   const Array3f min_pos = this->xyz_minpos();
   const Array3f max_pos = this->xyz_maxpos();
+  /*
+  printf("\nelement::intersect_points : ");
+  printf("min_pos = [%f, %f, %f]; ", min_pos[0], min_pos[1], min_pos[2]);
+  printf("max_pos = [%f, %f, %f]; ", max_pos[0], max_pos[1], max_pos[2]);
+
+  */
 
   // u is col and v is row
-  Array3f uv_start, uv_end;
+  Array3f uv_start;
   // #warning compute uv here
 
   switch (f) {
   case face_idx::face_up:
-    uv_start = {min_pos[0], max_pos[1], min_pos[0]};
+    uv_start = {min_pos[0], max_pos[1], min_pos[2]};
     // uv_end=max_pos;
 
     // here u <-> x+
-    intersect.uv[0] = (coordinate[2] - uv_start[2]) / this->z_range_abs();
+    intersect.uv[0] = (coordinate[0] - uv_start[0]) / this->x_range_abs();
     // here v<-> z+
-    intersect.uv[1] = (coordinate[1] - uv_start[1]) / this->x_range_abs();
+    intersect.uv[1] = (coordinate[2] - uv_start[2]) / this->z_range_abs();
+    /*
+                         printf("\nelement::intersect_points : face = up,
+                         uv_start = [%f, %f, %f], " "uv = [%f, %f]",
+                                uv_start[0], uv_start[1], uv_start[2],
+                         intersect.uv[0], intersect.uv[1]);
+                                */
     break;
 
   case face_idx::face_down:
-    uv_start = {min_pos[0], min_pos[1], max_pos[2]};
-    uv_end = {max_pos[0], min_pos[1], min_pos[2]};
-    // here u <-> x+
-    intersect.uv[0] = (coordinate[0] - uv_start[0]) / this->x_range_abs();
-    // here v <-> z-
-    intersect.uv[1] = (uv_end[2] - coordinate[2]) / this->z_range_abs();
+    uv_start = {max_pos[0], min_pos[1], max_pos[2]};
+    {
+      Array3f uv_end = {min_pos[0], min_pos[1], min_pos[2]};
+      //   here u <-> x+
+      intersect.uv[0] = (coordinate[0] - uv_end[0]) / this->x_range_abs();
+      // here v <-> z-
+      intersect.uv[1] = (uv_start[2] - coordinate[2]) / this->z_range_abs();
+    }
     break;
 
   case face_idx::face_east:
     // uv_start=max_pos;
-    uv_end = {max_pos[0], min_pos[1], min_pos[2]};
-    // here u <-> z-
-    intersect.uv[0] = (uv_end[2] - coordinate[2]) / this->z_range_abs();
+    uv_start = {max_pos[0], max_pos[1], max_pos[2]};
+    // uv_end = {max_pos[0], min_pos[1], min_pos[2]};
+    //  here u <-> z-
+    intersect.uv[0] = (uv_start[2] - coordinate[2]) / this->z_range_abs();
     // here v <-> y-
-    intersect.uv[1] = (uv_end[1] - coordinate[1]) / this->y_range_abs();
+    intersect.uv[1] = (uv_start[1] - coordinate[1]) / this->y_range_abs();
     break;
 
   case face_idx::face_west:
     uv_start = {min_pos[0], max_pos[1], min_pos[2]};
-    uv_end = {min_pos[0], min_pos[1], max_pos[2]};
+    // uv_end = {min_pos[0], min_pos[1], max_pos[2]};
 
     // here u <-> z+
     intersect.uv[0] = (coordinate[2] - uv_start[2]) / this->z_range_abs();
     // here v <-> y-
-    intersect.uv[1] = (uv_end[1] - coordinate[1]) / this->y_range_abs();
+    intersect.uv[1] = (uv_start[1] - coordinate[1]) / this->y_range_abs();
     break;
 
   case face_idx::face_south:
     uv_start = {min_pos[0], max_pos[1], max_pos[2]};
-    uv_end = {max_pos[0], min_pos[1], max_pos[2]};
+    // uv_end = {max_pos[0], min_pos[1], max_pos[2]};
 
     // here u <-> x+
     intersect.uv[0] = (coordinate[0] - uv_start[0]) / this->x_range_abs();
     // here v <-> y-
-    intersect.uv[1] = (uv_end[1] - coordinate[1]) / this->y_range_abs();
+    intersect.uv[1] = (uv_start[1] - coordinate[1]) / this->y_range_abs();
     break;
 
   case face_idx::face_north:
-    // uv_start={max_pos[0],max_pos[0],min_pos[0]};
-    uv_end = min_pos;
+    uv_start = {max_pos[0], max_pos[0], min_pos[0]};
+    // uv_end = min_pos;
 
     // here u <-> x-
-    intersect.uv[0] = (uv_end[0] - coordinate[0]) / this->x_range_abs();
+    intersect.uv[0] = (uv_start[0] - coordinate[0]) / this->x_range_abs();
     // here v <-> y-
-    intersect.uv[1] = (uv_end[1] - coordinate[1]) / this->y_range_abs();
+    intersect.uv[1] = (uv_start[1] - coordinate[1]) / this->y_range_abs();
     break;
   }
 
@@ -272,6 +287,9 @@ EImgRowMajor_t model::projection_image(face_idx fidx) const noexcept {
   ray_t ray(fidx);
   for (int r = 0; r < 16; r++) {
     for (int c = 0; c < 16; c++) {
+
+      // printf("\nr = %i, c = %i, : ", r, c);
+
       intersects.clear();
 
       // set the origin point of a ray
@@ -306,6 +324,8 @@ EImgRowMajor_t model::projection_image(face_idx fidx) const noexcept {
         ele.intersect_points(fidx, ray, &intersects);
         ele.intersect_points(inverse_face(fidx), ray, &intersects);
       }
+
+      // printf("\n");
 
       std::sort(intersects.begin(), intersects.end(), intersect_compare_fun);
 

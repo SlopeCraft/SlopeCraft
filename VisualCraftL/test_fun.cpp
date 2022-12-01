@@ -177,18 +177,17 @@ void export_projection_images(block_model::model m,
                               const std::string filenameprefix) {
   rewrite_png((filenameprefix + "_up.png").data(),
               m.projection_image(block_model::face_idx::face_up));
-  /*
-rewrite_png((filenameprefix + "_down.png").data(),
-  m.projection_image(block_model::face_idx::face_down));
-rewrite_png((filenameprefix + "_east.png").data(),
-  m.projection_image(block_model::face_idx::face_east));
-rewrite_png((filenameprefix + "_west.png").data(),
-  m.projection_image(block_model::face_idx::face_west));
-rewrite_png((filenameprefix + "_north.png").data(),
-  m.projection_image(block_model::face_idx::face_north));
-rewrite_png((filenameprefix + "_south.png").data(),
-  m.projection_image(block_model::face_idx::face_south));
-  */
+
+  rewrite_png((filenameprefix + "_down.png").data(),
+              m.projection_image(block_model::face_idx::face_down));
+  rewrite_png((filenameprefix + "_east.png").data(),
+              m.projection_image(block_model::face_idx::face_east));
+  rewrite_png((filenameprefix + "_west.png").data(),
+              m.projection_image(block_model::face_idx::face_west));
+  rewrite_png((filenameprefix + "_north.png").data(),
+              m.projection_image(block_model::face_idx::face_north));
+  rewrite_png((filenameprefix + "_south.png").data(),
+              m.projection_image(block_model::face_idx::face_south));
 }
 
 void test_VCL_block_model_full_block() {
@@ -201,12 +200,11 @@ void test_VCL_block_model_full_block() {
                            ->subfolder("textures")
                            ->subfolder("block")
                            ->files;
-  const bool success =
-      parse_png(images.at("gold_block.png").data(),
-                images.at("gold_block.png").file_size(), &texture);
+  const bool success = parse_png(images.at("F.png").data(),
+                                 images.at("F.png").file_size(), &texture);
 
   if (!success) {
-    cout << "Failed to parse gold_block.png" << endl;
+    cout << "\nFailed to parse gold_block.png" << endl;
     return;
   }
 
@@ -225,5 +223,5 @@ void test_VCL_block_model_full_block() {
 
   export_projection_images(smooth_stone, "test_block_model/gold_block");
 
-  cout << "success" << endl;
+  cout << "\nsuccess" << endl;
 }
