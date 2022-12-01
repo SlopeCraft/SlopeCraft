@@ -131,12 +131,14 @@ public:
 
 inline ARGB color_at_relative_idx(const EImgRowMajor_t &img, const float r_f,
                                   const float c_f) noexcept {
-  const int r_i = std::min<int>(std::max(int(std::round(r_f * img.rows())), 0),
+  const int r_i = std::min<int>(std::max(int(std::floor(r_f * img.rows())), 0),
                                 img.rows() - 1);
-  const int c_i = std::min<int>(std::max(int(std::round(c_f * img.cols())), 0),
+  const int c_i = std::min<int>(std::max(int(std::floor(c_f * img.cols())), 0),
                                 img.cols() - 1);
-
-  // printf("\ncolor_at_relative_idx : r_i = %i, c_i = %i", r_i, c_i);
+  /*
+  printf("\ncolor_at_relative_idx : r_f = %f, c_f = %f, r_i = %i, c_i = %i",
+         r_f, c_f, r_i, c_i);
+         */
 
   return img(r_i, c_i);
 }

@@ -200,8 +200,9 @@ void test_VCL_block_model_full_block() {
                            ->subfolder("textures")
                            ->subfolder("block")
                            ->files;
-  const bool success = parse_png(images.at("F.png").data(),
-                                 images.at("F.png").file_size(), &texture);
+  const bool success =
+      parse_png(images.at("gold_block.png").data(),
+                images.at("gold_block.png").file_size(), &texture);
 
   if (!success) {
     cout << "\nFailed to parse gold_block.png" << endl;

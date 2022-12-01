@@ -181,11 +181,13 @@ void element::intersect_points(
     // here v<-> z+
     intersect.uv[1] = (coordinate[2] - uv_start[2]) / this->z_range_abs();
     /*
-                         printf("\nelement::intersect_points : face = up,
-                         uv_start = [%f, %f, %f], " "uv = [%f, %f]",
-                                uv_start[0], uv_start[1], uv_start[2],
-                         intersect.uv[0], intersect.uv[1]);
-                                */
+    printf("\nelement::intersect_points : face = up, uv_start = [%f, %f, %f], "
+           "uv = [%f, %f] ",
+           uv_start[0], uv_start[1], uv_start[2], intersect.uv[0],
+           intersect.uv[1]);
+
+           */
+
     break;
 
   case face_idx::face_down:
