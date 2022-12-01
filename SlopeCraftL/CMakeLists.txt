@@ -77,7 +77,7 @@ target_compile_definitions(SlopeCraftL_C PRIVATE -DSCL_CAPI)
 # link SlopeCraftL with GAConverter and zlib
 set(SlopeCraft_SCL_link_libs
 
-    -lz
+    z
     OpenMP::OpenMP_CXX
     GAConverter
     ColorManip
@@ -99,7 +99,6 @@ endif()
 
 # set shared-lib properties
 set_target_properties(SlopeCraftL PROPERTIES
-    PREFIX ""
     VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_GUI_IDENTIFIER "github.com.ToKiNoBug.SlopeCraft"
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
@@ -107,7 +106,6 @@ set_target_properties(SlopeCraftL PROPERTIES
     MACOSX_BUNDLE TRUE
 )
 set_target_properties(SlopeCraftL_C PROPERTIES
-    PREFIX ""
     VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_GUI_IDENTIFIER "github.com.ToKiNoBug.SlopeCraft"
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
@@ -115,19 +113,44 @@ set_target_properties(SlopeCraftL_C PROPERTIES
     MACOSX_BUNDLE TRUE
 )
 
-# install for applications
-install(TARGETS SlopeCraftL
-    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX})
+if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+    set_target_properties(SlopeCraftL PROPERTIES
+        PREFIX "")
+    set_target_properties(SlopeCraftL_C PROPERTIES
+        PREFIX "")
+endif()
+
+if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+
+    # install for applications
+    install(TARGETS SlopeCraftL
+        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX})
+elseif(CMAKE_SYSTEM_NAME MATCHES "Linux")
+    message(STATUS Install for linux)
+    # install for applications
+    install(TARGETS SlopeCraftL
+        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+        LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+
+    # install for applications
+    install(TARGETS SlopeCraftL
+        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX})
+endif()
+
 
 # install to lib dirs
 install(TARGETS SlopeCraftL
-    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/Cpp/lib
+    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/Cpp/bin
+    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/Cpp/lib
 
     # LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/Cpp/lib
 )
 install(TARGETS SlopeCraftL_C
-    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/C/lib
+    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/C/bin
+    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/C/lib
 
     # LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/C/lib
 )

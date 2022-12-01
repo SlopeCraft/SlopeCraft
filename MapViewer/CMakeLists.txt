@@ -98,15 +98,28 @@ if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(MapViewer)
 endif()
 
-install(TARGETS MapViewer
-    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
-    BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX}
-)
+if(CMAKE_SYSTEM_NAME MATCHES "Windows")
 
-# Install icon for macOS
-if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    install(TARGETS MapViewer
+        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
+        BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX}
+    )
+elseif(CMAKE_SYSTEM_NAME MATCHES "Linux")
+    set_target_properties(MapViewer PROPERTIES INSTALL_RPATH "../lib")
+    install(TARGETS MapViewer
+        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+        BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+    )
+elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+
+    install(TARGETS MapViewer
+        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
+        BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX}
+
+    # Install icon for macOS
     # MapViewer.app
     file(GLOB MapViewer_Icon ${CMAKE_SOURCE_DIR}/MapViewer/others/MapViewer.icns)
     install(FILES ${MapViewer_Icon}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/MapViewer.app/Contents/Resources)
+)
 endif()

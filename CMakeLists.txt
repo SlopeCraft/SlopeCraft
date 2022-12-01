@@ -44,7 +44,7 @@ message("Length of CMAKE_PREFIX_PATH = " ${temp_L})
 # include(cmake/find_qt_translate.cmake)
 
 # If it is set to ON, everytime CMake reconfigure the project, all .ts files will be updated.
-set(SlopeCraft_update_ts_files ON)
+set(SlopeCraft_update_ts_files OFF)
 
 if(${SlopeCraft_update_ts_files} AND NOT DEFINED SlopeCraft_Qt_lupdate_executable)
     if(NOT DEFINED SlopeCraft_Qt_root_dir)
@@ -69,10 +69,10 @@ if(${SlopeCraft_vectorize})
 
     add_definitions("-DSC_VECTORIZE_AVX2")
 
-    check_cxx_compiler_flag("-mavx2" _march_native_works)
+    check_cxx_compiler_flag("-mavx2" _mavx2_works)
     check_cxx_compiler_flag("-xHost" _xhost_works)
 
-    if(${_march_native_works})
+    if(${_mavx2_works})
         message(STATUS "Vectorize using -mavx2")
         set(SlopeCraft_vectorize_flags "-mavx2")
     elseif(${_xhost_works})
@@ -87,7 +87,7 @@ endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     # add_compile_options(-fPIC)
-    set(CMAKE_INSTALL_RPATH ".")
+    #set(CMAKE_INSTALL_RPATH "../lib")
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")

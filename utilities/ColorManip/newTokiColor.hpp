@@ -37,18 +37,32 @@ This file is part of SlopeCraft.
 #include <xmmintrin.h>
 
 constexpr int num_float_per_m256 = 256 / 32;
-inline __m256 _mm256_abs_ps(__m256 x) noexcept {
-  alignas(32) float y[num_float_per_m256];
 
-  _mm256_store_ps(y, x);
+union alignas(32) f32_i32 {
+  float f32[8];
+  int i32[8];
+  __m256i m256i;
+};
 
-  for (int i = 0; i < 8; i++) {
-    y[i] = std::abs(y[i]);
-  }
+/**
+ * This function is a candidate when the real instruction can't be used.
+ */
+template <typename = void> inline __m256 _mm256_abs_ps(__m256 x) noexcept {
+  f32_i32 t;
 
-  return _mm256_load_ps(y);
+  static_assert(sizeof(__m256i) == 32);
+
+  _mm256_store_ps(t.f32, x);
+
+  t.m256i = _mm256_and_si256(t.m256i, _mm256_set1_epi32(1UL << 31));
+
+  return _mm256_load_ps(t.f32);
 }
-inline __m256 _mm256_acos_ps(__m256 x) noexcept {
+
+/**
+ * This function is a candidate when the real instruction can't be used.
+ */
+template <typename = void> inline __m256 _mm256_acos_ps(__m256 x) noexcept {
   alignas(32) float y[num_float_per_m256];
 
   _mm256_store_ps(y, x);
@@ -61,11 +75,11 @@ inline __m256 _mm256_acos_ps(__m256 x) noexcept {
 }
 
 // #warning rua~
-#endif
+#endif // SC_VECTORIZE_AVX2
 
 // using Eigen::Dynamic;
 namespace {
-static constexpr float threshold = 1e-10f;
+constexpr float threshold = 1e-10f;
 
 } // namespace
 struct convert_unit {
