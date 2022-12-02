@@ -1,3 +1,4 @@
+#include "ColorManip/ColorManip.h"
 #include "ParseResourcePack.h"
 #include "Resource_tree.h"
 #include "VisualCraftL.h"
@@ -13,14 +14,15 @@ using std::cout, std::endl;
 void test_VCL_single_image();
 void test_VCL_full_zip();
 void test_VCL_single_img_in_zip();
-
 void test_VCL_block_model_full_block();
+void test_VCL_color_compose();
 
 VCL_EXPORT void test_VCL() {
   // test_VCL_full_zip();
   // test_VCL_single_image();
   //  test_VCL_single_img_in_zip();
   test_VCL_block_model_full_block();
+  // test_VCL_color_compose();
 }
 
 void display_folder(const zipped_folder &folder, const int offset = 0) {
@@ -193,36 +195,63 @@ void export_projection_images(block_model::model m,
 void test_VCL_block_model_full_block() {
   zipped_folder vanilla = zipped_folder::from_zip("Vanilla_1_19_2.zip");
 
-  Eigen::Array<ARGB, -1, -1, Eigen::RowMajor> texture;
+  Eigen::Array<ARGB, -1, -1, Eigen::RowMajor> texture_gold, texture_glass;
 
   const auto &images = vanilla.folder_at("assets")
                            ->subfolder("minecraft")
                            ->subfolder("textures")
                            ->subfolder("block")
                            ->files;
-  const bool success =
-      parse_png(images.at("gold_block.png").data(),
-                images.at("gold_block.png").file_size(), &texture);
+  bool success = parse_png(images.at("F48.png").data(),
+                           images.at("F48.png").file_size(), &texture_gold);
+  if (!success) {
+    cout << "\nFailed to parse F48.png" << endl;
+    return;
+  }
+  success = parse_png(images.at("glass.png").data(),
+                      images.at("glass.png").file_size(), &texture_glass);
 
   if (!success) {
-    cout << "\nFailed to parse gold_block.png" << endl;
+    cout << "\nFailed to parse glass.png" << endl;
     return;
   }
 
-  block_model::model smooth_stone;
+  block_model::model model;
   {
     block_model::element element;
     element._from = {0, 0, 0};
     element._to = {16, 16, 16};
     block_model::face_t face;
-    face.texture = &texture;
-
+    face.texture = &texture_glass;
     element.faces.fill(face);
+    model.elements.emplace_back(element);
+  }
+  {
+    block_model::element element;
+    element._from = {4, 4, 4};
+    element._to = {12, 12, 12};
+    block_model::face_t face2;
+    face2.texture = &texture_gold;
 
-    smooth_stone.elements.emplace_back(element);
+    element.faces.fill(face2);
+
+    model.elements.emplace_back(element);
+    ////////////
   }
 
-  export_projection_images(smooth_stone, "test_block_model/gold_block");
+  export_projection_images(model, "test_block_model/gold_glass");
 
   cout << "\nsuccess" << endl;
+}
+
+void test_VCL_color_compose() {
+  ARGB fore, back;
+
+  fore = 0x00AABBCC;
+  back = 0xFF443322;
+  // std::swap(back, fore);
+  ARGB compose = ComposeColor_background_half_transparent(fore, back);
+
+  printf("\nFore = 0x%08X, back = 0x%08X, compose = 0x%08X\n", fore, back,
+         compose);
 }

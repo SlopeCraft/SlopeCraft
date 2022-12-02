@@ -31,24 +31,24 @@ plane_t element::plane(face_idx fi) const noexcept {
 
   switch (fi) {
   case face_y_pos:
-    point = {0.5, 1, 0.5};
+    point = {0.5, pos_max[1], 0.5};
     break;
   case face_y_neg:
-    point = {0.5, 0, 0.5};
+    point = {0.5, pos_min[1], 0.5};
     break;
 
   case face_x_pos:
-    point = {1, 0.5, 0.5};
+    point = {pos_max[0], 0.5, 0.5};
     break;
   case face_x_neg:
-    point = {0, 0.5, 0.5};
+    point = {pos_min[0], 0.5, 0.5};
     break;
 
   case face_z_pos:
-    point = {0.5, 0.5, 1};
+    point = {0.5, 0.5, pos_max[2]};
     break;
   case face_z_neg:
-    point = {0.5, 0.5, 0};
+    point = {0.5, 0.5, pos_min[2]};
     break;
   }
 
@@ -152,7 +152,8 @@ void element::intersect_points(
   intersect_point intersect;
   Array3f coordinate;
   coordinate = crossover_point(this->plane(f), ray);
-
+  // printf("\nelement::intersect_points : coordinate = [%f, %f,
+  // %f]",coordinate[0], coordinate[1], coordinate[2]);
   if (!this->is_not_outside(coordinate))
     return;
 
@@ -321,7 +322,7 @@ EImgRowMajor_t model::projection_image(face_idx fidx) const noexcept {
         break;
       }
 
-      for (const element ele : this->elements) {
+      for (const element &ele : this->elements) {
 
         ele.intersect_points(fidx, ray, &intersects);
         ele.intersect_points(inverse_face(fidx), ray, &intersects);
@@ -331,13 +332,24 @@ EImgRowMajor_t model::projection_image(face_idx fidx) const noexcept {
 
       std::sort(intersects.begin(), intersects.end(), intersect_compare_fun);
 
-      ARGB color = 0x00000000;
+      // printf("\nmodel::projection_image : r = %i, c = %i; ", r, c);
+      /*printf("intersects distance = [ ");
+      for (auto i : intersects) {
+        printf("%f, ", i.distance);
+      }
+      printf("];");
+      */
 
+      ARGB color = 0x00000000;
+      // printf("\n color : ");
       for (intersect_point &ip : intersects) {
+        // printf("\n0x%08X + 0x%08X -> ", color, ip.color());
+        color = ComposeColor_background_half_transparent(color, ip.color());
+        // printf("0x%08X; ", color);
         if (getA(color) >= 255)
           break;
-        color = ComposeColor_background_half_transparent(color, ip.color());
       }
+      // printf(";");
 
       result(r, c) = color;
     }

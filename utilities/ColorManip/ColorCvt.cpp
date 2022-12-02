@@ -51,6 +51,9 @@ ARGB ComposeColor_background_half_transparent(const ARGB front,
   if (alpha_front <= 0)
     return back;
 
+  if (alpha_front >= 255)
+    return front;
+
   int result_alpha = alpha_front + alpha_back - alpha_back * alpha_front / 255;
 
   if (result_alpha <= 0) {
