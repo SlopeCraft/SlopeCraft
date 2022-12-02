@@ -256,4 +256,96 @@ public:
 
 } // namespace block_model
 
+namespace resource_json {
+
+struct state {
+  std::string key;
+  std::string value;
+};
+
+using state_list = std::vector<state>;
+
+/// @return true if sla is equal to slb
+bool match_state_list(const state_list &sla, const state_list &slb) noexcept;
+
+class block_states_variant {
+public:
+  bool parse(std::string_view) noexcept;
+  const char *block_model_name(const state_list &sl) const noexcept;
+
+  std::vector<std::pair<state_list, std::string>> LUT;
+};
+
+struct criteria {
+public:
+  std::string key;
+  std::vector<std::string> values;
+
+  inline bool match(const state &state) const noexcept {
+    if (state.key != this->key)
+      return false;
+    return this->match(state.value);
+  }
+
+  inline bool match(std::string_view value) const noexcept {
+    for (const std::string &v : this->values) {
+      if (v == value)
+        return true;
+    }
+    return false;
+  }
+};
+
+using criteria_list_and = std::vector<criteria>;
+
+/// @return true if sl matches every criteria in cl
+bool match_criteria_list(const criteria_list_and &cl,
+                         const state_list &sl) noexcept;
+
+struct multipart_pair {
+
+  std::string apply_blockmodel;
+  criteria when;
+  std::vector<criteria_list_and> when_or;
+
+  inline bool match(const state_list &sl) const noexcept {
+    if (when_or.size() <= 0) {
+      std::string_view key = when.key;
+      const char *slvalue = nullptr;
+      for (const state &s : sl) {
+        if (s.key == key) {
+          slvalue = s.value.data();
+          break;
+        }
+      }
+      // if sl don't have a value for the key of criteria, it is considered as
+      // mismatch
+      if (slvalue == nullptr) {
+        return false;
+      }
+
+      return when.match(slvalue);
+    }
+
+    for (const criteria_list_and &cl : when_or) {
+      if (match_criteria_list(cl, sl))
+        return true;
+    }
+
+    return false;
+  }
+};
+
+class block_state_multipart {
+public:
+  std::vector<multipart_pair> pairs;
+
+  bool parse(std::string_view json) noexcept;
+
+  std::vector<const char *>
+  block_model_names(const state_list &sl) const noexcept;
+};
+
+} // namespace resource_json
+
 #endif // SLOPECRAFT_VISUALCRAFTL_PARSERESOURCEPACK_H

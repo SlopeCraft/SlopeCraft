@@ -22,6 +22,7 @@ add_library(VisualCraftL SHARED
     ParseResourcePack.h
     ParseResourcePack_png.cpp
     ParseResourcePack_blocks.cpp
+    ParseResourcePack_json.cpp
     test_fun.cpp)
 
 find_package(libzip REQUIRED)
@@ -33,6 +34,8 @@ include_directories(${ZLIB_INCLUDE_DIR})
 if(NOT ${libzip_FOUND})
     message(FATAL_ERROR "libzip not found")
 endif()
+
+target_include_directories(VisualCraftL PRIVATE ${SlopeCraft_Nlohmann_json_include_dir})
 
 target_link_libraries(VisualCraftL PRIVATE z png libzip::zip ColorManip)
 
