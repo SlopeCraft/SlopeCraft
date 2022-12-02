@@ -48,6 +48,26 @@ enum class face_rot : uint8_t {
   face_rot_270
 };
 
+inline face_rot int_to_face_rot(int a) {
+  switch (a) {
+  case 0:
+    return face_rot::face_rot_0;
+  case 90:
+    return face_rot::face_rot_90;
+  case 180:
+    return face_rot::face_rot_180;
+  case 270:
+    return face_rot::face_rot_270;
+
+  default:
+    printf("\nFunction int_to_face_rot failed to convert int to face_rot : "
+           "invalid value : %i\n",
+           a);
+    exit(1);
+    return face_rot::face_rot_0;
+  }
+}
+
 enum class face_idx : uint8_t {
   face_up,
   face_down,
@@ -263,6 +283,28 @@ struct state {
   std::string value;
 };
 
+struct model_store_t {
+  std::string model_name;
+  block_model::face_rot x{block_model::face_rot::face_rot_0};
+  block_model::face_rot y{block_model::face_rot::face_rot_0};
+  bool uvlock{false};
+};
+
+struct model_pass_t {
+  model_pass_t() = default;
+  explicit model_pass_t(const model_store_t &src) {
+    this->model_name = src.model_name.data();
+    this->x = src.x;
+    this->y = src.y;
+    this->uvlock = src.uvlock;
+  }
+
+  const char *model_name;
+  block_model::face_rot x{block_model::face_rot::face_rot_0};
+  block_model::face_rot y{block_model::face_rot::face_rot_0};
+  bool uvlock{false};
+};
+
 using state_list = std::vector<state>;
 
 /// @return true if sla is equal to slb
@@ -270,10 +312,9 @@ bool match_state_list(const state_list &sla, const state_list &slb) noexcept;
 
 class block_states_variant {
 public:
-  bool parse(std::string_view) noexcept;
-  const char *block_model_name(const state_list &sl) const noexcept;
+  model_pass_t block_model_name(const state_list &sl) const noexcept;
 
-  std::vector<std::pair<state_list, std::string>> LUT;
+  std::vector<std::pair<state_list, model_store_t>> LUT;
 };
 
 struct criteria {
@@ -304,7 +345,7 @@ bool match_criteria_list(const criteria_list_and &cl,
 
 struct multipart_pair {
 
-  std::string apply_blockmodel;
+  model_store_t apply_blockmodel;
   criteria when;
   std::vector<criteria_list_and> when_or;
 
@@ -340,11 +381,14 @@ class block_state_multipart {
 public:
   std::vector<multipart_pair> pairs;
 
-  bool parse(std::string_view json) noexcept;
-
-  std::vector<const char *>
+  std::vector<model_pass_t>
   block_model_names(const state_list &sl) const noexcept;
 };
+
+bool parse_block_state(const std::string_view json_str,
+                       block_states_variant *const dest_variant,
+                       block_state_multipart *const dest_mutlipart,
+                       bool *const is_dest_variant) noexcept;
 
 } // namespace resource_json
 

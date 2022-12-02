@@ -35,9 +35,11 @@ if(NOT ${libzip_FOUND})
     message(FATAL_ERROR "libzip not found")
 endif()
 
-target_include_directories(VisualCraftL PRIVATE ${SlopeCraft_Nlohmann_json_include_dir})
+target_include_directories(VisualCraftL PRIVATE
+    ${SlopeCraft_Nlohmann_json_include_dir}
+    ${CMAKE_SOURCE_DIR})
 
-target_link_libraries(VisualCraftL PRIVATE z png libzip::zip ColorManip)
+target_link_libraries(VisualCraftL PRIVATE z png libzip::zip ColorManip Schem)
 
 target_compile_definitions(VisualCraftL PRIVATE BEFORE "-DVISUALCRAFTL_BUILD")
 
