@@ -42,10 +42,10 @@ using EImgRowMajor_t =
     Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 
 enum class face_rot : uint8_t {
-  face_rot_0,
-  face_rot_90,
-  face_rot_180,
-  face_rot_270
+  face_rot_0 = 0,
+  face_rot_90 = 9,
+  face_rot_180 = 18,
+  face_rot_270 = 27
 };
 
 inline face_rot int_to_face_rot(int a) {
@@ -279,6 +279,11 @@ public:
 namespace resource_json {
 
 struct state {
+  state() = default;
+  explicit state(const char *k, const char *v) {
+    this->key = k;
+    this->value = v;
+  }
   std::string key;
   std::string value;
 };
@@ -387,8 +392,8 @@ public:
 
 bool parse_block_state(const std::string_view json_str,
                        block_states_variant *const dest_variant,
-                       block_state_multipart *const dest_mutlipart,
-                       bool *const is_dest_variant) noexcept;
+                       block_state_multipart *const dest_mutlipart = nullptr,
+                       bool *const is_dest_variant = nullptr) noexcept;
 
 } // namespace resource_json
 

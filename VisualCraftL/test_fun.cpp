@@ -10,19 +10,22 @@
 
 #include <stdio.h>
 
-using std::cout, std::endl;
+using std::cout, std::endl, std::string, std::vector;
 void test_VCL_single_image();
 void test_VCL_full_zip();
 void test_VCL_single_img_in_zip();
 void test_VCL_block_model_full_block();
-void test_VCL_color_compose();
+
+void test_VCL_parse_block_states();
+void test_VCL_parse_block_states_many();
 
 VCL_EXPORT void test_VCL() {
   // test_VCL_full_zip();
   // test_VCL_single_image();
   //  test_VCL_single_img_in_zip();
-  test_VCL_block_model_full_block();
-  // test_VCL_color_compose();
+  // test_VCL_block_model_full_block();
+  test_VCL_parse_block_states();
+  // test_VCL_parse_block_states_many();
 }
 
 void display_folder(const zipped_folder &folder, const int offset = 0) {
@@ -244,14 +247,92 @@ void test_VCL_block_model_full_block() {
   cout << "\nsuccess" << endl;
 }
 
-void test_VCL_color_compose() {
-  ARGB fore, back;
+void test_VCL_parse_block_states() {
 
-  fore = 0x00AABBCC;
-  back = 0xFF443322;
-  // std::swap(back, fore);
-  ARGB compose = ComposeColor_background_half_transparent(fore, back);
+  zipped_folder vanilla = zipped_folder::from_zip("Vanilla_1_19_2.zip");
 
-  printf("\nFore = 0x%08X, back = 0x%08X, compose = 0x%08X\n", fore, back,
-         compose);
+  auto &blockstates = vanilla.folder_at("assets")
+                          ->subfolder("minecraft")
+                          ->subfolder("blockstates")
+                          ->files;
+  zipped_file &file = blockstates.at("prismarine_stairs.json");
+
+  file.append_0_for_c_str();
+
+  bool success;
+  resource_json::block_states_variant variants;
+
+  success =
+      resource_json::parse_block_state((const char *)file.data(), &variants);
+  if (!success) {
+    printf("Failed to parse json.\n");
+    return;
+  }
+
+  // variants.LUT;
+  printf("size of LUT = %i\n", (int)variants.LUT.size());
+  printf("variants.LUT : \n");
+
+  for (const auto &i : variants.LUT) {
+    printf("[");
+    for (const auto &j : i.first) {
+      printf("%s=%s, ", j.key.data(), j.value.data());
+    }
+    printf("] : {");
+    printf("model_name = %s; ", i.second.model_name.data());
+
+    printf("x = %i; y = %i; ", int(i.second.x), int(i.second.y));
+
+    printf("}\n");
+  }
+
+  resource_json::state_list sl = {resource_json::state("axis", "x")};
+
+  resource_json::model_pass_t mp = variants.block_model_name(sl);
+
+  printf("\n matched model name = %s.\n", mp.model_name);
+
+  printf("\nrua~\n");
+}
+
+void test_VCL_parse_block_states_many() {
+
+  zipped_folder vanilla = zipped_folder::from_zip("Vanilla_1_19_2.zip");
+
+  auto &files = vanilla.folder_at("assets")
+                    ->subfolder("minecraft")
+                    ->subfolder("blockstates")
+                    ->files;
+  std::string_view keys[] = {"basalt.json",
+                             "air.json",
+                             "acacia_sapling.json",
+                             "light_gray_wool.json",
+                             "melon.json",
+                             "moving_piston.json",
+                             "nether_sprouts.json",
+                             "oak_trapdoor.json",
+                             "piston.json",
+                             "player_head.json",
+                             "polished_granite_stairs.json"};
+
+  constexpr int num_keys = sizeof(keys) / sizeof(keys[0]);
+
+  resource_json::block_states_variant vars[num_keys];
+
+  // zipped_file zfiles[num_keys];
+
+  for (int i = 0; i < num_keys; i++) {
+    zipped_file &zfile = files.at(keys[i].data());
+
+    zfile.append_0_for_c_str();
+
+    const bool success =
+        resource_json::parse_block_state((char *)zfile.data(), vars + i);
+
+    if (!success) {
+      printf("\nFailed to parse %s\n", keys[i].data());
+    }
+  }
+
+  printf("%i tasks finished\n", num_keys);
 }

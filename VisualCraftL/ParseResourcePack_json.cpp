@@ -94,33 +94,41 @@ bool parse_block_state_variant(const njson::object_t &obj,
 bool parse_block_state_multipart(const njson::object_t &obj,
                                  block_state_multipart *const dest_variant);
 
-bool parse_block_state(const std::string_view json_str,
-                       block_states_variant *const dest_variant,
-                       block_state_multipart *const dest_multipart,
-                       bool *const is_dest_variant) noexcept {
+bool resource_json::parse_block_state(
+    const std::string_view json_str, block_states_variant *const dest_variant,
+    block_state_multipart *const dest_multipart,
+    bool *const is_dest_variant) noexcept {
   njson::object_t obj;
   try {
     obj = njson::parse(json_str);
   } catch (...) {
+    printf("\nnlohmann json failed to parse json string : %s\n",
+           json_str.data());
     return false;
   }
 
   const bool has_variant =
-      obj.contains("variant") && obj.at("variant").is_object();
+      obj.contains("variants") && obj.at("variants").is_object();
   const bool has_multipart =
       obj.contains("multipart") && obj.at("multipart").is_object();
 
   if (has_variant == has_multipart) {
+
+    printf("\nFunction parse_block_state failed to parse json : has_variant = "
+           "%i, has_multipart = %i.",
+           has_variant, has_multipart);
     return false;
   }
 
   if (has_variant) {
-    *is_dest_variant = true;
+    if (is_dest_variant != nullptr)
+      *is_dest_variant = true;
     return parse_block_state_variant(obj, dest_variant);
   }
 
   if (has_multipart) {
-    *is_dest_variant = false;
+    if (is_dest_variant != nullptr)
+      *is_dest_variant = false;
     return parse_block_state_multipart(obj, dest_multipart);
   }
   // unreachable
@@ -130,7 +138,8 @@ bool parse_block_state(const std::string_view json_str,
 bool parse_block_state_list(std::string_view str,
                             state_list *const sl) noexcept {
   sl->clear();
-
+  if (str.size() <= 1)
+    return true;
   int substr_start = 0;
   // int substr_end = -1;
   int eq_pos = -1;
@@ -196,12 +205,14 @@ model_store_t json_to_model(const njson &obj) noexcept {
 
 bool parse_block_state_variant(const njson::object_t &obj,
                                block_states_variant *const dest) {
-  const njson &variants = obj.at("variants").object();
+  const njson &variants = obj.at("variants");
 
   dest->LUT.clear();
   dest->LUT.reserve(variants.size());
 
-  for (auto &pair : variants.items()) {
+  // printf("size of variants = %i\n", (int)variants.size());
+
+  for (auto pair : variants.items()) {
 
     if (!pair.value().is_object()) {
       printf("\nFunction parse_block_state_variant failed to parse json : "
@@ -211,9 +222,9 @@ bool parse_block_state_variant(const njson::object_t &obj,
       return false;
     }
 
-    const njson &obj = pair.value().object();
+    const njson &obj = pair.value();
 
-    if (!obj.contains("model") || !obj.at("model").is_string()) {
+    if ((!obj.contains("model")) || (!obj.at("model").is_string())) {
       printf("\nFunction parse_block_state_variant failed to parse json : no "
              "valid value for key \"model\"\n");
       return false;
@@ -221,6 +232,7 @@ bool parse_block_state_variant(const njson::object_t &obj,
 
     std::pair<state_list, model_store_t> p;
     if (!parse_block_state_list(pair.key(), &p.first)) {
+      printf("Failed to parse block state list : %s\n", pair.key().data());
       return false;
     }
 
@@ -232,7 +244,12 @@ bool parse_block_state_variant(const njson::object_t &obj,
   return true;
 }
 
-bool parse_block_state_multipart(const njson::object_t &obj,
-                                 block_state_multipart *const dest_variant) {
-#warning here
+bool parse_block_state_multipart(const njson::object_t &,
+                                 block_state_multipart *const) {
+
+  printf("\nFatal error : parsing blockstate json of multipart is not "
+         "supported yet.\n");
+
+  // exit(1);
+  return false;
 }

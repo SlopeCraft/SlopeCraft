@@ -19,6 +19,8 @@ public:
   inline uint8_t *data() noexcept { return __data.data(); }
 
   inline const uint8_t *data() const noexcept { return __data.data(); }
+
+  inline void append_0_for_c_str() noexcept { this->__data.push_back(0); }
 };
 
 class zipped_folder {
