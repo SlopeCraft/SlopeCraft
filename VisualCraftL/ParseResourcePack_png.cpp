@@ -1,8 +1,11 @@
-#include "ParseResourcePack.h"
-#include "Resource_tree.h"
+#include <png.h>
 
 #include <iostream>
-#include <png.h>
+#include <string>
+#include <unordered_map>
+
+#include "ParseResourcePack.h"
+#include "Resource_tree.h"
 
 using std::endl;
 
@@ -29,7 +32,6 @@ void png_callback_read_data_from_memory(png_struct *png, png_byte *data,
 bool parse_png(
     const void *const data, const int64_t length,
     Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> *img) {
-
   png_struct *png =
       png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
   if (png == NULL) {
@@ -46,7 +48,6 @@ bool parse_png(
 
   png_info *info_end = png_create_info_struct(png);
   if (info_end == NULL) {
-
     ::std::cerr << "Failed to create png info_end struct." << endl;
     png_destroy_read_struct(&png, &info, &info_end);
     return false;
@@ -121,7 +122,7 @@ bool parse_png(
     return false;
   }
   // cout << ")\n";
-  //#warning here
+  // #warning here
 
   img->resize(height, width);
 
@@ -160,7 +161,6 @@ std::unordered_map<std::string, Eigen::Array<ARGB, Eigen::Dynamic,
                                              Eigen::Dynamic, Eigen::RowMajor>>
 folder_to_images(const zipped_folder &src, bool *const is_ok,
                  std::string *const error_string) noexcept {
-
   std::unordered_map<std::string, Eigen::Array<ARGB, Eigen::Dynamic,
                                                Eigen::Dynamic, Eigen::RowMajor>>
       result;
@@ -281,4 +281,143 @@ std::cout << "row = " << row << ", col = " << col
   }
 
   return result;
+}
+
+bool resource_pack::add_textures(const zipped_folder &rpr,
+                                 const bool conflict_conver_old) noexcept {
+  const zipped_folder *const assets = rpr.subfolder("assets");
+  if (assets == nullptr) {
+    printf("Error : the resource pack doesn't have a subfolder named "
+           "\"assets\".\n");
+    return false;
+  }
+
+  for (const auto &namespace_folder : assets->subfolders) {
+    std::string_view namespace_name = namespace_folder.first;
+    const zipped_folder *const texture_folder =
+        namespace_folder.second.subfolder("textures");
+    if (texture_folder == nullptr) {
+      continue;
+    }
+
+    const zipped_folder *const blocks_folder =
+        texture_folder->subfolder("block");
+    if (blocks_folder == nullptr) {
+      continue;
+    }
+    if (blocks_folder->files.size() <= 0) {
+      continue;
+    }
+
+    const bool success = this->add_textures_direct(
+        blocks_folder->files, namespace_name, conflict_conver_old);
+
+    if (!success) {
+      return false;
+    }
+  }
+  return true;
+}
+
+bool resource_pack::add_textures_direct(
+    const std::unordered_map<std::string, zipped_file> &pngs,
+    std::string_view namespace_name, const bool conflict_conver_old) noexcept {
+  this->textures.reserve(this->textures.size() + pngs.size());
+  constexpr int buffer_size = 1024;
+  std::array<char, buffer_size> buffer;
+
+  for (const auto &file : pngs) {
+    if (!file.first.ends_with(".png"))
+      continue;
+
+    const bool is_dynamic = pngs.contains(file.first + ".mcmeta");
+
+    buffer.fill('\0');
+    std::strcpy(buffer.data(), namespace_name.data());
+    std::strcat(buffer.data(), ":block/");
+
+    // write in filename without extension name
+    {
+      char *dest = buffer.data() + std::strlen(buffer.data());
+
+      const char *src_begin = file.first.data();
+      const char *const src_end =
+          file.first.data() + file.first.find_last_of(".");
+
+      for (; src_begin < src_end; src_begin++) {
+        *dest = *src_begin;
+        dest++;
+      }
+    }
+    // key finished
+
+    if (this->textures.contains(buffer.data()) && !conflict_conver_old) {
+      continue;
+    }
+
+    block_model::EImgRowMajor_t img;
+
+    const bool success =
+        parse_png(file.second.data(), file.second.file_size(), &img);
+    if (!success || img.size() <= 0) {
+      printf("\nWarning : failed to parse png file %s in %s. Png parsing will "
+             "continue but this warning may cause further errors.\n",
+             file.first.data(), buffer.data());
+      continue;
+    }
+
+    if (is_dynamic) {
+      if (img.rows() % img.cols() != 0) {
+        printf("\nWarning : failed to process dynamic png file %s in %s. Image "
+               "has %i rows and %i cols, which is not of integer ratio. Png "
+               "parsing will continue but this warning may cause further "
+               "errors.\n",
+               file.first.data(), buffer.data(), int(img.rows()),
+               int(img.rows()));
+        continue;
+      }
+
+      img = process_dynamic_texture(img);
+    }
+
+    this->textures.emplace(std::string(buffer.data()), img);
+  }
+  return true;
+}
+
+Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
+process_dynamic_texture(const Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic,
+                                           Eigen::RowMajor> &src) noexcept {
+  Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> res(0, 0);
+
+  const int cols = src.cols();
+
+  if (src.rows() % cols != 0) {
+    printf("\nError : rows(%i) and cols(%i) are not of interger ratio\n",
+           (int)src.rows(), (int)src.cols());
+    return res;
+  }
+
+  const int repN = src.rows() / cols;
+
+  res.resize(cols, cols);
+  uint8_t *const dest_bytewise = reinterpret_cast<uint8_t *>(res.data());
+
+  const int step_bytes = cols * cols * sizeof(ARGB) / sizeof(uint8_t);
+
+  const uint8_t *const src_bytewise =
+      reinterpret_cast<const uint8_t *>(src.data());
+
+  for (int idx = 0; idx < cols * cols * sizeof(ARGB); idx++) {
+    uint32_t val = 0;
+    for (int rep = 0; rep < repN; rep++) {
+      val += src_bytewise[idx + rep * step_bytes];
+    }
+
+    val /= repN;
+
+    dest_bytewise[idx] = val & 0xFF;
+  }
+
+  return res;
 }

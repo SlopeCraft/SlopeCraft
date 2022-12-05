@@ -10,7 +10,9 @@
 
 #include <stdio.h>
 
-using std::cout, std::endl, std::string, std::vector;
+#include <omp.h>
+
+using std::cout, std::endl, std::string;
 void test_VCL_single_image();
 void test_VCL_full_zip();
 void test_VCL_single_img_in_zip();
@@ -19,13 +21,19 @@ void test_VCL_block_model_full_block();
 void test_VCL_parse_block_states();
 void test_VCL_parse_block_states_many();
 
+void test_resource_pack(const bool texture_only);
+
+void test_dereference();
+
 VCL_EXPORT void test_VCL() {
   // test_VCL_full_zip();
   // test_VCL_single_image();
   //  test_VCL_single_img_in_zip();
   // test_VCL_block_model_full_block();
-  test_VCL_parse_block_states();
+  // test_VCL_parse_block_states();
   // test_VCL_parse_block_states_many();
+  test_resource_pack(false);
+  // test_dereference();
 }
 
 void display_folder(const zipped_folder &folder, const int offset = 0) {
@@ -335,4 +343,57 @@ void test_VCL_parse_block_states_many() {
   }
 
   printf("%i tasks finished\n", num_keys);
+}
+
+void test_resource_pack(const bool texture_only) {
+  zipped_folder vanilla = zipped_folder::from_zip("Vanilla_1_19_2.zip");
+
+  resource_pack pack;
+  double clk;
+  clk = omp_get_wtime();
+  const bool ok = pack.add_textures(vanilla);
+  clk = omp_get_wtime() - clk;
+  if (!ok) {
+    printf("Failed to parse.\n");
+  }
+
+  printf("\n%i pngs parsed in %F ms.\n", int(pack.get_textures().size()),
+         clk * 1000);
+  /*
+  for (const auto &png : pack.get_textures()) {
+    printf("%s : [%i, %i]\n", png.first.data(), int(png.second.rows()),
+           int(png.second.rows()));
+  }
+  */
+
+  if (texture_only) {
+    printf("\nFinished.\n");
+    return;
+  }
+
+  clk = omp_get_wtime();
+  pack.add_block_models(vanilla);
+  clk = omp_get_wtime() - clk;
+
+  printf("\n%i block models parsed in %F ms.\n", int(pack.get_models().size()),
+         clk * 1000);
+
+  printf("\nFinished.\n");
+}
+
+void test_dereference() {
+  std::map<string, string> m{
+      {"1", "#2"}, {"2", "#3"}, {"A", "#B"}, {"B", "#C"}, {"C", "D"}};
+
+  printf("The origin set is : \n");
+  for (const auto &pair : m) {
+    printf("{%s, %s}\n", pair.first.data(), pair.second.data());
+  }
+
+  dereference_texture_name(m);
+
+  printf("The dereferenced set is : \n");
+  for (const auto &pair : m) {
+    printf("{%s, %s}\n", pair.first.data(), pair.second.data());
+  }
 }

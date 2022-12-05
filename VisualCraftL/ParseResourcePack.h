@@ -1,12 +1,16 @@
 #ifndef SLOPECRAFT_VISUALCRAFTL_PARSERESOURCEPACK_H
 #define SLOPECRAFT_VISUALCRAFTL_PARSERESOURCEPACK_H
 
-#include "Resource_tree.h"
-#include <Eigen/Dense>
-
 #include <ColorManip/ColorManip.h>
 
+#include <Eigen/Dense>
+#include <map>
+#include <string>
 #include <unordered_map>
+
+#include "Resource_tree.h"
+
+class resource_pack;
 
 /// resize image
 Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
@@ -20,6 +24,10 @@ resize_image_nearest(
                                 Eigen::RowMajor>()
                        .block(0, 0, 1, 1)) src_block,
     int rows, int cols) noexcept;
+
+Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
+process_dynamic_texture(const Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic,
+                                           Eigen::RowMajor> &src) noexcept;
 
 bool parse_png(
     const void *const data, const int64_t length,
@@ -349,7 +357,6 @@ bool match_criteria_list(const criteria_list_and &cl,
                          const state_list &sl) noexcept;
 
 struct multipart_pair {
-
   model_store_t apply_blockmodel;
   criteria when;
   std::vector<criteria_list_and> when_or;
@@ -397,4 +404,44 @@ bool parse_block_state(const std::string_view json_str,
 
 } // namespace resource_json
 
+block_model::face_idx string_to_face_idx(std::string_view str,
+                                         bool *const _ok) noexcept;
+
+/**
+ * \note Name of texture = <namespacename>:blocks/<pngfilename without prefix>
+ */
+class resource_pack {
+public:
+  using namespace_name_t = std::string;
+
+  bool add_textures(const zipped_folder &resourece_pack_root,
+                    const bool on_conflict_replace_old = true) noexcept;
+
+  bool add_block_models(const zipped_folder &resourece_pack_root,
+                        const bool on_conflict_replace_old = true) noexcept;
+
+  auto &get_textures() const noexcept { return this->textures; }
+  auto &get_models() const noexcept { return this->block_models; }
+  auto &get_block_states() const noexcept { return this->block_states; }
+
+  inline void clear_textures() noexcept { this->textures.clear(); }
+  inline void clear_models() noexcept { this->block_models.clear(); }
+  inline void clear_block_states() noexcept { this->block_states.clear(); }
+
+private:
+  std::unordered_map<std::string, block_model::model> block_models;
+  std::unordered_map<std::string, Eigen::Array<ARGB, Eigen::Dynamic,
+                                               Eigen::Dynamic, Eigen::RowMajor>>
+      textures;
+  std::unordered_map<std::string, resource_json::block_states_variant>
+      block_states;
+
+  bool
+  add_textures_direct(const std::unordered_map<std::string, zipped_file> &pngs,
+                      std::string_view namespace_name,
+                      const bool on_conflict_replace_old) noexcept;
+};
+
+void dereference_texture_name(
+    std::map<std::string, std::string> &text) noexcept;
 #endif // SLOPECRAFT_VISUALCRAFTL_PARSERESOURCEPACK_H
