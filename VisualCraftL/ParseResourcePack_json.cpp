@@ -127,9 +127,9 @@ bool resource_json::parse_block_state(
 
   if (has_multipart) {
     // parsing multipart is not supported yet.
-    return true;
     if (is_dest_variant != nullptr) *is_dest_variant = false;
-    return parse_block_state_multipart(obj, dest_multipart);
+    return true;
+    // return parse_block_state_multipart(obj, dest_multipart);
   }
   // unreachable
   return false;
@@ -840,8 +840,6 @@ bool resource_pack::add_block_states(
           "assets/minecraft/blockstates/%s. This will be "
           "skipped but may cause further warnings.\n",
           file.first.data());
-#warning here
-      return false;
       continue;
     }
 

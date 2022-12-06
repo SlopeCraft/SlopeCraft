@@ -383,6 +383,10 @@ void test_resource_pack(const bool texture_only,
   printf("\n%i block states parsed in %F ms.\n",
          int(pack.get_block_states().size()), clk * 1000);
 
+  for (const auto &pair : pack.get_block_states()) {
+    printf("%s\n", pair.first.data());
+  }
+
   printf("\nFinished.\n");
 }
 
