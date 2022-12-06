@@ -4,13 +4,12 @@
 #include <ColorManip/ColorManip.h>
 
 #include <Eigen/Dense>
-#include <map>
 #include <string>
 #include <unordered_map>
 
 #include "Resource_tree.h"
 
-class resource_pack;
+// struct resource_pack;
 
 /// resize image
 Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
@@ -58,21 +57,22 @@ enum class face_rot : uint8_t {
 
 inline face_rot int_to_face_rot(int a) {
   switch (a) {
-  case 0:
-    return face_rot::face_rot_0;
-  case 90:
-    return face_rot::face_rot_90;
-  case 180:
-    return face_rot::face_rot_180;
-  case 270:
-    return face_rot::face_rot_270;
+    case 0:
+      return face_rot::face_rot_0;
+    case 90:
+      return face_rot::face_rot_90;
+    case 180:
+      return face_rot::face_rot_180;
+    case 270:
+      return face_rot::face_rot_270;
 
-  default:
-    printf("\nFunction int_to_face_rot failed to convert int to face_rot : "
-           "invalid value : %i\n",
-           a);
-    exit(1);
-    return face_rot::face_rot_0;
+    default:
+      printf(
+          "\nFunction int_to_face_rot failed to convert int to face_rot : "
+          "invalid value : %i\n",
+          a);
+      exit(1);
+      return face_rot::face_rot_0;
   }
 }
 
@@ -95,20 +95,20 @@ constexpr face_idx face_y_neg = face_idx::face_down;
 
 constexpr inline face_idx inverse_face(const face_idx fi) noexcept {
   switch (fi) {
-  case face_idx::face_down:
-    return face_idx::face_up;
-  case face_idx::face_up:
-    return face_idx::face_down;
+    case face_idx::face_down:
+      return face_idx::face_up;
+    case face_idx::face_up:
+      return face_idx::face_down;
 
-  case face_idx::face_north:
-    return face_idx::face_south;
-  case face_idx::face_south:
-    return face_idx::face_north;
+    case face_idx::face_north:
+      return face_idx::face_south;
+    case face_idx::face_south:
+      return face_idx::face_north;
 
-  case face_idx::face_east:
-    return face_idx::face_west;
-  case face_idx::face_west:
-    return face_idx::face_east;
+    case face_idx::face_east:
+      return face_idx::face_west;
+    case face_idx::face_west:
+      return face_idx::face_east;
   }
 
   return face_idx::face_up;
@@ -123,7 +123,7 @@ constexpr inline bool is_parallel(const face_idx fiA,
 }
 
 class ray_t {
-public:
+ public:
   ray_t() = delete;
   explicit ray_t(const face_idx f);
   Eigen::Array3f abc;
@@ -132,7 +132,7 @@ public:
 
 /// Ax+By+Cz+D=0
 class plane_t {
-public:
+ public:
   plane_t() = delete;
   explicit plane_t(const Eigen::Array3f &normVec, const Eigen::Array3f &point)
       : ABC(normVec), D(-(normVec * point).sum()) {}
@@ -142,7 +142,7 @@ public:
 };
 
 class face_t {
-public:
+ public:
   const EImgRowMajor_t *texture{nullptr};
   /// It is not pixel index, but [0,1]*16 stored in integer
   std::array<int16_t, 2> uv_start{0, 0};
@@ -204,7 +204,7 @@ struct intersect_point {
 
 /// A 3d box to be displayed
 class element {
-public:
+ public:
   Eigen::Array3f _from;
   Eigen::Array3f _to;
   std::array<face_t, 6> faces;
@@ -240,8 +240,7 @@ public:
   inline int shown_face_num() const noexcept {
     int result = 0;
     for (const auto &f : faces) {
-      if (!f.is_hidden)
-        result++;
+      if (!f.is_hidden) result++;
     }
     return result;
   }
@@ -251,18 +250,18 @@ public:
            (point <= this->xyz_maxpos()).all();
   }
 
-  void
-  intersect_points(const face_idx f, const ray_t &ray,
-                   std::vector<intersect_point> *const dest) const noexcept;
+  void intersect_points(
+      const face_idx f, const ray_t &ray,
+      std::vector<intersect_point> *const dest) const noexcept;
 };
 
 /// a block model
 class model {
-public:
+ public:
   std::vector<element> elements;
 
-  inline void
-  get_faces(std::vector<const face_t *> *const dest) const noexcept {
+  inline void get_faces(
+      std::vector<const face_t *> *const dest) const noexcept {
     if (dest == nullptr) {
       return;
     }
@@ -282,7 +281,7 @@ public:
   EImgRowMajor_t projection_image(face_idx fidx) const noexcept;
 };
 
-} // namespace block_model
+}  // namespace block_model
 
 namespace resource_json {
 
@@ -324,27 +323,25 @@ using state_list = std::vector<state>;
 bool match_state_list(const state_list &sla, const state_list &slb) noexcept;
 
 class block_states_variant {
-public:
+ public:
   model_pass_t block_model_name(const state_list &sl) const noexcept;
 
   std::vector<std::pair<state_list, model_store_t>> LUT;
 };
 
 struct criteria {
-public:
+ public:
   std::string key;
   std::vector<std::string> values;
 
   inline bool match(const state &state) const noexcept {
-    if (state.key != this->key)
-      return false;
+    if (state.key != this->key) return false;
     return this->match(state.value);
   }
 
   inline bool match(std::string_view value) const noexcept {
     for (const std::string &v : this->values) {
-      if (v == value)
-        return true;
+      if (v == value) return true;
     }
     return false;
   }
@@ -381,8 +378,7 @@ struct multipart_pair {
     }
 
     for (const criteria_list_and &cl : when_or) {
-      if (match_criteria_list(cl, sl))
-        return true;
+      if (match_criteria_list(cl, sl)) return true;
     }
 
     return false;
@@ -390,19 +386,19 @@ struct multipart_pair {
 };
 
 class block_state_multipart {
-public:
+ public:
   std::vector<multipart_pair> pairs;
 
-  std::vector<model_pass_t>
-  block_model_names(const state_list &sl) const noexcept;
+  std::vector<model_pass_t> block_model_names(
+      const state_list &sl) const noexcept;
 };
 
-bool parse_block_state(const std::string_view json_str,
+bool parse_block_state(const char *const json_str_beg, const char *const end,
                        block_states_variant *const dest_variant,
                        block_state_multipart *const dest_mutlipart = nullptr,
                        bool *const is_dest_variant = nullptr) noexcept;
 
-} // namespace resource_json
+}  // namespace resource_json
 
 block_model::face_idx string_to_face_idx(std::string_view str,
                                          bool *const _ok) noexcept;
@@ -411,13 +407,16 @@ block_model::face_idx string_to_face_idx(std::string_view str,
  * \note Name of texture = <namespacename>:blocks/<pngfilename without prefix>
  */
 class resource_pack {
-public:
+ public:
   using namespace_name_t = std::string;
 
   bool add_textures(const zipped_folder &resourece_pack_root,
                     const bool on_conflict_replace_old = true) noexcept;
 
   bool add_block_models(const zipped_folder &resourece_pack_root,
+                        const bool on_conflict_replace_old = true) noexcept;
+
+  bool add_block_states(const zipped_folder &resourece_pack_root,
                         const bool on_conflict_replace_old = true) noexcept;
 
   auto &get_textures() const noexcept { return this->textures; }
@@ -428,7 +427,7 @@ public:
   inline void clear_models() noexcept { this->block_models.clear(); }
   inline void clear_block_states() noexcept { this->block_states.clear(); }
 
-private:
+ private:
   std::unordered_map<std::string, block_model::model> block_models;
   std::unordered_map<std::string, Eigen::Array<ARGB, Eigen::Dynamic,
                                                Eigen::Dynamic, Eigen::RowMajor>>
@@ -436,12 +435,11 @@ private:
   std::unordered_map<std::string, resource_json::block_states_variant>
       block_states;
 
-  bool
-  add_textures_direct(const std::unordered_map<std::string, zipped_file> &pngs,
-                      std::string_view namespace_name,
-                      const bool on_conflict_replace_old) noexcept;
+  bool add_textures_direct(
+      const std::unordered_map<std::string, zipped_file> &pngs,
+      std::string_view namespace_name,
+      const bool on_conflict_replace_old) noexcept;
 };
 
-void dereference_texture_name(
-    std::map<std::string, std::string> &text) noexcept;
-#endif // SLOPECRAFT_VISUALCRAFTL_PARSERESOURCEPACK_H
+struct VCL_resource_pack : public resource_pack {};
+#endif  // SLOPECRAFT_VISUALCRAFTL_PARSERESOURCEPACK_H

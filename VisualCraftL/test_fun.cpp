@@ -1,16 +1,14 @@
+#include <omp.h>
+#include <png.h>
+#include <stdio.h>
+
+#include <filesystem>
+#include <iostream>
+
 #include "ColorManip/ColorManip.h"
 #include "ParseResourcePack.h"
 #include "Resource_tree.h"
 #include "VisualCraftL.h"
-#include "VisualCraftL/ParseResourcePack.h"
-
-#include <filesystem>
-#include <iostream>
-#include <png.h>
-
-#include <stdio.h>
-
-#include <omp.h>
 
 using std::cout, std::endl, std::string;
 void test_VCL_single_image();
@@ -21,9 +19,7 @@ void test_VCL_block_model_full_block();
 void test_VCL_parse_block_states();
 void test_VCL_parse_block_states_many();
 
-void test_resource_pack(const bool texture_only);
-
-void test_dereference();
+void test_resource_pack(const bool texture_only, const bool parse_block_states);
 
 VCL_EXPORT void test_VCL() {
   // test_VCL_full_zip();
@@ -32,7 +28,7 @@ VCL_EXPORT void test_VCL() {
   // test_VCL_block_model_full_block();
   // test_VCL_parse_block_states();
   // test_VCL_parse_block_states_many();
-  test_resource_pack(false);
+  test_resource_pack(false, true);
   // test_dereference();
 }
 
@@ -50,7 +46,6 @@ void display_folder(const zipped_folder &folder, const int offset = 0) {
   }
 
   for (const auto &subfolder : folder.subfolders) {
-
     cout << spaces << "  " << subfolder.first << " : ";
     display_folder(subfolder.second, offset + 2);
   }
@@ -60,7 +55,6 @@ void display_folder(const zipped_folder &folder, const int offset = 0) {
 bool rewrite_png(const char *const filename,
                  const Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic,
                                     Eigen::RowMajor> &img) {
-
   png_struct *png =
       png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 
@@ -138,7 +132,6 @@ void test_VCL_single_image() {
 }
 
 void test_VCL_full_zip() {
-
   zipped_folder folder = zipped_folder::from_zip("Vanilla_1_19_2.zip");
 
   bool is_ok;
@@ -162,7 +155,6 @@ void test_VCL_full_zip() {
 }
 
 void test_VCL_single_img_in_zip() {
-
   zipped_folder folder = zipped_folder::from_zip("test.zip");
   zipped_folder *const block_dir = folder.subfolder("assets")
                                        ->subfolder("minecraft")
@@ -256,7 +248,6 @@ void test_VCL_block_model_full_block() {
 }
 
 void test_VCL_parse_block_states() {
-
   zipped_folder vanilla = zipped_folder::from_zip("Vanilla_1_19_2.zip");
 
   auto &blockstates = vanilla.folder_at("assets")
@@ -270,8 +261,9 @@ void test_VCL_parse_block_states() {
   bool success;
   resource_json::block_states_variant variants;
 
-  success =
-      resource_json::parse_block_state((const char *)file.data(), &variants);
+  success = resource_json::parse_block_state(
+      (const char *)file.data(), (const char *)file.data() + file.file_size(),
+      &variants);
   if (!success) {
     printf("Failed to parse json.\n");
     return;
@@ -304,7 +296,6 @@ void test_VCL_parse_block_states() {
 }
 
 void test_VCL_parse_block_states_many() {
-
   zipped_folder vanilla = zipped_folder::from_zip("Vanilla_1_19_2.zip");
 
   auto &files = vanilla.folder_at("assets")
@@ -334,8 +325,9 @@ void test_VCL_parse_block_states_many() {
 
     zfile.append_0_for_c_str();
 
-    const bool success =
-        resource_json::parse_block_state((char *)zfile.data(), vars + i);
+    const bool success = resource_json::parse_block_state(
+        (char *)zfile.data(), (char *)zfile.data() + zfile.file_size(),
+        vars + i);
 
     if (!success) {
       printf("\nFailed to parse %s\n", keys[i].data());
@@ -345,7 +337,8 @@ void test_VCL_parse_block_states_many() {
   printf("%i tasks finished\n", num_keys);
 }
 
-void test_resource_pack(const bool texture_only) {
+void test_resource_pack(const bool texture_only,
+                        const bool parse_block_states) {
   zipped_folder vanilla = zipped_folder::from_zip("Vanilla_1_19_2.zip");
 
   resource_pack pack;
@@ -378,9 +371,22 @@ void test_resource_pack(const bool texture_only) {
   printf("\n%i block models parsed in %F ms.\n", int(pack.get_models().size()),
          clk * 1000);
 
+  if (!parse_block_states) {
+    printf("\nFinished.\n");
+    return;
+  }
+
+  clk = omp_get_wtime();
+  pack.add_block_states(vanilla);
+  clk = omp_get_wtime() - clk;
+
+  printf("\n%i block states parsed in %F ms.\n",
+         int(pack.get_block_states().size()), clk * 1000);
+
   printf("\nFinished.\n");
 }
 
+/*
 void test_dereference() {
   std::map<string, string> m{
       {"1", "#2"}, {"2", "#3"}, {"A", "#B"}, {"B", "#C"}, {"C", "D"}};
@@ -397,3 +403,4 @@ void test_dereference() {
     printf("{%s, %s}\n", pair.first.data(), pair.second.data());
   }
 }
+*/

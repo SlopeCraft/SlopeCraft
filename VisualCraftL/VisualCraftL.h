@@ -10,6 +10,7 @@
 #include "VisualCraftL_global.h"
 
 struct VCL_Kernel;
+struct VCL_resource_pack;
 
 #ifdef __cplusplus
 #include "VisualCraft_classes.h"
@@ -24,8 +25,11 @@ VCL_EXPORT void VCL_destroy_kernel(VCL_Kernel *const ptr);
 
 VCL_EXPORT void test_VCL();
 
+VCL_EXPORT VCL_resource_pack *VCL_create_resource_pack(
+    const int zip_file_count, const char *const *const zip_file_names);
+
 #ifdef __cplusplus
 }
 #endif
 
-#endif // SLOPECRAFT_VISUALCRAFT_VISUALCRAFT_H
+#endif  // SLOPECRAFT_VISUALCRAFT_VISUALCRAFT_H

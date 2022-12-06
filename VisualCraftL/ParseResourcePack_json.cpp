@@ -91,22 +91,26 @@ bool parse_block_state_multipart(const njson::object_t &obj,
                                  block_state_multipart *const dest_variant);
 
 bool resource_json::parse_block_state(
-    const std::string_view json_str, block_states_variant *const dest_variant,
+    const char *const json_str_beg, const char *const json_str_end,
+    block_states_variant *const dest_variant,
     block_state_multipart *const dest_multipart,
     bool *const is_dest_variant) noexcept {
   njson::object_t obj;
   try {
-    obj = njson::parse(json_str);
+    obj = njson::parse(json_str_beg, json_str_end);
   } catch (...) {
-    printf("\nnlohmann json failed to parse json string : %s\n",
-           json_str.data());
+    printf("\nnlohmann json failed to parse json string : ");
+    for (const char *p = json_str_beg; p < json_str_end; p++) {
+      printf("%c", *p);
+    }
+    printf("\n");
     return false;
   }
 
   const bool has_variant =
       obj.contains("variants") && obj.at("variants").is_object();
   const bool has_multipart =
-      obj.contains("multipart") && obj.at("multipart").is_object();
+      obj.contains("multipart") && obj.at("multipart").is_array();
 
   if (has_variant == has_multipart) {
     printf(
@@ -122,6 +126,8 @@ bool resource_json::parse_block_state(
   }
 
   if (has_multipart) {
+    // parsing multipart is not supported yet.
+    return true;
     if (is_dest_variant != nullptr) *is_dest_variant = false;
     return parse_block_state_multipart(obj, dest_multipart);
   }
@@ -206,16 +212,24 @@ bool parse_block_state_variant(const njson::object_t &obj,
   // printf("size of variants = %i\n", (int)variants.size());
 
   for (auto pair : variants.items()) {
-    if (!pair.value().is_object()) {
+    if (!pair.value().is_structured()) {
       printf(
           "\nFunction parse_block_state_variant failed to parse json : "
-          "value for key "
-          "%s is not an object.\n",
+          "value for key \"%s\" is not an object or array.\n",
           pair.key().data());
       return false;
     }
 
-    const njson &obj = pair.value();
+    if (pair.value().is_array() && pair.value().size() <= 0) {
+      printf(
+          "\nFunction parse_block_state_variant failed to parse json : "
+          "value for key \"%s\" is an empty array.\n",
+          pair.key().data());
+      return false;
+    }
+
+    const njson &obj =
+        (pair.value().is_object()) ? (pair.value()) : (pair.value().at(0));
 
     if ((!obj.contains("model")) || (!obj.at("model").is_string())) {
       printf(
@@ -780,6 +794,63 @@ bool resource_pack::add_block_models(
     }
     // finished current model
     this->block_models.emplace(tmodel.first, md);
+  }
+
+  return true;
+}
+
+bool resource_pack::add_block_states(
+    const zipped_folder &resourece_pack_root,
+    const bool on_conflict_replace_old) noexcept {
+  const std::unordered_map<std::string, zipped_file> *files = nullptr;
+  {
+    const zipped_folder *temp = resourece_pack_root.subfolder("assets");
+    if (temp == nullptr) {
+      return false;
+    }
+    temp = temp->subfolder("minecraft");
+    if (temp == nullptr) {
+      return false;
+    }
+    temp = temp->subfolder("blockstates");
+    if (temp == nullptr) {
+      return false;
+    }
+    files = &temp->files;
+  }
+
+  this->block_states.reserve(this->block_states.size() + files->size());
+
+  for (const auto &file : *files) {
+    if (this->block_states.contains(file.first) && !on_conflict_replace_old) {
+      continue;
+    }
+
+    block_states_variant bsv;
+    bool is_dest_variant;
+
+    const bool success = parse_block_state(
+        (const char *)file.second.data(),
+        (const char *)file.second.data() + file.second.file_size(), &bsv,
+        nullptr, &is_dest_variant);
+
+    if (!success) {
+      printf(
+          "\nWarning : Failed to parse block state json file "
+          "assets/minecraft/blockstates/%s. This will be "
+          "skipped but may cause further warnings.\n",
+          file.first.data());
+#warning here
+      return false;
+      continue;
+    }
+
+    if (!is_dest_variant) {
+      continue;
+    }
+
+    const int substrlen = file.first.find_last_of('.');
+    this->block_states.emplace(file.first.substr(0, substrlen), bsv);
   }
 
   return true;
