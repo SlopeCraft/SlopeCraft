@@ -1,4 +1,3 @@
-#include <cstring>
 #include <utilities/Schem/bit_shrink.h>
 
 #include <json.hpp>
@@ -6,8 +5,6 @@
 #include <unordered_map>
 
 #include "ParseResourcePack.h"
-#include "VisualCraftL/ParseResourcePack.h"
-#include "VisualCraftL/Resource_tree.h"
 
 using namespace resource_json;
 
@@ -15,10 +12,8 @@ using njson = nlohmann::json;
 
 bool resource_json::match_state_list(const state_list &sla,
                                      const state_list &slb) noexcept {
-  if (sla.size() <= 0)
-    return true;
-  if (sla.size() != slb.size())
-    return false;
+  if (sla.size() <= 0) return true;
+  if (sla.size() != slb.size()) return false;
   int match_num = 0;
   for (const state &sa : sla) {
     for (const state &sb : slb) {
@@ -64,8 +59,8 @@ bool resource_json::match_criteria_list(const criteria_list_and &cl,
   return true;
 }
 
-model_pass_t
-block_states_variant::block_model_name(const state_list &sl) const noexcept {
+model_pass_t block_states_variant::block_model_name(
+    const state_list &sl) const noexcept {
   model_pass_t res;
   res.model_name = nullptr;
   for (const auto &pair : this->LUT) {
@@ -78,13 +73,12 @@ block_states_variant::block_model_name(const state_list &sl) const noexcept {
   return res;
 }
 
-std::vector<model_pass_t>
-block_state_multipart::block_model_names(const state_list &sl) const noexcept {
+std::vector<model_pass_t> block_state_multipart::block_model_names(
+    const state_list &sl) const noexcept {
   std::vector<model_pass_t> res;
 
   for (const multipart_pair &pair : this->pairs) {
-    if (pair.match(sl))
-      res.emplace_back(model_pass_t(pair.apply_blockmodel));
+    if (pair.match(sl)) res.emplace_back(model_pass_t(pair.apply_blockmodel));
   }
 
   return res;
@@ -115,21 +109,20 @@ bool resource_json::parse_block_state(
       obj.contains("multipart") && obj.at("multipart").is_object();
 
   if (has_variant == has_multipart) {
-    printf("\nFunction parse_block_state failed to parse json : has_variant = "
-           "%i, has_multipart = %i.",
-           has_variant, has_multipart);
+    printf(
+        "\nFunction parse_block_state failed to parse json : has_variant = "
+        "%i, has_multipart = %i.",
+        has_variant, has_multipart);
     return false;
   }
 
   if (has_variant) {
-    if (is_dest_variant != nullptr)
-      *is_dest_variant = true;
+    if (is_dest_variant != nullptr) *is_dest_variant = true;
     return parse_block_state_variant(obj, dest_variant);
   }
 
   if (has_multipart) {
-    if (is_dest_variant != nullptr)
-      *is_dest_variant = false;
+    if (is_dest_variant != nullptr) *is_dest_variant = false;
     return parse_block_state_multipart(obj, dest_multipart);
   }
   // unreachable
@@ -139,8 +132,7 @@ bool resource_json::parse_block_state(
 bool parse_block_state_list(std::string_view str,
                             state_list *const sl) noexcept {
   sl->clear();
-  if (str.size() <= 1)
-    return true;
+  if (str.size() <= 1) return true;
   int substr_start = 0;
   // int substr_end = -1;
   int eq_pos = -1;
@@ -154,9 +146,10 @@ bool parse_block_state_list(std::string_view str,
     if (str[cur] == ',' || str[cur] == '\0') {
       // substr_end = cur;
       if (eq_pos <= 0) {
-        printf("\n Function parse_block_state_list failed to parse block state "
-               "list : %s\n",
-               str.data());
+        printf(
+            "\n Function parse_block_state_list failed to parse block state "
+            "list : %s\n",
+            str.data());
         return false;
       }
 
@@ -214,18 +207,20 @@ bool parse_block_state_variant(const njson::object_t &obj,
 
   for (auto pair : variants.items()) {
     if (!pair.value().is_object()) {
-      printf("\nFunction parse_block_state_variant failed to parse json : "
-             "value for key "
-             "%s is not an object.\n",
-             pair.key().data());
+      printf(
+          "\nFunction parse_block_state_variant failed to parse json : "
+          "value for key "
+          "%s is not an object.\n",
+          pair.key().data());
       return false;
     }
 
     const njson &obj = pair.value();
 
     if ((!obj.contains("model")) || (!obj.at("model").is_string())) {
-      printf("\nFunction parse_block_state_variant failed to parse json : no "
-             "valid value for key \"model\"\n");
+      printf(
+          "\nFunction parse_block_state_variant failed to parse json : no "
+          "valid value for key \"model\"\n");
       return false;
     }
 
@@ -245,8 +240,9 @@ bool parse_block_state_variant(const njson::object_t &obj,
 
 bool parse_block_state_multipart(const njson::object_t &,
                                  block_state_multipart *const) {
-  printf("\nFatal error : parsing blockstate json of multipart is not "
-         "supported yet.\n");
+  printf(
+      "\nFatal error : parsing blockstate json of multipart is not "
+      "supported yet.\n");
 
   // exit(1);
   return false;
@@ -257,7 +253,7 @@ struct face_json_temp {
   std::array<int16_t, 4> uv{0, 0, 16, 16};
   block_model::face_idx cullface_face;
   bool have_cullface{false};
-  bool is_hidden{true}; ///< note that by default, is_hidden is true.
+  bool is_hidden{true};  ///< note that by default, is_hidden is true.
 };
 
 struct element_json_temp {
@@ -332,7 +328,6 @@ bool parse_single_model_json(const char *const json_beg,
   if (obj.contains("parent") && obj.at("parent").is_string()) {
     std::string p_str = obj.at("parent");
     if (p_str.starts_with("minecraft:")) {
-
       dest->parent = p_str.substr(sizeof("minecraft:") / sizeof(char) - 1);
     } else {
       dest->parent = p_str;
@@ -374,8 +369,9 @@ bool parse_single_model_json(const char *const json_beg,
       {
         const njson::array_t &arr_from = e.at("from");
         if (arr_from.size() != 3 || !arr_from.front().is_number()) {
-          printf("Error : size of \"from\" is not 3, or is not consisted of "
-                 "numbers.\n");
+          printf(
+              "Error : size of \"from\" is not 3, or is not consisted of "
+              "numbers.\n");
           return false;
         }
 
@@ -391,8 +387,9 @@ bool parse_single_model_json(const char *const json_beg,
       {
         const njson::array_t &arr_to = e.at("to");
         if (arr_to.size() != 3 || !arr_to.front().is_number()) {
-          printf("Error : size of \"to\" is not 3, or is not consisted of "
-                 "numbers.\n");
+          printf(
+              "Error : size of \"to\" is not 3, or is not consisted of "
+              "numbers.\n");
           return false;
         }
 
@@ -411,17 +408,17 @@ bool parse_single_model_json(const char *const json_beg,
         const njson &faces = e.at("faces");
         for (auto temp : faces.items()) {
           // if the face is not object, skip current face.
-          if (!temp.value().is_object())
-            continue;
+          if (!temp.value().is_object()) continue;
           face_json_temp f;
           block_model::face_idx fidx;
           {
             bool _ok;
             fidx = string_to_face_idx(temp.key(), &_ok);
             if (!_ok) {
-              printf("\nError while parsing block model json : invalid key %s "
-                     "doesn't refer to any face.\n",
-                     temp.key().data());
+              printf(
+                  "\nError while parsing block model json : invalid key %s "
+                  "doesn't refer to any face.\n",
+                  temp.key().data());
               return false;
             }
           }
@@ -430,8 +427,9 @@ bool parse_single_model_json(const char *const json_beg,
 
           if (!curface.contains("texture") ||
               !curface.at("texture").is_string()) {
-            printf("\nError while parsing block model json : face do not have "
-                   "texture.\n");
+            printf(
+                "\nError while parsing block model json : face do not have "
+                "texture.\n");
             return false;
           }
 
@@ -471,8 +469,9 @@ bool parse_single_model_json(const char *const json_beg,
             const njson::array_t &uvarr = curface.at("uv");
 
             if (uvarr.size() != 4 || !uvarr.front().is_number_integer()) {
-              printf("\nInvalid value for uv array : the size must be 4, and "
-                     "each value should be integer.\n");
+              printf(
+                  "\nInvalid value for uv array : the size must be 4, and "
+                  "each value should be integer.\n");
               return false;
             }
 
@@ -498,9 +497,9 @@ bool parse_single_model_json(const char *const json_beg,
   return true;
 }
 
-const char *
-dereference_texture_name(std::map<std::string, std::string>::iterator it,
-                         std::map<std::string, std::string> &text) noexcept {
+const char *dereference_texture_name(
+    std::map<std::string, std::string>::iterator it,
+    std::map<std::string, std::string> &text) noexcept {
   if (it == text.end()) {
     return nullptr;
   }
@@ -526,10 +525,8 @@ dereference_texture_name(std::map<std::string, std::string>::iterator it,
 
 void dereference_texture_name(
     std::map<std::string, std::string> &text) noexcept {
-
   for (auto it = text.begin(); it != text.end(); ++it) {
-    if (!it->second.starts_with('#'))
-      continue;
+    if (!it->second.starts_with('#')) continue;
     dereference_texture_name(it, text);
   }
 }
@@ -539,8 +536,7 @@ void dereference_model(block_model_json_temp &model) {
 
   for (auto &ele : model.elements) {
     for (auto &face : ele.faces) {
-      if (face.is_hidden)
-        continue;
+      if (face.is_hidden) continue;
       if (face.texture.starts_with('#')) {
         auto it = model.textures.find(face.texture.data() + 1);
 
@@ -558,7 +554,6 @@ void dereference_model(block_model_json_temp &model) {
 bool model_json_inherit_new(block_model_json_temp &child,
                             block_model_json_temp &parent,
                             const bool must_dereference_all) {
-
   if (child.parent.empty()) {
     printf("Error : child has no parent.\n");
     return false;
@@ -576,7 +571,11 @@ bool model_json_inherit_new(block_model_json_temp &child,
 
   dereference_texture_name(child.textures);
 
-  // do not add parent's element to child
+  // if child have a parent, and child doesn't define its own element, child
+  // inherit parent's elements.
+  if (child.elements.size() <= 0) {
+    child.elements = parent.elements;
+  }
 
   dereference_model(child);
 
@@ -589,9 +588,7 @@ bool inherit_recrusively(std::string_view childname,
                          block_model_json_temp &child,
                          std::unordered_map<std::string, block_model_json_temp>
                              &temp_models) noexcept {
-
-  if (child.parent.empty())
-    return true;
+  if (child.parent.empty()) return true;
 
   // #warning This function is not finished yet. I hope to inherit from the
   // root, which measn to find the root and inherit from root to leaf
@@ -600,9 +597,10 @@ bool inherit_recrusively(std::string_view childname,
   auto it = temp_models.find(child.parent);
 
   if (it == temp_models.end()) {
-    printf("\nError : Failed to inherit. Undefined reference to model %s, "
-           "required by %s.\n",
-           child.parent.data(), childname.data());
+    printf(
+        "\nError : Failed to inherit. Undefined reference to model %s, "
+        "required by %s.\n",
+        child.parent.data(), childname.data());
     return false;
   }
 
@@ -638,17 +636,13 @@ bool resource_pack::add_block_models(
   // find assets/minecraft/models/block
   {
     const zipped_folder *temp = resourece_pack_root.subfolder("assets");
-    if (temp == nullptr)
-      return false;
+    if (temp == nullptr) return false;
     temp = temp->subfolder("minecraft");
-    if (temp == nullptr)
-      return false;
+    if (temp == nullptr) return false;
     temp = temp->subfolder("models");
-    if (temp == nullptr)
-      return false;
+    if (temp == nullptr) return false;
     temp = temp->subfolder("block");
-    if (temp == nullptr)
-      return false;
+    if (temp == nullptr) return false;
 
     files = &temp->files;
   }
@@ -661,8 +655,7 @@ bool resource_pack::add_block_models(
   std::array<char, 1024> buffer;
 
   for (const auto &file : *files) {
-    if (!file.first.ends_with(".json"))
-      continue;
+    if (!file.first.ends_with(".json")) continue;
     buffer.fill('\0');
 
     std::strcpy(buffer.data(), "block/");
@@ -703,9 +696,10 @@ bool resource_pack::add_block_models(
   for (auto &model : temp_models) {
     const bool ok = inherit_recrusively(model.first, model.second, temp_models);
     if (!ok) {
-      printf("\nWarning : failed to inherit model %s. This model will be "
-             "skipped.\n",
-             model.first.data());
+      printf(
+          "\nWarning : failed to inherit model %s. This model will be "
+          "skipped.\n",
+          model.first.data());
       model.second.parent = "INVALID";
       // #warning following line should be commented.
       // return false;
@@ -737,8 +731,7 @@ bool resource_pack::add_block_models(
 
     md.elements.reserve(tmodel.second.elements.size());
     for (auto &tele : tmodel.second.elements) {
-      if (skip_this_model)
-        break;
+      if (skip_this_model) break;
       block_model::element ele;
 
       // ele._from = tele.from;
@@ -748,8 +741,7 @@ bool resource_pack::add_block_models(
       }
 
       for (uint8_t faceidx = 0; faceidx < 6; faceidx++) {
-        if (skip_this_model)
-          break;
+        if (skip_this_model) break;
         auto &tface = tele.faces[faceidx];
         ele.faces[faceidx].is_hidden = tface.is_hidden;
         if (tface.is_hidden) {
@@ -768,9 +760,10 @@ bool resource_pack::add_block_models(
             continue;
           }
 
-          printf("\nError : Undefined reference to texture %s, required by "
-                 "model %s but no such image.\n",
-                 tface.texture.data(), tmodel.first.data());
+          printf(
+              "\nError : Undefined reference to texture %s, required by "
+              "model %s but no such image.\n",
+              tface.texture.data(), tmodel.first.data());
           printf("The texture is : \n");
           for (const auto &pair : tmodel.second.textures) {
             printf("{%s, %s}\n", pair.first.data(), pair.second.data());
