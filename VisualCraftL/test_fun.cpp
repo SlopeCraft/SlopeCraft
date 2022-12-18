@@ -29,7 +29,6 @@ VCL_EXPORT void test_VCL() {
   // test_VCL_parse_block_states();
   // test_VCL_parse_block_states_many();
   test_resource_pack(false, true);
-  // test_dereference();
 }
 
 void display_folder(const zipped_folder &folder, const int offset = 0) {
