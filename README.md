@@ -22,7 +22,7 @@
 
 # 其他平台上的发行版
 
-* [SlopeCraft for macOS](https://github.com/iXORTech/SlopeCraft-for-macOS) - macOS 操作系统的适配与构建
+* [SlopeCraft for macOS](https://github.com/iXORTech/SlopeCraft-for-Linux-macOS) - Linux 与 macOS 操作系统的适配与构建
 
 # 使用教程
 
@@ -119,4 +119,4 @@ SlopeCraft 包含以下核心功能：
 * [SlopeCraftLossyCompression](https://github.com/ToKiNoBug/SlopeCraftLossyCompression) - 有损压缩库，基于无损压缩库实现
 * [SlopeCraftGlassBuilder](https://github.com/ToKiNoBug/SlopeCraftGlassBuilder) - 搭桥库
 * [HeuristicFlow](https://github.com/TokiNoBug/HeuristicFlow) - 遗传算法实现
-* [SlopeCraft for macOS](https://github.com/iXORTech/SlopeCraft-for-macOS) - macOS 操作系统的适配与构建
+* [SlopeCraft for macOS](https://github.com/iXORTech/SlopeCraft-for-Linux-macOS) - Linux 与 macOS 操作系统的适配与构建
