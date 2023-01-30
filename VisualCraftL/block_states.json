@@ -1,0 +1,8 @@
+{
+    "minecraft:stone": "all",
+    "deepslate": 17,
+    "minecraft:grass[snowy=false]": [
+        12
+    ],
+    "minecraft:grass_block[snowy=false]": 13
+}

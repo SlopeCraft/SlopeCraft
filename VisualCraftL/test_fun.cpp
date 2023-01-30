@@ -21,7 +21,7 @@ void test_VCL_parse_block_states_many();
 
 void test_resource_pack(const bool texture_only, const bool parse_block_states);
 
-VCL_EXPORT void test_VCL() {
+VCL_EXPORT_FUN void test_VCL() {
   // test_VCL_full_zip();
   // test_VCL_single_image();
   //  test_VCL_single_img_in_zip();

@@ -14,9 +14,11 @@
 #endif
 
 #if defined(VISUALCRAFTL_BUILD)
-#define VCL_EXPORT Q_DECL_EXPORT __stdcall
+#define VCL_EXPORT Q_DECL_EXPORT
 #else
-#define VCL_EXPORT Q_DECL_IMPORT __stdcall
+#define VCL_EXPORT Q_DECL_IMPORT
 #endif
+
+#define VCL_EXPORT_FUN VCL_EXPORT __stdcall
 
 #endif // SLOPECRAFT_VISUALCRAFT_VISUALCRAFTL_GLOBAL_H

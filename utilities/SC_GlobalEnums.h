@@ -54,6 +54,8 @@ enum SCL_gameVersion {
   FUTURE = 255
 };
 
+const SCL_gameVersion max_version = SCL_gameVersion::MC19;
+
 /// color difference formula used to match colors
 enum SCL_convertAlgo : char {
   /// naive RGB
@@ -194,11 +196,17 @@ enum SCL_HalfTpPixelSt : char {
   IgnoreAlpha = 'R'
 };
 
-enum VCL_Kernel_step : int {
-  VCL_none,
-  VCL_wait_for_image,
-  VCL_converted,
-  VCL_built
+#ifdef __cplusplus
+#define VCL_CLASS_IF_CPP class
+#else
+#define VCL_CLASS_IF_CPP
+#endif // #ifdef __cplusplus
+
+enum VCL_CLASS_IF_CPP VCL_Kernel_step : int {
+  VCL_none = 0,
+  VCL_wait_for_image = 1,
+  VCL_converted = 2,
+  VCL_built = 3
 };
 
 #endif

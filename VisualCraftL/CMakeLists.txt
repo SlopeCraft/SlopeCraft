@@ -15,6 +15,10 @@ add_library(VisualCraftL SHARED
     ParseResourcePack_png.cpp
     ParseResourcePack_blocks.cpp
     ParseResourcePack_json.cpp
+
+    BlockStateList.h
+    BlockStateList.cpp
+
     test_fun.cpp)
 
 find_package(libzip REQUIRED)
