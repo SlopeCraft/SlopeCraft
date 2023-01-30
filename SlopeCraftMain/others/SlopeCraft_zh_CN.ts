@@ -481,7 +481,7 @@ p, li { white-space: pre-wrap; }
         <location filename="../mainwindow.ui" line="431"/>
         <location filename="../mainwindow.ui" line="3998"/>
         <source>WE原理图</source>
-        <translation>WESchem</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="1970"/>
@@ -964,7 +964,7 @@ Litematic</translation>
     <message>
         <location filename="../MainWindow.cpp" line="1687"/>
         <source>错误信息：</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1724"/>
@@ -1010,7 +1010,7 @@ Litematic</translation>
     <message>
         <location filename="../MainWindow.cpp" line="1836"/>
         <source>未知游戏版本</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1840"/>
@@ -1018,47 +1018,47 @@ Litematic</translation>
         <location filename="../MainWindow.cpp" line="1848"/>
         <location filename="../MainWindow.cpp" line="1852"/>
         <source>导出原理图失败</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1841"/>
         <source>方块种类超出上限。</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1845"/>
         <source>错误的文件扩展名</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1849"/>
         <source>三维结构中存在错误的方块</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1853"/>
         <source>无法创建/打开文件</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1856"/>
         <source>导出WorldEdit原理图失败</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1857"/>
         <source>不支持导出1.12 WorldEdit原理图（.schematic格式），仅支持.schem格式</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1862"/>
         <source>导出原版结构方块文件失败</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1863"/>
         <source>导出时指定不使用结构空位表示空气，但方块列表中不包含空气。</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1868"/>
@@ -1099,22 +1099,22 @@ Litematic</translation>
     <message>
         <location filename="../MainWindow.cpp" line="1883"/>
         <source>在构建高度矩阵时，有损压缩失败，没能将地图画压缩到目标高度。         这可能是因为地图画行数过大。         尝试启用无损压缩，或者提高最大允许高度</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="2305"/>
         <source>测试方块列表失败</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="2306"/>
         <source>具体信息：</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="2337"/>
         <source>保存颜色表</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../MainWindow.cpp" line="1889"/>

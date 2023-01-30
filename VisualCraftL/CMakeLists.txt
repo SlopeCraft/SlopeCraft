@@ -2,14 +2,6 @@ cmake_minimum_required(VERSION 3.5)
 project(VisualCraftL VERSION ${SlopeCraft_version} LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 
-include_directories(
-    ${CMAKE_SOURCE_DIR}
-    ${SlopeCraft_Eigen3_include_dir}
-    ${SlopeCraft_HeuristicFlow_include_dir}
-    ${SlopeCraft_Nlohmann_json_include_dir}
-    ${CMAKE_SOURCE_DIR}/utilities
-)
-
 add_library(VisualCraftL SHARED
 
     VisualCraftL_global.h
@@ -29,19 +21,26 @@ find_package(libzip REQUIRED)
 find_package(ZLIB 1.2.11 REQUIRED)
 find_package(PNG REQUIRED)
 
-include_directories(${ZLIB_INCLUDE_DIR})
-
+# include_directories(${ZLIB_INCLUDE_DIR})
 if(NOT ${libzip_FOUND})
     message(FATAL_ERROR "libzip not found")
 endif()
 
 target_include_directories(VisualCraftL PRIVATE
     ${SlopeCraft_Nlohmann_json_include_dir}
+    ${SlopeCraft_Eigen3_include_dir}
+    ${SlopeCraft_HeuristicFlow_include_dir}
+    ${SlopeCraft_Nlohmann_json_include_dir}
     ${CMAKE_SOURCE_DIR})
+
+target_include_directories(VisualCraftL PUBLIC
+    ${CMAKE_SOURCE_DIR}/utilities)
 
 target_link_libraries(VisualCraftL PRIVATE z png libzip::zip ColorManip Schem)
 
 target_compile_definitions(VisualCraftL PRIVATE BEFORE "-DVISUALCRAFTL_BUILD")
+
+target_compile_features(VisualCraftL PRIVATE cxx_std_20)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     # message("libzip_LIBRARY = " ${libzip_LIBRARY})

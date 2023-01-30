@@ -1,7 +1,7 @@
 #ifndef SLOPECRAFT_VISUALCRAFT_VISUALCRAFTL_GLOBAL_H
 #define SLOPECRAFT_VISUALCRAFT_VISUALCRAFTL_GLOBAL_H
 
-//#ifdef VISUALCRAFTL_BUILD
+// #ifdef VISUALCRAFTL_BUILD
 
 #if defined(_MSC_VER) || defined(WIN64) || defined(_WIN64) ||                  \
     defined(__WIN64__) || defined(WIN32) || defined(_WIN32) ||                 \
@@ -14,9 +14,9 @@
 #endif
 
 #if defined(VISUALCRAFTL_BUILD)
-#define VCL_EXPORT Q_DECL_EXPORT
+#define VCL_EXPORT Q_DECL_EXPORT __stdcall
 #else
-#define VCL_EXPORT Q_DECL_IMPORT
+#define VCL_EXPORT Q_DECL_IMPORT __stdcall
 #endif
 
 #endif // SLOPECRAFT_VISUALCRAFT_VISUALCRAFTL_GLOBAL_H

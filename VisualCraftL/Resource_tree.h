@@ -2,6 +2,7 @@
 #define SLOPECRAFT_VISUALCRAFTL_RESOURCE_TREE_H
 
 #include <string>
+#include <string_view>
 #include <unordered_map>
 #include <vector>
 

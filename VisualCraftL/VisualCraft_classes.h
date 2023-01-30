@@ -7,7 +7,7 @@
 #include "SC_GlobalEnums.h"
 #endif
 
-struct VCL_Kernel {
+class VCL_Kernel {
 public:
   VCL_Kernel() = default;
   virtual ~VCL_Kernel() = default;

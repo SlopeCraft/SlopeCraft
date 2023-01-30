@@ -652,7 +652,7 @@ map files</translation>
     <message>
         <location filename="../mainwindow.ui" line="2369"/>
         <source>GACvter</source>
-        <translation></translation>
+        <translation>GACvter</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="2385"/>

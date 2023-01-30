@@ -3,21 +3,18 @@ set(CMAKE_CXX_STANDARD 20)
 
 find_package(ZLIB 1.2.11 REQUIRED)
 
-if(ZLIB_FOUND)
-    include_directories(ZLIB_INCLUDE_DIR)
-endif()
+# if(ZLIB_FOUND)
+# include_directories(ZLIB_INCLUDE_DIR)
+# endif()
+add_library(NBTWriter
 
-add_library(NBTWriter 
-    
-    NBTWriter.h 
+    NBTWriter.h
     NBTWriter.cpp)
 
-target_link_libraries(NBTWriter PRIVATE z)
-
+target_link_libraries(NBTWriter PUBLIC z)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     target_compile_options(NBTWriter PUBLIC "-fvisibility=hidden" "-fPIC")
 endif()
 
-#target_compile_options(NBTWriter BEFORE PUBLIC -std=c++17)
-
+# target_compile_options(NBTWriter BEFORE PUBLIC -std=c++17)
