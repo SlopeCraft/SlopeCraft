@@ -1,8 +1,15 @@
 {
-    "minecraft:stone": "all",
+    //Block that is available in all versions
+    "minecraft:stone": "all", 
+
+     //Block that is available in version greater or equal than 1.17
     "deepslate": 17,
-    "minecraft:grass[snowy=false]": [
+
+    //Block that is available only in this list of versions. In this example, it is 1.12
+    "minecraft:grass[snowy=false]": [ 
         12
     ],
-    "minecraft:grass_block[snowy=false]": 13
+
+    //Block that is available in version greater or equal than 1.13
+    "minecraft:grass_block[snowy=false]": 13 
 }

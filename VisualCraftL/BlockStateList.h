@@ -7,7 +7,6 @@
 #include <utilities/SC_GlobalEnums.h>
 #include <vector>
 
-
 constexpr inline size_t major_version_to_idx(SCL_gameVersion v) noexcept {
   switch (v) {
   case SCL_gameVersion::FUTURE:
@@ -68,6 +67,8 @@ public:
   void available_block_states(
       SCL_gameVersion v,
       std::vector<const std::string *> *const str_list) const noexcept;
+
+  inline auto &block_states() const noexcept { return this->states; }
 };
 
 #endif // SLOPECRAFT_VISUALCRAFT_BLOCKSTATELIST_H

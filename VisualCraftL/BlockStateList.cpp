@@ -62,13 +62,11 @@ bool VCL_block_state_list::add(std::string_view filename) noexcept {
   try {
     std::ifstream ifs(filename.data());
 
-    ifs >> jo;
+    jo = njson::parse(ifs, nullptr, true, true);
 
     ifs.close();
-  }
-
-  catch (std::runtime_error re) {
-    std::cout << "Failed to parse " << filename << ", detail : " << re.what()
+  } catch (std::runtime_error e) {
+    std::cout << "Failed to parse " << filename << ", detail : " << e.what()
               << std::endl;
     return false;
   }

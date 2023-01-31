@@ -20,9 +20,12 @@ public:
 
   virtual VCL_Kernel_step step() const noexcept = 0;
 
-  virtual bool
-  set_resource_pack(const VCL_resource_pack *const rp) noexcept = 0;
+  virtual bool set_resource(const VCL_resource_pack *const rp,
+                            const VCL_block_state_list *const bsl) noexcept = 0;
+  virtual bool set_resource_move(VCL_resource_pack **rp_ptr,
+                                 VCL_block_state_list **bsl_ptr) noexcept = 0;
   virtual const VCL_resource_pack *resource_pack() const noexcept = 0;
+  virtual const VCL_block_state_list *block_state_list() const noexcept = 0;
 };
 
 extern "C" {

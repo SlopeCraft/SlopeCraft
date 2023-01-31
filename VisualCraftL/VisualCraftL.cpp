@@ -40,19 +40,21 @@ VCL_create_resource_pack(const int zip_file_count,
   for (int zfidx = 0; zfidx < zip_file_count; zfidx++) {
 
     zipped_folder zf_2 = zipped_folder::from_zip(zip_file_names[zfidx]);
-    if (!rp->add_block_models(zf_2, !cover_from_first_to_end)) {
-      cout << "Warning : Failed to add block models from resource pack : "
+
+    if (!rp->add_textures(zf_2, !cover_from_first_to_end)) {
+      cout << "Failed to add textures from resource pack : "
            << zip_file_names[zfidx] << endl;
       continue;
     }
+
     if (!rp->add_block_states(zf_2, !cover_from_first_to_end)) {
       cout << "Failed to add block states from resource pack : "
            << zip_file_names[zfidx] << endl;
       continue;
     }
 
-    if (!rp->add_textures(zf_2, !cover_from_first_to_end)) {
-      cout << "Failed to add textures from resource pack : "
+    if (!rp->add_block_models(zf_2, !cover_from_first_to_end)) {
+      cout << "Warning : Failed to add block models from resource pack : "
            << zip_file_names[zfidx] << endl;
       continue;
     }
