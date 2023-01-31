@@ -178,6 +178,25 @@ VCL_Kernel_step TokiVC::step() const noexcept {
   return this->_step;
 }
 
+bool go_through(const std::vector<const std::string *> &bs_list,
+                std::unordered_map<const std::string *,
+                                   block_model::EImgRowMajor_t> &images,
+                resource_pack::buffer_t &buff) noexcept {
+
+  for (const std::string *strptr : bs_list) {
+    block_model::EImgRowMajor_t img;
+
+    if (!TokiVC::pack.compute_projection(*strptr, TokiVC::exposed_face, &img,
+                                         buff)) {
+      printf("\nError : failed to compute projection for %s\n",
+             strptr->c_str());
+      return false;
+    }
+
+    images.emplace(strptr, std::move(img));
+  }
+}
+
 bool TokiVC::update_color_set_no_lock() noexcept {
   switch (TokiVC::version) {
   case SCL_gameVersion::ANCIENT:
@@ -187,7 +206,6 @@ bool TokiVC::update_color_set_no_lock() noexcept {
   default:
     break;
   }
-#warning update color set here.
 
   std::vector<const std::string *> bs_transparent, bs_nontransparent;
 
@@ -195,6 +213,28 @@ bool TokiVC::update_color_set_no_lock() noexcept {
 
   TokiVC::bsl.avaliable_block_states_by_transparency(
       TokiVC::version, &bs_nontransparent, &bs_transparent);
+
+  {
+    // compute all projection images suitable for this version
+    std::unordered_map<const std::string *, block_model::EImgRowMajor_t> images;
+
+    images.reserve(bs_transparent.size() + bs_nontransparent.size());
+    resource_pack::buffer_t buff;
+    {
+      buff.pure_id.reserve(256);
+      buff.state_list.reserve(16);
+      buff.traits.reserve(16);
+    }
+
+    if (!go_through(bs_nontransparent, images, buff)) {
+      return false;
+    }
+
+    if (!go_through(bs_transparent, images, buff)) {
+      return false;
+    }
+#warning compute color of single layer and multiple layers here
+  }
 
   // update steps
   for (auto ptr : TokiVC_register) {

@@ -10,6 +10,7 @@
 #include "Resource_tree.h"
 
 #include "VisualCraftL.h"
+#include <utility>
 
 // struct resource_pack;
 
@@ -114,6 +115,108 @@ constexpr inline bool is_parallel(const face_idx fiA,
     return true;
   }
   return false;
+}
+
+constexpr inline face_idx rotate_x(face_idx original, face_rot x_rot) noexcept {
+  if (original == face_x_neg || original == face_x_pos) {
+    return original;
+  }
+
+  switch (x_rot) {
+  case face_rot::face_rot_0:
+    return original;
+
+  case face_rot::face_rot_180:
+    return inverse_face(original);
+
+  case face_rot::face_rot_90: {
+    switch (original) {
+    case face_z_neg:
+      return face_y_pos;
+    case face_y_pos:
+      return face_z_pos;
+    case face_z_pos:
+      return face_y_neg;
+    case face_y_neg:
+      return face_z_neg;
+    default:
+      std::unreachable();
+      return {};
+    }
+  }
+
+  case face_rot::face_rot_270: {
+    return inverse_face(rotate_x(original, face_rot::face_rot_90));
+  }
+  }
+  std::unreachable();
+  return {};
+}
+
+constexpr inline face_idx invrotate_x(face_idx rotated,
+                                      face_rot x_rot) noexcept {
+  switch (x_rot) {
+  case face_rot::face_rot_0:
+    return rotated;
+  case face_rot::face_rot_180:
+    return inverse_face(rotated);
+  case face_rot::face_rot_90:
+    return rotate_x(rotated, face_rot::face_rot_270);
+  case face_rot::face_rot_270:
+    return rotate_x(rotated, face_rot::face_rot_90);
+  }
+  std::unreachable();
+  return {};
+}
+
+constexpr inline face_idx rotate_y(face_idx original, face_rot y_rot) noexcept {
+  if (original == face_y_neg || original == face_y_pos) {
+    return original;
+  }
+
+  switch (y_rot) {
+  case face_rot::face_rot_0:
+    return original;
+  case face_rot::face_rot_180:
+    return inverse_face(original);
+  case face_rot::face_rot_90: {
+    switch (original) {
+    case face_x_pos:
+      return face_z_neg;
+    case face_z_neg:
+      return face_x_neg;
+    case face_x_neg:
+      return face_z_pos;
+    case face_z_pos:
+      return face_x_pos;
+    default:
+      std::unreachable();
+      return {};
+    }
+  }
+
+  case face_rot::face_rot_270:
+    return inverse_face(rotate_y(original, face_rot::face_rot_90));
+  }
+
+  std::unreachable();
+  return {};
+}
+
+constexpr inline face_idx invrotate_y(face_idx rotated,
+                                      face_rot y_rot) noexcept {
+  switch (y_rot) {
+  case face_rot::face_rot_0:
+    return rotated;
+  case face_rot::face_rot_180:
+    return inverse_face(rotated);
+  case face_rot::face_rot_90:
+    return rotate_y(rotated, face_rot::face_rot_270);
+  case face_rot::face_rot_270:
+    return rotate_y(rotated, face_rot::face_rot_90);
+  }
+  std::unreachable();
+  return {};
 }
 
 class ray_t {
@@ -274,6 +377,9 @@ public:
   }
 
   EImgRowMajor_t projection_image(face_idx fidx) const noexcept;
+
+  void projection_image(face_idx idx,
+                        EImgRowMajor_t *const dest) const noexcept;
 };
 
 } // namespace block_model
@@ -424,6 +530,29 @@ public:
   inline void clear_textures() noexcept { this->textures.clear(); }
   inline void clear_models() noexcept { this->block_models.clear(); }
   inline void clear_block_states() noexcept { this->block_states.clear(); }
+
+  struct buffer_t {
+    std::string pure_id;
+    std::vector<std::pair<std::string, std::string>> traits;
+    resource_json::state_list state_list;
+  };
+
+  const block_model::model *
+  find_model(const std::string &block_state_str, VCL_face_t face_exposed,
+             VCL_face_t *face_invrotated) const noexcept {
+    buffer_t b;
+    return this->find_model(block_state_str, face_exposed, face_invrotated, b);
+  }
+
+  const block_model::model *find_model(const std::string &block_state_str,
+                                       VCL_face_t face_exposed,
+                                       VCL_face_t *face_invrotated,
+                                       buffer_t &) const noexcept;
+
+  bool compute_projection(const std::string &block_state_str,
+                          VCL_face_t face_exposed,
+                          block_model::EImgRowMajor_t *const img,
+                          buffer_t &) const noexcept;
 
 private:
   std::unordered_map<std::string, block_model::model> block_models;

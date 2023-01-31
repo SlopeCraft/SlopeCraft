@@ -279,10 +279,11 @@ inline bool intersect_compare_fun(const intersect_point &a,
   return a.distance < b.distance;
 }
 
-EImgRowMajor_t model::projection_image(face_idx fidx) const noexcept {
-  EImgRowMajor_t result(16, 16);
-
-  result.fill(0x00000000);
+void model::projection_image(face_idx fidx,
+                             EImgRowMajor_t *const dest) const noexcept {
+  dest->resize(16, 16);
+  dest->fill(0x00000000);
+  dest->fill(0x00000000);
 
   std::vector<intersect_point> intersects;
   intersects.reserve(this->elements.size() * 2);
@@ -351,9 +352,15 @@ EImgRowMajor_t model::projection_image(face_idx fidx) const noexcept {
       }
       // printf(";");
 
-      result(r, c) = color;
+      dest->operator()(r, c) = color;
     }
   }
+}
+
+EImgRowMajor_t model::projection_image(face_idx fidx) const noexcept {
+  EImgRowMajor_t result(16, 16);
+
+  this->projection_image(fidx, &result);
 
   return result;
 }

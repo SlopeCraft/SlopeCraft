@@ -15,6 +15,7 @@ add_library(VisualCraftL SHARED
     ParseResourcePack_png.cpp
     ParseResourcePack_blocks.cpp
     ParseResourcePack_json.cpp
+    ResourcePack.cpp
 
     BlockStateList.h
     BlockStateList.cpp
@@ -46,7 +47,7 @@ target_link_libraries(VisualCraftL PRIVATE z png libzip::zip ColorManip Schem)
 
 target_compile_definitions(VisualCraftL PRIVATE BEFORE "-DVISUALCRAFTL_BUILD")
 
-target_compile_features(VisualCraftL PRIVATE cxx_std_20)
+target_compile_features(VisualCraftL PRIVATE cxx_std_20 cxx_std_23)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     # message("libzip_LIBRARY = " ${libzip_LIBRARY})
