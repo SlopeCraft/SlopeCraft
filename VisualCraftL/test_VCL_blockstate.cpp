@@ -59,7 +59,8 @@ int main(int argc, char **argv) {
     cout << "Resource pack(s) parsed successfully." << endl;
 
     if constexpr (set_resource_by_move) {
-      if (!kernel->set_resource_move(&rp, &bsl)) {
+      if (!VCL_set_resource_and_version_move(&rp, &bsl, SCL_gameVersion::MC19,
+                                             VCL_face_t::face_up, 2)) {
         cout << "Failed to set resource pack" << endl;
         VCL_destroy_block_state_list(bsl);
         VCL_destroy_resource_pack(rp);
@@ -68,7 +69,8 @@ int main(int argc, char **argv) {
       }
     } else {
 
-      if (!kernel->set_resource(rp, bsl)) {
+      if (!VCL_set_resource_and_version_copy(rp, bsl, SCL_gameVersion::MC19,
+                                             VCL_face_t::face_up, 2)) {
         cout << "Failed to set resource pack" << endl;
         VCL_destroy_block_state_list(bsl);
         VCL_destroy_resource_pack(rp);

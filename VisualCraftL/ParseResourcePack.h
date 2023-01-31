@@ -9,6 +9,8 @@
 
 #include "Resource_tree.h"
 
+#include "VisualCraftL.h"
+
 // struct resource_pack;
 
 /// resize image
@@ -75,14 +77,7 @@ inline face_rot int_to_face_rot(int a) {
   }
 }
 
-enum class face_idx : uint8_t {
-  face_up,
-  face_down,
-  face_north,
-  face_south,
-  face_east,
-  face_west
-};
+using face_idx = ::VCL_face_t;
 
 /// assocate xyz with NWSE and up/down
 constexpr face_idx face_x_pos = face_idx::face_east;
