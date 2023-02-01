@@ -6,7 +6,7 @@
         "nameEN": "Stone"
     },
     //Block that is available in version greater or equal than 1.17
-    "deepslate": {
+    "minecraft:deepslate[axis=x]": {
         "version": 17,
         "nameZH": "深板岩",
         "nameEN": "Deepslate"

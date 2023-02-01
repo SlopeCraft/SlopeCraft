@@ -184,6 +184,7 @@ bool go_through(const std::vector<const std::string *> &bs_list,
                 resource_pack::buffer_t &buff) noexcept {
 
   for (const std::string *strptr : bs_list) {
+    printf("Computing projection image for full id \"%s\"\n", strptr->c_str());
     block_model::EImgRowMajor_t img;
 
     if (!TokiVC::pack.compute_projection(*strptr, TokiVC::exposed_face, &img,
@@ -195,13 +196,14 @@ bool go_through(const std::vector<const std::string *> &bs_list,
 
     images.emplace(strptr, std::move(img));
   }
+  return true;
 }
 
 bool TokiVC::update_color_set_no_lock() noexcept {
   switch (TokiVC::version) {
   case SCL_gameVersion::ANCIENT:
-    return false;
   case SCL_gameVersion::FUTURE:
+    printf("\nError : invalid MC version : %i\n", int(TokiVC::version));
     return false;
   default:
     break;
@@ -223,14 +225,16 @@ bool TokiVC::update_color_set_no_lock() noexcept {
     {
       buff.pure_id.reserve(256);
       buff.state_list.reserve(16);
-      buff.traits.reserve(16);
+      // buff.traits.reserve(16);
     }
 
     if (!go_through(bs_nontransparent, images, buff)) {
+      printf("Failed to go through bs_nontransparent\n");
       return false;
     }
 
     if (!go_through(bs_transparent, images, buff)) {
+      printf("Failed to go through bs_transparent\n");
       return false;
     }
 #warning compute color of single layer and multiple layers here

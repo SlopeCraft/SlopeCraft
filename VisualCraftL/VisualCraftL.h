@@ -78,6 +78,9 @@ VCL_create_block_state_list(const int file_count,
 
 VCL_EXPORT_FUN void
 VCL_destroy_block_state_list(VCL_block_state_list *const ptr);
+
+VCL_EXPORT_FUN void VCL_display_resource_pack(const VCL_resource_pack *);
+VCL_EXPORT_FUN void VCL_display_block_state_list(const VCL_block_state_list *);
 }
 
 #endif // SLOPECRAFT_VISUALCRAFT_VISUALCRAFT_H

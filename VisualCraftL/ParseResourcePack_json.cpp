@@ -840,7 +840,7 @@ bool resource_pack::add_block_states(
     if (!success) {
       printf("\nWarning : Failed to parse block state json file "
              "assets/minecraft/blockstates/%s. This will be "
-             "skipped but may cause further warnings.\n",
+             "skipped but may cause further errors.\n",
              file.first.data());
       continue;
     }

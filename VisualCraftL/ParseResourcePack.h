@@ -420,6 +420,9 @@ struct model_pass_t {
 
 using state_list = std::vector<state>;
 
+bool process_full_id(std::string_view full_id, std::string *namespace_name,
+                     std::string *pure_id, state_list *states) noexcept;
+
 /// @return true if sla is equal to slb
 bool match_state_list(const state_list &sla, const state_list &slb) noexcept;
 
@@ -533,7 +536,7 @@ public:
 
   struct buffer_t {
     std::string pure_id;
-    std::vector<std::pair<std::string, std::string>> traits;
+    // std::vector<std::pair<std::string, std::string>> traits;
     resource_json::state_list state_list;
   };
 

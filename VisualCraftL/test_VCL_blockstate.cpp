@@ -10,7 +10,7 @@ int main(int argc, char **argv) {
 
   VCL_Kernel *kernel = VCL_create_kernel();
 
-  constexpr bool set_resource_by_move = true;
+  constexpr bool set_resource_by_move = false;
 
   if (kernel == nullptr) {
     cout << "Failed to create kernel." << endl;
@@ -57,6 +57,8 @@ int main(int argc, char **argv) {
     }
 
     cout << "Resource pack(s) parsed successfully." << endl;
+
+    // VCL_display_resource_pack(rp);
 
     if constexpr (set_resource_by_move) {
       if (!VCL_set_resource_and_version_move(&rp, &bsl, SCL_gameVersion::MC19,
