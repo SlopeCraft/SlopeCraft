@@ -23,13 +23,13 @@ This file is part of SlopeCraft.
 #ifndef SCL_NEWCOLORSET_HPP
 #define SCL_NEWCOLORSET_HPP
 
-#include "ColorManip.h"
 #include "colorset_maptical.hpp"
 #include "colorset_optical.hpp"
-#include "newTokiColor.hpp"
 #include <Eigen/Dense>
 #include <cmath>
 #include <type_traits>
+
+#include <SC_GlobalEnums.h>
 
 // using Eigen::Dynamic;
 
