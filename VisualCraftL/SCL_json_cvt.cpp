@@ -63,6 +63,10 @@ int main(int argc, char **argv) {
 
     int version_scl = obj_scl.at("version");
 
+    if (obj_scl.contains("idOld")) {
+      obj_vcl["version"] = 13;
+    }
+
     if (version_scl == 0) {
       obj_vcl.emplace("version", "all");
     } else {

@@ -2,13 +2,13 @@
     "minecraft:acacia_leaves[distance=7,persistent=true]": {
         "nameEN": "Acacia leaves",
         "nameZH": "金合欢树叶",
-        "version": "all"
+        "version": 13
     },
     "minecraft:acacia_planks": {
         "burnable": true,
         "nameEN": "Acacia plank",
         "nameZH": "金合欢木板",
-        "version": "all"
+        "version": 13
     },
     "minecraft:amethyst_block": {
         "nameEN": "Amethyst block",
@@ -18,40 +18,40 @@
     "minecraft:birch_leaves[distance=7,persistent=true]": {
         "nameEN": "Brich leaves",
         "nameZH": "白桦树叶",
-        "version": "all"
+        "version": 13
     },
     "minecraft:birch_planks": {
         "burnable": true,
         "nameEN": "Birch plank",
         "nameZH": "白桦木板",
-        "version": "all"
+        "version": 13
     },
     "minecraft:black_concrete": {
         "nameEN": "Black concrete",
         "nameZH": "黑色混凝土",
-        "version": "all"
+        "version": 13
     },
     "minecraft:black_stained_glass": {
         "nameEN": "Blakc glass",
         "nameZH": "黑色染色玻璃",
-        "version": "all",
+        "version": 13,
         "transparent": true
     },
     "minecraft:black_terracotta": {
         "nameEN": "Black terracotta",
         "nameZH": "黑色陶瓦",
-        "version": "all"
+        "version": 13
     },
     "minecraft:black_wool": {
         "burnable": true,
         "nameEN": "Black wool",
         "nameZH": "黑色羊毛",
-        "version": "all"
+        "version": 13
     },
     "minecraft:blue_concrete": {
         "nameEN": "Blue concrete",
         "nameZH": "蓝色混凝土",
-        "version": "all"
+        "version": 13
     },
     "minecraft:blue_ice": {
         "nameEN": "Blue ice",
@@ -61,25 +61,19 @@
     "minecraft:blue_stained_glass": {
         "nameEN": "Blue glass",
         "nameZH": "蓝色染色玻璃",
-        "version": "all",
+        "version": 13,
         "transparent": true
     },
     "minecraft:blue_terracotta": {
         "nameEN": "Blue terracotta",
         "nameZH": "蓝色陶瓦",
-        "version": "all"
+        "version": 13
     },
     "minecraft:blue_wool": {
         "burnable": true,
         "nameEN": "Blue wool",
         "nameZH": "蓝色羊毛",
-        "version": "all"
-    },
-    "minecraft:brewing_stand[has_bottle_0=false,has_bottle_1=false,has_bottle_2=false]": {
-        "nameEN": "brewing stand",
-        "nameZH": "酿造台",
-        "version": "all",
-        "wallUseable": false
+        "version": 13
     },
     "minecraft:brick_block": {
         "nameEN": "Bricks",
@@ -91,17 +85,18 @@
     "minecraft:bricks": {
         "nameEN": "Bricks",
         "nameZH": "砖块",
-        "version": "all"
+        "version": 13
     },
     "minecraft:brown_concrete": {
         "nameEN": "Brown concrete",
         "nameZH": "棕色混凝土",
-        "version": "all"
+        "version": 13
     },
+    /*
     "minecraft:brown_mushroom_block[east=true,west=true,north=true,south=true,up=true,down=true]": {
         "nameEN": "Brown mushroom block",
         "nameZH": "棕色蘑菇块",
-        "version": "all"
+        "version": 13
     },
     "minecraft:brown_mushroom_block[variant=all_outside]": {
         "nameEN": "Brown mushroom block",
@@ -110,34 +105,28 @@
             12
         ]
     },
+    */
     "minecraft:brown_stained_glass": {
         "nameEN": "Brown glass",
         "nameZH": "棕色染色玻璃",
-        "version": "all",
+        "version": 13,
         "transparent": true
     },
     "minecraft:brown_terracotta": {
         "nameEN": "Brown terracotta",
         "nameZH": "棕色陶瓦",
-        "version": "all"
+        "version": 13
     },
     "minecraft:brown_wool": {
         "burnable": true,
         "nameEN": "Brown wool",
         "nameZH": "棕色羊毛",
-        "version": "all"
+        "version": 13
     },
     "minecraft:calcite": {
         "nameEN": "Calcite",
         "nameZH": "方解石",
         "version": 17
-    },
-    "minecraft:campfire[facing=north,lit=true,signal_fire=false,waterlogged=false]": {
-        "isGlowing": true,
-        "nameEN": "Campfire",
-        "nameZH": "营火",
-        "version": 14,
-        "wallUseable": false
     },
     "minecraft:chiseled_deepslate": {
         "nameEN": "Chiseled deepslate",
@@ -174,7 +163,7 @@
     "minecraft:cobweb": {
         "nameEN": "Cobweb",
         "nameZH": "蜘蛛网",
-        "version": "all"
+        "version": 13
     },
     "minecraft:concrete[color=black]": {
         "nameEN": "Black concrete",
@@ -310,42 +299,42 @@
     "minecraft:cyan_concrete": {
         "nameEN": "Cyan concrete",
         "nameZH": "青色混凝土",
-        "version": "all"
+        "version": 13
     },
     "minecraft:cyan_stained_glass": {
         "nameEN": "Cyan glass",
         "nameZH": "青色染色玻璃",
-        "version": "all",
+        "version": 13,
         "transparent": true
     },
     "minecraft:cyan_terracotta": {
         "nameEN": "Cyan terracotta",
         "nameZH": "青色陶瓦",
-        "version": "all"
+        "version": 13
     },
     "minecraft:cyan_wool": {
         "burnable": true,
         "nameEN": "Cyan wool",
         "nameZH": "青色羊毛",
-        "version": "all"
+        "version": 13
     },
     "minecraft:dark_oak_leaves[distance=7,persistent=true]": {
         "nameEN": "Dark oat leaves",
         "nameZH": "黑橡树树叶",
-        "version": "all"
+        "version": 13
     },
     "minecraft:dark_oak_planks": {
         "burnable": true,
         "nameEN": "Dark oak plank",
         "nameZH": "黑橡木木板",
-        "version": "all"
+        "version": 13
     },
     "minecraft:dark_prismarine": {
         "nameEN": "Dark prismarine",
         "nameZH": "暗海晶石",
-        "version": "all"
+        "version": 13
     },
-    "minecraft:deepslate": {
+    "minecraft:deepslate[axis=y]": {
         "nameEN": "Deepslate",
         "nameZH": "深板岩",
         "version": 17
@@ -369,7 +358,7 @@
         "endermanPickable": true,
         "nameEN": "Dirt",
         "nameZH": "泥土",
-        "version": "all"
+        "version": 13
     },
     "minecraft:dirt[variant=coarse_dirt,snowy=false]": {
         "endermanPickable": true,
@@ -425,22 +414,7 @@
     "minecraft:end_stone_bricks": {
         "nameEN": "Endstone bricks",
         "nameZH": "末地石砖",
-        "version": "all"
-    },
-    "minecraft:glass": {
-        "nameEN": "Glass",
-        "nameZH": "玻璃",
-        "version": "all",
-        "transparent": true
-    },
-    "minecraft:glow_lichen[down=true,east=false,north=false,south=false,up=false,waterlogged=false]": {
-        "burnable": true,
-        "isGlowing": true,
-        "nameEN": "Glow lichen",
-        "nameZH": "发光地衣",
-        "needGlass": true,
-        "version": 17,
-        "wallUseable": false
+        "version": 13
     },
     "minecraft:glowstone": {
         "isGlowing": true,
@@ -466,52 +440,52 @@
         "endermanPickable": true,
         "nameEN": "Grass block",
         "nameZH": "草方块",
-        "version": "all",
+        "version": 13,
         "wallUseable": false
     },
     "minecraft:gray_concrete": {
         "nameEN": "Gray concrete",
         "nameZH": "灰色混凝土",
-        "version": "all"
+        "version": 13
     },
     "minecraft:gray_stained_glass": {
         "nameEN": "Gray glass",
         "nameZH": "灰色染色玻璃",
-        "version": "all",
+        "version": 13,
         "transparent": true
     },
     "minecraft:gray_terracotta": {
         "nameEN": "Gray terracotta",
         "nameZH": "灰色陶瓦",
-        "version": "all"
+        "version": 13
     },
     "minecraft:gray_wool": {
         "burnable": true,
         "nameEN": "Gray wool",
         "nameZH": "灰色羊毛",
-        "version": "all"
+        "version": 13
     },
     "minecraft:green_concrete": {
         "nameEN": "Green concrete",
         "nameZH": "绿色混凝土",
-        "version": "all"
+        "version": 13
     },
     "minecraft:green_stained_glass": {
         "nameEN": "Green glass",
         "nameZH": "绿色染色玻璃",
-        "version": "all",
+        "version": 13,
         "transparent": true
     },
     "minecraft:green_terracotta": {
         "nameEN": "Green terracotta",
         "nameZH": "绿色陶瓦",
-        "version": "all"
+        "version": 13
     },
     "minecraft:green_wool": {
         "burnable": true,
         "nameEN": "Green wool",
         "nameZH": "绿色羊毛",
-        "version": "all"
+        "version": 13
     },
     "minecraft:grindstone[face=floor,facing=north]": {
         "nameEN": "Grindstone",
@@ -558,30 +532,22 @@
         "nameZH": "铁块",
         "version": "all"
     },
-    "minecraft:iron_trapdoor[facing=north,half=top,open=false,powered=false,waterlogged=false]": {
+    "minecraft:iron_trapdoor[facing=north,half=top,open=false]": {
         "nameEN": "Iron trapdoor",
         "nameZH": "铁活板门",
         "version": "all",
         "wallUseable": false
     },
-    "minecraft:iron_trapdoor[facing=north,half=top,open=false]": {
-        "nameEN": "Iron trapdoor",
-        "nameZH": "铁活板门",
-        "version": [
-            12
-        ],
-        "wallUseable": false
-    },
     "minecraft:jungle_leaves[distance=7,persistent=true]": {
         "nameEN": "Jungle leaves",
         "nameZH": "丛林木树叶",
-        "version": "all"
+        "version": 13
     },
     "minecraft:jungle_planks": {
         "burnable": true,
         "nameEN": "Jungle plank",
         "nameZH": "丛林木板",
-        "version": "all"
+        "version": 13
     },
     "minecraft:lantern[hanging=false]": {
         "nameEN": "lantern",
@@ -639,45 +605,45 @@
     "minecraft:light_blue_concrete": {
         "nameEN": "Light blue concrete",
         "nameZH": "浅蓝混凝土",
-        "version": "all"
+        "version": 13
     },
     "minecraft:light_blue_stained_glass": {
         "nameEN": "Light blue glass",
         "nameZH": "浅蓝染色玻璃",
-        "version": "all",
+        "version": 13,
         "transparent": true
     },
     "minecraft:light_blue_terracotta": {
         "nameEN": "Light blue terracotta",
         "nameZH": "浅蓝陶瓦",
-        "version": "all"
+        "version": 13
     },
     "minecraft:light_blue_wool": {
         "nameEN": "light blue wool",
         "nameZH": "浅蓝羊毛",
-        "version": "all"
+        "version": 13
     },
     "minecraft:light_gray_concrete": {
         "nameEN": "Light gray concrete",
         "nameZH": "浅灰混凝土",
-        "version": "all"
+        "version": 13
     },
     "minecraft:light_gray_stained_glass": {
         "nameEN": "Light gray glass",
         "nameZH": "浅灰染色玻璃",
-        "version": "all",
+        "version": 13,
         "transparent": true
     },
     "minecraft:light_gray_terracotta": {
         "nameEN": "Light gray terracotta",
         "nameZH": "浅灰陶瓦",
-        "version": "all"
+        "version": 13
     },
     "minecraft:light_gray_wool": {
         "burnable": true,
         "nameEN": "Light gray wool",
         "nameZH": "浅灰羊毛",
-        "version": "all"
+        "version": 13
     },
     "minecraft:light_weighted_pressure_plate[power=0]": {
         "nameEN": "Gold pressure plate",
@@ -688,44 +654,44 @@
     "minecraft:lime_concrete": {
         "nameEN": "Lime concrete",
         "nameZH": "浅绿混凝土",
-        "version": "all"
+        "version": 13
     },
     "minecraft:lime_stained_glass": {
         "nameEN": "Lime glass",
         "nameZH": "浅绿染色玻璃",
-        "version": "all",
+        "version": 13,
         "transparent": true
     },
     "minecraft:lime_terracotta": {
         "nameEN": "Lime terracotta",
         "nameZH": "浅绿陶瓦",
-        "version": "all"
+        "version": 13
     },
     "minecraft:lime_wool": {
         "nameEN": "Lime wool",
         "nameZH": "浅绿羊毛",
-        "version": "all"
+        "version": 13
     },
     "minecraft:magenta_concrete": {
         "nameEN": "Magenta concrete",
         "nameZH": "品红色混凝土",
-        "version": "all"
+        "version": 13
     },
     "minecraft:magenta_stained_glass": {
         "nameEN": "Magenta glass",
         "nameZH": "品红染色玻璃",
-        "version": "all",
+        "version": 13,
         "transparent": true
     },
     "minecraft:magenta_terracotta": {
         "nameEN": "Magenta terracotta",
         "nameZH": "品红陶瓦",
-        "version": "all"
+        "version": 13
     },
     "minecraft:magenta_wool": {
         "nameEN": "Magenta wool",
         "nameZH": "品红色羊毛",
-        "version": "all"
+        "version": 13
     },
     "minecraft:magma": {
         "nameEN": "Magma block",
@@ -737,7 +703,7 @@
     "minecraft:magma_block": {
         "nameEN": "Magma block",
         "nameZH": "岩浆块",
-        "version": "all"
+        "version": 13
     },
     "minecraft:mangrove_planks": {
         "burnable": true,
@@ -755,12 +721,14 @@
         "nameZH": "泥砖",
         "version": 19
     },
+    /*
     "minecraft:mushroom_stem[east=true,west=true,north=true,south=true,up=true,down=true]": {
         "burnable": true,
         "nameEN": "Mushroom stem",
         "nameZH": "蘑菇柄",
         "version": 13
     },
+    */
     "minecraft:nether_brick": {
         "nameEN": "Nether brick",
         "nameZH": "地狱砖块",
@@ -771,7 +739,7 @@
     "minecraft:nether_bricks": {
         "nameEN": "Nether brick",
         "nameZH": "地狱砖块",
-        "version": "all"
+        "version": 13
     },
     "minecraft:nether_wart_block": {
         "nameEN": "Nether wart block",
@@ -786,13 +754,13 @@
     "minecraft:oak_leaves[distance=7,persistent=true]": {
         "nameEN": "Oak leaves",
         "nameZH": "橡树树叶",
-        "version": "all"
+        "version": 13
     },
     "minecraft:oak_planks": {
         "burnable": true,
         "nameEN": "Oak plank",
         "nameZH": "橡木木板",
-        "version": "all"
+        "version": 13
     },
     "minecraft:obsidian": {
         "nameEN": "Obsidian",
@@ -808,23 +776,23 @@
     "minecraft:orange_concrete": {
         "nameEN": "Orange concrete",
         "nameZH": "橙色混凝土",
-        "version": "all"
+        "version": 13
     },
     "minecraft:orange_stained_glass": {
         "nameEN": "Orange glass",
         "nameZH": "橙色染色玻璃",
-        "version": "all",
+        "version": 13,
         "transparent": true
     },
     "minecraft:orange_terracotta": {
         "nameEN": "Orange terracotta",
         "nameZH": "橙色陶瓦",
-        "version": "all"
+        "version": 13
     },
     "minecraft:orange_wool": {
         "nameEN": "Orange wool",
         "nameZH": "橙色羊毛",
-        "version": "all"
+        "version": 13
     },
     "minecraft:packed_ice": {
         "nameEN": "Packed ice",
@@ -845,23 +813,23 @@
     "minecraft:pink_concrete": {
         "nameEN": "Pink concrete",
         "nameZH": "粉色混凝土",
-        "version": "all"
+        "version": 13
     },
     "minecraft:pink_stained_glass": {
         "nameEN": "Pink glass",
         "nameZH": "粉色染色玻璃",
-        "version": "all",
+        "version": 13,
         "transparent": true
     },
     "minecraft:pink_terracotta": {
         "nameEN": "Pink terracotta",
         "nameZH": "粉色陶瓦",
-        "version": "all"
+        "version": 13
     },
     "minecraft:pink_wool": {
         "nameEN": "Pink wool",
         "nameZH": "粉色羊毛",
-        "version": "all"
+        "version": 13
     },
     "minecraft:planks[variant=acacia]": {
         "burnable": true,
@@ -915,7 +883,7 @@
         "endermanPickable": true,
         "nameEN": "Podzol",
         "nameZH": "灰化土",
-        "version": "all"
+        "version": 13
     },
     "minecraft:polished_basalt[axis=y]": {
         "nameEN": "Polished basalt",
@@ -935,17 +903,17 @@
     "minecraft:polished_diorite": {
         "nameEN": "Polished diorite",
         "nameZH": "磨制闪长岩",
-        "version": "all"
+        "version": 13
     },
     "minecraft:polished_granite": {
         "nameEN": "Polished granite",
         "nameZH": "磨制花岗岩",
-        "version": "all"
+        "version": 13
     },
     "minecraft:prismarine": {
         "nameEN": "Prismarine",
         "nameZH": "海晶石",
-        "version": "all"
+        "version": 13
     },
     "minecraft:prismarine[variant=dark_prismarine]": {
         "nameEN": "Dark prismarine",
@@ -971,13 +939,13 @@
     "minecraft:prismarine_bricks": {
         "nameEN": "Prismarine bricks",
         "nameZH": "海晶石砖",
-        "version": "all"
+        "version": 13
     },
     "minecraft:pumpkin": {
         "endermanPickable": true,
         "nameEN": "Pumpkin",
         "nameZH": "南瓜",
-        "version": "all"
+        "version": 13
     },
     "minecraft:pumpkin[variant=north]": {
         "endermanPickable": true,
@@ -990,24 +958,24 @@
     "minecraft:purple_concrete": {
         "nameEN": "Purple concrete",
         "nameZH": "紫色混凝土",
-        "version": "all"
+        "version": 13
     },
     "minecraft:purple_stained_glass": {
         "nameEN": "Purple glass",
         "nameZH": "紫色染色玻璃",
-        "version": "all",
+        "version": 13,
         "transparent": true
     },
     "minecraft:purple_terracotta": {
         "nameEN": "Purple terracotta",
         "nameZH": "紫色陶瓦",
-        "version": "all"
+        "version": 13
     },
     "minecraft:purple_wool": {
         "burnable": true,
         "nameEN": "Purple wool",
         "nameZH": "紫色羊毛",
-        "version": "all"
+        "version": 13
     },
     "minecraft:purpur_block": {
         "nameEN": "Purpur block",
@@ -1017,7 +985,7 @@
     "minecraft:quartz_block": {
         "nameEN": "Quartz block",
         "nameZH": "石英块",
-        "version": "all"
+        "version": 13
     },
     "minecraft:quartz_block[variant=default]": {
         "nameEN": "Quartz block",
@@ -1044,13 +1012,14 @@
     "minecraft:red_concrete": {
         "nameEN": "Red concrete",
         "nameZH": "红色混凝土",
-        "version": "all"
+        "version": 13
     },
+    /*
     "minecraft:red_mushroom_block[east=true,west=true,north=true,south=true,up=true,down=true]": {
         "burnable": true,
         "nameEN": "Red mushroom block",
         "nameZH": "红色蘑菇块",
-        "version": "all"
+        "version": 13
     },
     "minecraft:red_mushroom_block[variant=all_outside]": {
         "burnable": true,
@@ -1060,6 +1029,7 @@
             12
         ]
     },
+    */
     "minecraft:red_sandstone[type=smooth_red_sandstone]": {
         "nameEN": "Smooth red sandstone",
         "nameZH": "平滑红砂岩",
@@ -1070,19 +1040,19 @@
     "minecraft:red_stained_glass": {
         "nameEN": "Red glass",
         "nameZH": "红色染色玻璃",
-        "version": "all",
+        "version": 13,
         "transparent": true
     },
     "minecraft:red_terracotta": {
         "nameEN": "Red terracotta",
         "nameZH": "红色陶瓦",
-        "version": "all"
+        "version": 13
     },
     "minecraft:red_wool": {
         "burnable": true,
         "nameEN": "Red wool",
         "nameZH": "红色羊毛",
-        "version": "all"
+        "version": 13
     },
     "minecraft:redstone_block": {
         "nameEN": "Redstone block",
@@ -1106,17 +1076,6 @@
         "nameZH": "潜声催化剂",
         "version": 19
     },
-    "minecraft:sculk_shrieker[shrieking=false,waterlogged=false]": {
-        "nameEN": "Sculk shrieker",
-        "nameZH": "潜声尖啸体",
-        "version": 19
-    },
-    "minecraft:sculk_vein[down=true,east=false,north=false,south=false,up=false,waterlogged=false,west=false]": {
-        "nameEN": "Sculk vein",
-        "nameZH": "潜声藤蔓",
-        "needGlass": true,
-        "version": 19
-    },
     "minecraft:sea_lantern": {
         "nameEN": "Sea lantern",
         "nameZH": "海晶灯",
@@ -1138,17 +1097,17 @@
     "minecraft:slime_block": {
         "nameEN": "Slime block",
         "nameZH": "粘液块",
-        "version": "all"
+        "version": 13
     },
     "minecraft:smooth_red_sandstone": {
         "nameEN": "Smooth red sandstone",
         "nameZH": "平滑红砂岩",
-        "version": "all"
+        "version": 13
     },
     "minecraft:smooth_sandstone": {
         "nameEN": "Smooth sandstone",
         "nameZH": "平滑砂岩",
-        "version": "all"
+        "version": 13
     },
     "minecraft:smooth_stone": {
         "nameEN": "Smooth stone",
@@ -1165,7 +1124,7 @@
     "minecraft:snow_block": {
         "nameEN": "Snow",
         "nameZH": "雪块",
-        "version": "all"
+        "version": 13
     },
     "minecraft:soul_sand": {
         "nameEN": "Soul sand",
@@ -1180,13 +1139,13 @@
     "minecraft:spruce_leaves[distance=7,persistent=true]": {
         "nameEN": "Spurce leaves",
         "nameZH": "云杉树叶",
-        "version": "all"
+        "version": 13
     },
     "minecraft:spruce_planks": {
         "burnable": true,
         "nameEN": "Spruce plank",
         "nameZH": "云杉木板",
-        "version": "all"
+        "version": 13
     },
     "minecraft:stained_glass[color=black]": {
         "nameEN": "Blakc glass",
@@ -1431,7 +1390,7 @@
     "minecraft:stone": {
         "nameEN": "Stone",
         "nameZH": "石头",
-        "version": "all"
+        "version": 13
     },
     "minecraft:stone[variant=smooth_diorite]": {
         "nameEN": "Polished diorite",
@@ -1457,7 +1416,7 @@
     "minecraft:stone_bricks": {
         "nameEN": "Stone brick",
         "nameZH": "石砖",
-        "version": "all"
+        "version": 13
     },
     "minecraft:stonebrick[variant=stonebrick]": {
         "nameEN": "Stone brick",
@@ -1498,7 +1457,7 @@
     "minecraft:terracotta": {
         "nameEN": "Terracotta",
         "nameZH": "陶瓦",
-        "version": "all"
+        "version": 13
     },
     "minecraft:tinted_glass": {
         "nameEN": "Tinted glass",
@@ -1520,7 +1479,7 @@
         "endermanPickable": true,
         "nameEN": "TNT",
         "nameZH": "TNT",
-        "version": "all"
+        "version": 13
     },
     "minecraft:turtle_egg[eggs=4,hatch=0]": {
         "nameEN": "Turtle egg",
@@ -1610,23 +1569,23 @@
     "minecraft:white_concrete": {
         "nameEN": "White concrete",
         "nameZH": "白色混凝土",
-        "version": "all"
+        "version": 13
     },
     "minecraft:white_stained_glass": {
         "nameEN": "White glass",
         "nameZH": "白色染色玻璃",
-        "version": "all",
+        "version": 13,
         "transparent": true
     },
     "minecraft:white_terracotta": {
         "nameEN": "White terracotta",
         "nameZH": "白色陶瓦",
-        "version": "all"
+        "version": 13
     },
     "minecraft:white_wool": {
         "nameEN": "White wool",
         "nameZH": "白色羊毛",
-        "version": "all"
+        "version": 13
     },
     "minecraft:wool[color=black]": {
         "burnable": true,
@@ -1752,84 +1711,79 @@
     "minecraft:yellow_concrete": {
         "nameEN": "Yellow concrete",
         "nameZH": "黄色混凝土",
-        "version": "all"
+        "version": 13
     },
     "minecraft:yellow_stained_glass": {
         "nameEN": "yellow glass",
         "nameZH": "黄色染色玻璃",
-        "version": "all",
+        "version": 13,
         "transparent": true
     },
     "minecraft:yellow_terracotta": {
         "nameEN": "Yellow terracotta",
         "nameZH": "黄色陶瓦",
-        "version": "all"
+        "version": 13
     },
     "minecraft:yellow_wool": {
         "nameEN": "Yellow wool",
         "nameZH": "黄色羊毛",
-        "version": "all"
+        "version": 13
     },
-    "minecraft_sculk_sensor[power=0,sculk_sensor_phase=inactive,waterlogged=false]": {
-        "nameEN": "Sculk sensor",
-        "nameZH": "潜声传感器",
-        "version": 19
-    },
-    "minecraft:acacia_slab[type=top,waterlogged=false]": {
+    "minecraft:acacia_slab[type=top]": {
         "burnable": true,
         "nameEN": "Acacia slab",
         "nameZH": "金合欢木上半砖",
-        "version": "all"
+        "version": 13
     },
-    "minecraft:birch_slab[type=top,waterlogged=false]": {
+    "minecraft:birch_slab[type=top]": {
         "burnable": true,
         "nameEN": "Birch slab",
         "nameZH": "白桦木上半砖",
-        "version": "all"
+        "version": 13
     },
-    "minecraft:brick_slab[type=top,waterlogged=false]": {
+    "minecraft:brick_slab[type=top]": {
         "nameEN": "Brick slab",
         "nameZH": "砖块上半砖",
-        "version": "all"
+        "version": 13
     },
-    "minecraft:cobblestone_slab[type=top,waterlogged=false]": {
+    "minecraft:cobblestone_slab[type=top]": {
         "nameEN": "Cobblestone slab",
         "nameZH": "圆石上半砖",
-        "version": "all"
+        "version": 13
     },
-    "minecraft:dark_oak_slab[type=top,waterlogged=false]": {
+    "minecraft:dark_oak_slab[type=top]": {
         "burnable": true,
         "nameEN": "Dark oak slab",
         "nameZH": "黑橡木上半砖",
-        "version": "all"
+        "version": 13
     },
-    "minecraft:dark_prismarine_slab[type=top,waterlogged=false]": {
+    "minecraft:dark_prismarine_slab[type=top]": {
         "nameEN": "Dark prismarine slab",
         "nameZH": "暗海晶石上半砖",
         "version": 13
     },
-    "minecraft:jungle_slab[type=top,waterlogged=false]": {
+    "minecraft:jungle_slab[type=top]": {
         "burnable": true,
         "nameEN": "Jungle slab",
         "nameZH": "丛林木上半砖",
-        "version": "all"
+        "version": 13
     },
-    "minecraft:nether_brick_slab[type=top,waterlogged=false]": {
+    "minecraft:nether_brick_slab[type=top]": {
         "nameEN": "Nether brick slab",
         "nameZH": "地狱砖块上半砖",
-        "version": "all"
+        "version": 13
     },
-    "minecraft:oak_slab[type=top,waterlogged=false]": {
+    "minecraft:oak_slab[type=top]": {
         "nameEN": "Oak slab",
         "nameZH": "橡木上半砖",
-        "version": "all"
+        "version": 13
     },
-    "minecraft:prismarine_brick_slab[type=top,waterlogged=false]": {
+    "minecraft:prismarine_brick_slab[type=top]": {
         "nameEN": "Prismarine brick slab",
         "nameZH": "海晶石砖上半砖",
         "version": 13
     },
-    "minecraft:prismarine_slab[type=top,waterlogged=false]": {
+    "minecraft:prismarine_slab[type=top]": {
         "nameEN": "Prismarine slab",
         "nameZH": "海晶石上半砖",
         "version": 13
@@ -1841,36 +1795,36 @@
             12
         ]
     },
-    "minecraft:purpur_slab[type=top,waterlogged=false]": {
+    "minecraft:purpur_slab[type=top]": {
         "nameEN": "Purpur slab",
         "nameZH": "紫珀上半砖",
-        "version": "all"
+        "version": 13
     },
-    "minecraft:quartz_slab[type=top,waterlogged=false]": {
+    "minecraft:quartz_slab[type=top]": {
         "nameEN": "Quartz slab",
         "nameZH": "石英上半砖",
-        "version": "all"
+        "version": 13
     },
-    "minecraft:red_sandstone_slab[type=top,waterlogged=false]": {
+    "minecraft:red_sandstone_slab[type=top]": {
         "nameEN": "Red sandstone slab",
         "nameZH": "红砂岩上半砖",
-        "version": "all"
+        "version": 13
     },
-    "minecraft:sandstone_slab[type=top,waterlogged=false]": {
+    "minecraft:sandstone_slab[type=top]": {
         "nameEN": "Sandstone slab",
         "nameZH": "砂岩上半砖",
-        "version": "all"
+        "version": 13
     },
-    "minecraft:spruce_slab[type=top,waterlogged=false]": {
+    "minecraft:spruce_slab[type=top]": {
         "burnable": true,
         "nameEN": "Spruce slab",
         "nameZH": "云杉木上半砖",
-        "version": "all"
+        "version": 13
     },
-    "minecraft:stone_brick_slab[type=top,waterlogged=false]": {
+    "minecraft:stone_brick_slab[type=top]": {
         "nameEN": "Stonebrick slab",
         "nameZH": "石砖上半砖",
-        "version": "all"
+        "version": 13
     },
     "minecraft:stone_slab2[half=top,variant=red_sandstone]": {
         "nameEN": "Red sandstone slab",
@@ -1949,12 +1903,12 @@
             12
         ]
     },
-    "minecraft:stone_slab[type=top,waterlogged=false]": {
+    "minecraft:stone_slab[type=top]": {
         "nameEN": "Stone slab",
         "nameZH": "石头上半砖",
-        "version": "all"
+        "version": 13
     },
-    "minecraft:waxed_cut_copper_slab[type=top,waterlogged=false]": {
+    "minecraft:waxed_cut_copper_slab[type=top]": {
         "nameEN": "Waxed cut copper slab",
         "nameZH": "涂蜡切制铜上半砖",
         "version": 17
