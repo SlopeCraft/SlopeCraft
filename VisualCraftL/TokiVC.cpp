@@ -184,7 +184,10 @@ bool go_through(const std::vector<const std::string *> &bs_list,
                 resource_pack::buffer_t &buff) noexcept {
 
   for (const std::string *strptr : bs_list) {
-    printf("Computing projection image for full id \"%s\"\n", strptr->c_str());
+    if (false) {
+      printf("Computing projection image for full id \"%s\"\n",
+             strptr->c_str());
+    }
     block_model::EImgRowMajor_t img;
 
     if (!TokiVC::pack.compute_projection(*strptr, TokiVC::exposed_face, &img,
