@@ -505,13 +505,6 @@
         "nameZH": "干草块",
         "version": "all"
     },
-    "minecraft:heavy_weighted_pressure_plate[power=0]": {
-        "nameEN": "Iron pressure plate",
-        "nameZH": "铁压力板",
-        "needGlass": true,
-        "version": "all",
-        "wallUseable": false
-    },
     "minecraft:honey_block": {
         "nameEN": "Honey block",
         "nameZH": "蜜块",
@@ -525,18 +518,13 @@
     "minecraft:ice": {
         "nameEN": "Ice",
         "nameZH": "冰",
-        "version": "all"
+        "version": "all",
+        "transparent": true
     },
     "minecraft:iron_block": {
         "nameEN": "Iron block",
         "nameZH": "铁块",
         "version": "all"
-    },
-    "minecraft:iron_trapdoor[facing=north,half=top,open=false]": {
-        "nameEN": "Iron trapdoor",
-        "nameZH": "铁活板门",
-        "version": "all",
-        "wallUseable": false
     },
     "minecraft:jungle_leaves[distance=7,persistent=true]": {
         "nameEN": "Jungle leaves",
@@ -548,12 +536,6 @@
         "nameEN": "Jungle plank",
         "nameZH": "丛林木板",
         "version": 13
-    },
-    "minecraft:lantern[hanging=false]": {
-        "nameEN": "lantern",
-        "nameZH": "灯笼",
-        "version": 14,
-        "wallUseable": false
     },
     "minecraft:lapis_block": {
         "nameEN": "Lapis block",
@@ -644,12 +626,6 @@
         "nameEN": "Light gray wool",
         "nameZH": "浅灰羊毛",
         "version": 13
-    },
-    "minecraft:light_weighted_pressure_plate[power=0]": {
-        "nameEN": "Gold pressure plate",
-        "nameZH": "金压力板",
-        "needGlass": true,
-        "version": "all"
     },
     "minecraft:lime_concrete": {
         "nameEN": "Lime concrete",
@@ -1481,13 +1457,6 @@
         "nameZH": "TNT",
         "version": 13
     },
-    "minecraft:turtle_egg[eggs=4,hatch=0]": {
-        "nameEN": "Turtle egg",
-        "nameZH": "海蛋",
-        "needGlass": true,
-        "version": 13,
-        "wallUseable": false
-    },
     "minecraft:verdant_froglight[axis=y]": {
         "isGlowing": true,
         "nameEN": "Verdant Froglight",
@@ -1517,12 +1486,6 @@
         "nameEN": "Warped wart block",
         "nameZH": "扭曲疣块",
         "version": 16
-    },
-    "minecraft:water[level=0]": {
-        "nameEN": "Water",
-        "nameZH": "水",
-        "version": "all",
-        "wallUseable": false
     },
     "minecraft:waxed_copper_block": {
         "nameEN": "Waxed copper",
@@ -1558,13 +1521,6 @@
         "nameEN": "Waxed weathered copper",
         "nameZH": "涂蜡生锈铜块",
         "version": 17
-    },
-    "minecraft:web": {
-        "nameEN": "Cobweb",
-        "nameZH": "蜘蛛网",
-        "version": [
-            12
-        ]
     },
     "minecraft:white_concrete": {
         "nameEN": "White concrete",
