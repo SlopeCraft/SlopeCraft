@@ -138,7 +138,42 @@ VCL_EXPORT_FUN void VCL_display_resource_pack(const VCL_resource_pack *rp) {
   }
 
   cout << endl;
-}
-VCL_EXPORT_FUN void VCL_display_block_state_list(const VCL_block_state_list *) {
 
+  cout << "There are " << rp->get_textures().size() << " textures : \n";
+
+  for (const auto &pair : rp->get_textures()) {
+    cout << pair.first << " : [" << pair.second.rows() << ", "
+         << pair.second.cols() << "]\n";
+  }
+
+  cout << endl;
+}
+VCL_EXPORT_FUN void
+VCL_display_block_state_list(const VCL_block_state_list *bsl) {
+  if (bsl == nullptr) {
+    return;
+  }
+
+  cout << "Block state contains " << bsl->block_states().size()
+       << " blocks : \n";
+
+  for (const auto &pair : bsl->block_states()) {
+    cout << pair.first << " : ";
+    cout << "nameZH = \"" << pair.second.name_ZH << "\", nameEN = \""
+         << pair.second.name_EN;
+    cout << "\", transparent = "
+         << (const char *)(pair.second.is_transparent() ? "true" : "false");
+    cout << ", supported versions = [";
+
+    for (SCL_gameVersion v = SCL_gameVersion::MC12; v <= max_version;
+         v = SCL_gameVersion(int(v) + 1)) {
+      if (pair.second.version_info.contains(v)) {
+        cout << int(v) << ',';
+      }
+    }
+
+    cout << "]\n";
+  }
+
+  cout << endl;
 }

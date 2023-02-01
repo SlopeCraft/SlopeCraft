@@ -89,7 +89,7 @@ VCL_block parse_block(const nlohmann::json &jo, bool *const ok) {
 
   if (jo.contains("nameEN")) {
     if (jo.at("nameEN").is_string()) {
-      ret.name_ZH = jo.at("nameEN");
+      ret.name_EN = jo.at("nameEN");
     } else {
       *ok = false;
       return {};

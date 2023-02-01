@@ -70,3 +70,7 @@ target_link_libraries(test_VCL_internal PRIVATE VisualCraftL)
 
 add_executable(test_VCL_blockstate test_VCL_blockstate.cpp)
 target_link_libraries(test_VCL_blockstate PRIVATE VisualCraftL)
+
+add_executable(SCL_json_cvt SCL_json_cvt.cpp)
+target_include_directories(SCL_json_cvt PRIVATE
+    ${SlopeCraft_Nlohmann_json_include_dir})

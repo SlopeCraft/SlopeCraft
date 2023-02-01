@@ -60,6 +60,8 @@ int main(int argc, char **argv) {
 
     // VCL_display_resource_pack(rp);
 
+    // VCL_display_block_state_list(bsl);
+
     if constexpr (set_resource_by_move) {
       if (!VCL_set_resource_and_version_move(&rp, &bsl, SCL_gameVersion::MC19,
                                              VCL_face_t::face_up, 2)) {
