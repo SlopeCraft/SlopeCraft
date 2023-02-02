@@ -59,11 +59,11 @@ int main(int argc, char **argv) {
     cout << "Resource pack(s) parsed successfully." << endl;
 
     // VCL_display_resource_pack(rp);
-    // VCL_display_block_state_list(bsl);
+    //  VCL_display_block_state_list(bsl);
 
     constexpr int max_block_layers = 3;
 
-    constexpr auto version = SCL_gameVersion::MC12;
+    constexpr auto version = SCL_gameVersion::MC19;
 
     constexpr auto face = VCL_face_t::face_up;
 

@@ -150,51 +150,59 @@ VCL_destroy_block_state_list(VCL_block_state_list *const ptr) {
   delete ptr;
 }
 
-VCL_EXPORT_FUN void VCL_display_resource_pack(const VCL_resource_pack *rp) {
+VCL_EXPORT_FUN void VCL_display_resource_pack(const VCL_resource_pack *rp,
+                                              bool textures, bool blockstates,
+                                              bool model) {
   if (rp == nullptr) {
     return;
   }
+  if (blockstates) {
+    cout << "There are " << rp->get_block_states().size()
+         << " block state files : \n";
 
-  cout << "There are " << rp->get_block_states().size()
-       << " block state files : \n";
+    for (const auto &pair : rp->get_block_states()) {
+      cout << pair.first << " : {";
+      for (const auto &i : pair.second.LUT) {
+        cout << "\n  [";
+        for (const auto &j : i.first) {
+          cout << j.key << '=' << j.value << ',';
+        }
 
-  for (const auto &pair : rp->get_block_states()) {
-    cout << pair.first << " : {";
-    for (const auto &i : pair.second.LUT) {
-      cout << "\n  [";
-      for (const auto &j : i.first) {
-        cout << j.key << '=' << j.value << ',';
+        if (!i.first.empty()) {
+          cout << '\b';
+        }
+
+        cout << "] => " << i.second.model_name;
+        cout << ", x=" << int(i.second.x) * 10;
+        cout << ", y=" << int(i.second.y) * 10;
+        cout << ", uvlock="
+             << (const char *)(i.second.uvlock ? ("true") : ("false"));
       }
-
-      if (!i.first.empty()) {
-        cout << '\b';
-      }
-
-      cout << "] => " << i.second.model_name;
-      cout << ", x=" << int(i.second.x) * 10;
-      cout << ", y=" << int(i.second.y) * 10;
-      cout << ", uvlock="
-           << (const char *)(i.second.uvlock ? ("true") : ("false"));
+      cout << "}\n";
     }
-    cout << "}\n";
   }
 
-  cout << "There are " << rp->get_models().size() << " models : \n";
+  if (model) {
 
-  for (const auto &pair : rp->get_models()) {
-    cout << pair.first << " : " << pair.second.elements.size() << " elements\n";
+    cout << "There are " << rp->get_models().size() << " models : \n";
+
+    for (const auto &pair : rp->get_models()) {
+      cout << pair.first << " : " << pair.second.elements.size()
+           << " elements\n";
+    }
+
+    cout << endl;
   }
+  if (textures) {
+    cout << "There are " << rp->get_textures().size() << " textures : \n";
 
-  cout << endl;
+    for (const auto &pair : rp->get_textures()) {
+      cout << pair.first << " : [" << pair.second.rows() << ", "
+           << pair.second.cols() << "]\n";
+    }
 
-  cout << "There are " << rp->get_textures().size() << " textures : \n";
-
-  for (const auto &pair : rp->get_textures()) {
-    cout << pair.first << " : [" << pair.second.rows() << ", "
-         << pair.second.cols() << "]\n";
+    cout << endl;
   }
-
-  cout << endl;
 }
 VCL_EXPORT_FUN void
 VCL_display_block_state_list(const VCL_block_state_list *bsl) {

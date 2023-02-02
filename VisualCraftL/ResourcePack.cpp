@@ -151,6 +151,11 @@ resource_pack::find_model(const std::string &block_state_str,
   }
 
   auto it_state = this->block_states.find(buffer.pure_id);
+  /*
+   if (it_state == this->block_states.end()) {
+     it_state = this->block_states.find("block/" + buffer.pure_id);
+   }
+   */
 
   if (it_state == this->block_states.end()) {
     printf("\nError : undefined reference to block state whose pure block id "
