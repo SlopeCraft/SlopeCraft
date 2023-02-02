@@ -59,7 +59,6 @@ int main(int argc, char **argv) {
     cout << "Resource pack(s) parsed successfully." << endl;
 
     // VCL_display_resource_pack(rp);
-
     // VCL_display_block_state_list(bsl);
 
     constexpr int max_block_layers = 3;

@@ -128,17 +128,6 @@ bool resource_json::process_full_id(std::string_view full_id,
   return true;
 }
 
-void traits_format_convert(
-    std::vector<std::pair<std::string, std::string>> *src,
-    resource_json::state_list *const dst) noexcept {
-  dst->resize(src->size());
-
-  for (size_t i = 0; i < src->size(); i++) {
-    dst->at(i).key = std::move(src->at(i).first);
-    dst->at(i).value = std::move(src->at(i).second);
-  }
-}
-
 const block_model::model *
 resource_pack::find_model(const std::string &block_state_str,
                           VCL_face_t face_exposed, VCL_face_t *face_invrotated,
@@ -179,7 +168,8 @@ resource_pack::find_model(const std::string &block_state_str,
   *face_invrotated = face_exposed;
 
   if (model.model_name == nullptr) {
-    printf("\nError : No block model for full id : \"%s\"",
+    printf("\nError : No block model for full id : \"%s\", this is usually "
+           "because block states mismatch.",
            block_state_str.c_str());
     return nullptr;
   }
@@ -194,6 +184,9 @@ resource_pack::find_model(const std::string &block_state_str,
   }
 
   auto it_model = this->block_models.find(buffer.pure_id);
+  if (it_model == this->block_models.end()) {
+    it_model = this->block_models.find("block/" + buffer.pure_id);
+  }
 
   if (it_model == this->block_models.end()) {
     printf("Error : Failed to find block model for full id : \"%s\". Detail : "

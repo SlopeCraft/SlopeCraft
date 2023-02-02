@@ -31,7 +31,13 @@
     "minecraft:black_concrete": {
         "nameEN": "Black concrete",
         "nameZH": "黑色混凝土",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:concrete[color=black]"
+            ]
+        ]
     },
     "minecraft:black_stained_glass": {
         "nameEN": "Blakc glass",
@@ -59,7 +65,13 @@
     "minecraft:blue_concrete": {
         "nameEN": "Blue concrete",
         "nameZH": "蓝色混凝土",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:concrete[color=blue]"
+            ]
+        ]
     },
     "minecraft:blue_ice": {
         "nameEN": "Blue ice",
@@ -104,7 +116,13 @@
     "minecraft:brown_concrete": {
         "nameEN": "Brown concrete",
         "nameZH": "棕色混凝土",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:concrete[color=brown]"
+            ]
+        ]
     },
     /*
     "minecraft:brown_mushroom_block[east=true,west=true,north=true,south=true,up=true,down=true]": {
@@ -181,118 +199,6 @@
         "nameZH": "圆石",
         "version": "all"
     },
-    "minecraft:concrete[color=black]": {
-        "nameEN": "Black concrete",
-        "nameZH": "黑色混凝土",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:concrete[color=blue]": {
-        "nameEN": "Blue concrete",
-        "nameZH": "蓝色混凝土",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:concrete[color=brown]": {
-        "nameEN": "Brown concrete",
-        "nameZH": "棕色混凝土",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:concrete[color=cyan]": {
-        "nameEN": "Cyan concrete",
-        "nameZH": "青色混凝土",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:concrete[color=gray]": {
-        "nameEN": "Gray concrete",
-        "nameZH": "灰色混凝土",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:concrete[color=green]": {
-        "nameEN": "Green concrete",
-        "nameZH": "绿色混凝土",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:concrete[color=light_blue]": {
-        "nameEN": "Light blue concrete",
-        "nameZH": "浅蓝混凝土",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:concrete[color=lime]": {
-        "nameEN": "Lime concrete",
-        "nameZH": "浅绿混凝土",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:concrete[color=magenta]": {
-        "nameEN": "Magenta concrete",
-        "nameZH": "品红色混凝土",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:concrete[color=orange]": {
-        "nameEN": "Orange concrete",
-        "nameZH": "橙色混凝土",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:concrete[color=pink]": {
-        "nameEN": "Pink concrete",
-        "nameZH": "粉色混凝土",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:concrete[color=purple]": {
-        "nameEN": "Purple concrete",
-        "nameZH": "紫色混凝土",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:concrete[color=red]": {
-        "nameEN": "Red concrete",
-        "nameZH": "红色混凝土",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:concrete[color=silver]": {
-        "nameEN": "Light gray concrete",
-        "nameZH": "浅灰混凝土",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:concrete[color=white]": {
-        "nameEN": "White concrete",
-        "nameZH": "白色混凝土",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:concrete[color=yellow]": {
-        "nameEN": "Yellow concrete",
-        "nameZH": "黄色混凝土",
-        "version": [
-            12
-        ]
-    },
     "minecraft:crimson_hyphae[axis=y]": {
         "burnable": true,
         "nameEN": "Crimson hyphae",
@@ -317,7 +223,13 @@
     "minecraft:cyan_concrete": {
         "nameEN": "Cyan concrete",
         "nameZH": "青色混凝土",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:concrete[color=cyan]"
+            ]
+        ]
     },
     "minecraft:cyan_stained_glass": {
         "nameEN": "Cyan glass",
@@ -475,7 +387,13 @@
     "minecraft:gray_concrete": {
         "nameEN": "Gray concrete",
         "nameZH": "灰色混凝土",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:concrete[color=gray]"
+            ]
+        ]
     },
     "minecraft:gray_stained_glass": {
         "nameEN": "Gray glass",
@@ -503,7 +421,13 @@
     "minecraft:green_concrete": {
         "nameEN": "Green concrete",
         "nameZH": "绿色混凝土",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:concrete[color=green]"
+            ]
+        ]
     },
     "minecraft:green_stained_glass": {
         "nameEN": "Green glass",
@@ -629,7 +553,13 @@
     "minecraft:light_blue_concrete": {
         "nameEN": "Light blue concrete",
         "nameZH": "浅蓝混凝土",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:concrete[color=light_blue]"
+            ]
+        ]
     },
     "minecraft:light_blue_stained_glass": {
         "nameEN": "Light blue glass",
@@ -659,6 +589,13 @@
         "nameZH": "浅灰混凝土",
         "version": 13
     },
+    "minecraft:silver_concrete": {
+        "nameEN": "Light gray concrete",
+        "nameZH": "浅灰混凝土",
+        "version": [
+            12
+        ]
+    },
     "minecraft:light_gray_stained_glass": {
         "nameEN": "Light gray glass",
         "nameZH": "浅灰染色玻璃",
@@ -679,7 +616,13 @@
     "minecraft:lime_concrete": {
         "nameEN": "Lime concrete",
         "nameZH": "浅绿混凝土",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:concrete[color=lime]"
+            ]
+        ]
     },
     "minecraft:lime_stained_glass": {
         "nameEN": "Lime glass",
@@ -707,7 +650,13 @@
     "minecraft:magenta_concrete": {
         "nameEN": "Magenta concrete",
         "nameZH": "品红色混凝土",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:concrete[color=magenta]"
+            ]
+        ]
     },
     "minecraft:magenta_stained_glass": {
         "nameEN": "Magenta glass",
@@ -816,7 +765,13 @@
     "minecraft:orange_concrete": {
         "nameEN": "Orange concrete",
         "nameZH": "橙色混凝土",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:concrete[color=orange]"
+            ]
+        ]
     },
     "minecraft:orange_stained_glass": {
         "nameEN": "Orange glass",
@@ -860,7 +815,13 @@
     "minecraft:pink_concrete": {
         "nameEN": "Pink concrete",
         "nameZH": "粉色混凝土",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:concrete[color=pink]"
+            ]
+        ]
     },
     "minecraft:pink_stained_glass": {
         "nameEN": "Pink glass",
@@ -1012,7 +973,13 @@
     "minecraft:purple_concrete": {
         "nameEN": "Purple concrete",
         "nameZH": "紫色混凝土",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:concrete[color=purple]"
+            ]
+        ]
     },
     "minecraft:purple_stained_glass": {
         "nameEN": "Purple glass",
@@ -1072,7 +1039,13 @@
     "minecraft:red_concrete": {
         "nameEN": "Red concrete",
         "nameZH": "红色混凝土",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:concrete[color=red]"
+            ]
+        ]
     },
     /*
     "minecraft:red_mushroom_block[east=true,west=true,north=true,south=true,up=true,down=true]": {
@@ -1620,7 +1593,13 @@
     "minecraft:white_concrete": {
         "nameEN": "White concrete",
         "nameZH": "白色混凝土",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:concrete[color=white]"
+            ]
+        ]
     },
     "minecraft:white_stained_glass": {
         "nameEN": "White glass",
@@ -1662,7 +1641,13 @@
     "minecraft:yellow_concrete": {
         "nameEN": "Yellow concrete",
         "nameZH": "黄色混凝土",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:concrete[color=yellow]"
+            ]
+        ]
     },
     "minecraft:yellow_stained_glass": {
         "nameEN": "yellow glass",
@@ -1764,6 +1749,23 @@
             "up"
         ]
     },
+    "minecraft:oak_slab[half=top]": {
+        "burnable": true,
+        "nameEN": "Oak slab",
+        "nameZH": "橡木上半砖",
+        "version": [
+            12
+        ],
+        "faces": [
+            "up"
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:wooden_slab[half=top,variant=oak]"
+            ]
+        ]
+    },
     "minecraft:prismarine_brick_slab[type=top]": {
         "nameEN": "Prismarine brick slab",
         "nameZH": "海晶石砖上半砖",
@@ -1849,7 +1851,7 @@
             "up"
         ]
     },
-    "minecraft:stone_slab[half=top,variant=brick]": {
+    "minecraft:brick_slab[half=top]": {
         "nameEN": "Brick slab",
         "nameZH": "砖块上半砖",
         "version": [
@@ -1857,9 +1859,15 @@
         ],
         "faces": [
             "up"
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stone_slab[half=top,variant=brick]"
+            ]
         ]
     },
-    "minecraft:stone_slab[half=top,variant=cobblestone]": {
+    "minecraft:cobblestone_slab[half=top]": {
         "nameEN": "Cobblestone slab",
         "nameZH": "圆石上半砖",
         "version": [
@@ -1867,19 +1875,29 @@
         ],
         "faces": [
             "up"
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stone_slab[half=top,variant=cobblestone]"
+            ]
         ]
     },
-    "minecraft:stone_slab[half=top,variant=dark_prismarine]": {
-        "nameEN": "Dark prismarine slab",
-        "nameZH": "暗海晶石上半砖",
+    "minecraft:dark_prismarine_slab[half=top]": {
         "version": [
             12
         ],
         "faces": [
             "up"
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stone_slab[half=top,variant=dark_prismarine]"
+            ]
         ]
     },
-    "minecraft:stone_slab[half=top,variant=nether_brick]": {
+    "minecraft:nether_brick_slab[half=top]": {
         "nameEN": "Nether brick slab",
         "nameZH": "地狱砖块上半砖",
         "version": [
@@ -1887,9 +1905,15 @@
         ],
         "faces": [
             "up"
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stone_slab[half=top,variant=nether_brick]"
+            ]
         ]
     },
-    "minecraft:stone_slab[half=top,variant=prismarine]": {
+    "minecraft:prismarine_slab[half=top]": {
         "nameEN": "Prismarine slab",
         "nameZH": "海晶石上半砖",
         "version": [
@@ -1897,9 +1921,15 @@
         ],
         "faces": [
             "up"
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stone_slab[half=top,variant=prismarine]"
+            ]
         ]
     },
-    "minecraft:stone_slab[half=top,variant=prismarine_bricks]": {
+    "minecraft:prismarine_bricks_slab[half=top]": {
         "nameEN": "Prismarine brick slab",
         "nameZH": "海晶石砖上半砖",
         "version": [
@@ -1907,9 +1937,15 @@
         ],
         "faces": [
             "up"
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stone_slab[half=top,variant=prismarine_bricks]"
+            ]
         ]
     },
-    "minecraft:stone_slab[half=top,variant=quartz]": {
+    "minecraft:quartz_slab[half=top]": {
         "nameEN": "Quartz slab",
         "nameZH": "石英上半砖",
         "version": [
@@ -1917,9 +1953,15 @@
         ],
         "faces": [
             "up"
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stone_slab[half=top,variant=quartz]"
+            ]
         ]
     },
-    "minecraft:stone_slab[half=top,variant=sandstone]": {
+    "minecraft:sandstone_slab[half=top]": {
         "nameEN": "Sandstone slab",
         "nameZH": "砂岩上半砖",
         "version": [
@@ -1927,9 +1969,15 @@
         ],
         "faces": [
             "up"
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stone_slab[half=top,variant=sandstone]"
+            ]
         ]
     },
-    "minecraft:stone_slab[half=top,variant=stone]": {
+    "minecraft:stone_slab[half=top]": {
         "nameEN": "Stone slab",
         "nameZH": "石头上半砖",
         "version": [
@@ -1937,9 +1985,15 @@
         ],
         "faces": [
             "up"
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stone_slab[half=top,variant=stone]"
+            ]
         ]
     },
-    "minecraft:stone_slab[half=top,variant=stone_brick]": {
+    "minecraft:stone_brick_slab[half=top]": {
         "nameEN": "Stonebrick slab",
         "nameZH": "石砖上半砖",
         "version": [
@@ -1947,6 +2001,12 @@
         ],
         "faces": [
             "up"
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stone_slab[half=top,variant=stone_brick]"
+            ]
         ]
     },
     "minecraft:stone_slab[type=top]": {
@@ -1965,69 +2025,89 @@
             "up"
         ]
     },
-    "minecraft:wooden_slab[half=top,variant=acacia]": {
-        "burnable": true,
+    "minecraft:acacia_slab[half=top]": {
         "nameEN": "Acacia slab",
         "nameZH": "金合欢木上半砖",
         "version": [
             12
         ],
+        "burnable": true,
         "faces": [
             "up"
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:wooden_slab[half=top,variant=acacia]"
+            ]
         ]
     },
-    "minecraft:wooden_slab[half=top,variant=birch]": {
-        "burnable": true,
+    "minecraft:birch_slab[half=top]": {
         "nameEN": "Birch slab",
         "nameZH": "白桦木上半砖",
         "version": [
             12
         ],
+        "burnable": true,
         "faces": [
             "up"
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:wooden_slab[half=top,variant=birch]"
+            ]
         ]
     },
-    "minecraft:wooden_slab[half=top,variant=dark_oak]": {
-        "burnable": true,
+    "minecraft:dark_oak_slab[half=top]": {
         "nameEN": "Dark oak slab",
         "nameZH": "黑橡木上半砖",
         "version": [
             12
         ],
+        "burnable": true,
         "faces": [
             "up"
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:wooden_slab[half=top,variant=dark_oak]"
+            ]
         ]
     },
-    "minecraft:wooden_slab[half=top,variant=jungle]": {
-        "burnable": true,
+    "minecraft:jungle_slab[half=top]": {
         "nameEN": "Jungle slab",
         "nameZH": "丛林木上半砖",
         "version": [
             12
         ],
-        "faces": [
-            "up"
-        ]
-    },
-    "minecraft:wooden_slab[half=top,variant=oak]": {
-        "nameEN": "Oak slab",
-        "nameZH": "橡木上半砖",
-        "version": [
-            12
-        ],
-        "faces": [
-            "up"
-        ]
-    },
-    "minecraft:wooden_slab[half=top,variant=spruce]": {
         "burnable": true,
+        "faces": [
+            "up"
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:wooden_slab[half=top,variant=jungle]"
+            ]
+        ]
+    },
+    "minecraft:spruce_slab[half=top]": {
         "nameEN": "Spruce slab",
         "nameZH": "云杉木上半砖",
         "version": [
             12
         ],
+        "burnable": true,
         "faces": [
             "up"
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:wooden_slab[half=top,variant=spruce]"
+            ]
         ]
     },
     "minecraft:mycelium[snowy=false]": {

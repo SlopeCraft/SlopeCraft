@@ -67,13 +67,14 @@ VCL_create_resource_pack(const int zip_file_count,
 
   if (!rp->add_block_models(zf)) {
     cout << "Failed to add block states from resource pack." << endl;
-
+    /*
     cout << "All textures are listed here : " << endl;
     for (const auto &pair : rp->get_textures()) {
       cout << pair.first << " : [" << pair.second.rows() << ", "
            << pair.second.cols() << "]\n";
     }
     cout << endl;
+    */
 
     delete rp;
     return nullptr;
