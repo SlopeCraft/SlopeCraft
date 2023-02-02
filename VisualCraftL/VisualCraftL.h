@@ -81,13 +81,38 @@ VCL_destroy_block_state_list(VCL_block_state_list *const ptr);
 VCL_EXPORT_FUN void VCL_display_resource_pack(const VCL_resource_pack *);
 VCL_EXPORT_FUN void VCL_display_block_state_list(const VCL_block_state_list *);
 
+/**
+ *\return Number of blocks in this statelist, regardless of array_capacity
+ */
 VCL_EXPORT_FUN size_t VCL_get_blocks_from_block_state_list(
+    VCL_block_state_list *, VCL_block **const array_of_const_VCL_block,
+    size_t array_capcity);
+
+/**
+ *\return Number of blocks in this statelist that fits the version, regardless
+ *of array_capacity
+ */
+VCL_EXPORT_FUN size_t VCL_get_blocks_from_block_state_list_match(
+    VCL_block_state_list *, SCL_gameVersion v, VCL_face_t f,
+    VCL_block **const array_of_const_VCL_block, size_t array_capcity);
+
+/**
+ *\return Number of blocks in this statelist, regardless of array_capacity
+ */
+VCL_EXPORT_FUN size_t VCL_get_blocks_from_block_state_list_const(
     const VCL_block_state_list *,
     const VCL_block **const array_of_const_VCL_block, size_t array_capcity);
 
-VCL_EXPORT_FUN size_t VCL_get_blocks_from_block_state_list_by_version(
-    const VCL_block_state_list *, SCL_gameVersion v,
+/**
+ *\return Number of blocks in this statelist that fits the version, regardless
+ *of array_capacity
+ */
+VCL_EXPORT_FUN size_t VCL_get_blocks_from_block_state_list_match_const(
+    const VCL_block_state_list *, SCL_gameVersion v, VCL_face_t f,
     const VCL_block **const array_of_const_VCL_block, size_t array_capcity);
+
+VCL_EXPORT_FUN bool VCL_get_block_enabled(const VCL_block *);
+VCL_EXPORT_FUN void VCL_set_block_enabled(VCL_block *, bool val);
 }
 
 #endif // SLOPECRAFT_VISUALCRAFT_VISUALCRAFT_H

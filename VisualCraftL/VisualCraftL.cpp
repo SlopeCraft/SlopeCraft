@@ -206,7 +206,7 @@ VCL_display_block_state_list(const VCL_block_state_list *bsl) {
 
     for (SCL_gameVersion v = SCL_gameVersion::MC12; v <= max_version;
          v = SCL_gameVersion(int(v) + 1)) {
-      if (pair.second.version_info.contains(v)) {
+      if (pair.second.version_info.match(v)) {
         cout << int(v) << ',';
       }
     }
@@ -332,6 +332,65 @@ VCL_EXPORT_FUN int VCL_get_max_block_layers() {
 }
 
 VCL_EXPORT_FUN size_t VCL_get_blocks_from_block_state_list(
+    VCL_block_state_list *bsl, VCL_block **const const_VCL_ptr_arr,
+    size_t arr_capcity) {
+  if (bsl == nullptr) {
+    return 0;
+  }
+
+  if (const_VCL_ptr_arr == nullptr || arr_capcity <= 0) {
+    return bsl->block_states().size();
+  }
+
+  size_t widx = 0;
+
+  for (auto &pair : bsl->block_states()) {
+    if (widx >= arr_capcity) {
+      break;
+    }
+
+    const_VCL_ptr_arr[widx] = &pair.second;
+    widx++;
+  }
+
+  return bsl->block_states().size();
+}
+
+VCL_EXPORT_FUN size_t VCL_get_blocks_from_block_state_list_match(
+    VCL_block_state_list *bsl, SCL_gameVersion version, VCL_face_t f,
+    VCL_block **const array_of_const_VCL_block, size_t array_capcity) {
+
+  if (bsl == nullptr) {
+    return 0;
+  }
+
+  if (version == SCL_gameVersion::ANCIENT ||
+      version == SCL_gameVersion::FUTURE) {
+    // invalid version
+    return 0;
+  }
+
+  size_t available_block_counter = 0;
+  size_t write_counter = 0;
+
+  const bool can_write =
+      (array_of_const_VCL_block != nullptr) && (array_capcity > 0);
+
+  for (auto &pair : bsl->block_states()) {
+    if (pair.second.match(version, f)) {
+      available_block_counter++;
+
+      if (can_write && (write_counter < array_capcity)) {
+        array_of_const_VCL_block[write_counter] = &pair.second;
+        write_counter++;
+      }
+    }
+  }
+
+  return available_block_counter;
+}
+
+VCL_EXPORT_FUN size_t VCL_get_blocks_from_block_state_list_const(
     const VCL_block_state_list *bsl, const VCL_block **const const_VCL_ptr_arr,
     size_t arr_capcity) {
   if (bsl == nullptr) {
@@ -356,8 +415,8 @@ VCL_EXPORT_FUN size_t VCL_get_blocks_from_block_state_list(
   return bsl->block_states().size();
 }
 
-VCL_EXPORT_FUN size_t VCL_get_blocks_from_block_state_list_by_version(
-    const VCL_block_state_list *bsl, SCL_gameVersion version,
+VCL_EXPORT_FUN size_t VCL_get_blocks_from_block_state_list_match_const(
+    const VCL_block_state_list *bsl, SCL_gameVersion version, VCL_face_t f,
     const VCL_block **const array_of_const_VCL_block, size_t array_capcity) {
 
   if (bsl == nullptr) {
@@ -377,7 +436,7 @@ VCL_EXPORT_FUN size_t VCL_get_blocks_from_block_state_list_by_version(
       (array_of_const_VCL_block != nullptr) && (array_capcity > 0);
 
   for (const auto &pair : bsl->block_states()) {
-    if (pair.second.version_info.contains(version)) {
+    if (pair.second.match(version, f)) {
       available_block_counter++;
 
       if (can_write && (write_counter < array_capcity)) {
@@ -388,4 +447,19 @@ VCL_EXPORT_FUN size_t VCL_get_blocks_from_block_state_list_by_version(
   }
 
   return available_block_counter;
+}
+
+VCL_EXPORT_FUN bool VCL_get_block_enabled(const VCL_block *b) {
+  if (b == nullptr) {
+    return false;
+  }
+
+  return !b->is_disabled();
+}
+
+VCL_EXPORT_FUN void VCL_set_block_enabled(VCL_block *b, bool val) {
+  if (b == nullptr)
+    return;
+
+  b->set_disabled(!val);
 }

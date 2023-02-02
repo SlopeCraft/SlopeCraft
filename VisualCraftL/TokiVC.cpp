@@ -128,7 +128,9 @@ bool add_color_trans_to_nontrans(
   }
 
   for (VCL_block *blkp : bs_nontransparent) {
-
+    if (!blkp->is_background()) {
+      continue;
+    }
     bool ok = true;
 
     std::array<uint8_t, 3> ret =
@@ -260,7 +262,8 @@ bool TokiVC::update_color_set_no_lock() noexcept {
   bs_nontransparent.reserve(TokiVC::bsl.block_states().size() * 2 / 3);
 
   TokiVC::bsl.avaliable_block_states_by_transparency(
-      TokiVC::version, &bs_nontransparent, &bs_transparent);
+      TokiVC::version, TokiVC::exposed_face, &bs_nontransparent,
+      &bs_transparent);
 
   {
     resource_pack::buffer_t buff;

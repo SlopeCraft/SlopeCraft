@@ -231,24 +231,26 @@ bool VCL_block_state_list::add(std::string_view filename) noexcept {
 }
 
 void VCL_block_state_list::available_block_states(
-    SCL_gameVersion v, std::vector<VCL_block *> *const str_list) noexcept {
+    SCL_gameVersion v, VCL_face_t f,
+    std::vector<VCL_block *> *const str_list) noexcept {
   str_list->clear();
 
   for (auto &pair : this->states) {
-    if (pair.second.version_info.contains(v)) {
+    if (pair.second.match(v, f)) {
       str_list->emplace_back(&pair.second);
     }
   }
 }
 
 void VCL_block_state_list::avaliable_block_states_by_transparency(
-    SCL_gameVersion v, std::vector<VCL_block *> *const list_non_transparent,
+    SCL_gameVersion v, VCL_face_t f,
+    std::vector<VCL_block *> *const list_non_transparent,
     std::vector<VCL_block *> *const list_transparent) noexcept {
   list_non_transparent->clear();
   list_transparent->clear();
 
   for (auto &pair : this->states) {
-    if (pair.second.version_info.contains(v)) {
+    if (pair.second.match(v, f)) {
       if (pair.second.is_transparent()) {
         list_transparent->emplace_back(&pair.second);
       } else {

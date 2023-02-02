@@ -35,7 +35,7 @@ public:
     return ret;
   }
 
-  inline bool contains(SCL_gameVersion v) const noexcept {
+  inline bool match(SCL_gameVersion v) const noexcept {
     return set[major_version_to_idx(v)];
   }
 
@@ -74,7 +74,8 @@ public:
     background = 7,
     burnable = 8,
     enderman_pickable = 9,
-    is_glowing = 10
+    is_glowing = 10,
+    disabled = 11,
   };
 
   static constexpr size_t idx_face_up = (size_t)attribute::face_up;
@@ -84,8 +85,19 @@ public:
   static constexpr size_t idx_face_east = (size_t)attribute::face_east;
   static constexpr size_t idx_face_west = (size_t)attribute::face_west;
 
+  static_assert(idx_face_up < idx_face_down);
+  static_assert(idx_face_down < idx_face_north);
+  static_assert(idx_face_north < idx_face_south);
+  static_assert(idx_face_south < idx_face_east);
+  static_assert(idx_face_east < idx_face_west);
+
   static constexpr size_t idx_transparent = (size_t)attribute::transparency;
   static constexpr size_t idx_background = (size_t)attribute::background;
+  static constexpr size_t id_burnable = (size_t)attribute::burnable;
+  static constexpr size_t idx_enderman_pickable =
+      (size_t)attribute::enderman_pickable;
+  static constexpr size_t idx_is_glowing = (size_t)attribute::is_glowing;
+  static constexpr size_t idx_disabled = (size_t)attribute::disabled;
 
   inline bool get_attribute(attribute a) const noexcept {
     return this->attributes[size_t(a)];
@@ -119,6 +131,14 @@ public:
     this->attributes[idx_background] = val;
   }
 
+  inline bool is_disabled() const noexcept {
+    return this->attributes[idx_disabled];
+  }
+
+  inline void set_disabled(bool disable) noexcept {
+    this->attributes[idx_disabled] = disable;
+  }
+
   inline const std::string *full_id_ptr() const noexcept {
     return this->full_id_p;
   }
@@ -127,6 +147,11 @@ public:
     for (size_t idx = idx_face_up; idx < idx_face_west; idx++) {
       this->attributes[idx] = false;
     }
+  }
+
+  inline bool match(SCL_gameVersion v, VCL_face_t f) const noexcept {
+    return this->version_info.match(v) && this->is_face_available(f) &&
+           !this->is_disabled();
   }
 
 private:
@@ -154,14 +179,16 @@ public:
   bool add(std::string_view filename) noexcept;
 
   void
-  available_block_states(SCL_gameVersion v,
+  available_block_states(SCL_gameVersion v, VCL_face_t f,
                          std::vector<VCL_block *> *const str_list) noexcept;
 
   void avaliable_block_states_by_transparency(
-      SCL_gameVersion v, std::vector<VCL_block *> *const list_non_transparent,
+      SCL_gameVersion v, VCL_face_t f,
+      std::vector<VCL_block *> *const list_non_transparent,
       std::vector<VCL_block *> *const list_transparent) noexcept;
 
   inline auto &block_states() const noexcept { return this->states; }
+  inline auto &block_states() noexcept { return this->states; }
 
   inline VCL_block *block_at(const std::string &str) noexcept {
     auto it = this->states.find(str);
