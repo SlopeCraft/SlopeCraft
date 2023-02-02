@@ -15,7 +15,13 @@
         "burnable": true,
         "nameEN": "Acacia plank",
         "nameZH": "金合欢木板",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:planks[variant=acacia]"
+            ]
+        ]
     },
     "minecraft:amethyst_block": {
         "nameEN": "Amethyst block",
@@ -38,7 +44,13 @@
         "burnable": true,
         "nameEN": "Birch plank",
         "nameZH": "白桦木板",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:planks[variant=birch]"
+            ]
+        ]
     },
     "minecraft:black_concrete": {
         "nameEN": "Black concrete",
@@ -282,7 +294,13 @@
         "burnable": true,
         "nameEN": "Dark oak plank",
         "nameZH": "黑橡木木板",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:planks[variant=dark_oak]"
+            ]
+        ]
     },
     "minecraft:dark_prismarine": {
         "nameEN": "Dark prismarine",
@@ -519,7 +537,13 @@
         "burnable": true,
         "nameEN": "Jungle plank",
         "nameZH": "丛林木板",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:planks[variant=jungle]"
+            ]
+        ]
     },
     "minecraft:lapis_block": {
         "nameEN": "Lapis block",
@@ -731,7 +755,13 @@
         "burnable": true,
         "nameEN": "Oak plank",
         "nameZH": "橡木木板",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:planks[variant=oak]"
+            ]
+        ]
     },
     "minecraft:obsidian": {
         "nameEN": "Obsidian",
@@ -828,54 +858,6 @@
             ]
         ]
     },
-    "minecraft:planks[variant=acacia]": {
-        "burnable": true,
-        "nameEN": "Acacia plank",
-        "nameZH": "金合欢木板",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:planks[variant=birch]": {
-        "burnable": true,
-        "nameEN": "Birch plank",
-        "nameZH": "白桦木板",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:planks[variant=dark_oak]": {
-        "burnable": true,
-        "nameEN": "Dark oak plank",
-        "nameZH": "黑橡木木板",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:planks[variant=jungle]": {
-        "burnable": true,
-        "nameEN": "Jungle plank",
-        "nameZH": "丛林木板",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:planks[variant=oak]": {
-        "burnable": true,
-        "nameEN": "Oak plank",
-        "nameZH": "橡木木板",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:planks[variant=spruce]": {
-        "burnable": true,
-        "nameEN": "Spruce plank",
-        "nameZH": "云杉木板",
-        "version": [
-            12
-        ]
-    },
     "minecraft:podzol[snowy=false]": {
         "endermanPickable": true,
         "nameEN": "Podzol",
@@ -944,12 +926,70 @@
         "nameZH": "南瓜",
         "version": 13
     },
-    "minecraft:pumpkin[variant=north]": {
+    "minecraft:pumpkin[facing=north]": {
         "endermanPickable": true,
-        "nameEN": "Pumpkin",
-        "nameZH": "南瓜",
+        "nameEN": "Pumpkin(north)",
+        "nameZH": "南瓜（北）",
         "version": [
             12
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:pumpkin[variant=north]"
+            ]
+        ]
+    },
+    "minecraft:pumpkin[facing=south]": {
+        "endermanPickable": true,
+        "nameEN": "Pumpkin(south)",
+        "nameZH": "南瓜（南）",
+        "version": [
+            12
+        ],
+        "faces": [
+            "south",
+            "north"
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:pumpkin[variant=south]"
+            ]
+        ]
+    },
+    "minecraft:pumpkin[facing=east]": {
+        "endermanPickable": true,
+        "nameEN": "Pumpkin(east)",
+        "nameZH": "南瓜（东）",
+        "version": [
+            12
+        ],
+        "faces": [
+            "east"
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:pumpkin[variant=east]"
+            ]
+        ]
+    },
+    "minecraft:pumpkin[facing=west]": {
+        "endermanPickable": true,
+        "nameEN": "Pumpkin(west)",
+        "nameZH": "南瓜（西）",
+        "version": [
+            12
+        ],
+        "faces": [
+            "west"
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:pumpkin[variant=west]"
+            ]
         ]
     },
     "minecraft:purple_concrete": {
@@ -1175,7 +1215,13 @@
         "burnable": true,
         "nameEN": "Spruce plank",
         "nameZH": "云杉木板",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:planks[variant=spruce]"
+            ]
+        ]
     },
     "minecraft:stained_glass[color=black]": {
         "nameEN": "Blakc glass",
@@ -1967,20 +2013,6 @@
             ]
         ]
     },
-    "minecraft:dark_prismarine_slab[half=top]": {
-        "version": [
-            12
-        ],
-        "faces": [
-            "up"
-        ],
-        "id_replace_list": [
-            [
-                12,
-                "minecraft:stone_slab[half=top,variant=dark_prismarine]"
-            ]
-        ]
-    },
     "minecraft:nether_brick_slab[half=top]": {
         "nameEN": "Nether brick slab",
         "nameZH": "地狱砖块上半砖",
@@ -1994,38 +2026,6 @@
             [
                 12,
                 "minecraft:stone_slab[half=top,variant=nether_brick]"
-            ]
-        ]
-    },
-    "minecraft:prismarine_slab[half=top]": {
-        "nameEN": "Prismarine slab",
-        "nameZH": "海晶石上半砖",
-        "version": [
-            12
-        ],
-        "faces": [
-            "up"
-        ],
-        "id_replace_list": [
-            [
-                12,
-                "minecraft:stone_slab[half=top,variant=prismarine]"
-            ]
-        ]
-    },
-    "minecraft:prismarine_bricks_slab[half=top]": {
-        "nameEN": "Prismarine brick slab",
-        "nameZH": "海晶石砖上半砖",
-        "version": [
-            12
-        ],
-        "faces": [
-            "up"
-        ],
-        "id_replace_list": [
-            [
-                12,
-                "minecraft:stone_slab[half=top,variant=prismarine_bricks]"
             ]
         ]
     },
