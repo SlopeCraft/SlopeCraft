@@ -1305,116 +1305,212 @@
         ],
         "transparent": true
     },
-    "minecraft:stained_hardened_clay[color=black]": {
+    "minecraft:black_stained_hardened_clay": {
         "nameEN": "Black terracotta",
         "nameZH": "黑色陶瓦",
         "version": [
             12
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_hardened_clay[color=black]"
+            ]
         ]
     },
-    "minecraft:stained_hardened_clay[color=blue]": {
+    "minecraft:blue_stained_hardened_clay": {
         "nameEN": "Blue terracotta",
         "nameZH": "蓝色陶瓦",
         "version": [
             12
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_hardened_clay[color=blue]"
+            ]
         ]
     },
-    "minecraft:stained_hardened_clay[color=brown]": {
+    "minecraft:brown_stained_hardened_clay": {
         "nameEN": "Brown terracotta",
         "nameZH": "棕色陶瓦",
         "version": [
             12
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_hardened_clay[color=brown]"
+            ]
         ]
     },
-    "minecraft:stained_hardened_clay[color=cyan]": {
+    "minecraft:cyan_stained_hardened_clay": {
         "nameEN": "Cyan terracotta",
         "nameZH": "青色陶瓦",
         "version": [
             12
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_hardened_clay[color=cyan]"
+            ]
         ]
     },
-    "minecraft:stained_hardened_clay[color=gray]": {
+    "minecraft:gray_stained_hardened_clay": {
         "nameEN": "Gray terracotta",
         "nameZH": "灰色陶瓦",
         "version": [
             12
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_hardened_clay[color=gray]"
+            ]
         ]
     },
-    "minecraft:stained_hardened_clay[color=green]": {
+    "minecraft:green_stained_hardened_clay": {
         "nameEN": "Green terracotta",
         "nameZH": "绿色陶瓦",
         "version": [
             12
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_hardened_clay[color=green]"
+            ]
         ]
     },
-    "minecraft:stained_hardened_clay[color=light_blue]": {
+    "minecraft:light_blue_stained_hardened_clay": {
         "nameEN": "Light blue terracotta",
         "nameZH": "浅蓝陶瓦",
         "version": [
             12
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_hardened_clay[color=light_blue]"
+            ]
         ]
     },
-    "minecraft:stained_hardened_clay[color=lime]": {
+    "minecraft:lime_stained_hardened_clay": {
         "nameEN": "Lime terracotta",
         "nameZH": "浅绿陶瓦",
         "version": [
             12
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_hardened_clay[color=lime]"
+            ]
         ]
     },
-    "minecraft:stained_hardened_clay[color=magenta]": {
+    "minecraft:magenta_stained_hardened_clay": {
         "nameEN": "Magenta terracotta",
         "nameZH": "品红陶瓦",
         "version": [
             12
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_hardened_clay[color=magenta]"
+            ]
         ]
     },
-    "minecraft:stained_hardened_clay[color=orange]": {
+    "minecraft:orange_stained_hardened_clay": {
         "nameEN": "Orange terracotta",
         "nameZH": "橙色陶瓦",
         "version": [
             12
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_hardened_clay[color=orange]"
+            ]
         ]
     },
-    "minecraft:stained_hardened_clay[color=pink]": {
+    "minecraft:pink_stained_hardened_clay": {
         "nameEN": "Pink terracotta",
         "nameZH": "粉色陶瓦",
         "version": [
             12
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_hardened_clay[color=pink]"
+            ]
         ]
     },
-    "minecraft:stained_hardened_clay[color=purple]": {
+    "minecraft:purple_stained_hardened_clay": {
         "nameEN": "Purple terracotta",
         "nameZH": "紫色陶瓦",
         "version": [
             12
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_hardened_clay[color=purple]"
+            ]
         ]
     },
-    "minecraft:stained_hardened_clay[color=red]": {
+    "minecraft:red_stained_hardened_clay": {
         "nameEN": "Red terracotta",
         "nameZH": "红色陶瓦",
         "version": [
             12
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_hardened_clay[color=red]"
+            ]
         ]
     },
-    "minecraft:stained_hardened_clay[color=silver]": {
+    "minecraft:silver_stained_hardened_clay": {
         "nameEN": "Light gray terracotta",
         "nameZH": "浅灰陶瓦",
         "version": [
             12
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_hardened_clay[color=silver]"
+            ]
         ]
     },
-    "minecraft:stained_hardened_clay[color=white]": {
+    "minecraft:white_stained_hardened_clay": {
         "nameEN": "White terracotta",
         "nameZH": "白色陶瓦",
         "version": [
             12
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_hardened_clay[color=white]"
+            ]
         ]
     },
-    "minecraft:stained_hardened_clay[color=yellow]": {
+    "minecraft:yellow_stained_hardened_clay": {
         "nameEN": "Yellow terracotta",
         "nameZH": "黄色陶瓦",
         "version": [
             12
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_hardened_clay[color=yellow]"
+            ]
         ]
     },
     "minecraft:stone": {
