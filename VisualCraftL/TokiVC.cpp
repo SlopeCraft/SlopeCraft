@@ -1,8 +1,9 @@
-#include "TokiVC.h"
-
 #include <mutex>
 #include <set>
 #include <shared_mutex>
+#include <variant>
+
+#include "TokiVC.h"
 
 libImageCvt::template ImageCvter<false>::basic_colorset_t
     TokiVC::colorset_basic;
@@ -25,180 +26,221 @@ SCL_gameVersion TokiVC::version = MC19;
 VCL_face_t TokiVC::exposed_face = VCL_face_t::face_down;
 int TokiVC::max_block_layers = 3;
 
-namespace {
+std::vector<std::variant<const VCL_block *, std::vector<const VCL_block *>>>
+    TokiVC::LUT_basic_color_idx_to_blocks;
+
+namespace TokiVC_internal {
 std::shared_mutex global_lock;
 bool is_color_set_ready = false;
 
 std::set<TokiVC *> TokiVC_register;
-} // namespace
+} // namespace TokiVC_internal
 
 TokiVC::TokiVC() {
-  global_lock.lock();
-  if (is_color_set_ready) {
+  TokiVC_internal::global_lock.lock();
+  if (TokiVC_internal::is_color_set_ready) {
     this->_step = VCL_Kernel_step::VCL_wait_for_image;
   } else {
     this->_step = VCL_Kernel_step::VCL_none;
   }
 
-  TokiVC_register.emplace(this);
+  TokiVC_internal::TokiVC_register.emplace(this);
 
-  global_lock.unlock();
+  TokiVC_internal::global_lock.unlock();
 }
 
 TokiVC::~TokiVC() {
-  global_lock.lock();
+  TokiVC_internal::global_lock.lock();
 
-  auto it = TokiVC_register.find(this);
+  auto it = TokiVC_internal::TokiVC_register.find(this);
 
-  if (it != TokiVC_register.end()) {
-    TokiVC_register.erase(it);
+  if (it != TokiVC_internal::TokiVC_register.end()) {
+    TokiVC_internal::TokiVC_register.erase(it);
   }
 
-  global_lock.unlock();
-}
-
-VCL_EXPORT_FUN bool VCL_set_resource_and_version_copy(
-    const VCL_resource_pack *const rp, const VCL_block_state_list *const bsl,
-    SCL_gameVersion version, VCL_face_t face, int __max_block_layers) {
-
-  if (rp == nullptr || bsl == nullptr) {
-    return false;
-  }
-
-  if (__max_block_layers <= 0) {
-    return false;
-  }
-
-  std::unique_lock<std::shared_mutex> lkgd(global_lock);
-
-  is_color_set_ready = false;
-  TokiVC::pack = *rp;
-  TokiVC::bsl = *bsl;
-
-  TokiVC::version = version;
-  TokiVC::exposed_face = face;
-  TokiVC::max_block_layers = __max_block_layers;
-
-  const bool ret = TokiVC::update_color_set_no_lock();
-
-  return ret;
-}
-
-VCL_EXPORT_FUN bool VCL_set_resource_and_version_move(
-    VCL_resource_pack **rp_ptr, VCL_block_state_list **bsl_ptr,
-    SCL_gameVersion version, VCL_face_t face, int __max_block_layers) {
-  if (rp_ptr == nullptr || bsl_ptr == nullptr) {
-    return false;
-  }
-
-  if (*rp_ptr == nullptr || *bsl_ptr == nullptr) {
-    return false;
-  }
-  if (__max_block_layers <= 0) {
-    return false;
-  }
-
-  bool ret = true;
-  std::unique_lock<std::shared_mutex> lkgd(global_lock);
-
-  is_color_set_ready = false;
-
-  TokiVC::pack = std::move(**rp_ptr);
-  VCL_destroy_resource_pack(*rp_ptr);
-  *rp_ptr = nullptr;
-
-  TokiVC::bsl = std::move(**bsl_ptr);
-  VCL_destroy_block_state_list(*bsl_ptr);
-  *bsl_ptr = nullptr;
-
-  TokiVC::version = version;
-  TokiVC::exposed_face = face;
-  TokiVC::max_block_layers = __max_block_layers;
-
-  if (!TokiVC::update_color_set_no_lock()) {
-    ret = false;
-  }
-
-  return ret;
-}
-
-VCL_EXPORT_FUN bool VCL_is_colorset_ok() {
-  std::shared_lock<std::shared_mutex> lkgd(global_lock);
-  return is_color_set_ready;
-}
-
-VCL_EXPORT_FUN VCL_resource_pack *VCL_get_resource_pack() {
-  std::shared_lock<std::shared_mutex> lkgd(global_lock);
-  if (!is_color_set_ready) {
-    return nullptr;
-  }
-
-  return &TokiVC::pack;
-}
-
-VCL_EXPORT_FUN VCL_block_state_list *VCL_get_block_state_list() {
-  std::shared_lock<std::shared_mutex> lkgd(global_lock);
-  if (!is_color_set_ready) {
-    return nullptr;
-  }
-  return &TokiVC::bsl;
-}
-
-VCL_EXPORT_FUN SCL_gameVersion VCL_get_game_version() {
-  std::shared_lock<std::shared_mutex> lkgd(global_lock);
-  if (!is_color_set_ready) {
-    return SCL_gameVersion::ANCIENT;
-  }
-  return TokiVC::version;
-}
-
-VCL_EXPORT_FUN VCL_face_t VCL_get_exposed_face() {
-  std::shared_lock<std::shared_mutex> lkgd(global_lock);
-
-  if (!is_color_set_ready) {
-    return {};
-  }
-
-  return TokiVC::exposed_face;
-}
-
-VCL_EXPORT_FUN int VCL_get_max_block_layers() {
-  std::shared_lock<std::shared_mutex> lkgd(global_lock);
-  if (!is_color_set_ready) {
-    return 0;
-  }
-
-  return TokiVC::max_block_layers;
+  TokiVC_internal::global_lock.unlock();
 }
 
 VCL_Kernel_step TokiVC::step() const noexcept {
 
-  std::shared_lock<std::shared_mutex> lkgd(global_lock);
+  std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
 
   return this->_step;
 }
 
-bool go_through(const std::vector<const std::string *> &bs_list,
-                std::unordered_map<const std::string *,
-                                   block_model::EImgRowMajor_t> &images,
-                resource_pack::buffer_t &buff) noexcept {
+bool add_projection_image_for_bsl(const std::vector<VCL_block *> &bs_list,
+                                  resource_pack::buffer_t &buff) noexcept {
 
-  for (const std::string *strptr : bs_list) {
-    if (false) {
-      printf("Computing projection image for full id \"%s\"\n",
-             strptr->c_str());
-    }
-    block_model::EImgRowMajor_t img;
-
-    if (!TokiVC::pack.compute_projection(*strptr, TokiVC::exposed_face, &img,
-                                         buff)) {
-      printf("\nError : failed to compute projection for %s\n",
-             strptr->c_str());
+  for (VCL_block *blkp : bs_list) {
+    if (blkp->full_id_ptr() == nullptr) {
+      printf("\nError : a VCL_block do not have full_id. The block names are : "
+             "%s, %s\n",
+             blkp->name_ZH.c_str(), blkp->name_EN.c_str());
       return false;
     }
 
-    images.emplace(strptr, std::move(img));
+    if (false) {
+      printf("Computing projection image for full id \"%s\"\n",
+             blkp->full_id_ptr()->c_str());
+    }
+
+    block_model::EImgRowMajor_t *img = &blkp->project_image_on_exposed_face;
+
+    if (!TokiVC::pack.compute_projection(*blkp->full_id_ptr(),
+                                         TokiVC::exposed_face, img, buff)) {
+      printf("\nError : failed to compute projection for %s\n",
+             blkp->full_id_ptr()->c_str());
+      return false;
+    }
   }
+  return true;
+}
+
+bool add_color_non_transparent(
+    const std::vector<VCL_block *> &bs_nontransparent,
+    std::vector<std::variant<const VCL_block *, std::vector<const VCL_block *>>>
+        &LUT_bcitb,
+    std::vector<std::array<uint8_t, 3>> &temp_rgb_rowmajor) noexcept {
+  for (VCL_block *blkp : bs_nontransparent) {
+
+    bool ok = true;
+    auto ret = compute_mean_color(blkp->project_image_on_exposed_face, &ok);
+    if (!ok) {
+      return false;
+    }
+
+    temp_rgb_rowmajor.emplace_back(ret);
+    LUT_bcitb.emplace_back(blkp);
+  }
+  return true;
+}
+
+bool add_color_trans_to_nontrans(
+    const block_model::EImgRowMajor_t &front,
+    const std::vector<VCL_block *> &bs_nontransparent,
+    const std::vector<const VCL_block *> &accumulate_blocks,
+    std::vector<std::variant<const VCL_block *, std::vector<const VCL_block *>>>
+        &LUT_bcitb,
+    std::vector<std::array<uint8_t, 3>> &temp_rgb_rowmajor) noexcept {
+  if (front.size() <= 0) {
+    return false;
+  }
+
+  for (VCL_block *blkp : bs_nontransparent) {
+
+    bool ok = true;
+
+    std::array<uint8_t, 3> ret =
+        compose_image_and_mean(front, blkp->project_image_on_exposed_face, &ok);
+
+    if (!ok) {
+      return false;
+    }
+    std::vector<const VCL_block *> blocks(accumulate_blocks);
+    blocks.emplace_back(blkp);
+
+    temp_rgb_rowmajor.emplace_back(ret);
+    LUT_bcitb.emplace_back(std::move(blocks));
+  }
+
+  return true;
+}
+
+bool add_color_trans_to_trans_recurs(
+    const int allowed_depth, const block_model::EImgRowMajor_t &front,
+    const std::vector<VCL_block *> &bs_transparent,
+    const std::vector<VCL_block *> &bs_nontransparent,
+    const std::vector<const VCL_block *> &accumulate_blocks,
+    std::vector<std::variant<const VCL_block *, std::vector<const VCL_block *>>>
+        &LUT_bcitb,
+    std::vector<std::array<uint8_t, 3>> &temp_rgb_rowmajor) noexcept {
+  if (allowed_depth <= 0) {
+    printf("\nInvalid value for allowed_depth : %i\n", allowed_depth);
+    return false;
+  }
+
+  if (allowed_depth == 1) {
+    return add_color_trans_to_nontrans(front, bs_nontransparent,
+                                       accumulate_blocks, LUT_bcitb,
+                                       temp_rgb_rowmajor);
+  }
+  block_model::EImgRowMajor_t img(front);
+
+  {
+    uint8_t min_alpha = 255;
+    for (int i = 0; i < front.size(); i++) {
+      min_alpha = std::min(min_alpha, getA(front(i)));
+    }
+
+    // if multiple transparent block composed a non transparent image, then the
+    // recursion terminate.
+    if (min_alpha >= 255) {
+      bool ok = true;
+      std::array<uint8_t, 3> mean = compute_mean_color(front, &ok);
+
+      if (!ok) {
+        printf("\nError : function add_color_trans_to_trans_recurs failed to "
+               "compute mean color.\n");
+        return false;
+      }
+
+      LUT_bcitb.emplace_back(accumulate_blocks);
+      temp_rgb_rowmajor.emplace_back(mean);
+      return true;
+    }
+  }
+
+  for (const VCL_block *cblkp : bs_transparent) {
+
+    memcpy(img.data(), front.data(), front.size() * sizeof(uint32_t));
+    std::vector<const VCL_block *> blocks(accumulate_blocks);
+    blocks.emplace_back(cblkp);
+
+    if (!compose_image_background_half_transparent(
+            img, cblkp->project_image_on_exposed_face)) {
+      printf("\nError : function add_color_trans_to_trans_recurs failed "
+             "because failed to compose image. This is possible caused by "
+             "images have different sizes.\n");
+      return false;
+    }
+
+    if (!add_color_trans_to_trans_recurs(allowed_depth - 1, img, bs_transparent,
+                                         bs_nontransparent, blocks, LUT_bcitb,
+                                         temp_rgb_rowmajor)) {
+      printf("\nError : function add_color_trans_to_trans_recurs failed "
+             "because deeper recursion failed.\n");
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool add_color_trans_to_trans_start_recurse(
+    const int max_allowed_depth, const std::vector<VCL_block *> &bs_transparent,
+    const std::vector<VCL_block *> &bs_nontransparent,
+    std::vector<std::variant<const VCL_block *, std::vector<const VCL_block *>>>
+        &LUT_bcitb,
+    std::vector<std::array<uint8_t, 3>> &temp_rgb_rowmajor) noexcept {
+  if (max_allowed_depth <= 0) {
+    return false;
+  }
+
+  std::vector<const VCL_block *> accum({nullptr});
+
+  for (const VCL_block *cblkp : bs_transparent) {
+    accum[0] = cblkp;
+    if (!add_color_trans_to_trans_recurs(max_allowed_depth - 1,
+                                         cblkp->project_image_on_exposed_face,
+                                         bs_transparent, bs_nontransparent,
+                                         accum, LUT_bcitb, temp_rgb_rowmajor)) {
+      printf(
+          "\nError : function add_color_trans_to_trans_start_recurse failed "
+          "due to function call to add_color_trans_to_trans_recurs failed.\n");
+      return false;
+    }
+  }
+
   return true;
 }
 
@@ -212,7 +254,7 @@ bool TokiVC::update_color_set_no_lock() noexcept {
     break;
   }
 
-  std::vector<const std::string *> bs_transparent, bs_nontransparent;
+  std::vector<VCL_block *> bs_transparent, bs_nontransparent;
 
   bs_nontransparent.reserve(TokiVC::bsl.block_states().size() * 2 / 3);
 
@@ -220,10 +262,6 @@ bool TokiVC::update_color_set_no_lock() noexcept {
       TokiVC::version, &bs_nontransparent, &bs_transparent);
 
   {
-    // compute all projection images suitable for this version
-    std::unordered_map<const std::string *, block_model::EImgRowMajor_t> images;
-
-    images.reserve(bs_transparent.size() + bs_nontransparent.size());
     resource_pack::buffer_t buff;
     {
       buff.pure_id.reserve(256);
@@ -231,25 +269,50 @@ bool TokiVC::update_color_set_no_lock() noexcept {
       // buff.traits.reserve(16);
     }
 
-    if (!go_through(bs_nontransparent, images, buff)) {
+    if (!add_projection_image_for_bsl(bs_nontransparent, buff)) {
       printf("Failed to go through bs_nontransparent\n");
       return false;
     }
 
-    if (!go_through(bs_transparent, images, buff)) {
+    if (!add_projection_image_for_bsl(bs_transparent, buff)) {
       printf("Failed to go through bs_transparent\n");
       return false;
     }
-#warning compute color of single layer and multiple layers here
+
+    std::vector<std::array<uint8_t, 3>> colors_temp;
+    colors_temp.reserve(bs_nontransparent.size());
+    if (!add_color_non_transparent(bs_nontransparent,
+                                   TokiVC::LUT_basic_color_idx_to_blocks,
+                                   colors_temp)) {
+      printf("\nError : failed to compute mean colors for non transparent "
+             "images.\n");
+      return false;
+    }
+
+    printf("Size of LUT_basic_color_idx_to_blocks = %zu, size of colors_temp = "
+           "%zu\n",
+           TokiVC::LUT_basic_color_idx_to_blocks.size(), colors_temp.size());
+
+    if (!add_color_trans_to_trans_start_recurse(
+            TokiVC::max_block_layers, bs_transparent, bs_nontransparent,
+            TokiVC::LUT_basic_color_idx_to_blocks, colors_temp)) {
+      printf("\nError : failed to compute colors for composed blocks.\n");
+      return false;
+    }
+    printf("Size of LUT_basic_color_idx_to_blocks = %zu, size of colors_temp = "
+           "%zu\n",
+           TokiVC::LUT_basic_color_idx_to_blocks.size(), colors_temp.size());
+
+#warning compute color of single layer and multiple layers, fill in basical colors here
   }
 
   // update steps
-  for (auto ptr : TokiVC_register) {
+  for (auto ptr : TokiVC_internal::TokiVC_register) {
     ptr->_step = VCL_Kernel_step::VCL_wait_for_image;
     ptr->img_cvter.on_color_set_changed();
   }
 
-  is_color_set_ready = true;
+  TokiVC_internal::is_color_set_ready = true;
 
   return true;
 }
@@ -261,7 +324,7 @@ bool TokiVC::set_image(const int64_t rows, const int64_t cols,
     return false;
   }
 
-  std::shared_lock<std::shared_mutex> lkgd(global_lock);
+  std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
 
   if (this->_step < VCL_Kernel_step::VCL_wait_for_image) {
     return false;
@@ -275,7 +338,7 @@ bool TokiVC::set_image(const int64_t rows, const int64_t cols,
 }
 
 int64_t TokiVC::rows() const noexcept {
-  std::shared_lock<std::shared_mutex> lkgd(global_lock);
+  std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
   if (this->_step < VCL_Kernel_step::VCL_wait_for_conversion) {
     return 0;
   }
@@ -283,7 +346,7 @@ int64_t TokiVC::rows() const noexcept {
   return this->img_cvter.rows();
 }
 int64_t TokiVC::cols() const noexcept {
-  std::shared_lock<std::shared_mutex> lkgd(global_lock);
+  std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
   if (this->_step < VCL_Kernel_step::VCL_wait_for_conversion) {
     return 0;
   }
@@ -294,7 +357,7 @@ int64_t TokiVC::cols() const noexcept {
 const uint32_t *TokiVC::raw_image(int64_t *const __rows, int64_t *const __cols,
                                   bool *const is_row_major) const noexcept {
 
-  std::shared_lock<std::shared_mutex> lkgd(global_lock);
+  std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
   if (this->_step < VCL_Kernel_step::VCL_wait_for_conversion) {
     return nullptr;
   }

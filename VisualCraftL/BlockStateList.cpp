@@ -10,6 +10,10 @@ using std::cout, std::endl;
 
 VCL_block::VCL_block() { this->set_transparency(false); }
 
+VCL_block::VCL_block(const std::string *full_id_ptr) : full_id_p(full_id_ptr) {
+  this->set_transparency(false);
+}
+
 version_set parse_version_set(const nlohmann::json &jo,
                               bool *const ok) noexcept {
 
@@ -140,37 +144,39 @@ bool VCL_block_state_list::add(std::string_view filename) noexcept {
       return false;
     }
 
-    this->states.emplace(pair.key(), vb);
+    auto it = this->states.emplace(pair.key(), std::move(vb));
+
+    // This statement requires that VCL_block_state_list is a friend class of
+    // VCL_block
+    it.first->second.full_id_p = &it.first->first;
   }
 
   return true;
 }
 
 void VCL_block_state_list::available_block_states(
-    SCL_gameVersion v,
-    std::vector<const std::string *> *const str_list) const noexcept {
+    SCL_gameVersion v, std::vector<VCL_block *> *const str_list) noexcept {
   str_list->clear();
 
-  for (const auto &pair : this->states) {
+  for (auto &pair : this->states) {
     if (pair.second.version_info.contains(v)) {
-      str_list->emplace_back(&pair.first);
+      str_list->emplace_back(&pair.second);
     }
   }
 }
 
 void VCL_block_state_list::avaliable_block_states_by_transparency(
-    SCL_gameVersion v,
-    std::vector<const std::string *> *const list_non_transparent,
-    std::vector<const std::string *> *const list_transparent) const noexcept {
+    SCL_gameVersion v, std::vector<VCL_block *> *const list_non_transparent,
+    std::vector<VCL_block *> *const list_transparent) noexcept {
   list_non_transparent->clear();
   list_transparent->clear();
 
-  for (const auto &pair : this->states) {
+  for (auto &pair : this->states) {
     if (pair.second.version_info.contains(v)) {
       if (pair.second.is_transparent()) {
-        list_transparent->emplace_back(&pair.first);
+        list_transparent->emplace_back(&pair.second);
       } else {
-        list_non_transparent->emplace_back(&pair.first);
+        list_non_transparent->emplace_back(&pair.second);
       }
     }
   }

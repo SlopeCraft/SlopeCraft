@@ -57,30 +57,13 @@ public:
   }
 
   //*this is additional, and source_base is basical resource pack.
-  void merge_from_base(const zipped_folder &source_base) noexcept {
+  // so *this have higher priority than source_base
+  void merge_from_base(const zipped_folder &source_base) noexcept;
 
-    for (const auto it : source_base.files) {
-      auto find = this->files.find(it.first);
+  void merge_from_base(zipped_folder &&source_base) noexcept;
 
-      if (find == this->files.end()) {
-        this->files.emplace(it.first, it.second);
-      } else {
-        find->second = it.second;
-      }
-    }
-
-    for (const auto &it : source_base.subfolders) {
-      auto find = this->subfolders.find(it.first);
-
-      if (find == this->subfolders.end()) {
-        this->subfolders.emplace(it.first, it.second);
-      } else {
-        find->second.merge_from_base(it.second);
-      }
-    }
-  }
-
-  static zipped_folder from_zip(std::string_view zipname) noexcept;
+  static zipped_folder from_zip(std::string_view zipname,
+                                bool *const ok = nullptr) noexcept;
 };
 
 #endif // SLOPECRAFT_VISUALCRAFTL_RESOURCE_TREE_H

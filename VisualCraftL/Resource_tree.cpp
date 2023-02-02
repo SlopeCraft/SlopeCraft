@@ -4,7 +4,7 @@
 #include <iostream>
 #include <zip.h>
 
-//#include "VisualCraftL.h"
+// #include "VisualCraftL.h"
 
 using std::cout, std::endl, std::cerr;
 
@@ -27,21 +27,28 @@ auto split_by_slash(std::string_view str) noexcept {
   return result;
 }
 
-zipped_folder zipped_folder::from_zip(std::string_view zipname) noexcept {
+zipped_folder zipped_folder::from_zip(std::string_view zipname,
+                                      bool *const ok) noexcept {
   zipped_folder result;
   {
     std::filesystem::path path = zipname;
     if (zipname.empty()) {
+      if (ok)
+        *ok = false;
       cerr << "The filename  of zip is empty." << endl;
       return result;
     }
 
     if (!std::filesystem::is_regular_file(path)) {
+      if (ok)
+        *ok = false;
       cerr << "The filename does not refer to a regular file." << endl;
       return result;
     }
 
     if (path.extension() != ".zip") {
+      if (ok)
+        *ok = false;
       cerr << "The file extension name is not .zip" << endl;
       return result;
     }
@@ -50,6 +57,8 @@ zipped_folder zipped_folder::from_zip(std::string_view zipname) noexcept {
   zip_t *const zip = zip_open(zipname.data(), ZIP_RDONLY, &errorcode);
 
   if (zip == NULL) {
+    if (ok)
+      *ok = false;
     cerr << "Failed to open zip file : " << zipname
          << ", error code = " << errorcode << endl;
     return result;
@@ -86,6 +95,8 @@ zipped_folder zipped_folder::from_zip(std::string_view zipname) noexcept {
     destfile->__data.resize(stat.size);
     zip_file_t *const zfile = zip_fopen_index(zip, entry_idx, ZIP_FL_UNCHANGED);
     if (zfile == NULL) {
+      if (ok)
+        *ok = false;
       cerr << "Failed to open file in zip. index : " << entry_idx
            << "file name : " << ::zip_get_name(zip, entry_idx, ZIP_FL_ENC_GUESS)
            << endl;
@@ -95,5 +106,45 @@ zipped_folder zipped_folder::from_zip(std::string_view zipname) noexcept {
     zip_fread(zfile, destfile->__data.data(), stat.size);
   }
 
+  if (ok)
+    *ok = true;
+
   return result;
+}
+
+void zipped_folder::merge_from_base(const zipped_folder &source_base) noexcept {
+
+  for (const auto it : source_base.files) {
+    auto find = this->files.find(it.first);
+
+    if (find == this->files.end()) {
+      this->files.emplace(it.first, it.second);
+    } else {
+      // find->second = it.second;
+    }
+  }
+
+  for (const auto &it : source_base.subfolders) {
+    auto find = this->subfolders.find(it.first);
+
+    if (find == this->subfolders.end()) {
+      this->subfolders.emplace(it.first, it.second);
+    } else {
+      find->second.merge_from_base(it.second);
+    }
+  }
+}
+
+void zipped_folder::merge_from_base(zipped_folder &&source_base) noexcept {
+  this->files.merge(std::move(source_base.files));
+
+  for (auto &it : source_base.subfolders) {
+    auto find = this->subfolders.find(it.first);
+
+    if (find == this->subfolders.end()) {
+      this->subfolders.emplace(it.first, std::move(it.second));
+    } else {
+      find->second.merge_from_base(std::move(it.second));
+    }
+  }
 }

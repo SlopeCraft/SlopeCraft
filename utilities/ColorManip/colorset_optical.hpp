@@ -57,7 +57,7 @@ public:
   inline const float *xyz_data(int c) const noexcept { return __xyz[c].data(); }
 
 protected:
-  void resize(int new_color_count) {
+  void resize(int new_color_count) noexcept {
     if (new_color_count < 0) {
       new_color_count = 0;
     }
@@ -125,6 +125,7 @@ public:
     return color_id;
   }
 };
+
 class colorset_optical_allowed : public colorset_optical_base {
 public:
   static constexpr uint16_t invalid_color_id = ~uint16_t(0);

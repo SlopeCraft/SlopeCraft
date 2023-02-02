@@ -238,11 +238,6 @@ resize_image_nearest(const Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic,
                              (int)src.rows() - 1);
       int src_col = std::min((int)std::round(float(col * src.cols()) / cols),
                              (int)src.cols() - 1);
-      /*
-std::cout << "row = " << row << ", col = " << col
-<< ", src_row = " << src_row << ", src_col = " << src_col
-<< endl;
-*/
       result(row, col) = src(src_row, src_col);
     }
   }
@@ -271,11 +266,7 @@ resize_image_nearest(
       int src_col =
           std::min((int)std::round(float(col * src_block.cols()) / cols),
                    (int)src_block.cols() - 1);
-      /*
-std::cout << "row = " << row << ", col = " << col
-<< ", src_row = " << src_row << ", src_col = " << src_col
-<< endl;
-*/
+
       result(row, col) = src_block(src_row, src_col);
     }
   }
@@ -420,4 +411,100 @@ process_dynamic_texture(const Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic,
   }
 
   return res;
+}
+
+std::array<uint8_t, 3>
+compute_mean_color(const block_model::EImgRowMajor_t &img,
+                   bool *const ok) noexcept {
+  if (img.size() <= 0) {
+    if (ok != nullptr) {
+      *ok = false;
+    }
+
+    return {0, 0, 0};
+  }
+
+  std::array<uint64_t, 3> val{0, 0, 0};
+
+  for (int idx = 0; idx < img.size(); idx++) {
+    const uint32_t argb = img(idx);
+
+    val[0] += getR(argb);
+    val[1] += getG(argb);
+    val[2] += getB(argb);
+  }
+
+  std::array<uint8_t, 3> ret;
+
+  for (int i = 0; i < 3; i++) {
+    val[i] /= img.size();
+    ret[i] = val[i] & 0xFF;
+  }
+
+  if (ok != nullptr) {
+    *ok = true;
+  }
+
+  return ret;
+}
+
+#include <utilities/ColorManip/ColorManip.h>
+
+bool compose_image_background_half_transparent(
+    block_model::EImgRowMajor_t &front_and_dest,
+    const block_model::EImgRowMajor_t &back) noexcept {
+  if (front_and_dest.rows() != back.rows() ||
+      front_and_dest.cols() != back.cols()) {
+    return false;
+  }
+
+  if (front_and_dest.size() <= 0) {
+    return false;
+  }
+
+  for (int i = 0; i < front_and_dest.size(); i++) {
+    front_and_dest(i) =
+        ComposeColor_background_half_transparent(front_and_dest(i), back(i));
+  }
+  return true;
+}
+
+std::array<uint8_t, 3>
+compose_image_and_mean(const block_model::EImgRowMajor_t &front,
+                       const block_model::EImgRowMajor_t &back,
+                       bool *const ok) noexcept {
+  if (front.rows() != back.rows() || front.cols() != back.cols()) {
+    if (ok != nullptr)
+      *ok = false;
+    return {};
+  }
+
+  if (front.size() <= 0) {
+    if (ok != nullptr)
+      *ok = false;
+    return {};
+  }
+
+  std::array<uint64_t, 3> val{0, 0, 0};
+
+  for (int i = 0; i < front.size(); i++) {
+    const ARGB composed = ComposeColor(front(i), back(i));
+
+    val[0] += getR(composed);
+    val[1] += getG(composed);
+    val[2] += getB(composed);
+  }
+
+  std::array<uint8_t, 3> ret;
+
+  for (int i = 0; i < 3; i++) {
+    val[i] /= front.size();
+    ret[i] = val[i] & 0xFF;
+  }
+
+  if (ok != nullptr) {
+    *ok = true;
+  }
+
+  return ret;
 }

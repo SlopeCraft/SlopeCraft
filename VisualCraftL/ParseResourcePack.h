@@ -12,6 +12,14 @@
 #include "VisualCraftL.h"
 #include <utility>
 
+#if __cplusplus < 202002L
+#warning Requires C++23
+// This is used to disable stupid error from clangd.
+namespace std {
+void unreachable() { __builtin_trap(); }
+} // namespace std
+#endif
+
 // struct resource_pack;
 
 /// resize image
@@ -105,6 +113,7 @@ constexpr inline face_idx inverse_face(const face_idx fi) noexcept {
   case face_idx::face_west:
     return face_idx::face_east;
   }
+  std::unreachable();
 
   return face_idx::face_up;
 }
@@ -383,6 +392,19 @@ public:
 };
 
 } // namespace block_model
+
+std::array<uint8_t, 3>
+compute_mean_color(const block_model::EImgRowMajor_t &img,
+                   bool *const ok = nullptr) noexcept;
+
+bool compose_image_background_half_transparent(
+    block_model::EImgRowMajor_t &frontend_and_dest,
+    const block_model::EImgRowMajor_t &backend) noexcept;
+
+std::array<uint8_t, 3>
+compose_image_and_mean(const block_model::EImgRowMajor_t &front,
+                       const block_model::EImgRowMajor_t &back,
+                       bool *const ok = nullptr) noexcept;
 
 namespace resource_json {
 

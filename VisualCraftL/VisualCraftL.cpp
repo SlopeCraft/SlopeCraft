@@ -10,9 +10,13 @@
 
 #include "BlockStateList.h"
 
+#include <mutex>
+
 using std::cout, std::endl;
 
-VCL_EXPORT_FUN VCL_Kernel *VCL_create_kernel() { return new TokiVC; }
+VCL_EXPORT_FUN VCL_Kernel *VCL_create_kernel() {
+  return static_cast<VCL_Kernel *>(new TokiVC);
+}
 VCL_EXPORT_FUN void VCL_destroy_kernel(VCL_Kernel *const ptr) {
   if (ptr != nullptr) {
     delete dynamic_cast<TokiVC *>(ptr);
@@ -21,22 +25,54 @@ VCL_EXPORT_FUN void VCL_destroy_kernel(VCL_Kernel *const ptr) {
 
 VCL_EXPORT_FUN VCL_resource_pack *
 VCL_create_resource_pack(const int zip_file_count,
-                         const char *const *const zip_file_names,
-                         bool cover_from_first_to_end) {
+                         const char *const *const zip_file_names) {
 
   if (zip_file_count <= 0) {
     return nullptr;
   }
 
-  VCL_resource_pack *const rp = new VCL_resource_pack;
-  /*
-    zipped_folder zf = zipped_folder::from_zip(zip_file_names[0]);
-    rp->add_block_models(zf);
-    rp->add_block_states(zf);
-    rp->add_textures(zf);
-  */
+  bool ok = true;
+  zipped_folder zf = zipped_folder::from_zip(zip_file_names[0], &ok);
 
-  int success_count = 0;
+  if (!ok) {
+    cout << "Failed to parse " << zip_file_names[0] << endl;
+    return nullptr;
+  }
+
+  for (int zfidx = 1; zfidx < zip_file_count; zfidx++) {
+
+    zipped_folder z = zipped_folder::from_zip(zip_file_names[zfidx], &ok);
+
+    if (!ok) {
+      cout << "Failed to parse " << zip_file_names[zfidx] << endl;
+      return nullptr;
+    }
+
+    zf.merge_from_base(std::move(z));
+  }
+
+  VCL_resource_pack *const rp = new VCL_resource_pack;
+
+  if (!rp->add_textures(zf)) {
+    cout << "Failed to add textures from resource pack." << endl;
+    delete rp;
+    return nullptr;
+  }
+
+  if (!rp->add_block_states(zf)) {
+    cout << "Failed to add block states from resource pack." << endl;
+    delete rp;
+    return nullptr;
+  }
+
+  if (!rp->add_block_models(zf)) {
+    cout << "Failed to add block states from resource pack." << endl;
+    delete rp;
+    return nullptr;
+  }
+
+  // int success_count = 0;
+  /*
   for (int zfidx = 0; zfidx < zip_file_count; zfidx++) {
 
     zipped_folder zf_2 = zipped_folder::from_zip(zip_file_names[zfidx]);
@@ -60,17 +96,20 @@ VCL_create_resource_pack(const int zip_file_count,
     }
 
     success_count++;
-  }
+  }*/
 
-  if (success_count < zip_file_count) {
-    cout << "Warning : " << zip_file_count - success_count
-         << " resource pack(s) not parsed." << endl;
-  }
+  /*
+    if (success_count < zip_file_count) {
+      cout << "Warning : " << zip_file_count - success_count
+           << " resource pack(s) not parsed." << endl;
+    }
 
-  if (success_count <= 0) {
-    delete rp;
-    return nullptr;
-  }
+    if (success_count <= 0) {
+      delete rp;
+      return nullptr;
+    }
+
+    */
 
   return rp;
 }
@@ -176,4 +215,118 @@ VCL_display_block_state_list(const VCL_block_state_list *bsl) {
   }
 
   cout << endl;
+}
+
+VCL_EXPORT_FUN bool VCL_is_colorset_ok() {
+  std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+  return TokiVC_internal::is_color_set_ready;
+}
+
+VCL_EXPORT_FUN VCL_resource_pack *VCL_get_resource_pack() {
+  std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+  if (!TokiVC_internal::is_color_set_ready) {
+    return nullptr;
+  }
+
+  return &TokiVC::pack;
+}
+
+VCL_EXPORT_FUN VCL_block_state_list *VCL_get_block_state_list() {
+  std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+  if (!TokiVC_internal::is_color_set_ready) {
+    return nullptr;
+  }
+  return &TokiVC::bsl;
+}
+
+VCL_EXPORT_FUN SCL_gameVersion VCL_get_game_version() {
+  std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+  if (!TokiVC_internal::is_color_set_ready) {
+    return SCL_gameVersion::ANCIENT;
+  }
+  return TokiVC::version;
+}
+
+VCL_EXPORT_FUN VCL_face_t VCL_get_exposed_face() {
+  std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+
+  if (!TokiVC_internal::is_color_set_ready) {
+    return {};
+  }
+
+  return TokiVC::exposed_face;
+}
+
+VCL_EXPORT_FUN bool VCL_set_resource_and_version_copy(
+    const VCL_resource_pack *const rp, const VCL_block_state_list *const bsl,
+    SCL_gameVersion version, VCL_face_t face, int __max_block_layers) {
+
+  if (rp == nullptr || bsl == nullptr) {
+    return false;
+  }
+
+  if (__max_block_layers <= 0) {
+    return false;
+  }
+
+  std::unique_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+
+  TokiVC_internal::is_color_set_ready = false;
+  TokiVC::pack = *rp;
+  TokiVC::bsl = *bsl;
+
+  TokiVC::version = version;
+  TokiVC::exposed_face = face;
+  TokiVC::max_block_layers = __max_block_layers;
+
+  const bool ret = TokiVC::update_color_set_no_lock();
+
+  return ret;
+}
+
+VCL_EXPORT_FUN bool VCL_set_resource_and_version_move(
+    VCL_resource_pack **rp_ptr, VCL_block_state_list **bsl_ptr,
+    SCL_gameVersion version, VCL_face_t face, int __max_block_layers) {
+  if (rp_ptr == nullptr || bsl_ptr == nullptr) {
+    return false;
+  }
+
+  if (*rp_ptr == nullptr || *bsl_ptr == nullptr) {
+    return false;
+  }
+  if (__max_block_layers <= 0) {
+    return false;
+  }
+
+  bool ret = true;
+  std::unique_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+
+  TokiVC_internal::is_color_set_ready = false;
+
+  TokiVC::pack = std::move(**rp_ptr);
+  VCL_destroy_resource_pack(*rp_ptr);
+  *rp_ptr = nullptr;
+
+  TokiVC::bsl = std::move(**bsl_ptr);
+  VCL_destroy_block_state_list(*bsl_ptr);
+  *bsl_ptr = nullptr;
+
+  TokiVC::version = version;
+  TokiVC::exposed_face = face;
+  TokiVC::max_block_layers = __max_block_layers;
+
+  if (!TokiVC::update_color_set_no_lock()) {
+    ret = false;
+  }
+
+  return ret;
+}
+
+VCL_EXPORT_FUN int VCL_get_max_block_layers() {
+  std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+  if (!TokiVC_internal::is_color_set_ready) {
+    return 0;
+  }
+
+  return TokiVC::max_block_layers;
 }

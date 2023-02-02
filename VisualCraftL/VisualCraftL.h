@@ -68,8 +68,7 @@ VCL_EXPORT_FUN void test_VCL();
 
 [[nodiscard]] VCL_EXPORT_FUN VCL_resource_pack *
 VCL_create_resource_pack(const int zip_file_count,
-                         const char *const *const zip_file_names,
-                         bool cover_from_first_to_end = true);
+                         const char *const *const zip_file_names);
 VCL_EXPORT_FUN void VCL_destroy_resource_pack(VCL_resource_pack *const ptr);
 
 [[nodiscard]] VCL_EXPORT_FUN VCL_block_state_list *

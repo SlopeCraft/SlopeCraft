@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 project(VisualCraftL VERSION ${SlopeCraft_version} LANGUAGES CXX)
 
-# set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 20)
+
 add_library(VisualCraftL SHARED
 
     VisualCraftL_global.h
@@ -47,8 +48,9 @@ target_link_libraries(VisualCraftL PRIVATE z png libzip::zip ColorManip Schem)
 
 target_compile_definitions(VisualCraftL PRIVATE BEFORE "-DVISUALCRAFTL_BUILD")
 
-target_compile_features(VisualCraftL PRIVATE cxx_std_20 cxx_std_23)
+target_compile_features(VisualCraftL PRIVATE cxx_std_23)
 
+# target_compile_options(VisualCraftL PRIVATE "-std=c++20")
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     # message("libzip_LIBRARY = " ${libzip_LIBRARY})
     # if (NOT DEFINED libzip_LIBRARY)
