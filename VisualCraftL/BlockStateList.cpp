@@ -6,12 +6,23 @@
 
 #include <iostream>
 
+#include "ParseResourcePack.h"
+
 using std::cout, std::endl;
 
-VCL_block::VCL_block() { this->set_transparency(false); }
+VCL_block::VCL_block() { this->initialize_attributes(); }
 
 VCL_block::VCL_block(const std::string *full_id_ptr) : full_id_p(full_id_ptr) {
+  this->initialize_attributes();
+}
+
+void VCL_block::initialize_attributes() noexcept {
+  this->attributes.reset();
   this->set_transparency(false);
+  this->set_is_background(true);
+  for (size_t sz = idx_face_up; sz < idx_face_west; sz++) {
+    this->attributes[sz] = true;
+  }
 }
 
 version_set parse_version_set(const nlohmann::json &jo,
@@ -108,6 +119,71 @@ VCL_block parse_block(const nlohmann::json &jo, bool *const ok) {
       *ok = false;
       return {};
     }
+  }
+
+  if (jo.contains("faces")) {
+    if (jo.at("faces").is_array()) {
+      ret.disable_all_faces();
+      const nlohmann::json &ja = jo.at("faces");
+
+      for (size_t i = 0; i < ja.size(); i++) {
+        if (!ja.at(i).is_string()) {
+          *ok = false;
+          return {};
+        }
+        bool _ok = true;
+
+        const VCL_face_t f =
+            string_to_face_idx(ja.at(i).get<nlohmann::json::string_t>(), &_ok);
+        if (!_ok) {
+          *ok = false;
+          return {};
+        }
+
+        ret.set_face_avaliablity(f, true);
+      }
+    } else {
+
+      *ok = false;
+      return {};
+    }
+  }
+
+  if (jo.contains("burnable")) {
+    if (!jo.at("burnable").is_boolean()) {
+      *ok = false;
+      return {};
+    }
+
+    ret.set_attribute(VCL_block::attribute::burnable, jo.at("burnable"));
+  }
+
+  if (jo.contains("isGlowing")) {
+    if (!jo.at("isGlowing").is_boolean()) {
+      *ok = false;
+      return {};
+    }
+
+    ret.set_attribute(VCL_block::attribute::is_glowing, jo.at("isGlowing"));
+  }
+
+  if (jo.contains("endermanPickable")) {
+    if (!jo.at("endermanPickable").is_boolean()) {
+      *ok = false;
+      return {};
+    }
+
+    ret.set_attribute(VCL_block::attribute::enderman_pickable,
+                      jo.at("endermanPickable"));
+  }
+
+  if (jo.contains("background")) {
+    if (!jo.at("background").is_boolean()) {
+      *ok = false;
+      return {};
+    }
+
+    ret.set_attribute(VCL_block::attribute::background, jo.at("background"));
   }
 
   *ok = true;

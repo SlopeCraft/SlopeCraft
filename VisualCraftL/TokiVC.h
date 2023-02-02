@@ -49,14 +49,15 @@ private:
       LUT_basic_color_idx_to_blocks;
 
 private:
-  VCL_Kernel_step _step{VCL_Kernel_step::VCL_none};
+  VCL_Kernel_step _step{VCL_Kernel_step::VCL_wait_for_resource};
 
   libImageCvt::ImageCvter<false> img_cvter;
 };
 
 namespace TokiVC_internal {
 extern std::shared_mutex global_lock;
-extern bool is_color_set_ready;
+extern bool is_basic_color_set_ready;
+extern bool is_allowed_color_set_ready;
 } // namespace TokiVC_internal
 
 #endif // SLOPECRAFT_VISUALCRAFTL_TOKIVC_H

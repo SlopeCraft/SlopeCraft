@@ -217,14 +217,14 @@ VCL_display_block_state_list(const VCL_block_state_list *bsl) {
   cout << endl;
 }
 
-VCL_EXPORT_FUN bool VCL_is_colorset_ok() {
+VCL_EXPORT_FUN bool VCL_is_basic_colorset_ok() {
   std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
-  return TokiVC_internal::is_color_set_ready;
+  return TokiVC_internal::is_basic_color_set_ready;
 }
 
 VCL_EXPORT_FUN VCL_resource_pack *VCL_get_resource_pack() {
   std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
-  if (!TokiVC_internal::is_color_set_ready) {
+  if (!TokiVC_internal::is_basic_color_set_ready) {
     return nullptr;
   }
 
@@ -233,7 +233,7 @@ VCL_EXPORT_FUN VCL_resource_pack *VCL_get_resource_pack() {
 
 VCL_EXPORT_FUN VCL_block_state_list *VCL_get_block_state_list() {
   std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
-  if (!TokiVC_internal::is_color_set_ready) {
+  if (!TokiVC_internal::is_basic_color_set_ready) {
     return nullptr;
   }
   return &TokiVC::bsl;
@@ -241,7 +241,7 @@ VCL_EXPORT_FUN VCL_block_state_list *VCL_get_block_state_list() {
 
 VCL_EXPORT_FUN SCL_gameVersion VCL_get_game_version() {
   std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
-  if (!TokiVC_internal::is_color_set_ready) {
+  if (!TokiVC_internal::is_basic_color_set_ready) {
     return SCL_gameVersion::ANCIENT;
   }
   return TokiVC::version;
@@ -250,7 +250,7 @@ VCL_EXPORT_FUN SCL_gameVersion VCL_get_game_version() {
 VCL_EXPORT_FUN VCL_face_t VCL_get_exposed_face() {
   std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
 
-  if (!TokiVC_internal::is_color_set_ready) {
+  if (!TokiVC_internal::is_basic_color_set_ready) {
     return {};
   }
 
@@ -271,7 +271,7 @@ VCL_EXPORT_FUN bool VCL_set_resource_and_version_copy(
 
   std::unique_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
 
-  TokiVC_internal::is_color_set_ready = false;
+  TokiVC_internal::is_basic_color_set_ready = false;
   TokiVC::pack = *rp;
   TokiVC::bsl = *bsl;
 
@@ -301,7 +301,7 @@ VCL_EXPORT_FUN bool VCL_set_resource_and_version_move(
   bool ret = true;
   std::unique_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
 
-  TokiVC_internal::is_color_set_ready = false;
+  TokiVC_internal::is_basic_color_set_ready = false;
 
   TokiVC::pack = std::move(**rp_ptr);
   VCL_destroy_resource_pack(*rp_ptr);
@@ -324,9 +324,68 @@ VCL_EXPORT_FUN bool VCL_set_resource_and_version_move(
 
 VCL_EXPORT_FUN int VCL_get_max_block_layers() {
   std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
-  if (!TokiVC_internal::is_color_set_ready) {
+  if (!TokiVC_internal::is_basic_color_set_ready) {
     return 0;
   }
 
   return TokiVC::max_block_layers;
+}
+
+VCL_EXPORT_FUN size_t VCL_get_blocks_from_block_state_list(
+    const VCL_block_state_list *bsl, const VCL_block **const const_VCL_ptr_arr,
+    size_t arr_capcity) {
+  if (bsl == nullptr) {
+    return 0;
+  }
+
+  if (const_VCL_ptr_arr == nullptr || arr_capcity <= 0) {
+    return bsl->block_states().size();
+  }
+
+  size_t widx = 0;
+
+  for (const auto &pair : bsl->block_states()) {
+    if (widx >= arr_capcity) {
+      break;
+    }
+
+    const_VCL_ptr_arr[widx] = &pair.second;
+    widx++;
+  }
+
+  return bsl->block_states().size();
+}
+
+VCL_EXPORT_FUN size_t VCL_get_blocks_from_block_state_list_by_version(
+    const VCL_block_state_list *bsl, SCL_gameVersion version,
+    const VCL_block **const array_of_const_VCL_block, size_t array_capcity) {
+
+  if (bsl == nullptr) {
+    return 0;
+  }
+
+  if (version == SCL_gameVersion::ANCIENT ||
+      version == SCL_gameVersion::FUTURE) {
+    // invalid version
+    return 0;
+  }
+
+  size_t available_block_counter = 0;
+  size_t write_counter = 0;
+
+  const bool can_write =
+      (array_of_const_VCL_block != nullptr) && (array_capcity > 0);
+
+  for (const auto &pair : bsl->block_states()) {
+    if (pair.second.version_info.contains(version)) {
+      available_block_counter++;
+
+      if (can_write && (write_counter < array_capcity)) {
+        array_of_const_VCL_block[write_counter] = &pair.second;
+        write_counter++;
+      }
+    }
+  }
+
+  return available_block_counter;
 }

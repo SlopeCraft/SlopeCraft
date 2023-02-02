@@ -57,7 +57,7 @@ VCL_EXPORT_FUN bool VCL_set_resource_and_version_move(
     VCL_resource_pack **rp_ptr, VCL_block_state_list **bsl_ptr,
     SCL_gameVersion version, VCL_face_t exposed_face, int max_block_layers);
 
-VCL_EXPORT_FUN bool VCL_is_colorset_ok();
+VCL_EXPORT_FUN bool VCL_is_basic_colorset_ok();
 VCL_EXPORT_FUN VCL_resource_pack *VCL_get_resource_pack();
 VCL_EXPORT_FUN VCL_block_state_list *VCL_get_block_state_list();
 VCL_EXPORT_FUN SCL_gameVersion VCL_get_game_version();
@@ -80,6 +80,14 @@ VCL_destroy_block_state_list(VCL_block_state_list *const ptr);
 
 VCL_EXPORT_FUN void VCL_display_resource_pack(const VCL_resource_pack *);
 VCL_EXPORT_FUN void VCL_display_block_state_list(const VCL_block_state_list *);
+
+VCL_EXPORT_FUN size_t VCL_get_blocks_from_block_state_list(
+    const VCL_block_state_list *,
+    const VCL_block **const array_of_const_VCL_block, size_t array_capcity);
+
+VCL_EXPORT_FUN size_t VCL_get_blocks_from_block_state_list_by_version(
+    const VCL_block_state_list *, SCL_gameVersion v,
+    const VCL_block **const array_of_const_VCL_block, size_t array_capcity);
 }
 
 #endif // SLOPECRAFT_VISUALCRAFT_VISUALCRAFT_H

@@ -203,11 +203,12 @@ enum SCL_HalfTpPixelSt : char {
 #endif // #ifdef __cplusplus
 
 enum VCL_CLASS_IF_CPP VCL_Kernel_step : int {
-  VCL_none = 0,
-  VCL_wait_for_image = 1,
-  VCL_wait_for_conversion = 2,
-  VCL_wait_for_build = 3,
-  VCL_built = 4
+  VCL_wait_for_resource = 0,
+  VCL_wait_for_allowed_list = 1,
+  VCL_wait_for_image = 2,
+  VCL_wait_for_conversion = 3,
+  VCL_wait_for_build = 4,
+  VCL_built = 5
 };
 
 #endif

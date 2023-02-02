@@ -31,17 +31,18 @@ std::vector<std::variant<const VCL_block *, std::vector<const VCL_block *>>>
 
 namespace TokiVC_internal {
 std::shared_mutex global_lock;
-bool is_color_set_ready = false;
+bool is_basic_color_set_ready = false;
+bool is_allowed_color_set_ready = false;
 
 std::set<TokiVC *> TokiVC_register;
 } // namespace TokiVC_internal
 
 TokiVC::TokiVC() {
   TokiVC_internal::global_lock.lock();
-  if (TokiVC_internal::is_color_set_ready) {
+  if (TokiVC_internal::is_basic_color_set_ready) {
     this->_step = VCL_Kernel_step::VCL_wait_for_image;
   } else {
-    this->_step = VCL_Kernel_step::VCL_none;
+    this->_step = VCL_Kernel_step::VCL_wait_for_resource;
   }
 
   TokiVC_internal::TokiVC_register.emplace(this);
@@ -281,6 +282,7 @@ bool TokiVC::update_color_set_no_lock() noexcept {
 
     std::vector<std::array<uint8_t, 3>> colors_temp;
     colors_temp.reserve(bs_nontransparent.size());
+    TokiVC::LUT_basic_color_idx_to_blocks.clear();
     if (!add_color_non_transparent(bs_nontransparent,
                                    TokiVC::LUT_basic_color_idx_to_blocks,
                                    colors_temp)) {
@@ -293,26 +295,43 @@ bool TokiVC::update_color_set_no_lock() noexcept {
            "%zu\n",
            TokiVC::LUT_basic_color_idx_to_blocks.size(), colors_temp.size());
 
-    if (!add_color_trans_to_trans_start_recurse(
-            TokiVC::max_block_layers, bs_transparent, bs_nontransparent,
-            TokiVC::LUT_basic_color_idx_to_blocks, colors_temp)) {
-      printf("\nError : failed to compute colors for composed blocks.\n");
-      return false;
+    for (int layers = 2; layers <= max_block_layers; layers++) {
+      if (!add_color_trans_to_trans_start_recurse(
+              layers, bs_transparent, bs_nontransparent,
+              TokiVC::LUT_basic_color_idx_to_blocks, colors_temp)) {
+        printf("\nError : failed to compute colors for composed blocks.\n");
+        return false;
+      }
     }
+
     printf("Size of LUT_basic_color_idx_to_blocks = %zu, size of colors_temp = "
            "%zu\n",
            TokiVC::LUT_basic_color_idx_to_blocks.size(), colors_temp.size());
 
-#warning compute color of single layer and multiple layers, fill in basical colors here
+    if (colors_temp.size() != TokiVC::LUT_basic_color_idx_to_blocks.size()) {
+      printf("\nImpossible error : "
+             "colors_temp.size() (aka %zu) "
+             "!=TokiVC::LUT_basic_color_idx_to_blocks.size() (aka %zu)\n",
+             colors_temp.size(), TokiVC::LUT_basic_color_idx_to_blocks.size());
+      return false;
+    }
+
+    if (colors_temp.size() >= UINT16_MAX - 1) {
+      printf("\nError : too much colors. Num of colors should not exceed %i, "
+             "but it is %zu now.\n",
+             UINT16_MAX - 1, colors_temp.size());
+      return false;
+    }
+    // here the basic colors are ready.
   }
 
   // update steps
   for (auto ptr : TokiVC_internal::TokiVC_register) {
-    ptr->_step = VCL_Kernel_step::VCL_wait_for_image;
+    ptr->_step = VCL_Kernel_step::VCL_wait_for_allowed_list;
     ptr->img_cvter.on_color_set_changed();
   }
 
-  TokiVC_internal::is_color_set_ready = true;
+  TokiVC_internal::is_basic_color_set_ready = true;
 
   return true;
 }

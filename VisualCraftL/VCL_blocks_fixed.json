@@ -1,5 +1,6 @@
 {
     "minecraft:acacia_leaves[distance=7,persistent=true]": {
+        "burnable": true,
         "nameEN": "Acacia leaves",
         "nameZH": "金合欢树叶",
         "version": 13
@@ -16,6 +17,7 @@
         "version": 17
     },
     "minecraft:birch_leaves[distance=7,persistent=true]": {
+        "burnable": true,
         "nameEN": "Brich leaves",
         "nameZH": "白桦树叶",
         "version": 13
@@ -134,15 +136,16 @@
         "version": 17
     },
     "minecraft:clay": {
-        "endermanPickable": true,
         "nameEN": "Clay block",
         "nameZH": "黏土块",
-        "version": "all"
+        "version": "all",
+        "endermanPickable": true
     },
     "minecraft:coal_block": {
         "nameEN": "Coal block",
         "nameZH": "煤块",
-        "version": "all"
+        "version": "all",
+        "burnable": true
     },
     "minecraft:coarse_dirt": {
         "endermanPickable": true,
@@ -159,11 +162,6 @@
         "nameEN": "Cobblestone",
         "nameZH": "圆石",
         "version": "all"
-    },
-    "minecraft:cobweb": {
-        "nameEN": "Cobweb",
-        "nameZH": "蜘蛛网",
-        "version": 13
     },
     "minecraft:concrete[color=black]": {
         "nameEN": "Black concrete",
@@ -288,7 +286,9 @@
         "nameEN": "Crimson nylium",
         "nameZH": "绯红菌岩",
         "version": 16,
-        "wallUseable": false
+        "faces": [
+            "up"
+        ]
     },
     "minecraft:crimson_planks": {
         "burnable": true,
@@ -319,6 +319,7 @@
         "version": 13
     },
     "minecraft:dark_oak_leaves[distance=7,persistent=true]": {
+        "burnable": true,
         "nameEN": "Dark oat leaves",
         "nameZH": "黑橡树树叶",
         "version": 13
@@ -434,14 +435,18 @@
         "version": [
             12
         ],
-        "wallUseable": false
+        "faces": [
+            "up"
+        ]
     },
     "minecraft:grass_block[snowy=false]": {
         "endermanPickable": true,
         "nameEN": "Grass block",
         "nameZH": "草方块",
         "version": 13,
-        "wallUseable": false
+        "faces": [
+            "up"
+        ]
     },
     "minecraft:gray_concrete": {
         "nameEN": "Gray concrete",
@@ -487,12 +492,6 @@
         "nameZH": "绿色羊毛",
         "version": 13
     },
-    "minecraft:grindstone[face=floor,facing=north]": {
-        "nameEN": "Grindstone",
-        "nameZH": "砂轮",
-        "version": 14,
-        "wallUseable": false
-    },
     "minecraft:hardened_clay": {
         "nameEN": "Terracotta",
         "nameZH": "陶瓦",
@@ -527,6 +526,7 @@
         "version": "all"
     },
     "minecraft:jungle_leaves[distance=7,persistent=true]": {
+        "burnable": true,
         "nameEN": "Jungle leaves",
         "nameZH": "丛林木树叶",
         "version": 13
@@ -547,42 +547,48 @@
         "nameZH": "金合欢树叶",
         "version": [
             12
-        ]
+        ],
+        "burnable": true
     },
     "minecraft:leaves2[variant=dark_oak,check_decay=false,decayable=false]": {
         "nameEN": "Dark oat leaves",
         "nameZH": "黑橡树树叶",
         "version": [
             12
-        ]
+        ],
+        "burnable": true
     },
     "minecraft:leaves[variant=birch,check_decay=false,decayable=false]": {
         "nameEN": "Brich leaves",
         "nameZH": "白桦树叶",
         "version": [
             12
-        ]
+        ],
+        "burnable": true
     },
     "minecraft:leaves[variant=jungle,check_decay=false,decayable=false]": {
         "nameEN": "Jungle leaves",
         "nameZH": "丛林木树叶",
         "version": [
             12
-        ]
+        ],
+        "burnable": true
     },
     "minecraft:leaves[variant=oak,check_decay=false,decayable=false]": {
         "nameEN": "Oak leaves",
         "nameZH": "橡树树叶",
         "version": [
             12
-        ]
+        ],
+        "burnable": true
     },
     "minecraft:leaves[variant=spruce,check_decay=false,decayable=false]": {
         "nameEN": "Spurce leaves",
         "nameZH": "云杉树叶",
         "version": [
             12
-        ]
+        ],
+        "burnable": true
     },
     "minecraft:light_blue_concrete": {
         "nameEN": "Light blue concrete",
@@ -601,6 +607,7 @@
         "version": 13
     },
     "minecraft:light_blue_wool": {
+        "burnable": true,
         "nameEN": "light blue wool",
         "nameZH": "浅蓝羊毛",
         "version": 13
@@ -644,6 +651,7 @@
         "version": 13
     },
     "minecraft:lime_wool": {
+        "burnable": true,
         "nameEN": "Lime wool",
         "nameZH": "浅绿羊毛",
         "version": 13
@@ -665,6 +673,7 @@
         "version": 13
     },
     "minecraft:magenta_wool": {
+        "burnable": true,
         "nameEN": "Magenta wool",
         "nameZH": "品红色羊毛",
         "version": 13
@@ -730,7 +739,8 @@
     "minecraft:oak_leaves[distance=7,persistent=true]": {
         "nameEN": "Oak leaves",
         "nameZH": "橡树树叶",
-        "version": 13
+        "version": 13,
+        "burnable": true
     },
     "minecraft:oak_planks": {
         "burnable": true,
@@ -766,6 +776,7 @@
         "version": 13
     },
     "minecraft:orange_wool": {
+        "burnable": true,
         "nameEN": "Orange wool",
         "nameZH": "橙色羊毛",
         "version": 13
@@ -803,6 +814,7 @@
         "version": 13
     },
     "minecraft:pink_wool": {
+        "burnable": true,
         "nameEN": "Pink wool",
         "nameZH": "粉色羊毛",
         "version": 13
@@ -1068,12 +1080,14 @@
         "nameZH": "粘液块",
         "version": [
             12
-        ]
+        ],
+        "transparent": true
     },
     "minecraft:slime_block": {
         "nameEN": "Slime block",
         "nameZH": "粘液块",
-        "version": 13
+        "version": 13,
+        "transparent": true
     },
     "minecraft:smooth_red_sandstone": {
         "nameEN": "Smooth red sandstone",
@@ -1115,7 +1129,8 @@
     "minecraft:spruce_leaves[distance=7,persistent=true]": {
         "nameEN": "Spurce leaves",
         "nameZH": "云杉树叶",
-        "version": 13
+        "version": 13,
+        "burnable": true
     },
     "minecraft:spruce_planks": {
         "burnable": true,
@@ -1442,20 +1457,20 @@
         "transparent": true
     },
     "minecraft:tnt[explode=false]": {
-        "burnable": true,
-        "endermanPickable": true,
         "nameEN": "TNT",
         "nameZH": "TNT",
         "version": [
             12
-        ]
+        ],
+        "burnable": true,
+        "endermanPickable": true
     },
     "minecraft:tnt[unstable=false]": {
-        "burnable": true,
-        "endermanPickable": true,
         "nameEN": "TNT",
         "nameZH": "TNT",
-        "version": 13
+        "version": 13,
+        "burnable": true,
+        "endermanPickable": true
     },
     "minecraft:verdant_froglight[axis=y]": {
         "isGlowing": true,
@@ -1474,7 +1489,9 @@
         "nameEN": "Warped nylium",
         "nameZH": "扭曲菌岩",
         "version": 16,
-        "wallUseable": false
+        "faces": [
+            "up"
+        ]
     },
     "minecraft:warped_planks": {
         "burnable": true,
@@ -1539,6 +1556,7 @@
         "version": 13
     },
     "minecraft:white_wool": {
+        "burnable": true,
         "nameEN": "White wool",
         "nameZH": "白色羊毛",
         "version": 13
@@ -1592,6 +1610,7 @@
         ]
     },
     "minecraft:wool[color=light_blue]": {
+        "burnable": true,
         "nameEN": "light blue wool",
         "nameZH": "浅蓝羊毛",
         "version": [
@@ -1599,6 +1618,7 @@
         ]
     },
     "minecraft:wool[color=lime]": {
+        "burnable": true,
         "nameEN": "Lime wool",
         "nameZH": "浅绿羊毛",
         "version": [
@@ -1606,6 +1626,7 @@
         ]
     },
     "minecraft:wool[color=magenta]": {
+        "burnable": true,
         "nameEN": "Magenta wool",
         "nameZH": "品红色羊毛",
         "version": [
@@ -1613,6 +1634,7 @@
         ]
     },
     "minecraft:wool[color=orange]": {
+        "burnable": true,
         "nameEN": "Orange wool",
         "nameZH": "橙色羊毛",
         "version": [
@@ -1620,6 +1642,7 @@
         ]
     },
     "minecraft:wool[color=pink]": {
+        "burnable": true,
         "nameEN": "Pink wool",
         "nameZH": "粉色羊毛",
         "version": [
@@ -1651,6 +1674,7 @@
         ]
     },
     "minecraft:wool[color=white]": {
+        "burnable": true,
         "nameEN": "White wool",
         "nameZH": "白色羊毛",
         "version": [
@@ -1658,6 +1682,7 @@
         ]
     },
     "minecraft:wool[color=yellow]": {
+        "burnable": true,
         "nameEN": "Yellow wool",
         "nameZH": "黄色羊毛",
         "version": [
@@ -1676,11 +1701,13 @@
         "transparent": true
     },
     "minecraft:yellow_terracotta": {
+        "burnable": true,
         "nameEN": "Yellow terracotta",
         "nameZH": "黄色陶瓦",
         "version": 13
     },
     "minecraft:yellow_wool": {
+        "burnable": true,
         "nameEN": "Yellow wool",
         "nameZH": "黄色羊毛",
         "version": 13
@@ -1689,104 +1716,161 @@
         "burnable": true,
         "nameEN": "Acacia slab",
         "nameZH": "金合欢木上半砖",
-        "version": 13
+        "version": 13,
+        "faces": [
+            "up"
+        ]
     },
     "minecraft:birch_slab[type=top]": {
         "burnable": true,
         "nameEN": "Birch slab",
         "nameZH": "白桦木上半砖",
-        "version": 13
+        "version": 13,
+        "faces": [
+            "up"
+        ]
     },
     "minecraft:brick_slab[type=top]": {
         "nameEN": "Brick slab",
         "nameZH": "砖块上半砖",
-        "version": 13
+        "version": 13,
+        "faces": [
+            "up"
+        ]
     },
     "minecraft:cobblestone_slab[type=top]": {
         "nameEN": "Cobblestone slab",
         "nameZH": "圆石上半砖",
-        "version": 13
+        "version": 13,
+        "faces": [
+            "up"
+        ]
     },
     "minecraft:dark_oak_slab[type=top]": {
         "burnable": true,
         "nameEN": "Dark oak slab",
         "nameZH": "黑橡木上半砖",
-        "version": 13
+        "version": 13,
+        "faces": [
+            "up"
+        ]
     },
     "minecraft:dark_prismarine_slab[type=top]": {
         "nameEN": "Dark prismarine slab",
         "nameZH": "暗海晶石上半砖",
-        "version": 13
+        "version": 13,
+        "faces": [
+            "up"
+        ]
     },
     "minecraft:jungle_slab[type=top]": {
         "burnable": true,
         "nameEN": "Jungle slab",
         "nameZH": "丛林木上半砖",
-        "version": 13
+        "version": 13,
+        "faces": [
+            "up"
+        ]
     },
     "minecraft:nether_brick_slab[type=top]": {
         "nameEN": "Nether brick slab",
         "nameZH": "地狱砖块上半砖",
-        "version": 13
+        "version": 13,
+        "faces": [
+            "up"
+        ]
     },
     "minecraft:oak_slab[type=top]": {
         "nameEN": "Oak slab",
         "nameZH": "橡木上半砖",
-        "version": 13
+        "version": 13,
+        "faces": [
+            "up"
+        ]
     },
     "minecraft:prismarine_brick_slab[type=top]": {
         "nameEN": "Prismarine brick slab",
         "nameZH": "海晶石砖上半砖",
-        "version": 13
+        "version": 13,
+        "faces": [
+            "up"
+        ]
     },
     "minecraft:prismarine_slab[type=top]": {
         "nameEN": "Prismarine slab",
         "nameZH": "海晶石上半砖",
-        "version": 13
+        "version": 13,
+        "faces": [
+            "up"
+        ]
     },
     "minecraft:purpur_slab[half=top,variant=default]": {
         "nameEN": "Purpur slab",
         "nameZH": "紫珀上半砖",
         "version": [
             12
+        ],
+        "faces": [
+            "up"
         ]
     },
     "minecraft:purpur_slab[type=top]": {
         "nameEN": "Purpur slab",
         "nameZH": "紫珀上半砖",
-        "version": 13
+        "version": 13,
+        "faces": [
+            "up"
+        ]
     },
     "minecraft:quartz_slab[type=top]": {
         "nameEN": "Quartz slab",
         "nameZH": "石英上半砖",
-        "version": 13
+        "version": 13,
+        "faces": [
+            "up"
+        ]
     },
     "minecraft:red_sandstone_slab[type=top]": {
         "nameEN": "Red sandstone slab",
         "nameZH": "红砂岩上半砖",
-        "version": 13
+        "version": 13,
+        "faces": [
+            "up"
+        ]
     },
     "minecraft:sandstone_slab[type=top]": {
         "nameEN": "Sandstone slab",
         "nameZH": "砂岩上半砖",
-        "version": 13
+        "version": 13,
+        "faces": [
+            "up"
+        ]
     },
     "minecraft:spruce_slab[type=top]": {
         "burnable": true,
         "nameEN": "Spruce slab",
         "nameZH": "云杉木上半砖",
-        "version": 13
+        "version": 13,
+        "faces": [
+            "up"
+        ]
     },
     "minecraft:stone_brick_slab[type=top]": {
         "nameEN": "Stonebrick slab",
         "nameZH": "石砖上半砖",
-        "version": 13
+        "version": 13,
+        "faces": [
+            "up"
+        ]
     },
     "minecraft:stone_slab2[half=top,variant=red_sandstone]": {
         "nameEN": "Red sandstone slab",
         "nameZH": "红砂岩上半砖",
         "version": [
             12
+        ],
+        "faces": [
+            "up"
         ]
     },
     "minecraft:stone_slab[half=top,variant=brick]": {
@@ -1794,6 +1878,9 @@
         "nameZH": "砖块上半砖",
         "version": [
             12
+        ],
+        "faces": [
+            "up"
         ]
     },
     "minecraft:stone_slab[half=top,variant=cobblestone]": {
@@ -1801,6 +1888,9 @@
         "nameZH": "圆石上半砖",
         "version": [
             12
+        ],
+        "faces": [
+            "up"
         ]
     },
     "minecraft:stone_slab[half=top,variant=dark_prismarine]": {
@@ -1808,6 +1898,9 @@
         "nameZH": "暗海晶石上半砖",
         "version": [
             12
+        ],
+        "faces": [
+            "up"
         ]
     },
     "minecraft:stone_slab[half=top,variant=nether_brick]": {
@@ -1815,6 +1908,9 @@
         "nameZH": "地狱砖块上半砖",
         "version": [
             12
+        ],
+        "faces": [
+            "up"
         ]
     },
     "minecraft:stone_slab[half=top,variant=prismarine]": {
@@ -1822,6 +1918,9 @@
         "nameZH": "海晶石上半砖",
         "version": [
             12
+        ],
+        "faces": [
+            "up"
         ]
     },
     "minecraft:stone_slab[half=top,variant=prismarine_bricks]": {
@@ -1829,6 +1928,9 @@
         "nameZH": "海晶石砖上半砖",
         "version": [
             12
+        ],
+        "faces": [
+            "up"
         ]
     },
     "minecraft:stone_slab[half=top,variant=quartz]": {
@@ -1836,6 +1938,9 @@
         "nameZH": "石英上半砖",
         "version": [
             12
+        ],
+        "faces": [
+            "up"
         ]
     },
     "minecraft:stone_slab[half=top,variant=sandstone]": {
@@ -1843,6 +1948,9 @@
         "nameZH": "砂岩上半砖",
         "version": [
             12
+        ],
+        "faces": [
+            "up"
         ]
     },
     "minecraft:stone_slab[half=top,variant=stone]": {
@@ -1850,6 +1958,9 @@
         "nameZH": "石头上半砖",
         "version": [
             12
+        ],
+        "faces": [
+            "up"
         ]
     },
     "minecraft:stone_slab[half=top,variant=stone_brick]": {
@@ -1857,17 +1968,26 @@
         "nameZH": "石砖上半砖",
         "version": [
             12
+        ],
+        "faces": [
+            "up"
         ]
     },
     "minecraft:stone_slab[type=top]": {
         "nameEN": "Stone slab",
         "nameZH": "石头上半砖",
-        "version": 13
+        "version": 13,
+        "faces": [
+            "up"
+        ]
     },
     "minecraft:waxed_cut_copper_slab[type=top]": {
         "nameEN": "Waxed cut copper slab",
         "nameZH": "涂蜡切制铜上半砖",
-        "version": 17
+        "version": 17,
+        "faces": [
+            "up"
+        ]
     },
     "minecraft:wooden_slab[half=top,variant=acacia]": {
         "burnable": true,
@@ -1875,6 +1995,9 @@
         "nameZH": "金合欢木上半砖",
         "version": [
             12
+        ],
+        "faces": [
+            "up"
         ]
     },
     "minecraft:wooden_slab[half=top,variant=birch]": {
@@ -1883,6 +2006,9 @@
         "nameZH": "白桦木上半砖",
         "version": [
             12
+        ],
+        "faces": [
+            "up"
         ]
     },
     "minecraft:wooden_slab[half=top,variant=dark_oak]": {
@@ -1891,6 +2017,9 @@
         "nameZH": "黑橡木上半砖",
         "version": [
             12
+        ],
+        "faces": [
+            "up"
         ]
     },
     "minecraft:wooden_slab[half=top,variant=jungle]": {
@@ -1899,6 +2028,9 @@
         "nameZH": "丛林木上半砖",
         "version": [
             12
+        ],
+        "faces": [
+            "up"
         ]
     },
     "minecraft:wooden_slab[half=top,variant=oak]": {
@@ -1906,6 +2038,9 @@
         "nameZH": "橡木上半砖",
         "version": [
             12
+        ],
+        "faces": [
+            "up"
         ]
     },
     "minecraft:wooden_slab[half=top,variant=spruce]": {
@@ -1914,6 +2049,17 @@
         "nameZH": "云杉木上半砖",
         "version": [
             12
+        ],
+        "faces": [
+            "up"
+        ]
+    },
+    "minecraft:mycelium[snowy=false]": {
+        "nameEN": "Mycelium",
+        "nameZH": "菌丝",
+        "version": "all",
+        "faces": [
+            "up"
         ]
     }
 }

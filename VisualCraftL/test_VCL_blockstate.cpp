@@ -62,9 +62,12 @@ int main(int argc, char **argv) {
 
     // VCL_display_block_state_list(bsl);
 
+    constexpr int max_block_layers = 3;
+
     if constexpr (set_resource_by_move) {
       if (!VCL_set_resource_and_version_move(&rp, &bsl, SCL_gameVersion::MC19,
-                                             VCL_face_t::face_up, 2)) {
+                                             VCL_face_t::face_up,
+                                             max_block_layers)) {
         cout << "Failed to set resource pack" << endl;
         VCL_destroy_block_state_list(bsl);
         VCL_destroy_resource_pack(rp);
@@ -74,7 +77,8 @@ int main(int argc, char **argv) {
     } else {
 
       if (!VCL_set_resource_and_version_copy(rp, bsl, SCL_gameVersion::MC19,
-                                             VCL_face_t::face_up, 2)) {
+                                             VCL_face_t::face_up,
+                                             max_block_layers)) {
         cout << "Failed to set resource pack" << endl;
         VCL_destroy_block_state_list(bsl);
         VCL_destroy_resource_pack(rp);

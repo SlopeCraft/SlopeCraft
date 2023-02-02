@@ -9,6 +9,8 @@
 
 #include <Eigen/Dense>
 
+#include "VisualCraftL.h"
+
 constexpr inline size_t major_version_to_idx(SCL_gameVersion v) noexcept {
   switch (v) {
   case SCL_gameVersion::FUTURE:
@@ -55,31 +57,43 @@ public:
 class VCL_block_state_list;
 
 class VCL_block {
+  friend class VCL_block_state_list;
+
 public:
   VCL_block();
   VCL_block(const std::string *full_id_ptr);
 
-  enum class attribute { transparency = 0 };
+  enum class attribute : uint8_t {
+    face_up = int(VCL_face_t::face_up),
+    face_down = int(VCL_face_t::face_down),
+    face_north = int(VCL_face_t::face_north),
+    face_south = int(VCL_face_t::face_south),
+    face_east = int(VCL_face_t::face_east),
+    face_west = int(VCL_face_t::face_west),
+    transparency = 6,
+    background = 7,
+    burnable = 8,
+    enderman_pickable = 9,
+    is_glowing = 10
+  };
+
+  static constexpr size_t idx_face_up = (size_t)attribute::face_up;
+  static constexpr size_t idx_face_down = (size_t)attribute::face_down;
+  static constexpr size_t idx_face_north = (size_t)attribute::face_north;
+  static constexpr size_t idx_face_south = (size_t)attribute::face_south;
+  static constexpr size_t idx_face_east = (size_t)attribute::face_east;
+  static constexpr size_t idx_face_west = (size_t)attribute::face_west;
 
   static constexpr size_t idx_transparent = (size_t)attribute::transparency;
-  version_set version_info;
+  static constexpr size_t idx_background = (size_t)attribute::background;
 
-  inline const std::string *full_id_ptr() const noexcept {
-    return this->full_id_p;
+  inline bool get_attribute(attribute a) const noexcept {
+    return this->attributes[size_t(a)];
   }
 
-private:
-  std::bitset<32> attributes;
-  const std::string *full_id_p{nullptr};
-
-  friend class VCL_block_state_list;
-
-public:
-  std::string name_ZH{""};
-  std::string name_EN{""};
-
-  Eigen::Array<uint32_t, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
-      project_image_on_exposed_face{0, 0};
+  inline void set_attribute(attribute a, bool val) noexcept {
+    this->attributes[size_t(a)] = val;
+  }
 
   inline bool is_transparent() const noexcept {
     return this->attributes[idx_transparent];
@@ -88,6 +102,48 @@ public:
   inline void set_transparency(bool ts) noexcept {
     this->attributes[idx_transparent] = ts;
   }
+
+  inline bool is_face_available(VCL_face_t f) const noexcept {
+    return this->attributes[size_t(f)];
+  }
+
+  inline void set_face_avaliablity(VCL_face_t f, bool val) noexcept {
+    this->attributes[size_t(f)] = val;
+  }
+
+  inline bool is_background() const noexcept {
+    return this->attributes[idx_background];
+  }
+
+  inline void set_is_background(bool val) noexcept {
+    this->attributes[idx_background] = val;
+  }
+
+  inline const std::string *full_id_ptr() const noexcept {
+    return this->full_id_p;
+  }
+
+  inline void disable_all_faces() noexcept {
+    for (size_t idx = idx_face_up; idx < idx_face_west; idx++) {
+      this->attributes[idx] = false;
+    }
+  }
+
+private:
+  void initialize_attributes() noexcept;
+  // members
+public:
+  version_set version_info;
+
+private:
+  std::bitset<32> attributes;
+  const std::string *full_id_p{nullptr};
+
+public:
+  Eigen::Array<uint32_t, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
+      project_image_on_exposed_face{0, 0};
+  std::string name_ZH{""};
+  std::string name_EN{""};
 };
 
 class VCL_block_state_list {
