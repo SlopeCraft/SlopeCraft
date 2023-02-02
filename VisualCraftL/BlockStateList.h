@@ -154,6 +154,16 @@ public:
            !this->is_disabled();
   }
 
+  inline const std::string &id_for_schem(SCL_gameVersion v) const noexcept {
+
+    for (const auto &pair : this->id_replace_list) {
+      if (pair.first == v) {
+        return pair.second;
+      }
+    }
+    return *this->full_id_p;
+  }
+
 private:
   void initialize_attributes() noexcept;
   // members
@@ -169,6 +179,7 @@ public:
       project_image_on_exposed_face{0, 0};
   std::string name_ZH{""};
   std::string name_EN{""};
+  std::vector<std::pair<SCL_gameVersion, std::string>> id_replace_list{};
 };
 
 class VCL_block_state_list {

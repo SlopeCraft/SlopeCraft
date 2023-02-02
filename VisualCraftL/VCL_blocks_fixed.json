@@ -48,7 +48,13 @@
         "burnable": true,
         "nameEN": "Black wool",
         "nameZH": "黑色羊毛",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:wool[color=black]"
+            ]
+        ]
     },
     "minecraft:blue_concrete": {
         "nameEN": "Blue concrete",
@@ -75,7 +81,13 @@
         "burnable": true,
         "nameEN": "Blue wool",
         "nameZH": "蓝色羊毛",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:wool[color=blue]"
+            ]
+        ]
     },
     "minecraft:brick_block": {
         "nameEN": "Bricks",
@@ -123,7 +135,13 @@
         "burnable": true,
         "nameEN": "Brown wool",
         "nameZH": "棕色羊毛",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:wool[color=brown]"
+            ]
+        ]
     },
     "minecraft:calcite": {
         "nameEN": "Calcite",
@@ -316,7 +334,13 @@
         "burnable": true,
         "nameEN": "Cyan wool",
         "nameZH": "青色羊毛",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:wool[color=cyan]"
+            ]
+        ]
     },
     "minecraft:dark_oak_leaves[distance=7,persistent=true]": {
         "burnable": true,
@@ -468,7 +492,13 @@
         "burnable": true,
         "nameEN": "Gray wool",
         "nameZH": "灰色羊毛",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:wool[color=gray]"
+            ]
+        ]
     },
     "minecraft:green_concrete": {
         "nameEN": "Green concrete",
@@ -490,7 +520,13 @@
         "burnable": true,
         "nameEN": "Green wool",
         "nameZH": "绿色羊毛",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:wool[color=green]"
+            ]
+        ]
     },
     "minecraft:hardened_clay": {
         "nameEN": "Terracotta",
@@ -610,7 +646,13 @@
         "burnable": true,
         "nameEN": "light blue wool",
         "nameZH": "浅蓝羊毛",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:wool[color=light_blue]"
+            ]
+        ]
     },
     "minecraft:light_gray_concrete": {
         "nameEN": "Light gray concrete",
@@ -654,7 +696,13 @@
         "burnable": true,
         "nameEN": "Lime wool",
         "nameZH": "浅绿羊毛",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:wool[color=lime]"
+            ]
+        ]
     },
     "minecraft:magenta_concrete": {
         "nameEN": "Magenta concrete",
@@ -676,7 +724,13 @@
         "burnable": true,
         "nameEN": "Magenta wool",
         "nameZH": "品红色羊毛",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:wool[color=magenta]"
+            ]
+        ]
     },
     "minecraft:magma": {
         "nameEN": "Magma block",
@@ -779,7 +833,13 @@
         "burnable": true,
         "nameEN": "Orange wool",
         "nameZH": "橙色羊毛",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:wool[color=orange]"
+            ]
+        ]
     },
     "minecraft:packed_ice": {
         "nameEN": "Packed ice",
@@ -817,7 +877,13 @@
         "burnable": true,
         "nameEN": "Pink wool",
         "nameZH": "粉色羊毛",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:wool[color=pink]"
+            ]
+        ]
     },
     "minecraft:planks[variant=acacia]": {
         "burnable": true,
@@ -963,7 +1029,13 @@
         "burnable": true,
         "nameEN": "Purple wool",
         "nameZH": "紫色羊毛",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:wool[color=purple]"
+            ]
+        ]
     },
     "minecraft:purpur_block": {
         "nameEN": "Purpur block",
@@ -1040,7 +1112,13 @@
         "burnable": true,
         "nameEN": "Red wool",
         "nameZH": "红色羊毛",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:wool[color=red]"
+            ]
+        ]
     },
     "minecraft:redstone_block": {
         "nameEN": "Redstone block",
@@ -1559,134 +1637,26 @@
         "burnable": true,
         "nameEN": "White wool",
         "nameZH": "白色羊毛",
-        "version": 13
-    },
-    "minecraft:wool[color=black]": {
-        "burnable": true,
-        "nameEN": "Black wool",
-        "nameZH": "黑色羊毛",
-        "version": [
-            12
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:wool[color=white]"
+            ]
         ]
     },
-    "minecraft:wool[color=blue]": {
-        "burnable": true,
-        "nameEN": "Blue wool",
-        "nameZH": "蓝色羊毛",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:wool[color=brown]": {
-        "burnable": true,
-        "nameEN": "Brown wool",
-        "nameZH": "棕色羊毛",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:wool[color=cyan]": {
-        "burnable": true,
-        "nameEN": "Cyan wool",
-        "nameZH": "青色羊毛",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:wool[color=gray]": {
-        "burnable": true,
-        "nameEN": "Gray wool",
-        "nameZH": "灰色羊毛",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:wool[color=green]": {
-        "burnable": true,
-        "nameEN": "Green wool",
-        "nameZH": "绿色羊毛",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:wool[color=light_blue]": {
-        "burnable": true,
-        "nameEN": "light blue wool",
-        "nameZH": "浅蓝羊毛",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:wool[color=lime]": {
-        "burnable": true,
-        "nameEN": "Lime wool",
-        "nameZH": "浅绿羊毛",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:wool[color=magenta]": {
-        "burnable": true,
-        "nameEN": "Magenta wool",
-        "nameZH": "品红色羊毛",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:wool[color=orange]": {
-        "burnable": true,
-        "nameEN": "Orange wool",
-        "nameZH": "橙色羊毛",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:wool[color=pink]": {
-        "burnable": true,
-        "nameEN": "Pink wool",
-        "nameZH": "粉色羊毛",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:wool[color=purple]": {
-        "burnable": true,
-        "nameEN": "Purple wool",
-        "nameZH": "紫色羊毛",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:wool[color=red]": {
-        "burnable": true,
-        "nameEN": "Red wool",
-        "nameZH": "红色羊毛",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:wool[color=silver]": {
+    "minecraft:silver_wool": {
         "burnable": true,
         "nameEN": "Light gray wool",
         "nameZH": "浅灰羊毛",
         "version": [
             12
-        ]
-    },
-    "minecraft:wool[color=white]": {
-        "burnable": true,
-        "nameEN": "White wool",
-        "nameZH": "白色羊毛",
-        "version": [
-            12
-        ]
-    },
-    "minecraft:wool[color=yellow]": {
-        "burnable": true,
-        "nameEN": "Yellow wool",
-        "nameZH": "黄色羊毛",
-        "version": [
-            12
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:wool[color=silver]"
+            ]
         ]
     },
     "minecraft:yellow_concrete": {
@@ -1710,7 +1680,13 @@
         "burnable": true,
         "nameEN": "Yellow wool",
         "nameZH": "黄色羊毛",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:wool[color=yellow]"
+            ]
+        ]
     },
     "minecraft:acacia_slab[type=top]": {
         "burnable": true,

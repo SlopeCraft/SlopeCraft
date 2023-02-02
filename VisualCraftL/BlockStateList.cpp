@@ -93,6 +93,34 @@ VCL_block parse_block(const nlohmann::json &jo, bool *const ok) {
 
   ret.set_transparency(false);
 
+  if (jo.contains("id_replace_list")) {
+    if (!jo.at("id_replace_list").is_array()) {
+      *ok = false;
+      return {};
+    }
+
+    const nlohmann::json &ja = jo.at("id_replace_list");
+
+    for (size_t i = 0; i < ja.size(); i++) {
+      const nlohmann::json &jaa = ja.at(i);
+      if (!jaa.is_array() || jaa.size() != 2) {
+        *ok = false;
+        return {};
+      }
+
+      if (!jaa[0].is_number_integer() || !jaa[1].is_string()) {
+        *ok = false;
+        return {};
+      }
+
+      int val = jaa[0];
+      std::string idr = jaa[1];
+      ret.id_replace_list.emplace_back(
+          std::make_pair<SCL_gameVersion, std::string>(SCL_gameVersion(val),
+                                                       std::move(idr)));
+    }
+  }
+
   if (jo.contains("nameZH")) {
     if (jo.at("nameZH").is_string()) {
       ret.name_ZH = jo.at("nameZH");

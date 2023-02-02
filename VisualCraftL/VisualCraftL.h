@@ -64,7 +64,7 @@ VCL_EXPORT_FUN SCL_gameVersion VCL_get_game_version();
 VCL_EXPORT_FUN VCL_face_t VCL_get_exposed_face();
 VCL_EXPORT_FUN int VCL_get_max_block_layers();
 
-VCL_EXPORT_FUN void test_VCL();
+VCL_EXPORT_FUN void VCL_internal_test();
 
 [[nodiscard]] VCL_EXPORT_FUN VCL_resource_pack *
 VCL_create_resource_pack(const int zip_file_count,
@@ -89,8 +89,8 @@ VCL_EXPORT_FUN size_t VCL_get_blocks_from_block_state_list(
     size_t array_capcity);
 
 /**
- *\return Number of blocks in this statelist that fits the version, regardless
- *of array_capacity
+ *\return Number of blocks in this statelist that fits the version and face,
+ *regardless of array_capacity
  */
 VCL_EXPORT_FUN size_t VCL_get_blocks_from_block_state_list_match(
     VCL_block_state_list *, SCL_gameVersion v, VCL_face_t f,
@@ -104,8 +104,8 @@ VCL_EXPORT_FUN size_t VCL_get_blocks_from_block_state_list_const(
     const VCL_block **const array_of_const_VCL_block, size_t array_capcity);
 
 /**
- *\return Number of blocks in this statelist that fits the version, regardless
- *of array_capacity
+ *\return Number of blocks in this statelist that fits the version and list,
+ *regardless of array_capacity
  */
 VCL_EXPORT_FUN size_t VCL_get_blocks_from_block_state_list_match_const(
     const VCL_block_state_list *, SCL_gameVersion v, VCL_face_t f,

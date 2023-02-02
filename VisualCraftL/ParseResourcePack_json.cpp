@@ -144,6 +144,19 @@ bool parse_block_state_list(std::string_view str,
   sl->clear();
   if (str.size() <= 1)
     return true;
+
+  if (str == "normal") {
+    return true;
+  }
+
+  if (str == "all") {
+    return true;
+  }
+
+  if (str == "map") {
+    return true;
+  }
+
   int substr_start = 0;
   // int substr_end = -1;
   int eq_pos = -1;
@@ -358,7 +371,8 @@ bool parse_single_model_json(const char *const json_beg,
 
       auto it = dest->textures.emplace(temp.key(), temp.value());
 
-      if (it.first->second.starts_with("block/")) {
+      if (it.first->second.starts_with("block/") ||
+          it.first->second.starts_with("blocks/")) {
         it.first->second = "minecraft:" + it.first->second;
       }
     }
@@ -674,7 +688,6 @@ bool resource_pack::add_block_models(
     if (!file.first.ends_with(".json"))
       continue;
     buffer.fill('\0');
-
     std::strcpy(buffer.data(), "block/");
     {
       const int end = file.first.find_last_of('.');
@@ -781,7 +794,7 @@ bool resource_pack::add_block_models(
           printf("\nError : Undefined reference to texture %s, required by "
                  "model %s but no such image.\n",
                  tface.texture.data(), tmodel.first.data());
-          printf("The texture is : \n");
+          printf("The textures are : \n");
           for (const auto &pair : tmodel.second.textures) {
             printf("{%s, %s}\n", pair.first.data(), pair.second.data());
           }

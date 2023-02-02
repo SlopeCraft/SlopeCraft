@@ -174,8 +174,17 @@ folder_to_images(const zipped_folder &src, bool *const is_ok,
     folder_ptr = folder_ptr->subfolder("textures");
   }
   if (folder_ptr != nullptr) {
-    folder_ptr = folder_ptr->subfolder("block");
-    std::cout << "Found assets/minecraft/textures/block" << endl;
+    const zipped_folder *name_block = folder_ptr->subfolder("block");
+    // for 1.12
+    const zipped_folder *name_blocks = folder_ptr->subfolder("blocks");
+
+    if (name_block != nullptr) {
+      folder_ptr = name_block;
+      std::cout << "Found assets/minecraft/textures/block" << endl;
+    } else {
+      folder_ptr = name_blocks;
+      std::cout << "Found assets/minecraft/textures/blocks" << endl;
+    }
   }
   // the folder is empty
   if (folder_ptr == nullptr) {
@@ -290,9 +299,23 @@ bool resource_pack::add_textures(const zipped_folder &rpr,
     if (texture_folder == nullptr) {
       continue;
     }
+    const zipped_folder *blocks_folder = nullptr;
+    {
+      const zipped_folder *name_block = texture_folder->subfolder("block");
+      // for 1.12
+      const zipped_folder *name_blocks = texture_folder->subfolder("blocks");
 
-    const zipped_folder *const blocks_folder =
-        texture_folder->subfolder("block");
+      if (name_block != nullptr) {
+        this->is_MC12 = false;
+        blocks_folder = name_block;
+        std::cout << "Found assets/minecraft/textures/block" << endl;
+      } else {
+        this->is_MC12 = true;
+        blocks_folder = name_blocks;
+        std::cout << "Found assets/minecraft/textures/blocks" << endl;
+      }
+    }
+
     if (blocks_folder == nullptr) {
       continue;
     }
@@ -325,7 +348,12 @@ bool resource_pack::add_textures_direct(
 
     buffer.fill('\0');
     std::strcpy(buffer.data(), namespace_name.data());
-    std::strcat(buffer.data(), ":block/");
+    if (this->is_MC12) {
+      std::strcat(buffer.data(), ":blocks/");
+    } else {
+
+      std::strcat(buffer.data(), ":block/");
+    }
 
     // write in filename without extension name
     {

@@ -1,3 +1,3 @@
 #include "VisualCraftL.h"
 
-int main() { ::test_VCL(); }
+int main() { VCL_internal_test(); }

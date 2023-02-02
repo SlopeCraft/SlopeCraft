@@ -64,9 +64,9 @@ int main(int argc, char **argv) {
 
     constexpr int max_block_layers = 3;
 
-    constexpr auto version = SCL_gameVersion::MC19;
+    constexpr auto version = SCL_gameVersion::MC12;
 
-    constexpr auto face = VCL_face_t::face_down;
+    constexpr auto face = VCL_face_t::face_up;
 
     if constexpr (set_resource_by_move) {
       if (!VCL_set_resource_and_version_move(&rp, &bsl, version, face,

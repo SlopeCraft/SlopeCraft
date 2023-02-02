@@ -587,6 +587,24 @@ private:
   std::unordered_map<std::string, resource_json::block_states_variant>
       block_states;
 
+  bool is_MC12{false};
+
+  inline const char *texture_prefix_s() const noexcept {
+    if (is_MC12)
+      return "block";
+    else {
+      return "blocks";
+    }
+  }
+
+  inline const char *texture_prefix_s_slash() const noexcept {
+    if (is_MC12)
+      return "block/";
+    else {
+      return "blocks/";
+    }
+  }
+
   bool
   add_textures_direct(const std::unordered_map<std::string, zipped_file> &pngs,
                       std::string_view namespace_name,
