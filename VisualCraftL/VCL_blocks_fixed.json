@@ -66,8 +66,14 @@
     "minecraft:black_stained_glass": {
         "nameEN": "Blakc glass",
         "nameZH": "黑色染色玻璃",
-        "version": 13,
-        "transparent": true
+        "version": "all",
+        "transparent": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_glass[color=black]"
+            ]
+        ]
     },
     "minecraft:black_terracotta": {
         "nameEN": "Black terracotta",
@@ -105,8 +111,14 @@
     "minecraft:blue_stained_glass": {
         "nameEN": "Blue glass",
         "nameZH": "蓝色染色玻璃",
-        "version": 13,
-        "transparent": true
+        "version": "all",
+        "transparent": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_glass[color=blue]"
+            ]
+        ]
     },
     "minecraft:blue_terracotta": {
         "nameEN": "Blue terracotta",
@@ -165,8 +177,14 @@
     "minecraft:brown_stained_glass": {
         "nameEN": "Brown glass",
         "nameZH": "棕色染色玻璃",
-        "version": 13,
-        "transparent": true
+        "version": "all",
+        "transparent": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_glass[color=brown]"
+            ]
+        ]
     },
     "minecraft:brown_terracotta": {
         "nameEN": "Brown terracotta",
@@ -258,8 +276,14 @@
     "minecraft:cyan_stained_glass": {
         "nameEN": "Cyan glass",
         "nameZH": "青色染色玻璃",
-        "version": 13,
-        "transparent": true
+        "version": "all",
+        "transparent": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_glass[color=cyan]"
+            ]
+        ]
     },
     "minecraft:cyan_terracotta": {
         "nameEN": "Cyan terracotta",
@@ -434,8 +458,14 @@
     "minecraft:gray_stained_glass": {
         "nameEN": "Gray glass",
         "nameZH": "灰色染色玻璃",
-        "version": 13,
-        "transparent": true
+        "version": "all",
+        "transparent": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_glass[color=gray]"
+            ]
+        ]
     },
     "minecraft:gray_terracotta": {
         "nameEN": "Gray terracotta",
@@ -468,8 +498,14 @@
     "minecraft:green_stained_glass": {
         "nameEN": "Green glass",
         "nameZH": "绿色染色玻璃",
-        "version": 13,
-        "transparent": true
+        "version": "all",
+        "transparent": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_glass[color=green]"
+            ]
+        ]
     },
     "minecraft:green_terracotta": {
         "nameEN": "Green terracotta",
@@ -564,8 +600,14 @@
     "minecraft:light_blue_stained_glass": {
         "nameEN": "Light blue glass",
         "nameZH": "浅蓝染色玻璃",
-        "version": 13,
-        "transparent": true
+        "version": "all",
+        "transparent": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_glass[color=light]"
+            ]
+        ]
     },
     "minecraft:light_blue_terracotta": {
         "nameEN": "Light blue terracotta",
@@ -627,8 +669,14 @@
     "minecraft:lime_stained_glass": {
         "nameEN": "Lime glass",
         "nameZH": "浅绿染色玻璃",
-        "version": 13,
-        "transparent": true
+        "version": "all",
+        "transparent": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_glass[color=lime]"
+            ]
+        ]
     },
     "minecraft:lime_terracotta": {
         "nameEN": "Lime terracotta",
@@ -661,8 +709,14 @@
     "minecraft:magenta_stained_glass": {
         "nameEN": "Magenta glass",
         "nameZH": "品红染色玻璃",
-        "version": 13,
-        "transparent": true
+        "version": "all",
+        "transparent": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_glass[color=magenta]"
+            ]
+        ]
     },
     "minecraft:magenta_terracotta": {
         "nameEN": "Magenta terracotta",
@@ -788,8 +842,14 @@
     "minecraft:orange_stained_glass": {
         "nameEN": "Orange glass",
         "nameZH": "橙色染色玻璃",
-        "version": 13,
-        "transparent": true
+        "version": "all",
+        "transparent": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_glass[color=orange]"
+            ]
+        ]
     },
     "minecraft:orange_terracotta": {
         "nameEN": "Orange terracotta",
@@ -838,8 +898,14 @@
     "minecraft:pink_stained_glass": {
         "nameEN": "Pink glass",
         "nameZH": "粉色染色玻璃",
-        "version": 13,
-        "transparent": true
+        "version": "all",
+        "transparent": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_glass[color=pink]"
+            ]
+        ]
     },
     "minecraft:pink_terracotta": {
         "nameEN": "Pink terracotta",
@@ -1006,8 +1072,14 @@
     "minecraft:purple_stained_glass": {
         "nameEN": "Purple glass",
         "nameZH": "紫色染色玻璃",
-        "version": 13,
-        "transparent": true
+        "version": "all",
+        "transparent": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_glass[color=purple]"
+            ]
+        ]
     },
     "minecraft:purple_terracotta": {
         "nameEN": "Purple terracotta",
@@ -1095,8 +1167,14 @@
     "minecraft:red_stained_glass": {
         "nameEN": "Red glass",
         "nameZH": "红色染色玻璃",
-        "version": 13,
-        "transparent": true
+        "version": "all",
+        "transparent": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_glass[color=red]"
+            ]
+        ]
     },
     "minecraft:red_terracotta": {
         "nameEN": "Red terracotta",
@@ -1223,133 +1301,19 @@
             ]
         ]
     },
-    "minecraft:stained_glass[color=black]": {
-        "nameEN": "Blakc glass",
-        "nameZH": "黑色染色玻璃",
-        "version": [
-            12
-        ],
-        "transparent": true
-    },
-    "minecraft:stained_glass[color=blue]": {
-        "nameEN": "Blue glass",
-        "nameZH": "蓝色染色玻璃",
-        "version": [
-            12
-        ],
-        "transparent": true
-    },
-    "minecraft:stained_glass[color=brown]": {
-        "nameEN": "Brown glass",
-        "nameZH": "棕色染色玻璃",
-        "version": [
-            12
-        ],
-        "transparent": true
-    },
-    "minecraft:stained_glass[color=cyan]": {
-        "nameEN": "Cyan glass",
-        "nameZH": "青色染色玻璃",
-        "version": [
-            12
-        ],
-        "transparent": true
-    },
-    "minecraft:stained_glass[color=gray]": {
-        "nameEN": "Gray glass",
-        "nameZH": "灰色染色玻璃",
-        "version": [
-            12
-        ],
-        "transparent": true
-    },
-    "minecraft:stained_glass[color=green]": {
-        "nameEN": "Green glass",
-        "nameZH": "绿色染色玻璃",
-        "version": [
-            12
-        ],
-        "transparent": true
-    },
-    "minecraft:stained_glass[color=light_blue]": {
-        "nameEN": "Light blue glass",
-        "nameZH": "浅蓝染色玻璃",
-        "version": [
-            12
-        ],
-        "transparent": true
-    },
-    "minecraft:stained_glass[color=lime]": {
-        "nameEN": "Lime glass",
-        "nameZH": "浅绿染色玻璃",
-        "version": [
-            12
-        ],
-        "transparent": true
-    },
-    "minecraft:stained_glass[color=magenta]": {
-        "nameEN": "Magenta glass",
-        "nameZH": "品红染色玻璃",
-        "version": [
-            12
-        ],
-        "transparent": true
-    },
-    "minecraft:stained_glass[color=orange]": {
-        "nameEN": "Orange glass",
-        "nameZH": "橙色染色玻璃",
-        "version": [
-            12
-        ],
-        "transparent": true
-    },
-    "minecraft:stained_glass[color=pink]": {
-        "nameEN": "Pink glass",
-        "nameZH": "粉色染色玻璃",
-        "version": [
-            12
-        ],
-        "transparent": true
-    },
-    "minecraft:stained_glass[color=purple]": {
-        "nameEN": "Purple glass",
-        "nameZH": "紫色染色玻璃",
-        "version": [
-            12
-        ],
-        "transparent": true
-    },
-    "minecraft:stained_glass[color=red]": {
-        "nameEN": "Red glass",
-        "nameZH": "红色染色玻璃",
-        "version": [
-            12
-        ],
-        "transparent": true
-    },
-    "minecraft:stained_glass[color=silver]": {
+    "minecraft:silver_stained_glass": {
         "nameEN": "Light gray glass",
         "nameZH": "浅灰染色玻璃",
         "version": [
             12
         ],
-        "transparent": true
-    },
-    "minecraft:stained_glass[color=white]": {
-        "nameEN": "White glass",
-        "nameZH": "白色染色玻璃",
-        "version": [
-            12
-        ],
-        "transparent": true
-    },
-    "minecraft:stained_glass[color=yellow]": {
-        "nameEN": "yellow glass",
-        "nameZH": "黄色染色玻璃",
-        "version": [
-            12
-        ],
-        "transparent": true
+        "transparent": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_glass[color=silver]"
+            ]
+        ]
     },
     "minecraft:black_stained_hardened_clay": {
         "nameEN": "Black terracotta",
@@ -1734,8 +1698,14 @@
     "minecraft:white_stained_glass": {
         "nameEN": "White glass",
         "nameZH": "白色染色玻璃",
-        "version": 13,
-        "transparent": true
+        "version": "all",
+        "transparent": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_glass[color=white]"
+            ]
+        ]
     },
     "minecraft:white_terracotta": {
         "nameEN": "White terracotta",
@@ -1782,8 +1752,14 @@
     "minecraft:yellow_stained_glass": {
         "nameEN": "yellow glass",
         "nameZH": "黄色染色玻璃",
-        "version": 13,
-        "transparent": true
+        "version": "all",
+        "transparent": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stained_glass[color=yellow]"
+            ]
+        ]
     },
     "minecraft:yellow_terracotta": {
         "burnable": true,
@@ -1971,7 +1947,7 @@
             "up"
         ]
     },
-    "minecraft:stone_slab2[half=top,variant=red_sandstone]": {
+    "minecraft:red_sandstone_slab[half=top]": {
         "nameEN": "Red sandstone slab",
         "nameZH": "红砂岩上半砖",
         "version": [
@@ -1979,6 +1955,12 @@
         ],
         "faces": [
             "up"
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stone_slab2[half=top,variant=red_sandstone]"
+            ]
         ]
     },
     "minecraft:brick_slab[half=top]": {
