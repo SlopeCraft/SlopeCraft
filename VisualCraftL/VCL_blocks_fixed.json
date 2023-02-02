@@ -3,7 +3,13 @@
         "burnable": true,
         "nameEN": "Acacia leaves",
         "nameZH": "金合欢树叶",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:leaves2[variant=acacia,check_decay=false,decayable=false]"
+            ]
+        ]
     },
     "minecraft:acacia_planks": {
         "burnable": true,
@@ -20,7 +26,13 @@
         "burnable": true,
         "nameEN": "Brich leaves",
         "nameZH": "白桦树叶",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:leaves[variant=birch,check_decay=false,decayable=false]"
+            ]
+        ]
     },
     "minecraft:birch_planks": {
         "burnable": true,
@@ -258,7 +270,13 @@
         "burnable": true,
         "nameEN": "Dark oat leaves",
         "nameZH": "黑橡树树叶",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:leaves2[variant=dark_oak,check_decay=false,decayable=false]"
+            ]
+        ]
     },
     "minecraft:dark_oak_planks": {
         "burnable": true,
@@ -489,7 +507,13 @@
         "burnable": true,
         "nameEN": "Jungle leaves",
         "nameZH": "丛林木树叶",
-        "version": 13
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:leaves[variant=jungle,check_decay=false,decayable=false]"
+            ]
+        ]
     },
     "minecraft:jungle_planks": {
         "burnable": true,
@@ -501,54 +525,6 @@
         "nameEN": "Lapis block",
         "nameZH": "青金石块",
         "version": "all"
-    },
-    "minecraft:leaves2[variant=acacia,check_decay=false,decayable=false]": {
-        "nameEN": "Acacia leaves",
-        "nameZH": "金合欢树叶",
-        "version": [
-            12
-        ],
-        "burnable": true
-    },
-    "minecraft:leaves2[variant=dark_oak,check_decay=false,decayable=false]": {
-        "nameEN": "Dark oat leaves",
-        "nameZH": "黑橡树树叶",
-        "version": [
-            12
-        ],
-        "burnable": true
-    },
-    "minecraft:leaves[variant=birch,check_decay=false,decayable=false]": {
-        "nameEN": "Brich leaves",
-        "nameZH": "白桦树叶",
-        "version": [
-            12
-        ],
-        "burnable": true
-    },
-    "minecraft:leaves[variant=jungle,check_decay=false,decayable=false]": {
-        "nameEN": "Jungle leaves",
-        "nameZH": "丛林木树叶",
-        "version": [
-            12
-        ],
-        "burnable": true
-    },
-    "minecraft:leaves[variant=oak,check_decay=false,decayable=false]": {
-        "nameEN": "Oak leaves",
-        "nameZH": "橡树树叶",
-        "version": [
-            12
-        ],
-        "burnable": true
-    },
-    "minecraft:leaves[variant=spruce,check_decay=false,decayable=false]": {
-        "nameEN": "Spurce leaves",
-        "nameZH": "云杉树叶",
-        "version": [
-            12
-        ],
-        "burnable": true
     },
     "minecraft:light_blue_concrete": {
         "nameEN": "Light blue concrete",
@@ -742,8 +718,14 @@
     "minecraft:oak_leaves[distance=7,persistent=true]": {
         "nameEN": "Oak leaves",
         "nameZH": "橡树树叶",
-        "version": 13,
-        "burnable": true
+        "version": "all",
+        "burnable": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:leaves[variant=oak,check_decay=false,decayable=false]"
+            ]
+        ]
     },
     "minecraft:oak_planks": {
         "burnable": true,
@@ -1180,8 +1162,14 @@
     "minecraft:spruce_leaves[distance=7,persistent=true]": {
         "nameEN": "Spurce leaves",
         "nameZH": "云杉树叶",
-        "version": 13,
-        "burnable": true
+        "burnable": true,
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:leaves[variant=spruce,check_decay=false,decayable=false]"
+            ]
+        ]
     },
     "minecraft:spruce_planks": {
         "burnable": true,
