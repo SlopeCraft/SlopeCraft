@@ -87,10 +87,25 @@ public:
 };
 
 extern "C" {
-
+// create and destroy kernel
 [[nodiscard]] VCL_EXPORT_FUN VCL_Kernel *VCL_create_kernel();
 VCL_EXPORT_FUN void VCL_destroy_kernel(VCL_Kernel *const ptr);
 
+// create and destroy resource pack
+[[nodiscard]] VCL_EXPORT_FUN VCL_resource_pack *
+VCL_create_resource_pack(const int zip_file_count,
+                         const char *const *const zip_file_names);
+VCL_EXPORT_FUN void VCL_destroy_resource_pack(VCL_resource_pack *const ptr);
+
+// create and destroy block state list
+[[nodiscard]] VCL_EXPORT_FUN VCL_block_state_list *
+VCL_create_block_state_list(const int file_count,
+                            const char *const *const json_file_names);
+
+VCL_EXPORT_FUN void
+VCL_destroy_block_state_list(VCL_block_state_list *const ptr);
+
+// set resource for kernel
 VCL_EXPORT_FUN bool VCL_set_resource_and_version_copy(
     const VCL_resource_pack *const rp, const VCL_block_state_list *const bsl,
     SCL_gameVersion version, VCL_face_t exposed_face, int max_block_layers);
@@ -99,6 +114,7 @@ VCL_EXPORT_FUN bool VCL_set_resource_and_version_move(
     VCL_resource_pack **rp_ptr, VCL_block_state_list **bsl_ptr,
     SCL_gameVersion version, VCL_face_t exposed_face, int max_block_layers);
 
+// functions to check the resource
 VCL_EXPORT_FUN bool VCL_is_basic_colorset_ok();
 VCL_EXPORT_FUN VCL_resource_pack *VCL_get_resource_pack();
 VCL_EXPORT_FUN VCL_block_state_list *VCL_get_block_state_list();
@@ -106,24 +122,13 @@ VCL_EXPORT_FUN SCL_gameVersion VCL_get_game_version();
 VCL_EXPORT_FUN VCL_face_t VCL_get_exposed_face();
 VCL_EXPORT_FUN int VCL_get_max_block_layers();
 
-VCL_EXPORT_FUN void VCL_internal_test();
-
-[[nodiscard]] VCL_EXPORT_FUN VCL_resource_pack *
-VCL_create_resource_pack(const int zip_file_count,
-                         const char *const *const zip_file_names);
-VCL_EXPORT_FUN void VCL_destroy_resource_pack(VCL_resource_pack *const ptr);
-
-[[nodiscard]] VCL_EXPORT_FUN VCL_block_state_list *
-VCL_create_block_state_list(const int file_count,
-                            const char *const *const json_file_names);
-
-VCL_EXPORT_FUN void
-VCL_destroy_block_state_list(VCL_block_state_list *const ptr);
-
+// functions about resource pack
 VCL_EXPORT_FUN void VCL_display_resource_pack(const VCL_resource_pack *,
                                               bool textures = true,
                                               bool blockstates = true,
                                               bool model = true);
+
+// functions about block state list
 VCL_EXPORT_FUN void VCL_display_block_state_list(const VCL_block_state_list *);
 
 /**
@@ -156,7 +161,8 @@ VCL_EXPORT_FUN size_t VCL_get_blocks_from_block_state_list_match_const(
     const VCL_block_state_list *, SCL_gameVersion v, VCL_face_t f,
     const VCL_block **const array_of_const_VCL_block, size_t array_capcity);
 
-VCL_EXPORT_FUN bool VCL_get_block_enabled(const VCL_block *);
+// functions about VCL_block
+VCL_EXPORT_FUN bool VCL_is_block_enabled(const VCL_block *);
 VCL_EXPORT_FUN void VCL_set_block_enabled(VCL_block *, bool val);
 
 VCL_EXPORT_FUN const char *VCL_face_t_to_str(VCL_face_t);
@@ -174,6 +180,9 @@ VCL_EXPORT_FUN void VCL_set_block_class(VCL_block *, VCL_block_class_t cl);
 
 VCL_EXPORT_FUN VCL_block_class_t VCL_string_to_block_class(const char *str,
                                                            bool *ok = nullptr);
+
+// Function about internal test
+VCL_EXPORT_FUN void VCL_internal_test();
 }
 
 #endif // SLOPECRAFT_VISUALCRAFT_VISUALCRAFT_H

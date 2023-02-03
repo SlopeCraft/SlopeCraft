@@ -8,10 +8,13 @@ add_library(VisualCraftL SHARED
     VisualCraftL_global.h
     VisualCraftL.h
     VisualCraftL.cpp
+
     TokiVC.h
     TokiVC.cpp
+
     Resource_tree.h
     Resource_tree.cpp
+
     ParseResourcePack.h
     ParseResourcePack_png.cpp
     ParseResourcePack_blocks.cpp

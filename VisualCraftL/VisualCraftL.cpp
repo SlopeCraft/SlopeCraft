@@ -466,7 +466,7 @@ VCL_EXPORT_FUN size_t VCL_get_blocks_from_block_state_list_match_const(
   return available_block_counter;
 }
 
-VCL_EXPORT_FUN bool VCL_get_block_enabled(const VCL_block *b) {
+VCL_EXPORT_FUN bool VCL_is_block_enabled(const VCL_block *b) {
   if (b == nullptr) {
     return false;
   }
