@@ -39,7 +39,6 @@ target_include_directories(VisualCraftL PRIVATE
     ${SlopeCraft_Nlohmann_json_include_dir}
     ${SlopeCraft_Eigen3_include_dir}
     ${SlopeCraft_HeuristicFlow_include_dir}
-    ${SlopeCraft_Nlohmann_json_include_dir}
     ${CMAKE_SOURCE_DIR})
 
 target_include_directories(VisualCraftL PUBLIC
@@ -85,6 +84,12 @@ target_include_directories(SCL_json_cvt PRIVATE
 
 add_executable(test_block_class tests/test_block_class.cpp)
 target_link_libraries(test_block_class PRIVATE VisualCraftL)
+
+add_executable(VCL_json_sort tests/VCL_json_sort.cpp)
+target_link_libraries(VCL_json_sort PRIVATE VisualCraftL)
+target_include_directories(VCL_json_sort PRIVATE
+    ${cli11_include_dir}
+    ${SlopeCraft_Nlohmann_json_include_dir})
 
 include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_12.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_latest.cmake)
