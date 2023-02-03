@@ -335,6 +335,25 @@ block_model::face_idx string_to_face_idx(std::string_view str,
   return res;
 }
 
+const char *face_idx_to_string(block_model::face_idx f) noexcept {
+  switch (f) {
+  case block_model::face_idx::face_up:
+    return "up";
+  case block_model::face_idx::face_down:
+    return "down";
+  case block_model::face_idx::face_north:
+    return "north";
+  case block_model::face_idx::face_south:
+    return "south";
+  case block_model::face_idx::face_east:
+    return "east";
+  case block_model::face_idx::face_west:
+    return "west";
+  }
+
+  return nullptr;
+}
+
 bool parse_single_model_json(const char *const json_beg,
                              const char *const json_end,
                              block_model_json_temp *const dest) {

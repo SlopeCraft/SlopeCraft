@@ -11,7 +11,7 @@
 
 #include "VisualCraftL.h"
 #include <utility>
-
+/*
 #if __cplusplus < 202002L
 #warning Requires C++23
 // This is used to disable stupid error from clangd.
@@ -19,6 +19,8 @@ namespace std {
 void unreachable() { __builtin_trap(); }
 } // namespace std
 #endif
+
+*/
 
 // struct resource_pack;
 
@@ -531,6 +533,7 @@ bool parse_block_state(const char *const json_str_beg, const char *const end,
 
 block_model::face_idx string_to_face_idx(std::string_view str,
                                          bool *const _ok) noexcept;
+const char *face_idx_to_string(block_model::face_idx) noexcept;
 
 /**
  * \note Name of texture = <namespacename>:blocks/<pngfilename without prefix>

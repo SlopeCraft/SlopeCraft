@@ -20,6 +20,21 @@ enum class VCL_face_t : uint8_t {
   face_west = 5
 };
 
+enum class VCL_block_attribute_t : uint8_t {
+  face_up = int(VCL_face_t::face_up),
+  face_down = int(VCL_face_t::face_down),
+  face_north = int(VCL_face_t::face_north),
+  face_south = int(VCL_face_t::face_south),
+  face_east = int(VCL_face_t::face_east),
+  face_west = int(VCL_face_t::face_west),
+  transparency = 6,
+  background = 7,
+  burnable = 8,
+  enderman_pickable = 9,
+  is_glowing = 10,
+  disabled = 11,
+};
+
 class VCL_Kernel;
 class VCL_resource_pack;
 class VCL_block_state_list;
@@ -116,6 +131,16 @@ VCL_EXPORT_FUN size_t VCL_get_blocks_from_block_state_list_match_const(
 
 VCL_EXPORT_FUN bool VCL_get_block_enabled(const VCL_block *);
 VCL_EXPORT_FUN void VCL_set_block_enabled(VCL_block *, bool val);
+
+VCL_EXPORT_FUN const char *VCL_face_t_to_str(VCL_face_t);
+VCL_EXPORT_FUN VCL_face_t VCL_str_to_face_t(const char *str,
+                                            bool *ok = nullptr);
+
+VCL_EXPORT_FUN bool VCL_get_block_attribute(const VCL_block *,
+                                            VCL_block_attribute_t attribute);
+VCL_EXPORT_FUN void VCL_set_block_attribute(VCL_block *,
+                                            VCL_block_attribute_t attribute,
+                                            bool value);
 }
 
 #endif // SLOPECRAFT_VISUALCRAFT_VISUALCRAFT_H

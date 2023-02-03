@@ -63,20 +63,7 @@ public:
   VCL_block();
   VCL_block(const std::string *full_id_ptr);
 
-  enum class attribute : uint8_t {
-    face_up = int(VCL_face_t::face_up),
-    face_down = int(VCL_face_t::face_down),
-    face_north = int(VCL_face_t::face_north),
-    face_south = int(VCL_face_t::face_south),
-    face_east = int(VCL_face_t::face_east),
-    face_west = int(VCL_face_t::face_west),
-    transparency = 6,
-    background = 7,
-    burnable = 8,
-    enderman_pickable = 9,
-    is_glowing = 10,
-    disabled = 11,
-  };
+  using attribute = ::VCL_block_attribute_t;
 
   static constexpr size_t idx_face_up = (size_t)attribute::face_up;
   static constexpr size_t idx_face_down = (size_t)attribute::face_down;

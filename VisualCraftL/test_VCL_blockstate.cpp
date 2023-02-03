@@ -4,9 +4,43 @@
 #include <iostream>
 #include <vector>
 
+#include <CLI11.hpp>
+
 using std::cout, std::endl;
 
 int main(int argc, char **argv) {
+
+  CLI::App app;
+  std::vector<std::string> input_files;
+  app.add_option("files", input_files, "json and resource packs.")
+      ->required()
+      ->check(CLI::ExistingFile);
+  int __version;
+  app.add_option("--version", __version, "MC version.")
+      ->default_val(19)
+      ->check(CLI::Range(12, 19, "Avaliable versions."));
+  int __layers;
+  app.add_option("--layers", __layers, "Max layers")
+      ->default_val(3)
+      ->check(CLI::PositiveNumber);
+
+  std::string __face;
+  app.add_option("--face", __face, "Facing direction.")
+      ->default_val("up")
+      ->check(CLI::IsMember({"up", "down", "north", "south", "east", "west"}));
+
+  CLI11_PARSE(app, argc, argv);
+
+  const int max_block_layers = __layers;
+
+  const auto version = SCL_gameVersion(__version);
+
+  bool ok = true;
+
+  const VCL_face_t face = VCL_str_to_face_t(__face.c_str(), &ok);
+  if (!ok) {
+    return 1;
+  }
 
   VCL_Kernel *kernel = VCL_create_kernel();
 
@@ -21,15 +55,15 @@ int main(int argc, char **argv) {
 
     std::vector<const char *> zip_filenames, json_filenames;
 
-    for (int argidx = 1; argidx < argc; argidx++) {
-      std::filesystem::path p(argv[argidx]);
+    for (const std::string &i : input_files) {
+      std::filesystem::path p(i);
 
       if (p.extension() == ".zip") {
-        zip_filenames.emplace_back(argv[argidx]);
+        zip_filenames.emplace_back(i.c_str());
       }
 
       if (p.extension() == ".json") {
-        json_filenames.emplace_back(argv[argidx]);
+        json_filenames.emplace_back(i.c_str());
       }
     }
 
@@ -60,12 +94,6 @@ int main(int argc, char **argv) {
 
     // VCL_display_resource_pack(rp);
     //  VCL_display_block_state_list(bsl);
-
-    constexpr int max_block_layers = 3;
-
-    constexpr auto version = SCL_gameVersion::MC19;
-
-    constexpr auto face = VCL_face_t::face_up;
 
     if constexpr (set_resource_by_move) {
       if (!VCL_set_resource_and_version_move(&rp, &bsl, version, face,
