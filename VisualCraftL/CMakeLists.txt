@@ -86,6 +86,9 @@ target_include_directories(SCL_json_cvt PRIVATE
 add_executable(test_block_class tests/test_block_class.cpp)
 target_link_libraries(test_block_class PRIVATE VisualCraftL)
 
+include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_12.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_latest.cmake)
+
 add_test(NAME test_block_class COMMAND test_block_class WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
 # automatic tests

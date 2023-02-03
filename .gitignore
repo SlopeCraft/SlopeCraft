@@ -68,3 +68,4 @@ install/
 
 ### build
 build/*
+binaries/*

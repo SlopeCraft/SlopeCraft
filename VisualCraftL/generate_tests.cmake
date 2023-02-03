@@ -1,12 +1,15 @@
+include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_12.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_latest.cmake)
+
 set(temp_testname_prefix test_block_list)
 
 set(list_faces "up" "down" "north" "south" "east" "west")
 
 foreach(_ver RANGE 12 19)
     if(_ver EQUAL 12)
-        set(zip_file "Vanilla_1_12_2.zip")
+        set(zip_file ${VCL_resource_12})
     else()
-        set(zip_file "Vanilla_1_19_2.zip")
+        set(zip_file ${VCL_resource_latest})
     endif()
 
     foreach(_face ${list_faces})
