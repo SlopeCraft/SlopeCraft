@@ -13,8 +13,7 @@ foreach(_ver RANGE 12 19)
         # message(STATUS ${temp_testname_prefix}_${_ver}_${_face})
         set(test_name ${temp_testname_prefix}_${_ver}_${_face})
 
-        message(STATUS ${test_name})
-
+        # message(STATUS ${test_name})
         add_test(NAME ${test_name}
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
             COMMAND test_VCL_blockstate ${CMAKE_CURRENT_SOURCE_DIR}/VCL_blocks_fixed.json ${zip_file} --version ${_ver} --face ${_face})

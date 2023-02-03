@@ -93,6 +93,18 @@ VCL_block parse_block(const nlohmann::json &jo, bool *const ok) {
 
   ret.set_transparency(false);
 
+  if (!jo.contains("class") || !jo.at("class").is_string()) {
+    *ok = false;
+    return {};
+  } else {
+    const std::string &str = jo.at("class");
+    ret.block_class = string_to_block_class(str, ok);
+
+    if (!*ok) {
+      return {};
+    }
+  }
+
   if (jo.contains("id_replace_list")) {
     if (!jo.at("id_replace_list").is_array()) {
       *ok = false;
@@ -286,4 +298,47 @@ void VCL_block_state_list::avaliable_block_states_by_transparency(
       }
     }
   }
+}
+
+#define VCL_private_macro_make_case(str, s, ret, ok_val)                       \
+  if (str == #s) {                                                             \
+    ok_val = true;                                                             \
+    ret = VCL_block_class_t::s;                                                \
+  }
+
+VCL_block_class_t string_to_block_class(std::string_view str,
+                                        bool *ok) noexcept {
+  bool val_for_ok = false;
+  VCL_block_class_t result{};
+
+  VCL_private_macro_make_case(str, wood, result, val_for_ok);
+  VCL_private_macro_make_case(str, planks, result, val_for_ok);
+  VCL_private_macro_make_case(str, leaves, result, val_for_ok);
+  VCL_private_macro_make_case(str, mushroom, result, val_for_ok);
+  VCL_private_macro_make_case(str, slab, result, val_for_ok);
+  VCL_private_macro_make_case(str, wool, result, val_for_ok);
+  VCL_private_macro_make_case(str, concrete, result, val_for_ok);
+  VCL_private_macro_make_case(str, terracotta, result, val_for_ok);
+  VCL_private_macro_make_case(str, glazed_terracotta, result, val_for_ok);
+  VCL_private_macro_make_case(str, concrete_powder, result, val_for_ok);
+  VCL_private_macro_make_case(str, shulker_box, result, val_for_ok);
+  VCL_private_macro_make_case(str, glass, result, val_for_ok);
+  VCL_private_macro_make_case(str, redstone, result, val_for_ok);
+  VCL_private_macro_make_case(str, stone, result, val_for_ok);
+  VCL_private_macro_make_case(str, ore, result, val_for_ok);
+  VCL_private_macro_make_case(str, clay, result, val_for_ok);
+  VCL_private_macro_make_case(str, natural, result, val_for_ok);
+  VCL_private_macro_make_case(str, crafted, result, val_for_ok);
+  VCL_private_macro_make_case(str, desert, result, val_for_ok);
+  VCL_private_macro_make_case(str, nether, result, val_for_ok);
+  VCL_private_macro_make_case(str, the_end, result, val_for_ok);
+  VCL_private_macro_make_case(str, ocean, result, val_for_ok);
+  VCL_private_macro_make_case(str, creative_only, result, val_for_ok);
+  VCL_private_macro_make_case(str, others, result, val_for_ok);
+
+  if (ok != nullptr) {
+    *ok = val_for_ok;
+  }
+
+  return result;
 }

@@ -35,6 +35,33 @@ enum class VCL_block_attribute_t : uint8_t {
   disabled = 11,
 };
 
+enum class VCL_block_class_t : uint8_t {
+  wood,
+  planks,
+  leaves,
+  mushroom,
+  slab,
+  wool,
+  concrete,
+  terracotta,
+  glazed_terracotta,
+  concrete_powder,
+  shulker_box,
+  glass,
+  redstone,
+  stone,
+  ore,
+  clay,
+  natural,
+  crafted,
+  desert,
+  nether,
+  the_end,
+  ocean,
+  creative_only,
+  others
+};
+
 class VCL_Kernel;
 class VCL_resource_pack;
 class VCL_block_state_list;
@@ -141,6 +168,12 @@ VCL_EXPORT_FUN bool VCL_get_block_attribute(const VCL_block *,
 VCL_EXPORT_FUN void VCL_set_block_attribute(VCL_block *,
                                             VCL_block_attribute_t attribute,
                                             bool value);
+
+VCL_EXPORT_FUN VCL_block_class_t VCL_get_block_class(const VCL_block *);
+VCL_EXPORT_FUN void VCL_set_block_class(VCL_block *, VCL_block_class_t cl);
+
+VCL_EXPORT_FUN VCL_block_class_t VCL_string_to_block_class(const char *str,
+                                                           bool *ok = nullptr);
 }
 
 #endif // SLOPECRAFT_VISUALCRAFT_VISUALCRAFT_H

@@ -28,7 +28,7 @@ private:
 public:
   version_set() = default;
 
-  version_set(uint64_t val) : set(val) {}
+  version_set(uint32_t val) : set(val) {}
 
   static version_set all() noexcept {
     version_set ret(~uint32_t(0));
@@ -159,6 +159,11 @@ public:
 
 private:
   std::bitset<32> attributes;
+
+public:
+  VCL_block_class_t block_class{VCL_block_class_t::others};
+
+private:
   const std::string *full_id_p{nullptr};
 
 public:
@@ -198,5 +203,8 @@ public:
     return &it->second;
   }
 };
+
+VCL_block_class_t string_to_block_class(std::string_view str,
+                                        bool *ok = nullptr) noexcept;
 
 #endif // SLOPECRAFT_VISUALCRAFT_BLOCKSTATELIST_H

@@ -67,18 +67,23 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     )
 endif()
 
-add_executable(test_VCL_internal test_VCL_internal.cpp)
+add_executable(test_VCL_internal tests/test_VCL_internal.cpp)
 target_link_libraries(test_VCL_internal PRIVATE VisualCraftL)
 
 include(${CMAKE_SOURCE_DIR}/cmake/configure_cli11.cmake)
 
-add_executable(test_VCL_blockstate test_VCL_blockstate.cpp)
+add_executable(test_VCL_blockstate tests/test_VCL_blockstate.cpp)
 target_link_libraries(test_VCL_blockstate PRIVATE VisualCraftL)
 target_include_directories(test_VCL_blockstate PRIVATE ${cli11_include_dir})
 
-add_executable(SCL_json_cvt SCL_json_cvt.cpp)
+add_executable(SCL_json_cvt tests/SCL_json_cvt.cpp)
 target_include_directories(SCL_json_cvt PRIVATE
     ${SlopeCraft_Nlohmann_json_include_dir})
+
+add_executable(test_block_class tests/test_block_class.cpp)
+target_link_libraries(test_block_class PRIVATE VisualCraftL)
+
+add_test(NAME test_block_class COMMAND test_block_class WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
 # automatic tests
 include(generate_tests.cmake)

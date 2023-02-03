@@ -486,29 +486,29 @@ VCL_EXPORT_FUN const char *VCL_face_t_to_str(VCL_face_t f) {
 }
 
 VCL_EXPORT_FUN VCL_face_t VCL_str_to_face_t(const char *str, bool *ok) {
-  if (str == nullptr) {
-    if (ok != nullptr)
-      *ok = false;
-    return {};
-  }
-
   return string_to_face_idx(str, ok);
 }
 
 VCL_EXPORT_FUN bool VCL_get_block_attribute(const VCL_block *b,
                                             VCL_block_attribute_t attribute) {
-  if (b == nullptr) {
-    return false;
-  }
-
   return b->get_attribute(attribute);
 }
 
 VCL_EXPORT_FUN void VCL_set_block_attribute(VCL_block *b,
                                             VCL_block_attribute_t attribute,
                                             bool value) {
-  if (b == nullptr)
-    return;
 
   b->set_attribute(attribute, value);
+}
+
+VCL_EXPORT_FUN VCL_block_class_t VCL_get_block_class(const VCL_block *b) {
+  return b->block_class;
+}
+VCL_EXPORT_FUN void VCL_set_block_class(VCL_block *b, VCL_block_class_t cl) {
+  b->block_class = cl;
+}
+
+VCL_EXPORT_FUN VCL_block_class_t VCL_string_to_block_class(const char *str,
+                                                           bool *ok) {
+  return string_to_block_class(str, ok);
 }
