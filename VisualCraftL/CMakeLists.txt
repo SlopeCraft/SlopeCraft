@@ -45,12 +45,10 @@ target_include_directories(VisualCraftL PUBLIC
     ${CMAKE_SOURCE_DIR}/utilities)
 
 target_include_directories(VisualCraftL INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
-
 target_link_libraries(VisualCraftL PRIVATE z png libzip::zip ColorManip Schem)
-
 target_compile_definitions(VisualCraftL PRIVATE BEFORE "-DVISUALCRAFTL_BUILD")
-
 target_compile_features(VisualCraftL PRIVATE cxx_std_23)
+target_compile_options(VisualCraftL PRIVATE "-flto")
 
 # target_compile_options(VisualCraftL PRIVATE "-std=c++20")
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")

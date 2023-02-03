@@ -21,6 +21,7 @@
         "version": "all"
     },
     "minecraft:black_concrete": {
+        "background": true,
         "class": "concrete",
         "id_replace_list": [
             [
@@ -33,6 +34,7 @@
         "version": "all"
     },
     "minecraft:blue_concrete": {
+        "background": true,
         "class": "concrete",
         "id_replace_list": [
             [
@@ -45,6 +47,7 @@
         "version": "all"
     },
     "minecraft:brown_concrete": {
+        "background": true,
         "class": "concrete",
         "id_replace_list": [
             [
@@ -57,6 +60,7 @@
         "version": "all"
     },
     "minecraft:cyan_concrete": {
+        "background": true,
         "class": "concrete",
         "id_replace_list": [
             [
@@ -69,6 +73,7 @@
         "version": "all"
     },
     "minecraft:gray_concrete": {
+        "background": true,
         "class": "concrete",
         "id_replace_list": [
             [
@@ -81,6 +86,7 @@
         "version": "all"
     },
     "minecraft:green_concrete": {
+        "background": true,
         "class": "concrete",
         "id_replace_list": [
             [
@@ -93,6 +99,7 @@
         "version": "all"
     },
     "minecraft:light_blue_concrete": {
+        "background": true,
         "class": "concrete",
         "id_replace_list": [
             [
@@ -105,12 +112,14 @@
         "version": "all"
     },
     "minecraft:light_gray_concrete": {
+        "background": true,
         "class": "concrete",
         "nameEN": "Light gray concrete",
         "nameZH": "浅灰混凝土",
         "version": 13
     },
     "minecraft:lime_concrete": {
+        "background": true,
         "class": "concrete",
         "id_replace_list": [
             [
@@ -123,6 +132,7 @@
         "version": "all"
     },
     "minecraft:magenta_concrete": {
+        "background": true,
         "class": "concrete",
         "id_replace_list": [
             [
@@ -135,6 +145,7 @@
         "version": "all"
     },
     "minecraft:orange_concrete": {
+        "background": true,
         "class": "concrete",
         "id_replace_list": [
             [
@@ -147,6 +158,7 @@
         "version": "all"
     },
     "minecraft:pink_concrete": {
+        "background": true,
         "class": "concrete",
         "id_replace_list": [
             [
@@ -159,6 +171,7 @@
         "version": "all"
     },
     "minecraft:purple_concrete": {
+        "background": true,
         "class": "concrete",
         "id_replace_list": [
             [
@@ -171,6 +184,7 @@
         "version": "all"
     },
     "minecraft:red_concrete": {
+        "background": true,
         "class": "concrete",
         "id_replace_list": [
             [
@@ -183,6 +197,7 @@
         "version": "all"
     },
     "minecraft:silver_concrete": {
+        "background": true,
         "class": "concrete",
         "nameEN": "Light gray concrete",
         "nameZH": "浅灰混凝土",
@@ -191,6 +206,7 @@
         ]
     },
     "minecraft:white_concrete": {
+        "background": true,
         "class": "concrete",
         "id_replace_list": [
             [
@@ -203,6 +219,7 @@
         "version": "all"
     },
     "minecraft:yellow_concrete": {
+        "background": true,
         "class": "concrete",
         "id_replace_list": [
             [
@@ -1776,6 +1793,7 @@
         ]
     },
     "minecraft:black_stained_hardened_clay": {
+        "background": true,
         "class": "terracotta",
         "id_replace_list": [
             [
@@ -1790,12 +1808,14 @@
         ]
     },
     "minecraft:black_terracotta": {
+        "background": true,
         "class": "terracotta",
         "nameEN": "Black terracotta",
         "nameZH": "黑色陶瓦",
         "version": 13
     },
     "minecraft:blue_stained_hardened_clay": {
+        "background": true,
         "class": "terracotta",
         "id_replace_list": [
             [
@@ -1810,12 +1830,14 @@
         ]
     },
     "minecraft:blue_terracotta": {
+        "background": true,
         "class": "terracotta",
         "nameEN": "Blue terracotta",
         "nameZH": "蓝色陶瓦",
         "version": 13
     },
     "minecraft:brown_stained_hardened_clay": {
+        "background": true,
         "class": "terracotta",
         "id_replace_list": [
             [
@@ -1830,12 +1852,14 @@
         ]
     },
     "minecraft:brown_terracotta": {
+        "background": true,
         "class": "terracotta",
         "nameEN": "Brown terracotta",
         "nameZH": "棕色陶瓦",
         "version": 13
     },
     "minecraft:cyan_stained_hardened_clay": {
+        "background": true,
         "class": "terracotta",
         "id_replace_list": [
             [
@@ -1850,12 +1874,14 @@
         ]
     },
     "minecraft:cyan_terracotta": {
+        "background": true,
         "class": "terracotta",
         "nameEN": "Cyan terracotta",
         "nameZH": "青色陶瓦",
         "version": 13
     },
     "minecraft:gray_stained_hardened_clay": {
+        "background": true,
         "class": "terracotta",
         "id_replace_list": [
             [
@@ -1870,12 +1896,14 @@
         ]
     },
     "minecraft:gray_terracotta": {
+        "background": true,
         "class": "terracotta",
         "nameEN": "Gray terracotta",
         "nameZH": "灰色陶瓦",
         "version": 13
     },
     "minecraft:green_stained_hardened_clay": {
+        "background": true,
         "class": "terracotta",
         "id_replace_list": [
             [
@@ -1890,12 +1918,14 @@
         ]
     },
     "minecraft:green_terracotta": {
+        "background": true,
         "class": "terracotta",
         "nameEN": "Green terracotta",
         "nameZH": "绿色陶瓦",
         "version": 13
     },
     "minecraft:hardened_clay": {
+        "background": true,
         "class": "terracotta",
         "nameEN": "Terracotta",
         "nameZH": "陶瓦",
@@ -1904,6 +1934,7 @@
         ]
     },
     "minecraft:light_blue_stained_hardened_clay": {
+        "background": true,
         "class": "terracotta",
         "id_replace_list": [
             [
@@ -1918,18 +1949,21 @@
         ]
     },
     "minecraft:light_blue_terracotta": {
+        "background": true,
         "class": "terracotta",
         "nameEN": "Light blue terracotta",
         "nameZH": "浅蓝陶瓦",
         "version": 13
     },
     "minecraft:light_gray_terracotta": {
+        "background": true,
         "class": "terracotta",
         "nameEN": "Light gray terracotta",
         "nameZH": "浅灰陶瓦",
         "version": 13
     },
     "minecraft:lime_stained_hardened_clay": {
+        "background": true,
         "class": "terracotta",
         "id_replace_list": [
             [
@@ -1944,12 +1978,14 @@
         ]
     },
     "minecraft:lime_terracotta": {
+        "background": true,
         "class": "terracotta",
         "nameEN": "Lime terracotta",
         "nameZH": "浅绿陶瓦",
         "version": 13
     },
     "minecraft:magenta_stained_hardened_clay": {
+        "background": true,
         "class": "terracotta",
         "id_replace_list": [
             [
@@ -1964,12 +2000,14 @@
         ]
     },
     "minecraft:magenta_terracotta": {
+        "background": true,
         "class": "terracotta",
         "nameEN": "Magenta terracotta",
         "nameZH": "品红陶瓦",
         "version": 13
     },
     "minecraft:orange_stained_hardened_clay": {
+        "background": true,
         "class": "terracotta",
         "id_replace_list": [
             [
@@ -1984,12 +2022,14 @@
         ]
     },
     "minecraft:orange_terracotta": {
+        "background": true,
         "class": "terracotta",
         "nameEN": "Orange terracotta",
         "nameZH": "橙色陶瓦",
         "version": 13
     },
     "minecraft:pink_stained_hardened_clay": {
+        "background": true,
         "class": "terracotta",
         "id_replace_list": [
             [
@@ -2004,12 +2044,14 @@
         ]
     },
     "minecraft:pink_terracotta": {
+        "background": true,
         "class": "terracotta",
         "nameEN": "Pink terracotta",
         "nameZH": "粉色陶瓦",
         "version": 13
     },
     "minecraft:purple_stained_hardened_clay": {
+        "background": true,
         "class": "terracotta",
         "id_replace_list": [
             [
@@ -2024,12 +2066,14 @@
         ]
     },
     "minecraft:purple_terracotta": {
+        "background": true,
         "class": "terracotta",
         "nameEN": "Purple terracotta",
         "nameZH": "紫色陶瓦",
         "version": 13
     },
     "minecraft:red_stained_hardened_clay": {
+        "background": true,
         "class": "terracotta",
         "id_replace_list": [
             [
@@ -2044,12 +2088,14 @@
         ]
     },
     "minecraft:red_terracotta": {
+        "background": true,
         "class": "terracotta",
         "nameEN": "Red terracotta",
         "nameZH": "红色陶瓦",
         "version": 13
     },
     "minecraft:silver_stained_hardened_clay": {
+        "background": true,
         "class": "terracotta",
         "id_replace_list": [
             [
@@ -2064,12 +2110,14 @@
         ]
     },
     "minecraft:terracotta": {
+        "background": true,
         "class": "terracotta",
         "nameEN": "Terracotta",
         "nameZH": "陶瓦",
         "version": 13
     },
     "minecraft:white_stained_hardened_clay": {
+        "background": true,
         "class": "terracotta",
         "id_replace_list": [
             [
@@ -2084,12 +2132,14 @@
         ]
     },
     "minecraft:white_terracotta": {
+        "background": true,
         "class": "terracotta",
         "nameEN": "White terracotta",
         "nameZH": "白色陶瓦",
         "version": 13
     },
     "minecraft:yellow_stained_hardened_clay": {
+        "background": true,
         "class": "terracotta",
         "id_replace_list": [
             [
@@ -2104,6 +2154,7 @@
         ]
     },
     "minecraft:yellow_terracotta": {
+        "background": true,
         "burnable": true,
         "class": "terracotta",
         "nameEN": "Yellow terracotta",
@@ -2179,6 +2230,7 @@
         "version": 16
     },
     "minecraft:black_wool": {
+        "background": true,
         "burnable": true,
         "class": "wool",
         "id_replace_list": [
@@ -2192,6 +2244,7 @@
         "version": "all"
     },
     "minecraft:blue_wool": {
+        "background": true,
         "burnable": true,
         "class": "wool",
         "id_replace_list": [
@@ -2205,6 +2258,7 @@
         "version": "all"
     },
     "minecraft:brown_wool": {
+        "background": true,
         "burnable": true,
         "class": "wool",
         "id_replace_list": [
@@ -2218,6 +2272,7 @@
         "version": "all"
     },
     "minecraft:cyan_wool": {
+        "background": true,
         "burnable": true,
         "class": "wool",
         "id_replace_list": [
@@ -2231,6 +2286,7 @@
         "version": "all"
     },
     "minecraft:gray_wool": {
+        "background": true,
         "burnable": true,
         "class": "wool",
         "id_replace_list": [
@@ -2244,6 +2300,7 @@
         "version": "all"
     },
     "minecraft:green_wool": {
+        "background": true,
         "burnable": true,
         "class": "wool",
         "id_replace_list": [
@@ -2257,6 +2314,7 @@
         "version": "all"
     },
     "minecraft:light_blue_wool": {
+        "background": true,
         "burnable": true,
         "class": "wool",
         "id_replace_list": [
@@ -2270,6 +2328,7 @@
         "version": "all"
     },
     "minecraft:light_gray_wool": {
+        "background": true,
         "burnable": true,
         "class": "wool",
         "nameEN": "Light gray wool",
@@ -2277,6 +2336,7 @@
         "version": 13
     },
     "minecraft:lime_wool": {
+        "background": true,
         "burnable": true,
         "class": "wool",
         "id_replace_list": [
@@ -2290,6 +2350,7 @@
         "version": "all"
     },
     "minecraft:magenta_wool": {
+        "background": true,
         "burnable": true,
         "class": "wool",
         "id_replace_list": [
@@ -2303,6 +2364,7 @@
         "version": "all"
     },
     "minecraft:orange_wool": {
+        "background": true,
         "burnable": true,
         "class": "wool",
         "id_replace_list": [
@@ -2316,6 +2378,7 @@
         "version": "all"
     },
     "minecraft:pink_wool": {
+        "background": true,
         "burnable": true,
         "class": "wool",
         "id_replace_list": [
@@ -2329,6 +2392,7 @@
         "version": "all"
     },
     "minecraft:purple_wool": {
+        "background": true,
         "burnable": true,
         "class": "wool",
         "id_replace_list": [
@@ -2342,6 +2406,7 @@
         "version": "all"
     },
     "minecraft:red_wool": {
+        "background": true,
         "burnable": true,
         "class": "wool",
         "id_replace_list": [
@@ -2355,6 +2420,7 @@
         "version": "all"
     },
     "minecraft:silver_wool": {
+        "background": true,
         "burnable": true,
         "class": "wool",
         "id_replace_list": [
@@ -2370,6 +2436,7 @@
         ]
     },
     "minecraft:white_wool": {
+        "background": true,
         "burnable": true,
         "class": "wool",
         "id_replace_list": [
@@ -2383,6 +2450,7 @@
         "version": "all"
     },
     "minecraft:yellow_wool": {
+        "background": true,
         "burnable": true,
         "class": "wool",
         "id_replace_list": [

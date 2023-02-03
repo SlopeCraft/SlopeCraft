@@ -19,7 +19,7 @@ VCL_block::VCL_block(const std::string *full_id_ptr) : full_id_p(full_id_ptr) {
 void VCL_block::initialize_attributes() noexcept {
   this->attributes.reset();
   this->set_transparency(false);
-  this->set_is_background(true);
+  this->set_is_background(false);
   for (size_t sz = idx_face_up; sz < idx_face_west; sz++) {
     this->attributes[sz] = true;
   }
