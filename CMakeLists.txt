@@ -5,6 +5,8 @@ set(SlopeCraft_version 3.10.1)
 project(SlopeCraft VERSION ${SlopeCraft_version} LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 
+enable_testing()
+
 # manage the install prefix
 set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install_app)
 set(CMAKE_INSTALL_LIBDIR ${CMAKE_INSTALL_PREFIX})
@@ -87,7 +89,7 @@ endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     # add_compile_options(-fPIC)
-    #set(CMAKE_INSTALL_RPATH "../lib")
+    # set(CMAKE_INSTALL_RPATH "../lib")
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")

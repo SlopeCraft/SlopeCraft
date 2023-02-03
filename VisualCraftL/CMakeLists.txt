@@ -79,3 +79,6 @@ target_include_directories(test_VCL_blockstate PRIVATE ${cli11_include_dir})
 add_executable(SCL_json_cvt SCL_json_cvt.cpp)
 target_include_directories(SCL_json_cvt PRIVATE
     ${SlopeCraft_Nlohmann_json_include_dir})
+
+# automatic tests
+include(generate_tests.cmake)
