@@ -6,6 +6,8 @@
 
 #include "ParseResourcePack.h"
 
+#include <ranges>
+
 using namespace resource_json;
 
 using njson = nlohmann::json;
@@ -266,18 +268,139 @@ bool parse_block_state_variant(const njson::object_t &obj,
   return true;
 }
 
-bool parse_block_state_multipart(const njson::object_t &,
-                                 block_state_multipart *const) {
-  printf("\nFatal error : parsing blockstate json of multipart is not "
-         "supported yet.\n");
+void parse_single_criteria_split(std::string_view key, std::string_view values,
+                                 criteria *const cr) noexcept {
+  cr->key = key;
+  cr->values.clear();
 
-  // exit(1);
-  return false;
+  size_t current_value_beg_idx = 0;
+
+  for (size_t idx = 0;; idx++) {
+    if (values.size() >= idx || values[idx] == '\0' || values[idx] == '|') {
+      cr->values.emplace_back(
+          values.substr(current_value_beg_idx, idx - current_value_beg_idx));
+      current_value_beg_idx = idx + 1;
+    }
+
+    if (values.size() >= idx || values[idx] == '\0') {
+      break;
+    }
+  }
+}
+
+bool parse_block_state_multipart(const njson::object_t &obj,
+                                 block_state_multipart *const dest) {
+  /*
+printf("\nFatal error : parsing blockstate json of multipart is not "
+"supported yet.\n");
+
+// abort();
+return false;
+*/
+
+  const njson &multiparts = obj.at("multipart");
+
+  if (!multiparts.is_array()) {
+    printf("\nFatal error : multipart must be an array.\n");
+    return false;
+  }
+
+  dest->pairs.clear();
+
+  for (size_t i = 0; i < multiparts.size(); i++) {
+    const njson &part = multiparts[i];
+
+    multipart_pair mpp;
+    try {
+      const njson &apply = part.at("apply");
+      mpp.apply_blockmodel.model_name = apply.at("model");
+      if (apply.contains("x")) {
+        mpp.apply_blockmodel.x = apply.at("x");
+      }
+      if (apply.contains("y")) {
+        mpp.apply_blockmodel.y = apply.at("y");
+      }
+      if (apply.contains("uvlock")) {
+        mpp.apply_blockmodel.uvlock = apply.at("uvlock");
+      }
+    } catch (std::runtime_error err) {
+
+      printf(
+          "\nAn error occurred when parsing the value of apply. Details : %s\n",
+          err.what());
+      return false;
+    }
+
+    try {
+      const njson &when = part.at("when");
+
+      if (when.contains("OR")) {
+        const njson &OR = when.at("OR");
+        std::vector<criteria_list_and> when_or;
+        for (size_t idx = 0; idx < OR.size(); idx++) {
+          criteria_list_and and_list;
+
+          for (auto it = OR[idx].begin(); it != OR[idx].end(); ++it) {
+            criteria cr;
+            // const std::string &v_str = ;
+            parse_single_criteria_split(it.key(),
+                                        (const std::string &)it.value(), &cr);
+            and_list.emplace_back(std::move(cr));
+          }
+
+          when_or.emplace_back(std::move(and_list));
+        }
+
+        mpp.criteria = std::move(when_or);
+      } else {
+        if (when.size() != 1) {
+          printf("\nError : when should be an object and has "
+                 "only one pair of key and value.\n");
+          return false;
+        }
+        criteria cr;
+
+        auto it = when.begin();
+
+        parse_single_criteria_split(it.key(), (const std::string &)it.value(),
+                                    &cr);
+
+        mpp.criteria = std::move(cr);
+      }
+    } catch (std::runtime_error err) {
+      printf("\nFatal error : failed to parse when for a multipart blockstate "
+             "file. Details : %s\n",
+             err.what());
+      return false;
+    }
+
+    dest->pairs.emplace_back(std::move(mpp));
+    /*
+        if (!part.is_object()) {
+          printf("\nFatal error : multipart must an array of objects.\n");
+          return false;
+        }
+
+        if (!part.contains("apply") || !part.contains("when")) {
+          printf("\nFatal error : element in multipart must contains \"apply\"
+       and "
+                 "\"when\"\n");
+          return false;
+        }
+
+        if (!apply.contains("model") || !apply.at("model").is_string()) {
+          printf("\nFatal error : multipart should apply a model.\n");
+          return false;
+        }
+        */
+  }
+
+  return true;
 }
 
 struct face_json_temp {
   std::string texture{""};
-  std::array<int16_t, 4> uv{0, 0, 16, 16};
+  std::array<float, 4> uv{0, 0, 16, 16};
   block_model::face_idx cullface_face;
   bool have_cullface{false};
   bool is_hidden{true}; ///< note that by default, is_hidden is true.
@@ -512,13 +635,17 @@ bool parse_single_model_json(const char *const json_beg,
           if (curface.contains("uv") && curface.at("uv").is_array()) {
             const njson::array_t &uvarr = curface.at("uv");
 
-            if (uvarr.size() != 4 || !uvarr.front().is_number_integer()) {
-              printf("\nInvalid value for uv array : the size must be 4, and "
-                     "each value should be integer.\n");
+            if (uvarr.size() != 4) {
+              printf("\nInvalid value for uv array : the size must be 4.\n");
               return false;
             }
 
             for (int idx = 0; idx < 4; idx++) {
+              if (!uvarr.at(idx).is_number()) {
+                printf("\nInvalid value for uv array : the value must be "
+                       "numbers.\n");
+                return false;
+              }
               f.uv[idx] = uvarr[idx];
             }
           }

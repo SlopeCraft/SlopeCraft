@@ -11,6 +11,8 @@
 
 #include "VisualCraftL.h"
 #include <utility>
+#include <variant>
+
 /*
 #if __cplusplus < 202002L
 #warning Requires C++23
@@ -115,7 +117,7 @@ constexpr inline face_idx inverse_face(const face_idx fi) noexcept {
   case face_idx::face_west:
     return face_idx::face_east;
   }
-  std::unreachable();
+  // std::unreachable();
 
   return face_idx::face_up;
 }
@@ -151,7 +153,7 @@ constexpr inline face_idx rotate_x(face_idx original, face_rot x_rot) noexcept {
     case face_y_neg:
       return face_z_neg;
     default:
-      std::unreachable();
+      // std::unreachable();
       return {};
     }
   }
@@ -160,7 +162,7 @@ constexpr inline face_idx rotate_x(face_idx original, face_rot x_rot) noexcept {
     return inverse_face(rotate_x(original, face_rot::face_rot_90));
   }
   }
-  std::unreachable();
+  // std::unreachable();
   return {};
 }
 
@@ -176,7 +178,7 @@ constexpr inline face_idx invrotate_x(face_idx rotated,
   case face_rot::face_rot_270:
     return rotate_x(rotated, face_rot::face_rot_90);
   }
-  std::unreachable();
+  // std::unreachable();
   return {};
 }
 
@@ -201,7 +203,7 @@ constexpr inline face_idx rotate_y(face_idx original, face_rot y_rot) noexcept {
     case face_z_pos:
       return face_x_pos;
     default:
-      std::unreachable();
+      // std::unreachable();
       return {};
     }
   }
@@ -210,7 +212,7 @@ constexpr inline face_idx rotate_y(face_idx original, face_rot y_rot) noexcept {
     return inverse_face(rotate_y(original, face_rot::face_rot_90));
   }
 
-  std::unreachable();
+  // std::unreachable();
   return {};
 }
 
@@ -226,7 +228,7 @@ constexpr inline face_idx invrotate_y(face_idx rotated,
   case face_rot::face_rot_270:
     return rotate_y(rotated, face_rot::face_rot_90);
   }
-  std::unreachable();
+  // std::unreachable();
   return {};
 }
 
@@ -253,15 +255,15 @@ class face_t {
 public:
   const EImgRowMajor_t *texture{nullptr};
   /// It is not pixel index, but [0,1]*16 stored in integer
-  std::array<int16_t, 2> uv_start{0, 0};
+  std::array<float, 2> uv_start{0, 0};
   /// It is not pixel index, but [0,1]*16 stored in integer
-  std::array<int16_t, 2> uv_end{16, 16};
+  std::array<float, 2> uv_end{16, 16};
   face_rot rot{face_rot::face_rot_0};
   bool is_hidden{false};
 
   inline bool is_uv_whole_texture() const noexcept {
-    return (uv_start[0] == 0 && uv_start[1] == 0) &&
-           (uv_end[0] == 16 && uv_end[1] == 16);
+    return (uv_start[0] <= 0 && uv_start[1] <= 0) &&
+           (uv_end[0] >= 16 && uv_end[1] >= 16);
   }
 };
 
@@ -484,13 +486,18 @@ bool match_criteria_list(const criteria_list_and &cl,
                          const state_list &sl) noexcept;
 
 struct multipart_pair {
+  std::variant<criteria, std::vector<criteria_list_and>> criteria;
   model_store_t apply_blockmodel;
+  /*
   criteria when;
   std::vector<criteria_list_and> when_or;
+  */
 
   inline bool match(const state_list &sl) const noexcept {
-    if (when_or.size() <= 0) {
-      std::string_view key = when.key;
+    const resource_json::criteria *when =
+        std::get_if<resource_json::criteria>(&this->criteria);
+    if (when != nullptr) {
+      std::string_view key = when->key;
       const char *slvalue = nullptr;
       for (const state &s : sl) {
         if (s.key == key) {
@@ -504,8 +511,11 @@ struct multipart_pair {
         return false;
       }
 
-      return when.match(slvalue);
+      return when->match(slvalue);
     }
+
+    const std::vector<criteria_list_and> &when_or =
+        std::get<std::vector<criteria_list_and>>(this->criteria);
 
     for (const criteria_list_and &cl : when_or) {
       if (match_criteria_list(cl, sl))
