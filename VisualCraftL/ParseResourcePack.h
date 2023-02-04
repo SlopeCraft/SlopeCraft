@@ -47,11 +47,6 @@ bool parse_png(
     const void *const data, const int64_t length,
     Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> *img);
 
-std::unordered_map<std::string, Eigen::Array<ARGB, Eigen::Dynamic,
-                                             Eigen::Dynamic, Eigen::RowMajor>>
-folder_to_images(const zipped_folder &src, bool *const error = nullptr,
-                 std::string *const error_string = nullptr) noexcept;
-
 namespace block_model {
 constexpr int x_idx = 0;
 constexpr int y_idx = 1;
@@ -144,14 +139,14 @@ constexpr inline face_idx rotate_x(face_idx original, face_rot x_rot) noexcept {
 
   case face_rot::face_rot_90: {
     switch (original) {
-    case face_z_neg:
-      return face_y_pos;
     case face_y_pos:
-      return face_z_pos;
-    case face_z_pos:
+      return face_z_neg;
+    case face_z_neg:
       return face_y_neg;
     case face_y_neg:
-      return face_z_neg;
+      return face_z_pos;
+    case face_z_pos:
+      return face_y_pos;
     default:
       // std::unreachable();
       return {};
@@ -194,14 +189,14 @@ constexpr inline face_idx rotate_y(face_idx original, face_rot y_rot) noexcept {
     return inverse_face(original);
   case face_rot::face_rot_90: {
     switch (original) {
-    case face_x_pos:
-      return face_z_neg;
-    case face_z_neg:
+    case face_z_pos:
       return face_x_neg;
     case face_x_neg:
-      return face_z_pos;
-    case face_z_pos:
+      return face_z_neg;
+    case face_z_neg:
       return face_x_pos;
+    case face_x_pos:
+      return face_z_pos;
     default:
       // std::unreachable();
       return {};
@@ -230,6 +225,23 @@ constexpr inline face_idx invrotate_y(face_idx rotated,
   }
   // std::unreachable();
   return {};
+}
+
+constexpr inline face_idx rotate(face_idx original, face_rot x_rot,
+                                 face_rot y_rot) noexcept {
+  return rotate_y(rotate_x(original, x_rot), y_rot);
+}
+
+constexpr inline face_idx invrotate(face_idx original, face_rot x_rot,
+                                    face_rot y_rot) noexcept {
+  return invrotate_x(invrotate_y(original, y_rot), x_rot);
+}
+
+Eigen::Array3f rotate_x(const Eigen::Array3f &pos, face_rot x_rot) noexcept;
+Eigen::Array3f rotate_y(const Eigen::Array3f &pos, face_rot y_rot) noexcept;
+inline Eigen::Array3f rotate(const Eigen::Array3f &pos, face_rot x_rot,
+                             face_rot y_rot) noexcept {
+  return rotate_y(rotate_x(pos, x_rot), y_rot);
 }
 
 class ray_t {
@@ -364,6 +376,8 @@ public:
   void
   intersect_points(const face_idx f, const ray_t &ray,
                    std::vector<intersect_point> *const dest) const noexcept;
+
+  element rotate(face_rot x_rot, face_rot y_rot) const noexcept;
 };
 
 /// a block model
@@ -393,6 +407,8 @@ public:
 
   void projection_image(face_idx idx,
                         EImgRowMajor_t *const dest) const noexcept;
+
+  void merge_back(const model &md, face_rot x_rot, face_rot y_rot) noexcept;
 };
 
 } // namespace block_model
@@ -481,13 +497,16 @@ public:
 
 using criteria_list_and = std::vector<criteria>;
 
+struct criteria_all_pass {};
+
 /// @return true if sl matches every criteria in cl
 bool match_criteria_list(const criteria_list_and &cl,
                          const state_list &sl) noexcept;
 
 struct multipart_pair {
-  std::variant<criteria, std::vector<criteria_list_and>> criteria;
-  model_store_t apply_blockmodel;
+  std::variant<criteria, std::vector<criteria_list_and>, criteria_all_pass>
+      criteria;
+  std::vector<model_store_t> apply_blockmodel;
   /*
   criteria when;
   std::vector<criteria_list_and> when_or;
@@ -514,6 +533,10 @@ struct multipart_pair {
       return when->match(slvalue);
     }
 
+    if (std::get_if<criteria_all_pass>(&this->criteria) != nullptr) {
+      return true;
+    }
+
     const std::vector<criteria_list_and> &when_or =
         std::get<std::vector<criteria_list_and>>(this->criteria);
 
@@ -534,10 +557,10 @@ public:
   block_model_names(const state_list &sl) const noexcept;
 };
 
-bool parse_block_state(const char *const json_str_beg, const char *const end,
-                       block_states_variant *const dest_variant,
-                       block_state_multipart *const dest_mutlipart = nullptr,
-                       bool *const is_dest_variant = nullptr) noexcept;
+bool parse_block_state(
+    const char *const json_str_beg, const char *const end,
+    std::variant<block_states_variant, block_state_multipart> *,
+    bool *const is_dest_variant = nullptr) noexcept;
 
 } // namespace resource_json
 
@@ -575,17 +598,16 @@ public:
     resource_json::state_list state_list;
   };
 
-  const block_model::model *
+  std::variant<const block_model::model *, block_model::model>
   find_model(const std::string &block_state_str, VCL_face_t face_exposed,
              VCL_face_t *face_invrotated) const noexcept {
     buffer_t b;
     return this->find_model(block_state_str, face_exposed, face_invrotated, b);
   }
 
-  const block_model::model *find_model(const std::string &block_state_str,
-                                       VCL_face_t face_exposed,
-                                       VCL_face_t *face_invrotated,
-                                       buffer_t &) const noexcept;
+  std::variant<const block_model::model *, block_model::model>
+  find_model(const std::string &block_state_str, VCL_face_t face_exposed,
+             VCL_face_t *face_invrotated, buffer_t &) const noexcept;
 
   bool compute_projection(const std::string &block_state_str,
                           VCL_face_t face_exposed,
@@ -597,7 +619,9 @@ private:
   std::unordered_map<std::string, Eigen::Array<ARGB, Eigen::Dynamic,
                                                Eigen::Dynamic, Eigen::RowMajor>>
       textures;
-  std::unordered_map<std::string, resource_json::block_states_variant>
+  std::unordered_map<std::string,
+                     std::variant<resource_json::block_states_variant,
+                                  resource_json::block_state_multipart>>
       block_states;
 
   bool is_MC12{false};

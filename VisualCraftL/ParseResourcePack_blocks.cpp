@@ -364,3 +364,85 @@ EImgRowMajor_t model::projection_image(face_idx fidx) const noexcept {
 
   return result;
 }
+
+void model::merge_back(const model &md, face_rot x_rot,
+                       face_rot y_rot) noexcept {
+  this->elements.reserve(this->elements.size() + md.elements.size());
+
+  for (const element &ele : md.elements) {
+    this->elements.emplace_back(ele.rotate(x_rot, y_rot));
+  }
+}
+
+Eigen::Array3f block_model::rotate_x(const Eigen::Array3f &pos,
+                                     face_rot x_rot) noexcept {
+
+  const Eigen::Array3f center{8, 8, 8};
+
+  const Eigen::Array3f diff_before = pos - center;
+  Eigen::Array3f diff_after = diff_before;
+
+  switch (x_rot) {
+  case face_rot::face_rot_0:
+    return pos;
+  case face_rot::face_rot_90:
+    diff_after[y_idx] = diff_before[z_idx];
+    diff_after[z_idx] = -diff_before[y_idx];
+    break;
+  case face_rot::face_rot_180:
+    diff_after[y_idx] = -diff_before[y_idx];
+    diff_after[z_idx] = -diff_before[z_idx];
+    break;
+  case face_rot::face_rot_270:
+    diff_after[y_idx] = -diff_before[z_idx];
+    diff_after[z_idx] = diff_before[y_idx];
+    break;
+  }
+
+  return diff_after + center;
+}
+Eigen::Array3f block_model::rotate_y(const Eigen::Array3f &pos,
+                                     face_rot y_rot) noexcept {
+  const Eigen::Array3f center{8, 8, 8};
+
+  const Eigen::Array3f diff_before = pos - center;
+  Eigen::Array3f diff_after = diff_before;
+
+  switch (y_rot) {
+  case face_rot::face_rot_0:
+    return pos;
+
+  case face_rot::face_rot_90:
+    diff_after[x_idx] = -diff_before[z_idx];
+    diff_after[z_idx] = diff_before[x_idx];
+    break;
+  case face_rot::face_rot_180:
+    diff_after[x_idx] = -diff_before[x_idx];
+    diff_after[z_idx] = -diff_before[z_idx];
+    break;
+  case face_rot::face_rot_270:
+    diff_after[x_idx] = diff_before[z_idx];
+    diff_after[z_idx] = -diff_before[x_idx];
+    break;
+  }
+
+  return diff_after + center;
+}
+
+element block_model::element::rotate(face_rot x_rot,
+                                     face_rot y_rot) const noexcept {
+  element ret;
+  const Eigen::Array3f f = block_model::rotate(this->_from, x_rot, y_rot);
+  const Eigen::Array3f t = block_model::rotate(this->_to, x_rot, y_rot);
+  ret._from = f.min(t);
+  ret._to = t.max(t);
+
+  for (uint8_t face = 0; face < 6; face++) {
+    const face_idx face_beg = face_idx(face);
+    const face_idx face_end = block_model::rotate(face_beg, x_rot, y_rot);
+
+    ret.faces[uint8_t(face_end)] = this->faces[uint8_t(face_beg)];
+  }
+
+  return ret;
+}

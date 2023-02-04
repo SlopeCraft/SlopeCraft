@@ -181,8 +181,10 @@ VCL_EXPORT_FUN void VCL_set_block_class(VCL_block *, VCL_block_class_t cl);
 VCL_EXPORT_FUN VCL_block_class_t VCL_string_to_block_class(const char *str,
                                                            bool *ok = nullptr);
 
+#ifdef VCL_ENABLE_INTERNAL_TEST
 // Function about internal test
 VCL_EXPORT_FUN void VCL_internal_test();
+#endif // #ifdef VCL_ENABLE_INTERNAL_TEST
 }
 
 #endif // SLOPECRAFT_VISUALCRAFT_VISUALCRAFT_H

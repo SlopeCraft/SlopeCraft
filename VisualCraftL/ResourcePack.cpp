@@ -128,7 +128,7 @@ bool resource_json::process_full_id(std::string_view full_id,
   return true;
 }
 
-const block_model::model *
+std::variant<const block_model::model *, block_model::model>
 resource_pack::find_model(const std::string &block_state_str,
                           VCL_face_t face_exposed, VCL_face_t *face_invrotated,
                           buffer_t &buffer) const noexcept {
@@ -164,44 +164,91 @@ resource_pack::find_model(const std::string &block_state_str,
     return nullptr;
   }
 
-  resource_json::model_pass_t model =
-      it_state->second.block_model_name(buffer.state_list);
+  if (it_state->second.index() == 0) {
+    resource_json::model_pass_t model =
+        std::get<resource_json::block_states_variant>(it_state->second)
+            .block_model_name(buffer.state_list);
 
-  face_exposed = block_model::invrotate_y(face_exposed, model.y);
-  face_exposed = block_model::invrotate_x(face_exposed, model.x);
+    face_exposed = block_model::invrotate_y(face_exposed, model.y);
+    face_exposed = block_model::invrotate_x(face_exposed, model.x);
 
-  *face_invrotated = face_exposed;
+    *face_invrotated = face_exposed;
 
-  if (model.model_name == nullptr) {
-    printf("\nError : No block model for full id : \"%s\", this is usually "
-           "because block states mismatch.",
-           block_state_str.c_str());
-    return nullptr;
+    if (model.model_name == nullptr) {
+      printf("\nError : No block model for full id : \"%s\", this is usually "
+             "because block states mismatch.",
+             block_state_str.c_str());
+      return nullptr;
+    }
+    {
+      std::string sv(model.model_name);
+      const size_t idx_of_colon = sv.find_first_of(':');
+      if (idx_of_colon != sv.npos) {
+        buffer.pure_id = sv.substr(idx_of_colon + 1);
+      } else {
+        buffer.pure_id = sv;
+      }
+    }
+
+    auto it_model = this->block_models.find(buffer.pure_id);
+    if (it_model == this->block_models.end()) {
+      it_model = this->block_models.find("block/" + buffer.pure_id);
+    }
+
+    if (it_model == this->block_models.end()) {
+      printf(
+          "Error : Failed to find block model for full id : \"%s\". Detail : "
+          "undefined reference to model named \"%s\".\n",
+          block_state_str.c_str(), model.model_name);
+      return nullptr;
+    }
+
+    return &it_model->second;
   }
-  {
-    std::string sv(model.model_name);
-    const size_t idx_of_colon = sv.find_first_of(':');
-    if (idx_of_colon != sv.npos) {
-      buffer.pure_id = sv.substr(idx_of_colon + 1);
-    } else {
-      buffer.pure_id = sv;
+  // Here the block must be a multipart
+  const auto &multipart =
+      std::get<resource_json::block_state_multipart>(it_state->second);
+
+  const auto models = multipart.block_model_names(buffer.state_list);
+  for (const auto &md : models) {
+    if (md.model_name == nullptr) {
+      return nullptr;
     }
   }
 
-  auto it_model = this->block_models.find(buffer.pure_id);
-  if (it_model == this->block_models.end()) {
-    it_model = this->block_models.find("block/" + buffer.pure_id);
-  }
-
-  if (it_model == this->block_models.end()) {
-    printf("Error : Failed to find block model for full id : \"%s\". Detail : "
-           "undefined reference to model named \"%s\".\n",
-           block_state_str.c_str(), model.model_name);
+  if (models.size() <= 0) {
     return nullptr;
   }
 
-  return &it_model->second;
+  block_model::model md;
 
+  for (size_t mdidx = 0; mdidx < models.size(); mdidx++) {
+    {
+      std::string sv(models[mdidx].model_name);
+      const size_t idx_of_colon = sv.find_first_of(':');
+      if (idx_of_colon != sv.npos) {
+        buffer.pure_id = sv.substr(idx_of_colon + 1);
+      } else {
+        buffer.pure_id = std::move(sv);
+      }
+    }
+
+    auto it_model = this->block_models.find(buffer.pure_id);
+    if (it_model == this->block_models.end()) {
+      it_model = this->block_models.find("block/" + buffer.pure_id);
+    }
+    if (it_model == this->block_models.end()) {
+      printf(
+          "Error : Failed to find block model for full id : \"%s\". Detail : "
+          "undefined reference to model named \"%s\".\n",
+          block_state_str.c_str(), models[mdidx].model_name);
+      return nullptr;
+    }
+
+    md.merge_back(it_model->second, models[mdidx].x, models[mdidx].y);
+  }
+
+  return std::move(md);
   // auto jt=this->block_models.find(it->second.)
 }
 
@@ -210,13 +257,21 @@ bool resource_pack::compute_projection(const std::string &block_state_str,
                                        block_model::EImgRowMajor_t *const img,
                                        buffer_t &buffer) const noexcept {
 
-  const block_model::model *model =
+  std::variant<const block_model::model *, block_model::model> ret =
       this->find_model(block_state_str, face_exposed, &face_exposed, buffer);
 
-  if (model == nullptr) {
-    return false;
+  if (ret.index() == 0) {
+    auto model = std::get<0>(ret);
+    if (model == nullptr) {
+      return false;
+    }
+
+    model->projection_image(face_exposed, img);
+    return true;
   }
 
-  model->projection_image(face_exposed, img);
+  block_model::model &md = std::get<1>(ret);
+
+  md.projection_image(face_exposed, img);
   return true;
 }

@@ -162,22 +162,25 @@ VCL_EXPORT_FUN void VCL_display_resource_pack(const VCL_resource_pack *rp,
 
     for (const auto &pair : rp->get_block_states()) {
       cout << pair.first << " : {";
-      for (const auto &i : pair.second.LUT) {
-        cout << "\n  [";
-        for (const auto &j : i.first) {
-          cout << j.key << '=' << j.value << ',';
-        }
+      if (pair.second.index() == 1) {
+        cout << "\n  multipart.\n";
+      } else
+        for (const auto &i : std::get<0>(pair.second).LUT) {
+          cout << "\n  [";
+          for (const auto &j : i.first) {
+            cout << j.key << '=' << j.value << ',';
+          }
 
-        if (!i.first.empty()) {
-          cout << '\b';
-        }
+          if (!i.first.empty()) {
+            cout << '\b';
+          }
 
-        cout << "] => " << i.second.model_name;
-        cout << ", x=" << int(i.second.x) * 10;
-        cout << ", y=" << int(i.second.y) * 10;
-        cout << ", uvlock="
-             << (const char *)(i.second.uvlock ? ("true") : ("false"));
-      }
+          cout << "] => " << i.second.model_name;
+          cout << ", x=" << int(i.second.x) * 10;
+          cout << ", y=" << int(i.second.y) * 10;
+          cout << ", uvlock="
+               << (const char *)(i.second.uvlock ? ("true") : ("false"));
+        }
       cout << "}\n";
     }
   }

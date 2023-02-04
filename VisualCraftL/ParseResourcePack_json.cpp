@@ -83,7 +83,10 @@ block_state_multipart::block_model_names(const state_list &sl) const noexcept {
 
   for (const multipart_pair &pair : this->pairs) {
     if (pair.match(sl))
-      res.emplace_back(model_pass_t(pair.apply_blockmodel));
+      for (const auto &ms : pair.apply_blockmodel) {
+        res.emplace_back(model_pass_t(ms));
+      }
+    // res.emplace_back(model_pass_t(pair.apply_blockmodel));
   }
 
   return res;
@@ -97,8 +100,7 @@ bool parse_block_state_multipart(const njson::object_t &obj,
 
 bool resource_json::parse_block_state(
     const char *const json_str_beg, const char *const json_str_end,
-    block_states_variant *const dest_variant,
-    block_state_multipart *const dest_multipart,
+    std::variant<block_states_variant, block_state_multipart> *dest,
     bool *const is_dest_variant) noexcept {
   njson::object_t obj;
   try {
@@ -127,14 +129,22 @@ bool resource_json::parse_block_state(
   if (has_variant) {
     if (is_dest_variant != nullptr)
       *is_dest_variant = true;
-    return parse_block_state_variant(obj, dest_variant);
+
+    block_states_variant variant;
+    const bool ok = parse_block_state_variant(obj, &variant);
+    *dest = std::move(variant);
+    return ok;
   }
 
   if (has_multipart) {
     // parsing multipart is not supported yet.
     if (is_dest_variant != nullptr)
       *is_dest_variant = false;
-    return true;
+
+    block_state_multipart multipart;
+    const bool ok = parse_block_state_multipart(obj, &multipart);
+    *dest = std::move(multipart);
+    return ok;
     // return parse_block_state_multipart(obj, dest_multipart);
   }
   // unreachable
@@ -288,15 +298,90 @@ void parse_single_criteria_split(std::string_view key, std::string_view values,
   }
 }
 
+model_store_t parse_single_apply(const njson &single_obj) noexcept(false) {
+  model_store_t ms;
+
+  ms.model_name = single_obj.at("model");
+  if (single_obj.contains("x")) {
+    ms.x = single_obj.at("x");
+  }
+  if (single_obj.contains("y")) {
+    ms.y = single_obj.at("y");
+  }
+  if (single_obj.contains("uvlock")) {
+    ms.uvlock = single_obj.at("uvlock");
+  }
+
+  return ms;
+}
+
+std::vector<model_store_t>
+parse_multipart_apply(const njson &apply) noexcept(false) {
+  std::vector<model_store_t> ret;
+
+  if (apply.is_object()) {
+    ret.emplace_back(parse_single_apply(apply));
+    return ret;
+  }
+
+  if (apply.is_array()) {
+    for (size_t i = 0; i < apply.size(); i++) {
+      ret.emplace_back(parse_single_apply(apply.at(i)));
+    }
+    return ret;
+  }
+  throw std::runtime_error("Invalid value for \"apply\" in a multipart.");
+  return {};
+}
+
+std::variant<criteria, std::vector<criteria_list_and>, criteria_all_pass>
+parse_multipart_when(const njson &when) noexcept(false) {
+  if (when.contains("OR")) {
+    const njson &OR = when.at("OR");
+    std::vector<criteria_list_and> when_or;
+    for (size_t idx = 0; idx < OR.size(); idx++) {
+      criteria_list_and and_list;
+
+      for (auto it = OR[idx].begin(); it != OR[idx].end(); ++it) {
+        criteria cr;
+        // const std::string &v_str = ;
+        parse_single_criteria_split(it.key(), (const std::string &)it.value(),
+                                    &cr);
+        and_list.emplace_back(std::move(cr));
+      }
+
+      when_or.emplace_back(std::move(and_list));
+    }
+
+    return std::move(when_or);
+  }
+
+  if (when.size() == 1) {
+    criteria cr;
+
+    auto it = when.begin();
+
+    parse_single_criteria_split(it.key(), (const std::string &)it.value(), &cr);
+
+    return std::move(cr);
+  }
+  criteria_list_and and_list;
+
+  for (auto it = when.begin(); it != when.end(); ++it) {
+    criteria cr;
+    // const std::string &v_str = ;
+    parse_single_criteria_split(it.key(), (const std::string &)it.value(), &cr);
+    and_list.emplace_back(std::move(cr));
+  }
+
+  std::vector<criteria_list_and> when_or;
+  when_or.emplace_back(std::move(and_list));
+
+  return std::move(when_or);
+}
+
 bool parse_block_state_multipart(const njson::object_t &obj,
                                  block_state_multipart *const dest) {
-  /*
-printf("\nFatal error : parsing blockstate json of multipart is not "
-"supported yet.\n");
-
-// abort();
-return false;
-*/
 
   const njson &multiparts = obj.at("multipart");
 
@@ -311,63 +396,32 @@ return false;
     const njson &part = multiparts[i];
 
     multipart_pair mpp;
+
+    // parse apply
     try {
       const njson &apply = part.at("apply");
-      mpp.apply_blockmodel.model_name = apply.at("model");
-      if (apply.contains("x")) {
-        mpp.apply_blockmodel.x = apply.at("x");
-      }
-      if (apply.contains("y")) {
-        mpp.apply_blockmodel.y = apply.at("y");
-      }
-      if (apply.contains("uvlock")) {
-        mpp.apply_blockmodel.uvlock = apply.at("uvlock");
-      }
-    } catch (std::runtime_error err) {
+      mpp.apply_blockmodel = parse_multipart_apply(apply);
+    } catch (const std::exception &err) {
 
-      printf(
-          "\nAn error occurred when parsing the value of apply. Details : %s\n",
-          err.what());
+      printf("\nAn error occurred when parsing the value of apply. Details : "
+             "%s\n",
+             err.what());
       return false;
+    }
+
+    // parse when
+    if (!part.contains("when")) {
+      mpp.criteria = criteria_all_pass();
+      dest->pairs.emplace_back(std::move(mpp));
+      continue;
     }
 
     try {
       const njson &when = part.at("when");
 
-      if (when.contains("OR")) {
-        const njson &OR = when.at("OR");
-        std::vector<criteria_list_and> when_or;
-        for (size_t idx = 0; idx < OR.size(); idx++) {
-          criteria_list_and and_list;
+      mpp.criteria = parse_multipart_when(when);
 
-          for (auto it = OR[idx].begin(); it != OR[idx].end(); ++it) {
-            criteria cr;
-            // const std::string &v_str = ;
-            parse_single_criteria_split(it.key(),
-                                        (const std::string &)it.value(), &cr);
-            and_list.emplace_back(std::move(cr));
-          }
-
-          when_or.emplace_back(std::move(and_list));
-        }
-
-        mpp.criteria = std::move(when_or);
-      } else {
-        if (when.size() != 1) {
-          printf("\nError : when should be an object and has "
-                 "only one pair of key and value.\n");
-          return false;
-        }
-        criteria cr;
-
-        auto it = when.begin();
-
-        parse_single_criteria_split(it.key(), (const std::string &)it.value(),
-                                    &cr);
-
-        mpp.criteria = std::move(cr);
-      }
-    } catch (std::runtime_error err) {
+    } catch (const std::exception &err) {
       printf("\nFatal error : failed to parse when for a multipart blockstate "
              "file. Details : %s\n",
              err.what());
@@ -987,14 +1041,15 @@ bool resource_pack::add_block_states(
     if (this->block_states.contains(file.first) && !on_conflict_replace_old) {
       continue;
     }
-
-    block_states_variant bsv;
+    std::variant<resource_json::block_states_variant,
+                 resource_json::block_state_multipart>
+        bs;
     bool is_dest_variant;
 
     const bool success = parse_block_state((const char *)file.second.data(),
                                            (const char *)file.second.data() +
                                                file.second.file_size(),
-                                           &bsv, nullptr, &is_dest_variant);
+                                           &bs, &is_dest_variant);
 
     if (!success) {
       printf("\nWarning : Failed to parse block state json file "
@@ -1004,12 +1059,8 @@ bool resource_pack::add_block_states(
       continue;
     }
 
-    if (!is_dest_variant) {
-      continue;
-    }
-
     const int substrlen = file.first.find_last_of('.');
-    this->block_states.emplace(file.first.substr(0, substrlen), bsv);
+    this->block_states.emplace(file.first.substr(0, substrlen), std::move(bs));
   }
 
   return true;

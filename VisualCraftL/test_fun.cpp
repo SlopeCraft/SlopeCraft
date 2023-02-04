@@ -10,7 +10,11 @@
 #include "Resource_tree.h"
 #include "VisualCraftL.h"
 
-using std::cout, std::endl, std::string;
+std::unordered_map<std::string, Eigen::Array<ARGB, Eigen::Dynamic,
+                                             Eigen::Dynamic, Eigen::RowMajor>>
+folder_to_images(const zipped_folder &src, bool *const error = nullptr,
+                 std::string *const error_string = nullptr) noexcept;
+
 void test_VCL_single_image();
 void test_VCL_full_zip();
 void test_VCL_single_img_in_zip();
@@ -258,11 +262,19 @@ void test_VCL_parse_block_states() {
   file.append_0_for_c_str();
 
   bool success;
-  resource_json::block_states_variant variants;
+  {
+    resource_json::block_states_variant variants;
+    std::variant<resource_json::block_states_variant,
+                 resource_json::block_state_multipart>
+        temp;
 
-  success = resource_json::parse_block_state(
-      (const char *)file.data(), (const char *)file.data() + file.file_size(),
-      &variants);
+    success = resource_json::parse_block_state(
+        (const char *)file.data(), (const char *)file.data() + file.file_size(),
+        &temp);
+
+    variants = std::move(std::get<0>(temp));
+  }
+
   if (!success) {
     printf("Failed to parse json.\n");
     return;
@@ -294,6 +306,7 @@ void test_VCL_parse_block_states() {
   printf("\nrua~\n");
 }
 
+/*
 void test_VCL_parse_block_states_many() {
   zipped_folder vanilla = zipped_folder::from_zip("Vanilla_1_19_2.zip");
 
@@ -336,6 +349,7 @@ void test_VCL_parse_block_states_many() {
   printf("%i tasks finished\n", num_keys);
 }
 
+*/
 void test_resource_pack(const bool texture_only,
                         const bool parse_block_states) {
   zipped_folder vanilla = zipped_folder::from_zip("Vanilla_1_19_2.zip");
@@ -407,3 +421,77 @@ void test_dereference() {
   }
 }
 */
+
+using std::cout, std::endl, std::string;
+std::unordered_map<std::string, Eigen::Array<ARGB, Eigen::Dynamic,
+                                             Eigen::Dynamic, Eigen::RowMajor>>
+folder_to_images(const zipped_folder &src, bool *const is_ok,
+                 std::string *const error_string) noexcept {
+  std::unordered_map<std::string, Eigen::Array<ARGB, Eigen::Dynamic,
+                                               Eigen::Dynamic, Eigen::RowMajor>>
+      result;
+
+  const zipped_folder *folder_ptr = &src;
+  folder_ptr = folder_ptr->subfolder("assets");
+  if (folder_ptr != nullptr) {
+    folder_ptr = folder_ptr->subfolder("minecraft");
+  }
+  if (folder_ptr != nullptr) {
+    folder_ptr = folder_ptr->subfolder("textures");
+  }
+  if (folder_ptr != nullptr) {
+    const zipped_folder *name_block = folder_ptr->subfolder("block");
+    // for 1.12
+    const zipped_folder *name_blocks = folder_ptr->subfolder("blocks");
+
+    if (name_block != nullptr) {
+      folder_ptr = name_block;
+      std::cout << "Found assets/minecraft/textures/block" << endl;
+    } else {
+      folder_ptr = name_blocks;
+      std::cout << "Found assets/minecraft/textures/blocks" << endl;
+    }
+  }
+  // the folder is empty
+  if (folder_ptr == nullptr) {
+    if (is_ok != nullptr) {
+      *is_ok = true;
+    }
+    if (error_string != nullptr) {
+      *error_string = "The folder is empty";
+    }
+    return result;
+  }
+
+  std::cout << "Parsing png files" << endl;
+
+  std::cout << "file num = " << folder_ptr->files.size() << endl;
+
+  // go through the folder
+  result.reserve(folder_ptr->files.size());
+  for (const auto &file : folder_ptr->files) {
+    Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> img;
+
+    if (file.first.substr(file.first.size() - 4, 4) != ".png") {
+      continue;
+    }
+
+    const bool success =
+        parse_png(file.second.data(), file.second.file_size(), &img);
+    if (!success) {
+      ::std::cerr << "Failed to read " << file.first
+                  << ", this file will be skipped." << endl;
+      continue;
+    }
+
+    result.emplace(file.first, std::move(img));
+  }
+
+  if (is_ok != nullptr) {
+    *is_ok = true;
+  }
+  if (error_string != nullptr) {
+    *error_string = "";
+  }
+  return result;
+}

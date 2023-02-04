@@ -3,6 +3,14 @@ project(VisualCraftL VERSION ${SlopeCraft_version} LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 
+set(VCL_enable_internal_test OFF)
+
+if(${VCL_enable_internal_test})
+    set(VCL_internal_test_source_file test_fun.cpp)
+else()
+    set(VCL_internal_test_source_file)
+endif()
+
 add_library(VisualCraftL SHARED
 
     VisualCraftL_global.h
@@ -24,7 +32,7 @@ add_library(VisualCraftL SHARED
     BlockStateList.h
     BlockStateList.cpp
 
-    test_fun.cpp)
+    ${VCL_internal_test_source_file})
 
 find_package(libzip REQUIRED)
 find_package(ZLIB 1.2.11 REQUIRED)
@@ -48,6 +56,10 @@ target_include_directories(VisualCraftL INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(VisualCraftL PRIVATE z png libzip::zip ColorManip Schem)
 target_compile_definitions(VisualCraftL PRIVATE BEFORE "-DVISUALCRAFTL_BUILD")
 
+if(${VCL_enable_internal_test})
+    target_compile_definitions(VisualCraftL PUBLIC BEFORE "-DVCL_ENABLE_INTERNAL_TEST")
+endif()
+
 # target_compile_features(VisualCraftL PRIVATE cxx_std_23)
 target_compile_options(VisualCraftL PRIVATE "-std=c++20")
 target_compile_options(VisualCraftL PRIVATE "-flto")
@@ -68,8 +80,10 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     )
 endif()
 
-add_executable(test_VCL_internal tests/test_VCL_internal.cpp)
-target_link_libraries(test_VCL_internal PRIVATE VisualCraftL)
+if(${VCL_enable_internal_test})
+    add_executable(test_VCL_internal tests/test_VCL_internal.cpp)
+    target_link_libraries(test_VCL_internal PRIVATE VisualCraftL)
+endif()
 
 include(${CMAKE_SOURCE_DIR}/cmake/configure_cli11.cmake)
 
