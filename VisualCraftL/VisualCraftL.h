@@ -66,6 +66,7 @@ class VCL_Kernel;
 class VCL_resource_pack;
 class VCL_block_state_list;
 class VCL_block;
+class VCL_model;
 
 class VCL_Kernel {
 public:
@@ -180,6 +181,20 @@ VCL_EXPORT_FUN void VCL_set_block_class(VCL_block *, VCL_block_class_t cl);
 
 VCL_EXPORT_FUN VCL_block_class_t VCL_string_to_block_class(const char *str,
                                                            bool *ok = nullptr);
+
+[[nodiscard]] VCL_EXPORT_FUN VCL_model *
+VCL_get_block_model(const VCL_block *block,
+                    const VCL_resource_pack *resource_pack,
+                    VCL_face_t face_exposed, VCL_face_t *face_invrotated);
+VCL_EXPORT_FUN void VCL_destroy_block_model(VCL_model *);
+
+/// \return Whether the image is returned. rows and cols will always be
+/// returned.
+VCL_EXPORT_FUN bool VCL_compute_projection_image(const VCL_model *,
+                                                 VCL_face_t face, int *rows,
+                                                 int *cols,
+                                                 uint32_t *img_buffer_argb32,
+                                                 size_t buffer_capacity_bytes);
 
 #ifdef VCL_ENABLE_INTERNAL_TEST
 // Function about internal test

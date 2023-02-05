@@ -649,4 +649,8 @@ private:
 };
 
 class VCL_resource_pack : public resource_pack {};
+class VCL_model {
+public:
+  std::variant<const block_model::model *, block_model::model> value;
+};
 #endif // SLOPECRAFT_VISUALCRAFTL_PARSERESOURCEPACK_H

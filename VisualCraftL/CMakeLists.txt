@@ -11,6 +11,12 @@ else()
     set(VCL_internal_test_source_file)
 endif()
 
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    set(VCL_def_file VisualCraftL.def)
+endif()
+
+message(STATUS ${VCL_def_file})
+
 add_library(VisualCraftL SHARED
 
     VisualCraftL_global.h
@@ -32,7 +38,8 @@ add_library(VisualCraftL SHARED
     BlockStateList.h
     BlockStateList.cpp
 
-    ${VCL_internal_test_source_file})
+    ${VCL_internal_test_source_file}
+    ${VCL_def_file})
 
 find_package(libzip REQUIRED)
 find_package(ZLIB 1.2.11 REQUIRED)

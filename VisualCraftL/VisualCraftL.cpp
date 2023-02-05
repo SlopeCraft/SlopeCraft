@@ -554,3 +554,63 @@ VCL_EXPORT_FUN VCL_block_class_t VCL_string_to_block_class(const char *str,
                                                            bool *ok) {
   return string_to_block_class(str, ok);
 }
+
+[[nodiscard]] VCL_EXPORT_FUN VCL_model *
+VCL_get_block_model(const VCL_block *block,
+                    const VCL_resource_pack *resource_pack,
+                    VCL_face_t face_exposed, VCL_face_t *face_invrotated) {
+  if (block->full_id_ptr() == nullptr) {
+    return nullptr;
+  }
+  VCL_face_t temp_fi;
+  auto model_variant =
+      resource_pack->find_model(*block->full_id_ptr(), face_exposed, &temp_fi);
+
+  if (model_variant.index() == 0 && std::get<0>(model_variant) == nullptr) {
+    return nullptr;
+  }
+
+  VCL_model *ret = new VCL_model;
+  ret->value = std::move(model_variant);
+
+  if (face_invrotated != nullptr) {
+    *face_invrotated = temp_fi;
+  }
+  return ret;
+}
+
+VCL_EXPORT_FUN void VCL_destroy_block_model(VCL_model *md) { delete md; }
+
+VCL_EXPORT_FUN bool VCL_compute_projection_image(const VCL_model *md,
+                                                 VCL_face_t face, int *rows,
+                                                 int *cols,
+                                                 uint32_t *img_buffer_argb32,
+                                                 size_t buffer_capacity_bytes) {
+
+  if (rows != nullptr) {
+    *rows = 16;
+  }
+  if (cols != nullptr) {
+    *cols = 16;
+  }
+
+  const block_model::model *mdptr = nullptr;
+
+  if (md->value.index() == 0) {
+    mdptr = std::get<0>(md->value);
+  } else {
+    mdptr = &std::get<1>(md->value);
+  }
+
+  if (img_buffer_argb32 == nullptr ||
+      buffer_capacity_bytes < 16 * 16 * sizeof(uint32_t)) {
+    return false;
+  }
+
+  auto img = mdptr->projection_image(face);
+
+  Eigen::Map<block_model::EImgRowMajor_t> map(img_buffer_argb32, 16, 16);
+
+  map = img;
+  return true;
+}
