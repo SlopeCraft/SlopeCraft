@@ -543,6 +543,13 @@ VCL_EXPORT_FUN void VCL_set_block_attribute(VCL_block *b,
   b->set_attribute(attribute, value);
 }
 
+VCL_EXPORT_FUN const char *VCL_get_block_id(const VCL_block *b) {
+  if (b->full_id_ptr() == nullptr) {
+    return nullptr;
+  }
+  return b->full_id_ptr()->c_str();
+}
+
 VCL_EXPORT_FUN VCL_block_class_t VCL_get_block_class(const VCL_block *b) {
   return b->block_class;
 }

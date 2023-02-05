@@ -1,4 +1,4 @@
-LIBRARY VisualCraftL
+LIBRARY libVisualCraftL
 EXPORTS 
 VCL_create_kernel @1
 VCL_destroy_kernel @2

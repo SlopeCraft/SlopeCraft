@@ -15,8 +15,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     set(VCL_def_file VisualCraftL.def)
 endif()
 
-message(STATUS ${VCL_def_file})
-
+# message(STATUS ${VCL_def_file})
 add_library(VisualCraftL SHARED
 
     VisualCraftL_global.h
@@ -60,16 +59,17 @@ target_include_directories(VisualCraftL PUBLIC
     ${CMAKE_SOURCE_DIR}/utilities)
 
 target_include_directories(VisualCraftL INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(VisualCraftL PRIVATE z png libzip::zip ColorManip Schem)
+target_link_libraries(VisualCraftL PRIVATE z PNG::PNG libzip::zip ColorManip Schem)
 target_compile_definitions(VisualCraftL PRIVATE BEFORE "-DVISUALCRAFTL_BUILD")
 
 if(${VCL_enable_internal_test})
     target_compile_definitions(VisualCraftL PUBLIC BEFORE "-DVCL_ENABLE_INTERNAL_TEST")
 endif()
 
-# target_compile_features(VisualCraftL PRIVATE cxx_std_23)
-target_compile_options(VisualCraftL PRIVATE "-std=c++20")
-target_compile_options(VisualCraftL PRIVATE "-flto")
+target_compile_features(VisualCraftL PRIVATE cxx_std_20)
+
+# target_compile_options(VisualCraftL PRIVATE "-std=c++20")
+target_compile_options(VisualCraftL PUBLIC "-flto")
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     # message("libzip_LIBRARY = " ${libzip_LIBRARY})
@@ -110,6 +110,13 @@ target_link_libraries(VCL_json_sort PRIVATE VisualCraftL)
 target_include_directories(VCL_json_sort PRIVATE
     ${cli11_include_dir}
     ${SlopeCraft_Nlohmann_json_include_dir})
+
+add_executable(test_VCL_project_image tests/test_VCL_project_image.cpp)
+target_link_libraries(test_VCL_project_image PRIVATE VisualCraftL PNG::PNG)
+target_include_directories(test_VCL_project_image PRIVATE
+    ${cli11_include_dir}
+    ${SlopeCraft_Nlohmann_json_include_dir}
+    ${SlopeCraft_Eigen3_include_dir})
 
 include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_12.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_latest.cmake)
