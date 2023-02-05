@@ -93,7 +93,7 @@ int main(int argc, char **argv) {
     cout << "Resource pack(s) parsed successfully." << endl;
 
     // VCL_display_resource_pack(rp);
-    //  VCL_display_block_state_list(bsl);
+    // VCL_display_block_state_list(bsl);
 
     if constexpr (set_resource_by_move) {
       if (!VCL_set_resource_and_version_move(&rp, &bsl, version, face,

@@ -235,11 +235,11 @@ bool resource_pack::add_textures(const zipped_folder &rpr,
       if (name_block != nullptr) {
         this->is_MC12 = false;
         blocks_folder = name_block;
-        std::cout << "Found assets/minecraft/textures/block" << endl;
+        // std::cout << "Found assets/minecraft/textures/block" << endl;
       } else {
         this->is_MC12 = true;
         blocks_folder = name_blocks;
-        std::cout << "Found assets/minecraft/textures/blocks" << endl;
+        // std::cout << "Found assets/minecraft/textures/blocks" << endl;
       }
     }
 

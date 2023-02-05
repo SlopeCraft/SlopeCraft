@@ -163,7 +163,46 @@ VCL_EXPORT_FUN void VCL_display_resource_pack(const VCL_resource_pack *rp,
     for (const auto &pair : rp->get_block_states()) {
       cout << pair.first << " : {";
       if (pair.second.index() == 1) {
-        cout << "\n  multipart.\n";
+        cout << "\n  multipart : [";
+
+        for (const auto &mpp : std::get<1>(pair.second).pairs) {
+          cout << "apply :[";
+          for (const auto &md : mpp.apply_blockmodel) {
+            cout << md.model_name << ',';
+          }
+          cout << ']';
+          if (mpp.criteria.index() == 2) {
+            cout << ';';
+            continue;
+          }
+          if (mpp.criteria.index() == 0) {
+            cout << " when : ";
+
+            const auto &cr = std::get<0>(mpp.criteria);
+            cout << cr.key << " = [";
+            for (const auto &val : cr.values) {
+              cout << val << ',';
+            }
+            cout << "];";
+            continue;
+          }
+
+          // or_list
+          cout << "when_or : [";
+          for (const auto &cla : std::get<1>(mpp.criteria)) {
+            cout << '{';
+            for (const auto &cr : cla) {
+              cout << cr.key << " = [";
+              for (const auto &val : cr.values) {
+                cout << val << ',';
+              }
+              cout << ']';
+            }
+            cout << '}';
+          }
+          cout << "];";
+        }
+
       } else
         for (const auto &i : std::get<0>(pair.second).LUT) {
           cout << "\n  [";

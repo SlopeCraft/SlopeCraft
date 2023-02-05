@@ -82,10 +82,11 @@ block_state_multipart::block_model_names(const state_list &sl) const noexcept {
   std::vector<model_pass_t> res;
 
   for (const multipart_pair &pair : this->pairs) {
-    if (pair.match(sl))
+    if (pair.match(sl)) {
       for (const auto &ms : pair.apply_blockmodel) {
         res.emplace_back(model_pass_t(ms));
       }
+    }
     // res.emplace_back(model_pass_t(pair.apply_blockmodel));
   }
 
@@ -286,13 +287,13 @@ void parse_single_criteria_split(std::string_view key, std::string_view values,
   size_t current_value_beg_idx = 0;
 
   for (size_t idx = 0;; idx++) {
-    if (values.size() >= idx || values[idx] == '\0' || values[idx] == '|') {
+    if (values.size() <= idx || values[idx] == '\0' || values[idx] == '|') {
       cr->values.emplace_back(
           values.substr(current_value_beg_idx, idx - current_value_beg_idx));
       current_value_beg_idx = idx + 1;
     }
 
-    if (values.size() >= idx || values[idx] == '\0') {
+    if (values.size() <= idx || values[idx] == '\0') {
       break;
     }
   }
@@ -344,9 +345,15 @@ parse_multipart_when(const njson &when) noexcept(false) {
 
       for (auto it = OR[idx].begin(); it != OR[idx].end(); ++it) {
         criteria cr;
+        if (it.value().is_boolean()) {
+          cr.key = it.key();
+          cr.values.emplace_back((it.value()) ? ("true") : ("false"));
+
+        } else {
+          parse_single_criteria_split(it.key(), it.value().get<std::string>(),
+                                      &cr);
+        }
         // const std::string &v_str = ;
-        parse_single_criteria_split(it.key(), (const std::string &)it.value(),
-                                    &cr);
         and_list.emplace_back(std::move(cr));
       }
 
@@ -361,7 +368,12 @@ parse_multipart_when(const njson &when) noexcept(false) {
 
     auto it = when.begin();
 
-    parse_single_criteria_split(it.key(), (const std::string &)it.value(), &cr);
+    if (it.value().is_boolean()) {
+      cr.key = it.key();
+      cr.values.emplace_back((it.value()) ? ("true") : ("false"));
+    } else {
+      parse_single_criteria_split(it.key(), it.value().get<std::string>(), &cr);
+    }
 
     return std::move(cr);
   }
@@ -369,8 +381,13 @@ parse_multipart_when(const njson &when) noexcept(false) {
 
   for (auto it = when.begin(); it != when.end(); ++it) {
     criteria cr;
-    // const std::string &v_str = ;
-    parse_single_criteria_split(it.key(), (const std::string &)it.value(), &cr);
+
+    if (it.value().is_boolean()) {
+      cr.key = it.key();
+      cr.values.emplace_back((it.value()) ? ("true") : ("false"));
+    } else {
+      parse_single_criteria_split(it.key(), it.value().get<std::string>(), &cr);
+    }
     and_list.emplace_back(std::move(cr));
   }
 
@@ -422,9 +439,10 @@ bool parse_block_state_multipart(const njson::object_t &obj,
       mpp.criteria = parse_multipart_when(when);
 
     } catch (const std::exception &err) {
-      printf("\nFatal error : failed to parse when for a multipart blockstate "
-             "file. Details : %s\n",
-             err.what());
+      printf(
+          "\nFatal error : failed to parse \"when\" for a multipart blockstate "
+          "file. Details : %s\n",
+          err.what());
       return false;
     }
 

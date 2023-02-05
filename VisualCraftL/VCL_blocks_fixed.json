@@ -2462,5 +2462,42 @@
         "nameEN": "Yellow wool",
         "nameZH": "黄色羊毛",
         "version": "all"
+    },
+    "minecraft:brown_mushroom_block[east=true,west=true,north=true,south=true,up=true,down=true]": {
+        "nameEN": "Brown mushroom block",
+        "nameZH": "棕色蘑菇块",
+        "class": "mushroom",
+        "version": 13
+    },
+    "minecraft:brown_mushroom_block[variant=all_outside]": {
+        "nameEN": "Brown mushroom block",
+        "nameZH": "棕色蘑菇块",
+        "class": "mushroom",
+        "version": [
+            12
+        ]
+    },
+    "minecraft:mushroom_stem[east=true,west=true,north=true,south=true,up=true,down=true]": {
+        "burnable": true,
+        "nameEN": "Mushroom stem",
+        "nameZH": "蘑菇柄",
+        "class": "mushroom",
+        "version": 13
+    },
+    "minecraft:red_mushroom_block[east=true,west=true,north=true,south=true,up=true,down=true]": {
+        "burnable": true,
+        "nameEN": "Red mushroom block",
+        "nameZH": "红色蘑菇块",
+        "class": "mushroom",
+        "version": 13
+    },
+    "minecraft:red_mushroom_block[variant=all_outside]": {
+        "burnable": true,
+        "nameEN": "Red mushroom block",
+        "nameZH": "红色蘑菇块",
+        "class": "mushroom",
+        "version": [
+            12
+        ]
     }
 }

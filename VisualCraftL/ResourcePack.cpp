@@ -212,11 +212,13 @@ resource_pack::find_model(const std::string &block_state_str,
   const auto models = multipart.block_model_names(buffer.state_list);
   for (const auto &md : models) {
     if (md.model_name == nullptr) {
+      printf("File = %s, line = %i\n", __FILE__, __LINE__);
       return nullptr;
     }
   }
 
   if (models.size() <= 0) {
+    printf("File = %s, line = %i\n", __FILE__, __LINE__);
     return nullptr;
   }
 
@@ -263,6 +265,9 @@ bool resource_pack::compute_projection(const std::string &block_state_str,
   if (ret.index() == 0) {
     auto model = std::get<0>(ret);
     if (model == nullptr) {
+      printf("\nError : failed to find a block model for full id :\"%s\", "
+             "function find_model returned nullptr\n",
+             block_state_str.c_str());
       return false;
     }
 
