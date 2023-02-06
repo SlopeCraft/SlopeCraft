@@ -198,6 +198,13 @@ VCL_EXPORT_FUN bool VCL_compute_projection_image(const VCL_model *,
                                                  uint32_t *img_buffer_argb32,
                                                  size_t buffer_capacity_bytes);
 
+enum class VCL_report_type_t : int { information, warning, error };
+
+using VCL_report_callback_t = void (*)(VCL_report_type_t, const char *);
+
+VCL_EXPORT_FUN VCL_report_callback_t VCL_get_report_callback();
+VCL_EXPORT_FUN void VCL_set_report_callback(VCL_report_callback_t);
+
 #ifdef VCL_ENABLE_INTERNAL_TEST
 // Function about internal test
 VCL_EXPORT_FUN void VCL_internal_test();

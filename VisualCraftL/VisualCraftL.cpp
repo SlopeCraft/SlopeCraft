@@ -9,7 +9,7 @@
 #include "TokiVC.h"
 
 #include "BlockStateList.h"
-
+#include "VCL_internal.h"
 #include <mutex>
 
 using std::cout, std::endl;
@@ -620,4 +620,31 @@ VCL_EXPORT_FUN bool VCL_compute_projection_image(const VCL_model *md,
 
   map = img;
   return true;
+}
+
+void default_report_callback(VCL_report_type_t type, const char *msg) {
+  const char *type_msg = nullptr;
+
+  switch (type) {
+  case VCL_report_type_t::information:
+    type_msg = "Information : ";
+    break;
+  case VCL_report_type_t::warning:
+    type_msg = "Warning : ";
+    break;
+  case VCL_report_type_t::error:
+    type_msg = "Error : ";
+  }
+
+  printf("\n%s%s\n", type_msg, msg);
+}
+
+VCL_report_callback_t VCL_report = default_report_callback;
+
+VCL_EXPORT_FUN VCL_report_callback_t VCL_get_report_callback() {
+  return VCL_report;
+}
+
+VCL_EXPORT_FUN void VCL_set_report_callback(VCL_report_callback_t cb) {
+  VCL_report = cb;
 }

@@ -44,6 +44,9 @@ find_package(libzip REQUIRED)
 find_package(ZLIB 1.2.11 REQUIRED)
 find_package(PNG REQUIRED)
 
+include(${CMAKE_SOURCE_DIR}/cmake/configure_fmtlib.cmake)
+find_package(fmt REQUIRED)
+
 # include_directories(${ZLIB_INCLUDE_DIR})
 if(NOT ${libzip_FOUND})
     message(FATAL_ERROR "libzip not found")
@@ -59,7 +62,7 @@ target_include_directories(VisualCraftL PUBLIC
     ${CMAKE_SOURCE_DIR}/utilities)
 
 target_include_directories(VisualCraftL INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(VisualCraftL PRIVATE z PNG::PNG libzip::zip ColorManip Schem)
+target_link_libraries(VisualCraftL PRIVATE z PNG::PNG libzip::zip ColorManip Schem fmt::fmt)
 target_compile_definitions(VisualCraftL PRIVATE BEFORE "-DVISUALCRAFTL_BUILD")
 
 if(${VCL_enable_internal_test})
