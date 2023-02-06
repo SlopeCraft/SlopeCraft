@@ -1,13 +1,12 @@
 #include <png.h>
 
-#include <iostream>
 #include <string>
 #include <unordered_map>
 
 #include "ParseResourcePack.h"
 #include "Resource_tree.h"
 
-using std::endl;
+#include "VCL_internal.h"
 
 struct read_buffer_wrapper {
   const void *data;
@@ -35,21 +34,23 @@ bool parse_png(
   png_struct *png =
       png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
   if (png == NULL) {
-    ::std::cerr << "Failed to create png read struct." << endl;
+
+    ::VCL_report(VCL_report_type_t::error, "Failed to create png read struct.");
     return false;
   }
 
   png_info *info = png_create_info_struct(png);
   if (info == NULL) {
-    ::std::cerr << "Failed to create png info struct." << endl;
     png_destroy_read_struct(&png, &info, NULL);
+    ::VCL_report(VCL_report_type_t::error, "Failed to create png info struct.");
     return false;
   }
 
   png_info *info_end = png_create_info_struct(png);
   if (info_end == NULL) {
-    ::std::cerr << "Failed to create png info_end struct." << endl;
     png_destroy_read_struct(&png, &info, &info_end);
+    ::VCL_report(VCL_report_type_t::error,
+                 "Failed to create png info_end struct.");
     return false;
   }
 
@@ -117,8 +118,9 @@ bool parse_png(
     // cout << "PNG_COLOR_TYPE_GRAY_ALPHA";
     break;
   default:
-    ::std::cerr << "Unknown color type " << color_type << endl;
     png_destroy_read_struct(&png, &info, &info_end);
+    std::string msg = fmt::format("Unknown color type {}", color_type);
+    ::VCL_report(VCL_report_type_t::error, msg.c_str());
     return false;
   }
   // cout << ")\n";
@@ -214,8 +216,9 @@ bool resource_pack::add_textures(const zipped_folder &rpr,
                                  const bool conflict_conver_old) noexcept {
   const zipped_folder *const assets = rpr.subfolder("assets");
   if (assets == nullptr) {
-    printf("Error : the resource pack doesn't have a subfolder named "
-           "\"assets\".\n");
+    ::VCL_report(VCL_report_type_t::error,
+                 "Error : the resource pack doesn't have a subfolder named "
+                 "\"assets\".\n");
     return false;
   }
 
@@ -306,20 +309,23 @@ bool resource_pack::add_textures_direct(
     const bool success =
         parse_png(file.second.data(), file.second.file_size(), &img);
     if (!success || img.size() <= 0) {
-      printf("\nWarning : failed to parse png file %s in %s. Png parsing will "
-             "continue but this warning may cause further errors.\n",
-             file.first.data(), buffer.data());
+      std::string msg = fmt::format(
+          "Warning : failed to parse png file {} in {}. Png parsing will "
+          "continue but this warning may cause further errors.",
+          file.first, buffer.data());
+      ::VCL_report(VCL_report_type_t::warning, msg.c_str());
       continue;
     }
 
     if (is_dynamic) {
       if (img.rows() % img.cols() != 0) {
-        printf("\nWarning : failed to process dynamic png file %s in %s. Image "
-               "has %i rows and %i cols, which is not of integer ratio. Png "
-               "parsing will continue but this warning may cause further "
-               "errors.\n",
-               file.first.data(), buffer.data(), int(img.rows()),
-               int(img.rows()));
+        std::string msg = fmt::format(
+            "Warning : failed to process dynamic png file {} in {}. Image "
+            "has {} rows and {} cols, which is not of integer ratio. Png "
+            "parsing will continue but this warning may cause further "
+            "errors.",
+            file.first.data(), buffer.data(), img.rows(), img.rows());
+        ::VCL_report(VCL_report_type_t::warning, msg.c_str());
         continue;
       }
 
@@ -339,8 +345,10 @@ process_dynamic_texture(const Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic,
   const int cols = src.cols();
 
   if (src.rows() % cols != 0) {
-    printf("\nError : rows(%i) and cols(%i) are not of interger ratio\n",
-           (int)src.rows(), (int)src.cols());
+    std::string msg =
+        fmt::format("Error : rows({}) and cols({}) are not of interger ratio.",
+                    src.rows(), src.cols());
+    ::VCL_report(VCL_report_type_t::error, msg.c_str());
     return res;
   }
 

@@ -4,11 +4,9 @@
 
 #include <fstream>
 
-#include <iostream>
-
 #include "ParseResourcePack.h"
 
-using std::cout, std::endl;
+#include "VCL_internal.h"
 
 VCL_block::VCL_block() { this->initialize_attributes(); }
 
@@ -244,7 +242,9 @@ bool VCL_block_state_list::add(std::string_view filename) noexcept {
 
     ifs.close();
   } catch (std::runtime_error e) {
-    cout << "Failed to parse " << filename << ", detail : " << e.what() << endl;
+    std::string msg =
+        fmt::format("Failed to parse {}, detail : {}", filename, e.what());
+    ::VCL_report(VCL_report_type_t::error, msg.c_str());
     return false;
   }
 
@@ -254,9 +254,11 @@ bool VCL_block_state_list::add(std::string_view filename) noexcept {
     VCL_block vb = parse_block(pair.value(), &ok);
 
     if (!ok) {
-      cout << "Failed to parse " << filename
-           << " : invalid value for block state " << pair.key() << " : "
-           << pair.value() << endl;
+
+      std::string msg = fmt::format(
+          "Failed to parse {},  : invalid value for block state {} : {}",
+          filename, pair.key(), pair.value());
+      ::VCL_report(VCL_report_type_t::error, msg.c_str());
       return false;
     }
 

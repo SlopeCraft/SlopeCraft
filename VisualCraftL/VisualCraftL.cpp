@@ -2,8 +2,6 @@
 
 #include <stddef.h>
 
-#include <iostream>
-
 #include "ParseResourcePack.h"
 #include "Resource_tree.h"
 #include "TokiVC.h"
@@ -12,7 +10,7 @@
 #include "VCL_internal.h"
 #include <mutex>
 
-using std::cout, std::endl;
+#include <sstream>
 
 VCL_EXPORT_FUN VCL_Kernel *VCL_create_kernel() {
   return static_cast<VCL_Kernel *>(new TokiVC);
@@ -35,7 +33,10 @@ VCL_create_resource_pack(const int zip_file_count,
   zipped_folder zf = zipped_folder::from_zip(zip_file_names[0], &ok);
 
   if (!ok) {
-    cout << "Failed to parse " << zip_file_names[0] << endl;
+
+    std::string msg = fmt::format("Failed to parse {}\n", zip_file_names[0]);
+
+    VCL_report(VCL_report_type_t::error, msg.c_str(), true);
     return nullptr;
   }
 
@@ -44,7 +45,9 @@ VCL_create_resource_pack(const int zip_file_count,
     zipped_folder z = zipped_folder::from_zip(zip_file_names[zfidx], &ok);
 
     if (!ok) {
-      cout << "Failed to parse " << zip_file_names[zfidx] << endl;
+      std::string msg =
+          fmt::format("Failed to parse {}\n", zip_file_names[zfidx]);
+      VCL_report(VCL_report_type_t::error, msg.c_str(), true);
       return nullptr;
     }
 
@@ -54,19 +57,20 @@ VCL_create_resource_pack(const int zip_file_count,
   VCL_resource_pack *const rp = new VCL_resource_pack;
 
   if (!rp->add_textures(zf)) {
-    cout << "Failed to add textures from resource pack." << endl;
     delete rp;
+    VCL_report(VCL_report_type_t::error,
+               "Failed to add textures from resource pack.", true);
     return nullptr;
   }
 
   if (!rp->add_block_states(zf)) {
-    cout << "Failed to add block states from resource pack." << endl;
     delete rp;
+    VCL_report(VCL_report_type_t::error,
+               "Failed to add block states from resource pack.", true);
     return nullptr;
   }
 
   if (!rp->add_block_models(zf)) {
-    cout << "Failed to add block states from resource pack." << endl;
     /*
     cout << "All textures are listed here : " << endl;
     for (const auto &pair : rp->get_textures()) {
@@ -77,6 +81,8 @@ VCL_create_resource_pack(const int zip_file_count,
     */
 
     delete rp;
+    VCL_report(VCL_report_type_t::error,
+               "Failed to add block states from resource pack.", true);
     return nullptr;
   }
 
@@ -157,93 +163,109 @@ VCL_EXPORT_FUN void VCL_display_resource_pack(const VCL_resource_pack *rp,
     return;
   }
   if (blockstates) {
-    cout << "There are " << rp->get_block_states().size()
-         << " block state files : \n";
+    std::stringstream ss;
+    ss << "There are " << rp->get_block_states().size()
+       << " block state files : \n";
 
     for (const auto &pair : rp->get_block_states()) {
-      cout << pair.first << " : {";
+      ss << pair.first << " : {";
       if (pair.second.index() == 1) {
-        cout << "\n  multipart : [";
+        ss << "\n  multipart : [";
 
         for (const auto &mpp : std::get<1>(pair.second).pairs) {
-          cout << "apply :[";
+          ss << "apply :[";
           for (const auto &md : mpp.apply_blockmodel) {
-            cout << md.model_name << ',';
+            ss << md.model_name << ',';
           }
-          cout << ']';
+          ss << ']';
           if (mpp.criteria.index() == 2) {
-            cout << ';';
+            ss << ';';
             continue;
           }
           if (mpp.criteria.index() == 0) {
-            cout << " when : ";
+            ss << " when : ";
 
             const auto &cr = std::get<0>(mpp.criteria);
-            cout << cr.key << " = [";
+            ss << cr.key << " = [";
             for (const auto &val : cr.values) {
-              cout << val << ',';
+              ss << val << ',';
             }
-            cout << "];";
+            ss << "];";
             continue;
           }
 
           // or_list
-          cout << "when_or : [";
+          ss << "when_or : [";
           for (const auto &cla : std::get<1>(mpp.criteria)) {
-            cout << '{';
+            ss << '{';
             for (const auto &cr : cla) {
-              cout << cr.key << " = [";
+              ss << cr.key << " = [";
               for (const auto &val : cr.values) {
-                cout << val << ',';
+                ss << val << ',';
               }
-              cout << ']';
+              ss << ']';
             }
-            cout << '}';
+            ss << '}';
           }
-          cout << "];";
+          ss << "];";
         }
 
       } else
         for (const auto &i : std::get<0>(pair.second).LUT) {
-          cout << "\n  [";
+          ss << "\n  [";
           for (const auto &j : i.first) {
-            cout << j.key << '=' << j.value << ',';
+            ss << j.key << '=' << j.value << ',';
           }
 
           if (!i.first.empty()) {
-            cout << '\b';
+            ss << '\b';
           }
 
-          cout << "] => " << i.second.model_name;
-          cout << ", x=" << int(i.second.x) * 10;
-          cout << ", y=" << int(i.second.y) * 10;
-          cout << ", uvlock="
-               << (const char *)(i.second.uvlock ? ("true") : ("false"));
+          ss << "] => " << i.second.model_name;
+          ss << ", x=" << int(i.second.x) * 10;
+          ss << ", y=" << int(i.second.y) * 10;
+          ss << ", uvlock="
+             << (const char *)(i.second.uvlock ? ("true") : ("false"));
         }
-      cout << "}\n";
+      ss << "}\n";
     }
+
+    std::string msg;
+    ss >> msg;
+
+    VCL_report(VCL_report_type_t::information, msg.c_str(), true);
   }
 
   if (model) {
 
-    cout << "There are " << rp->get_models().size() << " models : \n";
+    std::stringstream ss;
+    ss << "There are " << rp->get_models().size() << " models : \n";
 
     for (const auto &pair : rp->get_models()) {
-      cout << pair.first << " : " << pair.second.elements.size()
-           << " elements\n";
+      ss << pair.first << " : " << pair.second.elements.size() << " elements\n";
     }
 
-    cout << endl;
+    ss << std::endl;
+    std::string msg;
+    ss >> msg;
+
+    VCL_report(VCL_report_type_t::information, msg.c_str(), true);
   }
+
   if (textures) {
-    cout << "There are " << rp->get_textures().size() << " textures : \n";
+    std::stringstream ss;
+    ss << "There are " << rp->get_textures().size() << " textures : \n";
 
     for (const auto &pair : rp->get_textures()) {
-      cout << pair.first << " : [" << pair.second.rows() << ", "
-           << pair.second.cols() << "]\n";
+      ss << pair.first << " : [" << pair.second.rows() << ", "
+         << pair.second.cols() << "]\n";
     }
 
-    cout << endl;
+    ss << std::endl;
+    std::string msg;
+    ss >> msg;
+
+    VCL_report(VCL_report_type_t::information, msg.c_str(), true);
   }
 }
 VCL_EXPORT_FUN void
@@ -252,28 +274,32 @@ VCL_display_block_state_list(const VCL_block_state_list *bsl) {
     return;
   }
 
-  cout << "Block state contains " << bsl->block_states().size()
-       << " blocks : \n";
+  std::stringstream ss;
+  ss << "Block state contains " << bsl->block_states().size() << " blocks : \n";
 
   for (const auto &pair : bsl->block_states()) {
-    cout << pair.first << " : ";
-    cout << "nameZH = \"" << pair.second.name_ZH << "\", nameEN = \""
-         << pair.second.name_EN;
-    cout << "\", transparent = "
-         << (const char *)(pair.second.is_transparent() ? "true" : "false");
-    cout << ", supported versions = [";
+    ss << pair.first << " : ";
+    ss << "nameZH = \"" << pair.second.name_ZH << "\", nameEN = \""
+       << pair.second.name_EN;
+    ss << "\", transparent = "
+       << (const char *)(pair.second.is_transparent() ? "true" : "false");
+    ss << ", supported versions = [";
 
     for (SCL_gameVersion v = SCL_gameVersion::MC12; v <= max_version;
          v = SCL_gameVersion(int(v) + 1)) {
       if (pair.second.version_info.match(v)) {
-        cout << int(v) << ',';
+        ss << int(v) << ',';
       }
     }
 
-    cout << "]\n";
+    ss << "]\n";
   }
 
-  cout << endl;
+  ss << std::endl;
+  std::string msg;
+  ss >> msg;
+
+  VCL_report(VCL_report_type_t::information, msg.c_str(), true);
 }
 
 VCL_EXPORT_FUN bool VCL_is_basic_colorset_ok() {
@@ -622,7 +648,7 @@ VCL_EXPORT_FUN bool VCL_compute_projection_image(const VCL_model *md,
   return true;
 }
 
-void default_report_callback(VCL_report_type_t type, const char *msg) {
+void default_report_callback(VCL_report_type_t type, const char *msg, bool) {
   const char *type_msg = nullptr;
 
   switch (type) {
@@ -639,12 +665,16 @@ void default_report_callback(VCL_report_type_t type, const char *msg) {
   printf("\n%s%s\n", type_msg, msg);
 }
 
-VCL_report_callback_t VCL_report = default_report_callback;
+VCL_report_callback_t VCL_report_fun = default_report_callback;
 
 VCL_EXPORT_FUN VCL_report_callback_t VCL_get_report_callback() {
-  return VCL_report;
+  return VCL_report_fun;
 }
 
 VCL_EXPORT_FUN void VCL_set_report_callback(VCL_report_callback_t cb) {
-  VCL_report = cb;
+  VCL_report_fun = cb;
+}
+
+void VCL_report(VCL_report_type_t t, const char *msg, bool flush) noexcept {
+  VCL_report_fun(t, msg, flush);
 }

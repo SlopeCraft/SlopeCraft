@@ -5,6 +5,6 @@
 #include <fmt/format.h>
 // #include <format>
 
-extern VCL_report_callback_t VCL_report;
+void VCL_report(VCL_report_type_t, const char *, bool flush = false) noexcept;
 
 #endif // SLOPECRAFT_VISUALCRAFTL_VCL_INTERNAL_H

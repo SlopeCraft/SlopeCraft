@@ -1,9 +1,9 @@
+#include "TokiVC.h"
+#include "VCL_internal.h"
 #include <mutex>
 #include <set>
 #include <shared_mutex>
 #include <variant>
-
-#include "TokiVC.h"
 
 libImageCvt::template ImageCvter<false>::basic_colorset_t
     TokiVC::colorset_basic;
@@ -74,23 +74,28 @@ bool add_projection_image_for_bsl(const std::vector<VCL_block *> &bs_list,
 
   for (VCL_block *blkp : bs_list) {
     if (blkp->full_id_ptr() == nullptr) {
-      printf("\nError : a VCL_block do not have full_id. The block names are : "
-             "%s, %s\n",
-             blkp->name_ZH.c_str(), blkp->name_EN.c_str());
+      std::string msg = fmt::format(
+          "\nError : a VCL_block do not have full_id. The block names are : "
+          "{}, {}\n",
+          blkp->name_ZH, blkp->name_EN);
+      VCL_report(VCL_report_type_t::error, msg.c_str());
       return false;
     }
 
     if (false) {
-      printf("Computing projection image for full id \"%s\"\n",
-             blkp->full_id_ptr()->c_str());
+      std::string msg =
+          fmt::format("Computing projection image for full id \"{}\"\n",
+                      blkp->full_id_ptr()->c_str());
+      VCL_report(VCL_report_type_t::information, msg.c_str());
     }
 
     block_model::EImgRowMajor_t *img = &blkp->project_image_on_exposed_face;
 
     if (!TokiVC::pack.compute_projection(*blkp->full_id_ptr(),
                                          TokiVC::exposed_face, img, buff)) {
-      printf("\nError : failed to compute projection for %s\n",
-             blkp->full_id_ptr()->c_str());
+      std::string msg = fmt::format("failed to compute projection for {}.\n",
+                                    blkp->full_id_ptr()->c_str());
+      VCL_report(VCL_report_type_t::error, msg.c_str());
       return false;
     }
   }
@@ -158,7 +163,9 @@ bool add_color_trans_to_trans_recurs(
         &LUT_bcitb,
     std::vector<std::array<uint8_t, 3>> &temp_rgb_rowmajor) noexcept {
   if (allowed_depth <= 0) {
-    printf("\nInvalid value for allowed_depth : %i\n", allowed_depth);
+    std::string msg =
+        fmt::format("Invalid value for allowed_depth : {}\n", allowed_depth);
+    VCL_report(VCL_report_type_t::error, msg.c_str());
     return false;
   }
 
@@ -182,8 +189,9 @@ bool add_color_trans_to_trans_recurs(
       std::array<uint8_t, 3> mean = compute_mean_color(front, &ok);
 
       if (!ok) {
-        printf("\nError : function add_color_trans_to_trans_recurs failed to "
-               "compute mean color.\n");
+        VCL_report(VCL_report_type_t::error,
+                   "Function add_color_trans_to_trans_recurs failed to "
+                   "compute mean color.\n");
         return false;
       }
 
@@ -201,17 +209,19 @@ bool add_color_trans_to_trans_recurs(
 
     if (!compose_image_background_half_transparent(
             img, cblkp->project_image_on_exposed_face)) {
-      printf("\nError : function add_color_trans_to_trans_recurs failed "
-             "because failed to compose image. This is possible caused by "
-             "images have different sizes.\n");
+      VCL_report(VCL_report_type_t::error,
+                 "Function add_color_trans_to_trans_recurs failed "
+                 "because failed to compose image. This is possible caused by "
+                 "images have different sizes.\n");
       return false;
     }
 
     if (!add_color_trans_to_trans_recurs(allowed_depth - 1, img, bs_transparent,
                                          bs_nontransparent, blocks, LUT_bcitb,
                                          temp_rgb_rowmajor)) {
-      printf("\nError : function add_color_trans_to_trans_recurs failed "
-             "because deeper recursion failed.\n");
+      VCL_report(VCL_report_type_t::error,
+                 "Function add_color_trans_to_trans_recurs failed "
+                 "because deeper recursion failed.\n");
       return false;
     }
   }
@@ -237,8 +247,9 @@ bool add_color_trans_to_trans_start_recurse(
                                          cblkp->project_image_on_exposed_face,
                                          bs_transparent, bs_nontransparent,
                                          accum, LUT_bcitb, temp_rgb_rowmajor)) {
-      printf(
-          "\nError : function add_color_trans_to_trans_start_recurse failed "
+      VCL_report(
+          VCL_report_type_t::error,
+          "Function add_color_trans_to_trans_start_recurse failed "
           "due to function call to add_color_trans_to_trans_recurs failed.\n");
       return false;
     }
@@ -250,9 +261,12 @@ bool add_color_trans_to_trans_start_recurse(
 bool TokiVC::update_color_set_no_lock() noexcept {
   switch (TokiVC::version) {
   case SCL_gameVersion::ANCIENT:
-  case SCL_gameVersion::FUTURE:
-    printf("\nError : invalid MC version : %i\n", int(TokiVC::version));
+  case SCL_gameVersion::FUTURE: {
+    std::string msg =
+        fmt::format("Invalid MC version : {}\n", int(TokiVC::version));
+    VCL_report(VCL_report_type_t::error, msg.c_str());
     return false;
+  }
   default:
     break;
   }
@@ -274,12 +288,14 @@ bool TokiVC::update_color_set_no_lock() noexcept {
     }
 
     if (!add_projection_image_for_bsl(bs_nontransparent, buff)) {
-      printf("Failed to go through bs_nontransparent\n");
+      VCL_report(VCL_report_type_t::error,
+                 "Failed to go through bs_nontransparent\n");
       return false;
     }
 
     if (!add_projection_image_for_bsl(bs_transparent, buff)) {
-      printf("Failed to go through bs_transparent\n");
+      VCL_report(VCL_report_type_t::error,
+                 "Failed to go through bs_transparent\n");
       return false;
     }
 
@@ -289,40 +305,55 @@ bool TokiVC::update_color_set_no_lock() noexcept {
     if (!add_color_non_transparent(bs_nontransparent,
                                    TokiVC::LUT_basic_color_idx_to_blocks,
                                    colors_temp)) {
-      printf("\nError : failed to compute mean colors for non transparent "
-             "images.\n");
+      VCL_report(VCL_report_type_t::error,
+                 "Failed to compute mean colors for non transparent "
+                 "images.\n");
       return false;
     }
 
-    printf("Size of LUT_basic_color_idx_to_blocks = %zu, size of colors_temp = "
-           "%zu\n",
-           TokiVC::LUT_basic_color_idx_to_blocks.size(), colors_temp.size());
+    {
+      std::string msg = fmt::format(
+          "Size of LUT_basic_color_idx_to_blocks = {}, size of colors_temp = "
+          "{}\n",
+          TokiVC::LUT_basic_color_idx_to_blocks.size(), colors_temp.size());
+      VCL_report(VCL_report_type_t::information, msg.c_str());
+    }
 
     for (int layers = 2; layers <= max_block_layers; layers++) {
       if (!add_color_trans_to_trans_start_recurse(
               layers, bs_transparent, bs_nontransparent,
               TokiVC::LUT_basic_color_idx_to_blocks, colors_temp)) {
-        printf("\nError : failed to compute colors for composed blocks.\n");
+        VCL_report(VCL_report_type_t::error,
+                   "failed to compute colors for composed blocks.\n");
         return false;
       }
     }
 
-    printf("Size of LUT_basic_color_idx_to_blocks = %zu, size of colors_temp = "
-           "%zu\n",
-           TokiVC::LUT_basic_color_idx_to_blocks.size(), colors_temp.size());
+    {
+      std::string msg = fmt::format(
+          "Size of LUT_basic_color_idx_to_blocks = {}, size of colors_temp = "
+          "{}\n",
+          TokiVC::LUT_basic_color_idx_to_blocks.size(), colors_temp.size());
+      VCL_report(VCL_report_type_t::error, msg.c_str());
+    }
 
     if (colors_temp.size() != TokiVC::LUT_basic_color_idx_to_blocks.size()) {
-      printf("\nImpossible error : "
-             "colors_temp.size() (aka %zu) "
-             "!=TokiVC::LUT_basic_color_idx_to_blocks.size() (aka %zu)\n",
-             colors_temp.size(), TokiVC::LUT_basic_color_idx_to_blocks.size());
+      std::string msg = fmt::format(
+          "\nImpossible error : "
+          "colors_temp.size() (aka {}) "
+          "!=TokiVC::LUT_basic_color_idx_to_blocks.size() (aka {})\n",
+          colors_temp.size(), TokiVC::LUT_basic_color_idx_to_blocks.size());
+      VCL_report(VCL_report_type_t::error, msg.c_str());
       return false;
     }
 
     if (colors_temp.size() >= UINT16_MAX - 1) {
-      printf("\nError : too much colors. Num of colors should not exceed %i, "
-             "but it is %zu now.\n",
-             UINT16_MAX - 1, colors_temp.size());
+      std::string msg = fmt::format(
+          "\nError : too much colors. Num of colors should not exceed {}, "
+          "but it is {} now.\n",
+          UINT16_MAX - 1, colors_temp.size());
+      VCL_report(VCL_report_type_t::error,
+                 "failed to compute colors for composed blocks.\n");
       return false;
     }
     // here the basic colors are ready.

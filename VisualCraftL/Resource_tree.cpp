@@ -1,12 +1,10 @@
 #include "Resource_tree.h"
 
+#include "VCL_internal.h"
 #include <filesystem>
-#include <iostream>
 #include <zip.h>
 
 // #include "VisualCraftL.h"
-
-using std::cout, std::endl, std::cerr;
 
 auto split_by_slash(std::string_view str) noexcept {
   std::vector<std::basic_string_view<char>> result;
@@ -35,21 +33,27 @@ zipped_folder zipped_folder::from_zip(std::string_view zipname,
     if (zipname.empty()) {
       if (ok)
         *ok = false;
-      cerr << "The filename  of zip is empty." << endl;
+      std::string msg =
+          fmt::format("The filename \"{}\" of zip is empty.", zipname);
+      ::VCL_report(VCL_report_type_t::error, msg.c_str());
       return result;
     }
 
     if (!std::filesystem::is_regular_file(path)) {
       if (ok)
         *ok = false;
-      cerr << "The filename does not refer to a regular file." << endl;
+      std::string msg = fmt::format(
+          "The filename \"{}\" does not refer to a regular file.", zipname);
+      ::VCL_report(VCL_report_type_t::error, msg.c_str());
       return result;
     }
 
     if (path.extension() != ".zip") {
       if (ok)
         *ok = false;
-      cerr << "The file extension name is not .zip" << endl;
+      std::string msg = fmt::format(
+          "The filename \"{}\" extension name is not .zip", zipname);
+      ::VCL_report(VCL_report_type_t::error, msg.c_str());
       return result;
     }
   }
@@ -59,8 +63,9 @@ zipped_folder zipped_folder::from_zip(std::string_view zipname,
   if (zip == NULL) {
     if (ok)
       *ok = false;
-    cerr << "Failed to open zip file : " << zipname
-         << ", error code = " << errorcode << endl;
+    std::string msg = fmt::format(
+        "Failed to open zip file : {}, error code = {}", zipname, errorcode);
+    ::VCL_report(VCL_report_type_t::error, msg.c_str());
     return result;
   }
 
@@ -97,9 +102,10 @@ zipped_folder zipped_folder::from_zip(std::string_view zipname,
     if (zfile == NULL) {
       if (ok)
         *ok = false;
-      cerr << "Failed to open file in zip. index : " << entry_idx
-           << "file name : " << ::zip_get_name(zip, entry_idx, ZIP_FL_ENC_GUESS)
-           << endl;
+      std::string msg = fmt::format(
+          "Failed to open file in zip. index : {}, file name : {}\n", entry_idx,
+          ::zip_get_name(zip, entry_idx, ZIP_FL_ENC_GUESS));
+      ::VCL_report(VCL_report_type_t::error, msg.c_str());
       continue;
     }
 

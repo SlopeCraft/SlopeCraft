@@ -8,6 +8,8 @@
 
 #include <ranges>
 
+#include "VCL_internal.h"
+
 using namespace resource_json;
 
 using njson = nlohmann::json;
@@ -107,11 +109,9 @@ bool resource_json::parse_block_state(
   try {
     obj = njson::parse(json_str_beg, json_str_end);
   } catch (...) {
-    printf("\nnlohmann json failed to parse json string : ");
-    for (const char *p = json_str_beg; p < json_str_end; p++) {
-      printf("%c", *p);
-    }
-    printf("\n");
+    std::string msg = "nlohmann json failed to parse json string : ";
+    msg.append(json_str_beg, json_str_end);
+    ::VCL_report(VCL_report_type_t::error, msg.c_str());
     return false;
   }
 
@@ -121,9 +121,12 @@ bool resource_json::parse_block_state(
       obj.contains("multipart") && obj.at("multipart").is_array();
 
   if (has_variant == has_multipart) {
-    printf("\nFunction parse_block_state failed to parse json : has_variant = "
-           "%i, has_multipart = %i.",
-           has_variant, has_multipart);
+
+    std::string msg =
+        fmt::format("Function parse_block_state failed to parse json : "
+                    "has_variant = {}, has_multipart = {}.",
+                    has_variant, has_multipart);
+    ::VCL_report(VCL_report_type_t::error, msg.c_str());
     return false;
   }
 
@@ -183,9 +186,11 @@ bool parse_block_state_list(std::string_view str,
     if (str[cur] == ',' || str[cur] == '\0') {
       // substr_end = cur;
       if (eq_pos <= 0) {
-        printf("\n Function parse_block_state_list failed to parse block state "
-               "list : %s\n",
-               str.data());
+        std::string msg = fmt::format(
+            " Function parse_block_state_list failed to parse block state "
+            "list : {}",
+            str);
+        ::VCL_report(VCL_report_type_t::error, msg.c_str());
         return false;
       }
 
@@ -239,20 +244,23 @@ bool parse_block_state_variant(const njson::object_t &obj,
   dest->LUT.clear();
   dest->LUT.reserve(variants.size());
 
-  // printf("size of variants = %i\n", (int)variants.size());
-
   for (auto pair : variants.items()) {
     if (!pair.value().is_structured()) {
-      printf("\nFunction parse_block_state_variant failed to parse json : "
-             "value for key \"%s\" is not an object or array.\n",
-             pair.key().data());
+      std::string msg = fmt::format(
+          "Function parse_block_state_variant failed to parse json : "
+          "value for key \"{}\" is not an object or array.",
+          pair.key());
+
+      ::VCL_report(VCL_report_type_t::error, msg.c_str());
       return false;
     }
 
     if (pair.value().is_array() && pair.value().size() <= 0) {
-      printf("\nFunction parse_block_state_variant failed to parse json : "
-             "value for key \"%s\" is an empty array.\n",
-             pair.key().data());
+      std::string msg = fmt::format(
+          "Function parse_block_state_variant failed to parse json : "
+          "value for key \"{}\" is an empty array.",
+          pair.key().data());
+      ::VCL_report(VCL_report_type_t::error, msg.c_str());
       return false;
     }
 
@@ -260,14 +268,19 @@ bool parse_block_state_variant(const njson::object_t &obj,
         (pair.value().is_object()) ? (pair.value()) : (pair.value().at(0));
 
     if ((!obj.contains("model")) || (!obj.at("model").is_string())) {
-      printf("\nFunction parse_block_state_variant failed to parse json : no "
-             "valid value for key \"model\"\n");
+      std::string msg = fmt::format(
+          "Function parse_block_state_variant failed to parse json : no "
+          "valid value for key \"model\"");
+
+      ::VCL_report(VCL_report_type_t::error, msg.c_str());
       return false;
     }
 
     std::pair<state_list, model_store_t> p;
     if (!parse_block_state_list(pair.key(), &p.first)) {
-      printf("Failed to parse block state list : %s\n", pair.key().data());
+      std::string msg =
+          fmt::format("Failed to parse block state list : {}", pair.key());
+      ::VCL_report(VCL_report_type_t::error, msg.c_str());
       return false;
     }
 
@@ -403,7 +416,9 @@ bool parse_block_state_multipart(const njson::object_t &obj,
   const njson &multiparts = obj.at("multipart");
 
   if (!multiparts.is_array()) {
-    printf("\nFatal error : multipart must be an array.\n");
+    std::string msg = fmt::format("Fatal error : multipart must be an array.");
+
+    ::VCL_report(VCL_report_type_t::error, msg.c_str());
     return false;
   }
 
@@ -420,9 +435,10 @@ bool parse_block_state_multipart(const njson::object_t &obj,
       mpp.apply_blockmodel = parse_multipart_apply(apply);
     } catch (const std::exception &err) {
 
-      printf("\nAn error occurred when parsing the value of apply. Details : "
-             "%s\n",
-             err.what());
+      std::string msg = fmt::format(
+          "An error occurred when parsing the value of apply. Details : {}",
+          err.what());
+      ::VCL_report(VCL_report_type_t::error, msg.c_str());
       return false;
     }
 
@@ -439,9 +455,9 @@ bool parse_block_state_multipart(const njson::object_t &obj,
       mpp.criteria = parse_multipart_when(when);
 
     } catch (const std::exception &err) {
-      printf(
+      std::string msg = fmt::format(
           "\nFatal error : failed to parse \"when\" for a multipart blockstate "
-          "file. Details : %s\n",
+          "file. Details : {}\n",
           err.what());
       return false;
     }
@@ -558,11 +574,9 @@ bool parse_single_model_json(const char *const json_beg,
   njson obj = njson::parse(json_beg, json_end, nullptr, false, true);
   if (obj.is_null()) {
     // this may be unsafe but just keep it currently.
-    printf("\nError : Failed to parse block model json : \n");
-    for (const char *p = json_beg; p != json_end; p++) {
-      printf("%c", *p);
-    }
-    printf("\n");
+    std::string msg = "Failed to parse block model json : ";
+    msg.append(json_beg, json_end);
+    ::VCL_report(VCL_report_type_t::error, msg.c_str());
     return false;
   }
 
@@ -604,36 +618,50 @@ bool parse_single_model_json(const char *const json_beg,
 
       element_json_temp ele;
       if (!e.contains("from") || !e.at("from").is_array()) {
-        printf("Error : \"from\" doesn't exist, or is not an array.\n");
+
+        ::VCL_report(VCL_report_type_t::error,
+                     "\"from\" doesn't exist, or is not an array.");
         return false;
       }
       // from
       {
         const njson::array_t &arr_from = e.at("from");
         if (arr_from.size() != 3 || !arr_from.front().is_number()) {
-          printf("Error : size of \"from\" is not 3, or is not consisted of "
-                 "numbers.\n");
+
+          ::VCL_report(VCL_report_type_t::error, "size of \"from\" is not 3");
           return false;
         }
 
         for (int idx = 0; idx < 3; idx++) {
+          if (!arr_from[idx].is_number()) {
+            ::VCL_report(
+                VCL_report_type_t::error,
+                "one or more element in array \"from\" is not number.");
+            return false;
+          }
           ele.from[idx] = arr_from[idx];
         }
       }
       if (!e.contains("to") || !e.at("to").is_array()) {
-        printf("Error : \"to\" doesn't exist, or is not an array.\n");
+        ::VCL_report(VCL_report_type_t::error,
+                     "\"to\" doesn't exist, or is not an array.");
         return false;
       }
       // to
       {
         const njson::array_t &arr_to = e.at("to");
-        if (arr_to.size() != 3 || !arr_to.front().is_number()) {
-          printf("Error : size of \"to\" is not 3, or is not consisted of "
-                 "numbers.\n");
+        if (arr_to.size() != 3) {
+          ::VCL_report(VCL_report_type_t::error, "size of \"to\" is not 3.");
           return false;
         }
 
         for (int idx = 0; idx < 3; idx++) {
+          if (!arr_to[idx].is_number()) {
+
+            ::VCL_report(VCL_report_type_t::error,
+                         "one or more element in array \"to\" is not number.");
+            return false;
+          }
           ele.to[idx] = arr_to[idx];
         }
       }
@@ -641,7 +669,8 @@ bool parse_single_model_json(const char *const json_beg,
       // faces
       {
         if (!e.contains("faces") || !e.at("faces").is_object()) {
-          printf("Error : \"faces\" doesn't exist, or is not an object.\n");
+          ::VCL_report(VCL_report_type_t::error,
+                       "\"faces\" doesn't exist, or is not an object.");
           return false;
         }
 
@@ -656,9 +685,11 @@ bool parse_single_model_json(const char *const json_beg,
             bool _ok;
             fidx = string_to_face_idx(temp.key(), &_ok);
             if (!_ok) {
-              printf("\nError while parsing block model json : invalid key %s "
-                     "doesn't refer to any face.\n",
-                     temp.key().data());
+              std::string msg = fmt::format(
+                  "Error while parsing block model json : invalid key {} "
+                  "doesn't refer to any face.",
+                  temp.key());
+              ::VCL_report(VCL_report_type_t::error, msg.c_str());
               return false;
             }
           }
@@ -667,8 +698,10 @@ bool parse_single_model_json(const char *const json_beg,
 
           if (!curface.contains("texture") ||
               !curface.at("texture").is_string()) {
-            printf("\nError while parsing block model json : face do not have "
-                   "texture.\n");
+            ::VCL_report(
+                VCL_report_type_t::error,
+                "Error while parsing block model json : face do not have "
+                "texture.");
             return false;
           }
 
@@ -692,8 +725,9 @@ bool parse_single_model_json(const char *const json_beg,
                   string_to_face_idx(cullface_temp, &ok);
 
               if (!ok) {
-                printf("\nInvalid value for cullface : %s\n",
-                       cullface_temp.data());
+                std::string msg = fmt::format("Invalid value for cullface : {}",
+                                              cullface_temp);
+                ::VCL_report(VCL_report_type_t::error, msg.c_str());
                 return false;
               }
 
@@ -708,14 +742,16 @@ bool parse_single_model_json(const char *const json_beg,
             const njson::array_t &uvarr = curface.at("uv");
 
             if (uvarr.size() != 4) {
-              printf("\nInvalid value for uv array : the size must be 4.\n");
+              ::VCL_report(VCL_report_type_t::error,
+                           "Invalid value for uv array : the size must be 4.");
               return false;
             }
 
             for (int idx = 0; idx < 4; idx++) {
               if (!uvarr.at(idx).is_number()) {
-                printf("\nInvalid value for uv array : the value must be "
-                       "numbers.\n");
+                ::VCL_report(VCL_report_type_t::error,
+                             "Invalid value for uv array : the value must be "
+                             "numbers.");
                 return false;
               }
               f.uv[idx] = uvarr[idx];
@@ -799,7 +835,7 @@ bool model_json_inherit_new(block_model_json_temp &child,
                             block_model_json_temp &parent,
                             const bool must_dereference_all) {
   if (child.parent.empty()) {
-    printf("Error : child has no parent.\n");
+    ::VCL_report(VCL_report_type_t::error, "child has no parent.");
     return false;
   }
 
@@ -842,9 +878,11 @@ bool inherit_recrusively(std::string_view childname,
   auto it = temp_models.find(child.parent);
 
   if (it == temp_models.end()) {
-    printf("\nError : Failed to inherit. Undefined reference to model %s, "
-           "required by %s.\n",
-           child.parent.data(), childname.data());
+    std::string msg =
+        fmt::format("Failed to inherit. Undefined reference to model {}, "
+                    "required by {}.",
+                    child.parent.data(), childname.data());
+    ::VCL_report(VCL_report_type_t::error, msg.c_str());
     return false;
   }
 
@@ -865,8 +903,9 @@ bool inherit_recrusively(std::string_view childname,
   // dereference_texture_name(child.textures);
 
   if (!success) {
-    printf("\nError : Failed to inherit. Child : %s, parent : %s.\n",
-           childname.data(), child.parent.data());
+    std::string msg = fmt::format("Failed to inherit. Child : {}, parent : {}.",
+                                  childname.data(), child.parent.data());
+    ::VCL_report(VCL_report_type_t::error, msg.c_str());
     return false;
   }
 
@@ -922,8 +961,9 @@ bool resource_pack::add_block_models(
         (const char *)file.second.data() + file.second.file_size(), &bmjt);
 
     if (!ok) {
-      printf("\nError : failed to parse assets/minecraft/models/block/%s.\n",
-             file.first.data());
+      std::string msg = fmt::format(
+          "failed to parse assets/minecraft/models/block/{}.", file.first);
+      ::VCL_report(VCL_report_type_t::error, msg.c_str());
       return false;
     }
 
@@ -944,10 +984,12 @@ bool resource_pack::add_block_models(
   for (auto &model : temp_models) {
     const bool ok = inherit_recrusively(model.first, model.second, temp_models);
     if (!ok) {
-      printf("\nWarning : failed to inherit model %s. This model will be "
-             "skipped.\n",
-             model.first.data());
       model.second.parent = "INVALID";
+      std::string msg = fmt::format(
+          "Warning : failed to inherit model {}. This model will be "
+          "skipped.",
+          model.first);
+      ::VCL_report(VCL_report_type_t::warning, msg.c_str());
       // #warning following line should be commented.
       // return false;
       continue;
@@ -1008,14 +1050,16 @@ bool resource_pack::add_block_models(
             skip_this_model = true;
             continue;
           }
-
-          printf("\nError : Undefined reference to texture %s, required by "
-                 "model %s but no such image.\n",
-                 tface.texture.data(), tmodel.first.data());
-          printf("The textures are : \n");
+          std::string msg =
+              fmt::format("Undefined reference to texture {}, required by "
+                          "model {} but no such image.\nThe textures are : \n",
+                          tface.texture, tmodel.first);
           for (const auto &pair : tmodel.second.textures) {
-            printf("{%s, %s}\n", pair.first.data(), pair.second.data());
+            std::string temp = fmt::format("{{{}, {}}}\n", pair.first.data(),
+                                           pair.second.data());
+            msg.append(temp);
           }
+          ::VCL_report(VCL_report_type_t::error, msg.c_str());
           return false;
 
           // if managed to find, go on
@@ -1070,10 +1114,13 @@ bool resource_pack::add_block_states(
                                            &bs, &is_dest_variant);
 
     if (!success) {
-      printf("\nWarning : Failed to parse block state json file "
-             "assets/minecraft/blockstates/%s. This will be "
-             "skipped but may cause further errors.\n",
-             file.first.data());
+      std::string msg =
+          fmt::format("Warning : Failed to parse block state json file "
+                      "assets/minecraft/blockstates/{}. This will be "
+                      "skipped but may cause further errors.\n",
+                      file.first);
+
+      ::VCL_report(VCL_report_type_t::warning, msg.c_str());
       continue;
     }
 

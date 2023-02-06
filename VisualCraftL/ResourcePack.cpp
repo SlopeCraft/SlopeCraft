@@ -1,5 +1,7 @@
 #include "ParseResourcePack.h"
 
+#include "VCL_internal.h"
+
 bool parse_single_state_expression(const char *const beg, const char *const end,
                                    resource_json::state *state) noexcept {
   const char *ptr_eq = nullptr;
@@ -17,12 +19,10 @@ bool parse_single_state_expression(const char *const beg, const char *const end,
   }
 
   if (ptr_eq == nullptr) {
-    printf("\nError : state expression dosen\'t contain '=' : \"");
-
-    for (const char *c = beg; c < end; c++) {
-      printf("%c", *c);
-    }
-    printf("\"\n");
+    std::string msg = "state expression dosen\'t contain '=' : \"";
+    msg.append(beg, end);
+    msg.append("\"\n");
+    VCL_report(VCL_report_type_t::error, msg.c_str());
     return false;
   }
 
@@ -135,19 +135,25 @@ resource_pack::find_model(const std::string &block_state_str,
 
   if (!resource_json::process_full_id(block_state_str, nullptr, &buffer.pure_id,
                                       &buffer.state_list)) {
-    printf("\nError : invalid full block id that can not be parsed to a list "
-           "of block states : \"%s\"\n",
-           block_state_str.c_str());
+    std::string msg =
+        fmt::format("invalid full block id that can not be parsed to a list "
+                    "of block states : \"{}\"",
+                    block_state_str.c_str());
+
+    VCL_report(VCL_report_type_t::error, msg.c_str());
     return nullptr;
   }
 
   constexpr bool display_statelist_here = false;
   if (display_statelist_here) {
-    printf("statelist = [");
+    std::string msg = "statelist = [";
+
     for (const auto &i : buffer.state_list) {
-      printf("%s=%s,", i.key.c_str(), i.value.c_str());
+      std::string temp = fmt::format("{}={},", i.key.c_str(), i.value.c_str());
+      msg.append(temp);
     }
-    printf("]\n");
+    msg.append("]\n");
+    VCL_report(VCL_report_type_t::information, msg.c_str());
   }
 
   auto it_state = this->block_states.find(buffer.pure_id);
@@ -158,9 +164,11 @@ resource_pack::find_model(const std::string &block_state_str,
    */
 
   if (it_state == this->block_states.end()) {
-    printf("\nError : undefined reference to block state whose pure block id "
-           "is : \"%s\"  and full block id is : \"%s\"\n",
-           buffer.pure_id.c_str(), block_state_str.c_str());
+    std::string msg =
+        fmt::format("Undefined reference to block state whose pure block id "
+                    "is : \"{}\"  and full block id is : \"{}\"\n",
+                    buffer.pure_id, block_state_str);
+    VCL_report(VCL_report_type_t::error, msg.c_str());
     return nullptr;
   }
 
@@ -175,9 +183,11 @@ resource_pack::find_model(const std::string &block_state_str,
     *face_invrotated = face_exposed;
 
     if (model.model_name == nullptr) {
-      printf("\nError : No block model for full id : \"%s\", this is usually "
-             "because block states mismatch.",
-             block_state_str.c_str());
+      std::string msg =
+          fmt::format("No block model for full id : \"{}\", this is usually "
+                      "because block states mismatch.",
+                      block_state_str);
+      VCL_report(VCL_report_type_t::error, msg.c_str());
       return nullptr;
     }
     {
@@ -196,10 +206,11 @@ resource_pack::find_model(const std::string &block_state_str,
     }
 
     if (it_model == this->block_models.end()) {
-      printf(
-          "Error : Failed to find block model for full id : \"%s\". Detail : "
-          "undefined reference to model named \"%s\".\n",
+      std::string msg = fmt::format(
+          "Failed to find block model for full id : \"{}\". Detail : "
+          "undefined reference to model named \"{}\".\n",
           block_state_str.c_str(), model.model_name);
+      VCL_report(VCL_report_type_t::error, msg.c_str());
       return nullptr;
     }
 
@@ -212,13 +223,16 @@ resource_pack::find_model(const std::string &block_state_str,
   const auto models = multipart.block_model_names(buffer.state_list);
   for (const auto &md : models) {
     if (md.model_name == nullptr) {
-      printf("File = %s, line = %i\n", __FILE__, __LINE__);
+      std::string msg =
+          fmt::format("File = {}, line = {}\n", __FILE__, __LINE__);
+      VCL_report(VCL_report_type_t::error, msg.c_str());
       return nullptr;
     }
   }
 
   if (models.size() <= 0) {
-    printf("File = %s, line = %i\n", __FILE__, __LINE__);
+    std::string msg = fmt::format("File = {}, line = {}\n", __FILE__, __LINE__);
+    VCL_report(VCL_report_type_t::error, msg.c_str());
     return nullptr;
   }
 
@@ -240,10 +254,11 @@ resource_pack::find_model(const std::string &block_state_str,
       it_model = this->block_models.find("block/" + buffer.pure_id);
     }
     if (it_model == this->block_models.end()) {
-      printf(
-          "Error : Failed to find block model for full id : \"%s\". Detail : "
-          "undefined reference to model named \"%s\".\n",
+      std::string msg = fmt::format(
+          "Failed to find block model for full id : \"{}\". Detail : "
+          "undefined reference to model named \"{}\".\n",
           block_state_str.c_str(), models[mdidx].model_name);
+      VCL_report(VCL_report_type_t::error, msg.c_str());
       return nullptr;
     }
 
@@ -265,9 +280,11 @@ bool resource_pack::compute_projection(const std::string &block_state_str,
   if (ret.index() == 0) {
     auto model = std::get<0>(ret);
     if (model == nullptr) {
-      printf("\nError : failed to find a block model for full id :\"%s\", "
-             "function find_model returned nullptr\n",
-             block_state_str.c_str());
+      std::string msg =
+          fmt::format("failed to find a block model for full id :\"{}\", "
+                      "function find_model returned nullptr\n",
+                      block_state_str.c_str());
+      VCL_report(VCL_report_type_t::error, msg.c_str());
       return false;
     }
 

@@ -200,7 +200,8 @@ VCL_EXPORT_FUN bool VCL_compute_projection_image(const VCL_model *,
 
 enum class VCL_report_type_t : int { information, warning, error };
 
-using VCL_report_callback_t = void (*)(VCL_report_type_t, const char *);
+using VCL_report_callback_t = void (*)(VCL_report_type_t, const char *,
+                                       bool flush);
 
 VCL_EXPORT_FUN VCL_report_callback_t VCL_get_report_callback();
 VCL_EXPORT_FUN void VCL_set_report_callback(VCL_report_callback_t);
