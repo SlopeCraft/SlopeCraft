@@ -309,10 +309,10 @@ bool resource_pack::add_textures_direct(
     const bool success =
         parse_png(file.second.data(), file.second.file_size(), &img);
     if (!success || img.size() <= 0) {
-      std::string msg = fmt::format(
-          "Warning : failed to parse png file {} in {}. Png parsing will "
-          "continue but this warning may cause further errors.",
-          file.first, buffer.data());
+      std::string msg =
+          fmt::format("Failed to parse png file {} in {}. Png parsing will "
+                      "continue but this warning may cause further errors.",
+                      file.first, buffer.data());
       ::VCL_report(VCL_report_type_t::warning, msg.c_str());
       continue;
     }
@@ -320,7 +320,7 @@ bool resource_pack::add_textures_direct(
     if (is_dynamic) {
       if (img.rows() % img.cols() != 0) {
         std::string msg = fmt::format(
-            "Warning : failed to process dynamic png file {} in {}. Image "
+            "Failed to process dynamic png file {} in {}. Image "
             "has {} rows and {} cols, which is not of integer ratio. Png "
             "parsing will continue but this warning may cause further "
             "errors.",
@@ -332,7 +332,7 @@ bool resource_pack::add_textures_direct(
       img = process_dynamic_texture(img);
     }
 
-    this->textures.emplace(std::string(buffer.data()), img);
+    this->textures.emplace(std::string(buffer.data()), std::move(img));
   }
   return true;
 }

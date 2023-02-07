@@ -86,45 +86,7 @@ VCL_create_resource_pack(const int zip_file_count,
     return nullptr;
   }
 
-  // int success_count = 0;
-  /*
-  for (int zfidx = 0; zfidx < zip_file_count; zfidx++) {
-
-    zipped_folder zf_2 = zipped_folder::from_zip(zip_file_names[zfidx]);
-
-    if (!rp->add_textures(zf_2, !cover_from_first_to_end)) {
-      cout << "Failed to add textures from resource pack : "
-           << zip_file_names[zfidx] << endl;
-      continue;
-    }
-
-    if (!rp->add_block_states(zf_2, !cover_from_first_to_end)) {
-      cout << "Failed to add block states from resource pack : "
-           << zip_file_names[zfidx] << endl;
-      continue;
-    }
-
-    if (!rp->add_block_models(zf_2, !cover_from_first_to_end)) {
-      cout << "Warning : Failed to add block models from resource pack : "
-           << zip_file_names[zfidx] << endl;
-      continue;
-    }
-
-    success_count++;
-  }*/
-
-  /*
-    if (success_count < zip_file_count) {
-      cout << "Warning : " << zip_file_count - success_count
-           << " resource pack(s) not parsed." << endl;
-    }
-
-    if (success_count <= 0) {
-      delete rp;
-      return nullptr;
-    }
-
-    */
+  VCL_report(VCL_report_type_t::warning, nullptr, true);
 
   return rp;
 }
@@ -147,7 +109,7 @@ VCL_create_block_state_list(const int file_count,
   for (int i = 0; i < file_count; i++) {
     bsl->add(json_file_names[i]);
   }
-
+  VCL_report(VCL_report_type_t::warning, nullptr, true);
   return bsl;
 }
 
@@ -365,6 +327,7 @@ VCL_EXPORT_FUN bool VCL_set_resource_and_version_copy(
   TokiVC::max_block_layers = __max_block_layers;
 
   const bool ret = TokiVC::update_color_set_no_lock();
+  VCL_report(VCL_report_type_t::warning, nullptr, true);
 
   return ret;
 }
@@ -403,6 +366,8 @@ VCL_EXPORT_FUN bool VCL_set_resource_and_version_move(
   if (!TokiVC::update_color_set_no_lock()) {
     ret = false;
   }
+
+  VCL_report(VCL_report_type_t::warning, nullptr, true);
 
   return ret;
 }
@@ -530,7 +495,7 @@ VCL_EXPORT_FUN size_t VCL_get_blocks_from_block_state_list_match_const(
       }
     }
   }
-
+  // no possible output
   return available_block_counter;
 }
 
@@ -609,6 +574,20 @@ VCL_get_block_model(const VCL_block *block,
   if (face_invrotated != nullptr) {
     *face_invrotated = temp_fi;
   }
+  VCL_report(VCL_report_type_t::warning, nullptr, true);
+  return ret;
+}
+
+[[nodiscard]] VCL_EXPORT_FUN VCL_model *
+VCL_get_block_model_by_name(const VCL_resource_pack *rp, const char *name) {
+  auto it = rp->get_models().find(name);
+
+  if (it == rp->get_models().end()) {
+    return nullptr;
+  }
+
+  VCL_model *ret = new VCL_model;
+  ret->value = &it->second;
   return ret;
 }
 
@@ -645,10 +624,59 @@ VCL_EXPORT_FUN bool VCL_compute_projection_image(const VCL_model *md,
   Eigen::Map<block_model::EImgRowMajor_t> map(img_buffer_argb32, 16, 16);
 
   map = img;
+
+  VCL_report(VCL_report_type_t::warning, nullptr, true);
   return true;
 }
 
+VCL_EXPORT_FUN void VCL_display_model(const VCL_model *md) {
+  if (md == nullptr) {
+    VCL_report(VCL_report_type_t::information, "nullptr", true);
+    return;
+  }
+
+  std::string msg;
+  msg.reserve(1024);
+
+  const block_model::model *mdp = nullptr;
+
+  if (md->value.index() == 0) {
+    msg.append("Is variant.\n");
+    mdp = std::get<0>(md->value);
+  } else {
+    msg.append("Is multipart.\n");
+    mdp = &std::get<1>(md->value);
+  }
+
+  msg.append("elements :[\n");
+  for (const auto &ele : mdp->elements) {
+    msg.append("  {\n");
+    msg.append(fmt::format("    from : [{}, {}, {}]\n", ele._from[0],
+                           ele._from[1], ele._from[2]));
+    msg.append(fmt::format("    to : [{}, {}, {}]\n", ele._to[0], ele._to[1],
+                           ele._to[2]));
+    msg.append("  faces : [\n");
+    for (const block_model::face_t &face : ele.faces) {
+      msg.append("    {");
+      msg.append(fmt::format(
+          "uv_start=[{},{}],uv_end=[{},{}],rot={},is_hidden={},texture={}",
+          face.uv_start[0], face.uv_start[1], face.uv_end[0], face.uv_end[1],
+          int(face.rot) * 10, face.is_hidden, (const void *)face.texture));
+      msg.append("}\n");
+    }
+    msg.append("  ]\n");
+  }
+  msg.append("]\n");
+
+  VCL_report(VCL_report_type_t::information, msg.c_str(), true);
+}
+
 void default_report_callback(VCL_report_type_t type, const char *msg, bool) {
+  if (msg == nullptr) {
+    // flush here.
+
+    return;
+  }
   const char *type_msg = nullptr;
 
   switch (type) {
@@ -660,6 +688,7 @@ void default_report_callback(VCL_report_type_t type, const char *msg, bool) {
     break;
   case VCL_report_type_t::error:
     type_msg = "Error : ";
+    break;
   }
 
   printf("\n%s%s\n", type_msg, msg);

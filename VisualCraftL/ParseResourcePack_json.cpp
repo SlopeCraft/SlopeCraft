@@ -962,7 +962,7 @@ bool resource_pack::add_block_models(
 
     if (!ok) {
       std::string msg = fmt::format(
-          "failed to parse assets/minecraft/models/block/{}.", file.first);
+          "Failed to parse assets/minecraft/models/block/{}.", file.first);
       ::VCL_report(VCL_report_type_t::error, msg.c_str());
       return false;
     }
@@ -985,10 +985,10 @@ bool resource_pack::add_block_models(
     const bool ok = inherit_recrusively(model.first, model.second, temp_models);
     if (!ok) {
       model.second.parent = "INVALID";
-      std::string msg = fmt::format(
-          "Warning : failed to inherit model {}. This model will be "
-          "skipped.",
-          model.first);
+      std::string msg =
+          fmt::format("Failed to inherit model {}. This model will be "
+                      "skipped, but it may cause further errors.",
+                      model.first);
       ::VCL_report(VCL_report_type_t::warning, msg.c_str());
       // #warning following line should be commented.
       // return false;
@@ -1036,17 +1036,19 @@ bool resource_pack::add_block_models(
         auto &tface = tele.faces[faceidx];
         ele.faces[faceidx].is_hidden = tface.is_hidden;
         if (tface.is_hidden) {
+          ele.faces[faceidx].texture = nullptr;
           continue;
         }
         ele.faces[faceidx].uv_start[0] = tface.uv[0];
         ele.faces[faceidx].uv_start[1] = tface.uv[1];
         ele.faces[faceidx].uv_end[0] = tface.uv[2];
-        ele.faces[faceidx].uv_end[1] = tface.uv[2];
+        ele.faces[faceidx].uv_end[1] = tface.uv[3];
 
         auto it = this->textures.find(tface.texture);
 
         if (it == this->textures.end()) {
           if (tface.texture.starts_with('#') && tmodel.second.is_inherited) {
+            // This model is considered to be abstract
             skip_this_model = true;
             continue;
           }
@@ -1055,9 +1057,11 @@ bool resource_pack::add_block_models(
                           "model {} but no such image.\nThe textures are : \n",
                           tface.texture, tmodel.first);
           for (const auto &pair : tmodel.second.textures) {
-            std::string temp = fmt::format("{{{}, {}}}\n", pair.first.data(),
-                                           pair.second.data());
+            msg.push_back('{');
+            std::string temp =
+                fmt::format("{}, {}\n", pair.first.data(), pair.second.data());
             msg.append(temp);
+            msg.push_back('}');
           }
           ::VCL_report(VCL_report_type_t::error, msg.c_str());
           return false;
@@ -1071,7 +1075,26 @@ bool resource_pack::add_block_models(
       md.elements.emplace_back(ele);
     }
     // finished current model
-    this->block_models.emplace(tmodel.first, md);
+    if (!skip_this_model) {
+      this->block_models.emplace(tmodel.first, std::move(md));
+    }
+  }
+
+  for (const auto &pair : this->block_models) {
+    for (const auto &ele : pair.second.elements) {
+      if (ele.volume() >= 1e-4) {
+        for (const auto &face : ele.faces) {
+          if (!face.is_hidden && face.texture == nullptr) {
+            std::string msg =
+                fmt::format("Found an error while examining all block models : "
+                            "face.texture==nullptr in model {}",
+                            pair.first);
+            ::VCL_report(VCL_report_type_t::error, msg.c_str());
+            return false;
+          }
+        }
+      }
+    }
   }
 
   return true;
@@ -1115,7 +1138,7 @@ bool resource_pack::add_block_states(
 
     if (!success) {
       std::string msg =
-          fmt::format("Warning : Failed to parse block state json file "
+          fmt::format("Failed to parse block state json file "
                       "assets/minecraft/blockstates/{}. This will be "
                       "skipped but may cause further errors.\n",
                       file.first);

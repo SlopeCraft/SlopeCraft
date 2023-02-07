@@ -121,6 +121,13 @@ target_include_directories(test_VCL_project_image PRIVATE
     ${SlopeCraft_Nlohmann_json_include_dir}
     ${SlopeCraft_Eigen3_include_dir})
 
+add_executable(test_VCL_model tests/test_VCL_model.cpp)
+target_link_libraries(test_VCL_model PRIVATE VisualCraftL)
+target_include_directories(test_VCL_model PRIVATE
+    ${cli11_include_dir}
+    ${SlopeCraft_Nlohmann_json_include_dir}
+    ${SlopeCraft_Eigen3_include_dir})
+
 include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_12.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_latest.cmake)
 

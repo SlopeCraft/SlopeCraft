@@ -26,6 +26,7 @@ int main(int argc, char **argv) {
 
   std::string filename_prefix;
   bool display_bsl = false;
+  bool display_model = false;
 
   {
     app.add_option("files", input_files, "json and resource packs.")
@@ -55,6 +56,7 @@ int main(int argc, char **argv) {
     app.add_option("--prefix", filename_prefix)->default_val("./");
 
     app.add_flag("--display-bsl", display_bsl)->default_val(false);
+    app.add_flag("--display-model", display_model)->default_val(false);
 
     CLI11_PARSE(app, argc, argv);
 
@@ -156,6 +158,10 @@ int main(int argc, char **argv) {
       cout << "Failed to find model for block "
            << VCL_get_block_id(blocks_to_render[idx]) << endl;
       return 6;
+    }
+
+    if (display_model) {
+      VCL_display_model(md);
     }
 
     if (!VCL_compute_projection_image(md, face, nullptr, nullptr, img.data(),

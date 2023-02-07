@@ -301,27 +301,7 @@ struct intersect_point {
 
   ///(u,v) in range[0,1]. corresponding to (c,r)
 
-  inline ARGB color() const noexcept {
-    // compute uv in range [0,1]
-    const float u_in_01 =
-        (face_ptr->uv_start[0] +
-         uv[0] * (face_ptr->uv_end[0] - face_ptr->uv_start[0])) /
-        16;
-    const float v_in_01 =
-        (face_ptr->uv_start[1] +
-         uv[1] * (face_ptr->uv_end[1] - face_ptr->uv_start[1])) /
-        16;
-
-    // printf("u_in_")
-    /*
-    printf("\nintersect_point::color : ");
-    printf("uv_start = [%i, %i]; uv_end = [%i, %i]; ", face_ptr->uv_start[0],
-           face_ptr->uv_start[1], face_ptr->uv_end[0], face_ptr->uv_end[1]);
-
-    printf("uv = [%f, %f]; ", uv[0], uv[1]);
-    printf("u_in_01 = %f, v_in_01 = %f; ", u_in_01, v_in_01);*/
-    return color_at_relative_idx(*(face_ptr->texture), v_in_01, u_in_01);
-  }
+  ARGB color() const noexcept;
 };
 
 /// A 3d box to be displayed
@@ -387,9 +367,6 @@ public:
 
   inline void
   get_faces(std::vector<const face_t *> *const dest) const noexcept {
-    if (dest == nullptr) {
-      return;
-    }
 
     dest->reserve(elements.size() * 6);
     dest->clear();

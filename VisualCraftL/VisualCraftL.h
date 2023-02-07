@@ -188,7 +188,13 @@ VCL_EXPORT_FUN VCL_block_class_t VCL_string_to_block_class(const char *str,
 VCL_get_block_model(const VCL_block *block,
                     const VCL_resource_pack *resource_pack,
                     VCL_face_t face_exposed, VCL_face_t *face_invrotated);
+
+[[nodiscard]] VCL_EXPORT_FUN VCL_model *
+VCL_get_block_model_by_name(const VCL_resource_pack *, const char *name);
+
 VCL_EXPORT_FUN void VCL_destroy_block_model(VCL_model *);
+
+VCL_EXPORT_FUN void VCL_display_model(const VCL_model *);
 
 /// \return Whether the image is returned. rows and cols will always be
 /// returned.
