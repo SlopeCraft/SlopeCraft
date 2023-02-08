@@ -1,6 +1,7 @@
 #ifndef SLOPECRAFT_UTILITIES_LIBABSTRACTGUI_LIBABSTRACTGUI_H
 #define SLOPECRAFT_UTILITIES_LIBABSTRACTGUI_LIBABSTRACTGUI_H
 
+#include <stdint.h>
 #include <string>
 #include <vector>
 

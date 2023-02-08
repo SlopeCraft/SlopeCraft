@@ -6,6 +6,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include <stdint.h>
+
 class zipped_file;
 class zipped_folder;
 

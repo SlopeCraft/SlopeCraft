@@ -11,7 +11,7 @@ add_library(NBTWriter
     NBTWriter.h
     NBTWriter.cpp)
 
-target_link_libraries(NBTWriter PUBLIC z)
+target_link_libraries(NBTWriter PUBLIC ZLIB::ZLIB)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     target_compile_options(NBTWriter PUBLIC "-fvisibility=hidden" "-fPIC")

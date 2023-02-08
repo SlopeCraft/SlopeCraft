@@ -22,9 +22,9 @@ This file is part of SlopeCraft.
 
 #ifndef KERNEL_H
 #define KERNEL_H
-#include <stdint.h>
 #include <stddef.h>
-//#define SCL_CAPI
+#include <stdint.h>
+// #define SCL_CAPI
 
 #include "SlopeCraftL_global.h"
 
@@ -56,12 +56,12 @@ SCL_EXPORT AbstractBlock *SCL_createBlock();
 unsigned long long SCL_EXPORT SCL_blockSize(const AbstractBlock *);
 
 /// id of this block
-const char *SCL_EXPORT SCL_getId(const AbstractBlock *);
+SCL_EXPORT const char *SCL_getId(const AbstractBlock *);
 
 /// first version
 unsigned char SCL_EXPORT SCL_getVersion(const AbstractBlock *);
 /// id in 1.12
-const char *SCL_EXPORT SCL_getIdOld(const AbstractBlock *);
+SCL_EXPORT const char *SCL_getIdOld(const AbstractBlock *);
 /// if this block needs a glass block under it
 bool SCL_EXPORT SCL_getNeedGlass(const AbstractBlock *);
 /// if this block emits light

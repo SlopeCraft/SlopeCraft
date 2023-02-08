@@ -62,7 +62,7 @@ target_include_directories(VisualCraftL PUBLIC
     ${CMAKE_SOURCE_DIR}/utilities)
 
 target_include_directories(VisualCraftL INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(VisualCraftL PRIVATE z PNG::PNG libzip::zip ColorManip Schem fmt::fmt)
+target_link_libraries(VisualCraftL PRIVATE ZLIB::ZLIB PNG::PNG libzip::zip ColorManip Schem fmt::fmt)
 target_compile_definitions(VisualCraftL PRIVATE BEFORE "-DVISUALCRAFTL_BUILD")
 
 if(${VCL_enable_internal_test})
@@ -72,7 +72,9 @@ endif()
 target_compile_features(VisualCraftL PRIVATE cxx_std_20)
 
 # target_compile_options(VisualCraftL PRIVATE "-std=c++20")
-target_compile_options(VisualCraftL PUBLIC "-flto")
+if(NOT ${MSVC})
+    target_compile_options(VisualCraftL PUBLIC "-flto")
+endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     # message("libzip_LIBRARY = " ${libzip_LIBRARY})
