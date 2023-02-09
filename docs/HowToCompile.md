@@ -52,3 +52,7 @@ Note that when SlopeCraftL links GAConverter, the link mode is **public**, for G
 ## Notice
 1. Since Eigen has many compile-time things, and HeuristicFlow may arouse many stupid warnings, your first compiling may spend several minutes and receive tons of warnings. Just wait and ignore them.
 2. If you meet any problem, draw me a new issue.
+3. If you are building VisualCraftL on linux, some linking problems around libzip may occur. To fix this problem, there are 2 ways possible:
+   1. Use a **static archive of libzip** instead of shared lib. But this libzip.a should be compiled with argument **`-fPIC`**, because `libVisualCraftL.so`, a shared lib will link to it. 
+      - If your libzip.a links other compress libs(for example, lzma), linking may fail. That is because libzip links to its dependents **privately regardless of whether libzip is built to be a shared lib**. I guess that this is a designing mistake in libzip. So it is **deprecated** to use a static libzip.
+   2. Use shared libzip, and copy `libzip.so` and symlinks against it to `CMAKE_CURRENT_BINARY_DIR`.

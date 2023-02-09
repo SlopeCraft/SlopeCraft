@@ -1,0 +1,39 @@
+return()
+
+if(NOT EXISTS ${CMAKE_SOURCE_DIR}/3rdParty/libzip/.git)
+#https://github.com/nih-at/libzip/
+
+message(STATUS "Cloing libzip...")
+
+execute_process(COMMAND git clone https://github.com/nih-at/libzip.git 
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/3rdParty
+    COMMAND_ERROR_IS_FATAL ANY
+    ECHO_ERROR_VARIABLE
+    ECHO_OUTPUT_VARIABLE)
+endif()
+
+execute_process(COMMAND git checkout v1.9.2 
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/3rdParty/libzip
+    COMMAND_ERROR_IS_FATAL ANY
+    ECHO_ERROR_VARIABLE
+    ECHO_OUTPUT_VARIABLE)
+
+
+execute_process(COMMAND cmake -S ${CMAKE_SOURCE_DIR}/3rdParty/libzip -B ${CMAKE_BINARY_DIR}/3rdParty/libzip/build -G ${CMAKE_GENERATOR} -DCMAKE_PREFIX_PATH:PATH="${CMAKE_PREFIX_PATH}" -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_BINARY_DIR}/3rdParty/libzip/install -DCMAKE_C_COMPILER:FILEPATH=${CMAKE_C_COMPILER} -DCMAKE_CXX_COMPILER:FILEPATH=${CMAKE_CXX_COMPILER} -DBUILD_SHARED_LIBS:BOOL=false -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+
+    COMMAND_ERROR_IS_FATAL ANY
+    ECHO_ERROR_VARIABLE
+    ECHO_OUTPUT_VARIABLE
+    )
+
+execute_process(COMMAND cmake --build ${CMAKE_BINARY_DIR}/3rdParty/libzip/build --parallel
+
+    COMMAND_ERROR_IS_FATAL ANY
+    ECHO_ERROR_VARIABLE
+    ECHO_OUTPUT_VARIABLE)
+
+execute_process(COMMAND cmake --install ${CMAKE_BINARY_DIR}/3rdParty/libzip/build
+
+    COMMAND_ERROR_IS_FATAL ANY
+    ECHO_ERROR_VARIABLE
+    ECHO_OUTPUT_VARIABLE)

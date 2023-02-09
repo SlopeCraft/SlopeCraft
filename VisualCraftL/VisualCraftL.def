@@ -30,5 +30,9 @@ VCL_get_block_class @27
 VCL_set_block_class @28
 VCL_string_to_block_class @29
 VCL_get_block_model @30
-VCL_destroy_block_model @31
-VCL_compute_projection_image @32
+VCL_get_block_model_by_name @31
+VCL_destroy_block_model @32
+VCL_compute_projection_image @33
+VCL_display_model @34
+VCL_get_report_callback @35
+VCL_set_report_callback @36

@@ -6,12 +6,11 @@
 #include <Eigen/Dense>
 #include <string>
 #include <unordered_map>
-
-#include "Resource_tree.h"
-
-#include "VisualCraftL.h"
 #include <utility>
 #include <variant>
+
+#include "Resource_tree.h"
+#include "VisualCraftL.h"
 
 /*
 #if __cplusplus < 202002L
@@ -67,21 +66,22 @@ enum class face_rot : uint8_t {
 
 inline face_rot int_to_face_rot(int a) {
   switch (a) {
-  case 0:
-    return face_rot::face_rot_0;
-  case 90:
-    return face_rot::face_rot_90;
-  case 180:
-    return face_rot::face_rot_180;
-  case 270:
-    return face_rot::face_rot_270;
+    case 0:
+      return face_rot::face_rot_0;
+    case 90:
+      return face_rot::face_rot_90;
+    case 180:
+      return face_rot::face_rot_180;
+    case 270:
+      return face_rot::face_rot_270;
 
-  default:
-    printf("\nFunction int_to_face_rot failed to convert int to face_rot : "
-           "invalid value : %i\n",
-           a);
-    exit(1);
-    return face_rot::face_rot_0;
+    default:
+      printf(
+          "\nFunction int_to_face_rot failed to convert int to face_rot : "
+          "invalid value : %i\n",
+          a);
+      exit(1);
+      return face_rot::face_rot_0;
   }
 }
 
@@ -97,20 +97,20 @@ constexpr face_idx face_y_neg = face_idx::face_down;
 
 constexpr inline face_idx inverse_face(const face_idx fi) noexcept {
   switch (fi) {
-  case face_idx::face_down:
-    return face_idx::face_up;
-  case face_idx::face_up:
-    return face_idx::face_down;
+    case face_idx::face_down:
+      return face_idx::face_up;
+    case face_idx::face_up:
+      return face_idx::face_down;
 
-  case face_idx::face_north:
-    return face_idx::face_south;
-  case face_idx::face_south:
-    return face_idx::face_north;
+    case face_idx::face_north:
+      return face_idx::face_south;
+    case face_idx::face_south:
+      return face_idx::face_north;
 
-  case face_idx::face_east:
-    return face_idx::face_west;
-  case face_idx::face_west:
-    return face_idx::face_east;
+    case face_idx::face_east:
+      return face_idx::face_west;
+    case face_idx::face_west:
+      return face_idx::face_east;
   }
   // std::unreachable();
 
@@ -131,31 +131,31 @@ constexpr inline face_idx rotate_x(face_idx original, face_rot x_rot) noexcept {
   }
 
   switch (x_rot) {
-  case face_rot::face_rot_0:
-    return original;
+    case face_rot::face_rot_0:
+      return original;
 
-  case face_rot::face_rot_180:
-    return inverse_face(original);
+    case face_rot::face_rot_180:
+      return inverse_face(original);
 
-  case face_rot::face_rot_90: {
-    switch (original) {
-    case face_y_pos:
-      return face_z_neg;
-    case face_z_neg:
-      return face_y_neg;
-    case face_y_neg:
-      return face_z_pos;
-    case face_z_pos:
-      return face_y_pos;
-    default:
-      // std::unreachable();
-      return {};
+    case face_rot::face_rot_90: {
+      switch (original) {
+        case face_y_pos:
+          return face_z_neg;
+        case face_z_neg:
+          return face_y_neg;
+        case face_y_neg:
+          return face_z_pos;
+        case face_z_pos:
+          return face_y_pos;
+        default:
+          // std::unreachable();
+          return {};
+      }
     }
-  }
 
-  case face_rot::face_rot_270: {
-    return inverse_face(rotate_x(original, face_rot::face_rot_90));
-  }
+    case face_rot::face_rot_270: {
+      return inverse_face(rotate_x(original, face_rot::face_rot_90));
+    }
   }
   // std::unreachable();
   return {};
@@ -164,14 +164,14 @@ constexpr inline face_idx rotate_x(face_idx original, face_rot x_rot) noexcept {
 constexpr inline face_idx invrotate_x(face_idx rotated,
                                       face_rot x_rot) noexcept {
   switch (x_rot) {
-  case face_rot::face_rot_0:
-    return rotated;
-  case face_rot::face_rot_180:
-    return inverse_face(rotated);
-  case face_rot::face_rot_90:
-    return rotate_x(rotated, face_rot::face_rot_270);
-  case face_rot::face_rot_270:
-    return rotate_x(rotated, face_rot::face_rot_90);
+    case face_rot::face_rot_0:
+      return rotated;
+    case face_rot::face_rot_180:
+      return inverse_face(rotated);
+    case face_rot::face_rot_90:
+      return rotate_x(rotated, face_rot::face_rot_270);
+    case face_rot::face_rot_270:
+      return rotate_x(rotated, face_rot::face_rot_90);
   }
   // std::unreachable();
   return {};
@@ -183,28 +183,28 @@ constexpr inline face_idx rotate_y(face_idx original, face_rot y_rot) noexcept {
   }
 
   switch (y_rot) {
-  case face_rot::face_rot_0:
-    return original;
-  case face_rot::face_rot_180:
-    return inverse_face(original);
-  case face_rot::face_rot_90: {
-    switch (original) {
-    case face_z_pos:
-      return face_x_neg;
-    case face_x_neg:
-      return face_z_neg;
-    case face_z_neg:
-      return face_x_pos;
-    case face_x_pos:
-      return face_z_pos;
-    default:
-      // std::unreachable();
-      return {};
+    case face_rot::face_rot_0:
+      return original;
+    case face_rot::face_rot_180:
+      return inverse_face(original);
+    case face_rot::face_rot_90: {
+      switch (original) {
+        case face_z_pos:
+          return face_x_neg;
+        case face_x_neg:
+          return face_z_neg;
+        case face_z_neg:
+          return face_x_pos;
+        case face_x_pos:
+          return face_z_pos;
+        default:
+          // std::unreachable();
+          return {};
+      }
     }
-  }
 
-  case face_rot::face_rot_270:
-    return inverse_face(rotate_y(original, face_rot::face_rot_90));
+    case face_rot::face_rot_270:
+      return inverse_face(rotate_y(original, face_rot::face_rot_90));
   }
 
   // std::unreachable();
@@ -214,14 +214,14 @@ constexpr inline face_idx rotate_y(face_idx original, face_rot y_rot) noexcept {
 constexpr inline face_idx invrotate_y(face_idx rotated,
                                       face_rot y_rot) noexcept {
   switch (y_rot) {
-  case face_rot::face_rot_0:
-    return rotated;
-  case face_rot::face_rot_180:
-    return inverse_face(rotated);
-  case face_rot::face_rot_90:
-    return rotate_y(rotated, face_rot::face_rot_270);
-  case face_rot::face_rot_270:
-    return rotate_y(rotated, face_rot::face_rot_90);
+    case face_rot::face_rot_0:
+      return rotated;
+    case face_rot::face_rot_180:
+      return inverse_face(rotated);
+    case face_rot::face_rot_90:
+      return rotate_y(rotated, face_rot::face_rot_270);
+    case face_rot::face_rot_270:
+      return rotate_y(rotated, face_rot::face_rot_90);
   }
   // std::unreachable();
   return {};
@@ -245,7 +245,7 @@ inline Eigen::Array3f rotate(const Eigen::Array3f &pos, face_rot x_rot,
 }
 
 class ray_t {
-public:
+ public:
   ray_t() = delete;
   explicit ray_t(const face_idx f);
   Eigen::Array3f abc;
@@ -254,7 +254,7 @@ public:
 
 /// Ax+By+Cz+D=0
 class plane_t {
-public:
+ public:
   plane_t() = delete;
   explicit plane_t(const Eigen::Array3f &normVec, const Eigen::Array3f &point)
       : ABC(normVec), D(-(normVec * point).sum()) {}
@@ -264,7 +264,7 @@ public:
 };
 
 class face_t {
-public:
+ public:
   const EImgRowMajor_t *texture{nullptr};
   /// It is not pixel index, but [0,1]*16 stored in integer
   std::array<float, 2> uv_start{0, 0};
@@ -306,7 +306,7 @@ struct intersect_point {
 
 /// A 3d box to be displayed
 class element {
-public:
+ public:
   Eigen::Array3f _from;
   Eigen::Array3f _to;
   std::array<face_t, 6> faces;
@@ -342,8 +342,7 @@ public:
   inline int shown_face_num() const noexcept {
     int result = 0;
     for (const auto &f : faces) {
-      if (!f.is_hidden)
-        result++;
+      if (!f.is_hidden) result++;
     }
     return result;
   }
@@ -353,21 +352,20 @@ public:
            (point <= this->xyz_maxpos()).all();
   }
 
-  void
-  intersect_points(const face_idx f, const ray_t &ray,
-                   std::vector<intersect_point> *const dest) const noexcept;
+  void intersect_points(
+      const face_idx f, const ray_t &ray,
+      std::vector<intersect_point> *const dest) const noexcept;
 
   element rotate(face_rot x_rot, face_rot y_rot) const noexcept;
 };
 
 /// a block model
 class model {
-public:
+ public:
   std::vector<element> elements;
 
-  inline void
-  get_faces(std::vector<const face_t *> *const dest) const noexcept {
-
+  inline void get_faces(
+      std::vector<const face_t *> *const dest) const noexcept {
     dest->reserve(elements.size() * 6);
     dest->clear();
 
@@ -388,20 +386,18 @@ public:
   void merge_back(const model &md, face_rot x_rot, face_rot y_rot) noexcept;
 };
 
-} // namespace block_model
+}  // namespace block_model
 
-std::array<uint8_t, 3>
-compute_mean_color(const block_model::EImgRowMajor_t &img,
-                   bool *const ok = nullptr) noexcept;
+std::array<uint8_t, 3> compute_mean_color(
+    const block_model::EImgRowMajor_t &img, bool *const ok = nullptr) noexcept;
 
 bool compose_image_background_half_transparent(
     block_model::EImgRowMajor_t &frontend_and_dest,
     const block_model::EImgRowMajor_t &backend) noexcept;
 
-std::array<uint8_t, 3>
-compose_image_and_mean(const block_model::EImgRowMajor_t &front,
-                       const block_model::EImgRowMajor_t &back,
-                       bool *const ok = nullptr) noexcept;
+std::array<uint8_t, 3> compose_image_and_mean(
+    const block_model::EImgRowMajor_t &front,
+    const block_model::EImgRowMajor_t &back, bool *const ok = nullptr) noexcept;
 
 namespace resource_json {
 
@@ -446,27 +442,25 @@ bool process_full_id(std::string_view full_id, std::string *namespace_name,
 bool match_state_list(const state_list &sla, const state_list &slb) noexcept;
 
 class block_states_variant {
-public:
+ public:
   model_pass_t block_model_name(const state_list &sl) const noexcept;
 
   std::vector<std::pair<state_list, model_store_t>> LUT;
 };
 
 struct criteria {
-public:
+ public:
   std::string key;
   std::vector<std::string> values;
 
   inline bool match(const state &state) const noexcept {
-    if (state.key != this->key)
-      return false;
+    if (state.key != this->key) return false;
     return this->match(state.value);
   }
 
   inline bool match(std::string_view value) const noexcept {
     for (const std::string &v : this->values) {
-      if (v == value)
-        return true;
+      if (v == value) return true;
     }
     return false;
   }
@@ -482,7 +476,7 @@ bool match_criteria_list(const criteria_list_and &cl,
 
 struct multipart_pair {
   std::variant<criteria, std::vector<criteria_list_and>, criteria_all_pass>
-      criteria;
+      criteria_variant;
   std::vector<model_store_t> apply_blockmodel;
   /*
   criteria when;
@@ -491,7 +485,7 @@ struct multipart_pair {
 
   inline bool match(const state_list &sl) const noexcept {
     const resource_json::criteria *when =
-        std::get_if<resource_json::criteria>(&this->criteria);
+        std::get_if<resource_json::criteria>(&this->criteria_variant);
     if (when != nullptr) {
       std::string_view key = when->key;
       const char *slvalue = nullptr;
@@ -510,16 +504,15 @@ struct multipart_pair {
       return when->match(slvalue);
     }
 
-    if (std::get_if<criteria_all_pass>(&this->criteria) != nullptr) {
+    if (std::get_if<criteria_all_pass>(&this->criteria_variant) != nullptr) {
       return true;
     }
 
     const std::vector<criteria_list_and> &when_or =
-        std::get<std::vector<criteria_list_and>>(this->criteria);
+        std::get<std::vector<criteria_list_and>>(this->criteria_variant);
 
     for (const criteria_list_and &cl : when_or) {
-      if (match_criteria_list(cl, sl))
-        return true;
+      if (match_criteria_list(cl, sl)) return true;
     }
 
     return false;
@@ -527,11 +520,11 @@ struct multipart_pair {
 };
 
 class block_state_multipart {
-public:
+ public:
   std::vector<multipart_pair> pairs;
 
-  std::vector<model_pass_t>
-  block_model_names(const state_list &sl) const noexcept;
+  std::vector<model_pass_t> block_model_names(
+      const state_list &sl) const noexcept;
 };
 
 bool parse_block_state(
@@ -539,7 +532,7 @@ bool parse_block_state(
     std::variant<block_states_variant, block_state_multipart> *,
     bool *const is_dest_variant = nullptr) noexcept;
 
-} // namespace resource_json
+}  // namespace resource_json
 
 block_model::face_idx string_to_face_idx(std::string_view str,
                                          bool *const _ok) noexcept;
@@ -549,7 +542,7 @@ const char *face_idx_to_string(block_model::face_idx) noexcept;
  * \note Name of texture = <namespacename>:blocks/<pngfilename without prefix>
  */
 class resource_pack {
-public:
+ public:
   using namespace_name_t = std::string;
 
   bool add_textures(const zipped_folder &resourece_pack_root,
@@ -575,23 +568,23 @@ public:
     resource_json::state_list state_list;
   };
 
-  std::variant<const block_model::model *, block_model::model>
-  find_model(const std::string &block_state_str, VCL_face_t face_exposed,
-             VCL_face_t *face_invrotated) const noexcept {
+  std::variant<const block_model::model *, block_model::model> find_model(
+      const std::string &block_state_str, VCL_face_t face_exposed,
+      VCL_face_t *face_invrotated) const noexcept {
     buffer_t b;
     return this->find_model(block_state_str, face_exposed, face_invrotated, b);
   }
 
-  std::variant<const block_model::model *, block_model::model>
-  find_model(const std::string &block_state_str, VCL_face_t face_exposed,
-             VCL_face_t *face_invrotated, buffer_t &) const noexcept;
+  std::variant<const block_model::model *, block_model::model> find_model(
+      const std::string &block_state_str, VCL_face_t face_exposed,
+      VCL_face_t *face_invrotated, buffer_t &) const noexcept;
 
   bool compute_projection(const std::string &block_state_str,
                           VCL_face_t face_exposed,
                           block_model::EImgRowMajor_t *const img,
                           buffer_t &) const noexcept;
 
-private:
+ private:
   std::unordered_map<std::string, block_model::model> block_models;
   std::unordered_map<std::string, Eigen::Array<ARGB, Eigen::Dynamic,
                                                Eigen::Dynamic, Eigen::RowMajor>>
@@ -619,15 +612,15 @@ private:
     }
   }
 
-  bool
-  add_textures_direct(const std::unordered_map<std::string, zipped_file> &pngs,
-                      std::string_view namespace_name,
-                      const bool on_conflict_replace_old) noexcept;
+  bool add_textures_direct(
+      const std::unordered_map<std::string, zipped_file> &pngs,
+      std::string_view namespace_name,
+      const bool on_conflict_replace_old) noexcept;
 };
 
 class VCL_resource_pack : public resource_pack {};
 class VCL_model {
-public:
+ public:
   std::variant<const block_model::model *, block_model::model> value;
 };
-#endif // SLOPECRAFT_VISUALCRAFTL_PARSERESOURCEPACK_H
+#endif  // SLOPECRAFT_VISUALCRAFTL_PARSERESOURCEPACK_H

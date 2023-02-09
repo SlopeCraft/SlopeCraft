@@ -7,6 +7,11 @@ set(CMAKE_CXX_STANDARD 20)
 
 enable_testing()
 
+if(${MSVC})
+message(WARNING "MSVC or MSVC-like compilers(cl or clang-cl) are not fully supported. 
+    Please use a gnu-like compiler, for example, gcc/g++ or clang/clang++.")
+endif()
+
 # manage the install prefix
 set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install_app)
 set(CMAKE_INSTALL_LIBDIR ${CMAKE_INSTALL_PREFIX})
