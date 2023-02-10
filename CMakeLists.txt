@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 20)
 enable_testing()
 
 if(${MSVC})
-message(WARNING "MSVC or MSVC-like compilers(cl or clang-cl) are not fully supported. 
+    message(WARNING "MSVC or MSVC-like compilers(cl or clang-cl) are not fully supported. 
     Please use a gnu-like compiler, for example, gcc/g++ or clang/clang++.")
 endif()
 
@@ -93,7 +93,6 @@ if(${SlopeCraft_vectorize})
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    # add_compile_options(-fPIC)
     # set(CMAKE_INSTALL_RPATH "../lib")
 endif()
 

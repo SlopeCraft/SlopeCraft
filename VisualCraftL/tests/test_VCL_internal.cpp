@@ -1,3 +1,3 @@
 #include "VisualCraftL.h"
 
-int main() { VCL_internal_test(); }
+int main(int argc, char **argv) { return VCL_internal_test(argc, argv); }

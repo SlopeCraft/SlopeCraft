@@ -70,7 +70,7 @@ class VCL_block;
 class VCL_model;
 
 class VCL_Kernel {
- public:
+public:
   VCL_Kernel() = default;
   virtual ~VCL_Kernel() = default;
 
@@ -83,9 +83,9 @@ class VCL_Kernel {
   virtual int64_t rows() const noexcept = 0;
   virtual int64_t cols() const noexcept = 0;
 
-  virtual const uint32_t *raw_image(
-      int64_t *const rows, int64_t *const cols,
-      bool *const is_row_major) const noexcept = 0;
+  virtual const uint32_t *
+  raw_image(int64_t *const rows, int64_t *const cols,
+            bool *const is_row_major) const noexcept = 0;
 };
 
 extern "C" {
@@ -94,16 +94,18 @@ extern "C" {
 VCL_EXPORT_FUN void VCL_destroy_kernel(VCL_Kernel *const ptr);
 
 // create and destroy resource pack
-[[nodiscard]] VCL_EXPORT_FUN VCL_resource_pack *VCL_create_resource_pack(
-    const int zip_file_count, const char *const *const zip_file_names);
+[[nodiscard]] VCL_EXPORT_FUN VCL_resource_pack *
+VCL_create_resource_pack(const int zip_file_count,
+                         const char *const *const zip_file_names);
 VCL_EXPORT_FUN void VCL_destroy_resource_pack(VCL_resource_pack *const ptr);
 
 // create and destroy block state list
-[[nodiscard]] VCL_EXPORT_FUN VCL_block_state_list *VCL_create_block_state_list(
-    const int file_count, const char *const *const json_file_names);
+[[nodiscard]] VCL_EXPORT_FUN VCL_block_state_list *
+VCL_create_block_state_list(const int file_count,
+                            const char *const *const json_file_names);
 
-VCL_EXPORT_FUN void VCL_destroy_block_state_list(
-    VCL_block_state_list *const ptr);
+VCL_EXPORT_FUN void
+VCL_destroy_block_state_list(VCL_block_state_list *const ptr);
 
 // set resource for kernel
 VCL_EXPORT_FUN bool VCL_set_resource_and_version_copy(
@@ -183,12 +185,13 @@ VCL_EXPORT_FUN void VCL_set_block_class(VCL_block *, VCL_block_class_t cl);
 VCL_EXPORT_FUN VCL_block_class_t VCL_string_to_block_class(const char *str,
                                                            bool *ok = nullptr);
 
-[[nodiscard]] VCL_EXPORT_FUN VCL_model *VCL_get_block_model(
-    const VCL_block *block, const VCL_resource_pack *resource_pack,
-    VCL_face_t face_exposed, VCL_face_t *face_invrotated);
+[[nodiscard]] VCL_EXPORT_FUN VCL_model *
+VCL_get_block_model(const VCL_block *block,
+                    const VCL_resource_pack *resource_pack,
+                    VCL_face_t face_exposed, VCL_face_t *face_invrotated);
 
-[[nodiscard]] VCL_EXPORT_FUN VCL_model *VCL_get_block_model_by_name(
-    const VCL_resource_pack *, const char *name);
+[[nodiscard]] VCL_EXPORT_FUN VCL_model *
+VCL_get_block_model_by_name(const VCL_resource_pack *, const char *name);
 
 VCL_EXPORT_FUN void VCL_destroy_block_model(VCL_model *);
 
@@ -212,8 +215,8 @@ VCL_EXPORT_FUN void VCL_set_report_callback(VCL_report_callback_t);
 
 #ifdef VCL_ENABLE_INTERNAL_TEST
 // Function about internal test
-VCL_EXPORT_FUN void VCL_internal_test();
-#endif  // #ifdef VCL_ENABLE_INTERNAL_TEST
+VCL_EXPORT_FUN int VCL_internal_test(int argc, char **argv);
+#endif // #ifdef VCL_ENABLE_INTERNAL_TEST
 }
 
-#endif  // SLOPECRAFT_VISUALCRAFT_VISUALCRAFT_H
+#endif // SLOPECRAFT_VISUALCRAFT_VISUALCRAFT_H

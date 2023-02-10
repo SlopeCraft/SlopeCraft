@@ -3,10 +3,10 @@ project(VisualCraftL VERSION ${SlopeCraft_version} LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(VCL_enable_internal_test OFF)
+set(VCL_enable_internal_test ON)
 
 if(${VCL_enable_internal_test})
-    set(VCL_internal_test_source_file test_fun.cpp)
+    set(VCL_internal_test_source_file VCL_internal_test_fun.cpp)
 else()
     set(VCL_internal_test_source_file)
 endif()
@@ -41,29 +41,28 @@ add_library(VisualCraftL SHARED
     ${VCL_def_file})
 
 find_package(ZLIB 1.2.11 REQUIRED)
-find_package(PNG REQUIRED)
+find_package(PNG 1.6.37 REQUIRED)
+find_package(libzip 1.9.2 REQUIRED)
 
 include(${CMAKE_SOURCE_DIR}/cmake/configure_fmtlib.cmake)
-find_package(fmt REQUIRED)
+find_package(fmt 9.1.0 REQUIRED)
 
-#include(${CMAKE_SOURCE_DIR}/cmake/configure_libzip.cmake)
-find_package(libzip REQUIRED)
+# include(${CMAKE_SOURCE_DIR}/cmake/configure_libzip.cmake)
 
 # include_directories(${ZLIB_INCLUDE_DIR})
-#if(NOT ${libzip_FOUND})
-#    message(FATAL_ERROR "libzip not found")
-#endif()
+# if(NOT ${libzip_FOUND})
+# message(FATAL_ERROR "libzip not found")
+# endif()
 
 # extensions for libzip
-#find_package(LibLZMA REQUIRED)
-#set(VCL_libzip_additions LibLZMA::LibLZMA)
+# find_package(LibLZMA REQUIRED)
+# set(VCL_libzip_additions LibLZMA::LibLZMA)
 
-#find_package(zstd)
-#if(${zstd_FOUND})
-#message(STATUS "zstd found.")
-#set(VCL_libzip_additions ${VCL_libzip_additions} Zstd::Zstd)
-#endif()
-
+# find_package(zstd)
+# if(${zstd_FOUND})
+# message(STATUS "zstd found.")
+# set(VCL_libzip_additions ${VCL_libzip_additions} Zstd::Zstd)
+# endif()
 target_include_directories(VisualCraftL PRIVATE
     ${SlopeCraft_Nlohmann_json_include_dir}
     ${SlopeCraft_Eigen3_include_dir}
@@ -74,18 +73,17 @@ target_include_directories(VisualCraftL PUBLIC
     ${CMAKE_SOURCE_DIR}/utilities)
 
 target_include_directories(VisualCraftL INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(VisualCraftL 
-    PRIVATE 
-    libzip::zip 
-    ZLIB::ZLIB 
-    PNG::PNG 
-    ${VCL_libzip_additions} 
-    ColorManip 
-    Schem 
+target_link_libraries(VisualCraftL
+    PRIVATE
+    libzip::zip
+    ZLIB::ZLIB
+    PNG::PNG
+    ${VCL_libzip_additions}
+    ColorManip
+    Schem
     fmt::fmt)
 
-#message(STATUS "ret = " ${ret})
-
+# message(STATUS "ret = " ${ret})
 target_compile_definitions(VisualCraftL PRIVATE BEFORE "-DVISUALCRAFTL_BUILD")
 
 if(${VCL_enable_internal_test})
@@ -96,7 +94,7 @@ target_compile_features(VisualCraftL PRIVATE cxx_std_20)
 
 # target_compile_options(VisualCraftL PRIVATE "-std=c++20")
 if(NOT ${MSVC})
-    #target_compile_options(VisualCraftL PUBLIC "-flto")
+    target_compile_options(VisualCraftL PUBLIC "-flto")
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
@@ -111,19 +109,19 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     target_compile_options(VisualCraftL
         PUBLIC "-fvisibility=hidden"
 
-        #PRIVATE "-rpath-link"
-        )
+        # PRIVATE "-rpath-link"
+    )
 
-    get_target_property(VCL_libzip_type libzip::zip TYPE)
+    # get_target_property(VCL_libzip_type libzip::zip TYPE)
 
-    get_target_property(VCL_libzip_location libzip::zip LOCATION)
+    # get_target_property(VCL_libzip_location libzip::zip LOCATION)
 
-    get_filename_component(VCL_libzip_dir ${VCL_libzip_location} DIRECTORY)
+    # get_filename_component(VCL_libzip_dir ${VCL_libzip_location} DIRECTORY)
 
-    #message(STATUS "VCL_libzip_dir = " ${VCL_libzip_dir})
+    # message(STATUS "VCL_libzip_dir = " ${VCL_libzip_dir})
 
-    #target_link_directories(VisualCraftL PUBLIC ${VCL_libzip_dir})
-    #target_link_options(VisualCraftL PRIVATE -rpath=${VCL_libzip_dir})
+    # target_link_directories(VisualCraftL PUBLIC ${VCL_libzip_dir})
+    # target_link_options(VisualCraftL PRIVATE -rpath=${VCL_libzip_dir})
 endif()
 
 if(${VCL_enable_internal_test})
