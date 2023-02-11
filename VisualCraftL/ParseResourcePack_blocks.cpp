@@ -399,7 +399,7 @@ Eigen::Array3f block_model::rotate_x(const Eigen::Array3f &pos,
     diff_after[z_idx] = diff_before[y_idx];
     break;
   }
-
+#warning rotate is incorrect
   return diff_after + center;
 }
 Eigen::Array3f block_model::rotate_y(const Eigen::Array3f &pos,
@@ -426,7 +426,7 @@ Eigen::Array3f block_model::rotate_y(const Eigen::Array3f &pos,
     diff_after[z_idx] = -diff_before[x_idx];
     break;
   }
-
+#warning rotate is incorrect
   return diff_after + center;
 }
 
@@ -436,14 +436,19 @@ element block_model::element::rotate(face_rot x_rot,
   const Eigen::Array3f f = block_model::rotate(this->_from, x_rot, y_rot);
   const Eigen::Array3f t = block_model::rotate(this->_to, x_rot, y_rot);
   ret._from = f.min(t);
-  ret._to = t.max(t);
+  ret._to = f.max(t);
 
-  for (uint8_t face = 0; face < 6; face++) {
-    const face_idx face_beg = face_idx(face);
+  for (uint8_t _face = 0; _face < 6; _face++) {
+    const face_idx face_beg = face_idx(_face);
     const face_idx face_end = block_model::rotate(face_beg, x_rot, y_rot);
 
-    ret.faces[uint8_t(face_end)] = this->faces[uint8_t(face_beg)];
+    ret.face(face_end) = this->face(face_beg);
   }
+
+  std::string msg = fmt::format("f = [{}, {}, {}], t = [{}, {}, {}]", f[0],
+                                f[1], f[2], t[0], t[1], t[2]);
+
+  VCL_report(VCL_report_type_t::information, msg.c_str());
 
   return ret;
 }

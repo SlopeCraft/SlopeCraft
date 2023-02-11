@@ -222,6 +222,13 @@ resource_pack::find_model(const std::string &block_state_str,
 
   const auto models = multipart.block_model_names(buffer.state_list);
   for (const auto &md : models) {
+
+    if constexpr (false) {
+      std::string msg =
+          fmt::format("x_rot = {}, y_rot = {}", int(md.x), int(md.y));
+      VCL_report(VCL_report_type_t::information, msg.c_str());
+    }
+
     if (md.model_name == nullptr) {
       std::string msg =
           fmt::format("File = {}, line = {}\n", __FILE__, __LINE__);
@@ -240,12 +247,12 @@ resource_pack::find_model(const std::string &block_state_str,
 
   for (size_t mdidx = 0; mdidx < models.size(); mdidx++) {
     {
-      std::string sv(models[mdidx].model_name);
+      std::string_view sv(models[mdidx].model_name);
       const size_t idx_of_colon = sv.find_first_of(':');
       if (idx_of_colon != sv.npos) {
         buffer.pure_id = sv.substr(idx_of_colon + 1);
       } else {
-        buffer.pure_id = std::move(sv);
+        buffer.pure_id = sv;
       }
     }
 
@@ -265,7 +272,7 @@ resource_pack::find_model(const std::string &block_state_str,
     md.merge_back(it_model->second, models[mdidx].x, models[mdidx].y);
   }
 
-  return std::move(md);
+  return md;
   // auto jt=this->block_models.find(it->second.)
 }
 

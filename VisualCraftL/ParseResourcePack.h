@@ -64,6 +64,17 @@ enum class face_rot : uint8_t {
   face_rot_270 = 27
 };
 
+constexpr bool inline is_0_90_180_270(int val) noexcept {
+  switch (val) {
+  case 0:
+  case 90:
+  case 180:
+  case 270:
+    return true;
+  }
+  return false;
+}
+
 inline face_rot int_to_face_rot(int a) {
   switch (a) {
   case 0:

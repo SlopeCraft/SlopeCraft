@@ -219,11 +219,29 @@ model_store_t json_to_model(const njson &obj) noexcept {
 
   if (obj.contains("x") && obj.at("x").is_number()) {
     const int val = obj.at("x");
+
+    if (!block_model::is_0_90_180_270(val)) {
+      std::string msg;
+      msg = fmt::format(
+          "Invalid x rotation value : {}. Invalid values : 0, 90, 180, 270.",
+          val);
+      VCL_report(VCL_report_type_t::error, msg.c_str());
+      return {};
+    }
+
     res.x = block_model::int_to_face_rot(val);
   }
 
   if (obj.contains("y") && obj.at("y").is_number()) {
     const int val = obj.at("y");
+    if (!block_model::is_0_90_180_270(val)) {
+      std::string msg;
+      msg = fmt::format(
+          "Invalid y rotation value : {}. Invalid values : 0, 90, 180, 270.",
+          val);
+      VCL_report(VCL_report_type_t::error, msg.c_str());
+      return {};
+    }
     res.y = block_model::int_to_face_rot(val);
   }
 
@@ -314,10 +332,10 @@ model_store_t parse_single_apply(const njson &single_obj) noexcept(false) {
 
   ms.model_name = single_obj.at("model");
   if (single_obj.contains("x")) {
-    ms.x = single_obj.at("x");
+    ms.x = block_model::int_to_face_rot(single_obj.at("x"));
   }
   if (single_obj.contains("y")) {
-    ms.y = single_obj.at("y");
+    ms.y = block_model::int_to_face_rot(single_obj.at("y"));
   }
   if (single_obj.contains("uvlock")) {
     ms.uvlock = single_obj.at("uvlock");

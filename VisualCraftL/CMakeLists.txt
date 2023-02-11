@@ -162,6 +162,10 @@ target_include_directories(test_VCL_model PRIVATE
     ${SlopeCraft_Nlohmann_json_include_dir}
     ${SlopeCraft_Eigen3_include_dir})
 
+if(${VCL_enable_internal_test})
+    add_test(NAME test_internal COMMAND test_VCL_internal WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+endif()
+
 include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_12.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_latest.cmake)
 
