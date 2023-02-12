@@ -3,21 +3,15 @@ project(VisualCraftL VERSION ${SlopeCraft_version} LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(VCL_enable_internal_test ON)
-
-if(${VCL_enable_internal_test})
-    set(VCL_internal_test_source_file VCL_internal_test_fun.cpp)
-else()
-    set(VCL_internal_test_source_file)
-endif()
+set(VCL_enable_internal_test OFF)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     set(VCL_def_file VisualCraftL.def)
+else()
+    set(VCL_def_file)
 endif()
 
-# message(STATUS ${VCL_def_file})
-add_library(VisualCraftL SHARED
-
+set(VCL_source_files
     VisualCraftL_global.h
     VisualCraftL.h
     VisualCraftL.cpp
@@ -36,9 +30,15 @@ add_library(VisualCraftL SHARED
 
     BlockStateList.h
     BlockStateList.cpp
+)
 
-    ${VCL_internal_test_source_file}
+# message(STATUS ${VCL_def_file})
+add_library(VisualCraftL SHARED
+    ${VCL_source_files}
     ${VCL_def_file})
+
+add_library(VisualCraftL_static STATIC
+    ${VCL_source_files})
 
 find_package(ZLIB 1.2.11 REQUIRED)
 find_package(PNG 1.6.37 REQUIRED)
@@ -47,34 +47,23 @@ find_package(libzip 1.9.2 REQUIRED)
 include(${CMAKE_SOURCE_DIR}/cmake/configure_fmtlib.cmake)
 find_package(fmt 9.1.0 REQUIRED)
 
-# include(${CMAKE_SOURCE_DIR}/cmake/configure_libzip.cmake)
-
-# include_directories(${ZLIB_INCLUDE_DIR})
-# if(NOT ${libzip_FOUND})
-# message(FATAL_ERROR "libzip not found")
-# endif()
-
-# extensions for libzip
-# find_package(LibLZMA REQUIRED)
-# set(VCL_libzip_additions LibLZMA::LibLZMA)
-
-# find_package(zstd)
-# if(${zstd_FOUND})
-# message(STATUS "zstd found.")
-# set(VCL_libzip_additions ${VCL_libzip_additions} Zstd::Zstd)
-# endif()
-target_include_directories(VisualCraftL PRIVATE
+set(VCL_include_dirs
     ${SlopeCraft_Nlohmann_json_include_dir}
     ${SlopeCraft_Eigen3_include_dir}
     ${SlopeCraft_HeuristicFlow_include_dir}
     ${CMAKE_SOURCE_DIR})
+target_include_directories(VisualCraftL PRIVATE ${VCL_include_dirs})
+target_include_directories(VisualCraftL_static PUBLIC ${VCL_include_dirs})
 
 target_include_directories(VisualCraftL PUBLIC
     ${CMAKE_SOURCE_DIR}/utilities)
+target_include_directories(VisualCraftL_static PUBLIC
+    ${CMAKE_SOURCE_DIR}/utilities)
 
 target_include_directories(VisualCraftL INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(VisualCraftL
-    PRIVATE
+target_include_directories(VisualCraftL_static INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+
+set(VCL_link_libs
     libzip::zip
     ZLIB::ZLIB
     PNG::PNG
@@ -83,14 +72,15 @@ target_link_libraries(VisualCraftL
     Schem
     fmt::fmt)
 
-# message(STATUS "ret = " ${ret})
-target_compile_definitions(VisualCraftL PRIVATE BEFORE "-DVISUALCRAFTL_BUILD")
+target_link_libraries(VisualCraftL PRIVATE ${VCL_link_libs})
+target_link_libraries(VisualCraftL_static PUBLIC ${VCL_link_libs})
 
-if(${VCL_enable_internal_test})
-    target_compile_definitions(VisualCraftL PUBLIC BEFORE "-DVCL_ENABLE_INTERNAL_TEST")
-endif()
+# message(STATUS "ret = " ${ret})
+target_compile_definitions(VisualCraftL PRIVATE "-DVISUALCRAFTL_BUILD")
+target_compile_definitions(VisualCraftL_static PRIVATE "-DVISUALCRAFTL_BUILD")
 
 target_compile_features(VisualCraftL PRIVATE cxx_std_20)
+target_compile_features(VisualCraftL_static PUBLIC cxx_std_20)
 
 # target_compile_options(VisualCraftL PRIVATE "-std=c++20")
 if(NOT ${MSVC})
@@ -124,10 +114,8 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     # target_link_options(VisualCraftL PRIVATE -rpath=${VCL_libzip_dir})
 endif()
 
-if(${VCL_enable_internal_test})
-    add_executable(test_VCL_internal tests/test_VCL_internal.cpp)
-    target_link_libraries(test_VCL_internal PRIVATE VisualCraftL)
-endif()
+add_executable(test_VCL_rotate_internal tests/test_VCL_rotate_internal.cpp)
+target_link_libraries(test_VCL_rotate_internal PRIVATE VisualCraftL_static)
 
 include(${CMAKE_SOURCE_DIR}/cmake/configure_cli11.cmake)
 
@@ -162,9 +150,7 @@ target_include_directories(test_VCL_model PRIVATE
     ${SlopeCraft_Nlohmann_json_include_dir}
     ${SlopeCraft_Eigen3_include_dir})
 
-if(${VCL_enable_internal_test})
-    add_test(NAME test_internal COMMAND test_VCL_internal WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-endif()
+add_test(NAME test_rotate COMMAND test_VCL_rotate_internal WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
 include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_12.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_latest.cmake)

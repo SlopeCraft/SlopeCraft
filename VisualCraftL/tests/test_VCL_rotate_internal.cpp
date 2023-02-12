@@ -6,18 +6,9 @@
 
 using std::cout, std::endl;
 
-#ifndef VCL_ENABLE_INTERNAL_TEST
-#error                                                                         \
-    "Internal tests should not be compiled without VCL_ENABLE_INTERNAL_TEST macro."
-#endif
-
 int print_rotate_sheet();
 
-int test_rotate();
-
-VCL_EXPORT_FUN int VCL_internal_test(int argc, char **argv) {
-  return print_rotate_sheet();
-}
+int main(int argc, char **argv) { return print_rotate_sheet(); }
 
 int print_rotate_sheet() {
   using namespace block_model;
@@ -68,5 +59,3 @@ int print_rotate_sheet() {
 
   return 0;
 }
-
-int test_rotate() {}

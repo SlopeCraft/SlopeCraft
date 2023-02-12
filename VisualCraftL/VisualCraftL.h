@@ -212,11 +212,6 @@ using VCL_report_callback_t = void (*)(VCL_report_type_t, const char *,
 
 VCL_EXPORT_FUN VCL_report_callback_t VCL_get_report_callback();
 VCL_EXPORT_FUN void VCL_set_report_callback(VCL_report_callback_t);
-
-#ifdef VCL_ENABLE_INTERNAL_TEST
-// Function about internal test
-VCL_EXPORT_FUN int VCL_internal_test(int argc, char **argv);
-#endif // #ifdef VCL_ENABLE_INTERNAL_TEST
 }
 
 #endif // SLOPECRAFT_VISUALCRAFT_VISUALCRAFT_H
