@@ -4,11 +4,18 @@
 #include <iomanip>
 #include <iostream>
 
+#include <CLI11.hpp>
+
 using std::cout, std::endl;
 
 int print_rotate_sheet();
 
-int main(int argc, char **argv) { return print_rotate_sheet(); }
+int rotate_arr3f(int argc, const char *const *const argv);
+
+int main(int argc, char **argv) {
+  // return print_rotate_sheet();
+  return rotate_arr3f(argc, argv);
+}
 
 int print_rotate_sheet() {
   using namespace block_model;
@@ -56,6 +63,40 @@ int print_rotate_sheet() {
   }
 
   cout << endl;
+
+  return 0;
+}
+
+int rotate_arr3f(int argc, const char *const *const argv) {
+  std::array<float, 3> __from, __to;
+  int __rot_x = 0, __rot_y = 0;
+  CLI::App app;
+
+  app.add_option("--from", __from)->expected(1)->required();
+  app.add_option("--to", __to)->expected(1)->required();
+
+  app.add_option("--rotx", __rot_x)
+      ->required()
+      ->check(CLI::IsMember({0, 90, 180, 270}));
+  app.add_option("--roty", __rot_y)
+      ->required()
+      ->check(CLI::IsMember({0, 90, 180, 270}));
+
+  CLI11_PARSE(app, argc, argv);
+
+  Eigen::Array3f from(__from.data()), to(__to.data());
+
+  const block_model::face_rot rot_x = block_model::face_rot(__rot_x / 10);
+  const block_model::face_rot rot_y = block_model::face_rot(__rot_y / 10);
+
+  from = block_model::rotate(from, rot_x, rot_y);
+  to = block_model::rotate(to, rot_x, rot_y);
+
+  cout << "after rotation : from = [" << from.transpose() << "], to = ["
+       << to.transpose() << ']' << endl;
+
+  cout << "min = [" << from.min(to).transpose() << "] , max = ["
+       << from.max(to).transpose() << ']' << endl;
 
   return 0;
 }

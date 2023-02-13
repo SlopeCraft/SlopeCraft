@@ -268,6 +268,11 @@ resource_pack::find_model(const std::string &block_state_str,
       VCL_report(VCL_report_type_t::error, msg.c_str());
       return nullptr;
     }
+    if constexpr (false) {
+      std::string msg =
+          fmt::format("merging back model : {}", models[mdidx].model_name);
+      VCL_report(VCL_report_type_t::information, msg.c_str());
+    }
 
     md.merge_back(it_model->second, models[mdidx].x, models[mdidx].y);
   }

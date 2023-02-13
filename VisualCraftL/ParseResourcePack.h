@@ -333,9 +333,15 @@ public:
   inline float y_range() const noexcept { return _to[1] - _from[1]; }
   inline float z_range() const noexcept { return _to[2] - _from[2]; }
 
-  inline float x_range_abs() const noexcept { return std::abs(x_range()); }
-  inline float y_range_abs() const noexcept { return std::abs(y_range()); }
-  inline float z_range_abs() const noexcept { return std::abs(z_range()); }
+  inline float x_range_abs() const noexcept {
+    return std::abs(this->x_range());
+  }
+  inline float y_range_abs() const noexcept {
+    return std::abs(this->y_range());
+  }
+  inline float z_range_abs() const noexcept {
+    return std::abs(this->z_range());
+  }
 
   inline Eigen::Array3f xyz_minpos() const noexcept {
     return this->_from.min(this->_to);

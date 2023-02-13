@@ -114,9 +114,6 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     # target_link_options(VisualCraftL PRIVATE -rpath=${VCL_libzip_dir})
 endif()
 
-add_executable(test_VCL_rotate_internal tests/test_VCL_rotate_internal.cpp)
-target_link_libraries(test_VCL_rotate_internal PRIVATE VisualCraftL_static)
-
 include(${CMAKE_SOURCE_DIR}/cmake/configure_cli11.cmake)
 
 add_executable(test_VCL_blockstate tests/test_VCL_blockstate.cpp)
@@ -150,7 +147,11 @@ target_include_directories(test_VCL_model PRIVATE
     ${SlopeCraft_Nlohmann_json_include_dir}
     ${SlopeCraft_Eigen3_include_dir})
 
-add_test(NAME test_rotate COMMAND test_VCL_rotate_internal WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+add_executable(itest_VCL_rotate tests/itest_VCL_rotate.cpp)
+target_link_libraries(itest_VCL_rotate PRIVATE VisualCraftL_static)
+target_include_directories(itest_VCL_rotate PRIVATE
+    ${cli11_include_dir})
+add_test(NAME test_rotate COMMAND itest_VCL_rotate WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
 include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_12.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_latest.cmake)

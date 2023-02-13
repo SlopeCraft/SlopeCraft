@@ -1092,16 +1092,14 @@ bool resource_pack::add_block_models(
 
   for (const auto &pair : this->block_models) {
     for (const auto &ele : pair.second.elements) {
-      if (ele.volume() >= 1e-4) {
-        for (const auto &face : ele.faces) {
-          if (!face.is_hidden && face.texture == nullptr) {
-            std::string msg =
-                fmt::format("Found an error while examining all block models : "
-                            "face.texture==nullptr in model {}",
-                            pair.first);
-            ::VCL_report(VCL_report_type_t::error, msg.c_str());
-            return false;
-          }
+      for (const auto &face : ele.faces) {
+        if (!face.is_hidden && face.texture == nullptr) {
+          std::string msg =
+              fmt::format("Found an error while examining all block models : "
+                          "face.texture==nullptr in model {}",
+                          pair.first);
+          ::VCL_report(VCL_report_type_t::error, msg.c_str());
+          return false;
         }
       }
     }

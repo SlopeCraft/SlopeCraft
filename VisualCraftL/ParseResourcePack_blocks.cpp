@@ -134,20 +134,29 @@ void element::intersect_points(
 
   if (this->face(f).is_hidden)
     return;
-
+#warning here
   switch (f) {
   case face_x_neg:
   case face_x_pos:
-    if (this->x_range_abs() < 1e-4f)
+    if (this->y_range_abs() * this->z_range_abs() < 1e-4f) {
+      VCL_report(VCL_report_type_t::information, "yz range skip");
       return;
+    }
+    break;
   case face_y_neg:
   case face_y_pos:
-    if (this->y_range_abs() < 1e-4f)
+    if (this->x_range_abs() * this->z_range_abs() < 1e-4f) {
+      VCL_report(VCL_report_type_t::information, "xz range skip");
       return;
+    }
+    break;
   case face_z_neg:
   case face_z_pos:
-    if (this->z_range_abs() < 1e-4f)
+    if (this->x_range_abs() * this->y_range_abs() < 1e-4f) {
+      VCL_report(VCL_report_type_t::information, "xy range skip");
       return;
+    }
+    break;
   }
 
   intersect_point intersect;
@@ -329,6 +338,11 @@ void model::projection_image(face_idx fidx,
         ele.intersect_points(fidx, ray, &intersects);
         ele.intersect_points(inverse_face(fidx), ray, &intersects);
       }
+      if constexpr (true) {
+        std::string msg =
+            fmt::format("num of intersects : {}", intersects.size());
+        VCL_report(VCL_report_type_t::information, msg.c_str());
+      }
 
       // printf("\n");
 
@@ -399,9 +413,9 @@ Eigen::Array3f block_model::rotate_x(const Eigen::Array3f &pos,
     diff_after[z_idx] = diff_before[y_idx];
     break;
   }
-#warning rotate is incorrect
   return diff_after + center;
 }
+
 Eigen::Array3f block_model::rotate_y(const Eigen::Array3f &pos,
                                      face_rot y_rot) noexcept {
   const Eigen::Array3f center{8, 8, 8};
@@ -426,13 +440,22 @@ Eigen::Array3f block_model::rotate_y(const Eigen::Array3f &pos,
     diff_after[z_idx] = -diff_before[x_idx];
     break;
   }
-#warning rotate is incorrect
+
   return diff_after + center;
 }
 
 element block_model::element::rotate(face_rot x_rot,
                                      face_rot y_rot) const noexcept {
   element ret;
+  if constexpr (false) {
+    std::string msg =
+        fmt::format("this->_from = [{}, {}, {}], this->_to = [{}, {}, {}]",
+                    this->_from[0], this->_from[1], this->_from[2],
+                    this->_to[0], this->_to[1], this->_to[2]);
+
+    VCL_report(VCL_report_type_t::information, msg.c_str());
+  }
+
   const Eigen::Array3f f = block_model::rotate(this->_from, x_rot, y_rot);
   const Eigen::Array3f t = block_model::rotate(this->_to, x_rot, y_rot);
   ret._from = f.min(t);
@@ -445,10 +468,11 @@ element block_model::element::rotate(face_rot x_rot,
     ret.face(face_end) = this->face(face_beg);
   }
 
-  std::string msg = fmt::format("f = [{}, {}, {}], t = [{}, {}, {}]", f[0],
-                                f[1], f[2], t[0], t[1], t[2]);
-
-  VCL_report(VCL_report_type_t::information, msg.c_str());
+  if constexpr (false) {
+    std::string msg = fmt::format("f = [{}, {}, {}], t = [{}, {}, {}]", f[0],
+                                  f[1], f[2], t[0], t[1], t[2]);
+    VCL_report(VCL_report_type_t::information, msg.c_str());
+  }
 
   return ret;
 }
