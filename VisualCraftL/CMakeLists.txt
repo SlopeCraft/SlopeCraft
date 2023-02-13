@@ -87,6 +87,9 @@ if(NOT ${MSVC})
     target_compile_options(VisualCraftL PUBLIC "-flto")
 endif()
 
+# profile with gprof
+#target_compile_options(VisualCraftL PUBLIC "-pg")
+#target_link_options(VisualCraftL PUBLIC "-pg")
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     # message("libzip_LIBRARY = " ${libzip_LIBRARY})
     # if (NOT DEFINED libzip_LIBRARY)

@@ -19,4 +19,5 @@ target_compile_features(Schem PRIVATE cxx_std_20)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     target_compile_options(Schem PUBLIC "-fvisibility=hidden")
+    target_compile_options(Schem PRIVATE "-fPIC")
 endif()

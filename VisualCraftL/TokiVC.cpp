@@ -1,9 +1,12 @@
 #include "TokiVC.h"
-#include "VCL_internal.h"
+
 #include <mutex>
 #include <set>
 #include <shared_mutex>
 #include <variant>
+
+#include "VCL_internal.h"
+
 
 libImageCvt::template ImageCvter<false>::basic_colorset_t
     TokiVC::colorset_basic;
@@ -35,7 +38,7 @@ bool is_basic_color_set_ready = false;
 bool is_allowed_color_set_ready = false;
 
 std::set<TokiVC *> TokiVC_register;
-} // namespace TokiVC_internal
+}  // namespace TokiVC_internal
 
 TokiVC::TokiVC() {
   TokiVC_internal::global_lock.lock();
@@ -63,7 +66,6 @@ TokiVC::~TokiVC() {
 }
 
 VCL_Kernel_step TokiVC::step() const noexcept {
-
   std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
 
   return this->_step;
@@ -71,7 +73,6 @@ VCL_Kernel_step TokiVC::step() const noexcept {
 
 bool add_projection_image_for_bsl(const std::vector<VCL_block *> &bs_list,
                                   resource_pack::buffer_t &buff) noexcept {
-
   for (VCL_block *blkp : bs_list) {
     if (blkp->full_id_ptr() == nullptr) {
       std::string msg = fmt::format(
@@ -108,7 +109,6 @@ bool add_color_non_transparent(
         &LUT_bcitb,
     std::vector<std::array<uint8_t, 3>> &temp_rgb_rowmajor) noexcept {
   for (VCL_block *blkp : bs_nontransparent) {
-
     bool ok = true;
     auto ret = compute_mean_color(blkp->project_image_on_exposed_face, &ok);
     if (!ok) {
@@ -202,7 +202,6 @@ bool add_color_trans_to_trans_recurs(
   }
 
   for (const VCL_block *cblkp : bs_transparent) {
-
     memcpy(img.data(), front.data(), front.size() * sizeof(uint32_t));
     std::vector<const VCL_block *> blocks(accumulate_blocks);
     blocks.emplace_back(cblkp);
@@ -260,15 +259,15 @@ bool add_color_trans_to_trans_start_recurse(
 
 bool TokiVC::update_color_set_no_lock() noexcept {
   switch (TokiVC::version) {
-  case SCL_gameVersion::ANCIENT:
-  case SCL_gameVersion::FUTURE: {
-    std::string msg =
-        fmt::format("Invalid MC version : {}\n", int(TokiVC::version));
-    VCL_report(VCL_report_type_t::error, msg.c_str());
-    return false;
-  }
-  default:
-    break;
+    case SCL_gameVersion::ANCIENT:
+    case SCL_gameVersion::FUTURE: {
+      std::string msg =
+          fmt::format("Invalid MC version : {}\n", int(TokiVC::version));
+      VCL_report(VCL_report_type_t::error, msg.c_str());
+      return false;
+    }
+    default:
+      break;
   }
 
   std::vector<VCL_block *> bs_transparent, bs_nontransparent;
@@ -334,7 +333,7 @@ bool TokiVC::update_color_set_no_lock() noexcept {
           "Size of LUT_basic_color_idx_to_blocks = {}, size of colors_temp = "
           "{}\n",
           TokiVC::LUT_basic_color_idx_to_blocks.size(), colors_temp.size());
-      VCL_report(VCL_report_type_t::error, msg.c_str());
+      VCL_report(VCL_report_type_t::information, msg.c_str());
     }
 
     if (colors_temp.size() != TokiVC::LUT_basic_color_idx_to_blocks.size()) {
@@ -409,7 +408,6 @@ int64_t TokiVC::cols() const noexcept {
 
 const uint32_t *TokiVC::raw_image(int64_t *const __rows, int64_t *const __cols,
                                   bool *const is_row_major) const noexcept {
-
   std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
   if (this->_step < VCL_Kernel_step::VCL_wait_for_conversion) {
     return nullptr;

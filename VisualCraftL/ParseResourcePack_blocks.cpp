@@ -134,26 +134,26 @@ void element::intersect_points(
 
   if (this->face(f).is_hidden)
     return;
-#warning here
+
   switch (f) {
   case face_x_neg:
   case face_x_pos:
     if (this->y_range_abs() * this->z_range_abs() < 1e-4f) {
-      VCL_report(VCL_report_type_t::information, "yz range skip");
+      // VCL_report(VCL_report_type_t::information, "yz range skip");
       return;
     }
     break;
   case face_y_neg:
   case face_y_pos:
     if (this->x_range_abs() * this->z_range_abs() < 1e-4f) {
-      VCL_report(VCL_report_type_t::information, "xz range skip");
+      // VCL_report(VCL_report_type_t::information, "xz range skip");
       return;
     }
     break;
   case face_z_neg:
   case face_z_pos:
     if (this->x_range_abs() * this->y_range_abs() < 1e-4f) {
-      VCL_report(VCL_report_type_t::information, "xy range skip");
+      // VCL_report(VCL_report_type_t::information, "xy range skip");
       return;
     }
     break;
@@ -338,7 +338,7 @@ void model::projection_image(face_idx fidx,
         ele.intersect_points(fidx, ray, &intersects);
         ele.intersect_points(inverse_face(fidx), ray, &intersects);
       }
-      if constexpr (true) {
+      if constexpr (false) {
         std::string msg =
             fmt::format("num of intersects : {}", intersects.size());
         VCL_report(VCL_report_type_t::information, msg.c_str());
