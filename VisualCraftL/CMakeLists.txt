@@ -6,9 +6,9 @@ set(CMAKE_CXX_STANDARD 20)
 set(VCL_enable_internal_test OFF)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    set(VCL_def_file VisualCraftL.def)
+    set(VCL_win_file VisualCraftL.def VisualCraftL.rc)
 else()
-    set(VCL_def_file)
+    set(VCL_win_file)
 endif()
 
 set(VCL_source_files
@@ -32,10 +32,10 @@ set(VCL_source_files
     BlockStateList.cpp
 )
 
-# message(STATUS ${VCL_def_file})
+# message(STATUS ${VCL_win_file})
 add_library(VisualCraftL SHARED
     ${VCL_source_files}
-    ${VCL_def_file})
+    ${VCL_win_file})
 
 add_library(VisualCraftL_static STATIC
     ${VCL_source_files})
@@ -88,8 +88,13 @@ if(NOT ${MSVC})
 endif()
 
 # profile with gprof
-#target_compile_options(VisualCraftL PUBLIC "-pg")
-#target_link_options(VisualCraftL PUBLIC "-pg")
+# target_compile_options(VisualCraftL PUBLIC "-pg")
+# target_link_options(VisualCraftL PUBLIC "-pg")
+if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+    # if the system is windows, remove the "lib" prefix.
+    set_target_properties(VisualCraftL PROPERTIES PREFIX "")
+endif()
+
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     # message("libzip_LIBRARY = " ${libzip_LIBRARY})
     # if (NOT DEFINED libzip_LIBRARY)

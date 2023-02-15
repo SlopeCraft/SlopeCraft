@@ -20,8 +20,9 @@ VCL_EXPORT_FUN void VCL_destroy_kernel(VCL_Kernel *const ptr) {
   }
 }
 
-VCL_EXPORT_FUN VCL_resource_pack *VCL_create_resource_pack(
-    const int zip_file_count, const char *const *const zip_file_names) {
+VCL_EXPORT_FUN VCL_resource_pack *
+VCL_create_resource_pack(const int zip_file_count,
+                         const char *const *const zip_file_names) {
   if (zip_file_count <= 0) {
     return nullptr;
   }
@@ -92,8 +93,9 @@ VCL_EXPORT_FUN void VCL_destroy_resource_pack(VCL_resource_pack *const ptr) {
   }
 }
 
-[[nodiscard]] VCL_EXPORT_FUN VCL_block_state_list *VCL_create_block_state_list(
-    const int file_count, const char *const *const json_file_names) {
+[[nodiscard]] VCL_EXPORT_FUN VCL_block_state_list *
+VCL_create_block_state_list(const int file_count,
+                            const char *const *const json_file_names) {
   if (file_count <= 0 || json_file_names == nullptr) {
     return nullptr;
   }
@@ -107,8 +109,8 @@ VCL_EXPORT_FUN void VCL_destroy_resource_pack(VCL_resource_pack *const ptr) {
   return bsl;
 }
 
-VCL_EXPORT_FUN void VCL_destroy_block_state_list(
-    VCL_block_state_list *const ptr) {
+VCL_EXPORT_FUN void
+VCL_destroy_block_state_list(VCL_block_state_list *const ptr) {
   delete ptr;
 }
 
@@ -223,8 +225,8 @@ VCL_EXPORT_FUN void VCL_display_resource_pack(const VCL_resource_pack *rp,
     VCL_report(VCL_report_type_t::information, msg.c_str(), true);
   }
 }
-VCL_EXPORT_FUN void VCL_display_block_state_list(
-    const VCL_block_state_list *bsl) {
+VCL_EXPORT_FUN void
+VCL_display_block_state_list(const VCL_block_state_list *bsl) {
   if (bsl == nullptr) {
     return;
   }
@@ -297,14 +299,15 @@ VCL_EXPORT_FUN VCL_face_t VCL_get_exposed_face() {
   return TokiVC::exposed_face;
 }
 
-VCL_EXPORT_FUN bool VCL_set_resource_and_version_copy(
-    const VCL_resource_pack *const rp, const VCL_block_state_list *const bsl,
-    SCL_gameVersion version, VCL_face_t face, int __max_block_layers) {
+VCL_EXPORT_FUN bool
+VCL_set_resource_copy(const VCL_resource_pack *const rp,
+                      const VCL_block_state_list *const bsl,
+                      const VCL_set_resource_option &option) {
   if (rp == nullptr || bsl == nullptr) {
     return false;
   }
 
-  if (__max_block_layers <= 0) {
+  if (option.max_block_layers <= 0) {
     return false;
   }
 
@@ -314,9 +317,9 @@ VCL_EXPORT_FUN bool VCL_set_resource_and_version_copy(
   TokiVC::pack = *rp;
   TokiVC::bsl = *bsl;
 
-  TokiVC::version = version;
-  TokiVC::exposed_face = face;
-  TokiVC::max_block_layers = __max_block_layers;
+  TokiVC::version = option.version;
+  TokiVC::exposed_face = option.exposed_face;
+  TokiVC::max_block_layers = option.max_block_layers;
 
   const bool ret = TokiVC::update_color_set_no_lock();
   VCL_report(VCL_report_type_t::warning, nullptr, true);
@@ -324,9 +327,10 @@ VCL_EXPORT_FUN bool VCL_set_resource_and_version_copy(
   return ret;
 }
 
-VCL_EXPORT_FUN bool VCL_set_resource_and_version_move(
-    VCL_resource_pack **rp_ptr, VCL_block_state_list **bsl_ptr,
-    SCL_gameVersion version, VCL_face_t face, int __max_block_layers) {
+VCL_EXPORT_FUN bool
+VCL_set_resource_move(VCL_resource_pack **rp_ptr,
+                      VCL_block_state_list **bsl_ptr,
+                      const VCL_set_resource_option &option) {
   if (rp_ptr == nullptr || bsl_ptr == nullptr) {
     return false;
   }
@@ -334,7 +338,7 @@ VCL_EXPORT_FUN bool VCL_set_resource_and_version_move(
   if (*rp_ptr == nullptr || *bsl_ptr == nullptr) {
     return false;
   }
-  if (__max_block_layers <= 0) {
+  if (option.max_block_layers <= 0) {
     return false;
   }
 
@@ -351,9 +355,9 @@ VCL_EXPORT_FUN bool VCL_set_resource_and_version_move(
   VCL_destroy_block_state_list(*bsl_ptr);
   *bsl_ptr = nullptr;
 
-  TokiVC::version = version;
-  TokiVC::exposed_face = face;
-  TokiVC::max_block_layers = __max_block_layers;
+  TokiVC::version = option.version;
+  TokiVC::exposed_face = option.exposed_face;
+  TokiVC::max_block_layers = option.max_block_layers;
 
   if (!TokiVC::update_color_set_no_lock()) {
     ret = false;
@@ -498,7 +502,8 @@ VCL_EXPORT_FUN bool VCL_is_block_enabled(const VCL_block *b) {
 }
 
 VCL_EXPORT_FUN void VCL_set_block_enabled(VCL_block *b, bool val) {
-  if (b == nullptr) return;
+  if (b == nullptr)
+    return;
 
   b->set_disabled(!val);
 }
@@ -541,9 +546,10 @@ VCL_EXPORT_FUN VCL_block_class_t VCL_string_to_block_class(const char *str,
   return string_to_block_class(str, ok);
 }
 
-[[nodiscard]] VCL_EXPORT_FUN VCL_model *VCL_get_block_model(
-    const VCL_block *block, const VCL_resource_pack *resource_pack,
-    VCL_face_t face_exposed, VCL_face_t *face_invrotated) {
+[[nodiscard]] VCL_EXPORT_FUN VCL_model *
+VCL_get_block_model(const VCL_block *block,
+                    const VCL_resource_pack *resource_pack,
+                    VCL_face_t face_exposed, VCL_face_t *face_invrotated) {
   if (block->full_id_ptr() == nullptr) {
     return nullptr;
   }
@@ -565,8 +571,8 @@ VCL_EXPORT_FUN VCL_block_class_t VCL_string_to_block_class(const char *str,
   return ret;
 }
 
-[[nodiscard]] VCL_EXPORT_FUN VCL_model *VCL_get_block_model_by_name(
-    const VCL_resource_pack *rp, const char *name) {
+[[nodiscard]] VCL_EXPORT_FUN VCL_model *
+VCL_get_block_model_by_name(const VCL_resource_pack *rp, const char *name) {
   auto it = rp->get_models().find(name);
 
   if (it == rp->get_models().end()) {
@@ -666,15 +672,15 @@ void default_report_callback(VCL_report_type_t type, const char *msg, bool) {
   const char *type_msg = nullptr;
 
   switch (type) {
-    case VCL_report_type_t::information:
-      type_msg = "Information : ";
-      break;
-    case VCL_report_type_t::warning:
-      type_msg = "Warning : ";
-      break;
-    case VCL_report_type_t::error:
-      type_msg = "Error : ";
-      break;
+  case VCL_report_type_t::information:
+    type_msg = "Information : ";
+    break;
+  case VCL_report_type_t::warning:
+    type_msg = "Warning : ";
+    break;
+  case VCL_report_type_t::error:
+    type_msg = "Error : ";
+    break;
   }
 
   printf("\n%s%s\n", type_msg, msg);

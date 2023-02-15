@@ -107,14 +107,22 @@ VCL_create_block_state_list(const int file_count,
 VCL_EXPORT_FUN void
 VCL_destroy_block_state_list(VCL_block_state_list *const ptr);
 
-// set resource for kernel
-VCL_EXPORT_FUN bool VCL_set_resource_and_version_copy(
-    const VCL_resource_pack *const rp, const VCL_block_state_list *const bsl,
-    SCL_gameVersion version, VCL_face_t exposed_face, int max_block_layers);
+struct VCL_set_resource_option {
+  SCL_gameVersion version;
+  VCL_face_t exposed_face;
+  int32_t max_block_layers;
+};
 
-VCL_EXPORT_FUN bool VCL_set_resource_and_version_move(
-    VCL_resource_pack **rp_ptr, VCL_block_state_list **bsl_ptr,
-    SCL_gameVersion version, VCL_face_t exposed_face, int max_block_layers);
+// set resource for kernel
+VCL_EXPORT_FUN bool
+VCL_set_resource_copy(const VCL_resource_pack *const rp,
+                      const VCL_block_state_list *const bsl,
+                      const VCL_set_resource_option &option);
+
+VCL_EXPORT_FUN bool
+VCL_set_resource_move(VCL_resource_pack **rp_ptr,
+                      VCL_block_state_list **bsl_ptr,
+                      const VCL_set_resource_option &option);
 
 // functions to check the resource
 VCL_EXPORT_FUN bool VCL_is_basic_colorset_ok();
