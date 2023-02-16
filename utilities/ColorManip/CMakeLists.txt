@@ -1,7 +1,7 @@
 project(ColorManip VERSION ${SlopeCraft_version} LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# set(CMAKE_CXX_STANDARD 20)
+# set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # include_directories(../SlopeCraftL)
 find_package(OpenMP REQUIRED)
@@ -23,13 +23,12 @@ add_library(ColorManip
     newTokiColor.hpp
 )
 
-target_compile_features(ColorManip PRIVATE cxx_std_20)
+target_compile_features(ColorManip PUBLIC cxx_std_20)
 
 # set_target_properties(ColorManip PROPERTIES CXX_STANDARD_REQUIRED ON)
 
 # get_target_property(cm_cxx_std ColorManip CXX_STANDARD)
-message(STATUS "cm_cxx_std = " ${cm_cxx_std})
-
+# message(STATUS "cm_cxx_std = " ${cm_cxx_std})
 target_include_directories(ColorManip PUBLIC
     ${SlopeCraft_Eigen3_include_dir}
     ${CMAKE_SOURCE_DIR}/utilities)

@@ -259,6 +259,84 @@ VCL_display_block_state_list(const VCL_block_state_list *bsl) {
   VCL_report(VCL_report_type_t::information, msg.c_str(), true);
 }
 
+VCL_EXPORT_FUN bool
+VCL_set_resource_copy(const VCL_resource_pack *const rp,
+                      const VCL_block_state_list *const bsl,
+                      const VCL_set_resource_option &option) {
+  if (rp == nullptr || bsl == nullptr) {
+    return false;
+  }
+
+  if (option.max_block_layers <= 0) {
+    return false;
+  }
+
+  std::unique_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+
+  TokiVC_internal::is_basic_color_set_ready = false;
+  TokiVC::pack = *rp;
+  TokiVC::bsl = *bsl;
+
+  TokiVC::version = option.version;
+  TokiVC::exposed_face = option.exposed_face;
+  TokiVC::max_block_layers = option.max_block_layers;
+
+  const bool ret = TokiVC::set_resource_no_lock();
+  VCL_report(VCL_report_type_t::warning, nullptr, true);
+
+  return ret;
+}
+
+VCL_EXPORT_FUN bool
+VCL_set_resource_move(VCL_resource_pack **rp_ptr,
+                      VCL_block_state_list **bsl_ptr,
+                      const VCL_set_resource_option &option) {
+  if (rp_ptr == nullptr || bsl_ptr == nullptr) {
+    return false;
+  }
+
+  if (*rp_ptr == nullptr || *bsl_ptr == nullptr) {
+    return false;
+  }
+  if (option.max_block_layers <= 0) {
+    return false;
+  }
+
+  bool ret = true;
+  std::unique_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+
+  TokiVC_internal::is_basic_color_set_ready = false;
+
+  TokiVC::pack = std::move(**rp_ptr);
+  VCL_destroy_resource_pack(*rp_ptr);
+  *rp_ptr = nullptr;
+
+  TokiVC::bsl = std::move(**bsl_ptr);
+  VCL_destroy_block_state_list(*bsl_ptr);
+  *bsl_ptr = nullptr;
+
+  TokiVC::version = option.version;
+  TokiVC::exposed_face = option.exposed_face;
+  TokiVC::max_block_layers = option.max_block_layers;
+
+  if (!TokiVC::set_resource_no_lock()) {
+    ret = false;
+  }
+
+  VCL_report(VCL_report_type_t::warning, nullptr, true);
+
+  return ret;
+}
+
+VCL_EXPORT_FUN int VCL_get_max_block_layers() {
+  std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+  if (!TokiVC_internal::is_basic_color_set_ready) {
+    return 0;
+  }
+
+  return TokiVC::max_block_layers;
+}
+
 VCL_EXPORT_FUN bool VCL_is_basic_colorset_ok() {
   std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
   return TokiVC_internal::is_basic_color_set_ready;
@@ -300,81 +378,43 @@ VCL_EXPORT_FUN VCL_face_t VCL_get_exposed_face() {
 }
 
 VCL_EXPORT_FUN bool
-VCL_set_resource_copy(const VCL_resource_pack *const rp,
-                      const VCL_block_state_list *const bsl,
-                      const VCL_set_resource_option &option) {
-  if (rp == nullptr || bsl == nullptr) {
-    return false;
-  }
-
-  if (option.max_block_layers <= 0) {
-    return false;
-  }
-
+VCL_set_allowed_blocks(const VCL_block *const *const blocks_allowed,
+                       size_t num_block_allowed) {
   std::unique_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
 
-  TokiVC_internal::is_basic_color_set_ready = false;
-  TokiVC::pack = *rp;
-  TokiVC::bsl = *bsl;
-
-  TokiVC::version = option.version;
-  TokiVC::exposed_face = option.exposed_face;
-  TokiVC::max_block_layers = option.max_block_layers;
-
-  const bool ret = TokiVC::update_color_set_no_lock();
-  VCL_report(VCL_report_type_t::warning, nullptr, true);
-
-  return ret;
+  return TokiVC::set_allowed_no_lock(blocks_allowed, num_block_allowed);
 }
 
-VCL_EXPORT_FUN bool
-VCL_set_resource_move(VCL_resource_pack **rp_ptr,
-                      VCL_block_state_list **bsl_ptr,
-                      const VCL_set_resource_option &option) {
-  if (rp_ptr == nullptr || bsl_ptr == nullptr) {
-    return false;
-  }
+VCL_EXPORT_FUN bool VCL_is_allowed_colorset_ok() {
 
-  if (*rp_ptr == nullptr || *bsl_ptr == nullptr) {
-    return false;
-  }
-  if (option.max_block_layers <= 0) {
-    return false;
-  }
-
-  bool ret = true;
-  std::unique_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
-
-  TokiVC_internal::is_basic_color_set_ready = false;
-
-  TokiVC::pack = std::move(**rp_ptr);
-  VCL_destroy_resource_pack(*rp_ptr);
-  *rp_ptr = nullptr;
-
-  TokiVC::bsl = std::move(**bsl_ptr);
-  VCL_destroy_block_state_list(*bsl_ptr);
-  *bsl_ptr = nullptr;
-
-  TokiVC::version = option.version;
-  TokiVC::exposed_face = option.exposed_face;
-  TokiVC::max_block_layers = option.max_block_layers;
-
-  if (!TokiVC::update_color_set_no_lock()) {
-    ret = false;
-  }
-
-  VCL_report(VCL_report_type_t::warning, nullptr, true);
-
-  return ret;
-}
-
-VCL_EXPORT_FUN int VCL_get_max_block_layers() {
   std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+
   if (!TokiVC_internal::is_basic_color_set_ready) {
-    return 0;
+    return false;
+  }
+  return TokiVC_internal::is_allowed_color_set_ready;
+}
+
+VCL_EXPORT_FUN int VCL_get_allowed_colors(uint32_t *dest,
+                                          size_t dest_capacity) {
+  std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+
+  size_t num_written = 0;
+
+  if (dest == nullptr || dest_capacity <= 0) {
+    return TokiVC::colorset_allowed.color_count();
   }
 
-  return TokiVC::max_block_layers;
+  for (int idx = 0; idx < TokiVC::colorset_allowed.color_count(); idx++) {
+    if (num_written >= dest_capacity) {
+      break;
+    }
+    Eigen::Array3i ret = (TokiVC::colorset_allowed.rgb(idx) * 255).cast<int>();
+    dest[num_written] = ARGB32(ret[0], ret[1], ret[2]);
+    num_written++;
+  }
+
+  return TokiVC::colorset_allowed.color_count();
 }
 
 VCL_EXPORT_FUN size_t VCL_get_blocks_from_block_state_list(

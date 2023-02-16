@@ -141,6 +141,15 @@ VCL_EXPORT_FUN SCL_gameVersion VCL_get_game_version();
 VCL_EXPORT_FUN VCL_face_t VCL_get_exposed_face();
 VCL_EXPORT_FUN int VCL_get_max_block_layers();
 
+// set allowed blocks for kernel
+VCL_EXPORT_FUN bool
+VCL_set_allowed_blocks(const VCL_block *const *const blocks_allowed,
+                       size_t num_block_allowed);
+
+VCL_EXPORT_FUN bool VCL_is_allowed_colorset_ok();
+
+VCL_EXPORT_FUN int VCL_get_allowed_colors(uint32_t *dest, size_t dest_capacity);
+
 // functions about resource pack
 VCL_EXPORT_FUN void VCL_display_resource_pack(const VCL_resource_pack *,
                                               bool textures = true,

@@ -12,6 +12,8 @@
 
 #include <shared_mutex>
 
+#include <unordered_set>
+
 class TokiVC : public VCL_Kernel {
 public:
   TokiVC();
@@ -41,12 +43,15 @@ public:
   static VCL_face_t exposed_face;
   static int max_block_layers;
 
-  static bool update_color_set_no_lock() noexcept;
+  static bool set_resource_no_lock() noexcept;
+  static bool set_allowed_no_lock(const VCL_block *const *const blocks_allowed,
+                                  size_t num_block_allowed) noexcept;
 
 private:
   static std::vector<
       std::variant<const VCL_block *, std::vector<const VCL_block *>>>
       LUT_basic_color_idx_to_blocks;
+  static std::unordered_set<const VCL_block *> blocks_allowed;
 
 private:
   VCL_Kernel_step _step{VCL_Kernel_step::VCL_wait_for_resource};
