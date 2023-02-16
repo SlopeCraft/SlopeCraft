@@ -3,11 +3,11 @@
 
 #include <CLI11.hpp>
 #include <QImage>
+#include <filesystem>
 #include <iostream>
 #include <string>
 #include <thread>
 #include <vector>
-
 
 using std::cout, std::endl;
 
@@ -100,10 +100,10 @@ int main(int argc, char **argv) {
   return run(input);
 }
 
-#define VCCL_PRIVATE_MACRO_MAKE_CASE(enum_val) \
-  if (str == #enum_val) {                      \
-    ok = true;                                 \
-    return SCL_convertAlgo::enum_val;          \
+#define VCCL_PRIVATE_MACRO_MAKE_CASE(enum_val)                                 \
+  if (str == #enum_val) {                                                      \
+    ok = true;                                                                 \
+    return SCL_convertAlgo::enum_val;                                          \
   }
 
 SCL_convertAlgo str_to_algo(std::string_view str, bool &ok) noexcept {
@@ -236,8 +236,36 @@ int run(const inputs &input) noexcept {
       cout << "Failed to convert" << endl;
       return __LINE__;
     }
+
+    if (input.make_converted_image) {
+      const std::filesystem::path src_path(img_filename);
+      std::string dst_name_str(input.prefix);
+
+      if (dst_name_str.back() != '/' || dst_name_str.back() != '\\') {
+        dst_name_str.append("/");
+      }
+      dst_name_str += src_path.filename().string();
+
+      cout << dst_name_str << endl;
+
+      memset(img.scanLine(0), 0, img.height() * img.width() * sizeof(uint32_t));
+
+      kernel->converted_image((uint32_t *)img.scanLine(0), nullptr, nullptr,
+                              true);
+
+      const bool ok = img.save(QString::fromLocal8Bit(dst_name_str.c_str()));
+
+      if (!ok) {
+        cout << "Failed to save image " << dst_name_str << endl;
+        return __LINE__;
+      }
+      // cout << dst_path << endl;
+    }
   }
 
   VCL_destroy_kernel(kernel);
+
+  cout << "success." << endl;
+
   return 0;
 }

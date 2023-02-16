@@ -55,7 +55,7 @@ bool is_basic_color_set_ready = false;
 bool is_allowed_color_set_ready = false;
 
 std::set<TokiVC *> TokiVC_register;
-}  // namespace TokiVC_internal
+} // namespace TokiVC_internal
 
 TokiVC::TokiVC() {
   TokiVC_internal::global_lock.lock();
@@ -282,15 +282,15 @@ bool add_color_trans_to_trans_start_recurse(
 
 bool TokiVC::set_resource_no_lock() noexcept {
   switch (TokiVC::version) {
-    case SCL_gameVersion::ANCIENT:
-    case SCL_gameVersion::FUTURE: {
-      std::string msg =
-          fmt::format("Invalid MC version : {}\n", int(TokiVC::version));
-      VCL_report(VCL_report_type_t::error, msg.c_str());
-      return false;
-    }
-    default:
-      break;
+  case SCL_gameVersion::ANCIENT:
+  case SCL_gameVersion::FUTURE: {
+    std::string msg =
+        fmt::format("Invalid MC version : {}\n", int(TokiVC::version));
+    VCL_report(VCL_report_type_t::error, msg.c_str());
+    return false;
+  }
+  default:
+    break;
   }
 
   std::vector<VCL_block *> bs_transparent, bs_nontransparent;
@@ -566,15 +566,11 @@ bool TokiVC::convert(::SCL_convertAlgo algo, bool dither) noexcept {
 }
 
 void TokiVC::converted_image(uint32_t *dest, int64_t *rows, int64_t *cols,
-                             bool *is_row_major) const noexcept {
+                             bool write_dest_row_major) const noexcept {
   std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
   if (this->_step < VCL_Kernel_step::VCL_wait_for_build) {
     return;
   }
 
-  this->img_cvter.converted_image(dest, rows, cols, true);
-
-  if (is_row_major != nullptr) {
-    *is_row_major = false;
-  }
+  this->img_cvter.converted_image(dest, rows, cols, !write_dest_row_major);
 }

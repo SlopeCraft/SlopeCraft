@@ -388,7 +388,7 @@ parse_multipart_when(const njson &when) noexcept(false) {
       when_or.emplace_back(std::move(and_list));
     }
 
-    return std::move(when_or);
+    return when_or;
   }
 
   if (when.size() == 1) {

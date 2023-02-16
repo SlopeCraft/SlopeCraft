@@ -104,7 +104,7 @@ public:
   virtual bool convert(::SCL_convertAlgo algo,
                        bool dither = false) noexcept = 0;
   virtual void converted_image(uint32_t *dest, int64_t *rows, int64_t *cols,
-                               bool *is_row_major) const noexcept = 0;
+                               bool write_dest_row_major) const noexcept = 0;
 };
 
 extern "C" {

@@ -35,7 +35,7 @@ public:
 
   bool convert(::SCL_convertAlgo algo, bool dither) noexcept override;
   void converted_image(uint32_t *dest, int64_t *rows, int64_t *cols,
-                       bool *is_row_major) const noexcept override;
+                       bool write_dest_row_major) const noexcept override;
 
 public:
   static libImageCvt::template ImageCvter<false>::basic_colorset_t

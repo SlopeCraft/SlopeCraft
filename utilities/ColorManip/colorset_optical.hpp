@@ -23,6 +23,7 @@ This file is part of SlopeCraft.
 #ifndef COLORMANIP_COLORSET_OPTICAL_HPP
 #define COLORMANIP_COLORSET_OPTICAL_HPP
 
+#include "../SC_aligned_alloc.hpp"
 #include "ColorManip.h"
 #include <Eigen/Dense>
 #include <cmath>
@@ -197,9 +198,40 @@ public:
   }
 };
 
+class TempVecOptical : public Eigen::Map<Eigen::ArrayXf> {
+public:
+  static constexpr size_t capacity = 65536;
+  using Base_t = Eigen::Map<Eigen::ArrayXf>;
+
+private:
+public:
+  TempVecOptical(int rows, int cols)
+      : Base_t((float *)SC_aligned_alloc(64, capacity * sizeof(float)), rows,
+               cols) {
+    if (cols != 1) {
+      abort();
+    }
+  }
+
+  TempVecOptical(const TempVecOptical &) = delete;
+  TempVecOptical(TempVecOptical &&) = delete;
+
+  ~TempVecOptical() { SC_aligned_free(this->data()); }
+
+  void resize(int rows, int cols) noexcept {
+    if (cols != 1 || size_t(rows) > capacity) {
+      abort();
+    }
+
+    Base_t::resize(rows, cols);
+  }
+
+  inline Base_t &base() noexcept { return *this; }
+};
+
 class newtokicolor_base_optical {
 public:
-  using TempVectorXf_t = Eigen::ArrayXf;
+  using TempVectorXf_t = TempVecOptical;
   using result_t = uint16_t;
 
 protected:

@@ -41,17 +41,16 @@ namespace libImageCvt {
 
 using ::Eigen::Dynamic;
 
-static const Eigen::Array<float, 2, 3> dithermap_LR(
-    {{0.0 / 16.0, 0.0 / 16.0, 7.0 / 16.0},
-     {3.0 / 16.0, 5.0 / 16.0, 1.0 / 16.0}});
+static const Eigen::Array<float, 2, 3>
+    dithermap_LR({{0.0 / 16.0, 0.0 / 16.0, 7.0 / 16.0},
+                  {3.0 / 16.0, 5.0 / 16.0, 1.0 / 16.0}});
 
-static const Eigen::Array<float, 2, 3> dithermap_RL(
-    {{7.0 / 16.0, 0.0 / 16.0, 0.0 / 16.0},
-     {1.0 / 16.0, 5.0 / 16.0, 3.0 / 16.0}});
+static const Eigen::Array<float, 2, 3>
+    dithermap_RL({{7.0 / 16.0, 0.0 / 16.0, 0.0 / 16.0},
+                  {1.0 / 16.0, 5.0 / 16.0, 3.0 / 16.0}});
 
-template <bool is_not_optical>
-class ImageCvter {
- public:
+template <bool is_not_optical> class ImageCvter {
+public:
   using basic_colorset_t = colorset_new<true, is_not_optical>;
   using allowed_colorset_t = colorset_new<false, is_not_optical>;
   using TokiColor_t =
@@ -63,7 +62,7 @@ class ImageCvter {
   static const basic_colorset_t &basic_colorset;
   static const allowed_colorset_t &allowed_colorset;
 
- protected:
+protected:
   Eigen::ArrayXX<ARGB> _raw_image;
   ::SCL_convertAlgo algo;
   std::unordered_map<convert_unit, TokiColor_t, ::hash_cvt_unit> _color_hash;
@@ -71,7 +70,7 @@ class ImageCvter {
   Eigen::ArrayXX<ARGB> _dithered_image;
   // Eigen::ArrayXX<colorid_t> colorid_matrix;
 
- public:
+public:
   uiPack ui;
   // SCL_convertAlgo convert_algo{SCL_convertAlgo::RGB_Better};
 
@@ -131,28 +130,28 @@ class ImageCvter {
 
     if (dither) {
       switch (this->algo) {
-        case ::SCL_convertAlgo::RGB:
-          this->template __impl_dither<::SCL_convertAlgo::RGB>();
-          break;
-        case ::SCL_convertAlgo::RGB_Better:
-          this->template __impl_dither<::SCL_convertAlgo::RGB_Better>();
-          break;
-        case ::SCL_convertAlgo::HSV:
-          this->template __impl_dither<::SCL_convertAlgo::HSV>();
-          break;
-        case ::SCL_convertAlgo::Lab94:
-          this->template __impl_dither<::SCL_convertAlgo::Lab94>();
-          break;
-        case ::SCL_convertAlgo::Lab00:
-          this->template __impl_dither<::SCL_convertAlgo::Lab00>();
-          break;
-        case ::SCL_convertAlgo::XYZ:
-          this->template __impl_dither<::SCL_convertAlgo::XYZ>();
-          break;
+      case ::SCL_convertAlgo::RGB:
+        this->template __impl_dither<::SCL_convertAlgo::RGB>();
+        break;
+      case ::SCL_convertAlgo::RGB_Better:
+        this->template __impl_dither<::SCL_convertAlgo::RGB_Better>();
+        break;
+      case ::SCL_convertAlgo::HSV:
+        this->template __impl_dither<::SCL_convertAlgo::HSV>();
+        break;
+      case ::SCL_convertAlgo::Lab94:
+        this->template __impl_dither<::SCL_convertAlgo::Lab94>();
+        break;
+      case ::SCL_convertAlgo::Lab00:
+        this->template __impl_dither<::SCL_convertAlgo::Lab00>();
+        break;
+      case ::SCL_convertAlgo::XYZ:
+        this->template __impl_dither<::SCL_convertAlgo::XYZ>();
+        break;
 
-        default:
-          exit(1);
-          return;
+      default:
+        exit(1);
+        return;
       }
     } else {
       this->_dithered_image = this->_raw_image;
@@ -185,10 +184,10 @@ class ImageCvter {
     converted_image(dest.data());
   }
 
-  inline void converted_image(
-      ARGB *const data_dest, int64_t *const rows_dest = nullptr,
-      int64_t *const cols_dest = nullptr,
-      const bool is_dest_col_major = true) const noexcept {
+  inline void
+  converted_image(ARGB *const data_dest, int64_t *const rows_dest = nullptr,
+                  int64_t *const cols_dest = nullptr,
+                  const bool is_dest_col_major = true) const noexcept {
     if (rows_dest != nullptr) {
       *rows_dest = this->rows();
     }
@@ -223,7 +222,7 @@ class ImageCvter {
     }
   }
 
- private:
+private:
   void add_colors_to_hash() noexcept {
     // this->_color_hash.clear();
 
@@ -233,7 +232,8 @@ class ImageCvter {
       auto it = _color_hash.find(cu);
 
       // this key isn't inserted
-      if (it == _color_hash.end()) this->_color_hash.emplace(cu, TokiColor_t());
+      if (it == _color_hash.end())
+        this->_color_hash.emplace(cu, TokiColor_t());
     }
   }
 
@@ -245,11 +245,12 @@ class ImageCvter {
     tasks.clear();
 
     for (auto &pair : _color_hash) {
-      if (!pair.second.is_result_computed()) tasks.emplace_back(&pair);
+      if (!pair.second.is_result_computed())
+        tasks.emplace_back(&pair);
     }
     const uint64_t taskCount = tasks.size();
-#warning we should parallelize here
-    // #pragma omp parallel for schedule(dynamic)
+// #warning we should parallelize here
+#pragma omp parallel for schedule(static)
     for (int thIdx = 0; thIdx < threadCount; thIdx++) {
       for (uint64_t taskIdx = thIdx; taskIdx < taskCount;
            taskIdx += threadCount) {
@@ -282,25 +283,24 @@ class ImageCvter {
   template <SCL_convertAlgo algo>
   inline static ARGB ColorCvt(float c0, float c1, float c2) noexcept {
     switch (algo) {
-      case ::SCL_convertAlgo::RGB:
-      case ::SCL_convertAlgo::RGB_Better:
-      case ::SCL_convertAlgo::gaCvter:
-        return RGB2ARGB(c0, c1, c2);
-      case ::SCL_convertAlgo::HSV:
-        return HSV2ARGB(c0, c1, c2);
-      case ::SCL_convertAlgo::Lab00:
-      case ::SCL_convertAlgo::Lab94:
-        return Lab2ARGB(c0, c1, c2);
-      case ::SCL_convertAlgo::XYZ:
-        return XYZ2ARGB(c0, c1, c2);
+    case ::SCL_convertAlgo::RGB:
+    case ::SCL_convertAlgo::RGB_Better:
+    case ::SCL_convertAlgo::gaCvter:
+      return RGB2ARGB(c0, c1, c2);
+    case ::SCL_convertAlgo::HSV:
+      return HSV2ARGB(c0, c1, c2);
+    case ::SCL_convertAlgo::Lab00:
+    case ::SCL_convertAlgo::Lab94:
+      return Lab2ARGB(c0, c1, c2);
+    case ::SCL_convertAlgo::XYZ:
+      return XYZ2ARGB(c0, c1, c2);
     }
     // unreachable
     exit(1);
     return 0;
   }
 
-  template <SCL_convertAlgo cvt_algo>
-  void __impl_dither() noexcept {
+  template <SCL_convertAlgo cvt_algo> void __impl_dither() noexcept {
     std::array<Eigen::ArrayXXf, 3> dither_c3;
     for (auto &i : dither_c3) {
       i.setZero(this->rows() + 2, this->cols() + 2);
@@ -416,6 +416,6 @@ class ImageCvter {
   }
 };
 
-}  // namespace libImageCvt
+} // namespace libImageCvt
 
-#endif  // COLORMANIP_IMAGECONVERT_HPP
+#endif // COLORMANIP_IMAGECONVERT_HPP
