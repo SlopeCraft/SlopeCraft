@@ -72,11 +72,13 @@ public:
   static constexpr size_t idx_face_east = (size_t)attribute::face_east;
   static constexpr size_t idx_face_west = (size_t)attribute::face_west;
 
+  static_assert(idx_face_up == 0);
   static_assert(idx_face_up < idx_face_down);
   static_assert(idx_face_down < idx_face_north);
   static_assert(idx_face_north < idx_face_south);
   static_assert(idx_face_south < idx_face_east);
   static_assert(idx_face_east < idx_face_west);
+  static_assert(idx_face_west == 5);
 
   static constexpr size_t idx_transparent = (size_t)attribute::transparency;
   static constexpr size_t idx_background = (size_t)attribute::background;

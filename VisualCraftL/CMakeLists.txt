@@ -161,6 +161,7 @@ target_include_directories(test_VCL_project_image PRIVATE
     ${cli11_include_dir}
     ${SlopeCraft_Nlohmann_json_include_dir}
     ${SlopeCraft_Eigen3_include_dir})
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/test_project_image)
 
 # test showing model
 add_executable(test_VCL_model tests/test_VCL_model.cpp)
@@ -185,3 +186,9 @@ add_test(NAME test_block_class COMMAND test_block_class WORKING_DIRECTORY ${CMAK
 
 # automatic tests
 include(generate_tests.cmake)
+
+add_executable(test_VCL_version tests/test_VCL_version.cpp)
+target_link_libraries(test_VCL_version PRIVATE VisualCraftL)
+target_compile_features(test_VCL_version PRIVATE cxx_std_17)
+
+add_test(NAME test_VCL_version COMMAND test_VCL_version WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})

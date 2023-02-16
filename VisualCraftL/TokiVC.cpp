@@ -373,6 +373,17 @@ bool TokiVC::set_resource_no_lock() noexcept {
       return false;
     }
     // here the basic colors are ready.
+    {
+      Eigen::Array<float, Eigen::Dynamic, 3> arrX3f;
+      arrX3f.resize(colors_temp.size(), 3);
+
+      for (int r = 0; r < colors_temp.size(); r++) {
+        for (int c = 0; c < 3; c++) {
+          arrX3f(r, c) = colors_temp[r][c] / 255.0f;
+        }
+      }
+      TokiVC::colorset_basic.set_colors(arrX3f.data(), arrX3f.rows());
+    }
   }
 
   // update steps
@@ -433,6 +444,12 @@ bool TokiVC::set_allowed_no_lock(const VCL_block *const *const blocks_allowed,
   std::vector<uint8_t> allowed_list;
   allowed_list.resize(TokiVC::LUT_basic_color_idx_to_blocks.size());
   memset(allowed_list.data(), 0, allowed_list.size());
+
+  if constexpr (true) {
+    std::string msg = fmt::format("TokiVC::colorset_basic.color_count() = {}.",
+                                  TokiVC::colorset_basic.color_count());
+    VCL_report(VCL_report_type_t::information, msg.c_str());
+  }
 
   for (size_t idx = 0; idx < TokiVC::LUT_basic_color_idx_to_blocks.size();
        idx++) {

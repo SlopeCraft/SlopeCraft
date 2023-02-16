@@ -18,7 +18,7 @@ void VCL_block::initialize_attributes() noexcept {
   this->attributes.reset();
   this->set_transparency(false);
   this->set_is_background(false);
-  for (size_t sz = idx_face_up; sz < idx_face_west; sz++) {
+  for (size_t sz = idx_face_up; sz <= idx_face_west; sz++) {
     this->attributes[sz] = true;
   }
   this->set_attribute(attribute::is_air, false);

@@ -524,16 +524,16 @@ block_model::face_idx string_to_face_idx(std::string_view str,
                                          bool *const _ok) noexcept {
   block_model::face_idx res = block_model::face_idx::face_down;
   bool ok = false;
-  if (str == "bottom") {
-    res = block_model::face_idx::face_down;
+  if (str == "up") {
+    res = block_model::face_idx::face_up;
     ok = true;
   }
   if (str == "down") {
     res = block_model::face_idx::face_down;
     ok = true;
   }
-  if (str == "up") {
-    res = block_model::face_idx::face_up;
+  if (str == "bottom") {
+    res = block_model::face_idx::face_down;
     ok = true;
   }
   if (str == "north") {

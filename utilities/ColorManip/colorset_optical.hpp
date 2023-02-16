@@ -69,7 +69,7 @@ protected:
       __xyz[c].setZero(new_color_count);
     }
 
-    _color_count = new_color_count;
+    this->_color_count = new_color_count;
   }
 };
 
@@ -79,27 +79,33 @@ public:
   inline uint16_t color_id(uint16_t idx) const noexcept { return idx; }
   colorset_optical_basic() { this->resize(0); }
 
-  bool set_colors(const float *const rgbsrc_colwise,
+  bool set_colors(const float *const rbgsrc_colmajor,
                   const int new_color_count) noexcept {
     if (new_color_count < 0) {
       return false;
     }
 
-    resize(0);
+    this->resize(0);
 
     if (new_color_count == 0) {
       return true;
     }
 
-    if (rgbsrc_colwise == nullptr) {
+    if (rbgsrc_colmajor == nullptr) {
       return false;
     }
 
-    Eigen::Map<const Eigen::Array<float, Eigen::Dynamic, 3>> rgbsrcmap(
-        rgbsrc_colwise, new_color_count, 3);
+    this->resize(new_color_count);
 
-    for (int c = 0; c < 0; c++) {
-      this->__rgb[c] = rgbsrcmap.col(c);
+    {
+      Eigen::Map<const Eigen::Array<float, Eigen::Dynamic, 3>> rgbsrcmap(
+          rbgsrc_colmajor, new_color_count, 3);
+
+      for (int c = 0; c < 3; c++) {
+        memcpy(this->__rgb[c].data(), rbgsrc_colmajor + (new_color_count * c),
+               sizeof(float) * new_color_count);
+        //= rgbsrcmap.col(c);
+      }
     }
 
     for (int coloridx = 0; coloridx < new_color_count; coloridx++) {
@@ -109,7 +115,7 @@ public:
       RGB2XYZ(this->__rgb[0](coloridx), this->__rgb[1](coloridx),
               this->__rgb[2](coloridx), this->__xyz[0](coloridx),
               this->__xyz[1](coloridx), this->__xyz[2](coloridx));
-      Lab2XYZ(this->__xyz[0](coloridx), this->__xyz[1](coloridx),
+      XYZ2Lab(this->__xyz[0](coloridx), this->__xyz[1](coloridx),
               this->__xyz[2](coloridx), this->__lab[0](coloridx),
               this->__lab[1](coloridx), this->__lab[2](coloridx));
     }
@@ -133,7 +139,7 @@ public:
 
 class colorset_optical_allowed : public colorset_optical_base {
 public:
-  static constexpr uint16_t invalid_color_id = ~uint16_t(0);
+  static constexpr uint16_t invalid_color_id = 0xFFFF;
 
 private:
   Eigen::Array<uint16_t, Eigen::Dynamic, 1> __color_id;

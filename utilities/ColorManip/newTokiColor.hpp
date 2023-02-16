@@ -83,7 +83,7 @@ template <typename = void> __m256 _mm256_acos_ps(__m256 x) noexcept {
 
 // using Eigen::Dynamic;
 namespace {
-constexpr float threshold = 1e-10f;
+inline constexpr float threshold = 1e-10f;
 
 } // namespace
 struct convert_unit {
@@ -222,7 +222,7 @@ private:
     if constexpr (is_not_optical) {
       this->Result = Allowed->Map(tempidx);
       if (Base_t::needFindSide)
-        doSide(diff);
+        this->doSide(diff);
 
       return this->Result;
     } else {
