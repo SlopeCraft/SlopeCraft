@@ -98,7 +98,7 @@ int main(int argc, char **argv) {
     if constexpr (set_resource_by_move) {
       if (!VCL_set_resource_move(
               &rp, &bsl,
-              VCL_set_resource_option{version, face, max_block_layers})) {
+              VCL_set_resource_option{version, max_block_layers, face})) {
         cout << "Failed to set resource pack" << endl;
         VCL_destroy_block_state_list(bsl);
         VCL_destroy_resource_pack(rp);
@@ -109,7 +109,7 @@ int main(int argc, char **argv) {
 
       if (!VCL_set_resource_copy(
               rp, bsl,
-              VCL_set_resource_option{version, face, max_block_layers})) {
+              VCL_set_resource_option{version, max_block_layers, face})) {
         cout << "Failed to set resource pack" << endl;
         VCL_destroy_block_state_list(bsl);
         VCL_destroy_resource_pack(rp);
@@ -120,6 +120,28 @@ int main(int argc, char **argv) {
 
     VCL_destroy_block_state_list(bsl);
     VCL_destroy_resource_pack(rp);
+  }
+
+  std::vector<VCL_block *> blocks;
+  blocks.resize(VCL_get_blocks_from_block_state_list_match(
+      VCL_get_block_state_list(), version, face, nullptr, 0));
+
+  const int block_num = VCL_get_blocks_from_block_state_list_match(
+      VCL_get_block_state_list(), version, face, blocks.data(), blocks.size());
+
+  if (block_num != blocks.size()) {
+    cout << "Impossible error : block_num = " << block_num
+         << " but blocks.size() = " << blocks.size() << endl;
+
+    VCL_destroy_kernel(kernel);
+    return 1;
+  }
+  if (!VCL_set_allowed_blocks(blocks.data(), blocks.size())) {
+
+    cout << "VCL_set_allowed_blocks failed." << endl;
+
+    VCL_destroy_kernel(kernel);
+    return 1;
   }
 
   VCL_destroy_kernel(kernel);

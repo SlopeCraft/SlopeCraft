@@ -82,6 +82,9 @@ target_compile_definitions(VisualCraftL_static PRIVATE "-DVISUALCRAFTL_BUILD")
 target_compile_features(VisualCraftL PRIVATE cxx_std_20)
 target_compile_features(VisualCraftL_static PUBLIC cxx_std_20)
 
+target_compile_options(VisualCraftL PRIVATE ${SlopeCraft_vectorize_flags})
+target_compile_options(VisualCraftL_static PRIVATE ${SlopeCraft_vectorize_flags})
+
 # target_compile_options(VisualCraftL PRIVATE "-std=c++20")
 if(NOT ${MSVC})
     target_compile_options(VisualCraftL PUBLIC "-flto")
@@ -124,23 +127,28 @@ endif()
 
 include(${CMAKE_SOURCE_DIR}/cmake/configure_cli11.cmake)
 
+# test block state and resource parsing
 add_executable(test_VCL_blockstate tests/test_VCL_blockstate.cpp)
 target_link_libraries(test_VCL_blockstate PRIVATE VisualCraftL)
 target_include_directories(test_VCL_blockstate PRIVATE ${cli11_include_dir})
 
+# convert json from SCL to VCL
 add_executable(SCL_json_cvt tests/SCL_json_cvt.cpp)
 target_include_directories(SCL_json_cvt PRIVATE
     ${SlopeCraft_Nlohmann_json_include_dir})
 
+# test block class properties
 add_executable(test_block_class tests/test_block_class.cpp)
 target_link_libraries(test_block_class PRIVATE VisualCraftL)
 
+# sort VCL json
 add_executable(VCL_json_sort tests/VCL_json_sort.cpp)
 target_link_libraries(VCL_json_sort PRIVATE VisualCraftL)
 target_include_directories(VCL_json_sort PRIVATE
     ${cli11_include_dir}
     ${SlopeCraft_Nlohmann_json_include_dir})
 
+# test computing projection images
 add_executable(test_VCL_project_image tests/test_VCL_project_image.cpp)
 target_link_libraries(test_VCL_project_image PRIVATE VisualCraftL PNG::PNG)
 target_include_directories(test_VCL_project_image PRIVATE
@@ -148,6 +156,7 @@ target_include_directories(test_VCL_project_image PRIVATE
     ${SlopeCraft_Nlohmann_json_include_dir}
     ${SlopeCraft_Eigen3_include_dir})
 
+# test showing model
 add_executable(test_VCL_model tests/test_VCL_model.cpp)
 target_link_libraries(test_VCL_model PRIVATE VisualCraftL)
 target_include_directories(test_VCL_model PRIVATE
@@ -155,10 +164,12 @@ target_include_directories(test_VCL_model PRIVATE
     ${SlopeCraft_Nlohmann_json_include_dir}
     ${SlopeCraft_Eigen3_include_dir})
 
+# internal test for rotation
 add_executable(itest_VCL_rotate tests/itest_VCL_rotate.cpp)
 target_link_libraries(itest_VCL_rotate PRIVATE VisualCraftL_static)
 target_include_directories(itest_VCL_rotate PRIVATE
     ${cli11_include_dir})
+
 add_test(NAME test_rotate COMMAND itest_VCL_rotate WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
 include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_12.cmake)

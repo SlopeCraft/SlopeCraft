@@ -1,4 +1,11 @@
 {
+    "minecraft:air": {
+        "class": "others",
+        "nameEN": "Air",
+        "nameZH": "空气",
+        "version": "all",
+        "is_air": true
+    },
     "minecraft:brick_block": {
         "class": "clay",
         "nameEN": "Bricks",

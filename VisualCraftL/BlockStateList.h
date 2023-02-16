@@ -85,6 +85,7 @@ public:
       (size_t)attribute::enderman_pickable;
   static constexpr size_t idx_is_glowing = (size_t)attribute::is_glowing;
   static constexpr size_t idx_disabled = (size_t)attribute::disabled;
+  static constexpr size_t idx_is_air = (size_t)attribute::is_air;
 
   inline bool get_attribute(attribute a) const noexcept {
     return this->attributes[size_t(a)];
@@ -125,6 +126,8 @@ public:
   inline void set_disabled(bool disable) noexcept {
     this->attributes[idx_disabled] = disable;
   }
+
+  inline bool is_air() const noexcept { return this->attributes[idx_is_air]; }
 
   inline const std::string *full_id_ptr() const noexcept {
     return this->full_id_p;

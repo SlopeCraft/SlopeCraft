@@ -21,6 +21,7 @@ void VCL_block::initialize_attributes() noexcept {
   for (size_t sz = idx_face_up; sz < idx_face_west; sz++) {
     this->attributes[sz] = true;
   }
+  this->set_attribute(attribute::is_air, false);
 }
 
 version_set parse_version_set(const nlohmann::json &jo,
@@ -224,6 +225,14 @@ VCL_block parse_block(const nlohmann::json &jo, bool *const ok) {
     ret.set_attribute(VCL_block::attribute::background, jo.at("background"));
   }
 
+  if (jo.contains("is_air")) {
+    if (!jo.at("is_air").is_boolean()) {
+      *ok = false;
+      return {};
+    }
+    ret.set_attribute(VCL_block::attribute::is_air, jo.at("is_air"));
+  }
+
   *ok = true;
 
   return ret;
@@ -293,6 +302,10 @@ void VCL_block_state_list::avaliable_block_states_by_transparency(
 
   for (auto &pair : this->states) {
     if (pair.second.match(v, f)) {
+      if (pair.second.is_air()) {
+        continue;
+      }
+
       if (pair.second.is_transparent()) {
         list_transparent->emplace_back(&pair.second);
       } else {

@@ -7,12 +7,12 @@
 
 #include <utilities/ColorManip/colorset_optical.hpp>
 #include <utilities/ColorManip/imageConvert.hpp>
-
+#include <utilities/Schem/Schem.h>
 #include <variant>
 
 #include <shared_mutex>
 
-#include <unordered_set>
+#include <unordered_map>
 
 class TokiVC : public VCL_Kernel {
 public:
@@ -30,6 +30,10 @@ public:
 
   const uint32_t *raw_image(int64_t *const rows, int64_t *const cols,
                             bool *const is_row_major) const noexcept override;
+
+  bool convert(::SCL_convertAlgo algo, bool dither) noexcept override;
+  void converted_image(uint32_t *dest, int64_t *rows, int64_t *cols,
+                       bool *is_row_major) const noexcept override;
 
 public:
   static libImageCvt::template ImageCvter<false>::basic_colorset_t
@@ -51,12 +55,15 @@ private:
   static std::vector<
       std::variant<const VCL_block *, std::vector<const VCL_block *>>>
       LUT_basic_color_idx_to_blocks;
-  static std::unordered_set<const VCL_block *> blocks_allowed;
+  static std::unordered_map<const VCL_block *, uint16_t> blocks_allowed;
 
 private:
   VCL_Kernel_step _step{VCL_Kernel_step::VCL_wait_for_resource};
 
   libImageCvt::ImageCvter<false> img_cvter;
+  libSchem::Schem schem;
+
+  void fill_schem_blocklist_no_lock() noexcept;
 };
 
 namespace TokiVC_internal {

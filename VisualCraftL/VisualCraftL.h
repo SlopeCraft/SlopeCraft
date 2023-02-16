@@ -43,6 +43,7 @@ enum class VCL_block_attribute_t : uint8_t {
   enderman_pickable = 9,
   is_glowing = 10,
   disabled = 11,
+  is_air = 12,
 };
 
 enum class VCL_block_class_t : uint8_t {
@@ -95,11 +96,16 @@ public:
   virtual const uint32_t *
   raw_image(int64_t *const rows, int64_t *const cols,
             bool *const is_row_major) const noexcept = 0;
+
+  virtual bool convert(::SCL_convertAlgo algo,
+                       bool dither = false) noexcept = 0;
+  virtual void converted_image(uint32_t *dest, int64_t *rows, int64_t *cols,
+                               bool *is_row_major) const noexcept = 0;
 };
 
 extern "C" {
 // create and destroy kernel
-[[nodiscard]] VCL_Kernel *VCL_EXPORT_FUN VCL_create_kernel();
+[[nodiscard]] VCL_EXPORT_FUN VCL_Kernel *VCL_create_kernel();
 VCL_EXPORT_FUN void VCL_destroy_kernel(VCL_Kernel *const ptr);
 
 // create and destroy resource pack
@@ -116,11 +122,14 @@ VCL_create_block_state_list(const int file_count,
 VCL_EXPORT_FUN void
 VCL_destroy_block_state_list(VCL_block_state_list *const ptr);
 
-struct VCL_set_resource_option {
+// make this struct 64 bytes for binary compability
+struct alignas(64) VCL_set_resource_option {
   SCL_gameVersion version;
-  VCL_face_t exposed_face;
   int32_t max_block_layers;
+  VCL_face_t exposed_face;
 };
+
+static_assert(sizeof(VCL_set_resource_option) == 64);
 
 // set resource for kernel
 VCL_EXPORT_FUN bool

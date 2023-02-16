@@ -124,6 +124,11 @@ public:
   inline uint16_t colorindex_of_id(const uint16_t color_id) const noexcept {
     return color_id;
   }
+
+  inline uint16_t
+  colorindex_of_colorid(const uint16_t color_id) const noexcept {
+    return this->colorindex_of_id(color_id);
+  }
 };
 
 class colorset_optical_allowed : public colorset_optical_base {

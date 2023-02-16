@@ -12,6 +12,7 @@ libImageCvt::template ImageCvter<false>::basic_colorset_t
 libImageCvt::template ImageCvter<false>::allowed_colorset_t
     TokiVC::colorset_allowed;
 
+// bind static members for template classes
 template <>
 const libImageCvt::template ImageCvter<false>::basic_colorset_t
     &libImageCvt::template ImageCvter<false>::basic_colorset =
@@ -22,6 +23,21 @@ const libImageCvt::template ImageCvter<false>::allowed_colorset_t
     &libImageCvt::template ImageCvter<false>::allowed_colorset =
         TokiVC::colorset_allowed;
 
+template <>
+const libImageCvt::template ImageCvter<false>::basic_colorset_t
+    *const newTokiColor<
+        false, libImageCvt::template ImageCvter<false>::basic_colorset_t,
+        libImageCvt::template ImageCvter<false>::allowed_colorset_t>::Basic =
+        &TokiVC::colorset_basic;
+
+template <>
+const libImageCvt::template ImageCvter<false>::allowed_colorset_t
+    *const newTokiColor<
+        false, libImageCvt::template ImageCvter<false>::basic_colorset_t,
+        libImageCvt::template ImageCvter<false>::allowed_colorset_t>::Allowed =
+        &TokiVC::colorset_allowed;
+
+// global variables that VCL uses
 VCL_resource_pack TokiVC::pack;
 VCL_block_state_list TokiVC::bsl;
 SCL_gameVersion TokiVC::version = MC19;
@@ -31,7 +47,7 @@ int TokiVC::max_block_layers = 3;
 std::vector<std::variant<const VCL_block *, std::vector<const VCL_block *>>>
     TokiVC::LUT_basic_color_idx_to_blocks;
 
-std::unordered_set<const VCL_block *> TokiVC::blocks_allowed;
+std::unordered_map<const VCL_block *, uint16_t> TokiVC::blocks_allowed;
 
 namespace TokiVC_internal {
 std::shared_mutex global_lock;
@@ -389,7 +405,29 @@ bool TokiVC::set_allowed_no_lock(const VCL_block *const *const blocks_allowed,
       return false;
     }
 
-    TokiVC::blocks_allowed.emplace(blocks_allowed[i]);
+    TokiVC::blocks_allowed.emplace(blocks_allowed[i], 0xFFFF);
+  }
+
+  {
+    uint16_t counter = 1;
+    size_t counter_air = 0;
+    for (auto &pair : TokiVC::blocks_allowed) {
+      if (pair.first->is_air()) {
+        pair.second = 0;
+        counter_air++;
+        continue;
+      }
+
+      pair.second = counter;
+      counter++;
+    }
+
+    if (counter_air != 1) {
+      std::string msg =
+          fmt::format("Types of air block is {}, expected 1.", counter_air);
+      VCL_report(VCL_report_type_t::error, msg.c_str());
+      return false;
+    }
   }
 
   std::vector<uint8_t> allowed_list;
@@ -426,6 +464,7 @@ bool TokiVC::set_allowed_no_lock(const VCL_block *const *const blocks_allowed,
 
   for (TokiVC *tkvcp : TokiVC_internal::TokiVC_register) {
     tkvcp->_step = VCL_Kernel_step::VCL_wait_for_image;
+    tkvcp->img_cvter.on_color_set_changed();
   }
 
   return true;
@@ -488,4 +527,31 @@ const uint32_t *TokiVC::raw_image(int64_t *const __rows, int64_t *const __cols,
   }
 
   return this->img_cvter.raw_image().data();
+}
+
+bool TokiVC::convert(::SCL_convertAlgo algo, bool dither) noexcept {
+  std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+  if (this->_step < VCL_Kernel_step::VCL_wait_for_conversion) {
+    return false;
+  }
+
+  this->img_cvter.convert_image(algo, dither);
+
+  this->_step = VCL_Kernel_step::VCL_wait_for_build;
+  return true;
+}
+
+void TokiVC::converted_image(uint32_t *dest, int64_t *rows, int64_t *cols,
+                             bool *is_row_major) const noexcept {
+
+  std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+  if (this->_step < VCL_Kernel_step::VCL_wait_for_build) {
+    return;
+  }
+
+  this->img_cvter.converted_image(dest, rows, cols, true);
+
+  if (is_row_major != nullptr) {
+    *is_row_major = false;
+  }
 }

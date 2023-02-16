@@ -66,7 +66,7 @@ if(${SlopeCraft_vectorize})
     if(${MSVC})
         set(SlopeCraft_vectorize_flags "/arch:AVX2")
     else()
-        set(SlopeCraft_vectorize_flags -mavx -mavx2 -mfma)
+        set(SlopeCraft_vectorize_flags -msse2 -mavx -mavx2 -mfma)
     endif()
 
     message(STATUS "Vectorize using " ${SlopeCraft_vectorize_flags})

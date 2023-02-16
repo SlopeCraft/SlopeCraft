@@ -355,10 +355,10 @@ private:
 
           coloridx_t coloridx;
           if constexpr (is_not_optical) {
-            coloridx = basic_colorset.colorindex_of_coloid(old_color.Result);
+            coloridx = basic_colorset.colorindex_of_colorid(old_color.Result);
           } else {
             coloridx =
-                basic_colorset.coloridex_of_colorid(old_color.result_color_id);
+                basic_colorset.colorindex_of_colorid(old_color.color_id());
           }
 
           for (int ch = 0; ch < 3; ch++) {
@@ -394,10 +394,10 @@ private:
 
           coloridx_t coloridx;
           if constexpr (is_not_optical) {
-            coloridx = basic_colorset.colorindex_of_coloid(old_color.Result);
+            coloridx = basic_colorset.colorindex_of_colorid(old_color.Result);
           } else {
             coloridx =
-                basic_colorset.coloridex_of_colorid(old_color.result_color_id);
+                basic_colorset.colorindex_of_colorid(old_color.color_id());
           }
 
           for (int ch = 0; ch < 3; ch++) {

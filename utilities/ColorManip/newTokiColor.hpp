@@ -49,6 +49,7 @@ union alignas(32) f32_i32 {
 /**
  * This function is a candidate when the real instruction can't be used.
  */
+
 template <typename = void> inline __m256 _mm256_abs_ps(__m256 x) noexcept {
   f32_i32 t;
 
@@ -64,7 +65,8 @@ template <typename = void> inline __m256 _mm256_abs_ps(__m256 x) noexcept {
 /**
  * This function is a candidate when the real instruction can't be used.
  */
-template <typename = void> inline __m256 _mm256_acos_ps(__m256 x) noexcept {
+
+template <typename = void> __m256 _mm256_acos_ps(__m256 x) noexcept {
   alignas(32) float y[num_float_per_m256];
 
   _mm256_store_ps(y, x);
@@ -168,9 +170,9 @@ public:
         this->Result = 0;
         return this->Result;
       } else {
-        static_assert(is_not_optical, "Not implemented here.");
+        // static_assert(is_not_optical, "Not implemented here.");
 
-        return 0;
+        return uint16_t(0xFFFF);
       }
     }
 
@@ -199,7 +201,7 @@ public:
       return applyXYZ(c3);
 
     default:
-      exit(1);
+      abort();
       return result_t(0);
     }
   }

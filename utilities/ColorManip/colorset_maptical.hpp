@@ -111,7 +111,7 @@ public:
     return Map(color_idx);
   }
 
-  static inline uint8_t colorindex_of_coloid(const uint8_t color_id) noexcept {
+  static inline uint8_t colorindex_of_colorid(const uint8_t color_id) noexcept {
     return (color_id << 6) | (color_id >> 2);
   }
 };
