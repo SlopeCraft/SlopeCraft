@@ -1,0 +1,24 @@
+#include "VisualCraftL.h"
+#include <stdlib.h>
+
+
+VCL_EXPORT_FUN const char *VCL_version_string() {
+    return "@VisualCraftL_VERSION@";
+}
+
+
+VCL_EXPORT_FUN int VCL_version_component(int i) {
+    switch (i) {
+        case 0:
+            return @VisualCraftL_VERSION_MAJOR@;
+        case 1:
+            return @VisualCraftL_VERSION_MINOR@;
+        case 2:
+            return @VisualCraftL_VERSION_PATCH@;
+        case 3:
+            return 0;
+        default:
+            abort();
+            return 0;
+    }
+}

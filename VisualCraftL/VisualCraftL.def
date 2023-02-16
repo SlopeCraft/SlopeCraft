@@ -39,3 +39,5 @@ VCL_compute_projection_image                            @37
 VCL_display_model                                       @38
 VCL_get_report_callback                                 @39
 VCL_set_report_callback                                 @40
+VCL_version_string                                      @41
+VCL_version_component                                   @42

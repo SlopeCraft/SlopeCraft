@@ -12,9 +12,10 @@ endif()
 
 enable_testing()
 
-if(${MSVC})
-    message(WARNING "MSVC or MSVC-like compilers(cl or clang-cl) are not fully supported. 
-    Please use a gnu-like compiler, for example, gcc/g++ or clang/clang++.")
+if(NOT CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    message(WARNING "MSVC or Clang are not fully supported. 
+    You MAY meet werid errors if you continue to build.
+    Please use gcc.")
 endif()
 
 # manage the install prefix

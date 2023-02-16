@@ -247,6 +247,18 @@ using VCL_report_callback_t = void (*)(VCL_report_type_t, const char *,
 
 VCL_EXPORT_FUN VCL_report_callback_t VCL_get_report_callback();
 VCL_EXPORT_FUN void VCL_set_report_callback(VCL_report_callback_t);
+
+VCL_EXPORT_FUN const char *VCL_version_string();
+
+/**
+i =
+  0 -> major version
+  1 -> minor version
+  2 -> patch version
+  3 -> tweak version
+  if other values, the function will call abort().
+*/
+VCL_EXPORT_FUN int VCL_version_component(int i);
 }
 
 #endif // SLOPECRAFT_VISUALCRAFT_VISUALCRAFT_H

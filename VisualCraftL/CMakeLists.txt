@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.20)
 project(VisualCraftL VERSION ${SlopeCraft_version} LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -6,10 +6,14 @@ set(CMAKE_CXX_STANDARD 20)
 set(VCL_enable_internal_test OFF)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    set(VCL_win_file VisualCraftL.def VisualCraftL.rc)
+    set(VCL_win_sources
+        VisualCraftL.def
+        ${CMAKE_CURRENT_BINARY_DIR}/VisualCraftL.rc)
 else()
-    set(VCL_win_file)
+    set(VCL_win_sources)
 endif()
+
+include(config_versions.cmake)
 
 set(VCL_source_files
     VisualCraftL_global.h
@@ -30,12 +34,14 @@ set(VCL_source_files
 
     BlockStateList.h
     BlockStateList.cpp
+
+    ${CMAKE_CURRENT_BINARY_DIR}/version.cpp
 )
 
-# message(STATUS ${VCL_win_file})
+# message(STATUS ${VCL_win_sources})
 add_library(VisualCraftL SHARED
     ${VCL_source_files}
-    ${VCL_win_file})
+    ${VCL_win_sources})
 
 add_library(VisualCraftL_static STATIC
     ${VCL_source_files})
@@ -60,8 +66,8 @@ target_include_directories(VisualCraftL PUBLIC
 target_include_directories(VisualCraftL_static PUBLIC
     ${CMAKE_SOURCE_DIR}/utilities)
 
-target_include_directories(VisualCraftL INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(VisualCraftL_static INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(VisualCraftL PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(VisualCraftL_static PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(VCL_link_libs
     libzip::zip
