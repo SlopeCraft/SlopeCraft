@@ -5,6 +5,11 @@ set(SlopeCraft_version 3.10.1)
 project(SlopeCraft VERSION ${SlopeCraft_version} LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 
+if(${MSVC})
+    add_compile_options("/Zc:__cplusplus")
+    add_compile_options("/wd4819")
+endif()
+
 enable_testing()
 
 if(${MSVC})
@@ -26,43 +31,25 @@ include(cmake/add_compiler_path_to_prefix.cmake)
 
 list(LENGTH CMAKE_PREFIX_PATH temp_L)
 
-# manage the include dir of HeuristicFlow
-# set(SlopeCraft_HeuristicFlow_include_dir D:/CppLibs/HeuristicFlow-1.6.2.1)
-
-# manage the include dir of Eigen
-# set(SlopeCraft_Eigen3_include_dir D:/CppLibs/libEigen3/include/eigen3)
 include(cmake/find_nlohmann_json.cmake)
 include(cmake/find_Eigen3.cmake)
 include(cmake/find_HeuristicFlow.cmake)
 
-if(NOT DEFINED SlopeCraft_Qt_root_dir)
-    # set(SlopeCraft_Qt_root_dir "D:/ProgramFiles/Qt/Qt/Qt6.2.4-gcc12-shared")
-endif()
-
-message(STATUS "SlopeCraft_Qt_root_dir = " ${SlopeCraft_Qt_root_dir})
-
 include(cmake/find_qt6.cmake)
 
-message("SlopeCraft_Qt_root_dir = " ${SlopeCraft_Qt_root_dir})
-
-message("Length of CMAKE_PREFIX_PATH = " ${temp_L})
-
-# find lupdate and lrelease of qt
-# include(cmake/find_qt_translate.cmake)
-
 # If it is set to ON, everytime CMake reconfigure the project, all .ts files will be updated.
-set(SlopeCraft_update_ts_files OFF)
+if(NOT DEFINED SlopeCraft_update_ts_files)
+    option(SlopeCraft_update_ts_files "Update language files before build" OFF)
+endif()
 
-if(${SlopeCraft_update_ts_files} AND NOT DEFINED SlopeCraft_Qt_lupdate_executable)
-    if(NOT DEFINED SlopeCraft_Qt_root_dir)
-        message(FATAL_ERROR "Please set the variable \"SlopeCraft_Qt_root_dir\". Otherwise cmake can\'t find lupdate")
-    endif()
-
-    set(SlopeCraft_Qt_lupdate_executable ${SlopeCraft_Qt_root_dir}/bin/lupdate)
+# find lupdate executable
+if(${SlopeCraft_update_ts_files} AND(NOT DEFINED SlopeCraft_Qt_lupdate_executable))
+    find_program(SlopeCraft_Qt_lupdate_executable name lupdate PATHS ${CMAKE_PREFIX_PATH} REQUIRED)
+    message(STATUS "Found lupdate at : " ${SlopeCraft_Qt_lupdate_executable})
 endif()
 
 if(NOT DEFINED SlopeCraft_vectorize)
-    set(SlopeCraft_vectorize ON)
+    option(SlopeCraft_vectorize "Compile with vectorization" ON)
 endif()
 
 add_definitions("-D_USE_MATH_DEFINES")
@@ -76,20 +63,15 @@ if(${SlopeCraft_vectorize})
 
     add_definitions("-DSC_VECTORIZE_AVX2")
 
-    check_cxx_compiler_flag("-mavx2" _mavx2_works)
-    check_cxx_compiler_flag("-xHost" _xhost_works)
-
-    if(${_mavx2_works})
-        message(STATUS "Vectorize using -mavx2")
-        set(SlopeCraft_vectorize_flags "-mavx2")
-    elseif(${_xhost_works})
-        message(STATUS "Vectorize using -xHost")
-        set(SlopeCraft_vectorize_flags "-xHost")
+    if(${MSVC})
+        set(SlopeCraft_vectorize_flags "/arch:AVX2")
     else()
-        message(STATUS "No suitable compiler flag found for vectorization")
+        set(SlopeCraft_vectorize_flags -mavx -mavx2 -mfma)
     endif()
 
-    list(APPEND SlopeCraft_vectorize_flags "-O3")
+    message(STATUS "Vectorize using " ${SlopeCraft_vectorize_flags})
+
+    # list(APPEND SlopeCraft_vectorize_flags "-O3")
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")

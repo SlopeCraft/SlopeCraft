@@ -23,7 +23,7 @@ This file is part of SlopeCraft.
 #ifndef NEWTOKICOLOR_HPP
 #define NEWTOKICOLOR_HPP
 
-#include "../../SlopeCraftL/SlopeCraftL.h"
+// #include "../../SlopeCraftL/SlopeCraftL.h"
 #include "ColorManip.h"
 #include "ColorManip/ColorManip.h"
 #include "colorset_maptical.hpp"
@@ -31,6 +31,8 @@ This file is part of SlopeCraft.
 #include <Eigen/Dense>
 #include <cmath>
 #include <functional>
+
+#include "../SC_GlobalEnums.h"
 
 #ifdef SC_VECTORIZE_AVX2
 #include <immintrin.h>

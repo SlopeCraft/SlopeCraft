@@ -28,8 +28,8 @@ This file is part of SlopeCraft.
 #include <cmath>
 #include <type_traits>
 
-#if __cplusplus < 201703L
-#error "C++17 required"
+#if __cplusplus < 202002L
+#error "C++ 20 required"
 #endif
 
 #ifdef RGB

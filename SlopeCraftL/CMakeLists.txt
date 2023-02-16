@@ -1,6 +1,6 @@
 project(SlopeCraft_SlopeCraftL VERSION ${SlopeCraft_version} LANGUAGES CXX)
-set(CMAKE_CXX_STANDARD 20)
 
+# set(CMAKE_CXX_STANDARD 20)
 include_directories(
     ${CMAKE_SOURCE_DIR}
     ${SlopeCraft_Eigen3_include_dir}
@@ -72,12 +72,15 @@ add_definitions(-DSLOPECRAFTL_LIBRARY)
 add_library(SlopeCraftL SHARED ${SlopeCraft_SCL_sources})
 add_library(SlopeCraftL_C SHARED ${SlopeCraft_SCL_sources})
 
+target_compile_features(SlopeCraftL PRIVATE cxx_std_20)
+target_compile_features(SlopeCraftL_C PRIVATE cxx_std_20)
+
 target_compile_definitions(SlopeCraftL_C PRIVATE -DSCL_CAPI)
 
 # link SlopeCraftL with GAConverter and zlib
 set(SlopeCraft_SCL_link_libs
 
-    z
+    ZLIB::ZLIB
     OpenMP::OpenMP_CXX
     GAConverter
     ColorManip
@@ -121,25 +124,23 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
-
     # install for applications
     install(TARGETS SlopeCraftL
         RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
         LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX})
 elseif(CMAKE_SYSTEM_NAME MATCHES "Linux")
     message(STATUS Install for linux)
+
     # install for applications
     install(TARGETS SlopeCraftL
         RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
         LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-
     # install for applications
     install(TARGETS SlopeCraftL
         RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
         LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX})
 endif()
-
 
 # install to lib dirs
 install(TARGETS SlopeCraftL

@@ -12,6 +12,15 @@
 
 #include "VisualCraftL_global.h"
 
+enum class VCL_Kernel_step : int {
+  VCL_wait_for_resource = 0,
+  VCL_wait_for_allowed_list = 1,
+  VCL_wait_for_image = 2,
+  VCL_wait_for_conversion = 3,
+  VCL_wait_for_build = 4,
+  VCL_built = 5
+};
+
 enum class VCL_face_t : uint8_t {
   face_up = 0,
   face_down = 1,
@@ -90,7 +99,7 @@ public:
 
 extern "C" {
 // create and destroy kernel
-[[nodiscard]] VCL_EXPORT_FUN VCL_Kernel *VCL_create_kernel();
+[[nodiscard]] VCL_Kernel *VCL_EXPORT_FUN VCL_create_kernel();
 VCL_EXPORT_FUN void VCL_destroy_kernel(VCL_Kernel *const ptr);
 
 // create and destroy resource pack

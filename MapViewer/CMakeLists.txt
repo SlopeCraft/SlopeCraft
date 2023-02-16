@@ -10,12 +10,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(ZLIB 1.2.11)
-
-# message("ZLIB_INCLUDE_DIR = " ${ZLIB_INCLUDE_DIR})
-if(ZLIB_FOUND)
-    include_directories(ZLIB_INCLUDE_DIR)
-endif()
+find_package(ZLIB 1.2.11 REQUIRED)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools REQUIRED)
@@ -81,7 +76,7 @@ endif()
 
 target_link_libraries(MapViewer
     PRIVATE
-    z
+    ZLIB::ZLIB
     Qt${QT_VERSION_MAJOR}::Widgets)
 
 set_target_properties(MapViewer PROPERTIES
@@ -99,7 +94,6 @@ if(QT_VERSION_MAJOR EQUAL 6)
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
-
     install(TARGETS MapViewer
         RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
         BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX}
@@ -111,15 +105,14 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Linux")
         BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
     )
 elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-
     install(TARGETS MapViewer
         RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
         BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX}
 
-    # Install icon for macOS
-    # MapViewer.app
-    file(GLOB MapViewer_Icon ${CMAKE_SOURCE_DIR}/MapViewer/others/MapViewer.icns)
-    install(FILES ${MapViewer_Icon}
+        # Install icon for macOS
+        # MapViewer.app
+        file(GLOB MapViewer_Icon ${CMAKE_SOURCE_DIR}/MapViewer/others/MapViewer.icns)
+        install(FILES ${MapViewer_Icon}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/MapViewer.app/Contents/Resources)
-)
+    )
 endif()
