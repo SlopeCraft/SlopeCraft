@@ -138,7 +138,7 @@ int main(int argc, char **argv) {
   const int block_num = VCL_get_blocks_from_block_state_list_match(
       VCL_get_block_state_list(), version, face, blocks.data(), blocks.size());
 
-  if (block_num != blocks.size()) {
+  if (block_num != int(blocks.size())) {
     cout << "Impossible error : block_num = " << block_num
          << " but blocks.size() = " << blocks.size() << endl;
 

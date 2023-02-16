@@ -81,25 +81,25 @@ Kernel *Kernel::create() {
   return static_cast<Kernel *>(new TokiSlopeCraft);
 }
 
-uint64_t Kernel::mcVersion2VersionNumber(gameVersion g) {
+uint64_t Kernel::mcVersion2VersionNumber(SCL_gameVersion g) {
   switch (g) {
-  case gameVersion::ANCIENT:
+  case SCL_gameVersion::ANCIENT:
     return 114514;
-  case gameVersion::MC12:
+  case SCL_gameVersion::MC12:
     return 1631;
-  case gameVersion::MC13:
+  case SCL_gameVersion::MC13:
     return 1976;
-  case gameVersion::MC14:
+  case SCL_gameVersion::MC14:
     return 2230;
-  case gameVersion::MC15:
+  case SCL_gameVersion::MC15:
     return 2230;
-  case gameVersion::MC16:
+  case SCL_gameVersion::MC16:
     return 2586;
-  case gameVersion::MC17:
+  case SCL_gameVersion::MC17:
     return 2730;
-  case gameVersion::MC18:
+  case SCL_gameVersion::MC18:
     return 2865;
-  case gameVersion::MC19:
+  case SCL_gameVersion::MC19:
     return 3105; // 1.19.0
   default:
     return 1919810;

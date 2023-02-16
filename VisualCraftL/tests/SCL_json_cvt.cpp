@@ -36,14 +36,14 @@ int main(int argc, char **argv) {
     std::ifstream ifs(argv[1]);
     scl = njson::parse(ifs, nullptr, true, true);
     ifs.close();
-  } catch (std::runtime_error re) {
+  } catch (std::exception &re) {
     cout << "Failed to parse SCL json. Detail : " << re.what() << endl;
     return 1;
   }
 
   njson &scl_blocks = get_scl_block_list(scl);
 
-  for (int i = 0; i < scl_blocks.size(); i++) {
+  for (size_t i = 0; i < scl_blocks.size(); i++) {
     const njson &obj_scl = scl_blocks.at(i);
 
     njson obj_vcl;

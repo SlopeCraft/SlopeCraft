@@ -9,6 +9,8 @@ set(CMAKE_CXX_EXTENSIONS FALSE)
 if(${MSVC})
     add_compile_options("/Zc:__cplusplus")
     add_compile_options("/wd4819")
+else()
+    add_compile_options(-Wall -Wreturn-type -Wsign-compare -Wextra)
 endif()
 
 enable_testing()
@@ -77,7 +79,6 @@ if(${SlopeCraft_vectorize})
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    add_compile_options(-Wall)
     # set(CMAKE_INSTALL_RPATH "../lib")
 endif()
 

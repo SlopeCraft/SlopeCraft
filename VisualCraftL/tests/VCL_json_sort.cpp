@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
 
     ijo = njson::parse(ifs, nullptr, true, true);
     ifs.close();
-  } catch (std::runtime_error re) {
+  } catch (std::exception &re) {
     cout << re.what() << endl;
   }
 

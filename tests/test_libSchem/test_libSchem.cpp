@@ -43,7 +43,7 @@ int main() {
 
   schem.resize(12, 9, 12);
 
-  std::vector<const char *> ids;  //= {"minecraft:air", "minecraft:glass"};
+  std::vector<const char *> ids; //= {"minecraft:air", "minecraft:glass"};
 
   ids.resize(1);
   for (auto &id : ids) {
@@ -126,7 +126,7 @@ void test_bit_shrink(const uint16_t *const src, const size_t u16_num,
   cout << "]" << endl;
 
   cout << "binary before shrinking : \n";
-  for (int idx = 0; idx < u16_num; idx++) {
+  for (int idx = 0; idx < int(u16_num); idx++) {
     uint16_t mask = (1ULL << 15);
     for (int bit = 0; bit < int(8 * sizeof(uint16_t)); bit++) {
       cout << ((src[idx] & mask) ? ('1') : ('0'));

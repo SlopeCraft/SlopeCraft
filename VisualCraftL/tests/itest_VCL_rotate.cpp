@@ -12,7 +12,7 @@ int print_rotate_sheet();
 
 int rotate_arr3f(int argc, const char *const *const argv);
 
-int main(int argc, char **argv) {
+int main(int, char **) {
   return print_rotate_sheet();
   // return rotate_arr3f(argc, argv);
 }
