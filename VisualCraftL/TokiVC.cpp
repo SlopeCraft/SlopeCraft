@@ -82,6 +82,12 @@ TokiVC::~TokiVC() {
   TokiVC_internal::global_lock.unlock();
 }
 
+void TokiVC::set_ui(void *uiptr,
+                    void (*progressRangeSet)(void *, int, int, int),
+                    void (*progressAdd)(void *, int)) noexcept {
+  this->img_cvter.ui = {uiptr, progressRangeSet, progressAdd};
+}
+
 VCL_Kernel_step TokiVC::step() const noexcept {
   std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
 
@@ -497,12 +503,13 @@ bool TokiVC::set_image(const int64_t rows, const int64_t cols,
   std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
 
   if (this->_step < VCL_Kernel_step::VCL_wait_for_image) {
+    VCL_report(VCL_report_type_t::error, "Trying to skip steps.");
     return false;
   }
 
   this->img_cvter.set_raw_image(img_argb, rows, cols, !is_row_major);
 
-  this->_step = VCL_Kernel_step::VCL_wait_for_build;
+  this->_step = VCL_Kernel_step::VCL_wait_for_conversion;
 
   return true;
 }

@@ -12,6 +12,11 @@ int main(int argc, char **argv) {
 
   CLI::App app;
   std::vector<std::string> input_files;
+
+  // std::vector<std::string> images;
+
+  // std::string cvted_image_prefix;
+
   app.add_option("files", input_files, "json and resource packs.")
       ->required()
       ->check(CLI::ExistingFile);
@@ -28,6 +33,10 @@ int main(int argc, char **argv) {
   app.add_option("--face", __face, "Facing direction.")
       ->default_val("up")
       ->check(CLI::IsMember({"up", "down", "north", "south", "east", "west"}));
+
+  // app.add_option("--image", images, "Images to
+  // convert")->check(CLI::ExistingFile); app.add_option("--prefix",
+  // cvted_image_prefix)->default_val("");
 
   CLI11_PARSE(app, argc, argv);
 

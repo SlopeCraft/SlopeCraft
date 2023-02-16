@@ -71,7 +71,7 @@ template <typename = void> __m256 _mm256_acos_ps(__m256 x) noexcept {
 
   _mm256_store_ps(y, x);
 
-  for (int i = 0; i < 8; i++) {
+  for (int i = 0; i < num_float_per_m256; i++) {
     y[i] = std::acos(y[i]);
   }
 
@@ -171,7 +171,7 @@ public:
         return this->Result;
       } else {
         // static_assert(is_not_optical, "Not implemented here.");
-
+        this->result_color_id = 0xFFFF;
         return uint16_t(0xFFFF);
       }
     }

@@ -119,6 +119,7 @@ public:
 class alignas(32) colorset_maptical_allowed {
 public:
   using color_col = Eigen::Array<float, 256, 1>;
+  static constexpr uint8_t invalid_color_id = 0;
 
 private:
   std::array<color_col, 3> __rgb;

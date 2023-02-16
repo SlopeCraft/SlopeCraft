@@ -35,6 +35,7 @@ This file is part of SlopeCraft.
 
 #include "../SC_GlobalEnums.h"
 
+#include <omp.h>
 #include <uiPack/uiPack.h>
 
 namespace libImageCvt {
@@ -214,10 +215,13 @@ public:
           const auto color_id = it->second.color_id();
           const auto color_index =
               basic_colorset.colorindex_of_colorid(color_id);
-
-          data_dest[idx] = RGB2ARGB(basic_colorset.RGB(color_index, 0),
-                                    basic_colorset.RGB(color_index, 1),
-                                    basic_colorset.RGB(color_index, 2));
+          if (color_index != allowed_colorset_t::invalid_color_id) {
+            data_dest[idx] = RGB2ARGB(basic_colorset.RGB(color_index, 0),
+                                      basic_colorset.RGB(color_index, 1),
+                                      basic_colorset.RGB(color_index, 2));
+          } else {
+            data_dest[idx] = 0x00'00'00'00;
+          }
         }
       }
     }
@@ -240,7 +244,7 @@ private:
 
   void match_all_TokiColors() noexcept {
 
-    static const int threadCount = 4 * std::thread::hardware_concurrency();
+    static const int threadCount = omp_get_num_threads();
 
     std::vector<std::pair<const convert_unit, TokiColor_t> *> tasks;
     tasks.reserve(_color_hash.size());
@@ -251,7 +255,8 @@ private:
         tasks.emplace_back(&pair);
     }
     const uint64_t taskCount = tasks.size();
-#pragma omp parallel for
+#warning we should parallelize here
+    // #pragma omp parallel for schedule(dynamic)
     for (int thIdx = 0; thIdx < threadCount; thIdx++) {
       for (uint64_t taskIdx = thIdx; taskIdx < taskCount;
            taskIdx += threadCount) {

@@ -181,6 +181,7 @@ add_test(NAME test_rotate COMMAND itest_VCL_rotate WORKING_DIRECTORY ${CMAKE_CUR
 
 include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_12.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_latest.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/configure_images.cmake)
 
 add_test(NAME test_block_class COMMAND test_block_class WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 

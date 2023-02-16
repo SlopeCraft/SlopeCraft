@@ -14,6 +14,7 @@
 VCL_EXPORT_FUN VCL_Kernel *VCL_create_kernel() {
   return static_cast<VCL_Kernel *>(new TokiVC);
 }
+
 VCL_EXPORT_FUN void VCL_destroy_kernel(VCL_Kernel *const ptr) {
   if (ptr != nullptr) {
     delete dynamic_cast<TokiVC *>(ptr);

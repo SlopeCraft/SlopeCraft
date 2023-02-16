@@ -84,6 +84,10 @@ public:
   VCL_Kernel() = default;
   virtual ~VCL_Kernel() = default;
 
+  virtual void set_ui(void *uiptr,
+                      void (*progressRangeSet)(void *, int, int, int),
+                      void (*progressAdd)(void *, int)) noexcept = 0;
+
   virtual VCL_Kernel_step step() const noexcept = 0;
 
   virtual bool set_image(const int64_t rows, const int64_t cols,

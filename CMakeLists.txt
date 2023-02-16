@@ -4,6 +4,7 @@ set(SlopeCraft_version 3.10.1)
 
 project(SlopeCraft VERSION ${SlopeCraft_version} LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_EXTENSIONS FALSE)
 
 if(${MSVC})
     add_compile_options("/Zc:__cplusplus")
@@ -90,6 +91,7 @@ add_subdirectory(SlopeCraftMain)
 add_subdirectory(MapViewer)
 add_subdirectory(tests)
 add_subdirectory(VisualCraftL)
+add_subdirectory(VC-cl)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 

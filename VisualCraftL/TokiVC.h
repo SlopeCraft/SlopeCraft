@@ -5,12 +5,12 @@
 #include "ParseResourcePack.h"
 #include "VisualCraftL.h"
 
+#include <shared_mutex>
 #include <utilities/ColorManip/colorset_optical.hpp>
 #include <utilities/ColorManip/imageConvert.hpp>
 #include <utilities/Schem/Schem.h>
+#include <utilities/uiPack/uiPack.h>
 #include <variant>
-
-#include <shared_mutex>
 
 #include <unordered_map>
 
@@ -18,6 +18,8 @@ class TokiVC : public VCL_Kernel {
 public:
   TokiVC();
   virtual ~TokiVC();
+  void set_ui(void *uiptr, void (*progressRangeSet)(void *, int, int, int),
+              void (*progressAdd)(void *, int)) noexcept override;
 
   VCL_Kernel_step step() const noexcept override;
 

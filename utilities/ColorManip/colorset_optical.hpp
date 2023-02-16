@@ -192,6 +192,7 @@ public:
   }
 
   inline uint16_t color_id(uint16_t idx) const noexcept {
+    assert(idx < __color_id.size());
     return __color_id[idx];
   }
 };
@@ -205,7 +206,7 @@ protected:
   result_t result_color_id{
       colorset_optical_allowed::invalid_color_id}; // the final color index
 public:
-  result_t color_id() const noexcept { return result_color_id; }
+  inline result_t color_id() const noexcept { return result_color_id; }
   inline bool is_result_computed() const noexcept {
     return (result_color_id != colorset_optical_allowed::invalid_color_id);
   }
