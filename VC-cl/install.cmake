@@ -1,0 +1,4 @@
+if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+    install(TARGETS VC-cl RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX})
+    return()
+endif()

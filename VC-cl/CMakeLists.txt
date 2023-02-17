@@ -25,3 +25,5 @@ find_package(OpenMP REQUIRED)
 target_link_libraries(VC-cl PRIVATE OpenMP::OpenMP_CXX)
 
 qt_finalize_executable(VC-cl)
+
+include(install.cmake)

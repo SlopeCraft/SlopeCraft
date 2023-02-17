@@ -94,7 +94,8 @@ target_compile_options(VisualCraftL_static PRIVATE ${SlopeCraft_vectorize_flags}
 # target_compile_options(VisualCraftL PRIVATE "-std=c++20")
 if(NOT ${MSVC})
     target_compile_options(VisualCraftL PUBLIC "-flto")
-    #target_compile_options(VisualCraftL PUBLIC "-Wall")
+
+    # target_compile_options(VisualCraftL PUBLIC "-Wall")
 endif()
 
 # profile with gprof
@@ -131,6 +132,8 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     # target_link_directories(VisualCraftL PUBLIC ${VCL_libzip_dir})
     # target_link_options(VisualCraftL PRIVATE -rpath=${VCL_libzip_dir})
 endif()
+
+include(install.cmake)
 
 include(${CMAKE_SOURCE_DIR}/cmake/configure_cli11.cmake)
 
