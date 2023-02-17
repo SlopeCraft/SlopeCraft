@@ -250,7 +250,7 @@ private:
     }
     const uint64_t taskCount = tasks.size();
 // #warning we should parallelize here
-#pragma omp parallel for schedule(static)
+#pragma omp parallel for
     for (int thIdx = 0; thIdx < threadCount; thIdx++) {
       for (uint64_t taskIdx = thIdx; taskIdx < taskCount;
            taskIdx += threadCount) {

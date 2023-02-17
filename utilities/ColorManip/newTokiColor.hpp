@@ -331,8 +331,11 @@ private:
   auto applyRGB(const Eigen::Array3f &c3) noexcept {
 #ifdef SC_VECTORIZE_AVX2
     TempVectorXf_t Diff(Allowed->color_count(), 1);
-    // std::vector<float> Diff;
-    // Diff.resize(Allowed->color_count());
+    Diff.resize(Allowed->color_count(), 1);
+
+    // Diff.resize(Allowed->color_count(), 1);
+    //  std::vector<float> Diff;
+    //  Diff.resize(Allowed->color_count());
     __m256 r2 = _mm256_set1_ps(c3[0]);
     __m256 g2 = _mm256_set1_ps(c3[1]);
     __m256 b2 = _mm256_set1_ps(c3[2]);
@@ -590,6 +593,7 @@ private:
   auto applyXYZ(const Eigen::Array3f &c3) noexcept {
 #ifdef SC_VECTORIZE_AVX2
     TempVectorXf_t Diff(Allowed->color_count(), 1);
+
     // const __m256 *const x1p = (const __m256 *)Allowed->xyz_data(0);
     // const __m256 *const y1p = (const __m256 *)Allowed->xyz_data(1);
     // const __m256 *const z1p = (const __m256 *)Allowed->xyz_data(2);

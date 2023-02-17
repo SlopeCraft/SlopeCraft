@@ -23,6 +23,7 @@ struct inputs {
   bool make_converted_image{false};
   SCL_convertAlgo algo;
   bool dither{false};
+  bool benchmark{false};
 };
 
 int run(const inputs &input) noexcept;
@@ -75,6 +76,8 @@ int main(int argc, char **argv) {
           {"RGB", "RGB_Better", "HSV", "Lab94", "Lab00", "XYZ", "gaCvter"}))
       ->expected(1);
   app.add_flag("--dither", input.dither)->default_val(false);
+  app.add_flag("--benchmark", input.benchmark, "Display the performance data.")
+      ->default_val(false);
 
   app.add_option("-j", input.num_threads)
       ->check(CLI::PositiveNumber)
@@ -232,9 +235,17 @@ int run(const inputs &input) noexcept {
       return __LINE__;
     }
 
+    double wt = omp_get_wtime();
+
     if (!kernel->convert(input.algo, input.dither)) {
       cout << "Failed to convert" << endl;
       return __LINE__;
+    }
+    wt = omp_get_wtime() - wt;
+
+    if (input.benchmark) {
+      cout << "Converting " << img.height() * img.width() << " pixels in " << wt
+           << " seconds." << endl;
     }
 
     if (input.make_converted_image) {
