@@ -1,0 +1,39 @@
+cmake_minimum_required(VERSION 3.20)
+project(vccl VERSION ${SlopeCraft_version} LANGUAGES CXX)
+
+configure_file(vccl.rc.in vccl.rc)
+
+set(vccl_win_sources)
+
+if(CMAKE_SYSTEM_NAME)
+    set(vccl_win_sources ${CMAKE_CURRENT_BINARY_DIR}/vccl.rc)
+endif()
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools Network Concurrent REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools Network Concurrent REQUIRED)
+
+qt_add_executable(vccl
+
+    MANUAL_FINALIZATION
+    vccl.cpp
+    ${vccl_win_sources}
+)
+
+target_link_libraries(vccl PRIVATE VisualCraftL Qt6::Core Qt6::Gui)
+
+include(${CMAKE_SOURCE_DIR}/cmake/configure_cli11.cmake)
+
+target_include_directories(vccl PRIVATE ${cli11_include_dir})
+
+find_package(OpenMP REQUIRED)
+target_link_libraries(vccl PRIVATE OpenMP::OpenMP_CXX)
+
+qt_finalize_executable(vccl)
+
+include(install.cmake)

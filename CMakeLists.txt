@@ -93,7 +93,7 @@ add_subdirectory(SlopeCraftMain)
 add_subdirectory(MapViewer)
 add_subdirectory(tests)
 add_subdirectory(VisualCraftL)
-add_subdirectory(VC-cl)
+add_subdirectory(vccl)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
