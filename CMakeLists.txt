@@ -86,6 +86,13 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     add_compile_definitions("_CRT_SECURE_NO_WARNINGS")
 endif()
 
+set(SlopeCraft_gprof OFF CACHE BOOL  "Profile with gprof")
+# profile with gprof
+if(${SlopeCraft_gprof})
+    add_compile_options("-pg")
+    add_link_options("-pg")
+endif()
+
 add_subdirectory(utilities)
 add_subdirectory(imageCutter)
 add_subdirectory(SlopeCraftL)

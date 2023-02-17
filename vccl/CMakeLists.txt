@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.20)
 project(vccl VERSION ${SlopeCraft_version} LANGUAGES CXX)
 
-configure_file(vccl.rc.in vccl.rc)
 
 set(vccl_win_sources)
 
-if(CMAKE_SYSTEM_NAME)
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    configure_file(vccl.rc.in vccl.rc)
     set(vccl_win_sources ${CMAKE_CURRENT_BINARY_DIR}/vccl.rc)
 endif()
 

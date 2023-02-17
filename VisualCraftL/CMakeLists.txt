@@ -5,6 +5,8 @@ set(CMAKE_CXX_STANDARD 20)
 
 set(VCL_enable_internal_test OFF)
 
+include(config_versions.cmake)
+
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     set(VCL_win_sources
         VisualCraftL.def
@@ -13,7 +15,6 @@ else()
     set(VCL_win_sources)
 endif()
 
-include(config_versions.cmake)
 
 set(VCL_source_files
     VisualCraftL_global.h
@@ -98,9 +99,6 @@ if(NOT ${MSVC})
     # target_compile_options(VisualCraftL PUBLIC "-Wall")
 endif()
 
-# profile with gprof
-# target_compile_options(VisualCraftL PUBLIC "-pg")
-# target_link_options(VisualCraftL PUBLIC "-pg")
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     # if the system is windows, remove the "lib" prefix.
     set_target_properties(VisualCraftL PROPERTIES PREFIX "")
