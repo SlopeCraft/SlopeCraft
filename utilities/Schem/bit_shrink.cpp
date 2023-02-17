@@ -21,12 +21,14 @@ This file is part of SlopeCraft.
 */
 
 #include "bit_shrink.h"
+
+#include <memory.h>
+
 #include <array>
 #include <cmath>
 #include <cstddef>
 #include <cstdlib>
 #include <iostream>
-#include <memory.h>
 // no flip now
 inline uint64_t flip_byte_order(uint64_t val) noexcept {
   uint8_t *const data = reinterpret_cast<uint8_t *>(&val);
@@ -47,7 +49,6 @@ void bit_shrink_inverse_skip(void *const dest, const int64_t head_skip_bits,
   // std::cout << "value_mask = " << value_mask << '\n';
 
   for (int64_t idx = 0; idx < src_count; idx++) {
-
     const uint16_t value = src[src_count - 1 - idx] & value_mask;
     //::std::cout << "value = " << value << '\n';
     const int64_t head_bit_idx = head_skip_bits + bits_per_element * idx;
@@ -65,7 +66,7 @@ void bit_shrink_inverse_skip(void *const dest, const int64_t head_skip_bits,
       uint64_t tail_block_cache = flip_byte_order(tail_block);
 
       const int64_t tail_bit_num = tail_bit_idx % bits_of_block + 1;
-      const int64_t head_bit_num = bits_per_element - tail_bit_num;
+      // const int64_t head_bit_num = bits_per_element - tail_bit_num;
 
       // write on head cache
       uint64_t write_mask = value;
@@ -133,7 +134,7 @@ void shrink_bits(const uint16_t *const src, const size_t src_count,
   // reverse bytes
   {
     uint8_t *data = (uint8_t *)dest->data();
-    for (int64_t byteid = 0; byteid < bytes_required / 2; byteid++) {
+    for (int64_t byteid = 0; byteid < int64_t(bytes_required / 2); byteid++) {
       std::swap(data[byteid], data[bytes_required - 1 - byteid]);
     }
   }
@@ -141,12 +142,12 @@ void shrink_bits(const uint16_t *const src, const size_t src_count,
 
 inline bool is_seperator(const char ch) noexcept {
   switch (ch) {
-  case '[':
-  case ',':
-  case ']':
-    return true;
-  default:
-    return false;
+    case '[':
+    case ',':
+    case ']':
+      return true;
+    default:
+      return false;
   }
 }
 
@@ -179,7 +180,7 @@ bool process_block_id(
   int num_op_eq = 0;
   int num_sep = 0;
 
-  for (int idx = traits_beg_idx; idx < id.size(); idx++) {
+  for (int idx = traits_beg_idx; idx < int(id.size()); idx++) {
     if (id[idx] == '=') {
       keychars.push_back(idx);
       num_op_eq++;

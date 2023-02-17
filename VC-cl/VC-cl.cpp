@@ -1,11 +1,13 @@
+#include <VisualCraftL.h>
+#include <omp.h>
+
 #include <CLI11.hpp>
 #include <QImage>
-#include <VisualCraftL.h>
 #include <iostream>
-#include <omp.h>
 #include <string>
 #include <thread>
 #include <vector>
+
 
 using std::cout, std::endl;
 
@@ -98,10 +100,10 @@ int main(int argc, char **argv) {
   return run(input);
 }
 
-#define VCCL_PRIVATE_MACRO_MAKE_CASE(enum_val)                                 \
-  if (str == #enum_val) {                                                      \
-    ok = true;                                                                 \
-    return SCL_convertAlgo::enum_val;                                          \
+#define VCCL_PRIVATE_MACRO_MAKE_CASE(enum_val) \
+  if (str == #enum_val) {                      \
+    ok = true;                                 \
+    return SCL_convertAlgo::enum_val;          \
   }
 
 SCL_convertAlgo str_to_algo(std::string_view str, bool &ok) noexcept {
@@ -119,7 +121,6 @@ SCL_convertAlgo str_to_algo(std::string_view str, bool &ok) noexcept {
 }
 
 int set_resource(VCL_Kernel *kernel, const inputs &input) noexcept {
-
   std::vector<const char *> zip_filenames, json_filenames;
 
   for (const auto &str : input.zips) {
@@ -172,7 +173,7 @@ int set_allowed(VCL_block_state_list *bsl, const inputs &input) noexcept {
   const int num = VCL_get_blocks_from_block_state_list_match(
       bsl, input.version, input.face, blocks.data(), blocks.size());
 
-  if (blocks.size() != num) {
+  if (int(blocks.size()) != num) {
     return __LINE__;
   }
 

@@ -74,10 +74,13 @@ else()
     endif()
 endif()
 
+find_package(OpenMP REQUIRED)
+
 target_link_libraries(MapViewer
     PRIVATE
     ZLIB::ZLIB
-    Qt${QT_VERSION_MAJOR}::Widgets)
+    Qt${QT_VERSION_MAJOR}::Widgets
+    OpenMP::OpenMP_CXX)
 
 set_target_properties(MapViewer PROPERTIES
     VERSION ${PROJECT_VERSION}

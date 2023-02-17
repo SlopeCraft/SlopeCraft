@@ -23,20 +23,18 @@ This file is part of SlopeCraft.
 #include <SlopeCraftL/SlopeCraftL.h>
 
 #include <array>
-#include <iostream>
-#include <vector>
-
 #include <cmath>
 #include <cstring>
 #include <ctime>
+#include <iostream>
 #include <random>
+#include <vector>
 
 std::mt19937 mt(std::hash<time_t>()(std::time(nullptr)));
 
 using std::cout, std::endl;
 
 int main() {
-
   SlopeCraft::Kernel *const kernel = SlopeCraft::Kernel::create();
 
   if (kernel == nullptr) {
@@ -54,7 +52,7 @@ int main() {
     }
     blocks[0]->setId("minecraft:glass");
 
-    for (int idx = 1; idx < blocks.size(); idx++) {
+    for (int idx = 1; idx < int(blocks.size()); idx++) {
       blocks[idx]->setId("minecraft:stone");
       blocks[idx]->setVersion(ANCIENT);
       blocks[idx]->setBurnable(false);
@@ -77,7 +75,7 @@ int main() {
     if (img_data == nullptr) {
       return 1;
     }
-    constexpr int mt19937_result_bytes = sizeof(decltype(mt()));
+    // constexpr int mt19937_result_bytes = sizeof(decltype(mt()));
 
     // generate a random image
     for (int idx = 0; idx < 256 * 256; idx++) {

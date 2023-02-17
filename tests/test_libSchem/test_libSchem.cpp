@@ -36,7 +36,6 @@ std::vector<std::string> generate_trash();
 const std::vector<std::string> trash_id = generate_trash();
 
 int main() {
-
   libSchem::Schem schem;
 
   schem.set_MC_major_version_number(MC18);
@@ -44,7 +43,7 @@ int main() {
 
   schem.resize(12, 9, 12);
 
-  std::vector<const char *> ids; //= {"minecraft:air", "minecraft:glass"};
+  std::vector<const char *> ids;  //= {"minecraft:air", "minecraft:glass"};
 
   ids.resize(1);
   for (auto &id : ids) {
@@ -93,10 +92,9 @@ int main() {
 
   // test_bit_shrink(&schem(0), schem.size(), schem.block_types());
 
-  SCL_errorFlag flag;
+  // SCL_errorFlag flag;
   std::string error_str;
   if (!schem.export_litematic("test12.litematic", info, nullptr, &error_str)) {
-
     cout << "Failed to export file "
          << "test12.litematic" << endl;
     cout << "Error info = " << error_str << endl;
@@ -122,7 +120,7 @@ void test_bit_shrink(const uint16_t *const src, const size_t u16_num,
   std::vector<uint64_t> shrinked;
 
   cout << "Before bit shrinking : [";
-  for (int idx = 0; idx < u16_num; idx++) {
+  for (int idx = 0; idx < int(u16_num); idx++) {
     cout << src[idx] << ", ";
   }
   cout << "]" << endl;
@@ -130,7 +128,7 @@ void test_bit_shrink(const uint16_t *const src, const size_t u16_num,
   cout << "binary before shrinking : \n";
   for (int idx = 0; idx < u16_num; idx++) {
     uint16_t mask = (1ULL << 15);
-    for (int bit = 0; bit < 8 * sizeof(uint16_t); bit++) {
+    for (int bit = 0; bit < int(8 * sizeof(uint16_t)); bit++) {
       cout << ((src[idx] & mask) ? ('1') : ('0'));
       mask = mask >> 1;
     }
@@ -144,7 +142,8 @@ void test_bit_shrink(const uint16_t *const src, const size_t u16_num,
 
   uint8_t *const data = reinterpret_cast<uint8_t *>(shrinked.data());
 
-  for (int64_t idx = 0; idx < shrinked.size() * sizeof(uint64_t); idx++) {
+  for (int64_t idx = 0; idx < int64_t(shrinked.size() * sizeof(uint64_t));
+       idx++) {
     uint8_t mask = (1 << 7);
     const uint8_t curbyte = data[idx];
     for (int bit = 0; bit < 8; bit++) {

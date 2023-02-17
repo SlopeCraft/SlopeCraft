@@ -30,20 +30,17 @@ void TokiSlopeCraft::makeTests(const AbstractBlock **src,
                 "Skipping is not allowed.\nYou can only make tests only after "
                 "you finished the map type and gameversion.");
 
-    if (_unFileName != nullptr)
-      std::strcpy(_unFileName, "");
+    if (_unFileName != nullptr) std::strcpy(_unFileName, "");
     return;
   }
 
   std::string s = makeTests(src, baseColor, std::string(dst));
-  if (_unFileName != nullptr)
-    std::strcpy(_unFileName, s.data());
+  if (_unFileName != nullptr) std::strcpy(_unFileName, s.data());
 }
 
 std::string TokiSlopeCraft::makeTests(const AbstractBlock **src,
                                       const uint8_t *src_baseColor,
                                       const std::string &fileName) {
-
   if (fileName.find_last_of(".nbt") == std::string::npos) {
     return "";
   }
@@ -122,17 +119,14 @@ void TokiSlopeCraft::exportAsLitematic(const char *TargetName,
                                        const char *LiteName,
                                        const char *RegionName,
                                        char *FileName) const {
-
   std::string temp = exportAsLitematic(TargetName, LiteName, RegionName);
 
-  if (FileName != nullptr)
-    std::strcpy(temp.data(), FileName);
+  if (FileName != nullptr) std::strcpy(temp.data(), FileName);
 }
 
-std::string
-TokiSlopeCraft::exportAsLitematic(const std::string &TargetName,
-                                  const std::string &LiteName,
-                                  const std::string &RegionName) const {
+std::string TokiSlopeCraft::exportAsLitematic(
+    const std::string &TargetName, const std::string &LiteName,
+    const std::string &RegionName) const {
   if (kernelStep < builded) {
     reportError(wind, errorFlag::HASTY_MANIPULATION,
                 "You can only export a map to litematic after you build the 3D "
@@ -275,7 +269,6 @@ void TokiSlopeCraft::makeHeight_new() {
   }
 
   for (uint16_t c = 0; c < sizePic(1); c++) {
-
     // cerr << "Coloumn " << c << '\n';
     HeightLine HL;
     // getTokiColorPtr(c,&src[0]);
@@ -284,7 +277,6 @@ void TokiSlopeCraft::makeHeight_new() {
     if (HL.maxHeight() > maxAllowedHeight &&
         (compressMethod == compressSettings::ForcedOnly ||
          compressMethod == compressSettings::Both)) {
-
       std::vector<const TokiColor *> ptr(getImageRows());
 
       this->image_cvter.col_TokiColor_ptrs(c, ptr.data());
@@ -332,36 +324,34 @@ schem.z_range()}); Build.resize(tempSize3D);
 */
   schem.set_zero();
   // Base(r+1,c)<->High(r+1,c)<->Build(c+1,High(r+1,c),r+1)
-  //为了区分玻璃与空气，张量中存储的是Base+1.所以元素为1对应着玻璃，0对应空气
+  // 为了区分玻璃与空气，张量中存储的是Base+1.所以元素为1对应着玻璃，0对应空气
   int x = 0, y = 0, z = 0;
   int yLow = 0;
 
   // cerr << WaterList.size() << " water columns in map\n";
   for (auto it = WaterList.begin(); it != WaterList.end();
-       it++) //水柱周围的玻璃
+       it++)  // 水柱周围的玻璃
   {
     x = TokiCol(it->first) + 1;
     z = TokiRow(it->first);
     y = waterHigh(it->second);
     yLow = waterLow(it->second);
-    schem(x, y + 1, z) = 0 + 1; //柱顶玻璃
+    schem(x, y + 1, z) = 0 + 1;  // 柱顶玻璃
     for (short yDynamic = yLow; yDynamic <= y; yDynamic++) {
       schem(x - 1, yDynamic, z - 0) = 1;
       schem(x + 1, yDynamic, z + 0) = 1;
       schem(x + 0, yDynamic, z - 1) = 1;
       schem(x + 0, yDynamic, z + 1) = 1;
     }
-    if (yLow >= 1)
-      schem(x, yLow - 1, z) = 1; //柱底玻璃
+    if (yLow >= 1) schem(x, yLow - 1, z) = 1;  // 柱底玻璃
   }
 
   progressAdd(wind, sizePic(2));
 
-  for (short r = -1; r < sizePic(0); r++) //普通方块
+  for (short r = -1; r < sizePic(0); r++)  // 普通方块
   {
     for (short c = 0; c < sizePic(1); c++) {
-      if (Base(r + 1, c) == 12 || Base(r + 1, c) == 0)
-        continue;
+      if (Base(r + 1, c) == 12 || Base(r + 1, c) == 0) continue;
       x = c + 1;
       y = LowMap(r + 1, c);
       z = r + 1;
@@ -369,12 +359,9 @@ schem.z_range()}); Build.resize(tempSize3D);
         schem(x, y - 1, z) = 0 + 1;
       if ((fireProof && blockPalette[Base(r + 1, c)].burnable) ||
           (endermanProof && blockPalette[Base(r + 1, c)].endermanPickable)) {
-        if (y >= 1 && schem(x, y - 1, z) == 0)
-          schem(x, y - 1, z) = 0 + 1;
-        if (x >= 1 && schem(x - 1, y, z) == 0)
-          schem(x - 1, y, z) = 0 + 1;
-        if (z >= 1 && schem(x, y, z - 1) == 0)
-          schem(x, y, z - 1) = 0 + 1;
+        if (y >= 1 && schem(x, y - 1, z) == 0) schem(x, y - 1, z) = 0 + 1;
+        if (x >= 1 && schem(x - 1, y, z) == 0) schem(x - 1, y, z) = 0 + 1;
+        if (z >= 1 && schem(x, y, z - 1) == 0) schem(x, y, z - 1) = 0 + 1;
         if (y + 1 < schem.y_range() && schem(x, y + 1, z) == 0)
           schem(x, y + 1, z) = 0 + 1;
         if (x + 1 < schem.x_range() && schem(x + 1, y, z) == 0)
@@ -405,10 +392,8 @@ schem.z_range()}); Build.resize(tempSize3D);
 }
 
 void TokiSlopeCraft::makeBridge() {
-  if (mapType != mapTypes::Slope)
-    return;
-  if (glassMethod != glassBridgeSettings::withBridge)
-    return;
+  if (mapType != mapTypes::Slope) return;
+  if (glassMethod != glassBridgeSettings::withBridge) return;
 
   int step = sizePic(2) / schem.y_range();
 
@@ -418,7 +403,7 @@ void TokiSlopeCraft::makeBridge() {
     keepAwake(wind);
     progressAdd(wind, step);
     if (y % (bridgeInterval + 1) == 0) {
-      std::array<int, 3> start, extension;//x,z,y
+      std::array<int, 3> start, extension;  // x,z,y
       start[0] = 0;
       start[1] = 0;
       start[2] = y;
@@ -466,15 +451,13 @@ void TokiSlopeCraft::makeBridge() {
 
 void TokiSlopeCraft::exportAsStructure(const char *TargetName,
                                        char *FileName) const {
-
   std::string temp = exportAsStructure(TargetName);
 
-  if (FileName != nullptr)
-    std::strcpy(temp.data(), FileName);
+  if (FileName != nullptr) std::strcpy(temp.data(), FileName);
 }
 
-std::string
-TokiSlopeCraft::exportAsStructure(const std::string &TargetName) const {
+std::string TokiSlopeCraft::exportAsStructure(
+    const std::string &TargetName) const {
   if (kernelStep < builded) {
     reportError(wind, errorFlag::HASTY_MANIPULATION,
                 "You can only export a map to structure after you build the 3D "
@@ -507,7 +490,6 @@ void TokiSlopeCraft::exportAsWESchem(const char *fileName,
                                      const char *const *const requiredMods,
                                      const int requiredModsCount,
                                      char *returnVal) const {
-
   if (fileName == nullptr || strlen(fileName) == 0) {
     return;
   }
@@ -519,8 +501,7 @@ void TokiSlopeCraft::exportAsWESchem(const char *fileName,
   _reqMods.reserve(requiredModsCount);
   if (requiredMods != nullptr)
     for (int idx = 0; idx < requiredModsCount; idx++) {
-      if (requiredMods[idx] == nullptr)
-        continue;
+      if (requiredMods[idx] == nullptr) continue;
       _reqMods.emplace_back(requiredMods[idx]);
     }
 
@@ -555,7 +536,7 @@ std::string TokiSlopeCraft::exportAsWESchem(
 
   info.required_mods_utf8.resize(requiredMods.size());
 
-  for (int idx = 0; idx < requiredMods.size(); idx++) {
+  for (int idx = 0; idx < int(requiredMods.size()); idx++) {
     info.required_mods_utf8[idx] = requiredMods[idx];
   }
 

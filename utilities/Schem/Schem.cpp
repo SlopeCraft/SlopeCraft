@@ -21,13 +21,15 @@ This file is part of SlopeCraft.
 */
 
 #include "Schem.h"
-#include "../NBTWriter/NBTWriter.h"
-#include "bit_shrink.h"
+
+#include <memory.h>
 
 #include <ctime>
 #include <filesystem>
 #include <iostream>
-#include <memory.h>
+
+#include "../NBTWriter/NBTWriter.h"
+#include "bit_shrink.h"
 
 using namespace libSchem;
 
@@ -106,7 +108,6 @@ enum class __mushroom_type : uint8_t {
 };
 
 void Schem::process_mushroom_states() noexcept {
-
   static const std::string id_red = "minecraft:red_mushroom_block";
   static const std::string id_brown = "minecraft:brown_mushroom_block";
   static const std::string id_stem = "minecraft:mushroom_stem";
@@ -156,7 +157,8 @@ void Schem::process_mushroom_states() noexcept {
   std::vector<__mushroom_type> is_mushroom_LUT;
   is_mushroom_LUT.resize(this->block_id_list.size());
 
-  for (int blockidx = 0; blockidx < this->block_id_list.size(); blockidx++) {
+  for (int blockidx = 0; blockidx < int(this->block_id_list.size());
+       blockidx++) {
     const auto &block_id = this->block_id_list[blockidx];
     const auto pure_id = ::to_pure_block_id(block_id);
     if (pure_id == id_red) {
@@ -232,15 +234,15 @@ void Schem::process_mushroom_states() noexcept {
         // write in the correct value of ele_t
         ele_t corrected_ele = invalid_ele_t;
         switch (current_mushroom_type) {
-        case __mushroom_type::brown_mushroom:
-          corrected_ele = u6_to_ele_brown[side.u6()];
-          break;
-        case __mushroom_type::red_mushroom:
-          corrected_ele = u6_to_ele_red[side.u6()];
-          break;
-        default:
-          corrected_ele = u6_to_ele_stem[side.u6()];
-          break;
+          case __mushroom_type::brown_mushroom:
+            corrected_ele = u6_to_ele_brown[side.u6()];
+            break;
+          case __mushroom_type::red_mushroom:
+            corrected_ele = u6_to_ele_red[side.u6()];
+            break;
+          default:
+            corrected_ele = u6_to_ele_stem[side.u6()];
+            break;
         }
 
         this->operator()(x, y, z) = corrected_ele;
@@ -254,7 +256,6 @@ bool Schem::export_litematic(std::string_view filename,
                              const litematic_info &info,
                              SCL_errorFlag *const error_flag,
                              std::string *const error_str) const noexcept {
-
   if (std::filesystem::path(filename).extension() != ".litematic") {
     // wrong extension
 
@@ -270,7 +271,6 @@ bool Schem::export_litematic(std::string_view filename,
   {
     std::array<int64_t, 3> pos;
     if (this->have_invalid_block(&pos[0], &pos[1], &pos[2])) {
-
       if (error_flag != nullptr) {
         *error_flag = SCL_errorFlag::EXPORT_SCHEM_HAS_INVALID_BLOCKS;
       }
@@ -388,44 +388,45 @@ bool Schem::export_litematic(std::string_view filename,
 
       lite.writeLongArrayHead("BlockStates", shrinked.size());
       {
-        for (int64_t idx = 0; idx < shrinked.size(); idx++) {
+        for (int64_t idx = 0; idx < int64_t(shrinked.size()); idx++) {
           lite.writeSingleTag<int64_t, true>(
               NBT::Long, "id", reinterpret_cast<int64_t &>(shrinked[idx]));
         }
       }
       // progressAdd(wind, size3D[0]);
     }
-    lite.endCompound(); // end current region
+    lite.endCompound();  // end current region
   }
-  lite.endCompound(); // end all regions
+  lite.endCompound();  // end all regions
 
   switch (this->MC_major_ver_number) {
-  case ::SCL_gameVersion::MC12:
-    lite.writeInt("MinecraftDataVersion", this->MC_version_number());
-    lite.writeInt("Version", 4);
-    break;
-  case ::SCL_gameVersion::MC13:
-  case ::SCL_gameVersion::MC14:
-  case ::SCL_gameVersion::MC15:
-  case ::SCL_gameVersion::MC16:
-  case ::SCL_gameVersion::MC17:
-  case ::SCL_gameVersion::MC18:
-  case ::SCL_gameVersion::MC19:
-    lite.writeInt("MinecraftDataVersion", this->MC_version_number());
-    lite.writeInt("Version", 5);
-    break;
-  default:
-    std::cerr << "Wrong game version!" << std::endl;
-    lite.close();
-    if (error_flag != nullptr) {
-      *error_flag = SCL_errorFlag::UNKNOWN_MAJOR_GAME_VERSION;
-    }
-    if (error_str != nullptr) {
-      *error_str = "Unknown major game version! Only 1.12 to 1.19 is "
-                   "supported, but given value " +
-                   std::to_string(this->MC_major_ver_number);
-    }
-    return false;
+    case ::SCL_gameVersion::MC12:
+      lite.writeInt("MinecraftDataVersion", this->MC_version_number());
+      lite.writeInt("Version", 4);
+      break;
+    case ::SCL_gameVersion::MC13:
+    case ::SCL_gameVersion::MC14:
+    case ::SCL_gameVersion::MC15:
+    case ::SCL_gameVersion::MC16:
+    case ::SCL_gameVersion::MC17:
+    case ::SCL_gameVersion::MC18:
+    case ::SCL_gameVersion::MC19:
+      lite.writeInt("MinecraftDataVersion", this->MC_version_number());
+      lite.writeInt("Version", 5);
+      break;
+    default:
+      std::cerr << "Wrong game version!" << std::endl;
+      lite.close();
+      if (error_flag != nullptr) {
+        *error_flag = SCL_errorFlag::UNKNOWN_MAJOR_GAME_VERSION;
+      }
+      if (error_str != nullptr) {
+        *error_str =
+            "Unknown major game version! Only 1.12 to 1.19 is "
+            "supported, but given value " +
+            std::to_string(this->MC_major_ver_number);
+      }
+      return false;
   }
   lite.close();
 
@@ -442,7 +443,6 @@ bool Schem::export_structure(std::string_view filename,
                              const bool is_air_structure_void,
                              SCL_errorFlag *const error_flag,
                              std::string *const error_str) const noexcept {
-
   if (std::filesystem::path(filename).extension() != ".nbt") {
     // wrong extension
 
@@ -459,7 +459,6 @@ bool Schem::export_structure(std::string_view filename,
   {
     std::array<int64_t, 3> pos;
     if (this->have_invalid_block(&pos[0], &pos[1], &pos[2])) {
-
       if (error_flag != nullptr) {
         *error_flag = SCL_errorFlag::EXPORT_SCHEM_HAS_INVALID_BLOCKS;
       }
@@ -492,8 +491,9 @@ bool Schem::export_structure(std::string_view filename,
       *error_flag = SCL_errorFlag::EXPORT_SCHEM_STRUCTURE_REQUIRES_AIR;
     }
     if (error_str != nullptr) {
-      *error_str = "You assigned is_air_structure_void=false, but there is no "
-                   "minecraft:air in your block palette.";
+      *error_str =
+          "You assigned is_air_structure_void=false, but there is no "
+          "minecraft:air in your block palette.";
     }
     return false;
   }
@@ -564,7 +564,6 @@ bool Schem::export_structure(std::string_view filename,
   }
   file.writeListHead("blocks", NBT::Compound, blocks_to_write);
   {
-
     for (int64_t y = 0; y < y_range(); y++) {
       for (int64_t z = 0; z < z_range(); z++) {
         for (int64_t x = 0; x < x_range(); x++) {
@@ -579,7 +578,6 @@ bool Schem::export_structure(std::string_view filename,
           }
 
           if (should_write) {
-
             file.writeCompound("This should never be shown");
             {
               file.writeListHead("pos", NBT::Int, 3);
@@ -599,28 +597,29 @@ bool Schem::export_structure(std::string_view filename,
     // finish writting the whole 3D array
 
     switch (this->MC_major_ver_number) {
-    case ::SCL_gameVersion::MC12:
-    case ::SCL_gameVersion::MC13:
-    case ::SCL_gameVersion::MC14:
-    case ::SCL_gameVersion::MC15:
-    case ::SCL_gameVersion::MC16:
-    case ::SCL_gameVersion::MC17:
-    case ::SCL_gameVersion::MC18:
-    case ::SCL_gameVersion::MC19:
-      file.writeInt("MinecraftDataVersion", this->MC_ver_number);
-      break;
-    default:
-      std::cerr << "Wrong game version!" << std::endl;
-      file.close();
-      if (error_flag != nullptr) {
-        *error_flag = SCL_errorFlag::UNKNOWN_MAJOR_GAME_VERSION;
-      }
-      if (error_str != nullptr) {
-        *error_str = "Unknown major game version! Only 1.12 to 1.19 is "
-                     "supported, but given value " +
-                     std::to_string(this->MC_major_ver_number);
-      }
-      return false;
+      case ::SCL_gameVersion::MC12:
+      case ::SCL_gameVersion::MC13:
+      case ::SCL_gameVersion::MC14:
+      case ::SCL_gameVersion::MC15:
+      case ::SCL_gameVersion::MC16:
+      case ::SCL_gameVersion::MC17:
+      case ::SCL_gameVersion::MC18:
+      case ::SCL_gameVersion::MC19:
+        file.writeInt("MinecraftDataVersion", this->MC_ver_number);
+        break;
+      default:
+        std::cerr << "Wrong game version!" << std::endl;
+        file.close();
+        if (error_flag != nullptr) {
+          *error_flag = SCL_errorFlag::UNKNOWN_MAJOR_GAME_VERSION;
+        }
+        if (error_str != nullptr) {
+          *error_str =
+              "Unknown major game version! Only 1.12 to 1.19 is "
+              "supported, but given value " +
+              std::to_string(this->MC_major_ver_number);
+        }
+        return false;
     }
   }
   file.close();
@@ -638,7 +637,6 @@ bool Schem::export_WESchem(std::string_view filename,
                            const WorldEditSchem_info &info,
                            SCL_errorFlag *const error_flag,
                            std::string *const error_str) const noexcept {
-
   if (std::filesystem::path(filename).extension() != ".schem") {
     // wrong extension
 
@@ -655,7 +653,6 @@ bool Schem::export_WESchem(std::string_view filename,
   {
     std::array<int64_t, 3> pos;
     if (this->have_invalid_block(&pos[0], &pos[1], &pos[2])) {
-
       if (error_flag != nullptr) {
         *error_flag = SCL_errorFlag::EXPORT_SCHEM_HAS_INVALID_BLOCKS;
       }
@@ -674,8 +671,9 @@ bool Schem::export_WESchem(std::string_view filename,
       *error_flag = ::SCL_errorFlag::EXPORT_SCHEM_MC12_NOT_SUPPORTED;
     }
     if (error_str != nullptr) {
-      *error_str = "Exporting a schematic as 1.12 WorldEdit .schematic format "
-                   "is not supported. Try other tools.";
+      *error_str =
+          "Exporting a schematic as 1.12 WorldEdit .schematic format "
+          "is not supported. Try other tools.";
     }
     return false;
   }
@@ -711,15 +709,15 @@ bool Schem::export_WESchem(std::string_view filename,
       }
     }
     // finish list
-  } // finish compound
+  }  // finish compound
   file.endCompound();
 
   file.writeCompound("Palette");
   {
-    for (int idx = 0; idx < block_id_list.size(); idx++) {
+    for (int idx = 0; idx < int(block_id_list.size()); idx++) {
       file.writeInt(block_id_list[idx].c_str(), idx);
     }
-  } // finished palette
+  }  // finished palette
   file.endCompound();
 
   file.writeListHead("BlockEntities", NBT::Compound, 0);
@@ -741,17 +739,17 @@ bool Schem::export_WESchem(std::string_view filename,
   file.writeByteArrayHead("BlockData", blockdata.size());
   {
     const int8_t *data = reinterpret_cast<int8_t *>(blockdata.data());
-    for (int64_t idx = 0; idx < blockdata.size(); idx++) {
+    for (int64_t idx = 0; idx < int64_t(blockdata.size()); idx++) {
       file.writeByte("", data[idx]);
     }
-  } // end array
+  }  // end array
 
   file.writeIntArrayHead("Offset", 3);
   {
     file.writeInt("x", info.offset[0]);
     file.writeInt("y", info.offset[1]);
     file.writeInt("z", info.offset[2]);
-  } // end array
+  }  // end array
 
   file.close();
   if (error_flag != nullptr) {

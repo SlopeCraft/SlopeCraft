@@ -5,7 +5,6 @@
 
 #include "ParseResourcePack.h"
 #include "Resource_tree.h"
-
 #include "VCL_internal.h"
 
 struct read_buffer_wrapper {
@@ -34,7 +33,6 @@ bool parse_png(
   png_struct *png =
       png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
   if (png == NULL) {
-
     ::VCL_report(VCL_report_type_t::error, "Failed to create png read struct.");
     return false;
   }
@@ -79,49 +77,48 @@ bool parse_png(
   if (bit_depth > 8) {
     png_set_strip_16(png);
   }
-  if (bit_depth < 8)
-    png_set_expand(png);
+  if (bit_depth < 8) png_set_expand(png);
 
   switch (color_type) {
-  case PNG_COLOR_TYPE_GRAY: // fixed
-    png_set_gray_to_rgb(png);
-    add_alpha = true;
-    // cout << "PNG_COLOR_TYPE_GRAY";
-    break;
-  case PNG_COLOR_TYPE_PALETTE: // fixed
+    case PNG_COLOR_TYPE_GRAY:  // fixed
+      png_set_gray_to_rgb(png);
+      add_alpha = true;
+      // cout << "PNG_COLOR_TYPE_GRAY";
+      break;
+    case PNG_COLOR_TYPE_PALETTE:  // fixed
 
-    png_set_palette_to_rgb(png);
-    png_set_bgr(png);
-    {
-      int num_trans = 0;
-      png_get_tRNS(png, info, NULL, &num_trans, NULL);
-      if (num_trans <= 0) {
-        add_alpha = true;
+      png_set_palette_to_rgb(png);
+      png_set_bgr(png);
+      {
+        int num_trans = 0;
+        png_get_tRNS(png, info, NULL, &num_trans, NULL);
+        if (num_trans <= 0) {
+          add_alpha = true;
+        }
+        // cout << "num_trans = " << num_trans << endl;
       }
-      // cout << "num_trans = " << num_trans << endl;
-    }
 
-    // cout << "PNG_COLOR_TYPE_PALETTE";
-    break;
-  case PNG_COLOR_TYPE_RGB: // fixed
-    png_set_bgr(png);
-    add_alpha = true;
-    // cout << "PNG_COLOR_TYPE_RGB";
-    break;
-  case PNG_COLOR_TYPE_RGB_ALPHA: // fixed
-    png_set_bgr(png);
-    // cout << "PNG_COLOR_TYPE_RGB_ALPHA";
-    break;
-  case PNG_COLOR_TYPE_GRAY_ALPHA: // fixed
-    png_set_gray_to_rgb(png);
-    // png_set_swap_alpha(png);
-    // cout << "PNG_COLOR_TYPE_GRAY_ALPHA";
-    break;
-  default:
-    png_destroy_read_struct(&png, &info, &info_end);
-    std::string msg = fmt::format("Unknown color type {}", color_type);
-    ::VCL_report(VCL_report_type_t::error, msg.c_str());
-    return false;
+      // cout << "PNG_COLOR_TYPE_PALETTE";
+      break;
+    case PNG_COLOR_TYPE_RGB:  // fixed
+      png_set_bgr(png);
+      add_alpha = true;
+      // cout << "PNG_COLOR_TYPE_RGB";
+      break;
+    case PNG_COLOR_TYPE_RGB_ALPHA:  // fixed
+      png_set_bgr(png);
+      // cout << "PNG_COLOR_TYPE_RGB_ALPHA";
+      break;
+    case PNG_COLOR_TYPE_GRAY_ALPHA:  // fixed
+      png_set_gray_to_rgb(png);
+      // png_set_swap_alpha(png);
+      // cout << "PNG_COLOR_TYPE_GRAY_ALPHA";
+      break;
+    default:
+      png_destroy_read_struct(&png, &info, &info_end);
+      std::string msg = fmt::format("Unknown color type {}", color_type);
+      ::VCL_report(VCL_report_type_t::error, msg.c_str());
+      return false;
   }
   // cout << ")\n";
   // #warning here
@@ -131,14 +128,14 @@ bool parse_png(
   std::vector<uint8_t *> row_ptrs;
   row_ptrs.resize(height);
 
-  for (int r = 0; r < height; r++) {
+  for (int r = 0; r < int(height); r++) {
     row_ptrs[r] = reinterpret_cast<uint8_t *>(&(*img)(r, 0));
   }
 
   png_read_image(png, row_ptrs.data());
 
-  if (add_alpha) { // add alpha manually
-    for (int r = 0; r < height; r++) {
+  if (add_alpha) {  // add alpha manually
+    for (int r = 0; r < int(height); r++) {
       uint8_t *const data = reinterpret_cast<uint8_t *>(&(*img)(r, 0));
       for (int pixel_idx = img->cols() - 1; pixel_idx > 0; pixel_idx--) {
         const uint8_t *const data_src = data + pixel_idx * 3;
@@ -165,8 +162,7 @@ resize_image_nearest(const Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic,
                      int rows, int cols) noexcept {
   Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> result(0,
                                                                              0);
-  if (rows <= 0 || cols <= 0 || src.size() <= 0)
-    return result;
+  if (rows <= 0 || cols <= 0 || src.size() <= 0) return result;
   result.resize(rows, cols);
   result.setZero();
 
@@ -191,8 +187,7 @@ resize_image_nearest(
     int rows, int cols) noexcept {
   Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> result(0,
                                                                              0);
-  if (rows <= 0 || cols <= 0 || src_block.size() <= 0)
-    return result;
+  if (rows <= 0 || cols <= 0 || src_block.size() <= 0) return result;
   result.resize(rows, cols);
   result.setZero();
 
@@ -271,8 +266,7 @@ bool resource_pack::add_textures_direct(
   std::array<char, buffer_size> buffer;
 
   for (const auto &file : pngs) {
-    if (!file.first.ends_with(".png"))
-      continue;
+    if (!file.first.ends_with(".png")) continue;
 
     const bool is_dynamic = pngs.contains(file.first + ".mcmeta");
 
@@ -281,7 +275,6 @@ bool resource_pack::add_textures_direct(
     if (this->is_MC12) {
       std::strcat(buffer.data(), ":blocks/");
     } else {
-
       std::strcat(buffer.data(), ":block/");
     }
 
@@ -309,10 +302,10 @@ bool resource_pack::add_textures_direct(
     const bool success =
         parse_png(file.second.data(), file.second.file_size(), &img);
     if (!success || img.size() <= 0) {
-      std::string msg =
-          fmt::format("Failed to parse png file {} in {}. Png parsing will "
-                      "continue but this warning may cause further errors.",
-                      file.first, buffer.data());
+      std::string msg = fmt::format(
+          "Failed to parse png file {} in {}. Png parsing will "
+          "continue but this warning may cause further errors.",
+          file.first, buffer.data());
       ::VCL_report(VCL_report_type_t::warning, msg.c_str());
       continue;
     }
@@ -362,7 +355,7 @@ process_dynamic_texture(const Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic,
   const uint8_t *const src_bytewise =
       reinterpret_cast<const uint8_t *>(src.data());
 
-  for (int idx = 0; idx < cols * cols * sizeof(ARGB); idx++) {
+  for (int idx = 0; idx < cols * cols * int(sizeof(ARGB)); idx++) {
     uint32_t val = 0;
     for (int rep = 0; rep < repN; rep++) {
       val += src_bytewise[idx + rep * step_bytes];
@@ -376,9 +369,8 @@ process_dynamic_texture(const Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic,
   return res;
 }
 
-std::array<uint8_t, 3>
-compute_mean_color(const block_model::EImgRowMajor_t &img,
-                   bool *const ok) noexcept {
+std::array<uint8_t, 3> compute_mean_color(
+    const block_model::EImgRowMajor_t &img, bool *const ok) noexcept {
   if (img.size() <= 0) {
     if (ok != nullptr) {
       *ok = false;
@@ -432,19 +424,16 @@ bool compose_image_background_half_transparent(
   return true;
 }
 
-std::array<uint8_t, 3>
-compose_image_and_mean(const block_model::EImgRowMajor_t &front,
-                       const block_model::EImgRowMajor_t &back,
-                       bool *const ok) noexcept {
+std::array<uint8_t, 3> compose_image_and_mean(
+    const block_model::EImgRowMajor_t &front,
+    const block_model::EImgRowMajor_t &back, bool *const ok) noexcept {
   if (front.rows() != back.rows() || front.cols() != back.cols()) {
-    if (ok != nullptr)
-      *ok = false;
+    if (ok != nullptr) *ok = false;
     return {};
   }
 
   if (front.size() <= 0) {
-    if (ok != nullptr)
-      *ok = false;
+    if (ok != nullptr) *ok = false;
     return {};
   }
 

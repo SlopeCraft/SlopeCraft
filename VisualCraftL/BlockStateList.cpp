@@ -1,11 +1,9 @@
 #include "BlockStateList.h"
 
+#include <fstream>
 #include <json.hpp>
 
-#include <fstream>
-
 #include "ParseResourcePack.h"
-
 #include "VCL_internal.h"
 
 VCL_block::VCL_block() { this->initialize_attributes(); }
@@ -26,7 +24,6 @@ void VCL_block::initialize_attributes() noexcept {
 
 version_set parse_version_set(const nlohmann::json &jo,
                               bool *const ok) noexcept {
-
   if (jo.is_string() && jo == "all") {
     *ok = true;
     // ret.version_info = version_set::all();
@@ -151,7 +148,6 @@ VCL_block parse_block(const nlohmann::json &jo, bool *const ok) {
   }
 
   if (jo.contains("transparent")) {
-
     if (jo.at("transparent").is_boolean()) {
       ret.set_transparency(jo.at("transparent"));
     } else {
@@ -182,7 +178,6 @@ VCL_block parse_block(const nlohmann::json &jo, bool *const ok) {
         ret.set_face_avaliablity(f, true);
       }
     } else {
-
       *ok = false;
       return {};
     }
@@ -239,7 +234,6 @@ VCL_block parse_block(const nlohmann::json &jo, bool *const ok) {
 }
 
 bool VCL_block_state_list::add(std::string_view filename) noexcept {
-
   using njson = nlohmann::json;
 
   njson jo;
@@ -250,7 +244,7 @@ bool VCL_block_state_list::add(std::string_view filename) noexcept {
     jo = njson::parse(ifs, nullptr, true, true);
 
     ifs.close();
-  } catch (std::runtime_error e) {
+  } catch (std::exception &e) {
     std::string msg =
         fmt::format("Failed to parse {}, detail : {}", filename, e.what());
     ::VCL_report(VCL_report_type_t::error, msg.c_str());
@@ -259,11 +253,10 @@ bool VCL_block_state_list::add(std::string_view filename) noexcept {
 
   bool ok = true;
 
-  for (const auto pair : jo.items()) {
+  for (const auto &pair : jo.items()) {
     VCL_block vb = parse_block(pair.value(), &ok);
 
     if (!ok) {
-
       std::string msg = fmt::format(
           "Failed to parse {},  : invalid value for block state {} : {}",
           filename, pair.key(), pair.value());
@@ -315,10 +308,10 @@ void VCL_block_state_list::avaliable_block_states_by_transparency(
   }
 }
 
-#define VCL_private_macro_make_case(str, s, ret, ok_val)                       \
-  if (str == #s) {                                                             \
-    ok_val = true;                                                             \
-    ret = VCL_block_class_t::s;                                                \
+#define VCL_private_macro_make_case(str, s, ret, ok_val) \
+  if (str == #s) {                                       \
+    ok_val = true;                                       \
+    ret = VCL_block_class_t::s;                          \
   }
 
 VCL_block_class_t string_to_block_class(std::string_view str,

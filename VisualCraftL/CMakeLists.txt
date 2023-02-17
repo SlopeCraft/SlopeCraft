@@ -94,6 +94,7 @@ target_compile_options(VisualCraftL_static PRIVATE ${SlopeCraft_vectorize_flags}
 # target_compile_options(VisualCraftL PRIVATE "-std=c++20")
 if(NOT ${MSVC})
     target_compile_options(VisualCraftL PUBLIC "-flto")
+    #target_compile_options(VisualCraftL PUBLIC "-Wall")
 endif()
 
 # profile with gprof
