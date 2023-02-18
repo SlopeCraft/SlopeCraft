@@ -25,3 +25,24 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
         DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/Cpp/include)
     return()
 endif()
+
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+
+    install(TARGETS VisualCraftL
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib)
+
+    install(TARGETS VisualCraftL_static
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib)
+
+    install(FILES ${VCL_app_files}
+        DESTINATION bin/Blocks_VCL)        
+    install(FILES VisualCraftL.h VisualCraftL_global.h
+        DESTINATION include)
+
+    #install(TARGETS libzip::zip
+    #    RUNTIME DESTINATION bin
+    #    LIBRARY DESTINATION lib)
+return()
+endif()

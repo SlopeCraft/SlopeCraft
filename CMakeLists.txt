@@ -22,9 +22,10 @@ if(NOT CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 endif()
 
 # manage the install prefix
-set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install_app)
-set(CMAKE_INSTALL_LIBDIR ${CMAKE_INSTALL_PREFIX})
-set(CMAKE_INSTALL_BINDIR ${CMAKE_INSTALL_PREFIX})
+set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install 
+    CACHE PATH "Where to install SlopeCraft.")
+#set(CMAKE_INSTALL_LIBDIR ${CMAKE_INSTALL_PREFIX})
+#set(CMAKE_INSTALL_BINDIR ${CMAKE_INSTALL_PREFIX})
 
 if(EXISTS ${CMAKE_SOURCE_DIR}/compile_commands.json)
     # delete files here
@@ -79,7 +80,9 @@ if(${SlopeCraft_vectorize})
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    # set(CMAKE_INSTALL_RPATH "../lib")
+message(WARNING "set runpath for linux")
+    set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
+    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")

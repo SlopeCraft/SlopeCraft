@@ -89,32 +89,4 @@ if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(imageCutter)
 endif()
 
-
-
-if(CMAKE_SYSTEM_NAME MATCHES "Windows")
-
-    install(TARGETS imageCutter
-        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
-        BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX}
-    )
-
-elseif(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    set_target_properties(imageCutter PROPERTIES INSTALL_RPATH "../lib")
-    install(TARGETS imageCutter
-        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
-        BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
-    )
-
-elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-
-    install(TARGETS imageCutter
-        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
-        BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX}
-    )
-
-    # Install icon for macOS
-    file(GLOB imageCutter_Icon ${CMAKE_SOURCE_DIR}/imageCutter/others/imageCutterIconNew.icns)
-    install(FILES ${imageCutter_Icon}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/imageCutter.app/Contents/Resources)
-
-endif()
+include(install.cmake)

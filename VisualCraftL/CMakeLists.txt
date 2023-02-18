@@ -105,93 +105,35 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    # message("libzip_LIBRARY = " ${libzip_LIBRARY})
-    # if (NOT DEFINED libzip_LIBRARY)
-    # find_library(sc_libzip_lib NAMES libzip.so PATHS ${CMAKE_PREIFX_PATH})
-    # else()
-    # set(sc_libzip_lib ${libzip_LIBRARY})
-    # endif()
-
-    # message("sc_libzip_lib = " ${sc_libzip_lib})
     target_compile_options(VisualCraftL
         PUBLIC "-fvisibility=hidden"
-
-        # PRIVATE "-rpath-link"
     )
+    get_target_property(VCL_libzip_type libzip::zip TYPE)
+    get_target_property(VCL_libzip_location libzip::zip LOCATION)
 
-    # get_target_property(VCL_libzip_type libzip::zip TYPE)
+    if(VCL_libzip_type STREQUAL "SHARED_LIBRARY")
+        get_filename_component(VCL_libzip_dir ${VCL_libzip_location} DIRECTORY)
+        message(STATUS "VCL_libzip_dir = " ${VCL_libzip_dir})
+        #target_link_directories(VisualCraftL PUBLIC ${VCL_libzip_dir})
+        target_link_libraries(VisualCraftL PUBLIC libzip::zip)
+        target_link_libraries(VisualCraftL_static PUBLIC libzip::zip)
+    endif()
 
-    # get_target_property(VCL_libzip_location libzip::zip LOCATION)
 
-    # get_filename_component(VCL_libzip_dir ${VCL_libzip_location} DIRECTORY)
-
-    # message(STATUS "VCL_libzip_dir = " ${VCL_libzip_dir})
-
-    # target_link_directories(VisualCraftL PUBLIC ${VCL_libzip_dir})
     # target_link_options(VisualCraftL PRIVATE -rpath=${VCL_libzip_dir})
 endif()
 
+
+set_target_properties(VisualCraftL PROPERTIES
+    VERSION ${PROJECT_VERSION}
+    #MACOSX_BUNDLE_ICON_FILE imageCutterIconNew.icns
+    MACOSX_BUNDLE_GUI_IDENTIFIER "com.github.ToKiNoBug.SlopeCraft"
+    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+    MACOSX_BUNDLE TRUE
+    WIN32_EXECUTABLE TRUE
+)
+
 include(install.cmake)
 
-include(${CMAKE_SOURCE_DIR}/cmake/configure_cli11.cmake)
-
-# test block state and resource parsing
-add_executable(test_VCL_blockstate tests/test_VCL_blockstate.cpp)
-target_link_libraries(test_VCL_blockstate PRIVATE VisualCraftL)
-target_include_directories(test_VCL_blockstate PRIVATE ${cli11_include_dir})
-
-# convert json from SCL to VCL
-add_executable(SCL_json_cvt tests/SCL_json_cvt.cpp)
-target_include_directories(SCL_json_cvt PRIVATE
-    ${SlopeCraft_Nlohmann_json_include_dir})
-
-# test block class properties
-add_executable(test_block_class tests/test_block_class.cpp)
-target_link_libraries(test_block_class PRIVATE VisualCraftL)
-
-# sort VCL json
-add_executable(VCL_json_sort tests/VCL_json_sort.cpp)
-target_link_libraries(VCL_json_sort PRIVATE VisualCraftL)
-target_include_directories(VCL_json_sort PRIVATE
-    ${cli11_include_dir}
-    ${SlopeCraft_Nlohmann_json_include_dir})
-
-# test computing projection images
-add_executable(test_VCL_project_image tests/test_VCL_project_image.cpp)
-target_link_libraries(test_VCL_project_image PRIVATE VisualCraftL PNG::PNG)
-target_include_directories(test_VCL_project_image PRIVATE
-    ${cli11_include_dir}
-    ${SlopeCraft_Nlohmann_json_include_dir}
-    ${SlopeCraft_Eigen3_include_dir})
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/test_project_image)
-
-# test showing model
-add_executable(test_VCL_model tests/test_VCL_model.cpp)
-target_link_libraries(test_VCL_model PRIVATE VisualCraftL)
-target_include_directories(test_VCL_model PRIVATE
-    ${cli11_include_dir}
-    ${SlopeCraft_Nlohmann_json_include_dir}
-    ${SlopeCraft_Eigen3_include_dir})
-
-# internal test for rotation
-add_executable(itest_VCL_rotate tests/itest_VCL_rotate.cpp)
-target_link_libraries(itest_VCL_rotate PRIVATE VisualCraftL_static)
-target_include_directories(itest_VCL_rotate PRIVATE
-    ${cli11_include_dir})
-
-add_test(NAME test_rotate COMMAND itest_VCL_rotate WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-
-include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_12.cmake)
-include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_latest.cmake)
-include(${CMAKE_SOURCE_DIR}/cmake/configure_images.cmake)
-
-add_test(NAME test_block_class COMMAND test_block_class WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-
-# automatic tests
-include(generate_tests.cmake)
-
-add_executable(test_VCL_version tests/test_VCL_version.cpp)
-target_link_libraries(test_VCL_version PRIVATE VisualCraftL)
-target_compile_features(test_VCL_version PRIVATE cxx_std_17)
-
-add_test(NAME test_VCL_version COMMAND test_VCL_version WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+include(add_test_executables.cmake)
