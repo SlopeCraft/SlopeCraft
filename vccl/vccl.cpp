@@ -36,6 +36,7 @@ void cb_progress_range_set(void *, int, int, int) {}
 void cb_progress_add(void *, int) {}
 
 int main(int argc, char **argv) {
+  cout << __LINE__ << endl;
   inputs input;
   CLI::App app;
   app.add_option("--rp", input.zips, "Resource packs")
@@ -83,7 +84,13 @@ int main(int argc, char **argv) {
       ->check(CLI::PositiveNumber)
       ->default_val(std::thread::hardware_concurrency());
 
-  CLI11_PARSE(app, argc, argv);
+  try {
+
+    CLI11_PARSE(app, argc, argv);
+  } catch (std::exception &e) {
+    cout << "Failed to parse cmd line arguments. Detail : " << e.what() << endl;
+    return __LINE__;
+  }
 
   input.version = SCL_gameVersion(__version);
 
