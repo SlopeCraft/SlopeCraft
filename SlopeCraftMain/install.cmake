@@ -14,8 +14,9 @@ if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
         RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
         BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX}
     )
+
     # Install icons
-    file(GLOB SlopeCraft_Icon 
+    file(GLOB SlopeCraft_Icon
         ${CMAKE_SOURCE_DIR}/SlopeCraftMain/others/SlopeCraftIconNew.icns)
     install(FILES ${SlopeCraft_Icon}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/SlopeCraft.app/Contents/Resources)
@@ -42,11 +43,21 @@ endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     # Install for Windows.
+    find_program(SlopeCraft_Qt_windeployqt_executable windeployqt PATHS ${CMAKE_PREFIX_PATH})
+
+    if(SlopeCraft_Qt_windeployqt_executable)
+        configure_file(others/deployqt_win.bat.in others/deployqt_win.bat)
+        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/others/deployqt_win.bat
+            DESTINATION ${CMAKE_INSTALL_PREFIX})
+    endif()
+
+    # SlopeCraft_Qt_windeployqt_executable
 
     # Install app
     install(TARGETS SlopeCraft
         RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
     )
+
     # Install FixedBlocks.json, CustomBlocks.json and README.md
     install(FILES ${SlopeCraft_install_jsons}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/Blocks)
@@ -69,9 +80,9 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-#set_target_properties(SlopeCraft PROPERTIES INSTALL_RPATH "../lib")
-# Install for Linux
-# Install app
+    # set_target_properties(SlopeCraft PROPERTIES INSTALL_RPATH "../lib")
+    # Install for Linux
+    # Install app
     install(TARGETS SlopeCraft
         RUNTIME DESTINATION bin
     )
@@ -95,7 +106,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Blocks/CustomBlocks)
 
     file(GLOB SlopeCraft_Icon ${CMAKE_SOURCE_DIR}/SlopeCraftMain/others/SlopeCraftIconNew.png)
-    
+
     install(FILES ${SlopeCraft_Icon}
         DESTINATION bin/icons)
 

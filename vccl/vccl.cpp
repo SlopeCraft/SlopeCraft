@@ -151,10 +151,12 @@ int set_resource(VCL_Kernel *kernel, const inputs &input) noexcept {
     VCL_destroy_kernel(kernel);
     return __LINE__;
   }
+  VCL_set_resource_option option;
+  option.version = input.version;
+  option.max_block_layers = input.layers;
+  option.exposed_face = input.face;
 
-  if (!VCL_set_resource_move(
-          &rp, &bsl,
-          VCL_set_resource_option{input.version, input.layers, input.face})) {
+  if (!VCL_set_resource_move(&rp, &bsl, option)) {
     cout << "Failed to set resource pack" << endl;
     VCL_destroy_block_state_list(bsl);
     VCL_destroy_resource_pack(rp);

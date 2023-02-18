@@ -22,8 +22,11 @@ set(SlopeCraft_SCL_windows_rc_files)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     message("Configuring on Windows. Adding rc file to " ${PROJECT_NAME})
+
+    configure_file(others/SlopeCraftL.rc.in others/SlopeCraftL.rc)
+
     set(SlopeCraft_SCL_windows_rc_files
-        ${CMAKE_CURRENT_SOURCE_DIR}/others/SlopeCraftL.rc)
+        ${CMAKE_CURRENT_BINARY_DIR}/others/SlopeCraftL.rc)
 endif()
 
 set(SlopeCraft_SCL_sources
@@ -70,12 +73,13 @@ set(SlopeCraft_SCL_sources
 add_definitions(-DSLOPECRAFTL_LIBRARY)
 
 add_library(SlopeCraftL SHARED ${SlopeCraft_SCL_sources})
-add_library(SlopeCraftL_C SHARED ${SlopeCraft_SCL_sources})
 
+# add_library(SlopeCraftL_C SHARED ${SlopeCraft_SCL_sources})
 target_compile_features(SlopeCraftL PRIVATE cxx_std_20)
-target_compile_features(SlopeCraftL_C PRIVATE cxx_std_20)
 
-target_compile_definitions(SlopeCraftL_C PRIVATE -DSCL_CAPI)
+# target_compile_features(SlopeCraftL_C PRIVATE cxx_std_20)
+
+# target_compile_definitions(SlopeCraftL_C PRIVATE -DSCL_CAPI)
 
 # link SlopeCraftL with GAConverter and zlib
 set(SlopeCraft_SCL_link_libs
@@ -90,14 +94,17 @@ set(SlopeCraft_SCL_link_libs
 
 # link to dependents
 target_link_libraries(SlopeCraftL PUBLIC ${SlopeCraft_SCL_link_libs})
-target_link_libraries(SlopeCraftL_C PUBLIC ${SlopeCraft_SCL_link_libs})
 
+# target_link_libraries(SlopeCraftL_C PUBLIC ${SlopeCraft_SCL_link_libs})
 target_compile_options(SlopeCraftL PRIVATE ${SlopeCraft_vectorize_flags})
-target_compile_options(SlopeCraftL_C PRIVATE ${SlopeCraft_vectorize_flags})
 
+# target_compile_options(SlopeCraftL_C PRIVATE ${SlopeCraft_vectorize_flags})
+
+# target_compile_definitions(SlopeCraftL PUBLIC "-DSLOPECRAFTL_NOT_INSTALLED")
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     target_compile_options(SlopeCraftL PRIVATE "-fvisibility=hidden" "-fPIC")
-    target_compile_options(SlopeCraftL_C PRIVATE "-fvisibility=hidden" "-fPIC")
+
+    # target_compile_options(SlopeCraftL_C PRIVATE "-fvisibility=hidden" "-fPIC")
 endif()
 
 # set shared-lib properties
@@ -108,19 +115,20 @@ set_target_properties(SlopeCraftL PROPERTIES
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
 )
-set_target_properties(SlopeCraftL_C PROPERTIES
-    VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_GUI_IDENTIFIER "github.com.ToKiNoBug.SlopeCraft"
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE TRUE
-)
 
+# set_target_properties(SlopeCraftL_C PROPERTIES
+# VERSION ${PROJECT_VERSION}
+# MACOSX_BUNDLE_GUI_IDENTIFIER "github.com.ToKiNoBug.SlopeCraft"
+# MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+# MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+# MACOSX_BUNDLE TRUE
+# )
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     set_target_properties(SlopeCraftL PROPERTIES
         PREFIX "")
-    set_target_properties(SlopeCraftL_C PROPERTIES
-        PREFIX "")
+
+    # set_target_properties(SlopeCraftL_C PROPERTIES
+    # PREFIX "")
 endif()
 
 include(install.cmake)

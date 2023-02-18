@@ -34,7 +34,8 @@ set(MapViewer_windows_rc_files)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     message("Configuring on Windows. Adding rc file to " ${PROJECT_NAME})
-    set(MapViewer_windows_rc_files others/MapViewer.rc)
+    configure_file(others/MapViewer.rc.in others/MapViewer.rc)
+    set(MapViewer_windows_rc_files ${CMAKE_CURRENT_BINARY_DIR}/others/MapViewer.rc)
 endif()
 
 set(MapViewer_ts_files

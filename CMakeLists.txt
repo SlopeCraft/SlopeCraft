@@ -22,11 +22,11 @@ if(NOT CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 endif()
 
 # manage the install prefix
-set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install 
+set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install
     CACHE PATH "Where to install SlopeCraft.")
-#set(CMAKE_INSTALL_LIBDIR ${CMAKE_INSTALL_PREFIX})
-#set(CMAKE_INSTALL_BINDIR ${CMAKE_INSTALL_PREFIX})
 
+# set(CMAKE_INSTALL_LIBDIR ${CMAKE_INSTALL_PREFIX})
+# set(CMAKE_INSTALL_BINDIR ${CMAKE_INSTALL_PREFIX})
 if(EXISTS ${CMAKE_SOURCE_DIR}/compile_commands.json)
     # delete files here
     file(REMOVE ${CMAKE_SOURCE_DIR}/compile_commands.json)
@@ -89,12 +89,17 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     add_compile_definitions("_CRT_SECURE_NO_WARNINGS")
 endif()
 
-set(SlopeCraft_gprof OFF CACHE BOOL  "Profile with gprof")
+set(SlopeCraft_gprof OFF CACHE BOOL "Profile with gprof")
+
 # profile with gprof
 if(${SlopeCraft_gprof})
     add_compile_options("-pg")
     add_link_options("-pg")
 endif()
+
+add_compile_definitions(SLOPECRAFTL_NOT_INSTALLED)
+add_compile_definitions(VISUALCRAFTL_NOT_INSTALLED)
+include_directories(${CMAKE_BINARY_DIR}/utilities)
 
 add_subdirectory(utilities)
 add_subdirectory(imageCutter)

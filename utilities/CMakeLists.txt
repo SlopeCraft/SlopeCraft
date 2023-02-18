@@ -1,5 +1,10 @@
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+configure_file(SC_version_buildtime.h.in
+    SC_version_buildtime.h)
+
+include(install.cmake)
+
 add_subdirectory(BlockListManager)
 add_subdirectory(ColorManip)
 add_subdirectory(ExternalConverters)

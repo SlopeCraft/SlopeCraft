@@ -54,7 +54,7 @@ void AbstractBlock::clear() {
 
 Kernel::Kernel() {}
 
-const char *Kernel::getSCLVersion() { return "v3.10.1"; }
+const char *Kernel::getSCLVersion() { return SC_VERSION_STR; }
 
 void Kernel::getColorMapPtrs(const float **const r, const float **const g,
                              const float **const b, const unsigned char **m,

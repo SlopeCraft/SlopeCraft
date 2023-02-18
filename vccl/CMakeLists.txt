@@ -1,12 +1,11 @@
 cmake_minimum_required(VERSION 3.20)
 project(vccl VERSION ${SlopeCraft_version} LANGUAGES CXX)
 
-
 set(vccl_win_sources)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    configure_file(vccl.rc.in vccl.rc)
-    set(vccl_win_sources ${CMAKE_CURRENT_BINARY_DIR}/vccl.rc)
+    configure_file(others/vccl.rc.in others/vccl.rc)
+    set(vccl_win_sources ${CMAKE_CURRENT_BINARY_DIR}/others/vccl.rc)
 endif()
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -38,7 +37,8 @@ qt_finalize_executable(vccl)
 
 set_target_properties(vccl PROPERTIES
     VERSION ${PROJECT_VERSION}
-    #MACOSX_BUNDLE_ICON_FILE imageCutterIconNew.icns
+
+    # MACOSX_BUNDLE_ICON_FILE imageCutterIconNew.icns
     MACOSX_BUNDLE_GUI_IDENTIFIER "com.github.ToKiNoBug.SlopeCraft"
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}

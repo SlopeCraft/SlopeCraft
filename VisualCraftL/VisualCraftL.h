@@ -126,14 +126,12 @@ VCL_create_block_state_list(const int file_count,
 VCL_EXPORT_FUN void
 VCL_destroy_block_state_list(VCL_block_state_list *const ptr);
 
-// make this struct 64 bytes for binary compability
-struct alignas(64) VCL_set_resource_option {
+struct VCL_set_resource_option {
+  const uint64_t lib_version{SC_VERSION_U64};
   SCL_gameVersion version;
   int32_t max_block_layers;
   VCL_face_t exposed_face;
 };
-
-static_assert(sizeof(VCL_set_resource_option) == 64);
 
 // set resource for kernel
 VCL_EXPORT_FUN bool

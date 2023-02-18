@@ -23,7 +23,8 @@ set(imageCutter_windows_rc_files)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     message("Configuring on Windows. Adding rc file to " ${PROJECT_NAME})
-    set(imageCutter_windows_rc_files others/imageCutter.rc)
+    configure_file(others/imageCutter.rc.in others/imageCutter.rc)
+    set(imageCutter_windows_rc_files ${CMAKE_CURRENT_BINARY_DIR}/others/imageCutter.rc)
 endif()
 
 set(imageCutter_ts_files

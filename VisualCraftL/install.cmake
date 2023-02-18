@@ -6,6 +6,10 @@ set(VCL_app_files
     ${VCL_resource_latest}
     ${CMAKE_CURRENT_SOURCE_DIR}/VCL_blocks_fixed.json)
 
+set(VCL_include_headers
+    VisualCraftL.h
+    VisualCraftL_global.h)
+
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     # install for app
     install(TARGETS VisualCraftL
@@ -21,13 +25,12 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     install(TARGETS VisualCraftL_static
         RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/Cpp/bin
         LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/Cpp/lib)
-    install(FILES VisualCraftL.h VisualCraftL_global.h
+    install(FILES ${VCL_include_headers}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/Cpp/include)
     return()
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-
     install(TARGETS VisualCraftL
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib)
@@ -37,12 +40,16 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
         LIBRARY DESTINATION lib)
 
     install(FILES ${VCL_app_files}
-        DESTINATION bin/Blocks_VCL)        
-    install(FILES VisualCraftL.h VisualCraftL_global.h
+        DESTINATION bin/Blocks_VCL)
+    install(FILES ${VCL_include_headers}
         DESTINATION include)
 
-    #install(TARGETS libzip::zip
-    #    RUNTIME DESTINATION bin
-    #    LIBRARY DESTINATION lib)
-return()
+    # install(TARGETS libzip::zip
+    # RUNTIME DESTINATION bin
+    # LIBRARY DESTINATION lib)
+    return()
+endif()
+
+if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    return()
 endif()

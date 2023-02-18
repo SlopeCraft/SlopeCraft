@@ -9,12 +9,11 @@ include(config_versions.cmake)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     set(VCL_win_sources
-        VisualCraftL.def
-        ${CMAKE_CURRENT_BINARY_DIR}/VisualCraftL.rc)
+        others/VisualCraftL.def
+        ${CMAKE_CURRENT_BINARY_DIR}/others/VisualCraftL.rc)
 else()
     set(VCL_win_sources)
 endif()
-
 
 set(VCL_source_files
     VisualCraftL_global.h
@@ -67,8 +66,11 @@ target_include_directories(VisualCraftL PUBLIC
 target_include_directories(VisualCraftL_static PUBLIC
     ${CMAKE_SOURCE_DIR}/utilities)
 
-target_include_directories(VisualCraftL PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(VisualCraftL_static PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(VisualCraftL PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_BINARY_DIR}/utilities)
+target_include_directories(VisualCraftL_static PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(VCL_link_libs
     libzip::zip
@@ -114,19 +116,19 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     if(VCL_libzip_type STREQUAL "SHARED_LIBRARY")
         get_filename_component(VCL_libzip_dir ${VCL_libzip_location} DIRECTORY)
         message(STATUS "VCL_libzip_dir = " ${VCL_libzip_dir})
-        #target_link_directories(VisualCraftL PUBLIC ${VCL_libzip_dir})
+
+        # target_link_directories(VisualCraftL PUBLIC ${VCL_libzip_dir})
         target_link_libraries(VisualCraftL PUBLIC libzip::zip)
         target_link_libraries(VisualCraftL_static PUBLIC libzip::zip)
     endif()
 
-
     # target_link_options(VisualCraftL PRIVATE -rpath=${VCL_libzip_dir})
 endif()
 
-
 set_target_properties(VisualCraftL PROPERTIES
     VERSION ${PROJECT_VERSION}
-    #MACOSX_BUNDLE_ICON_FILE imageCutterIconNew.icns
+
+    # MACOSX_BUNDLE_ICON_FILE imageCutterIconNew.icns
     MACOSX_BUNDLE_GUI_IDENTIFIER "com.github.ToKiNoBug.SlopeCraft"
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}

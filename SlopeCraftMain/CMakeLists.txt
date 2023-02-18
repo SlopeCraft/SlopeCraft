@@ -19,7 +19,8 @@ set(SlopeCraftMain_windows_rc_file)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     message("Configuring on Windows. Adding rc file to " ${PROJECT_NAME})
-    set(SlopeCraftMain_windows_rc_file others/SlopeCraft.rc)
+    configure_file(others/SlopeCraft.rc.in others/SlopeCraft.rc)
+    set(SlopeCraftMain_windows_rc_file ${CMAKE_CURRENT_BINARY_DIR}/others/SlopeCraft.rc)
 endif()
 
 set(SlopeCraftMain_header_files
