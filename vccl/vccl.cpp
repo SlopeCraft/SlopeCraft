@@ -1,10 +1,9 @@
-#include <VisualCraftL.h>
-#include <omp.h>
-
 #include <CLI11.hpp>
 #include <QImage>
+#include <VisualCraftL.h>
 #include <filesystem>
 #include <iostream>
+#include <omp.h>
 #include <string>
 #include <thread>
 #include <vector>
@@ -63,7 +62,7 @@ int main(int argc, char **argv) {
       ->check(CLI::Range(12, 19, "Avaliable versions."));
 
   app.add_option("--prefix", input.prefix, "Prefix to generate output")
-      ->check(CLI::ExistingDirectory)
+      ->default_val("")
       ->required();
 
   app.add_flag("--out-image", input.make_converted_image,
@@ -258,15 +257,8 @@ int run(const inputs &input) noexcept {
     }
 
     if (input.make_converted_image) {
-      const std::filesystem::path src_path(img_filename);
       std::string dst_name_str(input.prefix);
-
-      if (dst_name_str.back() != '/' || dst_name_str.back() != '\\') {
-        dst_name_str.append("/");
-      }
-      dst_name_str += src_path.filename().string();
-
-      cout << dst_name_str << endl;
+      dst_name_str += std::filesystem::path(img_filename).filename().string();
 
       memset(img.scanLine(0), 0, img.height() * img.width() * sizeof(uint32_t));
 

@@ -139,4 +139,4 @@ set_target_properties(VisualCraftL PROPERTIES
 
 include(install.cmake)
 
-include(add_test_executables.cmake)
+# include(add_test_executables.cmake)

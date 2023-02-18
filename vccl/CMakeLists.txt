@@ -48,3 +48,5 @@ set_target_properties(vccl PROPERTIES
 )
 
 include(install.cmake)
+
+include(add_test_vccl.cmake)

@@ -70,3 +70,4 @@ install/
 build/*
 binaries/*
 .vscode/*
+.vs/*
