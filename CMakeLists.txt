@@ -80,9 +80,9 @@ if(${SlopeCraft_vectorize})
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-message(WARNING "set runpath for linux")
+    message(STATUS "setting runpath for linux")
     set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
-    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
