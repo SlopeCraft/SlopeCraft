@@ -5,6 +5,7 @@ configure_file(SC_version_buildtime.h.in
 
 include(install.cmake)
 
+add_subdirectory(Opencl_warpper)
 add_subdirectory(BlockListManager)
 add_subdirectory(ColorManip)
 add_subdirectory(ExternalConverters)

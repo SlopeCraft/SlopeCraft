@@ -44,3 +44,16 @@ target_compile_options(ColorManip PRIVATE ${SlopeCraft_vectorize_flags})
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     target_compile_options(ColorManip PUBLIC "-fPIC")
 endif()
+
+find_package(OpenCL 3.0)
+
+if(${OpenCL_FOUND})
+    message(STATUS "Configuring OpenCL")
+    add_library(OCLWarpper STATIC
+        ColorDiff_OpenCL.h
+        ColorDiff_OpenCL.cpp)
+
+    target_include_directories(OCLWarpper PRIVATE ${CMAKE_SOURCE_DIR})
+    target_compile_features(OCLWarpper PUBLIC cxx_std_20)
+    target_link_libraries(OCLWarpper PUBLIC OpenCL::OpenCL)
+endif()
