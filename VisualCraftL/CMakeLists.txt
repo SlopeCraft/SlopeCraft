@@ -15,6 +15,7 @@ else()
     set(VCL_win_sources)
 endif()
 
+# find_package(OpenCL)
 set(VCL_source_files
     VisualCraftL_global.h
     VisualCraftL.h
