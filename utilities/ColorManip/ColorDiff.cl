@@ -18,7 +18,7 @@ float sum3(float3 v);
 float square(float v);
 float3 square_vec3(float3 v);
 
-float color_diff_RGB(float3 RGB1, float3 RGB2);
+float color_diff_RGB_XYZ(float3 RGB1, float3 RGB2);
 float color_diff_RGB_Better(float3 RGB1, float3 RGB2);
 float color_diff_HSV(float3 hsv1_vec3, float3 hsv2_vec3);
 float color_diff_Lab94(float3 lab1_vec3,float3 lab2_vec3);
@@ -32,7 +32,7 @@ float sum3(float3 v) { return v[0] + v[1] + v[2]; }
 float square(float s) {return s*s; }
 float3 square_vec3(float3 v) { return v * v; }
 
-float color_diff_RGB(float3 RGB1, float3 RGB2) { return norm2(RGB1 - RGB2); }
+float color_diff_RGB_XYZ(float3 RGB1, float3 RGB2) { return norm2(RGB1 - RGB2); }
 
 float color_diff_RGB_Better(float3 rgb1, float3 rgb2) {
 
@@ -95,7 +95,6 @@ float color_diff_HSV(float3 hsv1_vec3, float3 hsv2_vec3) {
   return dX * dX + dY * dY + dZ * dZ;
 }
 
-
 float color_diff_Lab94(float3 lab1_vec3,float3 lab2_vec3) {
   const float L1=lab1_vec3[0];
   const float a1=lab1_vec3[1];
@@ -119,7 +118,6 @@ float color_diff_Lab94(float3 lab1_vec3,float3 lab2_vec3) {
   const float result=deltaL_2+deltaCab_2/SC_2+deltaHab_2/SH_2;
   return result;
 }
-
 
 float color_diff_Lab00(float3 lab1_vec3,float3 lab2_vec3) {
   
@@ -240,8 +238,9 @@ float color_diff_Lab00(float3 lab1_vec3,float3 lab2_vec3) {
     result_diff_dst[global_idx] = result_diff;                                 \
   }
 
-SC_MAKE_COLORDIFF_KERNEL_FUN(match_color_RGB, color_diff_RGB)
+SC_MAKE_COLORDIFF_KERNEL_FUN(match_color_RGB, color_diff_RGB_XYZ)
 SC_MAKE_COLORDIFF_KERNEL_FUN(match_color_RGB_Better, color_diff_RGB_Better)
 SC_MAKE_COLORDIFF_KERNEL_FUN(match_color_HSV, color_diff_HSV)
 SC_MAKE_COLORDIFF_KERNEL_FUN(match_color_Lab94, color_diff_Lab94)
 SC_MAKE_COLORDIFF_KERNEL_FUN(match_color_Lab00, color_diff_Lab00)
+SC_MAKE_COLORDIFF_KERNEL_FUN(match_color_XYZ, color_diff_RGB_XYZ)
