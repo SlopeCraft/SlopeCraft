@@ -4,7 +4,8 @@
 
 #include <utilities/SC_GlobalEnums.h>
 
-namespace ocl_warpper {} // namespace ocl_warpper
+extern const unsigned char ColorManip_cl_rc[];
+extern const unsigned int ColorManip_cl_rc_length;
 
 size_t ocl_warpper::platform_num() noexcept {
   cl_uint ret;
@@ -117,6 +118,13 @@ public:
   cl::CommandQueue queue;
   cl::Program program;
 
+  cl::Kernel k_RGB;
+  cl::Kernel k_RGB_Better;
+  cl::Kernel k_HSV;
+  cl::Kernel k_Lab94;
+  cl::Kernel k_Lab00;
+  cl::Kernel k_XYZ;
+
 private:
   void init_resource() noexcept {
     this->context = cl::Context(this->device, NULL, NULL, NULL, &this->error);
@@ -129,7 +137,14 @@ private:
     if (this->error != CL_SUCCESS)
       return;
 
-#warning create program here.
+    std::pair<const char *, size_t> src;
+    src.first = (const char *)ColorManip_cl_rc;
+    src.second = ColorManip_cl_rc_length;
+    this->program = cl::Program(this->context, {src}, &this->error);
+    if (this->error != CL_SUCCESS)
+      return;
+
+#warning create kernels and buffers here.
   }
 
 public:

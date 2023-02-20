@@ -1,4 +1,4 @@
-project(ColorManip VERSION ${SlopeCraft_version} LANGUAGES CXX)
+project(ColorManip VERSION ${SlopeCraft_version} LANGUAGES C CXX)
 
 # set(CMAKE_CXX_STANDARD 20)
 # set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -49,11 +49,16 @@ find_package(OpenCL 3.0)
 
 if(${OpenCL_FOUND})
     message(STATUS "Configuring OpenCL")
+    include(${CMAKE_SOURCE_DIR}/cmake/find_ResourceCreator.cmake)
+    include(${CMAKE_SOURCE_DIR}/3rdParty/ResourceCreator.cmake/ResourceCreator.cmake)
+
     add_library(OCLWarpper STATIC
         ColorDiff_OpenCL.h
         ColorDiff_OpenCL.cpp)
 
+    add_resource(ColorManip_cl_rc ColorDiff.cl)
+
     target_include_directories(OCLWarpper PRIVATE ${CMAKE_SOURCE_DIR})
     target_compile_features(OCLWarpper PUBLIC cxx_std_20)
-    target_link_libraries(OCLWarpper PUBLIC OpenCL::OpenCL)
+    target_link_libraries(OCLWarpper PUBLIC OpenCL::OpenCL ColorManip_cl_rc)
 endif()
