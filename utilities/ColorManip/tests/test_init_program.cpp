@@ -44,9 +44,12 @@ int main(int, char **) {
   cout << "colorset set." << endl;
   {
     // initialize task with random colors
-    std::vector<uint32_t> tasks(task_size);
+    std::vector<std::array<float,3>> tasks(task_size);
     for (size_t tid = 0; tid < task_size; tid++) {
-      tasks[tid] = rand_u32(mt) | 0xFF'00'00'00;
+      for(size_t cid=0;cid<3;cid++) {
+
+      tasks[tid][cid] = rand_f32(mt);
+      }
     }
     // set tasks
     rcs.set_task(tasks.data(), tasks.size());

@@ -19,7 +19,7 @@ class ocl_resource {
 public:
   struct task_rcs {
     // std::vector<uint32_t> buf_unconverted_ARGB_host;
-    cl::Buffer ARGB_device;
+    cl::Buffer rawcolor_f32_3_device;
     std::vector<uint16_t> result_idx_u16_host;
     cl::Buffer result_idx_u16_device;
     std::vector<float> result_diff_f32_host;
@@ -71,7 +71,7 @@ public:
   void set_colorset(size_t color_num,
                     const std::array<const float *, 3> &color_ptrs) noexcept;
 
-  void set_task(const uint32_t *src, size_t task_num) noexcept;
+  void set_task(const std::array<float,3> *src, size_t task_num) noexcept;
 
   void execute(::SCL_convertAlgo algo) noexcept;
 

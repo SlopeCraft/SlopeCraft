@@ -188,7 +188,7 @@ void ocl_warpper::ocl_resource::init_resource() noexcept {
 #warning create kernels here.
 
   this->error = private_fun_change_buf_size(
-      this->context, this->task.ARGB_device, 128 * sizeof(uint32_t),
+      this->context, this->task.rawcolor_f32_3_device, 128 * sizeof(float[3]),
       CL_MEM_READ_ONLY, true);
   if (!this->ok()) {
     this->err_msg = "Failed to initialize buffer size for ARGB.";
@@ -226,12 +226,12 @@ void ocl_warpper::ocl_resource::resize_task(size_t task_num) noexcept {
   this->task.result_idx_u16_host.resize(task_num);
   this->task.result_diff_f32_host.resize(task_num);
 
-  const size_t ARGB_required_bytes = task_num * sizeof(uint32_t);
+  const size_t ARGB_required_bytes = task_num * sizeof(float[3]);
   const size_t result_idx_required_bytes = task_num * sizeof(uint16_t);
   const size_t result_diff_required_bytes = task_num * sizeof(float);
 
   this->error =
-      private_fun_change_buf_size(this->context, this->task.ARGB_device,
+      private_fun_change_buf_size(this->context, this->task.rawcolor_f32_3_device,
                                   ARGB_required_bytes, CL_MEM_READ_ONLY, false);
   if (!this->ok()) {
     this->err_msg = "Failed to ###.";
@@ -319,8 +319,7 @@ ocl_warpper::ocl_resource::kernel_by_algo(::SCL_convertAlgo algo) noexcept {
   return nullptr;
 }
 
-void ocl_warpper::ocl_resource::set_task(const uint32_t *src,
-                                         size_t task_num) noexcept {
+void ocl_warpper::ocl_resource::set_task(const std::array<float,3> *src, size_t task_num) noexcept {
   this->resize_task(task_num);
   if (!this->ok()) {
     this->err_msg = "Failed to ###.";
@@ -328,7 +327,7 @@ void ocl_warpper::ocl_resource::set_task(const uint32_t *src,
   }
 
   this->error = this->queue.enqueueWriteBuffer(
-      this->task.ARGB_device, false, 0, task_num * sizeof(uint32_t), src);
+      this->task.rawcolor_f32_3_device, false, 0, task_num * sizeof(float[3]), src);
   if (!this->ok()) {
     this->err_msg = "Failed to ###.";
     return;
@@ -361,7 +360,7 @@ void ocl_warpper::ocl_resource::set_args(::SCL_convertAlgo algo) noexcept {
     return;
   }
 
-  this->error = k->setArg(2, this->task.ARGB_device);
+  this->error = k->setArg(2, this->task.rawcolor_f32_3_device);
   if (!this->ok()) {
     this->err_msg = "Failed to set arg2.";
     return;
