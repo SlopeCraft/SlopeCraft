@@ -11,7 +11,7 @@ std::uniform_real_distribution<float> rand_f32(0, 1);
 std::uniform_int_distribution<uint32_t> rand_u32(0, UINT32_MAX);
 
 int main(int, char **) {
-  ocl_warpper::ocl_resource rcs(1, 0);
+  ocl_warpper::ocl_resource rcs(0, 0);
   if (!rcs.ok()) {
     cout << rcs.error_code() << " : " << rcs.error_detail() << endl;
     return 1;
@@ -19,10 +19,10 @@ int main(int, char **) {
 
   cout << "Vendor = " << rcs.device_vendor() << endl;
 
-  const size_t colorset_size = 1 << 14;
-  const size_t task_size = 1 << 15;
+  const size_t colorset_size = 1 << 15;
+  const size_t task_size = 1 << 16;
 
-  const SCL_convertAlgo algo = SCL_convertAlgo::RGB;
+  const SCL_convertAlgo algo = SCL_convertAlgo::RGB_Better;
 
   {
     std::vector<float> colorset_R(colorset_size), colorset_B(colorset_size),

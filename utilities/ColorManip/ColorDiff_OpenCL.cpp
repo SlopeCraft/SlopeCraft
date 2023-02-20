@@ -178,10 +178,17 @@ void ocl_warpper::ocl_resource::init_resource() noexcept {
     this->err_msg = "Failed to build program.";
     return;
   }
-#warning remember to restore the name
+
+
   this->k_RGB = cl::Kernel(this->program, "match_color_RGB", &this->error);
   if (!this->ok()) {
-    this->err_msg = "Failed to create kernel(match_color_RGB).";
+    this->err_msg = "Failed to create kernel (match_color_RGB).";
+    return;
+  }
+
+  this->k_RGB_Better = cl::Kernel(this->program, "match_color_RGB_Better", &this->error);
+  if (!this->ok()) {
+    this->err_msg = "Failed to create kernel (match_color_Better).";
     return;
   }
 
