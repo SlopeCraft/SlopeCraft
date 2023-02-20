@@ -58,7 +58,13 @@ if(${OpenCL_FOUND})
 
     add_resource(ColorManip_cl_rc ColorDiff.cl)
 
-    target_include_directories(OCLWarpper PRIVATE ${CMAKE_SOURCE_DIR})
+    target_include_directories(OCLWarpper PRIVATE ${SlopeCraft_Eigen3_include_dir})
+    target_include_directories(OCLWarpper PUBLIC ${CMAKE_SOURCE_DIR})
+    target_include_directories(OCLWarpper INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
     target_compile_features(OCLWarpper PUBLIC cxx_std_20)
     target_link_libraries(OCLWarpper PUBLIC OpenCL::OpenCL ColorManip_cl_rc)
+
+    add_executable(test_init_program tests/test_init_program.cpp)
+
+    target_link_libraries(test_init_program PRIVATE OCLWarpper)
 endif()
