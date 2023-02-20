@@ -19,6 +19,7 @@ float sum3(float3 v);
 
 float color_diff_RGB(float3 RGB1, float3 RGB2);
 float color_diff_RGB_Better(float3 RGB1, float3 RGB2);
+float color_diff_HSV(float3 hsv1_vec3, float3 hsv2_vec3);
 
 /// Function implementations
 
@@ -72,6 +73,25 @@ float color_diff_RGB_Better(float3 rgb1, float3 rgb2) {
   return part1 + part2;
 }
 
+float color_diff_HSV(float3 hsv1_vec3, float3 hsv2_vec3) {
+  const float h1 = hsv1_vec3[0];
+  const float s1 = hsv1_vec3[1];
+  const float v1 = hsv1_vec3[2];
+
+  const float h2 = hsv2_vec3[0];
+  const float s2 = hsv2_vec3[1];
+  const float v2 = hsv2_vec3[2];
+
+  const float sv_1 = s1 * v1;
+  const float sv_2 = s2 * v2;
+
+  const float dX = 50.0f * (cos(h1) * sv_1 - cos(h2) - sv_2);
+  const float dY = 50.0f * (sin(h1) * sv_1 - sin(h2) - sv_2);
+  const float dZ = 50.0f * (v1 - v2);
+
+  return dX * dX + dY * dY + dZ * dZ;
+}
+
 #define SC_MAKE_COLORDIFF_KERNEL_FUN(kfun_name, diff_fun)                      \
   __kernel void kfun_name(                                                     \
       __global const float3 *colorset_colors, const ushort colorset_size,      \
@@ -100,3 +120,4 @@ float color_diff_RGB_Better(float3 rgb1, float3 rgb2) {
 
 SC_MAKE_COLORDIFF_KERNEL_FUN(match_color_RGB, color_diff_RGB)
 SC_MAKE_COLORDIFF_KERNEL_FUN(match_color_RGB_Better, color_diff_RGB_Better)
+SC_MAKE_COLORDIFF_KERNEL_FUN(match_color_HSV, color_diff_HSV)

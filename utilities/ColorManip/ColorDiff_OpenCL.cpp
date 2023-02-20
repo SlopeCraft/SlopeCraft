@@ -192,6 +192,12 @@ void ocl_warpper::ocl_resource::init_resource() noexcept {
     return;
   }
 
+  this->k_HSV = cl::Kernel(this->program, "match_color_HSV", &this->error);
+  if (!this->ok()) {
+    this->err_msg = "Failed to create kernel (match_color_HSV).";
+    return;
+  }
+
 #warning create kernels here.
 
   this->error = private_fun_change_buf_size(
