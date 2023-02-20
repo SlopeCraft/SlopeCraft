@@ -3,8 +3,8 @@
 
 #include <CL/cl.hpp>
 #include <array>
+#include <assert.h>
 #include <string>
-
 #include <utilities/SC_GlobalEnums.h>
 
 namespace ocl_warpper {
@@ -27,8 +27,8 @@ public:
   };
 
   struct colorset_rcs {
-    cl::Buffer num_colors_ushort;
     cl::Buffer colorset_float3;
+    uint16_t colorset_color_num{0};
   };
 
 private:
@@ -71,12 +71,27 @@ public:
   void set_colorset(size_t color_num,
                     const std::array<const float *, 3> &color_ptrs) noexcept;
 
-  void set_task(const uint32_t *src, size_t task_num,
-                ::SCL_convertAlgo algo) noexcept;
+  void set_task(const uint32_t *src, size_t task_num) noexcept;
+
+  void execute(::SCL_convertAlgo algo) noexcept;
+
+  inline size_t task_count() const noexcept {
+    assert(this->task.result_diff_f32_host.size() ==
+           this->task.result_idx_u16_host.size());
+    return this->task.result_diff_f32_host.size();
+  }
+
+  inline std::string device_vendor() const noexcept {
+    return this->device.getInfo<CL_DEVICE_VENDOR>();
+  }
 
 private:
   void resize_task(size_t task_num) noexcept;
   void resize_colorset(size_t color_num) noexcept;
+
+  cl::Kernel *kernel_by_algo(::SCL_convertAlgo algo) noexcept;
+
+  void set_args(::SCL_convertAlgo algo) noexcept;
 };
 
 } // namespace ocl_warpper

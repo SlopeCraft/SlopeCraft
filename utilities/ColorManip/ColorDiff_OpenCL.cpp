@@ -5,6 +5,9 @@
 #include <stdlib.h>
 #include <utilities/SC_GlobalEnums.h>
 
+#warning remember to remove iostream
+#include <iostream>
+
 extern const unsigned char ColorManip_cl_rc[];
 extern const unsigned int ColorManip_cl_rc_length;
 
@@ -175,7 +178,7 @@ void ocl_warpper::ocl_resource::init_resource() noexcept {
     this->err_msg = "Failed to build program.";
     return;
   }
-
+#warning remember to restore the name
   this->k_RGB = cl::Kernel(this->program, "match_color_RGB", &this->error);
   if (!this->ok()) {
     this->err_msg = "Failed to create kernel(match_color_RGB).";
@@ -194,7 +197,7 @@ void ocl_warpper::ocl_resource::init_resource() noexcept {
 
   this->error = private_fun_change_buf_size(
       this->context, this->task.result_idx_u16_device, 128 * sizeof(uint16_t),
-      CL_MEM_READ_ONLY, true);
+      CL_MEM_WRITE_ONLY, true);
   if (!this->ok()) {
     this->err_msg = "Failed to ###.";
     return;
@@ -202,24 +205,16 @@ void ocl_warpper::ocl_resource::init_resource() noexcept {
 
   this->error = private_fun_change_buf_size(
       this->context, this->task.result_diff_f32_device, 128 * sizeof(float),
-      CL_MEM_READ_ONLY, true);
+      CL_MEM_WRITE_ONLY, true);
   if (!this->ok()) {
     this->err_msg = "Failed to ###.";
     return;
   }
 
   // initialize buffers for colorset
-  this->error = private_fun_change_buf_size(this->context,
-                                            this->colorset.num_colors_ushort, 2,
-                                            CL_MEM_READ_ONLY, true);
-  if (!this->ok()) {
-    this->err_msg = "Failed to ###.";
-    return;
-  }
-
-  this->error = private_fun_change_buf_size(
-      this->context, this->colorset.colorset_float3, 256 * sizeof(float) * 3,
-      CL_MEM_READ_ONLY, true);
+  this->colorset.colorset_float3 =
+      cl::Buffer(this->context, CL_MEM_READ_ONLY, 256 * sizeof(float) * 3, NULL,
+                 &this->error);
   if (!this->ok()) {
     this->err_msg = "Failed to ###.";
     return;
@@ -268,11 +263,7 @@ void ocl_warpper::ocl_resource::resize_colorset(size_t color_num) noexcept {
   if (!this->ok())
     return;
 
-  this->error = private_fun_change_buf_size(this->context,
-                                            this->colorset.num_colors_ushort, 2,
-                                            CL_MEM_READ_ONLY, false);
-  if (!this->ok())
-    return;
+  this->colorset.colorset_color_num = color_num;
 }
 
 void ocl_warpper::ocl_resource::set_colorset(
@@ -282,8 +273,6 @@ void ocl_warpper::ocl_resource::set_colorset(
     this->err_msg = "Failed to resize colorset.";
     return;
   }
-
-  uint16_t num = color_num;
 
   Eigen::ArrayXXf trans(color_num, 3);
 
@@ -301,13 +290,6 @@ void ocl_warpper::ocl_resource::set_colorset(
     return;
   }
 
-  this->error = this->queue.enqueueWriteBuffer(this->colorset.num_colors_ushort,
-                                               false, 0, 2, &num);
-  if (!this->ok()) {
-    this->err_msg = "Failed to copy colornum into device.";
-    return;
-  }
-
   this->error = this->queue.finish();
   if (!this->ok()) {
     this->err_msg = "Failed to wait for queue.";
@@ -315,8 +297,30 @@ void ocl_warpper::ocl_resource::set_colorset(
   }
 }
 
-void ocl_warpper::ocl_resource::set_task(const uint32_t *src, size_t task_num,
-                                         ::SCL_convertAlgo algo) noexcept {
+cl::Kernel *
+ocl_warpper::ocl_resource::kernel_by_algo(::SCL_convertAlgo algo) noexcept {
+
+  switch (algo) {
+  case SCL_convertAlgo::RGB:
+    return &this->k_RGB;
+  case SCL_convertAlgo::RGB_Better:
+    return &this->k_RGB_Better;
+  case SCL_convertAlgo::HSV:
+    return &this->k_HSV;
+  case SCL_convertAlgo::Lab94:
+    return &this->k_Lab94;
+  case SCL_convertAlgo::Lab00:
+    return &this->k_Lab00;
+  case SCL_convertAlgo::XYZ:
+    return &this->k_XYZ;
+  default:
+    return nullptr;
+  }
+  return nullptr;
+}
+
+void ocl_warpper::ocl_resource::set_task(const uint32_t *src,
+                                         size_t task_num) noexcept {
   this->resize_task(task_num);
   if (!this->ok()) {
     this->err_msg = "Failed to ###.";
@@ -335,45 +339,43 @@ void ocl_warpper::ocl_resource::set_task(const uint32_t *src, size_t task_num,
     this->err_msg = "Failed to ###.";
     return;
   }
+}
 
-  cl::Kernel *k = nullptr;
+void ocl_warpper::ocl_resource::set_args(::SCL_convertAlgo algo) noexcept {
 
-  switch (algo) {
-  case SCL_convertAlgo::RGB:
-    k = &this->k_RGB;
-    break;
-  default:
-    break;
-  }
+  this->queue.finish();
+
+  cl::Kernel *k = this->kernel_by_algo(algo);
 
   // set kernel args
+  // cl_mem mem = this->colorset.colorset_float3;
   this->error = k->setArg(0, this->colorset.colorset_float3);
   if (!this->ok()) {
-    this->err_msg = "Failed to ###.";
+    this->err_msg = "Failed to set arg0.";
     return;
   }
 
-  this->error = k->setArg(1, this->colorset.num_colors_ushort);
+  this->error = k->setArg(1, this->colorset.colorset_color_num);
   if (!this->ok()) {
-    this->err_msg = "Failed to ###.";
+    this->err_msg = "Failed to set arg1.";
     return;
   }
 
   this->error = k->setArg(2, this->task.ARGB_device);
   if (!this->ok()) {
-    this->err_msg = "Failed to ###.";
+    this->err_msg = "Failed to set arg2.";
     return;
   }
 
   this->error = k->setArg(3, this->task.result_idx_u16_device);
   if (!this->ok()) {
-    this->err_msg = "Failed to ###.";
+    this->err_msg = "Failed to set arg3.";
     return;
   }
 
   this->error = k->setArg(4, this->task.result_diff_f32_device);
   if (!this->ok()) {
-    this->err_msg = "Failed to ###.";
+    this->err_msg = "Failed to set arg4.";
     return;
   }
 }
@@ -401,4 +403,48 @@ cl_int private_fun_change_buf_size(cl::Context &context, cl::Buffer &buf,
   buf = replace;
 
   return CL_SUCCESS;
+}
+
+void ocl_warpper::ocl_resource::execute(::SCL_convertAlgo algo) noexcept {
+
+  this->set_args(algo);
+  if (!this->ok()) {
+    this->err_msg = "Failed to set args.";
+    return;
+  }
+
+  cl::Kernel *const k = this->kernel_by_algo(algo);
+  std::cout << "kernel function name = "
+            << k->getInfo<CL_KERNEL_FUNCTION_NAME>() << std::endl;
+
+  this->error =
+      this->queue.enqueueNDRangeKernel(*k, {0}, {this->task_count()}, {32});
+  if (!this->ok()) {
+    this->err_msg = "Failed to execute kernel function.";
+    return;
+  }
+
+  this->error =
+      this->queue.enqueueReadBuffer(this->task.result_idx_u16_device, false, 0,
+                                    this->task_count() * sizeof(uint16_t),
+                                    this->task.result_idx_u16_host.data());
+  if (!this->ok()) {
+    this->err_msg = "Failed to read result index from device.";
+    return;
+  }
+
+  this->error =
+      this->queue.enqueueReadBuffer(this->task.result_diff_f32_device, false, 0,
+                                    this->task_count() * sizeof(float),
+                                    this->task.result_diff_f32_host.data());
+  if (!this->ok()) {
+    this->err_msg = "Failed to read result diff from device.";
+    return;
+  }
+
+  this->error = this->queue.finish();
+  if (!this->ok()) {
+    this->err_msg = "Failed to wait for queue.";
+    return;
+  }
 }
