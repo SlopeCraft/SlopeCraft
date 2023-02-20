@@ -179,14 +179,14 @@ void ocl_warpper::ocl_resource::init_resource() noexcept {
     return;
   }
 
-
   this->k_RGB = cl::Kernel(this->program, "match_color_RGB", &this->error);
   if (!this->ok()) {
     this->err_msg = "Failed to create kernel (match_color_RGB).";
     return;
   }
 
-  this->k_RGB_Better = cl::Kernel(this->program, "match_color_RGB_Better", &this->error);
+  this->k_RGB_Better =
+      cl::Kernel(this->program, "match_color_RGB_Better", &this->error);
   if (!this->ok()) {
     this->err_msg = "Failed to create kernel (match_color_Better).";
     return;
@@ -195,6 +195,18 @@ void ocl_warpper::ocl_resource::init_resource() noexcept {
   this->k_HSV = cl::Kernel(this->program, "match_color_HSV", &this->error);
   if (!this->ok()) {
     this->err_msg = "Failed to create kernel (match_color_HSV).";
+    return;
+  }
+
+  this->k_HSV = cl::Kernel(this->program, "match_color_Lab94", &this->error);
+  if (!this->ok()) {
+    this->err_msg = "Failed to create kernel (match_color_Lab94).";
+    return;
+  }
+
+  this->k_HSV = cl::Kernel(this->program, "match_color_Lab00", &this->error);
+  if (!this->ok()) {
+    this->err_msg = "Failed to create kernel (match_color_Lab00).";
     return;
   }
 
@@ -243,9 +255,9 @@ void ocl_warpper::ocl_resource::resize_task(size_t task_num) noexcept {
   const size_t result_idx_required_bytes = task_num * sizeof(uint16_t);
   const size_t result_diff_required_bytes = task_num * sizeof(float);
 
-  this->error =
-      private_fun_change_buf_size(this->context, this->task.rawcolor_f32_3_device,
-                                  ARGB_required_bytes, CL_MEM_READ_ONLY, false);
+  this->error = private_fun_change_buf_size(
+      this->context, this->task.rawcolor_f32_3_device, ARGB_required_bytes,
+      CL_MEM_READ_ONLY, false);
   if (!this->ok()) {
     this->err_msg = "Failed to ###.";
     return;
@@ -332,15 +344,17 @@ ocl_warpper::ocl_resource::kernel_by_algo(::SCL_convertAlgo algo) noexcept {
   return nullptr;
 }
 
-void ocl_warpper::ocl_resource::set_task(const std::array<float,3> *src, size_t task_num) noexcept {
+void ocl_warpper::ocl_resource::set_task(const std::array<float, 3> *src,
+                                         size_t task_num) noexcept {
   this->resize_task(task_num);
   if (!this->ok()) {
     this->err_msg = "Failed to ###.";
     return;
   }
 
-  this->error = this->queue.enqueueWriteBuffer(
-      this->task.rawcolor_f32_3_device, false, 0, task_num * sizeof(float[3]), src);
+  this->error =
+      this->queue.enqueueWriteBuffer(this->task.rawcolor_f32_3_device, false, 0,
+                                     task_num * sizeof(float[3]), src);
   if (!this->ok()) {
     this->err_msg = "Failed to ###.";
     return;

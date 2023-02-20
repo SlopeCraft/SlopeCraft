@@ -13,7 +13,7 @@ std::uniform_real_distribution<float> rand_f32(0, 1);
 // std::uniform_int_distribution<uint32_t> rand_u32(0, UINT32_MAX);
 
 int main(int, char **) {
-  ocl_warpper::ocl_resource rcs(0, 0);
+  ocl_warpper::ocl_resource rcs(1, 0);
   if (!rcs.ok()) {
     cout << rcs.error_code() << " : " << rcs.error_detail() << endl;
     return 1;

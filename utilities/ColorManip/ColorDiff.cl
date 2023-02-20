@@ -14,7 +14,6 @@ __kernel void match_color_test(__global const float3 *color_avaliable_ptr,
 
 // compute sum(v*v)
 float norm2(float3 v);
-float deg2rad(float deg);
 float sum3(float3 v);
 float square(float v);
 float3 square_vec3(float3 v);
@@ -23,6 +22,7 @@ float color_diff_RGB(float3 RGB1, float3 RGB2);
 float color_diff_RGB_Better(float3 RGB1, float3 RGB2);
 float color_diff_HSV(float3 hsv1_vec3, float3 hsv2_vec3);
 float color_diff_Lab94(float3 lab1_vec3,float3 lab2_vec3);
+float color_diff_Lab00(float3 lab1_vec3,float3 lab2_vec3);
 
 
 /// Function implementations
@@ -31,8 +31,6 @@ float norm2(float3 v) { return dot(v, v); }
 float sum3(float3 v) { return v[0] + v[1] + v[2]; }
 float square(float s) {return s*s; }
 float3 square_vec3(float3 v) { return v * v; }
-
-float deg2rad(float deg) { return deg * M_PI / 180.0f; }
 
 float color_diff_RGB(float3 RGB1, float3 RGB2) { return norm2(RGB1 - RGB2); }
 
@@ -122,6 +120,100 @@ float color_diff_Lab94(float3 lab1_vec3,float3 lab2_vec3) {
   return result;
 }
 
+
+float color_diff_Lab00(float3 lab1_vec3,float3 lab2_vec3) {
+  
+  const float kL = 1.0;
+  const float kC = 1.0;
+  const float kH = 1.0;
+  const float L1=lab1_vec3[0];
+  const float a1=lab1_vec3[1];
+  const float b1=lab1_vec3[2];
+
+  const float L2=lab2_vec3[0];
+  const float a2=lab2_vec3[1];
+  const float b2=lab2_vec3[2];
+
+  
+  float C1sab = sqrt(a1 * a1 + b1 * b1);
+  float C2sab = sqrt(a2 * a2 + b2 * b2);
+  float mCsab = (C1sab + C2sab) / 2;
+  float pow_mCsab_7 = pow(mCsab, 7);
+  float G =
+      0.5 * (1 - sqrt(pow_mCsab_7 / (pow_mCsab_7 + pow(25.0f, 7.0f))));
+  float a1p = (1 + G) * a1;
+  float a2p = (1 + G) * a2;
+  float C1p = sqrt(a1p * a1p + b1 * b1);
+  float C2p = sqrt(a2p * a2p + b2 * b2);
+  float h1p, h2p;
+  if (b1 == 0 && a1p == 0)
+    h1p = 0;
+  else
+    h1p = atan2(b1, a1p);
+  if (h1p < 0)
+    h1p += 2 * M_PI;
+
+  if (b2 == 0 && a2p == 0)
+    h2p = 0;
+  else
+    h2p = atan2(b2, a2p);
+  if (h2p < 0)
+    h2p += 2 * M_PI;
+
+  float dLp = L2 - L1;
+  float dCp = C2p - C1p;
+  float dhp;
+  if (C1p * C2p == 0) {
+    dhp = 0;
+  } else {
+    if (fabs(h2p - h1p) <= radians(180.0f)) {
+      dhp = h2p - h1p;
+    } else if (h2p - h1p > radians(180.0f)) {
+      dhp = h2p - h1p - radians(360.0f);
+    } else {
+      dhp = h2p - h1p + radians(360.0f);
+    }
+  }
+
+  float dHp = 2 * sqrt(C1p * C2p) * sin(dhp / 2.0);
+
+  float mLp = (L1 + L2) / 2;
+  float mCp = (C1p + C2p) / 2;
+  float mhp;
+  if (C1p * C2p == 0) {
+    mhp = (h1p + h2p);
+  } else if (fabs(h2p - h1p) <= radians(180.0f)) {
+    mhp = (h1p + h2p) / 2;
+  } else if (h1p + h2p < radians(360.0f)) {
+    mhp = (h1p + h2p + radians(360.0f)) / 2;
+  } else {
+    mhp = (h1p + h2p - radians(360.0f)) / 2;
+  }
+
+  float T = 1 - 0.17 * cos(mhp - radians(30.0f)) + 0.24 * cos(2 * mhp) +
+            0.32 * cos(3 * mhp + radians(6.0f)) -
+            0.20 * cos(4 * mhp - radians(63.0f));
+
+  float dTheta = radians(30.0f) * exp(-square((mhp - radians(275.0f)) / radians(25.0f)));
+
+  float RC = 2 * sqrt(pow(mCp, 7) / (pow(25.0f, 7.0f) + pow(mCp, 7.0f)));
+  float square_mLp_minus_50 = square(mLp - 50);
+  float SL = 1 + 0.015 * square_mLp_minus_50 / sqrt(20 + square_mLp_minus_50);
+
+  float SC = 1 + 0.045 * mCp;
+
+  float SH = 1 + 0.015 * mCp * T;
+
+  float RT = -RC * sin(2 * dTheta);
+
+  float Diffsquare = square(dLp / SL / kL) + square(dCp / SC / kC) +
+                     square(dHp / SH / kH) +
+                     RT * (dCp / SC / kC) * (dHp / SH / kH);
+
+                     
+  return Diffsquare;
+}
+
 #define SC_MAKE_COLORDIFF_KERNEL_FUN(kfun_name, diff_fun)                      \
   __kernel void kfun_name(                                                     \
       __global const float3 *colorset_colors, const ushort colorset_size,      \
@@ -152,3 +244,4 @@ SC_MAKE_COLORDIFF_KERNEL_FUN(match_color_RGB, color_diff_RGB)
 SC_MAKE_COLORDIFF_KERNEL_FUN(match_color_RGB_Better, color_diff_RGB_Better)
 SC_MAKE_COLORDIFF_KERNEL_FUN(match_color_HSV, color_diff_HSV)
 SC_MAKE_COLORDIFF_KERNEL_FUN(match_color_Lab94, color_diff_Lab94)
+SC_MAKE_COLORDIFF_KERNEL_FUN(match_color_Lab00, color_diff_Lab00)
