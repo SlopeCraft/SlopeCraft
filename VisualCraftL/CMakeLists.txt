@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(VisualCraftL VERSION ${SlopeCraft_version} LANGUAGES CXX)
+project(VisualCraftL VERSION ${SlopeCraft_version} LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 
@@ -74,11 +74,12 @@ target_include_directories(VisualCraftL_static PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(VCL_link_libs
+
+    ColorManip
     libzip::zip
     ZLIB::ZLIB
     PNG::PNG
     ${VCL_libzip_additions}
-    ColorManip
     Schem
     fmt::fmt)
 

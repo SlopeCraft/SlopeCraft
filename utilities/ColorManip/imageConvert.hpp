@@ -26,8 +26,10 @@ This file is part of SlopeCraft.
 #include <omp.h>
 #include <uiPack/uiPack.h>
 
+#include "ColorDiff_OpenCL.h"
 #include <Eigen/Dense>
 #include <memory>
+#include <optional>
 #include <thread>
 #include <type_traits>
 #include <unordered_map>
@@ -49,7 +51,27 @@ static const Eigen::Array<float, 2, 3>
     dithermap_RL({{7.0 / 16.0, 0.0 / 16.0, 0.0 / 16.0},
                   {1.0 / 16.0, 5.0 / 16.0, 3.0 / 16.0}});
 
-template <bool is_not_optical> class ImageCvter {
+template <bool is_not_optical> struct OCL_wrapper_wrapper {
+  constexpr bool have_ocl() const noexcept { return false; }
+};
+
+template <> struct OCL_wrapper_wrapper<false> {
+
+protected:
+  ocl_warpper::ocl_resource ocl_rcs;
+  bool have_ocl_rcs{false};
+
+public:
+  bool have_ocl() const noexcept { return this->have_ocl_rcs; }
+
+  void set_ocl(ocl_warpper::ocl_resource &&src) noexcept {
+    this->ocl_rcs = src;
+    this->have_ocl_rcs = this->ocl_rcs.ok();
+  }
+};
+
+template <bool is_not_optical>
+class ImageCvter : OCL_wrapper_wrapper<is_not_optical> {
 public:
   using basic_colorset_t = colorset_new<true, is_not_optical>;
   using allowed_colorset_t = colorset_new<false, is_not_optical>;
@@ -116,16 +138,19 @@ public:
     }
   }
 
-  void convert_image(::SCL_convertAlgo __algo, bool dither) noexcept {
+  void convert_image(::SCL_convertAlgo __algo, bool dither,
+                     bool try_gpu = false) noexcept {
     if (__algo == ::SCL_convertAlgo::gaCvter) {
       __algo = ::SCL_convertAlgo::RGB_Better;
     }
 
     ui.rangeSet(0, 100, 0);
+
     this->algo = __algo;
     this->add_colors_to_hash();
     ui.rangeSet(0, 100, 25);
-    this->match_all_TokiColors();
+
+    this->match_all_TokiColors(try_gpu);
     ui.rangeSet(0, 100, 50);
 
     if (dither) {
@@ -237,7 +262,28 @@ private:
     }
   }
 
-  void match_all_TokiColors() noexcept {
+  void match_all_TokiColors(bool try_gpu) noexcept {
+    if constexpr (is_not_optical) {
+      this->match_all_TokiColors_cpu();
+    } else {
+
+      // If converter have gpu resources, compute by gpu
+      if (try_gpu && this->have_ocl()) {
+        const bool ok = this->match_all_TokiColors_gpu();
+
+        if (!ok) {
+          abort();
+          return;
+        }
+
+        // otherwise compute by cpu
+      } else {
+        this->match_all_TokiColors_cpu();
+      }
+    }
+  }
+
+  void match_all_TokiColors_cpu() noexcept {
     static const int threadCount = omp_get_num_threads();
 
     std::vector<std::pair<const convert_unit, TokiColor_t> *> tasks;
@@ -280,6 +326,78 @@ private:
     }
   }
 
+  template <typename = void> bool match_all_TokiColors_gpu() noexcept {
+    static_assert(!is_not_optical,
+                  "OpenCL boosting is only avaliable for VisualCraftL.");
+
+    if (!this->have_ocl()) {
+      abort();
+      return false;
+    }
+
+    this->ocl_rcs.set_colorset(TokiColor_t::Allowed->color_count(),
+                               {TokiColor_t::Allowed->rgb_data(0),
+                                TokiColor_t::Allowed->rgb_data(1),
+                                TokiColor_t::Allowed->rgb_data(2)});
+    if (!this->ocl_rcs.ok()) {
+      return false;
+    }
+
+    std::vector<std::pair<const convert_unit, TokiColor_t> *> tasks;
+    tasks.reserve(_color_hash.size());
+    tasks.clear();
+
+    for (auto &pair : this->_color_hash) {
+      if (!pair.second.is_result_computed()) {
+        if ((pair.first._ARGB & 0xFF'00'00'00) == 0) {
+          pair.second.compute(pair.first);
+        } else {
+          tasks.emplace_back(&pair);
+        }
+      }
+    }
+
+    if (tasks.size() <= 0) {
+      return true;
+    }
+
+    const SCL_convertAlgo algo = tasks[0]->first.algo;
+
+    const uint64_t taskCount = tasks.size();
+    std::vector<std::array<float, 3>> task_colors(taskCount);
+    for (size_t tid = 0; tid < taskCount; tid++) {
+
+      if (tasks[tid]->first.algo != algo) {
+        abort();
+        return false;
+      }
+
+      const auto c3_eig = tasks[tid]->first.to_c3();
+      for (size_t channel = 0; channel < 3; channel++) {
+        task_colors[tid][channel] = c3_eig[channel];
+      }
+    }
+
+    this->ocl_rcs.set_task(task_colors.data(), task_colors.size());
+    if (!this->ocl_rcs.ok()) {
+      return false;
+    }
+
+    this->ocl_rcs.execute(algo);
+    if (!this->ocl_rcs.ok()) {
+      return false;
+    }
+
+    for (size_t tid = 0; tid < taskCount; tid++) {
+      TokiColor_t &tc = tasks[tid]->second;
+      tc.set_gpu_result(
+          TokiColor_t::Allowed->color_id(this->ocl_rcs.result_idx()[tid]),
+          this->ocl_rcs.result_diff()[tid]);
+    }
+
+    return true;
+  }
+
   template <SCL_convertAlgo algo>
   inline static ARGB ColorCvt(float c0, float c1, float c2) noexcept {
     switch (algo) {
@@ -296,7 +414,7 @@ private:
       return XYZ2ARGB(c0, c1, c2);
     }
     // unreachable
-    exit(1);
+    abort();
     return 0;
   }
 

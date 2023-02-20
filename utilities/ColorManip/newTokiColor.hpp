@@ -162,6 +162,16 @@ public:
     }
   }
 
+  template <typename = void>
+  void set_gpu_result(uint16_t __result_color_id,
+                      float __result_diff) noexcept {
+    static_assert(!is_not_optical,
+                  "set_gpu_result is only avaliable for VisualCraftL.");
+
+    this->ResultDiff = __result_diff;
+    this->result_color_id = __result_color_id;
+  }
+
   auto compute(convert_unit cu) noexcept {
     if (getA(cu._ARGB) == 0) {
       if constexpr (is_not_optical) {
