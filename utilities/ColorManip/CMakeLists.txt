@@ -65,6 +65,5 @@ if(${OpenCL_FOUND})
     target_link_libraries(OCLWarpper PUBLIC OpenCL::OpenCL ColorManip_cl_rc)
 
     add_executable(test_init_program tests/test_init_program.cpp)
-
-    target_link_libraries(test_init_program PRIVATE OCLWarpper)
+    target_link_libraries(test_init_program PRIVATE OCLWarpper OpenMP::OpenMP_CXX ColorManip)
 endif()

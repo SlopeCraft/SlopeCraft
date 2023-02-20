@@ -71,7 +71,7 @@ public:
   void set_colorset(size_t color_num,
                     const std::array<const float *, 3> &color_ptrs) noexcept;
 
-  void set_task(const std::array<float,3> *src, size_t task_num) noexcept;
+  void set_task(const std::array<float, 3> *src, size_t task_num) noexcept;
 
   void execute(::SCL_convertAlgo algo) noexcept;
 
@@ -83,6 +83,14 @@ public:
 
   inline std::string device_vendor() const noexcept {
     return this->device.getInfo<CL_DEVICE_VENDOR>();
+  }
+
+  inline const auto &result_idx() const noexcept {
+    return this->task.result_idx_u16_host;
+  }
+
+  inline const auto &result_diff() const noexcept {
+    return this->task.result_diff_f32_host;
   }
 
 private:

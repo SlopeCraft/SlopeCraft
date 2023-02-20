@@ -16,15 +16,20 @@ __kernel void match_color_test(__global const float3 *color_avaliable_ptr,
 float norm2(float3 v);
 float deg2rad(float deg);
 float sum3(float3 v);
+float square(float v);
+float3 square_vec3(float3 v);
 
 float color_diff_RGB(float3 RGB1, float3 RGB2);
 float color_diff_RGB_Better(float3 RGB1, float3 RGB2);
 float color_diff_HSV(float3 hsv1_vec3, float3 hsv2_vec3);
+float color_diff_Lab94(float3 lab1_vec3,float3 lab2_vec3);
+
 
 /// Function implementations
 
 float norm2(float3 v) { return dot(v, v); }
 float sum3(float3 v) { return v[0] + v[1] + v[2]; }
+float square(float s) {return s*s; }
 float3 square_vec3(float3 v) { return v * v; }
 
 float deg2rad(float deg) { return deg * M_PI / 180.0f; }
@@ -92,6 +97,31 @@ float color_diff_HSV(float3 hsv1_vec3, float3 hsv2_vec3) {
   return dX * dX + dY * dY + dZ * dZ;
 }
 
+
+float color_diff_Lab94(float3 lab1_vec3,float3 lab2_vec3) {
+  const float L1=lab1_vec3[0];
+  const float a1=lab1_vec3[1];
+  const float b1=lab1_vec3[2];
+
+  const float L2=lab2_vec3[0];
+  const float a2=lab2_vec3[1];
+  const float b2=lab2_vec3[2];
+
+  const float deltaL_2=square(L1-L2);
+  const float C1_2=a1*a1+b1*b1;
+  const float C2_2=a2*a2+b2*b2;
+
+  const float deltaCab_2=square(sqrt(C1_2)-sqrt(C2_2));
+  const float deltaHab_2=square(a2-a1)+square(b2-b1)-deltaCab_2;
+
+
+  const float SC_2=square(sqrt(C1_2)*0.045f+1.0f);
+  const float SH_2=square(sqrt(C2_2)*0.015f+1.0f);
+
+  const float result=deltaL_2+deltaCab_2/SC_2+deltaHab_2/SH_2;
+  return result;
+}
+
 #define SC_MAKE_COLORDIFF_KERNEL_FUN(kfun_name, diff_fun)                      \
   __kernel void kfun_name(                                                     \
       __global const float3 *colorset_colors, const ushort colorset_size,      \
@@ -121,3 +151,4 @@ float color_diff_HSV(float3 hsv1_vec3, float3 hsv2_vec3) {
 SC_MAKE_COLORDIFF_KERNEL_FUN(match_color_RGB, color_diff_RGB)
 SC_MAKE_COLORDIFF_KERNEL_FUN(match_color_RGB_Better, color_diff_RGB_Better)
 SC_MAKE_COLORDIFF_KERNEL_FUN(match_color_HSV, color_diff_HSV)
+SC_MAKE_COLORDIFF_KERNEL_FUN(match_color_Lab94, color_diff_Lab94)
