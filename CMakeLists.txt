@@ -11,6 +11,7 @@ if(${MSVC})
     add_compile_options("/wd4819")
 else()
     add_compile_options(-Wall -Wreturn-type -Wsign-compare -Wextra)
+    add_link_options(-flto)
 endif()
 
 enable_testing()
