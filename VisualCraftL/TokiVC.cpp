@@ -82,6 +82,11 @@ TokiVC::~TokiVC() {
   TokiVC_internal::global_lock.unlock();
 }
 
+void TokiVC::show_gpu_name() const noexcept {
+  std::string msg = this->img_cvter.ocl_resource().device_vendor();
+  VCL_report(VCL_report_type_t::information, msg.c_str());
+}
+
 void TokiVC::set_ui(void *uiptr,
                     void (*progressRangeSet)(void *, int, int, int),
                     void (*progressAdd)(void *, int)) noexcept {

@@ -71,7 +71,7 @@ public:
   void set_colorset(size_t color_num,
                     const std::array<const float *, 3> &color_ptrs) noexcept;
 
-  void set_task(const std::array<float, 3> *src, size_t task_num) noexcept;
+  void set_task(size_t task_num, const std::array<float, 3> *data) noexcept;
 
   void execute(::SCL_convertAlgo algo, bool wait) noexcept;
 

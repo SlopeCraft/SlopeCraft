@@ -24,15 +24,15 @@ This file is part of SlopeCraft.
 #define NEWTOKICOLOR_HPP
 
 // #include "../../SlopeCraftL/SlopeCraftL.h"
-#include <Eigen/Dense>
-#include <cmath>
-#include <functional>
-
 #include "../SC_GlobalEnums.h"
 #include "ColorManip.h"
 #include "ColorManip/ColorManip.h"
 #include "colorset_maptical.hpp"
 #include "colorset_optical.hpp"
+#include <Eigen/Dense>
+#include <cmath>
+#include <functional>
+#include <iostream>
 
 #ifdef SC_VECTORIZE_AVX2
 #include <immintrin.h>
@@ -234,7 +234,9 @@ private:
 
       return this->Result;
     } else {
+
       this->result_color_id = Allowed->color_id(tempidx);
+      // std::cout << tempidx << '\t' << this->result_color_id << '\n';
       return this->color_id();
     }
   }

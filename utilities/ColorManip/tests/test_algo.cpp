@@ -145,7 +145,7 @@ int run_task(task_t &task) noexcept {
       {&eig_colorset(0, 0), &eig_colorset(0, 1), &eig_colorset(0, 2)});
   HANDLE_ERR(rcs, 2);
 
-  rcs.set_task(task.task_c3.data(), task.task_c3.size());
+  rcs.set_task(task.task_c3.size(), task.task_c3.data());
   HANDLE_ERR(rcs, 3);
 
   double wtime = omp_get_wtime();
@@ -154,15 +154,16 @@ int run_task(task_t &task) noexcept {
   wtime = omp_get_wtime() - wtime;
   cout << "GPU finished in " << wtime * 1e3 << " ms" << endl;
 
+  int ret = 0;
   for (size_t tid = 0; tid < task.task_c3.size(); tid++) {
     if (rcs.result_idx()[tid] >= task.colorset_c3.size()) {
       cout << "Error : task " << tid << " has invalid result_idx "
            << rcs.result_idx()[tid] << endl;
-      return 5;
+      ret = 5;
     }
   }
 
   cout << "Success" << endl;
 
-  return 0;
+  return ret;
 }

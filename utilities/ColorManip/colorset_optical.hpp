@@ -203,7 +203,6 @@ public:
   static constexpr size_t capacity = 65536;
   using Base_t = Eigen::Map<Eigen::ArrayXf>;
 
-private:
 public:
   TempVecOptical(int rows, int cols)
       : Base_t((float *)SC_aligned_alloc(64, capacity * sizeof(float)), rows,

@@ -94,6 +94,9 @@ public:
 
   virtual bool prefer_gpu() const noexcept = 0;
   virtual void set_prefer_gpu(bool try_gpu) noexcept = 0;
+  virtual void show_gpu_name() const noexcept = 0;
+  virtual size_t get_gpu_name(char *string_buffer,
+                              size_t buffer_capacity) const noexcept = 0;
 
   virtual VCL_Kernel_step step() const noexcept = 0;
 

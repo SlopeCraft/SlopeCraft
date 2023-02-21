@@ -62,6 +62,7 @@ add_library(OCLWrapper STATIC
     ColorDiff_OpenCL.h
     ColorDiff_OpenCL.cpp)
 
+file(TOUCH ${CMAKE_CURRENT_BINARY_DIR}/__rsc_ColorManip_cl_rc.c)
 add_resource(ColorManip_cl_rc ColorDiff.cl)
 
 target_include_directories(OCLWrapper PRIVATE ${SlopeCraft_Eigen3_include_dir})

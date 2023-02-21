@@ -6,6 +6,10 @@ run -j1 --rp D:/Git/SlopeCraft/binaries/Vanilla_1_19_2.zip --bsl D:/Git/SlopeCra
 vccl --rp D:/Git/SlopeCraft/binaries/Vanilla_1_19_2.zip --bsl D:/Git/SlopeCraft/VisualCraftL/VCL_blocks_fixed.json --layers 3 --face up --version 19 --prefix ./cpu_ --img D:/Git/SlopeCraft/binaries/images/test_image_01.png --benchmark -j20 --out-image --algo RGB
 
 vccl --rp D:/Git/SlopeCraft/binaries/Vanilla_1_19_2.zip --bsl D:/Git/SlopeCraft/VisualCraftL/VCL_blocks_fixed.json --layers 3 --face up --version 19 --prefix ./gpu_ --img D:/Git/SlopeCraft/binaries/images/test_image_01.png --benchmark -j20 --out-image --algo RGB --gpu
+
+
+
+vccl --rp D:/Git/SlopeCraft/binaries/Vanilla_1_19_2.zip --bsl D:/Git/SlopeCraft/VisualCraftL/VCL_blocks_fixed.json --layers 1 --face up --version 13 --prefix ./gpu_ --img D:/Git/SlopeCraft/binaries/images/test_image_01.png --benchmark -j20 --out-image --algo RGB --gpu
 ```
 
 

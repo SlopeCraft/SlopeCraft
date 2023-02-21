@@ -1,15 +1,3 @@
-/*
-__kernel void match_color_test(__global const float3 *color_avaliable_ptr,
-                               const ushort color_avaliable_num_ptr,
-                               __global const uint *colors_unconverted,
-                               __global ushort *result_idx_dst,
-                               __global float *result_diff_dst) {
-
-  // const float p=color_avaliable_num_ptr[0];
-  return;
-}
-*/
-
 /// Function definations
 
 // compute sum(v*v)
@@ -21,18 +9,27 @@ float3 square_vec3(float3 v);
 float color_diff_RGB_XYZ(float3 RGB1, float3 RGB2);
 float color_diff_RGB_Better(float3 RGB1, float3 RGB2);
 float color_diff_HSV(float3 hsv1_vec3, float3 hsv2_vec3);
-float color_diff_Lab94(float3 lab1_vec3,float3 lab2_vec3);
-float color_diff_Lab00(float3 lab1_vec3,float3 lab2_vec3);
-
+float color_diff_Lab94(float3 lab1_vec3, float3 lab2_vec3);
+float color_diff_Lab00(float3 lab1_vec3, float3 lab2_vec3);
 
 /// Function implementations
 
+bool have_nan(float3 v) {
+  bool ret = false;
+  for (size_t i = 0; i < 3; i++) {
+    ret = ret || isnan(v[i]);
+  }
+  return ret;
+}
+
 float norm2(float3 v) { return dot(v, v); }
 float sum3(float3 v) { return v[0] + v[1] + v[2]; }
-float square(float s) {return s*s; }
+float square(float s) { return s * s; }
 float3 square_vec3(float3 v) { return v * v; }
 
-float color_diff_RGB_XYZ(float3 RGB1, float3 RGB2) { return norm2(RGB1 - RGB2); }
+float color_diff_RGB_XYZ(float3 RGB1, float3 RGB2) {
+  return norm2(RGB1 - RGB2);
+}
 
 float color_diff_RGB_Better(float3 rgb1, float3 rgb2) {
 
@@ -95,50 +92,47 @@ float color_diff_HSV(float3 hsv1_vec3, float3 hsv2_vec3) {
   return dX * dX + dY * dY + dZ * dZ;
 }
 
-float color_diff_Lab94(float3 lab1_vec3,float3 lab2_vec3) {
-  const float L1=lab1_vec3[0];
-  const float a1=lab1_vec3[1];
-  const float b1=lab1_vec3[2];
+float color_diff_Lab94(float3 lab1_vec3, float3 lab2_vec3) {
+  const float L1 = lab1_vec3[0];
+  const float a1 = lab1_vec3[1];
+  const float b1 = lab1_vec3[2];
 
-  const float L2=lab2_vec3[0];
-  const float a2=lab2_vec3[1];
-  const float b2=lab2_vec3[2];
+  const float L2 = lab2_vec3[0];
+  const float a2 = lab2_vec3[1];
+  const float b2 = lab2_vec3[2];
 
-  const float deltaL_2=square(L1-L2);
-  const float C1_2=a1*a1+b1*b1;
-  const float C2_2=a2*a2+b2*b2;
+  const float deltaL_2 = square(L1 - L2);
+  const float C1_2 = a1 * a1 + b1 * b1;
+  const float C2_2 = a2 * a2 + b2 * b2;
 
-  const float deltaCab_2=square(sqrt(C1_2)-sqrt(C2_2));
-  const float deltaHab_2=square(a2-a1)+square(b2-b1)-deltaCab_2;
+  const float deltaCab_2 = square(sqrt(C1_2) - sqrt(C2_2));
+  const float deltaHab_2 = square(a2 - a1) + square(b2 - b1) - deltaCab_2;
 
+  const float SC_2 = square(sqrt(C1_2) * 0.045f + 1.0f);
+  const float SH_2 = square(sqrt(C2_2) * 0.015f + 1.0f);
 
-  const float SC_2=square(sqrt(C1_2)*0.045f+1.0f);
-  const float SH_2=square(sqrt(C2_2)*0.015f+1.0f);
-
-  const float result=deltaL_2+deltaCab_2/SC_2+deltaHab_2/SH_2;
+  const float result = deltaL_2 + deltaCab_2 / SC_2 + deltaHab_2 / SH_2;
   return result;
 }
 
-float color_diff_Lab00(float3 lab1_vec3,float3 lab2_vec3) {
-  
+float color_diff_Lab00(float3 lab1_vec3, float3 lab2_vec3) {
+
   const float kL = 1.0;
   const float kC = 1.0;
   const float kH = 1.0;
-  const float L1=lab1_vec3[0];
-  const float a1=lab1_vec3[1];
-  const float b1=lab1_vec3[2];
+  const float L1 = lab1_vec3[0];
+  const float a1 = lab1_vec3[1];
+  const float b1 = lab1_vec3[2];
 
-  const float L2=lab2_vec3[0];
-  const float a2=lab2_vec3[1];
-  const float b2=lab2_vec3[2];
+  const float L2 = lab2_vec3[0];
+  const float a2 = lab2_vec3[1];
+  const float b2 = lab2_vec3[2];
 
-  
   float C1sab = sqrt(a1 * a1 + b1 * b1);
   float C2sab = sqrt(a2 * a2 + b2 * b2);
   float mCsab = (C1sab + C2sab) / 2;
   float pow_mCsab_7 = pow(mCsab, 7);
-  float G =
-      0.5 * (1 - sqrt(pow_mCsab_7 / (pow_mCsab_7 + pow(25.0f, 7.0f))));
+  float G = 0.5 * (1 - sqrt(pow_mCsab_7 / (pow_mCsab_7 + pow(25.0f, 7.0f))));
   float a1p = (1 + G) * a1;
   float a2p = (1 + G) * a2;
   float C1p = sqrt(a1p * a1p + b1 * b1);
@@ -192,7 +186,8 @@ float color_diff_Lab00(float3 lab1_vec3,float3 lab2_vec3) {
             0.32 * cos(3 * mhp + radians(6.0f)) -
             0.20 * cos(4 * mhp - radians(63.0f));
 
-  float dTheta = radians(30.0f) * exp(-square((mhp - radians(275.0f)) / radians(25.0f)));
+  float dTheta =
+      radians(30.0f) * exp(-square((mhp - radians(275.0f)) / radians(25.0f)));
 
   float RC = 2 * sqrt(pow(mCp, 7) / (pow(25.0f, 7.0f) + pow(mCp, 7.0f)));
   float square_mLp_minus_50 = square(mLp - 50);
@@ -208,25 +203,40 @@ float color_diff_Lab00(float3 lab1_vec3,float3 lab2_vec3) {
                      square(dHp / SH / kH) +
                      RT * (dCp / SC / kC) * (dHp / SH / kH);
 
-                     
   return Diffsquare;
 }
 
+#define SC_OCL_SPOT_NAN true
+
 #define SC_MAKE_COLORDIFF_KERNEL_FUN(kfun_name, diff_fun)                      \
   __kernel void kfun_name(                                                     \
-      __global const float3 *colorset_colors, const ushort colorset_size,      \
-      __global const float3 *unconverted_colors,                               \
+      __global const float *colorset_colors, const ushort colorset_size,       \
+      __global const float *unconverted_colors,                                \
       __global ushort *result_idx_dst, __global float *result_diff_dst) {      \
     const size_t global_idx = get_global_id(0);                                \
-    const float3 unconverted = unconverted_colors[global_idx];                 \
+    const float3 unconverted = {unconverted_colors[global_idx * 3 + 0],        \
+                                unconverted_colors[global_idx * 3 + 1],        \
+                                unconverted_colors[global_idx * 3 + 2]};       \
+    if (true && have_nan(unconverted)) {                                       \
+      printf("Nan spotted at unconverted. Unconverted = {%f,%f,%f}, "          \
+             "get_global_id = %llu.\n",                                        \
+             unconverted[0], unconverted[1], unconverted[2], global_idx);      \
+      return;                                                                  \
+    }                                                                          \
                                                                                \
-    ushort result_idx = USHRT_MAX;                                                     \
+    ushort result_idx = USHRT_MAX - 1;                                         \
     float result_diff = FLT_MAX / 2;                                           \
                                                                                \
     for (ushort idx = 0; idx < colorset_size; idx++) {                         \
-      const float3 color_ava = colorset_colors[idx];                           \
+      const float3 color_ava = {colorset_colors[idx * 3 + 0],                  \
+                                colorset_colors[idx * 3 + 1],                  \
+                                colorset_colors[idx * 3 + 2]};                 \
                                                                                \
       const float diff_sq = diff_fun(color_ava, unconverted);                  \
+      if (true && isnan(diff_sq)) {                                            \
+        printf("Spotted nan at idx = %u.\n", (idx));                           \
+        return;                                                                \
+      }                                                                        \
       if (result_diff > diff_sq) {                                             \
         /* this branch may be optimized */                                     \
         result_idx = idx;                                                      \

@@ -24,6 +24,7 @@ struct inputs {
   bool dither{false};
   bool benchmark{false};
   bool prefer_gpu{false};
+  bool show_gpu{false};
   uint8_t platform_idx{0};
   uint8_t device_idx{0};
 };
@@ -86,12 +87,16 @@ int main(int argc, char **argv) {
       ->check(CLI::PositiveNumber)
       ->default_val(std::thread::hardware_concurrency());
 
-  app.add_flag("--gpu", input.prefer_gpu, "Use gpu firstly");
+  app.add_flag("--gpu", input.prefer_gpu, "Use gpu firstly")
+      ->default_val(false);
 
-  app.add_option("--platform-idx", input.platform_idx)
+  app.add_option("--platform", input.platform_idx)
+      ->default_val(0)
       ->check(CLI::NonNegativeNumber);
-  app.add_option("--device-idx", input.device_idx)
+  app.add_option("--device", input.device_idx)
+      ->default_val(0)
       ->check(CLI::NonNegativeNumber);
+  app.add_flag("--show-gpu", input.show_gpu)->default_val(false);
 
   CLI11_PARSE(app, argc, argv);
 
@@ -218,6 +223,10 @@ int run(const inputs &input) noexcept {
               "be invalid."
            << endl;
       return __LINE__;
+    }
+
+    if (input.show_gpu) {
+      kernel->show_gpu_name();
     }
   }
 

@@ -35,8 +35,22 @@ public:
   bool prefer_gpu() const noexcept override {
     return this->imgcvter_prefer_gpu;
   }
+
   void set_prefer_gpu(bool try_gpu) noexcept override {
     this->imgcvter_prefer_gpu = try_gpu;
+  }
+
+  void show_gpu_name() const noexcept override;
+  size_t get_gpu_name(char *string_buffer,
+                      size_t buffer_capacity) const noexcept override {
+    const std::string result = this->img_cvter.ocl_resource().device_vendor();
+    if (string_buffer == nullptr || buffer_capacity <= 0) {
+      return result.size();
+    }
+
+    memcpy(string_buffer, result.c_str(),
+           std::min(buffer_capacity, result.size()));
+    return result.size();
   }
 
   VCL_Kernel_step step() const noexcept override;

@@ -28,7 +28,6 @@ This file is part of SlopeCraft.
 
 #include "ColorDiff_OpenCL.h"
 #include <Eigen/Dense>
-#include <iostream>
 #include <memory>
 #include <optional>
 #include <thread>
@@ -302,7 +301,7 @@ private:
         tasks.emplace_back(&pair);
     }
     const uint64_t taskCount = tasks.size();
-// #warning we should parallelize here
+    // #warning we should parallelize here
 #pragma omp parallel for
     for (int thIdx = 0; thIdx < threadCount; thIdx++) {
       for (uint64_t taskIdx = thIdx; taskIdx < taskCount;
@@ -342,15 +341,6 @@ private:
       return false;
     }
 
-    // set colorset to device
-    this->ocl_rcs.set_colorset(TokiColor_t::Allowed->color_count(),
-                               {TokiColor_t::Allowed->rgb_data(0),
-                                TokiColor_t::Allowed->rgb_data(1),
-                                TokiColor_t::Allowed->rgb_data(2)});
-    if (!this->ocl_rcs.ok()) {
-      return false;
-    }
-
     std::vector<std::pair<const convert_unit, TokiColor_t> *> tasks;
     tasks.reserve(_color_hash.size());
     tasks.clear();
@@ -377,20 +367,60 @@ private:
         taskCount - taskCount % this->ocl_rcs.local_work_group_size();
     const uint64_t cpu_task_count = taskCount - gpu_task_count;
 
-    std::vector<std::array<float, 3>> task_colors(gpu_task_count);
-    for (size_t tid = 0; tid < gpu_task_count; tid++) {
+    {
+      std::vector<std::array<float, 3>> task_colors(gpu_task_count);
+      for (size_t tid = 0; tid < gpu_task_count; tid++) {
 
-      if (tasks[tid]->first.algo != algo) {
+        if (tasks[tid]->first.algo != algo) {
+          return false;
+        }
+
+        const Eigen::Array3f c3_eig = tasks[tid]->first.to_c3();
+        for (size_t channel = 0; channel < 3; channel++) {
+          task_colors[tid][channel] = c3_eig[channel];
+        }
+      }
+
+      //  set task
+      this->ocl_rcs.set_task(task_colors.size(), task_colors.data());
+      if (!this->ocl_rcs.ok()) {
         return false;
       }
-
-      const auto c3_eig = tasks[tid]->first.to_c3();
-      for (size_t channel = 0; channel < 3; channel++) {
-        task_colors[tid][channel] = c3_eig[channel];
-      }
     }
-    // set task
-    this->ocl_rcs.set_task(task_colors.data(), task_colors.size());
+
+    // set colorset to device
+
+    std::array<const float *, 3> colorset_ptrs{nullptr, nullptr, nullptr};
+    switch (algo) {
+    case SCL_convertAlgo::RGB:
+    case SCL_convertAlgo::RGB_Better:
+      colorset_ptrs = {TokiColor_t::Allowed->rgb_data(0),
+                       TokiColor_t::Allowed->rgb_data(1),
+                       TokiColor_t::Allowed->rgb_data(2)};
+      break;
+    case SCL_convertAlgo::HSV:
+      colorset_ptrs = {TokiColor_t::Allowed->hsv_data(0),
+                       TokiColor_t::Allowed->hsv_data(1),
+                       TokiColor_t::Allowed->hsv_data(2)};
+      break;
+    case SCL_convertAlgo::Lab94:
+    case SCL_convertAlgo::Lab00:
+      colorset_ptrs = {TokiColor_t::Allowed->lab_data(0),
+                       TokiColor_t::Allowed->lab_data(1),
+                       TokiColor_t::Allowed->lab_data(2)};
+      break;
+    case SCL_convertAlgo::XYZ:
+      colorset_ptrs = {TokiColor_t::Allowed->xyz_data(0),
+                       TokiColor_t::Allowed->xyz_data(1),
+                       TokiColor_t::Allowed->xyz_data(2)};
+      break;
+    default:
+      abort();
+    }
+
+    // set colorset for ocl
+    this->ocl_rcs.set_colorset(TokiColor_t::Allowed->color_count(),
+                               colorset_ptrs);
     if (!this->ocl_rcs.ok()) {
       return false;
     }
@@ -413,15 +443,12 @@ private:
     for (size_t tid = 0; tid < gpu_task_count; tid++) {
       TokiColor_t &tc = tasks[tid]->second;
 
-      const uint16_t tempIdx = this->ocl_rcs.result_idx()[tid];
-
-      if (tempIdx >= TokiColor_t::Allowed->color_count()) {
-        std::cout << "Invalid tempIdx " << tempIdx << ", only "
-                  << TokiColor_t::Allowed->color_count() << " colors in Allowed"
-                  << std::endl;
+      const uint16_t tempidx = this->ocl_rcs.result_idx()[tid];
+      if (tempidx >= TokiColor_t::Allowed->color_count()) {
+        abort();
       }
 
-      tc.set_gpu_result(TokiColor_t::Allowed->color_id(tempIdx),
+      tc.set_gpu_result(TokiColor_t::Allowed->color_id(tempidx),
                         this->ocl_rcs.result_diff()[tid]);
     }
 

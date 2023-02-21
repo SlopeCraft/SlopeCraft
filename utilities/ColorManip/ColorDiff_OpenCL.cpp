@@ -255,13 +255,20 @@ void ocl_warpper::ocl_resource::resize_task(size_t task_num) noexcept {
   this->task.result_idx_u16_host.resize(task_num);
   this->task.result_diff_f32_host.resize(task_num);
 
-  const size_t ARGB_required_bytes = task_num * sizeof(float[3]);
+  for (uint16_t &val : this->task.result_idx_u16_host) {
+    val = UINT16_MAX;
+  }
+  for (float &val : this->task.result_diff_f32_host) {
+    val = NAN;
+  }
+
+  const size_t task_f32_3_required_bytes = task_num * sizeof(float[3]);
   const size_t result_idx_required_bytes = task_num * sizeof(uint16_t);
   const size_t result_diff_required_bytes = task_num * sizeof(float);
 
   this->error = private_fun_change_buf_size(
-      this->context, this->task.rawcolor_f32_3_device, ARGB_required_bytes,
-      CL_MEM_READ_ONLY, false);
+      this->context, this->task.rawcolor_f32_3_device,
+      task_f32_3_required_bytes, CL_MEM_READ_ONLY, false);
   if (!this->ok()) {
     this->err_msg = "Failed to ###.";
     return;
@@ -303,16 +310,18 @@ void ocl_warpper::ocl_resource::set_colorset(
     return;
   }
 
-  Eigen::ArrayXXf trans(color_num, 3);
-
-  for (size_t c = 0; c < 3; c++) {
-    memcpy(&trans(0, c), color_ptrs[c], color_num * sizeof(float));
+  Eigen::Array<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> trans(
+      color_num, 3);
+  for (size_t r = 0; r < color_num; r++) {
+    for (size_t c = 0; c < 3; c++) {
+      trans(r, c) = color_ptrs[c][r];
+    }
   }
 
-  trans.transposeInPlace();
+  // trans.transposeInPlace();
 
   this->error = this->queue.enqueueWriteBuffer(
-      this->colorset.colorset_float3, false, 0, color_num * 3 * sizeof(float),
+      this->colorset.colorset_float3, false, 0, color_num * sizeof(float[3]),
       trans.data());
   if (!this->ok()) {
     this->err_msg = "Failed to copy colorset into device.";
@@ -348,6 +357,49 @@ ocl_warpper::ocl_resource::kernel_by_algo(::SCL_convertAlgo algo) noexcept {
   return nullptr;
 }
 
+void ocl_warpper::ocl_resource::set_task(
+    size_t task_num, const std::array<float, 3> *data) noexcept {
+  this->resize_task(task_num);
+  if (!this->ok()) {
+    this->err_msg = "Failed to ###.";
+    return;
+  }
+
+  this->error =
+      this->queue.enqueueWriteBuffer(this->task.rawcolor_f32_3_device, false, 0,
+                                     task_num * sizeof(float) * 3, data);
+  if (!this->ok()) {
+    this->err_msg = "Failed to ###.";
+    return;
+  }
+
+  // fill with 65535
+  this->error = this->queue.enqueueFillBuffer(this->task.result_idx_u16_device,
+                                              uint16_t(0xFFFF), 0,
+                                              task_num * sizeof(uint16_t));
+  if (!this->ok()) {
+    this->err_msg = "Failed to ###.";
+    return;
+  }
+
+  // fill with nan
+  /*
+  this->error =
+      this->queue.enqueueFillBuffer(this->task.result_diff_f32_device,
+                                    float(NAN), 0, task_num * sizeof(float));
+  if (!this->ok()) {
+    this->err_msg = "Failed to ###.";
+    return;
+  }*/
+
+  this->error = this->queue.finish();
+  if (!this->ok()) {
+    this->err_msg = "Failed to ###.";
+    return;
+  }
+}
+
+/*
 void ocl_warpper::ocl_resource::set_task(const std::array<float, 3> *src,
                                          size_t task_num) noexcept {
   this->resize_task(task_num);
@@ -357,8 +409,25 @@ void ocl_warpper::ocl_resource::set_task(const std::array<float, 3> *src,
   }
 
   this->error =
-      this->queue.enqueueWriteBuffer(this->task.rawcolor_f32_3_device, false, 0,
-                                     task_num * sizeof(float[3]), src);
+      this->queue.enqueueWriteBuffer(this->task.rawcolor_f32_3_device, true, 0,
+                                     task_num * sizeof(float[3]), src->data());
+  if (!this->ok()) {
+    this->err_msg = "Failed to ###.";
+    return;
+  }
+  // fill with 65536
+  this->error = this->queue.enqueueFillBuffer(this->task.result_idx_u16_device,
+                                              uint16_t(0xFFFF), 0,
+                                              task_num * sizeof(uint16_t));
+  if (!this->ok()) {
+    this->err_msg = "Failed to ###.";
+    return;
+  }
+
+  // fill with nan
+  this->error =
+      this->queue.enqueueFillBuffer(this->task.result_diff_f32_device,
+                                    float(NAN), 0, task_num * sizeof(float));
   if (!this->ok()) {
     this->err_msg = "Failed to ###.";
     return;
@@ -370,6 +439,8 @@ void ocl_warpper::ocl_resource::set_task(const std::array<float, 3> *src,
     return;
   }
 }
+
+*/
 
 void ocl_warpper::ocl_resource::set_args(::SCL_convertAlgo algo) noexcept {
 
@@ -454,8 +525,8 @@ void ocl_warpper::ocl_resource::execute(::SCL_convertAlgo algo,
 
   std::cout << "global group size = " << this->task_count() << std::endl;
 
-  this->error =
-      this->queue.enqueueNDRangeKernel(*k, {0}, {this->task_count()}, {32});
+  this->error = this->queue.enqueueNDRangeKernel(
+      *k, {0}, {this->task_count()}, {this->local_work_group_size()});
   if (!this->ok()) {
     this->err_msg = "Failed to execute kernel function.";
     return;
