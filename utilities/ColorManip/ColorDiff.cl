@@ -1,5 +1,8 @@
-/// Function definations
+#define SC_OCL_SPOT_NAN true
+//#define SC_OCL_SPOT_NAN false
 
+
+/// Function definations
 // compute sum(v*v)
 float norm2(float3 v);
 float sum3(float3 v);
@@ -35,7 +38,7 @@ float color_diff_RGB_Better(float3 rgb1, float3 rgb2) {
 
   const float w_r = 1.0f, w_g = 2.0f, w_b = 1.0f;
   const float3 w_vec3 = {w_r, w_g, w_b};
-  const float thre = 1e-10f;
+  const float thre = 1e-4f;
   const float3 one_vec3 = {1, 1, 1};
 
   const float SqrModSquare = norm2(rgb1) * norm2(rgb2);
@@ -44,18 +47,34 @@ float color_diff_RGB_Better(float3 rgb1, float3 rgb2) {
 
   const float SigmaRGB = (sum3(rgb1) + sum3(rgb2)) / 3.0f;
   const float3 S_rgb_vec3 = fmin((rgb1 + rgb2) / (SigmaRGB + thre), one_vec3);
+  
+      
+  if(SC_OCL_SPOT_NAN&&have_nan(S_rgb_vec3)) {
+    printf("S_rgb_vec3 contains nan.\n");
+    return NAN;
+  }
 
   const float sumRGBSquare = dot(rgb1, rgb2);
 
   const float theta =
-      2.0f / M_PI * acos(sumRGBSquare / (SqrModSquare + thre) / 1.01f);
+      2.0f / M_PI * acos((sumRGBSquare * rsqrt(SqrModSquare + thre)) / 1.01f);
+
+  if(SC_OCL_SPOT_NAN&&isnan(theta)) {
+    printf("theta is nan. sumRGBSquare = %f, SqrModSquare = %f.\n",sumRGBSquare,SqrModSquare);
+    return NAN;
+  }
 
   const float3 OnedDelta_rgb_vec3 = fabs(delta_rgb_vec3) / (rgb1 + rgb2 + thre);
 
-  const float sumOnedDelta = sum3(OnedDelta_rgb_vec3);
+  const float sumOnedDelta = sum3(OnedDelta_rgb_vec3) + thre;
 
   const float3 S_t_rgb_vec3 =
       OnedDelta_rgb_vec3 / sumOnedDelta * S_rgb_vec3 * S_rgb_vec3;
+      
+  if(SC_OCL_SPOT_NAN&&have_nan(S_t_rgb_vec3)) {
+    printf("S_t_rgb_vec3 contains nan.\n");
+    return NAN;
+  }
 
   const float S_theta = sum3(S_t_rgb_vec3);
 
@@ -67,8 +86,16 @@ float color_diff_RGB_Better(float3 rgb1, float3 rgb2) {
       S_rgb_vec3 * S_rgb_vec3 * delta_rgb_vec3 * delta_rgb_vec3 * w_vec3;
 
   const float part1 = sum3(SS_w_delta_delta_vec3) / sum3(w_vec3);
+  if(SC_OCL_SPOT_NAN&&isnan(part1)) {
+    printf("part1 is nan.\n");
+    return NAN;
+  }
 
   const float part2 = S_theta * S_ratio * theta * theta;
+  if(SC_OCL_SPOT_NAN&&isnan(part2)) {
+    printf("part2 is nan.\n");
+    return NAN;
+  }
 
   return part1 + part2;
 }
@@ -206,7 +233,6 @@ float color_diff_Lab00(float3 lab1_vec3, float3 lab2_vec3) {
   return Diffsquare;
 }
 
-#define SC_OCL_SPOT_NAN true
 
 #define SC_MAKE_COLORDIFF_KERNEL_FUN(kfun_name, diff_fun)                      \
   __kernel void kfun_name(                                                     \
@@ -231,6 +257,12 @@ float color_diff_Lab00(float3 lab1_vec3, float3 lab2_vec3) {
       const float3 color_ava = {colorset_colors[idx * 3 + 0],                  \
                                 colorset_colors[idx * 3 + 1],                  \
                                 colorset_colors[idx * 3 + 2]};                 \
+    if (true && have_nan(color_ava)) {                                         \
+      printf("Nan spotted at color_ava. color_ava = {%f,%f,%f}, "              \
+             "get_global_id = %llu.\n",                                        \
+             color_ava[0], color_ava[1], color_ava[2], global_idx);            \
+      return;                                                                  \
+    }                                                                          \
                                                                                \
       const float diff_sq = diff_fun(color_ava, unconverted);                  \
       if (true && isnan(diff_sq)) {                                            \

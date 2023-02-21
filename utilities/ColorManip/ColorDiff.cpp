@@ -49,7 +49,8 @@ float color_diff_RGB_plus(const float r1, const float g1, const float b1,
   const float sumRGBsquare = r1 * r2 + g1 * g2 + b1 * b2;
 
   const float theta =
-      2.0f / M_PI * std::acos(sumRGBsquare / (SqrModSquare + thre) / 1.01f);
+      2.0f / M_PI *
+      std::acos(sumRGBsquare / std::sqrt(SqrModSquare + thre) / 1.01f);
 
   const float OnedDeltaR = std::abs(deltaR) / (r1 + r2 + thre);
   const float OnedDeltaG = std::abs(deltaG) / (g1 + g2 + thre);
