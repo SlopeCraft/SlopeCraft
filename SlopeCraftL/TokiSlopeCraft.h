@@ -138,7 +138,8 @@ public:
   void getAvailableColors(ARGB *const, uint8_t *const,
                           int *const num = nullptr) const override;
   // can do in convertionReady:
-  bool convert(convertAlgo = RGB_Better, bool dither = false) override;
+  bool convert(convertAlgo = SCL_convertAlgo::RGB_Better,
+               bool dither = false) override;
   const uint32_t *getRawImage() const override {
     return this->image_cvter.raw_image().data();
   }
@@ -147,16 +148,19 @@ public:
 
   bool isVanilla() const override { return is_vanilla_static(); }
   static inline bool is_vanilla_static() noexcept {
-    return mapType != FileOnly;
+    return mapType != SCL_mapTypes::FileOnly;
   }
 
   bool isFlat() const override { return is_flat_static(); }
-  static inline bool is_flat_static() noexcept { return mapType == Flat; }
+  static inline bool is_flat_static() noexcept {
+    return mapType == SCL_mapTypes::Flat;
+  }
 
   // can do in converted:
-  bool build(compressSettings = noCompress, unsigned short = 256,
-             glassBridgeSettings = noBridge, unsigned short = 3,
-             bool fireProof = false,
+  bool build(compressSettings = SCL_compressSettings::noCompress,
+             unsigned short = 256,
+             glassBridgeSettings = SCL_glassBridgeSettings::noBridge,
+             unsigned short = 3, bool fireProof = false,
              bool endermanProof = false) override; // 构建三维结构
   void getConvertedImage(int *rows, int *cols,
                          unsigned int *dest) const override;

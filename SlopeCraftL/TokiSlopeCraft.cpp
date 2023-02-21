@@ -235,32 +235,32 @@ bool TokiSlopeCraft::__impl_setType(mapTypes type, gameVersion ver,
 
   reporter->reportWorkingStatue(reporter->wind, workStatues::collectingColors);
 
-  Eigen::ArrayXi baseColorVer(64); //基色对应的版本
-  baseColorVer.setConstant(FUTURE);
-  baseColorVer.segment(0, 52).setConstant(ANCIENT);
-  baseColorVer.segment(52, 7).setConstant(MC16);
-  baseColorVer.segment(59, 3).setConstant(MC17);
+  Eigen::ArrayXi baseColorVer(64); // 基色对应的版本
+  baseColorVer.setConstant((int)SCL_gameVersion::FUTURE);
+  baseColorVer.segment(0, 52).setConstant((int)SCL_gameVersion::ANCIENT);
+  baseColorVer.segment(52, 7).setConstant((int)SCL_gameVersion::MC16);
+  baseColorVer.segment(59, 3).setConstant((int)SCL_gameVersion::MC17);
 
   bool MIndex[256];
 
   for (short index = 0; index < 256; index++) {
-    MIndex[index] = true; //默认可以使用这种颜色，逐次判断各个不可以使用的条件
+    MIndex[index] = true; // 默认可以使用这种颜色，逐次判断各个不可以使用的条件
 
     if (!allowedBaseColor[index2baseColor(
-            index)]) { //在allowedBaseColor中被禁止
+            index)]) { // 在allowedBaseColor中被禁止
       MIndex[index] = false;
       continue;
     }
-    if (index2baseColor(index) == 0) { //空气禁用
+    if (index2baseColor(index) == 0) { // 空气禁用
       MIndex[index] = false;
       continue;
     }
-    if (mcVer < baseColorVer(index2baseColor(index))) { //版本低于基色版本
+    if ((int)mcVer < baseColorVer(index2baseColor(index))) { // 版本低于基色版本
       MIndex[index] = false;
       continue;
     }
     if (TokiSlopeCraft::blockPalette[index2baseColor(index)]
-            .id.empty()) { //空id
+            .id.empty()) { // 空id
       MIndex[index] = false;
       continue;
     }
@@ -273,17 +273,17 @@ bool TokiSlopeCraft::__impl_setType(mapTypes type, gameVersion ver,
       continue;
     }*/
     if (is_vanilla_static() &&
-        (index2depth(index) >= 3)) { //可实装的地图画不允许第四种阴影
+        (index2depth(index) >= 3)) { // 可实装的地图画不允许第四种阴影
       MIndex[index] = false;
       continue;
     }
-    if (index2baseColor(index) == 12) { //如果是水且非墙面
-      if (is_flat_static() && index2depth(index) != 2) { //平板且水深不是1格
+    if (index2baseColor(index) == 12) { // 如果是水且非墙面
+      if (is_flat_static() && index2depth(index) != 2) { // 平板且水深不是1格
         MIndex[index] = false;
         continue;
       }
     } else {
-      if (is_flat_static() && index2depth(index) != 1) { //平板且阴影不为1
+      if (is_flat_static() && index2depth(index) != 1) { // 平板且阴影不为1
         MIndex[index] = false;
         continue;
       }
@@ -310,7 +310,7 @@ bool TokiSlopeCraft::__impl_setType(mapTypes type, gameVersion ver,
   reporter->reportWorkingStatue(reporter->wind, workStatues::none);
   for (auto kernel_ptr : TokiSlopeCraft::kernel_hash_set) {
     kernel_ptr->image_cvter.on_color_set_changed();
-    kernel_ptr->kernelStep = wait4Image;
+    kernel_ptr->kernelStep = SCL_step::wait4Image;
   }
 
   ::SCL_internal_lock.unlock();
@@ -318,7 +318,7 @@ bool TokiSlopeCraft::__impl_setType(mapTypes type, gameVersion ver,
 }
 
 uint16_t TokiSlopeCraft::getColorCount() const {
-  if (kernelStep < wait4Image) {
+  if (kernelStep < SCL_step::wait4Image) {
     reportError(wind, errorFlag::HASTY_MANIPULATION,
                 "You can only query for avaliable color count after you set "
                 "the map type and gameversion");
@@ -357,7 +357,7 @@ void TokiSlopeCraft::getAvailableColors(ARGB *const ARGBDest,
 }
 
 void TokiSlopeCraft::setRawImage(const ARGB *src, int rows, int cols) {
-  if (kernelStep < wait4Image) {
+  if (kernelStep < SCL_step::wait4Image) {
     reportError(wind, errorFlag::HASTY_MANIPULATION,
                 "You can only import the raw image count after you set the map "
                 "type and gameversion");
@@ -371,7 +371,7 @@ void TokiSlopeCraft::setRawImage(const ARGB *src, int rows, int cols) {
 
   this->image_cvter.set_raw_image(src, rows, cols);
 
-  kernelStep = convertionReady;
+  kernelStep = SCL_step::convertionReady;
 
   return;
 }
@@ -396,17 +396,17 @@ int64_t TokiSlopeCraft::sizePic(short dim) const {
 
 TokiSlopeCraft::ColorSpace TokiSlopeCraft::getColorSpace() const {
   switch (this->image_cvter.convert_algo()) {
-  case RGB:
+  case SCL_convertAlgo::RGB:
     return R;
-  case RGB_Better:
+  case SCL_convertAlgo::RGB_Better:
     return R;
-  case HSV:
+  case SCL_convertAlgo::HSV:
     return H;
-  case Lab94:
+  case SCL_convertAlgo::Lab94:
     return L;
   case convertAlgo::Lab00:
     return L;
-  case XYZ:
+  case SCL_convertAlgo::XYZ:
     return X;
   case convertAlgo::gaCvter:
     return R;
@@ -427,7 +427,7 @@ void TokiSlopeCraft::getConvertedImage(int *rows, int *cols, ARGB *dest) const {
 EImage TokiSlopeCraft::getConovertedImage() const {
   EImage cvtedImg(sizePic(0), sizePic(1));
   cvtedImg.setZero();
-  if (kernelStep < converted) {
+  if (kernelStep < SCL_step::converted) {
     reportError(
         wind, errorFlag::HASTY_MANIPULATION,
         "You can get the converted image only after you converted a map.");
@@ -473,7 +473,7 @@ void TokiSlopeCraft::getConvertedMap(int *rows, int *cols,
 }
 
 int TokiSlopeCraft::getImageRows() const {
-  if (kernelStep < convertionReady) {
+  if (kernelStep < SCL_step::convertionReady) {
     reportError(
         wind, errorFlag::HASTY_MANIPULATION,
         "You can call getImageRows only after you imported the raw image.");
@@ -483,7 +483,7 @@ int TokiSlopeCraft::getImageRows() const {
 }
 
 int TokiSlopeCraft::getImageCols() const {
-  if (kernelStep < convertionReady) {
+  if (kernelStep < SCL_step::convertionReady) {
     reportError(
         wind, errorFlag::HASTY_MANIPULATION,
         "You can call getImageRows only after you imported the raw image.");
@@ -493,7 +493,7 @@ int TokiSlopeCraft::getImageCols() const {
 }
 
 void TokiSlopeCraft::get3DSize(int *x, int *y, int *z) const {
-  if (kernelStep < builded)
+  if (kernelStep < SCL_step::builded)
     return;
   if (x != nullptr)
     *x = schem.x_range();
@@ -505,7 +505,7 @@ void TokiSlopeCraft::get3DSize(int *x, int *y, int *z) const {
 }
 
 int TokiSlopeCraft::getHeight() const {
-  if (kernelStep < builded)
+  if (kernelStep < SCL_step::builded)
     return -1;
   return schem.y_range();
 }
@@ -524,7 +524,7 @@ int64_t TokiSlopeCraft::getBlockCounts(std::vector<int64_t> *dest) const {
   if (dest == nullptr) {
     return -1;
   }
-  if (kernelStep < builded)
+  if (kernelStep < SCL_step::builded)
     return -1;
   dest->resize(64);
   for (int i = 0; i < 64; i++)
@@ -540,7 +540,7 @@ int64_t TokiSlopeCraft::getBlockCounts(std::vector<int64_t> *dest) const {
 }
 
 int64_t TokiSlopeCraft::getBlockCounts() const {
-  if (kernelStep < builded)
+  if (kernelStep < SCL_step::builded)
     return -1;
   int totalCount = 0;
   for (int i = 0; i < schem.size(); i++) {
@@ -562,12 +562,12 @@ const uint16_t *TokiSlopeCraft::getBuild(int *xSize, int *ySize,
 }
 
 int TokiSlopeCraft::getXRange() const {
-  if (kernelStep < builded)
+  if (kernelStep < SCL_step::builded)
     return -1;
   return schem.x_range();
 }
 int TokiSlopeCraft::getZRange() const {
-  if (kernelStep < builded)
+  if (kernelStep < SCL_step::builded)
     return -1;
   return schem.x_range();
 }

@@ -256,11 +256,11 @@ unsigned int SCL_EXPORT SCL_getMaxFailTimes(const AiCvterOpt *);
 double SCL_EXPORT SCL_getCrossoverProb(const AiCvterOpt *);
 double SCL_EXPORT SCL_getMutationProb(const AiCvterOpt *);
 
-void SCL_EXPORT
-SCL_preprocessImage(unsigned int *ARGB32ptr, const uint64_t imageSize,
-                    const SCL_PureTpPixelSt = ReplaceWithBackGround,
-                    const SCL_HalfTpPixelSt = ComposeWithBackGround,
-                    unsigned int backGround = 0xFFFFFFFF);
+void SCL_EXPORT SCL_preprocessImage(
+    unsigned int *ARGB32ptr, const uint64_t imageSize,
+    const SCL_PureTpPixelSt = SCL_PureTpPixelSt::ReplaceWithBackGround,
+    const SCL_HalfTpPixelSt = SCL_HalfTpPixelSt::ComposeWithBackGround,
+    unsigned int backGround = 0xFFFFFFFF);
 
 unsigned char SCL_EXPORT SCL_maxAvailableVersion();
 

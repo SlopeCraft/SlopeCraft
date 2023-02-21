@@ -24,7 +24,7 @@ This file is part of SlopeCraft.
 #include <filesystem>
 
 bool TokiSlopeCraft::convert(convertAlgo algo, bool dither) {
-  if (kernelStep < convertionReady) {
+  if (kernelStep < SCL_step::convertionReady) {
     reportError(wind, errorFlag::HASTY_MANIPULATION,
                 "You can call convert only after you imported the raw image");
     return false;
@@ -119,7 +119,7 @@ bool TokiSlopeCraft::convert(convertAlgo algo, bool dither) {
 
   reportWorkingStatue(wind, workStatues::none);
 
-  kernelStep = converted;
+  kernelStep = SCL_step::converted;
   return true;
 }
 
@@ -140,12 +140,12 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(std::string FolderPath,
 
   std::vector<std::string> failed_file_list;
 
-  if (kernelStep < converted) {
+  if (kernelStep < SCL_step::converted) {
     reportError(wind, errorFlag::HASTY_MANIPULATION,
                 "You can export the map as map data files only after the image "
-                "is converted.");
+                "isSCL_step::converted.");
     failed_file_list.push_back(
-        "Too hasty! export after you converted the map!");
+        "Too hasty! export after youSCL_step::converted the map!");
     return failed_file_list;
   }
 
@@ -184,15 +184,15 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(std::string FolderPath,
       }
 
       switch (mcVer) {
-      case MC12:
-      case MC13:
+      case SCL_gameVersion::MC12:
+      case SCL_gameVersion::MC13:
         break;
-      case MC14:
-      case MC15:
-      case MC16:
-      case MC17:
-      case MC18:
-      case MC19:
+      case SCL_gameVersion::MC14:
+      case SCL_gameVersion::MC15:
+      case SCL_gameVersion::MC16:
+      case SCL_gameVersion::MC17:
+      case SCL_gameVersion::MC18:
+      case SCL_gameVersion::MC19:
         MapFile.writeInt("DataVersion", mcVersion2VersionNumber(mcVer));
         break;
       default:
@@ -211,32 +211,32 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(std::string FolderPath,
         MapFile.writeInt("xCenter", 0);
         MapFile.writeInt("zCenter", 0);
         switch (mcVer) {
-        case MC12:
+        case SCL_gameVersion::MC12:
           MapFile.writeByte("dimension", 114);
           MapFile.writeShort("height", 128);
           MapFile.writeShort("width", 128);
           break;
-        case MC13:
+        case SCL_gameVersion::MC13:
           MapFile.writeListHead("banners", NBT::Compound, 0);
           MapFile.writeListHead("frames", NBT::Compound, 0);
           MapFile.writeInt("dimension", 889464);
           break;
-        case MC14:
+        case SCL_gameVersion::MC14:
           MapFile.writeListHead("banners", NBT::Compound, 0);
           MapFile.writeListHead("frames", NBT::Compound, 0);
           MapFile.writeInt("dimension", 0);
           MapFile.writeByte("locked", 1);
           break;
-        case MC15:
+        case SCL_gameVersion::MC15:
           MapFile.writeListHead("banners", NBT::Compound, 0);
           MapFile.writeListHead("frames", NBT::Compound, 0);
           MapFile.writeInt("dimension", 0);
           MapFile.writeByte("locked", 1);
           break;
-        case MC16:
-        case MC17:
-        case MC18:
-        case MC19:
+        case SCL_gameVersion::MC16:
+        case SCL_gameVersion::MC17:
+        case SCL_gameVersion::MC18:
+        case SCL_gameVersion::MC19:
           MapFile.writeListHead("banners", NBT::Compound, 0);
           MapFile.writeListHead("frames", NBT::Compound, 0);
           MapFile.writeString("dimension", "minecraft:overworld");

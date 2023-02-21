@@ -5,9 +5,6 @@
 #include <stdlib.h>
 #include <utilities/SC_GlobalEnums.h>
 
-#warning remember to remove iostream
-#include <iostream>
-
 extern const unsigned char ColorManip_cl_rc[];
 extern const unsigned int ColorManip_cl_rc_length;
 
@@ -520,10 +517,6 @@ void ocl_warpper::ocl_resource::execute(::SCL_convertAlgo algo,
   }
 
   cl::Kernel *const k = this->kernel_by_algo(algo);
-  std::cout << "kernel function name = "
-            << k->getInfo<CL_KERNEL_FUNCTION_NAME>() << std::endl;
-
-  std::cout << "global group size = " << this->task_count() << std::endl;
 
   this->error = this->queue.enqueueNDRangeKernel(
       *k, {0}, {this->task_count()}, {this->local_work_group_size()});

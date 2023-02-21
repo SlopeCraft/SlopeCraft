@@ -565,7 +565,7 @@ void MainWindow::InitializeAll() {
   if (!Collected) {
     loadBlockList();
     // qDebug("方块列表加载完毕");
-    Manager->setVersion(SlopeCraft::gameVersion::MC17);
+    Manager->setVersion((unsigned char)SlopeCraft::gameVersion::MC17);
     onPresetsClicked();
     Collected = true;
   }
@@ -831,14 +831,14 @@ void MainWindow::preprocessImage(const QString &Path) {
 
 void MainWindow::on_ImportPic_clicked() {
 
-  QStringList userSelected = QFileDialog::getOpenFileNames(
-      this, tr("选择图片"), this->prevOpenedDir, tr("图片(*.png *.bmp *.jpg *.tif *.GIF )"));
+  QStringList userSelected =
+      QFileDialog::getOpenFileNames(this, tr("选择图片"), this->prevOpenedDir,
+                                    tr("图片(*.png *.bmp *.jpg *.tif *.GIF )"));
 
   if (userSelected.isEmpty())
     return;
 
-
-  this->prevOpenedDir=QFileInfo(userSelected.front()).filePath();
+  this->prevOpenedDir = QFileInfo(userSelected.front()).filePath();
 
   if (userSelected.size() == 1) {
     QString Path = userSelected.front();
@@ -908,8 +908,8 @@ QRgb ComposeColor(const QRgb front, const QRgb back) {
 inline void MainWindow::preProcess(char pureTpStrategy, char halfTpStrategy,
                                    QRgb BGC) {
   qDebug("调用了preProcess");
-  //透明像素处理策略：B->替换为背景色；A->空气；W->暂缓，等待处理
-  //半透明像素处理策略：B->替换为背景色；C->与背景色叠加；R->保留颜色；W->暂缓，等待处理
+  // 透明像素处理策略：B->替换为背景色；A->空气；W->暂缓，等待处理
+  // 半透明像素处理策略：B->替换为背景色；C->与背景色叠加；R->保留颜色；W->暂缓，等待处理
   qDebug("Cpoied");
   bool hasTotalTrans = false;
   if (pureTpStrategy != 'W' && halfTpStrategy != 'W') {
@@ -1164,7 +1164,7 @@ QImage EImage2QImage(const EImage &ei, ushort scale) {
 
 void MainWindow::progressRangeSet(void *p, int min, int max, int val) {
   MainWindow *wind = (MainWindow *)p;
-  //设置进度条的取值范围和值
+  // 设置进度条的取值范围和值
   if (wind->proTracker == nullptr) {
     qDebug("错误！proTracker==nullptr");
     return;
@@ -1233,7 +1233,7 @@ void MainWindow::on_Convert_clicked() {
   updateEnables();
 
   bool temp = false;
-  ui->Convert->setEnabled(temp); //防止用户在繁忙时重复操作
+  ui->Convert->setEnabled(temp); // 防止用户在繁忙时重复操作
   ui->isColorSpaceHSV->setEnabled(temp);
   ui->isColorSpaceRGB->setEnabled(temp);
   ui->isColorSpaceLab94->setEnabled(temp);
@@ -1253,7 +1253,7 @@ void MainWindow::on_Convert_clicked() {
   proTracker = nullptr;
 
   temp = true;
-  ui->Convert->setEnabled(temp); //恢复锁定
+  ui->Convert->setEnabled(temp); // 恢复锁定
   ui->isColorSpaceHSV->setEnabled(temp);
   ui->isColorSpaceRGB->setEnabled(temp);
   ui->isColorSpaceLab94->setEnabled(temp);
@@ -1740,8 +1740,8 @@ void MainWindow::onExportDataclicked(QString path) {
   QString FolderPath;
 
   if (path.isEmpty())
-    FolderPath =
-        (QFileDialog::getExistingDirectory(this, tr("请选择导出的文件夹"),this->prevOpenedDir));
+    FolderPath = (QFileDialog::getExistingDirectory(
+        this, tr("请选择导出的文件夹"), this->prevOpenedDir));
   else
     FolderPath = path;
 
@@ -1751,7 +1751,7 @@ void MainWindow::onExportDataclicked(QString path) {
     return;
   }
 
-  this->prevOpenedDir=FolderPath;
+  this->prevOpenedDir = FolderPath;
 
   ui->InputDataIndex->setEnabled(false);
   ui->ExportData->setEnabled(false);
@@ -1880,8 +1880,7 @@ void MainWindow::showError(void *p, SlopeCraft::errorFlag error,
     break;
   case SlopeCraft::errorFlag::LOSSYCOMPRESS_FAILED:
     title = tr("有损压缩失败");
-    text = tr(
-        "在构建高度矩阵时，有损压缩失败，没能将地图画压缩到目标高度。 \
+    text = tr("在构建高度矩阵时，有损压缩失败，没能将地图画压缩到目标高度。 \
         这可能是因为地图画行数过大。 \
         尝试启用无损压缩，或者提高最大允许高度");
     break;
@@ -2253,12 +2252,12 @@ void MainWindow::onActionSavePreset() {
 }
 
 void MainWindow::onActionLoadPreset() {
-  QString src = QFileDialog::getOpenFileName(this, tr("选择预设文件"), this->prevOpenedDir,
-                                             "*.scPreset.json");
+  QString src = QFileDialog::getOpenFileName(
+      this, tr("选择预设文件"), this->prevOpenedDir, "*.scPreset.json");
   if (src.isEmpty())
     return;
 
-  this->prevOpenedDir=QFileInfo(src).filePath();
+  this->prevOpenedDir = QFileInfo(src).filePath();
   Manager->loadPreset(src);
 }
 

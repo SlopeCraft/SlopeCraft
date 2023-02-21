@@ -40,8 +40,8 @@ inline ARGB composeColor(const ARGB front, const ARGB back) {
 namespace SlopeCraft {
 #endif
 
-//透明像素处理策略：B->替换为背景色；A->空气
-//半透明像素处理策略：B->替换为背景色；C->与背景色叠加；R->保留颜色
+// 透明像素处理策略：B->替换为背景色；A->空气
+// 半透明像素处理策略：B->替换为背景色；C->与背景色叠加；R->保留颜色
 void SCL_EXPORT SCL_preprocessImage(ARGB *data, const uint64_t imageSize,
                                     const SCL_PureTpPixelSt pSt,
                                     const SCL_HalfTpPixelSt hSt,
@@ -66,7 +66,7 @@ void SCL_EXPORT SCL_preprocessImage(ARGB *data, const uint64_t imageSize,
 
     if (getA(data[i]) < 255) { //  half transparent
       switch (hSt) {
-      case SCL_HalfTpPixelSt::ReplaceWithBackGround_:
+      case SCL_HalfTpPixelSt::ReplaceWithBackGround:
         data[i] = backGround;
         break;
       case SCL_HalfTpPixelSt::ComposeWithBackGround:

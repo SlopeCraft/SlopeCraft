@@ -38,7 +38,7 @@ const std::vector<std::string> trash_id = generate_trash();
 int main() {
   libSchem::Schem schem;
 
-  schem.set_MC_major_version_number(MC18);
+  schem.set_MC_major_version_number(SCL_gameVersion::MC18);
   schem.set_MC_version_number(2865);
 
   schem.resize(12, 9, 12);

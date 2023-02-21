@@ -234,15 +234,15 @@ void Schem::process_mushroom_states() noexcept {
         // write in the correct value of ele_t
         ele_t corrected_ele = invalid_ele_t;
         switch (current_mushroom_type) {
-          case __mushroom_type::brown_mushroom:
-            corrected_ele = u6_to_ele_brown[side.u6()];
-            break;
-          case __mushroom_type::red_mushroom:
-            corrected_ele = u6_to_ele_red[side.u6()];
-            break;
-          default:
-            corrected_ele = u6_to_ele_stem[side.u6()];
-            break;
+        case __mushroom_type::brown_mushroom:
+          corrected_ele = u6_to_ele_brown[side.u6()];
+          break;
+        case __mushroom_type::red_mushroom:
+          corrected_ele = u6_to_ele_red[side.u6()];
+          break;
+        default:
+          corrected_ele = u6_to_ele_stem[side.u6()];
+          break;
         }
 
         this->operator()(x, y, z) = corrected_ele;
@@ -395,38 +395,37 @@ bool Schem::export_litematic(std::string_view filename,
       }
       // progressAdd(wind, size3D[0]);
     }
-    lite.endCompound();  // end current region
+    lite.endCompound(); // end current region
   }
-  lite.endCompound();  // end all regions
+  lite.endCompound(); // end all regions
 
   switch (this->MC_major_ver_number) {
-    case ::SCL_gameVersion::MC12:
-      lite.writeInt("MinecraftDataVersion", this->MC_version_number());
-      lite.writeInt("Version", 4);
-      break;
-    case ::SCL_gameVersion::MC13:
-    case ::SCL_gameVersion::MC14:
-    case ::SCL_gameVersion::MC15:
-    case ::SCL_gameVersion::MC16:
-    case ::SCL_gameVersion::MC17:
-    case ::SCL_gameVersion::MC18:
-    case ::SCL_gameVersion::MC19:
-      lite.writeInt("MinecraftDataVersion", this->MC_version_number());
-      lite.writeInt("Version", 5);
-      break;
-    default:
-      std::cerr << "Wrong game version!" << std::endl;
-      lite.close();
-      if (error_flag != nullptr) {
-        *error_flag = SCL_errorFlag::UNKNOWN_MAJOR_GAME_VERSION;
-      }
-      if (error_str != nullptr) {
-        *error_str =
-            "Unknown major game version! Only 1.12 to 1.19 is "
-            "supported, but given value " +
-            std::to_string(this->MC_major_ver_number);
-      }
-      return false;
+  case ::SCL_gameVersion::MC12:
+    lite.writeInt("MinecraftDataVersion", this->MC_version_number());
+    lite.writeInt("Version", 4);
+    break;
+  case ::SCL_gameVersion::MC13:
+  case ::SCL_gameVersion::MC14:
+  case ::SCL_gameVersion::MC15:
+  case ::SCL_gameVersion::MC16:
+  case ::SCL_gameVersion::MC17:
+  case ::SCL_gameVersion::MC18:
+  case ::SCL_gameVersion::MC19:
+    lite.writeInt("MinecraftDataVersion", this->MC_version_number());
+    lite.writeInt("Version", 5);
+    break;
+  default:
+    std::cerr << "Wrong game version!" << std::endl;
+    lite.close();
+    if (error_flag != nullptr) {
+      *error_flag = SCL_errorFlag::UNKNOWN_MAJOR_GAME_VERSION;
+    }
+    if (error_str != nullptr) {
+      *error_str = "Unknown major game version! Only 1.12 to 1.19 is "
+                   "supported, but given value " +
+                   std::to_string((int)this->MC_major_ver_number);
+    }
+    return false;
   }
   lite.close();
 
@@ -491,9 +490,8 @@ bool Schem::export_structure(std::string_view filename,
       *error_flag = SCL_errorFlag::EXPORT_SCHEM_STRUCTURE_REQUIRES_AIR;
     }
     if (error_str != nullptr) {
-      *error_str =
-          "You assigned is_air_structure_void=false, but there is no "
-          "minecraft:air in your block palette.";
+      *error_str = "You assigned is_air_structure_void=false, but there is no "
+                   "minecraft:air in your block palette.";
     }
     return false;
   }
@@ -597,29 +595,28 @@ bool Schem::export_structure(std::string_view filename,
     // finish writting the whole 3D array
 
     switch (this->MC_major_ver_number) {
-      case ::SCL_gameVersion::MC12:
-      case ::SCL_gameVersion::MC13:
-      case ::SCL_gameVersion::MC14:
-      case ::SCL_gameVersion::MC15:
-      case ::SCL_gameVersion::MC16:
-      case ::SCL_gameVersion::MC17:
-      case ::SCL_gameVersion::MC18:
-      case ::SCL_gameVersion::MC19:
-        file.writeInt("MinecraftDataVersion", this->MC_ver_number);
-        break;
-      default:
-        std::cerr << "Wrong game version!" << std::endl;
-        file.close();
-        if (error_flag != nullptr) {
-          *error_flag = SCL_errorFlag::UNKNOWN_MAJOR_GAME_VERSION;
-        }
-        if (error_str != nullptr) {
-          *error_str =
-              "Unknown major game version! Only 1.12 to 1.19 is "
-              "supported, but given value " +
-              std::to_string(this->MC_major_ver_number);
-        }
-        return false;
+    case ::SCL_gameVersion::MC12:
+    case ::SCL_gameVersion::MC13:
+    case ::SCL_gameVersion::MC14:
+    case ::SCL_gameVersion::MC15:
+    case ::SCL_gameVersion::MC16:
+    case ::SCL_gameVersion::MC17:
+    case ::SCL_gameVersion::MC18:
+    case ::SCL_gameVersion::MC19:
+      file.writeInt("MinecraftDataVersion", this->MC_ver_number);
+      break;
+    default:
+      std::cerr << "Wrong game version!" << std::endl;
+      file.close();
+      if (error_flag != nullptr) {
+        *error_flag = SCL_errorFlag::UNKNOWN_MAJOR_GAME_VERSION;
+      }
+      if (error_str != nullptr) {
+        *error_str = "Unknown major game version! Only 1.12 to 1.19 is "
+                     "supported, but given value " +
+                     std::to_string((int)this->MC_major_ver_number);
+      }
+      return false;
     }
   }
   file.close();
@@ -666,14 +663,13 @@ bool Schem::export_WESchem(std::string_view filename,
     }
   }
 
-  if (this->MC_major_ver_number <= MC12) {
+  if (this->MC_major_ver_number <= SCL_gameVersion::MC12) {
     if (error_flag != nullptr) {
       *error_flag = ::SCL_errorFlag::EXPORT_SCHEM_MC12_NOT_SUPPORTED;
     }
     if (error_str != nullptr) {
-      *error_str =
-          "Exporting a schematic as 1.12 WorldEdit .schematic format "
-          "is not supported. Try other tools.";
+      *error_str = "Exporting a schematic as 1.12 WorldEdit .schematic format "
+                   "is not supported. Try other tools.";
     }
     return false;
   }
@@ -709,7 +705,7 @@ bool Schem::export_WESchem(std::string_view filename,
       }
     }
     // finish list
-  }  // finish compound
+  } // finish compound
   file.endCompound();
 
   file.writeCompound("Palette");
@@ -717,7 +713,7 @@ bool Schem::export_WESchem(std::string_view filename,
     for (int idx = 0; idx < int(block_id_list.size()); idx++) {
       file.writeInt(block_id_list[idx].c_str(), idx);
     }
-  }  // finished palette
+  } // finished palette
   file.endCompound();
 
   file.writeListHead("BlockEntities", NBT::Compound, 0);
@@ -742,14 +738,14 @@ bool Schem::export_WESchem(std::string_view filename,
     for (int64_t idx = 0; idx < int64_t(blockdata.size()); idx++) {
       file.writeByte("", data[idx]);
     }
-  }  // end array
+  } // end array
 
   file.writeIntArrayHead("Offset", 3);
   {
     file.writeInt("x", info.offset[0]);
     file.writeInt("y", info.offset[1]);
     file.writeInt("z", info.offset[2]);
-  }  // end array
+  } // end array
 
   file.close();
   if (error_flag != nullptr) {

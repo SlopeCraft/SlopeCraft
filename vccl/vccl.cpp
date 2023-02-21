@@ -212,7 +212,7 @@ int run(const inputs &input) noexcept {
     return __LINE__;
   }
 
-  cout << "algo = " << input.algo << endl;
+  cout << "algo = " << (char)input.algo << endl;
 
   kernel->set_prefer_gpu(input.prefer_gpu);
   if (input.prefer_gpu) {

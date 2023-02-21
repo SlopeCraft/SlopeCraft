@@ -31,7 +31,7 @@ This file is part of SlopeCraft.
 /**
  * @brief Minecraft game version
  */
-enum SCL_gameVersion {
+enum class SCL_gameVersion : int {
   /// older than 1.12
   ANCIENT = 0,
   /// 1.12
@@ -57,7 +57,7 @@ enum SCL_gameVersion {
 const SCL_gameVersion max_version = SCL_gameVersion::MC19;
 
 /// color difference formula used to match colors
-enum SCL_convertAlgo : char {
+enum class SCL_convertAlgo : char {
   /// naive RGB
   RGB = 'r',
   /// RGB with rotation
@@ -74,7 +74,11 @@ enum SCL_convertAlgo : char {
   gaCvter = 'A'
 };
 
-enum SCL_compressSettings : int {
+enum class SCL_colorSpace : char {
+
+};
+
+enum class SCL_compressSettings : int {
   /// don't compress
   noCompress = 0,
   /// compress in lossless only
@@ -85,14 +89,14 @@ enum SCL_compressSettings : int {
   Both = 3
 };
 
-enum SCL_glassBridgeSettings : int {
+enum class SCL_glassBridgeSettings : int {
   /// don't construce bridge
   noBridge = 0,
   /// construct bridge
   withBridge = 1
 };
 
-enum SCL_mapTypes : int {
+enum class SCL_mapTypes : int {
   /// 3D
   Slope = 0,
   /// flat
@@ -101,7 +105,7 @@ enum SCL_mapTypes : int {
   FileOnly = 2
 };
 
-enum SCL_step : int {
+enum class SCL_step : int {
   /// the instance is created
   nothing,
   /// map type is set and waitting for image
@@ -115,7 +119,7 @@ enum SCL_step : int {
   builded,
 };
 
-enum SCL_errorFlag : int {
+enum class SCL_errorFlag : int {
   /// no error
   NO_ERROR_OCCUR = -1,
   /// trying to skip steps
@@ -155,7 +159,7 @@ enum SCL_errorFlag : int {
 
 };
 
-enum SCL_workStatues : int {
+enum class SCL_workStatues : int {
   /// waiting
   none = -1,
 
@@ -182,7 +186,7 @@ enum SCL_workStatues : int {
 /**
  * @brief Pure transparent pixel processing strategy of SCL
  */
-enum SCL_PureTpPixelSt : char {
+enum class SCL_PureTpPixelSt : char {
   ReplaceWithBackGround = 'B',
   ReserveAsAir = 'A'
 };
@@ -190,8 +194,8 @@ enum SCL_PureTpPixelSt : char {
 /**
  * @brief The SCL_HalfTpPixelSt enum
  */
-enum SCL_HalfTpPixelSt : char {
-  ReplaceWithBackGround_ = 'B',
+enum class SCL_HalfTpPixelSt : char {
+  ReplaceWithBackGround = 'B',
   ComposeWithBackGround = 'C',
   IgnoreAlpha = 'R'
 };

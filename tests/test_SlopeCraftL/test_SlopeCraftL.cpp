@@ -41,7 +41,7 @@ int main() {
     return 1;
   }
 
-  cout << "current step : " << kernel->queryStep() << endl;
+  cout << "current step : " << (int)kernel->queryStep() << endl;
 
   {
     std::array<bool, 64> midx;
@@ -54,20 +54,21 @@ int main() {
 
     for (int idx = 1; idx < int(blocks.size()); idx++) {
       blocks[idx]->setId("minecraft:stone");
-      blocks[idx]->setVersion(ANCIENT);
+      blocks[idx]->setVersion((unsigned char)SCL_gameVersion::ANCIENT);
       blocks[idx]->setBurnable(false);
       blocks[idx]->setDoGlow(false);
       blocks[idx]->setEndermanPickable(false);
       blocks[idx]->setNeedGlass(false);
     }
-    kernel->setType(::SCL_mapTypes::Slope, MC19, midx.data(), blocks.data());
+    kernel->setType(::SCL_mapTypes::Slope, SCL_gameVersion::MC19, midx.data(),
+                    blocks.data());
 
     for (auto i : blocks) {
       i->destroy();
     }
   }
 
-  cout << "current step : " << kernel->queryStep() << endl;
+  cout << "current step : " << (int)kernel->queryStep() << endl;
 
   {
     // in col-major
@@ -86,18 +87,18 @@ int main() {
 
     delete[] img_data;
   }
-  cout << "current step : " << kernel->queryStep() << endl;
+  cout << "current step : " << (int)kernel->queryStep() << endl;
 
   kernel->convert(::SCL_convertAlgo::RGB, false);
-  cout << "current step : " << kernel->queryStep() << endl;
+  cout << "current step : " << (int)kernel->queryStep() << endl;
 
   kernel->exportAsData("./", 0, nullptr, nullptr);
 
-  cout << "current step : " << kernel->queryStep() << endl;
+  cout << "current step : " << (int)kernel->queryStep() << endl;
 
   kernel->build(::SCL_compressSettings::noCompress);
 
-  cout << "current step : " << kernel->queryStep() << endl;
+  cout << "current step : " << (int)kernel->queryStep() << endl;
 
   char return_buffer[1024] = "";
   kernel->exportAsLitematic("test.litematic", "my_litematic", "42",

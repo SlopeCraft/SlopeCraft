@@ -40,7 +40,7 @@ const libImageCvt::template ImageCvter<false>::allowed_colorset_t
 // global variables that VCL uses
 VCL_resource_pack TokiVC::pack;
 VCL_block_state_list TokiVC::bsl;
-SCL_gameVersion TokiVC::version = MC19;
+SCL_gameVersion TokiVC::version = SCL_gameVersion::MC19;
 VCL_face_t TokiVC::exposed_face = VCL_face_t::face_down;
 int TokiVC::max_block_layers = 3;
 

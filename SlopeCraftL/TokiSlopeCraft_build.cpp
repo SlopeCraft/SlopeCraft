@@ -54,7 +54,7 @@ std::string TokiSlopeCraft::makeTests(const AbstractBlock **src,
   realSrc.clear();
   realBaseColor.clear();
   for (uint32_t idx = 0; src[idx] != nullptr; idx++) {
-    if (src[idx]->getVersion() > mcVer) {
+    if (src[idx]->getVersion() > (int)mcVer) {
       continue;
     }
     realSrc.emplace_back(static_cast<const simpleBlock *>(src[idx]));
@@ -80,7 +80,7 @@ std::string TokiSlopeCraft::makeTests(const AbstractBlock **src,
     ids.reserve(realSrc.size() + 1);
     ids.emplace_back("minecraft:air");
     for (auto i : realSrc) {
-      if (TokiSlopeCraft::mcVer == MC12) {
+      if (TokiSlopeCraft::mcVer == SCL_gameVersion::MC12) {
         ids.emplace_back(i->getIdOld());
       } else {
         ids.emplace_back(i->getId());
@@ -131,7 +131,7 @@ std::string
 TokiSlopeCraft::exportAsLitematic(const std::string &TargetName,
                                   const std::string &LiteName,
                                   const std::string &RegionName) const {
-  if (kernelStep < builded) {
+  if (kernelStep < SCL_step::builded) {
     reportError(wind, errorFlag::HASTY_MANIPULATION,
                 "You can only export a map to litematic after you build the 3D "
                 "structure.");
@@ -165,7 +165,7 @@ TokiSlopeCraft::exportAsLitematic(const std::string &TargetName,
 bool TokiSlopeCraft::build(compressSettings cS, uint16_t mAH,
                            glassBridgeSettings gBS, uint16_t bI, bool fireProof,
                            bool endermanProof) {
-  if (kernelStep < converted) {
+  if (kernelStep < SCL_step::converted) {
     reportError(
         wind, errorFlag::HASTY_MANIPULATION,
         "You can build 3D strcuture only after you converted the raw image.");
@@ -186,8 +186,9 @@ bool TokiSlopeCraft::build(compressSettings cS, uint16_t mAH,
     temp.emplace_back("minecraft:air");
 
     for (const auto &block : TokiSlopeCraft::blockPalette) {
-      const char *id_at_curversion =
-          (this->mcVer == MC12) ? (block.getIdOld()) : (block.getId());
+      const char *id_at_curversion = (this->mcVer == SCL_gameVersion::MC12)
+                                         ? (block.getIdOld())
+                                         : (block.getId());
       if (std::strcmp("minecraft:air", id_at_curversion) == 0) {
         break;
       } else {
@@ -240,7 +241,7 @@ bool TokiSlopeCraft::build(compressSettings cS, uint16_t mAH,
 
   reportWorkingStatue(wind, workStatues::none);
 
-  kernelStep = builded;
+  kernelStep = SCL_step::builded;
 
   return true;
 }
@@ -292,7 +293,7 @@ void TokiSlopeCraft::makeHeight_new() {
       if (!success) {
         std::string msg = "Failed to compress the 3D structure at coloum " +
                           std::to_string(c);
-        reportError(wind, LOSSYCOMPRESS_FAILED, msg.data());
+        reportError(wind, SCL_errorFlag::LOSSYCOMPRESS_FAILED, msg.data());
         return;
       }
       Eigen::ArrayXi temp;
@@ -470,7 +471,7 @@ void TokiSlopeCraft::exportAsStructure(const char *TargetName,
 
 std::string
 TokiSlopeCraft::exportAsStructure(const std::string &TargetName) const {
-  if (kernelStep < builded) {
+  if (kernelStep < SCL_step::builded) {
     reportError(wind, errorFlag::HASTY_MANIPULATION,
                 "You can only export a map to structure after you build the 3D "
                 "structure.");
@@ -530,7 +531,7 @@ std::string TokiSlopeCraft::exportAsWESchem(
     const std::string &targetName, const std::array<int, 3> &offset,
     const std::array<int, 3> &, const char *Name,
     const std::vector<const char *> &requiredMods) const {
-  if (kernelStep < builded) {
+  if (kernelStep < SCL_step::builded) {
     reportError(wind, errorFlag::HASTY_MANIPULATION,
                 "You can only export a map to structure after you build the 3D "
                 "structure.");
