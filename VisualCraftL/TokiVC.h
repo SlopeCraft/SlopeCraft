@@ -21,6 +21,24 @@ public:
   void set_ui(void *uiptr, void (*progressRangeSet)(void *, int, int, int),
               void (*progressAdd)(void *, int)) noexcept override;
 
+  bool have_gpu_resource() const noexcept override {
+    return this->img_cvter.have_ocl();
+  }
+
+  bool set_gpu_resource(size_t platform_idx,
+                        size_t device_idx) noexcept override {
+    this->img_cvter.set_ocl(
+        ocl_warpper::ocl_resource(platform_idx, device_idx));
+    return this->img_cvter.ocl_resource().ok();
+  }
+
+  bool prefer_gpu() const noexcept override {
+    return this->imgcvter_prefer_gpu;
+  }
+  void set_prefer_gpu(bool try_gpu) noexcept override {
+    this->imgcvter_prefer_gpu = try_gpu;
+  }
+
   VCL_Kernel_step step() const noexcept override;
 
   bool set_image(const int64_t rows, const int64_t tcols,
@@ -61,6 +79,7 @@ private:
 
 private:
   VCL_Kernel_step _step{VCL_Kernel_step::VCL_wait_for_resource};
+  bool imgcvter_prefer_gpu{false};
 
   libImageCvt::ImageCvter<false> img_cvter;
   libSchem::Schem schem;

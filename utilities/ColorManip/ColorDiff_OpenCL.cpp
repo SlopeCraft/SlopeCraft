@@ -373,7 +373,11 @@ void ocl_warpper::ocl_resource::set_task(const std::array<float, 3> *src,
 
 void ocl_warpper::ocl_resource::set_args(::SCL_convertAlgo algo) noexcept {
 
-  this->queue.finish();
+  this->wait();
+  if (!this->ok()) {
+    this->err_msg = "Failed to wait.";
+    return;
+  }
 
   cl::Kernel *k = this->kernel_by_algo(algo);
 
@@ -435,7 +439,8 @@ cl_int private_fun_change_buf_size(cl::Context &context, cl::Buffer &buf,
   return CL_SUCCESS;
 }
 
-void ocl_warpper::ocl_resource::execute(::SCL_convertAlgo algo) noexcept {
+void ocl_warpper::ocl_resource::execute(::SCL_convertAlgo algo,
+                                        bool wait) noexcept {
 
   this->set_args(algo);
   if (!this->ok()) {
@@ -446,6 +451,8 @@ void ocl_warpper::ocl_resource::execute(::SCL_convertAlgo algo) noexcept {
   cl::Kernel *const k = this->kernel_by_algo(algo);
   std::cout << "kernel function name = "
             << k->getInfo<CL_KERNEL_FUNCTION_NAME>() << std::endl;
+
+  std::cout << "global group size = " << this->task_count() << std::endl;
 
   this->error =
       this->queue.enqueueNDRangeKernel(*k, {0}, {this->task_count()}, {32});
@@ -472,6 +479,12 @@ void ocl_warpper::ocl_resource::execute(::SCL_convertAlgo algo) noexcept {
     return;
   }
 
+  if (wait) {
+    this->wait();
+  }
+}
+
+void ocl_warpper::ocl_resource::wait() noexcept {
   this->error = this->queue.finish();
   if (!this->ok()) {
     this->err_msg = "Failed to wait for queue.";

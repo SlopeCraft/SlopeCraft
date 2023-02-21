@@ -64,7 +64,7 @@ int main(int, char **) {
 
   double wtime = omp_get_wtime();
 
-  rcs.execute(algo);
+  rcs.execute(algo, true);
   if (!rcs.ok()) {
     cout << rcs.error_code() << " : " << rcs.error_detail() << endl;
     return 4;

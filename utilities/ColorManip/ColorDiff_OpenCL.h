@@ -73,7 +73,9 @@ public:
 
   void set_task(const std::array<float, 3> *src, size_t task_num) noexcept;
 
-  void execute(::SCL_convertAlgo algo) noexcept;
+  void execute(::SCL_convertAlgo algo, bool wait) noexcept;
+
+  void wait() noexcept;
 
   inline size_t task_count() const noexcept {
     assert(this->task.result_diff_f32_host.size() ==
@@ -92,6 +94,8 @@ public:
   inline const auto &result_diff() const noexcept {
     return this->task.result_diff_f32_host;
   }
+
+  constexpr size_t local_work_group_size() const noexcept { return 32; }
 
 private:
   void resize_task(size_t task_num) noexcept;

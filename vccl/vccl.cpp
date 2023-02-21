@@ -23,6 +23,9 @@ struct inputs {
   SCL_convertAlgo algo;
   bool dither{false};
   bool benchmark{false};
+  bool prefer_gpu{false};
+  uint8_t platform_idx{0};
+  uint8_t device_idx{0};
 };
 
 int run(const inputs &input) noexcept;
@@ -83,13 +86,14 @@ int main(int argc, char **argv) {
       ->check(CLI::PositiveNumber)
       ->default_val(std::thread::hardware_concurrency());
 
-  try {
+  app.add_flag("--gpu", input.prefer_gpu, "Use gpu firstly");
 
-    CLI11_PARSE(app, argc, argv);
-  } catch (std::exception &e) {
-    cout << "Failed to parse cmd line arguments. Detail : " << e.what() << endl;
-    return __LINE__;
-  }
+  app.add_option("--platform-idx", input.platform_idx)
+      ->check(CLI::NonNegativeNumber);
+  app.add_option("--device-idx", input.device_idx)
+      ->check(CLI::NonNegativeNumber);
+
+  CLI11_PARSE(app, argc, argv);
 
   input.version = SCL_gameVersion(__version);
 
@@ -204,6 +208,18 @@ int run(const inputs &input) noexcept {
   }
 
   cout << "algo = " << input.algo << endl;
+
+  kernel->set_prefer_gpu(input.prefer_gpu);
+  if (input.prefer_gpu) {
+    const bool ok =
+        kernel->set_gpu_resource(input.platform_idx, input.device_idx);
+    if (!ok || !kernel->have_gpu_resource()) {
+      cout << "Failed to set gpu resource for kernel. Platform and device may "
+              "be invalid."
+           << endl;
+      return __LINE__;
+    }
+  }
 
   omp_set_num_teams(input.num_threads);
 

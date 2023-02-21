@@ -88,6 +88,13 @@ public:
                       void (*progressRangeSet)(void *, int, int, int),
                       void (*progressAdd)(void *, int)) noexcept = 0;
 
+  virtual bool have_gpu_resource() const noexcept = 0;
+  virtual bool set_gpu_resource(size_t platform_idx,
+                                size_t device_idx) noexcept = 0;
+
+  virtual bool prefer_gpu() const noexcept = 0;
+  virtual void set_prefer_gpu(bool try_gpu) noexcept = 0;
+
   virtual VCL_Kernel_step step() const noexcept = 0;
 
   virtual bool set_image(const int64_t rows, const int64_t cols,

@@ -220,14 +220,14 @@ float color_diff_Lab00(float3 lab1_vec3,float3 lab2_vec3) {
     const size_t global_idx = get_global_id(0);                                \
     const float3 unconverted = unconverted_colors[global_idx];                 \
                                                                                \
-    ushort result_idx = 0;                                                     \
+    ushort result_idx = USHRT_MAX;                                                     \
     float result_diff = FLT_MAX / 2;                                           \
                                                                                \
     for (ushort idx = 0; idx < colorset_size; idx++) {                         \
       const float3 color_ava = colorset_colors[idx];                           \
                                                                                \
       const float diff_sq = diff_fun(color_ava, unconverted);                  \
-      if (result_diff < diff_sq) {                                             \
+      if (result_diff > diff_sq) {                                             \
         /* this branch may be optimized */                                     \
         result_idx = idx;                                                      \
         result_diff = diff_sq;                                                 \

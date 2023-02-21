@@ -149,10 +149,18 @@ int run_task(task_t &task) noexcept {
   HANDLE_ERR(rcs, 3);
 
   double wtime = omp_get_wtime();
-  rcs.execute(task.algo);
-  HANDLE_ERR(rcs, 3);
+  rcs.execute(task.algo, true);
+  HANDLE_ERR(rcs, 4);
   wtime = omp_get_wtime() - wtime;
   cout << "GPU finished in " << wtime * 1e3 << " ms" << endl;
+
+  for (size_t tid = 0; tid < task.task_c3.size(); tid++) {
+    if (rcs.result_idx()[tid] >= task.colorset_c3.size()) {
+      cout << "Error : task " << tid << " has invalid result_idx "
+           << rcs.result_idx()[tid] << endl;
+      return 5;
+    }
+  }
 
   cout << "Success" << endl;
 

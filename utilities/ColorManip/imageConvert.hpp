@@ -28,6 +28,7 @@ This file is part of SlopeCraft.
 
 #include "ColorDiff_OpenCL.h"
 #include <Eigen/Dense>
+#include <iostream>
 #include <memory>
 #include <optional>
 #include <thread>
@@ -38,6 +39,10 @@ This file is part of SlopeCraft.
 #include "ColorManip.h"
 #include "newColorSet.hpp"
 #include "newTokiColor.hpp"
+
+#ifdef RGB
+#undef RGB
+#endif // #ifdef RGB
 
 namespace libImageCvt {
 
@@ -68,10 +73,12 @@ public:
     this->ocl_rcs = src;
     this->have_ocl_rcs = this->ocl_rcs.ok();
   }
+
+  inline const auto &ocl_resource() const noexcept { return this->ocl_rcs; }
 };
 
 template <bool is_not_optical>
-class ImageCvter : OCL_wrapper_wrapper<is_not_optical> {
+class ImageCvter : public OCL_wrapper_wrapper<is_not_optical> {
 public:
   using basic_colorset_t = colorset_new<true, is_not_optical>;
   using allowed_colorset_t = colorset_new<false, is_not_optical>;
@@ -138,7 +145,7 @@ public:
     }
   }
 
-  void convert_image(::SCL_convertAlgo __algo, bool dither,
+  bool convert_image(::SCL_convertAlgo __algo, bool dither,
                      bool try_gpu = false) noexcept {
     if (__algo == ::SCL_convertAlgo::gaCvter) {
       __algo = ::SCL_convertAlgo::RGB_Better;
@@ -149,8 +156,9 @@ public:
     this->algo = __algo;
     this->add_colors_to_hash();
     ui.rangeSet(0, 100, 25);
-
-    this->match_all_TokiColors(try_gpu);
+    if (!this->match_all_TokiColors(try_gpu)) {
+      return false;
+    }
     ui.rangeSet(0, 100, 50);
 
     if (dither) {
@@ -175,14 +183,14 @@ public:
         break;
 
       default:
-        exit(1);
-        return;
+        abort();
+        return false;
       }
     } else {
       this->_dithered_image = this->_raw_image;
     }
     ui.rangeSet(0, 100, 100);
-
+    return true;
     // fill_coloridmat_by_hash(this->colorid_matrix);
   }
 
@@ -195,7 +203,7 @@ public:
           convert_unit(this->_dithered_image(idx), this->algo));
 
       if (it == this->_color_hash.end()) {
-        exit(1);
+        abort();
       }
 
       result(idx) = it->second.color_id();
@@ -228,7 +236,7 @@ public:
           const ARGB argb = this->_dithered_image(r, c);
           auto it = this->_color_hash.find(convert_unit(argb, this->algo));
           if (it == this->_color_hash.end()) {
-            exit(1);
+            abort();
             return;
           }
 
@@ -262,23 +270,22 @@ private:
     }
   }
 
-  void match_all_TokiColors(bool try_gpu) noexcept {
+  bool match_all_TokiColors(bool try_gpu) noexcept {
     if constexpr (is_not_optical) {
       this->match_all_TokiColors_cpu();
+      return true;
     } else {
 
       // If converter have gpu resources, compute by gpu
       if (try_gpu && this->have_ocl()) {
         const bool ok = this->match_all_TokiColors_gpu();
 
-        if (!ok) {
-          abort();
-          return;
-        }
+        return ok;
 
         // otherwise compute by cpu
       } else {
         this->match_all_TokiColors_cpu();
+        return true;
       }
     }
   }
@@ -314,7 +321,7 @@ private:
       for (int64_t r = 0; r < this->rows(); r++) {
         auto it = this->_color_hash.find(this->_raw_image(r, c));
         if (it == this->_color_hash.end()) {
-          exit(1);
+          abort();
         }
 
         if constexpr (is_not_optical) {
@@ -335,6 +342,7 @@ private:
       return false;
     }
 
+    // set colorset to device
     this->ocl_rcs.set_colorset(TokiColor_t::Allowed->color_count(),
                                {TokiColor_t::Allowed->rgb_data(0),
                                 TokiColor_t::Allowed->rgb_data(1),
@@ -364,11 +372,15 @@ private:
     const SCL_convertAlgo algo = tasks[0]->first.algo;
 
     const uint64_t taskCount = tasks.size();
-    std::vector<std::array<float, 3>> task_colors(taskCount);
-    for (size_t tid = 0; tid < taskCount; tid++) {
+
+    const uint64_t gpu_task_count =
+        taskCount - taskCount % this->ocl_rcs.local_work_group_size();
+    const uint64_t cpu_task_count = taskCount - gpu_task_count;
+
+    std::vector<std::array<float, 3>> task_colors(gpu_task_count);
+    for (size_t tid = 0; tid < gpu_task_count; tid++) {
 
       if (tasks[tid]->first.algo != algo) {
-        abort();
         return false;
       }
 
@@ -377,22 +389,40 @@ private:
         task_colors[tid][channel] = c3_eig[channel];
       }
     }
-
+    // set task
     this->ocl_rcs.set_task(task_colors.data(), task_colors.size());
     if (!this->ocl_rcs.ok()) {
       return false;
     }
 
-    this->ocl_rcs.execute(algo);
+    this->ocl_rcs.execute(algo, false);
+    if (!this->ocl_rcs.ok()) {
+      return false;
+    }
+    // compute rest tasks on cpu
+    for (uint64_t ctid = 0; ctid < cpu_task_count; ctid++) {
+      const uint64_t tid = gpu_task_count + ctid;
+      tasks[tid]->second.compute(tasks[tid]->first);
+    }
+
+    this->ocl_rcs.wait();
     if (!this->ocl_rcs.ok()) {
       return false;
     }
 
-    for (size_t tid = 0; tid < taskCount; tid++) {
+    for (size_t tid = 0; tid < gpu_task_count; tid++) {
       TokiColor_t &tc = tasks[tid]->second;
-      tc.set_gpu_result(
-          TokiColor_t::Allowed->color_id(this->ocl_rcs.result_idx()[tid]),
-          this->ocl_rcs.result_diff()[tid]);
+
+      const uint16_t tempIdx = this->ocl_rcs.result_idx()[tid];
+
+      if (tempIdx >= TokiColor_t::Allowed->color_count()) {
+        std::cout << "Invalid tempIdx " << tempIdx << ", only "
+                  << TokiColor_t::Allowed->color_count() << " colors in Allowed"
+                  << std::endl;
+      }
+
+      tc.set_gpu_result(TokiColor_t::Allowed->color_id(tempIdx),
+                        this->ocl_rcs.result_diff()[tid]);
     }
 
     return true;
@@ -433,7 +463,7 @@ private:
             convert_unit(this->_raw_image(r, c), this->algo));
         if (it == this->_color_hash.end()) {
           // unreachable
-          exit(1);
+          abort();
           return;
         }
         for (int ch = 0; ch < 3; ch++) {
