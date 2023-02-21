@@ -112,8 +112,8 @@ float color_diff_HSV(float3 hsv1_vec3, float3 hsv2_vec3) {
   const float sv_1 = s1 * v1;
   const float sv_2 = s2 * v2;
 
-  const float dX = 50.0f * (cos(h1) * sv_1 - cos(h2) - sv_2);
-  const float dY = 50.0f * (sin(h1) * sv_1 - sin(h2) - sv_2);
+  const float dX = 50.0f * (cos(h1) * sv_1 - cos(h2) * sv_2);
+  const float dY = 50.0f * (sin(h1) * sv_1 - sin(h2) * sv_2);
   const float dZ = 50.0f * (v1 - v2);
 
   return dX * dX + dY * dY + dZ * dZ;
@@ -169,6 +169,7 @@ float color_diff_Lab00(float3 lab1_vec3, float3 lab2_vec3) {
     h1p = 0;
   else
     h1p = atan2(b1, a1p);
+
   if (h1p < 0)
     h1p += 2 * M_PI;
 
@@ -176,6 +177,7 @@ float color_diff_Lab00(float3 lab1_vec3, float3 lab2_vec3) {
     h2p = 0;
   else
     h2p = atan2(b2, a2p);
+    
   if (h2p < 0)
     h2p += 2 * M_PI;
 
