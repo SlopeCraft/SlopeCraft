@@ -6,6 +6,9 @@ project(SlopeCraft VERSION ${SlopeCraft_version} LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS FALSE)
 
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN TRUE)
+
 if(${MSVC})
     add_compile_options("/Zc:__cplusplus")
     add_compile_options("/wd4819")

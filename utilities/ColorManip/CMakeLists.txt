@@ -90,6 +90,6 @@ target_include_directories(test_algo PRIVATE ${cli11_include_dir})
 
 foreach(_algo r R H X l L)
     add_test(NAME test_algo_${_algo}
-        COMMAND test_algo --algo ${_algo} --platform-idx 1 --device-idx 0
+        COMMAND test_algo --algo ${_algo} --platform-idx 0 --device-idx 0
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 endforeach(_algo r R H X l L)
