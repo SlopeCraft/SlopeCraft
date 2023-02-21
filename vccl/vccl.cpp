@@ -1,12 +1,14 @@
+#include <VisualCraftL.h>
+#include <omp.h>
+
 #include <CLI11.hpp>
 #include <QImage>
-#include <VisualCraftL.h>
 #include <filesystem>
 #include <iostream>
-#include <omp.h>
 #include <string>
 #include <thread>
 #include <vector>
+
 
 using std::cout, std::endl;
 
@@ -39,7 +41,6 @@ void cb_progress_range_set(void *, int, int, int) {}
 void cb_progress_add(void *, int) {}
 
 int main(int argc, char **argv) {
-  cout << __LINE__ << endl;
   inputs input;
   CLI::App app;
   app.add_option("--rp", input.zips, "Resource packs")
@@ -118,10 +119,10 @@ int main(int argc, char **argv) {
   return run(input);
 }
 
-#define VCCL_PRIVATE_MACRO_MAKE_CASE(enum_val)                                 \
-  if (str == #enum_val) {                                                      \
-    ok = true;                                                                 \
-    return SCL_convertAlgo::enum_val;                                          \
+#define VCCL_PRIVATE_MACRO_MAKE_CASE(enum_val) \
+  if (str == #enum_val) {                      \
+    ok = true;                                 \
+    return SCL_convertAlgo::enum_val;          \
   }
 
 SCL_convertAlgo str_to_algo(std::string_view str, bool &ok) noexcept {
