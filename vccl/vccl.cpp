@@ -11,6 +11,12 @@ int main(int argc, char **argv) {
   inputs input;
   CLI::App app;
 
+  const bool is_gpu_accessible = VCL_platform_num() > 0;
+
+  if (is_gpu_accessible) {
+    input.prefer_gpu = true;
+  }
+
   app.set_version_flag("--version",
                        std::string("vccl version : ") + SC_VERSION_STR +
                            ", VisualCraftL version : " + VCL_version_string());
@@ -45,7 +51,7 @@ int main(int argc, char **argv) {
 
   std::string algo;
   app.add_option("--algo", algo, "Algorithm for conversion")
-      ->default_val("RGB_Better")
+      ->default_val("RGB")
       ->check(CLI::IsMember(
           {"RGB", "RGB_Better", "HSV", "Lab94", "Lab00", "XYZ", "gaCvter"}))
       ->expected(1);
@@ -61,7 +67,7 @@ int main(int argc, char **argv) {
       ->default_val(std::thread::hardware_concurrency());
 
   app.add_flag("--gpu", input.prefer_gpu, "Use gpu as much as possible")
-      ->default_val(false);
+      ->default_val(is_gpu_accessible);
 
   app.add_option("--platform", input.platform_idx, "The number of GPU platform")
       ->default_val(0)
@@ -73,7 +79,8 @@ int main(int argc, char **argv) {
   app.add_flag("--show-gpu", input.show_gpu)->default_val(false);
 
   app.add_flag("--list-gpu", input.list_gpu,
-               "List all GPU platforms and devices that OpenCL has access to.");
+               "List all GPU platforms and devices that OpenCL has access to.")
+      ->default_val(false);
   app.add_flag("--disable-config", input.disable_config,
                "Disable default option provided by vccl-config.json")
       ->default_val(false);
