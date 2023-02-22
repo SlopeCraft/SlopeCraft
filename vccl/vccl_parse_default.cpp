@@ -1,5 +1,6 @@
 #include "vccl_internal.h"
 #include <QImage>
+#include <QImageReader>
 #include <filesystem>
 #include <fstream>
 #include <json.hpp>
@@ -165,6 +166,15 @@ bool load_config(std::string_view filename, config &cfg) noexcept {
   return true;
 }
 
+void list_supported_formats() noexcept {
+  auto fmts = QImageReader::supportedImageFormats();
+  cout << "Supported image formats : ";
+  for (auto &qba : fmts) {
+    cout << qba.data() << ", ";
+  }
+  cout << endl;
+}
+
 int run(const inputs &input) noexcept {
 
   if (input.zips.size() <= 0 || input.jsons.size() <= 0) {
@@ -178,7 +188,7 @@ int run(const inputs &input) noexcept {
     return __LINE__;
   }
 
-  cout << "algo = " << (char)input.algo << endl;
+  // cout << "algo = " << (char)input.algo << endl;
 
   kernel->set_prefer_gpu(input.prefer_gpu);
   if (input.prefer_gpu) {
@@ -215,7 +225,7 @@ int run(const inputs &input) noexcept {
   }
 
   for (const auto &img_filename : input.images) {
-    QImage img(img_filename.c_str());
+    QImage img(QString::fromLocal8Bit(img_filename.c_str()));
 
     if (img.isNull()) {
       cout << "Failed to open image " << img_filename << endl;

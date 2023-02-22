@@ -4,8 +4,9 @@ set(SlopeCraft_version 3.10.1)
 
 project(SlopeCraft VERSION ${SlopeCraft_version} LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_EXTENSIONS FALSE)
 
+# set(CMAKE_C_EXTENSIONS FALSE)
+# set(CMAKE_CXX_EXTENSIONS FALSE)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN TRUE)
 
@@ -105,6 +106,8 @@ add_compile_definitions(SLOPECRAFTL_NOT_INSTALLED)
 add_compile_definitions(VISUALCRAFTL_NOT_INSTALLED)
 include_directories(${CMAKE_BINARY_DIR}/utilities)
 
+set(SlopeCraft_resource_file_to_touch_and_remove ${CMAKE_BINARY_DIR}/utilities/ColorManip/__rsc_ColorManip_cl_rc.c)
+
 add_subdirectory(utilities)
 add_subdirectory(imageCutter)
 add_subdirectory(SlopeCraftL)
@@ -113,6 +116,12 @@ add_subdirectory(MapViewer)
 add_subdirectory(tests)
 add_subdirectory(VisualCraftL)
 add_subdirectory(vccl)
+
+foreach(cmakerc ${SlopeCraft_resource_file_to_touch_and_remove})
+    message(WARNING "Remove " ${cmakerc})
+
+    # file(REMOVE ${cmakerc})
+endforeach(cmakerc ${SlopeCraft_resource_file_to_touch_and_remove})
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 

@@ -367,7 +367,7 @@ private:
         taskCount - taskCount % this->ocl_rcs.local_work_group_size();
     const uint64_t cpu_task_count = taskCount - gpu_task_count;
 
-    {
+    if (gpu_task_count > 0) {
       std::vector<std::array<float, 3>> task_colors(gpu_task_count);
       for (size_t tid = 0; tid < gpu_task_count; tid++) {
 
@@ -418,16 +418,18 @@ private:
       abort();
     }
 
-    // set colorset for ocl
-    this->ocl_rcs.set_colorset(TokiColor_t::Allowed->color_count(),
-                               colorset_ptrs);
-    if (!this->ocl_rcs.ok()) {
-      return false;
-    }
+    if (gpu_task_count > 0) {
+      // set colorset for ocl
+      this->ocl_rcs.set_colorset(TokiColor_t::Allowed->color_count(),
+                                 colorset_ptrs);
+      if (!this->ocl_rcs.ok()) {
+        return false;
+      }
 
-    this->ocl_rcs.execute(algo, false);
-    if (!this->ocl_rcs.ok()) {
-      return false;
+      this->ocl_rcs.execute(algo, false);
+      if (!this->ocl_rcs.ok()) {
+        return false;
+      }
     }
     // compute rest tasks on cpu
     for (uint64_t ctid = 0; ctid < cpu_task_count; ctid++) {
@@ -435,22 +437,25 @@ private:
       tasks[tid]->second.compute(tasks[tid]->first);
     }
 
-    this->ocl_rcs.wait();
-    if (!this->ocl_rcs.ok()) {
-      return false;
-    }
-
-    for (size_t tid = 0; tid < gpu_task_count; tid++) {
-      TokiColor_t &tc = tasks[tid]->second;
-
-      const uint16_t tempidx = this->ocl_rcs.result_idx()[tid];
-      if (tempidx >= TokiColor_t::Allowed->color_count()) {
-        abort();
+    if (gpu_task_count > 0) {
+      this->ocl_rcs.wait();
+      if (!this->ocl_rcs.ok()) {
+        return false;
       }
-
-      tc.set_gpu_result(TokiColor_t::Allowed->color_id(tempidx),
-                        this->ocl_rcs.result_diff()[tid]);
     }
+
+    if (gpu_task_count > 0)
+      for (size_t tid = 0; tid < gpu_task_count; tid++) {
+        TokiColor_t &tc = tasks[tid]->second;
+
+        const uint16_t tempidx = this->ocl_rcs.result_idx()[tid];
+        if (tempidx >= TokiColor_t::Allowed->color_count()) {
+          abort();
+        }
+
+        tc.set_gpu_result(TokiColor_t::Allowed->color_id(tempidx),
+                          this->ocl_rcs.result_diff()[tid]);
+      }
 
     return true;
   }

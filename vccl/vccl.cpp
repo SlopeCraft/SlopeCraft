@@ -3,6 +3,7 @@
 #include <thread>
 
 #include "vccl_internal.h"
+#include <QCoreApplication>
 
 using std::cout, std::endl;
 
@@ -76,6 +77,9 @@ int main(int argc, char **argv) {
   app.add_flag("--disable-config", input.disable_config,
                "Disable default option provided by vccl-config.json")
       ->default_val(false);
+  app.add_flag("--list-format", input.list_supported_formats,
+               "List all supported image formats.")
+      ->default_val(false);
 
   CLI11_PARSE(app, argc, argv);
 
@@ -119,5 +123,15 @@ int main(int argc, char **argv) {
     }
   }
 
-  return run(input);
+  QCoreApplication qapp(argc, argv);
+  if (input.list_supported_formats) {
+    list_supported_formats();
+    qapp.quit();
+    return 0;
+  }
+
+  const int ret = run(input);
+  qapp.quit();
+
+  return ret;
 }

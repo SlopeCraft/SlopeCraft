@@ -25,6 +25,7 @@ struct inputs {
   uint8_t platform_idx{0};
   uint8_t device_idx{0};
   bool list_gpu{false};
+  bool list_supported_formats{false};
   bool disable_config{false};
 };
 
@@ -43,5 +44,7 @@ struct config {
 };
 
 bool load_config(std::string_view filename, config &cfg) noexcept;
+
+void list_supported_formats() noexcept;
 
 #endif // #ifndef SLOPECRAFT_VCCL_INTERNAL_H

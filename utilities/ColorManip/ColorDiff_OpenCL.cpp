@@ -217,7 +217,7 @@ void ocl_warpper::ocl_resource::init_resource() noexcept {
       this->context, this->task.rawcolor_f32_3_device, 128 * sizeof(float[3]),
       CL_MEM_READ_ONLY, true);
   if (!this->ok()) {
-    this->err_msg = "Failed to initialize buffer size for ARGB.";
+    this->err_msg = "Failed to initialize this->task.rawcolor_f32_3_device.";
     return;
   }
 
@@ -225,7 +225,7 @@ void ocl_warpper::ocl_resource::init_resource() noexcept {
       this->context, this->task.result_idx_u16_device, 128 * sizeof(uint16_t),
       CL_MEM_WRITE_ONLY, true);
   if (!this->ok()) {
-    this->err_msg = "Failed to ###.";
+    this->err_msg = "Failed to initialize this->task.result_idx_u16_device.";
     return;
   }
 
@@ -233,7 +233,7 @@ void ocl_warpper::ocl_resource::init_resource() noexcept {
       this->context, this->task.result_diff_f32_device, 128 * sizeof(float),
       CL_MEM_WRITE_ONLY, true);
   if (!this->ok()) {
-    this->err_msg = "Failed to ###.";
+    this->err_msg = "Failed to initialize this->task.result_diff_f32_device.";
     return;
   }
 
@@ -242,7 +242,7 @@ void ocl_warpper::ocl_resource::init_resource() noexcept {
       cl::Buffer(this->context, CL_MEM_READ_ONLY, 256 * sizeof(float) * 3, NULL,
                  &this->error);
   if (!this->ok()) {
-    this->err_msg = "Failed to ###.";
+    this->err_msg = "Failed to initialize this->colorset.colorset_float3.";
     return;
   }
 }
@@ -267,7 +267,8 @@ void ocl_warpper::ocl_resource::resize_task(size_t task_num) noexcept {
       this->context, this->task.rawcolor_f32_3_device,
       task_f32_3_required_bytes, CL_MEM_READ_ONLY, false);
   if (!this->ok()) {
-    this->err_msg = "Failed to ###.";
+    this->err_msg = "Failed to allocate device memory for "
+                    "this->task.rawcolor_f32_3_device.";
     return;
   }
 
@@ -275,7 +276,8 @@ void ocl_warpper::ocl_resource::resize_task(size_t task_num) noexcept {
       this->context, this->task.result_idx_u16_device,
       result_idx_required_bytes, CL_MEM_WRITE_ONLY, false);
   if (!this->ok()) {
-    this->err_msg = "Failed to ###.";
+    this->err_msg = "Failed to allocate device memory for "
+                    "this->task.result_idx_u16_device.";
     return;
   }
 
@@ -283,7 +285,8 @@ void ocl_warpper::ocl_resource::resize_task(size_t task_num) noexcept {
       this->context, this->task.result_diff_f32_device,
       result_diff_required_bytes, CL_MEM_WRITE_ONLY, false);
   if (!this->ok()) {
-    this->err_msg = "Failed to ###.";
+    this->err_msg = "Failed to allocate device memory for "
+                    "this->task.result_diff_f32_device.";
     return;
   }
   return;
@@ -358,7 +361,6 @@ void ocl_warpper::ocl_resource::set_task(
     size_t task_num, const std::array<float, 3> *data) noexcept {
   this->resize_task(task_num);
   if (!this->ok()) {
-    this->err_msg = "Failed to ###.";
     return;
   }
 
@@ -366,7 +368,8 @@ void ocl_warpper::ocl_resource::set_task(
       this->queue.enqueueWriteBuffer(this->task.rawcolor_f32_3_device, false, 0,
                                      task_num * sizeof(float) * 3, data);
   if (!this->ok()) {
-    this->err_msg = "Failed to ###.";
+    this->err_msg = "Failed to write unconverted colors to device.";
+    this->err_msg += " task num = " + std::to_string(task_num);
     return;
   }
 
@@ -375,7 +378,8 @@ void ocl_warpper::ocl_resource::set_task(
                                               uint16_t(0xFFFF), 0,
                                               task_num * sizeof(uint16_t));
   if (!this->ok()) {
-    this->err_msg = "Failed to ###.";
+    this->err_msg =
+        "Failed to fill this->task.result_idx_u16_device with 0xFFFF.";
     return;
   }
 
@@ -391,7 +395,7 @@ void ocl_warpper::ocl_resource::set_task(
 
   this->error = this->queue.finish();
   if (!this->ok()) {
-    this->err_msg = "Failed to ###.";
+    this->err_msg = "Failed to wait for queue.";
     return;
   }
 }
