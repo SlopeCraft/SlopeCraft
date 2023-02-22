@@ -1,0 +1,11 @@
+{
+    "default_resource_pack_12": [
+        "./Blocks_VCL/Vanilla_1_12_2.zip"
+    ],
+    "default_resource_pack_latest": [
+        "./Blocks_VCL/Vanilla_1_19_2.zip"
+    ],
+    "default_block_state_list": [
+        "./Blocks_VCL/VCL_blocks_fixed.json"
+    ]
+}

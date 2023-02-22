@@ -30,7 +30,7 @@ foreach(_layers RANGE 1 3 1)
                     # message(STATUS ${test_name})
                     add_test(NAME ${test_name}
                         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-                        COMMAND vccl --bsl ${CMAKE_SOURCE_DIR}/VisualCraftL/VCL_blocks_fixed.json --rp ${zip_file} --version ${_ver} --face ${_face} --layers ${_layers} --img ${VCL_test_images} --dither=${_dither} -j1 --out-image --benchmark --prefix ${test_name} --gpu)
+                        COMMAND vccl --bsl ${CMAKE_SOURCE_DIR}/VisualCraftL/VCL_blocks_fixed.json --rp ${zip_file} --mcver ${_ver} --face ${_face} --layers ${_layers} --img ${VCL_test_images} --dither=${_dither} -j1 --out-image --benchmark --prefix ${test_name} --gpu --disable-config)
 
                     #
                 endforeach(_dither ${dither})

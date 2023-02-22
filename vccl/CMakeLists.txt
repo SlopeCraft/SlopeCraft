@@ -21,14 +21,17 @@ qt_add_executable(vccl
 
     MANUAL_FINALIZATION
     vccl.cpp
+    vccl_internal.h
+    vccl_parse_default.cpp
     ${vccl_win_sources}
 )
 
 target_link_libraries(vccl PRIVATE VisualCraftL Qt6::Core Qt6::Gui)
 
 include(${CMAKE_SOURCE_DIR}/cmake/configure_cli11.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/find_nlohmann_json.cmake)
 
-target_include_directories(vccl PRIVATE ${cli11_include_dir})
+target_include_directories(vccl PRIVATE ${cli11_include_dir} ${SlopeCraft_Nlohmann_json_include_dir})
 
 find_package(OpenMP REQUIRED)
 target_link_libraries(vccl PRIVATE OpenMP::OpenMP_CXX)
