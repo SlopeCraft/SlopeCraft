@@ -461,9 +461,13 @@ private:
 
       __m256 theta;
       {
+        __m256 temp1 =
+            _mm256_div_ps(sumRGBsquare, _mm256_add_ps(SqrModSquare, thre));
         //__m256 _mm256_rsqrt_ps (__m256 a)
+        /*
         __m256 temp1 = _mm256_mul_ps(
             sumRGBsquare, _mm256_rsqrt_ps(_mm256_add_ps(SqrModSquare, thre)));
+            */
         temp1 = _mm256_div_ps(temp1, _mm256_set1_ps(1.01f));
 
         __m256 temp2 = _mm256_acos_ps(temp1);
