@@ -740,3 +740,78 @@ VCL_EXPORT_FUN void VCL_set_report_callback(VCL_report_callback_t cb) {
 void VCL_report(VCL_report_type_t t, const char *msg, bool flush) noexcept {
   VCL_report_fun(t, msg, flush);
 }
+
+class VCL_GPU_Platform {
+public:
+  cl::Platform plat;
+  std::string name;
+  cl_int err;
+  std::vector<cl::Device> devices;
+
+  VCL_GPU_Platform() = delete;
+  VCL_GPU_Platform(size_t platid) {
+    cl_platform_id plats[1024];
+    cl_uint num_plats;
+    this->err = clGetPlatformIDs(1024, plats, &num_plats);
+    if (this->err != CL_SUCCESS) {
+      return;
+    }
+    if (platid >= num_plats) {
+      this->err = 1;
+      return;
+    }
+
+    this->plat = cl::Platform(plats[platid]);
+
+    this->name = this->plat.getInfo<CL_PLATFORM_NAME>(&this->err);
+    if (this->err != CL_SUCCESS) {
+      return;
+    }
+
+    this->err = this->plat.getDevices(CL_DEVICE_TYPE_ALL, &this->devices);
+    if (this->err != CL_SUCCESS) {
+      return;
+    }
+  }
+};
+
+class VCL_GPU_Device {
+public:
+  cl::Device device;
+  std::string name;
+};
+
+VCL_EXPORT_FUN size_t VCL_platform_num() { return ocl_warpper::platform_num(); }
+VCL_EXPORT_FUN VCL_GPU_Platform *VCL_get_platform(size_t platform_idx) {
+  VCL_GPU_Platform *ret = new VCL_GPU_Platform(platform_idx);
+  if (ret->err != CL_SUCCESS) {
+    delete ret;
+    return nullptr;
+  }
+  return ret;
+}
+
+VCL_EXPORT_FUN void VCL_release_platform(VCL_GPU_Platform *ptr) { delete ptr; }
+VCL_EXPORT_FUN const char *VCL_get_platform_name(const VCL_GPU_Platform *ptr) {
+  return ptr->name.c_str();
+}
+
+VCL_EXPORT_FUN size_t VCL_get_device_num(const VCL_GPU_Platform *platp) {
+  return platp->devices.size();
+}
+VCL_EXPORT_FUN VCL_GPU_Device *VCL_get_device(const VCL_GPU_Platform *platp,
+                                              size_t device_idx) {
+  if (device_idx >= platp->devices.size()) {
+    return nullptr;
+  }
+
+  VCL_GPU_Device *ret = new VCL_GPU_Device{platp->devices[device_idx], ""};
+  ret->name = ret->device.getInfo<CL_DEVICE_NAME>();
+  return ret;
+}
+
+VCL_EXPORT_FUN void VCL_release_device(VCL_GPU_Device *dev) { delete dev; }
+
+VCL_EXPORT_FUN const char *VCL_get_device_name(const VCL_GPU_Device *dev) {
+  return dev->name.c_str();
+}

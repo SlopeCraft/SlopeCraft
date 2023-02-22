@@ -9,7 +9,6 @@
 #include <thread>
 #include <vector>
 
-
 using std::cout, std::endl;
 
 struct inputs {
@@ -29,6 +28,7 @@ struct inputs {
   bool show_gpu{false};
   uint8_t platform_idx{0};
   uint8_t device_idx{0};
+  bool list_gpu{false};
 };
 
 int run(const inputs &input) noexcept;
@@ -40,15 +40,15 @@ SCL_convertAlgo str_to_algo(std::string_view str, bool &ok) noexcept;
 void cb_progress_range_set(void *, int, int, int) {}
 void cb_progress_add(void *, int) {}
 
+int list_gpu();
+
 int main(int argc, char **argv) {
   inputs input;
   CLI::App app;
   app.add_option("--rp", input.zips, "Resource packs")
-      ->check(CLI::ExistingFile)
-      ->required();
+      ->check(CLI::ExistingFile);
   app.add_option("--bsl", input.jsons, "Block state list json file.")
-      ->check(CLI::ExistingFile)
-      ->required();
+      ->check(CLI::ExistingFile);
   app.add_option("--img", input.images, "Images to convert")
       ->check(CLI::ExistingFile);
 
@@ -67,8 +67,7 @@ int main(int argc, char **argv) {
       ->check(CLI::Range(12, 19, "Avaliable versions."));
 
   app.add_option("--prefix", input.prefix, "Prefix to generate output")
-      ->default_val("")
-      ->required();
+      ->default_val("");
 
   app.add_flag("--out-image", input.make_converted_image,
                "Generate converted image")
@@ -99,6 +98,10 @@ int main(int argc, char **argv) {
       ->check(CLI::NonNegativeNumber);
   app.add_flag("--show-gpu", input.show_gpu)->default_val(false);
 
+  app.add_flag("--list-gpu", input.list_gpu,
+               "List all GPU platforms and devices that OpenCL has access to.")
+      ->default_val(false);
+
   CLI11_PARSE(app, argc, argv);
 
   input.version = SCL_gameVersion(__version);
@@ -116,13 +119,17 @@ int main(int argc, char **argv) {
     return __LINE__;
   }
 
+  if (input.list_gpu) {
+    return list_gpu();
+  }
+
   return run(input);
 }
 
-#define VCCL_PRIVATE_MACRO_MAKE_CASE(enum_val) \
-  if (str == #enum_val) {                      \
-    ok = true;                                 \
-    return SCL_convertAlgo::enum_val;          \
+#define VCCL_PRIVATE_MACRO_MAKE_CASE(enum_val)                                 \
+  if (str == #enum_val) {                                                      \
+    ok = true;                                                                 \
+    return SCL_convertAlgo::enum_val;                                          \
   }
 
 SCL_convertAlgo str_to_algo(std::string_view str, bool &ok) noexcept {
@@ -137,6 +144,33 @@ SCL_convertAlgo str_to_algo(std::string_view str, bool &ok) noexcept {
   VCCL_PRIVATE_MACRO_MAKE_CASE(gaCvter);
 
   return {};
+}
+
+int list_gpu() {
+  const size_t plat_num = VCL_platform_num();
+  cout << plat_num << " platforms found on this computer : \n";
+  for (size_t pid = 0; pid < plat_num; pid++) {
+
+    VCL_GPU_Platform *plat = VCL_get_platform(pid);
+    if (plat == nullptr) {
+      cout << "Failed to get platform " << pid << '\n';
+      continue;
+    }
+    cout << "Platform " << pid << " : " << VCL_get_platform_name(plat) << '\n';
+
+    const size_t dev_num = VCL_get_device_num(plat);
+    for (size_t did = 0; did < dev_num; did++) {
+      VCL_GPU_Device *dp = VCL_get_device(plat, did);
+      if (dp == nullptr) {
+        cout << "Failed to get device " << did << '\n';
+        continue;
+      }
+      cout << "    Device " << did << " : " << VCL_get_device_name(dp) << '\n';
+      VCL_release_device(dp);
+    }
+    VCL_release_platform(plat);
+  }
+  return 0;
 }
 
 int set_resource(VCL_Kernel *kernel, const inputs &input) noexcept {
@@ -207,6 +241,12 @@ int set_allowed(VCL_block_state_list *bsl, const inputs &input) noexcept {
 }
 
 int run(const inputs &input) noexcept {
+
+  if (input.zips.size() <= 0 || input.jsons.size() <= 0) {
+    cout << "No zips or jsons provided. exit." << endl;
+    return __LINE__;
+  }
+
   VCL_Kernel *kernel = VCL_create_kernel();
   if (kernel == nullptr) {
     cout << "Failed to create kernel." << endl;

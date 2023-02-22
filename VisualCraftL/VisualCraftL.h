@@ -271,6 +271,20 @@ i =
   if other values, the function will call abort().
 */
 VCL_EXPORT_FUN int VCL_version_component(int i);
+
+class VCL_GPU_Platform;
+class VCL_GPU_Device;
+
+[[nodiscard]] VCL_EXPORT_FUN size_t VCL_platform_num();
+VCL_EXPORT_FUN VCL_GPU_Platform *VCL_get_platform(size_t platform_idx);
+VCL_EXPORT_FUN void VCL_release_platform(VCL_GPU_Platform *);
+VCL_EXPORT_FUN const char *VCL_get_platform_name(const VCL_GPU_Platform *);
+
+VCL_EXPORT_FUN size_t VCL_get_device_num(const VCL_GPU_Platform *);
+[[nodiscard]] VCL_EXPORT_FUN VCL_GPU_Device *
+VCL_get_device(const VCL_GPU_Platform *, size_t device_idx);
+VCL_EXPORT_FUN void VCL_release_device(VCL_GPU_Device *);
+VCL_EXPORT_FUN const char *VCL_get_device_name(const VCL_GPU_Device *);
 }
 
 #endif // SLOPECRAFT_VISUALCRAFT_VISUALCRAFT_H
