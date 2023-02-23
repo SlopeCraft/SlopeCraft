@@ -73,6 +73,17 @@ enum class VCL_block_class_t : uint8_t {
   others
 };
 
+/**
+ * Tells the direction of upper when VCL_face_t = face_up or face_down.
+ *
+enum class VCL_upper_direction_t : uint8_t {
+  dir_north = 6,
+  dir_south = 7,
+  dir_east = 8,
+  dir_west = 9
+};
+*/
+
 class VCL_Kernel;
 class VCL_resource_pack;
 class VCL_block_state_list;
@@ -100,21 +111,29 @@ public:
 
   virtual VCL_Kernel_step step() const noexcept = 0;
 
+  ////////////////////////////////////////////////////////////////////////
   virtual bool set_image(const int64_t rows, const int64_t cols,
                          const uint32_t *const img_argb32,
                          const bool is_row_major) noexcept = 0;
 
   virtual int64_t rows() const noexcept = 0;
   virtual int64_t cols() const noexcept = 0;
+  // virtual int64_t layers() const noexcept = 0;
 
   virtual const uint32_t *
   raw_image(int64_t *const rows, int64_t *const cols,
             bool *const is_row_major) const noexcept = 0;
 
+  ////////////////////////////////////////////////////////////////////////
   virtual bool convert(::SCL_convertAlgo algo,
                        bool dither = false) noexcept = 0;
   virtual void converted_image(uint32_t *dest, int64_t *rows, int64_t *cols,
                                bool write_dest_row_major) const noexcept = 0;
+
+  ////////////////////////////////////////////////////////////////////////
+  virtual bool build() noexcept = 0;
+  virtual int64_t xyz_size(int64_t *x = nullptr, int64_t *y = nullptr,
+                           int64_t *z = nullptr) const noexcept = 0;
 };
 
 extern "C" {

@@ -23,6 +23,7 @@ set(VCL_source_files
 
     TokiVC.h
     TokiVC.cpp
+    TokiVC_build.cpp
 
     Resource_tree.h
     Resource_tree.cpp
@@ -35,6 +36,8 @@ set(VCL_source_files
 
     BlockStateList.h
     BlockStateList.cpp
+
+    DirectionHandler.hpp
 
     ${CMAKE_CURRENT_BINARY_DIR}/version.cpp
 )

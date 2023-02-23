@@ -69,6 +69,9 @@ public:
   void converted_image(uint32_t *dest, int64_t *rows, int64_t *cols,
                        bool write_dest_row_major) const noexcept override;
 
+  bool build() noexcept override;
+  int64_t xyz_size(int64_t *x, int64_t *y, int64_t *z) const noexcept override;
+
 public:
   static libImageCvt::template ImageCvter<false>::basic_colorset_t
       colorset_basic;
