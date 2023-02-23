@@ -106,7 +106,8 @@ add_compile_definitions(SLOPECRAFTL_NOT_INSTALLED)
 add_compile_definitions(VISUALCRAFTL_NOT_INSTALLED)
 include_directories(${CMAKE_BINARY_DIR}/utilities)
 
-set(SlopeCraft_resource_file_to_touch_and_remove ${CMAKE_BINARY_DIR}/utilities/ColorManip/__rsc_ColorManip_cl_rc.c)
+set(SlopeCraft_resource_file_to_touch_and_remove)
+mark_as_advanced(SlopeCraft_resource_file_to_touch_and_remove)
 
 add_subdirectory(utilities)
 add_subdirectory(imageCutter)
@@ -118,6 +119,7 @@ add_subdirectory(VisualCraftL)
 add_subdirectory(vccl)
 
 foreach(cmakerc ${SlopeCraft_resource_file_to_touch_and_remove})
+    # code here doesn't work here.
     message(WARNING "Remove " ${cmakerc})
 
     # file(REMOVE ${cmakerc})

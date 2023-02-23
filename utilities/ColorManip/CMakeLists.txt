@@ -62,13 +62,15 @@ add_library(OCLWrapper STATIC
     ColorDiff_OpenCL.h
     ColorDiff_OpenCL.cpp)
 
-
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     target_compile_options(OCLWrapper PUBLIC "-fPIC")
 endif()
 
-#file(TOUCH ${CMAKE_CURRENT_BINARY_DIR}/__rsc_ColorManip_cl_rc.c)
+file(TOUCH ${CMAKE_CURRENT_BINARY_DIR}/__rsc_ColorManip_cl_rc.c)
 add_resource(ColorManip_cl_rc ColorDiff.cl)
+
+mark_as_advanced(SlopeCraft_resource_file_to_touch_and_remove)
+list(APPEND SlopeCraft_resource_file_to_touch_and_remove ${CMAKE_CURRENT_BINARY_DIR}/__rsc_ColorManip_cl_rc.c)
 
 target_include_directories(OCLWrapper PRIVATE ${SlopeCraft_Eigen3_include_dir})
 target_include_directories(OCLWrapper PUBLIC ${CMAKE_SOURCE_DIR})

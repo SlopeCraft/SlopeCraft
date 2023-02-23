@@ -206,7 +206,7 @@ int run(const inputs &input) noexcept {
     }
   }
 
-  omp_set_num_teams(input.num_threads);
+  omp_set_num_threads(input.num_threads);
 
   kernel->set_ui(nullptr, cb_progress_range_set, cb_progress_add);
 
@@ -225,6 +225,16 @@ int run(const inputs &input) noexcept {
   }
 
   for (const auto &img_filename : input.images) {
+
+    {
+      const std::filesystem::path src_filename = img_filename;
+      cout << "src_filename.filename() = " << src_filename.filename();
+    }
+
+    if (!input.need_to_read()) {
+      continue;
+    }
+
     QImage img(QString::fromLocal8Bit(img_filename.c_str()));
 
     if (img.isNull()) {
@@ -244,8 +254,12 @@ int run(const inputs &input) noexcept {
       return __LINE__;
     }
 
-    double wt = omp_get_wtime();
+    if (!input.need_to_convert()) {
+      continue;
+    }
 
+    double wt = 0;
+    wt = omp_get_wtime();
     if (!kernel->convert(input.algo, input.dither)) {
       cout << "Failed to convert" << endl;
       return __LINE__;
@@ -273,6 +287,10 @@ int run(const inputs &input) noexcept {
         return __LINE__;
       }
       // cout << dst_path << endl;
+    }
+
+    if (!input.need_to_build()) {
+      continue;
     }
   }
 

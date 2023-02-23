@@ -290,7 +290,7 @@ private:
   }
 
   void match_all_TokiColors_cpu() noexcept {
-    static const int threadCount = omp_get_num_threads();
+    // const int threadCount = omp_get_num_threads();
 
     std::vector<std::pair<const convert_unit, TokiColor_t> *> tasks;
     tasks.reserve(_color_hash.size());
@@ -300,15 +300,22 @@ private:
       if (!pair.second.is_result_computed())
         tasks.emplace_back(&pair);
     }
-    const uint64_t taskCount = tasks.size();
+    const size_t taskCount = tasks.size();
+
+#pragma omp parallel for schedule(dynamic)
+    for (size_t taskIdx = 0; taskIdx < taskCount; taskIdx++) {
+      tasks[taskIdx]->second.compute(tasks[taskIdx]->first);
+    }
     // #warning we should parallelize here
-#pragma omp parallel for
+    /*
+#pragma omp parallel for schedule(dynamic)
     for (int thIdx = 0; thIdx < threadCount; thIdx++) {
       for (uint64_t taskIdx = thIdx; taskIdx < taskCount;
            taskIdx += threadCount) {
-        tasks[taskIdx]->second.compute(tasks[taskIdx]->first);
+      tasks[taskIdx]->second.compute(tasks[taskIdx]->first);
       }
     }
+  */
   }
 
   /// fill a colorid matrix according to raw image and colorhash
