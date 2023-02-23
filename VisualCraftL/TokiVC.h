@@ -72,6 +72,10 @@ public:
   bool build() noexcept override;
   int64_t xyz_size(int64_t *x, int64_t *y, int64_t *z) const noexcept override;
 
+  bool export_litematic(const char *localEncoding_filename,
+                        const char *utf8_litename,
+                        const char *utf8_regionname) const noexcept override;
+
 public:
   static libImageCvt::template ImageCvter<false>::basic_colorset_t
       colorset_basic;
