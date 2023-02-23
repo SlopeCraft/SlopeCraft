@@ -1,0 +1,11 @@
+{
+    "default_resource_pack_12": [
+        "@VCL_resource_12@"
+    ],
+    "default_resource_pack_latest": [
+        "@VCL_resource_latest@"
+    ],
+    "default_block_state_list": [
+        "@CMAKE_SOURCE_DIR@/VisualCraftL/VCL_blocks_fixed.json"
+    ]
+}

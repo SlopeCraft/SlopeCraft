@@ -193,7 +193,7 @@ public:
     // fill_coloridmat_by_hash(this->colorid_matrix);
   }
 
-  inline Eigen::ArrayXX<colorid_t> color_id() const noexcept {
+  Eigen::ArrayXX<colorid_t> color_id() const noexcept {
     Eigen::ArrayXX<colorid_t> result;
     result.setZero(this->rows(), this->cols());
 
@@ -208,6 +208,25 @@ public:
       result(idx) = it->second.color_id();
     }
     return result;
+  }
+
+  void color_id(Eigen::Map<Eigen::ArrayXX<colorid_t>> &result) const noexcept {
+    assert(result.rows() == this->rows());
+    assert(result.cols() == this->cols());
+    // result.resize(this->rows(), this->cols());
+    // memset(result.data(), 0, result.rows() * result.cols() *
+    // sizeof(uint16_t));
+
+    for (int64_t idx = 0; idx < this->size(); idx++) {
+      auto it = this->_color_hash.find(
+          convert_unit(this->_dithered_image(idx), this->algo));
+
+      if (it == this->_color_hash.end()) {
+        abort();
+      }
+
+      result(idx) = it->second.color_id();
+    }
   }
 
   inline void converted_image(Eigen::ArrayXX<ARGB> &dest) const noexcept {

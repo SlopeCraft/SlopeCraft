@@ -8,6 +8,11 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     set(vccl_win_sources ${CMAKE_CURRENT_BINARY_DIR}/others/vccl.rc)
 endif()
 
+include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_12.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_latest.cmake)
+
+configure_file(vccl-config-to-bin-dir.json.in vccl-config.json)
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOUIC ON)
@@ -16,6 +21,9 @@ set(CMAKE_AUTORCC ON)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools Network Concurrent REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools Network Concurrent REQUIRED)
+
+include(${CMAKE_SOURCE_DIR}/cmake/configure_fmtlib.cmake)
+find_package(fmt REQUIRED)
 
 qt_add_executable(vccl
 
@@ -26,7 +34,7 @@ qt_add_executable(vccl
     ${vccl_win_sources}
 )
 
-target_link_libraries(vccl PRIVATE VisualCraftL Qt6::Core Qt6::Gui)
+target_link_libraries(vccl PRIVATE VisualCraftL Qt6::Core Qt6::Gui fmt::fmt)
 
 include(${CMAKE_SOURCE_DIR}/cmake/configure_cli11.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/find_nlohmann_json.cmake)

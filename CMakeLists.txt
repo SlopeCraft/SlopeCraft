@@ -81,6 +81,8 @@ if(${SlopeCraft_vectorize})
 
     message(STATUS "Vectorize using " ${SlopeCraft_vectorize_flags})
 
+    # add_compile_options(${SlopeCraft_vectorize_flags})
+
     # list(APPEND SlopeCraft_vectorize_flags "-O3")
 endif()
 

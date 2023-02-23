@@ -2,6 +2,7 @@
 #include <QImage>
 #include <QImageReader>
 #include <filesystem>
+#include <fmt/format.h>
 #include <fstream>
 #include <json.hpp>
 #include <omp.h>
@@ -225,12 +226,11 @@ int run(const inputs &input) noexcept {
   }
 
   for (const auto &img_filename : input.images) {
-
-    {
-      const std::filesystem::path src_filename = img_filename;
-      cout << "src_filename.filename() = " << src_filename.filename();
-    }
-
+    const std::string pure_filename_no_extension =
+        std::filesystem::path(img_filename)
+            .filename()
+            .replace_extension("")
+            .string();
     if (!input.need_to_read()) {
       continue;
     }
@@ -238,7 +238,7 @@ int run(const inputs &input) noexcept {
     QImage img(QString::fromLocal8Bit(img_filename.c_str()));
 
     if (img.isNull()) {
-      cout << "Failed to open image " << img_filename << endl;
+      cout << fmt::format("Failed to open image {}", img_filename) << endl;
       VCL_destroy_kernel(kernel);
       return __LINE__;
     }
@@ -250,7 +250,7 @@ int run(const inputs &input) noexcept {
     }
     if (!kernel->set_image(img.height(), img.width(),
                            (const uint32_t *)img.scanLine(0), true)) {
-      cout << "Failed to set raw image." << endl;
+      cout << "Failed to set raw image to kernel." << endl;
       return __LINE__;
     }
 
@@ -261,19 +261,19 @@ int run(const inputs &input) noexcept {
     double wt = 0;
     wt = omp_get_wtime();
     if (!kernel->convert(input.algo, input.dither)) {
-      cout << "Failed to convert" << endl;
+      cout << "Failed to convert image." << endl;
       return __LINE__;
     }
     wt = omp_get_wtime() - wt;
 
     if (input.benchmark) {
-      cout << "Converting " << img.height() * img.width() << " pixels in " << wt
-           << " seconds." << endl;
+      cout << fmt::format("Converted {} pixels in {} seconds.\n",
+                          img.height() * img.width(), wt);
     }
 
     if (input.make_converted_image) {
       std::string dst_name_str(input.prefix);
-      dst_name_str += std::filesystem::path(img_filename).filename().string();
+      dst_name_str += pure_filename_no_extension + "_converted.png";
 
       memset(img.scanLine(0), 0, img.height() * img.width() * sizeof(uint32_t));
 
@@ -283,7 +283,7 @@ int run(const inputs &input) noexcept {
       const bool ok = img.save(QString::fromLocal8Bit(dst_name_str.c_str()));
 
       if (!ok) {
-        cout << "Failed to save image " << dst_name_str << endl;
+        cout << fmt::format("Failed to save image {}\n", dst_name_str);
         return __LINE__;
       }
       // cout << dst_path << endl;
@@ -291,6 +291,37 @@ int run(const inputs &input) noexcept {
 
     if (!input.need_to_build()) {
       continue;
+    }
+
+    wt = omp_get_wtime();
+    if (!kernel->build()) {
+      cout << "Failed to build " << endl;
+      return __LINE__;
+    }
+    wt = omp_get_wtime() - wt;
+
+    if (input.benchmark) {
+      cout << fmt::format("Built {} pixels in {} seconds.\n",
+                          kernel->xyz_size(), wt);
+    }
+
+    if (input.make_litematic) {
+      const std::string filename =
+          input.prefix + pure_filename_no_extension + ".litematic";
+      const bool success = kernel->export_litematic(
+          filename.c_str(), "Genereated by VCCL", "VCCL is part of SlopeCraft");
+      if (!success) {
+        cout << fmt::format("Failed to export {}.", filename) << endl;
+        return __LINE__;
+      }
+    }
+
+    if (input.make_schematic) {
+#warning here
+    }
+
+    if (input.make_structure) {
+#warning here
     }
   }
 

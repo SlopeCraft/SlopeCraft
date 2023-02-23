@@ -5,14 +5,14 @@
 #include "ParseResourcePack.h"
 #include "VisualCraftL.h"
 
+#include "DirectionHandler.hpp"
 #include <shared_mutex>
+#include <unordered_map>
 #include <utilities/ColorManip/colorset_optical.hpp>
 #include <utilities/ColorManip/imageConvert.hpp>
 #include <utilities/Schem/Schem.h>
 #include <utilities/uiPack/uiPack.h>
 #include <variant>
-
-#include <unordered_map>
 
 class TokiVC : public VCL_Kernel {
 public:
@@ -106,6 +106,12 @@ private:
   libSchem::Schem schem;
 
   void fill_schem_blocklist_no_lock() noexcept;
+
+  bool fill_schem_3d_no_lock(const dir_handler<int64_t> &dirh,
+                             const Eigen::ArrayXX<uint16_t> &) noexcept;
+
+  bool set_schem_3d_element(const dir_handler<int64_t> &dirh, int64_t r,
+                            int64_t c, uint16_t) noexcept;
 };
 
 namespace TokiVC_internal {
