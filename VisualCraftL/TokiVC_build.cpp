@@ -18,6 +18,24 @@ void TokiVC::fill_schem_blocklist_no_lock() noexcept {
   this->schem.set_block_id(blk_ids.data(), blk_ids.size());
 }
 
+int64_t TokiVC::xyz_size(int64_t *x, int64_t *y, int64_t *z) const noexcept {
+  std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+
+  if (this->_step < VCL_Kernel_step::VCL_built) {
+    VCL_report(VCL_report_type_t::error,
+               "Trying to get xyz size before without schem built.");
+    return -1;
+  }
+
+  if (x != nullptr)
+    *x = this->schem.x_range();
+  if (y != nullptr)
+    *y = this->schem.y_range();
+  if (z != nullptr)
+    *z = this->schem.z_range();
+  return this->schem.size();
+}
+
 bool TokiVC::build() noexcept {
   std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
 
@@ -39,81 +57,63 @@ bool TokiVC::build() noexcept {
 
   const Eigen::ArrayXX<uint16_t> color_id_mat = this->img_cvter.color_id();
 
-  // const int ret = color_id_mat(0, 0);
-  /*
-  if (!this->fill_schem_3d_no_lock(dirh, color_id_mat)) {
-    return false;
-  }
-  */
-
-  uint64_t sum = 0;
-
   for (int64_t r = 0; r < this->img_cvter.rows(); r++) {
     for (int64_t c = 0; c < this->img_cvter.cols(); c++) {
-      sum += color_id_mat(r, c);
-      this->set_schem_3d_element(dirh, r, c, color_id_mat(r, c));
+
+      const auto &variant =
+          TokiVC::LUT_basic_color_idx_to_blocks[color_id_mat(r, c)];
+
+      const VCL_block *const *blockpp = nullptr;
+      size_t depth_current = 0;
+
+      if (variant.index() == 0) {
+        blockpp = &std::get<0>(variant);
+        depth_current = 1;
+      } else {
+        const std::vector<const VCL_block *> &vec = std::get<1>(variant);
+        blockpp = vec.data();
+        depth_current = vec.size();
+      }
+
+      for (size_t depth = 0; depth < depth_current; depth++) {
+        const auto coord = dirh.coordinate_of(r, c, depth);
+        const int64_t range[3] = {this->schem.x_range(), this->schem.y_range(),
+                                  this->schem.z_range()};
+        for (size_t di = 0; di < 3; di++) {
+          if (coord[di] < 0 || coord[di] >= range[di]) {
+            std::string msg =
+                fmt::format("coordiante out of range : {}, {}, {}.\n", coord[0],
+                            coord[1], coord[2]);
+            VCL_report(VCL_report_type_t::error, msg.c_str());
+          }
+        }
+
+        const VCL_block *const blkp = blockpp[depth];
+
+        auto it = TokiVC::blocks_allowed.find(blkp);
+        if (it == TokiVC::blocks_allowed.end()) {
+          std::string msg =
+              fmt::format("Failed to find VCL_block at address {} named {} in "
+                          "allowed blocks. This is an internal error.",
+                          (const void *)blkp, blkp->full_id_ptr()->c_str());
+          VCL_report(VCL_report_type_t::error, msg.c_str());
+          return false;
+        }
+
+        const uint16_t blk_id = it->second;
+
+        this->schem(coord[0], coord[1], coord[2]) = blk_id;
+      }
     }
   }
-  std::cout << "sum = " << sum << std::endl;
+
+  this->schem.set_MC_major_version_number(TokiVC::version);
+  this->schem.set_MC_version_number(0);
+#warning set_MC_version_number should be set instead of 0
 
   this->_step = VCL_Kernel_step::VCL_built;
 
   return true;
-}
-
-bool TokiVC::set_schem_3d_element(const dir_handler<int64_t> &dirh, int64_t r,
-                                  int64_t c, uint16_t color_id) noexcept {
-  const auto &variant = TokiVC::LUT_basic_color_idx_to_blocks[color_id];
-
-  const VCL_block *const *blockpp = nullptr;
-  size_t depth_current = 0;
-
-  if (variant.index() == 0) {
-    blockpp = &std::get<0>(variant);
-    depth_current = 1;
-  } else {
-    const std::vector<const VCL_block *> &vec = std::get<1>(variant);
-    blockpp = vec.data();
-    depth_current = vec.size();
-  }
-
-  for (size_t depth = 0; depth < depth_current; depth++) {
-    const auto coord = dirh.coordinate_of(r, c, depth);
-    const VCL_block *const blkp = blockpp[depth];
-
-    auto it = TokiVC::blocks_allowed.find(blkp);
-    if (it == TokiVC::blocks_allowed.end()) {
-      std::string msg =
-          fmt::format("Failed to find VCL_block at address {} named {} in "
-                      "allowed blocks. This is an internal error.",
-                      (const void *)blkp, blkp->full_id_ptr()->c_str());
-      VCL_report(VCL_report_type_t::error, msg.c_str());
-      return false;
-    }
-
-    const uint16_t blk_id = it->second;
-
-    this->schem(coord[0], coord[1], coord[2]) = blk_id;
-  }
-
-  return true;
-}
-
-bool TokiVC::fill_schem_3d_no_lock(
-    const dir_handler<int64_t> &dirh,
-    const Eigen::ArrayXX<uint16_t> &color_id_mat) noexcept {}
-
-int64_t TokiVC::xyz_size(int64_t *x, int64_t *y, int64_t *z) const noexcept {
-  std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
-
-  if (x != nullptr)
-    *x = this->schem.x_range();
-  if (y != nullptr)
-    *y = this->schem.y_range();
-  if (z != nullptr)
-    *z = this->schem.z_range();
-
-  return this->schem.size();
 }
 
 bool TokiVC::export_litematic(const char *localEncoding_filename,
@@ -137,6 +137,7 @@ bool TokiVC::export_litematic(const char *localEncoding_filename,
   info.regionname_utf8 = utf8_regionname;
   SCL_errorFlag flag;
   std::string detail;
+
   const bool ok = this->schem.export_litematic(localEncoding_filename, info,
                                                &flag, &detail);
 

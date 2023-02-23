@@ -99,25 +99,39 @@ public:
   inline const auto &palette() const noexcept { return this->block_id_list; }
 
   inline ele_t &operator()(int64_t x, int64_t y, int64_t z) noexcept {
+    assert(x >= 0 && x < this->x_range());
+    assert(y >= 0 && y < this->y_range());
+    assert(z >= 0 && z < this->z_range());
     return xzy(x, z, y);
   }
 
   inline const ele_t &operator()(int64_t x, int64_t y,
                                  int64_t z) const noexcept {
+    assert(x >= 0 && x < this->x_range());
+    assert(y >= 0 && y < this->y_range());
+    assert(z >= 0 && z < this->z_range());
     return xzy(x, z, y);
   }
 
-  inline ele_t &operator()(int64_t idx) noexcept { return xzy(idx); }
+  inline ele_t &operator()(int64_t idx) noexcept {
+    assert(idx >= 0 && idx < this->size());
+    return xzy(idx);
+  }
 
   inline const ele_t &operator()(int64_t idx) const noexcept {
+    assert(idx >= 0 && idx < this->size());
     return xzy(idx);
   }
 
   inline const char *id_at(int64_t x, int64_t y, int64_t z) const noexcept {
+    assert(x >= 0 && x < this->x_range());
+    assert(y >= 0 && y < this->y_range());
+    assert(z >= 0 && z < this->z_range());
     return block_id_list[xzy(x, z, y)].c_str();
   }
 
   inline const char *id_at(int64_t idx) const noexcept {
+    assert(idx >= 0 && idx < this->size());
     return block_id_list[xzy(idx)].c_str();
   }
 

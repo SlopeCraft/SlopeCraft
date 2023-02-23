@@ -59,23 +59,25 @@ private:
                                          int_t depth) const noexcept {
     switch (this->map_face) {
     case VCL_face_t::face_east:
-      return {this->size_xyz[idx_x] - depth, this->size_xyz[idx_y] - r,
-              this->size_xyz[idx_x] - c};
+      return {this->size_xyz[idx_x] - depth - 1, this->size_xyz[idx_y] - r - 1,
+              this->size_xyz[idx_x] - c - 1};
 
     case VCL_face_t::face_west:
-      return {depth, this->size_xyz[idx_y] - r, c};
+      return {depth, this->size_xyz[idx_y] - r - 1, c};
 
     case VCL_face_t::face_north:
-      return {this->size_xyz[idx_x] - c, this->size_xyz[idx_y] - r, depth};
+      return {this->size_xyz[idx_x] - c - 1, this->size_xyz[idx_y] - r - 1,
+              depth};
 
     case VCL_face_t::face_south:
-      return {c, this->size_xyz[idx_y] - r, this->size_xyz[idx_z] - depth};
+      return {c, this->size_xyz[idx_y] - r - 1,
+              this->size_xyz[idx_z] - depth - 1};
 
     case VCL_face_t::face_up:
-      return {c, this->size_xyz[idx_y] - depth, r};
+      return {c, this->size_xyz[idx_y] - depth - 1, r};
 
     case VCL_face_t::face_down:
-      return {c, depth, this->size_xyz[idx_z] - r};
+      return {c, depth, this->size_xyz[idx_z] - r - 1};
     }
     abort();
     return {};

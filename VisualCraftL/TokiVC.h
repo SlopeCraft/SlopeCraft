@@ -106,12 +106,6 @@ private:
   libSchem::Schem schem;
 
   void fill_schem_blocklist_no_lock() noexcept;
-
-  bool fill_schem_3d_no_lock(const dir_handler<int64_t> &dirh,
-                             const Eigen::ArrayXX<uint16_t> &) noexcept;
-
-  bool set_schem_3d_element(const dir_handler<int64_t> &dirh, int64_t r,
-                            int64_t c, uint16_t) noexcept;
 };
 
 namespace TokiVC_internal {
