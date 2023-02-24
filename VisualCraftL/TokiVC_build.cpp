@@ -108,8 +108,8 @@ bool TokiVC::build() noexcept {
   }
 
   this->schem.set_MC_major_version_number(TokiVC::version);
-  this->schem.set_MC_version_number(0);
-#warning set_MC_version_number should be set instead of 0
+  this->schem.set_MC_version_number(
+      MCDataVersion::suggested_version(TokiVC::version));
 
   this->_step = VCL_Kernel_step::VCL_built;
 

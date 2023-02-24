@@ -39,7 +39,7 @@ int main() {
   libSchem::Schem schem;
 
   schem.set_MC_major_version_number(SCL_gameVersion::MC18);
-  schem.set_MC_version_number(2865);
+  schem.set_MC_version_number(MCDataVersion::MCDataVersion_t::Java_1_18_2);
 
   schem.resize(12, 9, 12);
 

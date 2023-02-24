@@ -200,8 +200,8 @@ bool TokiSlopeCraft::build(compressSettings cS, uint16_t mAH,
   }
 
   schem.set_MC_major_version_number(TokiSlopeCraft::mcVer);
-  schem.set_MC_version_number(
-      TokiSlopeCraft::mcVersion2VersionNumber(TokiSlopeCraft::mcVer));
+  schem.set_MC_version_number(MCDataVersion::MCDataVersion_t(
+      TokiSlopeCraft::mcVersion2VersionNumber(TokiSlopeCraft::mcVer)));
 
   // cerr << "ready to build" << endl;
 

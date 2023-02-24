@@ -16,6 +16,7 @@ target_include_directories(Schem PUBLIC ${SlopeCraft_Eigen3_include_dir})
 # target_compile_options(Schem BEFORE PUBLIC -std=c++17)
 target_link_libraries(Schem PUBLIC NBTWriter)
 target_compile_features(Schem PRIVATE cxx_std_20)
+target_link_libraries(Schem PUBLIC MCDataVersion)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     target_compile_options(Schem PUBLIC "-fvisibility=hidden")

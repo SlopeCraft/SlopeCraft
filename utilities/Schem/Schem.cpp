@@ -399,9 +399,9 @@ bool Schem::export_litematic(std::string_view filename,
   }
   lite.endCompound(); // end all regions
 
-  switch (this->MC_major_ver_number) {
+  switch (this->MC_major_ver) {
   case ::SCL_gameVersion::MC12:
-    lite.writeInt("MinecraftDataVersion", this->MC_version_number());
+    lite.writeInt("MinecraftDataVersion", (int)this->MC_version_number());
     lite.writeInt("Version", 4);
     break;
   case ::SCL_gameVersion::MC13:
@@ -411,7 +411,7 @@ bool Schem::export_litematic(std::string_view filename,
   case ::SCL_gameVersion::MC17:
   case ::SCL_gameVersion::MC18:
   case ::SCL_gameVersion::MC19:
-    lite.writeInt("MinecraftDataVersion", this->MC_version_number());
+    lite.writeInt("MinecraftDataVersion", (int)this->MC_version_number());
     lite.writeInt("Version", 5);
     break;
   default:
@@ -423,7 +423,7 @@ bool Schem::export_litematic(std::string_view filename,
     if (error_str != nullptr) {
       *error_str = "Unknown major game version! Only 1.12 to 1.19 is "
                    "supported, but given value " +
-                   std::to_string((int)this->MC_major_ver_number);
+                   std::to_string((int)this->MC_major_ver);
     }
     return false;
   }
@@ -594,7 +594,7 @@ bool Schem::export_structure(std::string_view filename,
     }
     // finish writting the whole 3D array
 
-    switch (this->MC_major_ver_number) {
+    switch (this->MC_major_ver) {
     case ::SCL_gameVersion::MC12:
     case ::SCL_gameVersion::MC13:
     case ::SCL_gameVersion::MC14:
@@ -603,7 +603,7 @@ bool Schem::export_structure(std::string_view filename,
     case ::SCL_gameVersion::MC17:
     case ::SCL_gameVersion::MC18:
     case ::SCL_gameVersion::MC19:
-      file.writeInt("MinecraftDataVersion", this->MC_ver_number);
+      file.writeInt("MinecraftDataVersion", (int)this->MC_data_ver);
       break;
     default:
       std::cerr << "Wrong game version!" << std::endl;
@@ -614,7 +614,7 @@ bool Schem::export_structure(std::string_view filename,
       if (error_str != nullptr) {
         *error_str = "Unknown major game version! Only 1.12 to 1.19 is "
                      "supported, but given value " +
-                     std::to_string((int)this->MC_major_ver_number);
+                     std::to_string((int)this->MC_major_ver);
       }
       return false;
     }
@@ -663,7 +663,7 @@ bool Schem::export_WESchem(std::string_view filename,
     }
   }
 
-  if (this->MC_major_ver_number <= SCL_gameVersion::MC12) {
+  if (this->MC_major_ver <= SCL_gameVersion::MC12) {
     if (error_flag != nullptr) {
       *error_flag = ::SCL_errorFlag::EXPORT_SCHEM_MC12_NOT_SUPPORTED;
     }
@@ -718,7 +718,7 @@ bool Schem::export_WESchem(std::string_view filename,
 
   file.writeListHead("BlockEntities", NBT::Compound, 0);
 
-  file.writeInt("DataVersion", this->MC_ver_number);
+  file.writeInt("DataVersion", (int)this->MC_data_ver);
 
   file.writeShort("Width", x_range());
   file.writeShort("Height", y_range());

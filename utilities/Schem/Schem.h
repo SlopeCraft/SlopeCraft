@@ -23,6 +23,7 @@ This file is part of SlopeCraft.
 #ifndef SCHEM_SCHEM_H
 #define SCHEM_SCHEM_H
 
+#include <MCDataVersion.h>
 #include <string>
 #include <string_view>
 #include <type_traits>
@@ -70,9 +71,8 @@ private:
 
   std::vector<std::string> block_id_list;
 
-  int MC_ver_number;
-
-  ::SCL_gameVersion MC_major_ver_number;
+  ::SCL_gameVersion MC_major_ver;
+  MCDataVersion::MCDataVersion_t MC_data_ver;
 
 public:
   Schem() { xzy.resize(0, 0, 0); }
@@ -92,6 +92,11 @@ public:
       return;
     }
     xzy.resize(x, z, y);
+  }
+
+  inline bool check_version_id() const noexcept {
+    return MCDataVersion::is_data_version_suitable(this->MC_major_ver,
+                                                   this->MC_data_ver);
   }
 
   inline const auto &tensor() const noexcept { return this->xzy; }
@@ -161,18 +166,21 @@ public:
   /// Schem will copy these strings
   void set_block_id(const char *const *const block_ids, const int num) noexcept;
 
-  inline int MC_version_number() const noexcept { return this->MC_ver_number; }
+  inline MCDataVersion::MCDataVersion_t MC_version_number() const noexcept {
+    return this->MC_data_ver;
+  }
 
-  inline void set_MC_version_number(const int _) noexcept {
-    this->MC_ver_number = _;
+  inline void
+  set_MC_version_number(const MCDataVersion::MCDataVersion_t _) noexcept {
+    this->MC_data_ver = _;
   }
 
   inline ::SCL_gameVersion MC_major_version_number() const noexcept {
-    return this->MC_major_ver_number;
+    return this->MC_major_ver;
   }
 
   inline void set_MC_major_version_number(const ::SCL_gameVersion _) noexcept {
-    this->MC_major_ver_number = _;
+    this->MC_major_ver = _;
   }
 
   /**
