@@ -42,7 +42,7 @@ target_link_libraries(ColorManip PUBLIC OpenMP::OpenMP_CXX)
 target_compile_options(ColorManip PRIVATE ${SlopeCraft_vectorize_flags})
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    target_compile_options(ColorManip PUBLIC "-fPIC")
+    set_target_properties(ColorManip PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 endif()
 
 find_package(OpenCL 3.0)
@@ -63,7 +63,7 @@ add_library(OCLWrapper STATIC
     ColorDiff_OpenCL.cpp)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    target_compile_options(OCLWrapper PUBLIC "-fPIC")
+    set_target_properties(OCLWrapper PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 endif()
 
 file(TOUCH ${CMAKE_CURRENT_BINARY_DIR}/__rsc_ColorManip_cl_rc.c)

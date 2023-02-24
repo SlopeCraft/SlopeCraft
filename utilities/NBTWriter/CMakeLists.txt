@@ -14,7 +14,7 @@ add_library(NBTWriter
 target_link_libraries(NBTWriter PUBLIC ZLIB::ZLIB)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    target_compile_options(NBTWriter PRIVATE "-fvisibility=hidden" "-fPIC")
+    set_target_properties(NBTWriter PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 endif()
 
 # target_compile_options(NBTWriter BEFORE PUBLIC -std=c++17)

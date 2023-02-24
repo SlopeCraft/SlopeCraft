@@ -19,6 +19,5 @@ target_compile_features(Schem PRIVATE cxx_std_20)
 target_link_libraries(Schem PUBLIC MCDataVersion)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    target_compile_options(Schem PUBLIC "-fvisibility=hidden")
-    target_compile_options(Schem PRIVATE "-fPIC")
+    set_target_properties(Schem PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 endif()
