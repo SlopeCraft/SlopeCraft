@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>VCWind</class>
  <widget class="QMainWindow" name="VCWind">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -53,56 +56,59 @@
             </property>
             <layout class="QGridLayout" name="gridLayout_3">
              <item row="2" column="1">
-              <widget class="QRadioButton" name="radioButton_9">
+              <widget class="QRadioButton" name="rdb_version_15">
                <property name="text">
                 <string>1.15</string>
                </property>
               </widget>
              </item>
              <item row="0" column="0">
-              <widget class="QRadioButton" name="radioButton_4">
+              <widget class="QRadioButton" name="rdb_version_12">
                <property name="text">
                 <string>1.12</string>
                </property>
               </widget>
              </item>
              <item row="4" column="0">
-              <widget class="QRadioButton" name="radioButton_6">
+              <widget class="QRadioButton" name="rdb_version_16">
                <property name="text">
                 <string>1.16</string>
                </property>
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="QRadioButton" name="radioButton_8">
+              <widget class="QRadioButton" name="rdb_version_13">
                <property name="text">
                 <string>1.13</string>
                </property>
               </widget>
              </item>
              <item row="2" column="0">
-              <widget class="QRadioButton" name="radioButton_5">
+              <widget class="QRadioButton" name="rdb_version_14">
                <property name="text">
                 <string>1.14</string>
                </property>
               </widget>
              </item>
              <item row="4" column="1">
-              <widget class="QRadioButton" name="radioButton_10">
+              <widget class="QRadioButton" name="rdb_version_17">
                <property name="text">
                 <string>1.17</string>
                </property>
               </widget>
              </item>
              <item row="5" column="1">
-              <widget class="QRadioButton" name="radioButton_7">
+              <widget class="QRadioButton" name="rdb_version_19">
                <property name="text">
                 <string>1.19</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
              <item row="5" column="0">
-              <widget class="QRadioButton" name="radioButton_17">
+              <widget class="QRadioButton" name="rdb_version_18">
                <property name="text">
                 <string>1.18</string>
                </property>
@@ -118,21 +124,24 @@
             </property>
             <layout class="QGridLayout" name="gridLayout_10">
              <item row="1" column="0">
-              <widget class="QRadioButton" name="radioButton_2">
+              <widget class="QRadioButton" name="rdb_direction_side">
                <property name="text">
                 <string>侧面（侧视）</string>
                </property>
               </widget>
              </item>
              <item row="0" column="0">
-              <widget class="QRadioButton" name="radioButton">
+              <widget class="QRadioButton" name="rdb_direction_up">
                <property name="text">
                 <string>上面（俯视）</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
              <item row="2" column="0">
-              <widget class="QRadioButton" name="radioButton_3">
+              <widget class="QRadioButton" name="rdb_direction_down">
                <property name="text">
                 <string>下面（仰视）</string>
                </property>
@@ -167,7 +176,7 @@
             </property>
             <layout class="QGridLayout" name="gridLayout_9">
              <item row="0" column="0">
-              <widget class="QListView" name="listView_2">
+              <widget class="QListView" name="lv_bls">
                <property name="movement">
                 <enum>QListView::Snap</enum>
                </property>
@@ -189,7 +198,7 @@
             </property>
             <layout class="QGridLayout" name="gridLayout_8">
              <item row="0" column="0">
-              <widget class="QListView" name="listView">
+              <widget class="QListView" name="lv_rp">
                <property name="movement">
                 <enum>QListView::Snap</enum>
                </property>
@@ -225,7 +234,7 @@
             </property>
             <layout class="QGridLayout" name="gridLayout_11">
              <item row="0" column="0">
-              <widget class="QScrollArea" name="scrollArea">
+              <widget class="QScrollArea" name="sa_blocks">
                <property name="widgetResizable">
                 <bool>true</bool>
                </property>
@@ -259,7 +268,7 @@
          </attribute>
          <layout class="QGridLayout" name="gridLayout_6" columnstretch="1,9,0,9">
           <item row="1" column="1" rowspan="3">
-           <widget class="QLabel" name="label">
+           <widget class="QLabel" name="label_raw_image">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
               <horstretch>0</horstretch>
@@ -285,7 +294,7 @@
            </widget>
           </item>
           <item row="1" column="3" rowspan="3">
-           <widget class="QLabel" name="label_2">
+           <widget class="QLabel" name="lable_converted">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
               <horstretch>0</horstretch>
@@ -357,49 +366,52 @@
             </property>
             <layout class="QGridLayout" name="gridLayout_12">
              <item row="0" column="0">
-              <widget class="QRadioButton" name="radioButton_11">
+              <widget class="QRadioButton" name="rb_algo_RGB">
                <property name="text">
                 <string notr="true">RGB</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
              <item row="4" column="0">
-              <widget class="QRadioButton" name="radioButton_13">
+              <widget class="QRadioButton" name="rb_algo_Lab00">
                <property name="text">
                 <string notr="true">Lab00(CIEDE00)</string>
                </property>
               </widget>
              </item>
              <item row="5" column="0">
-              <widget class="QRadioButton" name="radioButton_12">
+              <widget class="QRadioButton" name="rb_algo_XYZ">
                <property name="text">
                 <string notr="true">XYZ</string>
                </property>
               </widget>
              </item>
              <item row="2" column="0">
-              <widget class="QRadioButton" name="radioButton_15">
+              <widget class="QRadioButton" name="rb_algo_HSV">
                <property name="text">
                 <string notr="true">HSV</string>
                </property>
               </widget>
              </item>
              <item row="1" column="0">
-              <widget class="QRadioButton" name="radioButton_14">
+              <widget class="QRadioButton" name="rb_algo_RGB_Better">
                <property name="text">
                 <string notr="true">RGB+</string>
                </property>
               </widget>
              </item>
              <item row="3" column="0">
-              <widget class="QRadioButton" name="radioButton_16">
+              <widget class="QRadioButton" name="rb_algo_Lab94">
                <property name="text">
                 <string notr="true">Lab94(CIEDE94)</string>
                </property>
               </widget>
              </item>
              <item row="6" column="0">
-              <widget class="QCheckBox" name="checkBox">
+              <widget class="QCheckBox" name="rb_algo_dither">
                <property name="text">
                 <string>抖动</string>
                </property>
@@ -435,7 +447,7 @@
             </property>
             <layout class="QGridLayout" name="gridLayout_14">
              <item row="0" column="2">
-              <widget class="QTreeView" name="treeView"/>
+              <widget class="QTreeView" name="tv_gpu"/>
              </item>
             </layout>
            </widget>
@@ -447,7 +459,7 @@
             </property>
             <layout class="QGridLayout" name="gridLayout_15">
              <item row="0" column="0">
-              <widget class="QSpinBox" name="spinBox_num_threads">
+              <widget class="QSpinBox" name="sb_threads">
                <property name="prefix">
                 <string>CPU线程数：</string>
                </property>

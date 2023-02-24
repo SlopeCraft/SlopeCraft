@@ -118,6 +118,7 @@ add_subdirectory(SlopeCraftMain)
 add_subdirectory(MapViewer)
 add_subdirectory(tests)
 add_subdirectory(VisualCraftL)
+add_subdirectory(VisualCraft)
 add_subdirectory(vccl)
 
 foreach(cmakerc ${SlopeCraft_resource_file_to_touch_and_remove})
