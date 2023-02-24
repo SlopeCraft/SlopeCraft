@@ -301,33 +301,75 @@ int run(const inputs &input) noexcept {
     wt = omp_get_wtime() - wt;
 
     if (input.benchmark) {
-      cout << fmt::format("Built {} pixels in {} seconds.\n",
+      cout << fmt::format("Built {} blocks in {} seconds.\n",
                           kernel->xyz_size(), wt);
     }
 
     if (input.make_litematic) {
       const std::string filename =
           input.prefix + pure_filename_no_extension + ".litematic";
+
+      wt = omp_get_wtime();
       const bool success = kernel->export_litematic(
           filename.c_str(), "Genereated by VCCL", "VCCL is part of SlopeCraft");
+      wt = omp_get_wtime() - wt;
+
       if (!success) {
         cout << fmt::format("Failed to export {}.", filename) << endl;
         return __LINE__;
       }
+
+      if (input.benchmark) {
+        cout << fmt::format("Export litematic with {} blocks in {} seconds.\n",
+                            kernel->xyz_size(), wt);
+      }
     }
 
     if (input.make_schematic) {
-#warning here
+      const std::string filename =
+          input.prefix + pure_filename_no_extension + ".schem";
+
+      wt = omp_get_wtime();
+      const bool success = kernel->export_WESchem(
+          filename.data(), {0, 0, 0}, {0, 0, 0}, "Genereated by VCCL");
+      wt = omp_get_wtime() - wt;
+
+      if (!success) {
+        cout << fmt::format("Failed to export {}.", filename) << endl;
+        return __LINE__;
+      }
+
+      if (input.benchmark) {
+        cout << fmt::format("Export WE schem with {} blocks in {} seconds.\n",
+                            kernel->xyz_size(), wt);
+      }
     }
 
     if (input.make_structure) {
-#warning here
+      const std::string filename =
+          input.prefix + pure_filename_no_extension + ".nbt";
+
+      wt = omp_get_wtime();
+      const bool success = kernel->export_structure(
+          filename.c_str(), input.structure_is_air_void);
+      wt = omp_get_wtime() - wt;
+
+      if (!success) {
+        cout << fmt::format("Failed to export {}.", filename) << endl;
+        return __LINE__;
+      }
+
+      if (input.benchmark) {
+        cout << fmt::format(
+            "Export vanilla structure file with {} blocks in {} seconds.\n",
+            kernel->xyz_size(), wt);
+      }
     }
+
+    VCL_destroy_kernel(kernel);
+
+    cout << "success." << endl;
+
+    return 0;
   }
-
-  VCL_destroy_kernel(kernel);
-
-  cout << "success." << endl;
-
-  return 0;
 }

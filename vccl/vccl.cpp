@@ -7,6 +7,8 @@
 
 using std::cout, std::endl;
 
+bool validate_input(const inputs &input) noexcept;
+
 int main(int argc, char **argv) {
   inputs input;
   CLI::App app;
@@ -17,14 +19,15 @@ int main(int argc, char **argv) {
     input.prefer_gpu = true;
   }
 
-  app.set_version_flag("--version",
+  app.set_version_flag("--version,-v",
                        std::string("vccl version : ") + SC_VERSION_STR +
                            ", VisualCraftL version : " + VCL_version_string());
 
   // resource
-  app.add_option("--rp", input.zips, "Resource packs")
+  app.add_option("--resource-pack,--rp", input.zips, "Resource packs")
       ->check(CLI::ExistingFile);
-  app.add_option("--bsl", input.jsons, "Block state list json file.")
+  app.add_option("--block-state-list,--bsl", input.jsons,
+                 "Block state list json file.")
       ->check(CLI::ExistingFile);
 
   // colors
@@ -53,30 +56,34 @@ int main(int argc, char **argv) {
       ->default_val(false);
 
   //  images
-  app.add_option("--img", input.images, "Images to convert")
+  app.add_option("--src-img,--simg,--img", input.images, "Images to convert")
       ->check(CLI::ExistingFile);
 
   // exports
   app.add_option("--prefix", input.prefix, "Filename prefix of generate output")
       ->default_val("");
-  app.add_flag("--out-image", input.make_converted_image,
+  app.add_flag("--out-image,--oimg", input.make_converted_image,
                "Generate converted image")
       ->default_val(false);
-  app.add_flag("--litematic", input.make_litematic,
+  app.add_flag("--litematic,--lite", input.make_litematic,
                "Export .litematic files for litematica mod.")
       ->default_val(false);
-  app.add_flag("--schem", input.make_schematic,
+  app.add_flag("--schematic,--schem", input.make_schematic,
                "Export .schem for World Edit mod.")
       ->default_val(false);
-  app.add_flag("--structure", input.make_structure,
+  app.add_flag("--structure,--nbt", input.make_structure,
                "Export .nbt file for vanilla strcuture block.")
       ->default_val(false);
+  app.add_flag("--nbt-air-void", input.structure_is_air_void,
+               "Represent air as structure void in vanilla structure.")
+      ->default_val(true);
 
   // compute
   app.add_flag("--benchmark", input.benchmark, "Display the performance data.")
       ->default_val(false);
 
-  app.add_option("-j", input.num_threads, "CPU threads used to convert images")
+  app.add_option("--threads,-j", input.num_threads,
+                 "CPU threads used to convert images")
       ->check(CLI::PositiveNumber)
       ->default_val(std::thread::hardware_concurrency());
 
@@ -146,6 +153,10 @@ int main(int argc, char **argv) {
     }
   }
 
+  if (!validate_input(input)) {
+    return __LINE__;
+  }
+
   QCoreApplication qapp(argc, argv);
   if (input.list_supported_formats) {
     list_supported_formats();
@@ -157,4 +168,12 @@ int main(int argc, char **argv) {
   qapp.quit();
 
   return ret;
+}
+
+bool validate_input(const inputs &input) noexcept {
+  if (input.make_schematic && input.version <= SCL_gameVersion::MC12) {
+    cout << "Invalid input : .schem can not be exported within 1.12" << endl;
+    return false;
+  }
+  return true;
 }

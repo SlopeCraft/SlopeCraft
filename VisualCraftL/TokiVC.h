@@ -76,6 +76,16 @@ public:
                         const char *utf8_litename,
                         const char *utf8_regionname) const noexcept override;
 
+  bool export_structure(const char *localEncoding_TargetName,
+                        bool is_air_structure_void) const noexcept override;
+
+  bool export_WESchem(const char *localEncoding_fileName,
+                      const int (&offset)[3] = {0, 0, 0},
+                      const int (&weOffset)[3] = {0, 0, 0},
+                      const char *utf8_Name = "",
+                      const char *const *const utf8_requiredMods = nullptr,
+                      const int requiredModsCount = 0) const noexcept override;
+
 public:
   static libImageCvt::template ImageCvter<false>::basic_colorset_t
       colorset_basic;

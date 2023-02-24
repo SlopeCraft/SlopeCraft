@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.14)
 
 include(FetchContent)
 
-message(WARNING here)
+set(SC_CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+
 set(CMAKE_CXX_FLAGS "-fPIC")
 
 FetchContent_Declare(
@@ -21,6 +22,9 @@ if(NOT ${fmt_POPULATED})
 endif()
 
 FetchContent_MakeAvailable(fmt)
+
+set(CMAKE_CXX_FLAGS ${SC_CMAKE_CXX_FLAGS})
+unset(SC_CMAKE_CXX_FLAGS)
 
 # message(STATUS "fmt_POPULATED = " )
 

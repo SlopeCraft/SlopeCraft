@@ -1,9 +1,9 @@
-#include <vector>
-
 #include "DirectionHandler.hpp"
 #include "TokiVC.h"
 #include "VCL_internal.h"
 #include "VisualCraftL.h"
+#include <chrono>
+#include <vector>
 
 void TokiVC::fill_schem_blocklist_no_lock() noexcept {
   std::vector<const char *> blk_ids;
@@ -55,8 +55,10 @@ bool TokiVC::build() noexcept {
 
   this->schem.fill(0);
 
-  const Eigen::ArrayXX<uint16_t> color_id_mat = this->img_cvter.color_id();
+  std::atomic_bool ret = true;
 
+  const Eigen::ArrayXX<uint16_t> color_id_mat = this->img_cvter.color_id();
+#pragma omp parallel for schedule(static)
   for (int64_t r = 0; r < this->img_cvter.rows(); r++) {
     for (int64_t c = 0; c < this->img_cvter.cols(); c++) {
 
@@ -97,7 +99,7 @@ bool TokiVC::build() noexcept {
                           "allowed blocks. This is an internal error.",
                           (const void *)blkp, blkp->full_id_ptr()->c_str());
           VCL_report(VCL_report_type_t::error, msg.c_str());
-          return false;
+          ret = false;
         }
 
         const uint16_t blk_id = it->second;
@@ -113,7 +115,7 @@ bool TokiVC::build() noexcept {
 
   this->_step = VCL_Kernel_step::VCL_built;
 
-  return true;
+  return ret;
 }
 
 bool TokiVC::export_litematic(const char *localEncoding_filename,
@@ -135,6 +137,11 @@ bool TokiVC::export_litematic(const char *localEncoding_filename,
       "\"https://github.com/ToKiNoBug/SlopeCraft\" for detailed information.";
   info.litename_utf8 = utf8_litename;
   info.regionname_utf8 = utf8_regionname;
+  info.time_created = std::chrono::duration_cast<std::chrono::seconds>(
+                          std::chrono::system_clock::now().time_since_epoch())
+                          .count();
+  info.time_modified = info.time_created;
+
   SCL_errorFlag flag;
   std::string detail;
 
@@ -144,6 +151,74 @@ bool TokiVC::export_litematic(const char *localEncoding_filename,
   if (!ok) {
     std::string err =
         fmt::format("VisualCraftL failed to export a litematic. Error "
+                    "number(SCSL_errorFlag) = {}, detail : {}",
+                    int(flag), detail);
+    VCL_report(VCL_report_type_t::error, err.c_str());
+    return false;
+  }
+  return true;
+}
+
+bool TokiVC::export_structure(const char *localEncoding_TargetName,
+                              bool is_air_structure_void) const noexcept {
+
+  std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+
+  if (this->_step < VCL_Kernel_step::VCL_built) {
+    VCL_report(VCL_report_type_t::error,
+               "Trying to export structure without built.");
+    return false;
+  }
+
+  SCL_errorFlag flag;
+  std::string detail;
+  const bool ok = this->schem.export_structure(
+      localEncoding_TargetName, is_air_structure_void, &flag, &detail);
+
+  if (!ok) {
+    std::string err =
+        fmt::format("VisualCraftL failed to export a structure. Error "
+                    "number(SCSL_errorFlag) = {}, detail : {}",
+                    int(flag), detail);
+    VCL_report(VCL_report_type_t::error, err.c_str());
+    return false;
+  }
+  return true;
+}
+
+bool TokiVC::export_WESchem(const char *localEncoding_fileName,
+                            const int (&offset)[3], const int (&weOffset)[3],
+                            const char *utf8_Name,
+                            const char *const *const utf8_requiredMods,
+                            const int requiredModsCount) const noexcept {
+  std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+  if (this->_step < VCL_Kernel_step::VCL_built) {
+    VCL_report(VCL_report_type_t::error,
+               "Trying to export structure without built.");
+    return false;
+  }
+
+  libSchem::WorldEditSchem_info info;
+
+  info.schem_name_utf8 = utf8_Name;
+  for (size_t d = 0; d < 3; d++) {
+    info.offset[d] = offset[d];
+    info.WE_offset[d] = weOffset[d];
+  }
+
+  info.required_mods_utf8.resize(requiredModsCount);
+  for (int i = 0; i < requiredModsCount; i++) {
+    info.required_mods_utf8[i] = utf8_requiredMods[i];
+  }
+
+  SCL_errorFlag flag;
+  std::string detail;
+
+  const bool ok =
+      this->schem.export_WESchem(localEncoding_fileName, info, &flag, &detail);
+  if (!ok) {
+    std::string err =
+        fmt::format("VisualCraftL failed to export a WorldEdit schem. Error "
                     "number(SCSL_errorFlag) = {}, detail : {}",
                     int(flag), detail);
     VCL_report(VCL_report_type_t::error, err.c_str());

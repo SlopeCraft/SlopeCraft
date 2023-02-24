@@ -28,6 +28,7 @@ struct inputs {
   bool make_litematic{false};
   bool make_schematic{false};
   bool make_structure{false};
+  bool structure_is_air_void{true};
 
   inline bool need_to_read() const noexcept { return true; }
 

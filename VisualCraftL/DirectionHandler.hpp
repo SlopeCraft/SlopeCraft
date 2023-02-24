@@ -60,7 +60,7 @@ private:
     switch (this->map_face) {
     case VCL_face_t::face_east:
       return {this->size_xyz[idx_x] - depth - 1, this->size_xyz[idx_y] - r - 1,
-              this->size_xyz[idx_x] - c - 1};
+              this->size_xyz[idx_z] - c - 1};
 
     case VCL_face_t::face_west:
       return {depth, this->size_xyz[idx_y] - r - 1, c};

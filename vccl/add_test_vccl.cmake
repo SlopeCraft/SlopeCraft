@@ -17,8 +17,10 @@ foreach(_layers RANGE 1 3 1)
     foreach(_ver RANGE 12 19)
         if(_ver EQUAL 12)
             set(zip_file ${VCL_resource_12})
+            set(generate_schem)
         else()
             set(zip_file ${VCL_resource_latest})
+            set(generate_schem "--schem")
         endif()
 
         foreach(_face ${list_faces})
@@ -30,7 +32,10 @@ foreach(_layers RANGE 1 3 1)
                     # message(STATUS ${test_name})
                     add_test(NAME ${test_name}
                         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-                        COMMAND vccl --bsl ${CMAKE_SOURCE_DIR}/VisualCraftL/VCL_blocks_fixed.json --rp ${zip_file} --mcver ${_ver} --face ${_face} --layers ${_layers} --img ${VCL_test_images} --dither=${_dither} -j1 --out-image --benchmark --prefix ${test_name} --gpu --disable-config)
+
+                        # COMMAND vccl --bsl ${CMAKE_SOURCE_DIR}/VisualCraftL/VCL_blocks_fixed.json --rp ${zip_file} --mcver ${_ver} --face ${_face} --layers ${_layers} --img ${VCL_test_images} --dither=${_dither} -j1 --out-image --benchmark --prefix ${test_name} --gpu --disable-config
+                        COMMAND vccl --mcver ${_ver} --face ${_face} --layers ${_layers} --img ${CMAKE_SOURCE_DIR}/binaries/images/* --dither=${_dither} -j20 --out-image --benchmark --prefix ${test_name} --gpu --lite --nbt ${generate_schem}
+                    )
 
                     #
                 endforeach(_dither ${dither})

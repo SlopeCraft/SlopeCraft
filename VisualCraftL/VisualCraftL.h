@@ -138,21 +138,24 @@ public:
   virtual bool export_litematic(const char *localEncoding_filename,
                                 const char *utf8_litename,
                                 const char *utf8_regionname) const noexcept = 0;
-  /**
 
-  virtual void exportAsLitematic(
-      const char *localEncoding_TargetName, const char *utf8_LiteName,
-      const char *utf8_RegionName, char *localEncoding_returnVal) const = 0;
-  /// export map into Structure files (*.NBT)
-  virtual void exportAsStructure(const char *localEncoding_TargetName,
-                                 char *localEncoding_FileName) const = 0;
-  virtual void exportAsWESchem(
-      const char *localEncoding_fileName, const int(&offset)[3] = {0, 0, 0},
-      const int(&weOffset)[3] = {0, 0, 0}, const char *utf8_Name = "",
+  virtual bool export_structure(const char *localEncoding_TargetName,
+                                bool is_air_structure_void) const noexcept = 0;
+
+  virtual bool export_WESchem(
+      const char *localEncoding_fileName, const int (&offset)[3] = {0, 0, 0},
+      const int (&weOffset)[3] = {0, 0, 0}, const char *utf8_Name = "",
       const char *const *const utf8_requiredMods = nullptr,
-      const int requiredModsCount = 0, char *localEncoding_returnVal = nullptr)
-      const = 0;
-  */
+      const int requiredModsCount = 0) const noexcept = 0;
+  /*
+/// export map into Structure files (*.NBT)
+virtual void exportAsWESchem(
+  const char *localEncoding_fileName, const int(&offset)[3] = {0, 0, 0},
+  const int(&weOffset)[3] = {0, 0, 0}, const char *utf8_Name = "",
+  const char *const *const utf8_requiredMods = nullptr,
+  const int requiredModsCount = 0, char *localEncoding_returnVal = nullptr)
+  const = 0;
+*/
 };
 
 extern "C" {
