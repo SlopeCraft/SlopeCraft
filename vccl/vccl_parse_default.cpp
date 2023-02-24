@@ -177,6 +177,7 @@ void list_supported_formats() noexcept {
 }
 
 int run(const inputs &input) noexcept {
+  double wt = 0;
 
   if (input.zips.size() <= 0 || input.jsons.size() <= 0) {
     cout << "No zips or jsons provided. exit." << endl;
@@ -212,9 +213,17 @@ int run(const inputs &input) noexcept {
   kernel->set_ui(nullptr, cb_progress_range_set, cb_progress_add);
 
   {
+    wt = omp_get_wtime();
     const int ret = set_resource(kernel, input);
     if (ret != 0) {
       return ret;
+    }
+    wt = omp_get_wtime() - wt;
+
+    if (input.benchmark) {
+      cout << fmt::format(
+          "Parsing resource pack and block state list in {} miliseconds.\n",
+          wt * 1000);
     }
   }
 
@@ -258,7 +267,6 @@ int run(const inputs &input) noexcept {
       continue;
     }
 
-    double wt = 0;
     wt = omp_get_wtime();
     if (!kernel->convert(input.algo, input.dither)) {
       cout << "Failed to convert image." << endl;
@@ -365,11 +373,9 @@ int run(const inputs &input) noexcept {
             kernel->xyz_size(), wt);
       }
     }
-
-    VCL_destroy_kernel(kernel);
-
-    cout << "success." << endl;
-
-    return 0;
   }
+  VCL_destroy_kernel(kernel);
+  cout << "success." << endl;
+
+  return 0;
 }
