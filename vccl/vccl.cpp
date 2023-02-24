@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
   app.add_option("--resource-pack,--rp", input.zips, "Resource packs")
       ->check(CLI::ExistingFile);
   app.add_option("--block-state-list,--bsl", input.jsons,
-                 "Block state list json file.")
+                 "Block state list json files")
       ->check(CLI::ExistingFile);
 
   // colors
@@ -36,23 +36,26 @@ int main(int argc, char **argv) {
       ->default_val(19)
       ->check(CLI::Range(12, 19, "Avaliable versions"));
 
-  app.add_option("--layers", input.layers, "Max layers")
+  app.add_option("--layers,--layer", input.layers, "Max layers")
       ->default_val(3)
-      ->check(CLI::PositiveNumber);
+      ->check(CLI::Range(1, 3, "Avaliable depth"));
   std::string __face;
-  app.add_option("--face", __face, "Facing direction.")
+  app.add_option("--face", __face, "Facing direction")
       ->default_val("up")
       ->check(CLI::IsMember({"up", "down", "north", "south", "east", "west"}));
   std::string algo;
   app.add_option("--algo", algo, "Algorithm for conversion")
       ->default_val("RGB")
-      ->check(CLI::IsMember(
-          {"RGB", "RGB_Better", "HSV", "Lab94", "Lab00", "XYZ", "gaCvter"}))
+      ->check(
+          CLI::IsMember({"RGB", "RGB_Better", "HSV", "Lab94", "Lab00", "XYZ"}))
       ->expected(1);
 
   app.add_flag("--dither", input.dither,
                "Use Floyd-Steinberg dithering to improve the result of image "
                "conversion")
+      ->default_val(false);
+  app.add_flag("--show-num-color,--snc", input.show_color_num,
+               "Show the number of colos")
       ->default_val(false);
 
   //  images
@@ -61,25 +64,25 @@ int main(int argc, char **argv) {
 
   // exports
   app.add_option("--prefix", input.prefix, "Filename prefix of generate output")
-      ->default_val("");
+      ->default_val("./");
   app.add_flag("--out-image,--oimg", input.make_converted_image,
                "Generate converted image")
       ->default_val(false);
   app.add_flag("--litematic,--lite", input.make_litematic,
-               "Export .litematic files for litematica mod.")
+               "Export .litematic files for litematica mod")
       ->default_val(false);
   app.add_flag("--schematic,--schem", input.make_schematic,
-               "Export .schem for World Edit mod.")
+               "Export .schem for World Edit mod")
       ->default_val(false);
   app.add_flag("--structure,--nbt", input.make_structure,
-               "Export .nbt file for vanilla strcuture block.")
+               "Export .nbt file for vanilla strcuture block")
       ->default_val(false);
-  app.add_flag("--nbt-air-void", input.structure_is_air_void,
-               "Represent air as structure void in vanilla structure.")
+  app.add_flag("--nbt-air-void,--nav", input.structure_is_air_void,
+               "Represent air as structure void in vanilla structure")
       ->default_val(true);
 
   // compute
-  app.add_flag("--benchmark", input.benchmark, "Display the performance data.")
+  app.add_flag("--benchmark", input.benchmark, "Display the performance data")
       ->default_val(false);
 
   app.add_option("--threads,-j", input.num_threads,
@@ -100,15 +103,16 @@ int main(int argc, char **argv) {
       ->check(CLI::NonNegativeNumber);
   app.add_flag("--show-gpu", input.show_gpu)->default_val(false);
   app.add_flag("--list-gpu", input.list_gpu,
-               "List all avaliable GPU platforms and devices and exit.")
+               "List all avaliable GPU platforms and devices and exit")
       ->default_val(false);
 
   // others
   app.add_flag("--disable-config", input.disable_config,
                "Disable default option provided by vccl-config.json")
       ->default_val(false);
-  app.add_flag("--list-format", input.list_supported_formats,
-               "List all supported image formats and exit.")
+  app.add_flag("--list-image-formats,--list-formats,--lif",
+               input.list_supported_formats,
+               "List all supported image formats and exit")
       ->default_val(false);
 
   CLI11_PARSE(app, argc, argv);
@@ -134,7 +138,7 @@ int main(int argc, char **argv) {
   if (!input.disable_config) {
     config cfg;
     if (!load_config("vccl-config.json", cfg)) {
-      cout << "Failed to load config. Skip and continue." << endl;
+      cout << "Failed to load config. Skip and continue" << endl;
     } else {
       for (std::string &str : cfg.default_jsons) {
         input.jsons.emplace_back(std::move(str));
@@ -149,7 +153,7 @@ int main(int argc, char **argv) {
         }
       }
 
-      cout << "Default config loaded." << endl;
+      cout << "Default config loaded" << endl;
     }
   }
 

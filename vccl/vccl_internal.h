@@ -19,6 +19,7 @@ struct inputs {
   VCL_face_t face;
   SCL_convertAlgo algo;
   bool dither{false};
+  bool show_color_num{false};
   //  images
   std::vector<std::string> images;
 

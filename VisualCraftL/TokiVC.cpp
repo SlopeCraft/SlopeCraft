@@ -111,7 +111,7 @@ bool add_projection_image_for_bsl(const std::vector<VCL_block *> &bs_list,
       return false;
     }
 
-    if (false) {
+    if constexpr (false) {
       std::string msg =
           fmt::format("Computing projection image for full id \"{}\"\n",
                       blkp->full_id_ptr()->c_str());
@@ -338,7 +338,7 @@ bool TokiVC::set_resource_no_lock() noexcept {
       return false;
     }
 
-    {
+    if constexpr (false) {
       std::string msg = fmt::format(
           "Size of LUT_basic_color_idx_to_blocks = {}, size of colors_temp = "
           "{}\n",
@@ -355,8 +355,7 @@ bool TokiVC::set_resource_no_lock() noexcept {
         return false;
       }
     }
-
-    {
+    if constexpr (false) {
       std::string msg = fmt::format(
           "Size of LUT_basic_color_idx_to_blocks = {}, size of colors_temp = "
           "{}\n",
@@ -456,7 +455,7 @@ bool TokiVC::set_allowed_no_lock(const VCL_block *const *const blocks_allowed,
   allowed_list.resize(TokiVC::LUT_basic_color_idx_to_blocks.size());
   memset(allowed_list.data(), 0, allowed_list.size());
 
-  if constexpr (true) {
+  if constexpr (false) {
     std::string msg = fmt::format("TokiVC::colorset_basic.color_count() = {}.",
                                   TokiVC::colorset_basic.color_count());
     VCL_report(VCL_report_type_t::information, msg.c_str());

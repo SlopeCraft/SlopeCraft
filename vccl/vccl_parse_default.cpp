@@ -234,6 +234,11 @@ int run(const inputs &input) noexcept {
     }
   }
 
+  if (input.show_color_num) {
+    cout << fmt::format("{} colors avaliable.\n",
+                        VCL_get_allowed_colors(nullptr, 0));
+  }
+
   for (const auto &img_filename : input.images) {
     const std::string pure_filename_no_extension =
         std::filesystem::path(img_filename)
