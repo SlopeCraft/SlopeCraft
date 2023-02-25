@@ -575,6 +575,14 @@ VCL_EXPORT_FUN const char *VCL_get_block_id(const VCL_block *b) {
   return b->full_id_ptr()->c_str();
 }
 
+VCL_EXPORT_FUN const char *VCL_get_block_name(const VCL_block *b,
+                                              uint8_t is_ZH) {
+  if (is_ZH) {
+    return b->name_ZH.c_str();
+  }
+  return b->name_EN.c_str();
+}
+
 VCL_EXPORT_FUN VCL_block_class_t VCL_get_block_class(const VCL_block *b) {
   return b->block_class;
 }

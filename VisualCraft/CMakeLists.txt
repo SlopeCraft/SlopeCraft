@@ -10,19 +10,26 @@ set(CMAKE_AUTORCC ON)
 
 find_package(Qt6 COMPONENTS Widgets LinguistTools Network Concurrent REQUIRED)
 
+find_package(magic_enum REQUIRED)
+
 set(VisualCraft_header_files
     VCWind.h
     advanced_qlist_widget_item.h
+    CallBackFunctions.h
+    VC_block_class.h
 )
 
 set(VisualCraft_source_files
     main.cpp
     VCWind.cpp
     advanced_qlist_widget_item.cpp
+    CallBackFunctions.cpp
+    VC_block_class.cpp
 )
 
 set(VisualCraft_ui_files
-    VCWind.ui)
+    VCWind.ui
+    VC_block_class.ui)
 
 set(VisualCraft_ts_files)
 
@@ -43,7 +50,8 @@ target_link_libraries(VisualCraft PRIVATE
     VisualCraftL
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Network
-    Qt${QT_VERSION_MAJOR}::Concurrent)
+    Qt${QT_VERSION_MAJOR}::Concurrent
+    magic_enum::magic_enum)
 
 set_target_properties(VisualCraft PROPERTIES
     VERSION ${PROJECT_VERSION}

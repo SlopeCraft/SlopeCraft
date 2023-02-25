@@ -266,6 +266,7 @@ VCL_EXPORT_FUN void VCL_set_block_attribute(VCL_block *,
                                             bool value);
 
 VCL_EXPORT_FUN const char *VCL_get_block_id(const VCL_block *);
+VCL_EXPORT_FUN const char *VCL_get_block_name(const VCL_block *, uint8_t is_ZH);
 
 VCL_EXPORT_FUN VCL_block_class_t VCL_get_block_class(const VCL_block *);
 VCL_EXPORT_FUN void VCL_set_block_class(VCL_block *, VCL_block_class_t cl);
