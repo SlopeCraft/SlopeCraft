@@ -27,6 +27,8 @@ public:
 
   size_t selected_blocks(std::vector<VCL_block *> *select_blks) const noexcept;
 
+  const auto &blocks_vector() const noexcept { return this->blocks; }
+
 private:
   void erase_blocks() noexcept;
 

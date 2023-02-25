@@ -3,8 +3,10 @@
 
 #include <QMainWindow>
 #include <VisualCraftL.h>
+#include <map>
 
 class QListWidget;
+class VC_block_class;
 
 namespace Ui {
 class VCWind;
@@ -18,6 +20,7 @@ private:
 
   VCL_resource_pack *rp{nullptr};
   VCL_block_state_list *bsl{nullptr};
+  std::map<VCL_block_class_t, VC_block_class *> map_VC_block_class{};
 
   // static bool have_special(QListWidget *qlw) noexcept;
 

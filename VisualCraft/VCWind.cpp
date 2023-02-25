@@ -243,14 +243,66 @@ void VCWind::make_block_list_page() noexcept {
   }
 
   for (auto bcl : VCL_block_class_t_values) {
-    VC_block_class *class_widget = new VC_block_class(this);
+
+    VC_block_class *class_widget = nullptr;
+    {
+      auto it = this->map_VC_block_class.find(bcl);
+
+      if (it == this->map_VC_block_class.end() || it->second == nullptr) {
+
+        class_widget = new VC_block_class(this);
+        this->map_VC_block_class.emplace(bcl, class_widget);
+      } else {
+        class_widget = it->second;
+      }
+    }
+
     const size_t idx = size_t(bcl);
 
     this->ui->gl_sa_blocks->addWidget(class_widget, idx, 0);
     class_widget->show();
+    class_widget->setTitle(QString::number(idx) + " " +
+                           QString::fromUtf8(magic_enum::enum_name(bcl)) +
+                           " (" + QString::number(blocks[bcl].size()) + ") ");
 
     class_widget->set_blocks(blocks[bcl].size(), blocks[bcl].data(), 4);
-    class_widget->setTitle(QString::fromUtf8(magic_enum::enum_name(bcl)) +
-                           " (" + QString::number(int(bcl)) + ") ");
+
+    // set images for radio buttons
+    for (const auto &pair : class_widget->blocks_vector()) {
+      VCL_model *model = VCL_get_block_model(
+          pair.first, this->rp, this->current_selected_face(), nullptr);
+
+      if (model == nullptr) {
+        continue;
+      }
+
+      int rows = 0, cols = 0;
+
+      VCL_compute_projection_image(model, this->current_selected_face(), &rows,
+                                   &cols, nullptr, 0);
+      if (rows <= 0 || cols <= 0) {
+        VCL_destroy_block_model(model);
+        continue;
+      }
+
+      QImage img(cols, rows, QImage::Format::Format_ARGB32);
+
+      if (img.isNull()) {
+        VCL_destroy_block_model(model);
+        continue;
+      }
+      memset(img.scanLine(0), 0xFF, img.sizeInBytes());
+
+      const bool ok = VCL_compute_projection_image(
+          model, this->current_selected_face(), nullptr, nullptr,
+          (uint32_t *)img.scanLine(0), img.sizeInBytes());
+      if (!ok) {
+        VCL_destroy_block_model(model);
+        continue;
+      }
+
+      pair.second->setIcon(QIcon(QPixmap::fromImage(img)));
+      VCL_destroy_block_model(model);
+    }
   }
 }

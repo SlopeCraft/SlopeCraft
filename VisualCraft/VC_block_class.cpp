@@ -40,7 +40,7 @@ void VC_block_class::set_blocks(size_t num_blocks,
     this->ui->grid_layout->addWidget(cb);
 
     this->ui->grid_layout->addWidget(cb, rowidx, colidx);
-    // this->blocks.emplace_back(std::pair<VCL_block *, QCheckBox *>{blkp, cb});
+    this->blocks.emplace_back(std::pair<VCL_block *, QCheckBox *>{blkp, cb});
 
     cb->show();
   }
