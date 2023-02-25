@@ -11,11 +11,15 @@ set(CMAKE_AUTORCC ON)
 find_package(Qt6 COMPONENTS Widgets LinguistTools Network Concurrent REQUIRED)
 
 set(VisualCraft_header_files
-    VCWind.h)
+    VCWind.h
+    advanced_qlist_widget_item.h
+)
 
 set(VisualCraft_source_files
     main.cpp
-    VCWind.cpp)
+    VCWind.cpp
+    advanced_qlist_widget_item.cpp
+)
 
 set(VisualCraft_ui_files
     VCWind.ui)
