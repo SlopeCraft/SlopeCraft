@@ -23,6 +23,16 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
+    <item row="1" column="0">
+     <widget class="QProgressBar" name="progressBar">
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+      </property>
+     </widget>
+    </item>
     <item row="0" column="0">
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="1">
@@ -39,7 +49,7 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>2</number>
         </property>
         <property name="elideMode">
          <enum>Qt::ElideNone</enum>
@@ -49,6 +59,176 @@
           <string>基础属性</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_4" columnstretch="1,1,2,2">
+          <item row="2" column="0">
+           <spacer name="verticalSpacer_5">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="0" column="2" rowspan="3">
+           <widget class="QGroupBox" name="groupBox_3">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="title">
+             <string>资源包</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_8">
+             <item row="1" column="0">
+              <widget class="QPushButton" name="pb_add_rp">
+               <property name="text">
+                <string>添加</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QPushButton" name="pb_remove_rp">
+               <property name="text">
+                <string>删除</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0" colspan="2">
+              <widget class="QListWidget" name="lw_rp">
+               <property name="dragEnabled">
+                <bool>true</bool>
+               </property>
+               <property name="dragDropMode">
+                <enum>QAbstractItemView::InternalMove</enum>
+               </property>
+               <property name="selectionMode">
+                <enum>QAbstractItemView::ExtendedSelection</enum>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
+               <property name="movement">
+                <enum>QListView::Snap</enum>
+               </property>
+               <property name="layoutMode">
+                <enum>QListView::Batched</enum>
+               </property>
+               <property name="viewMode">
+                <enum>QListView::ListMode</enum>
+               </property>
+               <property name="wordWrap">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="0" column="3" rowspan="3">
+           <widget class="QGroupBox" name="groupBox_4">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="title">
+             <string>方块id文件（json）</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_9">
+             <item row="1" column="1">
+              <widget class="QPushButton" name="pb_remove_bsl">
+               <property name="text">
+                <string>删除</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QPushButton" name="pb_add_bsl">
+               <property name="text">
+                <string>添加</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0" colspan="2">
+              <widget class="QListWidget" name="lw_bsl">
+               <property name="dragDropMode">
+                <enum>QAbstractItemView::InternalMove</enum>
+               </property>
+               <property name="selectionMode">
+                <enum>QAbstractItemView::ExtendedSelection</enum>
+               </property>
+               <property name="movement">
+                <enum>QListView::Snap</enum>
+               </property>
+               <property name="layoutMode">
+                <enum>QListView::Batched</enum>
+               </property>
+               <property name="viewMode">
+                <enum>QListView::ListMode</enum>
+               </property>
+               <property name="wordWrap">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QGroupBox" name="groupBox">
+            <property name="title">
+             <string>像素画方向</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_10">
+             <item row="1" column="0">
+              <widget class="QRadioButton" name="rdb_direction_side">
+               <property name="text">
+                <string>侧面（侧视）</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QRadioButton" name="rdb_direction_up">
+               <property name="text">
+                <string>上面（俯视）</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QRadioButton" name="rdb_direction_down">
+               <property name="text">
+                <string>下面（仰视）</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <spacer name="verticalSpacer_3">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+          </item>
           <item row="0" column="1">
            <widget class="QGroupBox" name="groupBox_2">
             <property name="title">
@@ -117,158 +297,23 @@
             </layout>
            </widget>
           </item>
-          <item row="0" column="0">
-           <widget class="QGroupBox" name="groupBox">
-            <property name="title">
-             <string>像素画方向</string>
+          <item row="1" column="0">
+           <widget class="QSpinBox" name="sb_max_layers">
+            <property name="prefix">
+             <string>最大厚度：</string>
             </property>
-            <layout class="QGridLayout" name="gridLayout_10">
-             <item row="1" column="0">
-              <widget class="QRadioButton" name="rdb_direction_side">
-               <property name="text">
-                <string>侧面（侧视）</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QRadioButton" name="rdb_direction_up">
-               <property name="text">
-                <string>上面（俯视）</string>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
-              <widget class="QRadioButton" name="rdb_direction_down">
-               <property name="text">
-                <string>下面（仰视）</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="0">
-              <spacer name="verticalSpacer_3">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>40</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>3</number>
+            </property>
+            <property name="value">
+             <number>3</number>
+            </property>
            </widget>
           </item>
-          <item row="0" column="3" rowspan="2">
-           <widget class="QGroupBox" name="groupBox_4">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="title">
-             <string>方块id文件（json）</string>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_9">
-             <item row="1" column="1">
-              <widget class="QPushButton" name="pb_remove_bsl">
-               <property name="text">
-                <string>删除</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
-              <widget class="QPushButton" name="pb_add_bsl">
-               <property name="text">
-                <string>添加</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0" colspan="2">
-              <widget class="QListWidget" name="lw_bsl">
-               <property name="dragDropMode">
-                <enum>QAbstractItemView::InternalMove</enum>
-               </property>
-               <property name="selectionMode">
-                <enum>QAbstractItemView::ExtendedSelection</enum>
-               </property>
-               <property name="movement">
-                <enum>QListView::Snap</enum>
-               </property>
-               <property name="layoutMode">
-                <enum>QListView::Batched</enum>
-               </property>
-               <property name="viewMode">
-                <enum>QListView::ListMode</enum>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item row="0" column="2" rowspan="2">
-           <widget class="QGroupBox" name="groupBox_3">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="title">
-             <string>资源包</string>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_8">
-             <item row="1" column="0">
-              <widget class="QPushButton" name="pb_add_rp">
-               <property name="text">
-                <string>添加</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="1">
-              <widget class="QPushButton" name="pb_remove_rp">
-               <property name="text">
-                <string>删除</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0" colspan="2">
-              <widget class="QListWidget" name="lw_rp">
-               <property name="dragEnabled">
-                <bool>true</bool>
-               </property>
-               <property name="dragDropMode">
-                <enum>QAbstractItemView::InternalMove</enum>
-               </property>
-               <property name="selectionMode">
-                <enum>QAbstractItemView::ExtendedSelection</enum>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>16</width>
-                 <height>16</height>
-                </size>
-               </property>
-               <property name="movement">
-                <enum>QListView::Snap</enum>
-               </property>
-               <property name="layoutMode">
-                <enum>QListView::Batched</enum>
-               </property>
-               <property name="viewMode">
-                <enum>QListView::ListMode</enum>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item row="1" column="1">
+          <item row="1" column="1" rowspan="2">
            <spacer name="verticalSpacer_2">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -357,43 +402,15 @@
          <attribute name="title">
           <string>选择图片</string>
          </attribute>
-         <layout class="QGridLayout" name="gridLayout_6" columnstretch="1,9,0,9">
-          <item row="1" column="1" rowspan="3">
-           <widget class="QLabel" name="label_raw_image">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
-            </property>
-            <property name="text">
-             <string/>
+         <layout class="QGridLayout" name="gridLayout_6" columnstretch="0,0,0,0,0,0,0,0,0,0">
+          <item row="0" column="8" rowspan="5">
+           <widget class="Line" name="line">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
             </property>
            </widget>
           </item>
-          <item row="2" column="0" rowspan="2">
-           <widget class="QListWidget" name="lw_image_files">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="dragEnabled">
-             <bool>true</bool>
-            </property>
-            <property name="dragDropMode">
-             <enum>QAbstractItemView::InternalMove</enum>
-            </property>
-            <property name="movement">
-             <enum>QListView::Snap</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="3" rowspan="3">
+          <item row="1" column="9" rowspan="4">
            <widget class="QLabel" name="lable_converted">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -407,64 +424,55 @@
             <property name="text">
              <string/>
             </property>
+            <property name="scaledContents">
+             <bool>true</bool>
+            </property>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="QLabel" name="label_3">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>16777215</height>
-             </size>
-            </property>
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="cb_show_raw_size">
             <property name="text">
-             <string>原图</string>
+             <string>显示原始尺寸</string>
             </property>
-            <property name="textFormat">
-             <enum>Qt::PlainText</enum>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
+            <property name="checked">
+             <bool>false</bool>
             </property>
            </widget>
           </item>
-          <item row="0" column="3">
-           <widget class="QLabel" name="label_4">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>20</height>
-             </size>
-            </property>
+          <item row="2" column="1">
+           <widget class="QToolButton" name="tb_add_images">
             <property name="text">
-             <string>转化后</string>
-            </property>
-            <property name="textFormat">
-             <enum>Qt::PlainText</enum>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
+             <string>+</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="0" rowspan="2">
+          <item row="2" column="2">
+           <widget class="QToolButton" name="tb_remove_images">
+            <property name="text">
+             <string>-</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0" rowspan="2" colspan="3">
            <widget class="QGroupBox" name="groupBox_7">
             <property name="title">
              <string>调色算法</string>
             </property>
             <layout class="QGridLayout" name="gridLayout_12">
+             <item row="6" column="0">
+              <widget class="QCheckBox" name="cb_algo_dither">
+               <property name="text">
+                <string>抖动</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QRadioButton" name="rb_algo_HSV">
+               <property name="text">
+                <string notr="true">HSV</string>
+               </property>
+              </widget>
+             </item>
              <item row="0" column="0">
               <widget class="QRadioButton" name="rb_algo_RGB">
                <property name="text">
@@ -482,48 +490,94 @@
                </property>
               </widget>
              </item>
-             <item row="5" column="0">
-              <widget class="QRadioButton" name="rb_algo_XYZ">
-               <property name="text">
-                <string notr="true">XYZ</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
-              <widget class="QRadioButton" name="rb_algo_HSV">
-               <property name="text">
-                <string notr="true">HSV</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
+             <item row="0" column="1">
               <widget class="QRadioButton" name="rb_algo_RGB_Better">
                <property name="text">
                 <string notr="true">RGB+</string>
                </property>
               </widget>
              </item>
-             <item row="3" column="0">
+             <item row="2" column="1">
               <widget class="QRadioButton" name="rb_algo_Lab94">
                <property name="text">
                 <string notr="true">Lab94(CIEDE94)</string>
                </property>
               </widget>
              </item>
-             <item row="6" column="0">
-              <widget class="QCheckBox" name="rb_algo_dither">
+             <item row="4" column="1">
+              <widget class="QRadioButton" name="rb_algo_XYZ">
                <property name="text">
-                <string>抖动</string>
+                <string notr="true">XYZ</string>
                </property>
               </widget>
              </item>
             </layout>
            </widget>
           </item>
-          <item row="0" column="2" rowspan="4">
-           <widget class="Line" name="line">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
+          <item row="3" column="0" rowspan="2" colspan="3">
+           <widget class="QListWidget" name="lw_image_files">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="dragEnabled">
+             <bool>true</bool>
+            </property>
+            <property name="dragDropMode">
+             <enum>QAbstractItemView::InternalMove</enum>
+            </property>
+            <property name="selectionMode">
+             <enum>QAbstractItemView::ExtendedSelection</enum>
+            </property>
+            <property name="movement">
+             <enum>QListView::Snap</enum>
+            </property>
+            <property name="isWrapping" stdset="0">
+             <bool>false</bool>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="4" rowspan="4">
+           <widget class="QLabel" name="label_raw_image">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="scaledContents">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="4">
+           <widget class="QCheckBox" name="cb_show_raw">
+            <property name="text">
+             <string>显示原图</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="9">
+           <widget class="QCheckBox" name="cb_show_converted">
+            <property name="text">
+             <string>显示转化后图像</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -543,14 +597,29 @@
           <item row="0" column="1">
            <widget class="QGroupBox" name="groupBox_8">
             <property name="title">
-             <string>选择计算设备</string>
+             <string>OpenCL 可用的计算设备</string>
+            </property>
+            <property name="flat">
+             <bool>false</bool>
             </property>
             <layout class="QGridLayout" name="gridLayout_14">
              <item row="0" column="2">
               <widget class="QTreeWidget" name="tw_gpu">
+               <property name="selectionMode">
+                <enum>QAbstractItemView::SingleSelection</enum>
+               </property>
+               <property name="selectionBehavior">
+                <enum>QAbstractItemView::SelectItems</enum>
+               </property>
+               <property name="rootIsDecorated">
+                <bool>true</bool>
+               </property>
+               <attribute name="headerCascadingSectionResizes">
+                <bool>false</bool>
+               </attribute>
                <column>
                 <property name="text">
-                 <string>CPU</string>
+                 <string notr="true">CPU &amp; GPU</string>
                 </property>
                </column>
               </widget>
@@ -564,20 +633,7 @@
              <string>计算设置</string>
             </property>
             <layout class="QGridLayout" name="gridLayout_15">
-             <item row="0" column="0">
-              <widget class="QSpinBox" name="sb_threads">
-               <property name="prefix">
-                <string>CPU线程数：</string>
-               </property>
-               <property name="minimum">
-                <number>1</number>
-               </property>
-               <property name="maximum">
-                <number>1024</number>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
+             <item row="2" column="0">
               <spacer name="verticalSpacer">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
@@ -590,6 +646,28 @@
                </property>
               </spacer>
              </item>
+             <item row="0" column="0">
+              <widget class="QSpinBox" name="sb_threads">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="prefix">
+                <string>CPU线程数：</string>
+               </property>
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>1024</number>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QComboBox" name="combobox_select_device"/>
+             </item>
             </layout>
            </widget>
           </item>
@@ -598,16 +676,6 @@
        </widget>
       </item>
      </layout>
-    </item>
-    <item row="1" column="0">
-     <widget class="QProgressBar" name="progressBar">
-      <property name="value">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
-      </property>
-     </widget>
     </item>
    </layout>
   </widget>

@@ -765,7 +765,7 @@ public:
       return;
     }
     if (platid >= num_plats) {
-      this->err = 1;
+      this->err = 114514;
       return;
     }
 
@@ -790,8 +790,14 @@ public:
 };
 
 VCL_EXPORT_FUN size_t VCL_platform_num() { return ocl_warpper::platform_num(); }
-VCL_EXPORT_FUN VCL_GPU_Platform *VCL_get_platform(size_t platform_idx) {
+VCL_EXPORT_FUN VCL_GPU_Platform *VCL_get_platform(size_t platform_idx,
+                                                  int *errorcode) {
   VCL_GPU_Platform *ret = new VCL_GPU_Platform(platform_idx);
+
+  if (errorcode != nullptr) {
+    *errorcode = ret->err;
+  }
+
   if (ret->err != CL_SUCCESS) {
     delete ret;
     return nullptr;
@@ -808,9 +814,14 @@ VCL_EXPORT_FUN size_t VCL_get_device_num(const VCL_GPU_Platform *platp) {
   return platp->devices.size();
 }
 VCL_EXPORT_FUN VCL_GPU_Device *VCL_get_device(const VCL_GPU_Platform *platp,
-                                              size_t device_idx) {
+                                              size_t device_idx,
+                                              int *errorcode) {
   if (device_idx >= platp->devices.size()) {
     return nullptr;
+  }
+
+  if (errorcode != nullptr) {
+    *errorcode = platp->err;
   }
 
   VCL_GPU_Device *ret = new VCL_GPU_Device{platp->devices[device_idx], ""};

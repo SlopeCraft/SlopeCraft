@@ -7,18 +7,21 @@
 #include <QListWidgetItem>
 #include <QMessageBox>
 #include <magic_enum.hpp>
-#include <thread>
 
 VCWind::VCWind(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::VCWind), kernel(VCL_create_kernel()) {
   ui->setupUi(this);
+
+  kernel->set_ui(this, callback_progress_range_set,
+                 callback_progress_range_add);
 
   // this->ui->lv_rp;
 
   this->append_default_to_rp_or_bsl(this->ui->lw_rp, true);
   this->append_default_to_rp_or_bsl(this->ui->lw_bsl, false);
 
-  this->ui->sb_threads->setValue(std::thread::hardware_concurrency());
+  this->refresh_gpu_info();
+  this->select_default_device();
 
   // for test
   connect(this->ui->action_test01, &QAction::triggered, this,
@@ -26,6 +29,19 @@ VCWind::VCWind(QWidget *parent)
 }
 
 VCWind::~VCWind() { delete this->ui; }
+
+void VCWind::callback_progress_range_set(void *__w, int min, int max,
+                                         int val) noexcept {
+  VCWind *const w = reinterpret_cast<VCWind *>(__w);
+  w->ui->progressBar->setRange(min, max);
+  w->ui->progressBar->setValue(val);
+}
+
+void VCWind::callback_progress_range_add(void *__w, int delta) noexcept {
+  VCWind *const w = reinterpret_cast<VCWind *>(__w);
+  const int cur_val = w->ui->progressBar->value();
+  w->ui->progressBar->setValue(cur_val + delta);
+}
 
 // utilitiy functions
 void VCWind::append_default_to_rp_or_bsl(QListWidget *qlw,
@@ -89,6 +105,9 @@ void VCWind::create_resource_pack() noexcept {
 
   for (int i = 0; i < this->ui->lw_rp->count(); i++) {
     const auto qlwi = this->ui->lw_rp->item(i);
+    if (qlwi->checkState() != Qt::CheckState::Checked) {
+      continue;
+    }
 
     const auto aqlwi = dynamic_cast<const advanced_qlwi *>(qlwi);
 
@@ -127,6 +146,9 @@ void VCWind::create_block_state_list() noexcept {
 
   for (int i = 0; i < this->ui->lw_bsl->count(); i++) {
     const auto qlwi = this->ui->lw_bsl->item(i);
+    if (qlwi->checkState() != Qt::CheckState::Checked) {
+      continue;
+    }
 
     const auto aqlwi = dynamic_cast<const advanced_qlwi *>(qlwi);
 
@@ -304,5 +326,240 @@ void VCWind::make_block_list_page() noexcept {
       pair.second->setIcon(QIcon(QPixmap::fromImage(img)));
       VCL_destroy_block_model(model);
     }
+  }
+}
+
+void VCWind::setup_basical_colorset() noexcept {
+  if (VCL_is_basic_colorset_ok()) {
+    return;
+  }
+
+  if (this->rp == nullptr) {
+    this->create_resource_pack();
+  }
+
+  if (this->bsl == nullptr) {
+    this->create_block_state_list();
+  }
+
+  VCL_set_resource_option option;
+  option.exposed_face = this->current_selected_face();
+  option.version = this->current_selected_version();
+  option.max_block_layers = this->ui->sb_max_layers->value();
+
+  const bool success = VCL_set_resource_copy(this->rp, this->bsl, option);
+
+  if (!success) {
+    const auto ret = QMessageBox::critical(
+        this, VCWind::tr("资源包/方块状态列表json解析失败"),
+        VCWind::tr("部分方块的投影图像计算失败，或者总颜色数量超过上限（65534）"
+                   "。尝试移除解析失败的资源包/方块列表，或者减小最大层数。"),
+        QMessageBox::StandardButtons{QMessageBox::StandardButton::Close});
+    if (ret == QMessageBox::StandardButton::Close) {
+      exit(3);
+      return;
+    }
+  }
+}
+
+void VCWind::setup_allowed_colorset() noexcept {
+  if (VCL_is_allowed_colorset_ok()) {
+    return;
+  }
+  this->setup_basical_colorset();
+  std::vector<VCL_block *> blocks;
+  this->selected_blocks(&blocks);
+
+  const bool success = VCL_set_allowed_blocks(blocks.data(), blocks.size());
+
+  if (!success) {
+    const auto ret = QMessageBox::critical(
+        this, VCWind::tr("设置可用方块失败"),
+        VCWind::tr("可能是总颜色数量超过上限（65536），尝试移除解析失败的资源包"
+                   "/方块列表，或者减小最大层数。"),
+        QMessageBox::StandardButtons{QMessageBox::StandardButton::Close});
+    if (ret == QMessageBox::StandardButton::Close) {
+      exit(3);
+      return;
+    }
+  }
+}
+
+size_t
+VCWind::selected_blocks(std::vector<VCL_block *> *blocks_dest) const noexcept {
+  size_t counter = 0;
+  if (blocks_dest != nullptr)
+    blocks_dest->clear();
+  for (auto &pair : this->map_VC_block_class) {
+    counter += pair.second->selected_blocks(blocks_dest, true);
+  }
+
+  return counter;
+}
+
+void VCWind::on_tb_add_images_clicked() noexcept {
+  static QString prev_dir{""};
+  QStringList files =
+      QFileDialog::getOpenFileNames(this, VCWind::tr("选择图片（可多选）"),
+                                    prev_dir, "*.bmp;*.png;*.jpg;*.jpeg");
+  if (files.size() <= 0) {
+    return;
+  }
+
+  prev_dir = QFileInfo(files.front()).dir().absolutePath();
+
+  for (auto filename : files) {
+    if (!this->image_cache.contains(filename)) {
+      this->image_cache.emplace(filename, std::pair<QImage, QImage>{});
+    }
+
+    QImage img(filename);
+
+    if (img.isNull()) {
+      const auto ret = QMessageBox::warning(
+          this, VCWind::tr("读取图片失败"),
+          VCWind::tr("无法读取图片%"
+                     "1。图片可能是不支持的格式，或者已经损坏"
+                     "。图像过大也可能导致此错误。")
+              .arg(filename),
+          QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore,
+                                       QMessageBox::StandardButton::Close},
+          QMessageBox::StandardButton::Ignore);
+
+      if (ret == QMessageBox::StandardButton::Close) {
+        exit(2);
+        return;
+      }
+
+      this->image_cache.erase(filename);
+      continue;
+    }
+
+    this->image_cache[filename].first =
+        img.convertToFormat(QImage::Format_ARGB32);
+    this->image_cache[filename].second = QImage{};
+
+    QListWidgetItem *qlwi = new QListWidgetItem;
+    qlwi->setText(filename);
+
+    this->ui->lw_image_files->addItem(qlwi);
+  }
+}
+
+void VCWind::on_tb_remove_images_clicked() noexcept {
+  auto selected_items = this->ui->lw_image_files->selectedItems();
+
+  for (auto item : selected_items) {
+    this->ui->lw_image_files->removeItemWidget(item);
+
+    auto it = this->image_cache.find(item->text());
+
+    if (it != this->image_cache.end()) {
+      this->image_cache.erase(it);
+    }
+  }
+}
+
+void VCWind::setup_image(const QImage &img) noexcept {
+  this->setup_allowed_colorset();
+  bool ok = this->kernel->set_image(
+      img.height(), img.width(),
+      reinterpret_cast<const uint32_t *>(img.scanLine(0)), true);
+  if (!ok) {
+    const auto ret = QMessageBox::critical(
+        this, VCWind::tr("设置图片失败"),
+        VCWind::tr("这个错误不应该发生的，可能是你点儿背。"),
+        QMessageBox::StandardButtons{QMessageBox::StandardButton::Close});
+
+    if (ret == QMessageBox::StandardButton::Close) {
+      exit(2);
+      return;
+    }
+  }
+}
+
+SCL_convertAlgo VCWind::current_selected_algo() const noexcept {
+  if (this->ui->rb_algo_RGB->isChecked()) {
+    return SCL_convertAlgo::RGB;
+  }
+  if (this->ui->rb_algo_RGB_Better->isChecked()) {
+    return SCL_convertAlgo::RGB_Better;
+  }
+  if (this->ui->rb_algo_HSV->isChecked()) {
+    return SCL_convertAlgo::HSV;
+  }
+  if (this->ui->rb_algo_Lab94->isChecked()) {
+    return SCL_convertAlgo::Lab94;
+  }
+  if (this->ui->rb_algo_Lab00->isChecked()) {
+    return SCL_convertAlgo::Lab00;
+  }
+  if (this->ui->rb_algo_XYZ->isChecked()) {
+    return SCL_convertAlgo::XYZ;
+  }
+  abort();
+  return {};
+}
+
+void VCWind::on_lw_image_files_itemClicked(QListWidgetItem *item) noexcept {
+
+  this->setup_allowed_colorset();
+
+  auto it = this->image_cache.find(item->text());
+
+  if (it == this->image_cache.end()) {
+    return;
+  }
+
+  this->ui->label_raw_image->setPixmap(QPixmap::fromImage(it->second.first));
+
+  if (!it->second.second.isNull()) {
+    this->ui->lable_converted->setPixmap(QPixmap::fromImage(it->second.second));
+  }
+  this->setup_image(it->second.first);
+  const bool ok = this->kernel->convert(this->current_selected_algo(),
+                                        this->ui->cb_algo_dither->isChecked());
+  if (!ok) {
+    assert(false);
+    return;
+  }
+
+  int64_t rows, cols;
+  this->kernel->converted_image(nullptr, &rows, &cols, true);
+  if (rows <= 0 || cols <= 0) {
+    assert(false);
+    return;
+  }
+
+  QImage img(cols, rows, QImage::Format_ARGB32);
+  memset(img.scanLine(0), 0xFF, img.sizeInBytes());
+
+  this->kernel->converted_image(reinterpret_cast<uint32_t *>(img.scanLine(0)),
+                                nullptr, nullptr, true);
+
+  it->second.second = img;
+  this->ui->lable_converted->setPixmap(QPixmap::fromImage(img));
+}
+
+void VCWind::on_cb_show_raw_size_stateChanged(int state) noexcept {
+  bool autoscale = (state == 0);
+
+  this->ui->label_raw_image->setScaledContents(autoscale);
+  this->ui->lable_converted->setScaledContents(autoscale);
+}
+
+void VCWind::on_cb_show_raw_stateChanged(int state) noexcept {
+  if (state) {
+    this->ui->label_raw_image->show();
+  } else {
+    this->ui->label_raw_image->hide();
+  }
+}
+
+void VCWind::on_cb_show_converted_stateChanged(int state) noexcept {
+  if (state) {
+    this->ui->lable_converted->show();
+  } else {
+    this->ui->lable_converted->hide();
   }
 }

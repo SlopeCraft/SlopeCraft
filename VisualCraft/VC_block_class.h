@@ -25,7 +25,8 @@ public:
   void set_blocks(size_t num_blocks, VCL_block *const *const blocks,
                   size_t cols = 3) noexcept;
 
-  size_t selected_blocks(std::vector<VCL_block *> *select_blks) const noexcept;
+  size_t selected_blocks(std::vector<VCL_block *> *select_blks,
+                         bool append_to_select_blks = false) const noexcept;
 
   const auto &blocks_vector() const noexcept { return this->blocks; }
 

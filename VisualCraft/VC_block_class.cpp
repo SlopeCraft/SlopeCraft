@@ -52,9 +52,9 @@ void VC_block_class::set_state_for_all(bool checked) noexcept {
   }
 }
 
-size_t VC_block_class::selected_blocks(
-    std::vector<VCL_block *> *select_blks) const noexcept {
-  if (select_blks != nullptr) {
+size_t VC_block_class::selected_blocks(std::vector<VCL_block *> *select_blks,
+                                       bool append) const noexcept {
+  if (!append && select_blks != nullptr) {
     select_blks->clear();
   }
 

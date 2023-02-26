@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 project(VisualCraft_Main VERSION ${SlopeCraft_version} LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOMOC ON)
@@ -11,6 +10,8 @@ set(CMAKE_AUTORCC ON)
 find_package(Qt6 COMPONENTS Widgets LinguistTools Network Concurrent REQUIRED)
 
 find_package(magic_enum REQUIRED)
+
+find_package(OpenMP REQUIRED)
 
 set(VisualCraft_header_files
     VCWind.h
@@ -49,14 +50,15 @@ qt_add_executable(VisualCraft
     MANUAL_FINALIZATION
     ${VisualCraft_project_sources})
 
-target_compile_features(VisualCraft PRIVATE cxx_std_17)
+target_compile_features(VisualCraft PRIVATE cxx_std_20)
 
 target_link_libraries(VisualCraft PRIVATE
     VisualCraftL
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Network
     Qt${QT_VERSION_MAJOR}::Concurrent
-    magic_enum::magic_enum)
+    magic_enum::magic_enum
+    OpenMP::OpenMP_CXX)
 
 set_target_properties(VisualCraft PROPERTIES
     VERSION ${PROJECT_VERSION}
