@@ -64,4 +64,7 @@ float color_diff_RGB_plus(const float r1, const float g1, const float b1,
                           const float r2, const float g2,
                           const float b2) noexcept;
 
+float color_diff_HSV(float h1, float s1, float v1, float h2, float s2,
+                     float v2) noexcept;
+
 #endif

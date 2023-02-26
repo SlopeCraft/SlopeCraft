@@ -73,3 +73,16 @@ float color_diff_RGB_plus(const float r1, const float g1, const float b1,
 
   return result;
 }
+
+float color_diff_HSV(float h1, float s1, float v1, float h2, float s2,
+                     float v2) noexcept {
+
+  const float sv_1 = s1 * v1;
+  const float sv_2 = s2 * v2;
+
+  const float dX = 50.0f * (std::cos(h1) * sv_1 - std::cos(h2) * sv_2);
+  const float dY = 50.0f * (std::sin(h1) * sv_1 - std::sin(h2) * sv_2);
+  const float dZ = 50.0f * (v1 - v2);
+
+  return dX * dX + dY * dY + dZ * dZ;
+}

@@ -15,6 +15,20 @@ class VCWind;
 
 class VCWind : public QMainWindow {
   Q_OBJECT
+public:
+  struct convert_option {
+    SCL_convertAlgo algo;
+    bool dither;
+
+    inline bool operator==(convert_option another) const noexcept {
+      return this->algo == another.algo && this->dither == another.dither;
+    }
+
+    inline bool operator!=(convert_option another) const noexcept {
+      return !((*this) == another);
+    }
+  };
+
 private:
   // for all pages
   Ui::VCWind *ui;
@@ -61,6 +75,12 @@ private:
   void setup_image(const QImage &img) noexcept;
   // for page 2 ------------------------------------------
   SCL_convertAlgo current_selected_algo() const noexcept;
+  void show_image(decltype(image_cache)::iterator) noexcept;
+
+  void clear_convert_cache() noexcept;
+
+  convert_option current_convert_option() const noexcept;
+
   // for page 3 ------------------------------------------
   // for page 4 ------------------------------------------
   void refresh_gpu_info() noexcept;
@@ -90,9 +110,12 @@ private slots:
   void on_cb_show_raw_size_stateChanged(int state) noexcept;
   void on_cb_show_raw_stateChanged(int state) noexcept;
   void on_cb_show_converted_stateChanged(int state) noexcept;
+  void on_lw_image_files_itemClicked(QListWidgetItem *item) noexcept;
+
+  // manually connected
+  void when_algo_dither_bottons_toggled() noexcept;
 
   // for page 3
-  void on_lw_image_files_itemClicked(QListWidgetItem *item) noexcept;
   // for page 4
 
   // auto connected

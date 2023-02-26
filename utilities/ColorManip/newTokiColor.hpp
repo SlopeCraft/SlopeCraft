@@ -46,27 +46,20 @@ union alignas(32) f32_i32 {
   __m256i m256i;
 };
 
-/**
- * This function is a candidate when the real instruction can't be used.
- */
-
-template <typename = void> inline __m256 _mm256_abs_ps(__m256 x) noexcept {
-  f32_i32 t;
-
-  static_assert(sizeof(__m256i) == 32);
-
-  _mm256_store_ps(t.f32, x);
-
-  t.m256i = _mm256_and_si256(t.m256i, _mm256_set1_epi32(1UL << 31));
-
-  return _mm256_load_ps(t.f32);
+inline void take_abs_f32_8(float *p) noexcept {
+  for (size_t i = 0; i < 8; i++) {
+    *p = std::abs(*p);
+  }
 }
 
 /**
  * This function is a candidate when the real instruction can't be used.
  */
 
-template <typename = void> __m256 _mm256_acos_ps(__m256 x) noexcept {
+/**
+ * This function is a candidate when the real instruction can't be used.
+ */
+inline __m256 _mm256_acos_ps__manually(__m256 x) noexcept {
   alignas(32) float y[num_float_per_m256];
 
   _mm256_store_ps(y, x);
@@ -394,7 +387,7 @@ private:
   auto applyRGB_plus(const Eigen::Array3f &c3) noexcept {
     // const ColorList &allowedColors = Allowed->_RGB;
     constexpr float w_r = 1.0f, w_g = 2.0f, w_b = 1.0f;
-#ifdef SC_VECTORIZE_AVX2
+#if false && defined(SC_VECTORIZE_AVX2)
 
     TempVectorXf_t dist(Allowed->color_count(), 1);
 
@@ -469,17 +462,32 @@ private:
             sumRGBsquare, _mm256_rsqrt_ps(_mm256_add_ps(SqrModSquare, thre)));
             */
         temp1 = _mm256_div_ps(temp1, _mm256_set1_ps(1.01f));
-
-        __m256 temp2 = _mm256_acos_ps(temp1);
+        __m256 temp2;
+        {
+          alignas(32) float arr[8];
+          _mm256_store_ps(arr, temp1);
+          for (size_t i = 0; i < 8; i++) {
+            arr[i] = std::acos(arr[i]);
+          }
+          temp2 = _mm256_load_ps(arr);
+        }
+        //__m256 temp2 = _mm256_acos_ps__manually(temp1);
         theta = _mm256_mul_ps(temp2, _mm256_set1_ps(2.0f / M_PI));
       }
 
+      alignas(32) float arr[8];
       __m256 OnedDeltaR =
-          _mm256_div_ps(_mm256_abs_ps(deltaR), _mm256_add_ps(r1_plus_r2, thre));
+          _mm256_div_ps((_mm256_store_ps(arr, deltaR), take_abs_f32_8(arr),
+                         _mm256_load_ps(arr)),
+                        _mm256_add_ps(r1_plus_r2, thre));
       __m256 OnedDeltaG =
-          _mm256_div_ps(_mm256_abs_ps(deltaG), _mm256_add_ps(g1_plus_g2, thre));
+          _mm256_div_ps((_mm256_store_ps(arr, deltaG), take_abs_f32_8(arr),
+                         _mm256_load_ps(arr)),
+                        _mm256_add_ps(g1_plus_g2, thre));
       __m256 OnedDeltaB =
-          _mm256_div_ps(_mm256_abs_ps(deltaB), _mm256_add_ps(b1_plus_b2, thre));
+          _mm256_div_ps((_mm256_store_ps(arr, deltaB), take_abs_f32_8(arr),
+                         _mm256_load_ps(arr)),
+                        _mm256_add_ps(b1_plus_b2, thre));
 
       __m256 sumOnedDelta = _mm256_add_ps(_mm256_add_ps(OnedDeltaR, OnedDeltaG),
                                           _mm256_add_ps(OnedDeltaB, thre));
@@ -577,12 +585,21 @@ private:
     // auto Rmax = allowedColors.rowwise().maxCoeff();
     auto S_ratio = Rmax.max(std::max(R, std::max(g, b)));
 
-    TempVectorXf_t dist =
-        (S_r.square() * w_r * deltaR.square() +
-         S_g.square() * w_g * deltaG.square() +
-         S_b.square() * w_b * deltaB.square()) /
-            (w_r + w_g + w_b) +
-        S_theta * S_ratio * theta.square(); //+S_theta*S_ratio*theta.square()
+    TempVectorXf_t dist(Allowed->color_count(), 1);
+    if constexpr (is_not_optical) {
+      dist = (S_r.square() * w_r * deltaR.square() +
+              S_g.square() * w_g * deltaG.square() +
+              S_b.square() * w_b * deltaB.square()) /
+                 (w_r + w_g + w_b) +
+             S_theta * S_ratio * theta.square();
+    } else {
+      dist.base() = (S_r.square() * w_r * deltaR.square() +
+                     S_g.square() * w_g * deltaG.square() +
+                     S_b.square() * w_b * deltaB.square()) /
+                        (w_r + w_g + w_b) +
+                    S_theta * S_ratio * theta.square();
+    }
+    //+S_theta*S_ratio*theta.square()
 #endif
     return find_result(dist);
   }
@@ -590,19 +607,16 @@ private:
   auto applyHSV(const Eigen::Array3f &c3) noexcept {
     // const ColorList &allowedColors = Allowed->HSV;
 
-    auto S_times_V = Allowed->hsv(1) * Allowed->hsv(2);
-    const float s_times_v = c3[1] * c3[2];
-    auto deltaX = 50.0f * (Allowed->hsv(0).cos() * S_times_V -
-                           s_times_v * std::cos(c3[0]));
-    auto deltaY = 50.0f * (Allowed->hsv(0).sin() * S_times_V -
-                           s_times_v * std::sin(c3[0]));
-    auto deltaZ = 50.0f * (Allowed->hsv(2) - c3[2]);
-
     TempVectorXf_t Diff(Allowed->color_count(), 1);
-    if constexpr (is_not_optical) {
-      Diff = deltaX.square() + deltaY.square() + deltaZ.square();
-    } else {
-      Diff.base() = deltaX.square() + deltaY.square() + deltaZ.square();
+    for (size_t idx = 0; idx < Allowed->color_count(); idx++) {
+      const float diff =
+          color_diff_HSV(c3[0], c3[1], c3[2], Allowed->HSV(idx, 0),
+                         Allowed->HSV(idx, 1), Allowed->HSV(idx, 2));
+      if constexpr (is_not_optical) {
+        Diff[idx] = diff;
+      } else {
+        Diff.base()[idx] = diff;
+      }
     }
     return find_result(Diff);
   }

@@ -7,6 +7,7 @@
 #include <QListWidgetItem>
 #include <QMessageBox>
 #include <magic_enum.hpp>
+#include <ranges>
 
 VCWind::VCWind(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::VCWind), kernel(VCL_create_kernel()) {
@@ -26,6 +27,18 @@ VCWind::VCWind(QWidget *parent)
   // for test
   connect(this->ui->action_test01, &QAction::triggered, this,
           &VCWind::make_block_list_page);
+
+  QAbstractButton *const clear_cache_when_toggle[] = {
+      this->ui->rb_algo_RGB,   this->ui->rb_algo_RGB_Better,
+      this->ui->rb_algo_HSV,   this->ui->rb_algo_Lab00,
+
+      this->ui->rb_algo_Lab94, this->ui->rb_algo_XYZ,
+      this->ui->cb_algo_dither};
+  for (size_t i = 0; i < sizeof(clear_cache_when_toggle) / sizeof(void *);
+       i++) {
+    connect(clear_cache_when_toggle[i], &QAbstractButton::toggled, this,
+            &VCWind::when_algo_dither_bottons_toggled);
+  }
 }
 
 VCWind::~VCWind() { delete this->ui; }
@@ -501,21 +514,14 @@ SCL_convertAlgo VCWind::current_selected_algo() const noexcept {
   return {};
 }
 
-void VCWind::on_lw_image_files_itemClicked(QListWidgetItem *item) noexcept {
-
-  this->setup_allowed_colorset();
-
-  auto it = this->image_cache.find(item->text());
-
-  if (it == this->image_cache.end()) {
-    return;
-  }
-
+void VCWind::show_image(decltype(image_cache)::iterator it) noexcept {
   this->ui->label_raw_image->setPixmap(QPixmap::fromImage(it->second.first));
 
   if (!it->second.second.isNull()) {
     this->ui->lable_converted->setPixmap(QPixmap::fromImage(it->second.second));
+    return;
   }
+  this->setup_allowed_colorset();
   this->setup_image(it->second.first);
   const bool ok = this->kernel->convert(this->current_selected_algo(),
                                         this->ui->cb_algo_dither->isChecked());
@@ -541,6 +547,24 @@ void VCWind::on_lw_image_files_itemClicked(QListWidgetItem *item) noexcept {
   this->ui->lable_converted->setPixmap(QPixmap::fromImage(img));
 }
 
+void VCWind::on_lw_image_files_itemClicked(QListWidgetItem *item) noexcept {
+
+  auto it = this->image_cache.find(item->text());
+
+  if (it == this->image_cache.end()) {
+    return;
+  }
+
+  this->show_image(it);
+}
+
+void VCWind::clear_convert_cache() noexcept {
+  this->ui->lable_converted->setPixmap(QPixmap());
+  for (auto &pair : this->image_cache) {
+    pair.second.second = QImage();
+  }
+}
+
 void VCWind::on_cb_show_raw_size_stateChanged(int state) noexcept {
   bool autoscale = (state == 0);
 
@@ -561,5 +585,27 @@ void VCWind::on_cb_show_converted_stateChanged(int state) noexcept {
     this->ui->lable_converted->show();
   } else {
     this->ui->lable_converted->hide();
+  }
+}
+
+VCWind::convert_option VCWind::current_convert_option() const noexcept {
+  return convert_option{this->current_selected_algo(),
+                        this->ui->cb_algo_dither->isChecked()};
+}
+
+void VCWind::when_algo_dither_bottons_toggled() noexcept {
+  static bool first_run{true};
+  static convert_option prev;
+
+  const auto current = this->current_convert_option();
+
+  if (first_run || prev != current) {
+    if (first_run) {
+      first_run = false;
+    }
+
+    this->clear_convert_cache();
+
+    prev = current;
   }
 }
