@@ -12,8 +12,6 @@ FetchContent_Declare(magic_enum
     OVERRIDE_FIND_PACKAGE
 )
 
-if(NOT ${magic_enum_POPULATED})
-    message(STATUS "Downaloding magic_enum......")
-endif()
+message(STATUS "Downaloding magic_enum......")
 
 FetchContent_MakeAvailable(magic_enum)

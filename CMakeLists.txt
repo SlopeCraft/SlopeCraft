@@ -121,12 +121,13 @@ add_subdirectory(VisualCraftL)
 add_subdirectory(VisualCraft)
 add_subdirectory(vccl)
 
-foreach(cmakerc ${SlopeCraft_resource_file_to_touch_and_remove})
-    # code here doesn't work here.
-    message(WARNING "Remove " ${cmakerc})
+if(EXISTS ${CMAKE_BINARY_DIR}/utilities/ColorManip/__rsc_ColorManip_cl_rc.c)
+    file(SIZE ${CMAKE_BINARY_DIR}/utilities/ColorManip/__rsc_ColorManip_cl_rc.c size_of_file)
 
-    # file(REMOVE ${cmakerc})
-endforeach(cmakerc ${SlopeCraft_resource_file_to_touch_and_remove})
+    if(${size_of_file} LESS_EQUAL 0)
+        # file(REMOVE ${CMAKE_BINARY_DIR}/utilities/ColorManip/__rsc_ColorManip_cl_rc.c)
+    endif()
+endif()
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 

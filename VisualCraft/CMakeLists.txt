@@ -20,8 +20,13 @@ set(VisualCraft_header_files
 )
 
 set(VisualCraft_source_files
+
     main.cpp
+
+    # sources for VCWind
     VCWind.cpp
+    VCWind_gpu.cpp
+
     advanced_qlist_widget_item.cpp
     CallBackFunctions.cpp
     VC_block_class.cpp
@@ -64,3 +69,5 @@ set_target_properties(VisualCraft PROPERTIES
 )
 
 qt_finalize_executable(VisualCraft)
+
+include(install.cmake)

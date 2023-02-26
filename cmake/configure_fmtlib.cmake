@@ -17,9 +17,7 @@ FetchContent_Declare(
   # FETCHCONTENT_TRY_FIND_PACKAGE_MODE ALWAYS FIND_PACKAGE_ARGS find_fmt_args
 )
 
-if(NOT ${fmt_POPULATED})
-  message(STATUS "Downaloding and building fmtlib......")
-endif()
+message(STATUS "Downaloding and building fmtlib......")
 
 FetchContent_MakeAvailable(fmt)
 
