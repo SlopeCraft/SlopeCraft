@@ -27,6 +27,7 @@ set(VisualCraft_source_files
     # sources for VCWind
     VCWind.cpp
     VCWind_gpu.cpp
+    VCWind_export.cpp
 
     advanced_qlist_widget_item.cpp
     CallBackFunctions.cpp

@@ -36,7 +36,7 @@
     <item row="0" column="0">
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="1">
-       <widget class="QTabWidget" name="tabWidget">
+       <widget class="QTabWidget" name="tabWidget_main">
         <property name="font">
          <font>
           <family>微软雅黑</family>
@@ -49,7 +49,7 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>3</number>
         </property>
         <property name="elideMode">
          <enum>Qt::ElideNone</enum>
@@ -598,14 +598,7 @@
               <string>导出</string>
              </attribute>
              <layout class="QGridLayout" name="gridLayout_17">
-              <item row="1" column="1">
-               <widget class="QPushButton" name="pushButton">
-                <property name="text">
-                 <string>开始执行</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
+              <item row="1" column="3">
                <spacer name="horizontalSpacer">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
@@ -618,7 +611,7 @@
                 </property>
                </spacer>
               </item>
-              <item row="0" column="0" colspan="2">
+              <item row="0" column="0" colspan="5">
                <widget class="QTableWidget" name="tw_build">
                 <property name="alternatingRowColors">
                  <bool>true</bool>
@@ -636,7 +629,7 @@
                 </column>
                 <column>
                  <property name="text">
-                  <string>大小</string>
+                  <string>大小（行，列）</string>
                  </property>
                 </column>
                 <column>
@@ -669,6 +662,58 @@
                   <string>进度</string>
                  </property>
                 </column>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QComboBox" name="combobox_export_type">
+                <property name="currentIndex">
+                 <number>-1</number>
+                </property>
+                <property name="placeholderText">
+                 <string>导出类型</string>
+                </property>
+                <property name="frame">
+                 <bool>true</bool>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>litematic投影</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>原版结构方块文件</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>WorldEdit原理图</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>转化后图像</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>平面示意图</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="1" column="4">
+               <widget class="QPushButton" name="pb_execute">
+                <property name="text">
+                 <string>开始执行</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QPushButton" name="pb_select_export_dir">
+                <property name="text">
+                 <string>设置导出位置</string>
+                </property>
                </widget>
               </item>
              </layout>
@@ -717,7 +762,7 @@
                 </property>
                 <layout class="QGridLayout" name="gridLayout_19">
                  <item row="1" column="0">
-                  <widget class="QPlainTextEdit" name="plainTextEdit_2">
+                  <widget class="QPlainTextEdit" name="pte_lite_regionname">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                      <horstretch>0</horstretch>
@@ -730,7 +775,7 @@
                   </widget>
                  </item>
                  <item row="0" column="0">
-                  <widget class="QPlainTextEdit" name="plainTextEdit">
+                  <widget class="QPlainTextEdit" name="pte_lite_name">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                      <horstretch>0</horstretch>
@@ -765,7 +810,7 @@
                   </widget>
                  </item>
                  <item row="2" column="0" colspan="4">
-                  <widget class="QPlainTextEdit" name="plainTextEdit_3">
+                  <widget class="QPlainTextEdit" name="pte_weschem_name">
                    <property name="placeholderText">
                     <string>名称（非文件名）</string>
                    </property>
@@ -851,7 +896,7 @@
                   </widget>
                  </item>
                  <item row="3" column="0" colspan="4">
-                  <widget class="QPlainTextEdit" name="plainTextEdit_4">
+                  <widget class="QPlainTextEdit" name="pte_weshem_mods">
                    <property name="placeholderText">
                     <string>需要的mod名（一行一个，默认为空）</string>
                    </property>

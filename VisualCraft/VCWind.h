@@ -115,10 +115,25 @@ private:
   convert_option current_convert_option() const noexcept;
 
   // for page 3 ------------------------------------------
+  QString get_dir_for_export() noexcept;
+
+  void flush_export_tabel() noexcept;
+
+  static constexpr int export_col_filename = 0;
+  static constexpr int export_col_imagesize = 1;
+  static constexpr int export_col_lite = 2;
+  static constexpr int export_col_structure = 3;
+  static constexpr int export_col_schem = 4;
+  static constexpr int export_col_converted = 5;
+  static constexpr int export_col_flagdiagram = 6;
+  static constexpr int export_col_progress = 7;
+
   // for page 4 ------------------------------------------
   void refresh_gpu_info() noexcept;
   void select_default_device() noexcept;
 private slots:
+  // for all pages
+  void on_tabWidget_main_currentChanged(int page) noexcept;
 
   // for page 0
 
@@ -153,6 +168,9 @@ private slots:
   void when_algo_dither_bottons_toggled() noexcept;
 
   // for page 3
+  // auto connected
+  void on_pb_select_export_dir_clicked() noexcept;
+  void on_pb_execute_clicked() noexcept;
   // for page 4
 
   // auto connected

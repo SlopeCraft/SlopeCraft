@@ -597,6 +597,8 @@ void VCWind::on_tb_add_images_clicked() noexcept {
 
     this->ui->lw_image_files->addItem(qlwi);
   }
+
+  this->flush_export_tabel();
 }
 
 void VCWind::on_tb_remove_images_clicked() noexcept {
@@ -611,6 +613,8 @@ void VCWind::on_tb_remove_images_clicked() noexcept {
     this->ui->lw_image_files->removeItemWidget(item);
     delete item;
   }
+
+  this->flush_export_tabel();
 }
 
 void VCWind::setup_image(const QImage &img) noexcept {
@@ -756,6 +760,8 @@ void VCWind::when_algo_dither_bottons_toggled() noexcept {
     this->clear_convert_cache();
   }
 }
+
+void VCWind::on_tabWidget_main_currentChanged(int page) noexcept {}
 
 /*
 void VCWind::when_basical_colorset_changed() noexcept {
