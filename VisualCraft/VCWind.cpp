@@ -3,11 +3,14 @@
 #include "advanced_qlist_widget_item.h"
 #include "ui_VCWind.h"
 
+#include <QCryptographicHash>
 #include <QFileDialog>
 #include <QListWidgetItem>
 #include <QMessageBox>
+#include <iostream>
 #include <magic_enum.hpp>
-#include <ranges>
+
+using std::cout, std::endl;
 
 VCWind::VCWind(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::VCWind), kernel(VCL_create_kernel()) {
@@ -26,7 +29,7 @@ VCWind::VCWind(QWidget *parent)
 
   // for test
   connect(this->ui->action_test01, &QAction::triggered, this,
-          &VCWind::make_block_list_page);
+          &VCWind::setup_block_widgets);
 
   QAbstractButton *const clear_cache_when_toggle[] = {
       this->ui->rb_algo_RGB,   this->ui->rb_algo_RGB_Better,
@@ -108,6 +111,76 @@ VCL_face_t VCWind::current_selected_face() const noexcept {
   return {};
 }
 
+VCWind::basic_colorset_option VCWind::current_basic_option() const noexcept {
+  basic_colorset_option ret;
+  for (int i = 0; i < this->ui->lw_rp->count(); i++) {
+    const auto qlwi = this->ui->lw_rp->item(i);
+    if (qlwi->checkState() != Qt::CheckState::Checked) {
+      continue;
+    }
+
+    const auto aqlwi = dynamic_cast<const advanced_qlwi *>(qlwi);
+
+    if (aqlwi->is_special()) {
+      // ./Blocks/VCL/Vanilla_1_12_2.zip
+      // ./Blocks/VCL/Vanilla_1_19_2.zip
+
+      if (this->current_selected_version() == SCL_gameVersion::MC12) {
+        ret.zips.emplace_back("./Blocks_VCL/Vanilla_1_12_2.zip");
+      } else {
+
+        ret.zips.emplace_back("./Blocks_VCL/Vanilla_1_19_2.zip");
+      }
+      continue;
+    }
+
+    QString filename = qlwi->text();
+    ret.zips.emplace_back(filename);
+  }
+  for (int i = 0; i < this->ui->lw_bsl->count(); i++) {
+    const auto qlwi = this->ui->lw_bsl->item(i);
+    if (qlwi->checkState() != Qt::CheckState::Checked) {
+      continue;
+    }
+
+    const auto aqlwi = dynamic_cast<const advanced_qlwi *>(qlwi);
+
+    if (aqlwi->is_special()) {
+      // ./Blocks/VCL/Vanilla_1_12_2.zip
+      // ./Blocks/VCL/Vanilla_1_19_2.zip
+      ret.jsons.emplace_back("./Blocks_VCL/VCL_blocks_fixed.json");
+
+      continue;
+    }
+
+    QString filename = qlwi->text();
+    ret.jsons.emplace_back(filename);
+  }
+  ret.face = this->current_selected_face();
+  ret.layers = this->ui->sb_max_layers->value();
+  ret.version = this->current_selected_version();
+  return ret;
+}
+
+QByteArray VCWind::checksum_basic_colorset_option(
+    const basic_colorset_option &opt) const noexcept {
+  QCryptographicHash hash(QCryptographicHash::Algorithm::Sha1);
+
+  for (const auto &zip : opt.zips) {
+    hash.addData(zip.toUtf8());
+  }
+
+  for (const auto &json : opt.jsons) {
+    hash.addData(json.toUtf8());
+  }
+
+  hash.addData(QByteArray((const char *)&opt.face, 1));
+  hash.addData(QByteArray((const char *)&opt.version, 1));
+  hash.addData(QByteArray((const char *)&opt.layers, 1));
+
+  return hash.result();
+}
+
 // utilitiy functions
 void VCWind::create_resource_pack() noexcept {
   VCL_destroy_resource_pack(this->rp);
@@ -138,7 +211,7 @@ void VCWind::create_resource_pack() noexcept {
     }
 
     const QString &filename = qlwi->text();
-    rp_filenames.emplace_back(filename.toLocal8Bit());
+    rp_filenames.emplace_back(filename.toUtf8());
   }
 
   rpfiles_charp.resize(rp_filenames.size());
@@ -174,7 +247,7 @@ void VCWind::create_block_state_list() noexcept {
     }
 
     const QString &filename = qlwi->text();
-    bsl_filenames.emplace_back(filename.toLocal8Bit());
+    bsl_filenames.emplace_back(filename.toUtf8());
   }
 
   jsonfiles_charp.resize(bsl_filenames.size());
@@ -245,12 +318,23 @@ void VCWind::on_pb_remove_bsl_clicked() noexcept {
 }
 
 // slot
-void VCWind::make_block_list_page() noexcept {
-  this->create_resource_pack();
-  this->create_block_state_list();
+void VCWind::setup_block_widgets() noexcept {
+  if (!this->is_basical_colorset_changed() &&
+      !this->map_VC_block_class.empty()) {
+    return;
+  }
+
+  this->setup_basical_colorset();
+
+  for (auto &pair : this->map_VC_block_class) {
+    this->ui->gl_sa_blocks->removeWidget(pair.second);
+    delete pair.second;
+  }
+
+  this->map_VC_block_class.clear();
 
   const size_t num_blocks = VCL_get_blocks_from_block_state_list_match(
-      this->bsl, this->current_selected_version(),
+      VCL_get_block_state_list(), this->current_selected_version(),
       this->current_selected_face(), nullptr, 0);
 
   std::vector<VCL_block *> buffer(num_blocks);
@@ -259,7 +343,7 @@ void VCWind::make_block_list_page() noexcept {
   }
 
   VCL_get_blocks_from_block_state_list_match(
-      this->bsl, this->current_selected_version(),
+      VCL_get_block_state_list(), this->current_selected_version(),
       this->current_selected_face(), buffer.data(), buffer.size());
 
   std::map<VCL_block_class_t, std::vector<VCL_block *>> blocks;
@@ -286,6 +370,10 @@ void VCWind::make_block_list_page() noexcept {
       if (it == this->map_VC_block_class.end() || it->second == nullptr) {
 
         class_widget = new VC_block_class(this);
+
+        connect(class_widget->chbox_enabled(), &QCheckBox::toggled, this,
+                &VCWind::when_algo_dither_bottons_toggled);
+
         this->map_VC_block_class.emplace(bcl, class_widget);
       } else {
         class_widget = it->second;
@@ -304,8 +392,13 @@ void VCWind::make_block_list_page() noexcept {
 
     // set images for radio buttons
     for (const auto &pair : class_widget->blocks_vector()) {
-      VCL_model *model = VCL_get_block_model(
-          pair.first, this->rp, this->current_selected_face(), nullptr);
+
+      connect(pair.second, &QCheckBox::toggled, this,
+              &VCWind::when_algo_dither_bottons_toggled);
+
+      VCL_model *model =
+          VCL_get_block_model(pair.first, VCL_get_resource_pack(),
+                              this->current_selected_face(), nullptr);
 
       if (model == nullptr) {
         continue;
@@ -342,8 +435,18 @@ void VCWind::make_block_list_page() noexcept {
   }
 }
 
+bool VCWind::is_basical_colorset_changed() const noexcept {
+
+  static QByteArray hash_prev;
+  auto curr_opt = this->current_basic_option();
+  QByteArray curr_hash = this->checksum_basic_colorset_option(curr_opt);
+  const bool ret = hash_prev != curr_hash;
+  hash_prev = curr_hash;
+  return ret;
+}
+
 void VCWind::setup_basical_colorset() noexcept {
-  if (VCL_is_basic_colorset_ok()) {
+  if (VCL_is_basic_colorset_ok() && !this->is_basical_colorset_changed()) {
     return;
   }
 
@@ -375,15 +478,48 @@ void VCWind::setup_basical_colorset() noexcept {
   }
 }
 
+QByteArray VCWind::checksum_allowed_colorset_option(
+    const allowed_colorset_option &opt) noexcept {
+  QCryptographicHash hash(QCryptographicHash::Algorithm::Sha1);
+
+  for (const VCL_block *blk : opt.blocks) {
+    const char *const id = VCL_get_block_id(blk);
+    hash.addData(QByteArray(id));
+  }
+
+  return hash.result();
+}
+
+bool VCWind::is_allowed_colorset_changed(
+    allowed_colorset_option *opt) const noexcept {
+
+  static QByteArray prev_hash;
+  this->selected_blocks(&opt->blocks);
+  QByteArray cur_hash = VCWind::checksum_allowed_colorset_option(*opt);
+
+  const bool ret = prev_hash != cur_hash;
+
+  prev_hash = cur_hash;
+
+  return ret;
+}
+
 void VCWind::setup_allowed_colorset() noexcept {
-  if (VCL_is_allowed_colorset_ok()) {
+  allowed_colorset_option cur_option;
+  if (VCL_is_allowed_colorset_ok() &&
+      !this->is_allowed_colorset_changed(&cur_option)) {
     return;
   }
   this->setup_basical_colorset();
-  std::vector<VCL_block *> blocks;
-  this->selected_blocks(&blocks);
 
-  const bool success = VCL_set_allowed_blocks(blocks.data(), blocks.size());
+  this->setup_block_widgets();
+
+  if (cur_option.blocks.empty()) {
+    this->selected_blocks(&cur_option.blocks);
+  }
+
+  const bool success = VCL_set_allowed_blocks(cur_option.blocks.data(),
+                                              cur_option.blocks.size());
 
   if (!success) {
     const auto ret = QMessageBox::critical(
@@ -396,6 +532,8 @@ void VCWind::setup_allowed_colorset() noexcept {
       return;
     }
   }
+
+  this->clear_convert_cache();
 }
 
 size_t
@@ -406,6 +544,8 @@ VCWind::selected_blocks(std::vector<VCL_block *> *blocks_dest) const noexcept {
   for (auto &pair : this->map_VC_block_class) {
     counter += pair.second->selected_blocks(blocks_dest, true);
   }
+
+  cout << "selected block count : " << counter << endl;
 
   return counter;
 }
@@ -463,13 +603,13 @@ void VCWind::on_tb_remove_images_clicked() noexcept {
   auto selected_items = this->ui->lw_image_files->selectedItems();
 
   for (auto item : selected_items) {
-    this->ui->lw_image_files->removeItemWidget(item);
-
     auto it = this->image_cache.find(item->text());
 
     if (it != this->image_cache.end()) {
       this->image_cache.erase(it);
     }
+    this->ui->lw_image_files->removeItemWidget(item);
+    delete item;
   }
 }
 
@@ -548,7 +688,6 @@ void VCWind::show_image(decltype(image_cache)::iterator it) noexcept {
 }
 
 void VCWind::on_lw_image_files_itemClicked(QListWidgetItem *item) noexcept {
-
   auto it = this->image_cache.find(item->text());
 
   if (it == this->image_cache.end()) {
@@ -559,9 +698,11 @@ void VCWind::on_lw_image_files_itemClicked(QListWidgetItem *item) noexcept {
 }
 
 void VCWind::clear_convert_cache() noexcept {
-  this->ui->lable_converted->setPixmap(QPixmap());
+  this->ui->lable_converted->setPixmap(QPixmap(0, 0));
   for (auto &pair : this->image_cache) {
     pair.second.second = QImage();
+
+    assert(pair.second.second.isNull());
   }
 }
 
@@ -593,19 +734,71 @@ VCWind::convert_option VCWind::current_convert_option() const noexcept {
                         this->ui->cb_algo_dither->isChecked()};
 }
 
-void VCWind::when_algo_dither_bottons_toggled() noexcept {
+bool VCWind::is_convert_algo_changed() const noexcept {
   static bool first_run{true};
   static convert_option prev;
 
-  const auto current = this->current_convert_option();
+  auto current = this->current_convert_option();
+  if (first_run) {
+    prev = current;
+    return true;
+  }
 
-  if (first_run || prev != current) {
-    if (first_run) {
-      first_run = false;
-    }
+  return prev != current;
+}
+
+void VCWind::when_algo_dither_bottons_toggled() noexcept {
+  allowed_colorset_option temp;
+
+  if (this->is_convert_algo_changed() ||
+      this->is_allowed_colorset_changed(&temp)) {
 
     this->clear_convert_cache();
-
-    prev = current;
   }
 }
+
+/*
+void VCWind::when_basical_colorset_changed() noexcept {
+  this->is_basical_colorset_changed = true;
+}
+
+void VCWind::when_allowed_colorset_changed() noexcept {
+  this->is_allowed_colorset_changed = true;
+}
+void VCWind::connect_when_basical_colorset_changed() noexcept {
+  connect(this->ui->rdb_direction_up, &QRadioButton::toggled, this,
+          &VCWind::when_basical_colorset_changed);
+  connect(this->ui->rdb_direction_side, &QRadioButton::toggled, this,
+          &VCWind::when_basical_colorset_changed);
+  connect(this->ui->rdb_direction_down, &QRadioButton::toggled, this,
+          &VCWind::when_basical_colorset_changed);
+
+  connect(this->ui->rdb_version_12, &QRadioButton::toggled, this,
+          &VCWind::when_basical_colorset_changed);
+  connect(this->ui->rdb_version_13, &QRadioButton::toggled, this,
+          &VCWind::when_basical_colorset_changed);
+  connect(this->ui->rdb_version_14, &QRadioButton::toggled, this,
+          &VCWind::when_basical_colorset_changed);
+  connect(this->ui->rdb_version_15, &QRadioButton::toggled, this,
+          &VCWind::when_basical_colorset_changed);
+  connect(this->ui->rdb_version_16, &QRadioButton::toggled, this,
+          &VCWind::when_basical_colorset_changed);
+  connect(this->ui->rdb_version_17, &QRadioButton::toggled, this,
+          &VCWind::when_basical_colorset_changed);
+  connect(this->ui->rdb_version_18, &QRadioButton::toggled, this,
+          &VCWind::when_basical_colorset_changed);
+  connect(this->ui->rdb_version_19, &QRadioButton::toggled, this,
+          &VCWind::when_basical_colorset_changed);
+
+  connect(this->ui->sb_max_layers, &QSpinBox::valueChanged, this,
+          &VCWind::when_basical_colorset_changed);
+
+  connect(this->ui->lw_rp, &QListWidget::itemClicked, this,
+          &VCWind::when_basical_colorset_changed);
+  connect(this->ui->lw_bsl, &QListWidget::itemClicked, this,
+          &VCWind::when_basical_colorset_changed);
+  // QListWidget::itemClicked
+}
+*/
+
+// void VCWind::connect_when_allowed_colorset_changed() noexcept {}

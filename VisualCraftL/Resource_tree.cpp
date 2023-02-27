@@ -30,10 +30,11 @@ auto split_by_slash(std::string_view str) noexcept {
 zipped_folder zipped_folder::from_zip(std::string_view zipname,
                                       bool *const ok) noexcept {
   zipped_folder result;
-  {
-    std::filesystem::path path = zipname;
+  if (true) {
+    std::filesystem::path path = (const char8_t *)(zipname).data();
     if (zipname.empty()) {
-      if (ok) *ok = false;
+      if (ok)
+        *ok = false;
       std::string msg =
           fmt::format("The filename \"{}\" of zip is empty.", zipname);
       ::VCL_report(VCL_report_type_t::error, msg.c_str());
@@ -41,7 +42,8 @@ zipped_folder zipped_folder::from_zip(std::string_view zipname,
     }
 
     if (!std::filesystem::is_regular_file(path)) {
-      if (ok) *ok = false;
+      if (ok)
+        *ok = false;
       std::string msg = fmt::format(
           "The filename \"{}\" does not refer to a regular file.", zipname);
       ::VCL_report(VCL_report_type_t::error, msg.c_str());
@@ -49,7 +51,8 @@ zipped_folder zipped_folder::from_zip(std::string_view zipname,
     }
 
     if (path.extension() != ".zip") {
-      if (ok) *ok = false;
+      if (ok)
+        *ok = false;
       std::string msg = fmt::format(
           "The filename \"{}\" extension name is not .zip", zipname);
       ::VCL_report(VCL_report_type_t::error, msg.c_str());
@@ -60,7 +63,8 @@ zipped_folder zipped_folder::from_zip(std::string_view zipname,
   zip_t *const zip = zip_open(zipname.data(), ZIP_RDONLY, &errorcode);
 
   if (zip == NULL) {
-    if (ok) *ok = false;
+    if (ok)
+      *ok = false;
     std::string msg = fmt::format(
         "Failed to open zip file : {}, error code = {}", zipname, errorcode);
     ::VCL_report(VCL_report_type_t::error, msg.c_str());
@@ -98,7 +102,8 @@ zipped_folder zipped_folder::from_zip(std::string_view zipname,
     destfile->__data.resize(stat.size);
     zip_file_t *const zfile = zip_fopen_index(zip, entry_idx, ZIP_FL_UNCHANGED);
     if (zfile == NULL) {
-      if (ok) *ok = false;
+      if (ok)
+        *ok = false;
       std::string msg = fmt::format(
           "Failed to open file in zip. index : {}, file name : {}\n", entry_idx,
           ::zip_get_name(zip, entry_idx, ZIP_FL_ENC_GUESS));
@@ -109,7 +114,8 @@ zipped_folder zipped_folder::from_zip(std::string_view zipname,
     zip_fread(zfile, destfile->__data.data(), stat.size);
   }
 
-  if (ok) *ok = true;
+  if (ok)
+    *ok = true;
 
   return result;
 }

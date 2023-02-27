@@ -19,6 +19,10 @@ void VC_block_class::erase_blocks() noexcept {
   this->blocks.clear();
 }
 
+QCheckBox *VC_block_class::chbox_enabled() noexcept {
+  return this->ui->cb_enable;
+}
+
 void VC_block_class::set_blocks(size_t num_blocks,
                                 VCL_block *const *const blocks,
                                 size_t cols) noexcept {

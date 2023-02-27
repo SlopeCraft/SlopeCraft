@@ -29,6 +29,18 @@ public:
     }
   };
 
+  struct basic_colorset_option {
+    std::vector<QString> zips;
+    std::vector<QString> jsons;
+    VCL_face_t face;
+    SCL_gameVersion version;
+    int layers;
+  };
+
+  struct allowed_colorset_option {
+    std::vector<VCL_block *> blocks;
+  };
+
 private:
   // for all pages
   Ui::VCWind *ui;
@@ -36,10 +48,12 @@ private:
   // for page 0
   VCL_resource_pack *rp{nullptr};
   VCL_block_state_list *bsl{nullptr};
+  // bool is_basical_colorset_changed{true};
 
   // for page 1
   std::map<VCL_block_class_t, VC_block_class *> map_VC_block_class{};
-  // for page 2
+  // bool is_allowed_colorset_changed{true};
+  //  for page 2
   std::map<QString, std::pair<QImage, QImage>> image_cache;
   // for page 3
   // for page 4
@@ -66,14 +80,33 @@ private:
   SCL_gameVersion current_selected_version() const noexcept;
   VCL_face_t current_selected_face() const noexcept;
 
+  basic_colorset_option current_basic_option() const noexcept;
+
+  QByteArray checksum_basic_colorset_option(
+      const basic_colorset_option &opt) const noexcept;
+
+  static QByteArray
+  checksum_allowed_colorset_option(const allowed_colorset_option &opt) noexcept;
+
+  bool is_basical_colorset_changed() const noexcept;
+
   static void append_default_to_rp_or_bsl(QListWidget *qlw,
                                           bool is_rp) noexcept;
   void setup_basical_colorset() noexcept;
-  void setup_allowed_colorset() noexcept;
-  // for page 1 ------------------------------------------
+
+  // void connect_when_basical_colorset_changed() noexcept;
+  //  for page 1 ------------------------------------------
   size_t selected_blocks(std::vector<VCL_block *> *blocks_dest) const noexcept;
-  void setup_image(const QImage &img) noexcept;
+  bool is_allowed_colorset_changed(allowed_colorset_option *opt) const noexcept;
+
+  void setup_allowed_colorset() noexcept;
+
+  bool is_convert_algo_changed() const noexcept;
+
+  // void connect_when_allowed_colorset_changed() noexcept;
+
   // for page 2 ------------------------------------------
+  void setup_image(const QImage &img) noexcept;
   SCL_convertAlgo current_selected_algo() const noexcept;
   void show_image(decltype(image_cache)::iterator) noexcept;
 
@@ -96,11 +129,15 @@ private slots:
   void on_pb_add_bsl_clicked() noexcept;
   void on_pb_remove_bsl_clicked() noexcept;
 
+  // manually connected
+  // void when_basical_colorset_changed() noexcept;
+
   // for page 1
 
   // manually connected
-  void make_block_list_page() noexcept;
-  // for page 2
+  void setup_block_widgets() noexcept;
+  // void when_allowed_colorset_changed() noexcept;
+  //  for page 2
 
   // auto connected
   void on_tb_add_images_clicked() noexcept;

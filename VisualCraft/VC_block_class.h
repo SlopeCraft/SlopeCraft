@@ -30,6 +30,8 @@ public:
 
   const auto &blocks_vector() const noexcept { return this->blocks; }
 
+  QCheckBox *chbox_enabled() noexcept;
+
 private:
   void erase_blocks() noexcept;
 
