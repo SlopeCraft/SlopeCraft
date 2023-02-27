@@ -49,7 +49,7 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>4</number>
+         <number>0</number>
         </property>
         <property name="elideMode">
          <enum>Qt::ElideNone</enum>
@@ -526,13 +526,13 @@
              <bool>true</bool>
             </property>
             <property name="dragDropMode">
-             <enum>QAbstractItemView::InternalMove</enum>
+             <enum>QAbstractItemView::DropOnly</enum>
             </property>
             <property name="selectionMode">
              <enum>QAbstractItemView::ExtendedSelection</enum>
             </property>
             <property name="movement">
-             <enum>QListView::Snap</enum>
+             <enum>QListView::Static</enum>
             </property>
             <property name="isWrapping" stdset="0">
              <bool>false</bool>
@@ -587,7 +587,289 @@
          <attribute name="title">
           <string>导出</string>
          </attribute>
-         <layout class="QGridLayout" name="gridLayout_7"/>
+         <layout class="QGridLayout" name="gridLayout_7">
+          <item row="0" column="0">
+           <widget class="QTabWidget" name="tabWidget_2">
+            <property name="currentIndex">
+             <number>0</number>
+            </property>
+            <widget class="QWidget" name="tab">
+             <attribute name="title">
+              <string>导出</string>
+             </attribute>
+             <layout class="QGridLayout" name="gridLayout_17">
+              <item row="1" column="1">
+               <widget class="QPushButton" name="pushButton">
+                <property name="text">
+                 <string>开始执行</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <spacer name="horizontalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="0" column="0" colspan="2">
+               <widget class="QTableWidget" name="tw_build">
+                <property name="alternatingRowColors">
+                 <bool>true</bool>
+                </property>
+                <property name="columnCount">
+                 <number>8</number>
+                </property>
+                <attribute name="horizontalHeaderCascadingSectionResizes">
+                 <bool>false</bool>
+                </attribute>
+                <column>
+                 <property name="text">
+                  <string>图像</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>大小</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>生成litematica</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>生成结构方块文件</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>生成WE原理图</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>生成转化后图像</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>生成平面示意图</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>进度</string>
+                 </property>
+                </column>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="tab_2">
+             <attribute name="title">
+              <string>三维结构选项</string>
+             </attribute>
+             <layout class="QGridLayout" name="gridLayout_18">
+              <item row="0" column="1">
+               <widget class="QGroupBox" name="groupBox_11">
+                <property name="title">
+                 <string>原版结构方块文件(*.nbt)</string>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_20">
+                 <item row="0" column="0">
+                  <widget class="QCheckBox" name="cb_structure_is_air_void">
+                   <property name="text">
+                    <string>用结构空位表示空气</string>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <spacer name="verticalSpacer_6">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QGroupBox" name="groupBox_10">
+                <property name="title">
+                 <string>Litematica投影(*.litematic)</string>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_19">
+                 <item row="1" column="0">
+                  <widget class="QPlainTextEdit" name="plainTextEdit_2">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="placeholderText">
+                    <string>区域名称</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QPlainTextEdit" name="plainTextEdit">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="placeholderText">
+                    <string>投影名称（非文件名）</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item row="0" column="2">
+               <widget class="QGroupBox" name="groupBox_12">
+                <property name="title">
+                 <string>WorldEdit原理图(*.schem) (仅1.13+)</string>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_21">
+                 <item row="1" column="3">
+                  <widget class="QSpinBox" name="sb_weoffset_z">
+                   <property name="prefix">
+                    <string notr="true">z: </string>
+                   </property>
+                   <property name="minimum">
+                    <number>-32767</number>
+                   </property>
+                   <property name="maximum">
+                    <number>32767</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0" colspan="4">
+                  <widget class="QPlainTextEdit" name="plainTextEdit_3">
+                   <property name="placeholderText">
+                    <string>名称（非文件名）</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="2">
+                  <widget class="QSpinBox" name="sb_weoffset_y">
+                   <property name="prefix">
+                    <string notr="true">y: </string>
+                   </property>
+                   <property name="minimum">
+                    <number>-32767</number>
+                   </property>
+                   <property name="maximum">
+                    <number>32767</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="3">
+                  <widget class="QSpinBox" name="sb_offset_z">
+                   <property name="prefix">
+                    <string notr="true">z: </string>
+                   </property>
+                   <property name="minimum">
+                    <number>-32767</number>
+                   </property>
+                   <property name="maximum">
+                    <number>32767</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QSpinBox" name="sb_weoffset_x">
+                   <property name="prefix">
+                    <string notr="true">x: </string>
+                   </property>
+                   <property name="minimum">
+                    <number>-32767</number>
+                   </property>
+                   <property name="maximum">
+                    <number>32767</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label">
+                   <property name="text">
+                    <string>Offset</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_2">
+                   <property name="text">
+                    <string>WEOffset</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QSpinBox" name="sb_offset_x">
+                   <property name="prefix">
+                    <string notr="true">x: </string>
+                   </property>
+                   <property name="minimum">
+                    <number>-32767</number>
+                   </property>
+                   <property name="maximum">
+                    <number>32767</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="2">
+                  <widget class="QSpinBox" name="sb_offset_y">
+                   <property name="prefix">
+                    <string notr="true">y: </string>
+                   </property>
+                   <property name="minimum">
+                    <number>-32767</number>
+                   </property>
+                   <property name="maximum">
+                    <number>32767</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0" colspan="4">
+                  <widget class="QPlainTextEdit" name="plainTextEdit_4">
+                   <property name="placeholderText">
+                    <string>需要的mod名（一行一个，默认为空）</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="tab_3">
+             <attribute name="title">
+              <string>平面示意图选项</string>
+             </attribute>
+            </widget>
+           </widget>
+          </item>
+         </layout>
         </widget>
         <widget class="QWidget" name="tab_gpu">
          <attribute name="title">
@@ -672,6 +954,9 @@
                </property>
                <property name="placeholderText">
                 <string>选择计算设备</string>
+               </property>
+               <property name="duplicatesEnabled">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
