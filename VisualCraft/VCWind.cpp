@@ -761,7 +761,7 @@ void VCWind::when_algo_dither_bottons_toggled() noexcept {
   }
 }
 
-void VCWind::on_tabWidget_main_currentChanged(int page) noexcept {}
+void VCWind::on_tabWidget_main_currentChanged(int) noexcept {}
 
 /*
 void VCWind::when_basical_colorset_changed() noexcept {

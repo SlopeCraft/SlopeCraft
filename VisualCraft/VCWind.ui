@@ -49,7 +49,7 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>0</number>
         </property>
         <property name="elideMode">
          <enum>Qt::ElideNone</enum>
@@ -349,8 +349,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>820</width>
-                  <height>303</height>
+                  <width>98</width>
+                  <height>28</height>
                  </rect>
                 </property>
                 <layout class="QGridLayout" name="gl_sa_blocks"/>

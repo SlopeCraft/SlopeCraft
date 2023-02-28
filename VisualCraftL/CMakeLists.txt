@@ -8,9 +8,30 @@ set(VCL_enable_internal_test OFF)
 include(config_versions.cmake)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    file(STRINGS others/VisualCraftL.def.in VCL_def_funs)
+
+    set(VCL_counter 0)
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/others/VisualCraftL.def "")
+
+    foreach(VCL_fun_name ${VCL_def_funs})
+        file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/others/VisualCraftL.def ${VCL_fun_name})
+
+        if(VCL_counter GREATER 0)
+            file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/others/VisualCraftL.def "    @" ${VCL_counter} "\n")
+        else()
+            file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/others/VisualCraftL.def "\n")
+        endif()
+
+        math(EXPR VCL_counter "${VCL_counter} +1")
+    endforeach(VCL_fun_name ${VCL_def_funs})
+
+    unset(VCL_def_funs)
+    unset(VCL_counter)
+
     set(VCL_win_sources
-        others/VisualCraftL.def
+        ${CMAKE_CURRENT_BINARY_DIR}/others/VisualCraftL.def
         ${CMAKE_CURRENT_BINARY_DIR}/others/VisualCraftL.rc)
+
 else()
     set(VCL_win_sources)
 endif()
