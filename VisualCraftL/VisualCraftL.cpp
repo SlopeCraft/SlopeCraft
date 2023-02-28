@@ -834,3 +834,5 @@ VCL_EXPORT_FUN void VCL_release_device(VCL_GPU_Device *dev) { delete dev; }
 VCL_EXPORT_FUN const char *VCL_get_device_name(const VCL_GPU_Device *dev) {
   return dev->name.c_str();
 }
+
+VCL_EXPORT_FUN VCL_biome_info VCL_get_biome_info(VCL_biome_t) {}
