@@ -608,7 +608,7 @@ private:
     // const ColorList &allowedColors = Allowed->HSV;
 
     TempVectorXf_t Diff(Allowed->color_count(), 1);
-    for (size_t idx = 0; idx < Allowed->color_count(); idx++) {
+    for (int idx = 0; idx < Allowed->color_count(); idx++) {
       const float diff =
           color_diff_HSV(c3[0], c3[1], c3[2], Allowed->HSV(idx, 0),
                          Allowed->HSV(idx, 1), Allowed->HSV(idx, 2));

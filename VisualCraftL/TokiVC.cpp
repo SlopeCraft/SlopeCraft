@@ -230,6 +230,10 @@ bool add_color_trans_to_trans_recurs(
   }
 
   for (const VCL_block *cblkp : bs_transparent) {
+    if (cblkp == accumulate_blocks.back()) {
+      continue;
+    }
+
     memcpy(img.data(), front.data(), front.size() * sizeof(uint32_t));
     std::vector<const VCL_block *> blocks(accumulate_blocks);
     blocks.emplace_back(cblkp);

@@ -1,5 +1,6 @@
 #include "VisualCraftL.h"
 #include <stdlib.h>
+#include <stdint.h>
 
 
 VCL_EXPORT_FUN const char *VCL_version_string() {
@@ -18,7 +19,6 @@ VCL_EXPORT_FUN int VCL_version_component(int i) {
         case 3:
             return 0;
         default:
-            abort();
-            return 0;
+            return INT_MIN;
     }
 }

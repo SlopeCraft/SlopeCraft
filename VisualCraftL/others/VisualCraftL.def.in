@@ -42,6 +42,7 @@ VCL_get_report_callback
 VCL_set_report_callback
 VCL_version_string
 VCL_version_component
+VCL_is_version_ok
 VCL_platform_num
 VCL_get_platform
 VCL_release_platform
@@ -50,5 +51,4 @@ VCL_get_device_num
 VCL_get_device
 VCL_release_device
 VCL_get_device_name
-VCL_biome_temperature
-VCL_biome_downfall
+VCL_get_biome_info

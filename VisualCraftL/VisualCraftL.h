@@ -197,6 +197,24 @@ public:
   virtual void converted_image(uint32_t *dest, int64_t *rows, int64_t *cols,
                                bool write_dest_row_major) const noexcept = 0;
 
+  struct flag_diagram_option {
+    const uint64_t lib_version{SC_VERSION_U64};
+
+    // [row_start,row_end) * [o,col_count) will be written
+    int64_t row_start;
+    int64_t row_end;
+    int32_t split_line_row_margin; // 0 or negative number means no split lines
+    int32_t split_line_col_margin; // 0 or negative number means no split lines
+  };
+
+  virtual void flag_diagram(uint32_t *image_u8c3_rowmajor,
+                            const flag_diagram_option &, int layer_idx,
+                            int64_t *rows_required_dest,
+                            int64_t *cols_required_dest) const noexcept = 0;
+  virtual bool export_flag_diagram(const char *png_filename,
+                                   const flag_diagram_option &,
+                                   int layer_idx) const noexcept = 0;
+
   ////////////////////////////////////////////////////////////////////////
   virtual bool build() noexcept = 0;
   virtual int64_t xyz_size(int64_t *x = nullptr, int64_t *y = nullptr,
@@ -248,6 +266,7 @@ struct VCL_set_resource_option {
   const uint64_t lib_version{SC_VERSION_U64};
   SCL_gameVersion version;
   int32_t max_block_layers;
+  VCL_biome_t biome;
   VCL_face_t exposed_face;
 };
 
@@ -377,9 +396,10 @@ i =
   1 -> minor version
   2 -> patch version
   3 -> tweak version
-  if other values, the function will call abort().
+  if other values, the function will return INT_MIN.
 */
 VCL_EXPORT_FUN int VCL_version_component(int i);
+VCL_EXPORT_FUN bool VCL_is_version_ok(uint64_t version_at_caller_s_build_time);
 
 class VCL_GPU_Platform;
 class VCL_GPU_Device;

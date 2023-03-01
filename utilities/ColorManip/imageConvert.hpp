@@ -229,6 +229,18 @@ public:
     }
   }
 
+  colorid_t color_id(int64_t r, int64_t c) const noexcept {
+    assert(r >= 0 && r < this->rows());
+    assert(c >= 0 && c < this->cols());
+
+    auto it = this->_color_hash.find(
+        convert_unit{this->_dithered_image(r, c), this->algo});
+    if (it == this->_color_hash.end()) {
+      abort();
+    }
+    return it->second.color_id();
+  }
+
   inline void converted_image(Eigen::ArrayXX<ARGB> &dest) const noexcept {
     dest.setZero(this->rows(), this->cols());
 

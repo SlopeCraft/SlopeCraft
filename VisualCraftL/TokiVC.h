@@ -69,6 +69,13 @@ public:
   void converted_image(uint32_t *dest, int64_t *rows, int64_t *cols,
                        bool write_dest_row_major) const noexcept override;
 
+  void flag_diagram(uint32_t *image_u8c3_rowmajor, const flag_diagram_option &,
+                    int layer_idx, int64_t *rows_required_dest,
+                    int64_t *cols_required_dest) const noexcept override;
+  bool export_flag_diagram(const char *png_filename,
+                           const flag_diagram_option &,
+                           int layer_idx) const noexcept override;
+
   bool build() noexcept override;
   int64_t xyz_size(int64_t *x, int64_t *y, int64_t *z) const noexcept override;
 
@@ -106,6 +113,7 @@ private:
   static std::vector<
       std::variant<const VCL_block *, std::vector<const VCL_block *>>>
       LUT_basic_color_idx_to_blocks;
+
   static std::unordered_map<const VCL_block *, uint16_t> blocks_allowed;
 
 private:
@@ -116,6 +124,10 @@ private:
   libSchem::Schem schem;
 
   void fill_schem_blocklist_no_lock() noexcept;
+
+  void draw_flag_diagram_to_memory(uint32_t *image_u8c3_rowmajor,
+                                   const flag_diagram_option &,
+                                   int layer_idx) const noexcept;
 };
 
 namespace TokiVC_internal {
