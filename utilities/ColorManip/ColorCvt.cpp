@@ -42,8 +42,8 @@ ARGB ComposeColor(const ARGB front, const ARGB back) noexcept {
 
 ARGB ComposeColor_background_half_transparent(const ARGB front,
                                               const ARGB back) noexcept {
-  int alpha_front = getA(front);
-  int alpha_back = getA(back);
+  const int alpha_front = getA(front);
+  const int alpha_back = getA(back);
 
   if (alpha_back <= 0) {
     return front;
@@ -54,21 +54,25 @@ ARGB ComposeColor_background_half_transparent(const ARGB front,
   if (alpha_front >= 255)
     return front;
 
-  int result_alpha = alpha_front + alpha_back - alpha_back * alpha_front / 255;
+  // int result_alpha = alpha_front + alpha_back - alpha_back * alpha_front /
+  // 255;
+
+  const int result_alpha = alpha_front + alpha_back * (255 - alpha_front) / 255;
 
   if (result_alpha <= 0) {
     return 0;
   }
 
-  int result_red = (getR(front) * alpha_front * (255 - alpha_back) +
-                    getR(back) * alpha_back * 255) /
-                   255 / result_alpha;
-  int result_green = (getG(front) * alpha_front * (255 - alpha_back) +
-                      getG(back) * alpha_back * 255) /
-                     255 / result_alpha;
-  int result_blue = (getB(front) * alpha_front * (255 - alpha_back) +
-                     getB(back) * alpha_back * 255) /
-                    255 / result_alpha;
+  const int result_red = (255 * getR(front) * alpha_front +
+                          getR(back) * alpha_back * (255 - alpha_front)) /
+                         (255 * 255 * 255 * alpha_front);
+
+  const int result_green = (255 * getG(front) * alpha_front +
+                            getG(back) * alpha_back * (255 - alpha_front)) /
+                           (255 * 255 * 255 * alpha_front);
+  const int result_blue = (255 * getB(front) * alpha_front +
+                           getB(back) * alpha_back * (255 - alpha_front)) /
+                          (255 * 255 * 255 * alpha_front);
 
   return ARGB32(result_red, result_green, result_blue, result_alpha);
 }
