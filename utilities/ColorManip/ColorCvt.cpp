@@ -26,53 +26,68 @@ This file is part of SlopeCraft.
 #include <stdio.h>
 #include <utility>
 
+#include <assert.h>
+
 static constexpr float threshold = 1e-10f;
 
 #define deg2rad(deg) ((deg)*M_PI / 180.0)
 
-ARGB ComposeColor(const ARGB front, const ARGB back) noexcept {
-  int red =
-      (getR(front) * getA(front) + getR(back) * (255 - getA(front))) / 255;
-  int green =
-      (getG(front) * getA(front) + getG(back) * (255 - getA(front))) / 255;
-  int blue =
-      (getB(front) * getA(front) + getB(back) * (255 - getA(front))) / 255;
+ARGB ComposeColor(const ARGB top, const ARGB back) noexcept {
+  int red = (getR(top) * getA(top) + getR(back) * (255 - getA(top))) / 255;
+  int green = (getG(top) * getA(top) + getG(back) * (255 - getA(top))) / 255;
+  int blue = (getB(top) * getA(top) + getB(back) * (255 - getA(top))) / 255;
   return ARGB32(red, green, blue);
 }
 
-ARGB ComposeColor_background_half_transparent(const ARGB front,
+ARGB ComposeColor_background_half_transparent(const ARGB top,
                                               const ARGB back) noexcept {
-  const int alpha_front = getA(front);
+  const int alpha_top = getA(top);
   const int alpha_back = getA(back);
 
   if (alpha_back <= 0) {
-    return front;
+    return top;
   }
-  if (alpha_front <= 0)
+  if (alpha_top <= 0)
     return back;
 
-  if (alpha_front >= 255)
-    return front;
+  if (alpha_top >= 255)
+    return top;
 
-  // int result_alpha = alpha_front + alpha_back - alpha_back * alpha_front /
+  // int result_alpha = alpha_top + alpha_back - alpha_back * alpha_top /
   // 255;
+  int result_red, result_green, result_blue, result_alpha;
+  {
+    const float aT = alpha_top / 255.0f;
+    const float aB = alpha_back / 255.0f;
 
-  const int result_alpha = alpha_front + alpha_back * (255 - alpha_front) / 255;
+    const float aF = aT + aB - aT * aB;
 
-  if (result_alpha <= 0) {
-    return 0;
+    result_alpha = aF * 255;
+
+    {
+      const float rT = getR(top) / 255.0f;
+      const float rB = getR(back) / 255.0f;
+      const float rF = (rT * aT * (1 - aB) + rB * aB) / (aF);
+      result_red = rF * 255;
+    }
+    {
+      const float gT = getG(top) / 255.0f;
+      const float gB = getG(back) / 255.0f;
+      const float gF = (gT * aT * (1 - aB) + gB * aB) / (aF);
+      result_green = gF * 255;
+    }
+    {
+      const float bT = getB(top) / 255.0f;
+      const float bB = getB(back) / 255.0f;
+      const float bF = (bT * aT * (1 - aB) + bB * aB) / (aF);
+      result_blue = bF * 255;
+    }
   }
 
-  const int result_red = (255 * getR(front) * alpha_front +
-                          getR(back) * alpha_back * (255 - alpha_front)) /
-                         (255 * 255 * 255 * alpha_front);
-
-  const int result_green = (255 * getG(front) * alpha_front +
-                            getG(back) * alpha_back * (255 - alpha_front)) /
-                           (255 * 255 * 255 * alpha_front);
-  const int result_blue = (255 * getB(front) * alpha_front +
-                           getB(back) * alpha_back * (255 - alpha_front)) /
-                          (255 * 255 * 255 * alpha_front);
+  assert(result_alpha >= 0 && result_alpha <= 255);
+  assert(result_red >= 0 && result_red <= 255);
+  assert(result_green >= 0 && result_green <= 255);
+  assert(result_blue >= 0 && result_blue <= 255);
 
   return ARGB32(result_red, result_green, result_blue, result_alpha);
 }
