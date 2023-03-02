@@ -42,6 +42,13 @@ VCWind::VCWind(QWidget *parent)
     connect(clear_cache_when_toggle[i], &QAbstractButton::toggled, this,
             &VCWind::when_algo_dither_bottons_toggled);
   }
+
+  this->ui->combobox_select_biome->clear();
+
+  for (const auto &b : magic_enum::enum_values<VCL_biome_t>()) {
+    this->ui->combobox_select_biome->addItem(
+        QString::fromUtf8(VCL_biome_name(b, true)), int(b));
+  }
 }
 
 VCWind::~VCWind() { delete this->ui; }

@@ -426,6 +426,7 @@ struct VCL_biome_info {
 };
 
 VCL_EXPORT_FUN VCL_biome_info VCL_get_biome_info(VCL_biome_t);
+VCL_EXPORT_FUN const char *VCL_biome_name(VCL_biome_t, uint8_t is_ZH);
 }
 
 #endif // SLOPECRAFT_VISUALCRAFT_VISUALCRAFT_H

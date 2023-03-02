@@ -431,7 +431,7 @@ bool VCL_resource_pack::override_texture(
                            getB(ARGB_orignal));
 
     // this pixel is not to be colored.
-    if (max_RGB - min_RGB < 5) {
+    if (max_RGB - min_RGB >= 5) {
       img(idx) = ARGB_orignal;
       continue;
     }
@@ -440,7 +440,7 @@ bool VCL_resource_pack::override_texture(
     RGB2HSV(getR(ARGB_orignal) / 255.0f, getG(ARGB_orignal) / 255.0f,
             getB(ARGB_orignal) / 255.0f, Hp, Sp, Vp);
 
-    Vp *= k;
+    Vp = std::clamp(Vp * k, 0.0f, 1.0f);
     Hp = Hs;
     Sp = Ss;
 
