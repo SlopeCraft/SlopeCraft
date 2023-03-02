@@ -21,6 +21,7 @@ struct inputs {
   bool dither{false};
   bool show_color_num{false};
   VCL_biome_t biome{VCL_biome_t::the_void};
+  bool leaves_transparent{false};
   //  images
   std::vector<std::string> images;
 

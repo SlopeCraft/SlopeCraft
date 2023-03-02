@@ -55,6 +55,8 @@ int main(int argc, char **argv) {
       ->default_val("the_void")
       ->check(CLI::IsMember(magic_enum::enum_names<VCL_biome_t>()))
       ->expected(1);
+  app.add_flag("--leaves-transparent,--ltp", input.leaves_transparent)
+      ->default_val(false);
 
   app.add_flag("--dither", input.dither,
                "Use Floyd-Steinberg dithering to improve the result of image "

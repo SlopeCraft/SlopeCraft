@@ -230,6 +230,9 @@ VCL_resource_pack::find_model(const std::string &block_state_str,
    */
 
   if (it_state == this->block_states.end()) {
+    if (buffer.pure_id == "air") {
+      return block_model::model{};
+    }
     std::string msg =
         fmt::format("Undefined reference to block state whose pure block id "
                     "is : \"{}\"  and full block id is : \"{}\"\n",

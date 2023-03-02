@@ -96,6 +96,8 @@ int set_resource(VCL_Kernel *kernel, const inputs &input) noexcept {
   option.version = input.version;
   option.max_block_layers = input.layers;
   option.exposed_face = input.face;
+  option.biome = input.biome;
+  option.is_render_quality_fast = !input.leaves_transparent;
 
   if (!VCL_set_resource_move(&rp, &bsl, option)) {
     cout << "Failed to set resource pack" << endl;
