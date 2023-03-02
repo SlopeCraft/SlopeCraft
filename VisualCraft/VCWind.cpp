@@ -43,12 +43,7 @@ VCWind::VCWind(QWidget *parent)
             &VCWind::when_algo_dither_bottons_toggled);
   }
 
-  this->ui->combobox_select_biome->clear();
-
-  for (const auto &b : magic_enum::enum_values<VCL_biome_t>()) {
-    this->ui->combobox_select_biome->addItem(
-        QString::fromUtf8(VCL_biome_name(b, true)), int(b));
-  }
+  this->setup_ui_select_biome();
 }
 
 VCWind::~VCWind() { delete this->ui; }
@@ -73,6 +68,15 @@ void VCWind::append_default_to_rp_or_bsl(QListWidget *qlw,
   const QString txt = is_rp ? VCWind::tr("原版资源包") : VCWind::tr("原版json");
   advanced_qlwi *aqlwi = new advanced_qlwi(txt, true);
   qlw->addItem(aqlwi);
+}
+
+void VCWind::setup_ui_select_biome() noexcept {
+  this->ui->combobox_select_biome->clear();
+
+  for (const auto &b : magic_enum::enum_values<VCL_biome_t>()) {
+    this->ui->combobox_select_biome->addItem(
+        QString::fromUtf8(VCL_biome_name(b, true)), int(b));
+  }
 }
 
 // utilitiy functions
@@ -166,6 +170,9 @@ VCWind::basic_colorset_option VCWind::current_basic_option() const noexcept {
   ret.face = this->current_selected_face();
   ret.layers = this->ui->sb_max_layers->value();
   ret.version = this->current_selected_version();
+  ret.biome =
+      (VCL_biome_t)this->ui->combobox_select_biome->currentData().toInt();
+  ret.is_leaves_transparent = this->ui->cb_leaves_transparent->isChecked();
   return ret;
 }
 
@@ -181,9 +188,12 @@ QByteArray VCWind::checksum_basic_colorset_option(
     hash.addData(json.toUtf8());
   }
 
-  hash.addData(QByteArray((const char *)&opt.face, 1));
-  hash.addData(QByteArray((const char *)&opt.version, 1));
-  hash.addData(QByteArray((const char *)&opt.layers, 1));
+  hash.addData(QByteArray((const char *)&opt.face, sizeof(opt.face)));
+  hash.addData(QByteArray((const char *)&opt.version, sizeof(opt.version)));
+  hash.addData(QByteArray((const char *)&opt.layers, sizeof(opt.layers)));
+  hash.addData(QByteArrayView((const char *)&opt.biome, sizeof(opt.biome)));
+  hash.addData(QByteArrayView((const char *)&opt.is_leaves_transparent,
+                              sizeof(opt.is_leaves_transparent)));
 
   return hash.result();
 }
@@ -469,6 +479,9 @@ void VCWind::setup_basical_colorset() noexcept {
   option.exposed_face = this->current_selected_face();
   option.version = this->current_selected_version();
   option.max_block_layers = this->ui->sb_max_layers->value();
+  option.biome =
+      (VCL_biome_t)this->ui->combobox_select_biome->currentData().toInt();
+  option.is_render_quality_fast = !this->ui->cb_leaves_transparent->isChecked();
 
   const bool success = VCL_set_resource_move(&this->rp, &this->bsl, option);
 

@@ -571,7 +571,7 @@ public:
   VCL_resource_pack(const VCL_resource_pack &src) = delete;
   VCL_resource_pack(VCL_resource_pack &&) = default;
 
-  const VCL_resource_pack &operator=(const VCL_resource_pack &src) noexcept {
+  VCL_resource_pack &operator=(const VCL_resource_pack &src) noexcept {
     if (!this->copy(src)) {
       abort();
     }
@@ -579,9 +579,44 @@ public:
     return *this;
   }
 
+  VCL_resource_pack &operator=(VCL_resource_pack &&src) noexcept {
+    /**
+
+  std::unordered_map<std::string, block_model::model> block_models;
+  std::unordered_map<std::string, Eigen::Array<ARGB, Eigen::Dynamic,
+                                               Eigen::Dynamic, Eigen::RowMajor>>
+      textures_original;
+  std::unordered_map<std::string,
+                     std::variant<resource_json::block_states_variant,
+                                  resource_json::block_state_multipart>>
+      block_states;
+  block_model::EImgRowMajor_t colormap_grass;
+  block_model::EImgRowMajor_t colormap_foliage;
+
+  std::unordered_map<std::string, Eigen::Array<ARGB, Eigen::Dynamic,
+                                               Eigen::Dynamic, Eigen::RowMajor>>
+      textures_override;
+
+  bool is_MC12{false};
+    */
+
+    this->block_models = std::move(src.block_models);
+    this->textures_original = std::move(src.textures_original);
+    this->textures_override = std::move(src.textures_override);
+    this->block_states = std::move(src.block_states);
+    this->colormap_foliage = std::move(src.colormap_foliage);
+    this->colormap_grass = std::move(src.colormap_grass);
+
+    this->is_MC12 = src.is_MC12;
+
+    return *this;
+  }
+
   using namespace_name_t = std::string;
 
   inline void set_is_MC12(bool val) noexcept { this->is_MC12 = val; }
+
+  bool add_colormaps(const zipped_folder &resource_pack_root) noexcept;
 
   bool add_textures(const zipped_folder &resourece_pack_root,
                     const bool on_conflict_replace_old = true) noexcept;
@@ -658,8 +693,8 @@ private:
                      std::variant<resource_json::block_states_variant,
                                   resource_json::block_state_multipart>>
       block_states;
-  block_model::EImgRowMajor_t colormap_grass{256, 256};
-  block_model::EImgRowMajor_t colormap_foliage{256, 256};
+  block_model::EImgRowMajor_t colormap_grass;
+  block_model::EImgRowMajor_t colormap_foliage;
 
   std::unordered_map<std::string, Eigen::Array<ARGB, Eigen::Dynamic,
                                                Eigen::Dynamic, Eigen::RowMajor>>

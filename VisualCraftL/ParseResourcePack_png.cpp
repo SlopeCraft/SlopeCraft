@@ -210,8 +210,28 @@ resize_image_nearest(
   return result;
 }
 
+bool resource_pack::add_colormaps(const zipped_folder &rpr) noexcept {
+  this->colormap_grass.setZero(256, 256);
+  this->colormap_foliage.setZero(256, 256);
+
+  if (!this->add_colormap(rpr, "grass.png", this->colormap_grass)) {
+    return false;
+  }
+  assert(this->colormap_grass.rows() == 256);
+  assert(this->colormap_grass.cols() == 256);
+
+  if (!this->add_colormap(rpr, "foliage.png", this->colormap_foliage)) {
+    return false;
+  }
+  assert(this->colormap_foliage.rows() == 256);
+  assert(this->colormap_foliage.cols() == 256);
+
+  return true;
+}
+
 bool resource_pack::add_textures(const zipped_folder &rpr,
                                  const bool conflict_conver_old) noexcept {
+
   const zipped_folder *const assets = rpr.subfolder("assets");
   if (assets == nullptr) {
     ::VCL_report(VCL_report_type_t::error,
@@ -257,14 +277,6 @@ bool resource_pack::add_textures(const zipped_folder &rpr,
     if (!success) {
       return false;
     }
-  }
-
-  if (!this->add_colormap(rpr, "grass.png", this->colormap_grass)) {
-    return false;
-  }
-
-  if (!this->add_colormap(rpr, "foliage.png", this->colormap_foliage)) {
-    return false;
   }
 
   return true;
@@ -400,7 +412,7 @@ bool resource_pack::add_colormap(const zipped_folder &resourece_pack_root,
 
   if (ptr == nullptr || !ptr->files.contains(filename.data())) {
     std::string msg =
-        fmt::format("Failed to find assets/minecraft/textures/colormap/{}. "
+        fmt::format("Failed to find \"assets/minecraft/textures/colormap/{}\". "
                     "File doesn\'t exist.",
                     filename);
     VCL_report(VCL_report_type_t::error, msg.c_str());
@@ -412,10 +424,10 @@ bool resource_pack::add_colormap(const zipped_folder &resourece_pack_root,
   const bool success = parse_png(png.data(), png.file_size(), &img);
 
   if (!success) {
-    std::string msg =
-        fmt::format("Failed to parse assets/minecraft/textures/colormap/{}. "
-                    "Not a valid png file.",
-                    filename);
+    std::string msg = fmt::format(
+        "Failed to parse \"assets/minecraft/textures/colormap/{}\". "
+        "Not a valid png file.",
+        filename);
     VCL_report(VCL_report_type_t::error, msg.c_str());
     return false;
   }
@@ -423,7 +435,7 @@ bool resource_pack::add_colormap(const zipped_folder &resourece_pack_root,
   if (img.rows() != 256 || img.cols() != 256) {
     std::string msg =
         fmt::format("Failed to parse assets/minecraft/textures/colormap/{}. "
-                    "The rows({}) and cols({}) mismatched with (256,256).",
+                    "The rows({}) and cols({}) mismatch with (256,256).",
                     filename, img.rows(), img.cols());
     VCL_report(VCL_report_type_t::error, msg.c_str());
     return false;

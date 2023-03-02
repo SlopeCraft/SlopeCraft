@@ -32,9 +32,11 @@ public:
   struct basic_colorset_option {
     std::vector<QString> zips;
     std::vector<QString> jsons;
-    VCL_face_t face;
     SCL_gameVersion version;
     int layers;
+    VCL_face_t face;
+    VCL_biome_t biome;
+    bool is_leaves_transparent;
   };
 
   struct allowed_colorset_option {
@@ -71,6 +73,7 @@ private:
   static void callback_progress_range_add(void *, int) noexcept;
 
   // for page 0 ------------------------------------------
+  void setup_ui_select_biome() noexcept;
   //  create and set this->rp
   void create_resource_pack() noexcept;
   // create and set this->bsl

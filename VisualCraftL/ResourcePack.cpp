@@ -8,6 +8,8 @@ bool VCL_resource_pack::copy(const VCL_resource_pack &src) noexcept {
   this->textures_override = src.textures_override;
   this->block_states = src.block_states;
   this->block_models = src.block_models;
+  this->colormap_foliage = src.colormap_foliage;
+  this->colormap_grass = src.colormap_grass;
 
   std::unordered_map<const block_model::EImgRowMajor_t *,
                      const block_model::EImgRowMajor_t *>
@@ -419,10 +421,12 @@ bool VCL_resource_pack::override_texture(
 
   for (int idx = 0; idx < 16 * 16; idx++) {
     const uint32_t ARGB_orignal = img_original(idx);
-
-    if (replace_transparent_with_black && (getA(ARGB_orignal) == 0)) {
-      img(idx) = 0xFF'00'00'00;
-      continue;
+    if (getA(ARGB_orignal) == 0) {
+      if (replace_transparent_with_black) {
+        img(idx) = 0xFF'00'00'00;
+      } else {
+        img(idx) = ARGB_orignal;
+      }
     }
 
     int min_RGB = std::min(std::min(getR(ARGB_orignal), getG(ARGB_orignal)),
@@ -436,15 +440,11 @@ bool VCL_resource_pack::override_texture(
       continue;
     }
 
-    float Hp, Sp, Vp;
-    RGB2HSV(getR(ARGB_orignal) / 255.0f, getG(ARGB_orignal) / 255.0f,
-            getB(ARGB_orignal) / 255.0f, Hp, Sp, Vp);
+    float Vp = max_RGB / 255.0f;
 
     Vp = std::clamp(Vp * k, 0.0f, 1.0f);
-    Hp = Hs;
-    Sp = Ss;
 
-    img(idx) = HSV2ARGB(Hp, Sp, Vp);
+    img(idx) = HSV2ARGB(Hs, Ss, Vp);
   }
 
   this->textures_override.emplace(path_in_original.data(), std::move(img));
@@ -453,6 +453,8 @@ bool VCL_resource_pack::override_texture(
 
 uint32_t VCL_resource_pack::standard_color(VCL_biome_info info,
                                            bool is_foliage) const noexcept {
+  assert(info.downfall == info.downfall);
+  assert(info.temperature == info.temperature);
   const float t_adj = std::clamp(info.temperature, 0.0f, 1.0f);
   const float w_adj = std::clamp(info.downfall, 0.0f, 1.0f) * t_adj;
 
@@ -460,7 +462,7 @@ uint32_t VCL_resource_pack::standard_color(VCL_biome_info info,
   x = std::clamp(x, 0, 255);
 
   int y = 255 * (1.0f - w_adj);
-  y = std::clamp(y, 0, 255);
+  y = std::clamp(y, 0, 255 - x);
 
   const int r = 255 - y;
   const int c = x;
@@ -478,6 +480,9 @@ uint32_t VCL_resource_pack::standard_color(
                           (texture_name.find("vine") != texture_name.npos);
   const uint32_t default_result =
       this->standard_color(VCL_get_biome_info(biome), is_foliage);
+
+  assert(default_result != 0);
+  assert(getA(default_result) != 0);
 
   if (texture_name.find("spruce") != texture_name.npos) {
     return 0xFF'61'99'61;

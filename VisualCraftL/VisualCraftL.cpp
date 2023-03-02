@@ -53,6 +53,13 @@ VCL_create_resource_pack(const int zip_file_count,
 
   VCL_resource_pack *const rp = new VCL_resource_pack;
 
+  if (!rp->add_colormaps(zf)) {
+    delete rp;
+    VCL_report(VCL_report_type_t::error,
+               "Failed to add colormaps from resource pack.", true);
+    return nullptr;
+  }
+
   if (!rp->add_textures(zf)) {
     delete rp;
     VCL_report(VCL_report_type_t::error,
