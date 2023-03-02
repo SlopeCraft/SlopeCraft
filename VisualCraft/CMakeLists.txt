@@ -18,6 +18,7 @@ set(VisualCraft_header_files
     advanced_qlist_widget_item.h
     CallBackFunctions.h
     VC_block_class.h
+    BlockBrowser.h
 )
 
 set(VisualCraft_source_files
@@ -32,11 +33,14 @@ set(VisualCraft_source_files
     advanced_qlist_widget_item.cpp
     CallBackFunctions.cpp
     VC_block_class.cpp
+
+    BlockBrowser.cpp
 )
 
 set(VisualCraft_ui_files
     VCWind.ui
-    VC_block_class.ui)
+    VC_block_class.ui
+    BlockBrowser.ui)
 
 set(VisualCraft_ts_files)
 

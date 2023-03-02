@@ -1028,12 +1028,24 @@
     </property>
     <addaction name="action_test01"/>
    </widget>
+   <widget class="QMenu" name="menu_blocks">
+    <property name="title">
+     <string>方块</string>
+    </property>
+    <addaction name="ac_browse_block"/>
+   </widget>
+   <addaction name="menu_blocks"/>
    <addaction name="menu_tests"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="action_test01">
    <property name="text">
     <string>test01</string>
+   </property>
+  </action>
+  <action name="ac_browse_block">
+   <property name="text">
+    <string>浏览方块</string>
    </property>
   </action>
  </widget>
