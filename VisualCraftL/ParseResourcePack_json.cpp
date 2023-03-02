@@ -1053,9 +1053,9 @@ bool resource_pack::add_block_models(
         ele.faces[faceidx].uv_end[0] = tface.uv[2];
         ele.faces[faceidx].uv_end[1] = tface.uv[3];
 
-        auto it = this->textures.find(tface.texture);
+        auto imgptr = this->find_texture(tface.texture, false);
 
-        if (it == this->textures.end()) {
+        if (imgptr == nullptr) {
           if (tface.texture.starts_with('#') && tmodel.second.is_inherited) {
             // This model is considered to be abstract
             skip_this_model = true;
@@ -1077,7 +1077,7 @@ bool resource_pack::add_block_models(
 
           // if managed to find, go on
         }
-        ele.faces[faceidx].texture = &it->second;
+        ele.faces[faceidx].texture = imgptr;
       }
       // finished all faces
 

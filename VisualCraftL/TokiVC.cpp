@@ -43,6 +43,8 @@ VCL_block_state_list TokiVC::bsl;
 SCL_gameVersion TokiVC::version = SCL_gameVersion::MC19;
 VCL_face_t TokiVC::exposed_face = VCL_face_t::face_down;
 int TokiVC::max_block_layers = 3;
+bool TokiVC::is_render_quality_fast{true};
+VCL_biome_t TokiVC::biome{VCL_biome_t::the_void};
 
 std::vector<std::variant<const VCL_block *, std::vector<const VCL_block *>>>
     TokiVC::LUT_basic_color_idx_to_blocks;
@@ -301,6 +303,9 @@ bool TokiVC::set_resource_no_lock() noexcept {
   default:
     break;
   }
+
+  TokiVC::pack.set_is_MC12(TokiVC::version == SCL_gameVersion::MC12);
+  TokiVC::pack.override_textures(TokiVC::biome, TokiVC::is_render_quality_fast);
 
   std::vector<VCL_block *> bs_transparent, bs_nontransparent;
 

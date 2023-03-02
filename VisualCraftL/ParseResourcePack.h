@@ -23,7 +23,7 @@ void unreachable() { __builtin_trap(); }
 
 */
 
-// struct resource_pack;
+// struct VCL_resource_pack;
 
 /// resize image
 Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
@@ -560,12 +560,28 @@ block_model::face_idx string_to_face_idx(std::string_view str,
                                          bool *const _ok) noexcept;
 const char *face_idx_to_string(block_model::face_idx) noexcept;
 
+class VCL_resource_pack;
+using resource_pack = VCL_resource_pack;
 /**
  * \note Name of texture = <namespacename>:blocks/<pngfilename without prefix>
  */
-class resource_pack {
+class VCL_resource_pack {
 public:
+  VCL_resource_pack() = default;
+  VCL_resource_pack(const VCL_resource_pack &src) = delete;
+  VCL_resource_pack(VCL_resource_pack &&) = default;
+
+  const VCL_resource_pack &operator=(const VCL_resource_pack &src) noexcept {
+    if (!this->copy(src)) {
+      abort();
+    }
+
+    return *this;
+  }
+
   using namespace_name_t = std::string;
+
+  inline void set_is_MC12(bool val) noexcept { this->is_MC12 = val; }
 
   bool add_textures(const zipped_folder &resourece_pack_root,
                     const bool on_conflict_replace_old = true) noexcept;
@@ -576,13 +592,40 @@ public:
   bool add_block_states(const zipped_folder &resourece_pack_root,
                         const bool on_conflict_replace_old = true) noexcept;
 
-  inline auto &get_textures() const noexcept { return this->textures; }
+  const Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> *
+  find_texture(std::string_view path, bool override_only) const noexcept;
+
+  bool override_textures(VCL_biome_t biome,
+                         bool replace_transparent_with_black) noexcept;
+
+  bool override_texture(std::string_view path_in_original,
+                        uint32_t standard_color,
+                        bool replace_transparent_with_black) noexcept;
+
+  uint32_t standard_color(VCL_biome_info info, bool is_foliage) const noexcept;
+  uint32_t standard_color(VCL_biome_t biome,
+                          std::string_view texture_name) const noexcept;
+
+  inline auto &get_textures_original() const noexcept {
+    return this->textures_original;
+  }
+  inline auto &get_textures_override() const noexcept {
+    return this->textures_override;
+  }
+
   inline auto &get_models() const noexcept { return this->block_models; }
   inline auto &get_block_states() const noexcept { return this->block_states; }
 
-  inline void clear_textures() noexcept { this->textures.clear(); }
+  inline void clear_textures() noexcept {
+    this->textures_original.clear();
+    this->textures_override.clear();
+  }
   inline void clear_models() noexcept { this->block_models.clear(); }
   inline void clear_block_states() noexcept { this->block_states.clear(); }
+
+  inline void clear_texture_override() noexcept {
+    this->textures_override.clear();
+  }
 
   struct buffer_t {
     std::string pure_id;
@@ -610,11 +653,17 @@ private:
   std::unordered_map<std::string, block_model::model> block_models;
   std::unordered_map<std::string, Eigen::Array<ARGB, Eigen::Dynamic,
                                                Eigen::Dynamic, Eigen::RowMajor>>
-      textures;
+      textures_original;
   std::unordered_map<std::string,
                      std::variant<resource_json::block_states_variant,
                                   resource_json::block_state_multipart>>
       block_states;
+  block_model::EImgRowMajor_t colormap_grass{256, 256};
+  block_model::EImgRowMajor_t colormap_foliage{256, 256};
+
+  std::unordered_map<std::string, Eigen::Array<ARGB, Eigen::Dynamic,
+                                               Eigen::Dynamic, Eigen::RowMajor>>
+      textures_override;
 
   bool is_MC12{false};
 
@@ -638,9 +687,20 @@ private:
   add_textures_direct(const std::unordered_map<std::string, zipped_file> &pngs,
                       std::string_view namespace_name,
                       const bool on_conflict_replace_old) noexcept;
+  bool add_colormap(const zipped_folder &resourece_pack_root,
+                    std::string_view filename,
+                    block_model::EImgRowMajor_t &img) noexcept;
+
+  bool update_block_model_textures() noexcept;
+
+  bool filter_model_textures(
+      const std::unordered_map<const block_model::EImgRowMajor_t *,
+                               const block_model::EImgRowMajor_t *> &filter,
+      bool is_missing_error) noexcept;
+
+  bool copy(const VCL_resource_pack &src) noexcept;
 };
 
-class VCL_resource_pack : public resource_pack {};
 class VCL_model {
 public:
   std::variant<const block_model::model *, block_model::model> value;

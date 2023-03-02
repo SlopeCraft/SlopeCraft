@@ -4,6 +4,7 @@
 
 #include "vccl_internal.h"
 #include <QCoreApplication>
+#include <magic_enum.hpp>
 
 using std::cout, std::endl;
 
@@ -48,6 +49,11 @@ int main(int argc, char **argv) {
       ->default_val("RGB")
       ->check(
           CLI::IsMember({"RGB", "RGB_Better", "HSV", "Lab94", "Lab00", "XYZ"}))
+      ->expected(1);
+  std::string biome;
+  app.add_option("--biome", biome, "The biome where a pixel art is placed.")
+      ->default_val("the_void")
+      ->check(CLI::IsMember(magic_enum::enum_names<VCL_biome_t>()))
       ->expected(1);
 
   app.add_flag("--dither", input.dither,
@@ -114,6 +120,16 @@ int main(int argc, char **argv) {
                input.list_supported_formats,
                "List all supported image formats and exit")
       ->default_val(false);
+  app.add_flag("--list-blockstates,--list-blockstate,--lbs",
+               input.list_blockstates,
+               "List all blocks jsons in the resource pack.")
+      ->default_val(false);
+  app.add_flag("--list-models,--list-model,--lmd", input.list_models,
+               "List all block models in the resource pack.")
+      ->default_val(false);
+  app.add_flag("--list-textures,--list-texture", input.list_textures,
+               "List all textures in the resource pack.")
+      ->default_val(false);
 
   CLI11_PARSE(app, argc, argv);
 
@@ -131,6 +147,14 @@ int main(int argc, char **argv) {
   }
 
   input.algo = str_to_algo(algo, ok);
+
+  {
+    auto temp = magic_enum::enum_cast<VCL_biome_t>(biome);
+    ok = temp.has_value();
+    if (ok) {
+      input.biome = temp.value();
+    }
+  }
 
   if (!ok) {
     return __LINE__;

@@ -88,6 +88,8 @@ public:
   static constexpr size_t idx_is_glowing = (size_t)attribute::is_glowing;
   static constexpr size_t idx_disabled = (size_t)attribute::disabled;
   static constexpr size_t idx_is_air = (size_t)attribute::is_air;
+  static constexpr size_t idx_is_grass = (size_t)attribute::is_grass;
+  static constexpr size_t idx_is_foliage = (size_t)attribute::is_foliage;
 
   inline bool get_attribute(attribute a) const noexcept {
     return this->attributes[size_t(a)];

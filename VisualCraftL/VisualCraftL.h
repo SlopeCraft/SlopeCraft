@@ -44,6 +44,8 @@ enum class VCL_block_attribute_t : uint8_t {
   is_glowing = 10,
   disabled = 11,
   is_air = 12,
+  is_grass = 13,
+  is_foliage = 14
 };
 
 enum class VCL_block_class_t : uint8_t {
@@ -268,6 +270,7 @@ struct VCL_set_resource_option {
   int32_t max_block_layers;
   VCL_biome_t biome;
   VCL_face_t exposed_face;
+  bool is_render_quality_fast;
 };
 
 // set resource for kernel

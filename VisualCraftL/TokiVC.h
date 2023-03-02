@@ -104,6 +104,8 @@ public:
   static SCL_gameVersion version;
   static VCL_face_t exposed_face;
   static int max_block_layers;
+  static bool is_render_quality_fast;
+  static VCL_biome_t biome;
 
   static bool set_resource_no_lock() noexcept;
   static bool set_allowed_no_lock(const VCL_block *const *const blocks_allowed,

@@ -1,6 +1,69 @@
 #include "ParseResourcePack.h"
-
 #include "VCL_internal.h"
+#include <ColorManip/ColorManip.h>
+
+bool VCL_resource_pack::copy(const VCL_resource_pack &src) noexcept {
+
+  this->textures_original = src.textures_original;
+  this->textures_override = src.textures_override;
+  this->block_states = src.block_states;
+  this->block_models = src.block_models;
+
+  std::unordered_map<const block_model::EImgRowMajor_t *,
+                     const block_model::EImgRowMajor_t *>
+      update_textures;
+  update_textures.reserve(this->textures_original.size() +
+                          textures_override.size());
+
+  for (const auto &pair_src : src.textures_original) {
+    auto it_dst = this->textures_original.find(pair_src.first);
+
+    update_textures.emplace(&pair_src.second, &it_dst->second);
+  }
+
+  for (const auto &pair_src : src.textures_override) {
+    auto it_dst = this->textures_override.find(pair_src.first);
+
+    update_textures.emplace(&pair_src.second, &it_dst->second);
+  }
+
+  update_textures.emplace(nullptr, nullptr);
+
+  const bool ok = this->filter_model_textures(update_textures, true);
+
+  if (!ok) {
+    VCL_report(VCL_report_type_t::error, "Failed to copy resource pack.");
+    return false;
+  }
+  return true;
+}
+
+bool VCL_resource_pack::filter_model_textures(
+    const std::unordered_map<const block_model::EImgRowMajor_t *,
+                             const block_model::EImgRowMajor_t *> &filter,
+    bool is_missing_error) noexcept {
+
+  for (auto &pair : this->block_models) {
+    for (auto &ele : pair.second.elements) {
+      for (auto &face : ele.faces) {
+        auto it = filter.find(face.texture);
+        if (it != filter.end()) {
+          face.texture = it->second;
+        } else {
+          if (is_missing_error) {
+            std::string msg =
+                fmt::format("Failed to filter image pointer {}. Missing in the "
+                            "filter and is_missing_error is set to true.",
+                            (const void *)face.texture);
+            VCL_report(VCL_report_type_t::error, msg.c_str());
+            return false;
+          }
+        }
+      }
+    }
+  }
+  return true;
+}
 
 bool parse_single_state_expression(const char *const beg, const char *const end,
                                    resource_json::state *state) noexcept {
@@ -129,9 +192,10 @@ bool resource_json::process_full_id(std::string_view full_id,
 }
 
 std::variant<const block_model::model *, block_model::model>
-resource_pack::find_model(const std::string &block_state_str,
-                          VCL_face_t face_exposed, VCL_face_t *face_invrotated,
-                          buffer_t &buffer) const noexcept {
+VCL_resource_pack::find_model(const std::string &block_state_str,
+                              VCL_face_t face_exposed,
+                              VCL_face_t *face_invrotated,
+                              buffer_t &buffer) const noexcept {
 
   if (!resource_json::process_full_id(block_state_str, nullptr, &buffer.pure_id,
                                       &buffer.state_list)) {
@@ -281,10 +345,9 @@ resource_pack::find_model(const std::string &block_state_str,
   // auto jt=this->block_models.find(it->second.)
 }
 
-bool resource_pack::compute_projection(const std::string &block_state_str,
-                                       VCL_face_t face_exposed,
-                                       block_model::EImgRowMajor_t *const img,
-                                       buffer_t &buffer) const noexcept {
+bool VCL_resource_pack::compute_projection(
+    const std::string &block_state_str, VCL_face_t face_exposed,
+    block_model::EImgRowMajor_t *const img, buffer_t &buffer) const noexcept {
 
   std::variant<const block_model::model *, block_model::model> ret =
       this->find_model(block_state_str, face_exposed, &face_exposed, buffer);
@@ -307,5 +370,220 @@ bool resource_pack::compute_projection(const std::string &block_state_str,
   block_model::model &md = std::get<1>(ret);
 
   md.projection_image(face_exposed, img);
+  return true;
+}
+
+bool VCL_resource_pack::override_texture(
+    std::string_view path_in_original, uint32_t standard_color,
+    bool replace_transparent_with_black) noexcept {
+  if (this->textures_override.contains(path_in_original.data())) {
+    return true;
+  }
+
+  auto it = this->textures_original.find(path_in_original.data());
+  if (it == this->textures_original.end()) {
+    std::string msg = fmt::format(
+        "Failed to override texture \"{0}\" with given color {1:#x}, the "
+        "original texture \"{0}\" doesn't exist.",
+        path_in_original, standard_color);
+    VCL_report(VCL_report_type_t::error, msg.c_str());
+    return false;
+  }
+
+  const auto &img_original = it->second;
+
+  if (img_original.rows() != 16 || img_original.cols() != 16) {
+    std::string msg =
+        fmt::format("Failed to override texture \"{0}\" with given "
+                    "color {1:#x}, the image size of "
+                    "original texture \"{0}\" is {2} * {3} instead of 16 * 16",
+                    path_in_original, standard_color, img_original.rows(),
+                    img_original.cols());
+    VCL_report(VCL_report_type_t::error, msg.c_str());
+    return false;
+  }
+
+  standard_color |= 0xFF'00'00'00;
+  float Hs, Ss, Vs;
+  RGB2HSV(getR(standard_color) / 255.0f, getG(standard_color) / 255.0f,
+          getB(standard_color) / 255.0f, Hs, Ss, Vs);
+
+  Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> img(16,
+                                                                          16);
+  memset(img.data(), 0xFF, img.size() * sizeof(uint32_t));
+  // 0.902473997028232	-0.0371008915304607
+
+  // the ratio to adjust brightness of pixels are determined by the brightness
+  // of standard color
+  const float k = 0.902473997028232 * Vs - 0.0371008915304607;
+
+  for (int idx = 0; idx < 16 * 16; idx++) {
+    const uint32_t ARGB_orignal = img_original(idx);
+
+    if (replace_transparent_with_black && (getA(ARGB_orignal) == 0)) {
+      img(idx) = 0xFF'00'00'00;
+      continue;
+    }
+
+    int min_RGB = std::min(std::min(getR(ARGB_orignal), getG(ARGB_orignal)),
+                           getB(ARGB_orignal));
+    int max_RGB = std::max(std::max(getR(ARGB_orignal), getG(ARGB_orignal)),
+                           getB(ARGB_orignal));
+
+    // this pixel is not to be colored.
+    if (max_RGB - min_RGB < 5) {
+      img(idx) = ARGB_orignal;
+      continue;
+    }
+
+    float Hp, Sp, Vp;
+    RGB2HSV(getR(ARGB_orignal) / 255.0f, getG(ARGB_orignal) / 255.0f,
+            getB(ARGB_orignal) / 255.0f, Hp, Sp, Vp);
+
+    Vp *= k;
+    Hp = Hs;
+    Sp = Ss;
+
+    img(idx) = HSV2ARGB(Hp, Sp, Vp);
+  }
+
+  this->textures_override.emplace(path_in_original.data(), std::move(img));
+  return true;
+}
+
+uint32_t VCL_resource_pack::standard_color(VCL_biome_info info,
+                                           bool is_foliage) const noexcept {
+  const float t_adj = std::clamp(info.temperature, 0.0f, 1.0f);
+  const float w_adj = std::clamp(info.downfall, 0.0f, 1.0f) * t_adj;
+
+  int x = 255 * (1.0f - t_adj);
+  x = std::clamp(x, 0, 255);
+
+  int y = 255 * (1.0f - w_adj);
+  y = std::clamp(y, 0, 255);
+
+  const int r = 255 - y;
+  const int c = x;
+
+  if (is_foliage) {
+    return this->colormap_foliage(r, c);
+  } else {
+    return this->colormap_grass(r, c);
+  }
+}
+
+uint32_t VCL_resource_pack::standard_color(
+    VCL_biome_t biome, std::string_view texture_name) const noexcept {
+  const bool is_foliage = (texture_name.find("leaves") != texture_name.npos) ||
+                          (texture_name.find("vine") != texture_name.npos);
+  const uint32_t default_result =
+      this->standard_color(VCL_get_biome_info(biome), is_foliage);
+
+  if (texture_name.find("spruce") != texture_name.npos) {
+    return 0xFF'61'99'61;
+  }
+
+  if (texture_name.find("birch") != texture_name.npos) {
+    return 0xFF'80'a7'55;
+  }
+
+  if (biome == VCL_biome_t::swamp || biome == VCL_biome_t::mangrove_swamp) {
+    if (!is_foliage) {
+      return 0xFF'4c'76'3c;
+    }
+
+    if (texture_name.find("mangrove") != texture_name.npos) {
+      return 0xFF'8d'b1'27;
+    }
+
+    return 0xFF'6a'70'39;
+  }
+
+  if (biome == VCL_biome_t::dark_forest) {
+    if (!is_foliage) {
+      return ((default_result & 0xFF'fe'fe'fe) + 0xFF'28'34'0a) / 2;
+    }
+  }
+
+  if (biome == VCL_biome_t::badlands || biome == VCL_biome_t::eroded_badlands ||
+      biome == VCL_biome_t::wooded_badlands) {
+    if (is_foliage) {
+      return 0xFF'9e'81'4d;
+    } else {
+      return 0xFF'90'81'4d;
+    }
+  }
+
+  if (biome == VCL_biome_t::cherry_grove) {
+    return 0xFF'90'81'4d;
+  }
+
+  return default_result;
+}
+
+#include "textures_need_to_override.h"
+
+bool VCL_resource_pack::override_textures(
+    VCL_biome_t biome, bool replace_transparent_with_black) noexcept {
+  const std::string_view *grass_ids = nullptr;
+  size_t grass_num = 0;
+  const std::string_view *foliage_ids = nullptr;
+  size_t foliage_num = 0;
+  if (this->is_MC12) {
+    grass_ids = VCL_12_grass_texture_names;
+    grass_num = VCL_12_grass_texture_name_size;
+    foliage_ids = VCL_12_foliage_texture_names;
+    foliage_num = VCL_12_foliage_texture_name_size;
+  } else {
+    grass_ids = VCL_latest_grass_texture_names;
+    grass_num = VCL_latest_grass_texture_name_size;
+    foliage_ids = VCL_latest_foliage_texture_names;
+    foliage_num = VCL_latest_foliage_texture_name_size;
+  }
+
+  for (size_t gid = 0; gid < grass_num; gid++) {
+    const bool ok = this->override_texture(
+        grass_ids[gid], this->standard_color(biome, grass_ids[gid]),
+        replace_transparent_with_black);
+    if (!ok) {
+      return false;
+    }
+  }
+
+  for (size_t fid = 0; fid < foliage_num; fid++) {
+
+    const bool ok = this->override_texture(
+        foliage_ids[fid], this->standard_color(biome, foliage_ids[fid]),
+        replace_transparent_with_black);
+    if (!ok) {
+      return false;
+    }
+  }
+
+  return this->update_block_model_textures();
+}
+
+bool VCL_resource_pack::update_block_model_textures() noexcept {
+  std::unordered_map<const block_model::EImgRowMajor_t *,
+                     const block_model::EImgRowMajor_t *>
+      updater;
+  updater.reserve(this->textures_override.size());
+
+  for (auto &pair : this->textures_override) {
+    auto it = this->textures_original.find(pair.first);
+    if (it == this->textures_original.end()) {
+      std::string msg =
+          fmt::format("Internal logical error when invoking function "
+                      "\"VCL_resource_pack::update_block_model_textures\" : "
+                      "texture \"{}\" is overrided, but failed to find the "
+                      "image with same id in this->texture_original.",
+                      pair.first);
+      VCL_report(VCL_report_type_t::error, msg.c_str());
+      return false;
+    }
+
+    updater.emplace(&it->second, &pair.second);
+  }
+  this->filter_model_textures(updater, false);
   return true;
 }

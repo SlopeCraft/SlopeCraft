@@ -86,6 +86,12 @@ int set_resource(VCL_Kernel *kernel, const inputs &input) noexcept {
     VCL_destroy_kernel(kernel);
     return __LINE__;
   }
+
+  if (input.list_blockstates || input.list_models || input.list_textures) {
+    VCL_display_resource_pack(rp, input.list_textures, input.list_blockstates,
+                              input.list_models);
+  }
+
   VCL_set_resource_option option;
   option.version = input.version;
   option.max_block_layers = input.layers;

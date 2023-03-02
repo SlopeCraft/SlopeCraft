@@ -189,8 +189,7 @@ VCL_EXPORT_FUN void VCL_display_resource_pack(const VCL_resource_pack *rp,
       ss << "}\n";
     }
 
-    std::string msg;
-    ss >> msg;
+    std::string msg(ss.str());
 
     VCL_report(VCL_report_type_t::information, msg.c_str(), true);
   }
@@ -204,24 +203,31 @@ VCL_EXPORT_FUN void VCL_display_resource_pack(const VCL_resource_pack *rp,
     }
 
     ss << std::endl;
-    std::string msg;
-    ss >> msg;
+    std::string msg(ss.str());
 
     VCL_report(VCL_report_type_t::information, msg.c_str(), true);
   }
 
   if (textures) {
     std::stringstream ss;
-    ss << "There are " << rp->get_textures().size() << " textures : \n";
+    ss << "There are " << rp->get_textures_original().size()
+       << "original textures : \n";
 
-    for (const auto &pair : rp->get_textures()) {
+    for (const auto &pair : rp->get_textures_original()) {
+      ss << pair.first << " : [" << pair.second.rows() << ", "
+         << pair.second.cols() << "]\n";
+    }
+
+    ss << "There are " << rp->get_textures_override().size()
+       << " overrided textures : \n";
+
+    for (const auto &pair : rp->get_textures_override()) {
       ss << pair.first << " : [" << pair.second.rows() << ", "
          << pair.second.cols() << "]\n";
     }
 
     ss << std::endl;
-    std::string msg;
-    ss >> msg;
+    std::string msg(ss.str());
 
     VCL_report(VCL_report_type_t::information, msg.c_str(), true);
   }
@@ -281,6 +287,8 @@ VCL_set_resource_copy(const VCL_resource_pack *const rp,
   TokiVC::version = option.version;
   TokiVC::exposed_face = option.exposed_face;
   TokiVC::max_block_layers = option.max_block_layers;
+  TokiVC::biome = option.biome;
+  TokiVC::is_render_quality_fast = option.is_render_quality_fast;
 
   const bool ret = TokiVC::set_resource_no_lock();
   VCL_report(VCL_report_type_t::warning, nullptr, true);
@@ -319,6 +327,8 @@ VCL_set_resource_move(VCL_resource_pack **rp_ptr,
   TokiVC::version = option.version;
   TokiVC::exposed_face = option.exposed_face;
   TokiVC::max_block_layers = option.max_block_layers;
+  TokiVC::biome = option.biome;
+  TokiVC::is_render_quality_fast = option.is_render_quality_fast;
 
   if (!TokiVC::set_resource_no_lock()) {
     ret = false;

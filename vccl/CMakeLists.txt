@@ -24,6 +24,7 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools Network Conc
 
 include(${CMAKE_SOURCE_DIR}/cmake/configure_fmtlib.cmake)
 find_package(fmt REQUIRED)
+find_package(magic_enum REQUIRED)
 
 qt_add_executable(vccl
 
@@ -34,7 +35,7 @@ qt_add_executable(vccl
     ${vccl_win_sources}
 )
 
-target_link_libraries(vccl PRIVATE VisualCraftL Qt6::Core Qt6::Gui fmt::fmt)
+target_link_libraries(vccl PRIVATE VisualCraftL Qt6::Core Qt6::Gui fmt::fmt magic_enum::magic_enum)
 
 include(${CMAKE_SOURCE_DIR}/cmake/configure_cli11.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/find_nlohmann_json.cmake)

@@ -77,48 +77,49 @@ bool parse_png(
   if (bit_depth > 8) {
     png_set_strip_16(png);
   }
-  if (bit_depth < 8) png_set_expand(png);
+  if (bit_depth < 8)
+    png_set_expand(png);
 
   switch (color_type) {
-    case PNG_COLOR_TYPE_GRAY:  // fixed
-      png_set_gray_to_rgb(png);
-      add_alpha = true;
-      // cout << "PNG_COLOR_TYPE_GRAY";
-      break;
-    case PNG_COLOR_TYPE_PALETTE:  // fixed
+  case PNG_COLOR_TYPE_GRAY: // fixed
+    png_set_gray_to_rgb(png);
+    add_alpha = true;
+    // cout << "PNG_COLOR_TYPE_GRAY";
+    break;
+  case PNG_COLOR_TYPE_PALETTE: // fixed
 
-      png_set_palette_to_rgb(png);
-      png_set_bgr(png);
-      {
-        int num_trans = 0;
-        png_get_tRNS(png, info, NULL, &num_trans, NULL);
-        if (num_trans <= 0) {
-          add_alpha = true;
-        }
-        // cout << "num_trans = " << num_trans << endl;
+    png_set_palette_to_rgb(png);
+    png_set_bgr(png);
+    {
+      int num_trans = 0;
+      png_get_tRNS(png, info, NULL, &num_trans, NULL);
+      if (num_trans <= 0) {
+        add_alpha = true;
       }
+      // cout << "num_trans = " << num_trans << endl;
+    }
 
-      // cout << "PNG_COLOR_TYPE_PALETTE";
-      break;
-    case PNG_COLOR_TYPE_RGB:  // fixed
-      png_set_bgr(png);
-      add_alpha = true;
-      // cout << "PNG_COLOR_TYPE_RGB";
-      break;
-    case PNG_COLOR_TYPE_RGB_ALPHA:  // fixed
-      png_set_bgr(png);
-      // cout << "PNG_COLOR_TYPE_RGB_ALPHA";
-      break;
-    case PNG_COLOR_TYPE_GRAY_ALPHA:  // fixed
-      png_set_gray_to_rgb(png);
-      // png_set_swap_alpha(png);
-      // cout << "PNG_COLOR_TYPE_GRAY_ALPHA";
-      break;
-    default:
-      png_destroy_read_struct(&png, &info, &info_end);
-      std::string msg = fmt::format("Unknown color type {}", color_type);
-      ::VCL_report(VCL_report_type_t::error, msg.c_str());
-      return false;
+    // cout << "PNG_COLOR_TYPE_PALETTE";
+    break;
+  case PNG_COLOR_TYPE_RGB: // fixed
+    png_set_bgr(png);
+    add_alpha = true;
+    // cout << "PNG_COLOR_TYPE_RGB";
+    break;
+  case PNG_COLOR_TYPE_RGB_ALPHA: // fixed
+    png_set_bgr(png);
+    // cout << "PNG_COLOR_TYPE_RGB_ALPHA";
+    break;
+  case PNG_COLOR_TYPE_GRAY_ALPHA: // fixed
+    png_set_gray_to_rgb(png);
+    // png_set_swap_alpha(png);
+    // cout << "PNG_COLOR_TYPE_GRAY_ALPHA";
+    break;
+  default:
+    png_destroy_read_struct(&png, &info, &info_end);
+    std::string msg = fmt::format("Unknown color type {}", color_type);
+    ::VCL_report(VCL_report_type_t::error, msg.c_str());
+    return false;
   }
   // cout << ")\n";
   // #warning here
@@ -134,7 +135,7 @@ bool parse_png(
 
   png_read_image(png, row_ptrs.data());
 
-  if (add_alpha) {  // add alpha manually
+  if (add_alpha) { // add alpha manually
     for (int r = 0; r < int(height); r++) {
       uint8_t *const data = reinterpret_cast<uint8_t *>(&(*img)(r, 0));
       for (int pixel_idx = img->cols() - 1; pixel_idx > 0; pixel_idx--) {
@@ -162,7 +163,8 @@ resize_image_nearest(const Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic,
                      int rows, int cols) noexcept {
   Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> result(0,
                                                                              0);
-  if (rows <= 0 || cols <= 0 || src.size() <= 0) return result;
+  if (rows <= 0 || cols <= 0 || src.size() <= 0)
+    return result;
   result.resize(rows, cols);
   result.setZero();
 
@@ -187,7 +189,8 @@ resize_image_nearest(
     int rows, int cols) noexcept {
   Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> result(0,
                                                                              0);
-  if (rows <= 0 || cols <= 0 || src_block.size() <= 0) return result;
+  if (rows <= 0 || cols <= 0 || src_block.size() <= 0)
+    return result;
   result.resize(rows, cols);
   result.setZero();
 
@@ -255,18 +258,28 @@ bool resource_pack::add_textures(const zipped_folder &rpr,
       return false;
     }
   }
+
+  if (!this->add_colormap(rpr, "grass.png", this->colormap_grass)) {
+    return false;
+  }
+
+  if (!this->add_colormap(rpr, "foliage.png", this->colormap_foliage)) {
+    return false;
+  }
+
   return true;
 }
 
 bool resource_pack::add_textures_direct(
     const std::unordered_map<std::string, zipped_file> &pngs,
     std::string_view namespace_name, const bool conflict_conver_old) noexcept {
-  this->textures.reserve(this->textures.size() + pngs.size());
+  this->textures_original.reserve(this->textures_original.size() + pngs.size());
   constexpr int buffer_size = 1024;
   std::array<char, buffer_size> buffer;
 
   for (const auto &file : pngs) {
-    if (!file.first.ends_with(".png")) continue;
+    if (!file.first.ends_with(".png"))
+      continue;
 
     const bool is_dynamic = pngs.contains(file.first + ".mcmeta");
 
@@ -293,7 +306,8 @@ bool resource_pack::add_textures_direct(
     }
     // key finished
 
-    if (this->textures.contains(buffer.data()) && !conflict_conver_old) {
+    if (this->textures_original.contains(buffer.data()) &&
+        !conflict_conver_old) {
       continue;
     }
 
@@ -302,10 +316,10 @@ bool resource_pack::add_textures_direct(
     const bool success =
         parse_png(file.second.data(), file.second.file_size(), &img);
     if (!success || img.size() <= 0) {
-      std::string msg = fmt::format(
-          "Failed to parse png file {} in {}. Png parsing will "
-          "continue but this warning may cause further errors.",
-          file.first, buffer.data());
+      std::string msg =
+          fmt::format("Failed to parse png file {} in {}. Png parsing will "
+                      "continue but this warning may cause further errors.",
+                      file.first, buffer.data());
       ::VCL_report(VCL_report_type_t::warning, msg.c_str());
       continue;
     }
@@ -325,7 +339,7 @@ bool resource_pack::add_textures_direct(
       img = process_dynamic_texture(img);
     }
 
-    this->textures.emplace(std::string(buffer.data()), std::move(img));
+    this->textures_original.emplace(std::string(buffer.data()), std::move(img));
   }
   return true;
 }
@@ -369,8 +383,80 @@ process_dynamic_texture(const Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic,
   return res;
 }
 
-std::array<uint8_t, 3> compute_mean_color(
-    const block_model::EImgRowMajor_t &img, bool *const ok) noexcept {
+bool resource_pack::add_colormap(const zipped_folder &resourece_pack_root,
+                                 std::string_view filename,
+                                 block_model::EImgRowMajor_t &img) noexcept {
+  std::array<const char *, 4> keys = {"assets", "minecraft", "textures",
+                                      "colormap"};
+
+  const zipped_folder *ptr = &resourece_pack_root;
+
+  for (const char *key : keys) {
+    ptr = ptr->subfolder(key);
+    if (ptr == nullptr) {
+      break;
+    }
+  }
+
+  if (ptr == nullptr || !ptr->files.contains(filename.data())) {
+    std::string msg =
+        fmt::format("Failed to find assets/minecraft/textures/colormap/{}. "
+                    "File doesn\'t exist.",
+                    filename);
+    VCL_report(VCL_report_type_t::error, msg.c_str());
+    return false;
+  }
+
+  const zipped_file &png = ptr->files.at(filename.data());
+
+  const bool success = parse_png(png.data(), png.file_size(), &img);
+
+  if (!success) {
+    std::string msg =
+        fmt::format("Failed to parse assets/minecraft/textures/colormap/{}. "
+                    "Not a valid png file.",
+                    filename);
+    VCL_report(VCL_report_type_t::error, msg.c_str());
+    return false;
+  }
+
+  if (img.rows() != 256 || img.cols() != 256) {
+    std::string msg =
+        fmt::format("Failed to parse assets/minecraft/textures/colormap/{}. "
+                    "The rows({}) and cols({}) mismatched with (256,256).",
+                    filename, img.rows(), img.cols());
+    VCL_report(VCL_report_type_t::error, msg.c_str());
+    return false;
+  }
+
+  return true;
+}
+
+const Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> *
+resource_pack::find_texture(std::string_view path,
+                            bool override_only) const noexcept {
+  auto it = this->textures_override.find(path.data());
+
+  if (it != this->textures_override.end()) {
+    return &it->second;
+  }
+
+  if (override_only) {
+    return nullptr;
+  }
+
+  it = this->textures_original.find(path.data());
+
+  if (it != this->textures_original.end()) {
+    return &it->second;
+  }
+
+  return nullptr;
+}
+
+std::array<uint8_t, 3>
+compute_mean_color(const block_model::EImgRowMajor_t &img,
+                   bool *const ok) noexcept {
   if (img.size() <= 0) {
     if (ok != nullptr) {
       *ok = false;
@@ -424,16 +510,19 @@ bool compose_image_background_half_transparent(
   return true;
 }
 
-std::array<uint8_t, 3> compose_image_and_mean(
-    const block_model::EImgRowMajor_t &front,
-    const block_model::EImgRowMajor_t &back, bool *const ok) noexcept {
+std::array<uint8_t, 3>
+compose_image_and_mean(const block_model::EImgRowMajor_t &front,
+                       const block_model::EImgRowMajor_t &back,
+                       bool *const ok) noexcept {
   if (front.rows() != back.rows() || front.cols() != back.cols()) {
-    if (ok != nullptr) *ok = false;
+    if (ok != nullptr)
+      *ok = false;
     return {};
   }
 
   if (front.size() <= 0) {
-    if (ok != nullptr) *ok = false;
+    if (ok != nullptr)
+      *ok = false;
     return {};
   }
 

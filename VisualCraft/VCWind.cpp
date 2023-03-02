@@ -463,7 +463,7 @@ void VCWind::setup_basical_colorset() noexcept {
   option.version = this->current_selected_version();
   option.max_block_layers = this->ui->sb_max_layers->value();
 
-  const bool success = VCL_set_resource_copy(this->rp, this->bsl, option);
+  const bool success = VCL_set_resource_move(&this->rp, &this->bsl, option);
 
   if (!success) {
     const auto ret = QMessageBox::critical(

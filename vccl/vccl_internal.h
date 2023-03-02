@@ -20,6 +20,7 @@ struct inputs {
   SCL_convertAlgo algo;
   bool dither{false};
   bool show_color_num{false};
+  VCL_biome_t biome{VCL_biome_t::the_void};
   //  images
   std::vector<std::string> images;
 
@@ -53,6 +54,9 @@ struct inputs {
   // others
   bool disable_config{false};
   bool list_supported_formats{false};
+  bool list_blockstates{false};
+  bool list_models{false};
+  bool list_textures{false};
 };
 
 int run(const inputs &input) noexcept;
