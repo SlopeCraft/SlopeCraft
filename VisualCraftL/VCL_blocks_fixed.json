@@ -2507,10 +2507,315 @@
             12
         ]
     },
+    "minecraft:white_glazed_terracotta[facing=north]": {
+        "nameEN": "White glazed terracotta",
+        "nameZH": "白色带釉陶瓦",
+        "class": "glazed_terracotta",
+        "version": "all",
+        "background": true
+    },
+    "minecraft:orange_glazed_terracotta[facing=north]": {
+        "nameEN": "Orange glazed terracotta",
+        "nameZH": "橙色带釉陶瓦",
+        "class": "glazed_terracotta",
+        "version": "all",
+        "background": true
+    },
+    "minecraft:magenta_glazed_terracotta[facing=north]": {
+        "nameEN": "Magenta glazed terracotta",
+        "nameZH": "品红色带釉陶瓦",
+        "class": "glazed_terracotta",
+        "version": "all",
+        "background": true
+    },
+    "minecraft:light_blue_glazed_terracotta[facing=north]": {
+        "nameEN": "Light blue glazed terracotta",
+        "nameZH": "浅蓝色带釉陶瓦",
+        "class": "glazed_terracotta",
+        "version": "all",
+        "background": true
+    },
+    "minecraft:yellow_glazed_terracotta[facing=north]": {
+        "nameEN": "Yellow glazed terracotta",
+        "nameZH": "黄色带釉陶瓦",
+        "class": "glazed_terracotta",
+        "version": "all",
+        "background": true
+    },
+    "minecraft:lime_glazed_terracotta[facing=north]": {
+        "nameEN": "Lime glazed terracotta",
+        "nameZH": "浅绿色带釉陶瓦",
+        "class": "glazed_terracotta",
+        "version": "all",
+        "background": true
+    },
+    "minecraft:pink_glazed_terracotta[facing=north]": {
+        "nameEN": "Pink glazed terracotta",
+        "nameZH": "粉色带釉陶瓦",
+        "class": "glazed_terracotta",
+        "version": "all",
+        "background": true
+    },
+    "minecraft:gray_glazed_terracotta[facing=north]": {
+        "nameEN": "Gray glazed terracotta",
+        "nameZH": "灰色带釉陶瓦",
+        "class": "glazed_terracotta",
+        "version": "all",
+        "background": true
+    },
+    "minecraft:light_gray_glazed_terracotta[facing=north]": {
+        "nameEN": "Light gray glazed terracotta",
+        "nameZH": "浅灰色带釉陶瓦",
+        "class": "glazed_terracotta",
+        "version": 13,
+        "background": true
+    },
+    "minecraft:silver_glazed_terracotta[facing=north]": {
+        "nameEN": "Silver glazed terracotta",
+        "nameZH": "银色带釉陶瓦",
+        "class": "glazed_terracotta",
+        "version": [
+            12
+        ],
+        "background": true
+    },
+    "minecraft:cyan_glazed_terracotta[facing=north]": {
+        "nameEN": "Cyan glazed terracotta",
+        "nameZH": "青色带釉陶瓦",
+        "class": "glazed_terracotta",
+        "version": "all",
+        "background": true
+    },
+    "minecraft:blue_glazed_terracotta[facing=north]": {
+        "nameEN": "Blue glazed terracotta",
+        "nameZH": "蓝色带釉陶瓦",
+        "class": "glazed_terracotta",
+        "version": "all",
+        "background": true
+    },
+    "minecraft:brown_glazed_terracotta[facing=north]": {
+        "nameEN": "Brown glazed terracotta",
+        "nameZH": "棕色带釉陶瓦",
+        "class": "glazed_terracotta",
+        "version": "all",
+        "background": true
+    },
+    "minecraft:red_glazed_terracotta[facing=north]": {
+        "nameEN": "Red glazed terracotta",
+        "nameZH": "红色带釉陶瓦",
+        "class": "glazed_terracotta",
+        "version": "all",
+        "background": true
+    },
+    "minecraft:black_glazed_terracotta[facing=north]": {
+        "nameEN": "Black glazed terracotta",
+        "nameZH": "黑色带釉陶瓦",
+        "class": "glazed_terracotta",
+        "version": "all",
+        "background": true
+    },
+    "minecraft:white_concrete_powder[facing=north]": {
+        "nameEN": "White concrete powder",
+        "nameZH": "白色混凝土粉末",
+        "class": "concrete_powder",
+        "version": "all",
+        "faces": [
+            "up",
+            "north",
+            "south",
+            "east",
+            "west"
+        ]
+    },
+    "minecraft:orange_concrete_powder[facing=north]": {
+        "nameEN": "Orange concrete powder",
+        "nameZH": "橙色混凝土粉末",
+        "class": "concrete_powder",
+        "version": "all",
+        "faces": [
+            "up",
+            "north",
+            "south",
+            "east",
+            "west"
+        ]
+    },
+    "minecraft:magenta_concrete_powder[facing=north]": {
+        "nameEN": "Magenta concrete powder",
+        "nameZH": "品红色混凝土粉末",
+        "class": "concrete_powder",
+        "version": "all",
+        "faces": [
+            "up",
+            "north",
+            "south",
+            "east",
+            "west"
+        ]
+    },
+    "minecraft:light_blue_concrete_powder[facing=north]": {
+        "nameEN": "Light blue concrete powder",
+        "nameZH": "浅蓝色混凝土粉末",
+        "class": "concrete_powder",
+        "version": "all",
+        "faces": [
+            "up",
+            "north",
+            "south",
+            "east",
+            "west"
+        ]
+    },
+    "minecraft:yellow_concrete_powder[facing=north]": {
+        "nameEN": "Yellow concrete powder",
+        "nameZH": "黄色混凝土粉末",
+        "class": "concrete_powder",
+        "version": "all",
+        "faces": [
+            "up",
+            "north",
+            "south",
+            "east",
+            "west"
+        ]
+    },
+    "minecraft:lime_concrete_powder[facing=north]": {
+        "nameEN": "Lime concrete powder",
+        "nameZH": "浅绿色混凝土粉末",
+        "class": "concrete_powder",
+        "version": "all",
+        "faces": [
+            "up",
+            "north",
+            "south",
+            "east",
+            "west"
+        ]
+    },
+    "minecraft:pink_concrete_powder[facing=north]": {
+        "nameEN": "Pink concrete powder",
+        "nameZH": "粉色混凝土粉末",
+        "class": "concrete_powder",
+        "version": "all",
+        "faces": [
+            "up",
+            "north",
+            "south",
+            "east",
+            "west"
+        ]
+    },
+    "minecraft:gray_concrete_powder[facing=north]": {
+        "nameEN": "Gray concrete powder",
+        "nameZH": "灰色混凝土粉末",
+        "class": "concrete_powder",
+        "version": "all",
+        "faces": [
+            "up",
+            "north",
+            "south",
+            "east",
+            "west"
+        ]
+    },
+    "minecraft:light_gray_concrete_powder[facing=north]": {
+        "nameEN": "Light gray concrete powder",
+        "nameZH": "浅灰色混凝土粉末",
+        "class": "concrete_powder",
+        "version": 13,
+        "faces": [
+            "up",
+            "north",
+            "south",
+            "east",
+            "west"
+        ]
+    },
+    "minecraft:silver_concrete_powder[facing=north]": {
+        "nameEN": "Silver concrete powder",
+        "nameZH": "银色混凝土粉末",
+        "class": "concrete_powder",
+        "faces": [
+            "up",
+            "north",
+            "south",
+            "east",
+            "west"
+        ],
+        "version": [
+            12
+        ]
+    },
+    "minecraft:cyan_concrete_powder[facing=north]": {
+        "nameEN": "Cyan concrete powder",
+        "nameZH": "青色混凝土粉末",
+        "class": "concrete_powder",
+        "version": "all",
+        "faces": [
+            "up",
+            "north",
+            "south",
+            "east",
+            "west"
+        ]
+    },
+    "minecraft:blue_concrete_powder[facing=north]": {
+        "nameEN": "Blue concrete powder",
+        "nameZH": "蓝色混凝土粉末",
+        "class": "concrete_powder",
+        "version": "all",
+        "faces": [
+            "up",
+            "north",
+            "south",
+            "east",
+            "west"
+        ]
+    },
+    "minecraft:brown_concrete_powder[facing=north]": {
+        "nameEN": "Brown concrete powder",
+        "nameZH": "棕色混凝土粉末",
+        "class": "concrete_powder",
+        "version": "all",
+        "faces": [
+            "up",
+            "north",
+            "south",
+            "east",
+            "west"
+        ]
+    },
+    "minecraft:red_concrete_powder[facing=north]": {
+        "nameEN": "Red concrete powder",
+        "nameZH": "红色混凝土粉末",
+        "class": "concrete_powder",
+        "version": "all",
+        "faces": [
+            "up",
+            "north",
+            "south",
+            "east",
+            "west"
+        ]
+    },
+    "minecraft:black_concrete_powder[facing=north]": {
+        "nameEN": "Black concrete powder",
+        "nameZH": "黑色混凝土粉末",
+        "class": "concrete_powder",
+        "version": "all",
+        "faces": [
+            "up",
+            "north",
+            "south",
+            "east",
+            "west"
+        ]
+    }
+    /*,
     "minecraft:beacon": {
         "nameEN": "Beacon",
         "nameZH": "信标",
         "class": "others",
         "version": "all"
-    }
+    }*/
 }

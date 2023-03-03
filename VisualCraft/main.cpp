@@ -36,7 +36,7 @@ bool parse_config_json(QString &err) noexcept {
 
   try {
     std::fstream file{"./vc-config.json"};
-    file >> jo;
+    jo = njson::parse(file, nullptr, true, true);
 
     VCWind::default_json = jo.at("default_block_state_list");
     VCWind::default_zip_12 = jo.at("default_resource_pack_12");

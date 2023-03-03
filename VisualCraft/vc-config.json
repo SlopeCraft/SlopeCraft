@@ -1,5 +1,6 @@
 {
-    "default_resource_pack_12": "./Blocks_VCL/Vanilla_1_12_2.zip",
-    "default_resource_pack_latest": "./Blocks_VCL/Vanilla_1_19_2.zip",
-    "default_block_state_list": "./Blocks_VCL/VCL_blocks_fixed.json"
+    // The configure file for VisualCraft, telling where the default resource files are located.
+    "default_resource_pack_12": "./Blocks_VCL/Vanilla_1_12_2.zip", //< resource pack for 1.12
+    "default_resource_pack_latest": "./Blocks_VCL/Vanilla_1_19_2.zip", //< resource pack for above 1.13
+    "default_block_state_list": "./Blocks_VCL/VCL_blocks_fixed.json" //< block state list stored in json
 }
