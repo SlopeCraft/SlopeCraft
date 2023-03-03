@@ -6,100 +6,171 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>616</width>
-    <height>341</height>
+    <width>614</width>
+    <height>371</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>浏览方块</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <item row="2" column="1">
-    <widget class="QSpinBox" name="sb_scale_ratio">
-     <property name="suffix">
-      <string> x</string>
+   <item row="0" column="0" colspan="2">
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
      </property>
-     <property name="prefix">
-      <string>放大倍率：</string>
-     </property>
-     <property name="minimum">
-      <number>1</number>
-     </property>
-     <property name="maximum">
-      <number>512</number>
-     </property>
-     <property name="value">
-      <number>16</number>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QComboBox" name="combobox_select_blk">
-     <property name="placeholderText">
-      <string>选择方块</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QComboBox" name="combobox_select_face">
-     <property name="placeholderText">
-      <string>选择视角</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0" rowspan="7">
-    <widget class="QLabel" name="label_image">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1">
-    <widget class="QTextBrowser" name="tb_view_id">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="documentTitle">
-      <string>方块id</string>
-     </property>
-     <property name="placeholderText">
-      <string>方块id</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="1">
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="4" column="1">
-    <widget class="QPushButton" name="pb_save_current_image">
-     <property name="text">
-      <string>保存当前图片</string>
-     </property>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>可用方块</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="4" column="1">
+        <widget class="QPushButton" name="pb_save_current_image">
+         <property name="text">
+          <string>保存当前图片</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QComboBox" name="combobox_select_face">
+         <property name="placeholderText">
+          <string>选择视角</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QSpinBox" name="sb_scale_ratio">
+         <property name="suffix">
+          <string> x</string>
+         </property>
+         <property name="prefix">
+          <string>放大倍率：</string>
+         </property>
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>512</number>
+         </property>
+         <property name="value">
+          <number>16</number>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QTextBrowser" name="tb_view_id">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="documentTitle">
+          <string>方块id</string>
+         </property>
+         <property name="placeholderText">
+          <string>方块id</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="combobox_select_blk">
+         <property name="placeholderText">
+          <string>选择方块</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" rowspan="5">
+        <widget class="QLabel" name="label_image">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>所有方块</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="0" column="1" rowspan="5">
+        <widget class="QTableWidget" name="tw_version">
+         <column>
+          <property name="text">
+           <string>MC版本</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>是否可用</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QTextBrowser" name="tb_block_name_EN_all">
+         <property name="placeholderText">
+          <string>英文名</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2" rowspan="5">
+        <widget class="QTableWidget" name="tw_attribute">
+         <column>
+          <property name="text">
+           <string>属性</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>值</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QTextBrowser" name="tb_blockid_all">
+         <property name="placeholderText">
+          <string>方块id</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QComboBox" name="combobox_select_blk_all">
+         <property name="placeholderText">
+          <string>选择方块</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QTextBrowser" name="tb_block_name_ZH_all">
+         <property name="placeholderText">
+          <string>中文名</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_show_block_class">
+         <property name="text">
+          <string>方块类别：</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
   </layout>

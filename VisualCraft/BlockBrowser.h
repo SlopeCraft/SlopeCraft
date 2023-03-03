@@ -26,6 +26,7 @@ private slots:
 
   // auto connected
   void on_pb_save_current_image_clicked() noexcept;
+  void on_combobox_select_blk_all_currentIndexChanged(int idx) noexcept;
 
 public:
   explicit BlockBrowser(QWidget *parent);

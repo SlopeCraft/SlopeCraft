@@ -450,6 +450,8 @@ void VCWind::setup_block_widgets() noexcept {
       VCL_destroy_block_model(model);
     }
   }
+
+  this->ui->ac_browse_block->setEnabled(true);
 }
 
 bool VCWind::is_basical_colorset_changed() const noexcept {
@@ -785,6 +787,13 @@ void VCWind::when_algo_dither_bottons_toggled() noexcept {
   }
 }
 void VCWind::on_tabWidget_main_currentChanged(int) noexcept {}
+
+void VCWind::on_ac_load_resource_triggered() noexcept {
+  this->setup_basical_colorset();
+}
+void VCWind::on_ac_set_allowed_triggered() noexcept {
+  this->setup_allowed_colorset();
+}
 
 /*
 void VCWind::when_basical_colorset_changed() noexcept {

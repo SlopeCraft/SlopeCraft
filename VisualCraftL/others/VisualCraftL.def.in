@@ -32,6 +32,7 @@ VCL_get_block_class
 VCL_set_block_class
 VCL_get_block_id
 VCL_get_block_name
+VCL_is_block_suitable_for_version
 VCL_string_to_block_class
 VCL_get_block_model
 VCL_get_block_model_by_name

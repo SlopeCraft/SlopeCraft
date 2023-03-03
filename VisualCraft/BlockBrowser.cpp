@@ -4,6 +4,7 @@
 #include "ui_BlockBrowser.h"
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QTableWidgetItem>
 #include <magic_enum.hpp>
 
 BlockBrowser::BlockBrowser(QWidget *parent)
@@ -30,6 +31,7 @@ const VCWind *BlockBrowser::parent() const noexcept {
 }
 
 void BlockBrowser::fecth_content() noexcept {
+  // fecth content for avaliable blocks
   this->ui->combobox_select_blk->clear();
   this->ui->combobox_select_face->clear();
 
@@ -46,6 +48,71 @@ void BlockBrowser::fecth_content() noexcept {
 
     this->ui->combobox_select_face->addItem(str.data(), int(face));
   }
+
+  // fecth content for all blocks
+
+  const size_t num_blocks_all = VCL_get_blocks_from_block_state_list(
+      VCL_get_block_state_list(), nullptr, 0);
+
+  std::vector<VCL_block *> blks;
+  blks.resize(num_blocks_all);
+
+  const size_t num_blocks_all_2 = VCL_get_blocks_from_block_state_list(
+      VCL_get_block_state_list(), blks.data(), num_blocks_all);
+
+  if (num_blocks_all_2 != num_blocks_all) {
+    // logical error
+    QMessageBox::critical(
+        this, BlockBrowser::tr("致命逻辑错误"),
+        QStringLiteral("num_blocks_all_2(%1) != num_blocks_all(%2)")
+            .arg(num_blocks_all)
+            .arg(num_blocks_all_2));
+    exit(4);
+    return;
+  }
+
+  for (VCL_block *blk : blks) {
+    this->ui->combobox_select_blk_all->addItem(
+        QString::fromUtf8(VCL_get_block_name(blk, true)),
+        QVariant::fromValue((void *)blk));
+  }
+  {
+    this->ui->tw_version->setRowCount(19 - 12 + 1);
+    this->ui->tw_version->setColumnCount(2);
+    // if (false)
+    for (int r = 0; r < this->ui->tw_version->rowCount(); r++) {
+      for (int c = 0; c < this->ui->tw_version->columnCount(); c++) {
+        QTableWidgetItem *qtwi = new QTableWidgetItem;
+        qtwi->setFlags(Qt::ItemFlags{Qt::ItemFlag::ItemIsEnabled,
+                                     Qt::ItemFlag::ItemIsSelectable});
+        if (c == 0) {
+          qtwi->setText("1." + QString::number(r + 12));
+        }
+        this->ui->tw_version->setItem(r, c, qtwi);
+      }
+    }
+  }
+
+  {
+    auto attributes = magic_enum::enum_values<VCL_block_attribute_t>();
+    this->ui->tw_attribute->setRowCount(attributes.size());
+    this->ui->tw_attribute->setColumnCount(2);
+    // if (false)
+    for (int r = 0; r < this->ui->tw_attribute->rowCount(); r++) {
+      for (int c = 0; c < this->ui->tw_attribute->columnCount(); c++) {
+        QTableWidgetItem *qtwi = new QTableWidgetItem;
+        qtwi->setFlags(Qt::ItemFlags{Qt::ItemFlag::ItemIsEnabled,
+                                     Qt::ItemFlag::ItemIsSelectable});
+
+        if (c == 0) {
+          qtwi->setText(magic_enum::enum_name(attributes[r]).data());
+        }
+        this->ui->tw_attribute->setItem(r, c, qtwi);
+      }
+    }
+  }
+
+  // this->clear_second_page_content();
 }
 
 void BlockBrowser::update_display() noexcept {
@@ -136,5 +203,50 @@ void BlockBrowser::on_pb_save_current_image_clicked() noexcept {
         this, BlockBrowser::tr("保存图片失败"),
         BlockBrowser::tr("不知道怎么回事，反正就是没存上。"),
         QMessageBox::StandardButtons{QMessageBox::StandardButton::Ok});
+  }
+}
+
+void BlockBrowser::on_combobox_select_blk_all_currentIndexChanged(
+    int idx) noexcept {
+  if (idx < 0) {
+    return;
+  }
+
+  VCL_block *blk = (VCL_block *)this->ui->combobox_select_blk_all->currentData()
+                       .value<void *>();
+  assert(blk != nullptr);
+
+  this->ui->label_show_block_class->setText(
+      BlockBrowser::tr("方块类别：") +
+      magic_enum::enum_name(VCL_get_block_class(blk)).data());
+
+  this->ui->tb_block_name_EN_all->setText(
+      QString::fromUtf8(VCL_get_block_name(blk, false)));
+
+  this->ui->tb_block_name_ZH_all->setText(
+      QString::fromUtf8(VCL_get_block_name(blk, true)));
+
+  this->ui->tb_blockid_all->setText(VCL_get_block_id(blk));
+
+  for (int v = 12; v <= 19; v++) {
+    const int r = v - 12;
+    QTableWidgetItem *qtwi = this->ui->tw_version->item(r, 1);
+    assert(qtwi != nullptr);
+
+    qtwi->setCheckState(
+        VCL_is_block_suitable_for_version(blk, SCL_gameVersion(v))
+            ? Qt::CheckState::Checked
+            : Qt::CheckState::Unchecked);
+  }
+
+  auto attributes = magic_enum::enum_values<VCL_block_attribute_t>();
+
+  for (size_t r = 0; r < attributes.size(); r++) {
+    QTableWidgetItem *qtwi = this->ui->tw_attribute->item(r, 1);
+    assert(qtwi != nullptr);
+
+    qtwi->setCheckState(VCL_get_block_attribute(blk, attributes[r])
+                            ? Qt::CheckState::Checked
+                            : Qt::CheckState::Unchecked);
   }
 }

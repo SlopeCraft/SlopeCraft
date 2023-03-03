@@ -347,7 +347,7 @@
                   <x>0</x>
                   <y>0</y>
                   <width>820</width>
-                  <height>303</height>
+                  <height>301</height>
                  </rect>
                 </property>
                 <layout class="QGridLayout" name="gl_sa_blocks"/>
@@ -1019,22 +1019,36 @@
      <x>0</x>
      <y>0</y>
      <width>987</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+    </font>
    </property>
    <widget class="QMenu" name="menu_tests">
     <property name="title">
-     <string>Tests</string>
+     <string>测试</string>
     </property>
     <addaction name="action_test01"/>
    </widget>
-   <widget class="QMenu" name="menu_blocks">
+   <widget class="QMenu" name="menu_browse">
     <property name="title">
-     <string>方块</string>
+     <string>查看</string>
     </property>
     <addaction name="ac_browse_block"/>
+    <addaction name="ac_browse_biome"/>
    </widget>
-   <addaction name="menu_blocks"/>
+   <widget class="QMenu" name="menu_resource">
+    <property name="title">
+     <string>资源</string>
+    </property>
+    <addaction name="ac_load_resource"/>
+    <addaction name="ac_set_allowed"/>
+   </widget>
+   <addaction name="menu_resource"/>
+   <addaction name="menu_browse"/>
    <addaction name="menu_tests"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -1044,8 +1058,26 @@
    </property>
   </action>
   <action name="ac_browse_block">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
-    <string>浏览方块</string>
+    <string>方块</string>
+   </property>
+  </action>
+  <action name="ac_load_resource">
+   <property name="text">
+    <string>加载资源</string>
+   </property>
+  </action>
+  <action name="ac_set_allowed">
+   <property name="text">
+    <string>设置可用的方块</string>
+   </property>
+  </action>
+  <action name="ac_browse_biome">
+   <property name="text">
+    <string>生物群系</string>
    </property>
   </action>
  </widget>

@@ -607,6 +607,11 @@ VCL_EXPORT_FUN void VCL_set_block_class(VCL_block *b, VCL_block_class_t cl) {
   b->block_class = cl;
 }
 
+VCL_EXPORT_FUN bool VCL_is_block_suitable_for_version(const VCL_block *blk,
+                                                      SCL_gameVersion version) {
+  return blk->version_info.match(version);
+}
+
 VCL_EXPORT_FUN VCL_block_class_t VCL_string_to_block_class(const char *str,
                                                            bool *ok) {
   return string_to_block_class(str, ok);

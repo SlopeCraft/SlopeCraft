@@ -145,6 +145,12 @@ private:
 private slots:
   // for all pages
   void on_tabWidget_main_currentChanged(int page) noexcept;
+
+  // auto connected
+  void on_ac_load_resource_triggered() noexcept;
+  void on_ac_set_allowed_triggered() noexcept;
+
+  // auto connected
   void on_ac_browse_block_triggered() noexcept;
 
   // for page 0
