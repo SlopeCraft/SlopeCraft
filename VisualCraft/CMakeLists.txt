@@ -66,6 +66,8 @@ target_link_libraries(VisualCraft PRIVATE
     magic_enum::magic_enum
     OpenMP::OpenMP_CXX)
 
+target_include_directories(VisualCraft PRIVATE ${SlopeCraft_Nlohmann_json_include_dir})
+
 set_target_properties(VisualCraft PROPERTIES
     VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_ICON_FILE SlopeCraftIconNew.icns
@@ -77,5 +79,9 @@ set_target_properties(VisualCraft PROPERTIES
 )
 
 qt_finalize_executable(VisualCraft)
+
+include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_12.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_latest.cmake)
+configure_file(vc-config-to-bin-dir.json.in vc-config.json)
 
 include(install.cmake)

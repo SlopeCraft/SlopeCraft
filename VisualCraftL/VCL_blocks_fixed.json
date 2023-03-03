@@ -2506,12 +2506,11 @@
         "version": [
             12
         ]
-    }
-    /*,
+    },
     "minecraft:beacon": {
         "nameEN": "Beacon",
         "nameZH": "信标",
         "class": "others",
         "version": "all"
-    }*/
+    }
 }

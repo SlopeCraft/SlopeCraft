@@ -12,6 +12,10 @@
 
 using std::cout, std::endl;
 
+std::string VCWind::default_zip_12{""};
+std::string VCWind::default_zip_latest{""};
+std::string VCWind::default_json{""};
+
 VCWind::VCWind(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::VCWind), kernel(VCL_create_kernel()) {
   ui->setupUi(this);
@@ -133,14 +137,12 @@ VCWind::basic_colorset_option VCWind::current_basic_option() const noexcept {
     const auto aqlwi = dynamic_cast<const advanced_qlwi *>(qlwi);
 
     if (aqlwi->is_special()) {
-      // ./Blocks/VCL/Vanilla_1_12_2.zip
-      // ./Blocks/VCL/Vanilla_1_19_2.zip
 
       if (this->current_selected_version() == SCL_gameVersion::MC12) {
-        ret.zips.emplace_back("./Blocks_VCL/Vanilla_1_12_2.zip");
+        ret.zips.emplace_back(VCWind::default_zip_12.c_str());
       } else {
 
-        ret.zips.emplace_back("./Blocks_VCL/Vanilla_1_19_2.zip");
+        ret.zips.emplace_back(VCWind::default_zip_latest.c_str());
       }
       continue;
     }
@@ -157,9 +159,7 @@ VCWind::basic_colorset_option VCWind::current_basic_option() const noexcept {
     const auto aqlwi = dynamic_cast<const advanced_qlwi *>(qlwi);
 
     if (aqlwi->is_special()) {
-      // ./Blocks/VCL/Vanilla_1_12_2.zip
-      // ./Blocks/VCL/Vanilla_1_19_2.zip
-      ret.jsons.emplace_back("./Blocks_VCL/VCL_blocks_fixed.json");
+      ret.jsons.emplace_back(VCWind::default_json.c_str());
 
       continue;
     }
@@ -215,14 +215,12 @@ void VCWind::create_resource_pack() noexcept {
     const auto aqlwi = dynamic_cast<const advanced_qlwi *>(qlwi);
 
     if (aqlwi->is_special()) {
-      // ./Blocks/VCL/Vanilla_1_12_2.zip
-      // ./Blocks/VCL/Vanilla_1_19_2.zip
 
       if (this->current_selected_version() == SCL_gameVersion::MC12) {
-        rp_filenames.emplace_back("./Blocks_VCL/Vanilla_1_12_2.zip");
+        rp_filenames.emplace_back(VCWind::default_zip_12.c_str());
       } else {
 
-        rp_filenames.emplace_back("./Blocks_VCL/Vanilla_1_19_2.zip");
+        rp_filenames.emplace_back(VCWind::default_zip_latest.c_str());
       }
       continue;
     }
@@ -256,9 +254,7 @@ void VCWind::create_block_state_list() noexcept {
     const auto aqlwi = dynamic_cast<const advanced_qlwi *>(qlwi);
 
     if (aqlwi->is_special()) {
-      // ./Blocks/VCL/Vanilla_1_12_2.zip
-      // ./Blocks/VCL/Vanilla_1_19_2.zip
-      bsl_filenames.emplace_back("./Blocks_VCL/VCL_blocks_fixed.json");
+      bsl_filenames.emplace_back(VCWind::default_json.c_str());
 
       continue;
     }

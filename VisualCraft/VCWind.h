@@ -67,6 +67,10 @@ public:
   explicit VCWind(QWidget *parent = nullptr);
   ~VCWind();
 
+  static std::string default_zip_12;
+  static std::string default_zip_latest;
+  static std::string default_json;
+
   inline const auto &block_class_widgets() const noexcept {
     return this->map_VC_block_class;
   }
