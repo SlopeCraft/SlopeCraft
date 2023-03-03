@@ -19,7 +19,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>VisualCraft Pre-release</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
@@ -81,49 +81,49 @@
              <item row="2" column="1">
               <widget class="QRadioButton" name="rdb_version_15">
                <property name="text">
-                <string>1.15</string>
+                <string notr="true">1.15</string>
                </property>
               </widget>
              </item>
              <item row="0" column="0">
               <widget class="QRadioButton" name="rdb_version_12">
                <property name="text">
-                <string>1.12</string>
+                <string notr="true">1.12</string>
                </property>
               </widget>
              </item>
              <item row="4" column="0">
               <widget class="QRadioButton" name="rdb_version_16">
                <property name="text">
-                <string>1.16</string>
+                <string notr="true">1.16</string>
                </property>
               </widget>
              </item>
              <item row="0" column="1">
               <widget class="QRadioButton" name="rdb_version_13">
                <property name="text">
-                <string>1.13</string>
+                <string notr="true">1.13</string>
                </property>
               </widget>
              </item>
              <item row="2" column="0">
               <widget class="QRadioButton" name="rdb_version_14">
                <property name="text">
-                <string>1.14</string>
+                <string notr="true">1.14</string>
                </property>
               </widget>
              </item>
              <item row="4" column="1">
               <widget class="QRadioButton" name="rdb_version_17">
                <property name="text">
-                <string>1.17</string>
+                <string notr="true">1.17</string>
                </property>
               </widget>
              </item>
              <item row="5" column="1">
               <widget class="QRadioButton" name="rdb_version_19">
                <property name="text">
-                <string>1.19</string>
+                <string notr="true">1.19</string>
                </property>
                <property name="checked">
                 <bool>true</bool>
@@ -133,7 +133,7 @@
              <item row="5" column="0">
               <widget class="QRadioButton" name="rdb_version_18">
                <property name="text">
-                <string>1.18</string>
+                <string notr="true">1.18</string>
                </property>
               </widget>
              </item>
@@ -439,14 +439,14 @@
           <item row="2" column="1">
            <widget class="QToolButton" name="tb_add_images">
             <property name="text">
-             <string>+</string>
+             <string notr="true">+</string>
             </property>
            </widget>
           </item>
           <item row="2" column="2">
            <widget class="QToolButton" name="tb_remove_images">
             <property name="text">
-             <string>-</string>
+             <string notr="true">-</string>
             </property>
            </widget>
           </item>
@@ -855,14 +855,14 @@
                  <item row="0" column="0">
                   <widget class="QLabel" name="label">
                    <property name="text">
-                    <string>Offset</string>
+                    <string notr="true">Offset</string>
                    </property>
                   </widget>
                  </item>
                  <item row="1" column="0">
                   <widget class="QLabel" name="label_2">
                    <property name="text">
-                    <string>WEOffset</string>
+                    <string notr="true">WEOffset</string>
                    </property>
                   </widget>
                  </item>

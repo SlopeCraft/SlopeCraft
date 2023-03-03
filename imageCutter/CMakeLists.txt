@@ -33,7 +33,7 @@ set(imageCutter_ts_files
 if(${SlopeCraft_update_ts_files})
     # qt_add_lupdate(imageCutter TSFILES ${imageCutter_ts_files} CutterWind.ui SOURCES ${imageCutter_header_files} ${imageCutter_source_files})
     execute_process(
-        COMMAND ${SlopeCraft_Qt_lupdate_executable} CutterWind.ui ${imageCutter_header_files} ${imageCutter_source_files} "-ts" ${imageCutter_ts_files}
+        COMMAND ${SlopeCraft_Qt_lupdate_executable} CutterWind.ui ${imageCutter_header_files} ${imageCutter_source_files} "-ts" ${imageCutter_ts_files} -no-obsolete
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 endif()
 

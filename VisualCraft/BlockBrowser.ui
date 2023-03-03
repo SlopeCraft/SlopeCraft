@@ -41,7 +41,7 @@
        <item row="2" column="1">
         <widget class="QSpinBox" name="sb_scale_ratio">
          <property name="suffix">
-          <string> x</string>
+          <string notr="true"> x</string>
          </property>
          <property name="prefix">
           <string>放大倍率：</string>

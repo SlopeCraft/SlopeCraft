@@ -13,6 +13,8 @@ find_package(magic_enum REQUIRED)
 
 find_package(OpenMP REQUIRED)
 
+find_program(VC_lupdate_executable lupdate ${CMAKE_PREFIX_PATH})
+
 set(VisualCraft_header_files
     VCWind.h
     advanced_qlist_widget_item.h
@@ -43,7 +45,8 @@ set(VisualCraft_ui_files
     VC_block_class.ui
     BlockBrowser.ui)
 
-set(VisualCraft_ts_files)
+set(VisualCraft_ts_files
+    others/VisualCraft_en_US.ts)
 
 set(VisualCraft_project_sources
     ${VisualCraft_header_files}
@@ -51,6 +54,11 @@ set(VisualCraft_project_sources
     ${VisualCraft_ui_files}
     ${VisualCraft_ts_files}
 )
+
+if(${SlopeCraft_update_ts_files})
+    execute_process(COMMAND ${SlopeCraft_Qt_lupdate_executable} ${VisualCraft_header_files} ${VisualCraft_source_files} ${VisualCraft_ui_files} -ts others/VisualCraft_en_US.ts -no-obsolete
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} COMMAND_ERROR_IS_FATAL ANY)
+endif()
 
 qt_add_executable(VisualCraft
     MANUAL_FINALIZATION
@@ -76,6 +84,15 @@ set_target_properties(VisualCraft PROPERTIES
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
+)
+
+# translation
+qt_add_lrelease(VisualCraft TS_FILES ${VisualCraft_ts_files}
+    QM_FILES_OUTPUT_VARIABLE VCL_qm_files)
+qt_add_resources(VisualCraft "translations"
+    PREFIX "/i18n"
+    BASE ${CMAKE_CURRENT_BINARY_DIR}
+    FILES ${VCL_qm_files}
 )
 
 qt_finalize_executable(VisualCraft)

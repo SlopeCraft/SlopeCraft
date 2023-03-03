@@ -12,6 +12,8 @@
 
 using std::cout, std::endl;
 
+uint8_t is_language_ZH = true;
+
 std::string VCWind::default_zip_12{""};
 std::string VCWind::default_zip_latest{""};
 std::string VCWind::default_json{""};
@@ -79,7 +81,7 @@ void VCWind::setup_ui_select_biome() noexcept {
 
   for (const auto &b : magic_enum::enum_values<VCL_biome_t>()) {
     this->ui->combobox_select_biome->addItem(
-        QString::fromUtf8(VCL_biome_name(b, true)), int(b));
+        QString::fromUtf8(VCL_biome_name(b, ::is_language_ZH)), int(b));
   }
 }
 

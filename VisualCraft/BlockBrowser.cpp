@@ -38,7 +38,8 @@ void BlockBrowser::fecth_content() noexcept {
   for (const auto &pair_class : this->parent()->block_class_widgets()) {
     for (const auto &pair_blk : pair_class.second->blocks_vector()) {
       this->ui->combobox_select_blk->addItem(
-          QString::fromUtf8(VCL_get_block_name(pair_blk.first, true)),
+          QString::fromUtf8(
+              VCL_get_block_name(pair_blk.first, ::is_language_ZH)),
           QVariant::fromValue((void *)pair_blk.first));
     }
   }
@@ -73,7 +74,7 @@ void BlockBrowser::fecth_content() noexcept {
 
   for (VCL_block *blk : blks) {
     this->ui->combobox_select_blk_all->addItem(
-        QString::fromUtf8(VCL_get_block_name(blk, true)),
+        QString::fromUtf8(VCL_get_block_name(blk, ::is_language_ZH)),
         QVariant::fromValue((void *)blk));
   }
   {

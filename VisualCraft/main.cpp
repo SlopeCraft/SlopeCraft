@@ -2,14 +2,28 @@
 
 #include "CallbackFunctions.h"
 #include "VCWind.h"
-
+#include <QDir>
+#include <QFile>
 #include <QMessageBox>
-#include <json.hpp>
+#include <QTranslator>
 
 bool parse_config_json(QString &err) noexcept;
 
 int main(int argc, char **argv) {
   QApplication qapp(argc, argv);
+  QDir::setCurrent(QCoreApplication::applicationDirPath());
+  QTranslator translator;
+
+  ::is_language_ZH = QLocale::system().uiLanguages().contains("zh");
+
+  // this line is used to test the translation
+  //::is_language_ZH = false;
+
+  if (!::is_language_ZH) {
+    if (translator.load(":/i18n/VisualCraft_en_US.qm")) {
+      qapp.installTranslator(&translator);
+    }
+  }
 
   VCWind wind;
 
@@ -28,6 +42,7 @@ int main(int argc, char **argv) {
 }
 
 #include <fstream>
+#include <json.hpp>
 
 bool parse_config_json(QString &err) noexcept {
   err = "";

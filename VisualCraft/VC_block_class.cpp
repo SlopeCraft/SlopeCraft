@@ -1,7 +1,9 @@
 #include "VC_block_class.h"
+#include "VCWind.h"
 #include "ui_VC_block_class.h"
 #include <QCheckBox>
 #include <iostream>
+
 
 VC_block_class::VC_block_class(QWidget *parent)
     : QGroupBox(parent), ui(new Ui::VC_block_class) {
@@ -36,7 +38,7 @@ void VC_block_class::set_blocks(size_t num_blocks,
 
     cb->setChecked(VCL_is_block_enabled(blkp));
     // #warning set name here
-    cb->setText(QString::fromUtf8(VCL_get_block_name(blkp, true)));
+    cb->setText(QString::fromUtf8(VCL_get_block_name(blkp, ::is_language_ZH)));
 
     const size_t colidx = idx % cols;
     const size_t rowidx = idx / cols + 1;

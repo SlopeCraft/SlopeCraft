@@ -5,6 +5,8 @@
 #include <VisualCraftL.h>
 #include <map>
 
+extern uint8_t is_language_ZH;
+
 class QListWidget;
 class QListWidgetItem;
 class VC_block_class;
