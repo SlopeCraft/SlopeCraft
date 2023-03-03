@@ -11,26 +11,43 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>浏览方块</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
+   <item row="2" column="1">
+    <widget class="QSpinBox" name="sb_scale_ratio">
+     <property name="suffix">
+      <string> x</string>
+     </property>
+     <property name="prefix">
+      <string>放大倍率：</string>
+     </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>512</number>
+     </property>
+     <property name="value">
+      <number>16</number>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QComboBox" name="combobox_select_blk">
+     <property name="placeholderText">
+      <string>选择方块</string>
+     </property>
+    </widget>
+   </item>
    <item row="1" column="1">
-    <widget class="QComboBox" name="combobox_select_face"/>
-   </item>
-   <item row="4" column="1">
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
+    <widget class="QComboBox" name="combobox_select_face">
+     <property name="placeholderText">
+      <string>选择视角</string>
      </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
+    </widget>
    </item>
-   <item row="0" column="0" rowspan="6">
+   <item row="0" column="0" rowspan="7">
     <widget class="QLabel" name="label_image">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -44,24 +61,8 @@
      <property name="text">
       <string/>
      </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QComboBox" name="combobox_select_blk"/>
-   </item>
-   <item row="2" column="1">
-    <widget class="QSpinBox" name="sb_scale_ratio">
-     <property name="suffix">
-      <string>x</string>
-     </property>
-     <property name="prefix">
-      <string>放大倍率：</string>
-     </property>
-     <property name="minimum">
-      <number>1</number>
-     </property>
-     <property name="maximum">
-      <number>512</number>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </item>
@@ -72,6 +73,32 @@
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="documentTitle">
+      <string>方块id</string>
+     </property>
+     <property name="placeholderText">
+      <string>方块id</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="4" column="1">
+    <widget class="QPushButton" name="pb_save_current_image">
+     <property name="text">
+      <string>保存当前图片</string>
      </property>
     </widget>
    </item>

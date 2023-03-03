@@ -29,6 +29,7 @@ set(VisualCraft_source_files
     VCWind.cpp
     VCWind_gpu.cpp
     VCWind_export.cpp
+    VCWind_subwindows.cpp
 
     advanced_qlist_widget_item.cpp
     CallBackFunctions.cpp

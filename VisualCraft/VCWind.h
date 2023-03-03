@@ -67,6 +67,14 @@ public:
   explicit VCWind(QWidget *parent = nullptr);
   ~VCWind();
 
+  inline const auto &block_class_widgets() const noexcept {
+    return this->map_VC_block_class;
+  }
+
+signals:
+  void signal_basic_colorset_changed();
+  void signal_allowed_colorset_changed();
+
 private:
   // for all pages
   static void callback_progress_range_set(void *, int, int, int) noexcept;
@@ -137,6 +145,7 @@ private:
 private slots:
   // for all pages
   void on_tabWidget_main_currentChanged(int page) noexcept;
+  void on_ac_browse_block_triggered() noexcept;
 
   // for page 0
 

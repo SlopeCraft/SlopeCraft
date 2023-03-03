@@ -467,6 +467,8 @@ void VCWind::setup_basical_colorset() noexcept {
     return;
   }
 
+  emit signal_basic_colorset_changed();
+
   if (this->rp == nullptr) {
     this->create_resource_pack();
   }
@@ -531,6 +533,8 @@ void VCWind::setup_allowed_colorset() noexcept {
     return;
   }
   this->setup_basical_colorset();
+
+  emit signal_allowed_colorset_changed();
 
   this->setup_block_widgets();
 
@@ -780,7 +784,6 @@ void VCWind::when_algo_dither_bottons_toggled() noexcept {
     this->clear_convert_cache();
   }
 }
-
 void VCWind::on_tabWidget_main_currentChanged(int) noexcept {}
 
 /*
