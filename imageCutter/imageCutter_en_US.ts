@@ -2,13 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="en_US">
 <context>
-    <name>BatchUi</name>
-    <message>
-        <source>选择输出文件夹</source>
-        <translation type="obsolete">Select output directory</translation>
-    </message>
-</context>
-<context>
     <name>CutterWind</name>
     <message>
         <location filename="CutterWind.ui" line="14"/>
@@ -128,28 +121,6 @@
         <location filename="CutterWind.cpp" line="113"/>
         <source>选择输出文件夹</source>
         <translation>Select output directory</translation>
-    </message>
-</context>
-<context>
-    <name>MainWindow</name>
-    <message>
-        <source>开始</source>
-        <translation type="obsolete">Start</translation>
-    </message>
-    <message>
-        <source>选择图片</source>
-        <translation type="obsolete">Select image</translation>
-    </message>
-    <message>
-        <source>打开图片失败</source>
-        <translation type="obsolete">Failed to load image</translation>
-    </message>
-</context>
-<context>
-    <name>TaskBox</name>
-    <message>
-        <source>选择图片</source>
-        <translation type="obsolete">Select image</translation>
     </message>
 </context>
 </TS>

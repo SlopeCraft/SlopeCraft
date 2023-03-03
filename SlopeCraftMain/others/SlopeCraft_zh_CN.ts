@@ -770,7 +770,7 @@ Litematic</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="3972"/>
-        <location filename="../MainWindow.cpp" line="2249"/>
+        <location filename="../MainWindow.cpp" line="2248"/>
         <source>保存预设</source>
         <translation></translation>
     </message>
@@ -896,7 +896,7 @@ Litematic</translation>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="835"/>
+        <location filename="../MainWindow.cpp" line="836"/>
         <source>图片(*.png *.bmp *.jpg *.tif *.GIF )</source>
         <translation></translation>
     </message>
@@ -1102,153 +1102,153 @@ Litematic</translation>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2305"/>
+        <location filename="../MainWindow.cpp" line="2304"/>
         <source>测试方块列表失败</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2306"/>
+        <location filename="../MainWindow.cpp" line="2305"/>
         <source>具体信息：</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2337"/>
+        <location filename="../MainWindow.cpp" line="2336"/>
         <source>保存颜色表</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1889"/>
+        <location filename="../MainWindow.cpp" line="1888"/>
         <source>最大允许高度太小了</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1890"/>
+        <location filename="../MainWindow.cpp" line="1889"/>
         <source>有损压缩的最大允许不要低于14，否则很容易压缩失败</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1893"/>
+        <location filename="../MainWindow.cpp" line="1892"/>
         <source>允许使用的颜色过少</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1894"/>
+        <location filename="../MainWindow.cpp" line="1893"/>
         <source>你应该勾选启用尽可能多的基色，颜色太少是不行的！</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1897"/>
+        <location filename="../MainWindow.cpp" line="1896"/>
         <source>导出时Gzip压缩文件失败</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1898"/>
-        <location filename="../MainWindow.cpp" line="1902"/>
+        <location filename="../MainWindow.cpp" line="1897"/>
+        <location filename="../MainWindow.cpp" line="1901"/>
         <source>这可能是因为路径中含有中文字符！</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1901"/>
+        <location filename="../MainWindow.cpp" line="1900"/>
         <source>删除临时文件失败</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1933"/>
+        <location filename="../MainWindow.cpp" line="1932"/>
         <source>正在构建高度矩阵</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1936"/>
+        <location filename="../MainWindow.cpp" line="1935"/>
         <source>正在构建三维结构</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1939"/>
+        <location filename="../MainWindow.cpp" line="1938"/>
         <source>正在收集整张图片的颜色</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1942"/>
+        <location filename="../MainWindow.cpp" line="1941"/>
         <source>正在压缩立体地图画</source>
         <translation>Compressing the map</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1945"/>
+        <location filename="../MainWindow.cpp" line="1944"/>
         <source>正在为立体地图画搭桥</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1948"/>
+        <location filename="../MainWindow.cpp" line="1947"/>
         <source>正在匹配颜色</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1951"/>
+        <location filename="../MainWindow.cpp" line="1950"/>
         <source>正在使用抖动仿色</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1954"/>
+        <location filename="../MainWindow.cpp" line="1953"/>
         <source>正在将平板地图画变为墙面地图画</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1957"/>
+        <location filename="../MainWindow.cpp" line="1956"/>
         <source>正在写入三维结构</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1960"/>
+        <location filename="../MainWindow.cpp" line="1959"/>
         <source>正在写入方块列表</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1963"/>
+        <location filename="../MainWindow.cpp" line="1962"/>
         <source>正在写入地图数据文件</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1966"/>
+        <location filename="../MainWindow.cpp" line="1965"/>
         <source>正在写入基础信息</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2107"/>
+        <location filename="../MainWindow.cpp" line="2106"/>
         <source>检查更新完毕</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2108"/>
+        <location filename="../MainWindow.cpp" line="2107"/>
         <source>现在你正在用的就是最新版本！</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2179"/>
+        <location filename="../MainWindow.cpp" line="2178"/>
         <source>可用</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2180"/>
+        <location filename="../MainWindow.cpp" line="2179"/>
         <source>种颜色</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2195"/>
+        <location filename="../MainWindow.cpp" line="2194"/>
         <source>保存截屏</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2195"/>
+        <location filename="../MainWindow.cpp" line="2194"/>
         <source>图片 (*.jpg *.jpeg *.tif *.bmp *.png)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2219"/>
+        <location filename="../MainWindow.cpp" line="2218"/>
         <source>保存当前显示图片</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2220"/>
+        <location filename="../MainWindow.cpp" line="2219"/>
         <source>图片(*.png)</source>
         <translation></translation>
     </message>
@@ -1258,7 +1258,7 @@ Litematic</translation>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2291"/>
+        <location filename="../MainWindow.cpp" line="2290"/>
         <source>测试方块列表的结构文件</source>
         <translation></translation>
     </message>
@@ -1336,19 +1336,19 @@ Litematic</translation>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2043"/>
+        <location filename="../MainWindow.cpp" line="2042"/>
         <source>检查更新时遇到Json解析错误</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2044"/>
-        <location filename="../MainWindow.cpp" line="2066"/>
-        <location filename="../MainWindow.cpp" line="2085"/>
+        <location filename="../MainWindow.cpp" line="2043"/>
+        <location filename="../MainWindow.cpp" line="2065"/>
+        <location filename="../MainWindow.cpp" line="2084"/>
         <source>网址  </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2045"/>
+        <location filename="../MainWindow.cpp" line="2044"/>
         <source>  回复的信息无法通过json解析。
 
 这只是检查更新时遇到的故障，但不要紧，软件该用还能用。
@@ -1359,9 +1359,9 @@ Litematic</translation>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2050"/>
-        <location filename="../MainWindow.cpp" line="2072"/>
-        <location filename="../MainWindow.cpp" line="2091"/>
+        <location filename="../MainWindow.cpp" line="2049"/>
+        <location filename="../MainWindow.cpp" line="2071"/>
+        <location filename="../MainWindow.cpp" line="2090"/>
         <source>
 
 具体回复的信息为：
@@ -1369,13 +1369,13 @@ Litematic</translation>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2065"/>
-        <location filename="../MainWindow.cpp" line="2084"/>
+        <location filename="../MainWindow.cpp" line="2064"/>
+        <location filename="../MainWindow.cpp" line="2083"/>
         <source>检查更新时返回信息错误</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2067"/>
+        <location filename="../MainWindow.cpp" line="2066"/>
         <source>  回复的信息中不包含版本号（&quot;tag_name&quot;）。
 
 这只是检查更新时遇到的故障，但不要紧，软件该用还能用。
@@ -1384,7 +1384,7 @@ Litematic</translation>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2086"/>
+        <location filename="../MainWindow.cpp" line="2085"/>
         <source>  回复的信息中，版本号（&quot;tag_name&quot;）不是字符串。
 
 这只是检查更新时遇到的故障，但不要紧，软件该用还能用。
@@ -1393,23 +1393,23 @@ Litematic</translation>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2120"/>
+        <location filename="../MainWindow.cpp" line="2119"/>
         <source>SlopeCraft已更新</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2121"/>
+        <location filename="../MainWindow.cpp" line="2120"/>
         <source>好消息！好消息！SlopeCraft更新了！
 </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2122"/>
+        <location filename="../MainWindow.cpp" line="2121"/>
         <source>当前版本为</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2123"/>
+        <location filename="../MainWindow.cpp" line="2122"/>
         <source>，检查到最新版本为</source>
         <translation></translation>
     </message>
