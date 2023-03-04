@@ -50,8 +50,8 @@ private:
   Ui::VCWind *ui;
   VCL_Kernel *const kernel{nullptr};
   // for page 0
-  VCL_resource_pack *rp{nullptr};
-  VCL_block_state_list *bsl{nullptr};
+  // VCL_resource_pack *rp{nullptr};
+  // VCL_block_state_list *bsl{nullptr};
   // bool is_basical_colorset_changed{true};
 
   // for page 1
@@ -89,9 +89,11 @@ private:
   // for page 0 ------------------------------------------
   void setup_ui_select_biome() noexcept;
   //  create and set this->rp
-  void create_resource_pack() noexcept;
+  [[nodiscard]] static VCL_resource_pack *
+  create_resource_pack(const basic_colorset_option &opt) noexcept;
   // create and set this->bsl
-  void create_block_state_list() noexcept;
+  [[nodiscard]] static VCL_block_state_list *
+  create_block_state_list(const basic_colorset_option &opt) noexcept;
 
   // receive current selected version from ui
   SCL_gameVersion current_selected_version() const noexcept;

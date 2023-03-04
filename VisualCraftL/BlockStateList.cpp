@@ -5,6 +5,7 @@
 
 #include "ParseResourcePack.h"
 #include "VCL_internal.h"
+#include <magic_enum.hpp>
 
 VCL_block::VCL_block() { this->initialize_attributes(); }
 
@@ -228,6 +229,22 @@ VCL_block parse_block(const nlohmann::json &jo, bool *const ok) {
     ret.set_attribute(VCL_block::attribute::is_air, jo.at("is_air"));
   }
 
+  if (jo.contains("is_grass")) {
+    if (!jo.at("is_grass").is_boolean()) {
+      *ok = false;
+      return {};
+    }
+    ret.set_attribute(VCL_block::attribute::is_grass, jo.at("is_grass"));
+  }
+
+  if (jo.contains("is_foliage")) {
+    if (!jo.at("is_foliage").is_boolean()) {
+      *ok = false;
+      return {};
+    }
+    ret.set_attribute(VCL_block::attribute::is_foliage, jo.at("is_foliage"));
+  }
+
   *ok = true;
 
   return ret;
@@ -308,45 +325,16 @@ void VCL_block_state_list::avaliable_block_states_by_transparency(
   }
 }
 
-#define VCL_private_macro_make_case(str, s, ret, ok_val) \
-  if (str == #s) {                                       \
-    ok_val = true;                                       \
-    ret = VCL_block_class_t::s;                          \
-  }
-
 VCL_block_class_t string_to_block_class(std::string_view str,
                                         bool *ok) noexcept {
-  bool val_for_ok = false;
-  VCL_block_class_t result{};
 
-  VCL_private_macro_make_case(str, wood, result, val_for_ok);
-  VCL_private_macro_make_case(str, planks, result, val_for_ok);
-  VCL_private_macro_make_case(str, leaves, result, val_for_ok);
-  VCL_private_macro_make_case(str, mushroom, result, val_for_ok);
-  VCL_private_macro_make_case(str, slab, result, val_for_ok);
-  VCL_private_macro_make_case(str, wool, result, val_for_ok);
-  VCL_private_macro_make_case(str, concrete, result, val_for_ok);
-  VCL_private_macro_make_case(str, terracotta, result, val_for_ok);
-  VCL_private_macro_make_case(str, glazed_terracotta, result, val_for_ok);
-  VCL_private_macro_make_case(str, concrete_powder, result, val_for_ok);
-  VCL_private_macro_make_case(str, shulker_box, result, val_for_ok);
-  VCL_private_macro_make_case(str, glass, result, val_for_ok);
-  VCL_private_macro_make_case(str, redstone, result, val_for_ok);
-  VCL_private_macro_make_case(str, stone, result, val_for_ok);
-  VCL_private_macro_make_case(str, ore, result, val_for_ok);
-  VCL_private_macro_make_case(str, clay, result, val_for_ok);
-  VCL_private_macro_make_case(str, natural, result, val_for_ok);
-  VCL_private_macro_make_case(str, crafted, result, val_for_ok);
-  VCL_private_macro_make_case(str, desert, result, val_for_ok);
-  VCL_private_macro_make_case(str, nether, result, val_for_ok);
-  VCL_private_macro_make_case(str, the_end, result, val_for_ok);
-  VCL_private_macro_make_case(str, ocean, result, val_for_ok);
-  VCL_private_macro_make_case(str, creative_only, result, val_for_ok);
-  VCL_private_macro_make_case(str, others, result, val_for_ok);
-
+  auto ret = magic_enum::enum_cast<VCL_block_class_t>(str);
   if (ok != nullptr) {
-    *ok = val_for_ok;
+    *ok = ret.has_value();
+  }
+  if (!ret.has_value()) {
+    return {};
   }
 
-  return result;
+  return ret.value();
 }

@@ -25,17 +25,32 @@ int main(int argc, char **argv) {
     }
   }
 
+  if (!VCL_is_version_ok()) {
+    QMessageBox::critical(
+        nullptr, VCWind::tr("VisualCraftL动态库版本不匹配"),
+        VCWind::tr(
+            "界面程序编译时使用的VisualCraftL版本为%"
+            "1，而VisualCraftL动态库的版本为%2。通常这是因为动态库版本过低。")
+            .arg(SC_VERSION_STR)
+            .arg(VCL_version_string()));
+    qapp.exit(1);
+    return 1;
+  }
+
+  {
+    QString err;
+    if (!parse_config_json(err)) {
+      QMessageBox::critical(nullptr, VCWind::tr("加载配置文件失败。"), err);
+      qapp.exit(1);
+      return 1;
+    }
+  }
+
   VCWind wind;
 
   VC_callback::wind = &wind;
 
   VCL_set_report_callback(VC_callback::callback_receive_report);
-  QString err;
-  if (!parse_config_json(err)) {
-    QMessageBox::critical(&wind, VCWind::tr("加载配置文件失败。"), err);
-    qapp.exit(1);
-    return 1;
-  }
 
   wind.show();
   return qapp.exec();

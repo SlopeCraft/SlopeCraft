@@ -404,7 +404,8 @@ i =
   if other values, the function will return INT_MIN.
 */
 VCL_EXPORT_FUN int VCL_version_component(int i);
-VCL_EXPORT_FUN bool VCL_is_version_ok(uint64_t version_at_caller_s_build_time);
+VCL_EXPORT_FUN bool
+VCL_is_version_ok(uint64_t version_at_caller_s_build_time = SC_VERSION_U64);
 
 class VCL_GPU_Platform;
 class VCL_GPU_Device;

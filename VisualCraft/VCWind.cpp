@@ -201,73 +201,34 @@ QByteArray VCWind::checksum_basic_colorset_option(
 }
 
 // utilitiy functions
-void VCWind::create_resource_pack() noexcept {
-  VCL_destroy_resource_pack(this->rp);
-
-  std::vector<QByteArray> rp_filenames;
+VCL_resource_pack *
+VCWind::create_resource_pack(const basic_colorset_option &opt) noexcept {
+  std::vector<QByteArray> rpfiles_qba;
+  rpfiles_qba.reserve(opt.zips.size());
   std::vector<const char *> rpfiles_charp;
-  rp_filenames.reserve(this->ui->lw_rp->count());
-
-  for (int i = 0; i < this->ui->lw_rp->count(); i++) {
-    const auto qlwi = this->ui->lw_rp->item(i);
-    if (qlwi->checkState() != Qt::CheckState::Checked) {
-      continue;
-    }
-
-    if (qlwi->data(Qt::UserRole).toBool()) {
-
-      if (this->current_selected_version() == SCL_gameVersion::MC12) {
-        rp_filenames.emplace_back(VCWind::default_zip_12.c_str());
-      } else {
-
-        rp_filenames.emplace_back(VCWind::default_zip_latest.c_str());
-      }
-      continue;
-    }
-
-    const QString &filename = qlwi->text();
-    rp_filenames.emplace_back(filename.toUtf8());
+  rpfiles_charp.reserve(opt.zips.size());
+  for (auto &qstr : opt.zips) {
+    rpfiles_qba.emplace_back(qstr.toUtf8());
+    rpfiles_charp.emplace_back(rpfiles_qba.back().data());
   }
 
-  rpfiles_charp.resize(rp_filenames.size());
-  for (size_t i = 0; i < rp_filenames.size(); i++) {
-    rpfiles_charp[i] = rp_filenames[i].data();
-  }
-
-  this->rp =
-      VCL_create_resource_pack(rpfiles_charp.size(), rpfiles_charp.data());
+  return VCL_create_resource_pack(rpfiles_charp.size(), rpfiles_charp.data());
 }
 
 // utilitiy functions
-void VCWind::create_block_state_list() noexcept {
-  VCL_destroy_block_state_list(this->bsl);
+VCL_block_state_list *
+VCWind::create_block_state_list(const basic_colorset_option &opt) noexcept {
+
   std::vector<QByteArray> bsl_filenames;
   std::vector<const char *> jsonfiles_charp;
-  bsl_filenames.reserve(this->ui->lw_bsl->count());
 
-  for (int i = 0; i < this->ui->lw_bsl->count(); i++) {
-    const auto qlwi = this->ui->lw_bsl->item(i);
-    if (qlwi->checkState() != Qt::CheckState::Checked) {
-      continue;
-    }
-
-    if (qlwi->data(Qt::UserRole).toBool()) {
-      bsl_filenames.emplace_back(VCWind::default_json.c_str());
-
-      continue;
-    }
-
-    const QString &filename = qlwi->text();
-    bsl_filenames.emplace_back(filename.toUtf8());
+  for (auto &qstr : opt.jsons) {
+    bsl_filenames.emplace_back(qstr.toUtf8());
+    jsonfiles_charp.emplace_back(bsl_filenames.back().data());
   }
 
-  jsonfiles_charp.resize(bsl_filenames.size());
-  for (size_t i = 0; i < bsl_filenames.size(); i++) {
-    jsonfiles_charp[i] = bsl_filenames[i].data();
-  }
-
-  this->bsl = VCL_create_block_state_list(jsonfiles_charp.size(),
-                                          jsonfiles_charp.data());
+  return VCL_create_block_state_list(jsonfiles_charp.size(),
+                                     jsonfiles_charp.data());
 }
 
 // slot
@@ -474,12 +435,28 @@ void VCWind::setup_basical_colorset() noexcept {
 
   emit signal_basic_colorset_changed();
 
-  if (this->rp == nullptr) {
-    this->create_resource_pack();
+  auto current_option = this->current_basic_option();
+
+  VCL_resource_pack *rp = VCWind::create_resource_pack(current_option);
+
+  if (rp == nullptr) {
+    QMessageBox::critical(
+        this, VCWind::tr("资源包解析失败"),
+        VCWind::tr("在此窗口之前弹出的错误信息非常重要，请将它汇报给开发者。"),
+        QMessageBox::StandardButtons{QMessageBox::StandardButton::Close});
+    exit(3);
+    return;
   }
 
-  if (this->bsl == nullptr) {
-    this->create_block_state_list();
+  VCL_block_state_list *bsl = VCWind::create_block_state_list(current_option);
+  if (bsl == nullptr) {
+    QMessageBox::critical(
+        this, VCWind::tr("方块状态列表json解析失败"),
+        VCWind::tr("在此窗口之前弹出的错误信息非常重要，请将它汇报给开发者。"),
+        QMessageBox::StandardButtons{QMessageBox::StandardButton::Close});
+    VCL_destroy_resource_pack(rp);
+    exit(4);
+    return;
   }
 
   VCL_set_resource_option option;
@@ -490,7 +467,7 @@ void VCWind::setup_basical_colorset() noexcept {
       (VCL_biome_t)this->ui->combobox_select_biome->currentData().toInt();
   option.is_render_quality_fast = !this->ui->cb_leaves_transparent->isChecked();
 
-  const bool success = VCL_set_resource_move(&this->rp, &this->bsl, option);
+  const bool success = VCL_set_resource_move(&rp, &bsl, option);
 
   if (!success) {
     const auto ret = QMessageBox::critical(
@@ -499,7 +476,7 @@ void VCWind::setup_basical_colorset() noexcept {
                    "。尝试移除解析失败的资源包/方块列表，或者减小最大层数。"),
         QMessageBox::StandardButtons{QMessageBox::StandardButton::Close});
     if (ret == QMessageBox::StandardButton::Close) {
-      exit(3);
+      exit(5);
       return;
     }
   }
@@ -789,6 +766,7 @@ void VCWind::when_algo_dither_bottons_toggled() noexcept {
     this->clear_convert_cache();
   }
 }
+
 void VCWind::on_tabWidget_main_currentChanged(int) noexcept {}
 
 void VCWind::on_ac_load_resource_triggered() noexcept {
