@@ -307,6 +307,10 @@ VCL_EXPORT_FUN void VCL_display_resource_pack(const VCL_resource_pack *,
                                               bool blockstates = true,
                                               bool model = true);
 
+VCL_EXPORT_FUN const uint32_t *VCL_get_colormap(const VCL_resource_pack *,
+                                                bool is_foliage,
+                                                int *rows = nullptr,
+                                                int *cols = nullptr);
 // functions about block state list
 VCL_EXPORT_FUN void VCL_display_block_state_list(const VCL_block_state_list *);
 

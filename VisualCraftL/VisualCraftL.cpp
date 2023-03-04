@@ -239,8 +239,23 @@ VCL_EXPORT_FUN void VCL_display_resource_pack(const VCL_resource_pack *rp,
     VCL_report(VCL_report_type_t::information, msg.c_str(), true);
   }
 }
-VCL_EXPORT_FUN void
-VCL_display_block_state_list(const VCL_block_state_list *bsl) {
+
+VCL_EXPORT_FUN const uint32_t *VCL_get_colormap(const VCL_resource_pack *rp,
+                                                bool is_foliage, int *rows,
+                                                int *cols) {
+
+  if (rows != nullptr) {
+    *rows = 256;
+  }
+  if (cols != nullptr) {
+    *cols = 256;
+  }
+
+  return rp->get_colormap(is_foliage).data();
+}
+
+VCL_EXPORT_FUN
+void VCL_display_block_state_list(const VCL_block_state_list *bsl) {
   if (bsl == nullptr) {
     return;
   }

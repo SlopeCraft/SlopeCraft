@@ -300,10 +300,12 @@ void VCWind::on_pb_remove_bsl_clicked() noexcept {
 
 // slot
 void VCWind::setup_block_widgets() noexcept {
+  /*
   if (!this->is_basical_colorset_changed() &&
       !this->map_VC_block_class.empty()) {
     return;
   }
+  */
 
   this->setup_basical_colorset();
 
@@ -322,8 +324,7 @@ void VCWind::setup_block_widgets() noexcept {
   for (auto &ptr_ref : buffer) {
     ptr_ref = nullptr;
   }
-
-  VCL_get_blocks_from_block_state_list_match(
+  const size_t block_nums = VCL_get_blocks_from_block_state_list_match(
       VCL_get_block_state_list(), this->current_selected_version(),
       this->current_selected_face(), buffer.data(), buffer.size());
 
@@ -415,6 +416,9 @@ void VCWind::setup_block_widgets() noexcept {
     }
   }
 
+  this->ui->gb_blocks->setTitle(VCWind::tr("全部方块") +
+                                QStringLiteral(" (%1)").arg(block_nums));
+
   this->ui->ac_browse_block->setEnabled(true);
 }
 
@@ -480,6 +484,8 @@ void VCWind::setup_basical_colorset() noexcept {
       return;
     }
   }
+
+  this->setup_block_widgets();
 }
 
 QByteArray VCWind::checksum_allowed_colorset_option(
@@ -517,8 +523,6 @@ void VCWind::setup_allowed_colorset() noexcept {
   this->setup_basical_colorset();
 
   emit signal_allowed_colorset_changed();
-
-  this->setup_block_widgets();
 
   if (cur_option.blocks.empty()) {
     this->selected_blocks(&cur_option.blocks);

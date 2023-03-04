@@ -17,6 +17,7 @@ VCL_set_allowed_blocks
 VCL_is_allowed_colorset_ok
 VCL_get_allowed_colors
 VCL_display_resource_pack
+VCL_get_colormap
 VCL_display_block_state_list
 VCL_get_blocks_from_block_state_list
 VCL_get_blocks_from_block_state_list_const

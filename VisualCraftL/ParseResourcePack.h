@@ -580,25 +580,6 @@ public:
   }
 
   VCL_resource_pack &operator=(VCL_resource_pack &&src) noexcept {
-    /**
-
-  std::unordered_map<std::string, block_model::model> block_models;
-  std::unordered_map<std::string, Eigen::Array<ARGB, Eigen::Dynamic,
-                                               Eigen::Dynamic, Eigen::RowMajor>>
-      textures_original;
-  std::unordered_map<std::string,
-                     std::variant<resource_json::block_states_variant,
-                                  resource_json::block_state_multipart>>
-      block_states;
-  block_model::EImgRowMajor_t colormap_grass;
-  block_model::EImgRowMajor_t colormap_foliage;
-
-  std::unordered_map<std::string, Eigen::Array<ARGB, Eigen::Dynamic,
-                                               Eigen::Dynamic, Eigen::RowMajor>>
-      textures_override;
-
-  bool is_MC12{false};
-    */
 
     this->block_models = std::move(src.block_models);
     this->textures_original = std::move(src.textures_original);
@@ -683,6 +664,10 @@ public:
                           VCL_face_t face_exposed,
                           block_model::EImgRowMajor_t *const img,
                           buffer_t &) const noexcept;
+
+  inline const auto &get_colormap(bool is_foliage) const noexcept {
+    return (is_foliage) ? (this->colormap_foliage) : (this->colormap_grass);
+  }
 
 private:
   std::unordered_map<std::string, block_model::model> block_models;

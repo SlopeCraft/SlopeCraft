@@ -331,7 +331,7 @@
          </attribute>
          <layout class="QGridLayout" name="gridLayout_5">
           <item row="0" column="1">
-           <widget class="QGroupBox" name="groupBox_5">
+           <widget class="QGroupBox" name="gb_blocks">
             <property name="title">
              <string>全部方块</string>
             </property>
