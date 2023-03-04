@@ -17,7 +17,8 @@ find_program(VC_lupdate_executable lupdate ${CMAKE_PREFIX_PATH})
 
 set(VisualCraft_header_files
     VCWind.h
-    advanced_qlist_widget_item.h
+
+    # advanced_qlist_widget_item.h
     CallBackFunctions.h
     VC_block_class.h
     BlockBrowser.h
@@ -33,7 +34,7 @@ set(VisualCraft_source_files
     VCWind_export.cpp
     VCWind_subwindows.cpp
 
-    advanced_qlist_widget_item.cpp
+    # advanced_qlist_widget_item.cpp
     CallBackFunctions.cpp
     VC_block_class.cpp
 

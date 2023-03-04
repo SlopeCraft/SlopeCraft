@@ -595,11 +595,6 @@
 <context>
     <name>VC_block_class</name>
     <message>
-        <location filename="../VC_block_class.ui" line="14"/>
-        <source>GroupBox</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../VC_block_class.ui" line="23"/>
         <source>启用</source>
         <translation>Enable</translation>

@@ -1,6 +1,5 @@
 #include "VCWind.h"
 #include "VC_block_class.h"
-#include "advanced_qlist_widget_item.h"
 #include "ui_VCWind.h"
 
 #include <QCryptographicHash>
@@ -72,8 +71,13 @@ void VCWind::append_default_to_rp_or_bsl(QListWidget *qlw,
                                          bool is_rp) noexcept {
 
   const QString txt = is_rp ? VCWind::tr("原版资源包") : VCWind::tr("原版json");
-  advanced_qlwi *aqlwi = new advanced_qlwi(txt, true);
-  qlw->addItem(aqlwi);
+  QListWidgetItem *qlwi = new QListWidgetItem(txt);
+
+  qlwi->setData(Qt::UserRole, true);
+  qlwi->setCheckState(Qt::CheckState::Checked);
+  qlwi->setIcon(QIcon(QApplication::style()->standardIcon(
+      QStyle::StandardPixmap::SP_FileIcon)));
+  qlw->addItem(qlwi);
 }
 
 void VCWind::setup_ui_select_biome() noexcept {
@@ -136,9 +140,7 @@ VCWind::basic_colorset_option VCWind::current_basic_option() const noexcept {
       continue;
     }
 
-    const auto aqlwi = dynamic_cast<const advanced_qlwi *>(qlwi);
-
-    if (aqlwi->is_special()) {
+    if (qlwi->data(Qt::UserRole).toBool()) {
 
       if (this->current_selected_version() == SCL_gameVersion::MC12) {
         ret.zips.emplace_back(VCWind::default_zip_12.c_str());
@@ -158,9 +160,7 @@ VCWind::basic_colorset_option VCWind::current_basic_option() const noexcept {
       continue;
     }
 
-    const auto aqlwi = dynamic_cast<const advanced_qlwi *>(qlwi);
-
-    if (aqlwi->is_special()) {
+    if (qlwi->data(Qt::UserRole).toBool()) {
       ret.jsons.emplace_back(VCWind::default_json.c_str());
 
       continue;
@@ -214,9 +214,7 @@ void VCWind::create_resource_pack() noexcept {
       continue;
     }
 
-    const auto aqlwi = dynamic_cast<const advanced_qlwi *>(qlwi);
-
-    if (aqlwi->is_special()) {
+    if (qlwi->data(Qt::UserRole).toBool()) {
 
       if (this->current_selected_version() == SCL_gameVersion::MC12) {
         rp_filenames.emplace_back(VCWind::default_zip_12.c_str());
@@ -253,9 +251,7 @@ void VCWind::create_block_state_list() noexcept {
       continue;
     }
 
-    const auto aqlwi = dynamic_cast<const advanced_qlwi *>(qlwi);
-
-    if (aqlwi->is_special()) {
+    if (qlwi->data(Qt::UserRole).toBool()) {
       bsl_filenames.emplace_back(VCWind::default_json.c_str());
 
       continue;
@@ -286,8 +282,12 @@ void VCWind::on_pb_add_rp_clicked() noexcept {
   prev_dir = QFileInfo(zips.front()).dir().absolutePath();
 
   for (QString &qstr : zips) {
-    advanced_qlwi *aqlwi = new advanced_qlwi(qstr, false);
-    this->ui->lw_rp->insertItem(0, aqlwi);
+    QListWidgetItem *qlwi = new QListWidgetItem(qstr);
+    qlwi->setData(Qt::UserRole, false);
+    qlwi->setCheckState(Qt::CheckState::Checked);
+    qlwi->setIcon(QIcon(QApplication::style()->standardIcon(
+        QStyle::StandardPixmap::SP_FileIcon)));
+    this->ui->lw_rp->insertItem(0, qlwi);
   }
 }
 
@@ -295,7 +295,7 @@ void VCWind::on_pb_add_rp_clicked() noexcept {
 void VCWind::on_pb_remove_rp_clicked() noexcept {
   auto list_qwli = this->ui->lw_rp->selectedItems();
   for (auto qlwi : list_qwli) {
-    if (dynamic_cast<advanced_qlwi *>(qlwi)->is_special()) {
+    if (qlwi->data(Qt::UserRole).toBool()) {
       continue;
     }
     this->ui->lw_rp->removeItemWidget(qlwi);
@@ -315,8 +315,13 @@ void VCWind::on_pb_add_bsl_clicked() noexcept {
   prev_dir = QFileInfo(jsons.front()).dir().absolutePath();
 
   for (QString &qstr : jsons) {
-    advanced_qlwi *aqlwi = new advanced_qlwi(qstr, false);
-    this->ui->lw_bsl->insertItem(0, aqlwi);
+    QListWidgetItem *qlwi = new QListWidgetItem(qstr);
+
+    qlwi->setData(Qt::UserRole, false);
+    qlwi->setCheckState(Qt::CheckState::Checked);
+    qlwi->setIcon(QIcon(QApplication::style()->standardIcon(
+        QStyle::StandardPixmap::SP_FileIcon)));
+    this->ui->lw_bsl->insertItem(0, qlwi);
   }
 }
 
@@ -324,7 +329,7 @@ void VCWind::on_pb_add_bsl_clicked() noexcept {
 void VCWind::on_pb_remove_bsl_clicked() noexcept {
   auto list_qwli = this->ui->lw_bsl->selectedItems();
   for (auto qlwi : list_qwli) {
-    if (dynamic_cast<advanced_qlwi *>(qlwi)->is_special()) {
+    if (qlwi->data(Qt::UserRole).toBool()) {
       continue;
     }
     this->ui->lw_bsl->removeItemWidget(qlwi);
