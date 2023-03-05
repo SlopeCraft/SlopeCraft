@@ -792,6 +792,8 @@ void VCL_report(VCL_report_type_t t, const char *msg, bool flush) noexcept {
   VCL_report_fun(t, msg, flush);
 }
 
+#include <CL/cl.hpp>
+
 class VCL_GPU_Platform {
 public:
   cl::Platform plat;
@@ -832,7 +834,7 @@ public:
   std::string name;
 };
 
-VCL_EXPORT_FUN size_t VCL_platform_num() { return ocl_warpper::platform_num(); }
+VCL_EXPORT_FUN size_t VCL_platform_num() { return gpu_wrapper::platform_num(); }
 VCL_EXPORT_FUN VCL_GPU_Platform *VCL_get_platform(size_t platform_idx,
                                                   int *errorcode) {
   VCL_GPU_Platform *ret = new VCL_GPU_Platform(platform_idx);

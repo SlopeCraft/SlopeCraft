@@ -22,14 +22,18 @@ public:
               void (*progressAdd)(void *, int)) noexcept override;
 
   bool have_gpu_resource() const noexcept override {
-    return this->img_cvter.have_ocl();
+    return this->img_cvter.have_gpu_resource();
   }
 
   bool set_gpu_resource(size_t platform_idx,
                         size_t device_idx) noexcept override {
-    this->img_cvter.set_ocl(
-        ocl_warpper::ocl_resource(platform_idx, device_idx));
-    return this->img_cvter.ocl_resource().ok();
+    if (this->img_cvter.have_gpu_resource()) {
+      gpu_wrapper::destroy(this->img_cvter.gpu_resource());
+    }
+    this->img_cvter.set_gpu_resource(
+        gpu_wrapper::create_opencl(platform_idx, device_idx));
+
+    return this->img_cvter.gpu_resource()->ok_v();
   }
 
   bool prefer_gpu() const noexcept override {
@@ -43,7 +47,8 @@ public:
   void show_gpu_name() const noexcept override;
   size_t get_gpu_name(char *string_buffer,
                       size_t buffer_capacity) const noexcept override {
-    const std::string result = this->img_cvter.ocl_resource().device_vendor();
+    const std::string result =
+        this->img_cvter.gpu_resource()->device_vendor_v();
     if (string_buffer == nullptr || buffer_capacity <= 0) {
       return result.size();
     }

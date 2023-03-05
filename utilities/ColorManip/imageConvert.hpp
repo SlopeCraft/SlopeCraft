@@ -71,7 +71,12 @@ public:
     this->gpu = gi;
   }
 
-  inline auto gpu_resource() noexcept { return this->gpu; }
+  inline gpu_wrapper::gpu_interface *gpu_resource() noexcept {
+    return this->gpu;
+  }
+  inline const gpu_wrapper::gpu_interface *gpu_resource() const noexcept {
+    return this->gpu;
+  }
 };
 
 template <bool is_not_optical>
@@ -305,7 +310,7 @@ private:
     } else {
 
       // If converter have gpu resources, compute by gpu
-      if (try_gpu && this->have_ocl()) {
+      if (try_gpu && this->have_gpu_resource()) {
         const bool ok = this->match_all_TokiColors_gpu();
 
         return ok;
@@ -372,7 +377,7 @@ private:
     static_assert(!is_not_optical,
                   "OpenCL boosting is only avaliable for VisualCraftL.");
 
-    if (!this->have_ocl()) {
+    if (!this->have_gpu_resource()) {
       abort();
       return false;
     }
@@ -462,7 +467,7 @@ private:
         return false;
       }
 
-      this->gpu->execute(algo, false);
+      this->gpu->execute_v(algo, false);
       if (!this->gpu->ok_v()) {
         return false;
       }

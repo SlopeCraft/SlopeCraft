@@ -85,7 +85,7 @@ TokiVC::~TokiVC() {
 }
 
 void TokiVC::show_gpu_name() const noexcept {
-  std::string msg = this->img_cvter.ocl_resource().device_vendor();
+  std::string msg = this->img_cvter.gpu_resource()->device_vendor_v();
   VCL_report(VCL_report_type_t::information, msg.c_str());
 }
 
@@ -574,8 +574,8 @@ bool TokiVC::convert(::SCL_convertAlgo algo, bool dither) noexcept {
   if (!this->img_cvter.convert_image(algo, dither, this->imgcvter_prefer_gpu)) {
     std::string msg =
         fmt::format("Failed to convert. detail : {}, error code = {}",
-                    this->img_cvter.ocl_resource().error_detail(),
-                    this->img_cvter.ocl_resource().error_code());
+                    this->img_cvter.gpu_resource()->error_detail_v(),
+                    this->img_cvter.gpu_resource()->error_code_v());
     VCL_report(VCL_report_type_t::error, msg.c_str());
     return false;
   }
