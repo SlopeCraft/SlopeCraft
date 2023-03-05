@@ -46,13 +46,12 @@ std::string platform_str(size_t platform_idx) noexcept;
 
 size_t device_num(size_t platform_idx) noexcept;
 std::string device_str(size_t platform_idx, size_t device_idx) noexcept;
-} // namespace gpu_wrapper
 
 #ifdef SLOPECRAFT_HAVE_OPENCL
-
-gpu_wrapper::gpu_interface *create_opencl(size_t platform_idx,
-                                          size_t device_idx);
-
+[[nodiscard]] gpu_wrapper::gpu_interface *create_opencl(size_t platform_idx,
+                                                        size_t device_idx);
 #endif // #ifdef SLOPECRAFT_HAVE_OPENCL
+
+} // namespace gpu_wrapper
 
 #endif // SLOPECRAFT_UTILITIES_GPUWRAPPER_GPUINTERFACE_H

@@ -1,4 +1,4 @@
-#include <ColorDiff_OpenCL.h>
+#include <GPU_interface.h>
 #include <iostream>
 #include <random>
 
@@ -13,13 +13,14 @@ std::uniform_real_distribution<float> rand_f32(0, 1);
 // std::uniform_int_distribution<uint32_t> rand_u32(0, UINT32_MAX);
 
 int main(int, char **) {
-  ocl_warpper::ocl_resource rcs(0, 0);
-  if (!rcs.ok()) {
-    cout << rcs.error_code() << " : " << rcs.error_detail() << endl;
+  gpu_wrapper::gpu_interface *const gi = gpu_wrapper::create_opencl(0, 0);
+
+  if (!gi->ok_v()) {
+    cout << gi->error_code_v() << " : " << gi->error_detail_v() << endl;
     return 1;
   }
 
-  cout << "Vendor = " << rcs.device_vendor() << endl;
+  cout << "Vendor = " << gi->device_vendor_v() << endl;
 
   const size_t colorset_size = 128;
   const size_t task_size = 256;
@@ -35,10 +36,10 @@ int main(int, char **) {
       colorset_B[cid] = rand_f32(mt);
     }
     // set colorset
-    rcs.set_colorset(colorset_size,
-                     {colorset_R.data(), colorset_G.data(), colorset_B.data()});
-    if (!rcs.ok()) {
-      cout << rcs.error_code() << " : " << rcs.error_detail() << endl;
+    gi->set_colorset_v(colorset_size, {colorset_R.data(), colorset_G.data(),
+                                       colorset_B.data()});
+    if (!gi->ok_v()) {
+      cout << gi->error_code_v() << " : " << gi->error_detail_v() << endl;
       return 3;
     }
   }
@@ -53,9 +54,9 @@ int main(int, char **) {
       }
     }
     // set tasks
-    rcs.set_task(tasks.size(), tasks.data());
-    if (!rcs.ok()) {
-      cout << rcs.error_code() << " : " << rcs.error_detail() << endl;
+    gi->set_task_v(tasks.size(), tasks.data());
+    if (!gi->ok_v()) {
+      cout << gi->error_code_v() << " : " << gi->error_detail_v() << endl;
       return 2;
     }
   }
@@ -64,9 +65,9 @@ int main(int, char **) {
 
   double wtime = omp_get_wtime();
 
-  rcs.execute(algo, true);
-  if (!rcs.ok()) {
-    cout << rcs.error_code() << " : " << rcs.error_detail() << endl;
+  gi->execute_v(algo, true);
+  if (!gi->ok_v()) {
+    cout << gi->error_code_v() << " : " << gi->error_detail_v() << endl;
     return 4;
   }
   wtime = omp_get_wtime() - wtime;
@@ -75,8 +76,8 @@ int main(int, char **) {
   if (false) {
     for (size_t tid = 0; tid < task_size; tid++) {
       const std::array<float, 3> unconverted_color = tasks[tid];
-      const uint16_t gpu_result_idx = rcs.result_idx()[tid];
-      const float gpu_result_diff = rcs.result_diff()[tid];
+      const uint16_t gpu_result_idx = gi->result_idx_v()[tid];
+      const float gpu_result_diff = gi->result_diff_v()[tid];
 
       const std::array<float, 3> gpu_result_color = {
           colorset_R[gpu_result_idx], colorset_G[gpu_result_idx],
@@ -94,5 +95,8 @@ int main(int, char **) {
 
     cout << "Success" << endl;
   }
+
+  gpu_wrapper::destroy(gi);
+
   return 0;
 }

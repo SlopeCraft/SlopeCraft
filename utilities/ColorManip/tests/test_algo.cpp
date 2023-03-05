@@ -138,7 +138,8 @@ int run_task(task_t &task) noexcept {
     eig_colorset = map_colorset.transpose();
   }
 
-  gpu_wrapper::gpu_interface *gi = create_opencl(task.platidx, task.devidx);
+  gpu_wrapper::gpu_interface *const gi =
+      gpu_wrapper::create_opencl(task.platidx, task.devidx);
 
   HANDLE_ERR(gi, 1);
 
@@ -164,6 +165,8 @@ int run_task(task_t &task) noexcept {
       ret = 5;
     }
   }
+
+  gpu_wrapper::destroy(gi);
 
   cout << "Success" << endl;
 
