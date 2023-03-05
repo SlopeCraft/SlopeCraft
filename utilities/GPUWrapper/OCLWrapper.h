@@ -1,6 +1,7 @@
 #ifndef SLOPECRAFT_UTILITIES_COLORDIRR_OPENCL_H
 #define SLOPECRAFT_UTILITIES_COLORDIRR_OPENCL_H
 
+#include "GPU_interface.h"
 #include <CL/cl.hpp>
 #include <array>
 #include <assert.h>
@@ -15,7 +16,7 @@ std::string platform_str(size_t platform_idx) noexcept;
 size_t device_num(size_t platform_idx) noexcept;
 std::string device_str(size_t platform_idx, size_t device_idx) noexcept;
 
-class ocl_resource {
+class ocl_resource : public ::gpu_wrapper::gpu_interface {
 public:
   struct task_rcs {
     // std::vector<uint32_t> buf_unconverted_ARGB_host;
@@ -97,6 +98,10 @@ public:
 
   constexpr size_t local_work_group_size() const noexcept { return 32; }
 
+  size_t local_work_group_size_v() const noexcept override {
+    return this->local_work_group_size();
+  }
+
 private:
   void resize_task(size_t task_num) noexcept;
   void resize_colorset(size_t color_num) noexcept;
@@ -104,6 +109,48 @@ private:
   cl::Kernel *kernel_by_algo(::SCL_convertAlgo algo) noexcept;
 
   void set_args(::SCL_convertAlgo algo) noexcept;
+
+public:
+  // overrided functions
+
+  const char *api_v() const noexcept override { return "OpenCL"; }
+
+  int error_code_v() const noexcept override { return this->error_code(); }
+  bool ok_v() const noexcept override { return this->ok(); }
+  std::string error_detail_v() const noexcept override {
+    return this->error_detail_v();
+  };
+
+  void set_colorset_v(
+      size_t color_num,
+      const std::array<const float *, 3> &color_ptrs) noexcept override {
+    this->set_colorset(color_num, color_ptrs);
+  }
+
+  void set_task_v(size_t task_num,
+                  const std::array<float, 3> *data) noexcept override {
+    this->set_task(task_num, data);
+  }
+
+  void execute_v(::SCL_convertAlgo algo, bool wait) noexcept override {
+    this->execute(algo, wait);
+  }
+
+  void wait_v() noexcept override { this->wait(); }
+
+  size_t task_count_v() const noexcept override { return this->task_count(); }
+
+  std::string device_vendor_v() const noexcept override {
+    return this->device_vendor();
+  }
+
+  const uint16_t *result_idx_v() const noexcept override {
+    return this->result_idx().data();
+  }
+
+  const float *result_diff_v() const noexcept override {
+    return this->result_diff().data();
+  }
 };
 
 } // namespace ocl_warpper

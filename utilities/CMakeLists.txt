@@ -6,6 +6,7 @@ configure_file(SC_version_buildtime.h.in
 include(install.cmake)
 
 add_subdirectory(MCDataVersion)
+add_subdirectory(GPUWrapper)
 add_subdirectory(ColorManip)
 add_subdirectory(BlockListManager)
 add_subdirectory(ExternalConverters)

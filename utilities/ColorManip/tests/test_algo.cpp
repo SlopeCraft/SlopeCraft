@@ -1,7 +1,8 @@
 #include <CLI11.hpp>
-#include <ColorDiff_OpenCL.h>
 #include <ColorManip.h>
 #include <Eigen/Dense>
+#include <GPU_interface.h>
+#include <SC_GlobalEnums.h>
 #include <iostream>
 #include <omp.h>
 #include <random>
@@ -67,17 +68,17 @@ int main(int argc, char **argv) {
 }
 
 int list_gpu() noexcept {
-  size_t num_plats = ocl_warpper::platform_num();
+  size_t num_plats = gpu_wrapper::platform_num();
   cout << num_plats << " platforms found." << endl;
   for (size_t idx_plat = 0; idx_plat < num_plats; idx_plat++) {
-    const size_t num_devs = ocl_warpper::device_num(idx_plat);
+    const size_t num_devs = gpu_wrapper::device_num(idx_plat);
     cout << "Platform " << idx_plat << " : "
-         << ocl_warpper::platform_str(idx_plat) << " has " << num_devs
+         << gpu_wrapper::platform_str(idx_plat) << " has " << num_devs
          << " devices : \n";
 
     for (size_t devidx = 0; devidx < num_devs; devidx++) {
       cout << "    " << devidx << " : "
-           << ocl_warpper::device_str(idx_plat, devidx) << '\n';
+           << gpu_wrapper::device_str(idx_plat, devidx) << '\n';
     }
   }
 
@@ -116,9 +117,9 @@ void fill_c3arr(std::vector<std::array<float, 3>> &dst, std::mt19937 &mt,
   }
 }
 
-#define HANDLE_ERR(rcs, ret)                                                   \
-  if (!rcs.ok()) {                                                             \
-    cout << rcs.error_detail() << " : " << rcs.error_code() << endl;           \
+#define HANDLE_ERR(gi, ret)                                                    \
+  if (!gi->ok_v()) {                                                           \
+    cout << gi->error_detail_v() << " : " << gi->error_code_v() << endl;       \
     return ret;                                                                \
   }
 
@@ -137,28 +138,29 @@ int run_task(task_t &task) noexcept {
     eig_colorset = map_colorset.transpose();
   }
 
-  ocl_warpper::ocl_resource rcs(task.platidx, task.devidx);
-  HANDLE_ERR(rcs, 1);
+  gpu_wrapper::gpu_interface *gi = create_opencl(task.platidx, task.devidx);
 
-  rcs.set_colorset(
+  HANDLE_ERR(gi, 1);
+
+  gi->set_colorset_v(
       task.colorset_c3.size(),
       {&eig_colorset(0, 0), &eig_colorset(0, 1), &eig_colorset(0, 2)});
-  HANDLE_ERR(rcs, 2);
+  HANDLE_ERR(gi, 2);
 
-  rcs.set_task(task.task_c3.size(), task.task_c3.data());
-  HANDLE_ERR(rcs, 3);
+  gi->set_task_v(task.task_c3.size(), task.task_c3.data());
+  HANDLE_ERR(gi, 3);
 
   double wtime = omp_get_wtime();
-  rcs.execute(task.algo, true);
-  HANDLE_ERR(rcs, 4);
+  gi->execute_v(task.algo, true);
+  HANDLE_ERR(gi, 4);
   wtime = omp_get_wtime() - wtime;
   cout << "GPU finished in " << wtime * 1e3 << " ms" << endl;
 
   int ret = 0;
   for (size_t tid = 0; tid < task.task_c3.size(); tid++) {
-    if (rcs.result_idx()[tid] >= task.colorset_c3.size()) {
+    if (gi->result_idx_v()[tid] >= task.colorset_c3.size()) {
       cout << "Error : task " << tid << " has invalid result_idx "
-           << rcs.result_idx()[tid] << endl;
+           << gi->result_idx_v()[tid] << endl;
       ret = 5;
     }
   }
