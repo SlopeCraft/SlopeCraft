@@ -13,18 +13,21 @@ void VCWind::refresh_gpu_info() noexcept {
   {
     std::array<int, 4> result;
     constexpr uint32_t input[3] = {0x80000002, 0x80000003, 0x80000004};
-    std::string str;
+
+    char str[1024] = "";
+
     bool error = false;
     for (auto i : input) {
       try {
         __cpuid(result.data(), i);
       } catch (std::exception &e) {
-        str = "Instruction cpuid failed. Detail : ";
-        str += e.what();
+        strcpy(str, "Instruction cpuid failed. Detail : ");
+        strcpy(str, e.what());
         error = true;
         break;
       }
-      str += std::string_view(reinterpret_cast<char *>(result.data()));
+      strcat(str, reinterpret_cast<char *>(result.data()));
+      // str += std::string_view();
     }
 
     QString text("CPU : " + QString::fromUtf8(str));
