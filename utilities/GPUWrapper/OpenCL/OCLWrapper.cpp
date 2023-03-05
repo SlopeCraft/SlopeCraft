@@ -1,5 +1,5 @@
 #include "OCLWrapper.h"
-#include "GPU_interface.h"
+#include "../GPU_interface.h"
 
 #include <CL/cl.hpp>
 #include <Eigen/Dense>
@@ -8,13 +8,6 @@
 
 extern const unsigned char ColorManip_cl_rc[];
 extern const unsigned int ColorManip_cl_rc_length;
-
-namespace gpu_wrapper {
-gpu_interface *create_opencl(size_t platform_idx, size_t device_idx) {
-  return static_cast<gpu_interface *>(
-      new ocl_warpper::ocl_resource(platform_idx, device_idx));
-}
-} // namespace gpu_wrapper
 
 size_t ocl_warpper::platform_num() noexcept {
   cl_uint ret;

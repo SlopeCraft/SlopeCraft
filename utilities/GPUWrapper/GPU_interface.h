@@ -41,6 +41,34 @@ public:
 
 void destroy(gpu_interface *);
 
+class platform_wrapper {
+public:
+  platform_wrapper() = default;
+  virtual ~platform_wrapper() = default;
+
+  virtual const char *name_v() const noexcept = 0;
+
+  virtual size_t num_devices_v() const noexcept = 0;
+
+  // virtual size_t index() const noexcept = 0;
+
+  [[nodiscard]] static platform_wrapper *
+  create(size_t idx, int *errorcode = nullptr) noexcept;
+  static void destroy(platform_wrapper *) noexcept;
+};
+
+class device_wrapper {
+public:
+  device_wrapper() = default;
+  virtual ~device_wrapper() = default;
+
+  virtual const char *name_v() const noexcept = 0;
+
+  [[nodiscard]] static device_wrapper *
+  create(platform_wrapper *pw, size_t idx, int *errorcode = nullptr) noexcept;
+  static void destroy(device_wrapper *) noexcept;
+};
+
 size_t platform_num() noexcept;
 std::string platform_str(size_t platform_idx) noexcept;
 

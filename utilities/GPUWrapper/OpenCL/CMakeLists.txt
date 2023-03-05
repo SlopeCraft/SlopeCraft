@@ -11,14 +11,16 @@ include(${CMAKE_SOURCE_DIR}/3rdParty/ResourceCreator.cmake/ResourceCreator.cmake
 
 add_library(OCLWrapper STATIC
     OCLWrapper.h
-    OCLWrapper.cpp)
+    OCLWrapper.cpp
+
+    GPU_interface.cpp)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     set_target_properties(OCLWrapper PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 endif()
 
-file(TOUCH ${CMAKE_CURRENT_BINARY_DIR}/__rsc_ColorManip_cl_rc.c)
 add_resource(ColorManip_cl_rc ColorDiff.cl)
+file(TOUCH ${CMAKE_CURRENT_BINARY_DIR}/__rsc_ColorManip_cl_rc.c)
 
 mark_as_advanced(SlopeCraft_resource_file_to_touch_and_remove)
 list(APPEND SlopeCraft_resource_file_to_touch_and_remove ${CMAKE_CURRENT_BINARY_DIR}/__rsc_ColorManip_cl_rc.c)

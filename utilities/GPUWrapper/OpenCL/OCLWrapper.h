@@ -1,12 +1,15 @@
 #ifndef SLOPECRAFT_UTILITIES_COLORDIRR_OPENCL_H
 #define SLOPECRAFT_UTILITIES_COLORDIRR_OPENCL_H
 
-#include "GPU_interface.h"
+#include "../GPU_interface.h"
 #include <CL/cl.hpp>
 #include <array>
 #include <assert.h>
 #include <string>
 #include <utilities/SC_GlobalEnums.h>
+
+cl::Platform private_fun_get_platform(size_t platform_idx,
+                                      cl_int &err) noexcept;
 
 namespace ocl_warpper {
 
@@ -151,6 +154,35 @@ public:
   const float *result_diff_v() const noexcept override {
     return this->result_diff().data();
   }
+};
+
+class ocl_platform : public ::gpu_wrapper::platform_wrapper {
+public:
+  ocl_platform() = delete;
+  ocl_platform(size_t idx);
+  cl::Platform platform;
+  std::string name;
+
+  std::vector<cl::Device> devices;
+
+  cl_int err{0};
+
+  const char *name_v() const noexcept override { return this->name.c_str(); };
+  size_t num_devices_v() const noexcept override {
+    return this->devices.size();
+  }
+};
+
+class ocl_device : public ::gpu_wrapper::device_wrapper {
+public:
+  ocl_device() = delete;
+  ocl_device(cl::Device);
+
+  cl::Device device;
+  std::string name;
+  cl_int err{0};
+
+  const char *name_v() const noexcept override { return this->name.c_str(); }
 };
 
 } // namespace ocl_warpper
