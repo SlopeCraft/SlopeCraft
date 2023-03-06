@@ -8,6 +8,39 @@
 #include "VCWind.h"
 #include "ui_VCWind.h"
 
+std::string get_cpu_name(bool &error) noexcept {
+  std::array<int, 4> result;
+  uint8_t *const result_cptr = reinterpret_cast<uint8_t *>(result.data());
+  constexpr uint32_t input[3] = {0x80000002, 0x80000003, 0x80000004};
+
+  char str[1024] = "";
+
+  error = false;
+  for (auto i : input) {
+    try {
+      __cpuid(i, result[0], result[1], result[2], result[3]);
+    } catch (std::exception &e) {
+      strcpy(str, "Instruction cpuid failed. Detail : ");
+      strcpy(str, e.what());
+      error = true;
+      return str;
+    }
+    size_t o = 0;
+    for (; o < result.size() * sizeof(uint32_t); o++) {
+      if (result_cptr[o] >= 128 || result_cptr[o] == 0) {
+        break;
+      }
+    }
+
+    for (; o < result.size() * sizeof(uint32_t); o++) {
+      result_cptr[o] = 0;
+    }
+
+    strcat(str, reinterpret_cast<char *>(result.data()));
+  }
+  return str;
+}
+
 void VCWind::refresh_gpu_info() noexcept {
   this->ui->sb_threads->setValue(std::thread::hardware_concurrency());
 
@@ -15,34 +48,9 @@ void VCWind::refresh_gpu_info() noexcept {
   this->ui->combobox_select_device->clear();
 
   {
-    std::array<int, 4> result;
-    uint8_t *const result_cptr = reinterpret_cast<uint8_t *>(result.data());
-    constexpr uint32_t input[3] = {0x80000002, 0x80000003, 0x80000004};
-
-    char str[1024] = "";
 
     bool error = false;
-    for (auto i : input) {
-      try {
-        __cpuid(i, result[0], result[1], result[2], result[3]);
-      } catch (std::exception &e) {
-        strcpy(str, "Instruction cpuid failed. Detail : ");
-        strcpy(str, e.what());
-        error = true;
-        break;
-      }
-
-      for (size_t o = 0; o < result.size() * sizeof(uint32_t); o++) {
-        if (result_cptr[o] >= 128) {
-          result_cptr[o] = '\0';
-        }
-      }
-
-      strcat(str, reinterpret_cast<char *>(result.data()));
-      // str += std::string_view();
-    }
-
-    QString text("CPU : " + QString::fromUtf8(str));
+    QString text("CPU : " + QString::fromUtf8(get_cpu_name(error)));
     QTreeWidgetItem *cpu = new QTreeWidgetItem;
     cpu->setText(0, text);
     if (error) {
