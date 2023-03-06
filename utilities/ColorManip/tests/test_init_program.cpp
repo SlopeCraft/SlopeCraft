@@ -13,7 +13,15 @@ std::uniform_real_distribution<float> rand_f32(0, 1);
 // std::uniform_int_distribution<uint32_t> rand_u32(0, UINT32_MAX);
 
 int main(int, char **) {
-  gpu_wrapper::gpu_interface *const gi = gpu_wrapper::create_opencl(0, 0);
+  auto plat = gpu_wrapper::platform_wrapper::create(0);
+
+  auto dev = gpu_wrapper::device_wrapper::create(plat, 0);
+
+  gpu_wrapper::gpu_interface *const gi =
+      gpu_wrapper::gpu_interface::create(plat, dev);
+
+  gpu_wrapper::device_wrapper::destroy(dev);
+  gpu_wrapper::platform_wrapper::destroy(plat);
 
   if (!gi->ok_v()) {
     cout << gi->error_code_v() << " : " << gi->error_detail_v() << endl;
@@ -96,7 +104,7 @@ int main(int, char **) {
     cout << "Success" << endl;
   }
 
-  gpu_wrapper::destroy(gi);
+  gpu_wrapper::gpu_interface::destroy(gi);
 
   return 0;
 }

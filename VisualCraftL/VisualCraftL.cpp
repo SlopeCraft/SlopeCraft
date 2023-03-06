@@ -792,18 +792,6 @@ void VCL_report(VCL_report_type_t t, const char *msg, bool flush) noexcept {
   VCL_report_fun(t, msg, flush);
 }
 
-class VCL_GPU_Platform {
-public:
-  ~VCL_GPU_Platform() { gpu_wrapper::platform_wrapper::destroy(this->pw); }
-  gpu_wrapper::platform_wrapper *pw{nullptr};
-};
-
-class VCL_GPU_Device {
-public:
-  ~VCL_GPU_Device() { gpu_wrapper::device_wrapper::destroy(this->dw); }
-  gpu_wrapper::device_wrapper *dw{nullptr};
-};
-
 VCL_EXPORT_FUN size_t VCL_platform_num() { return gpu_wrapper::platform_num(); }
 
 VCL_EXPORT_FUN VCL_GPU_Platform *VCL_get_platform(size_t platform_idx,

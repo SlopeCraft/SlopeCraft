@@ -70,7 +70,7 @@ public:
 public:
   ocl_resource();
 
-  ocl_resource(size_t platform_idx, size_t device_idx);
+  ocl_resource(cl::Platform plat, cl::Device dev);
 
   void set_colorset(size_t color_num,
                     const std::array<const float *, 3> &color_ptrs) noexcept;
@@ -120,8 +120,9 @@ public:
 
   int error_code_v() const noexcept override { return this->error_code(); }
   bool ok_v() const noexcept override { return this->ok(); }
+
   std::string error_detail_v() const noexcept override {
-    return this->error_detail_v();
+    return this->error_detail();
   };
 
   void set_colorset_v(

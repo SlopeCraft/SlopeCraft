@@ -152,7 +152,7 @@
              <number>3</number>
             </property>
             <property name="value">
-             <number>3</number>
+             <number>1</number>
             </property>
            </widget>
           </item>
@@ -346,8 +346,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>820</width>
-                  <height>301</height>
+                  <width>98</width>
+                  <height>28</height>
                  </rect>
                 </property>
                 <layout class="QGridLayout" name="gl_sa_blocks"/>

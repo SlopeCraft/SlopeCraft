@@ -1,5 +1,6 @@
 #include "VCWind.h"
 #include "ui_VCWind.h"
+#include <QMessageBox>
 #include <intrin.h>
 #include <omp.h>
 #include <thread>
@@ -123,18 +124,59 @@ void VCWind::on_sb_threads_valueChanged(int val) noexcept {
 void VCWind::on_combobox_select_device_currentIndexChanged(int idx) noexcept {
   const QPoint current_choice =
       this->ui->combobox_select_device->itemData(idx).toPoint();
-  // reload
-  if (current_choice != this->prev_compute_device) {
-    this->prev_compute_device = current_choice;
 
-    const bool is_gpu = (current_choice.x() >= 0 && current_choice.y() >= 0);
-
-    if (!is_gpu) {
-      this->kernel->set_prefer_gpu(false);
-      return;
-    }
-
-    this->kernel->set_prefer_gpu(true);
-    this->kernel->set_gpu_resource(current_choice.x(), current_choice.y());
+  if (current_choice == this->prev_compute_device) {
+    return;
   }
+
+  const QString err = this->update_gpu_device(current_choice);
+
+  if (!err.isEmpty()) {
+    auto ret = QMessageBox::critical(
+        this, VCWind::tr("设置计算设备失败"), err,
+        QMessageBox::StandardButtons{QMessageBox::StandardButton::Close,
+                                     QMessageBox::StandardButton::Ignore});
+    if (ret == QMessageBox::StandardButton::Close) {
+      abort();
+    }
+  }
+}
+
+QString VCWind::update_gpu_device(QPoint current_choice) noexcept {
+  // reload
+  this->prev_compute_device = current_choice;
+
+  const bool is_gpu = (current_choice.x() >= 0 && current_choice.y() >= 0);
+
+  if (!is_gpu) {
+    this->kernel->set_prefer_gpu(false);
+    return {};
+  }
+
+  this->kernel->set_prefer_gpu(true);
+
+  VCL_GPU_Platform *plat = VCL_get_platform(current_choice.x());
+  if (plat == nullptr) {
+    return VCWind::tr("创建GPU平台失败，平台序号为%1，设备序号为%2")
+        .arg(current_choice.x())
+        .arg(current_choice.y());
+  }
+
+  VCL_GPU_Device *dev = VCL_get_device(plat, current_choice.y());
+  if (dev == nullptr) {
+    return VCWind::tr("创建GPU设备失败，平台序号为%1，设备序号为%2")
+        .arg(current_choice.x())
+        .arg(current_choice.y());
+  }
+
+  if (!this->kernel->set_gpu_resource(plat, dev)) {
+    return VCWind::tr("设置GPU设备失败。，平台序号为%1，设备序号为%2")
+        .arg(current_choice.x())
+        .arg(current_choice.y());
+  }
+
+  VCL_release_device(dev);
+  VCL_release_platform(plat);
+
+  return {};
 }

@@ -71,15 +71,21 @@ int list_gpu() noexcept {
   size_t num_plats = gpu_wrapper::platform_num();
   cout << num_plats << " platforms found." << endl;
   for (size_t idx_plat = 0; idx_plat < num_plats; idx_plat++) {
-    const size_t num_devs = gpu_wrapper::device_num(idx_plat);
-    cout << "Platform " << idx_plat << " : "
-         << gpu_wrapper::platform_str(idx_plat) << " has " << num_devs
-         << " devices : \n";
+    gpu_wrapper::platform_wrapper *pw =
+        gpu_wrapper::platform_wrapper::create(idx_plat);
+
+    const size_t num_devs = pw->num_devices_v();
+    cout << "Platform " << idx_plat << " : " << pw->name_v() << " has "
+         << num_devs << " devices : \n";
 
     for (size_t devidx = 0; devidx < num_devs; devidx++) {
-      cout << "    " << devidx << " : "
-           << gpu_wrapper::device_str(idx_plat, devidx) << '\n';
+      gpu_wrapper::device_wrapper *dw =
+          gpu_wrapper::device_wrapper::create(pw, devidx);
+      cout << "    " << devidx << " : " << dw->name_v() << '\n';
+      gpu_wrapper::device_wrapper::destroy(dw);
     }
+
+    gpu_wrapper::platform_wrapper::destroy(pw);
   }
 
   cout << endl;
@@ -137,11 +143,16 @@ int run_task(task_t &task) noexcept {
 
     eig_colorset = map_colorset.transpose();
   }
+  auto plat = gpu_wrapper::platform_wrapper::create(task.platidx);
+
+  auto dev = gpu_wrapper::device_wrapper::create(plat, task.devidx);
 
   gpu_wrapper::gpu_interface *const gi =
-      gpu_wrapper::create_opencl(task.platidx, task.devidx);
-
+      gpu_wrapper::gpu_interface::create(plat, dev);
   HANDLE_ERR(gi, 1);
+
+  gpu_wrapper::device_wrapper::destroy(dev);
+  gpu_wrapper::platform_wrapper::destroy(plat);
 
   gi->set_colorset_v(
       task.colorset_c3.size(),
@@ -166,7 +177,7 @@ int run_task(task_t &task) noexcept {
     }
   }
 
-  gpu_wrapper::destroy(gi);
+  gpu_wrapper::gpu_interface::destroy(gi);
 
   cout << "Success" << endl;
 

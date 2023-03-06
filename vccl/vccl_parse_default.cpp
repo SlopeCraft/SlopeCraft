@@ -202,8 +202,29 @@ int run(const inputs &input) noexcept {
 
   kernel->set_prefer_gpu(input.prefer_gpu);
   if (input.prefer_gpu) {
-    const bool ok =
-        kernel->set_gpu_resource(input.platform_idx, input.device_idx);
+    bool ok = true;
+    while (true) {
+
+      auto plat = VCL_get_platform(input.platform_idx);
+      if (plat == nullptr) {
+        ok = false;
+        break;
+      }
+
+      auto dev = VCL_get_device(plat, input.device_idx);
+
+      if (dev == nullptr) {
+        VCL_release_platform(plat);
+        ok = false;
+        break;
+      }
+
+      ok = kernel->set_gpu_resource(plat, dev);
+
+      VCL_release_device(dev);
+      VCL_release_platform(plat);
+      break;
+    }
     if (!ok || !kernel->have_gpu_resource()) {
       cout << "Failed to set gpu resource for kernel. Platform and device may "
               "be invalid."

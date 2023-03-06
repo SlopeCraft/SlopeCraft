@@ -1,33 +1,9 @@
 #include "../GPU_interface.h"
 #include "OCLWrapper.h"
 
-void gpu_wrapper::destroy(gpu_interface *gi) {
-
-  delete static_cast<ocl_warpper::ocl_resource *>(gi);
-  return;
-}
-
 size_t gpu_wrapper::platform_num() noexcept {
   return ::ocl_warpper::platform_num();
 }
-std::string gpu_wrapper::platform_str(size_t platform_idx) noexcept {
-  return ::ocl_warpper::platform_str(platform_idx);
-}
-
-size_t gpu_wrapper::device_num(size_t platform_idx) noexcept {
-  return ::ocl_warpper::device_num(platform_idx);
-}
-std::string gpu_wrapper::device_str(size_t platform_idx,
-                                    size_t device_idx) noexcept {
-  return ::ocl_warpper::device_str(platform_idx, device_idx);
-}
-
-namespace gpu_wrapper {
-gpu_interface *create_opencl(size_t platform_idx, size_t device_idx) {
-  return static_cast<gpu_interface *>(
-      new ocl_warpper::ocl_resource(platform_idx, device_idx));
-}
-} // namespace gpu_wrapper
 
 ocl_warpper::ocl_platform::ocl_platform(size_t idx) {
   this->platform = private_fun_get_platform(idx, this->err);
@@ -83,4 +59,28 @@ ocl_warpper::ocl_device::ocl_device(cl::Device __dev) : device(__dev) {
 
 void ::gpu_wrapper::device_wrapper::destroy(device_wrapper *dw) noexcept {
   delete static_cast<::ocl_warpper::ocl_device *>(dw);
+}
+
+gpu_wrapper::gpu_interface *
+gpu_wrapper::gpu_interface::create(gpu_wrapper::platform_wrapper *pw,
+                                   gpu_wrapper::device_wrapper *dw) noexcept {
+  ocl_warpper::ocl_platform *plat =
+      static_cast<ocl_warpper::ocl_platform *>(pw);
+  ocl_warpper::ocl_device *dev = static_cast<ocl_warpper::ocl_device *>(dw);
+
+  ocl_warpper::ocl_resource *ret =
+      new ocl_warpper::ocl_resource(plat->platform, dev->device);
+
+  if (!ret->ok()) {
+    delete ret;
+    return nullptr;
+  }
+
+  return static_cast<::gpu_wrapper::gpu_interface *>(ret);
+}
+
+void ::gpu_wrapper::gpu_interface::destroy(gpu_interface *gi) noexcept {
+
+  delete static_cast<ocl_warpper::ocl_resource *>(gi);
+  return;
 }

@@ -132,17 +132,9 @@ ocl_warpper::ocl_resource::ocl_resource() {
   this->init_resource();
 }
 
-ocl_warpper::ocl_resource::ocl_resource(size_t platform_idx,
-                                        size_t device_idx) {
-  this->platform = private_fun_get_platform(platform_idx, this->error);
-  if (!this->ok()) {
-    return;
-  }
-
-  this->device = private_fun_get_device(platform_idx, device_idx, this->error);
-  if (!this->ok()) {
-    return;
-  }
+ocl_warpper::ocl_resource::ocl_resource(cl::Platform plat, cl::Device dev) {
+  this->platform = plat;
+  this->device = dev;
 
   this->init_resource();
 }

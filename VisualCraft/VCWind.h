@@ -150,6 +150,8 @@ private:
   // for page 4 ------------------------------------------
   void refresh_gpu_info() noexcept;
   void select_default_device() noexcept;
+
+  QString update_gpu_device(QPoint current_choice) noexcept;
 private slots:
   // for all pages
   void on_tabWidget_main_currentChanged(int page) noexcept;

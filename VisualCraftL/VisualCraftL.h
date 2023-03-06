@@ -159,6 +159,9 @@ class VCL_block_state_list;
 class VCL_block;
 class VCL_model;
 
+class VCL_GPU_Platform;
+class VCL_GPU_Device;
+
 class VCL_Kernel {
 public:
   VCL_Kernel() = default;
@@ -169,8 +172,10 @@ public:
                       void (*progressAdd)(void *, int)) noexcept = 0;
 
   virtual bool have_gpu_resource() const noexcept = 0;
-  virtual bool set_gpu_resource(size_t platform_idx,
-                                size_t device_idx) noexcept = 0;
+  [[deprecated]] virtual bool set_gpu_resource(size_t platform_idx,
+                                               size_t device_idx) noexcept = 0;
+  virtual bool set_gpu_resource(const VCL_GPU_Platform *,
+                                const VCL_GPU_Device *) noexcept = 0;
 
   virtual bool prefer_gpu() const noexcept = 0;
   virtual void set_prefer_gpu(bool try_gpu) noexcept = 0;
@@ -410,9 +415,6 @@ i =
 VCL_EXPORT_FUN int VCL_version_component(int i);
 VCL_EXPORT_FUN bool
 VCL_is_version_ok(uint64_t version_at_caller_s_build_time = SC_VERSION_U64);
-
-class VCL_GPU_Platform;
-class VCL_GPU_Device;
 
 [[nodiscard]] VCL_EXPORT_FUN size_t VCL_platform_num();
 VCL_EXPORT_FUN VCL_GPU_Platform *VCL_get_platform(size_t platform_idx,
