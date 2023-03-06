@@ -33,3 +33,8 @@ target_link_libraries(OCLWrapper PUBLIC OpenCL::OpenCL ColorManip_cl_rc)
 
 target_link_libraries(GPUInterface PUBLIC OCLWrapper)
 target_compile_definitions(GPUInterface PUBLIC SLOPECRAFT_HAVE_OPENCL)
+
+
+if(${LINUX})
+    set_target_properties(GPUInterface PROPERTIES TARGET_INDENPENDENT_CODE TRUE)
+endif()

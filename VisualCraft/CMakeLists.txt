@@ -19,7 +19,7 @@ set(VisualCraft_header_files
     VCWind.h
 
     # advanced_qlist_widget_item.h
-    CallBackFunctions.h
+    CallbackFunctions.h
     VC_block_class.h
     BlockBrowser.h
 )
@@ -35,7 +35,7 @@ set(VisualCraft_source_files
     VCWind_subwindows.cpp
 
     # advanced_qlist_widget_item.cpp
-    CallBackFunctions.cpp
+    CallbackFunctions.cpp
     VC_block_class.cpp
 
     BlockBrowser.cpp

@@ -1,6 +1,4 @@
 #include "VCWind.h"
-#include "VC_block_class.h"
-#include "ui_VCWind.h"
 
 #include <QCryptographicHash>
 #include <QFileDialog>
@@ -8,6 +6,10 @@
 #include <QMessageBox>
 #include <iostream>
 #include <magic_enum.hpp>
+
+#include "VC_block_class.h"
+#include "ui_VCWind.h"
+
 
 using std::cout, std::endl;
 
@@ -69,7 +71,6 @@ void VCWind::callback_progress_range_add(void *__w, int delta) noexcept {
 // utilitiy functions
 void VCWind::append_default_to_rp_or_bsl(QListWidget *qlw,
                                          bool is_rp) noexcept {
-
   const QString txt = is_rp ? VCWind::tr("原版资源包") : VCWind::tr("原版json");
   QListWidgetItem *qlwi = new QListWidgetItem(txt);
 
@@ -141,11 +142,9 @@ VCWind::basic_colorset_option VCWind::current_basic_option() const noexcept {
     }
 
     if (qlwi->data(Qt::UserRole).toBool()) {
-
       if (this->current_selected_version() == SCL_gameVersion::MC12) {
         ret.zips.emplace_back(VCWind::default_zip_12.c_str());
       } else {
-
         ret.zips.emplace_back(VCWind::default_zip_latest.c_str());
       }
       continue;
@@ -201,8 +200,8 @@ QByteArray VCWind::checksum_basic_colorset_option(
 }
 
 // utilitiy functions
-VCL_resource_pack *
-VCWind::create_resource_pack(const basic_colorset_option &opt) noexcept {
+VCL_resource_pack *VCWind::create_resource_pack(
+    const basic_colorset_option &opt) noexcept {
   std::vector<QByteArray> rpfiles_qba;
   rpfiles_qba.reserve(opt.zips.size());
   std::vector<const char *> rpfiles_charp;
@@ -216,9 +215,8 @@ VCWind::create_resource_pack(const basic_colorset_option &opt) noexcept {
 }
 
 // utilitiy functions
-VCL_block_state_list *
-VCWind::create_block_state_list(const basic_colorset_option &opt) noexcept {
-
+VCL_block_state_list *VCWind::create_block_state_list(
+    const basic_colorset_option &opt) noexcept {
   std::vector<QByteArray> bsl_filenames;
   std::vector<const char *> jsonfiles_charp;
 
@@ -344,13 +342,11 @@ void VCWind::setup_block_widgets() noexcept {
   }
 
   for (auto bcl : VCL_block_class_t_values) {
-
     VC_block_class *class_widget = nullptr;
     {
       auto it = this->map_VC_block_class.find(bcl);
 
       if (it == this->map_VC_block_class.end() || it->second == nullptr) {
-
         class_widget = new VC_block_class(this);
 
         connect(class_widget->chbox_enabled(), &QCheckBox::toggled, this,
@@ -374,7 +370,6 @@ void VCWind::setup_block_widgets() noexcept {
 
     // set images for radio buttons
     for (const auto &pair : class_widget->blocks_vector()) {
-
       connect(pair.second, &QCheckBox::toggled, this,
               &VCWind::when_algo_dither_bottons_toggled);
 
@@ -423,7 +418,6 @@ void VCWind::setup_block_widgets() noexcept {
 }
 
 bool VCWind::is_basical_colorset_changed() const noexcept {
-
   static QByteArray hash_prev;
   auto curr_opt = this->current_basic_option();
   QByteArray curr_hash = this->checksum_basic_colorset_option(curr_opt);
@@ -502,7 +496,6 @@ QByteArray VCWind::checksum_allowed_colorset_option(
 
 bool VCWind::is_allowed_colorset_changed(
     allowed_colorset_option *opt) const noexcept {
-
   static QByteArray prev_hash;
   this->selected_blocks(&opt->blocks);
   QByteArray cur_hash = VCWind::checksum_allowed_colorset_option(*opt);
@@ -546,11 +539,10 @@ void VCWind::setup_allowed_colorset() noexcept {
   this->clear_convert_cache();
 }
 
-size_t
-VCWind::selected_blocks(std::vector<VCL_block *> *blocks_dest) const noexcept {
+size_t VCWind::selected_blocks(
+    std::vector<VCL_block *> *blocks_dest) const noexcept {
   size_t counter = 0;
-  if (blocks_dest != nullptr)
-    blocks_dest->clear();
+  if (blocks_dest != nullptr) blocks_dest->clear();
   for (auto &pair : this->map_VC_block_class) {
     counter += pair.second->selected_blocks(blocks_dest, true);
   }
@@ -564,7 +556,7 @@ void VCWind::on_tb_add_images_clicked() noexcept {
   static QString prev_dir{""};
   QStringList files =
       QFileDialog::getOpenFileNames(this, VCWind::tr("选择图片（可多选）"),
-                                    prev_dir, "*.bmp;*.png;*.jpg;*.jpeg");
+                                    prev_dir, "*.bmp *.png *.jpg *.jpeg");
   if (files.size() <= 0) {
     return;
   }
@@ -766,7 +758,6 @@ void VCWind::when_algo_dither_bottons_toggled() noexcept {
 
   if (this->is_convert_algo_changed() ||
       this->is_allowed_colorset_changed(&temp)) {
-
     this->clear_convert_cache();
   }
 }

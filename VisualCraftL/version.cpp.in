@@ -1,6 +1,7 @@
 #include "VisualCraftL.h"
 #include <stdlib.h>
 #include <stdint.h>
+#include <climits>
 
 
 VCL_EXPORT_FUN const char *VCL_version_string() {

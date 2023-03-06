@@ -1,9 +1,12 @@
+
+#include <cpuid.h>
+#include <omp.h>
+
+#include <QMessageBox>
+#include <thread>
+
 #include "VCWind.h"
 #include "ui_VCWind.h"
-#include <QMessageBox>
-#include <intrin.h>
-#include <omp.h>
-#include <thread>
 
 void VCWind::refresh_gpu_info() noexcept {
   this->ui->sb_threads->setValue(std::thread::hardware_concurrency());
@@ -13,6 +16,7 @@ void VCWind::refresh_gpu_info() noexcept {
 
   {
     std::array<int, 4> result;
+    uint8_t *const result_cptr = reinterpret_cast<uint8_t *>(result.data());
     constexpr uint32_t input[3] = {0x80000002, 0x80000003, 0x80000004};
 
     char str[1024] = "";
@@ -20,13 +24,20 @@ void VCWind::refresh_gpu_info() noexcept {
     bool error = false;
     for (auto i : input) {
       try {
-        __cpuid(result.data(), i);
+        __cpuid(i, result[0], result[1], result[2], result[3]);
       } catch (std::exception &e) {
         strcpy(str, "Instruction cpuid failed. Detail : ");
         strcpy(str, e.what());
         error = true;
         break;
       }
+
+      for (size_t o = 0; o < result.size() * sizeof(uint32_t); o++) {
+        if (result_cptr[o] >= 128) {
+          result_cptr[o] = '\0';
+        }
+      }
+
       strcat(str, reinterpret_cast<char *>(result.data()));
       // str += std::string_view();
     }
