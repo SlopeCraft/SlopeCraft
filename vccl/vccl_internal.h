@@ -15,7 +15,7 @@ struct inputs {
 
   // colors
   SCL_gameVersion version;
-  uint8_t layers;
+  uint8_t layers{1};
   VCL_face_t face;
   SCL_convertAlgo algo;
   bool dither{false};
@@ -28,6 +28,9 @@ struct inputs {
   // exports
   std::string prefix;
   bool make_converted_image{false};
+  bool make_flat_diagram{false};
+  int flat_diagram_splitline_margin_row{16};
+  int flat_diagram_splitline_margin_col{16};
   bool make_litematic{false};
   bool make_schematic{false};
   bool make_structure{false};
@@ -36,10 +39,11 @@ struct inputs {
   inline bool need_to_read() const noexcept { return true; }
 
   inline bool need_to_convert() const noexcept {
-    return make_converted_image || need_to_build();
+    return this->make_converted_image || this->make_flat_diagram ||
+           this->need_to_build();
   }
   inline bool need_to_build() const noexcept {
-    return make_litematic || make_schematic || make_structure;
+    return this->make_litematic || this->make_schematic || this->make_structure;
   }
   // compute
   uint16_t num_threads;

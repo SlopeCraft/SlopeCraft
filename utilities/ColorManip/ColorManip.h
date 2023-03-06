@@ -50,15 +50,19 @@ ARGB ComposeColor(const ARGB front,
 ARGB ComposeColor_background_half_transparent(
     const ARGB front, const ARGB background_can_be_transparent) noexcept;
 
-inline ARGB ARGB32(uint32_t r, uint32_t g, uint32_t b,
-                   uint32_t a = 255) noexcept {
+constexpr inline ARGB ARGB32(uint32_t r, uint32_t g, uint32_t b,
+                             uint32_t a = 255) noexcept {
   return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | ((b & 0xFF)) | (a << 24);
 }
 
-inline uint8_t getR(ARGB argb) noexcept { return (argb & 0x00FF0000) >> 16; }
-inline uint8_t getG(ARGB argb) noexcept { return (argb & 0x0000FF00) >> 8; }
-inline uint8_t getB(ARGB argb) noexcept { return argb & 0xFF; }
-inline uint8_t getA(ARGB argb) noexcept { return argb >> 24; }
+constexpr inline uint8_t getR(ARGB argb) noexcept {
+  return (argb & 0x00FF0000) >> 16;
+}
+constexpr inline uint8_t getG(ARGB argb) noexcept {
+  return (argb & 0x0000FF00) >> 8;
+}
+constexpr inline uint8_t getB(ARGB argb) noexcept { return argb & 0xFF; }
+constexpr inline uint8_t getA(ARGB argb) noexcept { return argb >> 24; }
 
 float color_diff_RGB_plus(const float r1, const float g1, const float b1,
                           const float r2, const float g2,

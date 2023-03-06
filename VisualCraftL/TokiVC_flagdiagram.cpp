@@ -4,13 +4,32 @@
 #include <immintrin.h>
 #include <xmmintrin.h>
 
+constexpr uint32_t reverse_color(uint32_t ARGB_src) noexcept {
+  return ARGB32(255 - getR(ARGB_src), 255 - getG(ARGB_src),
+                255 - getB(ARGB_src), getA(ARGB_src));
+}
+
 void reverse_color(uint32_t *ptr, size_t num_pixels) noexcept {
   // this can be vertorized by compiler optimization
   for (uint32_t *p = ptr; p < ptr + num_pixels; p++) {
-    const uint32_t ARGB_src = *p;
-    const uint32_t result = ARGB32(255 - getR(ARGB_src), 255 - getG(ARGB_src),
-                                   255 - getB(ARGB_src), getA(ARGB_src));
-    *p = result;
+    *p = reverse_color(*p);
+  }
+}
+
+constexpr uint32_t reverse_byte(uint32_t v) noexcept {
+  const uint32_t a = (v & 0xFF'00'00'00) >> 24;
+  const uint32_t b = (v & 0x00'FF'00'00) >> 8;
+  const uint32_t c = (v & 0x00'00'FF'00) << 8;
+  const uint32_t d = (v & 0x00'00'00'FF) << 24;
+
+  return a | b | c | d;
+}
+
+void ARGB_to_AGBR(uint32_t *ptr, size_t num_pixels) noexcept {
+  for (uint32_t *p = ptr; p < ptr + num_pixels; p++) {
+    const uint32_t A = getA(*p);
+    *p = (*p) << 8 | A;
+    *p = reverse_byte(*p);
   }
 }
 
@@ -41,8 +60,10 @@ void TokiVC::draw_flag_diagram_to_memory(uint32_t *image_u8c3_rowmajor,
       const auto &variant =
           TokiVC::LUT_basic_color_idx_to_blocks[current_color_idx];
       const VCL_block *blkp = nullptr;
-      if (variant.index() == 0 && layer_idx == 0) {
-        blkp = std::get<0>(variant);
+      if (variant.index() == 0) {
+        if (layer_idx == 0) {
+          blkp = std::get<0>(variant);
+        }
       } else {
         const auto &vec = std::get<1>(variant);
 
@@ -52,6 +73,7 @@ void TokiVC::draw_flag_diagram_to_memory(uint32_t *image_u8c3_rowmajor,
       }
 
       if (blkp == nullptr) {
+        map.block<16, 16>(r_pixel_beg, c_pixel_beg).fill(0x00'FF'FF'FF);
         continue;
       }
       /*
@@ -66,12 +88,37 @@ void TokiVC::draw_flag_diagram_to_memory(uint32_t *image_u8c3_rowmajor,
           blkp->project_image_on_exposed_face;
     }
   }
+
+  for (int64_t br = opt.row_start; br < opt.row_end; br++) {
+    if ((opt.split_line_row_margin > 0) &&
+        (br % opt.split_line_row_margin == 0)) {
+      const int64_t pr = (br - opt.row_start) * 16;
+
+      reverse_color(&map(pr, 0), map.cols());
+    }
+  }
+
+  for (int64_t bc = 0; bc < this->img_cvter.cols(); bc++) {
+    if ((opt.split_line_col_margin > 0) &&
+        (bc % opt.split_line_col_margin == 0)) {
+      const int64_t pc = bc * 16;
+
+      for (int64_t pr = 0; pr < map.rows(); pr++) {
+        map(pr, pc) = reverse_color(map(pr, pc));
+      }
+    }
+  }
 }
 
 void TokiVC::flag_diagram(uint32_t *image_u8c3_rowmajor,
                           const flag_diagram_option &opt, int layer_idx,
                           int64_t *rows_required_dest,
                           int64_t *cols_required_dest) const noexcept {
+  if (this->_step < ::VCL_Kernel_step::VCL_wait_for_build) {
+    VCL_report(VCL_report_type_t::error,
+               "Trying to export flag diagram without image converted.");
+    return;
+  }
 
   std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
 
@@ -87,7 +134,7 @@ void TokiVC::flag_diagram(uint32_t *image_u8c3_rowmajor,
     return;
   }
 
-  draw_flag_diagram_to_memory(image_u8c3_rowmajor, opt, layer_idx);
+  this->draw_flag_diagram_to_memory(image_u8c3_rowmajor, opt, layer_idx);
 }
 
 #include <png.h>
@@ -96,7 +143,15 @@ void TokiVC::flag_diagram(uint32_t *image_u8c3_rowmajor,
 bool TokiVC::export_flag_diagram(const char *png_filename,
                                  const flag_diagram_option &opt,
                                  int layer_idx) const noexcept {
-  const int64_t rows_capacity_by_blocks = 16;
+  if (this->_step < ::VCL_Kernel_step::VCL_wait_for_build) {
+    VCL_report(VCL_report_type_t::error,
+               "Trying to export flag diagram without image converted.");
+    return false;
+  }
+
+  std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+
+  const int64_t rows_capacity_by_blocks = 64;
 
   block_model::EImgRowMajor_t buffer(rows_capacity_by_blocks * 16,
                                      this->img_cvter.cols() * 16);
@@ -140,7 +195,8 @@ bool TokiVC::export_flag_diagram(const char *png_filename,
   png_set_IHDR(png, png_info, this->img_cvter.cols() * 16,
                16 * (opt.row_end - opt.row_start), 8, PNG_COLOR_TYPE_RGB_ALPHA,
                PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT,
-               PNG_FILTER_NONE);
+               PNG_FILTER_TYPE_DEFAULT);
+  png_write_info(png, png_info);
 
   for (int64_t ridx = opt.row_start; ridx < opt.row_end;
        ridx += rows_capacity_by_blocks) {
@@ -153,10 +209,15 @@ bool TokiVC::export_flag_diagram(const char *png_filename,
          opt.split_line_row_margin, opt.split_line_col_margin},
         layer_idx);
 
+    ARGB_to_AGBR(buffer.data(),
+                 rows_this_time * 16 * this->img_cvter.cols() * 16);
+
     for (int64_t pix_r = 0; pix_r < rows_this_time * 16; pix_r++) {
       png_write_row(png, reinterpret_cast<const uint8_t *>(&buffer(pix_r, 0)));
     }
   }
+
+  png_write_end(png, png_info);
 
   png_destroy_write_struct(&png, &png_info);
   fclose(fp);

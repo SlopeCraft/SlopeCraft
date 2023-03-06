@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
       ->check(CLI::Range(12, 19, "Avaliable versions"));
 
   app.add_option("--layers,--layer", input.layers, "Max layers")
-      ->default_val(3)
+      ->default_val(1)
       ->check(CLI::Range(1, 3, "Avaliable depth"));
   std::string __face;
   app.add_option("--face", __face, "Facing direction")
@@ -76,6 +76,20 @@ int main(int argc, char **argv) {
   app.add_flag("--out-image,--oimg", input.make_converted_image,
                "Generate converted image")
       ->default_val(false);
+  app.add_flag("--out-flag-diagram,--ofd", input.make_flat_diagram,
+               "Generated flat diagram")
+      ->default_val(false);
+  app.add_option("--flat-diagram-splitline-margin-row,--fdslmr,--fdsmr",
+                 input.flat_diagram_splitline_margin_row,
+                 "Row margin of split line in flat diagram. Non positive "
+                 "values indicates that no splitline is drawn.")
+      ->default_val(16);
+  app.add_option("--flat-diagram-splitline-margin-col,--fdslmc,--fdsmc",
+                 input.flat_diagram_splitline_margin_col,
+                 "Col margin of split line in flat diagram. Non negative "
+                 "values indicates that no splitline is drawn.")
+      ->default_val(16);
+
   app.add_flag("--litematic,--lite", input.make_litematic,
                "Export .litematic files for litematica mod")
       ->default_val(false);

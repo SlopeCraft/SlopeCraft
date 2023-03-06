@@ -331,6 +331,28 @@ int run(const inputs &input) noexcept {
       // cout << dst_path << endl;
     }
 
+    if (input.make_flat_diagram) {
+      for (uint8_t layer = 0; layer < input.layers; layer++) {
+
+        std::string dst_name_str(input.prefix);
+        dst_name_str += "_flagdiagram_layer=";
+        dst_name_str += std::to_string(layer);
+        dst_name_str += ".png";
+
+        VCL_Kernel::flag_diagram_option option;
+        option.row_start = 0;
+        option.row_end = kernel->rows();
+        option.split_line_row_margin = input.flat_diagram_splitline_margin_row;
+        option.split_line_col_margin = input.flat_diagram_splitline_margin_col;
+
+        if (!kernel->export_flag_diagram(dst_name_str.c_str(), option, layer)) {
+          cout << fmt::format("Failed to export flat diagram {}\n",
+                              dst_name_str);
+          return __LINE__;
+        }
+      }
+    }
+
     if (!input.need_to_build()) {
       continue;
     }
