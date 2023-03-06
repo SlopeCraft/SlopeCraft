@@ -37,18 +37,6 @@ public:
     return this->img_cvter.have_gpu_resource();
   }
 
-  bool set_gpu_resource(size_t platform_idx,
-                        size_t device_idx) noexcept override {
-    if (this->img_cvter.have_gpu_resource()) {
-      gpu_wrapper::gpu_interface::destroy(this->img_cvter.gpu_resource());
-    }
-
-    this->img_cvter.set_gpu_resource(
-        gpu_wrapper::create_opencl(platform_idx, device_idx));
-
-    return this->img_cvter.gpu_resource()->ok_v();
-  }
-
   bool set_gpu_resource(const VCL_GPU_Platform *p,
                         const VCL_GPU_Device *d) noexcept override {
     if (this->img_cvter.have_gpu_resource()) {

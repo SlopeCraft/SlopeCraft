@@ -8,16 +8,9 @@
 #include <string>
 #include <utilities/SC_GlobalEnums.h>
 
-cl::Platform private_fun_get_platform(size_t platform_idx,
-                                      cl_int &err) noexcept;
-
 namespace ocl_warpper {
 
 size_t platform_num() noexcept;
-std::string platform_str(size_t platform_idx) noexcept;
-
-size_t device_num(size_t platform_idx) noexcept;
-std::string device_str(size_t platform_idx, size_t device_idx) noexcept;
 
 class ocl_resource : public ::gpu_wrapper::gpu_interface {
 public:

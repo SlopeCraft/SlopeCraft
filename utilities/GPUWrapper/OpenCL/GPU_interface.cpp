@@ -5,18 +5,6 @@ size_t gpu_wrapper::platform_num() noexcept {
   return ::ocl_warpper::platform_num();
 }
 
-ocl_warpper::ocl_platform::ocl_platform(size_t idx) {
-  this->platform = private_fun_get_platform(idx, this->err);
-  if (this->err != CL_SUCCESS)
-    return;
-
-  this->name = this->platform.getInfo<CL_PLATFORM_NAME>(&this->err);
-  if (this->err != CL_SUCCESS)
-    return;
-
-  this->err = this->platform.getDevices(CL_DEVICE_TYPE_ALL, &this->devices);
-}
-
 ::gpu_wrapper::platform_wrapper * ::gpu_wrapper::platform_wrapper::create(
     size_t idx, int *errorcode) noexcept {
   ::ocl_warpper::ocl_platform *plat = new ::ocl_warpper::ocl_platform(idx);

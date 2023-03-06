@@ -172,8 +172,7 @@ public:
                       void (*progressAdd)(void *, int)) noexcept = 0;
 
   virtual bool have_gpu_resource() const noexcept = 0;
-  [[deprecated]] virtual bool set_gpu_resource(size_t platform_idx,
-                                               size_t device_idx) noexcept = 0;
+
   virtual bool set_gpu_resource(const VCL_GPU_Platform *,
                                 const VCL_GPU_Device *) noexcept = 0;
 
