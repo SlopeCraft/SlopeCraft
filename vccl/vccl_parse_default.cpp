@@ -332,9 +332,11 @@ int run(const inputs &input) noexcept {
     }
 
     if (input.make_flat_diagram) {
+      double wtime[3];
       for (uint8_t layer = 0; layer < input.layers; layer++) {
 
         std::string dst_name_str(input.prefix);
+        dst_name_str += pure_filename_no_extension;
         dst_name_str += "_flagdiagram_layer=";
         dst_name_str += std::to_string(layer);
         dst_name_str += ".png";
@@ -344,12 +346,22 @@ int run(const inputs &input) noexcept {
         option.row_end = kernel->rows();
         option.split_line_row_margin = input.flat_diagram_splitline_margin_row;
         option.split_line_col_margin = input.flat_diagram_splitline_margin_col;
-
+        wtime[layer] = omp_get_wtime();
         if (!kernel->export_flag_diagram(dst_name_str.c_str(), option, layer)) {
           cout << fmt::format("Failed to export flat diagram {}\n",
                               dst_name_str);
           return __LINE__;
         }
+        wtime[layer] = omp_get_wtime() - wtime[layer];
+      }
+
+      if (input.benchmark) {
+        cout << fmt::format("Export flatdiagram containing {} images in ",
+                            input.layers);
+        for (int i = 0; i < input.layers; i++) {
+          cout << wtime[i] << ", ";
+        }
+        cout << " seconds.\n";
       }
     }
 
