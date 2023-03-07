@@ -190,9 +190,9 @@ bool TokiVC::export_flag_diagram(const char *png_filename,
 
   png_init_io(png, fp);
 
-  png_set_compression_level(png, Z_BEST_COMPRESSION);
+  png_set_compression_level(png, opt.png_compress_level);
 
-  png_set_compression_mem_level(png, 8);
+  png_set_compression_mem_level(png, opt.png_compress_memory_level);
 
   // png_set_text_compression_level(png, 8);
 

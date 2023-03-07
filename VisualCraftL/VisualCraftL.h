@@ -211,6 +211,8 @@ public:
     int64_t row_end;
     int32_t split_line_row_margin; // 0 or negative number means no split lines
     int32_t split_line_col_margin; // 0 or negative number means no split lines
+    int png_compress_level{9};
+    int png_compress_memory_level{8};
   };
 
   virtual void flag_diagram(uint32_t *image_u8c3_rowmajor,

@@ -908,23 +908,19 @@
                  <string>平面示意图(*.png)</string>
                 </property>
                 <layout class="QGridLayout" name="gridLayout_22">
-                 <item row="0" column="0">
-                  <widget class="QCheckBox" name="cb_row_split_line">
-                   <property name="text">
-                    <string>水平分隔线</string>
+                 <item row="4" column="0">
+                  <widget class="QSpinBox" name="sb_fd_compress_level">
+                   <property name="prefix">
+                    <string>png压缩级别：</string>
                    </property>
-                   <property name="checked">
-                    <bool>true</bool>
+                   <property name="maximum">
+                    <number>9</number>
                    </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QCheckBox" name="cb_col_split_line">
-                   <property name="text">
-                    <string>垂直分隔线</string>
+                   <property name="singleStep">
+                    <number>1</number>
                    </property>
-                   <property name="checked">
-                    <bool>true</bool>
+                   <property name="value">
+                    <number>9</number>
                    </property>
                   </widget>
                  </item>
@@ -947,7 +943,7 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="4" column="0">
+                 <item row="6" column="0">
                   <spacer name="verticalSpacer_2">
                    <property name="orientation">
                     <enum>Qt::Vertical</enum>
@@ -976,6 +972,42 @@
                    </property>
                    <property name="value">
                     <number>16</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QCheckBox" name="cb_col_split_line">
+                   <property name="text">
+                    <string>垂直分隔线</string>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QCheckBox" name="cb_row_split_line">
+                   <property name="text">
+                    <string>水平分隔线</string>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="0">
+                  <widget class="QSpinBox" name="sb_fd_compress_mem_level">
+                   <property name="prefix">
+                    <string>png压缩内存级别：</string>
+                   </property>
+                   <property name="maximum">
+                    <number>9</number>
+                   </property>
+                   <property name="singleStep">
+                    <number>1</number>
+                   </property>
+                   <property name="value">
+                    <number>8</number>
                    </property>
                   </widget>
                  </item>

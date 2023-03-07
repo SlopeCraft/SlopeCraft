@@ -289,6 +289,10 @@ bool VCWind::export_flatdiagram(const QString &diagram_dest) noexcept {
     option.split_line_col_margin = 0;
   }
 
+  option.png_compress_level = this->ui->sb_fd_compress_level->value();
+  option.png_compress_memory_level =
+      this->ui->sb_fd_compress_mem_level->value();
+
   for (int l = 0; l < qsl.size(); l++) {
     const bool ok = this->kernel->export_flag_diagram(
         qsl[l].toLocal8Bit().data(), option, l);
