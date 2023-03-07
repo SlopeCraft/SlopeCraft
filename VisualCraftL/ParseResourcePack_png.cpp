@@ -517,7 +517,7 @@ bool compose_image_background_half_transparent(
 
   for (int i = 0; i < front_and_dest.size(); i++) {
     front_and_dest(i) =
-        ComposeColor_background_half_transparent(front_and_dest(i), back(i));
+        ComposeColor_background_half_transparent(back(i), front_and_dest(i));
   }
   return true;
 }
