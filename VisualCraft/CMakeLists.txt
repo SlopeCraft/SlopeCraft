@@ -56,7 +56,7 @@ set(VisualCraft_project_sources
     ${VisualCraft_ts_files}
 )
 
-if(${SlopeCraft_update_ts_files})
+if(TRUE OR ${SlopeCraft_update_ts_files})
     execute_process(COMMAND ${SlopeCraft_Qt_lupdate_executable} ${VisualCraft_header_files} ${VisualCraft_source_files} ${VisualCraft_ui_files} -ts others/VisualCraft_en_US.ts -no-obsolete
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} COMMAND_ERROR_IS_FATAL ANY)
 endif()
@@ -79,7 +79,8 @@ target_include_directories(VisualCraft PRIVATE ${SlopeCraft_Nlohmann_json_includ
 
 set_target_properties(VisualCraft PROPERTIES
     VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_ICON_FILE SlopeCraftIconNew.icns
+
+    # MACOSX_BUNDLE_ICON_FILE SlopeCraftIconNew.icns
     MACOSX_BUNDLE_GUI_IDENTIFIER "com.github.ToKiNoBug.SlopeCraft"
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}

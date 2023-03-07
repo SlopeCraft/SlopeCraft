@@ -45,6 +45,7 @@ VCL_set_report_callback
 VCL_version_string
 VCL_version_component
 VCL_is_version_ok
+VCL_get_GPU_api_name
 VCL_platform_num
 VCL_get_platform
 VCL_release_platform

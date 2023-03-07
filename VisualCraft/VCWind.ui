@@ -1026,9 +1026,9 @@
          </attribute>
          <layout class="QGridLayout" name="gridLayout_13">
           <item row="0" column="1">
-           <widget class="QGroupBox" name="groupBox_8">
+           <widget class="QGroupBox" name="gb_gpu">
             <property name="title">
-             <string>可用的计算设备（CPU + OpenCL可用的显卡）</string>
+             <string notr="true"/>
             </property>
             <property name="flat">
              <bool>false</bool>
@@ -1154,9 +1154,19 @@
     <addaction name="ac_load_resource"/>
     <addaction name="ac_set_allowed"/>
    </widget>
+   <widget class="QMenu" name="menu_about">
+    <property name="title">
+     <string>关于</string>
+    </property>
+    <addaction name="action_about_VisualCraft"/>
+    <addaction name="action_report_bugs"/>
+    <addaction name="action_github_repo"/>
+    <addaction name="action_deveploer_homepage"/>
+   </widget>
    <addaction name="menu_resource"/>
    <addaction name="menu_browse"/>
    <addaction name="menu_tests"/>
+   <addaction name="menu_about"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="action_test01">
@@ -1185,6 +1195,26 @@
   <action name="ac_browse_biome">
    <property name="text">
     <string>生物群系</string>
+   </property>
+  </action>
+  <action name="action_about_VisualCraft">
+   <property name="text">
+    <string>关于VisualCraft</string>
+   </property>
+  </action>
+  <action name="action_report_bugs">
+   <property name="text">
+    <string>反馈bug</string>
+   </property>
+  </action>
+  <action name="action_github_repo">
+   <property name="text">
+    <string>Github仓库</string>
+   </property>
+  </action>
+  <action name="action_deveploer_homepage">
+   <property name="text">
+    <string>开发者</string>
    </property>
   </action>
  </widget>

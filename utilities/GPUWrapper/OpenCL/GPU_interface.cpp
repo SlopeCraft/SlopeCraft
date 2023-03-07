@@ -1,6 +1,8 @@
 #include "../GPU_interface.h"
 #include "OCLWrapper.h"
 
+const char *gpu_wrapper::api_name() noexcept { return "OpenCL"; }
+
 size_t gpu_wrapper::platform_num() noexcept {
   return ::ocl_warpper::platform_num();
 }

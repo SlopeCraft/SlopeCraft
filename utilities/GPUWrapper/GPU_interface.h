@@ -7,6 +7,8 @@
 
 namespace gpu_wrapper {
 
+const char *api_name() noexcept;
+
 size_t platform_num() noexcept;
 
 class platform_wrapper {

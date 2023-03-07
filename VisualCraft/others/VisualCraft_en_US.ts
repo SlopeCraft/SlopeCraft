@@ -175,6 +175,7 @@
     </message>
     <message>
         <location filename="../VCWind.ui" line="336"/>
+        <location filename="../VCWind.cpp" line="413"/>
         <source>全部方块</source>
         <translation>All blocks</translation>
     </message>
@@ -310,32 +311,89 @@
         <translation>Set export directory</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="720"/>
-        <source>三维结构选项</source>
-        <translation>3D settings</translation>
+        <location filename="../VCWind.ui" line="908"/>
+        <source>平面示意图(*.png)</source>
+        <translation>Flat diagram(*.png)</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="726"/>
+        <location filename="../VCWind.ui" line="914"/>
+        <source>png压缩级别：</source>
+        <translation>png compress level: </translation>
+    </message>
+    <message>
+        <location filename="../VCWind.ui" line="930"/>
+        <location filename="../VCWind.ui" line="962"/>
+        <source> 方块</source>
+        <translation> blocks</translation>
+    </message>
+    <message>
+        <location filename="../VCWind.ui" line="933"/>
+        <location filename="../VCWind.ui" line="965"/>
+        <source>间距：</source>
+        <translation>margin: </translation>
+    </message>
+    <message>
+        <location filename="../VCWind.ui" line="981"/>
+        <source>垂直分隔线</source>
+        <translation>Vertical split line</translation>
+    </message>
+    <message>
+        <location filename="../VCWind.ui" line="991"/>
+        <source>水平分隔线</source>
+        <translation>Horizontal split line</translation>
+    </message>
+    <message>
+        <location filename="../VCWind.ui" line="1001"/>
+        <source>png压缩内存级别：</source>
+        <translation>png compress memory level: </translation>
+    </message>
+    <message>
+        <location filename="../VCWind.ui" line="1202"/>
+        <source>关于VisualCraft</source>
+        <translation>About VisualCraft</translation>
+    </message>
+    <message>
+        <location filename="../VCWind.ui" line="1207"/>
+        <source>反馈bug</source>
+        <translation>Report bugs</translation>
+    </message>
+    <message>
+        <location filename="../VCWind.ui" line="1212"/>
+        <source>Github仓库</source>
+        <translation>Github repository</translation>
+    </message>
+    <message>
+        <location filename="../VCWind.ui" line="1217"/>
+        <source>开发者</source>
+        <translation>Deveploer</translation>
+    </message>
+    <message>
+        <location filename="../VCWind.ui" line="761"/>
         <source>原版结构方块文件(*.nbt)</source>
         <translation>Vanilla structure(*.nbt)</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="732"/>
+        <location filename="../VCWind.ui" line="767"/>
         <source>用结构空位表示空气</source>
         <translation>Use structure void as air</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="758"/>
+        <location filename="../VCWind.ui" line="726"/>
         <source>Litematica投影(*.litematic)</source>
         <translation>Litematica file (*.litematic)</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="770"/>
+        <location filename="../VCWind.ui" line="720"/>
+        <source>导出选项</source>
+        <translation>Export options</translation>
+    </message>
+    <message>
+        <location filename="../VCWind.ui" line="738"/>
         <source>区域名称</source>
         <translation>Region name</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="783"/>
+        <location filename="../VCWind.ui" line="751"/>
         <source>投影名称（非文件名）</source>
         <translation>Schematic name(not file name)</translation>
     </message>
@@ -355,161 +413,207 @@
         <translation>Required mods (one mod in one line)</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="909"/>
-        <source>平面示意图选项</source>
-        <translation>Flag diagram options</translation>
-    </message>
-    <message>
-        <location filename="../VCWind.ui" line="918"/>
+        <location filename="../VCWind.ui" line="1025"/>
         <source>显卡设置</source>
         <translation>GPU settings</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="924"/>
-        <source>可用的计算设备（CPU + OpenCL可用的显卡）</source>
-        <translation>Compute deviecs (CPU and OpenCL-avaliable GPUs)</translation>
-    </message>
-    <message>
-        <location filename="../VCWind.ui" line="957"/>
+        <location filename="../VCWind.ui" line="1064"/>
         <source>计算设置</source>
         <translation>Computation settings</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="982"/>
+        <location filename="../VCWind.ui" line="1089"/>
         <source>CPU线程数：</source>
         <translation>CPU threads: </translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="998"/>
+        <location filename="../VCWind.ui" line="1105"/>
         <source>选择计算设备</source>
         <translation>Select compute device</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1032"/>
+        <location filename="../VCWind.ui" line="1139"/>
         <source>测试</source>
         <translation>Test</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1038"/>
+        <location filename="../VCWind.ui" line="1145"/>
         <source>查看</source>
         <translation>Browse</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1045"/>
+        <location filename="../VCWind.ui" line="1152"/>
         <source>资源</source>
         <translation>Resources</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1057"/>
+        <location filename="../VCWind.ui" line="1159"/>
+        <source>关于</source>
+        <translation>About</translation>
+    </message>
+    <message>
+        <location filename="../VCWind.ui" line="1174"/>
         <source>test01</source>
         <translation>test01</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1065"/>
+        <location filename="../VCWind.ui" line="1182"/>
         <source>方块</source>
         <translation>Blocks</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1070"/>
+        <location filename="../VCWind.ui" line="1187"/>
         <source>加载资源</source>
         <translation>Load resources</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1075"/>
+        <location filename="../VCWind.ui" line="1192"/>
         <source>设置可用的方块</source>
         <translation>Set avaliable blocks</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1080"/>
+        <location filename="../VCWind.ui" line="1197"/>
         <source>生物群系</source>
         <translation>Biomes</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="35"/>
+        <location filename="../main.cpp" line="30"/>
+        <source>VisualCraftL动态库版本不匹配</source>
+        <translation>The version of dynamic library &quot;VisualCraftL&quot; mismatch</translation>
+    </message>
+    <message>
+        <location filename="../main.cpp" line="31"/>
+        <source>界面程序编译时使用的VisualCraftL版本为%1，而VisualCraftL动态库的版本为%2。通常这是因为动态库版本过低。</source>
+        <translation>The version of VisualCraftL at ui program&apos;s build time is %1, and that of VisualCraftL is %2. Usually this is because the version of dynamic lib is not late enough.</translation>
+    </message>
+    <message>
+        <location filename="../main.cpp" line="43"/>
         <source>加载配置文件失败。</source>
         <translation>Failed to load configuration file.</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="62"/>
+        <location filename="../main.cpp" line="77"/>
         <source>无法加载配置文件&quot;./vc-config.json&quot;。
 %1</source>
         <translation>Failed to load configuration file &quot;./vc-config.json&apos;. 
 %1</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="74"/>
+        <location filename="../VCWind.cpp" line="73"/>
         <source>原版资源包</source>
         <translation>Vanilla</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="74"/>
+        <location filename="../VCWind.cpp" line="73"/>
         <source>原版json</source>
         <translation>Default</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="281"/>
+        <location filename="../VCWind.cpp" line="235"/>
         <source>选择资源包</source>
         <translation>Select resource pack</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="310"/>
+        <location filename="../VCWind.cpp" line="268"/>
         <source>选择方块id json文件</source>
         <translation>Select block state list json file</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="492"/>
+        <location filename="../VCWind.cpp" line="441"/>
+        <source>资源包解析失败</source>
+        <translation>Failed to parse resource pack</translation>
+    </message>
+    <message>
+        <location filename="../VCWind.cpp" line="442"/>
+        <location filename="../VCWind.cpp" line="452"/>
+        <source>在此窗口之前弹出的错误信息非常重要，请将它汇报给开发者。</source>
+        <translation>Error messages shown before this window is really important. Report it to the deveploer.</translation>
+    </message>
+    <message>
+        <location filename="../VCWind.cpp" line="451"/>
+        <source>方块状态列表json解析失败</source>
+        <translation>Failed to parse block state list json</translation>
+    </message>
+    <message>
+        <location filename="../VCWind.cpp" line="471"/>
         <source>资源包/方块状态列表json解析失败</source>
         <translation>Failed to parse resource packs or bsl jsons.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="493"/>
+        <location filename="../VCWind.cpp" line="472"/>
         <source>部分方块的投影图像计算失败，或者总颜色数量超过上限（65534）。尝试移除解析失败的资源包/方块列表，或者减小最大层数。</source>
         <translation>Failed to compute projection image for some blocks, or the total color amout exceeds the limit of 65534. You can try removing resource packs or block state list jsons that failed to be parsed, or reduce the max layers.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="550"/>
+        <location filename="../VCWind.cpp" line="528"/>
         <source>设置可用方块失败</source>
         <translation>Failed to set avaliable blocks</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="551"/>
+        <location filename="../VCWind.cpp" line="529"/>
         <source>可能是总颜色数量超过上限（65536），尝试移除解析失败的资源包/方块列表，或者减小最大层数。</source>
         <translation>Probably the count of colors exceeds the upper bound(65536). Try removing some resource packs or jsons, or reduce the maximum layers.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="580"/>
+        <location filename="../VCWind.cpp" line="558"/>
         <source>选择图片（可多选）</source>
         <translation>Select images</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="597"/>
+        <location filename="../VCWind.cpp" line="575"/>
         <source>读取图片失败</source>
         <translation>Failed to load image.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="598"/>
+        <location filename="../VCWind.cpp" line="576"/>
         <source>无法读取图片%1。图片可能是不支持的格式，或者已经损坏。图像过大也可能导致此错误。</source>
         <translation>Failed to load image %1 . The image may be of unsupported format, or has been screwed up. A tooooo large image may also cause this error.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="651"/>
+        <location filename="../VCWind.cpp" line="629"/>
         <source>设置图片失败</source>
         <translation>Failed to set image</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="652"/>
+        <location filename="../VCWind.cpp" line="630"/>
         <source>这个错误不应该发生的，可能是你点儿背。</source>
         <translation>This error is considered to be impossible.</translation>
     </message>
     <message>
-        <location filename="../VCWind_gpu.cpp" line="52"/>
+        <location filename="../VCWind_gpu.cpp" line="67"/>
+        <source>可用的计算设备（CPU + %1可用的显卡）</source>
+        <translation>Avaliable compute devices (CPU + %1-avaliable-GPUs)</translation>
+    </message>
+    <message>
+        <location filename="../VCWind_gpu.cpp" line="78"/>
         <source>无法获取platform信息. 请检查驱动. OpenCL错误码: %1.</source>
         <translation>Failed to get platform information. Please check GPU driver(s). OpenCL error code : %1.</translation>
     </message>
     <message>
-        <location filename="../VCWind_gpu.cpp" line="75"/>
+        <location filename="../VCWind_gpu.cpp" line="101"/>
         <source>无法获取device信息. 请检查驱动. OpenCL错误码: %1</source>
         <translation>Failed to get device infomation. Please check the driver(s). OpenCL error code : %1</translation>
+    </message>
+    <message>
+        <location filename="../VCWind_gpu.cpp" line="158"/>
+        <source>设置计算设备失败</source>
+        <translation>Failed to set compute device</translation>
+    </message>
+    <message>
+        <location filename="../VCWind_gpu.cpp" line="182"/>
+        <source>创建GPU平台失败，平台序号为%1，设备序号为%2</source>
+        <translation>Failed to create GPU platform, the index of platform is %1 and index of device is %2</translation>
+    </message>
+    <message>
+        <location filename="../VCWind_gpu.cpp" line="189"/>
+        <source>创建GPU设备失败，平台序号为%1，设备序号为%2</source>
+        <translation>Failed to create GPU device, the index of platform is %1 and index of device is %2</translation>
+    </message>
+    <message>
+        <location filename="../VCWind_gpu.cpp" line="195"/>
+        <source>设置GPU设备失败。，平台序号为%1，设备序号为%2</source>
+        <translation>Failed to set GPU device, the index of platform is %1 and index of device is %2</translation>
     </message>
     <message>
         <location filename="../VCWind_export.cpp" line="10"/>
@@ -532,62 +636,86 @@
         <translation>When you set the output directory for any type of export, you should select the type of export with the combobox in the left. Please select a type first.</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="147"/>
+        <location filename="../VCWind_export.cpp" line="261"/>
+        <source>平面示意图输入错误</source>
+        <translation>Invalid input for flatdiagram</translation>
+    </message>
+    <message>
+        <location filename="../VCWind_export.cpp" line="262"/>
+        <source>应输入%1个以&quot;;&quot;分隔的文件名，但实际上输入了%2个。
+您输入的%2个文件名是：
+%3</source>
+        <translation>You should input %1 filenames separeted by &quot;;&quot;, but %2 is(are) given infact.
+The %2 filename(s) you give is:
+%3</translation>
+    </message>
+    <message>
+        <location filename="../VCWind_export.cpp" line="302"/>
+        <source>导出平面示意图失败</source>
+        <translation>Failed to export flat diagram</translation>
+    </message>
+    <message>
+        <location filename="../VCWind_export.cpp" line="303"/>
+        <source>尝试为原图生成第%1个平面示意图（%2）时出现了错误。</source>
+        <translation>Error occurred when trying to generate the %1-th flat diagram(%2).</translation>
+    </message>
+    <message>
+        <location filename="../VCWind_export.cpp" line="331"/>
         <source>致命逻辑错误</source>
         <translation>Impossible error</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="148"/>
+        <location filename="../VCWind_export.cpp" line="332"/>
         <source>导出页码表格中的图片&quot;%1&quot;不能在this-&gt;image_cache中找到对应的缓存。请将这个错误反馈给软件开发者。</source>
         <translation>Cache of image named &quot;%1&quot; in the export table cannot be found in this-&gt;image_cache. Please send this as a feedback to the developer.</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="204"/>
+        <location filename="../VCWind_export.cpp" line="242"/>
         <source>保存转化后图像失败</source>
         <translation>Failed to save the converted image</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="205"/>
+        <location filename="../VCWind_export.cpp" line="243"/>
         <source>QImage未能生成&quot;%1&quot;。</source>
         <translation>QImage failed to generate &quot;%1&quot;.</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="232"/>
+        <location filename="../VCWind_export.cpp" line="413"/>
         <source>构建三维结构失败</source>
         <translation>Failed to build 3D structure</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="233"/>
+        <location filename="../VCWind_export.cpp" line="414"/>
         <source>VisualCraftL不能为图像&quot;%1&quot;构建三维结构。</source>
         <translation>VisualCraft failed to build 3D structure for image &quot;%1&quot;.</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="257"/>
+        <location filename="../VCWind_export.cpp" line="154"/>
         <source>导出litematica失败</source>
         <translation>Failed to export as litematic</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="258"/>
+        <location filename="../VCWind_export.cpp" line="155"/>
         <source>VisualCraftL不能为图像&quot;%1&quot;生成投影文件&quot;%2&quot;。</source>
         <translation>VisualCraft failed to generate litematic file &quot;%2&quot; for image &quot;%1&quot;.</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="283"/>
+        <location filename="../VCWind_export.cpp" line="178"/>
         <source>导出原版结构方块文件失败</source>
         <translation>Failed to export as vanilla structure</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="284"/>
+        <location filename="../VCWind_export.cpp" line="179"/>
         <source>VisualCraftL不能为图像&quot;%1&quot;生成结构方块文件&quot;%2&quot;。</source>
         <translation>VisualCraft failed to generate structure file &quot;%2&quot; for image &quot;%1&quot;.</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="327"/>
+        <location filename="../VCWind_export.cpp" line="220"/>
         <source>导出World Edit原理图失败</source>
         <translation>Failed to export as WE schematic</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="328"/>
+        <location filename="../VCWind_export.cpp" line="221"/>
         <source>VisualCraftL不能为图像&quot;%1&quot;生成World Edit原理图&quot;%2&quot;。</source>
         <translation>VisualCraft failed to generate WE schematic file &quot;%2&quot; for image &quot;%1&quot;.</translation>
     </message>

@@ -792,6 +792,10 @@ void VCL_report(VCL_report_type_t t, const char *msg, bool flush) noexcept {
   VCL_report_fun(t, msg, flush);
 }
 
+VCL_EXPORT_FUN const char *VCL_get_GPU_api_name() {
+  return ::gpu_wrapper::api_name();
+}
+
 VCL_EXPORT_FUN size_t VCL_platform_num() { return gpu_wrapper::platform_num(); }
 
 VCL_EXPORT_FUN VCL_GPU_Platform *VCL_get_platform(size_t platform_idx,

@@ -64,6 +64,9 @@ void VCWind::refresh_gpu_info() noexcept {
     // cpu->setCheckState(0, Qt::CheckState::Unchecked);
   }
 
+  this->ui->gb_gpu->setTitle(VCWind::tr("可用的计算设备（CPU + %1可用的显卡）")
+                                 .arg(VCL_get_GPU_api_name()));
+
   const size_t num_plats = VCL_platform_num();
   int errcode = 0;
 
