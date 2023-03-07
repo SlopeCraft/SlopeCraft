@@ -193,6 +193,7 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(std::string FolderPath,
       case SCL_gameVersion::MC17:
       case SCL_gameVersion::MC18:
       case SCL_gameVersion::MC19:
+#warning here
         MapFile.writeInt("DataVersion", mcVersion2VersionNumber(mcVer));
         break;
       default:
@@ -200,7 +201,9 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(std::string FolderPath,
         break;
       }
       static const std::string ExportedBy =
-          "Exported by SlopeCraft " + std::string(Kernel::getSCLVersion()) +
+#warning here
+          "Exported by SlopeCraft " +
+          std::string(TokiSlopeCraft::getSCLVersion()) +
           ", developed by TokiNoBug";
       MapFile.writeString("ExportedBy", ExportedBy.data());
       MapFile.writeCompound("data");

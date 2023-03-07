@@ -24,7 +24,6 @@ This file is part of SlopeCraft.
 #define KERNEL_H
 #include <stddef.h>
 #include <stdint.h>
-// #define SCL_CAPI
 
 #include "SlopeCraftL_global.h"
 
@@ -36,240 +35,259 @@ This file is part of SlopeCraft.
 #endif
 
 // declare classes
-#ifdef SCL_CAPI
-struct AbstractBlock;
-struct AiCvterOpt;
-struct Kernel;
-
-#else
 namespace SlopeCraft {
 class AbstractBlock;
 struct AiCvterOpt;
 class Kernel;
 } // namespace SlopeCraft
-#endif
 
-// define exported C functions
-#ifdef SCL_CAPI
-extern "C" {
-SCL_EXPORT AbstractBlock *SCL_createBlock();
-unsigned long long SCL_EXPORT SCL_blockSize(const AbstractBlock *);
+namespace SlopeCraft {
 
-/// id of this block
-SCL_EXPORT const char *SCL_getId(const AbstractBlock *);
+using AbstractBlock = ::SlopeCraft::AbstractBlock;
+using AiCvterOpt = ::SlopeCraft::AiCvterOpt;
+using Kernel = ::SlopeCraft::Kernel;
 
-/// first version
-unsigned char SCL_EXPORT SCL_getVersion(const AbstractBlock *);
-/// id in 1.12
-SCL_EXPORT const char *SCL_getIdOld(const AbstractBlock *);
-/// if this block needs a glass block under it
-bool SCL_EXPORT SCL_getNeedGlass(const AbstractBlock *);
-/// if this block emits light
-bool SCL_EXPORT SCL_getDoGlow(const AbstractBlock *);
-/// if this block can be stolen by enderman
-bool SCL_EXPORT SCL_getEndermanPickable(const AbstractBlock *);
-/// if this block can be burnt
-bool SCL_EXPORT SCL_getBurnable(const AbstractBlock *);
-// if this block can be used in wall-map
-// bool SCL_EXPORT SCL_getWallUseable(const AbstractBlock *);
+using step = ::SCL_step;
+using mapTypes = ::SCL_mapTypes;
+using compressSettings = ::SCL_compressSettings;
+using convertAlgo = ::SCL_convertAlgo;
+using glassBridgeSettings = ::SCL_glassBridgeSettings;
+using gameVersion = ::SCL_gameVersion;
+using workStatues = ::SCL_workStatues;
+using errorFlag = ::SCL_errorFlag;
 
-/// set block id
-void SCL_EXPORT SCL_setId(AbstractBlock *, const char *);
-/// set first version
-void SCL_EXPORT SCL_setVersion(AbstractBlock *, unsigned char);
-/// set id in 1.12
-void SCL_EXPORT SCL_setIdOld(AbstractBlock *, const char *);
-/// set if this block needs a glass block under it
-void SCL_EXPORT SCL_setNeedGlass(AbstractBlock *, bool);
-/// set if this block emits light
-void SCL_EXPORT SCL_setDoGlow(AbstractBlock *, bool);
-/// set if this block can be stolen by enderman
-void SCL_EXPORT SCL_setEndermanPickable(AbstractBlock *, bool);
-/// set if this block can be burnt
-void SCL_EXPORT SCL_setBurnable(AbstractBlock *, bool);
-// set if this block can be used in wall-map
-// void SCL_EXPORT SCL_setWallUseable(AbstractBlock *, bool);
-/// let *b equal to *this
-void SCL_EXPORT SCL_copyTo(AbstractBlock *, AbstractBlock *b);
-/// set this block to air
-void SCL_EXPORT SCL_clear(AbstractBlock *);
-/// replacement for operator delete
-void SCL_EXPORT SCL_destroyBlock(AbstractBlock *);
+}; // namespace SlopeCraft
 
-/// create a Kernel object
-Kernel *SCL_EXPORT SCL_createKernel();
+namespace SlopeCraft {
 
-void SCL_EXPORT SCL_getColorMapPtrs(const float **const rdata,
-                                    const float **const gdata,
-                                    const float **const bdata,
-                                    const unsigned char **, int *);
-// full palette
-const float *SCL_EXPORT SCL_getBasicColorMapPtrs();
+class SCL_EXPORT AbstractBlock {
+public:
+  AbstractBlock();
+  // virtual ~AbstractBlock() {};
+  /// create a block
+  [[deprecated]] static AbstractBlock *create();
+  /// real size of this block
+  virtual unsigned long long size() const = 0;
+  /// id of this block
+  virtual const char *getId() const = 0;
+  /// first version
+  virtual uint8_t getVersion() const = 0;
+  /// id in 1.12
+  virtual const char *getIdOld() const = 0;
+  /// if this block needs a glass block under it
+  virtual bool getNeedGlass() const = 0;
+  /// if this block emits light
+  virtual bool getDoGlow() const = 0;
+  /// if this block can be stolen by enderman
+  virtual bool getEndermanPickable() const = 0;
+  /// if this block can be burnt
+  virtual bool getBurnable() const = 0;
 
-const char *SCL_EXPORT SCL_getSCLVersion();
+  /// set block id
+  virtual void setId(const char *) = 0;
+  /// set first version
+  virtual void setVersion(uint8_t) = 0;
+  /// set id in 1.12
+  virtual void setIdOld(const char *) = 0;
+  /// set if this block needs a glass block under it
+  virtual void setNeedGlass(bool) = 0;
+  /// set if this block emits light
+  virtual void setDoGlow(bool) = 0;
+  /// set if this block can be stolen by enderman
+  virtual void setEndermanPickable(bool) = 0;
+  /// set if this block can be burnt
+  virtual void setBurnable(bool) = 0;
+  /// let *b equal to *this
+  void copyTo(AbstractBlock *b) const;
+  /// set this block to air
+  void clear();
+  /// replacement for operator delete
+  [[deprecated]] virtual void destroy() = 0;
+};
 
-unsigned long long SCL_EXPORT SCL_mcVersion2VersionNumber(SCL_gameVersion);
+class SCL_EXPORT Kernel {
+public:
+  Kernel();
+  // virtual ~Kernel() {};
 
-// can do in nothing:
-/// real size of Kernel
-unsigned long long SCL_EXPORT SCL_kernelSize(Kernel *k);
-/// get current step
-SCL_step SCL_EXPORT SCL_queryStep(const Kernel *k);
-/// revert to a previous step
-void SCL_EXPORT SCL_decreaseStep(Kernel *k, SCL_step);
-/// replacement for operator delete
-void SCL_EXPORT SCL_destroyKernel(Kernel *k);
+  /// create a kernel object
+  [[deprecated]] static Kernel *create();
 
-void SCL_EXPORT SCL_setAiCvterOpt(Kernel *k, const AiCvterOpt *a);
-const AiCvterOpt *SCL_EXPORT SCL_getAiCvterOpt(const Kernel *k);
+public:
+  /// function ptr to window object
+  virtual void setWindPtr(void *) = 0;
+  /// a function ptr to show progress of converting and exporting
+  virtual void setProgressRangeSet(void (*)(void *, int, int, int)) = 0;
+  /// a function ptr to add progress value
+  virtual void setProgressAdd(void (*)(void *, int)) = 0;
+  /// a function ptr to prevent window from being syncoped
+  virtual void setKeepAwake(void (*)(void *)) = 0;
 
-/// function ptr to window object
-void SCL_EXPORT SCL_setWindPtr(Kernel *k, void *);
-/// a function ptr to show progress of converting and exporting
-void SCL_EXPORT SCL_setProgressRangeSet(Kernel *k, void (*)(void *, int min,
-                                                            int max, int val));
-/// a function ptr to add progress value
-void SCL_EXPORT SCL_setProgressAdd(Kernel *k, void (*)(void *, int));
-/// a function ptr to prevent window from being syncoped
-void SCL_EXPORT SCL_setKeepAwake(Kernel *k, void (*)(void *));
+  /// a function ptr to show progress of compressing and bridge-building
+  virtual void setAlgoProgressRangeSet(void (*)(void *, int, int, int)) = 0;
+  /// a function ptr to add progress value of compressing and bridge-building
+  virtual void setAlgoProgressAdd(void (*)(void *, int)) = 0;
 
-/// a function ptr to show progress of compressing and bridge-building
-void SCL_EXPORT SCL_setAlgoProgressRangeSet(Kernel *k,
-                                            void (*)(void *, int, int, int));
-/// a function ptr to add progress value of compressing and bridge-building
-void SCL_EXPORT SCL_setAlgoProgressAdd(Kernel *k, void (*)(void *, int));
+  /// a function ptr to report error when something wrong happens
+  virtual void setReportError(void (*)(void *, ::SCL_errorFlag,
+                                       const char *)) = 0;
+  /// a function ptr to report working statue especially when busy
+  virtual void setReportWorkingStatue(void (*)(void *, ::SCL_workStatues)) = 0;
 
-/// a function ptr to report error when something wrong happens
-void SCL_EXPORT SCL_setReportError(Kernel *k, void (*)(void *, SCL_errorFlag,
-                                                       const char *));
-/// a function ptr to report working statue especially when busy
-void SCL_EXPORT SCL_setReportWorkingStatue(Kernel *k,
-                                           void (*)(void *, SCL_workStatues));
+  virtual void setAiCvterOpt(const AiCvterOpt *) = 0;
 
-// can do in colorSetReady:
-/// set map type and blocklist
-bool SCL_EXPORT SCL_setType(Kernel *k, SCL_mapTypes, SCL_gameVersion,
-                            const bool[64], const AbstractBlock *[64]);
-/// get palette (base colors only) in ARGB32
-void SCL_EXPORT SCL_getBaseColorsInARGB32(const Kernel *k, unsigned int *);
+  virtual const AiCvterOpt *aiCvterOpt() const = 0;
 
-// can do in wait4Image:
-/// set original image from ARGB32 matrix (col-major)
-void SCL_EXPORT SCL_setRawImage(Kernel *k, const unsigned int *src, int rows,
-                                int cols);
-/// get accessible color count
-unsigned short SCL_EXPORT SCL_getColorCount(const Kernel *k);
-/// make a structure that includes all accessible blocks
-void SCL_EXPORT SCL_makeTests(Kernel *k, const AbstractBlock **,
-                              const unsigned char *, const char *, char *);
-/// get avaliable colors in argb32
-void SCL_EXPORT getAvailableColors(const Kernel *k,
-                                   unsigned int *const dest_ARGB32,
-                                   unsigned char *const dest_map_color,
-                                   int *const num);
+  // can do in nothing:
+  /// real size of kernel
+  virtual unsigned long long size() = 0;
+  /// revert to a previous step
+  virtual void decreaseStep(::SCL_step) = 0;
+  /// replacement for operator delete
+  [[deprecated]] virtual void destroy() = 0;
 
-// can do in convertionReady:
-/// convert original image to map
-bool SCL_EXPORT SCL_convert(Kernel *k, SCL_convertAlgo = RGB_Better,
-                            bool dither = false);
-/// get image rows
-int SCL_EXPORT SCL_getImageRows(const Kernel *k);
-/// get image cols
-int SCL_EXPORT SCL_getImageCols(const Kernel *k);
-/// query if map is buildable in vanilla survival
-bool SCL_EXPORT SCL_isVanilla(const Kernel *k);
-/// query if map is a flat one
-bool SCL_EXPORT SCL_isFlat(const Kernel *k);
+  // can do in colorSetReady:
+  /// get current step
+  virtual ::SCL_step queryStep() const = 0;
+  /// set map type and blocklist
+  virtual bool setType(::SCL_mapTypes, ::SCL_gameVersion, const bool[64],
+                       const AbstractBlock *const *const) = 0;
+  /// get palette (base colors only) in ARGB32
+  virtual void getBaseColorInARGB32(uint32_t *const) const = 0;
 
-// can do in converted:
-/// construct 3D structure
-bool SCL_EXPORT SCL_build(Kernel *k, SCL_compressSettings = noCompress,
-                          unsigned short = 256,
-                          SCL_glassBridgeSettings = noBridge,
-                          unsigned short = 3, bool fireProof = false,
-                          bool endermanProof = false);
+  // can do in wait4Image:
+  /// set original image from ARGB32 matrix (col-major)
+  virtual void setRawImage(const uint32_t *src, int rows, int cols) = 0;
+  /// get accessible color count
+  virtual unsigned short getColorCount() const = 0;
+  /// get usable colors in ARGB32
+  virtual void getAvailableColors(uint32_t *const ARGB32_dest = nullptr,
+                                  uint8_t *const map_color_dest = nullptr,
+                                  int *const num = nullptr) const = 0;
+  /// make a structure that includes all accessible blocks
+  virtual void makeTests(const AbstractBlock **, const uint8_t *, const char *,
+                         char *) = 0;
 
-/// get converted image
-void SCL_EXPORT SCL_getConvertedImage(const Kernel *k, int *rows, int *cols,
-                                      unsigned int *dest);
-/// export as map data files
-void SCL_EXPORT SCL_exportAsData(const Kernel *k, const char *FolderPath,
-                                 const int indexStart, int *fileCount,
-                                 char **dest);
-/// get converted map(in mapColor array)
-void SCL_EXPORT SCL_getConvertedMap(const Kernel *k, int *rows, int *cols,
-                                    unsigned char *);
+  // can do in convertionReady:
+  /// convert original image to map
+  virtual bool convert(::SCL_convertAlgo = ::SCL_convertAlgo::RGB_Better,
+                       bool dither = false) = 0;
+  /// get image rows
+  virtual int getImageRows() const = 0;
+  /// get image cols
+  virtual int getImageCols() const = 0;
+  virtual const uint32_t *getRawImage() const = 0;
+  /// query if map is buildable in vanilla survival
+  virtual bool isVanilla() const = 0;
+  /// query if map is a flat one
+  virtual bool isFlat() const = 0;
 
-// can do in builded:
-/// export map into litematica files (*.litematic)
-void SCL_EXPORT SCL_exportAsLitematic(const Kernel *k, const char *TargetName,
-                                      const char *LiteName,
-                                      const char *RegionName, char *FileName);
-/// export map into Structure files (*.NBT)
-void SCL_EXPORT SCL_exportAsStructure(const Kernel *k, const char *TargetName,
-                                      char *FileName);
+  // can do in converted:
+  /// construct 3D structure
+  virtual bool
+  build(::SCL_compressSettings = ::SCL_compressSettings::noCompress,
+        unsigned short = 256,
+        ::SCL_glassBridgeSettings = ::SCL_glassBridgeSettings::noBridge,
+        unsigned short = 3, bool fireProof = false,
+        bool endermanProof = false) = 0;
 
-/// get x,y,z size
-void SCL_EXPORT SCL_get3DSize(const Kernel *k, int *x, int *y, int *z);
+  /// get converted image
+  virtual void getConvertedImage(int *rows, int *cols,
+                                 uint32_t *dest) const = 0;
+  /// export as map data files, returns failed files.
+  virtual void exportAsData(const char *FolderPath, const int indexStart,
+                            int *fileCount, char **dest) const = 0;
+  /// get converted map(in mapColor array)
+  virtual void getConvertedMap(int *rows, int *cols, uint8_t *) const = 0;
 
-/// get 3d structure's size
-int SCL_EXPORT SCL_getHeight(const Kernel *k);
-/// get 3d structure's size
-int SCL_EXPORT SCL_getXRange(const Kernel *k);
-/// get 3d structure's size
-int SCL_EXPORT SCL_getZRange(const Kernel *k);
-/// get block count in total and in detail
-void SCL_EXPORT SCL_getBlockCountsInTypes(const Kernel *k, int *total,
-                                          int detail[64]);
-/// get sum block count
-int SCL_EXPORT SCL_getBlockCounts(const Kernel *k);
-/// get 3d structure in 3d-matrix (col major)
-const unsigned short *SCL_EXPORT SCL_getBuild(const Kernel *k, int *xSize,
-                                              int *ySize, int *zSize);
+  // can do in builded:
+  /// export map into litematica files (*.litematic)
+  virtual void exportAsLitematic(const char *localEncoding_TargetName,
+                                 const char *utf8_LiteName,
+                                 const char *utf8_RegionName,
+                                 char *localEncoding_returnVal) const = 0;
+  /// export map into Structure files (*.NBT)
+  virtual void exportAsStructure(const char *localEncoding_TargetName,
+                                 char *localEncoding_FileName) const = 0;
+  virtual void exportAsWESchem(
+      const char *localEncoding_fileName, const int (&offset)[3] = {0, 0, 0},
+      const int (&weOffset)[3] = {0, 0, 0}, const char *utf8_Name = "",
+      const char *const *const utf8_requiredMods = nullptr,
+      const int requiredModsCount = 0,
+      char *localEncoding_returnVal = nullptr) const = 0;
 
-} //  extern "C"
-#endif //  ifdef SCL_CAPI
+  /// get x,y,z size
+  virtual void get3DSize(int *x, int *y, int *z) const = 0;
 
-// expand definations of AbstractBlock and Kernel if it is cpp api
-#ifndef SCL_CAPI
-#include "defines_of_extern_classes.h"
-#endif //  ifndef SLOPECRAFT_CAPI
+  /// get 3d structure's size
+  virtual int getHeight() const = 0;
+  /// get 3d structure's size
+  virtual int getXRange() const = 0;
+  /// get 3d structure's size
+  virtual int getZRange() const = 0;
+  /// get block count in total and in detail
+  virtual void getBlockCounts(int *total, int detail[64]) const = 0;
+  /// get sum block count
+  virtual int64_t getBlockCounts() const = 0;
+  /// get 3d structure in 3d-matrix (col major)
+  virtual const unsigned short *getBuild(int *xSize = nullptr,
+                                         int *ySize = nullptr,
+                                         int *zSize = nullptr) const = 0;
+
+protected:
+  /// calling delete is deprecated, use void Kernel::destroy() instead
+};
+
+} // namespace SlopeCraft
 
 // these functions are
 extern "C" {
-#ifndef SCL_CAPI
 namespace SlopeCraft {
-#endif
+
+SCL_EXPORT Kernel *SCL_createKernel();
+SCL_EXPORT void SCL_destroyKernel(Kernel *);
+
+SCL_EXPORT AbstractBlock *SCL_createBlock();
+SCL_EXPORT void SCL_destroyBlock(AbstractBlock *);
 
 SCL_EXPORT AiCvterOpt *SCL_createAiCvterOpt();
-void SCL_EXPORT SCL_destroyAiCvterOpt(AiCvterOpt *);
+SCL_EXPORT void SCL_destroyAiCvterOpt(AiCvterOpt *);
 
-void SCL_EXPORT SCL_setPopSize(AiCvterOpt *, unsigned int p);
-void SCL_EXPORT SCL_setMaxGeneration(AiCvterOpt *, unsigned int p);
-void SCL_EXPORT SCL_setMaxFailTimes(AiCvterOpt *, unsigned int p);
-void SCL_EXPORT SCL_setCrossoverProb(AiCvterOpt *, double p);
-void SCL_EXPORT SCL_setMutationProb(AiCvterOpt *, double p);
+SCL_EXPORT void SCL_setPopSize(AiCvterOpt *, uint32_t p);
+SCL_EXPORT void SCL_setMaxGeneration(AiCvterOpt *, uint32_t p);
+SCL_EXPORT void SCL_setMaxFailTimes(AiCvterOpt *, uint32_t p);
+SCL_EXPORT void SCL_setCrossoverProb(AiCvterOpt *, double p);
+SCL_EXPORT void SCL_setMutationProb(AiCvterOpt *, double p);
 
-unsigned int SCL_EXPORT SCL_getPopSize(const AiCvterOpt *);
-unsigned int SCL_EXPORT SCL_getMaxGeneration(const AiCvterOpt *);
-unsigned int SCL_EXPORT SCL_getMaxFailTimes(const AiCvterOpt *);
-double SCL_EXPORT SCL_getCrossoverProb(const AiCvterOpt *);
-double SCL_EXPORT SCL_getMutationProb(const AiCvterOpt *);
+SCL_EXPORT uint32_t SCL_getPopSize(const AiCvterOpt *);
+SCL_EXPORT uint32_t SCL_getMaxGeneration(const AiCvterOpt *);
+SCL_EXPORT uint32_t SCL_getMaxFailTimes(const AiCvterOpt *);
+SCL_EXPORT double SCL_getCrossoverProb(const AiCvterOpt *);
+SCL_EXPORT double SCL_getMutationProb(const AiCvterOpt *);
 
-void SCL_EXPORT SCL_preprocessImage(
-    unsigned int *ARGB32ptr, const uint64_t imageSize,
+SCL_EXPORT void SCL_preprocessImage(
+    uint32_t *ARGB32ptr, const uint64_t imageSize,
     const SCL_PureTpPixelSt = SCL_PureTpPixelSt::ReplaceWithBackGround,
     const SCL_HalfTpPixelSt = SCL_HalfTpPixelSt::ComposeWithBackGround,
-    unsigned int backGround = 0xFFFFFFFF);
+    uint32_t backGround = 0xFFFFFFFF);
 
-unsigned char SCL_EXPORT SCL_maxAvailableVersion();
+SCL_EXPORT uint8_t SCL_maxAvailableVersion();
 
-#ifndef SCL_CAPI
+SCL_EXPORT const char *SCL_getSCLVersion();
+
+SCL_EXPORT void SCL_getColorMapPtrs(const float **const rdata,
+                                    const float **const gdata,
+                                    const float **const bdata, const uint8_t **,
+                                    int *);
+// full palette
+SCL_EXPORT const float *SCL_getBasicColorMapPtrs();
+
+// SCL_EXPORT uint64_t SCL_mcVersion2VersionNumber(::SCL_gameVersion);
+
 } //  namespace SlopeCraft
-#endif
 
 } //  extern "C"
 
-// void SCL_EXPORT SCL_test();
+// SCL_EXPORT void SCL_test();
 
 #endif // KERNEL_H

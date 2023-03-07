@@ -47,7 +47,7 @@ const ushort MainWindow::BLGlowing[64] = {
     0, 0, 0, 0, 0, 0, 6, 0, 0, 1, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0};
 
-const QString MainWindow::selfVersion = SlopeCraft::Kernel::getSCLVersion();
+const QString MainWindow::selfVersion = SlopeCraft::SCL_getSCLVersion();
 
 bool MainWindow::isBatchOperating = false;
 
@@ -62,7 +62,7 @@ inline uint32_t inverseColor(uint32_t raw) noexcept {
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow),
-      kernel(SlopeCraft::Kernel::create()) {
+      kernel(SlopeCraft::SCL_createKernel()) {
   ui->setupUi(this);
   // qDebug("成功setupUi");
   Collected = false;
@@ -255,7 +255,7 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 MainWindow::~MainWindow() {
-  kernel->destroy();
+  SlopeCraft::SCL_destroyKernel(this->kernel);
   delete Manager;
   delete ui;
 }
@@ -588,7 +588,7 @@ void MainWindow::turnToPage(int page) {
   page %= 9;
   QString newtitle = "SlopeCraft ";
 
-  newtitle += SlopeCraft::Kernel::getSCLVersion();
+  newtitle += SlopeCraft::SCL_getSCLVersion();
 #ifdef WIN32
   newtitle += " Copyright © 2021-2022 TokiNoBug    "; // windows
 #elif defined(_MAC) || defined(__APPLE__)
@@ -1113,8 +1113,9 @@ void MainWindow::kernelSetType() {
   kernel->setType(type, ver, allowedBaseColor, palette.data());
   const uint8_t *allowedMap;
   int colorN = 0;
-  SlopeCraft::Kernel::getColorMapPtrs(nullptr, nullptr, nullptr, &allowedMap,
-                                      &colorN);
+
+  SlopeCraft::SCL_getColorMapPtrs(nullptr, nullptr, nullptr, &allowedMap,
+                                  &colorN);
   /*
   cout<<"\n\nAllowedMap=";
   for(int i=0;i<colorN;i++) {
@@ -1880,7 +1881,8 @@ void MainWindow::showError(void *p, SlopeCraft::errorFlag error,
     break;
   case SlopeCraft::errorFlag::LOSSYCOMPRESS_FAILED:
     title = tr("有损压缩失败");
-    text = tr("在构建高度矩阵时，有损压缩失败，没能将地图画压缩到目标高度。 \
+    text = tr(
+        "在构建高度矩阵时，有损压缩失败，没能将地图画压缩到目标高度。 \
         这可能是因为地图画行数过大。 \
         尝试启用无损压缩，或者提高最大允许高度");
     break;

@@ -79,10 +79,21 @@ namespace NBT {
 template <bool> class NBTWriter;
 };
 
-class TokiSlopeCraft : public Kernel {
+class TokiSlopeCraft : public ::SlopeCraft::Kernel {
 public:
   static const colorset_basic_t Basic;
   static colorset_allowed_t Allowed;
+
+  static void getColorMapPtrs(const float **const rdata,
+                              const float **const gdata,
+                              const float **const bdata, const uint8_t **,
+                              int *);
+  // full palette
+  static const float *getBasicColorMapPtrs();
+
+  static const char *getSCLVersion();
+
+  static uint64_t mcVersion2VersionNumber(::SCL_gameVersion);
 
 public:
   TokiSlopeCraft();
