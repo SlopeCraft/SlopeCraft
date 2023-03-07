@@ -1158,10 +1158,16 @@
     <property name="title">
      <string>关于</string>
     </property>
-    <addaction name="action_about_VisualCraft"/>
-    <addaction name="action_report_bugs"/>
-    <addaction name="action_github_repo"/>
-    <addaction name="action_deveploer_homepage"/>
+    <widget class="QMenu" name="menu_contact">
+     <property name="title">
+      <string>联系开发者</string>
+     </property>
+     <addaction name="ac_contact_bilibili"/>
+     <addaction name="ac_contact_github_repo"/>
+    </widget>
+    <addaction name="ac_about_VisualCraft"/>
+    <addaction name="ac_report_bugs"/>
+    <addaction name="menu_contact"/>
    </widget>
    <addaction name="menu_resource"/>
    <addaction name="menu_browse"/>
@@ -1197,24 +1203,40 @@
     <string>生物群系</string>
    </property>
   </action>
-  <action name="action_about_VisualCraft">
+  <action name="ac_about_VisualCraft">
    <property name="text">
     <string>关于VisualCraft</string>
    </property>
   </action>
-  <action name="action_report_bugs">
+  <action name="ac_report_bugs">
    <property name="text">
     <string>反馈bug</string>
    </property>
   </action>
-  <action name="action_github_repo">
+  <action name="ac_github_repo">
    <property name="text">
     <string>Github仓库</string>
    </property>
   </action>
-  <action name="action_deveploer_homepage">
+  <action name="action">
    <property name="text">
-    <string>开发者</string>
+    <string>bilibili</string>
+   </property>
+  </action>
+  <action name="ac_contact_bilibili">
+   <property name="text">
+    <string notr="true">Bilibili</string>
+   </property>
+   <property name="iconText">
+    <string notr="true">Bilibili</string>
+   </property>
+   <property name="toolTip">
+    <string notr="true">Bilibili</string>
+   </property>
+  </action>
+  <action name="ac_contact_github_repo">
+   <property name="text">
+    <string>Github仓库</string>
    </property>
   </action>
  </widget>

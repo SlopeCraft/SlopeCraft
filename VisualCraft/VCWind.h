@@ -162,7 +162,14 @@ private:
   QString update_gpu_device(QPoint current_choice) noexcept;
 private slots:
   // for all pages
+  // auto connected
   void on_tabWidget_main_currentChanged(int page) noexcept;
+
+  // auto connected
+  void on_ac_about_VisualCraft_triggered() noexcept;
+  void on_ac_contact_bilibili_triggered() noexcept;
+  void on_ac_contact_github_repo_triggered() noexcept;
+  void on_ac_report_bugs_triggered() noexcept;
 
   // auto connected
   void on_ac_load_resource_triggered() noexcept;

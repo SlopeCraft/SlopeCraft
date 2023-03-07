@@ -348,24 +348,32 @@
         <translation>png compress memory level: </translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1202"/>
+        <location filename="../VCWind.ui" line="1163"/>
+        <source>联系开发者</source>
+        <translation>Contact developer</translation>
+    </message>
+    <message>
+        <location filename="../VCWind.ui" line="1208"/>
+        <location filename="../VCWind.cpp" line="776"/>
         <source>关于VisualCraft</source>
         <translation>About VisualCraft</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1207"/>
+        <location filename="../VCWind.ui" line="1213"/>
         <source>反馈bug</source>
         <translation>Report bugs</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1212"/>
+        <location filename="../VCWind.ui" line="1218"/>
+        <location filename="../VCWind.ui" line="1239"/>
         <source>Github仓库</source>
         <translation>Github repository</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1217"/>
-        <source>开发者</source>
-        <translation>Deveploer</translation>
+        <location filename="../VCWind.ui" line="1223"/>
+        <source>bilibili</source>
+        <translatorcomment>?</translatorcomment>
+        <translation>bilibili</translation>
     </message>
     <message>
         <location filename="../VCWind.ui" line="761"/>
@@ -453,27 +461,27 @@
         <translation>About</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1174"/>
+        <location filename="../VCWind.ui" line="1180"/>
         <source>test01</source>
         <translation>test01</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1182"/>
+        <location filename="../VCWind.ui" line="1188"/>
         <source>方块</source>
         <translation>Blocks</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1187"/>
+        <location filename="../VCWind.ui" line="1193"/>
         <source>加载资源</source>
         <translation>Load resources</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1192"/>
+        <location filename="../VCWind.ui" line="1198"/>
         <source>设置可用的方块</source>
         <translation>Set avaliable blocks</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1197"/>
+        <location filename="../VCWind.ui" line="1203"/>
         <source>生物群系</source>
         <translation>Biomes</translation>
     </message>
@@ -579,6 +587,39 @@
         <location filename="../VCWind.cpp" line="630"/>
         <source>这个错误不应该发生的，可能是你点儿背。</source>
         <translation>This error is considered to be impossible.</translation>
+    </message>
+    <message>
+        <location filename="../VCWind.cpp" line="777"/>
+        <source>VisualCraft是一款全新的Minecraft像素画生成器，由MC玩家TokiNoBug开发，是SlopeCraft的子项目。与其他类似的软件不同，VisualCraft旨在跟进最新的MC版本(1.12~最新版)、支持最多的MC特性，提供最强大的功能。
+
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../VCWind.cpp" line="782"/>
+        <source>目前VisualCraft能够解析许多第三方资源包，也允许自定义的更加新方块。与传统的思路不同，VisualCraft以方块模型的方式来解析资源包，尽量贴近Minecraft的方式，因此支持各种自定义的方块模型。
+
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../VCWind.cpp" line="786"/>
+        <source>在导出方面，VisualCraft支持Litematica mod的投影(*.litematic)、WorldEdit 原理图(*.shem)(仅1.13+可用)、原版结构方块文件(*.nbt)、平面示意图(*.png)等方式。
+
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../VCWind.cpp" line="790"/>
+        <source>VisualCraft支持用各种透明方块互相叠加，产生更多的颜色。软件最多支持不超过65534种颜色，受此限制，像素画的层数不超过3层。
+
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../VCWind.cpp" line="793"/>
+        <source>由于颜色数量很多，VisualCraft使用了显卡加速。目前支持的API有OpenCL。现在正在使用的API是%1</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../VCWind_gpu.cpp" line="67"/>
