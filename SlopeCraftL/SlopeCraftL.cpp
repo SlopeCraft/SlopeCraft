@@ -26,7 +26,7 @@ This file is part of SlopeCraft.
 
 using namespace SlopeCraft;
 
-AbstractBlock *AbstractBlock::create() { return new simpleBlock; }
+// AbstractBlock *AbstractBlock::create() { return new simpleBlock; }
 
 AbstractBlock::AbstractBlock() {}
 
@@ -53,11 +53,6 @@ void AbstractBlock::clear() {
 }
 
 Kernel::Kernel() {}
-
-Kernel *Kernel::create() {
-  // return (new TokiSlopeCraft)->toBaseClassPtr();
-  return static_cast<Kernel *>(new TokiSlopeCraft);
-}
 
 using namespace SlopeCraft;
 

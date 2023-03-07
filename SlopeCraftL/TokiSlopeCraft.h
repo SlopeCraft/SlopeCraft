@@ -120,7 +120,7 @@ public:
   /// a function ptr to report working statue especially when busy
   void setReportWorkingStatue(void (*)(void *, workStatues)) override;
   unsigned long long size() override { return sizeof(TokiSlopeCraft); }
-  void destroy() override { delete this; }
+  // void destroy() override { delete this; }
   void decreaseStep(step) override;
   void makeTests(const AbstractBlock **, const unsigned char *, const char *,
                  char *) override;

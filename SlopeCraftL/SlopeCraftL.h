@@ -60,12 +60,11 @@ using errorFlag = ::SCL_errorFlag;
 
 namespace SlopeCraft {
 
-class SCL_EXPORT AbstractBlock {
+class AbstractBlock {
 public:
   AbstractBlock();
   // virtual ~AbstractBlock() {};
-  /// create a block
-  [[deprecated]] static AbstractBlock *create();
+
   /// real size of this block
   virtual unsigned long long size() const = 0;
   /// id of this block
@@ -101,17 +100,12 @@ public:
   void copyTo(AbstractBlock *b) const;
   /// set this block to air
   void clear();
-  /// replacement for operator delete
-  [[deprecated]] virtual void destroy() = 0;
 };
 
-class SCL_EXPORT Kernel {
+class Kernel {
 public:
   Kernel();
   // virtual ~Kernel() {};
-
-  /// create a kernel object
-  [[deprecated]] static Kernel *create();
 
 public:
   /// function ptr to window object
@@ -143,8 +137,6 @@ public:
   virtual unsigned long long size() = 0;
   /// revert to a previous step
   virtual void decreaseStep(::SCL_step) = 0;
-  /// replacement for operator delete
-  [[deprecated]] virtual void destroy() = 0;
 
   // can do in colorSetReady:
   /// get current step

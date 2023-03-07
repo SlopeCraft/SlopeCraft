@@ -30,8 +30,7 @@ TokiBlock::TokiBlock(QRadioButton *_target, const QJsonObject &json,
   self = _self;
   target = _target;
 
-#warning here
-  block = AbstractBlock::create();
+  block = SCL_createBlock();
 
   block->setId(json.value("id").toString().toLocal8Bit());
 

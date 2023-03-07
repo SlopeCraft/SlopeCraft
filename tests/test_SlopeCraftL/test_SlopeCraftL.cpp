@@ -35,7 +35,7 @@ std::mt19937 mt(std::hash<time_t>()(std::time(nullptr)));
 using std::cout, std::endl;
 
 int main() {
-  SlopeCraft::Kernel *const kernel = SlopeCraft::Kernel::create();
+  SlopeCraft::Kernel *const kernel = SlopeCraft::SCL_createKernel();
 
   if (kernel == nullptr) {
     return 1;
@@ -48,7 +48,7 @@ int main() {
     midx.fill(true);
     std::array<SlopeCraft::AbstractBlock *, 64> blocks;
     for (auto &ptr : blocks) {
-      ptr = SlopeCraft::AbstractBlock::create();
+      ptr = SlopeCraft::SCL_createBlock();
     }
     blocks[0]->setId("minecraft:glass");
 
@@ -64,7 +64,7 @@ int main() {
                     blocks.data());
 
     for (auto i : blocks) {
-      i->destroy();
+      SlopeCraft::SCL_destroyBlock(i);
     }
   }
 
@@ -111,7 +111,7 @@ int main() {
          << endl;
   }
 
-  kernel->destroy();
+  SlopeCraft::SCL_destroyKernel(kernel);
   cout << "testing finished" << endl;
   return 0;
 }
