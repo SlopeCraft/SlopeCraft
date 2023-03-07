@@ -147,6 +147,14 @@ private:
   static constexpr int export_col_flagdiagram = 6;
   static constexpr int export_col_progress = 7;
 
+  // returns false means to skip current task.
+  bool export_lite(const QString &, const QString &image_filename) noexcept;
+  bool export_structure(const QString &,
+                        const QString &image_filename) noexcept;
+  bool export_schem(const QString &, const QString &image_filename) noexcept;
+  bool export_converted(const QString &, const QImage &) noexcept;
+  bool export_flatdiagram(const QString &) noexcept;
+
   // for page 4 ------------------------------------------
   void refresh_gpu_info() noexcept;
   void select_default_device() noexcept;

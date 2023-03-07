@@ -151,6 +151,8 @@ bool TokiVC::export_flag_diagram(const char *png_filename,
 
   std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
 
+  this->img_cvter.ui.rangeSet(0, this->img_cvter.rows(), 0);
+
   const int64_t rows_capacity_by_blocks = 64;
 
   block_model::EImgRowMajor_t buffer(rows_capacity_by_blocks * 16,
@@ -244,11 +246,17 @@ bool TokiVC::export_flag_diagram(const char *png_filename,
     for (int64_t pix_r = 0; pix_r < rows_this_time * 16; pix_r++) {
       png_write_row(png, reinterpret_cast<const uint8_t *>(&buffer(pix_r, 0)));
     }
+
+    this->img_cvter.ui.rangeSet(0, this->img_cvter.rows(),
+                                ridx - opt.row_start);
   }
 
   png_write_end(png, png_info);
 
   png_destroy_write_struct(&png, &png_info);
   fclose(fp);
+
+  this->img_cvter.ui.rangeSet(0, this->img_cvter.rows(),
+                              this->img_cvter.rows());
   return true;
 }
