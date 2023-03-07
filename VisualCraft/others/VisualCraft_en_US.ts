@@ -354,7 +354,7 @@
     </message>
     <message>
         <location filename="../VCWind.ui" line="1208"/>
-        <location filename="../VCWind.cpp" line="776"/>
+        <location filename="../VCWind.cpp" line="777"/>
         <source>关于VisualCraft</source>
         <translation>About VisualCraft</translation>
     </message>
@@ -589,37 +589,45 @@
         <translation>This error is considered to be impossible.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="777"/>
+        <location filename="../VCWind.cpp" line="778"/>
         <source>VisualCraft是一款全新的Minecraft像素画生成器，由MC玩家TokiNoBug开发，是SlopeCraft的子项目。与其他类似的软件不同，VisualCraft旨在跟进最新的MC版本(1.12~最新版)、支持最多的MC特性，提供最强大的功能。
 
 </source>
-        <translation type="unfinished"></translation>
+        <translation>VisualCraft is a brand-new pixel art generator for Minecraft. It is developed by TokiNoBug, and is a subproject of SlopeCraft. Unlike other counterparts, VisualCraft aims to catch up with latest versions of Minecraft(from 1.12 to latest), providing greatest functions and supporting as much MC features as possible.
+
+</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="782"/>
+        <location filename="../VCWind.cpp" line="783"/>
         <source>目前VisualCraft能够解析许多第三方资源包，也允许自定义的更加新方块。与传统的思路不同，VisualCraft以方块模型的方式来解析资源包，尽量贴近Minecraft的方式，因此支持各种自定义的方块模型。
 
 </source>
-        <translation type="unfinished"></translation>
+        <translation>Now VisualCraft is able to parse many third-party resource packs, and allowing users to add custom blocks. Different from traditional modes, VisualCraft understand a resource pack by parsing block models, which is similar with what Minecraft does. Thus custom block models are supported correctly.
+
+</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="786"/>
+        <location filename="../VCWind.cpp" line="787"/>
         <source>在导出方面，VisualCraft支持Litematica mod的投影(*.litematic)、WorldEdit 原理图(*.shem)(仅1.13+可用)、原版结构方块文件(*.nbt)、平面示意图(*.png)等方式。
 
 </source>
-        <translation type="unfinished"></translation>
+        <translation>When it comes to export, VisualCraft supports multiple formats, like Litematic mod(*.litematic), WorldEdit schematic(*.schem)(1.13+ only), vanilla structure block file(*.nbt), flat diagram image(*.png) and so on.
+
+</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="790"/>
+        <location filename="../VCWind.cpp" line="791"/>
         <source>VisualCraft支持用各种透明方块互相叠加，产生更多的颜色。软件最多支持不超过65534种颜色，受此限制，像素画的层数不超过3层。
 
 </source>
-        <translation type="unfinished"></translation>
+        <translation>VisualCraft composes half-transparent blocks to produce more colors. No greater than 65534 colors are supported, and thus the maximum layers should now exceeds 3.
+
+</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="793"/>
+        <location filename="../VCWind.cpp" line="794"/>
         <source>由于颜色数量很多，VisualCraft使用了显卡加速。目前支持的API有OpenCL。现在正在使用的API是%1</source>
-        <translation type="unfinished"></translation>
+        <translation>The great amount of colors makes GPU accleration necessary. Now OpenCL is supported, and %1 is what currently using.</translation>
     </message>
     <message>
         <location filename="../VCWind_gpu.cpp" line="67"/>
