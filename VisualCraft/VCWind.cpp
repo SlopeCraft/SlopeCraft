@@ -199,8 +199,8 @@ QByteArray VCWind::checksum_basic_colorset_option(
 }
 
 // utilitiy functions
-VCL_resource_pack *
-VCWind::create_resource_pack(const basic_colorset_option &opt) noexcept {
+VCL_resource_pack *VCWind::create_resource_pack(
+    const basic_colorset_option &opt) noexcept {
   std::vector<QByteArray> rpfiles_qba;
   rpfiles_qba.reserve(opt.zips.size());
   std::vector<const char *> rpfiles_charp;
@@ -214,8 +214,8 @@ VCWind::create_resource_pack(const basic_colorset_option &opt) noexcept {
 }
 
 // utilitiy functions
-VCL_block_state_list *
-VCWind::create_block_state_list(const basic_colorset_option &opt) noexcept {
+VCL_block_state_list *VCWind::create_block_state_list(
+    const basic_colorset_option &opt) noexcept {
   std::vector<QByteArray> bsl_filenames;
   std::vector<const char *> jsonfiles_charp;
 
@@ -538,16 +538,15 @@ void VCWind::setup_allowed_colorset() noexcept {
   this->clear_convert_cache();
 }
 
-size_t
-VCWind::selected_blocks(std::vector<VCL_block *> *blocks_dest) const noexcept {
+size_t VCWind::selected_blocks(
+    std::vector<VCL_block *> *blocks_dest) const noexcept {
   size_t counter = 0;
-  if (blocks_dest != nullptr)
-    blocks_dest->clear();
+  if (blocks_dest != nullptr) blocks_dest->clear();
   for (auto &pair : this->map_VC_block_class) {
     counter += pair.second->selected_blocks(blocks_dest, true);
   }
 
-  cout << "selected block count : " << counter << endl;
+  // cout << "selected block count : " << counter << endl;
 
   return counter;
 }

@@ -56,7 +56,7 @@ set(VisualCraft_project_sources
     ${VisualCraft_ts_files}
 )
 
-if(TRUE OR ${SlopeCraft_update_ts_files})
+if(${SlopeCraft_update_ts_files})
     execute_process(COMMAND ${SlopeCraft_Qt_lupdate_executable} ${VisualCraft_header_files} ${VisualCraft_source_files} ${VisualCraft_ui_files} -ts others/VisualCraft_en_US.ts -no-obsolete
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} COMMAND_ERROR_IS_FATAL ANY)
 endif()
