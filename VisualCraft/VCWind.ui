@@ -49,7 +49,7 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <property name="elideMode">
          <enum>Qt::ElideNone</enum>
@@ -383,6 +383,13 @@
                </property>
               </spacer>
              </item>
+             <item row="3" column="0">
+              <widget class="QPushButton" name="pb_deselect_rare">
+               <property name="text">
+                <string>禁用罕见方块</string>
+               </property>
+              </widget>
+             </item>
              <item row="2" column="0">
               <widget class="QPushButton" name="pb_deselect_non_reporducible">
                <property name="text">
@@ -397,10 +404,10 @@
                </property>
               </widget>
              </item>
-             <item row="3" column="0">
-              <widget class="QPushButton" name="pb_deselect_rare">
+             <item row="5" column="0">
+              <widget class="QPushButton" name="pb_custom_select">
                <property name="text">
-                <string>禁用罕见方块</string>
+                <string>高级匹配</string>
                </property>
               </widget>
              </item>

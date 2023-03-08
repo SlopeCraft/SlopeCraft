@@ -2,8 +2,8 @@
 #include "VCWind.h"
 #include "ui_VC_block_class.h"
 #include <QCheckBox>
+#include <QLabel>
 #include <iostream>
-
 
 VC_block_class::VC_block_class(QWidget *parent)
     : QGroupBox(parent), ui(new Ui::VC_block_class) {
@@ -49,6 +49,18 @@ void VC_block_class::set_blocks(size_t num_blocks,
     this->blocks.emplace_back(std::pair<VCL_block *, QCheckBox *>{blkp, cb});
 
     cb->show();
+  }
+
+  if (num_blocks <= 1) {
+    return;
+  }
+
+  // add place holders so that there will always be `cols` cols
+  for (size_t c = num_blocks; c < cols; c++) {
+    QLabel *lb = new QLabel;
+    lb->setText("");
+    this->ui->grid_layout->addWidget(lb, 1, c);
+    lb->show();
   }
 }
 
