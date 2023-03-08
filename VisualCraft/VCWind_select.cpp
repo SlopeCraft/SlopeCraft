@@ -49,3 +49,17 @@ void VCWind::on_pb_deselect_rare_clicked() noexcept {
     }
   });
 }
+
+int VCWind::count_block_matched(std::function<bool(const VCL_block *)>
+                                    return_true_when_match) const noexcept {
+  int counter = 0;
+  for (auto &blk_class : this->map_VC_block_class) {
+    for (auto &blk_pair : blk_class.second->blocks_vector()) {
+      if (return_true_when_match(blk_pair.first)) {
+        counter++;
+      }
+    }
+  }
+
+  return counter;
+}

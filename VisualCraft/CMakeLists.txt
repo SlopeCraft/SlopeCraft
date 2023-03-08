@@ -22,6 +22,7 @@ set(VisualCraft_header_files
     CallbackFunctions.h
     VC_block_class.h
     BlockBrowser.h
+    BlockSelector.h
 )
 
 set(VisualCraft_source_files
@@ -40,12 +41,17 @@ set(VisualCraft_source_files
     VC_block_class.cpp
 
     BlockBrowser.cpp
+
+    BlockSelector.cpp
+    BlockSelectorCriteria.cpp
 )
 
 set(VisualCraft_ui_files
     VCWind.ui
     VC_block_class.ui
-    BlockBrowser.ui)
+    BlockBrowser.ui
+    BlockSelector.ui
+    BlockSelectorCriteria.ui)
 
 set(VisualCraft_ts_files
     others/VisualCraft_en_US.ts)

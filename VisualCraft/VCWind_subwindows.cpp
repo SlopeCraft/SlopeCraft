@@ -1,4 +1,5 @@
 #include "BlockBrowser.h"
+#include "BlockSelector.h"
 #include "VCWind.h"
 #include "ui_VCWind.h"
 #include <QDesktopServices>
@@ -52,4 +53,16 @@ void VCWind::on_ac_contact_github_repo_triggered() noexcept {
 void VCWind::on_ac_report_bugs_triggered() noexcept {
   QDesktopServices::openUrl(
       QUrl("https://github.com/ToKiNoBug/SlopeCraft/issues/new/choose"));
+}
+
+void VCWind::on_pb_custom_select_clicked() noexcept {
+
+  BlockSelector *bs = new BlockSelector(this);
+
+  bs->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
+  bs->setAttribute(Qt::WidgetAttribute::WA_AlwaysStackOnTop, true);
+  // bb->setAttribute(Qt::WidgetAttribute::WA_NativeWindow, true);
+  bs->setWindowFlag(Qt::WindowType::Window, true);
+
+  bs->show();
 }

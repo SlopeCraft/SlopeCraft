@@ -123,12 +123,17 @@ private:
 
   bool is_convert_algo_changed() const noexcept;
 
+public:
   void select_blocks(
       std::function<bool(const VCL_block *)> return_true_for_select) noexcept;
 
   void deselect_blocks(
       std::function<bool(const VCL_block *)> return_true_for_deselect) noexcept;
 
+  int count_block_matched(std::function<bool(const VCL_block *)>
+                              return_true_when_match) const noexcept;
+
+private:
   // void connect_when_allowed_colorset_changed() noexcept;
 
   // for page 2 ------------------------------------------
@@ -204,6 +209,9 @@ private slots:
   void on_pb_deselect_all_clicked() noexcept;
   void on_pb_deselect_non_reporducible_clicked() noexcept;
   void on_pb_deselect_rare_clicked() noexcept;
+
+  // auto connected
+  void on_pb_custom_select_clicked() noexcept;
 
   // manually connected
   void setup_block_widgets() noexcept;
