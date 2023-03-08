@@ -45,7 +45,9 @@ enum class VCL_block_attribute_t : uint8_t {
   disabled = 11,
   is_air = 12,
   is_grass = 13,
-  is_foliage = 14
+  is_foliage = 14,
+  reproducible = 15,
+  rare = 16
 };
 
 enum class VCL_block_class_t : uint8_t {

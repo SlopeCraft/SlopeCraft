@@ -25,7 +25,8 @@
         "endermanPickable": true,
         "nameEN": "Clay block",
         "nameZH": "黏土块",
-        "version": "all"
+        "version": "all",
+        "reproducible": false
     },
     "minecraft:black_concrete": {
         "background": true,
@@ -682,7 +683,8 @@
         "isGlowing": true,
         "nameEN": "Ochre Froglight",
         "nameZH": "黄色蛙鸣灯",
-        "version": 19
+        "version": 19,
+        "rare": true
     },
     "minecraft:packed_ice": {
         "class": "natural",
@@ -701,7 +703,8 @@
         "isGlowing": true,
         "nameEN": "Verdant Froglight",
         "nameZH": "紫色蛙鸣灯",
-        "version": 19
+        "version": 19,
+        "rare": true
     },
     "minecraft:podzol[snowy=false]": {
         "class": "natural",
@@ -813,7 +816,8 @@
         "isGlowing": true,
         "nameEN": "Verdant Froglight",
         "nameZH": "绿色蛙鸣灯",
-        "version": 19
+        "version": 19,
+        "rare": true
     },
     "minecraft:crimson_nylium": {
         "class": "nether",
@@ -852,13 +856,15 @@
         "nameZH": "地狱砖块",
         "version": [
             12
-        ]
+        ],
+        "reproducible": false
     },
     "minecraft:nether_bricks": {
         "class": "nether",
         "nameEN": "Nether brick",
         "nameZH": "地狱砖块",
-        "version": 13
+        "version": 13,
+        "reproducible": false
     },
     "minecraft:nether_wart_block": {
         "class": "nether",
@@ -870,19 +876,22 @@
         "class": "nether",
         "nameEN": "Netherrack",
         "nameZH": "地狱岩",
-        "version": "all"
+        "version": "all",
+        "reproducible": false
     },
     "minecraft:soul_sand": {
         "class": "nether",
         "nameEN": "Soul sand",
         "nameZH": "灵魂沙",
-        "version": "all"
+        "version": "all",
+        "reproducible": false
     },
     "minecraft:soul_soil": {
         "class": "nether",
         "nameEN": "Soul soil",
         "nameZH": "灵魂土",
-        "version": 16
+        "version": 16,
+        "reproducible": false
     },
     "minecraft:warped_nylium": {
         "class": "nether",
@@ -958,7 +967,8 @@
         "class": "ore",
         "nameEN": "Amethyst block",
         "nameZH": "紫水晶块",
-        "version": 17
+        "version": 17,
+        "rare": true
     },
     "minecraft:coal_block": {
         "burnable": true,
@@ -971,103 +981,125 @@
         "class": "ore",
         "nameEN": "Diamond block",
         "nameZH": "钻石块",
-        "version": "all"
+        "version": "all",
+        "reproducible": false,
+        "rare": true
     },
     "minecraft:emerald_block": {
         "class": "ore",
         "nameEN": "Emerald block",
         "nameZH": "绿宝石块",
-        "version": "all"
+        "version": "all",
+        "rare": true
     },
     "minecraft:gold_block": {
         "class": "ore",
         "nameEN": "Gold block",
         "nameZH": "金块",
-        "version": "all"
+        "version": "all",
+        "rare": true
     },
     "minecraft:iron_block": {
         "class": "ore",
         "nameEN": "Iron block",
         "nameZH": "铁块",
-        "version": "all"
+        "version": "all",
+        "rare": true
     },
     "minecraft:lapis_block": {
         "class": "ore",
         "nameEN": "Lapis block",
         "nameZH": "青金石块",
-        "version": "all"
+        "version": "all",
+        "reproducible": false,
+        "rare": true
     },
     "minecraft:raw_copper_block": {
         "class": "ore",
         "nameEN": "Raw copper block",
         "nameZH": "生铜块",
-        "version": 17
+        "version": 17,
+        "reproducible": false,
+        "rare": true
     },
     "minecraft:raw_gold_block": {
         "class": "ore",
         "nameEN": "Raw gold block",
         "nameZH": "粗金块",
-        "version": 17
+        "version": 17,
+        "reproducible": false,
+        "rare": true
     },
     "minecraft:raw_iron_block": {
         "class": "ore",
         "nameEN": "Raw iron block",
         "nameZH": "生铁块",
-        "version": 17
+        "version": 17,
+        "reproducible": false,
+        "rare": true
     },
     "minecraft:waxed_copper_block": {
         "class": "ore",
         "nameEN": "Waxed copper",
         "nameZH": "涂蜡铜块",
-        "version": 17
+        "version": 17,
+        "rare": true
     },
     "minecraft:waxed_cut_copper": {
         "class": "ore",
         "nameEN": "Waxed cut copper",
         "nameZH": "涂蜡切制铜块",
-        "version": 17
+        "version": 17,
+        "rare": true
     },
     "minecraft:waxed_exposed_copper": {
         "class": "ore",
         "nameEN": "Waxed exposed copper",
         "nameZH": "涂蜡斑驳铜块",
-        "version": 17
+        "version": 17,
+        "rare": true
     },
     "minecraft:waxed_exposed_cut_copper": {
         "class": "ore",
         "nameEN": "Waxed exposed cut copper",
         "nameZH": "涂蜡切制斑驳铜块",
-        "version": 17
+        "version": 17,
+        "rare": true
     },
     "minecraft:waxed_oxidized_copper": {
         "class": "ore",
         "nameEN": "Waxed oxided copper",
         "nameZH": "涂蜡氧化铜块",
-        "version": 17
+        "version": 17,
+        "rare": true
     },
     "minecraft:waxed_oxidized_cut_copper": {
         "class": "ore",
         "nameEN": "Waxed oxided cut copper",
         "nameZH": "涂蜡切制氧化铜块",
-        "version": 17
+        "version": 17,
+        "rare": true
     },
     "minecraft:waxed_weathered_copper": {
         "class": "ore",
         "nameEN": "Waxed weathered copper",
         "nameZH": "涂蜡生锈铜块",
-        "version": 17
+        "version": 17,
+        "rare": true
     },
     "minecraft:sculk": {
         "class": "others",
         "nameEN": "Sculk block",
         "nameZH": "潜声方块",
-        "version": 19
+        "version": 19,
+        "rare": true
     },
     "minecraft:sculk_catalyst[bloom=false]": {
         "class": "others",
         "nameEN": "Sculk catalyst",
         "nameZH": "潜声催化剂",
-        "version": 19
+        "version": 19,
+        "rare": true
     },
     "minecraft:acacia_planks": {
         "burnable": true,
@@ -1408,7 +1440,8 @@
         "nameZH": "地狱砖块上半砖",
         "version": [
             12
-        ]
+        ],
+        "reproducible": false
     },
     "minecraft:nether_brick_slab[type=top]": {
         "class": "slab",
@@ -1417,7 +1450,8 @@
         ],
         "nameEN": "Nether brick slab",
         "nameZH": "地狱砖块上半砖",
-        "version": 13
+        "version": 13,
+        "reproducible": false
     },
     "minecraft:oak_slab[half=top]": {
         "burnable": true,
@@ -1649,25 +1683,30 @@
         ],
         "nameEN": "Waxed cut copper slab",
         "nameZH": "涂蜡切制铜上半砖",
-        "version": 17
+        "version": 17,
+        "rare": true
     },
     "minecraft:calcite": {
         "class": "stone",
         "nameEN": "Calcite",
         "nameZH": "方解石",
-        "version": 17
+        "version": 17,
+        "reproducible": false,
+        "rare": true
     },
     "minecraft:chiseled_deepslate": {
         "class": "stone",
         "nameEN": "Chiseled deepslate",
         "nameZH": "錾制深板岩",
-        "version": 17
+        "version": 17,
+        "reproducible": false
     },
     "minecraft:cobbled_deepslate": {
         "class": "stone",
         "nameEN": "Cobbled deepslate",
         "nameZH": "深板岩圆石",
-        "version": 17
+        "version": 17,
+        "reproducible": false
     },
     "minecraft:cobblestone": {
         "class": "stone",
@@ -1679,25 +1718,30 @@
         "class": "stone",
         "nameEN": "Deepslate",
         "nameZH": "深板岩",
-        "version": 17
+        "version": 17,
+        "reproducible": false
     },
     "minecraft:deepslate_bricks": {
         "class": "stone",
         "nameEN": "Deepslate bricks",
         "nameZH": "深板岩砖",
-        "version": 17
+        "version": 17,
+        "reproducible": false
     },
     "minecraft:deepslate_tiles": {
         "class": "stone",
         "nameEN": "Deepslate tiles",
         "nameZH": "深板岩瓦",
-        "version": 17
+        "version": 17,
+        "reproducible": false
     },
     "minecraft:dripstone_block": {
         "class": "stone",
         "nameEN": "DripStone Block",
         "nameZH": "滴水石块",
-        "version": 17
+        "version": 17,
+        "reproducible": false,
+        "rare": true
     },
     "minecraft:obsidian": {
         "class": "stone",
@@ -1709,31 +1753,36 @@
         "class": "stone",
         "nameEN": "Polished basalt",
         "nameZH": "磨制玄武岩",
-        "version": 16
+        "version": 16,
+        "reproducible": false
     },
     "minecraft:polished_blackstone": {
         "class": "stone",
         "nameEN": "Polished blackstone",
         "nameZH": "磨制黑石",
-        "version": 16
+        "version": 16,
+        "reproducible": false
     },
     "minecraft:polished_deepslate": {
         "class": "stone",
         "nameEN": "Polished deepslate",
         "nameZH": "磨制深板岩",
-        "version": 17
+        "version": 17,
+        "reproducible": false
     },
     "minecraft:polished_diorite": {
         "class": "stone",
         "nameEN": "Polished diorite",
         "nameZH": "磨制闪长岩",
-        "version": 13
+        "version": 13,
+        "reproducible": false
     },
     "minecraft:polished_granite": {
         "class": "stone",
         "nameEN": "Polished granite",
         "nameZH": "磨制花岗岩",
-        "version": 13
+        "version": 13,
+        "reproducible": false
     },
     "minecraft:quartz_block": {
         "class": "stone",
@@ -1767,7 +1816,8 @@
         "nameZH": "磨制闪长岩",
         "version": [
             12
-        ]
+        ],
+        "reproducible": false
     },
     "minecraft:stone[variant=smooth_granite]": {
         "class": "stone",
@@ -1775,7 +1825,8 @@
         "nameZH": "磨制花岗岩",
         "version": [
             12
-        ]
+        ],
+        "reproducible": false
     },
     "minecraft:stone[variant=stone]": {
         "class": "stone",
@@ -1938,7 +1989,8 @@
         "nameZH": "陶瓦",
         "version": [
             12
-        ]
+        ],
+        "reproducible": false
     },
     "minecraft:light_blue_stained_hardened_clay": {
         "background": true,
@@ -2121,7 +2173,8 @@
         "class": "terracotta",
         "nameEN": "Terracotta",
         "nameZH": "陶瓦",
-        "version": 13
+        "version": 13,
+        "reproducible": false
     },
     "minecraft:white_stained_hardened_clay": {
         "background": true,
@@ -2166,7 +2219,8 @@
         "class": "terracotta",
         "nameEN": "Yellow terracotta",
         "nameZH": "黄色陶瓦",
-        "version": 13
+        "version": 13,
+        "reproducible": false
     },
     "minecraft:end_bricks": {
         "class": "the_end",
@@ -2174,19 +2228,22 @@
         "nameZH": "末地石砖",
         "version": [
             12
-        ]
+        ],
+        "reproducible": false
     },
     "minecraft:end_stone": {
         "class": "the_end",
         "nameEN": "End stone",
         "nameZH": "末地石",
-        "version": "all"
+        "version": "all",
+        "reproducible": false
     },
     "minecraft:end_stone_bricks": {
         "class": "the_end",
         "nameEN": "Endstone bricks",
         "nameZH": "末地石砖",
-        "version": 13
+        "version": 13,
+        "reproducible": false
     },
     "minecraft:purpur_block": {
         "class": "the_end",

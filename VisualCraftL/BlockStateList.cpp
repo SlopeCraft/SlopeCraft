@@ -21,6 +21,7 @@ void VCL_block::initialize_attributes() noexcept {
     this->attributes[sz] = true;
   }
   this->set_attribute(attribute::is_air, false);
+  this->set_attribute(attribute::reproducible, true);
 }
 
 version_set parse_version_set(const nlohmann::json &jo,
@@ -243,6 +244,23 @@ VCL_block parse_block(const nlohmann::json &jo, bool *const ok) {
       return {};
     }
     ret.set_attribute(VCL_block::attribute::is_foliage, jo.at("is_foliage"));
+  }
+
+  if (jo.contains("reproducible")) {
+    if (!jo.at("reproducible").is_boolean()) {
+      *ok = false;
+      return {};
+    }
+    ret.set_attribute(VCL_block::attribute::reproducible,
+                      jo.at("reproducible"));
+  }
+
+  if (jo.contains("rare")) {
+    if (!jo.at("rare").is_boolean()) {
+      *ok = false;
+      return {};
+    }
+    ret.set_attribute(VCL_block::attribute::rare, jo.at("rare"));
   }
 
   *ok = true;

@@ -30,6 +30,7 @@ set(VisualCraft_source_files
 
     # sources for VCWind
     VCWind.cpp
+    VCWind_select.cpp
     VCWind_gpu.cpp
     VCWind_export.cpp
     VCWind_subwindows.cpp

@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <VisualCraftL.h>
+#include <functional>
 #include <map>
 
 extern uint8_t is_language_ZH;
@@ -122,6 +123,12 @@ private:
 
   bool is_convert_algo_changed() const noexcept;
 
+  void select_blocks(
+      std::function<bool(const VCL_block *)> return_true_for_select) noexcept;
+
+  void deselect_blocks(
+      std::function<bool(const VCL_block *)> return_true_for_deselect) noexcept;
+
   // void connect_when_allowed_colorset_changed() noexcept;
 
   // for page 2 ------------------------------------------
@@ -191,6 +198,12 @@ private slots:
   // void when_basical_colorset_changed() noexcept;
 
   // for page 1
+
+  // auto connected
+  void on_pb_select_all_clicked() noexcept;
+  void on_pb_deselect_all_clicked() noexcept;
+  void on_pb_deselect_non_reporducible_clicked() noexcept;
+  void on_pb_deselect_rare_clicked() noexcept;
 
   // manually connected
   void setup_block_widgets() noexcept;
