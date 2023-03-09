@@ -430,6 +430,7 @@ bool VCL_resource_pack::override_texture(
       } else {
         img(idx) = ARGB_orignal;
       }
+      continue;
     }
 
     int min_RGB = std::min(std::min(getR(ARGB_orignal), getG(ARGB_orignal)),
@@ -444,7 +445,7 @@ bool VCL_resource_pack::override_texture(
     }
 
     float Vp = max_RGB / 255.0f;
-
+#warning color computing is incorrect when biome is desert
     Vp = std::clamp(Vp * k, 0.0f, 1.0f);
 
     img(idx) = HSV2ARGB(Hs, Ss, Vp);
@@ -461,14 +462,15 @@ VCL_resource_pack::locate_color_rc(VCL_biome_info info) const noexcept {
   const float t_adj = std::clamp(info.temperature, 0.0f, 1.0f);
   const float w_adj = std::clamp(info.downfall, 0.0f, 1.0f) * t_adj;
 
-  int x = 255 * (1.0f - t_adj);
+  int x = 255 * t_adj;
   x = std::clamp(x, 0, 255);
 
-  int y = 255 * (1.0f - w_adj);
-  y = std::clamp(y, 0, 255 - x);
+  int y = 255 * w_adj;
+  y = std::clamp(y, 0, x);
+  // y = std::clamp(y, 0, x);
 
   const int r = 255 - y;
-  const int c = x;
+  const int c = 255 - x;
   return {r, c};
 }
 

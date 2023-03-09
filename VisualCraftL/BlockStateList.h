@@ -57,6 +57,7 @@ public:
 class VCL_block_state_list;
 
 class VCL_block {
+#warning foliage blocks' transparency is not implemented now
   friend class VCL_block_state_list;
 
 public:
