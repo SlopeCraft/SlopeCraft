@@ -57,11 +57,13 @@ private:
 
   // for page 1
   std::map<VCL_block_class_t, VC_block_class *> map_VC_block_class{};
-  // bool is_allowed_colorset_changed{true};
-  //  for page 2
+  // QByteArray hash_basical{""};
+  //  bool is_allowed_colorset_changed{true};
+  //   for page 2
   std::map<QString, std::pair<QImage, QImage>> image_cache;
-  // for page 3
-  // for page 4
+  // QByteArray hash_allowed{""};
+  //  for page 3
+  //  for page 4
   QPoint prev_compute_device{-3, -3};
 
   // static bool have_special(QListWidget *qlw) noexcept;

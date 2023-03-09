@@ -188,9 +188,9 @@ QByteArray VCWind::checksum_basic_colorset_option(
     hash.addData(json.toUtf8());
   }
 
-  hash.addData(QByteArray((const char *)&opt.face, sizeof(opt.face)));
-  hash.addData(QByteArray((const char *)&opt.version, sizeof(opt.version)));
-  hash.addData(QByteArray((const char *)&opt.layers, sizeof(opt.layers)));
+  hash.addData(QByteArrayView((const char *)&opt.face, sizeof(opt.face)));
+  hash.addData(QByteArrayView((const char *)&opt.version, sizeof(opt.version)));
+  hash.addData(QByteArrayView((const char *)&opt.layers, sizeof(opt.layers)));
   hash.addData(QByteArrayView((const char *)&opt.biome, sizeof(opt.biome)));
   hash.addData(QByteArrayView((const char *)&opt.is_leaves_transparent,
                               sizeof(opt.is_leaves_transparent)));
@@ -199,8 +199,8 @@ QByteArray VCWind::checksum_basic_colorset_option(
 }
 
 // utilitiy functions
-VCL_resource_pack *VCWind::create_resource_pack(
-    const basic_colorset_option &opt) noexcept {
+VCL_resource_pack *
+VCWind::create_resource_pack(const basic_colorset_option &opt) noexcept {
   std::vector<QByteArray> rpfiles_qba;
   rpfiles_qba.reserve(opt.zips.size());
   std::vector<const char *> rpfiles_charp;
@@ -214,8 +214,8 @@ VCL_resource_pack *VCWind::create_resource_pack(
 }
 
 // utilitiy functions
-VCL_block_state_list *VCWind::create_block_state_list(
-    const basic_colorset_option &opt) noexcept {
+VCL_block_state_list *
+VCWind::create_block_state_list(const basic_colorset_option &opt) noexcept {
   std::vector<QByteArray> bsl_filenames;
   std::vector<const char *> jsonfiles_charp;
 
@@ -297,14 +297,8 @@ void VCWind::on_pb_remove_bsl_clicked() noexcept {
 
 // slot
 void VCWind::setup_block_widgets() noexcept {
-  /*
-  if (!this->is_basical_colorset_changed() &&
-      !this->map_VC_block_class.empty()) {
-    return;
-  }
-  */
-
-  this->setup_basical_colorset();
+#warning this line may should be deleted
+  // this->setup_basical_colorset();
 
   for (auto &pair : this->map_VC_block_class) {
     this->ui->gl_sa_blocks->removeWidget(pair.second);
@@ -417,11 +411,12 @@ void VCWind::setup_block_widgets() noexcept {
 }
 
 bool VCWind::is_basical_colorset_changed() const noexcept {
-  static QByteArray hash_prev;
+  static QByteArray hash_prev{""};
   auto curr_opt = this->current_basic_option();
   QByteArray curr_hash = this->checksum_basic_colorset_option(curr_opt);
   const bool ret = hash_prev != curr_hash;
   hash_prev = curr_hash;
+
   return ret;
 }
 
@@ -431,6 +426,8 @@ void VCWind::setup_basical_colorset() noexcept {
   }
 
   emit signal_basic_colorset_changed();
+
+  VCL_discard_resource();
 
   auto current_option = this->current_basic_option();
 
@@ -495,7 +492,7 @@ QByteArray VCWind::checksum_allowed_colorset_option(
 
 bool VCWind::is_allowed_colorset_changed(
     allowed_colorset_option *opt) const noexcept {
-  static QByteArray prev_hash;
+  static QByteArray prev_hash{""};
   this->selected_blocks(&opt->blocks);
   QByteArray cur_hash = VCWind::checksum_allowed_colorset_option(*opt);
 
@@ -507,14 +504,17 @@ bool VCWind::is_allowed_colorset_changed(
 }
 
 void VCWind::setup_allowed_colorset() noexcept {
+  this->setup_basical_colorset();
+
   allowed_colorset_option cur_option;
   if (VCL_is_allowed_colorset_ok() &&
       !this->is_allowed_colorset_changed(&cur_option)) {
     return;
   }
-  this->setup_basical_colorset();
 
   emit signal_allowed_colorset_changed();
+
+  VCL_discard_allowed_blocks();
 
   if (cur_option.blocks.empty()) {
     this->selected_blocks(&cur_option.blocks);
@@ -538,10 +538,11 @@ void VCWind::setup_allowed_colorset() noexcept {
   this->clear_convert_cache();
 }
 
-size_t VCWind::selected_blocks(
-    std::vector<VCL_block *> *blocks_dest) const noexcept {
+size_t
+VCWind::selected_blocks(std::vector<VCL_block *> *blocks_dest) const noexcept {
   size_t counter = 0;
-  if (blocks_dest != nullptr) blocks_dest->clear();
+  if (blocks_dest != nullptr)
+    blocks_dest->clear();
   for (auto &pair : this->map_VC_block_class) {
     counter += pair.second->selected_blocks(blocks_dest, true);
   }
@@ -666,7 +667,9 @@ void VCWind::show_image(decltype(image_cache)::iterator it) noexcept {
     this->ui->lable_converted->setPixmap(QPixmap::fromImage(it->second.second));
     return;
   }
+
   this->setup_allowed_colorset();
+
   this->setup_image(it->second.first);
   const bool ok = this->kernel->convert(this->current_selected_algo(),
                                         this->ui->cb_algo_dither->isChecked());
@@ -697,6 +700,23 @@ void VCWind::on_lw_image_files_itemClicked(QListWidgetItem *item) noexcept {
 
   if (it == this->image_cache.end()) {
     return;
+  }
+
+  {
+    allowed_colorset_option opt;
+    const bool is_basical_changed = this->is_basical_colorset_changed();
+    const bool is_allowed_changed = this->is_allowed_colorset_changed(&opt);
+
+    if (is_allowed_changed) {
+      VCL_discard_allowed_blocks();
+    }
+    if (is_basical_changed) {
+      VCL_discard_resource();
+    }
+    if (is_basical_changed || is_allowed_changed) {
+      this->clear_convert_cache();
+      // this->setup_allowed_colorset();
+    }
   }
 
   this->show_image(it);
