@@ -611,11 +611,22 @@ VCL_EXPORT_FUN void VCL_set_block_attribute(VCL_block *b,
   b->set_attribute(attribute, value);
 }
 
-VCL_EXPORT_FUN const char *VCL_get_block_id(const VCL_block *b) {
+VCL_EXPORT_FUN const char *VCL_get_block_id(const VCL_block *b,
+                                            bool ignore_id_replace_list) {
   if (b->full_id_ptr() == nullptr) {
     return nullptr;
   }
-  return b->full_id_ptr()->c_str();
+
+  if (ignore_id_replace_list) {
+    return b->full_id_ptr()->c_str();
+  } else {
+    return b->id_for_schem(VCL_get_game_version()).c_str();
+  }
+}
+
+VCL_EXPORT_FUN const char *VCL_get_block_id_version(const VCL_block *b,
+                                                    SCL_gameVersion v) {
+  return b->id_for_schem(v).c_str();
 }
 
 VCL_EXPORT_FUN const char *VCL_get_block_name(const VCL_block *b,

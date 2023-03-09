@@ -369,7 +369,10 @@ VCL_EXPORT_FUN void VCL_set_block_attribute(VCL_block *,
                                             VCL_block_attribute_t attribute,
                                             bool value);
 
-VCL_EXPORT_FUN const char *VCL_get_block_id(const VCL_block *);
+VCL_EXPORT_FUN const char *VCL_get_block_id(const VCL_block *,
+                                            bool ignore_id_replace_list = true);
+VCL_EXPORT_FUN const char *VCL_get_block_id_version(const VCL_block *,
+                                                    SCL_gameVersion);
 VCL_EXPORT_FUN const char *VCL_get_block_name(const VCL_block *, uint8_t is_ZH);
 
 VCL_EXPORT_FUN VCL_block_class_t VCL_get_block_class(const VCL_block *);

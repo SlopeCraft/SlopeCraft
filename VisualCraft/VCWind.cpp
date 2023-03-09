@@ -297,7 +297,6 @@ void VCWind::on_pb_remove_bsl_clicked() noexcept {
 
 // slot
 void VCWind::setup_block_widgets() noexcept {
-#warning this line may should be deleted
   // this->setup_basical_colorset();
 
   for (auto &pair : this->map_VC_block_class) {

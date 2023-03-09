@@ -138,7 +138,7 @@ public:
   }
 
   inline void disable_all_faces() noexcept {
-    for (size_t idx = idx_face_up; idx < idx_face_west; idx++) {
+    for (size_t idx = idx_face_up; idx <= idx_face_west; idx++) {
       this->attributes[idx] = false;
     }
   }

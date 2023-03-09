@@ -122,13 +122,24 @@ void BlockBrowser::update_display() noexcept {
     return;
   }
 
+  VCL_block *const blk =
+      (VCL_block *)this->ui->combobox_select_blk->currentData().value<void *>();
+
+  for (int i = 0; i < this->ui->combobox_select_blk_all->count(); i++) {
+    VCL_block *const blk2 =
+        (VCL_block *)this->ui->combobox_select_blk_all->itemData(i)
+            .value<void *>();
+    if (blk2 == blk) {
+      this->ui->combobox_select_blk_all->setCurrentIndex(i);
+      break;
+    }
+  }
+
   if (this->ui->combobox_select_face->currentIndex() < 0) {
     return;
   }
 
   const int scale = this->ui->sb_scale_ratio->value();
-  VCL_block *blk =
-      (VCL_block *)this->ui->combobox_select_blk->currentData().value<void *>();
   if (blk == nullptr) {
     abort();
   }
@@ -179,7 +190,10 @@ void BlockBrowser::update_display() noexcept {
     }
   }
 
+  this->ui->label_image->setText("");
   this->ui->label_image->setPixmap(QPixmap::fromImage(scaled_img));
+  this->ui->label_image->setAlignment(Qt::Alignment{
+      Qt::AlignmentFlag::AlignHCenter, Qt::AlignmentFlag::AlignVCenter});
 
   VCL_destroy_block_model(md);
 }
@@ -234,10 +248,19 @@ void BlockBrowser::on_combobox_select_blk_all_currentIndexChanged(
     QTableWidgetItem *qtwi = this->ui->tw_version->item(r, 1);
     assert(qtwi != nullptr);
 
-    qtwi->setCheckState(
-        VCL_is_block_suitable_for_version(blk, SCL_gameVersion(v))
-            ? Qt::CheckState::Checked
-            : Qt::CheckState::Unchecked);
+    const bool is_suitable =
+        VCL_is_block_suitable_for_version(blk, SCL_gameVersion(v));
+
+    qtwi->setCheckState(is_suitable ? Qt::CheckState::Checked
+                                    : Qt::CheckState::Unchecked);
+    QString str{""};
+
+    if (is_suitable) {
+      str =
+          QString::fromUtf8(VCL_get_block_id_version(blk, SCL_gameVersion(v)));
+    }
+
+    qtwi->setText(str);
   }
 
   auto attributes = magic_enum::enum_values<VCL_block_attribute_t>();
