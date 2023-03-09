@@ -23,6 +23,7 @@ set(VisualCraft_header_files
     VC_block_class.h
     BlockBrowser.h
     BlockSelector.h
+    BiomeBrowser.h
 )
 
 set(VisualCraft_source_files
@@ -44,6 +45,8 @@ set(VisualCraft_source_files
 
     BlockSelector.cpp
     BlockSelectorCriteria.cpp
+
+    BiomeBrowser.cpp
 )
 
 set(VisualCraft_ui_files
@@ -51,7 +54,8 @@ set(VisualCraft_ui_files
     VC_block_class.ui
     BlockBrowser.ui
     BlockSelector.ui
-    BlockSelectorCriteria.ui)
+    BlockSelectorCriteria.ui
+    BiomeBrowser.ui)
 
 set(VisualCraft_ts_files
     others/VisualCraft_en_US.ts)

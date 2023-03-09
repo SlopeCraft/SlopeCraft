@@ -322,6 +322,7 @@ VCL_EXPORT_FUN const uint32_t *VCL_get_colormap(const VCL_resource_pack *,
                                                 bool is_foliage,
                                                 int *rows = nullptr,
                                                 int *cols = nullptr);
+
 // functions about block state list
 VCL_EXPORT_FUN void VCL_display_block_state_list(const VCL_block_state_list *);
 
@@ -447,6 +448,10 @@ struct VCL_biome_info {
 
 VCL_EXPORT_FUN VCL_biome_info VCL_get_biome_info(VCL_biome_t);
 VCL_EXPORT_FUN const char *VCL_biome_name(VCL_biome_t, uint8_t is_ZH);
+
+VCL_EXPORT_FUN uint32_t VCL_locate_colormap(const VCL_resource_pack *,
+                                            bool is_grass, VCL_biome_info info,
+                                            int *row, int *col);
 }
 
 #endif // SLOPECRAFT_VISUALCRAFT_VISUALCRAFT_H

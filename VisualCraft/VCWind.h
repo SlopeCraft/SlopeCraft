@@ -175,7 +175,7 @@ private:
 
   QString update_gpu_device(QPoint current_choice) noexcept;
 private slots:
-  // for all pages
+  // for all pages ------------------------------------------
   // auto connected
   void on_tabWidget_main_currentChanged(int page) noexcept;
 
@@ -191,8 +191,9 @@ private slots:
 
   // auto connected
   void on_ac_browse_block_triggered() noexcept;
+  void on_ac_browse_biome_triggered() noexcept;
 
-  // for page 0
+  // for page 0 ------------------------------------------
 
   // auto connected
   void on_pb_add_rp_clicked() noexcept;
@@ -204,7 +205,7 @@ private slots:
   // manually connected
   // void when_basical_colorset_changed() noexcept;
 
-  // for page 1
+  // for page 1 ------------------------------------------
 
   // auto connected
   void on_pb_select_all_clicked() noexcept;
@@ -218,7 +219,7 @@ private slots:
   // manually connected
   void setup_block_widgets() noexcept;
   // void when_allowed_colorset_changed() noexcept;
-  //  for page 2
+  //  for page 2 ------------------------------------------
 
   // auto connected
   void on_tb_add_images_clicked() noexcept;
@@ -233,11 +234,11 @@ private slots:
   // manually connected
   void when_algo_dither_bottons_toggled() noexcept;
 
-  // for page 3
+  // for page 3 ------------------------------------------
   // auto connected
   void on_pb_select_export_dir_clicked() noexcept;
   void on_pb_execute_clicked() noexcept;
-  // for page 4
+  // for page 4 ------------------------------------------
 
   // auto connected
   void on_sb_threads_valueChanged(int val) noexcept;

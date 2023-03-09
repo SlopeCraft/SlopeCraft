@@ -454,8 +454,8 @@ bool VCL_resource_pack::override_texture(
   return true;
 }
 
-uint32_t VCL_resource_pack::standard_color(VCL_biome_info info,
-                                           bool is_foliage) const noexcept {
+std::array<int, 2>
+VCL_resource_pack::locate_color_rc(VCL_biome_info info) const noexcept {
   assert(info.downfall == info.downfall);
   assert(info.temperature == info.temperature);
   const float t_adj = std::clamp(info.temperature, 0.0f, 1.0f);
@@ -469,6 +469,16 @@ uint32_t VCL_resource_pack::standard_color(VCL_biome_info info,
 
   const int r = 255 - y;
   const int c = x;
+  return {r, c};
+}
+
+uint32_t VCL_resource_pack::standard_color(VCL_biome_info info,
+                                           bool is_foliage) const noexcept {
+
+  const auto rc = this->locate_color_rc(info);
+
+  const int r = rc[0];
+  const int c = rc[1];
 
   if (is_foliage) {
     return this->colormap_foliage(r, c);

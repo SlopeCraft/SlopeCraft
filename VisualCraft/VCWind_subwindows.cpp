@@ -1,3 +1,4 @@
+#include "BiomeBrowser.h"
 #include "BlockBrowser.h"
 #include "BlockSelector.h"
 #include "VCWind.h"
@@ -42,6 +43,20 @@ void VCWind::on_ac_about_VisualCraft_triggered() noexcept {
                "由于颜色数量很多，VisualCraft使用了显卡加速。目前支持的AP"
                "I有OpenCL。现在正在使用的API是%1")
                .arg(VCL_get_GPU_api_name())));
+}
+
+void VCWind::on_ac_browse_biome_triggered() noexcept {
+  BiomeBrowser *bb = new BiomeBrowser(this);
+
+  bb->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
+  bb->setAttribute(Qt::WidgetAttribute::WA_AlwaysStackOnTop, true);
+  // bb->setAttribute(Qt::WidgetAttribute::WA_NativeWindow, true);
+  bb->setWindowFlag(Qt::WindowType::Window, true);
+
+  connect(this, &VCWind::signal_basic_colorset_changed, bb,
+          &QWidget::deleteLater);
+
+  bb->show();
 }
 
 void VCWind::on_ac_contact_bilibili_triggered() noexcept {

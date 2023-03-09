@@ -1220,6 +1220,9 @@
    </property>
   </action>
   <action name="ac_browse_biome">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>生物群系</string>
    </property>

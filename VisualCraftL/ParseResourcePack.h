@@ -618,6 +618,8 @@ public:
                         uint32_t standard_color,
                         bool replace_transparent_with_black) noexcept;
 
+  std::array<int, 2> locate_color_rc(VCL_biome_info) const noexcept;
+
   uint32_t standard_color(VCL_biome_info info, bool is_foliage) const noexcept;
   uint32_t standard_color(VCL_biome_t biome,
                           std::string_view texture_name) const noexcept;

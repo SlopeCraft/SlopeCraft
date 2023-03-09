@@ -1263,3 +1263,17 @@ const char *VCL_biome_name_EN(VCL_biome_t b) noexcept {
 VCL_EXPORT_FUN const char *VCL_biome_name(VCL_biome_t biome, uint8_t is_ZH) {
   return (is_ZH) ? VCL_biome_name_ZH(biome) : VCL_biome_name_EN(biome);
 }
+VCL_EXPORT_FUN uint32_t VCL_locate_colormap(const VCL_resource_pack *rp,
+                                            bool is_grass, VCL_biome_info info,
+                                            int *row, int *col) {
+  const auto rc = rp->locate_color_rc(info);
+
+  if (row != nullptr) {
+    *row = rc[0];
+  }
+  if (col != nullptr) {
+    *col = rc[1];
+  }
+
+  return rp->standard_color(info, !is_grass);
+}

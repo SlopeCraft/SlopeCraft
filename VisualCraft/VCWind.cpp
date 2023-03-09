@@ -407,6 +407,7 @@ void VCWind::setup_block_widgets() noexcept {
                                 QStringLiteral(" (%1)").arg(block_nums));
 
   this->ui->ac_browse_block->setEnabled(true);
+  this->ui->ac_browse_biome->setEnabled(true);
 }
 
 bool VCWind::is_basical_colorset_changed() const noexcept {
