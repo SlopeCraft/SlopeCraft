@@ -409,19 +409,15 @@ bool VCL_resource_pack::override_texture(
   }
 
   standard_color |= 0xFF'00'00'00;
-  float Hs, Ss, Vs;
-  RGB2HSV(getR(standard_color) / 255.0f, getG(standard_color) / 255.0f,
-          getB(standard_color) / 255.0f, Hs, Ss, Vs);
 
   Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> img(16,
                                                                           16);
   memset(img.data(), 0xFF, img.size() * sizeof(uint32_t));
   // 0.902473997028232	-0.0371008915304607
 
-  // the ratio to adjust brightness of pixels are determined by the brightness
-  // of standard color
-  const float k = 0.902473997028232 * Vs - 0.0371008915304607;
-
+  const std::array<float, 3> rgb_std{getR(standard_color) / 255.0f,
+                                     getG(standard_color) / 255.0f,
+                                     getB(standard_color) / 255.0f};
   for (int idx = 0; idx < 16 * 16; idx++) {
     const uint32_t ARGB_orignal = img_original(idx);
     if (getA(ARGB_orignal) == 0) {
@@ -444,11 +440,16 @@ bool VCL_resource_pack::override_texture(
       continue;
     }
 
-    float Vp = max_RGB / 255.0f;
-#warning color computing is incorrect when biome is desert
-    Vp = std::clamp(Vp * k, 0.0f, 1.0f);
+    const float V_T = float(max_RGB + min_RGB) / 2 / 255;
 
-    img(idx) = HSV2ARGB(Hs, Ss, Vp);
+    const float slope = 0.8291f * V_T - 0.0050f;
+
+    std::array<float, 3> rgb_dst{};
+
+    for (size_t c = 0; c < 3; c++) {
+      rgb_dst[c] = std::clamp(rgb_std[c] * slope, 0.0f, 1.0f);
+    }
+    img(idx) = RGB2ARGB(rgb_dst[0], rgb_dst[1], rgb_dst[2]);
   }
 
   this->textures_override.emplace(path_in_original.data(), std::move(img));
