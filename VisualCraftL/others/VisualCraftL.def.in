@@ -7,6 +7,7 @@ VCL_create_block_state_list
 VCL_destroy_block_state_list
 VCL_set_resource_copy
 VCL_set_resource_move
+VCL_discard_resource
 VCL_is_basic_colorset_ok
 VCL_get_resource_pack
 VCL_get_block_state_list
@@ -14,6 +15,7 @@ VCL_get_game_version
 VCL_get_exposed_face
 VCL_get_max_block_layers
 VCL_set_allowed_blocks
+VCL_discard_allowed_blocks
 VCL_is_allowed_colorset_ok
 VCL_get_allowed_colors
 VCL_display_resource_pack

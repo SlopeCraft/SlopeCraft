@@ -292,6 +292,8 @@ VCL_set_resource_move(VCL_resource_pack **rp_ptr,
                       VCL_block_state_list **bsl_ptr,
                       const VCL_set_resource_option &option);
 
+VCL_EXPORT_FUN void VCL_discard_resource();
+
 // functions to check the resource
 VCL_EXPORT_FUN bool VCL_is_basic_colorset_ok();
 VCL_EXPORT_FUN VCL_resource_pack *VCL_get_resource_pack();
@@ -304,6 +306,7 @@ VCL_EXPORT_FUN int VCL_get_max_block_layers();
 VCL_EXPORT_FUN bool
 VCL_set_allowed_blocks(const VCL_block *const *const blocks_allowed,
                        size_t num_block_allowed);
+VCL_EXPORT_FUN void VCL_discard_allowed_blocks();
 
 VCL_EXPORT_FUN bool VCL_is_allowed_colorset_ok();
 

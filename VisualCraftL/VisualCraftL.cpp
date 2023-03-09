@@ -361,6 +361,13 @@ VCL_set_resource_move(VCL_resource_pack **rp_ptr,
   return ret;
 }
 
+VCL_EXPORT_FUN void VCL_discard_resource() {
+  std::unique_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+
+  TokiVC_internal::is_basic_color_set_ready = false;
+  TokiVC_internal::is_allowed_color_set_ready = false;
+}
+
 VCL_EXPORT_FUN int VCL_get_max_block_layers() {
   std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
   if (!TokiVC_internal::is_basic_color_set_ready) {
@@ -416,6 +423,10 @@ VCL_set_allowed_blocks(const VCL_block *const *const blocks_allowed,
   std::unique_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
 
   return TokiVC::set_allowed_no_lock(blocks_allowed, num_block_allowed);
+}
+VCL_EXPORT_FUN void VCL_discard_allowed_blocks() {
+  std::unique_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+  TokiVC_internal::is_allowed_color_set_ready = false;
 }
 
 VCL_EXPORT_FUN bool VCL_is_allowed_colorset_ok() {
