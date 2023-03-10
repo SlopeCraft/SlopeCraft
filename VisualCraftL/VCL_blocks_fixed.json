@@ -211,6 +211,12 @@
         "nameZH": "银色混凝土 (1.12)",
         "version": [
             12
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:concrete[color=silver]"
+            ]
         ]
     },
     "minecraft:white_concrete": {
@@ -2425,6 +2431,331 @@
         "nameEN": "Purpur block",
         "nameZH": "紫珀块",
         "version": "all"
+    },
+    "minecraft:acacia_log[axis=y]": {
+        "class": "wood",
+        "nameEN": "Acacia log (Y axis)",
+        "nameZH": "金合欢原木 (Y轴)",
+        "version": "all",
+        "burnable": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:log2[variant=acacia,axis=y]"
+            ]
+        ]
+    },
+    "minecraft:acacia_log[axis=x]": {
+        "class": "wood",
+        "nameEN": "Acacia log (X axis)",
+        "nameZH": "金合欢原木 (X轴)",
+        "version": "all",
+        "faces": [
+            "east",
+            "west",
+            "up",
+            "down"
+        ],
+        "burnable": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:log2[variant=acacia,axis=x]"
+            ]
+        ]
+    },
+    "minecraft:acacia_log[axis=z]": {
+        "class": "wood",
+        "nameEN": "Acacia log (Z axis)",
+        "nameZH": "金合欢原木 (Z轴)",
+        "version": "all",
+        "faces": [
+            "north",
+            "south"
+        ],
+        "burnable": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:log2[variant=acacia,axis=z]"
+            ]
+        ]
+    },
+    "minecraft:dark_oak_log[axis=y]": {
+        "class": "wood",
+        "nameEN": "Dark oak log (Y axis)",
+        "nameZH": "黑橡树原木 (Y轴)",
+        "version": "all",
+        "burnable": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:log2[variant=dark_oak,axis=y]"
+            ]
+        ]
+    },
+    "minecraft:dark_oak_log[axis=x]": {
+        "class": "wood",
+        "nameEN": "Dark oak log (X axis)",
+        "nameZH": "黑橡树原木 (X轴)",
+        "version": "all",
+        "faces": [
+            "east",
+            "west",
+            "up",
+            "down"
+        ],
+        "burnable": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:log2[variant=dark_oak,axis=x]"
+            ]
+        ]
+    },
+    "minecraft:dark_oak_log[axis=z]": {
+        "class": "wood",
+        "nameEN": "Dark oak log (Z axis)",
+        "nameZH": "黑橡树原木 (Z轴)",
+        "version": "all",
+        "faces": [
+            "north",
+            "south"
+        ],
+        "burnable": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:log2[variant=dark_oak,axis=z]"
+            ]
+        ]
+    },
+    "minecraft:jungle_log[axis=y]": {
+        "class": "wood",
+        "nameEN": "Jungle log (Y axis)",
+        "nameZH": "丛林木原木 (Y轴)",
+        "version": "all",
+        "burnable": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:log[variant=jungle,axis=y]"
+            ]
+        ]
+    },
+    "minecraft:jungle_log[axis=x]": {
+        "class": "wood",
+        "nameEN": "Jungle log (X axis)",
+        "nameZH": "丛林木原木 (X轴)",
+        "version": "all",
+        "faces": [
+            "east",
+            "west",
+            "up",
+            "down"
+        ],
+        "burnable": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:log[variant=jungle,axis=x]"
+            ]
+        ]
+    },
+    "minecraft:jungle_log[axis=z]": {
+        "class": "wood",
+        "nameEN": "Jungle log (Z axis)",
+        "nameZH": "丛林木原木 (Z轴)",
+        "version": "all",
+        "faces": [
+            "north",
+            "south"
+        ],
+        "burnable": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:log[variant=jungle,axis=z]"
+            ]
+        ]
+    },
+    "minecraft:birch_log[axis=y]": {
+        "class": "wood",
+        "nameEN": "Birch log (Y axis)",
+        "nameZH": "白桦原木 (Y轴)",
+        "version": "all",
+        "burnable": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:log[variant=birch,axis=y]"
+            ]
+        ]
+    },
+    "minecraft:birch_log[axis=x]": {
+        "class": "wood",
+        "nameEN": "Birch log (X axis)",
+        "nameZH": "白桦原木 (X轴)",
+        "version": "all",
+        "faces": [
+            "east",
+            "west",
+            "up",
+            "down"
+        ],
+        "burnable": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:log[variant=birch,axis=x]"
+            ]
+        ]
+    },
+    "minecraft:birch_log[axis=z]": {
+        "class": "wood",
+        "nameEN": "Birch log (Z axis)",
+        "nameZH": "白桦原木 (Z轴)",
+        "version": "all",
+        "faces": [
+            "north",
+            "south"
+        ],
+        "burnable": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:log[variant=birch,axis=z]"
+            ]
+        ]
+    },
+    "minecraft:spruce_log[axis=y]": {
+        "class": "wood",
+        "nameEN": "Spruce log (Y axis)",
+        "nameZH": "云杉原木 (Y轴)",
+        "version": "all",
+        "burnable": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:log[variant=spruce,axis=y]"
+            ]
+        ]
+    },
+    "minecraft:spruce_log[axis=x]": {
+        "class": "wood",
+        "nameEN": "Spruce log (X axis)",
+        "nameZH": "云杉原木 (X轴)",
+        "version": "all",
+        "faces": [
+            "east",
+            "west",
+            "up",
+            "down"
+        ],
+        "burnable": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:log[variant=spruce,axis=x]"
+            ]
+        ]
+    },
+    "minecraft:spruce_log[axis=z]": {
+        "class": "wood",
+        "nameEN": "Spruce log (Z axis)",
+        "nameZH": "云杉原木 (Z轴)",
+        "version": "all",
+        "faces": [
+            "north",
+            "south"
+        ],
+        "burnable": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:log[variant=spruce,axis=z]"
+            ]
+        ]
+    },
+    "minecraft:oak_log[axis=y]": {
+        "class": "wood",
+        "nameEN": "Oak log (Y axis)",
+        "nameZH": "橡木原木 (Y轴)",
+        "version": "all",
+        "burnable": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:log[variant=oak,axis=y]"
+            ]
+        ]
+    },
+    "minecraft:oak_log[axis=x]": {
+        "class": "wood",
+        "nameEN": "Oak log (X axis)",
+        "nameZH": "橡木原木 (X轴)",
+        "version": "all",
+        "faces": [
+            "east",
+            "west",
+            "up",
+            "down"
+        ],
+        "burnable": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:log[variant=oak,axis=x]"
+            ]
+        ]
+    },
+    "minecraft:oak_log[axis=z]": {
+        "class": "wood",
+        "nameEN": "Oak log (Z axis)",
+        "nameZH": "橡木原木 (Z轴)",
+        "version": "all",
+        "faces": [
+            "north",
+            "south"
+        ],
+        "burnable": true,
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:log[variant=oak,axis=z]"
+            ]
+        ]
+    },
+    "minecraft:mangrove_log[axis=y]": {
+        "class": "wood",
+        "nameEN": "Mangrove log (Y axis)",
+        "nameZH": "红树原木 (Y轴)",
+        "version": 19,
+        "burnable": true
+    },
+    "minecraft:mangrove_log[axis=x]": {
+        "class": "wood",
+        "nameEN": "Mangrove log (X axis)",
+        "nameZH": "红树原木 (X轴)",
+        "version": 19,
+        "faces": [
+            "east",
+            "west",
+            "up",
+            "down"
+        ],
+        "burnable": true
+    },
+    "minecraft:mangrove_log[axis=z]": {
+        "class": "wood",
+        "nameEN": "Mangrove log (Z axis)",
+        "nameZH": "红树原木 (Z轴)",
+        "version": 19,
+        "faces": [
+            "north",
+            "south"
+        ],
+        "burnable": true
     },
     "minecraft:crimson_hyphae[axis=y]": {
         "burnable": true,
