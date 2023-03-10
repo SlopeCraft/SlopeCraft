@@ -307,6 +307,8 @@ bool TokiVC::set_resource_no_lock() noexcept {
   TokiVC::pack.set_is_MC12(TokiVC::version == SCL_gameVersion::MC12);
   TokiVC::pack.override_textures(TokiVC::biome, TokiVC::is_render_quality_fast);
 
+  TokiVC::bsl.update_foliages(!TokiVC::is_render_quality_fast);
+
   std::vector<VCL_block *> bs_transparent, bs_nontransparent;
 
   bs_nontransparent.reserve(TokiVC::bsl.block_states().size() * 2 / 3);

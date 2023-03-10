@@ -57,7 +57,7 @@ public:
 class VCL_block_state_list;
 
 class VCL_block {
-#warning foliage blocks' transparency is not implemented now
+
   friend class VCL_block_state_list;
 
 public:
@@ -210,6 +210,8 @@ public:
 
     return &it->second;
   }
+
+  void update_foliages(bool is_foliage_transparent) noexcept;
 };
 
 VCL_block_class_t string_to_block_class(std::string_view str,

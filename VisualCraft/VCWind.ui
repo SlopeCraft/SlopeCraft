@@ -472,7 +472,7 @@
            </widget>
           </item>
           <item row="0" column="0" rowspan="2" colspan="3">
-           <widget class="QGroupBox" name="groupBox_7">
+           <widget class="QGroupBox" name="gb_convert_algo">
             <property name="title">
              <string>调色算法</string>
             </property>

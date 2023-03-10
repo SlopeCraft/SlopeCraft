@@ -75,6 +75,16 @@ version_set parse_version_set(const nlohmann::json &jo,
   return {};
 }
 
+#define VCL_PRIVATE_MACRO_PARSE_ATTRIBUTE(key_str, key_enum)                   \
+  if (jo.contains(#key_str)) {                                                 \
+    if (!jo.at(#key_str).is_boolean()) {                                       \
+      *ok = false;                                                             \
+      return {};                                                               \
+    }                                                                          \
+                                                                               \
+    ret.set_attribute(VCL_block::attribute::key_enum, jo.at(#key_str));        \
+  }
+
 VCL_block parse_block(const nlohmann::json &jo, bool *const ok) {
   if (!jo.contains("version")) {
     *ok = false;
@@ -185,83 +195,15 @@ VCL_block parse_block(const nlohmann::json &jo, bool *const ok) {
     }
   }
 
-  if (jo.contains("burnable")) {
-    if (!jo.at("burnable").is_boolean()) {
-      *ok = false;
-      return {};
-    }
-
-    ret.set_attribute(VCL_block::attribute::burnable, jo.at("burnable"));
-  }
-
-  if (jo.contains("isGlowing")) {
-    if (!jo.at("isGlowing").is_boolean()) {
-      *ok = false;
-      return {};
-    }
-
-    ret.set_attribute(VCL_block::attribute::is_glowing, jo.at("isGlowing"));
-  }
-
-  if (jo.contains("endermanPickable")) {
-    if (!jo.at("endermanPickable").is_boolean()) {
-      *ok = false;
-      return {};
-    }
-
-    ret.set_attribute(VCL_block::attribute::enderman_pickable,
-                      jo.at("endermanPickable"));
-  }
-
-  if (jo.contains("background")) {
-    if (!jo.at("background").is_boolean()) {
-      *ok = false;
-      return {};
-    }
-
-    ret.set_attribute(VCL_block::attribute::background, jo.at("background"));
-  }
-
-  if (jo.contains("is_air")) {
-    if (!jo.at("is_air").is_boolean()) {
-      *ok = false;
-      return {};
-    }
-    ret.set_attribute(VCL_block::attribute::is_air, jo.at("is_air"));
-  }
-
-  if (jo.contains("is_grass")) {
-    if (!jo.at("is_grass").is_boolean()) {
-      *ok = false;
-      return {};
-    }
-    ret.set_attribute(VCL_block::attribute::is_grass, jo.at("is_grass"));
-  }
-
-  if (jo.contains("is_foliage")) {
-    if (!jo.at("is_foliage").is_boolean()) {
-      *ok = false;
-      return {};
-    }
-    ret.set_attribute(VCL_block::attribute::is_foliage, jo.at("is_foliage"));
-  }
-
-  if (jo.contains("reproducible")) {
-    if (!jo.at("reproducible").is_boolean()) {
-      *ok = false;
-      return {};
-    }
-    ret.set_attribute(VCL_block::attribute::reproducible,
-                      jo.at("reproducible"));
-  }
-
-  if (jo.contains("rare")) {
-    if (!jo.at("rare").is_boolean()) {
-      *ok = false;
-      return {};
-    }
-    ret.set_attribute(VCL_block::attribute::rare, jo.at("rare"));
-  }
+  VCL_PRIVATE_MACRO_PARSE_ATTRIBUTE(burnable, burnable);
+  VCL_PRIVATE_MACRO_PARSE_ATTRIBUTE(isGlowing, is_glowing);
+  VCL_PRIVATE_MACRO_PARSE_ATTRIBUTE(endermanPickable, enderman_pickable);
+  VCL_PRIVATE_MACRO_PARSE_ATTRIBUTE(background, background);
+  VCL_PRIVATE_MACRO_PARSE_ATTRIBUTE(is_air, is_air);
+  VCL_PRIVATE_MACRO_PARSE_ATTRIBUTE(is_grass, is_grass);
+  VCL_PRIVATE_MACRO_PARSE_ATTRIBUTE(is_foliage, is_foliage);
+  VCL_PRIVATE_MACRO_PARSE_ATTRIBUTE(reproducible, reproducible);
+  VCL_PRIVATE_MACRO_PARSE_ATTRIBUTE(rare, rare);
 
   *ok = true;
 
@@ -339,6 +281,16 @@ void VCL_block_state_list::avaliable_block_states_by_transparency(
       } else {
         list_non_transparent->emplace_back(&pair.second);
       }
+    }
+  }
+}
+
+void VCL_block_state_list::update_foliages(
+    bool is_foliage_transparent) noexcept {
+  for (auto &pair : this->states) {
+    if (pair.second.get_attribute(VCL_block_attribute_t::is_foliage)) {
+      pair.second.set_attribute(VCL_block_attribute_t::transparency,
+                                is_foliage_transparent);
     }
   }
 }

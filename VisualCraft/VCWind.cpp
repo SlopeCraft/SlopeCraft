@@ -535,6 +535,10 @@ void VCWind::setup_allowed_colorset() noexcept {
     }
   }
 
+  this->ui->gb_convert_algo->setTitle(
+      VCWind::tr("调色算法 (共%1种颜色)")
+          .arg(VCL_get_allowed_colors(nullptr, 0)));
+
   this->clear_convert_cache();
 }
 
