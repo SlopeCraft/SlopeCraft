@@ -146,6 +146,10 @@ int main(int argc, char **argv) {
   app.add_flag("--list-textures,--list-texture", input.list_textures,
                "List all textures in the resource pack.")
       ->default_val(false);
+  app.add_flag("--export-test-litematic,--export-test-lite,--etl",
+               input.export_test_lite,
+               "Export a testing lite that contains all avaliable blocks.")
+      ->default_val(false);
 
   CLI11_PARSE(app, argc, argv);
 

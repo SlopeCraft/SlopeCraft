@@ -312,6 +312,8 @@ VCL_EXPORT_FUN bool VCL_is_allowed_colorset_ok();
 
 VCL_EXPORT_FUN int VCL_get_allowed_colors(uint32_t *dest, size_t dest_capacity);
 
+VCL_EXPORT_FUN bool VCL_export_test_litematic(const char *filename);
+
 // functions about resource pack
 VCL_EXPORT_FUN void VCL_display_resource_pack(const VCL_resource_pack *,
                                               bool textures = true,

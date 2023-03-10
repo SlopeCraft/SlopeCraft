@@ -62,6 +62,7 @@ struct inputs {
   bool list_blockstates{false};
   bool list_models{false};
   bool list_textures{false};
+  bool export_test_lite{false};
 };
 
 int run(const inputs &input) noexcept;

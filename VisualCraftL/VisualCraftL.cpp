@@ -439,6 +439,12 @@ VCL_EXPORT_FUN bool VCL_is_allowed_colorset_ok() {
   return TokiVC_internal::is_allowed_color_set_ready;
 }
 
+VCL_EXPORT_FUN bool VCL_export_test_litematic(const char *filename) {
+  std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+
+  return TokiVC::export_test_litematic_no_lock(filename);
+}
+
 VCL_EXPORT_FUN int VCL_get_allowed_colors(uint32_t *dest,
                                           size_t dest_capacity) {
   std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);

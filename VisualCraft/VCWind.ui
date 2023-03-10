@@ -1159,6 +1159,7 @@
     <property name="title">
      <string>测试</string>
     </property>
+    <addaction name="ac_export_test_schem"/>
     <addaction name="action_test01"/>
    </widget>
    <widget class="QMenu" name="menu_browse">
@@ -1198,7 +1199,13 @@
   <widget class="QStatusBar" name="statusbar"/>
   <action name="action_test01">
    <property name="text">
-    <string>test01</string>
+    <string notr="true">internal test 01</string>
+   </property>
+   <property name="iconText">
+    <string notr="true">internal test 01</string>
+   </property>
+   <property name="toolTip">
+    <string notr="true">internal test 01</string>
    </property>
   </action>
   <action name="ac_browse_block">
@@ -1261,6 +1268,14 @@
   <action name="ac_contact_github_repo">
    <property name="text">
     <string>Github仓库</string>
+   </property>
+  </action>
+  <action name="ac_export_test_schem">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>生成测试投影</string>
    </property>
   </action>
  </widget>

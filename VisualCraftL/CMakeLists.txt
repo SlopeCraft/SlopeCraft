@@ -49,6 +49,7 @@ set(VCL_source_files
     TokiVC.cpp
     TokiVC_flagdiagram.cpp
     TokiVC_build.cpp
+    TokiVC_export_test.cpp
 
     Resource_tree.h
     Resource_tree.cpp

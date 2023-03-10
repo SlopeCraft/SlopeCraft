@@ -268,6 +268,24 @@ int run(const inputs &input) noexcept {
                         VCL_get_allowed_colors(nullptr, 0));
   }
 
+  if (input.export_test_lite) {
+    std::string filename = fmt::format("{}test_all_blocks_mc={}.litematic",
+                                       input.prefix, int(input.version));
+    wt = omp_get_wtime();
+
+    if (!VCL_export_test_litematic(filename.c_str())) {
+      cout << fmt::format("Failed to export test litematic \"{}\"", filename)
+           << endl;
+      return __LINE__;
+    }
+
+    wt = omp_get_wtime() - wt;
+
+    if (input.benchmark) {
+      cout << fmt::format("Exported \"{}\" in {} seconds.\n", filename, wt);
+    }
+  }
+
   for (const auto &img_filename : input.images) {
     const std::string pure_filename_no_extension =
         std::filesystem::path(img_filename)

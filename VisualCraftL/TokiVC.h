@@ -134,6 +134,8 @@ public:
   static bool set_allowed_no_lock(const VCL_block *const *const blocks_allowed,
                                   size_t num_block_allowed) noexcept;
 
+  static bool export_test_litematic_no_lock(const char *filename) noexcept;
+
 private:
   static std::vector<
       std::variant<const VCL_block *, std::vector<const VCL_block *>>>
