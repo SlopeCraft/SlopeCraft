@@ -1888,6 +1888,12 @@
         "nameZH": "圆石",
         "version": "all"
     },
+    "minecraft:mossy_cobblestone": {
+        "class": "stone",
+        "nameEN": "Mossy cobblestone",
+        "nameZH": "苔石",
+        "version": "all"
+    },
     "minecraft:deepslate[axis=y]": {
         "class": "stone",
         "nameEN": "Deepslate",
@@ -1966,13 +1972,13 @@
         "reproducible": false
     },
     "minecraft:quartz_block": {
-        "class": "stone",
+        "class": "ore",
         "nameEN": "Quartz block",
         "nameZH": "石英块",
         "version": 13
     },
     "minecraft:quartz_block[variant=default]": {
-        "class": "stone",
+        "class": "ore",
         "nameEN": "Quartz block (1.12)",
         "nameZH": "石英块 (1.12)",
         "version": [
