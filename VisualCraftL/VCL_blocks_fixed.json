@@ -1093,6 +1093,161 @@
         "version": 17,
         "rare": true
     },
+    "minecraft:gilded_blackstone": {
+        "class": "ore",
+        "nameEN": "Glided blackstone",
+        "nameZH": "镶金黑石",
+        "version": 16,
+        "reproducible": false,
+        "rare": true
+    },
+    "minecraft:coal_ore": {
+        "class": "ore",
+        "nameEN": "Coal ore",
+        "nameZH": "煤矿",
+        "version": "all",
+        "reproducible": false
+    },
+    "minecraft:deepslate_coal_ore": {
+        "class": "ore",
+        "nameEN": "Deepslate coal ore",
+        "nameZH": "深板岩煤矿",
+        "version": 17,
+        "reproducible": false
+    },
+    "minecraft:copper_ore": {
+        "class": "ore",
+        "nameEN": "Copper ore",
+        "nameZH": "铜矿",
+        "version": 17,
+        "reproducible": false
+    },
+    "minecraft:deepslate_copper_ore": {
+        "class": "ore",
+        "nameEN": "Deepslate copper ore",
+        "nameZH": "深板岩铜矿",
+        "version": 17,
+        "reproducible": false
+    },
+    "minecraft:diamond_ore": {
+        "class": "ore",
+        "nameEN": "Diamond ore",
+        "nameZH": "钻石矿",
+        "version": "all",
+        "reproducible": false,
+        "rare": true
+    },
+    "minecraft:deepslate_diamond_ore": {
+        "class": "ore",
+        "nameEN": "Deepslate diamond ore",
+        "nameZH": "深板岩钻石矿",
+        "version": 17,
+        "reproducible": false,
+        "rare": true
+    },
+    "minecraft:emerald_ore": {
+        "class": "ore",
+        "nameEN": "Emerald ore",
+        "nameZH": "绿宝石矿",
+        "version": "all",
+        "reproducible": false,
+        "rare": true
+    },
+    "minecraft:deepslate_emerald_ore": {
+        "class": "ore",
+        "nameEN": "Deepslate emerald ore",
+        "nameZH": "深板岩绿宝石矿",
+        "version": 17,
+        "reproducible": false,
+        "rare": true
+    },
+    "minecraft:gold_ore": {
+        "class": "ore",
+        "nameEN": "Gold ore",
+        "nameZH": "金矿",
+        "version": "all",
+        "reproducible": false
+    },
+    "minecraft:deepslate_gold_ore": {
+        "class": "ore",
+        "nameEN": "Deepslate gold ore",
+        "nameZH": "深板岩金矿",
+        "version": 17,
+        "reproducible": false
+    },
+    "minecraft:iron_ore": {
+        "class": "ore",
+        "nameEN": "Iron ore",
+        "nameZH": "铁矿",
+        "version": "all",
+        "reproducible": false
+    },
+    "minecraft:deepslate_iron_ore": {
+        "class": "ore",
+        "nameEN": "Deepslate iron ore",
+        "nameZH": "深板岩铁矿",
+        "version": 17,
+        "reproducible": false
+    },
+    "minecraft:lapis_ore": {
+        "class": "ore",
+        "nameEN": "Lapis ore",
+        "nameZH": "青金石矿",
+        "version": "all",
+        "reproducible": false
+    },
+    "minecraft:deepslate_lapis_ore": {
+        "class": "ore",
+        "nameEN": "Deepslate lapis ore",
+        "nameZH": "深板岩青金石矿",
+        "version": 17,
+        "reproducible": false
+    },
+    "minecraft:redstone_ore": {
+        "class": "ore",
+        "nameEN": "Redstone ore",
+        "nameZH": "红石矿",
+        "version": "all",
+        "reproducible": false
+    },
+    "minecraft:deepslate_redstone_ore": {
+        "class": "ore",
+        "nameEN": "Deepslate redstone ore",
+        "nameZH": "深板岩红石矿",
+        "version": 17,
+        "reproducible": false
+    },
+    "minecraft:nether_gold_ore": {
+        "class": "ore",
+        "nameEN": "Nether gold ore",
+        "nameZH": "下界金矿",
+        "version": 16,
+        "reproducible": false
+    },
+    "minecraft:nether_quartz_ore": {
+        "class": "ore",
+        "nameEN": "Nether quartz ore",
+        "nameZH": "下界石英矿",
+        "version": 13,
+        "reproducible": false
+    },
+    "minecraft:quartz_ore": {
+        "class": "ore",
+        "nameEN": "Nether quartz ore (1.12)",
+        "nameZH": "下界石英矿 (1.12)",
+        "version": [
+            12
+        ],
+        "reproducible": false
+    },
+    "minecraft:ancient_debris": {
+        "class": "ore",
+        "nameEN": "Ancient debris",
+        "nameZH": "远古残骸",
+        "version": 16,
+        "reproducible": false,
+        "rare": true
+    },
     "minecraft:sculk": {
         "class": "others",
         "nameEN": "Sculk block",
@@ -1692,6 +1847,13 @@
         "version": 17,
         "rare": true
     },
+    "minecraft:tuff": {
+        "class": "stone",
+        "nameEN": "Tuff",
+        "nameZH": "凝灰岩",
+        "version": 17,
+        "reproducible": false
+    },
     "minecraft:calcite": {
         "class": "stone",
         "nameEN": "Calcite",
@@ -1754,6 +1916,13 @@
         "nameEN": "Obsidian",
         "nameZH": "黑曜石",
         "version": "all"
+    },
+    "minecraft:crying_obsidian": {
+        "class": "stone",
+        "nameEN": "Crying obsidian",
+        "nameZH": "哭泣的黑曜石",
+        "version": 16,
+        "rare": true
     },
     "minecraft:polished_basalt[axis=y]": {
         "class": "stone",
@@ -2971,6 +3140,14 @@
         "nameZH": "紫水晶母岩",
         "class": "creative_only",
         "version": 17,
+        "reproducible": false,
+        "rare": true
+    },
+    "minecraft:reinforced_deepslate": {
+        "nameEN": "Reinforced deepslate",
+        "nameZH": "强化深板岩",
+        "class": "creative_only",
+        "version": 19,
         "reproducible": false,
         "rare": true
     }
