@@ -159,7 +159,7 @@ void element::intersect_points(
     break;
   }
 
-  intersect_point intersect;
+  intersect_point intersect{1e9f, {0, 0}, nullptr};
   Array3f coordinate;
   coordinate = crossover_point(this->plane(f), ray);
   // printf("\nelement::intersect_points : coordinate = [%f, %f,

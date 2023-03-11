@@ -20,6 +20,7 @@ VCL_set_allowed_blocks
 VCL_discard_allowed_blocks
 VCL_is_allowed_colorset_ok
 VCL_get_allowed_colors
+VCL_get_allowed_color_id
 VCL_export_test_litematic
 VCL_display_resource_pack
 VCL_get_colormap

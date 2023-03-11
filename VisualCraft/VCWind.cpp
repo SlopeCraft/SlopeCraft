@@ -542,6 +542,7 @@ void VCWind::setup_allowed_colorset() noexcept {
           .arg(VCL_get_allowed_colors(nullptr, 0)));
 
   this->clear_convert_cache();
+  this->ui->ac_browse_allowed_colors->setEnabled(true);
 }
 
 size_t

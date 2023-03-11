@@ -320,6 +320,9 @@ VCL_EXPORT_FUN bool VCL_is_allowed_colorset_ok();
 
 VCL_EXPORT_FUN int VCL_get_allowed_colors(uint32_t *dest, size_t dest_capacity);
 
+VCL_EXPORT_FUN size_t VCL_get_allowed_color_id(
+    uint16_t *const dest, size_t dest_capacity_in_elements);
+
 VCL_EXPORT_FUN bool VCL_export_test_litematic(const char *filename);
 
 // functions about resource pack

@@ -52,9 +52,32 @@ void compose_blocks(QImage &dst, const QImage &src, int idx,
   }
 }
 
-void ColorBrowser::setup_table() noexcept {
+void ColorBrowser::setup_table_basic() noexcept {
+  std::vector<uint16_t> cid;
+  cid.resize(VCL_num_basic_colors());
+  uint16_t i = 0;
+  for (uint16_t &val : cid) {
+    val = i;
+    i++;
+  }
+
+  this->setup_table(cid.data(), cid.size());
+}
+
+void ColorBrowser::setup_table_allowed() noexcept {
+  std::vector<uint16_t> cid;
+
+  cid.resize(VCL_get_allowed_color_id(nullptr, 0));
+
+  VCL_get_allowed_color_id(cid.data(), cid.capacity());
+
+  this->setup_table(cid.data(), cid.size());
+}
+
+void ColorBrowser::setup_table(const uint16_t *const color_id_list,
+                               const size_t color_count) noexcept {
   const int layers = VCL_get_max_block_layers();
-  const int color_count = VCL_num_basic_colors();
+  // const int color_count = VCL_num_basic_colors();
 
   const int col_offset = this->ui->table->columnCount();
 
@@ -78,21 +101,23 @@ void ColorBrowser::setup_table() noexcept {
   std::unordered_map<const VCL_block *, QImage> block_images;
 
   // get color and block composition
-  for (int idx = 0; idx < color_count; idx++) {
+  for (size_t idx = 0; idx < color_count; idx++) {
     auto &pair = mat_block[idx];
     pair.first.resize(layers);
 
-    const int num =
-        VCL_get_basic_color_composition(idx, pair.first.data(), &pair.second);
+    const int num = VCL_get_basic_color_composition(
+        color_id_list[idx], pair.first.data(), &pair.second);
 
     if (num <= 0) {
 
       const auto ret = QMessageBox::warning(
           this, ColorBrowser::tr("获取颜色表失败"),
           ColorBrowser::tr(
-              "在尝试获取第%1个颜色时出现错误。函数VCL_get_basic_"
-              "color_composition返回值为%2，正常情况下应当返回正数。")
+              "在尝试获取第%1个颜色(color_id = "
+              "%2)时出现错误。函数VCL_get_basic_"
+              "color_composition返回值为%3，正常情况下应当返回正数。")
               .arg(idx)
+              .arg(color_id_list[idx])
               .arg(num),
           QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore,
                                        QMessageBox::StandardButton::Close},
@@ -175,9 +200,10 @@ void ColorBrowser::setup_table() noexcept {
 
   constexpr int margin = 4;
 
-  for (int r = 0; r < color_count; r++) {
-    this->ui->table->setItem(r, col_color_idx,
-                             new QTableWidgetItem(QString::number(r)));
+  for (size_t r = 0; r < color_count; r++) {
+    this->ui->table->setItem(
+        r, col_color_idx,
+        new QTableWidgetItem(QString::number(color_id_list[r])));
 
     const uint32_t color = mat_block[r].second;
     const auto &blocks = mat_block[r].first;

@@ -514,6 +514,27 @@ VCL_EXPORT_FUN int VCL_get_allowed_colors(uint32_t *dest,
   return TokiVC::colorset_allowed.color_count();
 }
 
+VCL_EXPORT_FUN size_t VCL_get_allowed_color_id(
+    uint16_t *const dest, size_t dest_capacity_in_elements) {
+  std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+
+  if (!TokiVC_internal::is_basic_color_set_ready ||
+      !TokiVC_internal::is_basic_color_set_ready) {
+    return 0;
+  }
+
+  if (dest != nullptr) {
+    for (size_t cidx = 0;
+         cidx < std::min<size_t>(dest_capacity_in_elements,
+                                 TokiVC::colorset_allowed.color_count());
+         cidx++) {
+      dest[cidx] = TokiVC::colorset_allowed.color_id(cidx);
+    }
+  }
+
+  return TokiVC::colorset_allowed.color_count();
+}
+
 VCL_EXPORT_FUN size_t VCL_get_blocks_from_block_state_list(
     VCL_block_state_list *bsl, VCL_block **const const_VCL_ptr_arr,
     size_t arr_capcity) {
