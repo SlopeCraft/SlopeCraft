@@ -15,6 +15,13 @@ find_package(OpenMP REQUIRED)
 
 find_program(VC_lupdate_executable lupdate ${CMAKE_PREFIX_PATH})
 
+if(${WIN32})
+    configure_file(others/VisualCraft.rc.in others/VisualCraft.rc)
+    set(VisualCraft_win_files ${CMAKE_CURRENT_BINARY_DIR}/others/VisualCraft.rc)
+else()
+    set(VisualCraft_win_files)
+endif()
+
 set(VisualCraft_header_files
     VCWind.h
 
@@ -69,6 +76,7 @@ set(VisualCraft_project_sources
     ${VisualCraft_source_files}
     ${VisualCraft_ui_files}
     ${VisualCraft_ts_files}
+    ${VisualCraft_win_files}
 )
 
 if(${SlopeCraft_update_ts_files})
