@@ -1,11 +1,12 @@
 #include "TokiVC.h"
 
+#include "VCL_internal.h"
 #include <mutex>
 #include <set>
 #include <shared_mutex>
+#include <stack>
+#include <unordered_map>
 #include <variant>
-
-#include "VCL_internal.h"
 
 libImageCvt::template ImageCvter<false>::basic_colorset_t
     TokiVC::colorset_basic;
@@ -133,11 +134,12 @@ bool add_projection_image_for_bsl(const std::vector<VCL_block *> &bs_list,
   return true;
 }
 
+using mutlihash_color_blocks = std::unordered_multimap<
+    uint32_t, std::variant<const VCL_block *, std::vector<const VCL_block *>>>;
+
 bool add_color_non_transparent(
     const std::vector<VCL_block *> &bs_nontransparent,
-    std::vector<std::variant<const VCL_block *, std::vector<const VCL_block *>>>
-        &LUT_bcitb,
-    std::vector<std::array<uint8_t, 3>> &temp_rgb_rowmajor) noexcept {
+    mutlihash_color_blocks &map_color_blocks) noexcept {
   for (VCL_block *blkp : bs_nontransparent) {
     bool ok = true;
     auto ret = compute_mean_color(blkp->project_image_on_exposed_face, &ok);
@@ -145,8 +147,10 @@ bool add_color_non_transparent(
       return false;
     }
 
-    temp_rgb_rowmajor.emplace_back(ret);
-    LUT_bcitb.emplace_back(blkp);
+    map_color_blocks.emplace(ARGB32(ret[0], ret[1], ret[2]), blkp);
+
+    // temp_rgb_rowmajor.emplace_back(ret);
+    // LUT_bcitb.emplace_back(blkp);
   }
   return true;
 }
@@ -155,9 +159,7 @@ bool add_color_trans_to_nontrans(
     const block_model::EImgRowMajor_t &front,
     const std::vector<VCL_block *> &bs_nontransparent,
     const std::vector<const VCL_block *> &accumulate_blocks,
-    std::vector<std::variant<const VCL_block *, std::vector<const VCL_block *>>>
-        &LUT_bcitb,
-    std::vector<std::array<uint8_t, 3>> &temp_rgb_rowmajor) noexcept {
+    mutlihash_color_blocks &map_color_blocks) noexcept {
   if (front.size() <= 0) {
     return false;
   }
@@ -177,8 +179,10 @@ bool add_color_trans_to_nontrans(
     std::vector<const VCL_block *> blocks(accumulate_blocks);
     blocks.emplace_back(blkp);
 
-    temp_rgb_rowmajor.emplace_back(ret);
-    LUT_bcitb.emplace_back(std::move(blocks));
+    map_color_blocks.emplace(ARGB32(ret[0], ret[1], ret[2]), blocks);
+
+    // temp_rgb_rowmajor.emplace_back(ret);
+    // LUT_bcitb.emplace_back(std::move(blocks));
   }
 
   return true;
@@ -189,9 +193,7 @@ bool add_color_trans_to_trans_recurs(
     const std::vector<VCL_block *> &bs_transparent,
     const std::vector<VCL_block *> &bs_nontransparent,
     const std::vector<const VCL_block *> &accumulate_blocks,
-    std::vector<std::variant<const VCL_block *, std::vector<const VCL_block *>>>
-        &LUT_bcitb,
-    std::vector<std::array<uint8_t, 3>> &temp_rgb_rowmajor) noexcept {
+    mutlihash_color_blocks &map_color_blocks) noexcept {
   if (allowed_depth <= 0) {
     std::string msg =
         fmt::format("Invalid value for allowed_depth : {}\n", allowed_depth);
@@ -201,8 +203,7 @@ bool add_color_trans_to_trans_recurs(
 
   if (allowed_depth == 1) {
     return add_color_trans_to_nontrans(front, bs_nontransparent,
-                                       accumulate_blocks, LUT_bcitb,
-                                       temp_rgb_rowmajor);
+                                       accumulate_blocks, map_color_blocks);
   }
   block_model::EImgRowMajor_t img(front);
 
@@ -225,8 +226,10 @@ bool add_color_trans_to_trans_recurs(
         return false;
       }
 
-      LUT_bcitb.emplace_back(accumulate_blocks);
-      temp_rgb_rowmajor.emplace_back(mean);
+      map_color_blocks.emplace(ARGB32(mean[0], mean[1], mean[2]),
+                               accumulate_blocks);
+      // LUT_bcitb.emplace_back(accumulate_blocks);
+      // temp_rgb_rowmajor.emplace_back(mean);
       return true;
     }
   }
@@ -250,8 +253,8 @@ bool add_color_trans_to_trans_recurs(
     }
 
     if (!add_color_trans_to_trans_recurs(allowed_depth - 1, img, bs_transparent,
-                                         bs_nontransparent, blocks, LUT_bcitb,
-                                         temp_rgb_rowmajor)) {
+                                         bs_nontransparent, blocks,
+                                         map_color_blocks)) {
       VCL_report(VCL_report_type_t::error,
                  "Function add_color_trans_to_trans_recurs failed "
                  "because deeper recursion failed.\n");
@@ -265,9 +268,7 @@ bool add_color_trans_to_trans_recurs(
 bool add_color_trans_to_trans_start_recurse(
     const int max_allowed_depth, const std::vector<VCL_block *> &bs_transparent,
     const std::vector<VCL_block *> &bs_nontransparent,
-    std::vector<std::variant<const VCL_block *, std::vector<const VCL_block *>>>
-        &LUT_bcitb,
-    std::vector<std::array<uint8_t, 3>> &temp_rgb_rowmajor) noexcept {
+    mutlihash_color_blocks &map_color_blocks) noexcept {
   if (max_allowed_depth <= 0) {
     return false;
   }
@@ -276,10 +277,9 @@ bool add_color_trans_to_trans_start_recurse(
 
   for (const VCL_block *cblkp : bs_transparent) {
     accum[0] = cblkp;
-    if (!add_color_trans_to_trans_recurs(max_allowed_depth - 1,
-                                         cblkp->project_image_on_exposed_face,
-                                         bs_transparent, bs_nontransparent,
-                                         accum, LUT_bcitb, temp_rgb_rowmajor)) {
+    if (!add_color_trans_to_trans_recurs(
+            max_allowed_depth - 1, cblkp->project_image_on_exposed_face,
+            bs_transparent, bs_nontransparent, accum, map_color_blocks)) {
       VCL_report(
           VCL_report_type_t::error,
           "Function add_color_trans_to_trans_start_recurse failed "
@@ -289,6 +289,102 @@ bool add_color_trans_to_trans_start_recurse(
   }
 
   return true;
+}
+
+size_t blocks_count(
+    const std::variant<const VCL_block *, std::vector<const VCL_block *>>
+        &variant) noexcept {
+  if (variant.index() == 0) {
+    return 1;
+  }
+
+  return std::get<1>(variant).size();
+}
+
+bool compare_blocks_multi(const std::vector<const VCL_block *> &a,
+                          const std::vector<const VCL_block *> &b) {
+  if (a.size() != b.size()) {
+    return a.size() < b.size();
+  }
+
+  for (size_t i = 0; i < a.size(); i++) {
+    if (a[i] != b[i]) {
+      return VCL_compare_block(a[i], b[i]);
+    }
+  }
+  // if is all same
+  return false;
+}
+
+bool compare_blocks_variant(
+    const std::variant<const VCL_block *, std::vector<const VCL_block *>> &a,
+    const std::variant<const VCL_block *, std::vector<const VCL_block *>>
+        &b) noexcept {
+
+  if (blocks_count(a) != blocks_count(b)) {
+    return blocks_count(a) < blocks_count(b);
+  }
+
+  if (a.index() != b.index()) {
+    // this should no happen, but is not fatal
+    return a.index() < b.index();
+  }
+
+  if (a.index() == 0) {
+    return VCL_compare_block(std::get<0>(a), std::get<0>(b));
+  }
+
+  return compare_blocks_multi(std::get<1>(a), std::get<1>(b));
+}
+
+void convert_blocks_and_colors_from_hash_vector(
+    mutlihash_color_blocks &src,
+    std::vector<std::array<uint8_t, 3>> &colors_temp,
+    std::vector<std::variant<const VCL_block *, std::vector<const VCL_block *>>>
+        &LUT_bcitb) noexcept {
+
+  std::vector<mutlihash_color_blocks::iterator> selected_variants;
+  selected_variants.reserve(src.size());
+
+  uint32_t prev_color = 0;
+  for (auto it = src.begin(); it != src.end(); ++it) {
+    if (prev_color == it->first) {
+      continue;
+    }
+
+    auto range = src.equal_range(it->first);
+
+    assert(range.first != range.second);
+
+    auto selected = range.first;
+
+    for (auto jt = range.first; jt != range.second; ++jt) {
+      // if price of jt is smaller than selected, update selected
+      if (compare_blocks_variant(jt->second, selected->second)) {
+        selected = jt;
+      }
+    }
+
+    selected_variants.emplace_back(selected);
+    prev_color = selected->first;
+  }
+
+  std::sort(selected_variants.begin(), selected_variants.end(),
+            [](mutlihash_color_blocks::const_iterator a,
+               mutlihash_color_blocks::const_iterator b) -> bool {
+              return compare_blocks_variant(a->second, b->second);
+            });
+
+  colors_temp.clear();
+  LUT_bcitb.clear();
+  colors_temp.reserve(selected_variants.size());
+  LUT_bcitb.reserve(selected_variants.size());
+
+  for (auto &it : selected_variants) {
+    LUT_bcitb.emplace_back(std::move(it->second));
+    colors_temp.emplace_back(std::array<uint8_t, 3>{
+        getR(it->first), getG(it->first), getB(it->first)});
+  }
 }
 
 bool TokiVC::set_resource_no_lock() noexcept {
@@ -337,12 +433,9 @@ bool TokiVC::set_resource_no_lock() noexcept {
       return false;
     }
 
-    std::vector<std::array<uint8_t, 3>> colors_temp;
-    colors_temp.reserve(bs_nontransparent.size());
-    TokiVC::LUT_basic_color_idx_to_blocks.clear();
-    if (!add_color_non_transparent(bs_nontransparent,
-                                   TokiVC::LUT_basic_color_idx_to_blocks,
-                                   colors_temp)) {
+    mutlihash_color_blocks map_color_blocks;
+
+    if (!add_color_non_transparent(bs_nontransparent, map_color_blocks)) {
       VCL_report(VCL_report_type_t::error,
                  "Failed to compute mean colors for non transparent "
                  "images.\n");
@@ -350,29 +443,31 @@ bool TokiVC::set_resource_no_lock() noexcept {
     }
 
     if constexpr (false) {
-      std::string msg = fmt::format(
-          "Size of LUT_basic_color_idx_to_blocks = {}, size of colors_temp = "
-          "{}\n",
-          TokiVC::LUT_basic_color_idx_to_blocks.size(), colors_temp.size());
+      std::string msg = fmt::format("Size of map_color_blocks = {}\n",
+                                    map_color_blocks.size());
       VCL_report(VCL_report_type_t::information, msg.c_str());
     }
 
     for (int layers = 2; layers <= max_block_layers; layers++) {
       if (!add_color_trans_to_trans_start_recurse(
-              layers, bs_transparent, bs_nontransparent,
-              TokiVC::LUT_basic_color_idx_to_blocks, colors_temp)) {
+              layers, bs_transparent, bs_nontransparent, map_color_blocks)) {
         VCL_report(VCL_report_type_t::error,
                    "failed to compute colors for composed blocks.\n");
         return false;
       }
     }
+
     if constexpr (false) {
-      std::string msg = fmt::format(
-          "Size of LUT_basic_color_idx_to_blocks = {}, size of colors_temp = "
-          "{}\n",
-          TokiVC::LUT_basic_color_idx_to_blocks.size(), colors_temp.size());
+      std::string msg = fmt::format("Size of map_color_blocks = {}\n",
+                                    map_color_blocks.size());
       VCL_report(VCL_report_type_t::information, msg.c_str());
     }
+
+    std::vector<std::array<uint8_t, 3>> colors_temp;
+    TokiVC::LUT_basic_color_idx_to_blocks.clear();
+
+    convert_blocks_and_colors_from_hash_vector(
+        map_color_blocks, colors_temp, TokiVC::LUT_basic_color_idx_to_blocks);
 
     if (colors_temp.size() != TokiVC::LUT_basic_color_idx_to_blocks.size()) {
       std::string msg = fmt::format(
