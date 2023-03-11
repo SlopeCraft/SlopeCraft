@@ -2406,8 +2406,7 @@
         "class": "terracotta",
         "nameEN": "Yellow terracotta",
         "nameZH": "黄色陶瓦",
-        "version": 13,
-        "reproducible": false
+        "version": 13
     },
     "minecraft:end_bricks": {
         "class": "the_end",

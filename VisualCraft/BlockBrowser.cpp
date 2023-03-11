@@ -72,6 +72,8 @@ void BlockBrowser::fecth_content() noexcept {
     return;
   }
 
+  std::sort(blks.begin(), blks.end(), VCL_compare_block);
+
   for (VCL_block *blk : blks) {
     this->ui->combobox_select_blk_all->addItem(
         QString::fromUtf8(VCL_get_block_name(blk, ::is_language_ZH)),

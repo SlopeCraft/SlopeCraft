@@ -18,7 +18,7 @@
     <widget class="QTableWidget" name="table">
      <column>
       <property name="text">
-       <string> 颜色序号</string>
+       <string>颜色序号</string>
       </property>
      </column>
      <column>

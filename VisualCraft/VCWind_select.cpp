@@ -2,6 +2,16 @@
 #include "VC_block_class.h"
 #include "ui_VCWind.h"
 
+void VCWind::apply_selection(
+    std::function<void(const VCL_block *, QCheckBox *)> selector) noexcept {
+
+  for (auto &blk_class : this->map_VC_block_class) {
+    for (auto &blk_pair : blk_class.second->blocks_vector()) {
+      selector(blk_pair.first, blk_pair.second);
+    }
+  }
+}
+
 void VCWind::select_blocks(
     std::function<bool(const VCL_block *)> return_true_for_select) noexcept {
   for (auto &blk_class : this->map_VC_block_class) {
@@ -62,4 +72,17 @@ int VCWind::count_block_matched(std::function<bool(const VCL_block *)>
   }
 
   return counter;
+}
+
+void VCWind::on_pb_invselect_classwise_clicked() noexcept {
+  for (auto &blk_class : this->map_VC_block_class) {
+    blk_class.second->chbox_enabled()->setChecked(
+        !blk_class.second->chbox_enabled()->isChecked());
+  }
+}
+
+void VCWind::on_pb_invselect_blockwise_clicked() noexcept {
+  this->apply_selection([](const VCL_block *, QCheckBox *cb) {
+    cb->setChecked(!cb->isChecked());
+  });
 }

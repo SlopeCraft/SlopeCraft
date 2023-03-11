@@ -11,6 +11,7 @@ extern uint8_t is_language_ZH;
 class QListWidget;
 class QListWidgetItem;
 class VC_block_class;
+class QCheckBox;
 
 namespace Ui {
 class VCWind;
@@ -125,6 +126,9 @@ private:
 
   bool is_convert_algo_changed() const noexcept;
 
+  void apply_selection(
+      std::function<void(const VCL_block *, QCheckBox *)>) noexcept;
+
 public:
   void select_blocks(
       std::function<bool(const VCL_block *)> return_true_for_select) noexcept;
@@ -214,6 +218,8 @@ private slots:
   void on_pb_deselect_all_clicked() noexcept;
   void on_pb_deselect_non_reporducible_clicked() noexcept;
   void on_pb_deselect_rare_clicked() noexcept;
+  void on_pb_invselect_classwise_clicked() noexcept;
+  void on_pb_invselect_blockwise_clicked() noexcept;
 
   // auto connected
   void on_pb_custom_select_clicked() noexcept;

@@ -152,7 +152,7 @@
              <number>3</number>
             </property>
             <property name="value">
-             <number>1</number>
+             <number>2</number>
             </property>
            </widget>
           </item>
@@ -363,6 +363,13 @@
              <string>快捷键</string>
             </property>
             <layout class="QGridLayout" name="gridLayout_16">
+             <item row="8" column="0">
+              <widget class="QPushButton" name="pb_custom_select">
+               <property name="text">
+                <string>高级匹配</string>
+               </property>
+              </widget>
+             </item>
              <item row="1" column="0">
               <widget class="QPushButton" name="pb_deselect_all">
                <property name="text">
@@ -370,7 +377,28 @@
                </property>
               </widget>
              </item>
-             <item row="4" column="0">
+             <item row="3" column="0">
+              <widget class="QPushButton" name="pb_deselect_rare">
+               <property name="text">
+                <string>禁用罕见方块</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QPushButton" name="pb_select_all">
+               <property name="text">
+                <string>全部启用</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QPushButton" name="pb_deselect_non_reporducible">
+               <property name="text">
+                <string>禁用不可再生</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="0">
               <spacer name="verticalSpacer_4">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
@@ -383,31 +411,17 @@
                </property>
               </spacer>
              </item>
-             <item row="3" column="0">
-              <widget class="QPushButton" name="pb_deselect_rare">
-               <property name="text">
-                <string>禁用罕见方块</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
-              <widget class="QPushButton" name="pb_deselect_non_reporducible">
-               <property name="text">
-                <string>禁用不可再生</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QPushButton" name="pb_select_all">
-               <property name="text">
-                <string>全部启用</string>
-               </property>
-              </widget>
-             </item>
              <item row="5" column="0">
-              <widget class="QPushButton" name="pb_custom_select">
+              <widget class="QPushButton" name="pb_invselect_blockwise">
                <property name="text">
-                <string>高级匹配</string>
+                <string>全部反选</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0">
+              <widget class="QPushButton" name="pb_invselect_classwise">
+               <property name="text">
+                <string>按类反选</string>
                </property>
               </widget>
              </item>

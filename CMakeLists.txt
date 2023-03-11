@@ -52,7 +52,7 @@ if(NOT DEFINED SlopeCraft_update_ts_files)
     option(SlopeCraft_update_ts_files "Update language files before build" OFF)
 endif()
 
-# set(SlopeCraft_update_ts_files ON)
+set(SlopeCraft_update_ts_files ON)
 
 # find lupdate executable
 if(${SlopeCraft_update_ts_files} AND(NOT DEFINED SlopeCraft_Qt_lupdate_executable))
