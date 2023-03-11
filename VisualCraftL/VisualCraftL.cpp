@@ -655,6 +655,31 @@ VCL_EXPORT_FUN bool VCL_is_block_suitable_for_version(const VCL_block *blk,
   return blk->version_info.match(version);
 }
 
+VCL_EXPORT_FUN bool VCL_compare_block(const VCL_block *b1,
+                                      const VCL_block *b2) {
+  // if one of these blocks contains null, compare by index
+  if ((b1 == nullptr) || (b2 == nullptr)) {
+    return b1 < b2;
+  }
+
+  // compare by class
+  if (b1->block_class != b2->block_class) {
+    return b1->block_class < b2->block_class;
+  }
+
+  // compare by introduced version. Earlier versions are greater
+  {
+    const auto v1 = b1->version_info.introduced_version();
+    const auto v2 = b2->version_info.introduced_version();
+
+    if (v1 != v2) {
+      return v1 < v2;
+    }
+  }
+
+  return std::less<std::string>()(*b1->full_id_ptr(), *b2->full_id_ptr());
+}
+
 VCL_EXPORT_FUN VCL_block_class_t VCL_string_to_block_class(const char *str,
                                                            bool *ok) {
   return string_to_block_class(str, ok);

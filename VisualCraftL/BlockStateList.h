@@ -52,6 +52,15 @@ public:
   inline bool operator==(const version_set &vs) const noexcept {
     return this->to_u32() == vs.to_u32();
   }
+
+  SCL_gameVersion introduced_version() const noexcept {
+    for (size_t i = 0; i < 32; i++) {
+      if (this->set[i]) {
+        return SCL_gameVersion(i);
+      }
+    }
+    return SCL_gameVersion::FUTURE;
+  }
 };
 
 class VCL_block_state_list;

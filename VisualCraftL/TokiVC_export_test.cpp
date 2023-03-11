@@ -7,6 +7,7 @@
 const VCL_block *
 find_first_mark_block(const std::unordered_map<const VCL_block *, uint16_t>
                           &blocks_allowed) noexcept {
+  const VCL_block *p = nullptr;
   for (const auto &pair : blocks_allowed) {
     if (pair.first->is_air()) {
       continue;
@@ -14,9 +15,12 @@ find_first_mark_block(const std::unordered_map<const VCL_block *, uint16_t>
     if (pair.first->is_disabled()) {
       continue;
     }
-    return pair.first;
+
+    if (VCL_compare_block(p, pair.first)) {
+      p = pair.first;
+    }
   }
-  return nullptr;
+  return p;
 }
 
 bool TokiVC::export_test_litematic_no_lock(const char *filename) noexcept {

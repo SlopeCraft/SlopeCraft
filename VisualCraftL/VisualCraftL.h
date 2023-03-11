@@ -382,6 +382,7 @@ VCL_EXPORT_FUN VCL_block_class_t VCL_get_block_class(const VCL_block *);
 VCL_EXPORT_FUN void VCL_set_block_class(VCL_block *, VCL_block_class_t cl);
 VCL_EXPORT_FUN bool VCL_is_block_suitable_for_version(const VCL_block *,
                                                       SCL_gameVersion version);
+VCL_EXPORT_FUN bool VCL_compare_block(const VCL_block *b1, const VCL_block *b2);
 
 VCL_EXPORT_FUN VCL_block_class_t VCL_string_to_block_class(const char *str,
                                                            bool *ok = nullptr);

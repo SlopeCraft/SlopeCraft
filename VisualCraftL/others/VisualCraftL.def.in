@@ -38,6 +38,7 @@ VCL_get_block_id
 VCL_get_block_id_version
 VCL_get_block_name
 VCL_is_block_suitable_for_version
+VCL_compare_block
 VCL_string_to_block_class
 VCL_get_block_model
 VCL_get_block_model_by_name

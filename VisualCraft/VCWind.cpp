@@ -358,6 +358,8 @@ void VCWind::setup_block_widgets() noexcept {
                            QString::fromUtf8(magic_enum::enum_name(bcl)) +
                            " (" + QString::number(blocks[bcl].size()) + ") ");
 
+    std::sort(blocks[bcl].begin(), blocks[bcl].end(), VCL_compare_block);
+
     class_widget->set_blocks(blocks[bcl].size(), blocks[bcl].data(), 4);
 
     // set images for radio buttons
