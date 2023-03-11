@@ -8,14 +8,20 @@ namespace Ui {
 class ColorBrowser;
 }
 
+// class private_class_setup_chart;
+
 class ColorBrowser : public QWidget {
   Q_OBJECT
 private:
   Ui::ColorBrowser *ui;
+  // private_class_setup_chart *thread{nullptr};
 
 public:
   explicit ColorBrowser(QWidget *parent);
   ~ColorBrowser();
+
+  void setup_table() noexcept;
+  // void setup_table_threaded() noexcept;
 };
 
 #endif // SLOPECRAFT_VISUALCRAFT_COLORBROWSER_H

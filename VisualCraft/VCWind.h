@@ -192,6 +192,7 @@ private slots:
   // auto connected
   void on_ac_browse_block_triggered() noexcept;
   void on_ac_browse_biome_triggered() noexcept;
+  void on_ac_browse_basic_colors_triggered() noexcept;
 
   // for page 0 ------------------------------------------
 

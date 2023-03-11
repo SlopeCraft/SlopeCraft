@@ -438,9 +438,9 @@ VCL_get_basic_color_composition(size_t color_idx,
 
   if (color != nullptr) {
     const uint16_t color_id = TokiVC::colorset_basic.color_id(color_idx);
-    *color = ARGB32(TokiVC::colorset_basic.RGB(color_id, 0),
-                    TokiVC::colorset_basic.RGB(color_id, 1),
-                    TokiVC::colorset_basic.RGB(color_id, 2));
+    *color = ARGB32(TokiVC::colorset_basic.RGB(color_id, 0) * 255,
+                    TokiVC::colorset_basic.RGB(color_id, 1) * 255,
+                    TokiVC::colorset_basic.RGB(color_id, 2) * 255);
   }
 
   const auto &variant = TokiVC::LUT_bcitb()[color_idx];

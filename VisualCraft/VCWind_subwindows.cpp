@@ -1,6 +1,7 @@
 #include "BiomeBrowser.h"
 #include "BlockBrowser.h"
 #include "BlockSelector.h"
+#include "ColorBrowser.h"
 #include "VCWind.h"
 #include "ui_VCWind.h"
 #include <QDesktopServices>
@@ -80,4 +81,20 @@ void VCWind::on_pb_custom_select_clicked() noexcept {
   bs->setWindowFlag(Qt::WindowType::Window, true);
 
   bs->show();
+}
+
+void VCWind::on_ac_browse_basic_colors_triggered() noexcept {
+  ColorBrowser *cb = new ColorBrowser(this);
+
+  cb->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
+  cb->setAttribute(Qt::WidgetAttribute::WA_AlwaysStackOnTop, true);
+  // bb->setAttribute(Qt::WidgetAttribute::WA_NativeWindow, true);
+  cb->setWindowFlag(Qt::WindowType::Window, true);
+
+  connect(this, &VCWind::signal_basic_colorset_changed, cb,
+          &QWidget::deleteLater);
+
+  cb->show();
+
+  cb->setup_table();
 }

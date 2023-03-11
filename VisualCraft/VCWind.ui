@@ -1168,6 +1168,7 @@
     </property>
     <addaction name="ac_browse_block"/>
     <addaction name="ac_browse_biome"/>
+    <addaction name="ac_browse_basic_colors"/>
    </widget>
    <widget class="QMenu" name="menu_resource">
     <property name="title">
@@ -1276,6 +1277,14 @@
    </property>
    <property name="text">
     <string>生成测试投影</string>
+   </property>
+  </action>
+  <action name="ac_browse_basic_colors">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>查看所有颜色</string>
    </property>
   </action>
  </widget>

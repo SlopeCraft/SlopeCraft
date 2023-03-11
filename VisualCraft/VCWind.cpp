@@ -477,6 +477,7 @@ void VCWind::setup_basical_colorset() noexcept {
   }
 
   this->setup_block_widgets();
+  this->ui->ac_browse_basic_colors->setEnabled(true);
 }
 
 QByteArray VCWind::checksum_allowed_colorset_option(
