@@ -149,8 +149,7 @@ void BlockBrowser::update_display() noexcept {
   VCL_face_t face =
       this->ui->combobox_select_face->currentData().value<VCL_face_t>();
 
-  VCL_model *md =
-      VCL_get_block_model(blk, VCL_get_resource_pack(), face, nullptr);
+  VCL_model *md = VCL_get_block_model(blk, VCL_get_resource_pack());
 
   if (md == nullptr) {
     return;

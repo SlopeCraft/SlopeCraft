@@ -560,6 +560,17 @@ block_model::face_idx string_to_face_idx(std::string_view str,
                                          bool *const _ok) noexcept;
 const char *face_idx_to_string(block_model::face_idx) noexcept;
 
+struct model_with_rotation {
+  const block_model::model *model_ptr{nullptr};
+  block_model::face_rot x_rot{block_model::face_rot::face_rot_0};
+  block_model::face_rot y_rot{block_model::face_rot::face_rot_0};
+};
+
+class VCL_model {
+public:
+  std::variant<model_with_rotation, block_model::model> value;
+};
+
 class VCL_resource_pack;
 using resource_pack = VCL_resource_pack;
 /**
@@ -651,16 +662,14 @@ public:
     resource_json::state_list state_list;
   };
 
-  std::variant<const block_model::model *, block_model::model>
-  find_model(const std::string &block_state_str, VCL_face_t face_exposed,
-             VCL_face_t *face_invrotated) const noexcept {
+  std::variant<model_with_rotation, block_model::model>
+  find_model(const std::string &block_state_str) const noexcept {
     buffer_t b;
-    return this->find_model(block_state_str, face_exposed, face_invrotated, b);
+    return this->find_model(block_state_str, b);
   }
 
-  std::variant<const block_model::model *, block_model::model>
-  find_model(const std::string &block_state_str, VCL_face_t face_exposed,
-             VCL_face_t *face_invrotated, buffer_t &) const noexcept;
+  std::variant<model_with_rotation, block_model::model>
+  find_model(const std::string &block_state_str, buffer_t &) const noexcept;
 
   bool compute_projection(const std::string &block_state_str,
                           VCL_face_t face_exposed,
@@ -723,8 +732,4 @@ private:
   bool copy(const VCL_resource_pack &src) noexcept;
 };
 
-class VCL_model {
-public:
-  std::variant<const block_model::model *, block_model::model> value;
-};
 #endif // SLOPECRAFT_VISUALCRAFTL_PARSERESOURCEPACK_H

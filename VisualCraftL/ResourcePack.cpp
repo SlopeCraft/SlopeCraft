@@ -193,10 +193,8 @@ bool resource_json::process_full_id(std::string_view full_id,
   return true;
 }
 
-std::variant<const block_model::model *, block_model::model>
+std::variant<model_with_rotation, block_model::model>
 VCL_resource_pack::find_model(const std::string &block_state_str,
-                              VCL_face_t face_exposed,
-                              VCL_face_t *face_invrotated,
                               buffer_t &buffer) const noexcept {
 
   if (!resource_json::process_full_id(block_state_str, nullptr, &buffer.pure_id,
@@ -207,11 +205,11 @@ VCL_resource_pack::find_model(const std::string &block_state_str,
                     block_state_str.c_str());
 
     VCL_report(VCL_report_type_t::error, msg.c_str());
-    return nullptr;
+    return model_with_rotation{nullptr};
   }
 
   constexpr bool display_statelist_here = false;
-  if (display_statelist_here) {
+  if constexpr (display_statelist_here) {
     std::string msg = "statelist = [";
 
     for (const auto &i : buffer.state_list) {
@@ -238,7 +236,7 @@ VCL_resource_pack::find_model(const std::string &block_state_str,
                     "is : \"{}\"  and full block id is : \"{}\"\n",
                     buffer.pure_id, block_state_str);
     VCL_report(VCL_report_type_t::error, msg.c_str());
-    return nullptr;
+    return model_with_rotation{nullptr};
   }
 
   if (it_state->second.index() == 0) {
@@ -246,10 +244,7 @@ VCL_resource_pack::find_model(const std::string &block_state_str,
         std::get<resource_json::block_states_variant>(it_state->second)
             .block_model_name(buffer.state_list);
 
-    face_exposed = block_model::invrotate_y(face_exposed, model.y);
-    face_exposed = block_model::invrotate_x(face_exposed, model.x);
-
-    *face_invrotated = face_exposed;
+    // face_exposed = block_model::invrotate(face_exposed, model.x, model.y);
 
     if (model.model_name == nullptr) {
       std::string msg =
@@ -257,7 +252,7 @@ VCL_resource_pack::find_model(const std::string &block_state_str,
                       "because block states mismatch.",
                       block_state_str);
       VCL_report(VCL_report_type_t::error, msg.c_str());
-      return nullptr;
+      return model_with_rotation{nullptr};
     }
     {
       std::string sv(model.model_name);
@@ -280,10 +275,10 @@ VCL_resource_pack::find_model(const std::string &block_state_str,
           "undefined reference to model named \"{}\".\n",
           block_state_str.c_str(), model.model_name);
       VCL_report(VCL_report_type_t::error, msg.c_str());
-      return nullptr;
+      return model_with_rotation{nullptr};
     }
 
-    return &it_model->second;
+    return model_with_rotation{&it_model->second, model.x, model.y};
   }
   // Here the block must be a multipart
   const auto &multipart =
@@ -302,14 +297,14 @@ VCL_resource_pack::find_model(const std::string &block_state_str,
       std::string msg =
           fmt::format("File = {}, line = {}\n", __FILE__, __LINE__);
       VCL_report(VCL_report_type_t::error, msg.c_str());
-      return nullptr;
+      return model_with_rotation{nullptr};
     }
   }
 
   if (models.size() <= 0) {
     std::string msg = fmt::format("File = {}, line = {}\n", __FILE__, __LINE__);
     VCL_report(VCL_report_type_t::error, msg.c_str());
-    return nullptr;
+    return model_with_rotation{nullptr};
   }
 
   block_model::model md;
@@ -335,7 +330,7 @@ VCL_resource_pack::find_model(const std::string &block_state_str,
           "undefined reference to model named \"{}\".\n",
           block_state_str.c_str(), models[mdidx].model_name);
       VCL_report(VCL_report_type_t::error, msg.c_str());
-      return nullptr;
+      return model_with_rotation{nullptr};
     }
     if constexpr (false) {
       std::string msg =
@@ -354,12 +349,12 @@ bool VCL_resource_pack::compute_projection(
     const std::string &block_state_str, VCL_face_t face_exposed,
     block_model::EImgRowMajor_t *const img, buffer_t &buffer) const noexcept {
 
-  std::variant<const block_model::model *, block_model::model> ret =
-      this->find_model(block_state_str, face_exposed, &face_exposed, buffer);
+  std::variant<model_with_rotation, block_model::model> ret =
+      this->find_model(block_state_str, buffer);
 
   if (ret.index() == 0) {
     auto model = std::get<0>(ret);
-    if (model == nullptr) {
+    if (model.model_ptr == nullptr) {
       std::string msg =
           fmt::format("failed to find a block model for full id :\"{}\", "
                       "function find_model returned nullptr\n",
@@ -368,7 +363,8 @@ bool VCL_resource_pack::compute_projection(
       return false;
     }
 
-    model->projection_image(face_exposed, img);
+    model.model_ptr->projection_image(
+        block_model::invrotate(face_exposed, model.x_rot, model.y_rot), img);
     return true;
   }
 

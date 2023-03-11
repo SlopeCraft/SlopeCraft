@@ -366,8 +366,7 @@ void VCWind::setup_block_widgets() noexcept {
               &VCWind::when_algo_dither_bottons_toggled);
 
       VCL_model *model =
-          VCL_get_block_model(pair.first, VCL_get_resource_pack(),
-                              this->current_selected_face(), nullptr);
+          VCL_get_block_model(pair.first, VCL_get_resource_pack());
 
       if (model == nullptr) {
         continue;

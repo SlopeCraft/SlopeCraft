@@ -40,7 +40,6 @@ VCL_get_block_name
 VCL_is_block_suitable_for_version
 VCL_string_to_block_class
 VCL_get_block_model
-VCL_get_block_model_by_name
 VCL_destroy_block_model
 VCL_compute_projection_image
 VCL_display_model

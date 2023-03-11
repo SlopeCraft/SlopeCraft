@@ -662,39 +662,22 @@ VCL_EXPORT_FUN VCL_block_class_t VCL_string_to_block_class(const char *str,
 
 [[nodiscard]] VCL_EXPORT_FUN VCL_model *
 VCL_get_block_model(const VCL_block *block,
-                    const VCL_resource_pack *resource_pack,
-                    VCL_face_t face_exposed, VCL_face_t *face_invrotated) {
+                    const VCL_resource_pack *resource_pack) {
   if (block->full_id_ptr() == nullptr) {
     return nullptr;
   }
-  VCL_face_t temp_fi;
-  auto model_variant =
-      resource_pack->find_model(*block->full_id_ptr(), face_exposed, &temp_fi);
 
-  if (model_variant.index() == 0 && std::get<0>(model_variant) == nullptr) {
+  auto model_variant = resource_pack->find_model(*block->full_id_ptr());
+
+  if (model_variant.index() == 0 &&
+      std::get<0>(model_variant).model_ptr == nullptr) {
     return nullptr;
   }
 
   VCL_model *ret = new VCL_model;
   ret->value = std::move(model_variant);
 
-  if (face_invrotated != nullptr) {
-    *face_invrotated = temp_fi;
-  }
   VCL_report(VCL_report_type_t::warning, nullptr, true);
-  return ret;
-}
-
-[[nodiscard]] VCL_EXPORT_FUN VCL_model *
-VCL_get_block_model_by_name(const VCL_resource_pack *rp, const char *name) {
-  auto it = rp->get_models().find(name);
-
-  if (it == rp->get_models().end()) {
-    return nullptr;
-  }
-
-  VCL_model *ret = new VCL_model;
-  ret->value = &it->second;
   return ret;
 }
 
@@ -715,7 +698,9 @@ VCL_EXPORT_FUN bool VCL_compute_projection_image(const VCL_model *md,
   const block_model::model *mdptr = nullptr;
 
   if (md->value.index() == 0) {
-    mdptr = std::get<0>(md->value);
+    mdptr = std::get<0>(md->value).model_ptr;
+    face = block_model::invrotate(face, std::get<0>(md->value).x_rot,
+                                  std::get<0>(md->value).y_rot);
   } else {
     mdptr = &std::get<1>(md->value);
   }
@@ -748,7 +733,7 @@ VCL_EXPORT_FUN void VCL_display_model(const VCL_model *md) {
 
   if (md->value.index() == 0) {
     msg.append("Is variant.\n");
-    mdp = std::get<0>(md->value);
+    mdp = std::get<0>(md->value).model_ptr;
   } else {
     msg.append("Is multipart.\n");
     mdp = &std::get<1>(md->value);
