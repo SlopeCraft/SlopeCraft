@@ -136,6 +136,10 @@ public:
 
   static bool export_test_litematic_no_lock(const char *filename) noexcept;
 
+  static const auto &LUT_bcitb() noexcept {
+    return TokiVC::LUT_basic_color_idx_to_blocks;
+  }
+
 private:
   static std::vector<
       std::variant<const VCL_block *, std::vector<const VCL_block *>>>

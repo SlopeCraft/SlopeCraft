@@ -14,6 +14,8 @@ VCL_get_block_state_list
 VCL_get_game_version
 VCL_get_exposed_face
 VCL_get_max_block_layers
+VCL_num_basic_colors
+VCL_get_basic_color_composition
 VCL_set_allowed_blocks
 VCL_discard_allowed_blocks
 VCL_is_allowed_colorset_ok

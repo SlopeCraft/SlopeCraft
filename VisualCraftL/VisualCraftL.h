@@ -301,6 +301,14 @@ VCL_EXPORT_FUN VCL_block_state_list *VCL_get_block_state_list();
 VCL_EXPORT_FUN SCL_gameVersion VCL_get_game_version();
 VCL_EXPORT_FUN VCL_face_t VCL_get_exposed_face();
 VCL_EXPORT_FUN int VCL_get_max_block_layers();
+VCL_EXPORT_FUN size_t VCL_num_basic_colors();
+/**
+  \returns the number of blocks of this color.
+*/
+VCL_EXPORT_FUN int
+VCL_get_basic_color_composition(size_t color_idx,
+                                const VCL_block **const blocks_dest = nullptr,
+                                uint32_t *const color_dest = nullptr);
 
 // set allowed blocks for kernel
 VCL_EXPORT_FUN bool

@@ -417,6 +417,53 @@ VCL_EXPORT_FUN VCL_face_t VCL_get_exposed_face() {
   return TokiVC::exposed_face;
 }
 
+VCL_EXPORT_FUN size_t VCL_num_basic_colors() {
+  std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+  return TokiVC::LUT_bcitb().size();
+}
+
+VCL_EXPORT_FUN int
+VCL_get_basic_color_composition(size_t color_idx,
+                                const VCL_block **const blocks_dest,
+                                uint32_t *const color) {
+  std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+
+  if (!TokiVC_internal::is_basic_color_set_ready) {
+    return -1;
+  }
+
+  if (color_idx >= TokiVC::LUT_bcitb().size()) {
+    return false;
+  }
+
+  if (color != nullptr) {
+    const uint16_t color_id = TokiVC::colorset_basic.color_id(color_idx);
+    *color = ARGB32(TokiVC::colorset_basic.RGB(color_id, 0),
+                    TokiVC::colorset_basic.RGB(color_id, 1),
+                    TokiVC::colorset_basic.RGB(color_id, 2));
+  }
+
+  const auto &variant = TokiVC::LUT_bcitb()[color_idx];
+  const VCL_block *const *srcp = nullptr;
+  size_t num_blocks = 0;
+  if (variant.index() == 0) {
+    srcp = &std::get<0>(variant);
+    num_blocks = 1;
+  } else {
+    const auto &vec = std::get<1>(variant);
+    srcp = vec.data();
+    num_blocks = vec.size();
+  }
+
+  if (blocks_dest != nullptr) {
+    for (size_t i = 0; i < num_blocks; i++) {
+      blocks_dest[i] = srcp[i];
+    }
+  }
+
+  return num_blocks;
+}
+
 VCL_EXPORT_FUN bool
 VCL_set_allowed_blocks(const VCL_block *const *const blocks_allowed,
                        size_t num_block_allowed) {
