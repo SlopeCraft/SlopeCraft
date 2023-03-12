@@ -811,7 +811,7 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
     <message>
         <location filename="../VCWind_subwindows.cpp" line="68"/>
         <source>由于颜色数量很多，VisualCraft使用了显卡加速。目前支持的API有OpenCL。现在正在使用的API是%1</source>
-        <translation type="unfinished">The great amount of colors makes GPU accleration necessary. Now OpenCL is supported, and %1 is what currently being used.</translation>
+        <translation>The great amount of colors makes GPU accleration necessary. Now OpenCL is supported, and %1 is what currently being used.</translation>
     </message>
     <message>
         <location filename="../VCWind_subwindows.cpp" line="171"/>
