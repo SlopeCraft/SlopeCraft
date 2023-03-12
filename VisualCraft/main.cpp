@@ -8,6 +8,9 @@
 #include <QTranslator>
 
 QNetworkAccessManager *global_manager{nullptr};
+std::pair<QString, QString> url_for_update{
+    "https://api.github.com/repos/SlopeCraft/SlopeCraft/releases",
+    "https://github.com/SlopeCraft/SlopeCraft/releases"};
 
 bool parse_config_json(QString &err) noexcept;
 
@@ -59,10 +62,8 @@ int main(int argc, char **argv) {
 
   wind.show();
 
-  wind.retrieve_latest_version(
-      "https://api.github.com/repos/ToKiNoBug/SlopeCraft/releases/latest",
-      manager, "https://github.com/ToKiNoBug/SlopeCraft/releases/latest",
-      false);
+  wind.retrieve_latest_version(url_for_update.first, manager,
+                               url_for_update.second, false);
 
   return qapp.exec();
 }

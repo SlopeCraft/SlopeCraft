@@ -10,6 +10,8 @@
 extern uint8_t is_language_ZH;
 extern QNetworkAccessManager *global_manager;
 
+extern std::pair<QString, QString> url_for_update;
+
 class QListWidget;
 class QListWidgetItem;
 class VC_block_class;
