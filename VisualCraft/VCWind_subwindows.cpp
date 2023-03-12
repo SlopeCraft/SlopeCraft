@@ -169,8 +169,12 @@ void VCWind::when_network_finished(QNetworkReply *reply, QString url_download,
             .arg(reply->url().toString())
             .arg(e.what()),
         QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore});
+    reply->deleteLater();
     return;
   }
+
+  reply->deleteLater();
+  reply = nullptr;
 
   if (is_prerelase) {
     return;
