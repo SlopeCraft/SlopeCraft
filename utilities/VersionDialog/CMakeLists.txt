@@ -20,11 +20,10 @@ set(VersionDialog_project_sources
     ${VersionDialog_source_files}
     ${VersionDialog_ui_files})
 
-if(${SlopeCraft_update_ts_files})
-    execute_process(COMMAND ${SlopeCraft_Qt_lupdate_executable} ${VersionDialog_header_files} ${VersionDialog_source_files} ${VersionDialog_ui_files} -ts others/VersionDialog_en_US.ts -no-obsolete
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} COMMAND_ERROR_IS_FATAL ANY)
-endif()
-
+# if(${SlopeCraft_update_ts_files})
+# execute_process(COMMAND ${SlopeCraft_Qt_lupdate_executable} ${VersionDialog_header_files} ${VersionDialog_source_files} ${VersionDialog_ui_files} -ts others/VersionDialog_en_US.ts -no-obsolete
+# WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} COMMAND_ERROR_IS_FATAL ANY)
+# endif()
 add_library(VersionDialog STATIC
     ${VersionDialog_project_sources})
 

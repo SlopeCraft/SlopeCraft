@@ -60,7 +60,9 @@ int main(int argc, char **argv) {
 
   VCL_set_report_callback(VC_callback::callback_receive_report);
 
-  wind.setWindowTitle(QStringLiteral("VisualCraft v%1").arg(SC_VERSION_STR));
+  wind.setWindowTitle(
+      QStringLiteral("VisualCraft v%1  Copyright © 2021-2023 TokiNoBug")
+          .arg(SC_VERSION_STR));
 
   wind.show();
 

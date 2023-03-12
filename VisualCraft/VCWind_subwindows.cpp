@@ -67,11 +67,11 @@ void VCWind::on_ac_contact_bilibili_triggered() noexcept {
   QDesktopServices::openUrl(QUrl("https://space.bilibili.com/351429231"));
 }
 void VCWind::on_ac_contact_github_repo_triggered() noexcept {
-  QDesktopServices::openUrl(QUrl("https://github.com/ToKiNoBug/SlopeCraft"));
+  QDesktopServices::openUrl(QUrl("https://github.com/SlopeCraft"));
 }
 void VCWind::on_ac_report_bugs_triggered() noexcept {
   QDesktopServices::openUrl(
-      QUrl("https://github.com/ToKiNoBug/SlopeCraft/issues/new/choose"));
+      QUrl("https://github.com/SlopeCraft/SlopeCraft/issues/new/choose"));
 }
 
 void VCWind::on_pb_custom_select_clicked() noexcept {

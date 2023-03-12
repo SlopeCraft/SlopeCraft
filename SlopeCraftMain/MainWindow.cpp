@@ -572,7 +572,7 @@ void MainWindow::InitializeAll() {
 }
 
 void MainWindow::contactG() {
-  QDesktopServices::openUrl(QUrl("github.com/ToKiNoBug"));
+  QDesktopServices::openUrl(QUrl("github.com/SlopeCraft"));
 }
 
 void MainWindow::contactB() {
@@ -590,12 +590,12 @@ void MainWindow::turnToPage(int page) {
 
   newtitle += SlopeCraft::SCL_getSCLVersion();
 #ifdef WIN32
-  newtitle += " Copyright © 2021-2022 TokiNoBug    "; // windows
+  newtitle += " Copyright © 2021-2023 TokiNoBug    "; // windows
 #elif defined(_MAC) || defined(__APPLE__)
   newtitle +=
-      " Copyright © 2021-2022 TokiNoBug,AbrasiveBoar, Cubik65536   "; // macOs
+      " Copyright © 2021-2023 TokiNoBug,AbrasiveBoar, Cubik65536   "; // macOs
 #else
-  newtitle += " Copyright © 2021-2022 TokiNoBug    "; // unknown platform
+  newtitle += " Copyright © 2021-2023 TokiNoBug    "; // unknown platform
 #endif
 
   switch (page) {
@@ -1985,7 +1985,7 @@ void MainWindow::on_AllowForcedOpti_stateChanged(int arg1) {
 }
 
 void MainWindow::on_reportBugs_clicked() {
-  QUrl url("https://github.com/ToKiNoBug/SlopeCraft/issues/new/choose");
+  QUrl url("https://github.com/SlopeCraft/SlopeCraft/issues/new/choose");
   QDesktopServices::openUrl(url);
 }
 
