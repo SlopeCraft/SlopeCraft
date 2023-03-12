@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2022  TokiNoBug
+ Copyright © 2021-2023  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -13,39 +13,29 @@ This file is part of SlopeCraft.
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with SlopeCraft.  If not, see <https://www.gnu.org/licenses/>.
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
 
     Contact with me:
-    github:https://github.com/ToKiNoBug
+    github:https://github.com/SlopeCraft/SlopeCraft
     bilibili:https://space.bilibili.com/351429231
 */
 
 #include "TaskBox.h"
 
-TaskType TaskBox::taskType=TaskType::Litematica;
+TaskType TaskBox::taskType = TaskType::Litematica;
 
-TaskBox::TaskBox(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::TaskBox)
-{
-    ui->setupUi(this);
-    mapCols=0;
-    mapRows=0;
+TaskBox::TaskBox(QWidget *parent) : QWidget(parent), ui(new Ui::TaskBox) {
+  ui->setupUi(this);
+  mapCols = 0;
+  mapRows = 0;
 }
 
-TaskBox::~TaskBox()
-{
-    delete ui;
-}
-
+TaskBox::~TaskBox() { delete ui; }
 
 void TaskBox::on_browseImage_clicked() {
-    QString imgPath=QFileDialog::getOpenFileName(this,
-                                                  tr("选择图片"),
-                                                  "./",
-                                                  tr("图片(*.png *.bmp *.jpg *.tif *.GIF )"));
-    if(imgPath.isEmpty())
-        return;
-    setTask(imgPath);
+  QString imgPath = QFileDialog::getOpenFileName(
+      this, tr("选择图片"), "./", tr("图片(*.png *.bmp *.jpg *.tif *.GIF )"));
+  if (imgPath.isEmpty())
+    return;
+  setTask(imgPath);
 }
-

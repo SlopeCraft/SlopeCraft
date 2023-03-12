@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2022  TokiNoBug
+ Copyright © 2021-2023  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -13,47 +13,46 @@ This file is part of SlopeCraft.
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with SlopeCraft.  If not, see <https://www.gnu.org/licenses/>.
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
 
     Contact with me:
-    github:https://github.com/ToKiNoBug
+    github:https://github.com/SlopeCraft/SlopeCraft
     bilibili:https://space.bilibili.com/351429231
 */
 
 #ifndef SLOPECRAFTL_GLOBAL_H
 #define SLOPECRAFTL_GLOBAL_H
 
-#if defined(_MSC_VER) || defined(WIN64) || defined(_WIN64) || defined(__WIN64__) || defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
-#  define Q_DECL_EXPORT __declspec(dllexport)
-#  define Q_DECL_IMPORT __declspec(dllimport)
+#if defined(_MSC_VER) || defined(WIN64) || defined(_WIN64) ||                  \
+    defined(__WIN64__) || defined(WIN32) || defined(_WIN32) ||                 \
+    defined(__WIN32__) || defined(__NT__)
+#define Q_DECL_EXPORT __declspec(dllexport)
+#define Q_DECL_IMPORT __declspec(dllimport)
 #else
-#  define Q_DECL_EXPORT     __attribute__((visibility("default")))
-#  define Q_DECL_IMPORT     __attribute__((visibility("default")))
+#define Q_DECL_EXPORT __attribute__((visibility("default")))
+#define Q_DECL_IMPORT __attribute__((visibility("default")))
 #endif
 
 #if defined(SLOPECRAFTL_LIBRARY)
-#  define SLOPECRAFTL_EXPORT Q_DECL_EXPORT
+#define SLOPECRAFTL_EXPORT Q_DECL_EXPORT
 #else
-#  define SLOPECRAFTL_EXPORT Q_DECL_IMPORT
+#define SLOPECRAFTL_EXPORT Q_DECL_IMPORT
 #endif
-
 
 #define SCL_EXPORT SLOPECRAFTL_EXPORT
 
-
 #ifndef SCL_external_class
-    #ifdef SCL_CAPI
-        #define SCL_external_class struct
-    #else
-        #define SCL_external_class class SCL_EXPORT
-    #endif
+#ifdef SCL_CAPI
+#define SCL_external_class struct
+#else
+#define SCL_external_class class SCL_EXPORT
+#endif
 #endif
 
-
 #ifdef SLOPECRAFTL_NOT_INSTALLED
-    #include <SC_version_buildtime.h>
+#include <SC_version_buildtime.h>
 #else
-    #include "SC_version_buildtime.h"
-#endif//SLOPECRAFTL_NOT_INSTALLED
+#include "SC_version_buildtime.h"
+#endif // SLOPECRAFTL_NOT_INSTALLED
 
 #endif // SLOPECRAFTL_GLOBAL_H

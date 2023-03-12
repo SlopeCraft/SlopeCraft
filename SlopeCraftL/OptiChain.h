@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2022  TokiNoBug
+ Copyright © 2021-2023  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -13,28 +13,28 @@ This file is part of SlopeCraft.
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with SlopeCraft.  If not, see <https://www.gnu.org/licenses/>.
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
 
     Contact with me:
-    github:https://github.com/ToKiNoBug
+    github:https://github.com/SlopeCraft/SlopeCraft
     bilibili:https://space.bilibili.com/351429231
 */
 
 #ifndef OPTICHAIN_H
 #define OPTICHAIN_H
-//#define showImg
-//#define removeQt
-//#define sendInfo
+// #define showImg
+// #define removeQt
+// #define sendInfo
 
+#include "SCLDefines.h"
 #include <iostream>
-#include <string>
 #include <list>
 #include <queue>
-#include "SCLDefines.h"
+#include <string>
 
-//using namespace std;
-//using namespace Eigen;
-enum RegionType {idp,Hang,Invalid};
+// using namespace std;
+// using namespace Eigen;
+enum RegionType { idp, Hang, Invalid };
 
 #ifndef removeQt
 extern ARGB isTColor;
@@ -43,68 +43,67 @@ extern ARGB WaterColor;
 extern ARGB greyColor;
 
 #endif
-class Region
-{
+class Region {
 public:
-    Region(short=-1,short=-1,RegionType=Invalid);
-    short Beg;
-    short End;
-    RegionType type;
-    bool isIDP() const;
-    bool isHang() const;
-    bool isValid() const;
-    int size() const;
-    short indexLocal2Global(short) const;
-    short indexGlobal2Local(short) const;
-    std::string toString() const;
+  Region(short = -1, short = -1, RegionType = Invalid);
+  short Beg;
+  short End;
+  RegionType type;
+  bool isIDP() const;
+  bool isHang() const;
+  bool isValid() const;
+  int size() const;
+  short indexLocal2Global(short) const;
+  short indexGlobal2Local(short) const;
+  std::string toString() const;
 };
 
-class OptiChain
-{
+class OptiChain {
 public:
-    //Index一律以Height矩阵中的索引为准。Height(r,c+1)<->Base(r,c)
-    //高度矩阵一律不含水柱顶的玻璃方块
-    OptiChain(int Size=-1);//default Random Constructor
-    OptiChain(const Eigen::ArrayXi & base,
-              const Eigen::ArrayXi & High,const Eigen::ArrayXi & Low);
-    ~OptiChain();
+  // Index一律以Height矩阵中的索引为准。Height(r,c+1)<->Base(r,c)
+  // 高度矩阵一律不含水柱顶的玻璃方块
+  OptiChain(int Size = -1); // default Random Constructor
+  OptiChain(const Eigen::ArrayXi &base, const Eigen::ArrayXi &High,
+            const Eigen::ArrayXi &Low);
+  ~OptiChain();
 
-    void divideAndCompress();
-    const Eigen::ArrayXi & getHighLine();
-    const Eigen::ArrayXi & getLowLine();
-    //ArrayXi toDepth() const;
+  void divideAndCompress();
+  const Eigen::ArrayXi &getHighLine();
+  const Eigen::ArrayXi &getLowLine();
+  // ArrayXi toDepth() const;
 
-    //static ArrayXXi Base;
-    static const Eigen::Array3i Both;
-    static const Eigen::Array3i Left;
-    static const Eigen::Array3i Right;
+  // static ArrayXXi Base;
+  static const Eigen::Array3i Both;
+  static const Eigen::Array3i Left;
+  static const Eigen::Array3i Right;
 
 #ifdef showImg
-    //static QLabel *SinkIDP;
-    static QLabel *SinkAll;
-    static bool AllowSinkHang;
+  // static QLabel *SinkIDP;
+  static QLabel *SinkAll;
+  static bool AllowSinkHang;
 #endif
 
 private:
-    //int Col;
-    Eigen::ArrayXi Base;
-    Eigen::ArrayXi HighLine;
-    Eigen::ArrayXi LowLine;
-    std::queue<Region> Chain;//将一整列按水/空气切分为若干个大的孤立区间
-    std::list<Region> SubChain;//将Chain中每个大的孤立区间切分为若干“最大单孤立区间”和“悬空区间”组成的串
+  // int Col;
+  Eigen::ArrayXi Base;
+  Eigen::ArrayXi HighLine;
+  Eigen::ArrayXi LowLine;
+  std::queue<Region> Chain; // 将一整列按水/空气切分为若干个大的孤立区间
+  std::list<Region>
+      SubChain; // 将Chain中每个大的孤立区间切分为若干“最大单孤立区间”和“悬空区间”组成的串
 
-    void divideToChain();
-    void divideToSubChain();
+  void divideToChain();
+  void divideToSubChain();
 
-    bool isAir(int index) const;
-    bool isWater(int index) const;
-    bool isSolidBlock(int index) const;
+  bool isAir(int index) const;
+  bool isWater(int index) const;
+  bool isSolidBlock(int index) const;
 
-    void Sink(const Region&);
-    int validHeight(int index) const;
+  void Sink(const Region &);
+  int validHeight(int index) const;
 
-    void dispSubChain() const;
-//private:
-    void divideToSubChain(const Region&);
+  void dispSubChain() const;
+  // private:
+  void divideToSubChain(const Region &);
 };
 #endif // OPTICHAIN_H
