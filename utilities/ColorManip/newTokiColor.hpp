@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2022  TokiNoBug
+ Copyright © 2021-2023  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -13,12 +13,15 @@ This file is part of SlopeCraft.
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with SlopeCraft.  If not, see <https://www.gnu.org/licenses/>.
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
 
     Contact with me:
-    github:https://github.com/ToKiNoBug
+    github:https://github.com/SlopeCraft/SlopeCraft
     bilibili:https://space.bilibili.com/351429231
 */
+
+libili : https : // space.bilibili.com/351429231
+                     * /
 
 #ifndef NEWTOKICOLOR_HPP
 #define NEWTOKICOLOR_HPP
@@ -38,7 +41,7 @@ This file is part of SlopeCraft.
 #include <immintrin.h>
 #include <xmmintrin.h>
 
-constexpr int num_float_per_m256 = 256 / 32;
+                 constexpr int num_float_per_m256 = 256 / 32;
 
 union alignas(32) f32_i32 {
   float f32[8];

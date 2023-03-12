@@ -1,3 +1,25 @@
+/*
+ Copyright © 2021-2023  TokiNoBug
+This file is part of SlopeCraft.
+
+    SlopeCraft is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    SlopeCraft is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
+
+    Contact with me:
+    github:https://github.com/SlopeCraft/SlopeCraft
+    bilibili:https://space.bilibili.com/351429231
+*/
+
 #include "VisualCraftL.h"
 
 #include <stddef.h>
@@ -286,6 +308,32 @@ void VCL_display_block_state_list(const VCL_block_state_list *bsl) {
   ss >> msg;
 
   VCL_report(VCL_report_type_t::information, msg.c_str(), true);
+}
+
+VCL_EXPORT_FUN double
+VCL_estimate_color_num(size_t num_layers, size_t num_foreground,
+                       size_t num_background,
+                       size_t num_nontransparent_non_background) {
+  double a = num_background;
+  double b = num_foreground;
+  double num_stacked = 0;
+
+  switch (num_foreground) {
+  case 0:
+    num_stacked = a;
+    break;
+  case 1:
+    num_stacked = a + a * b;
+    break;
+  case 2:
+    num_stacked = a + (num_layers + 1) * b * a;
+    break;
+  default:
+    num_stacked = a + a * b * (std::pow(b - 1, num_layers + 1) - 1) / (b - 2);
+    break;
+  }
+
+  return num_stacked + num_nontransparent_non_background;
 }
 
 VCL_EXPORT_FUN bool
