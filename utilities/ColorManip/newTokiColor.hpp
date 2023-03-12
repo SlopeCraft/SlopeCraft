@@ -20,9 +20,6 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
-libili : https : // space.bilibili.com/351429231
-                     * /
-
 #ifndef NEWTOKICOLOR_HPP
 #define NEWTOKICOLOR_HPP
 
@@ -41,7 +38,7 @@ libili : https : // space.bilibili.com/351429231
 #include <immintrin.h>
 #include <xmmintrin.h>
 
-                 constexpr int num_float_per_m256 = 256 / 32;
+constexpr int num_float_per_m256 = 256 / 32;
 
 union alignas(32) f32_i32 {
   float f32[8];

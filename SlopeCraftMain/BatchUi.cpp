@@ -20,17 +20,13 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
-s
-
 #include "BatchUi.h"
 #include "ui_BatchUi.h"
 
 #include "MainWindow.h"
 
-BatchUi::BatchUi(BatchUi ** _self,QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::BatchUi)
-{
+BatchUi::BatchUi(BatchUi **_self, QWidget *parent)
+    : QMainWindow(parent), ui(new Ui::BatchUi) {
   ui->setupUi(this);
   self = _self;
   this->setAttribute(Qt::WA_QuitOnClose, false);

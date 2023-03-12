@@ -25,9 +25,9 @@ This file is part of SlopeCraft.
 
 #include <stdint.h>
 
-#define SC_VERSION_MAJOR_U16 @PROJECT_VERSION_MAJOR @
-#define SC_VERSION_MINOR_U16 @PROJECT_VERSION_MINOR @
-#define SC_VERSION_PATCH_U16 @PROJECT_VERSION_PATCH @
+#define SC_VERSION_MAJOR_U16 @PROJECT_VERSION_MAJOR@
+#define SC_VERSION_MINOR_U16 @PROJECT_VERSION_MINOR@
+#define SC_VERSION_PATCH_U16 @PROJECT_VERSION_PATCH@
 #define SC_VERSION_TWEAK_U16 0
 
 #define SC_MAKE_VERSION_U64(major, minor, patch, tweak)                        \
