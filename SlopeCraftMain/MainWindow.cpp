@@ -2022,7 +2022,7 @@ void MainWindow::grabVersion(bool isAuto) {
   isRunning = true;
 
   static const QString url =
-      "https://api.github.com/repos/TokiNoBug/SlopeCraft/releases";
+      "https://api.github.com/repos/SlopeCraft/SlopeCraft/releases";
 
   QEventLoop tempLoop;
   QNetworkAccessManager *manager = new QNetworkAccessManager;
@@ -2133,7 +2133,7 @@ void MainWindow::grabVersion(bool isAuto) {
     VersionDialog::userChoice userReply = verDialog->getResult();
 
     if (userReply == VersionDialog::userChoice::Yes) {
-      QDesktopServices::openUrl(QUrl(latest3xJo["url"].toString()));
+      QDesktopServices::openUrl(QUrl(latest3xJo["html_url"].toString()));
       /*
       if(trans.language()=="zh_CN") {
           QDesktopServices::openUrl(

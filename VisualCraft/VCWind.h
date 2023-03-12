@@ -10,7 +10,7 @@
 extern uint8_t is_language_ZH;
 extern QNetworkAccessManager *global_manager;
 
-extern std::pair<QString, QString> url_for_update;
+extern QString url_for_update;
 
 class QListWidget;
 class QListWidgetItem;
@@ -86,7 +86,7 @@ public:
   }
 
   void retrieve_latest_version(QString url_api, QNetworkAccessManager &qnam,
-                               QString url_download, bool is_manually) noexcept;
+                               bool is_manually) noexcept;
 signals:
   void signal_basic_colorset_changed();
   void signal_allowed_colorset_changed();
@@ -96,8 +96,7 @@ private:
   static void callback_progress_range_set(void *, int, int, int) noexcept;
   static void callback_progress_range_add(void *, int) noexcept;
 
-  void when_network_finished(QNetworkReply *reply, QString url_download,
-                             bool is_manually) noexcept;
+  void when_network_finished(QNetworkReply *reply, bool is_manually) noexcept;
 
   // for page 0 ------------------------------------------
   void setup_ui_select_biome() noexcept;

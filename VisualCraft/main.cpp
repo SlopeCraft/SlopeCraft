@@ -8,9 +8,9 @@
 #include <QTranslator>
 
 QNetworkAccessManager *global_manager{nullptr};
-std::pair<QString, QString> url_for_update{
-    "https://api.github.com/repos/SlopeCraft/SlopeCraft/releases",
-    "https://github.com/SlopeCraft/SlopeCraft/releases"};
+
+QString url_for_update{
+    "https://api.github.com/repos/SlopeCraft/SlopeCraft/releases"};
 
 bool parse_config_json(QString &err) noexcept;
 
@@ -60,10 +60,11 @@ int main(int argc, char **argv) {
 
   VCL_set_report_callback(VC_callback::callback_receive_report);
 
+  wind.setWindowTitle(QStringLiteral("VisualCraft v%1").arg(SC_VERSION_STR));
+
   wind.show();
 
-  wind.retrieve_latest_version(url_for_update.first, manager,
-                               url_for_update.second, false);
+  wind.retrieve_latest_version(::url_for_update, manager, false);
 
   return qapp.exec();
 }

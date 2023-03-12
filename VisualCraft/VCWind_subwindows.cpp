@@ -120,13 +120,11 @@ void VCWind::on_ac_browse_allowed_colors_triggered() noexcept {
 }
 
 void VCWind::on_ac_check_update_triggered() noexcept {
-  this->retrieve_latest_version(url_for_update.first, *global_manager,
-                                url_for_update.second, true);
+  this->retrieve_latest_version(::url_for_update, *global_manager, true);
 }
 
 void VCWind::retrieve_latest_version(QString url_api,
                                      QNetworkAccessManager &manager,
-                                     QString url_download,
                                      bool is_manually) noexcept {
   QNetworkRequest request(url_api);
 
@@ -134,13 +132,12 @@ void VCWind::retrieve_latest_version(QString url_api,
 
   // connect(reply, &QNetworkReply::finished, this,
   //         &VCWind::when_network_finished);
-  connect(reply, &QNetworkReply::finished,
-          [this, reply, url_download, is_manually]() {
-            this->when_network_finished(reply, url_download, is_manually);
-          });
+  connect(reply, &QNetworkReply::finished, [this, reply, is_manually]() {
+    this->when_network_finished(reply, is_manually);
+  });
 }
 
-void VCWind::when_network_finished(QNetworkReply *reply, QString url_download,
+void VCWind::when_network_finished(QNetworkReply *reply,
                                    bool is_manually) noexcept {
 
   const QByteArray content_qba = reply->readAll();
