@@ -7,6 +7,8 @@
 #include <QMessageBox>
 #include <QTranslator>
 
+QNetworkAccessManager *global_manager{nullptr};
+
 bool parse_config_json(QString &err) noexcept;
 
 int main(int argc, char **argv) {
@@ -46,6 +48,9 @@ int main(int argc, char **argv) {
     }
   }
 
+  QNetworkAccessManager manager;
+  global_manager = &manager;
+
   VCWind wind;
 
   VC_callback::wind = &wind;
@@ -53,6 +58,12 @@ int main(int argc, char **argv) {
   VCL_set_report_callback(VC_callback::callback_receive_report);
 
   wind.show();
+
+  wind.retrieve_latest_version(
+      "https://api.github.com/repos/ToKiNoBug/SlopeCraft/releases/latest",
+      manager, "https://github.com/ToKiNoBug/SlopeCraft/releases/latest",
+      false);
+
   return qapp.exec();
 }
 

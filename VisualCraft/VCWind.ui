@@ -346,8 +346,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>815</width>
-                  <height>301</height>
+                  <width>98</width>
+                  <height>28</height>
                  </rect>
                 </property>
                 <layout class="QGridLayout" name="gl_sa_blocks"/>
@@ -1206,6 +1206,7 @@
     <addaction name="ac_about_VisualCraft"/>
     <addaction name="ac_report_bugs"/>
     <addaction name="menu_contact"/>
+    <addaction name="ac_check_update"/>
    </widget>
    <addaction name="menu_resource"/>
    <addaction name="menu_browse"/>
@@ -1308,6 +1309,11 @@
    </property>
    <property name="text">
     <string>查看可用颜色</string>
+   </property>
+  </action>
+  <action name="ac_check_update">
+   <property name="text">
+    <string>检查更新</string>
    </property>
   </action>
  </widget>

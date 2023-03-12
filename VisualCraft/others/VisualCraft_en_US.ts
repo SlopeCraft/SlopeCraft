@@ -740,7 +740,7 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
     <message>
         <location filename="../VCWind.cpp" line="541"/>
         <source>调色算法 (共%1种颜色)</source>
-        <translation type="unfinished"></translation>
+        <translation>Convert algorithms(%1 colors avaliable)</translation>
     </message>
     <message>
         <location filename="../VCWind.cpp" line="565"/>
@@ -781,7 +781,9 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
         <source>目前VisualCraft能够解析许多第三方资源包，也允许自定义增加加新方块。与传统的思路不同，VisualCraft以方块模型的方式来解析资源包，尽量贴近Minecraft的方式，因此支持各种自定义的方块模型。
 
 </source>
-        <translation type="unfinished"></translation>
+        <translation>Now VisualCraft is able to parse many 3rd party resource packs and allowing to add custom new blocks. Different from traditional methods, VisualCraft understands resource packs by parsing block models, which is rather similiar with what Minecraft does. Thus custom block models are supported.
+
+</translation>
     </message>
     <message>
         <location filename="../VCWind_subwindows.cpp" line="36"/>

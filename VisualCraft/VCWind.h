@@ -2,11 +2,13 @@
 #define SLOPECRAFT_VISUALCRAFT_VCWIND_H
 
 #include <QMainWindow>
+#include <QNetworkAccessManager>
 #include <VisualCraftL.h>
 #include <functional>
 #include <map>
 
 extern uint8_t is_language_ZH;
+extern QNetworkAccessManager *global_manager;
 
 class QListWidget;
 class QListWidgetItem;
@@ -81,6 +83,8 @@ public:
     return this->map_VC_block_class;
   }
 
+  void retrieve_latest_version(QString url_api, QNetworkAccessManager &qnam,
+                               QString url_download, bool is_manually) noexcept;
 signals:
   void signal_basic_colorset_changed();
   void signal_allowed_colorset_changed();
@@ -89,6 +93,9 @@ private:
   // for all pages
   static void callback_progress_range_set(void *, int, int, int) noexcept;
   static void callback_progress_range_add(void *, int) noexcept;
+
+  void when_network_finished(QNetworkReply *reply, QString url_download,
+                             bool is_manually) noexcept;
 
   // for page 0 ------------------------------------------
   void setup_ui_select_biome() noexcept;
@@ -180,6 +187,7 @@ private:
   QString update_gpu_device(QPoint current_choice) noexcept;
 private slots:
   // for all pages ------------------------------------------
+
   // auto connected
   void on_tabWidget_main_currentChanged(int page) noexcept;
 
@@ -198,6 +206,9 @@ private slots:
   void on_ac_browse_biome_triggered() noexcept;
   void on_ac_browse_basic_colors_triggered() noexcept;
   void on_ac_browse_allowed_colors_triggered() noexcept;
+
+  // auto connected
+  void on_ac_check_update_triggered() noexcept;
 
   // for page 0 ------------------------------------------
 

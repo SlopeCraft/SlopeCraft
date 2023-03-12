@@ -6,6 +6,8 @@
 #include "ui_VCWind.h"
 #include <QDesktopServices>
 #include <QMessageBox>
+#include <QNetworkReply>
+#include <QNetworkRequest>
 
 void VCWind::on_ac_browse_block_triggered() noexcept {
   BlockBrowser *bb = new BlockBrowser(this);
@@ -114,4 +116,113 @@ void VCWind::on_ac_browse_allowed_colors_triggered() noexcept {
   cb->show();
 
   cb->setup_table_allowed();
+}
+
+void VCWind::on_ac_check_update_triggered() noexcept {
+  this->retrieve_latest_version(
+      "https://api.github.com/repos/ToKiNoBug/SlopeCraft/releases/latest",
+      *global_manager,
+      "https://github.com/ToKiNoBug/SlopeCraft/releases/latest", true);
+}
+
+void VCWind::retrieve_latest_version(QString url_api,
+                                     QNetworkAccessManager &manager,
+                                     QString url_download,
+                                     bool is_manually) noexcept {
+  QNetworkRequest request(url_api);
+
+  QNetworkReply *reply = manager.get(request);
+
+  // connect(reply, &QNetworkReply::finished, this,
+  //         &VCWind::when_network_finished);
+  connect(reply, &QNetworkReply::finished,
+          [this, reply, url_download, is_manually]() {
+            this->when_network_finished(reply, url_download, is_manually);
+          });
+}
+
+#include <json.hpp>
+
+void VCWind::when_network_finished(QNetworkReply *reply, QString url_download,
+                                   bool is_manually) noexcept {
+
+  const QByteArray content_qba = reply->readAll();
+
+  using njson = nlohmann::json;
+
+  njson content;
+
+  QString tag_name{""};
+  bool is_prerelase{false};
+
+  try {
+    content = njson::parse(content_qba.data());
+    std::string tag_name_temp = content.at("tag_name");
+    tag_name = QString::fromStdString(tag_name_temp);
+    is_prerelase = content.at("prerelease");
+  } catch (std::exception &e) {
+    QMessageBox::warning(
+        this, VCWind::tr("获取最新版本失败"),
+        VCWind::tr("解析 \"%1\" "
+                   "返回的结果时出现错误：\n\n%"
+                   "2\n\n这不是一个致命错误，不影响软件使用。")
+            .arg(reply->url().toString())
+            .arg(e.what()),
+        QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore});
+    return;
+  }
+
+  if (is_prerelase) {
+    return;
+  }
+
+  if (tag_name.startsWith('v')) {
+    tag_name.remove(0, 1);
+  }
+
+  QStringList nums = tag_name.split('.');
+
+  std::vector<int> ver_num(nums.size());
+
+  for (size_t i = 0; i < ver_num.size(); i++) {
+    ver_num[i] = nums[i].toInt();
+  }
+
+  while (ver_num.size() < 4) {
+    ver_num.emplace_back(0);
+  }
+
+  const uint64_t latest_ver =
+      SC_MAKE_VERSION_U64(ver_num[0], ver_num[1], ver_num[2], ver_num[3]);
+
+  const uint64_t dll_ver =
+      SC_MAKE_VERSION_U64(VCL_version_component(0), VCL_version_component(1),
+                          VCL_version_component(2), 0);
+
+  const uint64_t ui_ver = SC_VERSION_U64;
+
+  const uint64_t cur_ver = std::min(dll_ver, ui_ver);
+
+  if (cur_ver >= latest_ver) {
+
+    if (is_manually) {
+      QMessageBox::information(this, VCWind::tr("检查更新成功"),
+                               VCWind::tr("您在使用的是最新版本"));
+    }
+
+    return;
+  }
+  const auto ret = QMessageBox::information(
+      this, VCWind::tr("VisualCraft已更新"),
+      VCWind::tr("最新版本为%1，当前版本为%2（内核版本%3）")
+          .arg('v' + tag_name)
+          .arg(SC_VERSION_STR)
+          .arg(VCL_version_string()),
+      QMessageBox::StandardButtons{QMessageBox::StandardButton::Yes,
+                                   QMessageBox::StandardButton::No});
+  if (ret == QMessageBox::StandardButton::No) {
+    return;
+  }
+
+  QDesktopServices::openUrl(QUrl(url_download));
 }
