@@ -82,52 +82,52 @@
         <translation>Browse</translation>
     </message>
     <message>
-        <location filename="../BatchUi.cpp" line="139"/>
+        <location filename="../BatchUi.cpp" line="133"/>
         <source>选择输出文件夹</source>
         <translation>Select a directory</translation>
     </message>
     <message>
-        <location filename="../BatchUi.cpp" line="162"/>
+        <location filename="../BatchUi.cpp" line="154"/>
         <source>目标文件夹不可用</source>
         <translation>Invalid directory</translation>
     </message>
     <message>
-        <location filename="../BatchUi.cpp" line="168"/>
+        <location filename="../BatchUi.cpp" line="159"/>
         <source>主窗体中选择了纯文件地图画，冲突</source>
         <translation>Confilction : you assigned file-only maps in main window</translation>
     </message>
     <message>
-        <location filename="../BatchUi.cpp" line="173"/>
+        <location filename="../BatchUi.cpp" line="164"/>
         <source>就绪</source>
         <translation>Ready</translation>
     </message>
     <message>
-        <location filename="../BatchUi.cpp" line="193"/>
+        <location filename="../BatchUi.cpp" line="184"/>
         <source>批量处理中：</source>
         <translation>Batch operation working ......</translation>
     </message>
     <message>
-        <location filename="../BatchUi.cpp" line="206"/>
+        <location filename="../BatchUi.cpp" line="194"/>
         <source>正在转化为地图画</source>
         <translation>Converting image to map</translation>
     </message>
     <message>
-        <location filename="../BatchUi.cpp" line="211"/>
+        <location filename="../BatchUi.cpp" line="199"/>
         <source>正在构建三维结构</source>
         <translation>Building 3D structure</translation>
     </message>
     <message>
-        <location filename="../BatchUi.cpp" line="213"/>
+        <location filename="../BatchUi.cpp" line="201"/>
         <source>正在导出三维结构</source>
         <translation>Exporting 3D structure</translation>
     </message>
     <message>
-        <location filename="../BatchUi.cpp" line="218"/>
+        <location filename="../BatchUi.cpp" line="205"/>
         <source>正在导出地图文件</source>
         <translation>Exporting map data files</translation>
     </message>
     <message>
-        <location filename="../BatchUi.cpp" line="227"/>
+        <location filename="../BatchUi.cpp" line="214"/>
         <source>批量处理完成</source>
         <translation>All tasks finished</translation>
     </message>
@@ -1341,17 +1341,17 @@ Check your map type, remember that file-only map can&apos;t be exported as litem
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../previewwind.cpp" line="40"/>
+        <location filename="../previewwind.cpp" line="36"/>
         <source>个</source>
         <translation>block(s)</translation>
     </message>
     <message>
-        <location filename="../previewwind.cpp" line="42"/>
+        <location filename="../previewwind.cpp" line="38"/>
         <source>盒</source>
         <translation>SB</translation>
     </message>
     <message>
-        <location filename="../previewwind.cpp" line="44"/>
+        <location filename="../previewwind.cpp" line="41"/>
         <source>组</source>
         <translation>stacks</translation>
     </message>
@@ -1489,17 +1489,17 @@ Click No to ignore the error; Click NoToAll will disable auto-update-checking.
         <translation></translation>
     </message>
     <message>
-        <location filename="../TaskBox.cpp" line="44"/>
+        <location filename="../TaskBox.cpp" line="37"/>
         <source>选择图片</source>
         <translation>Select Image</translation>
     </message>
     <message>
-        <location filename="../TaskBox.cpp" line="46"/>
+        <location filename="../TaskBox.cpp" line="37"/>
         <source>图片(*.png *.bmp *.jpg *.tif *.GIF )</source>
         <translation>Images(*.png *.bmp *.jpg *.tif *.GIF )</translation>
     </message>
     <message>
-        <location filename="../TaskBox.h" line="70"/>
+        <location filename="../TaskBox.h" line="63"/>
         <source>图片格式损坏</source>
         <translation>Damaged image</translation>
     </message>

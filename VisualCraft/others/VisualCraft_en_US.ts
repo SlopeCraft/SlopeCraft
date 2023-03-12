@@ -44,7 +44,7 @@
         <translation>Downfall: </translation>
     </message>
     <message>
-        <location filename="../BiomeBrowser.cpp" line="79"/>
+        <location filename="../BiomeBrowser.cpp" line="101"/>
         <source>当前颜色：</source>
         <translation>Current color: </translation>
     </message>
@@ -72,7 +72,7 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
     </message>
     <message>
         <location filename="../BlockBrowser.ui" line="54"/>
-        <location filename="../BlockBrowser.cpp" line="205"/>
+        <location filename="../BlockBrowser.cpp" line="227"/>
         <source>保存当前图片</source>
         <translation>Save current image</translation>
     </message>
@@ -136,22 +136,22 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
     </message>
     <message>
         <location filename="../BlockBrowser.ui" line="159"/>
-        <location filename="../BlockBrowser.cpp" line="236"/>
+        <location filename="../BlockBrowser.cpp" line="258"/>
         <source>方块类别：</source>
         <translation>Block class: </translation>
     </message>
     <message>
-        <location filename="../BlockBrowser.cpp" line="67"/>
+        <location filename="../BlockBrowser.cpp" line="89"/>
         <source>致命逻辑错误</source>
         <translation>Impossible error</translation>
     </message>
     <message>
-        <location filename="../BlockBrowser.cpp" line="219"/>
+        <location filename="../BlockBrowser.cpp" line="241"/>
         <source>保存图片失败</source>
         <translation>Failed to save image.</translation>
     </message>
     <message>
-        <location filename="../BlockBrowser.cpp" line="220"/>
+        <location filename="../BlockBrowser.cpp" line="242"/>
         <source>不知道怎么回事，反正就是没存上。</source>
         <translation>I don&apos;t know why.</translation>
     </message>
@@ -174,7 +174,7 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
         <translation>Disable matched blocks</translation>
     </message>
     <message>
-        <location filename="../BlockSelector.cpp" line="67"/>
+        <location filename="../BlockSelector.cpp" line="89"/>
         <source>匹配到%1个方块</source>
         <translation>%1 block(s) matched</translation>
     </message>
@@ -207,33 +207,33 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
         <translation>Block icons</translation>
     </message>
     <message>
-        <location filename="../ColorBrowser.cpp" line="90"/>
+        <location filename="../ColorBrowser.cpp" line="112"/>
         <source>第%1个方块</source>
         <translation>block %1</translation>
     </message>
     <message>
-        <location filename="../ColorBrowser.cpp" line="114"/>
+        <location filename="../ColorBrowser.cpp" line="136"/>
         <source>获取颜色表失败</source>
         <translation>Failed to retrive colorset</translation>
     </message>
     <message>
-        <location filename="../ColorBrowser.cpp" line="115"/>
+        <location filename="../ColorBrowser.cpp" line="137"/>
         <source>在尝试获取第%1个颜色(color_id = %2)时出现错误。函数VCL_get_basic_color_composition返回值为%3，正常情况下应当返回正数。</source>
         <translation>An error occurred when trying to get color %1 (color_id = %2). Function VCL_get_basic_color_composition returned %3, but a positive number is expected.</translation>
     </message>
     <message>
-        <location filename="../ColorBrowser.cpp" line="154"/>
-        <location filename="../ColorBrowser.cpp" line="177"/>
+        <location filename="../ColorBrowser.cpp" line="176"/>
+        <location filename="../ColorBrowser.cpp" line="199"/>
         <source>计算投影图像失败</source>
         <translation>Failed to compute projection image</translation>
     </message>
     <message>
-        <location filename="../ColorBrowser.cpp" line="155"/>
+        <location filename="../ColorBrowser.cpp" line="177"/>
         <source>在尝试获取方块 &quot;%1&quot; 的方块模型时出现错误。</source>
         <translation>An error occurred when trying to get block model for block &quot;%1&quot; (color_id = %2)</translation>
     </message>
     <message>
-        <location filename="../ColorBrowser.cpp" line="178"/>
+        <location filename="../ColorBrowser.cpp" line="200"/>
         <source>成功获取到方块 &quot;%1&quot; 的方块模型，但计算投影图像失败。</source>
         <translation>Managed to get a block model for block &apos;%1&quot;, but subsequent computation of projection image failed.</translation>
     </message>
@@ -314,7 +314,7 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
     </message>
     <message>
         <location filename="../VCWind.ui" line="336"/>
-        <location filename="../VCWind.cpp" line="407"/>
+        <location filename="../VCWind.cpp" line="429"/>
         <source>全部方块</source>
         <translation>All blocks</translation>
     </message>
@@ -518,7 +518,7 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
     </message>
     <message>
         <location filename="../VCWind.ui" line="1256"/>
-        <location filename="../VCWind_subwindows.cpp" line="29"/>
+        <location filename="../VCWind_subwindows.cpp" line="51"/>
         <source>关于VisualCraft</source>
         <translation>About VisualCraft</translation>
     </message>
@@ -665,115 +665,115 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
         <translation>Biomes</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="35"/>
+        <location filename="../main.cpp" line="57"/>
         <source>VisualCraftL动态库版本不匹配</source>
         <translation>The version of dynamic library &quot;VisualCraftL&quot; mismatch</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="36"/>
+        <location filename="../main.cpp" line="58"/>
         <source>界面程序编译时使用的VisualCraftL版本为%1，而VisualCraftL动态库的版本为%2。通常这是因为动态库版本过低。</source>
         <translation>The version of VisualCraftL at ui program&apos;s build time is %1, and that of VisualCraftL is %2. Usually this is because the version of dynamic lib is not late enough.</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="48"/>
+        <location filename="../main.cpp" line="70"/>
         <source>加载配置文件失败。</source>
         <translation>Failed to load configuration file.</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="92"/>
+        <location filename="../main.cpp" line="114"/>
         <source>无法加载配置文件&quot;./vc-config.json&quot;。
 %1</source>
         <translation>Failed to load configuration file &quot;./vc-config.json&apos;. 
 %1</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="73"/>
+        <location filename="../VCWind.cpp" line="95"/>
         <source>原版资源包</source>
         <translation>Vanilla</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="73"/>
+        <location filename="../VCWind.cpp" line="95"/>
         <source>原版json</source>
         <translation>Default</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="235"/>
+        <location filename="../VCWind.cpp" line="257"/>
         <source>选择资源包</source>
         <translation>Select resource pack</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="268"/>
+        <location filename="../VCWind.cpp" line="290"/>
         <source>选择方块id json文件</source>
         <translation>Select block state list json file</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="439"/>
+        <location filename="../VCWind.cpp" line="461"/>
         <source>资源包解析失败</source>
         <translation>Failed to parse resource pack</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="440"/>
-        <location filename="../VCWind.cpp" line="450"/>
+        <location filename="../VCWind.cpp" line="462"/>
+        <location filename="../VCWind.cpp" line="472"/>
         <source>在此窗口之前弹出的错误信息非常重要，请将它汇报给开发者。</source>
         <translation>Error messages shown before this window is really important. Report it to the deveploer.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="449"/>
+        <location filename="../VCWind.cpp" line="471"/>
         <source>方块状态列表json解析失败</source>
         <translation>Failed to parse block state list json</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="469"/>
+        <location filename="../VCWind.cpp" line="491"/>
         <source>资源包/方块状态列表json解析失败</source>
         <translation>Failed to parse resource packs or bsl jsons.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="470"/>
+        <location filename="../VCWind.cpp" line="492"/>
         <source>部分方块的投影图像计算失败，或者总颜色数量超过上限（65534）。尝试移除解析失败的资源包/方块列表，或者减小最大层数。</source>
         <translation>Failed to compute projection image for some blocks, or the total color amout exceeds the limit of 65534. You can try removing resource packs or block state list jsons that failed to be parsed, or reduce the max layers.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="530"/>
+        <location filename="../VCWind.cpp" line="552"/>
         <source>设置可用方块失败</source>
         <translation>Failed to set avaliable blocks</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="531"/>
+        <location filename="../VCWind.cpp" line="553"/>
         <source>可能是总颜色数量超过上限（65536），尝试移除解析失败的资源包/方块列表，或者减小最大层数。</source>
         <translation>Probably the count of colors exceeds the upper bound(65536). Try removing some resource packs or jsons, or reduce the maximum layers.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="541"/>
+        <location filename="../VCWind.cpp" line="563"/>
         <source>调色算法 (共%1种颜色)</source>
         <translation>Convert algorithms(%1 colors avaliable)</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="565"/>
+        <location filename="../VCWind.cpp" line="587"/>
         <source>选择图片（可多选）</source>
         <translation>Select images</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="582"/>
+        <location filename="../VCWind.cpp" line="604"/>
         <source>读取图片失败</source>
         <translation>Failed to load image.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="583"/>
+        <location filename="../VCWind.cpp" line="605"/>
         <source>无法读取图片%1。图片可能是不支持的格式，或者已经损坏。图像过大也可能导致此错误。</source>
         <translation>Failed to load image %1 . The image may be of unsupported format, or has been screwed up. A tooooo large image may also cause this error.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="636"/>
+        <location filename="../VCWind.cpp" line="658"/>
         <source>设置图片失败</source>
         <translation>Failed to set image</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="637"/>
+        <location filename="../VCWind.cpp" line="659"/>
         <source>这个错误不应该发生的，可能是你点儿背。</source>
         <translation>This error is considered to be impossible.</translation>
     </message>
     <message>
-        <location filename="../VCWind_subwindows.cpp" line="30"/>
+        <location filename="../VCWind_subwindows.cpp" line="52"/>
         <source>VisualCraft是一款全新的Minecraft像素画生成器，由MC玩家TokiNoBug开发，是SlopeCraft的子项目。与其他类似的软件不同，VisualCraft旨在跟进最新的MC版本(1.12~最新版)、支持最多的MC特性，提供最强大的功能。
 
 </source>
@@ -782,7 +782,7 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
 </translation>
     </message>
     <message>
-        <location filename="../VCWind_subwindows.cpp" line="35"/>
+        <location filename="../VCWind_subwindows.cpp" line="57"/>
         <source>目前VisualCraft能够解析许多第三方资源包，也允许自定义增加加新方块。与传统的思路不同，VisualCraft以方块模型的方式来解析资源包，尽量贴近Minecraft的方式，因此支持各种自定义的方块模型。
 
 </source>
@@ -791,7 +791,7 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
 </translation>
     </message>
     <message>
-        <location filename="../VCWind_subwindows.cpp" line="39"/>
+        <location filename="../VCWind_subwindows.cpp" line="61"/>
         <source>在导出方面，VisualCraft支持Litematica mod的投影(*.litematic)、WorldEdit 原理图(*.shem)(仅1.13+可用)、原版结构方块文件(*.nbt)、平面示意图(*.png)等方式。
 
 </source>
@@ -800,7 +800,7 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
 </translation>
     </message>
     <message>
-        <location filename="../VCWind_subwindows.cpp" line="43"/>
+        <location filename="../VCWind_subwindows.cpp" line="65"/>
         <source>VisualCraft支持用各种透明方块互相叠加，产生更多的颜色。软件最多支持不超过65534种颜色，受此限制，像素画的层数不超过3层。
 
 </source>
@@ -809,17 +809,17 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
 </translation>
     </message>
     <message>
-        <location filename="../VCWind_subwindows.cpp" line="46"/>
+        <location filename="../VCWind_subwindows.cpp" line="68"/>
         <source>由于颜色数量很多，VisualCraft使用了显卡加速。目前支持的API有OpenCL。现在正在使用的API是%1</source>
-        <translation>The great amount of colors makes GPU accleration necessary. Now OpenCL is supported, and %1 is what currently using.</translation>
+        <translation type="unfinished">The great amount of colors makes GPU accleration necessary. Now OpenCL is supported, and %1 is what currently being used.</translation>
     </message>
     <message>
-        <location filename="../VCWind_subwindows.cpp" line="149"/>
+        <location filename="../VCWind_subwindows.cpp" line="171"/>
         <source>获取最新版本失败</source>
         <translation>Failed to retrieve latest version</translation>
     </message>
     <message>
-        <location filename="../VCWind_subwindows.cpp" line="150"/>
+        <location filename="../VCWind_subwindows.cpp" line="172"/>
         <source>解析 &quot;%1&quot; 返回的结果时出现错误：
 
 %2
@@ -836,93 +836,93 @@ The original message that can not be parsed is :
 %3</translation>
     </message>
     <message>
-        <location filename="../VCWind_subwindows.cpp" line="173"/>
-        <location filename="../VCWind_subwindows.cpp" line="183"/>
+        <location filename="../VCWind_subwindows.cpp" line="195"/>
+        <location filename="../VCWind_subwindows.cpp" line="205"/>
         <source>检查更新成功</source>
         <translation>Succeded in checking for updates</translation>
     </message>
     <message>
-        <location filename="../VCWind_subwindows.cpp" line="174"/>
+        <location filename="../VCWind_subwindows.cpp" line="196"/>
         <source>您在使用的是最新版本</source>
         <translation>You are using the latest version</translation>
     </message>
     <message>
-        <location filename="../VCWind_subwindows.cpp" line="184"/>
+        <location filename="../VCWind_subwindows.cpp" line="206"/>
         <source>您使用的版本(%1)比已发布的(%2)更新，可能是测试版。</source>
         <translation>The current version (%1) is later than latest released(%2), it&apos;s probably a testing one.</translation>
     </message>
     <message>
-        <location filename="../VCWind_subwindows.cpp" line="197"/>
+        <location filename="../VCWind_subwindows.cpp" line="219"/>
         <source>VisualCraft已更新</source>
         <translation>Update VisualCraft</translation>
     </message>
     <message>
-        <location filename="../VCWind_subwindows.cpp" line="198"/>
+        <location filename="../VCWind_subwindows.cpp" line="220"/>
         <source>最新版本为%1，当前版本为%2（内核版本%3）</source>
         <translation>The latest version is %1 and current version is %2(kernel version is %3)</translation>
     </message>
     <message>
-        <location filename="../VCWind_gpu.cpp" line="64"/>
+        <location filename="../VCWind_gpu.cpp" line="85"/>
         <source>可用的计算设备（CPU + %1可用的显卡）</source>
         <translation>Avaliable compute devices (CPU + %1-avaliable-GPUs)</translation>
     </message>
     <message>
-        <location filename="../VCWind_gpu.cpp" line="75"/>
+        <location filename="../VCWind_gpu.cpp" line="96"/>
         <source>无法获取platform信息. 请检查驱动. OpenCL错误码: %1.</source>
         <translation>Failed to get platform information. Please check GPU driver(s). OpenCL error code : %1.</translation>
     </message>
     <message>
-        <location filename="../VCWind_gpu.cpp" line="98"/>
+        <location filename="../VCWind_gpu.cpp" line="119"/>
         <source>无法获取device信息. 请检查驱动. OpenCL错误码: %1</source>
         <translation>Failed to get device infomation. Please check the driver(s). OpenCL error code : %1</translation>
     </message>
     <message>
-        <location filename="../VCWind_gpu.cpp" line="155"/>
+        <location filename="../VCWind_gpu.cpp" line="176"/>
         <source>设置计算设备失败</source>
         <translation>Failed to set compute device</translation>
     </message>
     <message>
-        <location filename="../VCWind_gpu.cpp" line="179"/>
+        <location filename="../VCWind_gpu.cpp" line="200"/>
         <source>创建GPU平台失败，平台序号为%1，设备序号为%2</source>
         <translation>Failed to create GPU platform, the index of platform is %1 and index of device is %2</translation>
     </message>
     <message>
-        <location filename="../VCWind_gpu.cpp" line="186"/>
+        <location filename="../VCWind_gpu.cpp" line="207"/>
         <source>创建GPU设备失败，平台序号为%1，设备序号为%2</source>
         <translation>Failed to create GPU device, the index of platform is %1 and index of device is %2</translation>
     </message>
     <message>
-        <location filename="../VCWind_gpu.cpp" line="192"/>
+        <location filename="../VCWind_gpu.cpp" line="213"/>
         <source>设置GPU设备失败。，平台序号为%1，设备序号为%2</source>
         <translation>Failed to set GPU device, the index of platform is %1 and index of device is %2</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="10"/>
+        <location filename="../VCWind_export.cpp" line="32"/>
         <source>选择输出位置</source>
         <translation>Select output directory</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="46"/>
+        <location filename="../VCWind_export.cpp" line="68"/>
         <source>%1, %2</source>
         <translation>%1 rows, %2 cols</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="74"/>
+        <location filename="../VCWind_export.cpp" line="96"/>
         <source>错误操作</source>
         <translation>Invalid operation</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="75"/>
+        <location filename="../VCWind_export.cpp" line="97"/>
         <source>设置任何一种导出类型的输出位置时，都需要在左侧的combo box中选择一个导出类型。请先选择一种导出类型，再设置导出位置。</source>
         <translation>When you set the output directory for any type of export, you should select the type of export with the combobox in the left. Please select a type first.</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="261"/>
+        <location filename="../VCWind_export.cpp" line="283"/>
         <source>平面示意图输入错误</source>
         <translation>Invalid input for flatdiagram</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="262"/>
+        <location filename="../VCWind_export.cpp" line="284"/>
         <source>应输入%1个以&quot;;&quot;分隔的文件名，但实际上输入了%2个。
 您输入的%2个文件名是：
 %3</source>
@@ -931,72 +931,72 @@ The %2 filename(s) you give is:
 %3</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="302"/>
+        <location filename="../VCWind_export.cpp" line="324"/>
         <source>导出平面示意图失败</source>
         <translation>Failed to export flat diagram</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="303"/>
+        <location filename="../VCWind_export.cpp" line="325"/>
         <source>尝试为原图生成第%1个平面示意图（%2）时出现了错误。</source>
         <translation>Error occurred when trying to generate the %1-th flat diagram(%2).</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="331"/>
+        <location filename="../VCWind_export.cpp" line="353"/>
         <source>致命逻辑错误</source>
         <translation>Impossible error</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="332"/>
+        <location filename="../VCWind_export.cpp" line="354"/>
         <source>导出页码表格中的图片&quot;%1&quot;不能在this-&gt;image_cache中找到对应的缓存。请将这个错误反馈给软件开发者。</source>
         <translation>Cache of image named &quot;%1&quot; in the export table cannot be found in this-&gt;image_cache. Please send this as a feedback to the developer.</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="242"/>
+        <location filename="../VCWind_export.cpp" line="264"/>
         <source>保存转化后图像失败</source>
         <translation>Failed to save the converted image</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="243"/>
+        <location filename="../VCWind_export.cpp" line="265"/>
         <source>QImage未能生成&quot;%1&quot;。</source>
         <translation>QImage failed to generate &quot;%1&quot;.</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="413"/>
+        <location filename="../VCWind_export.cpp" line="435"/>
         <source>构建三维结构失败</source>
         <translation>Failed to build 3D structure</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="414"/>
+        <location filename="../VCWind_export.cpp" line="436"/>
         <source>VisualCraftL不能为图像&quot;%1&quot;构建三维结构。</source>
         <translation>VisualCraft failed to build 3D structure for image &quot;%1&quot;.</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="154"/>
+        <location filename="../VCWind_export.cpp" line="176"/>
         <source>导出litematica失败</source>
         <translation>Failed to export as litematic</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="155"/>
+        <location filename="../VCWind_export.cpp" line="177"/>
         <source>VisualCraftL不能为图像&quot;%1&quot;生成投影文件&quot;%2&quot;。</source>
         <translation>VisualCraft failed to generate litematic file &quot;%2&quot; for image &quot;%1&quot;.</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="178"/>
+        <location filename="../VCWind_export.cpp" line="200"/>
         <source>导出原版结构方块文件失败</source>
         <translation>Failed to export as vanilla structure</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="179"/>
+        <location filename="../VCWind_export.cpp" line="201"/>
         <source>VisualCraftL不能为图像&quot;%1&quot;生成结构方块文件&quot;%2&quot;。</source>
         <translation>VisualCraft failed to generate structure file &quot;%2&quot; for image &quot;%1&quot;.</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="220"/>
+        <location filename="../VCWind_export.cpp" line="242"/>
         <source>导出World Edit原理图失败</source>
         <translation>Failed to export as WE schematic</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="221"/>
+        <location filename="../VCWind_export.cpp" line="243"/>
         <source>VisualCraftL不能为图像&quot;%1&quot;生成World Edit原理图&quot;%2&quot;。</source>
         <translation>VisualCraft failed to generate WE schematic file &quot;%2&quot; for image &quot;%1&quot;.</translation>
     </message>

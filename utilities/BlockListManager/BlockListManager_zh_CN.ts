@@ -4,37 +4,37 @@
 <context>
     <name>BlockListManager</name>
     <message>
-        <location filename="BlockListManager.cpp" line="287"/>
+        <location filename="BlockListManager.cpp" line="295"/>
         <source>预设文件格式错误</source>
         <translation>Syntax error in preset file</translation>
     </message>
     <message>
-        <location filename="BlockListManager.cpp" line="288"/>
+        <location filename="BlockListManager.cpp" line="296"/>
         <source>解析预设文件时遇到json格式错误：</source>
         <translation>Json syntax error when parsing the preset file:</translation>
     </message>
     <message>
-        <location filename="BlockListManager.cpp" line="320"/>
+        <location filename="BlockListManager.cpp" line="326"/>
         <source>预设文件中包含未知方块</source>
         <translation>The preset file contains unknown block</translation>
     </message>
     <message>
-        <location filename="BlockListManager.cpp" line="321"/>
+        <location filename="BlockListManager.cpp" line="327"/>
         <source>预设文件中基色</source>
         <translation>In the preset file, base color </translation>
     </message>
     <message>
-        <location filename="BlockListManager.cpp" line="322"/>
+        <location filename="BlockListManager.cpp" line="327"/>
         <source>对应的方块id</source>
         <translation> which has a block id </translation>
     </message>
     <message>
-        <location filename="BlockListManager.cpp" line="323"/>
+        <location filename="BlockListManager.cpp" line="328"/>
         <source>在方块列表中不存在</source>
         <translation> that doesn\&apos;t exist in block list</translation>
     </message>
     <message>
-        <location filename="BlockListManager.cpp" line="324"/>
+        <location filename="BlockListManager.cpp" line="329"/>
         <source>将为这个启用默认选项</source>
         <translation>SlopeCraft will apply the default option for this.</translation>
     </message>

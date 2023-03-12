@@ -21,9 +21,11 @@ This file is part of SlopeCraft.
 */
 
 #include "VersionDialog.h"
-#include "ui_VersionDialog.h"
 
 #include <QDesktopServices>
+
+#include "ui_VersionDialog.h"
+
 
 VersionDialog::VersionDialog(QWidget *parent)
     : QDialog(parent), ui(new Ui::VersionDialog) {
@@ -70,8 +72,8 @@ uint64_t version_string_to_u64(const char *str) noexcept {
 
 #include <json.hpp>
 
-version_info
-extract_latest_version(std::string_view json_all_releaese) noexcept(false) {
+version_info extract_latest_version(
+    std::string_view json_all_releaese) noexcept(false) {
   using njson = nlohmann::json;
 
   njson jo = njson::parse(json_all_releaese);
@@ -107,7 +109,7 @@ extract_latest_version(std::string_view json_all_releaese) noexcept(false) {
 
   if (latest.empty()) {
     throw std::runtime_error(
-        "Failed to find any release that matched current major version.");
+        "Failed to find any release that matches current major version.");
     return {};
   }
 
