@@ -138,7 +138,6 @@ public:
   inline auto kernelPtr() const { return kernel; }
 
 public slots:
-  void destroySubWindTrans();
   void ReceiveTPS(tpS);
   // 透明像素处理策略：B->替换为背景色；A->空气；W->暂缓，等待处理
   // 半透明像素处理策略：B->替换为背景色；C->与背景色叠加；R->保留颜色；W->暂缓，等待处理
@@ -244,11 +243,7 @@ private:
   Ui::MainWindow *ui;
 
   SlopeCraft::Kernel *const kernel;
-  tpStrategyWind *transSubWind;
   BlockListManager *Manager;
-  BatchUi *batchOperator;
-  VersionDialog *verDialog;
-  AiCvterParameterDialog *acpDialog;
 
   QImage rawPic;
 

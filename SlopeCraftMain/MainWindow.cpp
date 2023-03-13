@@ -91,13 +91,7 @@ MainWindow::MainWindow(QWidget *parent)
           &MainWindow::onBlockListChanged);
   // connect(Kernel,SIGNAL(convertProgressSetRange(int,int,int)));
 
-  batchOperator = nullptr;
-  verDialog = nullptr;
-  acpDialog = nullptr;
-
   ui->maxHeight->setValue(255);
-
-  transSubWind = nullptr;
 
   connect(ui->progressStart, &QPushButton::clicked, this,
           &MainWindow::turnToPage0);
@@ -850,14 +844,11 @@ void MainWindow::on_ImportPic_clicked() {
 
     return;
   } else {
-    if (batchOperator != nullptr) {
-      qDebug("错误！连续打开两个BatchUi");
-      return;
-    }
+    auto bo = new BatchUi(this);
     // qDebug("开始创建BatchUi");
-    batchOperator = new BatchUi(&batchOperator, this);
-    batchOperator->show();
-    batchOperator->setTasks(userSelected);
+    bo->setTasks(userSelected);
+    bo->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
+    bo->show();
     /*
     connect(this,&MainWindow::mapTypeChanged,
             batchOperator,&BatchUi::taskTypeUpdated);
@@ -868,23 +859,14 @@ void MainWindow::on_ImportPic_clicked() {
 }
 
 void MainWindow::on_ImportSettings_clicked() {
-  if (transSubWind != nullptr) {
-    qDebug("子窗口已经打开，不能重复打开！");
-    return;
-  }
-  transSubWind = new tpStrategyWind(this);
-  transSubWind->show();
-  connect(transSubWind, &tpStrategyWind::destroyed, this,
-          &MainWindow::destroySubWindTrans);
+
+  auto transSubWind = new tpStrategyWind(this);
   connect(transSubWind, &tpStrategyWind::Confirm, this,
           &MainWindow::ReceiveTPS);
   transSubWind->setVal(Strategy);
-}
 
-void MainWindow::destroySubWindTrans() {
-  disconnect(transSubWind, &tpStrategyWind::Confirm, this,
-             &MainWindow::ReceiveTPS);
-  transSubWind = nullptr;
+  transSubWind->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
+  transSubWind->show();
 }
 
 void MainWindow::ReceiveTPS(tpS t) {
@@ -2111,19 +2093,15 @@ void MainWindow::grabVersion(bool isAuto) {
     return;
   } else {
 
-    if (verDialog != nullptr) {
-      qDebug("prevented VersionDialog to be opened twice at one time");
-      return;
-    }
-
-    verDialog = new VersionDialog(&verDialog, this);
-    verDialog->show();
+    auto verDialog = new VersionDialog(this);
+    verDialog->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
     verDialog->setTexts(QObject::tr("SlopeCraft已更新"),
                         QObject::tr("好消息！好消息！SlopeCraft更新了！\n") +
                             QObject::tr("当前版本为") + selfVersion +
                             QObject::tr("，检查到最新版本为") + latestVersion,
                         updateInfo);
 
+    verDialog->show();
     QEventLoop EL(this);
     connect(this, &MainWindow::closed, verDialog, &VersionDialog::close);
     connect(verDialog, &VersionDialog::finished, &EL, &QEventLoop::quit);
@@ -2264,9 +2242,8 @@ void MainWindow::onActionLoadPreset() {
 }
 
 void MainWindow::onActionAiCvterParameters() {
-  if (acpDialog == nullptr) {
-    acpDialog = new AiCvterParameterDialog(&acpDialog, this);
-  }
+  auto acpDialog = new AiCvterParameterDialog(this);
+  acpDialog->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
   acpDialog->show();
 }
 

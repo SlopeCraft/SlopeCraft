@@ -36,7 +36,7 @@ class AiCvterParameterDialog : public QDialog {
   Q_OBJECT
 
 public:
-  explicit AiCvterParameterDialog(AiCvterParameterDialog **, QWidget *parent);
+  explicit AiCvterParameterDialog(QWidget *parent);
   ~AiCvterParameterDialog();
 
 protected:
@@ -49,7 +49,6 @@ private slots:
 
 private:
   Ui::AiCvterParameterDialog *ui;
-  AiCvterParameterDialog **self;
 };
 
 #endif // AICVTERPARAMETERDIALOG_H

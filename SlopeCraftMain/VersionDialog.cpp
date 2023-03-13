@@ -21,17 +21,16 @@ This file is part of SlopeCraft.
 */
 
 #include "VersionDialog.h"
+#include "ui_VersionDialog.h"
 
-VersionDialog::VersionDialog(VersionDialog **_self, QWidget *parent)
+VersionDialog::VersionDialog(QWidget *parent)
     : QDialog(parent), ui(new Ui::VersionDialog) {
   ui->setupUi(this);
   result = userChoice::No;
-  self = _self;
 }
 
 VersionDialog::~VersionDialog() {
   delete ui;
-  *self = nullptr;
   // deleteLater();
 }
 
