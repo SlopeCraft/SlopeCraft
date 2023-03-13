@@ -51,7 +51,7 @@ include(cmake/find_qt6.cmake)
 
 # If it is set to ON, everytime CMake reconfigure the project, all .ts files will be updated.
 if(NOT DEFINED SlopeCraft_update_ts_files)
-    option(SlopeCraft_update_ts_files "Update language files before build" OFF)
+    option(SlopeCraft_update_ts_files "Update language files before build" OFF CACHE)
 endif()
 
 # set(SlopeCraft_update_ts_files ON)
