@@ -19,7 +19,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>VisualCraft Pre-release</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
@@ -58,8 +58,8 @@
          <attribute name="title">
           <string>基础属性</string>
          </attribute>
-         <layout class="QGridLayout" name="gridLayout_4" columnstretch="1,1,2,2">
-          <item row="2" column="0">
+         <layout class="QGridLayout" name="gridLayout_4" columnstretch="0,0,0,0">
+          <item row="3" column="0">
            <spacer name="verticalSpacer_5">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -72,7 +72,91 @@
             </property>
            </spacer>
           </item>
-          <item row="0" column="2" rowspan="3">
+          <item row="0" column="1">
+           <widget class="QGroupBox" name="groupBox_2">
+            <property name="title">
+             <string>游戏版本</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_3">
+             <item row="2" column="1">
+              <widget class="QRadioButton" name="rdb_version_15">
+               <property name="text">
+                <string notr="true">1.15</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QRadioButton" name="rdb_version_12">
+               <property name="text">
+                <string notr="true">1.12</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0">
+              <widget class="QRadioButton" name="rdb_version_16">
+               <property name="text">
+                <string notr="true">1.16</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QRadioButton" name="rdb_version_13">
+               <property name="text">
+                <string notr="true">1.13</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QRadioButton" name="rdb_version_14">
+               <property name="text">
+                <string notr="true">1.14</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <widget class="QRadioButton" name="rdb_version_17">
+               <property name="text">
+                <string notr="true">1.17</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="1">
+              <widget class="QRadioButton" name="rdb_version_19">
+               <property name="text">
+                <string notr="true">1.19</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="0">
+              <widget class="QRadioButton" name="rdb_version_18">
+               <property name="text">
+                <string notr="true">1.18</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QSpinBox" name="sb_max_layers">
+            <property name="prefix">
+             <string>最大厚度：</string>
+            </property>
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>3</number>
+            </property>
+            <property name="value">
+             <number>2</number>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2" rowspan="4">
            <widget class="QGroupBox" name="groupBox_3">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -132,7 +216,7 @@
             </layout>
            </widget>
           </item>
-          <item row="0" column="3" rowspan="3">
+          <item row="0" column="3" rowspan="4">
            <widget class="QGroupBox" name="groupBox_4">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -229,102 +313,15 @@
             </layout>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="QGroupBox" name="groupBox_2">
-            <property name="title">
-             <string>游戏版本</string>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_3">
-             <item row="2" column="1">
-              <widget class="QRadioButton" name="rdb_version_15">
-               <property name="text">
-                <string>1.15</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QRadioButton" name="rdb_version_12">
-               <property name="text">
-                <string>1.12</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="0">
-              <widget class="QRadioButton" name="rdb_version_16">
-               <property name="text">
-                <string>1.16</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QRadioButton" name="rdb_version_13">
-               <property name="text">
-                <string>1.13</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
-              <widget class="QRadioButton" name="rdb_version_14">
-               <property name="text">
-                <string>1.14</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="1">
-              <widget class="QRadioButton" name="rdb_version_17">
-               <property name="text">
-                <string>1.17</string>
-               </property>
-              </widget>
-             </item>
-             <item row="5" column="1">
-              <widget class="QRadioButton" name="rdb_version_19">
-               <property name="text">
-                <string>1.19</string>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="5" column="0">
-              <widget class="QRadioButton" name="rdb_version_18">
-               <property name="text">
-                <string>1.18</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
+          <item row="1" column="0" colspan="2">
+           <widget class="QComboBox" name="combobox_select_biome"/>
           </item>
-          <item row="1" column="0">
-           <widget class="QSpinBox" name="sb_max_layers">
-            <property name="prefix">
-             <string>最大厚度：</string>
-            </property>
-            <property name="minimum">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <number>3</number>
-            </property>
-            <property name="value">
-             <number>3</number>
+          <item row="2" column="1">
+           <widget class="QCheckBox" name="cb_leaves_transparent">
+            <property name="text">
+             <string>树叶透明</string>
             </property>
            </widget>
-          </item>
-          <item row="1" column="1" rowspan="2">
-           <spacer name="verticalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
           </item>
          </layout>
         </widget>
@@ -334,7 +331,7 @@
          </attribute>
          <layout class="QGridLayout" name="gridLayout_5">
           <item row="0" column="1">
-           <widget class="QGroupBox" name="groupBox_5">
+           <widget class="QGroupBox" name="gb_blocks">
             <property name="title">
              <string>全部方块</string>
             </property>
@@ -366,7 +363,42 @@
              <string>快捷键</string>
             </property>
             <layout class="QGridLayout" name="gridLayout_16">
+             <item row="8" column="0">
+              <widget class="QPushButton" name="pb_custom_select">
+               <property name="text">
+                <string>高级匹配</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QPushButton" name="pb_deselect_all">
+               <property name="text">
+                <string>全部禁用</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QPushButton" name="pb_deselect_rare">
+               <property name="text">
+                <string>禁用罕见方块</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QPushButton" name="pb_select_all">
+               <property name="text">
+                <string>全部启用</string>
+               </property>
+              </widget>
+             </item>
              <item row="2" column="0">
+              <widget class="QPushButton" name="pb_deselect_non_reporducible">
+               <property name="text">
+                <string>禁用不可再生</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="0">
               <spacer name="verticalSpacer_4">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
@@ -379,17 +411,17 @@
                </property>
               </spacer>
              </item>
-             <item row="0" column="0">
-              <widget class="QPushButton" name="pb_select_all">
+             <item row="5" column="0">
+              <widget class="QPushButton" name="pb_invselect_blockwise">
                <property name="text">
-                <string>全部启用</string>
+                <string>全部反选</string>
                </property>
               </widget>
              </item>
-             <item row="1" column="0">
-              <widget class="QPushButton" name="pb_deselect_all">
+             <item row="4" column="0">
+              <widget class="QPushButton" name="pb_invselect_classwise">
                <property name="text">
-                <string>全部禁用</string>
+                <string>按类反选</string>
                </property>
               </widget>
              </item>
@@ -442,19 +474,19 @@
           <item row="2" column="1">
            <widget class="QToolButton" name="tb_add_images">
             <property name="text">
-             <string>+</string>
+             <string notr="true">+</string>
             </property>
            </widget>
           </item>
           <item row="2" column="2">
            <widget class="QToolButton" name="tb_remove_images">
             <property name="text">
-             <string>-</string>
+             <string notr="true">-</string>
             </property>
            </widget>
           </item>
           <item row="0" column="0" rowspan="2" colspan="3">
-           <widget class="QGroupBox" name="groupBox_7">
+           <widget class="QGroupBox" name="gb_convert_algo">
             <property name="title">
              <string>调色算法</string>
             </property>
@@ -720,41 +752,9 @@
             </widget>
             <widget class="QWidget" name="tab_2">
              <attribute name="title">
-              <string>三维结构选项</string>
+              <string>导出选项</string>
              </attribute>
              <layout class="QGridLayout" name="gridLayout_18">
-              <item row="0" column="1">
-               <widget class="QGroupBox" name="groupBox_11">
-                <property name="title">
-                 <string>原版结构方块文件(*.nbt)</string>
-                </property>
-                <layout class="QGridLayout" name="gridLayout_20">
-                 <item row="0" column="0">
-                  <widget class="QCheckBox" name="cb_structure_is_air_void">
-                   <property name="text">
-                    <string>用结构空位表示空气</string>
-                   </property>
-                   <property name="checked">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
-                  <spacer name="verticalSpacer_6">
-                   <property name="orientation">
-                    <enum>Qt::Vertical</enum>
-                   </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>20</width>
-                     <height>40</height>
-                    </size>
-                   </property>
-                  </spacer>
-                 </item>
-                </layout>
-               </widget>
-              </item>
               <item row="0" column="0">
                <widget class="QGroupBox" name="groupBox_10">
                 <property name="title">
@@ -786,6 +786,38 @@
                     <string>投影名称（非文件名）</string>
                    </property>
                   </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QGroupBox" name="groupBox_11">
+                <property name="title">
+                 <string>原版结构方块文件(*.nbt)</string>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_20">
+                 <item row="0" column="0">
+                  <widget class="QCheckBox" name="cb_structure_is_air_void">
+                   <property name="text">
+                    <string>用结构空位表示空气</string>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <spacer name="verticalSpacer_6">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
                  </item>
                 </layout>
                </widget>
@@ -858,14 +890,14 @@
                  <item row="0" column="0">
                   <widget class="QLabel" name="label">
                    <property name="text">
-                    <string>Offset</string>
+                    <string notr="true">Offset</string>
                    </property>
                   </widget>
                  </item>
                  <item row="1" column="0">
                   <widget class="QLabel" name="label_2">
                    <property name="text">
-                    <string>WEOffset</string>
+                    <string notr="true">WEOffset</string>
                    </property>
                   </widget>
                  </item>
@@ -905,12 +937,119 @@
                 </layout>
                </widget>
               </item>
+              <item row="0" column="3">
+               <widget class="QGroupBox" name="groupBox_5">
+                <property name="title">
+                 <string>平面示意图(*.png)</string>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_22">
+                 <item row="4" column="0">
+                  <widget class="QSpinBox" name="sb_fd_compress_level">
+                   <property name="prefix">
+                    <string>png压缩级别：</string>
+                   </property>
+                   <property name="maximum">
+                    <number>9</number>
+                   </property>
+                   <property name="singleStep">
+                    <number>1</number>
+                   </property>
+                   <property name="value">
+                    <number>9</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QSpinBox" name="sb_fd_sl_row_margin">
+                   <property name="suffix">
+                    <string> 方块</string>
+                   </property>
+                   <property name="prefix">
+                    <string>间距：</string>
+                   </property>
+                   <property name="minimum">
+                    <number>1</number>
+                   </property>
+                   <property name="maximum">
+                    <number>16384</number>
+                   </property>
+                   <property name="value">
+                    <number>16</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="6" column="0">
+                  <spacer name="verticalSpacer_2">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QSpinBox" name="sb_fd_sl_col_margin">
+                   <property name="suffix">
+                    <string> 方块</string>
+                   </property>
+                   <property name="prefix">
+                    <string>间距：</string>
+                   </property>
+                   <property name="minimum">
+                    <number>1</number>
+                   </property>
+                   <property name="maximum">
+                    <number>16384</number>
+                   </property>
+                   <property name="value">
+                    <number>16</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QCheckBox" name="cb_col_split_line">
+                   <property name="text">
+                    <string>垂直分隔线</string>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QCheckBox" name="cb_row_split_line">
+                   <property name="text">
+                    <string>水平分隔线</string>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="0">
+                  <widget class="QSpinBox" name="sb_fd_compress_mem_level">
+                   <property name="prefix">
+                    <string>png压缩内存级别：</string>
+                   </property>
+                   <property name="maximum">
+                    <number>9</number>
+                   </property>
+                   <property name="singleStep">
+                    <number>1</number>
+                   </property>
+                   <property name="value">
+                    <number>8</number>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
              </layout>
-            </widget>
-            <widget class="QWidget" name="tab_3">
-             <attribute name="title">
-              <string>平面示意图选项</string>
-             </attribute>
             </widget>
            </widget>
           </item>
@@ -922,9 +1061,9 @@
          </attribute>
          <layout class="QGridLayout" name="gridLayout_13">
           <item row="0" column="1">
-           <widget class="QGroupBox" name="groupBox_8">
+           <widget class="QGroupBox" name="gb_gpu">
             <property name="title">
-             <string>可用的计算设备（CPU + OpenCL可用的显卡）</string>
+             <string notr="true"/>
             </property>
             <property name="flat">
              <bool>false</bool>
@@ -1022,21 +1161,159 @@
      <x>0</x>
      <y>0</y>
      <width>987</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+    </font>
    </property>
    <widget class="QMenu" name="menu_tests">
     <property name="title">
-     <string>Tests</string>
+     <string>测试</string>
     </property>
+    <addaction name="ac_export_test_schem"/>
     <addaction name="action_test01"/>
    </widget>
+   <widget class="QMenu" name="menu_browse">
+    <property name="title">
+     <string>查看</string>
+    </property>
+    <addaction name="ac_browse_block"/>
+    <addaction name="ac_browse_biome"/>
+    <addaction name="ac_browse_basic_colors"/>
+    <addaction name="ac_browse_allowed_colors"/>
+   </widget>
+   <widget class="QMenu" name="menu_resource">
+    <property name="title">
+     <string>资源</string>
+    </property>
+    <addaction name="ac_load_resource"/>
+    <addaction name="ac_set_allowed"/>
+   </widget>
+   <widget class="QMenu" name="menu_about">
+    <property name="title">
+     <string>关于</string>
+    </property>
+    <widget class="QMenu" name="menu_contact">
+     <property name="title">
+      <string>联系开发者</string>
+     </property>
+     <addaction name="ac_contact_bilibili"/>
+     <addaction name="ac_contact_github_repo"/>
+    </widget>
+    <addaction name="ac_about_VisualCraft"/>
+    <addaction name="ac_report_bugs"/>
+    <addaction name="menu_contact"/>
+    <addaction name="ac_check_update"/>
+   </widget>
+   <addaction name="menu_resource"/>
+   <addaction name="menu_browse"/>
    <addaction name="menu_tests"/>
+   <addaction name="menu_about"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="action_test01">
    <property name="text">
-    <string>test01</string>
+    <string notr="true">internal test 01</string>
+   </property>
+   <property name="iconText">
+    <string notr="true">internal test 01</string>
+   </property>
+   <property name="toolTip">
+    <string notr="true">internal test 01</string>
+   </property>
+  </action>
+  <action name="ac_browse_block">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>方块</string>
+   </property>
+  </action>
+  <action name="ac_load_resource">
+   <property name="text">
+    <string>加载资源</string>
+   </property>
+  </action>
+  <action name="ac_set_allowed">
+   <property name="text">
+    <string>设置可用的方块</string>
+   </property>
+  </action>
+  <action name="ac_browse_biome">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>生物群系</string>
+   </property>
+  </action>
+  <action name="ac_about_VisualCraft">
+   <property name="text">
+    <string>关于VisualCraft</string>
+   </property>
+  </action>
+  <action name="ac_report_bugs">
+   <property name="text">
+    <string>反馈bug</string>
+   </property>
+  </action>
+  <action name="ac_github_repo">
+   <property name="text">
+    <string>Github仓库</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="text">
+    <string>bilibili</string>
+   </property>
+  </action>
+  <action name="ac_contact_bilibili">
+   <property name="text">
+    <string notr="true">Bilibili</string>
+   </property>
+   <property name="iconText">
+    <string notr="true">Bilibili</string>
+   </property>
+   <property name="toolTip">
+    <string notr="true">Bilibili</string>
+   </property>
+  </action>
+  <action name="ac_contact_github_repo">
+   <property name="text">
+    <string>Github仓库</string>
+   </property>
+  </action>
+  <action name="ac_export_test_schem">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>生成测试投影</string>
+   </property>
+  </action>
+  <action name="ac_browse_basic_colors">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>查看所有颜色</string>
+   </property>
+  </action>
+  <action name="ac_browse_allowed_colors">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>查看可用颜色</string>
+   </property>
+  </action>
+  <action name="ac_check_update">
+   <property name="text">
+    <string>检查更新</string>
    </property>
   </action>
  </widget>

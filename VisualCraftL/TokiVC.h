@@ -1,3 +1,25 @@
+/*
+ Copyright © 2021-2023  TokiNoBug
+This file is part of SlopeCraft.
+
+    SlopeCraft is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    SlopeCraft is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
+
+    Contact with me:
+    github:https://github.com/SlopeCraft/SlopeCraft
+    bilibili:https://space.bilibili.com/351429231
+*/
+
 #ifndef SLOPECRAFT_VISUALCRAFTL_TOKIVC_H
 #define SLOPECRAFT_VISUALCRAFTL_TOKIVC_H
 
@@ -14,6 +36,18 @@
 #include <utilities/uiPack/uiPack.h>
 #include <variant>
 
+class VCL_GPU_Platform {
+public:
+  ~VCL_GPU_Platform() { gpu_wrapper::platform_wrapper::destroy(this->pw); }
+  gpu_wrapper::platform_wrapper *pw{nullptr};
+};
+
+class VCL_GPU_Device {
+public:
+  ~VCL_GPU_Device() { gpu_wrapper::device_wrapper::destroy(this->dw); }
+  gpu_wrapper::device_wrapper *dw{nullptr};
+};
+
 class TokiVC : public VCL_Kernel {
 public:
   TokiVC();
@@ -22,14 +56,24 @@ public:
               void (*progressAdd)(void *, int)) noexcept override;
 
   bool have_gpu_resource() const noexcept override {
-    return this->img_cvter.have_ocl();
+    return this->img_cvter.have_gpu_resource();
   }
 
-  bool set_gpu_resource(size_t platform_idx,
-                        size_t device_idx) noexcept override {
-    this->img_cvter.set_ocl(
-        ocl_warpper::ocl_resource(platform_idx, device_idx));
-    return this->img_cvter.ocl_resource().ok();
+  bool set_gpu_resource(const VCL_GPU_Platform *p,
+                        const VCL_GPU_Device *d) noexcept override {
+    if (this->img_cvter.have_gpu_resource()) {
+      gpu_wrapper::gpu_interface::destroy(this->img_cvter.gpu_resource());
+    }
+    auto platp = static_cast<gpu_wrapper::platform_wrapper *>(p->pw);
+    auto devp = static_cast<gpu_wrapper::device_wrapper *>(d->dw);
+
+    auto gi = gpu_wrapper::gpu_interface::create(platp, devp);
+    if (gi == nullptr || !gi->ok_v()) {
+      return false;
+    }
+
+    this->img_cvter.set_gpu_resource(gi);
+    return this->img_cvter.gpu_resource()->ok_v();
   }
 
   bool prefer_gpu() const noexcept override {
@@ -43,7 +87,8 @@ public:
   void show_gpu_name() const noexcept override;
   size_t get_gpu_name(char *string_buffer,
                       size_t buffer_capacity) const noexcept override {
-    const std::string result = this->img_cvter.ocl_resource().device_vendor();
+    const std::string result =
+        this->img_cvter.gpu_resource()->device_vendor_v();
     if (string_buffer == nullptr || buffer_capacity <= 0) {
       return result.size();
     }
@@ -104,10 +149,18 @@ public:
   static SCL_gameVersion version;
   static VCL_face_t exposed_face;
   static int max_block_layers;
+  static bool is_render_quality_fast;
+  static VCL_biome_t biome;
 
   static bool set_resource_no_lock() noexcept;
   static bool set_allowed_no_lock(const VCL_block *const *const blocks_allowed,
                                   size_t num_block_allowed) noexcept;
+
+  static bool export_test_litematic_no_lock(const char *filename) noexcept;
+
+  static const auto &LUT_bcitb() noexcept {
+    return TokiVC::LUT_basic_color_idx_to_blocks;
+  }
 
 private:
   static std::vector<

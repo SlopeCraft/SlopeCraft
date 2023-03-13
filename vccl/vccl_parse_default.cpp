@@ -1,3 +1,25 @@
+/*
+ Copyright © 2021-2023  TokiNoBug
+This file is part of SlopeCraft.
+
+    SlopeCraft is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    SlopeCraft is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
+
+    Contact with me:
+    github:https://github.com/SlopeCraft/SlopeCraft
+    bilibili:https://space.bilibili.com/351429231
+*/
+
 #include "vccl_internal.h"
 #include <QImage>
 #include <QImageReader>
@@ -86,10 +108,18 @@ int set_resource(VCL_Kernel *kernel, const inputs &input) noexcept {
     VCL_destroy_kernel(kernel);
     return __LINE__;
   }
+
+  if (input.list_blockstates || input.list_models || input.list_textures) {
+    VCL_display_resource_pack(rp, input.list_textures, input.list_blockstates,
+                              input.list_models);
+  }
+
   VCL_set_resource_option option;
   option.version = input.version;
   option.max_block_layers = input.layers;
   option.exposed_face = input.face;
+  option.biome = input.biome;
+  option.is_render_quality_fast = !input.leaves_transparent;
 
   if (!VCL_set_resource_move(&rp, &bsl, option)) {
     cout << "Failed to set resource pack" << endl;
@@ -194,8 +224,29 @@ int run(const inputs &input) noexcept {
 
   kernel->set_prefer_gpu(input.prefer_gpu);
   if (input.prefer_gpu) {
-    const bool ok =
-        kernel->set_gpu_resource(input.platform_idx, input.device_idx);
+    bool ok = true;
+    while (true) {
+
+      auto plat = VCL_get_platform(input.platform_idx);
+      if (plat == nullptr) {
+        ok = false;
+        break;
+      }
+
+      auto dev = VCL_get_device(plat, input.device_idx);
+
+      if (dev == nullptr) {
+        VCL_release_platform(plat);
+        ok = false;
+        break;
+      }
+
+      ok = kernel->set_gpu_resource(plat, dev);
+
+      VCL_release_device(dev);
+      VCL_release_platform(plat);
+      break;
+    }
     if (!ok || !kernel->have_gpu_resource()) {
       cout << "Failed to set gpu resource for kernel. Platform and device may "
               "be invalid."
@@ -237,6 +288,24 @@ int run(const inputs &input) noexcept {
   if (input.show_color_num) {
     cout << fmt::format("{} colors avaliable.\n",
                         VCL_get_allowed_colors(nullptr, 0));
+  }
+
+  if (input.export_test_lite) {
+    std::string filename = fmt::format("{}test_all_blocks_mc={}.litematic",
+                                       input.prefix, int(input.version));
+    wt = omp_get_wtime();
+
+    if (!VCL_export_test_litematic(filename.c_str())) {
+      cout << fmt::format("Failed to export test litematic \"{}\"", filename)
+           << endl;
+      return __LINE__;
+    }
+
+    wt = omp_get_wtime() - wt;
+
+    if (input.benchmark) {
+      cout << fmt::format("Exported \"{}\" in {} seconds.\n", filename, wt);
+    }
   }
 
   for (const auto &img_filename : input.images) {
@@ -300,6 +369,40 @@ int run(const inputs &input) noexcept {
         return __LINE__;
       }
       // cout << dst_path << endl;
+    }
+
+    if (input.make_flat_diagram) {
+      double wtime[3];
+      for (uint8_t layer = 0; layer < input.layers; layer++) {
+
+        std::string dst_name_str(input.prefix);
+        dst_name_str += pure_filename_no_extension;
+        dst_name_str += "_flagdiagram_layer=";
+        dst_name_str += std::to_string(layer);
+        dst_name_str += ".png";
+
+        VCL_Kernel::flag_diagram_option option;
+        option.row_start = 0;
+        option.row_end = kernel->rows();
+        option.split_line_row_margin = input.flat_diagram_splitline_margin_row;
+        option.split_line_col_margin = input.flat_diagram_splitline_margin_col;
+        wtime[layer] = omp_get_wtime();
+        if (!kernel->export_flag_diagram(dst_name_str.c_str(), option, layer)) {
+          cout << fmt::format("Failed to export flat diagram {}\n",
+                              dst_name_str);
+          return __LINE__;
+        }
+        wtime[layer] = omp_get_wtime() - wtime[layer];
+      }
+
+      if (input.benchmark) {
+        cout << fmt::format("Export flatdiagram containing {} images in ",
+                            input.layers);
+        for (int i = 0; i < input.layers; i++) {
+          cout << wtime[i] << ", ";
+        }
+        cout << " seconds.\n";
+      }
     }
 
     if (!input.need_to_build()) {

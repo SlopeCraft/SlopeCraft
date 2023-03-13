@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2022  TokiNoBug
+ Copyright © 2021-2023  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -13,10 +13,10 @@ This file is part of SlopeCraft.
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with SlopeCraft.  If not, see <https://www.gnu.org/licenses/>.
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
 
     Contact with me:
-    github:https://github.com/ToKiNoBug
+    github:https://github.com/SlopeCraft/SlopeCraft
     bilibili:https://space.bilibili.com/351429231
 */
 
@@ -35,7 +35,7 @@ std::mt19937 mt(std::hash<time_t>()(std::time(nullptr)));
 using std::cout, std::endl;
 
 int main() {
-  SlopeCraft::Kernel *const kernel = SlopeCraft::Kernel::create();
+  SlopeCraft::Kernel *const kernel = SlopeCraft::SCL_createKernel();
 
   if (kernel == nullptr) {
     return 1;
@@ -48,7 +48,7 @@ int main() {
     midx.fill(true);
     std::array<SlopeCraft::AbstractBlock *, 64> blocks;
     for (auto &ptr : blocks) {
-      ptr = SlopeCraft::AbstractBlock::create();
+      ptr = SlopeCraft::SCL_createBlock();
     }
     blocks[0]->setId("minecraft:glass");
 
@@ -64,7 +64,7 @@ int main() {
                     blocks.data());
 
     for (auto i : blocks) {
-      i->destroy();
+      SlopeCraft::SCL_destroyBlock(i);
     }
   }
 
@@ -111,7 +111,7 @@ int main() {
          << endl;
   }
 
-  kernel->destroy();
+  SlopeCraft::SCL_destroyKernel(kernel);
   cout << "testing finished" << endl;
   return 0;
 }

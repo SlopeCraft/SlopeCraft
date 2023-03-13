@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2022  TokiNoBug
+ Copyright © 2021-2023  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -13,10 +13,10 @@ This file is part of SlopeCraft.
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with SlopeCraft.  If not, see <https://www.gnu.org/licenses/>.
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
 
     Contact with me:
-    github:https://github.com/ToKiNoBug
+    github:https://github.com/SlopeCraft/SlopeCraft
     bilibili:https://space.bilibili.com/351429231
 */
 
@@ -29,7 +29,7 @@ TokiBaseColor::TokiBaseColor(uchar _baseColor, QGridLayout *_layout,
     : QObject(parent) {
   layout = _layout;
   baseColor = _baseColor;
-  //负责创建QCheckBox和对应的弹簧
+  // 负责创建QCheckBox和对应的弹簧
 
   layout->addWidget(checkBox = new QCheckBox("启用"), 0, 1);
   checkBox->setChecked(false);
@@ -41,7 +41,7 @@ TokiBaseColor::TokiBaseColor(uchar _baseColor, QGridLayout *_layout,
   connect(checkBox, &QCheckBox::toggled, this, &TokiBaseColor::userClicked);
   connect(this, &TokiBaseColor::translate, this,
           &TokiBaseColor::translateCheckBox);
-  //创建弹簧
+  // 创建弹簧
   QSpacerItem *si = new QSpacerItem(40, 20, QSizePolicy::Policy::Expanding,
                                     QSizePolicy::Policy::Preferred);
   layout->addItem(si, 0, 2);
@@ -102,7 +102,7 @@ void TokiBaseColor::receiveClicked(ushort _selected) {
   versionCheck();
 }
 
-bool TokiBaseColor::isAllOverVersion() const { //判断是否所有方块都超版本了
+bool TokiBaseColor::isAllOverVersion() const { // 判断是否所有方块都超版本了
   bool isAllOver = true;
   for (auto it = tbs.cbegin(); it != tbs.cend(); it++) {
     isAllOver &= ((*it)->block->getVersion() > mcVer);

@@ -1,3 +1,25 @@
+/*
+ Copyright © 2021-2023  TokiNoBug
+This file is part of SlopeCraft.
+
+    SlopeCraft is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    SlopeCraft is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
+
+    Contact with me:
+    github:https://github.com/SlopeCraft/SlopeCraft
+    bilibili:https://space.bilibili.com/351429231
+*/
+
 #include "VisualCraftL.h"
 
 #include <stddef.h>
@@ -52,6 +74,13 @@ VCL_create_resource_pack(const int zip_file_count,
   }
 
   VCL_resource_pack *const rp = new VCL_resource_pack;
+
+  if (!rp->add_colormaps(zf)) {
+    delete rp;
+    VCL_report(VCL_report_type_t::error,
+               "Failed to add colormaps from resource pack.", true);
+    return nullptr;
+  }
 
   if (!rp->add_textures(zf)) {
     delete rp;
@@ -189,8 +218,7 @@ VCL_EXPORT_FUN void VCL_display_resource_pack(const VCL_resource_pack *rp,
       ss << "}\n";
     }
 
-    std::string msg;
-    ss >> msg;
+    std::string msg(ss.str());
 
     VCL_report(VCL_report_type_t::information, msg.c_str(), true);
   }
@@ -204,30 +232,52 @@ VCL_EXPORT_FUN void VCL_display_resource_pack(const VCL_resource_pack *rp,
     }
 
     ss << std::endl;
-    std::string msg;
-    ss >> msg;
+    std::string msg(ss.str());
 
     VCL_report(VCL_report_type_t::information, msg.c_str(), true);
   }
 
   if (textures) {
     std::stringstream ss;
-    ss << "There are " << rp->get_textures().size() << " textures : \n";
+    ss << "There are " << rp->get_textures_original().size()
+       << "original textures : \n";
 
-    for (const auto &pair : rp->get_textures()) {
+    for (const auto &pair : rp->get_textures_original()) {
+      ss << pair.first << " : [" << pair.second.rows() << ", "
+         << pair.second.cols() << "]\n";
+    }
+
+    ss << "There are " << rp->get_textures_override().size()
+       << " overrided textures : \n";
+
+    for (const auto &pair : rp->get_textures_override()) {
       ss << pair.first << " : [" << pair.second.rows() << ", "
          << pair.second.cols() << "]\n";
     }
 
     ss << std::endl;
-    std::string msg;
-    ss >> msg;
+    std::string msg(ss.str());
 
     VCL_report(VCL_report_type_t::information, msg.c_str(), true);
   }
 }
-VCL_EXPORT_FUN void
-VCL_display_block_state_list(const VCL_block_state_list *bsl) {
+
+VCL_EXPORT_FUN const uint32_t *VCL_get_colormap(const VCL_resource_pack *rp,
+                                                bool is_foliage, int *rows,
+                                                int *cols) {
+
+  if (rows != nullptr) {
+    *rows = 256;
+  }
+  if (cols != nullptr) {
+    *cols = 256;
+  }
+
+  return rp->get_colormap(is_foliage).data();
+}
+
+VCL_EXPORT_FUN
+void VCL_display_block_state_list(const VCL_block_state_list *bsl) {
   if (bsl == nullptr) {
     return;
   }
@@ -260,6 +310,32 @@ VCL_display_block_state_list(const VCL_block_state_list *bsl) {
   VCL_report(VCL_report_type_t::information, msg.c_str(), true);
 }
 
+VCL_EXPORT_FUN double
+VCL_estimate_color_num(size_t num_layers, size_t num_foreground,
+                       size_t num_background,
+                       size_t num_nontransparent_non_background) {
+  double a = num_background;
+  double b = num_foreground;
+  double num_stacked = 0;
+
+  switch (num_foreground) {
+  case 0:
+    num_stacked = a;
+    break;
+  case 1:
+    num_stacked = a + a * b;
+    break;
+  case 2:
+    num_stacked = a + (num_layers + 1) * b * a;
+    break;
+  default:
+    num_stacked = a + a * b * (std::pow(b - 1, num_layers + 1) - 1) / (b - 2);
+    break;
+  }
+
+  return num_stacked + num_nontransparent_non_background;
+}
+
 VCL_EXPORT_FUN bool
 VCL_set_resource_copy(const VCL_resource_pack *const rp,
                       const VCL_block_state_list *const bsl,
@@ -281,6 +357,8 @@ VCL_set_resource_copy(const VCL_resource_pack *const rp,
   TokiVC::version = option.version;
   TokiVC::exposed_face = option.exposed_face;
   TokiVC::max_block_layers = option.max_block_layers;
+  TokiVC::biome = option.biome;
+  TokiVC::is_render_quality_fast = option.is_render_quality_fast;
 
   const bool ret = TokiVC::set_resource_no_lock();
   VCL_report(VCL_report_type_t::warning, nullptr, true);
@@ -319,6 +397,8 @@ VCL_set_resource_move(VCL_resource_pack **rp_ptr,
   TokiVC::version = option.version;
   TokiVC::exposed_face = option.exposed_face;
   TokiVC::max_block_layers = option.max_block_layers;
+  TokiVC::biome = option.biome;
+  TokiVC::is_render_quality_fast = option.is_render_quality_fast;
 
   if (!TokiVC::set_resource_no_lock()) {
     ret = false;
@@ -327,6 +407,13 @@ VCL_set_resource_move(VCL_resource_pack **rp_ptr,
   VCL_report(VCL_report_type_t::warning, nullptr, true);
 
   return ret;
+}
+
+VCL_EXPORT_FUN void VCL_discard_resource() {
+  std::unique_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+
+  TokiVC_internal::is_basic_color_set_ready = false;
+  TokiVC_internal::is_allowed_color_set_ready = false;
 }
 
 VCL_EXPORT_FUN int VCL_get_max_block_layers() {
@@ -378,12 +465,63 @@ VCL_EXPORT_FUN VCL_face_t VCL_get_exposed_face() {
   return TokiVC::exposed_face;
 }
 
+VCL_EXPORT_FUN size_t VCL_num_basic_colors() {
+  std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+  return TokiVC::LUT_bcitb().size();
+}
+
+VCL_EXPORT_FUN int
+VCL_get_basic_color_composition(size_t color_idx,
+                                const VCL_block **const blocks_dest,
+                                uint32_t *const color) {
+  std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+
+  if (!TokiVC_internal::is_basic_color_set_ready) {
+    return -1;
+  }
+
+  if (color_idx >= TokiVC::LUT_bcitb().size()) {
+    return false;
+  }
+
+  if (color != nullptr) {
+    const uint16_t color_id = TokiVC::colorset_basic.color_id(color_idx);
+    *color = ARGB32(TokiVC::colorset_basic.RGB(color_id, 0) * 255,
+                    TokiVC::colorset_basic.RGB(color_id, 1) * 255,
+                    TokiVC::colorset_basic.RGB(color_id, 2) * 255);
+  }
+
+  const auto &variant = TokiVC::LUT_bcitb()[color_idx];
+  const VCL_block *const *srcp = nullptr;
+  size_t num_blocks = 0;
+  if (variant.index() == 0) {
+    srcp = &std::get<0>(variant);
+    num_blocks = 1;
+  } else {
+    const auto &vec = std::get<1>(variant);
+    srcp = vec.data();
+    num_blocks = vec.size();
+  }
+
+  if (blocks_dest != nullptr) {
+    for (size_t i = 0; i < num_blocks; i++) {
+      blocks_dest[i] = srcp[i];
+    }
+  }
+
+  return num_blocks;
+}
+
 VCL_EXPORT_FUN bool
 VCL_set_allowed_blocks(const VCL_block *const *const blocks_allowed,
                        size_t num_block_allowed) {
   std::unique_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
 
   return TokiVC::set_allowed_no_lock(blocks_allowed, num_block_allowed);
+}
+VCL_EXPORT_FUN void VCL_discard_allowed_blocks() {
+  std::unique_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+  TokiVC_internal::is_allowed_color_set_ready = false;
 }
 
 VCL_EXPORT_FUN bool VCL_is_allowed_colorset_ok() {
@@ -394,6 +532,12 @@ VCL_EXPORT_FUN bool VCL_is_allowed_colorset_ok() {
     return false;
   }
   return TokiVC_internal::is_allowed_color_set_ready;
+}
+
+VCL_EXPORT_FUN bool VCL_export_test_litematic(const char *filename) {
+  std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+
+  return TokiVC::export_test_litematic_no_lock(filename);
 }
 
 VCL_EXPORT_FUN int VCL_get_allowed_colors(uint32_t *dest,
@@ -413,6 +557,27 @@ VCL_EXPORT_FUN int VCL_get_allowed_colors(uint32_t *dest,
     Eigen::Array3i ret = (TokiVC::colorset_allowed.rgb(idx) * 255).cast<int>();
     dest[num_written] = ARGB32(ret[0], ret[1], ret[2]);
     num_written++;
+  }
+
+  return TokiVC::colorset_allowed.color_count();
+}
+
+VCL_EXPORT_FUN size_t VCL_get_allowed_color_id(
+    uint16_t *const dest, size_t dest_capacity_in_elements) {
+  std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
+
+  if (!TokiVC_internal::is_basic_color_set_ready ||
+      !TokiVC_internal::is_basic_color_set_ready) {
+    return 0;
+  }
+
+  if (dest != nullptr) {
+    for (size_t cidx = 0;
+         cidx < std::min<size_t>(dest_capacity_in_elements,
+                                 TokiVC::colorset_allowed.color_count());
+         cidx++) {
+      dest[cidx] = TokiVC::colorset_allowed.color_id(cidx);
+    }
   }
 
   return TokiVC::colorset_allowed.color_count();
@@ -568,11 +733,22 @@ VCL_EXPORT_FUN void VCL_set_block_attribute(VCL_block *b,
   b->set_attribute(attribute, value);
 }
 
-VCL_EXPORT_FUN const char *VCL_get_block_id(const VCL_block *b) {
+VCL_EXPORT_FUN const char *VCL_get_block_id(const VCL_block *b,
+                                            bool ignore_id_replace_list) {
   if (b->full_id_ptr() == nullptr) {
     return nullptr;
   }
-  return b->full_id_ptr()->c_str();
+
+  if (ignore_id_replace_list) {
+    return b->full_id_ptr()->c_str();
+  } else {
+    return b->id_for_schem(VCL_get_game_version()).c_str();
+  }
+}
+
+VCL_EXPORT_FUN const char *VCL_get_block_id_version(const VCL_block *b,
+                                                    SCL_gameVersion v) {
+  return b->id_for_schem(v).c_str();
 }
 
 VCL_EXPORT_FUN const char *VCL_get_block_name(const VCL_block *b,
@@ -590,6 +766,36 @@ VCL_EXPORT_FUN void VCL_set_block_class(VCL_block *b, VCL_block_class_t cl) {
   b->block_class = cl;
 }
 
+VCL_EXPORT_FUN bool VCL_is_block_suitable_for_version(const VCL_block *blk,
+                                                      SCL_gameVersion version) {
+  return blk->version_info.match(version);
+}
+
+VCL_EXPORT_FUN bool VCL_compare_block(const VCL_block *b1,
+                                      const VCL_block *b2) {
+  // if one of these blocks contains null, compare by index
+  if ((b1 == nullptr) || (b2 == nullptr)) {
+    return b1 < b2;
+  }
+
+  // compare by class
+  if (b1->block_class != b2->block_class) {
+    return b1->block_class < b2->block_class;
+  }
+
+  // compare by introduced version. Earlier versions are greater
+  {
+    const auto v1 = b1->version_info.introduced_version();
+    const auto v2 = b2->version_info.introduced_version();
+
+    if (v1 != v2) {
+      return v1 < v2;
+    }
+  }
+
+  return std::less<std::string>()(*b1->full_id_ptr(), *b2->full_id_ptr());
+}
+
 VCL_EXPORT_FUN VCL_block_class_t VCL_string_to_block_class(const char *str,
                                                            bool *ok) {
   return string_to_block_class(str, ok);
@@ -597,39 +803,38 @@ VCL_EXPORT_FUN VCL_block_class_t VCL_string_to_block_class(const char *str,
 
 [[nodiscard]] VCL_EXPORT_FUN VCL_model *
 VCL_get_block_model(const VCL_block *block,
-                    const VCL_resource_pack *resource_pack,
-                    VCL_face_t face_exposed, VCL_face_t *face_invrotated) {
+                    const VCL_resource_pack *resource_pack) {
   if (block->full_id_ptr() == nullptr) {
     return nullptr;
   }
-  VCL_face_t temp_fi;
-  auto model_variant =
-      resource_pack->find_model(*block->full_id_ptr(), face_exposed, &temp_fi);
 
-  if (model_variant.index() == 0 && std::get<0>(model_variant) == nullptr) {
+  auto model_variant = resource_pack->find_model(*block->full_id_ptr());
+
+  if (model_variant.index() == 0 &&
+      std::get<0>(model_variant).model_ptr == nullptr) {
     return nullptr;
   }
 
   VCL_model *ret = new VCL_model;
   ret->value = std::move(model_variant);
 
-  if (face_invrotated != nullptr) {
-    *face_invrotated = temp_fi;
-  }
   VCL_report(VCL_report_type_t::warning, nullptr, true);
   return ret;
 }
 
 [[nodiscard]] VCL_EXPORT_FUN VCL_model *
 VCL_get_block_model_by_name(const VCL_resource_pack *rp, const char *name) {
-  auto it = rp->get_models().find(name);
 
-  if (it == rp->get_models().end()) {
-    return nullptr;
+  auto result = rp->find_model(name);
+
+  if (result.index() == 0) {
+    if (std::get<0>(result).model_ptr == nullptr) {
+      return nullptr;
+    }
   }
 
   VCL_model *ret = new VCL_model;
-  ret->value = &it->second;
+  ret->value = result;
   return ret;
 }
 
@@ -650,7 +855,9 @@ VCL_EXPORT_FUN bool VCL_compute_projection_image(const VCL_model *md,
   const block_model::model *mdptr = nullptr;
 
   if (md->value.index() == 0) {
-    mdptr = std::get<0>(md->value);
+    mdptr = std::get<0>(md->value).model_ptr;
+    face = block_model::invrotate(face, std::get<0>(md->value).x_rot,
+                                  std::get<0>(md->value).y_rot);
   } else {
     mdptr = &std::get<1>(md->value);
   }
@@ -683,7 +890,7 @@ VCL_EXPORT_FUN void VCL_display_model(const VCL_model *md) {
 
   if (md->value.index() == 0) {
     msg.append("Is variant.\n");
-    mdp = std::get<0>(md->value);
+    mdp = std::get<0>(md->value).model_ptr;
   } else {
     msg.append("Is multipart.\n");
     mdp = &std::get<1>(md->value);
@@ -755,90 +962,41 @@ void VCL_report(VCL_report_type_t t, const char *msg, bool flush) noexcept {
   VCL_report_fun(t, msg, flush);
 }
 
-class VCL_GPU_Platform {
-public:
-  cl::Platform plat;
-  std::string name;
-  cl_int err;
-  std::vector<cl::Device> devices;
+VCL_EXPORT_FUN const char *VCL_get_GPU_api_name() {
+  return ::gpu_wrapper::api_name();
+}
 
-  VCL_GPU_Platform() = delete;
-  VCL_GPU_Platform(size_t platid) {
-    cl_platform_id plats[1024];
-    cl_uint num_plats;
-    this->err = clGetPlatformIDs(1024, plats, &num_plats);
-    if (this->err != CL_SUCCESS) {
-      return;
-    }
-    if (platid >= num_plats) {
-      this->err = 114514;
-      return;
-    }
+VCL_EXPORT_FUN size_t VCL_platform_num() { return gpu_wrapper::platform_num(); }
 
-    this->plat = cl::Platform(plats[platid]);
-
-    this->name = this->plat.getInfo<CL_PLATFORM_NAME>(&this->err);
-    if (this->err != CL_SUCCESS) {
-      return;
-    }
-
-    this->err = this->plat.getDevices(CL_DEVICE_TYPE_ALL, &this->devices);
-    if (this->err != CL_SUCCESS) {
-      return;
-    }
-  }
-};
-
-class VCL_GPU_Device {
-public:
-  cl::Device device;
-  std::string name;
-};
-
-VCL_EXPORT_FUN size_t VCL_platform_num() { return ocl_warpper::platform_num(); }
 VCL_EXPORT_FUN VCL_GPU_Platform *VCL_get_platform(size_t platform_idx,
                                                   int *errorcode) {
-  VCL_GPU_Platform *ret = new VCL_GPU_Platform(platform_idx);
-
-  if (errorcode != nullptr) {
-    *errorcode = ret->err;
-  }
-
-  if (ret->err != CL_SUCCESS) {
-    delete ret;
-    return nullptr;
-  }
+  VCL_GPU_Platform *ret = new VCL_GPU_Platform;
+  ret->pw = gpu_wrapper::platform_wrapper::create(platform_idx, errorcode);
   return ret;
 }
 
 VCL_EXPORT_FUN void VCL_release_platform(VCL_GPU_Platform *ptr) { delete ptr; }
 VCL_EXPORT_FUN const char *VCL_get_platform_name(const VCL_GPU_Platform *ptr) {
-  return ptr->name.c_str();
+  return ptr->pw->name_v();
 }
 
 VCL_EXPORT_FUN size_t VCL_get_device_num(const VCL_GPU_Platform *platp) {
-  return platp->devices.size();
+  return platp->pw->num_devices_v();
 }
 VCL_EXPORT_FUN VCL_GPU_Device *VCL_get_device(const VCL_GPU_Platform *platp,
                                               size_t device_idx,
                                               int *errorcode) {
-  if (device_idx >= platp->devices.size()) {
-    return nullptr;
-  }
+  VCL_GPU_Device *ret = new VCL_GPU_Device;
+  ret->dw =
+      gpu_wrapper::device_wrapper::create(platp->pw, device_idx, errorcode);
 
-  if (errorcode != nullptr) {
-    *errorcode = platp->err;
-  }
-
-  VCL_GPU_Device *ret = new VCL_GPU_Device{platp->devices[device_idx], ""};
-  ret->name = ret->device.getInfo<CL_DEVICE_NAME>();
   return ret;
 }
 
 VCL_EXPORT_FUN void VCL_release_device(VCL_GPU_Device *dev) { delete dev; }
 
 VCL_EXPORT_FUN const char *VCL_get_device_name(const VCL_GPU_Device *dev) {
-  return dev->name.c_str();
+  return dev->dw->name_v();
 }
 
 static_assert(std::is_trivially_copyable_v<VCL_biome_t> &&
@@ -976,4 +1134,294 @@ VCL_EXPORT_FUN VCL_biome_info VCL_get_biome_info(VCL_biome_t biome) {
     return VCL_biome_info{0.5, 0.8};
   }
   return VCL_biome_info{NAN, NAN};
+}
+
+#include <magic_enum.hpp>
+
+const char *VCL_biome_name_ZH(VCL_biome_t b) noexcept {
+
+  switch (b) {
+  case VCL_biome_t::the_void:
+    return "虚空";
+  case VCL_biome_t::plains:
+    return "平原";
+  case VCL_biome_t::sunflower_plains:
+    return "向日葵平原";
+  case VCL_biome_t::snowy_plains:
+    return "雪原";
+  case VCL_biome_t::ice_spikes:
+    return "冰刺之地";
+  case VCL_biome_t::desert:
+    return "沙漠";
+  case VCL_biome_t::swamp:
+    return "湿地";
+  case VCL_biome_t::mangrove_swamp:
+    return "红树林湿地";
+  case VCL_biome_t::forest:
+    return "森林";
+  case VCL_biome_t::flower_forest:
+    return "繁华森林";
+  case VCL_biome_t::birch_forest:
+    return "白桦森林";
+  case VCL_biome_t::dark_forest:
+    return "黑森林";
+  case VCL_biome_t::old_growth_birch_forest:
+    return "原始桦木森林";
+  case VCL_biome_t::old_growth_pine_taiga:
+    return "原始松木针叶林";
+  case VCL_biome_t::old_growth_spruce_taiga:
+    return "原始云杉针叶林";
+  case VCL_biome_t::taiga:
+    return "针叶林";
+  case VCL_biome_t::snowy_taiga:
+    return "积雪针叶林";
+  case VCL_biome_t::savanna:
+    return "热带草原";
+  case VCL_biome_t::savanna_plateau:
+    return "热带高原";
+  case VCL_biome_t::windswept_hills:
+    return "风袭丘陵";
+  case VCL_biome_t::windswept_gravelly_hills:
+    return "风袭沙砾丘陵";
+  case VCL_biome_t::windswept_forest:
+    return "风袭森林";
+  case VCL_biome_t::windswept_savanna:
+    return "风袭热带草原";
+  case VCL_biome_t::jungle:
+    return "丛林";
+  case VCL_biome_t::sparse_jungle:
+    return "稀疏丛林";
+  case VCL_biome_t::bamboo_jungle:
+    return "竹林";
+  case VCL_biome_t::badlands:
+    return "恶地(粘土山)";
+  case VCL_biome_t::eroded_badlands:
+    return "风蚀恶地";
+  case VCL_biome_t::wooded_badlands:
+    return "疏林恶地";
+  case VCL_biome_t::meadow:
+    return "草甸";
+  case VCL_biome_t::grove:
+    return "雪林";
+  case VCL_biome_t::snowy_slopes:
+    return "积雪山坡";
+  case VCL_biome_t::frozen_peaks:
+    return "冰封山峰";
+  case VCL_biome_t::jagged_peaks:
+    return "尖峭山峰";
+  case VCL_biome_t::stony_peaks:
+    return "裸岩山峰";
+  case VCL_biome_t::river:
+    return "河流";
+  case VCL_biome_t::frozen_river:
+    return "冻河";
+  case VCL_biome_t::beach:
+    return "沙滩";
+  case VCL_biome_t::snowy_beach:
+    return "积雪沙滩";
+  case VCL_biome_t::stony_shore:
+    return "石岸";
+  case VCL_biome_t::warm_ocean:
+    return "暖水海洋";
+  case VCL_biome_t::lukewarm_ocean:
+    return "温水海洋";
+  case VCL_biome_t::deep_lukewarm_ocean:
+    return "温水深海";
+  case VCL_biome_t::ocean:
+    return "海洋";
+  case VCL_biome_t::deep_ocean:
+    return "深海";
+  case VCL_biome_t::cold_ocean:
+    return "冷水海洋";
+  case VCL_biome_t::deep_cold_ocean:
+    return "冷水深海";
+  case VCL_biome_t::frozen_ocean:
+    return "冻洋";
+  case VCL_biome_t::deep_frozen_ocean:
+    return "冰冻深海";
+  case VCL_biome_t::mushroom_fields:
+    return "蘑菇岛";
+  case VCL_biome_t::dripstone_caves:
+    return "溶洞";
+  case VCL_biome_t::lush_caves:
+    return "繁茂洞穴";
+  case VCL_biome_t::deep_dark:
+    return "Deep ♂ Dark ♂";
+  case VCL_biome_t::nether_wastes:
+    return "下界荒地";
+  case VCL_biome_t::warped_forest:
+    return "扭曲森林";
+  case VCL_biome_t::crimson_forest:
+    return "绯红森林";
+  case VCL_biome_t::soul_sand_valley:
+    return "灵魂沙峡谷";
+  case VCL_biome_t::basalt_deltas:
+    return "玄武岩三角洲";
+  case VCL_biome_t::the_end:
+    return "末地";
+  case VCL_biome_t::end_highlands:
+    return "末地高原";
+  case VCL_biome_t::end_midlands:
+    return "末地内陆";
+  case VCL_biome_t::small_end_islands:
+    return "末地小型岛屿";
+  case VCL_biome_t::end_barrens:
+    return "末地荒地";
+  case VCL_biome_t::cherry_grove:
+    return "樱花树林(1.20)";
+  }
+  return "Unamed";
+}
+
+const char *VCL_biome_name_EN(VCL_biome_t b) noexcept {
+  switch (b) {
+  case VCL_biome_t::the_void:
+    return "The Void";
+  case VCL_biome_t::plains:
+    return "Plains";
+  case VCL_biome_t::sunflower_plains:
+    return "Sunflower Plains";
+  case VCL_biome_t::snowy_plains:
+    return "Snowy Plains";
+  case VCL_biome_t::ice_spikes:
+    return "Ice Spikes";
+  case VCL_biome_t::desert:
+    return "Desert";
+  case VCL_biome_t::swamp:
+    return "Swamp";
+  case VCL_biome_t::mangrove_swamp:
+    return "Mangrove Swamp";
+  case VCL_biome_t::forest:
+    return "Forest";
+  case VCL_biome_t::flower_forest:
+    return "Flower Forest";
+  case VCL_biome_t::birch_forest:
+    return "Birch Forest";
+  case VCL_biome_t::dark_forest:
+    return "Dark Forest";
+  case VCL_biome_t::old_growth_birch_forest:
+    return "Old Growth Birch Forest";
+  case VCL_biome_t::old_growth_pine_taiga:
+    return "Old Growth Pine Taiga";
+  case VCL_biome_t::old_growth_spruce_taiga:
+    return "Old Growth Spruce Taiga";
+  case VCL_biome_t::taiga:
+    return "Taiga";
+  case VCL_biome_t::snowy_taiga:
+    return "Snowy Taiga";
+  case VCL_biome_t::savanna:
+    return "Savanna";
+  case VCL_biome_t::savanna_plateau:
+    return "Savanna Plateau";
+  case VCL_biome_t::windswept_hills:
+    return "Windswept Hills";
+  case VCL_biome_t::windswept_gravelly_hills:
+    return "Windswept Gravelly Hills";
+  case VCL_biome_t::windswept_forest:
+    return "Windswept Forest";
+  case VCL_biome_t::windswept_savanna:
+    return "Windswept Savanna";
+  case VCL_biome_t::jungle:
+    return "Jungle";
+  case VCL_biome_t::sparse_jungle:
+    return "Sparse Jungle";
+  case VCL_biome_t::bamboo_jungle:
+    return "Bamboo Jungle";
+  case VCL_biome_t::badlands:
+    return "Badlands";
+  case VCL_biome_t::eroded_badlands:
+    return "Eroded Badlands";
+  case VCL_biome_t::wooded_badlands:
+    return "Wooded Badlands";
+  case VCL_biome_t::meadow:
+    return "Meadow";
+  case VCL_biome_t::grove:
+    return "Grove";
+  case VCL_biome_t::snowy_slopes:
+    return "Snowy Slopes";
+  case VCL_biome_t::frozen_peaks:
+    return "Frozen Peaks";
+  case VCL_biome_t::jagged_peaks:
+    return "Jagged Peaks";
+  case VCL_biome_t::stony_peaks:
+    return "Stony Peaks";
+  case VCL_biome_t::river:
+    return "River";
+  case VCL_biome_t::frozen_river:
+    return "Frozen River";
+  case VCL_biome_t::beach:
+    return "Beach";
+  case VCL_biome_t::snowy_beach:
+    return "Snowy Beach";
+  case VCL_biome_t::stony_shore:
+    return "Stony Shore";
+  case VCL_biome_t::warm_ocean:
+    return "Warm Ocean";
+  case VCL_biome_t::lukewarm_ocean:
+    return "Lukewarm Ocean";
+  case VCL_biome_t::deep_lukewarm_ocean:
+    return "Deep Lukewarm Ocean";
+  case VCL_biome_t::ocean:
+    return "Ocean";
+  case VCL_biome_t::deep_ocean:
+    return "Deep Ocean";
+  case VCL_biome_t::cold_ocean:
+    return "Cold Ocean";
+  case VCL_biome_t::deep_cold_ocean:
+    return "Deep Cold Ocean";
+  case VCL_biome_t::frozen_ocean:
+    return "Frozen Ocean";
+  case VCL_biome_t::deep_frozen_ocean:
+    return "Deep Frozen Ocean";
+  case VCL_biome_t::mushroom_fields:
+    return "Mushroom Fields";
+  case VCL_biome_t::dripstone_caves:
+    return "Dripstone Caves";
+  case VCL_biome_t::lush_caves:
+    return "Lush Caves";
+  case VCL_biome_t::deep_dark:
+    return "Deep Dark";
+  case VCL_biome_t::nether_wastes:
+    return "Nether Wastes";
+  case VCL_biome_t::warped_forest:
+    return "Warped Forest";
+  case VCL_biome_t::crimson_forest:
+    return "Crimson Forest";
+  case VCL_biome_t::soul_sand_valley:
+    return "Soul Sand Valley";
+  case VCL_biome_t::basalt_deltas:
+    return "Basalt Deltas";
+  case VCL_biome_t::the_end:
+    return "The End";
+  case VCL_biome_t::end_highlands:
+    return "End Highlands";
+  case VCL_biome_t::end_midlands:
+    return "End Midlands";
+  case VCL_biome_t::small_end_islands:
+    return "Small End Islands";
+  case VCL_biome_t::end_barrens:
+    return "End Barrens";
+  case VCL_biome_t::cherry_grove:
+    return "Cherry Grove";
+  }
+
+  return "Unamed";
+}
+
+VCL_EXPORT_FUN const char *VCL_biome_name(VCL_biome_t biome, uint8_t is_ZH) {
+  return (is_ZH) ? VCL_biome_name_ZH(biome) : VCL_biome_name_EN(biome);
+}
+VCL_EXPORT_FUN uint32_t VCL_locate_colormap(const VCL_resource_pack *rp,
+                                            bool is_grass, VCL_biome_info info,
+                                            int *row, int *col) {
+  const auto rc = rp->locate_color_rc(info);
+
+  if (row != nullptr) {
+    *row = rc[0];
+  }
+  if (col != nullptr) {
+    *col = rc[1];
+  }
+
+  return rp->standard_color(info, !is_grass);
 }

@@ -10,11 +10,13 @@ set(VCL_include_headers
     VisualCraftL.h
     VisualCraftL_global.h)
 
-if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+if(${WIN32})
     # install for app
     install(TARGETS VisualCraftL
         RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
-        LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX})
+
+        # LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}
+    )
     install(FILES ${VCL_app_files}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/Blocks_VCL)
 
@@ -30,7 +32,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     return()
 endif()
 
-if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+if(${LINUX})
     install(TARGETS VisualCraftL
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib)
@@ -50,6 +52,8 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     return()
 endif()
 
-if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+if(${APPLE})
     return()
 endif()
+
+message(WARNING "No rule to install VisualCraftL")

@@ -1,9 +1,31 @@
+/*
+ Copyright © 2021-2023  TokiNoBug
+This file is part of SlopeCraft.
+
+    SlopeCraft is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    SlopeCraft is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
+
+    Contact with me:
+    github:https://github.com/SlopeCraft/SlopeCraft
+    bilibili:https://space.bilibili.com/351429231
+*/
 
 #include <CLI11.hpp>
 #include <thread>
 
 #include "vccl_internal.h"
 #include <QCoreApplication>
+#include <magic_enum.hpp>
 
 using std::cout, std::endl;
 
@@ -37,7 +59,7 @@ int main(int argc, char **argv) {
       ->check(CLI::Range(12, 19, "Avaliable versions"));
 
   app.add_option("--layers,--layer", input.layers, "Max layers")
-      ->default_val(3)
+      ->default_val(1)
       ->check(CLI::Range(1, 3, "Avaliable depth"));
   std::string __face;
   app.add_option("--face", __face, "Facing direction")
@@ -49,6 +71,13 @@ int main(int argc, char **argv) {
       ->check(
           CLI::IsMember({"RGB", "RGB_Better", "HSV", "Lab94", "Lab00", "XYZ"}))
       ->expected(1);
+  std::string biome;
+  app.add_option("--biome", biome, "The biome where a pixel art is placed.")
+      ->default_val("the_void")
+      ->check(CLI::IsMember(magic_enum::enum_names<VCL_biome_t>()))
+      ->expected(1);
+  app.add_flag("--leaves-transparent,--ltp", input.leaves_transparent)
+      ->default_val(false);
 
   app.add_flag("--dither", input.dither,
                "Use Floyd-Steinberg dithering to improve the result of image "
@@ -68,6 +97,20 @@ int main(int argc, char **argv) {
   app.add_flag("--out-image,--oimg", input.make_converted_image,
                "Generate converted image")
       ->default_val(false);
+  app.add_flag("--out-flag-diagram,--ofd", input.make_flat_diagram,
+               "Generated flat diagram")
+      ->default_val(false);
+  app.add_option("--flat-diagram-splitline-margin-row,--fdslmr,--fdsmr",
+                 input.flat_diagram_splitline_margin_row,
+                 "Row margin of split line in flat diagram. Non positive "
+                 "values indicates that no splitline is drawn.")
+      ->default_val(16);
+  app.add_option("--flat-diagram-splitline-margin-col,--fdslmc,--fdsmc",
+                 input.flat_diagram_splitline_margin_col,
+                 "Col margin of split line in flat diagram. Non negative "
+                 "values indicates that no splitline is drawn.")
+      ->default_val(16);
+
   app.add_flag("--litematic,--lite", input.make_litematic,
                "Export .litematic files for litematica mod")
       ->default_val(false);
@@ -114,6 +157,20 @@ int main(int argc, char **argv) {
                input.list_supported_formats,
                "List all supported image formats and exit")
       ->default_val(false);
+  app.add_flag("--list-blockstates,--list-blockstate,--lbs",
+               input.list_blockstates,
+               "List all blocks jsons in the resource pack.")
+      ->default_val(false);
+  app.add_flag("--list-models,--list-model,--lmd", input.list_models,
+               "List all block models in the resource pack.")
+      ->default_val(false);
+  app.add_flag("--list-textures,--list-texture", input.list_textures,
+               "List all textures in the resource pack.")
+      ->default_val(false);
+  app.add_flag("--export-test-litematic,--export-test-lite,--etl",
+               input.export_test_lite,
+               "Export a testing lite that contains all avaliable blocks.")
+      ->default_val(false);
 
   CLI11_PARSE(app, argc, argv);
 
@@ -131,6 +188,14 @@ int main(int argc, char **argv) {
   }
 
   input.algo = str_to_algo(algo, ok);
+
+  {
+    auto temp = magic_enum::enum_cast<VCL_biome_t>(biome);
+    ok = temp.has_value();
+    if (ok) {
+      input.biome = temp.value();
+    }
+  }
 
   if (!ok) {
     return __LINE__;

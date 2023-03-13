@@ -1,6 +1,30 @@
+/*
+ Copyright © 2021-2023  TokiNoBug
+This file is part of SlopeCraft.
+
+    SlopeCraft is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    SlopeCraft is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
+
+    Contact with me:
+    github:https://github.com/SlopeCraft/SlopeCraft
+    bilibili:https://space.bilibili.com/351429231
+*/
+
 #include "VC_block_class.h"
+#include "VCWind.h"
 #include "ui_VC_block_class.h"
 #include <QCheckBox>
+#include <QLabel>
 #include <iostream>
 
 VC_block_class::VC_block_class(QWidget *parent)
@@ -36,7 +60,7 @@ void VC_block_class::set_blocks(size_t num_blocks,
 
     cb->setChecked(VCL_is_block_enabled(blkp));
     // #warning set name here
-    cb->setText(QString::fromUtf8(VCL_get_block_name(blkp, true)));
+    cb->setText(QString::fromUtf8(VCL_get_block_name(blkp, ::is_language_ZH)));
 
     const size_t colidx = idx % cols;
     const size_t rowidx = idx / cols + 1;
@@ -47,6 +71,18 @@ void VC_block_class::set_blocks(size_t num_blocks,
     this->blocks.emplace_back(std::pair<VCL_block *, QCheckBox *>{blkp, cb});
 
     cb->show();
+  }
+
+  if (num_blocks <= 1) {
+    return;
+  }
+
+  // add place holders so that there will always be `cols` cols
+  for (size_t c = num_blocks; c < cols; c++) {
+    QLabel *lb = new QLabel;
+    lb->setText("");
+    this->ui->grid_layout->addWidget(lb, 1, c);
+    lb->show();
   }
 }
 

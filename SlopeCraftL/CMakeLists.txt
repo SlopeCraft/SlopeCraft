@@ -47,7 +47,6 @@ set(SlopeCraft_SCL_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/simpleBlock.h
     ${CMAKE_CURRENT_SOURCE_DIR}/SlopeCraftL.h
     ${CMAKE_CURRENT_SOURCE_DIR}/SlopeCraftL_global.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/defines_of_extern_classes.h
 
     # ${CMAKE_CURRENT_SOURCE_DIR}/newColorSet.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/AiCvterOpt.cpp
@@ -56,8 +55,8 @@ set(SlopeCraft_SCL_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/HeightLine.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/OptiChain.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/PrimGlassBuilder.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/SlopeCraftL_CAPI.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/TokiSlopeCraft.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/TokiSlopeCraft_static_funs.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/TokiSlopeCraft_build.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/TokiSlopeCraft_convert.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/WaterItem.cpp

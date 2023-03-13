@@ -1,7 +1,26 @@
+/*
+ Copyright © 2021-2023  TokiNoBug
+This file is part of SlopeCraft.
+
+    SlopeCraft is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    SlopeCraft is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
+
+    Contact with me:
+    github:https://github.com/SlopeCraft/SlopeCraft
+    bilibili:https://space.bilibili.com/351429231
+*/
+
 #include "VCWind.h"
-#include "VC_block_class.h"
-#include "advanced_qlist_widget_item.h"
-#include "ui_VCWind.h"
 
 #include <QCryptographicHash>
 #include <QFileDialog>
@@ -10,7 +29,16 @@
 #include <iostream>
 #include <magic_enum.hpp>
 
+#include "VC_block_class.h"
+#include "ui_VCWind.h"
+
 using std::cout, std::endl;
+
+uint8_t is_language_ZH = true;
+
+std::string VCWind::default_zip_12{""};
+std::string VCWind::default_zip_latest{""};
+std::string VCWind::default_json{""};
 
 VCWind::VCWind(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::VCWind), kernel(VCL_create_kernel()) {
@@ -42,6 +70,8 @@ VCWind::VCWind(QWidget *parent)
     connect(clear_cache_when_toggle[i], &QAbstractButton::toggled, this,
             &VCWind::when_algo_dither_bottons_toggled);
   }
+
+  this->setup_ui_select_biome();
 }
 
 VCWind::~VCWind() { delete this->ui; }
@@ -62,10 +92,23 @@ void VCWind::callback_progress_range_add(void *__w, int delta) noexcept {
 // utilitiy functions
 void VCWind::append_default_to_rp_or_bsl(QListWidget *qlw,
                                          bool is_rp) noexcept {
-
   const QString txt = is_rp ? VCWind::tr("原版资源包") : VCWind::tr("原版json");
-  advanced_qlwi *aqlwi = new advanced_qlwi(txt, true);
-  qlw->addItem(aqlwi);
+  QListWidgetItem *qlwi = new QListWidgetItem(txt);
+
+  qlwi->setData(Qt::UserRole, true);
+  qlwi->setCheckState(Qt::CheckState::Checked);
+  qlwi->setIcon(QIcon(QApplication::style()->standardIcon(
+      QStyle::StandardPixmap::SP_FileIcon)));
+  qlw->addItem(qlwi);
+}
+
+void VCWind::setup_ui_select_biome() noexcept {
+  this->ui->combobox_select_biome->clear();
+
+  for (const auto &b : magic_enum::enum_values<VCL_biome_t>()) {
+    this->ui->combobox_select_biome->addItem(
+        QString::fromUtf8(VCL_biome_name(b, ::is_language_ZH)), int(b));
+  }
 }
 
 // utilitiy functions
@@ -119,17 +162,11 @@ VCWind::basic_colorset_option VCWind::current_basic_option() const noexcept {
       continue;
     }
 
-    const auto aqlwi = dynamic_cast<const advanced_qlwi *>(qlwi);
-
-    if (aqlwi->is_special()) {
-      // ./Blocks/VCL/Vanilla_1_12_2.zip
-      // ./Blocks/VCL/Vanilla_1_19_2.zip
-
+    if (qlwi->data(Qt::UserRole).toBool()) {
       if (this->current_selected_version() == SCL_gameVersion::MC12) {
-        ret.zips.emplace_back("./Blocks_VCL/Vanilla_1_12_2.zip");
+        ret.zips.emplace_back(VCWind::default_zip_12.c_str());
       } else {
-
-        ret.zips.emplace_back("./Blocks_VCL/Vanilla_1_19_2.zip");
+        ret.zips.emplace_back(VCWind::default_zip_latest.c_str());
       }
       continue;
     }
@@ -143,12 +180,8 @@ VCWind::basic_colorset_option VCWind::current_basic_option() const noexcept {
       continue;
     }
 
-    const auto aqlwi = dynamic_cast<const advanced_qlwi *>(qlwi);
-
-    if (aqlwi->is_special()) {
-      // ./Blocks/VCL/Vanilla_1_12_2.zip
-      // ./Blocks/VCL/Vanilla_1_19_2.zip
-      ret.jsons.emplace_back("./Blocks_VCL/VCL_blocks_fixed.json");
+    if (qlwi->data(Qt::UserRole).toBool()) {
+      ret.jsons.emplace_back(VCWind::default_json.c_str());
 
       continue;
     }
@@ -159,6 +192,9 @@ VCWind::basic_colorset_option VCWind::current_basic_option() const noexcept {
   ret.face = this->current_selected_face();
   ret.layers = this->ui->sb_max_layers->value();
   ret.version = this->current_selected_version();
+  ret.biome =
+      (VCL_biome_t)this->ui->combobox_select_biome->currentData().toInt();
+  ret.is_leaves_transparent = this->ui->cb_leaves_transparent->isChecked();
   return ret;
 }
 
@@ -174,89 +210,44 @@ QByteArray VCWind::checksum_basic_colorset_option(
     hash.addData(json.toUtf8());
   }
 
-  hash.addData(QByteArray((const char *)&opt.face, 1));
-  hash.addData(QByteArray((const char *)&opt.version, 1));
-  hash.addData(QByteArray((const char *)&opt.layers, 1));
+  hash.addData(QByteArrayView((const char *)&opt.face, sizeof(opt.face)));
+  hash.addData(QByteArrayView((const char *)&opt.version, sizeof(opt.version)));
+  hash.addData(QByteArrayView((const char *)&opt.layers, sizeof(opt.layers)));
+  hash.addData(QByteArrayView((const char *)&opt.biome, sizeof(opt.biome)));
+  hash.addData(QByteArrayView((const char *)&opt.is_leaves_transparent,
+                              sizeof(opt.is_leaves_transparent)));
 
   return hash.result();
 }
 
 // utilitiy functions
-void VCWind::create_resource_pack() noexcept {
-  VCL_destroy_resource_pack(this->rp);
-
-  std::vector<QByteArray> rp_filenames;
+VCL_resource_pack *
+VCWind::create_resource_pack(const basic_colorset_option &opt) noexcept {
+  std::vector<QByteArray> rpfiles_qba;
+  rpfiles_qba.reserve(opt.zips.size());
   std::vector<const char *> rpfiles_charp;
-  rp_filenames.reserve(this->ui->lw_rp->count());
-
-  for (int i = 0; i < this->ui->lw_rp->count(); i++) {
-    const auto qlwi = this->ui->lw_rp->item(i);
-    if (qlwi->checkState() != Qt::CheckState::Checked) {
-      continue;
-    }
-
-    const auto aqlwi = dynamic_cast<const advanced_qlwi *>(qlwi);
-
-    if (aqlwi->is_special()) {
-      // ./Blocks/VCL/Vanilla_1_12_2.zip
-      // ./Blocks/VCL/Vanilla_1_19_2.zip
-
-      if (this->current_selected_version() == SCL_gameVersion::MC12) {
-        rp_filenames.emplace_back("./Blocks_VCL/Vanilla_1_12_2.zip");
-      } else {
-
-        rp_filenames.emplace_back("./Blocks_VCL/Vanilla_1_19_2.zip");
-      }
-      continue;
-    }
-
-    const QString &filename = qlwi->text();
-    rp_filenames.emplace_back(filename.toUtf8());
+  rpfiles_charp.reserve(opt.zips.size());
+  for (auto &qstr : opt.zips) {
+    rpfiles_qba.emplace_back(qstr.toUtf8());
+    rpfiles_charp.emplace_back(rpfiles_qba.back().data());
   }
 
-  rpfiles_charp.resize(rp_filenames.size());
-  for (size_t i = 0; i < rp_filenames.size(); i++) {
-    rpfiles_charp[i] = rp_filenames[i].data();
-  }
-
-  this->rp =
-      VCL_create_resource_pack(rpfiles_charp.size(), rpfiles_charp.data());
+  return VCL_create_resource_pack(rpfiles_charp.size(), rpfiles_charp.data());
 }
 
 // utilitiy functions
-void VCWind::create_block_state_list() noexcept {
-  VCL_destroy_block_state_list(this->bsl);
+VCL_block_state_list *
+VCWind::create_block_state_list(const basic_colorset_option &opt) noexcept {
   std::vector<QByteArray> bsl_filenames;
   std::vector<const char *> jsonfiles_charp;
-  bsl_filenames.reserve(this->ui->lw_bsl->count());
 
-  for (int i = 0; i < this->ui->lw_bsl->count(); i++) {
-    const auto qlwi = this->ui->lw_bsl->item(i);
-    if (qlwi->checkState() != Qt::CheckState::Checked) {
-      continue;
-    }
-
-    const auto aqlwi = dynamic_cast<const advanced_qlwi *>(qlwi);
-
-    if (aqlwi->is_special()) {
-      // ./Blocks/VCL/Vanilla_1_12_2.zip
-      // ./Blocks/VCL/Vanilla_1_19_2.zip
-      bsl_filenames.emplace_back("./Blocks_VCL/VCL_blocks_fixed.json");
-
-      continue;
-    }
-
-    const QString &filename = qlwi->text();
-    bsl_filenames.emplace_back(filename.toUtf8());
+  for (auto &qstr : opt.jsons) {
+    bsl_filenames.emplace_back(qstr.toUtf8());
+    jsonfiles_charp.emplace_back(bsl_filenames.back().data());
   }
 
-  jsonfiles_charp.resize(bsl_filenames.size());
-  for (size_t i = 0; i < bsl_filenames.size(); i++) {
-    jsonfiles_charp[i] = bsl_filenames[i].data();
-  }
-
-  this->bsl = VCL_create_block_state_list(jsonfiles_charp.size(),
-                                          jsonfiles_charp.data());
+  return VCL_create_block_state_list(jsonfiles_charp.size(),
+                                     jsonfiles_charp.data());
 }
 
 // slot
@@ -271,8 +262,12 @@ void VCWind::on_pb_add_rp_clicked() noexcept {
   prev_dir = QFileInfo(zips.front()).dir().absolutePath();
 
   for (QString &qstr : zips) {
-    advanced_qlwi *aqlwi = new advanced_qlwi(qstr, false);
-    this->ui->lw_rp->insertItem(0, aqlwi);
+    QListWidgetItem *qlwi = new QListWidgetItem(qstr);
+    qlwi->setData(Qt::UserRole, false);
+    qlwi->setCheckState(Qt::CheckState::Checked);
+    qlwi->setIcon(QIcon(QApplication::style()->standardIcon(
+        QStyle::StandardPixmap::SP_FileIcon)));
+    this->ui->lw_rp->insertItem(0, qlwi);
   }
 }
 
@@ -280,7 +275,7 @@ void VCWind::on_pb_add_rp_clicked() noexcept {
 void VCWind::on_pb_remove_rp_clicked() noexcept {
   auto list_qwli = this->ui->lw_rp->selectedItems();
   for (auto qlwi : list_qwli) {
-    if (dynamic_cast<advanced_qlwi *>(qlwi)->is_special()) {
+    if (qlwi->data(Qt::UserRole).toBool()) {
       continue;
     }
     this->ui->lw_rp->removeItemWidget(qlwi);
@@ -300,8 +295,13 @@ void VCWind::on_pb_add_bsl_clicked() noexcept {
   prev_dir = QFileInfo(jsons.front()).dir().absolutePath();
 
   for (QString &qstr : jsons) {
-    advanced_qlwi *aqlwi = new advanced_qlwi(qstr, false);
-    this->ui->lw_bsl->insertItem(0, aqlwi);
+    QListWidgetItem *qlwi = new QListWidgetItem(qstr);
+
+    qlwi->setData(Qt::UserRole, false);
+    qlwi->setCheckState(Qt::CheckState::Checked);
+    qlwi->setIcon(QIcon(QApplication::style()->standardIcon(
+        QStyle::StandardPixmap::SP_FileIcon)));
+    this->ui->lw_bsl->insertItem(0, qlwi);
   }
 }
 
@@ -309,7 +309,7 @@ void VCWind::on_pb_add_bsl_clicked() noexcept {
 void VCWind::on_pb_remove_bsl_clicked() noexcept {
   auto list_qwli = this->ui->lw_bsl->selectedItems();
   for (auto qlwi : list_qwli) {
-    if (dynamic_cast<advanced_qlwi *>(qlwi)->is_special()) {
+    if (qlwi->data(Qt::UserRole).toBool()) {
       continue;
     }
     this->ui->lw_bsl->removeItemWidget(qlwi);
@@ -319,12 +319,7 @@ void VCWind::on_pb_remove_bsl_clicked() noexcept {
 
 // slot
 void VCWind::setup_block_widgets() noexcept {
-  if (!this->is_basical_colorset_changed() &&
-      !this->map_VC_block_class.empty()) {
-    return;
-  }
-
-  this->setup_basical_colorset();
+  // this->setup_basical_colorset();
 
   for (auto &pair : this->map_VC_block_class) {
     this->ui->gl_sa_blocks->removeWidget(pair.second);
@@ -341,8 +336,7 @@ void VCWind::setup_block_widgets() noexcept {
   for (auto &ptr_ref : buffer) {
     ptr_ref = nullptr;
   }
-
-  VCL_get_blocks_from_block_state_list_match(
+  const size_t block_nums = VCL_get_blocks_from_block_state_list_match(
       VCL_get_block_state_list(), this->current_selected_version(),
       this->current_selected_face(), buffer.data(), buffer.size());
 
@@ -362,13 +356,11 @@ void VCWind::setup_block_widgets() noexcept {
   }
 
   for (auto bcl : VCL_block_class_t_values) {
-
     VC_block_class *class_widget = nullptr;
     {
       auto it = this->map_VC_block_class.find(bcl);
 
       if (it == this->map_VC_block_class.end() || it->second == nullptr) {
-
         class_widget = new VC_block_class(this);
 
         connect(class_widget->chbox_enabled(), &QCheckBox::toggled, this,
@@ -388,17 +380,17 @@ void VCWind::setup_block_widgets() noexcept {
                            QString::fromUtf8(magic_enum::enum_name(bcl)) +
                            " (" + QString::number(blocks[bcl].size()) + ") ");
 
+    std::sort(blocks[bcl].begin(), blocks[bcl].end(), VCL_compare_block);
+
     class_widget->set_blocks(blocks[bcl].size(), blocks[bcl].data(), 4);
 
     // set images for radio buttons
     for (const auto &pair : class_widget->blocks_vector()) {
-
       connect(pair.second, &QCheckBox::toggled, this,
               &VCWind::when_algo_dither_bottons_toggled);
 
       VCL_model *model =
-          VCL_get_block_model(pair.first, VCL_get_resource_pack(),
-                              this->current_selected_face(), nullptr);
+          VCL_get_block_model(pair.first, VCL_get_resource_pack());
 
       if (model == nullptr) {
         continue;
@@ -433,15 +425,21 @@ void VCWind::setup_block_widgets() noexcept {
       VCL_destroy_block_model(model);
     }
   }
+
+  this->ui->gb_blocks->setTitle(VCWind::tr("全部方块") +
+                                QStringLiteral(" (%1)").arg(block_nums));
+
+  this->ui->ac_browse_block->setEnabled(true);
+  this->ui->ac_browse_biome->setEnabled(true);
 }
 
 bool VCWind::is_basical_colorset_changed() const noexcept {
-
-  static QByteArray hash_prev;
+  static QByteArray hash_prev{""};
   auto curr_opt = this->current_basic_option();
   QByteArray curr_hash = this->checksum_basic_colorset_option(curr_opt);
   const bool ret = hash_prev != curr_hash;
   hash_prev = curr_hash;
+
   return ret;
 }
 
@@ -450,20 +448,43 @@ void VCWind::setup_basical_colorset() noexcept {
     return;
   }
 
-  if (this->rp == nullptr) {
-    this->create_resource_pack();
+  emit signal_basic_colorset_changed();
+
+  VCL_discard_resource();
+
+  auto current_option = this->current_basic_option();
+
+  VCL_resource_pack *rp = VCWind::create_resource_pack(current_option);
+
+  if (rp == nullptr) {
+    QMessageBox::critical(
+        this, VCWind::tr("资源包解析失败"),
+        VCWind::tr("在此窗口之前弹出的错误信息非常重要，请将它汇报给开发者。"),
+        QMessageBox::StandardButtons{QMessageBox::StandardButton::Close});
+    exit(3);
+    return;
   }
 
-  if (this->bsl == nullptr) {
-    this->create_block_state_list();
+  VCL_block_state_list *bsl = VCWind::create_block_state_list(current_option);
+  if (bsl == nullptr) {
+    QMessageBox::critical(
+        this, VCWind::tr("方块状态列表json解析失败"),
+        VCWind::tr("在此窗口之前弹出的错误信息非常重要，请将它汇报给开发者。"),
+        QMessageBox::StandardButtons{QMessageBox::StandardButton::Close});
+    VCL_destroy_resource_pack(rp);
+    exit(4);
+    return;
   }
 
   VCL_set_resource_option option;
   option.exposed_face = this->current_selected_face();
   option.version = this->current_selected_version();
   option.max_block_layers = this->ui->sb_max_layers->value();
+  option.biome =
+      (VCL_biome_t)this->ui->combobox_select_biome->currentData().toInt();
+  option.is_render_quality_fast = !this->ui->cb_leaves_transparent->isChecked();
 
-  const bool success = VCL_set_resource_copy(this->rp, this->bsl, option);
+  const bool success = VCL_set_resource_move(&rp, &bsl, option);
 
   if (!success) {
     const auto ret = QMessageBox::critical(
@@ -472,10 +493,13 @@ void VCWind::setup_basical_colorset() noexcept {
                    "。尝试移除解析失败的资源包/方块列表，或者减小最大层数。"),
         QMessageBox::StandardButtons{QMessageBox::StandardButton::Close});
     if (ret == QMessageBox::StandardButton::Close) {
-      exit(3);
+      exit(5);
       return;
     }
   }
+
+  this->setup_block_widgets();
+  this->ui->ac_browse_basic_colors->setEnabled(true);
 }
 
 QByteArray VCWind::checksum_allowed_colorset_option(
@@ -492,8 +516,7 @@ QByteArray VCWind::checksum_allowed_colorset_option(
 
 bool VCWind::is_allowed_colorset_changed(
     allowed_colorset_option *opt) const noexcept {
-
-  static QByteArray prev_hash;
+  static QByteArray prev_hash{""};
   this->selected_blocks(&opt->blocks);
   QByteArray cur_hash = VCWind::checksum_allowed_colorset_option(*opt);
 
@@ -505,14 +528,17 @@ bool VCWind::is_allowed_colorset_changed(
 }
 
 void VCWind::setup_allowed_colorset() noexcept {
+  this->setup_basical_colorset();
+
   allowed_colorset_option cur_option;
   if (VCL_is_allowed_colorset_ok() &&
       !this->is_allowed_colorset_changed(&cur_option)) {
     return;
   }
-  this->setup_basical_colorset();
 
-  this->setup_block_widgets();
+  emit signal_allowed_colorset_changed();
+
+  VCL_discard_allowed_blocks();
 
   if (cur_option.blocks.empty()) {
     this->selected_blocks(&cur_option.blocks);
@@ -533,7 +559,12 @@ void VCWind::setup_allowed_colorset() noexcept {
     }
   }
 
+  this->ui->gb_convert_algo->setTitle(
+      VCWind::tr("调色算法 (共%1种颜色)")
+          .arg(VCL_get_allowed_colors(nullptr, 0)));
+
   this->clear_convert_cache();
+  this->ui->ac_browse_allowed_colors->setEnabled(true);
 }
 
 size_t
@@ -545,7 +576,7 @@ VCWind::selected_blocks(std::vector<VCL_block *> *blocks_dest) const noexcept {
     counter += pair.second->selected_blocks(blocks_dest, true);
   }
 
-  cout << "selected block count : " << counter << endl;
+  // cout << "selected block count : " << counter << endl;
 
   return counter;
 }
@@ -554,7 +585,7 @@ void VCWind::on_tb_add_images_clicked() noexcept {
   static QString prev_dir{""};
   QStringList files =
       QFileDialog::getOpenFileNames(this, VCWind::tr("选择图片（可多选）"),
-                                    prev_dir, "*.bmp;*.png;*.jpg;*.jpeg");
+                                    prev_dir, "*.bmp *.png *.jpg *.jpeg");
   if (files.size() <= 0) {
     return;
   }
@@ -665,7 +696,9 @@ void VCWind::show_image(decltype(image_cache)::iterator it) noexcept {
     this->ui->lable_converted->setPixmap(QPixmap::fromImage(it->second.second));
     return;
   }
+
   this->setup_allowed_colorset();
+
   this->setup_image(it->second.first);
   const bool ok = this->kernel->convert(this->current_selected_algo(),
                                         this->ui->cb_algo_dither->isChecked());
@@ -696,6 +729,23 @@ void VCWind::on_lw_image_files_itemClicked(QListWidgetItem *item) noexcept {
 
   if (it == this->image_cache.end()) {
     return;
+  }
+
+  {
+    allowed_colorset_option opt;
+    const bool is_basical_changed = this->is_basical_colorset_changed();
+    const bool is_allowed_changed = this->is_allowed_colorset_changed(&opt);
+
+    if (is_allowed_changed) {
+      VCL_discard_allowed_blocks();
+    }
+    if (is_basical_changed) {
+      VCL_discard_resource();
+    }
+    if (is_basical_changed || is_allowed_changed) {
+      this->clear_convert_cache();
+      // this->setup_allowed_colorset();
+    }
   }
 
   this->show_image(it);
@@ -756,12 +806,19 @@ void VCWind::when_algo_dither_bottons_toggled() noexcept {
 
   if (this->is_convert_algo_changed() ||
       this->is_allowed_colorset_changed(&temp)) {
-
     this->clear_convert_cache();
   }
 }
 
 void VCWind::on_tabWidget_main_currentChanged(int) noexcept {}
+
+void VCWind::on_ac_load_resource_triggered() noexcept {
+  this->setup_basical_colorset();
+}
+
+void VCWind::on_ac_set_allowed_triggered() noexcept {
+  this->setup_allowed_colorset();
+}
 
 /*
 void VCWind::when_basical_colorset_changed() noexcept {

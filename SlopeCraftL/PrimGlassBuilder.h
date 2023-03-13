@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2022  TokiNoBug
+ Copyright © 2021-2023  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -13,10 +13,10 @@ This file is part of SlopeCraft.
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with SlopeCraft.  If not, see <https://www.gnu.org/licenses/>.
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
 
     Contact with me:
-    github:https://github.com/ToKiNoBug
+    github:https://github.com/SlopeCraft/SlopeCraft
     bilibili:https://space.bilibili.com/351429231
 */
 
@@ -81,7 +81,7 @@ TokiMap ySlice2TokiMap(const Eigen::Tensor<uint8_t, 3> &);
 
 glassMap connectBetweenLayers(const TokiMap &, const TokiMap &,
                               walkableMap *walkable);
-//返回值是架构在相对较高的一层上的，walkable是各层俯视图叠加
+// 返回值是架构在相对较高的一层上的，walkable是各层俯视图叠加
 
 class PrimGlassBuilder {
 public:

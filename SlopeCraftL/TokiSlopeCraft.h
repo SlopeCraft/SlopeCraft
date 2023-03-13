@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2022  TokiNoBug
+ Copyright © 2021-2023  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -13,10 +13,10 @@ This file is part of SlopeCraft.
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with SlopeCraft.  If not, see <https://www.gnu.org/licenses/>.
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
 
     Contact with me:
-    github:https://github.com/ToKiNoBug
+    github:https://github.com/SlopeCraft/SlopeCraft
     bilibili:https://space.bilibili.com/351429231
 */
 
@@ -79,10 +79,21 @@ namespace NBT {
 template <bool> class NBTWriter;
 };
 
-class TokiSlopeCraft : public Kernel {
+class TokiSlopeCraft : public ::SlopeCraft::Kernel {
 public:
   static const colorset_basic_t Basic;
   static colorset_allowed_t Allowed;
+
+  static void getColorMapPtrs(const float **const rdata,
+                              const float **const gdata,
+                              const float **const bdata, const uint8_t **,
+                              int *);
+  // full palette
+  static const float *getBasicColorMapPtrs();
+
+  static const char *getSCLVersion();
+
+  static uint64_t mcVersion2VersionNumber(::SCL_gameVersion);
 
 public:
   TokiSlopeCraft();
@@ -109,7 +120,7 @@ public:
   /// a function ptr to report working statue especially when busy
   void setReportWorkingStatue(void (*)(void *, workStatues)) override;
   unsigned long long size() override { return sizeof(TokiSlopeCraft); }
-  void destroy() override { delete this; }
+  // void destroy() override { delete this; }
   void decreaseStep(step) override;
   void makeTests(const AbstractBlock **, const unsigned char *, const char *,
                  char *) override;

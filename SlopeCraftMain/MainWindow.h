@@ -1,6 +1,5 @@
-
 /*
- Copyright © 2021-2022  TokiNoBug
+ Copyright © 2021-2023  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -14,20 +13,20 @@ This file is part of SlopeCraft.
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with SlopeCraft.  If not, see <https://www.gnu.org/licenses/>.
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
 
     Contact with me:
-    github:https://github.com/ToKiNoBug
+    github:https://github.com/SlopeCraft/SlopeCraft
     bilibili:https://space.bilibili.com/351429231
 */
 
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-//#define dispDerivative
-//#define putDitheredImg
-//#define putMapData
-//#define putBlockList
+// #define dispDerivative
+// #define putDitheredImg
+// #define putMapData
+// #define putBlockList
 #include "ui_mainwindow.h"
 
 #include <QButtonGroup>
@@ -50,7 +49,7 @@ This file is part of SlopeCraft.
 
 #include <QJsonArray>
 #include <QJsonDocument>
-//#include <QJsonError>
+// #include <QJsonError>
 #include <QJsonObject>
 
 #include <QNetworkAccessManager>
@@ -66,7 +65,7 @@ This file is part of SlopeCraft.
 
 #include <Eigen/Dense>
 
-//#define SLOPECRAFTL_WITH_AICVETR
+// #define SLOPECRAFTL_WITH_AICVETR
 #include "SlopeCraftL.h"
 
 #include "AiCvterParameterDialog.h"
@@ -117,7 +116,7 @@ public:
   MainWindow(QWidget *parent = nullptr);
   ~MainWindow();
 
-  //初始化方块列表用
+  // 初始化方块列表用
   void InitializeAll();
   static void putSettings(const QJsonObject &jo);
 
@@ -141,11 +140,11 @@ public:
 public slots:
   void destroySubWindTrans();
   void ReceiveTPS(tpS);
-  //透明像素处理策略：B->替换为背景色；A->空气；W->暂缓，等待处理
-  //半透明像素处理策略：B->替换为背景色；C->与背景色叠加；R->保留颜色；W->暂缓，等待处理
+  // 透明像素处理策略：B->替换为背景色；A->空气；W->暂缓，等待处理
+  // 半透明像素处理策略：B->替换为背景色；C->与背景色叠加；R->保留颜色；W->暂缓，等待处理
 
   void showPreview();
-  //语言槽
+  // 语言槽
   void turnCh();
   void turnEn();
 
@@ -159,7 +158,7 @@ private slots:
 
   void contactG();
   void contactB();
-  //翻页的自定义槽
+  // 翻页的自定义槽
   void turnToPage0();
   void turnToPage1();
   void turnToPage2();
@@ -184,7 +183,7 @@ private slots:
   void onMapTypeClicked();
 
   // for Page3
-  //应用预设方块列表的自定义槽
+  // 应用预设方块列表的自定义槽
   void ChangeToCustom();
   void onPresetsClicked();
   void onBlockListChanged();
@@ -288,7 +287,7 @@ private:
   void selectBlockByString(const std::string &);
 
   static void progressRangeSet(void *, int min, int max,
-                               int val); //设置进度条的取值范围和值
+                               int val); // 设置进度条的取值范围和值
   static void progressAdd(void *, int deltaVal);
   static void keepAwake(void *);
 

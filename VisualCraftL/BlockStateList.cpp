@@ -1,3 +1,25 @@
+/*
+ Copyright © 2021-2023  TokiNoBug
+This file is part of SlopeCraft.
+
+    SlopeCraft is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    SlopeCraft is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
+
+    Contact with me:
+    github:https://github.com/SlopeCraft/SlopeCraft
+    bilibili:https://space.bilibili.com/351429231
+*/
+
 #include "BlockStateList.h"
 
 #include <fstream>
@@ -5,6 +27,7 @@
 
 #include "ParseResourcePack.h"
 #include "VCL_internal.h"
+#include <magic_enum.hpp>
 
 VCL_block::VCL_block() { this->initialize_attributes(); }
 
@@ -20,6 +43,7 @@ void VCL_block::initialize_attributes() noexcept {
     this->attributes[sz] = true;
   }
   this->set_attribute(attribute::is_air, false);
+  this->set_attribute(attribute::reproducible, true);
 }
 
 version_set parse_version_set(const nlohmann::json &jo,
@@ -72,6 +96,16 @@ version_set parse_version_set(const nlohmann::json &jo,
 
   return {};
 }
+
+#define VCL_PRIVATE_MACRO_PARSE_ATTRIBUTE(key_str, key_enum)                   \
+  if (jo.contains(#key_str)) {                                                 \
+    if (!jo.at(#key_str).is_boolean()) {                                       \
+      *ok = false;                                                             \
+      return {};                                                               \
+    }                                                                          \
+                                                                               \
+    ret.set_attribute(VCL_block::attribute::key_enum, jo.at(#key_str));        \
+  }
 
 VCL_block parse_block(const nlohmann::json &jo, bool *const ok) {
   if (!jo.contains("version")) {
@@ -183,50 +217,15 @@ VCL_block parse_block(const nlohmann::json &jo, bool *const ok) {
     }
   }
 
-  if (jo.contains("burnable")) {
-    if (!jo.at("burnable").is_boolean()) {
-      *ok = false;
-      return {};
-    }
-
-    ret.set_attribute(VCL_block::attribute::burnable, jo.at("burnable"));
-  }
-
-  if (jo.contains("isGlowing")) {
-    if (!jo.at("isGlowing").is_boolean()) {
-      *ok = false;
-      return {};
-    }
-
-    ret.set_attribute(VCL_block::attribute::is_glowing, jo.at("isGlowing"));
-  }
-
-  if (jo.contains("endermanPickable")) {
-    if (!jo.at("endermanPickable").is_boolean()) {
-      *ok = false;
-      return {};
-    }
-
-    ret.set_attribute(VCL_block::attribute::enderman_pickable,
-                      jo.at("endermanPickable"));
-  }
-
-  if (jo.contains("background")) {
-    if (!jo.at("background").is_boolean()) {
-      *ok = false;
-      return {};
-    }
-
-    ret.set_attribute(VCL_block::attribute::background, jo.at("background"));
-  }
-
-  if (jo.contains("is_air")) {
-    if (!jo.at("is_air").is_boolean()) {
-      *ok = false;
-      return {};
-    }
-    ret.set_attribute(VCL_block::attribute::is_air, jo.at("is_air"));
-  }
+  VCL_PRIVATE_MACRO_PARSE_ATTRIBUTE(burnable, burnable);
+  VCL_PRIVATE_MACRO_PARSE_ATTRIBUTE(isGlowing, is_glowing);
+  VCL_PRIVATE_MACRO_PARSE_ATTRIBUTE(endermanPickable, enderman_pickable);
+  VCL_PRIVATE_MACRO_PARSE_ATTRIBUTE(background, background);
+  VCL_PRIVATE_MACRO_PARSE_ATTRIBUTE(is_air, is_air);
+  VCL_PRIVATE_MACRO_PARSE_ATTRIBUTE(is_grass, is_grass);
+  VCL_PRIVATE_MACRO_PARSE_ATTRIBUTE(is_foliage, is_foliage);
+  VCL_PRIVATE_MACRO_PARSE_ATTRIBUTE(reproducible, reproducible);
+  VCL_PRIVATE_MACRO_PARSE_ATTRIBUTE(rare, rare);
 
   *ok = true;
 
@@ -308,45 +307,26 @@ void VCL_block_state_list::avaliable_block_states_by_transparency(
   }
 }
 
-#define VCL_private_macro_make_case(str, s, ret, ok_val) \
-  if (str == #s) {                                       \
-    ok_val = true;                                       \
-    ret = VCL_block_class_t::s;                          \
+void VCL_block_state_list::update_foliages(
+    bool is_foliage_transparent) noexcept {
+  for (auto &pair : this->states) {
+    if (pair.second.get_attribute(VCL_block_attribute_t::is_foliage)) {
+      pair.second.set_attribute(VCL_block_attribute_t::transparency,
+                                is_foliage_transparent);
+    }
   }
+}
 
 VCL_block_class_t string_to_block_class(std::string_view str,
                                         bool *ok) noexcept {
-  bool val_for_ok = false;
-  VCL_block_class_t result{};
 
-  VCL_private_macro_make_case(str, wood, result, val_for_ok);
-  VCL_private_macro_make_case(str, planks, result, val_for_ok);
-  VCL_private_macro_make_case(str, leaves, result, val_for_ok);
-  VCL_private_macro_make_case(str, mushroom, result, val_for_ok);
-  VCL_private_macro_make_case(str, slab, result, val_for_ok);
-  VCL_private_macro_make_case(str, wool, result, val_for_ok);
-  VCL_private_macro_make_case(str, concrete, result, val_for_ok);
-  VCL_private_macro_make_case(str, terracotta, result, val_for_ok);
-  VCL_private_macro_make_case(str, glazed_terracotta, result, val_for_ok);
-  VCL_private_macro_make_case(str, concrete_powder, result, val_for_ok);
-  VCL_private_macro_make_case(str, shulker_box, result, val_for_ok);
-  VCL_private_macro_make_case(str, glass, result, val_for_ok);
-  VCL_private_macro_make_case(str, redstone, result, val_for_ok);
-  VCL_private_macro_make_case(str, stone, result, val_for_ok);
-  VCL_private_macro_make_case(str, ore, result, val_for_ok);
-  VCL_private_macro_make_case(str, clay, result, val_for_ok);
-  VCL_private_macro_make_case(str, natural, result, val_for_ok);
-  VCL_private_macro_make_case(str, crafted, result, val_for_ok);
-  VCL_private_macro_make_case(str, desert, result, val_for_ok);
-  VCL_private_macro_make_case(str, nether, result, val_for_ok);
-  VCL_private_macro_make_case(str, the_end, result, val_for_ok);
-  VCL_private_macro_make_case(str, ocean, result, val_for_ok);
-  VCL_private_macro_make_case(str, creative_only, result, val_for_ok);
-  VCL_private_macro_make_case(str, others, result, val_for_ok);
-
+  auto ret = magic_enum::enum_cast<VCL_block_class_t>(str);
   if (ok != nullptr) {
-    *ok = val_for_ok;
+    *ok = ret.has_value();
+  }
+  if (!ret.has_value()) {
+    return {};
   }
 
-  return result;
+  return ret.value();
 }

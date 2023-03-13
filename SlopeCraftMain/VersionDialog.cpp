@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2022  TokiNoBug
+ Copyright © 2021-2023  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -13,65 +13,60 @@ This file is part of SlopeCraft.
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with SlopeCraft.  If not, see <https://www.gnu.org/licenses/>.
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
 
     Contact with me:
-    github:https://github.com/ToKiNoBug
+    github:https://github.com/SlopeCraft/SlopeCraft
     bilibili:https://space.bilibili.com/351429231
 */
 
 #include "VersionDialog.h"
 
-VersionDialog::VersionDialog(VersionDialog ** _self,QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::VersionDialog)
-{
-    ui->setupUi(this);
-    result=userChoice::No;
-    self=_self;
+VersionDialog::VersionDialog(VersionDialog **_self, QWidget *parent)
+    : QDialog(parent), ui(new Ui::VersionDialog) {
+  ui->setupUi(this);
+  result = userChoice::No;
+  self = _self;
 }
 
 VersionDialog::~VersionDialog() {
-    delete  ui;
-    *self=nullptr;
-    //deleteLater();
+  delete ui;
+  *self = nullptr;
+  // deleteLater();
 }
 
 void VersionDialog::on_BtnYes_clicked() {
-    result=userChoice::Yes;
-    close();
-    //emit finished();
+  result = userChoice::Yes;
+  close();
+  // emit finished();
 }
 
 void VersionDialog::on_BtnNo_clicked() {
-    result=userChoice::No;
-    close();
-    //emit finished();
+  result = userChoice::No;
+  close();
+  // emit finished();
 }
 
 void VersionDialog::on_BtnNoToAll_clicked() {
-    result=userChoice::NoToAll;
-    close();
-    //emit finished();
+  result = userChoice::NoToAll;
+  close();
+  // emit finished();
 }
 
-void VersionDialog::closeEvent(QCloseEvent * event) {
-    //result=userChoice::No;
-    emit finished();
-    QWidget::closeEvent(event);
-    deleteLater();
+void VersionDialog::closeEvent(QCloseEvent *event) {
+  // result=userChoice::No;
+  emit finished();
+  QWidget::closeEvent(event);
+  deleteLater();
 }
 
-VersionDialog::userChoice VersionDialog::getResult() const {
-    return result;
-}
+VersionDialog::userChoice VersionDialog::getResult() const { return result; }
 
-void VersionDialog::setTexts(const QString &title,
-                             const QString &labelText,
+void VersionDialog::setTexts(const QString &title, const QString &labelText,
                              const QString &browserText) {
-    setWindowTitle(title);
-    ui->label->setText(labelText);
-    ui->textBrowser->setMarkdown(browserText);
+  setWindowTitle(title);
+  ui->label->setText(labelText);
+  ui->textBrowser->setMarkdown(browserText);
 }
 
 /*

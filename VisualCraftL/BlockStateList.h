@@ -1,3 +1,25 @@
+/*
+ Copyright © 2021-2023  TokiNoBug
+This file is part of SlopeCraft.
+
+    SlopeCraft is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    SlopeCraft is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
+
+    Contact with me:
+    github:https://github.com/SlopeCraft/SlopeCraft
+    bilibili:https://space.bilibili.com/351429231
+*/
+
 #ifndef SLOPECRAFT_VISUALCRAFT_BLOCKSTATELIST_H
 #define SLOPECRAFT_VISUALCRAFT_BLOCKSTATELIST_H
 
@@ -52,11 +74,21 @@ public:
   inline bool operator==(const version_set &vs) const noexcept {
     return this->to_u32() == vs.to_u32();
   }
+
+  SCL_gameVersion introduced_version() const noexcept {
+    for (size_t i = 0; i < 32; i++) {
+      if (this->set[i]) {
+        return SCL_gameVersion(i);
+      }
+    }
+    return SCL_gameVersion::FUTURE;
+  }
 };
 
 class VCL_block_state_list;
 
 class VCL_block {
+
   friend class VCL_block_state_list;
 
 public:
@@ -88,6 +120,8 @@ public:
   static constexpr size_t idx_is_glowing = (size_t)attribute::is_glowing;
   static constexpr size_t idx_disabled = (size_t)attribute::disabled;
   static constexpr size_t idx_is_air = (size_t)attribute::is_air;
+  static constexpr size_t idx_is_grass = (size_t)attribute::is_grass;
+  static constexpr size_t idx_is_foliage = (size_t)attribute::is_foliage;
 
   inline bool get_attribute(attribute a) const noexcept {
     return this->attributes[size_t(a)];
@@ -136,7 +170,7 @@ public:
   }
 
   inline void disable_all_faces() noexcept {
-    for (size_t idx = idx_face_up; idx < idx_face_west; idx++) {
+    for (size_t idx = idx_face_up; idx <= idx_face_west; idx++) {
       this->attributes[idx] = false;
     }
   }
@@ -207,6 +241,8 @@ public:
 
     return &it->second;
   }
+
+  void update_foliages(bool is_foliage_transparent) noexcept;
 };
 
 VCL_block_class_t string_to_block_class(std::string_view str,

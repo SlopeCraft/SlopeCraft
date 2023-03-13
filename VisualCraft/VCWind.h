@@ -1,13 +1,43 @@
+/*
+ Copyright © 2021-2023  TokiNoBug
+This file is part of SlopeCraft.
+
+    SlopeCraft is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    SlopeCraft is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
+
+    Contact with me:
+    github:https://github.com/SlopeCraft/SlopeCraft
+    bilibili:https://space.bilibili.com/351429231
+*/
+
 #ifndef SLOPECRAFT_VISUALCRAFT_VCWIND_H
 #define SLOPECRAFT_VISUALCRAFT_VCWIND_H
 
 #include <QMainWindow>
+#include <QNetworkAccessManager>
 #include <VisualCraftL.h>
+#include <functional>
 #include <map>
+
+extern uint8_t is_language_ZH;
+extern QNetworkAccessManager *global_manager;
+
+extern QString url_for_update;
 
 class QListWidget;
 class QListWidgetItem;
 class VC_block_class;
+class QCheckBox;
 
 namespace Ui {
 class VCWind;
@@ -32,9 +62,11 @@ public:
   struct basic_colorset_option {
     std::vector<QString> zips;
     std::vector<QString> jsons;
-    VCL_face_t face;
     SCL_gameVersion version;
     int layers;
+    VCL_face_t face;
+    VCL_biome_t biome;
+    bool is_leaves_transparent;
   };
 
   struct allowed_colorset_option {
@@ -46,17 +78,19 @@ private:
   Ui::VCWind *ui;
   VCL_Kernel *const kernel{nullptr};
   // for page 0
-  VCL_resource_pack *rp{nullptr};
-  VCL_block_state_list *bsl{nullptr};
+  // VCL_resource_pack *rp{nullptr};
+  // VCL_block_state_list *bsl{nullptr};
   // bool is_basical_colorset_changed{true};
 
   // for page 1
   std::map<VCL_block_class_t, VC_block_class *> map_VC_block_class{};
-  // bool is_allowed_colorset_changed{true};
-  //  for page 2
+  // QByteArray hash_basical{""};
+  //  bool is_allowed_colorset_changed{true};
+  //   for page 2
   std::map<QString, std::pair<QImage, QImage>> image_cache;
-  // for page 3
-  // for page 4
+  // QByteArray hash_allowed{""};
+  //  for page 3
+  //  for page 4
   QPoint prev_compute_device{-3, -3};
 
   // static bool have_special(QListWidget *qlw) noexcept;
@@ -65,16 +99,35 @@ public:
   explicit VCWind(QWidget *parent = nullptr);
   ~VCWind();
 
+  static std::string default_zip_12;
+  static std::string default_zip_latest;
+  static std::string default_json;
+
+  inline const auto &block_class_widgets() const noexcept {
+    return this->map_VC_block_class;
+  }
+
+  void retrieve_latest_version(QString url_api, QNetworkAccessManager &qnam,
+                               bool is_manually) noexcept;
+signals:
+  void signal_basic_colorset_changed();
+  void signal_allowed_colorset_changed();
+
 private:
   // for all pages
   static void callback_progress_range_set(void *, int, int, int) noexcept;
   static void callback_progress_range_add(void *, int) noexcept;
 
+  void when_network_finished(QNetworkReply *reply, bool is_manually) noexcept;
+
   // for page 0 ------------------------------------------
+  void setup_ui_select_biome() noexcept;
   //  create and set this->rp
-  void create_resource_pack() noexcept;
+  [[nodiscard]] static VCL_resource_pack *
+  create_resource_pack(const basic_colorset_option &opt) noexcept;
   // create and set this->bsl
-  void create_block_state_list() noexcept;
+  [[nodiscard]] static VCL_block_state_list *
+  create_block_state_list(const basic_colorset_option &opt) noexcept;
 
   // receive current selected version from ui
   SCL_gameVersion current_selected_version() const noexcept;
@@ -103,6 +156,20 @@ private:
 
   bool is_convert_algo_changed() const noexcept;
 
+  void apply_selection(
+      std::function<void(const VCL_block *, QCheckBox *)>) noexcept;
+
+public:
+  void select_blocks(
+      std::function<bool(const VCL_block *)> return_true_for_select) noexcept;
+
+  void deselect_blocks(
+      std::function<bool(const VCL_block *)> return_true_for_deselect) noexcept;
+
+  int count_block_matched(std::function<bool(const VCL_block *)>
+                              return_true_when_match) const noexcept;
+
+private:
   // void connect_when_allowed_colorset_changed() noexcept;
 
   // for page 2 ------------------------------------------
@@ -128,14 +195,45 @@ private:
   static constexpr int export_col_flagdiagram = 6;
   static constexpr int export_col_progress = 7;
 
+  // returns false means to skip current task.
+  bool export_lite(const QString &, const QString &image_filename) noexcept;
+  bool export_structure(const QString &,
+                        const QString &image_filename) noexcept;
+  bool export_schem(const QString &, const QString &image_filename) noexcept;
+  bool export_converted(const QString &, const QImage &) noexcept;
+  bool export_flatdiagram(const QString &) noexcept;
+
   // for page 4 ------------------------------------------
   void refresh_gpu_info() noexcept;
   void select_default_device() noexcept;
+
+  QString update_gpu_device(QPoint current_choice) noexcept;
 private slots:
-  // for all pages
+  // for all pages ------------------------------------------
+
+  // auto connected
   void on_tabWidget_main_currentChanged(int page) noexcept;
 
-  // for page 0
+  // auto connected
+  void on_ac_about_VisualCraft_triggered() noexcept;
+  void on_ac_contact_bilibili_triggered() noexcept;
+  void on_ac_contact_github_repo_triggered() noexcept;
+  void on_ac_report_bugs_triggered() noexcept;
+
+  // auto connected
+  void on_ac_load_resource_triggered() noexcept;
+  void on_ac_set_allowed_triggered() noexcept;
+
+  // auto connected
+  void on_ac_browse_block_triggered() noexcept;
+  void on_ac_browse_biome_triggered() noexcept;
+  void on_ac_browse_basic_colors_triggered() noexcept;
+  void on_ac_browse_allowed_colors_triggered() noexcept;
+
+  // auto connected
+  void on_ac_check_update_triggered() noexcept;
+
+  // for page 0 ------------------------------------------
 
   // auto connected
   void on_pb_add_rp_clicked() noexcept;
@@ -147,12 +245,23 @@ private slots:
   // manually connected
   // void when_basical_colorset_changed() noexcept;
 
-  // for page 1
+  // for page 1 ------------------------------------------
+
+  // auto connected
+  void on_pb_select_all_clicked() noexcept;
+  void on_pb_deselect_all_clicked() noexcept;
+  void on_pb_deselect_non_reporducible_clicked() noexcept;
+  void on_pb_deselect_rare_clicked() noexcept;
+  void on_pb_invselect_classwise_clicked() noexcept;
+  void on_pb_invselect_blockwise_clicked() noexcept;
+
+  // auto connected
+  void on_pb_custom_select_clicked() noexcept;
 
   // manually connected
   void setup_block_widgets() noexcept;
   // void when_allowed_colorset_changed() noexcept;
-  //  for page 2
+  //  for page 2 ------------------------------------------
 
   // auto connected
   void on_tb_add_images_clicked() noexcept;
@@ -167,11 +276,11 @@ private slots:
   // manually connected
   void when_algo_dither_bottons_toggled() noexcept;
 
-  // for page 3
+  // for page 3 ------------------------------------------
   // auto connected
   void on_pb_select_export_dir_clicked() noexcept;
   void on_pb_execute_clicked() noexcept;
-  // for page 4
+  // for page 4 ------------------------------------------
 
   // auto connected
   void on_sb_threads_valueChanged(int val) noexcept;

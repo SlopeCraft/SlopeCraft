@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2022  TokiNoBug
+ Copyright © 2021-2023  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -13,10 +13,10 @@ This file is part of SlopeCraft.
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with SlopeCraft.  If not, see <https://www.gnu.org/licenses/>.
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
 
     Contact with me:
-    github:https://github.com/ToKiNoBug
+    github:https://github.com/SlopeCraft/SlopeCraft
     bilibili:https://space.bilibili.com/351429231
 */
 
@@ -25,85 +25,49 @@ This file is part of SlopeCraft.
 
 #include "SCLDefines.h"
 using namespace SlopeCraft;
+#include <iostream>
 #include <string>
 #include <vector>
-#include <iostream>
 
-typedef unsigned char uchar ;
+typedef unsigned char uchar;
 
 typedef std::vector<std::string> stringList;
 
-
-class simpleBlock : public AbstractBlock
-{
+class simpleBlock : public AbstractBlock {
 public:
-    simpleBlock();
-    virtual ~simpleBlock(){};
-    std::string id;
-    uchar version;
-    std::string idOld;
-    bool needGlass;
-    bool doGlow;
-    bool endermanPickable;
-    bool burnable;
+  simpleBlock();
+  virtual ~simpleBlock(){};
+  std::string id;
+  uchar version;
+  std::string idOld;
+  bool needGlass;
+  bool doGlow;
+  bool endermanPickable;
+  bool burnable;
 
-    unsigned long long size() const {
-        return sizeof(simpleBlock);
-    }
+  unsigned long long size() const { return sizeof(simpleBlock); }
 
-    const char* getId() const {
-        return id.data();
-    };
-    unsigned char getVersion() const {
-        return version;
-    };
-    const char* getIdOld() const {
-        return idOld.data();
-    };
-    bool getNeedGlass() const {
-        return needGlass;
-    };
-    bool getDoGlow() const {
-        return doGlow;
-    };
-    bool getEndermanPickable() const {
-        return endermanPickable;
-    };
-    bool getBurnable() const {
-        return burnable;
-    };
+  const char *getId() const { return id.data(); };
+  unsigned char getVersion() const { return version; };
+  const char *getIdOld() const { return idOld.data(); };
+  bool getNeedGlass() const { return needGlass; };
+  bool getDoGlow() const { return doGlow; };
+  bool getEndermanPickable() const { return endermanPickable; };
+  bool getBurnable() const { return burnable; };
 
-    void setId(const char* _id) {
-        id=_id;
-    };
-    void setVersion(unsigned char _ver) {
-        version=_ver;
-    };
-    void setIdOld(const char* _idOld) {
-        idOld=_idOld;
-    };
-    void setNeedGlass(bool _needGlass) {
-        needGlass=_needGlass;
-    };
-    void setDoGlow(bool _doGlow) {
-        doGlow=_doGlow;
-    };
-    void setEndermanPickable(bool _enderman) {
-        endermanPickable=_enderman;
-    };
-    void setBurnable(bool _burn) {
-        burnable=_burn;
-    };
+  void setId(const char *_id) { id = _id; };
+  void setVersion(unsigned char _ver) { version = _ver; };
+  void setIdOld(const char *_idOld) { idOld = _idOld; };
+  void setNeedGlass(bool _needGlass) { needGlass = _needGlass; };
+  void setDoGlow(bool _doGlow) { doGlow = _doGlow; };
+  void setEndermanPickable(bool _enderman) { endermanPickable = _enderman; };
+  void setBurnable(bool _burn) { burnable = _burn; };
 
-    void destroy() {
-        delete this;
-    }
+  void destroy() { delete this; }
 
-    static bool dealBlockId(const std::string & id ,
-                            std::string & netBlockId,
-                            stringList * proName,
-                            stringList * proVal);
-    //simpleBlock& operator =(const simpleBlock &);
+  static bool dealBlockId(const std::string &id, std::string &netBlockId,
+                          stringList *proName, stringList *proVal);
+  // simpleBlock& operator =(const simpleBlock &);
 };
 
 #endif // SIMPLEBLOCK_H

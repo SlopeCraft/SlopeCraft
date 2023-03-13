@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>BlockBrowser</class>
+ <widget class="QWidget" name="BlockBrowser">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>593</width>
+    <height>391</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>浏览方块</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="0" column="0" colspan="2">
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>可用方块</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="0" column="0" rowspan="5">
+        <widget class="QLabel" name="label_image">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="text">
+          <string>在“可用方块”页，可以浏览所有可用方块在每一个面的投影图像。在“所有方块”页，可以浏览任何方块（包括当前版本不可用的方块）的所有属性。
+
+在“可用方块”页选择了一个方块后，“所有方块”页也会自动选中这个方块。但在”所有方块“页选择的方块不会影响到”可用方块“页，因为选中的方块不一定能在当前版本使用，不一定能计算出投影图像。</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignJustify|Qt::AlignVCenter</set>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QPushButton" name="pb_save_current_image">
+         <property name="text">
+          <string>保存当前图片</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QComboBox" name="combobox_select_face">
+         <property name="placeholderText">
+          <string>选择视角</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="combobox_select_blk">
+         <property name="placeholderText">
+          <string>选择方块</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QSpinBox" name="sb_scale_ratio">
+         <property name="suffix">
+          <string notr="true"> x</string>
+         </property>
+         <property name="prefix">
+          <string>放大倍率：</string>
+         </property>
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>512</number>
+         </property>
+         <property name="value">
+          <number>16</number>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QTextBrowser" name="tb_view_id">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="documentTitle">
+          <string>方块id</string>
+         </property>
+         <property name="placeholderText">
+          <string>方块id</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>所有方块</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_3" columnstretch="0,0,0,0">
+       <item row="0" column="2" rowspan="5">
+        <widget class="QTableWidget" name="tw_attribute">
+         <column>
+          <property name="text">
+           <string>属性</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>值</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+       <item row="0" column="3" rowspan="5">
+        <widget class="QTableWidget" name="tw_version">
+         <column>
+          <property name="text">
+           <string>MC版本</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>是否可用</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="2">
+        <widget class="QComboBox" name="combobox_select_blk_all">
+         <property name="placeholderText">
+          <string>选择方块</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="2">
+        <widget class="QTextBrowser" name="tb_blockid_all">
+         <property name="placeholderText">
+          <string>方块id</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="2">
+        <widget class="QLabel" name="label_show_block_class">
+         <property name="text">
+          <string>方块类别：</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0" colspan="2">
+        <widget class="QTextBrowser" name="tb_block_name_ZH_all">
+         <property name="placeholderText">
+          <string>中文名</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0" colspan="2">
+        <widget class="QTextBrowser" name="tb_block_name_EN_all">
+         <property name="placeholderText">
+          <string>英文名</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2022  TokiNoBug
+ Copyright © 2021-2023  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -13,10 +13,10 @@ This file is part of SlopeCraft.
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with SlopeCraft.  If not, see <https://www.gnu.org/licenses/>.
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
 
     Contact with me:
-    github:https://github.com/ToKiNoBug
+    github:https://github.com/SlopeCraft/SlopeCraft
     bilibili:https://space.bilibili.com/351429231
 */
 
@@ -26,8 +26,8 @@ This file is part of SlopeCraft.
 #include <omp.h>
 #include <uiPack/uiPack.h>
 
-#include "ColorDiff_OpenCL.h"
 #include <Eigen/Dense>
+#include <GPU_interface.h>
 #include <memory>
 #include <optional>
 #include <thread>
@@ -55,29 +55,32 @@ static const Eigen::Array<float, 2, 3>
     dithermap_RL({{7.0 / 16.0, 0.0 / 16.0, 0.0 / 16.0},
                   {1.0 / 16.0, 5.0 / 16.0, 3.0 / 16.0}});
 
-template <bool is_not_optical> struct OCL_wrapper_wrapper {
-  constexpr bool have_ocl() const noexcept { return false; }
+template <bool is_not_optical> struct GPU_wrapper_wrapper {
+  constexpr bool have_gpu_resource() const noexcept { return false; }
 };
 
-template <> struct OCL_wrapper_wrapper<false> {
+template <> struct GPU_wrapper_wrapper<false> {
 
 protected:
-  ocl_warpper::ocl_resource ocl_rcs;
-  bool have_ocl_rcs{false};
+  gpu_wrapper::gpu_interface *gpu{nullptr};
 
 public:
-  bool have_ocl() const noexcept { return this->have_ocl_rcs; }
+  bool have_gpu_resource() const noexcept { return this->gpu != nullptr; }
 
-  void set_ocl(ocl_warpper::ocl_resource &&src) noexcept {
-    this->ocl_rcs = src;
-    this->have_ocl_rcs = this->ocl_rcs.ok();
+  void set_gpu_resource(gpu_wrapper::gpu_interface *gi) noexcept {
+    this->gpu = gi;
   }
 
-  inline const auto &ocl_resource() const noexcept { return this->ocl_rcs; }
+  inline gpu_wrapper::gpu_interface *gpu_resource() noexcept {
+    return this->gpu;
+  }
+  inline const gpu_wrapper::gpu_interface *gpu_resource() const noexcept {
+    return this->gpu;
+  }
 };
 
 template <bool is_not_optical>
-class ImageCvter : public OCL_wrapper_wrapper<is_not_optical> {
+class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
 public:
   using basic_colorset_t = colorset_new<true, is_not_optical>;
   using allowed_colorset_t = colorset_new<false, is_not_optical>;
@@ -307,7 +310,7 @@ private:
     } else {
 
       // If converter have gpu resources, compute by gpu
-      if (try_gpu && this->have_ocl()) {
+      if (try_gpu && this->have_gpu_resource()) {
         const bool ok = this->match_all_TokiColors_gpu();
 
         return ok;
@@ -374,7 +377,7 @@ private:
     static_assert(!is_not_optical,
                   "OpenCL boosting is only avaliable for VisualCraftL.");
 
-    if (!this->have_ocl()) {
+    if (!this->have_gpu_resource()) {
       abort();
       return false;
     }
@@ -402,7 +405,7 @@ private:
     const uint64_t taskCount = tasks.size();
 
     const uint64_t gpu_task_count =
-        taskCount - taskCount % this->ocl_rcs.local_work_group_size();
+        taskCount - taskCount % this->gpu->local_work_group_size_v();
     const uint64_t cpu_task_count = taskCount - gpu_task_count;
 
     if (gpu_task_count > 0) {
@@ -420,8 +423,8 @@ private:
       }
 
       //  set task
-      this->ocl_rcs.set_task(task_colors.size(), task_colors.data());
-      if (!this->ocl_rcs.ok()) {
+      this->gpu->set_task_v(task_colors.size(), task_colors.data());
+      if (!this->gpu->ok_v()) {
         return false;
       }
     }
@@ -458,14 +461,14 @@ private:
 
     if (gpu_task_count > 0) {
       // set colorset for ocl
-      this->ocl_rcs.set_colorset(TokiColor_t::Allowed->color_count(),
-                                 colorset_ptrs);
-      if (!this->ocl_rcs.ok()) {
+      this->gpu->set_colorset_v(TokiColor_t::Allowed->color_count(),
+                                colorset_ptrs);
+      if (!this->gpu->ok_v()) {
         return false;
       }
 
-      this->ocl_rcs.execute(algo, false);
-      if (!this->ocl_rcs.ok()) {
+      this->gpu->execute_v(algo, false);
+      if (!this->gpu->ok_v()) {
         return false;
       }
     }
@@ -476,8 +479,8 @@ private:
     }
 
     if (gpu_task_count > 0) {
-      this->ocl_rcs.wait();
-      if (!this->ocl_rcs.ok()) {
+      this->gpu->wait_v();
+      if (!this->gpu->ok_v()) {
         return false;
       }
     }
@@ -486,13 +489,13 @@ private:
       for (size_t tid = 0; tid < gpu_task_count; tid++) {
         TokiColor_t &tc = tasks[tid]->second;
 
-        const uint16_t tempidx = this->ocl_rcs.result_idx()[tid];
+        const uint16_t tempidx = this->gpu->result_idx_v()[tid];
         if (tempidx >= TokiColor_t::Allowed->color_count()) {
           abort();
         }
 
         tc.set_gpu_result(TokiColor_t::Allowed->color_id(tempidx),
-                          this->ocl_rcs.result_diff()[tid]);
+                          this->gpu->result_diff_v()[tid]);
       }
 
     return true;

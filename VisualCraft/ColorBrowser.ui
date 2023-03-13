@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ColorBrowser</class>
+ <widget class="QWidget" name="ColorBrowser">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>625</width>
+    <height>462</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>查看颜色表</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QTableWidget" name="table">
+     <column>
+      <property name="text">
+       <string>颜色序号</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>颜色</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>色号</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>方块图标</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

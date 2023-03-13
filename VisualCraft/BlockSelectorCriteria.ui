@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>BlockSelectorCriteria</class>
+ <widget class="QWidget" name="BlockSelectorCriteria">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>507</width>
+    <height>40</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string/>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,0,0,0,0,0">
+   <item row="0" column="0">
+    <widget class="QComboBox" name="cb_logic">
+     <item>
+      <property name="text">
+       <string notr="true">AND</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string notr="true">OR</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="0" column="4">
+    <widget class="QToolButton" name="tb_append">
+     <property name="font">
+      <font>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string notr="true">+</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="3">
+    <widget class="QComboBox" name="cb_value">
+     <item>
+      <property name="text">
+       <string notr="true">TRUE</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string notr="true">FALSE</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QComboBox" name="cb_attribute">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string notr="true">=</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="5">
+    <widget class="QToolButton" name="tb_remove">
+     <property name="font">
+      <font>
+       <family>Microsoft YaHei UI</family>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string notr="true">-</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

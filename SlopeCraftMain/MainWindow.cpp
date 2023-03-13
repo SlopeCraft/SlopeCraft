@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2022  TokiNoBug
+ Copyright © 2021-2023  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -13,10 +13,10 @@ This file is part of SlopeCraft.
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with SlopeCraft.  If not, see <https://www.gnu.org/licenses/>.
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
 
     Contact with me:
-    github:https://github.com/ToKiNoBug
+    github:https://github.com/SlopeCraft/SlopeCraft
     bilibili:https://space.bilibili.com/351429231
 */
 
@@ -47,7 +47,7 @@ const ushort MainWindow::BLGlowing[64] = {
     0, 0, 0, 0, 0, 0, 6, 0, 0, 1, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0};
 
-const QString MainWindow::selfVersion = SlopeCraft::Kernel::getSCLVersion();
+const QString MainWindow::selfVersion = SlopeCraft::SCL_getSCLVersion();
 
 bool MainWindow::isBatchOperating = false;
 
@@ -62,7 +62,7 @@ inline uint32_t inverseColor(uint32_t raw) noexcept {
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow),
-      kernel(SlopeCraft::Kernel::create()) {
+      kernel(SlopeCraft::SCL_createKernel()) {
   ui->setupUi(this);
   // qDebug("成功setupUi");
   Collected = false;
@@ -255,7 +255,7 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 MainWindow::~MainWindow() {
-  kernel->destroy();
+  SlopeCraft::SCL_destroyKernel(this->kernel);
   delete Manager;
   delete ui;
 }
@@ -572,7 +572,7 @@ void MainWindow::InitializeAll() {
 }
 
 void MainWindow::contactG() {
-  QDesktopServices::openUrl(QUrl("github.com/ToKiNoBug"));
+  QDesktopServices::openUrl(QUrl("github.com/SlopeCraft"));
 }
 
 void MainWindow::contactB() {
@@ -588,14 +588,14 @@ void MainWindow::turnToPage(int page) {
   page %= 9;
   QString newtitle = "SlopeCraft ";
 
-  newtitle += SlopeCraft::Kernel::getSCLVersion();
+  newtitle += SlopeCraft::SCL_getSCLVersion();
 #ifdef WIN32
-  newtitle += " Copyright © 2021-2022 TokiNoBug    "; // windows
+  newtitle += " Copyright © 2021-2023 TokiNoBug    "; // windows
 #elif defined(_MAC) || defined(__APPLE__)
   newtitle +=
-      " Copyright © 2021-2022 TokiNoBug,AbrasiveBoar, Cubik65536   "; // macOs
+      " Copyright © 2021-2023 TokiNoBug,AbrasiveBoar, Cubik65536   "; // macOs
 #else
-  newtitle += " Copyright © 2021-2022 TokiNoBug    "; // unknown platform
+  newtitle += " Copyright © 2021-2023 TokiNoBug    "; // unknown platform
 #endif
 
   switch (page) {
@@ -1113,8 +1113,9 @@ void MainWindow::kernelSetType() {
   kernel->setType(type, ver, allowedBaseColor, palette.data());
   const uint8_t *allowedMap;
   int colorN = 0;
-  SlopeCraft::Kernel::getColorMapPtrs(nullptr, nullptr, nullptr, &allowedMap,
-                                      &colorN);
+
+  SlopeCraft::SCL_getColorMapPtrs(nullptr, nullptr, nullptr, &allowedMap,
+                                  &colorN);
   /*
   cout<<"\n\nAllowedMap=";
   for(int i=0;i<colorN;i++) {
@@ -1880,7 +1881,8 @@ void MainWindow::showError(void *p, SlopeCraft::errorFlag error,
     break;
   case SlopeCraft::errorFlag::LOSSYCOMPRESS_FAILED:
     title = tr("有损压缩失败");
-    text = tr("在构建高度矩阵时，有损压缩失败，没能将地图画压缩到目标高度。 \
+    text = tr(
+        "在构建高度矩阵时，有损压缩失败，没能将地图画压缩到目标高度。 \
         这可能是因为地图画行数过大。 \
         尝试启用无损压缩，或者提高最大允许高度");
     break;
@@ -1983,7 +1985,7 @@ void MainWindow::on_AllowForcedOpti_stateChanged(int arg1) {
 }
 
 void MainWindow::on_reportBugs_clicked() {
-  QUrl url("https://github.com/ToKiNoBug/SlopeCraft/issues/new/choose");
+  QUrl url("https://github.com/SlopeCraft/SlopeCraft/issues/new/choose");
   QDesktopServices::openUrl(url);
 }
 
@@ -2020,7 +2022,7 @@ void MainWindow::grabVersion(bool isAuto) {
   isRunning = true;
 
   static const QString url =
-      "https://api.github.com/repos/TokiNoBug/SlopeCraft/releases";
+      "https://api.github.com/repos/SlopeCraft/SlopeCraft/releases";
 
   QEventLoop tempLoop;
   QNetworkAccessManager *manager = new QNetworkAccessManager;
@@ -2131,7 +2133,7 @@ void MainWindow::grabVersion(bool isAuto) {
     VersionDialog::userChoice userReply = verDialog->getResult();
 
     if (userReply == VersionDialog::userChoice::Yes) {
-      QDesktopServices::openUrl(QUrl(latest3xJo["url"].toString()));
+      QDesktopServices::openUrl(QUrl(latest3xJo["html_url"].toString()));
       /*
       if(trans.language()=="zh_CN") {
           QDesktopServices::openUrl(

@@ -1,4 +1,27 @@
-#include "ColorDiff_OpenCL.h"
+/*
+ Copyright © 2021-2023  TokiNoBug
+This file is part of SlopeCraft.
+
+    SlopeCraft is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    SlopeCraft is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
+
+    Contact with me:
+    github:https://github.com/SlopeCraft/SlopeCraft
+    bilibili:https://space.bilibili.com/351429231
+*/
+
+#include "OCLWrapper.h"
+#include "../GPU_interface.h"
 
 #include <CL/cl.hpp>
 #include <Eigen/Dense>
@@ -42,72 +65,16 @@ cl::Platform private_fun_get_platform(size_t platform_idx,
   return cl::Platform(plats[platform_idx]);
 }
 
-std::string ocl_warpper::platform_str(size_t platform_idx) noexcept {
-  cl_int err;
-  cl::Platform plat = private_fun_get_platform(platform_idx, err);
-  if (err != CL_SUCCESS) {
-    return "Failed to get platform info, error code : " + std::to_string(err);
-  }
+ocl_warpper::ocl_platform::ocl_platform(size_t idx) {
+  this->platform = private_fun_get_platform(idx, this->err);
+  if (this->err != CL_SUCCESS)
+    return;
 
-  auto ret = plat.getInfo<CL_PLATFORM_NAME>(&err);
-  if (err != CL_SUCCESS) {
-    return "Failed to get platform info, error code : " + std::to_string(err);
-  }
-  return ret;
-}
+  this->name = this->platform.getInfo<CL_PLATFORM_NAME>(&this->err);
+  if (this->err != CL_SUCCESS)
+    return;
 
-size_t ocl_warpper::device_num(size_t platform_idx) noexcept {
-
-  cl_int err;
-  cl::Platform plat = private_fun_get_platform(platform_idx, err);
-  if (err != CL_SUCCESS) {
-    return {};
-  }
-
-  std::vector<cl::Device> devices;
-
-  err = plat.getDevices(CL_DEVICE_TYPE_ALL, &devices);
-  if (err != CL_SUCCESS) {
-    return 0;
-  }
-
-  return devices.size();
-}
-
-cl::Device private_fun_get_device(size_t platform_idx, size_t device_idx,
-                                  cl_int &err) noexcept {
-
-  auto plat = private_fun_get_platform(platform_idx, err);
-  if (err != CL_SUCCESS) {
-    return {};
-  }
-
-  std::vector<cl::Device> devices;
-
-  err = plat.getDevices(CL_DEVICE_TYPE_ALL, &devices);
-  if (err != CL_SUCCESS) {
-    return {};
-  }
-
-  return devices[device_idx];
-}
-
-std::string ocl_warpper::device_str(size_t platform_idx,
-                                    size_t device_idx) noexcept {
-  cl_int err;
-  cl::Device dev = private_fun_get_device(platform_idx, device_idx, err);
-
-  if (err != CL_SUCCESS) {
-    return "Failed to get device info, error code : " + std::to_string(err);
-  }
-
-  auto ret = dev.getInfo<CL_DEVICE_VENDOR>(&err);
-
-  if (err != CL_SUCCESS) {
-    return "Failed to get device info, error code : " + std::to_string(err);
-  }
-
-  return ret;
+  this->err = this->platform.getDevices(CL_DEVICE_TYPE_ALL, &this->devices);
 }
 
 cl_int private_fun_change_buf_size(cl::Context &context, cl::Buffer &buf,
@@ -131,17 +98,9 @@ ocl_warpper::ocl_resource::ocl_resource() {
   this->init_resource();
 }
 
-ocl_warpper::ocl_resource::ocl_resource(size_t platform_idx,
-                                        size_t device_idx) {
-  this->platform = private_fun_get_platform(platform_idx, this->error);
-  if (!this->ok()) {
-    return;
-  }
-
-  this->device = private_fun_get_device(platform_idx, device_idx, this->error);
-  if (!this->ok()) {
-    return;
-  }
+ocl_warpper::ocl_resource::ocl_resource(cl::Platform plat, cl::Device dev) {
+  this->platform = plat;
+  this->device = dev;
 
   this->init_resource();
 }

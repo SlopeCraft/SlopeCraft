@@ -1,3 +1,25 @@
+/*
+ Copyright © 2021-2023  TokiNoBug
+This file is part of SlopeCraft.
+
+    SlopeCraft is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    SlopeCraft is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
+
+    Contact with me:
+    github:https://github.com/SlopeCraft/SlopeCraft
+    bilibili:https://space.bilibili.com/351429231
+*/
+
 #ifndef SLOPECRAFT_VISUALCRAFT_VISUALCRAFT_H
 #define SLOPECRAFT_VISUALCRAFT_VISUALCRAFT_H
 
@@ -44,6 +66,10 @@ enum class VCL_block_attribute_t : uint8_t {
   is_glowing = 10,
   disabled = 11,
   is_air = 12,
+  is_grass = 13,
+  is_foliage = 14,
+  reproducible = 15,
+  rare = 16
 };
 
 enum class VCL_block_class_t : uint8_t {
@@ -157,6 +183,9 @@ class VCL_block_state_list;
 class VCL_block;
 class VCL_model;
 
+class VCL_GPU_Platform;
+class VCL_GPU_Device;
+
 class VCL_Kernel {
 public:
   VCL_Kernel() = default;
@@ -167,8 +196,9 @@ public:
                       void (*progressAdd)(void *, int)) noexcept = 0;
 
   virtual bool have_gpu_resource() const noexcept = 0;
-  virtual bool set_gpu_resource(size_t platform_idx,
-                                size_t device_idx) noexcept = 0;
+
+  virtual bool set_gpu_resource(const VCL_GPU_Platform *,
+                                const VCL_GPU_Device *) noexcept = 0;
 
   virtual bool prefer_gpu() const noexcept = 0;
   virtual void set_prefer_gpu(bool try_gpu) noexcept = 0;
@@ -205,6 +235,8 @@ public:
     int64_t row_end;
     int32_t split_line_row_margin; // 0 or negative number means no split lines
     int32_t split_line_col_margin; // 0 or negative number means no split lines
+    int png_compress_level{9};
+    int png_compress_memory_level{8};
   };
 
   virtual void flag_diagram(uint32_t *image_u8c3_rowmajor,
@@ -268,7 +300,13 @@ struct VCL_set_resource_option {
   int32_t max_block_layers;
   VCL_biome_t biome;
   VCL_face_t exposed_face;
+  bool is_render_quality_fast;
 };
+
+VCL_EXPORT_FUN double
+VCL_estimate_color_num(size_t num_layers, size_t num_foreground,
+                       size_t num_background,
+                       size_t num_nontransparent_non_background);
 
 // set resource for kernel
 VCL_EXPORT_FUN bool
@@ -281,6 +319,8 @@ VCL_set_resource_move(VCL_resource_pack **rp_ptr,
                       VCL_block_state_list **bsl_ptr,
                       const VCL_set_resource_option &option);
 
+VCL_EXPORT_FUN void VCL_discard_resource();
+
 // functions to check the resource
 VCL_EXPORT_FUN bool VCL_is_basic_colorset_ok();
 VCL_EXPORT_FUN VCL_resource_pack *VCL_get_resource_pack();
@@ -288,21 +328,40 @@ VCL_EXPORT_FUN VCL_block_state_list *VCL_get_block_state_list();
 VCL_EXPORT_FUN SCL_gameVersion VCL_get_game_version();
 VCL_EXPORT_FUN VCL_face_t VCL_get_exposed_face();
 VCL_EXPORT_FUN int VCL_get_max_block_layers();
+VCL_EXPORT_FUN size_t VCL_num_basic_colors();
+/**
+  \returns the number of blocks of this color.
+*/
+VCL_EXPORT_FUN int
+VCL_get_basic_color_composition(size_t color_idx,
+                                const VCL_block **const blocks_dest = nullptr,
+                                uint32_t *const color_dest = nullptr);
 
 // set allowed blocks for kernel
 VCL_EXPORT_FUN bool
 VCL_set_allowed_blocks(const VCL_block *const *const blocks_allowed,
                        size_t num_block_allowed);
+VCL_EXPORT_FUN void VCL_discard_allowed_blocks();
 
 VCL_EXPORT_FUN bool VCL_is_allowed_colorset_ok();
 
 VCL_EXPORT_FUN int VCL_get_allowed_colors(uint32_t *dest, size_t dest_capacity);
+
+VCL_EXPORT_FUN size_t VCL_get_allowed_color_id(
+    uint16_t *const dest, size_t dest_capacity_in_elements);
+
+VCL_EXPORT_FUN bool VCL_export_test_litematic(const char *filename);
 
 // functions about resource pack
 VCL_EXPORT_FUN void VCL_display_resource_pack(const VCL_resource_pack *,
                                               bool textures = true,
                                               bool blockstates = true,
                                               bool model = true);
+
+VCL_EXPORT_FUN const uint32_t *VCL_get_colormap(const VCL_resource_pack *,
+                                                bool is_foliage,
+                                                int *rows = nullptr,
+                                                int *cols = nullptr);
 
 // functions about block state list
 VCL_EXPORT_FUN void VCL_display_block_state_list(const VCL_block_state_list *);
@@ -351,19 +410,24 @@ VCL_EXPORT_FUN void VCL_set_block_attribute(VCL_block *,
                                             VCL_block_attribute_t attribute,
                                             bool value);
 
-VCL_EXPORT_FUN const char *VCL_get_block_id(const VCL_block *);
+VCL_EXPORT_FUN const char *VCL_get_block_id(const VCL_block *,
+                                            bool ignore_id_replace_list = true);
+VCL_EXPORT_FUN const char *VCL_get_block_id_version(const VCL_block *,
+                                                    SCL_gameVersion);
 VCL_EXPORT_FUN const char *VCL_get_block_name(const VCL_block *, uint8_t is_ZH);
 
 VCL_EXPORT_FUN VCL_block_class_t VCL_get_block_class(const VCL_block *);
 VCL_EXPORT_FUN void VCL_set_block_class(VCL_block *, VCL_block_class_t cl);
+VCL_EXPORT_FUN bool VCL_is_block_suitable_for_version(const VCL_block *,
+                                                      SCL_gameVersion version);
+VCL_EXPORT_FUN bool VCL_compare_block(const VCL_block *b1, const VCL_block *b2);
 
 VCL_EXPORT_FUN VCL_block_class_t VCL_string_to_block_class(const char *str,
                                                            bool *ok = nullptr);
 
 [[nodiscard]] VCL_EXPORT_FUN VCL_model *
 VCL_get_block_model(const VCL_block *block,
-                    const VCL_resource_pack *resource_pack,
-                    VCL_face_t face_exposed, VCL_face_t *face_invrotated);
+                    const VCL_resource_pack *resource_pack);
 
 [[nodiscard]] VCL_EXPORT_FUN VCL_model *
 VCL_get_block_model_by_name(const VCL_resource_pack *, const char *name);
@@ -399,10 +463,10 @@ i =
   if other values, the function will return INT_MIN.
 */
 VCL_EXPORT_FUN int VCL_version_component(int i);
-VCL_EXPORT_FUN bool VCL_is_version_ok(uint64_t version_at_caller_s_build_time);
+VCL_EXPORT_FUN bool
+VCL_is_version_ok(uint64_t version_at_caller_s_build_time = SC_VERSION_U64);
 
-class VCL_GPU_Platform;
-class VCL_GPU_Device;
+VCL_EXPORT_FUN const char *VCL_get_GPU_api_name();
 
 [[nodiscard]] VCL_EXPORT_FUN size_t VCL_platform_num();
 VCL_EXPORT_FUN VCL_GPU_Platform *VCL_get_platform(size_t platform_idx,
@@ -423,6 +487,11 @@ struct VCL_biome_info {
 };
 
 VCL_EXPORT_FUN VCL_biome_info VCL_get_biome_info(VCL_biome_t);
+VCL_EXPORT_FUN const char *VCL_biome_name(VCL_biome_t, uint8_t is_ZH);
+
+VCL_EXPORT_FUN uint32_t VCL_locate_colormap(const VCL_resource_pack *,
+                                            bool is_grass, VCL_biome_info info,
+                                            int *row, int *col);
 }
 
 #endif // SLOPECRAFT_VISUALCRAFT_VISUALCRAFT_H

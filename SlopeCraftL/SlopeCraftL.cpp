@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2022  TokiNoBug
+ Copyright © 2021-2023  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -13,10 +13,10 @@ This file is part of SlopeCraft.
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with SlopeCraft.  If not, see <https://www.gnu.org/licenses/>.
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
 
     Contact with me:
-    github:https://github.com/ToKiNoBug
+    github:https://github.com/SlopeCraft/SlopeCraft
     bilibili:https://space.bilibili.com/351429231
 */
 
@@ -26,7 +26,7 @@ This file is part of SlopeCraft.
 
 using namespace SlopeCraft;
 
-AbstractBlock *AbstractBlock::create() { return new simpleBlock; }
+// AbstractBlock *AbstractBlock::create() { return new simpleBlock; }
 
 AbstractBlock::AbstractBlock() {}
 
@@ -54,54 +54,67 @@ void AbstractBlock::clear() {
 
 Kernel::Kernel() {}
 
-const char *Kernel::getSCLVersion() { return SC_VERSION_STR; }
+using namespace SlopeCraft;
 
-void Kernel::getColorMapPtrs(const float **const r, const float **const g,
-                             const float **const b, const unsigned char **m,
-                             int *rows) {
-  if (r != nullptr)
-    *r = TokiSlopeCraft::Allowed.rgb_data(0);
-  if (g != nullptr)
-    *g = TokiSlopeCraft::Allowed.rgb_data(1);
-  if (b != nullptr)
-    *b = TokiSlopeCraft::Allowed.rgb_data(2);
+extern "C" {
 
-  if (m != nullptr)
-    *m = TokiSlopeCraft::Allowed.map_data();
-  if (rows != nullptr)
-    *rows = TokiSlopeCraft::Allowed.color_count();
+SCL_EXPORT Kernel *SCL_createKernel() { return new TokiSlopeCraft; }
+SCL_EXPORT void SCL_destroyKernel(Kernel *k) {
+  delete static_cast<TokiSlopeCraft *>(k);
 }
 
-const float *Kernel::getBasicColorMapPtrs() {
-  return TokiSlopeCraft::Basic.RGB_mat().data();
+SCL_EXPORT AbstractBlock *SCL_createBlock() { return new simpleBlock; }
+SCL_EXPORT void SCL_destroyBlock(AbstractBlock *b) {
+  delete static_cast<simpleBlock *>(b);
 }
 
-Kernel *Kernel::create() {
-  // return (new TokiSlopeCraft)->toBaseClassPtr();
-  return static_cast<Kernel *>(new TokiSlopeCraft);
+SCL_EXPORT AiCvterOpt *SCL_createAiCvterOpt() { return new AiCvterOpt; }
+void SCL_EXPORT SCL_destroyAiCvterOpt(AiCvterOpt *a) { delete a; }
+
+void SCL_EXPORT SCL_setPopSize(AiCvterOpt *a, unsigned int p) {
+  a->popSize = p;
+}
+void SCL_EXPORT SCL_setMaxGeneration(AiCvterOpt *a, unsigned int p) {
+  a->maxGeneration = p;
+}
+void SCL_EXPORT SCL_setMaxFailTimes(AiCvterOpt *a, unsigned int p) {
+  a->maxFailTimes = p;
+}
+void SCL_EXPORT SCL_setCrossoverProb(AiCvterOpt *a, double p) {
+  a->crossoverProb = p;
+}
+void SCL_EXPORT SCL_setMutationProb(AiCvterOpt *a, double p) {
+  a->mutationProb = p;
 }
 
-uint64_t Kernel::mcVersion2VersionNumber(SCL_gameVersion g) {
-  switch (g) {
-  case SCL_gameVersion::ANCIENT:
-    return 114514;
-  case SCL_gameVersion::MC12:
-    return 1631;
-  case SCL_gameVersion::MC13:
-    return 1976;
-  case SCL_gameVersion::MC14:
-    return 2230;
-  case SCL_gameVersion::MC15:
-    return 2230;
-  case SCL_gameVersion::MC16:
-    return 2586;
-  case SCL_gameVersion::MC17:
-    return 2730;
-  case SCL_gameVersion::MC18:
-    return 2865;
-  case SCL_gameVersion::MC19:
-    return 3105; // 1.19.0
-  default:
-    return 1919810;
-  }
+unsigned int SCL_EXPORT SCL_getPopSize(const AiCvterOpt *a) {
+  return a->popSize;
+}
+unsigned int SCL_EXPORT SCL_getMaxGeneration(const AiCvterOpt *a) {
+  return a->maxGeneration;
+}
+unsigned int SCL_EXPORT SCL_getMaxFailTimes(const AiCvterOpt *a) {
+  return a->maxFailTimes;
+}
+double SCL_EXPORT SCL_getCrossoverProb(const AiCvterOpt *a) {
+  return a->crossoverProb;
+}
+double SCL_EXPORT SCL_getMutationProb(const AiCvterOpt *a) {
+  return a->mutationProb;
+}
+
+SCL_EXPORT void SCL_getColorMapPtrs(const float **const rdata,
+                                    const float **const gdata,
+                                    const float **const bdata,
+                                    const uint8_t **mapdata, int *num) {
+  TokiSlopeCraft::getColorMapPtrs(rdata, gdata, bdata, mapdata, num);
+}
+
+SCL_EXPORT const float *SCL_getBasicColorMapPtrs() {
+  return TokiSlopeCraft::getBasicColorMapPtrs();
+}
+
+SCL_EXPORT const char *SCL_getSCLVersion() {
+  return TokiSlopeCraft::getSCLVersion();
+}
 }
