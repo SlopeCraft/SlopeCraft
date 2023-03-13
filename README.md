@@ -20,10 +20,6 @@
 
 * [地图画原理](github.com/ToKiNoBug/SlopeCraftTutorial/tree/main/BasicPrinciple)
 
-# 其他平台上的发行版
-
-* [SlopeCraft for macOS](https://github.com/iXORTech/SlopeCraft-for-Linux-macOS) - Linux 与 macOS 操作系统的适配与构建
-
 # 使用教程
 
 * [SlopeCraft傻瓜级使用教程v3.0](https://github.com/ToKiNoBug/SlopeCraftTutorial/tree/v3.7/zh_CN/v3.0)
@@ -109,8 +105,6 @@ SlopeCraft 包含以下核心功能：
 
 见使用教程。
 
-<br>
-
 # 其他相关仓库
 
 * [NBTWriter](https://github.com/ToKiNoBug/NBTWriter-of-Toki) - 写NBT文件的库（自己写的，功能比较弱，满足自己的需求就够了）
@@ -119,4 +113,3 @@ SlopeCraft 包含以下核心功能：
 * [SlopeCraftLossyCompression](https://github.com/ToKiNoBug/SlopeCraftLossyCompression) - 有损压缩库，基于无损压缩库实现
 * [SlopeCraftGlassBuilder](https://github.com/ToKiNoBug/SlopeCraftGlassBuilder) - 搭桥库
 * [HeuristicFlow](https://github.com/TokiNoBug/HeuristicFlow) - 遗传算法实现
-* [SlopeCraft for macOS](https://github.com/iXORTech/SlopeCraft-for-Linux-macOS) - Linux 与 macOS 操作系统的适配与构建

@@ -20,10 +20,6 @@
 
 * [Pinciple of Map Pixel Arts](https://github.com/ToKiNoBug/SlopeCraftTutorial/blob/main/en_US/BasicPrinciple/README.md)
 
-# Builds for Other Platforms
-
-* [SlopeCraft for macOS](https://github.com/iXORTech/SlopeCraft-for-macOS) - Compatibility changes and builds for macOS
-
 # Tutorials
 
 * [SlopeCraftv3.1 Tutorial](https://github.com/ToKiNoBug/SlopeCraftTutorial/tree/v3.7/en_US/v3.1)
@@ -108,4 +104,3 @@ See tutorials listed above.
 * [SlopeCraftLossyCompression](https://github.com/ToKiNoBug/SlopeCraftLossyCompression) - Lossy compression lib, based on SlopeCraftCompressLib.
 * [SlopeCraftGlassBuilder](https://github.com/ToKiNoBug/SlopeCraftGlassBuilder) - Glass bridge building lib.
 * [HeuristicFlow](https://github.com/TokiNoBug/HeuristicFlow) - GA implementation.
-* [SlopeCraft for macOS](https://github.com/iXORTech/SlopeCraft-for-macOS) - Compatibility changes and builds for macOS
