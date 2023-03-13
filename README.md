@@ -18,15 +18,15 @@
 
 # 原理介绍
 
-* [地图画原理](github.com/ToKiNoBug/SlopeCraftTutorial/tree/main/BasicPrinciple)
+* [地图画原理](https://github.com/ToKiNoBug/SlopeCraftTutorial/tree/main/BasicPrinciple)
 
 # 使用教程
 
-* [SlopeCraft傻瓜级使用教程v3.0](https://github.com/ToKiNoBug/SlopeCraftTutorial/tree/v3.7/zh_CN/v3.0)
+* [SlopeCraft 傻瓜级使用教程 v3.0](https://github.com/ToKiNoBug/SlopeCraftTutorial/tree/v3.7/zh_CN/v3.0)
 * [SlopeCraftv3.1 Tutorial](https://github.com/ToKiNoBug/SlopeCraftTutorial/tree/v3.7/en_US/v3.1)
 * [SlopeCraftv3.1 使用教程](https://github.com/ToKiNoBug/SlopeCraftTutorial/tree/v3.7/zh_CN/v3.1)
-* [SlopeCraft v3.6教程](https://github.com/ToKiNoBug/SlopeCraftTutorial/blob/v3.6/v3.6/v3.6教程.tex)
-* [SlopeCraft v3.7教程](https://github.com/ToKiNoBug/SlopeCraftTutorial/blob/v3.7/zh_CN/v3.7/v3.7教程.tex)
+* [SlopeCraft v3.6 教程](https://github.com/ToKiNoBug/SlopeCraftTutorial/blob/v3.6/v3.6/v3.6教程.tex)
+* [SlopeCraft v3.7 教程](https://github.com/ToKiNoBug/SlopeCraftTutorial/blob/v3.7/zh_CN/v3.7/v3.7教程.tex)
 
 # FAQ（常见问题）
 
@@ -52,7 +52,7 @@ SlopeCraft 是一款基于 Qt + Eigen + zlib 开发的、用于在 Minecraft 中
 
 ### 1. 游戏版本
 
-SlopeCraft 支持的 Minecraft 版本为 1.12\~1.17。其中从1.12到1.15的地图没有什么变化，最多只有204种颜色；而1.16则为了下界树木增加了28种颜色，达到了232色。1.17为深板岩、生铁块和发光地衣增加了12种颜色，达到了244色。（这里的颜色忽略透明）
+SlopeCraft 支持的 Minecraft 版本为 1.12\~1.17。其中从 1.12 到 1.15 的地图没有什么变化，最多只有 204 种颜色；而 1.16 则为了下界树木增加了 28 种颜色，达到了 232 色。1.17 为深板岩、生铁块和发光地衣增加了 12 种颜色，达到了 244 色。（这里的颜色忽略透明）
 
 ### 2. 地图画类型
 
@@ -60,15 +60,15 @@ SlopeCraft 支持的 Minecraft 版本为 1.12\~1.17。其中从1.12到1.15的地
 
 立体地图画则牺牲了1/4的颜色，换来可以在原版生存实装的优点。这种地图画可以生成为三维地图画，也是这个软件的核心功能。
 
-Flat类型的地图画是平板的。由于立体地图画实装的难度很高，我特意开发了平板地图画的功能。
+Flat 类型的地图画是平板的。由于立体地图画实装的难度很高，我特意开发了平板地图画的功能。
 
-平板地图画顾名思义，是传统平坦的像素画，它最容易实装，但只有纯文件地图画1/4的颜色：51/58/61色。
+平板地图画顾名思义，是传统平坦的像素画，它最容易实装，但只有纯文件地图画 1/4 的颜色：51/58/61 色。
 
 ### 3. 转化算法
 
 这是比较专业的部分。你地图画必须也只能由地图所允许的颜色组成，转化算法就是为图片中的每个像素匹配对应的地图颜色。转化算法的实质是不同的色差公式。
 
-SlopeCraft中使用了6种转化算法：RGB、RGB+、HSV、Lab94、Lab00 和 XYZ。
+SlopeCraft 中使用了 6 种转化算法：RGB、RGB+、HSV、Lab94、Lab00 和 XYZ。
 
 此外，抖动算法会尝试用相近的颜色掺混弥补颜色稀少的缺点，用分辨率换颜色丰富度。
 
@@ -78,10 +78,10 @@ SlopeCraft中使用了6种转化算法：RGB、RGB+、HSV、Lab94、Lab00 和 XY
 
 这是最为重要的部分，它与最终生成的地图画息息相关。简单来说，地图中的每个基础颜色往往对应着多种方块，但导出的时候我们只能给每个基础颜色选择一种对应的方块。
 
-所以方块列表就是建造像素画的“材料表”，称之为方块列表。我预设了4种方块列表，分别为：Vanilla，Cheap，Elegant 和 Shiny。
+所以方块列表就是建造像素画的“材料表”，称之为方块列表。我预设了 4 种方块列表，分别为：Vanilla，Cheap，Elegant 和 Shiny。
 
 Vanilla 方块列表尽量还原每一种基础颜色的“原汁原味”，如沙子的颜色就对应砂岩、钻石块的颜色就对应钻石块等。
-它往往不太适合生存实装（废话，3000个钻石块爽死你），只适合创造模式演示，因此我命名为 Creative。
+它往往不太适合生存实装（废话，3000 个钻石块爽死你），只适合创造模式演示，因此我命名为 Creative。
 
 Cheap 是极度优化的方块列表，一切基础颜色都尽全力选择生存中最容易获得的、最廉价的方块，比如“下界”的颜色使用地狱岩、“白色”使用雪块。它适合生存的早期和中期。
 
@@ -107,7 +107,7 @@ SlopeCraft 包含以下核心功能：
 
 # 其他相关仓库
 
-* [NBTWriter](https://github.com/ToKiNoBug/NBTWriter-of-Toki) - 写NBT文件的库（自己写的，功能比较弱，满足自己的需求就够了）
+* [NBTWriter](https://github.com/ToKiNoBug/NBTWriter-of-Toki) - 写 NBT 文件的库（自己写的，功能比较弱，满足自己的需求就够了）
 * [SlopeCraftTutorial](https://github.com/ToKiNoBug/SlopeCraftTutorial) - 专门存放教程
 * [SlopeCraftCompressLib](https://github.com/ToKiNoBug/SlopeCraftCompressLib) - 无损压缩库，也承担了构建高度矩阵的功能
 * [SlopeCraftLossyCompression](https://github.com/ToKiNoBug/SlopeCraftLossyCompression) - 有损压缩库，基于无损压缩库实现
