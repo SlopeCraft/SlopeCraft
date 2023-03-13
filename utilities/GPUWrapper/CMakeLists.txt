@@ -10,4 +10,15 @@ if(${LINUX})
     set_target_properties(GPUInterface PROPERTIES TARGET_INDENPENDENT_CODE TRUE)
 endif()
 
-add_subdirectory(OpenCL)
+if(${SlopeCraft_GPU_API} STREQUAL "OpenCL")
+    add_subdirectory(OpenCL)
+    target_compile_definitions(GPUInterface PUBLIC -DSLOPECRAFT_GPU_API="OpenCL")
+    return()
+endif()
+
+if(${SlopeCraft_GPU_API} STREQUAL "None")
+    add_subdirectory(None)
+    return()
+endif()
+
+message(FATAL_ERROR "Invalid value for \"SlopeCraft_GPU_API\" : ${SlopeCraft_GPU_API}")

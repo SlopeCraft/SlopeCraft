@@ -466,6 +466,7 @@ VCL_EXPORT_FUN int VCL_version_component(int i);
 VCL_EXPORT_FUN bool
 VCL_is_version_ok(uint64_t version_at_caller_s_build_time = SC_VERSION_U64);
 
+VCL_EXPORT_FUN bool VCL_have_gpu_api();
 VCL_EXPORT_FUN const char *VCL_get_GPU_api_name();
 
 [[nodiscard]] VCL_EXPORT_FUN size_t VCL_platform_num();

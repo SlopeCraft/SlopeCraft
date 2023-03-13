@@ -1,9 +1,5 @@
 
-find_package(OpenCL 3.0)
-
-if(NOT ${OpenCL_FOUND})
-    return()
-endif()
+find_package(OpenCL 3.0 REQUIRED)
 
 message(STATUS "Configuring OpenCL")
 include(${CMAKE_SOURCE_DIR}/cmake/find_ResourceCreator.cmake)
@@ -33,7 +29,6 @@ target_link_libraries(OCLWrapper PUBLIC OpenCL::OpenCL ColorManip_cl_rc)
 
 target_link_libraries(GPUInterface PUBLIC OCLWrapper)
 target_compile_definitions(GPUInterface PUBLIC SLOPECRAFT_HAVE_OPENCL)
-
 
 if(${LINUX})
     set_target_properties(GPUInterface PROPERTIES TARGET_INDENPENDENT_CODE TRUE)

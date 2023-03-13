@@ -10,6 +10,8 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN TRUE)
 
+set(SlopeCraft_GPU_API "OpenCL" CACHE STRING "API used to compute. Valid values : OpenCL, None. Metal may be supported.")
+
 if(${MSVC})
     add_compile_options("/Zc:__cplusplus")
     add_compile_options("/wd4819")
@@ -49,7 +51,7 @@ include(cmake/find_qt6.cmake)
 
 # If it is set to ON, everytime CMake reconfigure the project, all .ts files will be updated.
 if(NOT DEFINED SlopeCraft_update_ts_files)
-    option(SlopeCraft_update_ts_files "Update language files before build" OFF)
+    option(SlopeCraft_update_ts_files "Update language files before build" OFF CACHE)
 endif()
 
 # set(SlopeCraft_update_ts_files ON)
