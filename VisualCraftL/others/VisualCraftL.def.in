@@ -5,6 +5,7 @@ VCL_create_resource_pack
 VCL_destroy_resource_pack
 VCL_create_block_state_list
 VCL_destroy_block_state_list
+VCL_estimate_color_num
 VCL_set_resource_copy
 VCL_set_resource_move
 VCL_discard_resource

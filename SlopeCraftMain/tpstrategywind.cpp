@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2022  TokiNoBug
+ Copyright © 2021-2023  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -13,96 +13,91 @@ This file is part of SlopeCraft.
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with SlopeCraft.  If not, see <https://www.gnu.org/licenses/>.
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
 
     Contact with me:
-    github:https://github.com/ToKiNoBug
+    github:https://github.com/SlopeCraft/SlopeCraft
     bilibili:https://space.bilibili.com/351429231
 */
 
 #ifndef TpStrategyWind_CPP
 #define TpStrategyWind_CPP
-#include "MainWindow.h"
 #include "tpstrategywind.h"
+#include "MainWindow.h"
 #include "ui_tpstrategywind.h"
-#include <QDialog>
 #include <QColorDialog>
-tpStrategyWind::tpStrategyWind(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::tpStrategyWind)
-{
-    ui->setupUi(this);
-    BackGroundColor=qRgb(220,220,220);
-    this->setAttribute(Qt::WA_QuitOnClose,false);
+#include <QDialog>
+tpStrategyWind::tpStrategyWind(QWidget *parent)
+    : QMainWindow(parent), ui(new Ui::tpStrategyWind) {
+  ui->setupUi(this);
+  BackGroundColor = qRgb(220, 220, 220);
+  this->setAttribute(Qt::WA_QuitOnClose, false);
 }
 
-void tpStrategyWind::setVal(tpS t)
-{
-    if(t.pTpS=='B')ui->isPureB->setChecked(true);
-    else ui->isPureA->setChecked(true);
-
-    if(t.hTpS=='B')
-        ui->isHB->setChecked(true);
-    else if(t.hTpS=='C')
-        ui->isHS->setChecked(true);
-    else ui->isHR->setChecked(true);
-
-    QPalette temp;
-    QColor Temp(qRed(t.BGC),qGreen(t.BGC),qBlue(t.BGC));
-    temp.setColor(QPalette::Window,Temp);
-    ui->ShowBGCCustom->setPalette(temp);
-    ui->ShowBGCCustom->setAutoFillBackground(true);
-}
-
-void tpStrategyWind::closeEvent(QCloseEvent*event)
-{
-    emit destroyed();
-    delete this;
-    event->accept();
-}
-
-tpStrategyWind::~tpStrategyWind()
-{
-    qDebug("子窗口析构");
-    delete ui;
-}
-
-
-void tpStrategyWind::on_Confirm_clicked()
-{
-    grabTpSInfo();
-    emit Confirm(tpS(pTpS,hTpS,BackGroundColor));
-    qDebug("传值完成");
-    close();
-}
-
-void tpStrategyWind::grabTpSInfo()
-{
-    pTpS=(ui->isPureB->isChecked())?'B':'A';
-
-    hTpS=(ui->isHB->isChecked())?'B':((ui->isHR->isChecked())?'R':'C');
-    if(ui->isBGCWhite->isChecked())BackGroundColor=qRgb(255,255,255);
-    else if(ui->isBGCGray->isChecked())BackGroundColor=qRgb(220,220,220);
-    qDebug("抓取完成");
-}
-
-void tpStrategyWind::on_isBGCCustom_clicked()
-{
-    QColor Temp=QColorDialog::getColor();
-    if(!Temp.isValid())return;
-    BackGroundColor=qRgb(Temp.red(),Temp.green(),Temp.blue());
-    QPalette temp;
-    temp.setColor(QPalette::Window,Temp);
-    ui->ShowBGCCustom->setPalette(temp);
-    ui->ShowBGCCustom->setAutoFillBackground(true);
-}
-
-
-void tpStrategyWind::on_Reset_clicked()
-{
+void tpStrategyWind::setVal(tpS t) {
+  if (t.pTpS == 'B')
     ui->isPureB->setChecked(true);
+  else
+    ui->isPureA->setChecked(true);
+
+  if (t.hTpS == 'B')
+    ui->isHB->setChecked(true);
+  else if (t.hTpS == 'C')
     ui->isHS->setChecked(true);
-    ui->isBGCGray->setChecked(true);
+  else
+    ui->isHR->setChecked(true);
+
+  QPalette temp;
+  QColor Temp(qRed(t.BGC), qGreen(t.BGC), qBlue(t.BGC));
+  temp.setColor(QPalette::Window, Temp);
+  ui->ShowBGCCustom->setPalette(temp);
+  ui->ShowBGCCustom->setAutoFillBackground(true);
+}
+
+void tpStrategyWind::closeEvent(QCloseEvent *event) {
+  emit destroyed();
+  delete this;
+  event->accept();
+}
+
+tpStrategyWind::~tpStrategyWind() {
+  qDebug("子窗口析构");
+  delete ui;
+}
+
+void tpStrategyWind::on_Confirm_clicked() {
+  grabTpSInfo();
+  emit Confirm(tpS(pTpS, hTpS, BackGroundColor));
+  qDebug("传值完成");
+  close();
+}
+
+void tpStrategyWind::grabTpSInfo() {
+  pTpS = (ui->isPureB->isChecked()) ? 'B' : 'A';
+
+  hTpS = (ui->isHB->isChecked()) ? 'B' : ((ui->isHR->isChecked()) ? 'R' : 'C');
+  if (ui->isBGCWhite->isChecked())
+    BackGroundColor = qRgb(255, 255, 255);
+  else if (ui->isBGCGray->isChecked())
+    BackGroundColor = qRgb(220, 220, 220);
+  qDebug("抓取完成");
+}
+
+void tpStrategyWind::on_isBGCCustom_clicked() {
+  QColor Temp = QColorDialog::getColor();
+  if (!Temp.isValid())
+    return;
+  BackGroundColor = qRgb(Temp.red(), Temp.green(), Temp.blue());
+  QPalette temp;
+  temp.setColor(QPalette::Window, Temp);
+  ui->ShowBGCCustom->setPalette(temp);
+  ui->ShowBGCCustom->setAutoFillBackground(true);
+}
+
+void tpStrategyWind::on_Reset_clicked() {
+  ui->isPureB->setChecked(true);
+  ui->isHS->setChecked(true);
+  ui->isBGCGray->setChecked(true);
 }
 
 #endif

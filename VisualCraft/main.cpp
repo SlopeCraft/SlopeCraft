@@ -1,3 +1,25 @@
+/*
+ Copyright © 2021-2023  TokiNoBug
+This file is part of SlopeCraft.
+
+    SlopeCraft is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    SlopeCraft is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
+
+    Contact with me:
+    github:https://github.com/SlopeCraft/SlopeCraft
+    bilibili:https://space.bilibili.com/351429231
+*/
+
 #include <QApplication>
 
 #include "CallbackFunctions.h"
@@ -8,6 +30,9 @@
 #include <QTranslator>
 
 QNetworkAccessManager *global_manager{nullptr};
+
+QString url_for_update{
+    "https://api.github.com/repos/SlopeCraft/SlopeCraft/releases"};
 
 bool parse_config_json(QString &err) noexcept;
 
@@ -57,12 +82,13 @@ int main(int argc, char **argv) {
 
   VCL_set_report_callback(VC_callback::callback_receive_report);
 
+  wind.setWindowTitle(
+      QStringLiteral("VisualCraft v%1  Copyright © 2021-2023 TokiNoBug")
+          .arg(SC_VERSION_STR));
+
   wind.show();
 
-  wind.retrieve_latest_version(
-      "https://api.github.com/repos/ToKiNoBug/SlopeCraft/releases/latest",
-      manager, "https://github.com/ToKiNoBug/SlopeCraft/releases/latest",
-      false);
+  wind.retrieve_latest_version(::url_for_update, manager, false);
 
   return qapp.exec();
 }

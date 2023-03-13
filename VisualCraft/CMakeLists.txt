@@ -13,8 +13,6 @@ find_package(magic_enum REQUIRED)
 
 find_package(OpenMP REQUIRED)
 
-find_program(VC_lupdate_executable lupdate ${CMAKE_PREFIX_PATH})
-
 if(${WIN32})
     configure_file(others/VisualCraft.rc.in others/VisualCraft.rc)
     set(VisualCraft_win_files ${CMAKE_CURRENT_BINARY_DIR}/others/VisualCraft.rc)
@@ -96,7 +94,8 @@ target_link_libraries(VisualCraft PRIVATE
     Qt${QT_VERSION_MAJOR}::Network
     Qt${QT_VERSION_MAJOR}::Concurrent
     magic_enum::magic_enum
-    OpenMP::OpenMP_CXX)
+    OpenMP::OpenMP_CXX
+    VersionDialog)
 
 target_include_directories(VisualCraft PRIVATE ${SlopeCraft_Nlohmann_json_include_dir})
 

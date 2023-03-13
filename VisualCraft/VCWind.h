@@ -1,3 +1,25 @@
+/*
+ Copyright © 2021-2023  TokiNoBug
+This file is part of SlopeCraft.
+
+    SlopeCraft is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    SlopeCraft is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
+
+    Contact with me:
+    github:https://github.com/SlopeCraft/SlopeCraft
+    bilibili:https://space.bilibili.com/351429231
+*/
+
 #ifndef SLOPECRAFT_VISUALCRAFT_VCWIND_H
 #define SLOPECRAFT_VISUALCRAFT_VCWIND_H
 
@@ -9,6 +31,8 @@
 
 extern uint8_t is_language_ZH;
 extern QNetworkAccessManager *global_manager;
+
+extern QString url_for_update;
 
 class QListWidget;
 class QListWidgetItem;
@@ -84,7 +108,7 @@ public:
   }
 
   void retrieve_latest_version(QString url_api, QNetworkAccessManager &qnam,
-                               QString url_download, bool is_manually) noexcept;
+                               bool is_manually) noexcept;
 signals:
   void signal_basic_colorset_changed();
   void signal_allowed_colorset_changed();
@@ -94,8 +118,7 @@ private:
   static void callback_progress_range_set(void *, int, int, int) noexcept;
   static void callback_progress_range_add(void *, int) noexcept;
 
-  void when_network_finished(QNetworkReply *reply, QString url_download,
-                             bool is_manually) noexcept;
+  void when_network_finished(QNetworkReply *reply, bool is_manually) noexcept;
 
   // for page 0 ------------------------------------------
   void setup_ui_select_biome() noexcept;

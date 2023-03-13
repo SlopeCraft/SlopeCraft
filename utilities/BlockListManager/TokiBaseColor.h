@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2022  TokiNoBug
+ Copyright © 2021-2023  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -13,70 +13,67 @@ This file is part of SlopeCraft.
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with SlopeCraft.  If not, see <https://www.gnu.org/licenses/>.
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
 
     Contact with me:
-    github:https://github.com/ToKiNoBug
+    github:https://github.com/SlopeCraft/SlopeCraft
     bilibili:https://space.bilibili.com/351429231
 */
 
 #ifndef TOKIBASECOLOR_H
 #define TOKIBASECOLOR_H
 
-#include <QObject>
-#include <QLabel>
-#include <QGridLayout>
-#include <QSpacerItem>
 #include <QCheckBox>
-#include <vector>
+#include <QGridLayout>
+#include <QLabel>
+#include <QObject>
+#include <QSpacerItem>
 #include <cmath>
+#include <vector>
 
 #include "TokiBlock.h"
 
 class BlockListManager;
 
-class TokiBaseColor : public QObject
-{
-    Q_OBJECT
-    friend class BlockListManager;
+class TokiBaseColor : public QObject {
+  Q_OBJECT
+  friend class BlockListManager;
+
 public:
-    explicit TokiBaseColor(uchar,
-                           QGridLayout*,
-                           QObject *parent = nullptr);
-    ~TokiBaseColor();
+  explicit TokiBaseColor(uchar, QGridLayout *, QObject *parent = nullptr);
+  ~TokiBaseColor();
 
-    const TokiBlock* getTokiBlock() const;
+  const TokiBlock *getTokiBlock() const;
 
-    bool getEnabled() const;
+  bool getEnabled() const;
 
-    ushort getSelected() const;
+  ushort getSelected() const;
 
-    void addTokiBlock(const QJsonObject & json,
-                  const QString & imgDir);
-    void makeLabel(QRgb);
+  void addTokiBlock(const QJsonObject &json, const QString &imgDir);
+  void makeLabel(QRgb);
 
-    void getTokiBlockList(std::vector<const TokiBlock*> & ) const;
+  void getTokiBlockList(std::vector<const TokiBlock *> &) const;
 
-static uchar mcVer;
+  static uchar mcVer;
 
 signals:
-    void userClicked();
-    void translate(Language);
+  void userClicked();
+  void translate(Language);
 
 private:
-    uchar baseColor;
-    bool isEnabled;
-    ushort selected;
-    QGridLayout * layout;
-    QCheckBox * checkBox;
-    std::vector<TokiBlock*> tbs;
-    bool isAllOverVersion() const;
-    void setSelected(ushort);
+  uchar baseColor;
+  bool isEnabled;
+  ushort selected;
+  QGridLayout *layout;
+  QCheckBox *checkBox;
+  std::vector<TokiBlock *> tbs;
+  bool isAllOverVersion() const;
+  void setSelected(ushort);
 private slots:
-    void receiveClicked(ushort);
-    void updateEnabled(bool);
-    void versionCheck();
-    void translateCheckBox(Language);
+  void receiveClicked(ushort);
+  void updateEnabled(bool);
+  void versionCheck();
+  void translateCheckBox(Language);
 };
 
 #endif // TOKIBASECOLOR_H

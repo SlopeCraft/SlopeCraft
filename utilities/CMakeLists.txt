@@ -14,6 +14,7 @@ add_subdirectory(Schem)
 add_subdirectory(NBTWriter)
 add_subdirectory(uiPack)
 add_subdirectory(MapImageCvter)
+add_subdirectory(VersionDialog)
 
 # add_subdirectory(libAbstractGUI)
 # add_subdirectory(libSCGUI)

@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2022  TokiNoBug
+ Copyright © 2021-2023  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -13,10 +13,10 @@ This file is part of SlopeCraft.
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with SlopeCraft.  If not, see <https://www.gnu.org/licenses/>.
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
 
     Contact with me:
-    github:https://github.com/ToKiNoBug
+    github:https://github.com/SlopeCraft/SlopeCraft
     bilibili:https://space.bilibili.com/351429231
 */
 
@@ -572,7 +572,7 @@ void MainWindow::InitializeAll() {
 }
 
 void MainWindow::contactG() {
-  QDesktopServices::openUrl(QUrl("github.com/ToKiNoBug"));
+  QDesktopServices::openUrl(QUrl("github.com/SlopeCraft"));
 }
 
 void MainWindow::contactB() {
@@ -590,12 +590,12 @@ void MainWindow::turnToPage(int page) {
 
   newtitle += SlopeCraft::SCL_getSCLVersion();
 #ifdef WIN32
-  newtitle += " Copyright © 2021-2022 TokiNoBug    "; // windows
+  newtitle += " Copyright © 2021-2023 TokiNoBug    "; // windows
 #elif defined(_MAC) || defined(__APPLE__)
   newtitle +=
-      " Copyright © 2021-2022 TokiNoBug,AbrasiveBoar, Cubik65536   "; // macOs
+      " Copyright © 2021-2023 TokiNoBug,AbrasiveBoar, Cubik65536   "; // macOs
 #else
-  newtitle += " Copyright © 2021-2022 TokiNoBug    "; // unknown platform
+  newtitle += " Copyright © 2021-2023 TokiNoBug    "; // unknown platform
 #endif
 
   switch (page) {
@@ -1985,7 +1985,7 @@ void MainWindow::on_AllowForcedOpti_stateChanged(int arg1) {
 }
 
 void MainWindow::on_reportBugs_clicked() {
-  QUrl url("https://github.com/ToKiNoBug/SlopeCraft/issues/new/choose");
+  QUrl url("https://github.com/SlopeCraft/SlopeCraft/issues/new/choose");
   QDesktopServices::openUrl(url);
 }
 
@@ -2022,7 +2022,7 @@ void MainWindow::grabVersion(bool isAuto) {
   isRunning = true;
 
   static const QString url =
-      "https://api.github.com/repos/TokiNoBug/SlopeCraft/releases";
+      "https://api.github.com/repos/SlopeCraft/SlopeCraft/releases";
 
   QEventLoop tempLoop;
   QNetworkAccessManager *manager = new QNetworkAccessManager;
@@ -2133,7 +2133,7 @@ void MainWindow::grabVersion(bool isAuto) {
     VersionDialog::userChoice userReply = verDialog->getResult();
 
     if (userReply == VersionDialog::userChoice::Yes) {
-      QDesktopServices::openUrl(QUrl(latest3xJo["url"].toString()));
+      QDesktopServices::openUrl(QUrl(latest3xJo["html_url"].toString()));
       /*
       if(trans.language()=="zh_CN") {
           QDesktopServices::openUrl(

@@ -20,14 +20,42 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
-#include "AiCvterOpt.h"
+#ifndef SLOPECRAFT_VISUALCRAFT_VERSION_DIALOG_H
+#define SLOPECRAFT_VISUALCRAFT_VERSION_DIALOG_H
 
-using namespace SlopeCraft;
+#include <QDialog>
+#include <SC_version_buildtime.h>
 
-AiCvterOpt::AiCvterOpt() {
-  popSize = 50;
-  maxGeneration = 200;
-  maxFailTimes = 50;
-  crossoverProb = 0.8;
-  mutationProb = 0.01;
+class VersionDialog;
+
+namespace Ui {
+class VersionDialog;
 }
+
+class VersionDialog : public QDialog {
+  Q_OBJECT
+private:
+  Ui::VersionDialog *ui;
+  QString url_download{""};
+
+public:
+  explicit VersionDialog(QWidget *parent);
+  ~VersionDialog();
+
+  void setup_text(QString title, QString content, QString markdown_content,
+                  QString url_download) noexcept;
+private slots:
+  void on_pb_download_clicked() noexcept;
+};
+
+struct version_info {
+  QString tag_name;
+  QString body;
+  QString html_url;
+  uint64_t version_u64;
+};
+
+version_info
+extract_latest_version(std::string_view json_all_releaese) noexcept(false);
+
+#endif // SLOPECRAFT_VISUALCRAFT_VERSION_DIALOG_H

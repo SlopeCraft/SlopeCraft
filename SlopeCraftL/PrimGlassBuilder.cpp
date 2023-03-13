@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2022  TokiNoBug
+ Copyright © 2021-2023  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -13,10 +13,10 @@ This file is part of SlopeCraft.
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with SlopeCraft.  If not, see <https://www.gnu.org/licenses/>.
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
 
     Contact with me:
-    github:https://github.com/ToKiNoBug
+    github:https://github.com/SlopeCraft/SlopeCraft
     bilibili:https://space.bilibili.com/351429231
 */
 
@@ -155,14 +155,14 @@ glassMap PrimGlassBuilder::makeBridge(const TokiMap &_targetMap,
           std::min(long(unitL), long(_targetMap.cols() - c * unitL)));
 
       algos[r][c] = pgb.animate();
-      //#ifdef WITH_QT
-      //            connect(algos[r][c],&PrimGlassBuilder::progressRangeSet,
-      //                    this,&PrimGlassBuilder::progressRangeSet);
-      //            connect(algos[r][c],&PrimGlassBuilder::progressAdd,
-      //                    this,&PrimGlassBuilder::progressAdd);
-      //            connect(algos[r][c],&PrimGlassBuilder::keepAwake,
-      //                    this,&PrimGlassBuilder::keepAwake);
-      //#endif
+      // #ifdef WITH_QT
+      //             connect(algos[r][c],&PrimGlassBuilder::progressRangeSet,
+      //                     this,&PrimGlassBuilder::progressRangeSet);
+      //             connect(algos[r][c],&PrimGlassBuilder::progressAdd,
+      //                     this,&PrimGlassBuilder::progressAdd);
+      //             connect(algos[r][c],&PrimGlassBuilder::keepAwake,
+      //                     this,&PrimGlassBuilder::keepAwake);
+      // #endif
     }
   }
   // qDebug("分区分块完毕，开始在每个分区内搭桥");
@@ -363,7 +363,7 @@ void PrimGlassBuilder::runPrim() {
 
     auto selectedEdge = edges.begin();
 
-    //从列表中第一个元素开始搜索第一个可行边
+    // 从列表中第一个元素开始搜索第一个可行边
     for (;;) {
       if (selectedEdge == edges.end()) {
         std::cerr << "Error: failed to find valid edge!\n";
@@ -377,19 +377,19 @@ void PrimGlassBuilder::runPrim() {
       if (fz && fw) {
         eraseTask.emplace(selectedEdge);
         selectedEdge++;
-        //如果一条边的首尾都是已经被连接到的点，那么移除这条边
+        // 如果一条边的首尾都是已经被连接到的点，那么移除这条边
         continue;
       }
       bool uz = !fz;
       bool uw = !fw;
       if ((fz && uw) || (fw && uz)) {
-        //找到了第一条可行的边
+        // 找到了第一条可行的边
         break;
       }
       selectedEdge++;
     }
 
-    //从找到的第一条边开始，寻找长度最小的可行边
+    // 从找到的第一条边开始，寻找长度最小的可行边
     for (auto it = selectedEdge; it != edges.end();) {
       // if(selectedEdge->lengthSquare<=2)break;
       // TokiPos x=it->beg(),y=it->end();
@@ -397,7 +397,7 @@ void PrimGlassBuilder::runPrim() {
       bool fy = isFound[(it)->endIdx];
       if (fx && fy) {
         eraseTask.emplace(it);
-        it++; //如果一条边的首尾都是已经被连接到的点，那么移除这条边
+        it++; // 如果一条边的首尾都是已经被连接到的点，那么移除这条边
         continue;
       }
       bool ux = !fx;
@@ -410,9 +410,9 @@ void PrimGlassBuilder::runPrim() {
       it++;
     }
 
-    //将选中边装入树中，
-    //并从集合unsearched中删除选中边的两个端点，
-    //向集合found中加入选中边的两个端点
+    // 将选中边装入树中，
+    // 并从集合unsearched中删除选中边的两个端点，
+    // 向集合found中加入选中边的两个端点
     {
       // TokiPos x=selectedEdge->beg();
       // TokiPos y=selectedEdge->end();
@@ -496,8 +496,8 @@ glassMap connectBetweenLayers(const TokiMap &map1, const TokiMap &map2,
 }
 
 TokiMap ySlice2TokiMap(const Eigen::Tensor<uint8_t, 3> &raw) {
-  assert(raw.dimension(2)==1);
-    
+  assert(raw.dimension(2) == 1);
+
   TokiMap result(raw.dimension(0), raw.dimension(1));
   result.setZero();
   for (int i = 0; i < raw.size(); i++)

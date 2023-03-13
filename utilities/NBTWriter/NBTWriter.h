@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2022  TokiNoBug
+ Copyright © 2021-2023  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -13,17 +13,17 @@ This file is part of SlopeCraft.
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with SlopeCraft.  If not, see <https://www.gnu.org/licenses/>.
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
 
     Contact with me:
-    github:https://github.com/ToKiNoBug
+    github:https://github.com/SlopeCraft/SlopeCraft
     bilibili:https://space.bilibili.com/351429231
 */
 
 #ifndef SCL_NBTWRITER_H
 #define SCL_NBTWRITER_H
 
-//#include <bits/endian>
+// #include <bits/endian>
 #include <assert.h>
 #include <stack>
 #include <stdint.h>
@@ -34,7 +34,7 @@ This file is part of SlopeCraft.
 
 #include <stdlib.h>
 
-//#include <iostream>
+// #include <iostream>
 
 // using std::cout,std::endl;
 
