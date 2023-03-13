@@ -309,17 +309,17 @@ private:
       return true;
     } else {
 
-      // If converter have gpu resources, compute by gpu
-      if (try_gpu && this->have_gpu_resource()) {
-        const bool ok = this->match_all_TokiColors_gpu();
+      if constexpr (gpu_wrapper::have_api) {
+        // If converter have gpu resources, compute by gpu
+        if (try_gpu && this->have_gpu_resource()) {
+          const bool ok = this->match_all_TokiColors_gpu();
 
-        return ok;
-
-        // otherwise compute by cpu
-      } else {
-        this->match_all_TokiColors_cpu();
-        return true;
+          return ok;
+        }
       }
+      // otherwise compute by cpu
+      this->match_all_TokiColors_cpu();
+      return true;
     }
   }
 
@@ -375,7 +375,8 @@ private:
 
   template <typename = void> bool match_all_TokiColors_gpu() noexcept {
     static_assert(!is_not_optical,
-                  "OpenCL boosting is only avaliable for VisualCraftL.");
+                  "GPU boosting is only avaliable for VisualCraftL.");
+    // static_assert(gpu_wrapper::have_api, "No avaliable GPU api.");
 
     if (!this->have_gpu_resource()) {
       abort();

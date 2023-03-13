@@ -962,6 +962,8 @@ void VCL_report(VCL_report_type_t t, const char *msg, bool flush) noexcept {
   VCL_report_fun(t, msg, flush);
 }
 
+VCL_EXPORT_FUN bool VCL_have_gpu_api() { return ::gpu_wrapper::have_api; }
+
 VCL_EXPORT_FUN const char *VCL_get_GPU_api_name() {
   return ::gpu_wrapper::api_name();
 }

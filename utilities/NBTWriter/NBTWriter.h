@@ -212,24 +212,20 @@ public:
    * \return If closing succeeds
    */
   bool close() {
-    // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
     if (!this->is_open()) {
       return false;
     }
-    // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
     if (!tasks.empty())
       emergencyFill();
-    // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
     constexpr char fileTail[1] = {idEnd};
 
     this->write_data(fileTail, sizeof(fileTail));
-    // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
     this->close_file();
-    // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
+
     return true;
   }
 
@@ -239,116 +235,93 @@ public:
    */
   int emergencyFill() {
 
-    // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
-
     if (tasks.empty()) {
       return 0;
     }
-    // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
     int bytes = 0;
 
-    // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
     while (!tasks.empty()) {
-      // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
       if (isInCompound()) {
         bytes += endCompound();
         continue;
       }
-      // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
       // cout<<"tasks.size() = "<<tasks.size()<<endl;
 
       switch (currentType()) {
       case End:
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
+
         exit(114514);
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
         continue;
       case Byte:
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
+
         bytes += writeByte("autoByte", 114);
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
         continue;
       case Short:
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
+
         bytes += writeShort("autoShort", 514);
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
         continue;
       case Int:
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
+
         bytes += writeInt("autoInt", 114514);
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
         continue;
       case Long:
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
+
         bytes += writeLong("autoLong", 1919810);
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
         continue;
       case Float:
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
+
         bytes += writeFloat("autoFloat", 114.514);
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
         continue;
       case Double:
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
+
         bytes += writeDouble("autoDouble", 1919810.114514);
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
         continue;
       case String:
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
+
         bytes += writeString("autoString", "FuckYou!");
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
         continue;
       case List:
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
+
         bytes += writeListHead("autoList", Int, 1);
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
         continue;
       case Compound:
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
+
         bytes += writeCompound("autoCompound");
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
         continue;
       case ByteArray:
         bytes += writeByteArrayHead("autoByteArray", 1);
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
         continue;
       case IntArray:
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
+
         bytes += writeIntArrayHead("autoIntArray", 1);
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
         continue;
       case LongArray:
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
+
         bytes += writeLongArrayHead("autoLongArray", 1);
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
         continue;
       }
-      // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
     }
 
-    // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
     bytes += writeString("TokiNoBug'sWarning",
                          "There's sth wrong with ur NBTWriter, the file format "
                          "is completed automatically instead of manually.");
 
-    // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
     return bytes;
   }
 
@@ -436,45 +409,38 @@ public:
   int writeSingleTag(const tagType type, const char *Name, T value) {
     static_assert(std::is_trivial_v<T>);
 
-    // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
     if (!this->is_open()) {
       return 0;
     }
 
-    // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
     if constexpr (convertToBE) {
       value = convertLEBE(value);
     }
 
-    // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
     int bytes = 0;
     const uint16_t realNameL = strlen(Name);
     const uint16_t flippedNameL = convertLEBE(realNameL);
 
-    // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
     if (isInCompound()) {
-      // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
+
       bytes += this->write_data(&type, sizeof(char));
-      // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
+
       bytes += this->write_data(&flippedNameL, sizeof(flippedNameL));
-      // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
+
       bytes += this->write_data(Name, realNameL);
-      // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
+
       bytes += this->write_data(&value, sizeof(T));
-      // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
+
     } else {
-      // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
+
       if (!typeMatch(type)) {
         return 0;
       }
-      // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
       bytes += this->write_data(&value, sizeof(T));
-      // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
+
       onElementWritten();
-      // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
     }
-    // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
     return bytes;
   }
@@ -649,12 +615,10 @@ public:
 private:
   template <tagType elementType>
   int writeArrayHead(const char *Name, const int32_t arraySize) {
-    // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
     if (!this->is_open()) {
       return 0;
     }
-    // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
     static_assert((elementType == Byte) || (elementType == Int) ||
                   (elementType == Long));
@@ -669,59 +633,39 @@ private:
     const int16_t flippedNameL = convertLEBE(realNameL);
     const int32_t flippedArraySize = convertLEBE<int32_t>(arraySize);
 
-    // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
     if (isInCompound()) {
-      // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
       bytes += this->write_data(&arrayId, sizeof(char));
-      // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
       bytes += this->write_data(&flippedNameL, sizeof(int16_t));
-      // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
       bytes += this->write_data(Name, realNameL);
-      // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
       bytes += this->write_data(&flippedArraySize, sizeof(int32_t));
-      // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
       tasks.emplace(task_t(elementType, arraySize));
-      // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
       if (arraySize == 0) {
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
         onElementWritten();
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
       }
-      // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
       return bytes;
     }
-    // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
     if (isInListOrArray() && typeMatch(arrayId)) {
-      // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
       bytes += this->write_data(&flippedArraySize, sizeof(int32_t));
 
-      // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
-
       tasks.emplace(task_t(elementType, arraySize));
-      // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
       if (arraySize == 0) {
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
         onElementWritten();
-        // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
       }
-
-      // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
       return bytes;
     }
-    // printf("%s , %d\n",__FILE__,__LINE__);cout<<endl;
 
     return 0;
   }
