@@ -2016,6 +2016,60 @@
         "nameZH": "石头",
         "version": 13
     },
+    "minecraft:andesite": {
+        "class": "stone",
+        "nameEN": "Andesite",
+        "nameZH": "磨制安山岩",
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stone[variant=andesite]"
+            ]
+        ],
+        "reproducible": false
+    },
+    "minecraft:diorite": {
+        "class": "stone",
+        "nameEN": "Diorite",
+        "nameZH": "闪长岩",
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stone[variant=diorite]"
+            ]
+        ],
+        "reproducible": false
+    },
+    "minecraft:granite": {
+        "class": "stone",
+        "nameEN": "Granite",
+        "nameZH": "花岗岩",
+        "version": "all",
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stone[variant=granite]"
+            ]
+        ],
+        "reproducible": false
+    },
+    "minecraft:smooth_andesite": {
+        "class": "stone",
+        "nameEN": "Polished andesite (1.12)",
+        "nameZH": "磨制安山岩 (1.12)",
+        "version": [
+            12
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stone[variant=smooth_andesite]"
+            ]
+        ],
+        "reproducible": false
+    },
     "minecraft:smooth_diorite": {
         "class": "stone",
         "nameEN": "Polished diorite (1.12)",
