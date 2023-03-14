@@ -346,8 +346,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>98</width>
-                  <height>28</height>
+                  <width>815</width>
+                  <height>301</height>
                  </rect>
                 </property>
                 <layout class="QGridLayout" name="gl_sa_blocks"/>
@@ -1175,6 +1175,7 @@
     </property>
     <addaction name="ac_export_test_schem"/>
     <addaction name="action_test01"/>
+    <addaction name="ac_flush_warnings"/>
    </widget>
    <widget class="QMenu" name="menu_browse">
     <property name="title">
@@ -1314,6 +1315,11 @@
   <action name="ac_check_update">
    <property name="text">
     <string>检查更新</string>
+   </property>
+  </action>
+  <action name="ac_flush_warnings">
+   <property name="text">
+    <string>刷新警告信息</string>
    </property>
   </action>
  </widget>

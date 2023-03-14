@@ -30,7 +30,6 @@ This file is part of SlopeCraft.
 #include <functional>
 #include <map>
 
-
 extern uint8_t is_language_ZH;
 extern QNetworkAccessManager *global_manager;
 
@@ -210,6 +209,8 @@ private:
   QString update_gpu_device(QPoint current_choice) noexcept;
 private slots:
   // for all pages ------------------------------------------
+
+  void on_ac_flush_warnings_triggered() noexcept;
 
   // auto connected
   void on_tabWidget_main_currentChanged(int page) noexcept;
