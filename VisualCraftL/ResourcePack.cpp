@@ -20,6 +20,7 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
+#include "BlockStateList.h"
 #include "ParseResourcePack.h"
 #include "VCL_internal.h"
 #include <ColorManip/ColorManip.h>
@@ -624,5 +625,110 @@ bool VCL_resource_pack::update_block_model_textures() noexcept {
     updater.emplace(&it->second, &pair.second);
   }
   this->filter_model_textures(updater, false);
+  return true;
+}
+
+bool VCL_resource_pack::override_required_textures(
+    VCL_biome_t biome, bool replace_transparent_with_black,
+    const VCL_block *const *const blkpp, size_t num_blkp) noexcept {
+  struct texture_info {
+    const char *name{nullptr};
+    bool is_grass{false};
+    bool is_foliage{false};
+  };
+
+  std::unordered_map<const block_model::EImgRowMajor_t *, texture_info>
+      textures_used;
+
+  textures_used.reserve(this->textures_original.size());
+
+  buffer_t buffer;
+
+  for (size_t idx_blkp = 0; idx_blkp < num_blkp; idx_blkp++) {
+    const VCL_block &blk = *(blkpp[idx_blkp]);
+    const bool is_grass = blk.get_attribute(VCL_block_attribute_t::is_grass);
+    const bool is_foliage =
+        blk.get_attribute(VCL_block_attribute_t::is_foliage);
+
+    if (!(is_grass || is_foliage)) {
+      continue;
+    }
+
+    if (is_grass == is_foliage) {
+
+      std::string msg = fmt::format("Failed to override texture for block {} "
+                                    "because it is both grass and foliage.",
+                                    blk.full_id_ptr()->c_str());
+      return false;
+    }
+
+    auto model = this->find_model(*blk.full_id_ptr(), buffer);
+
+    if (model.index() == 0 && std::get<0>(model).model_ptr == nullptr) {
+      std::string msg = fmt::format(
+          "Failed to override texture for block {} because model is not found.",
+          blk.full_id_ptr()->c_str());
+      VCL_report(VCL_report_type_t::error, msg.c_str());
+      return false;
+    }
+
+    const block_model::model *md{nullptr};
+
+    if (model.index() == 0) {
+      md = std::get<0>(model).model_ptr;
+    } else {
+      md = &std::get<1>(model);
+    }
+
+    for (const auto &element : md->elements) {
+      for (const auto &face : element.faces) {
+        if (face.is_hidden) {
+          continue;
+        }
+
+        textures_used[face.texture].is_foliage |= is_foliage;
+        textures_used[face.texture].is_grass |= is_grass;
+      }
+    }
+  }
+
+  for (auto &pair : textures_used) {
+
+    for (const auto &j : this->textures_original) {
+      if (&j.second == pair.first) {
+        pair.second.name = j.first.c_str();
+      }
+    }
+
+    if (pair.second.name == nullptr) {
+      std::string msg =
+          fmt::format("Failed to override texture at address {}, because this "
+                      "image cannot be found in this->textures_original.",
+                      (const void *)(pair.first));
+      VCL_report(VCL_report_type_t::error, msg.c_str());
+      return false;
+    }
+
+    if (pair.second.is_foliage && pair.second.is_grass) {
+      std::string msg = fmt::format(
+          "Texture \"{}\" will is used both as grass and as foliage.",
+          pair.second.name);
+      VCL_report(VCL_report_type_t::warning, msg.c_str());
+    }
+  }
+
+  for (const auto &pair : textures_used) {
+    const uint32_t color_grass = this->standard_color(biome, pair.second.name);
+
+    const bool success = this->override_texture(pair.second.name, color_grass,
+                                                replace_transparent_with_black);
+    if (!success) {
+      std::string msg =
+          fmt::format("Failed to override texture named {}", pair.second.name);
+      VCL_report(VCL_report_type_t::error, msg.c_str());
+      return false;
+    }
+  }
+
   return true;
 }

@@ -644,8 +644,14 @@ public:
   const Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> *
   find_texture(std::string_view path, bool override_only) const noexcept;
 
-  bool override_textures(VCL_biome_t biome,
-                         bool replace_transparent_with_black) noexcept;
+  [[deprecated]] bool
+  override_textures(VCL_biome_t biome,
+                    bool replace_transparent_with_black) noexcept;
+
+  bool override_required_textures(VCL_biome_t biome,
+                                  bool replace_transparent_with_black,
+                                  const VCL_block *const *const blkpp,
+                                  size_t num_blkp) noexcept;
 
   bool override_texture(std::string_view path_in_original,
                         uint32_t standard_color,

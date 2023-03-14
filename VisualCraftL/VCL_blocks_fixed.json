@@ -1211,9 +1211,26 @@
     },
     "minecraft:redstone_ore": {
         "class": "ore",
-        "nameEN": "Redstone ore",
-        "nameZH": "红石矿",
-        "version": "all",
+        "nameEN": "Redstone ore (1.12&1.16+)",
+        "nameZH": "红石矿 (1.12&1.16+)",
+        "version": [
+            12,
+            16,
+            17,
+            18,
+            19
+        ],
+        "reproducible": false
+    },
+    "minecraft:redstone_ore[lit=false]": {
+        "class": "ore",
+        "nameEN": "Redstone ore (1.13~1.15)",
+        "nameZH": "红石矿 (1.13~1.15)",
+        "version": [
+            13,
+            14,
+            15
+        ],
         "reproducible": false
     },
     "minecraft:deepslate_redstone_ore": {

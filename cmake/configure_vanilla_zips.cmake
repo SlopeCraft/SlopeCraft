@@ -1,6 +1,5 @@
 set(VCL_zip_names
     "Vanilla_1_12_2.zip"
-    "Vanilla_1_12_2.zip"
     "Vanilla_1_13_2.zip"
     "Vanilla_1_14_4.zip"
     "Vanilla_1_15_2.zip"
@@ -18,9 +17,10 @@ foreach(mcver RANGE 12 19)
 
     list(GET VCL_zip_names ${VCL_resource_idx} VCL_current_zip_name)
 
+    set(VCL_resource_${mcver} ${CMAKE_SOURCE_DIR}/binaries/${VCL_current_zip_name} PARENT_SCOPE)
+
     if(EXISTS ${CMAKE_SOURCE_DIR}/binaries/${VCL_current_zip_name})
         message(STATUS "Found resoruce pack for MC${mcver} (${VCL_current_zip_name}).")
-        set(VCL_resource_${mcver} ${CMAKE_SOURCE_DIR}/binaries/${VCL_current_zip_name} PARENT_SCOPE)
         continue()
     endif()
 
@@ -32,8 +32,6 @@ foreach(mcver RANGE 12 19)
 
     if(EXISTS ${CMAKE_SOURCE_DIR}/binaries/${VCL_current_zip_name})
         message(STATUS "Downloaded resoruce pack for MC${mcver}.")
-
-        set(VCL_resource_${mcver} ${CMAKE_SOURCE_DIR}/binaries/${VCL_current_zip_name} PARENT_SCOPE)
 
     else()
         message(FATAL_ERROR "Failed to download resource pack for MC${mcver}.")
