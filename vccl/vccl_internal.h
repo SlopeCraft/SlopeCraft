@@ -25,6 +25,7 @@ This file is part of SlopeCraft.
 
 #include <VisualCraftL.h>
 #include <iostream>
+#include <map>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -94,14 +95,6 @@ int set_allowed(VCL_block_state_list *bsl, const inputs &input) noexcept;
 SCL_convertAlgo str_to_algo(std::string_view str, bool &ok) noexcept;
 
 int list_gpu();
-
-struct config {
-  std::vector<std::string> default_zips_12;
-  std::vector<std::string> default_zips_latest;
-  std::vector<std::string> default_jsons;
-};
-
-bool load_config(std::string_view filename, config &cfg) noexcept;
 
 void list_supported_formats() noexcept;
 

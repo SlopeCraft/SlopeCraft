@@ -25,6 +25,7 @@ This file is part of SlopeCraft.
 
 #include "vccl_internal.h"
 #include <QCoreApplication>
+#include <VCLConfigLoader.h>
 #include <magic_enum.hpp>
 
 using std::cout, std::endl;
@@ -201,22 +202,15 @@ int main(int argc, char **argv) {
     return __LINE__;
   }
   if (!input.disable_config) {
-    config cfg;
+    VCL_config cfg;
     if (!load_config("vccl-config.json", cfg)) {
       cout << "Failed to load config. Skip and continue" << endl;
     } else {
       for (std::string &str : cfg.default_jsons) {
         input.jsons.emplace_back(std::move(str));
       }
-      if (input.version == SCL_gameVersion::MC12) {
-        for (std::string &str : cfg.default_zips_12) {
-          input.zips.emplace_back(std::move(str));
-        }
-      } else {
-        for (std::string &str : cfg.default_zips_latest) {
-          input.zips.emplace_back(std::move(str));
-        }
-      }
+
+      input.zips.emplace_back(cfg.default_zips.at(input.version));
 
       cout << "Default config loaded" << endl;
     }

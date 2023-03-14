@@ -121,8 +121,8 @@ qt_add_resources(VisualCraft "translations"
 
 qt_finalize_executable(VisualCraft)
 
-include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_12.cmake)
-include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_latest.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips.cmake)
+
 configure_file(vc-config-to-bin-dir.json.in vc-config.json)
 
 include(install.cmake)

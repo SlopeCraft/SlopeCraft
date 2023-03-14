@@ -15,6 +15,7 @@ add_subdirectory(NBTWriter)
 add_subdirectory(uiPack)
 add_subdirectory(MapImageCvter)
 add_subdirectory(VersionDialog)
+add_subdirectory(VCLConfigLoader)
 
 # add_subdirectory(libAbstractGUI)
 # add_subdirectory(libSCGUI)

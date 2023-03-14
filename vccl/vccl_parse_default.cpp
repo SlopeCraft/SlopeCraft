@@ -155,47 +155,6 @@ int set_allowed(VCL_block_state_list *bsl, const inputs &input) noexcept {
   return 0;
 }
 
-bool load_config(std::string_view filename, config &cfg) noexcept {
-
-  using njson = nlohmann::json;
-  njson jo;
-  try {
-    std::ifstream ofs(filename.data());
-    if (!ofs) {
-      cout << "Failed to open default config file " << filename << endl;
-      return false;
-    }
-
-    ofs >> jo;
-    {
-      njson &rp12 = jo.at("default_resource_pack_12");
-      cfg.default_zips_12.clear();
-      for (size_t i = 0; i < rp12.size(); i++) {
-        cfg.default_zips_12.emplace_back(rp12[i].get<std::string>());
-      }
-    }
-    {
-      njson &rp_latest = jo.at("default_resource_pack_latest");
-      cfg.default_zips_latest.clear();
-      for (size_t i = 0; i < rp_latest.size(); i++) {
-        cfg.default_zips_latest.emplace_back(rp_latest[i].get<std::string>());
-      }
-    }
-    {
-      njson &bsl = jo.at("default_block_state_list");
-      cfg.default_jsons.clear();
-      for (size_t i = 0; i < bsl.size(); i++) {
-        cfg.default_jsons.emplace_back(bsl[i].get<std::string>());
-      }
-    }
-
-  } catch (std::exception &e) {
-    cout << "Failed to parse default config file(\"" << filename
-         << "\'), detail : " << e.what() << endl;
-    return false;
-  }
-  return true;
-}
 
 void list_supported_formats() noexcept {
   auto fmts = QImageReader::supportedImageFormats();

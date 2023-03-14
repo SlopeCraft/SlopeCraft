@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
   ::is_language_ZH = QLocale::system().uiLanguages().contains("zh");
 
   // this line is used to test the translation
-  //::is_language_ZH = false;
+  ::is_language_ZH = false;
 
   if (!::is_language_ZH) {
     if (translator.load(":/i18n/VisualCraft_en_US.qm")) {
