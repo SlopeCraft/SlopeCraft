@@ -1,20 +1,24 @@
-# SlopeCraft
+**中文** | [English](README-en.md) <!-- lang -->
 
-![](https://img.shields.io/badge/C%2B%2B-17-blue?style=plastic) ![](https://img.shields.io/badge/Qt-v6.1.0-brightgreen?style=plastic) ![](https://img.shields.io/badge/Eigen-v3.4.0-yellowgreen?style=plastic) 
+<h1 align="center">SlopeCraft</h1>
 
-![](https://img.shields.io/badge/Minecraft-1.12~1.19-orange?style=plastic) 
+<p align="center">
+  <b>生成多种样式的 Minecraft 地图画！</b>
+</p>
 
-![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/TokiNoBug/SlopeCraft?style=plastic) ![GitHub](https://img.shields.io/github/license/TokiNoBug/SlopeCraft?style=plastic)
-
-<br>
-
-**简体中文** | [English](README_EN.md "README_EN.md")  <!-- lang -->
-
-<br>
-
-> 在 Minecraft 中生成多种样式的地图画
-
-<br>
+<p align="center">
+    <img src="https://img.shields.io/badge/Minecraft-1.12~1.19-green?style=for-the-badge" />
+    <a href="LICENSE">
+        <img src="https://img.shields.io/badge/License-GPL--3.0-important?style=for-the-badge" />
+    </a>
+    <a href="https://github.com/SlopeCraft/Slopecraft/releases/latest">
+        <img src="https://img.shields.io/github/v/release/SlopeCraft/SlopeCraft?style=for-the-badge" />
+    </a>
+    <br />
+    <img src="https://img.shields.io/badge/C%2B%2B-17-blue?style=for-the-badge" />
+    <img src="https://img.shields.io/badge/Qt-v6.1.0-brightgreen?style=for-the-badge" />
+    <img src="https://img.shields.io/badge/Eigen-v3.4.0-yellowgreen?style=for-the-badge" />
+</p>
 
 # 原理介绍
 

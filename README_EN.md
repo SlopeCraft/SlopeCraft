@@ -1,20 +1,24 @@
-# SlopeCraft
+[中文](README.md) | **English** <!-- lang -->
 
-![](https://img.shields.io/badge/C%2B%2B-17-blue?style=plastic) ![](https://img.shields.io/badge/Qt-v6.1.0-brightgreen?style=plastic) ![](https://img.shields.io/badge/Eigen-v3.4.0-yellowgreen?style=plastic) 
+<h1 align="center">SlopeCraft</h1>
 
-![](https://img.shields.io/badge/Minecraft-1.12~1.19-orange?style=plastic) 
+<p align="center">
+  <b>Get your Minecraft pixel painting in multiple kinds of forms!</b>
+</p>
 
-![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/TokiNoBug/SlopeCraft?style=plastic) ![GitHub](https://img.shields.io/github/license/TokiNoBug/SlopeCraft?style=plastic)
-
-<br>
-
-[简体中文](README.md "README.md") | **English**    <!-- lang -->
-
-<br>
-
-> Get your Minecraft pixel painting in multiple kinds of forms!
-
-<br>
+<p align="center">
+    <img src="https://img.shields.io/badge/Minecraft-1.12~1.19-green?style=for-the-badge" />
+    <a href="LICENSE">
+        <img src="https://img.shields.io/badge/License-GPL--3.0-important?style=for-the-badge" />
+    </a>
+    <a href="https://github.com/SlopeCraft/Slopecraft/releases/latest">
+        <img src="https://img.shields.io/github/v/release/SlopeCraft/SlopeCraft?style=for-the-badge" />
+    </a>
+    <br />
+    <img src="https://img.shields.io/badge/C%2B%2B-17-blue?style=for-the-badge" />
+    <img src="https://img.shields.io/badge/Qt-v6.1.0-brightgreen?style=for-the-badge" />
+    <img src="https://img.shields.io/badge/Eigen-v3.4.0-yellowgreen?style=for-the-badge" />
+</p>
 
 # Principles
 
