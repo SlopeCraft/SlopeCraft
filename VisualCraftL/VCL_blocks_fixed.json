@@ -2016,21 +2016,33 @@
         "nameZH": "石头",
         "version": 13
     },
-    "minecraft:stone[variant=smooth_diorite]": {
+    "minecraft:smooth_diorite": {
         "class": "stone",
         "nameEN": "Polished diorite (1.12)",
         "nameZH": "磨制闪长岩 (1.12)",
         "version": [
             12
         ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stone[variant=smooth_diorite]"
+            ]
+        ],
         "reproducible": false
     },
-    "minecraft:stone[variant=smooth_granite]": {
+    "minecraft:smooth_granite": {
         "class": "stone",
         "nameEN": "Polished granite (1.12)",
         "nameZH": "磨制花岗岩 (1.12)",
         "version": [
             12
+        ],
+        "id_replace_list": [
+            [
+                12,
+                "minecraft:stone[variant=smooth_granite]"
+            ]
         ],
         "reproducible": false
     },
