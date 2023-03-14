@@ -93,25 +93,11 @@ int main(int argc, char **argv) {
   return qapp.exec();
 }
 
-#include <fstream>
-#include <json.hpp>
-
 bool parse_config_json(QString &err) noexcept {
   err = "";
-  using njson = nlohmann::json;
-  njson jo;
 
-  try {
-    std::fstream file{"./vc-config.json"};
-    jo = njson::parse(file, nullptr, true, true);
-
-    VCWind::default_json = jo.at("default_block_state_list");
-    VCWind::default_zip_12 = jo.at("default_resource_pack_12");
-    VCWind::default_zip_latest = jo.at("default_resource_pack_latest");
-
-  } catch (std::exception &e) {
-    err =
-        VCWind::tr("无法加载配置文件\"./vc-config.json\"。\n%1").arg(e.what());
+  if (!load_config("./vc-config.json", VCWind::config)) {
+    err = VCWind::tr("无法加载配置文件\"./vc-config.json\"。\n%1").arg("");
     return false;
   }
 

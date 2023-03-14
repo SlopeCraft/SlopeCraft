@@ -36,9 +36,7 @@ using std::cout, std::endl;
 
 uint8_t is_language_ZH = true;
 
-std::string VCWind::default_zip_12{""};
-std::string VCWind::default_zip_latest{""};
-std::string VCWind::default_json{""};
+VCL_config VCWind::config;
 
 VCWind::VCWind(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::VCWind), kernel(VCL_create_kernel()) {
@@ -163,11 +161,10 @@ VCWind::basic_colorset_option VCWind::current_basic_option() const noexcept {
     }
 
     if (qlwi->data(Qt::UserRole).toBool()) {
-      if (this->current_selected_version() == SCL_gameVersion::MC12) {
-        ret.zips.emplace_back(VCWind::default_zip_12.c_str());
-      } else {
-        ret.zips.emplace_back(VCWind::default_zip_latest.c_str());
-      }
+      ret.zips.emplace_back(
+          QString::fromUtf8(
+              VCWind::config.default_zips.at(this->current_selected_version()))
+              .data());
       continue;
     }
 
@@ -181,7 +178,9 @@ VCWind::basic_colorset_option VCWind::current_basic_option() const noexcept {
     }
 
     if (qlwi->data(Qt::UserRole).toBool()) {
-      ret.jsons.emplace_back(VCWind::default_json.c_str());
+      for (const auto &jfilename : VCWind::config.default_jsons) {
+        ret.jsons.emplace_back(QString::fromUtf8(jfilename.data()));
+      }
 
       continue;
     }

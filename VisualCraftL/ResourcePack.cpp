@@ -640,7 +640,7 @@ bool VCL_resource_pack::override_required_textures(
   std::unordered_map<const block_model::EImgRowMajor_t *, texture_info>
       textures_used;
 
-  textures_used.reserve(this->textures_original.size());
+  // textures_used.reserve(this->textures_original.size());
 
   buffer_t buffer;
 
@@ -681,13 +681,22 @@ bool VCL_resource_pack::override_required_textures(
     }
 
     for (const auto &element : md->elements) {
-      for (const auto &face : element.faces) {
+      for (size_t idx = 0; idx < 6; idx++) {
+
+        const auto &face = element.faces[idx];
+
+        if (is_grass && (idx != (size_t)VCL_face_t::face_up)) {
+          continue;
+        }
+
         if (face.is_hidden) {
           continue;
         }
 
-        textures_used[face.texture].is_foliage |= is_foliage;
-        textures_used[face.texture].is_grass |= is_grass;
+        textures_used[face.texture].is_foliage =
+            textures_used[face.texture].is_foliage || is_foliage;
+        textures_used[face.texture].is_grass =
+            textures_used[face.texture].is_grass || is_grass;
       }
     }
   }
@@ -730,5 +739,5 @@ bool VCL_resource_pack::override_required_textures(
     }
   }
 
-  return true;
+  return this->update_block_model_textures();
 }

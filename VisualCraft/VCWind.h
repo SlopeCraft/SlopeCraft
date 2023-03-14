@@ -25,9 +25,11 @@ This file is part of SlopeCraft.
 
 #include <QMainWindow>
 #include <QNetworkAccessManager>
+#include <VCLConfigLoader.h>
 #include <VisualCraftL.h>
 #include <functional>
 #include <map>
+
 
 extern uint8_t is_language_ZH;
 extern QNetworkAccessManager *global_manager;
@@ -99,9 +101,7 @@ public:
   explicit VCWind(QWidget *parent = nullptr);
   ~VCWind();
 
-  static std::string default_zip_12;
-  static std::string default_zip_latest;
-  static std::string default_json;
+  static VCL_config config;
 
   inline const auto &block_class_widgets() const noexcept {
     return this->map_VC_block_class;

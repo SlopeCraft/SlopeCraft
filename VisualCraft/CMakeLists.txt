@@ -95,7 +95,8 @@ target_link_libraries(VisualCraft PRIVATE
     Qt${QT_VERSION_MAJOR}::Concurrent
     magic_enum::magic_enum
     OpenMP::OpenMP_CXX
-    VersionDialog)
+    VersionDialog
+    VCLConfigLoader)
 
 target_include_directories(VisualCraft PRIVATE ${SlopeCraft_Nlohmann_json_include_dir})
 

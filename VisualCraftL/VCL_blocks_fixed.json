@@ -644,7 +644,8 @@
         "nameZH": "草方块 (1.12)",
         "version": [
             12
-        ]
+        ],
+        "is_grass": true
     },
     "minecraft:grass_block[snowy=false]": {
         "class": "natural",
@@ -654,7 +655,8 @@
         ],
         "nameEN": "Grass block",
         "nameZH": "草方块",
-        "version": 13
+        "version": 13,
+        "is_grass": true
     },
     "minecraft:honeycomb_block": {
         "class": "natural",
