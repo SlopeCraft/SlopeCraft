@@ -511,6 +511,11 @@ public:
 
 using criteria_list_and = std::vector<criteria>;
 
+struct criteria_list_or_and {
+  std::vector<criteria_list_and> components;
+  bool is_or{true};
+};
+
 struct criteria_all_pass {};
 
 /// @return true if sl matches every criteria in cl
@@ -518,7 +523,7 @@ bool match_criteria_list(const criteria_list_and &cl,
                          const state_list &sl) noexcept;
 
 struct multipart_pair {
-  std::variant<criteria, std::vector<criteria_list_and>, criteria_all_pass>
+  std::variant<criteria, criteria_list_or_and, criteria_all_pass>
       criteria_variant;
   std::vector<model_store_t> apply_blockmodel;
   /*
@@ -551,12 +556,20 @@ struct multipart_pair {
       return true;
     }
 
-    const std::vector<criteria_list_and> &when_or =
-        std::get<std::vector<criteria_list_and>>(this->criteria_variant);
+    const auto &when_or =
+        std::get<criteria_list_or_and>(this->criteria_variant);
 
-    for (const criteria_list_and &cl : when_or) {
-      if (match_criteria_list(cl, sl))
-        return true;
+    size_t counter = 0;
+    for (const criteria_list_and &cl : when_or.components) {
+      if (match_criteria_list(cl, sl)) {
+        counter++;
+      }
+    }
+
+    if (when_or.is_or) {
+      return counter > 0;
+    } else {
+      return counter >= when_or.components.size();
     }
 
     return false;

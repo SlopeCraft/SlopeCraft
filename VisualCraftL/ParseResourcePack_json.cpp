@@ -383,15 +383,22 @@ parse_multipart_apply(const njson &apply) noexcept(false) {
   return {};
 }
 
-std::variant<criteria, std::vector<criteria_list_and>, criteria_all_pass>
+std::variant<criteria, criteria_list_or_and, criteria_all_pass>
 parse_multipart_when(const njson &when) noexcept(false) {
-  if (when.contains("OR")) {
-    const njson &OR = when.at("OR");
-    std::vector<criteria_list_and> when_or;
-    for (size_t idx = 0; idx < OR.size(); idx++) {
+  const bool is_or = when.contains("OR");
+  const bool is_and = when.contains("AND");
+  if (is_or || is_and) {
+    const njson &list_or_and = (is_or) ? (when.at("OR")) : (when.at("AND"));
+    criteria_list_or_and when_or_and;
+
+    when_or_and.components.reserve(list_or_and.size());
+    when_or_and.is_or = is_or;
+
+    for (size_t idx = 0; idx < list_or_and.size(); idx++) {
       criteria_list_and and_list;
 
-      for (auto it = OR[idx].begin(); it != OR[idx].end(); ++it) {
+      for (auto it = list_or_and[idx].begin(); it != list_or_and[idx].end();
+           ++it) {
         criteria cr;
         if (it.value().is_boolean()) {
           cr.key = it.key();
@@ -405,10 +412,10 @@ parse_multipart_when(const njson &when) noexcept(false) {
         and_list.emplace_back(std::move(cr));
       }
 
-      when_or.emplace_back(std::move(and_list));
+      when_or_and.components.emplace_back(std::move(and_list));
     }
 
-    return when_or;
+    return when_or_and;
   }
 
   if (when.size() == 1) {
@@ -439,8 +446,8 @@ parse_multipart_when(const njson &when) noexcept(false) {
     and_list.emplace_back(std::move(cr));
   }
 
-  std::vector<criteria_list_and> when_or;
-  when_or.emplace_back(std::move(and_list));
+  criteria_list_or_and when_or;
+  when_or.components.emplace_back(std::move(and_list));
 
   return when_or;
 }
@@ -819,6 +826,16 @@ dereference_texture_name(std::map<std::string, std::string>::iterator it,
   // here it->second must be a # reference.
 
   auto next_it = text.find(it->second.data() + 1);
+
+  // This line is added as a patch, to fix error when parsing 1.19.3 data packs.
+  // I'm not sure whether models that triggered this can be parsed correctly, it
+  // is only introduced to prevent endless recursion, so that errors can be
+  // reported
+  if (next_it == it) {
+    // found a self-reference value
+    return nullptr;
+  }
+
   const char *const ret = dereference_texture_name(next_it, text);
 
   if (ret != nullptr) {
