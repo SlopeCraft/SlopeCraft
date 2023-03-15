@@ -44,7 +44,19 @@ int main(int argc, char **argv) {
   ::is_language_ZH = QLocale::system().uiLanguages().contains("zh");
 
   // this line is used to test the translation
-  ::is_language_ZH = false;
+
+  for (int i = 0; i < argc; i++) {
+    if (std::string_view(argv[i]) == "--lang-force-to-en") {
+      ::is_language_ZH = false;
+      break;
+    }
+    if (std::string_view(argv[i]) == "--lang-force-to-zh") {
+      ::is_language_ZH = true;
+      break;
+    }
+  }
+
+  //::is_language_ZH = false;
 
   if (!::is_language_ZH) {
     if (translator.load(":/i18n/VisualCraft_en_US.qm")) {
@@ -54,10 +66,10 @@ int main(int argc, char **argv) {
 
   if (!VCL_is_version_ok()) {
     QMessageBox::critical(
-        nullptr, VCWind::tr("VisualCraftL动态库版本不匹配"),
+        nullptr, VCWind::tr("VisualCraftL 动态库版本不匹配"),
         VCWind::tr(
-            "界面程序编译时使用的VisualCraftL版本为%"
-            "1，而VisualCraftL动态库的版本为%2。通常这是因为动态库版本过低。")
+            "界面程序编译时使用的 VisualCraftL 版本为%"
+            "1，而 VisualCraftL 动态库的版本为%2。通常这是因为动态库版本过低。")
             .arg(SC_VERSION_STR)
             .arg(VCL_version_string()));
     qapp.exit(1);
