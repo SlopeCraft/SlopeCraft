@@ -64,7 +64,11 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow),
       kernel(SlopeCraft::SCL_createKernel()) {
   ui->setupUi(this);
-  // qDebug("成功setupUi");
+
+  ui->label_show_version->setText(
+      ui->label_show_version->text().arg(QStringLiteral("v") + SC_VERSION_STR));
+
+  // qDebug("成功 setupUi");
   Collected = false;
 
   // qDebug("成功创建内核");
@@ -144,7 +148,7 @@ MainWindow::MainWindow(QWidget *parent)
   connect(ui->action_export_avaliable_color_list, &QAction::triggered, this,
           &MainWindow::exportAvailableColors);
 
-  qDebug("成功connect所有的菜单");
+  qDebug("成功 connect 所有的菜单");
 
   connect(ui->NextPage, &QPushButton::clicked, this, &MainWindow::turnToPage2);
   connect(ui->NextPage2, &QPushButton::clicked, this, &MainWindow::turnToPage3);
@@ -162,7 +166,7 @@ MainWindow::MainWindow(QWidget *parent)
   connect(ui->FinshExData, &QPushButton::clicked, this,
           &MainWindow::turnToPage8);
   connect(ui->Exit, &QPushButton::clicked, this, &MainWindow::close);
-  qDebug("成功connect所有的翻页按钮");
+  qDebug("成功 connect 所有的翻页按钮");
 
   connect(ui->isGame12, &QRadioButton::toggled, this,
           &MainWindow::onGameVerClicked);
@@ -325,15 +329,17 @@ QJsonArray MainWindow::getFixedBlocksList(QString Path) {
                 ? error.errorString()
                 : "Json file doesn't contain array named \"FixedBlocks\"";
         int userChoice = QMessageBox::critical(
-            this, tr("错误：默认方块列表的JSON格式有错"),
-            tr("JSON错误原因：") + errorInfo +
-                tr("\n默认方块列表记录了SlopeCraft最基础的常用方块，是程序运行"
-                   "必须的。\n请点击Yes手动寻找它，或者点击No退出程序，重新下载"
-                   "最新版SlopeCraft/修复错误后再启动程序。"),
+            this, tr("错误：默认方块列表的 JSON 格式有错"),
+            tr("JSON 错误原因：") + errorInfo +
+                tr("\n默认方块列表记录了 SlopeCraft "
+                   "最基础的常用方块，是程序运行"
+                   "必须的。\n请点击 Yes 手动寻找它，或者点击 No "
+                   "退出程序，重新下载"
+                   "最新版 SlopeCraft/修复错误后再启动程序。"),
             QMessageBox::StandardButton::Yes, QMessageBox::StandardButton::No);
         if (userChoice == QMessageBox::StandardButton::Yes) {
           Path = QFileDialog::getOpenFileName(
-              this, "重新寻找默认方块列表文件FixedBlocks.json", "./",
+              this, "重新寻找默认方块列表文件 FixedBlocks.json", "./",
               "FixedBlocks.json");
           if (Path.isEmpty()) {
             exit(0);
@@ -348,13 +354,15 @@ QJsonArray MainWindow::getFixedBlocksList(QString Path) {
     } else {
       int userChoice = QMessageBox::critical(
           this, tr("错误：找不到默认方块列表"),
-          tr("默认方块列表记录了SlopeCraft最基础的常用方块，是程序运行必须的。"
-             "\n请点击Yes手动寻找它，或者点击No退出程序，重新下载最新版SlopeCra"
-             "ft后再启动程序。"),
+          tr("默认方块列表记录了 SlopeCraft "
+             "最基础的常用方块，是程序运行必须的。"
+             "\n请点击 Yes 手动寻找它，或者点击 No 退出程序，重新下载最新版 "
+             "SlopeCra"
+             "ft 后再启动程序。"),
           QMessageBox::StandardButton::Yes, QMessageBox::StandardButton::No);
       if (userChoice == QMessageBox::StandardButton::Yes) {
         Path = QFileDialog::getOpenFileName(
-            this, "重新寻找默认方块列表文件FixedBlocks.json", "./",
+            this, "重新寻找默认方块列表文件 FixedBlocks.json", "./",
             "FixedBlocks.json");
         if (Path.isEmpty()) {
           exit(0);
@@ -375,10 +383,12 @@ QString MainWindow::getFixedBlockListDir(QString Dir) {
       return Dir;
     } else {
       QMessageBox::StandardButton userChoice = QMessageBox::warning(
-          this, tr("错误：存放默认方块图标的文件夹FixedBlocks不存在"),
-          tr("FixedBlocks文件夹存储了默认方块列表所有方块对应的图片。\n这个错误"
-             "不致命，可以忽略，但最好重新下载SlopeCraft。\n点击Retry重新寻找这"
-             "个文件夹，点击Ignore忽略这个错误，点击Close退出程序"),
+          this, tr("错误：存放默认方块图标的文件夹 FixedBlocks 不存在"),
+          tr("FixedBlocks "
+             "文件夹存储了默认方块列表所有方块对应的图片。\n这个错误"
+             "不致命，可以忽略，但最好重新下载 SlopeCraft。\n点击 Retry "
+             "重新寻找这"
+             "个文件夹，点击 Ignore 忽略这个错误，点击 Close 退出程序"),
           {QMessageBox::StandardButton::Retry,
            QMessageBox::StandardButton::Ignore,
            QMessageBox::StandardButton::Close},
@@ -387,7 +397,7 @@ QString MainWindow::getFixedBlockListDir(QString Dir) {
       switch (userChoice) {
       case QMessageBox::StandardButton::Retry:
         Dir = QFileDialog::getExistingDirectory(
-            this, tr("重新寻找默认方块图标文件夹FixedBlocks"), "./",
+            this, tr("重新寻找默认方块图标文件夹 FixedBlocks"), "./",
             QFileDialog::Option::ReadOnly);
         if (!Dir.isEmpty()) {
           continue;
@@ -420,11 +430,13 @@ QJsonArray MainWindow::getCustomBlockList(QString Path) {
                 ? error.errorString()
                 : "Json file doesn't contain array named \"CustomBlocks\"";
         QMessageBox::StandardButton userChoice = QMessageBox::warning(
-            this, tr("错误：自定义方块列表的JSON格式有错"),
-            tr("JSON错误原因：") + errorInfo +
-                tr("\n自定义方块列表记录了SlopeCraft额外添加的可选方块，不是程"
-                   "序运行必须的。\n请点击Yes手动寻找它，或点击Ignore忽略这个错"
-                   "误，或者点击Close退出程序，重新下载最新版SlopeCraft/"
+            this, tr("错误：自定义方块列表的 JSON 格式有错"),
+            tr("JSON 错误原因：") + errorInfo +
+                tr("\n自定义方块列表记录了 SlopeCraft "
+                   "额外添加的可选方块，不是程"
+                   "序运行必须的。\n请点击 Yes 手动寻找它，或点击 Ignore "
+                   "忽略这个错"
+                   "误，或者点击 Close 退出程序，重新下载最新版 SlopeCraft/"
                    "修复错误后再启动程序。"),
             {QMessageBox::StandardButton::Yes,
              QMessageBox::StandardButton::Ignore,
@@ -433,7 +445,7 @@ QJsonArray MainWindow::getCustomBlockList(QString Path) {
         switch (userChoice) {
         case QMessageBox::StandardButton::Yes:
           Path = QFileDialog::getOpenFileName(
-              this, "重新寻找自定义方块列表文件CustomBlocks.json", "./",
+              this, "重新寻找自定义方块列表文件 CustomBlocks.json", "./",
               "CustomBlocks.json");
           if (Path.isEmpty()) {
             QJsonArray a;
@@ -456,10 +468,12 @@ QJsonArray MainWindow::getCustomBlockList(QString Path) {
       }
     } else {
       QMessageBox::StandardButton userChoice = QMessageBox::warning(
-          this, tr("错误：自定义方块列表文件CustomBlocks.json不存在"),
-          tr("自定义方块列表记录了SlopeCraft额外添加的可选方块，不是程序运行必"
-             "须的。\n请点击Yes手动寻找它，或点击Ignore忽略这个错误，或者点击Cl"
-             "ose退出程序，重新下载最新版SlopeCraft/修复错误后再启动程序。"),
+          this, tr("错误：自定义方块列表文件 CustomBlocks.json 不存在"),
+          tr("自定义方块列表记录了 SlopeCraft "
+             "额外添加的可选方块，不是程序运行必"
+             "须的。\n请点击 Yes 手动寻找它，或点击 Ignore "
+             "忽略这个错误，或者点击 Cl"
+             "ose 退出程序，重新下载最新版 SlopeCraft/修复错误后再启动程序。"),
           {QMessageBox::StandardButton::Yes,
            QMessageBox::StandardButton::Ignore,
            QMessageBox::StandardButton::Close},
@@ -467,7 +481,7 @@ QJsonArray MainWindow::getCustomBlockList(QString Path) {
       switch (userChoice) {
       case QMessageBox::StandardButton::Yes:
         Path = QFileDialog::getOpenFileName(
-            this, "重新寻找自定义方块列表文件CustomBlocks.json", "./",
+            this, "重新寻找自定义方块列表文件 CustomBlocks.json", "./",
             "CustomBlocks.json");
         if (Path.isEmpty()) {
           QJsonArray a;
@@ -498,10 +512,11 @@ QString MainWindow::getCustomBlockListDir(QString Dir) {
       return Dir;
     } else {
       QMessageBox::StandardButton userChoice = QMessageBox::warning(
-          this, tr("错误：存放自定义方块图标的文件夹CustomBlocks不存在"),
-          tr("CustomBlocks文件夹存储了用户自定义方块列表所有方块对应的图片。\n"
-             "这个错误不致命，可以忽略，但最好重新下载SlopeCraft。\n点击Retry重"
-             "新寻找这个文件夹，点击Ignore忽略这个错误，点击Close退出程序"),
+          this, tr("错误：存放自定义方块图标的文件夹 CustomBlocks 不存在"),
+          tr("CustomBlocks 文件夹存储了用户自定义方块列表所有方块对应的图片。\n"
+             "这个错误不致命，可以忽略，但最好重新下载 SlopeCraft。\n点击 "
+             "Retry 重"
+             "新寻找这个文件夹，点击 Ignore 忽略这个错误，点击 Close 退出程序"),
           {QMessageBox::StandardButton::Retry,
            QMessageBox::StandardButton::Ignore,
            QMessageBox::StandardButton::Close},
@@ -509,7 +524,7 @@ QString MainWindow::getCustomBlockListDir(QString Dir) {
       switch (userChoice) {
       case QMessageBox::StandardButton::Retry:
         Dir = QFileDialog::getExistingDirectory(
-            this, tr("重新寻找自定义方块图标文件夹CustomBlocks"), "./",
+            this, tr("重新寻找自定义方块图标文件夹 CustomBlocks"), "./",
             QFileDialog::Option::ReadOnly);
         if (!Dir.isEmpty()) {
           continue;
@@ -633,7 +648,7 @@ void MainWindow::turnToPage(int page) {
   case 6:
     newtitle += "Step 5 / 6";
     newtitle += "    ";
-    newtitle += tr("导出为mcfunction");
+    newtitle += tr("导出为 mcfunction");
     ui->stackedWidget->setCurrentIndex(page);
     break;
   case 7:
@@ -825,9 +840,9 @@ void MainWindow::preprocessImage(const QString &Path) {
 
 void MainWindow::on_ImportPic_clicked() {
 
-  QStringList userSelected =
-      QFileDialog::getOpenFileNames(this, tr("选择图片"), this->prevOpenedDir,
-                                    tr("图片(*.png *.bmp *.jpg *.tif *.GIF )"));
+  QStringList userSelected = QFileDialog::getOpenFileNames(
+      this, tr("选择图片"), this->prevOpenedDir,
+      tr("图片 (*.png *.bmp *.jpg *.tif *.GIF )"));
 
   if (userSelected.isEmpty())
     return;
@@ -845,7 +860,7 @@ void MainWindow::on_ImportPic_clicked() {
     return;
   } else {
     auto bo = new BatchUi(this);
-    // qDebug("开始创建BatchUi");
+    // qDebug("开始创建 BatchUi");
     bo->setTasks(userSelected);
     bo->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
     bo->show();
@@ -853,7 +868,7 @@ void MainWindow::on_ImportPic_clicked() {
     connect(this,&MainWindow::mapTypeChanged,
             batchOperator,&BatchUi::taskTypeUpdated);
             */
-    // qDebug("Mainwindow setTasks完毕");
+    // qDebug("Mainwindow setTasks 完毕");
     return;
   }
 }
@@ -872,7 +887,7 @@ void MainWindow::on_ImportSettings_clicked() {
 void MainWindow::ReceiveTPS(tpS t) {
   this->Strategy = t;
   qDebug("接收成功");
-  qDebug() << "pTpS=" << t.pTpS << "；hTpS=" << t.hTpS;
+  qDebug() << "pTpS=" << t.pTpS << ". hTpS=" << t.hTpS;
 }
 
 QRgb ComposeColor(const QRgb front, const QRgb back) {
@@ -889,7 +904,7 @@ QRgb ComposeColor(const QRgb front, const QRgb back) {
 
 inline void MainWindow::preProcess(char pureTpStrategy, char halfTpStrategy,
                                    QRgb BGC) {
-  qDebug("调用了preProcess");
+  qDebug("调用了 preProcess");
   // 透明像素处理策略：B->替换为背景色；A->空气；W->暂缓，等待处理
   // 半透明像素处理策略：B->替换为背景色；C->与背景色叠加；R->保留颜色；W->暂缓，等待处理
   qDebug("Cpoied");
@@ -1562,9 +1577,9 @@ void MainWindow::onExportLiteclicked(QString path) {
 
   std::string FileName;
   if (path.isEmpty()) {
-    QStringList suffixes({tr("投影文件(*.litematic)"),
-                          tr("结构方块文件(*.nbt)"),
-                          tr("WorldEdit原理图(*.schem)")});
+    QStringList suffixes({tr("投影文件 (*.litematic)"),
+                          tr("结构方块文件 (*.nbt)"),
+                          tr("WorldEdit 原理图 (*.schem)")});
 
     const int first_format_idx = ui->tabExport3DInfo->currentIndex();
 
@@ -1615,7 +1630,7 @@ void MainWindow::onExportLiteclicked(QString path) {
   else if (putLitematic)
     kernel->exportAsLitematic(
         FileName.data(), ui->InputLiteName->text().toUtf8().data(),
-        (ui->InputRegionName->text() + tr("(xz坐标=-65±128×整数)"))
+        (ui->InputRegionName->text() + tr("(xz 坐标=-65±128×整数)"))
             .toUtf8()
             .data(),
         failed_file_name);
@@ -1704,7 +1719,7 @@ void MainWindow::on_InputDataIndex_textChanged() {
   }
 
   ui->ShowDataFileName->setText(
-      tr("你输入的起始序号不可用，请输入大于等于0的整数！"));
+      tr("你输入的起始序号不可用，请输入大于等于 0 的整数！"));
   ui->ExportData->setEnabled(false);
   return;
 }
@@ -1717,7 +1732,7 @@ void MainWindow::onExportDataclicked(QString path) {
   isIndexValid = isIndexValid && (indexStart >= 0);
   if (!isIndexValid) {
     QMessageBox::information(this, tr("你输入的起始序号不可用"),
-                             tr("请输入大于等于0的整数！"));
+                             tr("请输入大于等于 0 的整数！"));
     return;
   }
   QString FolderPath;
@@ -1730,7 +1745,7 @@ void MainWindow::onExportDataclicked(QString path) {
 
   if (FolderPath.isEmpty()) {
     QMessageBox::information(this, tr("你选择的文件夹不存在！"),
-                             tr("你可以选择存档中的data文件夹"));
+                             tr("你可以选择存档中的 data 文件夹"));
     return;
   }
 
@@ -1773,11 +1788,6 @@ void MainWindow::switchLan(Language lang) {
 
   emit Manager->translate(lang);
 
-  if (QFile(":/new/Pic/BG3.png").exists()) {
-    qDebug("File exists.");
-  } else
-    qDebug("File doesn't exists.");
-
   if (lang == Language::EN) {
     if (!trans.load(":/i18n/SlopeCraft_en_US.qm")) {
       qDebug("Failed to load \":/i18n/SlopeCraft_en_US.qm\"");
@@ -1787,11 +1797,7 @@ void MainWindow::switchLan(Language lang) {
     ui->retranslateUi(this);
     qDebug("Changed language to English");
   } else {
-    if (!trans.load(":/i18n/SlopeCraft_zh_CN.qm")) {
-      qDebug("Failed to load \":/i18n/SlopeCraft_zh_CN.qm\"");
-      return;
-    }
-    qApp->installTranslator(&trans);
+    qApp->removeTranslator(&trans);
     ui->retranslateUi(this);
     qDebug("Changed language to Chinese");
   }
@@ -1836,9 +1842,9 @@ void MainWindow::showError(void *p, SlopeCraft::errorFlag error,
     text = tr("无法创建/打开文件") + detail;
     break;
   case SlopeCraft::errorFlag::EXPORT_SCHEM_MC12_NOT_SUPPORTED:
-    title = tr("导出WorldEdit原理图失败");
-    text = tr("不支持导出1.12 "
-              "WorldEdit原理图（.schematic格式），仅支持.schem格式") +
+    title = tr("导出 WorldEdit 原理图失败");
+    text = tr("不支持导出 1.12 "
+              "WorldEdit 原理图（.schematic 格式），仅支持.schem 格式") +
            detail;
     break;
   case SlopeCraft::errorFlag::EXPORT_SCHEM_STRUCTURE_REQUIRES_AIR:
@@ -1859,7 +1865,7 @@ void MainWindow::showError(void *p, SlopeCraft::errorFlag error,
     break;
   case SlopeCraft::errorFlag::HASTY_MANIPULATION:
     title = tr("跳步操作");
-    text = tr("SlopeCraft不允许你跳步操作，请按照左侧竖边栏的顺序操作！");
+    text = tr("SlopeCraft 不允许你跳步操作，请按照左侧竖边栏的顺序操作！");
     break;
   case SlopeCraft::errorFlag::LOSSYCOMPRESS_FAILED:
     title = tr("有损压缩失败");
@@ -1870,14 +1876,14 @@ void MainWindow::showError(void *p, SlopeCraft::errorFlag error,
     break;
   case SlopeCraft::errorFlag::MAX_ALLOWED_HEIGHT_LESS_THAN_14:
     title = tr("最大允许高度太小了");
-    text = tr("有损压缩的最大允许不要低于14，否则很容易压缩失败");
+    text = tr("有损压缩的最大允许不要低于 14，否则很容易压缩失败");
     break;
   case SlopeCraft::errorFlag::USEABLE_COLOR_TOO_FEW:
     title = tr("允许使用的颜色过少");
     text = tr("你应该勾选启用尽可能多的基色，颜色太少是不行的！");
     break;
   case SlopeCraft::errorFlag::FAILED_TO_COMPRESS:
-    title = tr("导出时Gzip压缩文件失败");
+    title = tr("导出时 Gzip 压缩文件失败");
     text = tr("这可能是因为路径中含有中文字符！");
     break;
   case SlopeCraft::errorFlag::FAILED_TO_REMOVE:
@@ -2023,13 +2029,14 @@ void MainWindow::grabVersion(bool isAuto) {
   QJsonDocument jd = QJsonDocument::fromJson(result, &error);
   if (error.error != error.NoError) {
     QMessageBox::StandardButton userReply = QMessageBox::information(
-        this, QObject::tr("检查更新时遇到Json解析错误"),
+        this, QObject::tr("检查更新时遇到 Json 解析错误"),
         QObject::tr("网址  ") + url +
-            QObject::tr(
-                "  "
-                "回复的信息无法通过json解析。\n\n这只是检查更新时遇到的故障，但"
-                "不要紧，软件该用还能用。\n点击No以忽略这个错误；点击NoToAll则"
-                "不会再自动检查更新。\n\n具体的错误为：\n") +
+            QObject::tr("  "
+                        "回复的信息无法通过 json "
+                        "解析。\n\n这只是检查更新时遇到的故障，但"
+                        "不要紧，软件该用还能用。\n点击 No "
+                        "以忽略这个错误；点击 NoToAll 则"
+                        "不会再自动检查更新。\n\n具体的错误为：\n") +
             error.errorString() + QObject::tr("\n\n具体回复的信息为：\n") +
             result,
         QMessageBox::StandardButton::No, QMessageBox::StandardButton::NoToAll);
@@ -2047,11 +2054,12 @@ void MainWindow::grabVersion(bool isAuto) {
     QMessageBox::StandardButton userReply = QMessageBox::information(
         this, QObject::tr("检查更新时返回信息错误"),
         QObject::tr("网址  ") + url +
-            QObject::tr("  "
-                        "回复的信息中不包含版本号（\"tag_"
-                        "name\"）。\n\n这只是检查更新时遇到的故障，但不要紧，软"
-                        "件该用还能用。\n点击No以忽略这个错误；点击NoToAll则不"
-                        "会再自动检查更新。\n") +
+            QObject::tr(
+                "  "
+                "回复的信息中不包含版本号（\"tag_"
+                "name\"）。\n\n这只是检查更新时遇到的故障，但不要紧，软"
+                "件该用还能用。\n点击 No 以忽略这个错误；点击 NoToAll 则不"
+                "会再自动检查更新。\n") +
             QObject::tr("\n\n具体回复的信息为：\n") + result,
         QMessageBox::StandardButton::No, QMessageBox::StandardButton::NoToAll);
     if (userReply == QMessageBox::StandardButton::NoToAll) {
@@ -2066,11 +2074,12 @@ void MainWindow::grabVersion(bool isAuto) {
     QMessageBox::StandardButton userReply = QMessageBox::information(
         this, QObject::tr("检查更新时返回信息错误"),
         QObject::tr("网址  ") + url +
-            QObject::tr("  "
-                        "回复的信息中，版本号（\"tag_"
-                        "name\"）不是字符串。\n\n这只是检查更新时遇到的故障，但"
-                        "不要紧，软件该用还能用。\n点击No以忽略这个错误；点击No"
-                        "ToAll则不会再自动检查更新。\n") +
+            QObject::tr(
+                "  "
+                "回复的信息中，版本号（\"tag_"
+                "name\"）不是字符串。\n\n这只是检查更新时遇到的故障，但"
+                "不要紧，软件该用还能用。\n点击 No 以忽略这个错误；点击 No"
+                "ToAll 则不会再自动检查更新。\n") +
             QObject::tr("\n\n具体回复的信息为：\n") + result,
         QMessageBox::StandardButton::No, QMessageBox::StandardButton::NoToAll);
     if (userReply == QMessageBox::StandardButton::NoToAll) {
@@ -2095,8 +2104,8 @@ void MainWindow::grabVersion(bool isAuto) {
 
     auto verDialog = new VersionDialog(this);
     verDialog->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
-    verDialog->setTexts(QObject::tr("SlopeCraft已更新"),
-                        QObject::tr("好消息！好消息！SlopeCraft更新了！\n") +
+    verDialog->setTexts(QObject::tr("SlopeCraft 已更新"),
+                        QObject::tr("好消息！好消息！SlopeCraft 更新了！\n") +
                             QObject::tr("当前版本为") + selfVersion +
                             QObject::tr("，检查到最新版本为") + latestVersion,
                         updateInfo);
@@ -2196,7 +2205,7 @@ void MainWindow::on_ExImage_clicked() {
   }
 
   QString savePath = QFileDialog::getSaveFileName(this, tr("保存当前显示图片"),
-                                                  "./", tr("图片(*.png)"));
+                                                  "./", tr("图片 (*.png)"));
 
   if (savePath.isEmpty()) {
     return;
