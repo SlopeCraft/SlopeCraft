@@ -78,7 +78,7 @@ set(VisualCraft_project_sources
 )
 
 if(${SlopeCraft_update_ts_files})
-    execute_process(COMMAND ${SlopeCraft_Qt_lupdate_executable} ${VisualCraft_header_files} ${VisualCraft_source_files} ${VisualCraft_ui_files} -ts others/VisualCraft_en_US.ts -no-obsolete
+    execute_process(COMMAND ${SlopeCraft_Qt_lupdate_executable} ${VisualCraft_header_files} ${VisualCraft_source_files} ${VisualCraft_ui_files} -ts others/VisualCraft_en_US.ts ${SlopeCraft_ts_flags}
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} COMMAND_ERROR_IS_FATAL ANY)
 endif()
 
@@ -113,11 +113,11 @@ set_target_properties(VisualCraft PROPERTIES
 
 # translation
 qt_add_lrelease(VisualCraft TS_FILES ${VisualCraft_ts_files}
-    QM_FILES_OUTPUT_VARIABLE VCL_qm_files)
+    QM_FILES_OUTPUT_VARIABLE VC_qm_files)
 qt_add_resources(VisualCraft "translations"
     PREFIX "/i18n"
     BASE ${CMAKE_CURRENT_BINARY_DIR}
-    FILES ${VCL_qm_files}
+    FILES ${VC_qm_files}
 )
 
 qt_finalize_executable(VisualCraft)
