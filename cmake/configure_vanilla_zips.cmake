@@ -19,7 +19,7 @@ foreach(mcver RANGE 12 19)
     set(VCL_resource_${mcver} ${CMAKE_SOURCE_DIR}/binaries/${VCL_current_zip_name} CACHE FILEPATH "")
 
     if(EXISTS ${CMAKE_SOURCE_DIR}/binaries/${VCL_current_zip_name})
-        message(STATUS "Found resoruce pack for MC${mcver} (${VCL_current_zip_name}).")
+        # message(STATUS "Found resoruce pack for MC${mcver} (${VCL_current_zip_name}).")
         continue()
     endif()
 

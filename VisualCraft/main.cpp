@@ -21,13 +21,13 @@ This file is part of SlopeCraft.
 */
 
 #include <QApplication>
-
-#include "CallbackFunctions.h"
-#include "VCWind.h"
 #include <QDir>
 #include <QFile>
 #include <QMessageBox>
 #include <QTranslator>
+
+#include "CallbackFunctions.h"
+#include "VCWind.h"
 
 QNetworkAccessManager *global_manager{nullptr};
 
@@ -39,7 +39,6 @@ bool parse_config_json(QString &err) noexcept;
 int main(int argc, char **argv) {
   QApplication qapp(argc, argv);
   QDir::setCurrent(QCoreApplication::applicationDirPath());
-  QTranslator translator;
 
   ::is_language_ZH = QLocale::system().uiLanguages().contains("zh");
 
@@ -58,6 +57,7 @@ int main(int argc, char **argv) {
 
   //::is_language_ZH = false;
 
+  QTranslator translator;
   if (!::is_language_ZH) {
     if (translator.load(":/i18n/VisualCraft_en_US.qm")) {
       qapp.installTranslator(&translator);
@@ -102,7 +102,9 @@ int main(int argc, char **argv) {
 
   wind.retrieve_latest_version(::url_for_update, manager, false);
 
-  return qapp.exec();
+  int ret = qapp.exec();
+
+  return ret;
 }
 
 bool parse_config_json(QString &err) noexcept {

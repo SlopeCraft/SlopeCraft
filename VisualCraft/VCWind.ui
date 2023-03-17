@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>987</width>
-    <height>475</height>
+    <width>1057</width>
+    <height>476</height>
    </rect>
   </property>
   <property name="font">
@@ -346,8 +346,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>815</width>
-                  <height>301</height>
+                  <width>861</width>
+                  <height>273</height>
                  </rect>
                 </property>
                 <layout class="QGridLayout" name="gl_sa_blocks"/>
@@ -1160,8 +1160,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>987</width>
-     <height>22</height>
+     <width>1057</width>
+     <height>27</height>
     </rect>
    </property>
    <property name="font">

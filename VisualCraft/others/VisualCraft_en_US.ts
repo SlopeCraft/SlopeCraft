@@ -314,7 +314,7 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
     </message>
     <message>
         <location filename="../VCWind.ui" line="336"/>
-        <location filename="../VCWind.cpp" line="429"/>
+        <location filename="../VCWind.cpp" line="428"/>
         <source>全部方块</source>
         <translation>All blocks</translation>
     </message>
@@ -512,52 +512,57 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
         <translation>png compress memory level: </translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1201"/>
+        <location filename="../VCWind.ui" line="1202"/>
         <source>联系开发者</source>
         <translation>Contact developer</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1256"/>
+        <location filename="../VCWind.ui" line="1257"/>
         <location filename="../VCWind_subwindows.cpp" line="51"/>
         <source>关于VisualCraft</source>
         <translation>About VisualCraft</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1261"/>
+        <location filename="../VCWind.ui" line="1262"/>
         <source>反馈bug</source>
         <translation>Report bugs</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1266"/>
-        <location filename="../VCWind.ui" line="1287"/>
+        <location filename="../VCWind.ui" line="1267"/>
+        <location filename="../VCWind.ui" line="1288"/>
         <source>Github仓库</source>
         <translation>Github repository</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1271"/>
+        <location filename="../VCWind.ui" line="1272"/>
         <source>bilibili</source>
         <translatorcomment>?</translatorcomment>
         <translation>bilibili</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1295"/>
+        <location filename="../VCWind.ui" line="1296"/>
         <source>生成测试投影</source>
         <translation>Generate testing litematic</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1303"/>
+        <location filename="../VCWind.ui" line="1304"/>
         <source>查看所有颜色</source>
         <translation>Browse all colors</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1311"/>
+        <location filename="../VCWind.ui" line="1312"/>
         <source>查看可用颜色</source>
         <translation>Browse avaliable colors</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1316"/>
+        <location filename="../VCWind.ui" line="1317"/>
         <source>检查更新</source>
         <translation>Check updates</translation>
+    </message>
+    <message>
+        <location filename="../VCWind.ui" line="1322"/>
+        <source>刷新警告信息</source>
+        <translation>Flush warnings</translation>
     </message>
     <message>
         <location filename="../VCWind.ui" line="796"/>
@@ -630,52 +635,52 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
         <translation>Test</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1181"/>
+        <location filename="../VCWind.ui" line="1182"/>
         <source>查看</source>
         <translation>Browse</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1190"/>
+        <location filename="../VCWind.ui" line="1191"/>
         <source>资源</source>
         <translation>Resources</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1197"/>
+        <location filename="../VCWind.ui" line="1198"/>
         <source>关于</source>
         <translation>About</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1233"/>
+        <location filename="../VCWind.ui" line="1234"/>
         <source>方块</source>
         <translation>Blocks</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1238"/>
+        <location filename="../VCWind.ui" line="1239"/>
         <source>加载资源</source>
         <translation>Load resources</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1243"/>
+        <location filename="../VCWind.ui" line="1244"/>
         <source>设置可用的方块</source>
         <translation>Set avaliable blocks</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1251"/>
+        <location filename="../VCWind.ui" line="1252"/>
         <source>生物群系</source>
         <translation>Biomes</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="57"/>
-        <source>VisualCraftL动态库版本不匹配</source>
-        <translation>The version of dynamic library &quot;VisualCraftL&quot; mismatch</translation>
-    </message>
-    <message>
-        <location filename="../main.cpp" line="58"/>
-        <source>界面程序编译时使用的VisualCraftL版本为%1，而VisualCraftL动态库的版本为%2。通常这是因为动态库版本过低。</source>
-        <translation>The version of VisualCraftL at ui program&apos;s build time is %1, and that of VisualCraftL is %2. Usually this is because the version of dynamic lib is not late enough.</translation>
+        <location filename="../main.cpp" line="69"/>
+        <source>VisualCraftL 动态库版本不匹配</source>
+        <translation>The version of VisualCraftL shared lib mismatch</translation>
     </message>
     <message>
         <location filename="../main.cpp" line="70"/>
+        <source>界面程序编译时使用的 VisualCraftL 版本为%1，而 VisualCraftL 动态库的版本为%2。通常这是因为动态库版本过低。</source>
+        <translation>The version of VisualCraftL at compile-time is %1, while that at runtime is %2. Usually it is because the version of VisualCraftL shared lib is too old.</translation>
+    </message>
+    <message>
+        <location filename="../main.cpp" line="82"/>
         <source>加载配置文件失败。</source>
         <translation>Failed to load configuration file.</translation>
     </message>
@@ -687,88 +692,88 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
 %1</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="95"/>
+        <location filename="../VCWind.cpp" line="93"/>
         <source>原版资源包</source>
         <translation>Vanilla</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="95"/>
+        <location filename="../VCWind.cpp" line="93"/>
         <source>原版json</source>
         <translation>Default</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="257"/>
+        <location filename="../VCWind.cpp" line="256"/>
         <source>选择资源包</source>
         <translation>Select resource pack</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="290"/>
+        <location filename="../VCWind.cpp" line="289"/>
         <source>选择方块id json文件</source>
         <translation>Select block state list json file</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="461"/>
+        <location filename="../VCWind.cpp" line="460"/>
         <source>资源包解析失败</source>
         <translation>Failed to parse resource pack</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="462"/>
-        <location filename="../VCWind.cpp" line="472"/>
+        <location filename="../VCWind.cpp" line="461"/>
+        <location filename="../VCWind.cpp" line="471"/>
         <source>在此窗口之前弹出的错误信息非常重要，请将它汇报给开发者。</source>
         <translation>Error messages shown before this window is really important. Report it to the deveploer.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="471"/>
+        <location filename="../VCWind.cpp" line="470"/>
         <source>方块状态列表json解析失败</source>
         <translation>Failed to parse block state list json</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="491"/>
+        <location filename="../VCWind.cpp" line="490"/>
         <source>资源包/方块状态列表json解析失败</source>
         <translation>Failed to parse resource packs or bsl jsons.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="492"/>
+        <location filename="../VCWind.cpp" line="491"/>
         <source>部分方块的投影图像计算失败，或者总颜色数量超过上限（65534）。尝试移除解析失败的资源包/方块列表，或者减小最大层数。</source>
         <translation>Failed to compute projection image for some blocks, or the total color amout exceeds the limit of 65534. You can try removing resource packs or block state list jsons that failed to be parsed, or reduce the max layers.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="552"/>
+        <location filename="../VCWind.cpp" line="551"/>
         <source>设置可用方块失败</source>
         <translation>Failed to set avaliable blocks</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="553"/>
+        <location filename="../VCWind.cpp" line="552"/>
         <source>可能是总颜色数量超过上限（65536），尝试移除解析失败的资源包/方块列表，或者减小最大层数。</source>
         <translation>Probably the count of colors exceeds the upper bound(65536). Try removing some resource packs or jsons, or reduce the maximum layers.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="563"/>
+        <location filename="../VCWind.cpp" line="562"/>
         <source>调色算法 (共%1种颜色)</source>
         <translation>Convert algorithms(%1 colors avaliable)</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="587"/>
+        <location filename="../VCWind.cpp" line="586"/>
         <source>选择图片（可多选）</source>
         <translation>Select images</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="604"/>
+        <location filename="../VCWind.cpp" line="603"/>
         <source>读取图片失败</source>
         <translation>Failed to load image.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="605"/>
+        <location filename="../VCWind.cpp" line="604"/>
         <source>无法读取图片%1。图片可能是不支持的格式，或者已经损坏。图像过大也可能导致此错误。</source>
         <translation>Failed to load image %1 . The image may be of unsupported format, or has been screwed up. A tooooo large image may also cause this error.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="658"/>
+        <location filename="../VCWind.cpp" line="657"/>
         <source>设置图片失败</source>
         <translation>Failed to set image</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="659"/>
+        <location filename="../VCWind.cpp" line="658"/>
         <source>这个错误不应该发生的，可能是你点儿背。</source>
         <translation>This error is considered to be impossible.</translation>
     </message>
