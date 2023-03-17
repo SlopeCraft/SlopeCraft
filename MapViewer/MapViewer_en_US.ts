@@ -4,11 +4,6 @@
 <context>
     <name>MapViewerWind</name>
     <message>
-        <location filename="MapViewerWind.ui" line="14"/>
-        <source>SlopeCraft MapViewer</source>
-        <translation></translation>
-    </message>
-    <message>
         <location filename="MapViewerWind.ui" line="38"/>
         <location filename="MapViewerWind.ui" line="130"/>
         <source>加载地图</source>
@@ -106,11 +101,6 @@
         <location filename="MapViewerWind.cpp" line="637"/>
         <source>保存为图片</source>
         <translation>Save</translation>
-    </message>
-    <message>
-        <location filename="MapViewerWind.ui" line="415"/>
-        <source>×1</source>
-        <translation></translation>
     </message>
     <message>
         <location filename="MapViewerWind.ui" line="447"/>
