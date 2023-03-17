@@ -57,8 +57,7 @@ set(SlopeCraftMain_ui_files
 
 set(SlopeCraftMain_ts_files
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/others/SlopeCraft_en_US.ts
-    ${CMAKE_CURRENT_SOURCE_DIR}/others/SlopeCraft_zh_CN.ts)
+    ${CMAKE_CURRENT_SOURCE_DIR}/others/SlopeCraft_en_US.ts)
 
 if(${SlopeCraft_update_ts_files})
     execute_process(
@@ -67,14 +66,12 @@ if(${SlopeCraft_update_ts_files})
     )
 endif()
 
-set_source_files_properties(${SlopeCraftMain_ts_files}
-    PROPERTIES OUTPUT_LOCATION ${CMAKE_CURRENT_SOURCE_DIR})
-qt_add_translation(TEMP ${SlopeCraftMain_ts_files})
-
 set(SlopeCraftMain_qrc_files
     ${CMAKE_CURRENT_SOURCE_DIR}/others/BlockTextures.qrc
     ${CMAKE_CURRENT_SOURCE_DIR}/others/Pics.qrc
-    ${CMAKE_CURRENT_SOURCE_DIR}/others/SlopeCraft_translation.qrc)
+
+    # ${CMAKE_CURRENT_SOURCE_DIR}/others/SlopeCraft_translation.qrc
+)
 
 set(SlopeCraftMain_project_sources
     ${SlopeCraftMain_header_files}
@@ -86,27 +83,25 @@ set(SlopeCraftMain_project_sources
     ${SlopeCraftMain_windows_rc_file}
 )
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(SlopeCraft
-        MANUAL_FINALIZATION
-        ${SlopeCraftMain_project_sources})
+qt_add_executable(SlopeCraft
+    MANUAL_FINALIZATION
+    ${SlopeCraftMain_project_sources})
 
 # execute_process(COMMAND "pause")
 # qt_create_translation(SlopeCraftMain_qm_files ${CMAKE_CURRENT_SOURCE_DIR} ${SlopeCraftMain_ts_files})
+qt_add_lrelease(SlopeCraft TS_FILES ${SlopeCraftMain_ts_files}
+    QM_FILES_OUTPUT_VARIABLE SC_qm_files)
+
+qt_add_resources(SlopeCraft "translations"
+    PREFIX "/i18n"
+    BASE ${CMAKE_CURRENT_BINARY_DIR}
+    FILES ${SC_qm_files})
 
 # qt6_add_resources(SlopeCraft "translation"
 # PREFIX "/i18n"
 # FILES
 # ${SlopeCraftMain_qm_files}
 # ${CMAKE_SOURCE_DIR}/CMakeLists.txt)
-else()
-    if(ANDROID)
-        add_library(SlopeCraft SHARED ${SlopeCraftMain_project_sources})
-    else()
-        add_executable(SlopeCraft ${SlopeCraftMain_project_sources})
-    endif()
-endif()
-
 target_link_libraries(SlopeCraft
     PRIVATE
     BlockListManager
@@ -126,8 +121,6 @@ set_target_properties(SlopeCraft PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
-if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(SlopeCraft)
-endif()
+qt_finalize_executable(SlopeCraft)
 
 include(install.cmake)
