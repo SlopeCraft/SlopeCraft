@@ -95,7 +95,7 @@ class tpStrategyWind;
 #ifndef TPS__
 #define TPS__
 class tpS {
-public:
+ public:
   tpS(char _pTpS = 'B', char _hTpS = 'C', QRgb _BGC = qRgb(220, 220, 220)) {
     pTpS = _pTpS;
     hTpS = _hTpS;
@@ -112,7 +112,7 @@ class MainWindow : public QMainWindow {
   Q_OBJECT
   friend class BatchUi;
 
-public:
+ public:
   MainWindow(QWidget *parent = nullptr);
   ~MainWindow();
 
@@ -122,22 +122,24 @@ public:
 
   static const QString selfVersion;
 
-signals:
+  static constexpr char sc_preset_extension[] = ".sc_preset_json";
+
+ signals:
   void mapTypeChanged();
 
   void closed();
 
-protected:
+ protected:
   void closeEvent(QCloseEvent *) override;
   void keyPressEvent(QKeyEvent *) override;
 
-public:
+ public:
   inline void preProcess(char pureTpStrategy = 'B', char halfTpStrategy = 'C',
                          QRgb BGC = qRgb(220, 220, 220));
 
   inline auto kernelPtr() const { return kernel; }
 
-public slots:
+ public slots:
   void ReceiveTPS(tpS);
   // 透明像素处理策略：B->替换为背景色；A->空气；W->暂缓，等待处理
   // 半透明像素处理策略：B->替换为背景色；C->与背景色叠加；R->保留颜色；W->暂缓，等待处理
@@ -153,7 +155,7 @@ public slots:
 
   void grabVersion(bool isAuto = true);
 
-private slots:
+ private slots:
 
   void contactG();
   void contactB();
@@ -239,7 +241,7 @@ private slots:
 
   void testBlockList();
 
-private:
+ private:
   Ui::MainWindow *ui;
 
   SlopeCraft::Kernel *const kernel;
@@ -265,7 +267,7 @@ private:
   QProgressBar *proTracker;
   // void applyPre(ushort*BL);
 
-private:
+ private:
   void loadBlockList();
   void turnToPage(int);
   void updateEnables();
@@ -282,7 +284,7 @@ private:
   void selectBlockByString(const std::string &);
 
   static void progressRangeSet(void *, int min, int max,
-                               int val); // 设置进度条的取值范围和值
+                               int val);  // 设置进度条的取值范围和值
   static void progressAdd(void *, int deltaVal);
   static void keepAwake(void *);
 
@@ -302,4 +304,4 @@ using EImage = Eigen::ArrayXX<uint32_t>;
 
 EImage QImage2EImage(const QImage &);
 QImage EImage2QImage(const EImage &, ushort scale = 1);
-#endif // MAINWINDOW_H
+#endif  // MAINWINDOW_H

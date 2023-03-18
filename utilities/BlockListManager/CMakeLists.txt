@@ -27,7 +27,7 @@ set(BlockListManager_source_files
     TokiBlock.cpp)
 
 set(BlockListManager_ts_files
-    ${CMAKE_CURRENT_SOURCE_DIR}/BlockListManager_zh_CN.ts
+    ${CMAKE_CURRENT_SOURCE_DIR}/BlockListManager_en_US.ts
 )
 
 if(${SlopeCraft_update_ts_files})

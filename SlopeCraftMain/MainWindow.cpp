@@ -61,7 +61,8 @@ inline uint32_t inverseColor(uint32_t raw) noexcept {
 }
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow),
+    : QMainWindow(parent),
+      ui(new Ui::MainWindow),
       kernel(SlopeCraft::SCL_createKernel()) {
   ui->setupUi(this);
 
@@ -259,8 +260,7 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::showPreview() {
-  if (kernel->queryStep() < SlopeCraft::step::builded)
-    return;
+  if (kernel->queryStep() < SlopeCraft::step::builded) return;
 
   PreviewWind *preWind = new PreviewWind(this);
   preWind->Src.resize(64);
@@ -279,7 +279,7 @@ void MainWindow::showPreview() {
       ib = preWind->BlockCount.erase(ib);
       iS = preWind->Src.erase(iS);
     }
-    if (*ib > 0) { //  if the block is used, keep it. otherwise erase it.
+    if (*ib > 0) {  //  if the block is used, keep it. otherwise erase it.
       ib++;
       iS++;
       continue;
@@ -323,7 +323,6 @@ QJsonArray MainWindow::getFixedBlocksList(QString Path) {
           jd.object().value("FixedBlocks").isArray()) {
         return jd.object().value("FixedBlocks").toArray();
       } else {
-
         QString errorInfo =
             (error.error != QJsonParseError::NoError)
                 ? error.errorString()
@@ -395,18 +394,18 @@ QString MainWindow::getFixedBlockListDir(QString Dir) {
 
           QMessageBox::StandardButton::Ignore);
       switch (userChoice) {
-      case QMessageBox::StandardButton::Retry:
-        Dir = QFileDialog::getExistingDirectory(
-            this, tr("重新寻找默认方块图标文件夹 FixedBlocks"), "./",
-            QFileDialog::Option::ReadOnly);
-        if (!Dir.isEmpty()) {
-          continue;
-        }
-        return "./";
-      case QMessageBox::StandardButton::Ignore:
-        return "./";
-      default:
-        exit(0);
+        case QMessageBox::StandardButton::Retry:
+          Dir = QFileDialog::getExistingDirectory(
+              this, tr("重新寻找默认方块图标文件夹 FixedBlocks"), "./",
+              QFileDialog::Option::ReadOnly);
+          if (!Dir.isEmpty()) {
+            continue;
+          }
+          return "./";
+        case QMessageBox::StandardButton::Ignore:
+          return "./";
+        default:
+          exit(0);
       }
     }
   }
@@ -443,27 +442,25 @@ QJsonArray MainWindow::getCustomBlockList(QString Path) {
              QMessageBox::StandardButton::Close},
             QMessageBox::StandardButton::Ignore);
         switch (userChoice) {
-        case QMessageBox::StandardButton::Yes:
-          Path = QFileDialog::getOpenFileName(
-              this, "重新寻找自定义方块列表文件 CustomBlocks.json", "./",
-              "CustomBlocks.json");
-          if (Path.isEmpty()) {
+          case QMessageBox::StandardButton::Yes:
+            Path = QFileDialog::getOpenFileName(
+                this, "重新寻找自定义方块列表文件 CustomBlocks.json", "./",
+                "CustomBlocks.json");
+            if (Path.isEmpty()) {
+              QJsonArray a;
+              while (!a.empty()) a.removeFirst();
+              return a;
+            } else {
+              continue;
+            }
+            break;
+          case QMessageBox::StandardButton::Close:
+            exit(0);
+            break;
+          default:
             QJsonArray a;
-            while (!a.empty())
-              a.removeFirst();
+            while (!a.empty()) a.removeFirst();
             return a;
-          } else {
-            continue;
-          }
-          break;
-        case QMessageBox::StandardButton::Close:
-          exit(0);
-          break;
-        default:
-          QJsonArray a;
-          while (!a.empty())
-            a.removeFirst();
-          return a;
         }
       }
     } else {
@@ -479,27 +476,25 @@ QJsonArray MainWindow::getCustomBlockList(QString Path) {
            QMessageBox::StandardButton::Close},
           QMessageBox::StandardButton::Ignore);
       switch (userChoice) {
-      case QMessageBox::StandardButton::Yes:
-        Path = QFileDialog::getOpenFileName(
-            this, "重新寻找自定义方块列表文件 CustomBlocks.json", "./",
-            "CustomBlocks.json");
-        if (Path.isEmpty()) {
+        case QMessageBox::StandardButton::Yes:
+          Path = QFileDialog::getOpenFileName(
+              this, "重新寻找自定义方块列表文件 CustomBlocks.json", "./",
+              "CustomBlocks.json");
+          if (Path.isEmpty()) {
+            QJsonArray a;
+            while (!a.empty()) a.removeFirst();
+            return a;
+          } else {
+            continue;
+          }
+          break;
+        case QMessageBox::StandardButton::Close:
+          exit(0);
+          break;
+        default:
           QJsonArray a;
-          while (!a.empty())
-            a.removeFirst();
+          while (!a.empty()) a.removeFirst();
           return a;
-        } else {
-          continue;
-        }
-        break;
-      case QMessageBox::StandardButton::Close:
-        exit(0);
-        break;
-      default:
-        QJsonArray a;
-        while (!a.empty())
-          a.removeFirst();
-        return a;
       }
     }
   }
@@ -522,18 +517,18 @@ QString MainWindow::getCustomBlockListDir(QString Dir) {
            QMessageBox::StandardButton::Close},
           QMessageBox::StandardButton::Ignore);
       switch (userChoice) {
-      case QMessageBox::StandardButton::Retry:
-        Dir = QFileDialog::getExistingDirectory(
-            this, tr("重新寻找自定义方块图标文件夹 CustomBlocks"), "./",
-            QFileDialog::Option::ReadOnly);
-        if (!Dir.isEmpty()) {
-          continue;
-        }
-        return "./";
-      case QMessageBox::StandardButton::Ignore:
-        return "./";
-      default:
-        exit(0);
+        case QMessageBox::StandardButton::Retry:
+          Dir = QFileDialog::getExistingDirectory(
+              this, tr("重新寻找自定义方块图标文件夹 CustomBlocks"), "./",
+              QFileDialog::Option::ReadOnly);
+          if (!Dir.isEmpty()) {
+            continue;
+          }
+          return "./";
+        case QMessageBox::StandardButton::Ignore:
+          return "./";
+        default:
+          exit(0);
       }
     }
   }
@@ -541,7 +536,6 @@ QString MainWindow::getCustomBlockListDir(QString Dir) {
 }
 
 void MainWindow::loadBlockList() {
-
   QJsonArray ja = getFixedBlocksList("./Blocks/FixedBlocks.json");
 
   QString Dir = getFixedBlockListDir("./Blocks/FixedBlocks");
@@ -599,73 +593,73 @@ void MainWindow::turnToPage(int page) {
 
   newtitle += SlopeCraft::SCL_getSCLVersion();
 #ifdef WIN32
-  newtitle += " Copyright © 2021-2023 TokiNoBug    "; // windows
+  newtitle += " Copyright © 2021-2023 TokiNoBug    ";  // windows
 #elif defined(_MAC) || defined(__APPLE__)
   newtitle +=
-      " Copyright © 2021-2023 TokiNoBug,AbrasiveBoar, Cubik65536   "; // macOs
+      " Copyright © 2021-2023 TokiNoBug,AbrasiveBoar, Cubik65536   ";  // macOs
 #else
-  newtitle += " Copyright © 2021-2023 TokiNoBug    "; // unknown platform
+  newtitle += " Copyright © 2021-2023 TokiNoBug    ";  // unknown platform
 #endif
 
   switch (page) {
-  case 0:
-    newtitle += "Step 0 / 6";
-    newtitle += "    ";
-    newtitle += tr("开始");
-    ui->stackedWidget->setCurrentIndex(page);
-    break;
+    case 0:
+      newtitle += "Step 0 / 6";
+      newtitle += "    ";
+      newtitle += tr("开始");
+      ui->stackedWidget->setCurrentIndex(page);
+      break;
 
-  case 1:
-    newtitle += "Step 1 / 6";
-    newtitle += "    ";
-    newtitle += tr("导入图片");
-    ui->stackedWidget->setCurrentIndex(page);
-    break;
-  case 2:
-    newtitle += "Step 2 / 6";
-    newtitle += "    ";
-    newtitle += tr("设置地图画类型");
-    ui->stackedWidget->setCurrentIndex(page);
-    break;
-  case 3:
-    newtitle += "Step 3 / 6";
-    newtitle += "    ";
-    newtitle += tr("设置方块列表");
-    ui->stackedWidget->setCurrentIndex(page);
-    break;
-  case 4:
-    newtitle += "Step 4 / 6";
-    newtitle += "    ";
-    newtitle += tr("调整颜色");
-    ui->stackedWidget->setCurrentIndex(page);
-    break;
-  case 5:
-    newtitle += "Step 5 / 6";
-    newtitle += "    ";
-    newtitle += tr("导出为投影文件");
-    ui->stackedWidget->setCurrentIndex(page);
-    break;
-  case 6:
-    newtitle += "Step 5 / 6";
-    newtitle += "    ";
-    newtitle += tr("导出为 mcfunction");
-    ui->stackedWidget->setCurrentIndex(page);
-    break;
-  case 7:
-    newtitle += "Step 5 / 6";
-    newtitle += "    ";
-    newtitle += tr("导出为地图文件");
-    ui->stackedWidget->setCurrentIndex(page);
-    break;
-  case 8:
-    newtitle += "Step 6 / 6";
-    newtitle += "    ";
-    newtitle += tr("结束");
-    ui->stackedWidget->setCurrentIndex(page);
-    break;
-  default:
-    qDebug("尝试翻页错误");
-    break;
+    case 1:
+      newtitle += "Step 1 / 6";
+      newtitle += "    ";
+      newtitle += tr("导入图片");
+      ui->stackedWidget->setCurrentIndex(page);
+      break;
+    case 2:
+      newtitle += "Step 2 / 6";
+      newtitle += "    ";
+      newtitle += tr("设置地图画类型");
+      ui->stackedWidget->setCurrentIndex(page);
+      break;
+    case 3:
+      newtitle += "Step 3 / 6";
+      newtitle += "    ";
+      newtitle += tr("设置方块列表");
+      ui->stackedWidget->setCurrentIndex(page);
+      break;
+    case 4:
+      newtitle += "Step 4 / 6";
+      newtitle += "    ";
+      newtitle += tr("调整颜色");
+      ui->stackedWidget->setCurrentIndex(page);
+      break;
+    case 5:
+      newtitle += "Step 5 / 6";
+      newtitle += "    ";
+      newtitle += tr("导出为投影文件");
+      ui->stackedWidget->setCurrentIndex(page);
+      break;
+    case 6:
+      newtitle += "Step 5 / 6";
+      newtitle += "    ";
+      newtitle += tr("导出为 mcfunction");
+      ui->stackedWidget->setCurrentIndex(page);
+      break;
+    case 7:
+      newtitle += "Step 5 / 6";
+      newtitle += "    ";
+      newtitle += tr("导出为地图文件");
+      ui->stackedWidget->setCurrentIndex(page);
+      break;
+    case 8:
+      newtitle += "Step 6 / 6";
+      newtitle += "    ";
+      newtitle += tr("结束");
+      ui->stackedWidget->setCurrentIndex(page);
+      break;
+    default:
+      qDebug("尝试翻页错误");
+      break;
   }
   this->setWindowTitle(newtitle);
   updateEnables();
@@ -718,7 +712,6 @@ void MainWindow::turnToPage8() {
 }
 
 void MainWindow::updateEnables() {
-
   bool temp = true;
   ui->StartWithFlat->setEnabled(temp);
   ui->StartWithNotVanilla->setEnabled(temp);
@@ -791,7 +784,6 @@ void MainWindow::on_StartWithWall_clicked() {
 */
 
 void MainWindow::preprocessImage(const QString &Path) {
-
   if (!rawPic.load(Path)) {
     QMessageBox::information(this, tr("打开图片失败"),
                              tr("要不试试换一张图片吧！"));
@@ -839,13 +831,11 @@ void MainWindow::preprocessImage(const QString &Path) {
 }
 
 void MainWindow::on_ImportPic_clicked() {
-
   QStringList userSelected = QFileDialog::getOpenFileNames(
       this, tr("选择图片"), this->prevOpenedDir,
       tr("图片 (*.png *.bmp *.jpg *.tif *.GIF )"));
 
-  if (userSelected.isEmpty())
-    return;
+  if (userSelected.isEmpty()) return;
 
   this->prevOpenedDir = QFileInfo(userSelected.front()).filePath();
 
@@ -874,7 +864,6 @@ void MainWindow::on_ImportPic_clicked() {
 }
 
 void MainWindow::on_ImportSettings_clicked() {
-
   auto transSubWind = new tpStrategyWind(this);
   connect(transSubWind, &tpStrategyWind::Confirm, this,
           &MainWindow::ReceiveTPS);
@@ -914,32 +903,30 @@ inline void MainWindow::preProcess(char pureTpStrategy, char halfTpStrategy,
     for (int r = 0; r < rawPic.height(); r++) {
       CL = (QRgb *)rawPic.scanLine(r);
       for (int c = 0; c < rawPic.width(); c++) {
-        if (qAlpha(CL[c]) >= 255)
-          continue;
-        if (qAlpha(CL[c]) == 0)
-          switch (pureTpStrategy) {
-          case 'B':
-            CL[c] = BGC;
-            continue;
-          case 'A':
-            if (!hasTotalTrans) {
-              qDebug() << "发现纯透明像素";
-              hasTotalTrans = true;
-            }
-            CL[c] = qRgba(0, 0, 0, 0);
-            continue;
+        if (qAlpha(CL[c]) >= 255) continue;
+        if (qAlpha(CL[c]) == 0) switch (pureTpStrategy) {
+            case 'B':
+              CL[c] = BGC;
+              continue;
+            case 'A':
+              if (!hasTotalTrans) {
+                qDebug() << "发现纯透明像素";
+                hasTotalTrans = true;
+              }
+              CL[c] = qRgba(0, 0, 0, 0);
+              continue;
           }
 
         // qDebug("neeeee");
         switch (halfTpStrategy) {
-        case 'B':
-          CL[c] = BGC;
-          break;
-        case 'C':
-          CL[c] = ComposeColor(CL[c], BGC);
-          break;
-        case 'R':
-          CL[c] = qRgb(qRed(CL[c]), qGreen(CL[c]), qBlue(CL[c]));
+          case 'B':
+            CL[c] = BGC;
+            break;
+          case 'C':
+            CL[c] = ComposeColor(CL[c], BGC);
+            break;
+          case 'R':
+            CL[c] = qRgb(qRed(CL[c]), qGreen(CL[c]), qBlue(CL[c]));
         }
       }
     }
@@ -1025,8 +1012,7 @@ void MainWindow::onPresetsClicked() {
     Manager->applyPreset(BLGlowing);
   }
 
-  if (ui->isMapSurvival->isChecked())
-    Manager->setEnabled(12, false);
+  if (ui->isMapSurvival->isChecked()) Manager->setEnabled(12, false);
 
   kernel->decreaseStep(SlopeCraft::step::nothing);
   updateEnables();
@@ -1039,23 +1025,16 @@ void MainWindow::onAlgoClicked() {
 
   SlopeCraft::convertAlgo now;
   const bool nowDither = ui->AllowDither->isChecked();
-  if (ui->isColorSpaceRGBOld->isChecked())
-    now = SlopeCraft::convertAlgo::RGB;
+  if (ui->isColorSpaceRGBOld->isChecked()) now = SlopeCraft::convertAlgo::RGB;
   if (ui->isColorSpaceRGB->isChecked())
     now = SlopeCraft::convertAlgo::RGB_Better;
-  if (ui->isColorSpaceHSV->isChecked())
-    now = SlopeCraft::convertAlgo::HSV;
-  if (ui->isColorSpaceLab94->isChecked())
-    now = SlopeCraft::convertAlgo::Lab94;
-  if (ui->isColorSpaceLab00->isChecked())
-    now = SlopeCraft::convertAlgo::Lab00;
-  if (ui->isColorSpaceXYZ->isChecked())
-    now = SlopeCraft::convertAlgo::XYZ;
-  if (ui->isColorSpaceAi->isChecked())
-    now = SlopeCraft::convertAlgo::gaCvter;
+  if (ui->isColorSpaceHSV->isChecked()) now = SlopeCraft::convertAlgo::HSV;
+  if (ui->isColorSpaceLab94->isChecked()) now = SlopeCraft::convertAlgo::Lab94;
+  if (ui->isColorSpaceLab00->isChecked()) now = SlopeCraft::convertAlgo::Lab00;
+  if (ui->isColorSpaceXYZ->isChecked()) now = SlopeCraft::convertAlgo::XYZ;
+  if (ui->isColorSpaceAi->isChecked()) now = SlopeCraft::convertAlgo::gaCvter;
 
-  if (lastChoice == SlopeCraft::convertAlgo::gaCvter)
-    kernelSetImg();
+  if (lastChoice == SlopeCraft::convertAlgo::gaCvter) kernelSetImg();
 
   if ((lastChoice != now) || (lastDither != nowDither))
     kernel->decreaseStep(SlopeCraft::step::convertionReady);
@@ -1066,15 +1045,11 @@ void MainWindow::onAlgoClicked() {
 }
 
 void MainWindow::kernelSetType() {
-
   SlopeCraft::mapTypes type = SlopeCraft::mapTypes::Slope;
   {
-    if (ui->isMapCreative->isChecked())
-      type = SlopeCraft::mapTypes::FileOnly;
-    if (ui->isMapFlat->isChecked())
-      type = SlopeCraft::mapTypes::Flat;
-    if (ui->isMapSurvival->isChecked())
-      type = SlopeCraft::mapTypes::Slope;
+    if (ui->isMapCreative->isChecked()) type = SlopeCraft::mapTypes::FileOnly;
+    if (ui->isMapFlat->isChecked()) type = SlopeCraft::mapTypes::Flat;
+    if (ui->isMapSurvival->isChecked()) type = SlopeCraft::mapTypes::Slope;
     /*
     if(ui->isMapWall->isChecked())
         type=SlopeCraft::mapTypes::Wall;*/
@@ -1082,22 +1057,14 @@ void MainWindow::kernelSetType() {
 
   SlopeCraft::gameVersion ver = SlopeCraft::gameVersion::MC19;
   {
-    if (ui->isGame12->isChecked())
-      ver = SlopeCraft::gameVersion::MC12;
-    if (ui->isGame13->isChecked())
-      ver = SlopeCraft::gameVersion::MC13;
-    if (ui->isGame14->isChecked())
-      ver = SlopeCraft::gameVersion::MC14;
-    if (ui->isGame15->isChecked())
-      ver = SlopeCraft::gameVersion::MC15;
-    if (ui->isGame16->isChecked())
-      ver = SlopeCraft::gameVersion::MC16;
-    if (ui->isGame17->isChecked())
-      ver = SlopeCraft::gameVersion::MC17;
-    if (ui->isGame18->isChecked())
-      ver = SlopeCraft::gameVersion::MC18;
-    if (ui->isGame19->isChecked())
-      ver = SlopeCraft::gameVersion::MC19;
+    if (ui->isGame12->isChecked()) ver = SlopeCraft::gameVersion::MC12;
+    if (ui->isGame13->isChecked()) ver = SlopeCraft::gameVersion::MC13;
+    if (ui->isGame14->isChecked()) ver = SlopeCraft::gameVersion::MC14;
+    if (ui->isGame15->isChecked()) ver = SlopeCraft::gameVersion::MC15;
+    if (ui->isGame16->isChecked()) ver = SlopeCraft::gameVersion::MC16;
+    if (ui->isGame17->isChecked()) ver = SlopeCraft::gameVersion::MC17;
+    if (ui->isGame18->isChecked()) ver = SlopeCraft::gameVersion::MC18;
+    if (ui->isGame19->isChecked()) ver = SlopeCraft::gameVersion::MC19;
   }
 
   bool allowedBaseColor[64];
@@ -1142,8 +1109,7 @@ EImage QImage2EImage(const QImage &qi) {
   const QRgb *CL = nullptr;
   for (int r = 0; r < ei.rows(); r++) {
     CL = (const QRgb *)qi.scanLine(r);
-    for (int c = 0; c < ei.cols(); c++)
-      ei(r, c) = CL[c];
+    for (int c = 0; c < ei.cols(); c++) ei(r, c) = CL[c];
   }
   return ei;
 }
@@ -1154,8 +1120,7 @@ QImage EImage2QImage(const EImage &ei, ushort scale) {
   QRgb *CL = nullptr;
   for (int r = 0; r < qi.height(); r++) {
     CL = (QRgb *)qi.scanLine(r);
-    for (int c = 0; c < qi.width(); c++)
-      CL[c] = ei(r / scale, c / scale);
+    for (int c = 0; c < qi.width(); c++) CL[c] = ei(r / scale, c / scale);
   }
   return qi;
 }
@@ -1195,34 +1160,28 @@ void MainWindow::on_Convert_clicked() {
   if (kernel->queryStep() < SlopeCraft::step::wait4Image) {
     qDebug("setType again");
     onBlockListChanged();
-    if (kernel->queryStep() < SlopeCraft::step::wait4Image)
-      return;
+    if (kernel->queryStep() < SlopeCraft::step::wait4Image) return;
   }
 
   if (kernel->queryStep() < SlopeCraft::step::convertionReady) {
     qDebug("setImage again");
     kernelSetImg();
-    if (kernel->queryStep() < SlopeCraft::step::convertionReady)
-      return;
+    if (kernel->queryStep() < SlopeCraft::step::convertionReady) return;
   }
 
   SlopeCraft::convertAlgo now = SlopeCraft::convertAlgo::RGB;
   bool nowDither = ui->AllowDither->isChecked();
   {
-    if (ui->isColorSpaceRGBOld->isChecked())
-      now = SlopeCraft::convertAlgo::RGB;
+    if (ui->isColorSpaceRGBOld->isChecked()) now = SlopeCraft::convertAlgo::RGB;
     if (ui->isColorSpaceRGB->isChecked())
       now = SlopeCraft::convertAlgo::RGB_Better;
-    if (ui->isColorSpaceHSV->isChecked())
-      now = SlopeCraft::convertAlgo::HSV;
+    if (ui->isColorSpaceHSV->isChecked()) now = SlopeCraft::convertAlgo::HSV;
     if (ui->isColorSpaceLab94->isChecked())
       now = SlopeCraft::convertAlgo::Lab94;
     if (ui->isColorSpaceLab00->isChecked())
       now = SlopeCraft::convertAlgo::Lab00;
-    if (ui->isColorSpaceXYZ->isChecked())
-      now = SlopeCraft::convertAlgo::XYZ;
-    if (ui->isColorSpaceAi->isChecked())
-      now = SlopeCraft::convertAlgo::gaCvter;
+    if (ui->isColorSpaceXYZ->isChecked()) now = SlopeCraft::convertAlgo::XYZ;
+    if (ui->isColorSpaceAi->isChecked()) now = SlopeCraft::convertAlgo::gaCvter;
   }
 
   proTracker = ui->ShowProgressABbar;
@@ -1231,7 +1190,7 @@ void MainWindow::on_Convert_clicked() {
   updateEnables();
 
   bool temp = false;
-  ui->Convert->setEnabled(temp); // 防止用户在繁忙时重复操作
+  ui->Convert->setEnabled(temp);  // 防止用户在繁忙时重复操作
   ui->isColorSpaceHSV->setEnabled(temp);
   ui->isColorSpaceRGB->setEnabled(temp);
   ui->isColorSpaceLab94->setEnabled(temp);
@@ -1251,7 +1210,7 @@ void MainWindow::on_Convert_clicked() {
   proTracker = nullptr;
 
   temp = true;
-  ui->Convert->setEnabled(temp); // 恢复锁定
+  ui->Convert->setEnabled(temp);  // 恢复锁定
   ui->isColorSpaceHSV->setEnabled(temp);
   ui->isColorSpaceRGB->setEnabled(temp);
   ui->isColorSpaceLab94->setEnabled(temp);
@@ -1286,12 +1245,10 @@ void MainWindow::on_ExData_clicked() {
 }
 
 void MainWindow::on_ExportFlatDiagram_clicked() {
-
   const QString path =
       QFileDialog::getSaveFileName(this, "保存为平面示意图", "", "*.png");
 
-  if (path.isEmpty())
-    return;
+  if (path.isEmpty()) return;
 
   ui->ExportFlatDiagram->setEnabled(false);
   ui->progressExFlatDiagram->setEnabled(false);
@@ -1406,8 +1363,7 @@ void MainWindow::on_ExportFlatDiagram_clicked() {
     // cout<<"\n\nrowOffset = "<<rowOffset<<"\n";
     //  write inversly
     for (int invIdx = 0; invIdx < numberRowsDigits; invIdx++) {
-      if (invIdx >= (int)str.size())
-        break;
+      if (invIdx >= (int)str.size()) break;
 
       // the reverse idx
       const char curChar = str[str.size() - 1 - invIdx];
@@ -1432,8 +1388,7 @@ void MainWindow::on_ExportFlatDiagram_clicked() {
     const int colOffset =
         leftBorderWidth + blockRowsCols * col + (blockRowsCols - charWidth) / 2;
     for (int invIdx = 0; invIdx < numberColsDigits; invIdx++) {
-      if (invIdx >= (int)str.size())
-        break;
+      if (invIdx >= (int)str.size()) break;
       const int curCharIdx = str[str.size() - 1 - invIdx] - '0';
 
       const int rowOffset =
@@ -1466,8 +1421,7 @@ void MainWindow::on_ExportFlatDiagram_clicked() {
         keepAwake(this);
       }
 
-      if (build(xPos, yPos, zPos) <= 0)
-        continue;
+      if (build(xPos, yPos, zPos) <= 0) continue;
 
       const int blockIdx = build(xPos, yPos, zPos) - 1;
 
@@ -1523,7 +1477,6 @@ void MainWindow::on_ExportFlatDiagram_clicked() {
 // Page5
 
 void MainWindow::on_Build4Lite_clicked() {
-
   bool naturalCompress = ui->AllowNaturalOpti->isChecked();
   bool forcedCompress = ui->AllowForcedOpti->isChecked();
   SlopeCraft::compressSettings cS;
@@ -1565,8 +1518,7 @@ void MainWindow::on_Build4Lite_clicked() {
       "  × Z:" + std::to_string(size3D[2])));
   proTracker = nullptr;
   updateEnables();
-  if (!isBatchOperating)
-    showPreview();
+  if (!isBatchOperating) showPreview();
 }
 
 void MainWindow::on_ManualPreview_clicked() { showPreview(); }
@@ -1574,7 +1526,6 @@ void MainWindow::on_ManualPreview_clicked() { showPreview(); }
 void MainWindow::on_ExportLite_clicked() { onExportLiteclicked(""); }
 
 void MainWindow::onExportLiteclicked(QString path) {
-
   std::string FileName;
   if (path.isEmpty()) {
     QStringList suffixes({tr("投影文件 (*.litematic)"),
@@ -1601,8 +1552,7 @@ void MainWindow::onExportLiteclicked(QString path) {
   }
   // std::string unCompressed;
   char failed_file_name[512] = "";
-  if (FileName.empty())
-    return;
+  if (FileName.empty()) return;
   const bool putLitematic =
       (FileName.substr(FileName.length() - strlen(".litematic")) ==
        ".litematic");
@@ -1655,12 +1605,10 @@ void MainWindow::onExportLiteclicked(QString path) {
     for (int d = 0; d < 3; d++) {
       bool ok = true;
       int result = offsetSrc[d]->text().toInt(&ok);
-      if (ok)
-        offset[d] = result;
+      if (ok) offset[d] = result;
 
       result = weOffsetSrc[d]->text().toInt(&ok);
-      if (ok)
-        weOffset[d] = result;
+      if (ok) weOffset[d] = result;
     }
 
     kernel->exportAsWESchem(FileName.data(), offset, weOffset,
@@ -1785,7 +1733,6 @@ void MainWindow::turnCh() { switchLan(Language::ZH); }
 void MainWindow::turnEn() { switchLan(Language::EN); }
 
 void MainWindow::switchLan(Language lang) {
-
   emit Manager->translate(lang);
 
   if (lang == Language::EN) {
@@ -1819,77 +1766,77 @@ void MainWindow::showError(void *p, SlopeCraft::errorFlag error,
                        : (tr("\n具体信息：") + QString::fromStdString(msg));
 
   switch (error) {
-  case SlopeCraft::errorFlag::NO_ERROR_OCCUR:
-    return;
-  case SlopeCraft::errorFlag::UNKNOWN_MAJOR_GAME_VERSION:
-    title = tr("未知游戏版本");
-    text = detail;
-    break;
-  case SlopeCraft::errorFlag::EXPORT_SCHEM_BLOCK_PALETTE_OVERFLOW:
-    title = tr("导出原理图失败");
-    text = tr("方块种类超出上限。") + detail;
-    break;
-  case SlopeCraft::errorFlag::EXPORT_SCHEM_WRONG_EXTENSION:
-    title = tr("导出原理图失败");
-    text = tr("错误的文件扩展名") + detail;
-    break;
-  case SlopeCraft::errorFlag::EXPORT_SCHEM_HAS_INVALID_BLOCKS:
-    title = tr("导出原理图失败");
-    text = tr("三维结构中存在错误的方块") + detail;
-    break;
-  case SlopeCraft::errorFlag::EXPORT_SCHEM_FAILED_TO_CREATE_FILE:
-    title = tr("导出原理图失败");
-    text = tr("无法创建/打开文件") + detail;
-    break;
-  case SlopeCraft::errorFlag::EXPORT_SCHEM_MC12_NOT_SUPPORTED:
-    title = tr("导出 WorldEdit 原理图失败");
-    text = tr("不支持导出 1.12 "
-              "WorldEdit 原理图（.schematic 格式），仅支持.schem 格式") +
-           detail;
-    break;
-  case SlopeCraft::errorFlag::EXPORT_SCHEM_STRUCTURE_REQUIRES_AIR:
-    title = tr("导出原版结构方块文件失败");
-    text = tr("导出时指定不使用结构空位表示空气，但方块列表中不包含空气。") +
-           detail;
-    break;
+    case SlopeCraft::errorFlag::NO_ERROR_OCCUR:
+      return;
+    case SlopeCraft::errorFlag::UNKNOWN_MAJOR_GAME_VERSION:
+      title = tr("未知游戏版本");
+      text = detail;
+      break;
+    case SlopeCraft::errorFlag::EXPORT_SCHEM_BLOCK_PALETTE_OVERFLOW:
+      title = tr("导出原理图失败");
+      text = tr("方块种类超出上限。") + detail;
+      break;
+    case SlopeCraft::errorFlag::EXPORT_SCHEM_WRONG_EXTENSION:
+      title = tr("导出原理图失败");
+      text = tr("错误的文件扩展名") + detail;
+      break;
+    case SlopeCraft::errorFlag::EXPORT_SCHEM_HAS_INVALID_BLOCKS:
+      title = tr("导出原理图失败");
+      text = tr("三维结构中存在错误的方块") + detail;
+      break;
+    case SlopeCraft::errorFlag::EXPORT_SCHEM_FAILED_TO_CREATE_FILE:
+      title = tr("导出原理图失败");
+      text = tr("无法创建/打开文件") + detail;
+      break;
+    case SlopeCraft::errorFlag::EXPORT_SCHEM_MC12_NOT_SUPPORTED:
+      title = tr("导出 WorldEdit 原理图失败");
+      text = tr("不支持导出 1.12 "
+                "WorldEdit 原理图（.schematic 格式），仅支持.schem 格式") +
+             detail;
+      break;
+    case SlopeCraft::errorFlag::EXPORT_SCHEM_STRUCTURE_REQUIRES_AIR:
+      title = tr("导出原版结构方块文件失败");
+      text = tr("导出时指定不使用结构空位表示空气，但方块列表中不包含空气。") +
+             detail;
+      break;
 
-  case SlopeCraft::errorFlag::EMPTY_RAW_IMAGE:
-    title = tr("转化原图为地图画时出错");
-    text = tr("原图为空！你可能没有导入原图！");
-    break;
-  case SlopeCraft::errorFlag::DEPTH_3_IN_VANILLA_MAP:
-    title = tr("构建高度矩阵时出现错误");
-    text = tr(
-        "原版地图画不允许出现第三个阴影（不存在的几何关系不可能生存实装！）\n"
-        "请检查你的地图画类型，纯文件地图画不可以导出为投影！");
-    break;
-  case SlopeCraft::errorFlag::HASTY_MANIPULATION:
-    title = tr("跳步操作");
-    text = tr("SlopeCraft 不允许你跳步操作，请按照左侧竖边栏的顺序操作！");
-    break;
-  case SlopeCraft::errorFlag::LOSSYCOMPRESS_FAILED:
-    title = tr("有损压缩失败");
-    text = tr(
-        "在构建高度矩阵时，有损压缩失败，没能将地图画压缩到目标高度。 \
+    case SlopeCraft::errorFlag::EMPTY_RAW_IMAGE:
+      title = tr("转化原图为地图画时出错");
+      text = tr("原图为空！你可能没有导入原图！");
+      break;
+    case SlopeCraft::errorFlag::DEPTH_3_IN_VANILLA_MAP:
+      title = tr("构建高度矩阵时出现错误");
+      text = tr(
+          "原版地图画不允许出现第三个阴影（不存在的几何关系不可能生存实装！）\n"
+          "请检查你的地图画类型，纯文件地图画不可以导出为投影！");
+      break;
+    case SlopeCraft::errorFlag::HASTY_MANIPULATION:
+      title = tr("跳步操作");
+      text = tr("SlopeCraft 不允许你跳步操作，请按照左侧竖边栏的顺序操作！");
+      break;
+    case SlopeCraft::errorFlag::LOSSYCOMPRESS_FAILED:
+      title = tr("有损压缩失败");
+      text = tr(
+          "在构建高度矩阵时，有损压缩失败，没能将地图画压缩到目标高度。 \
         这可能是因为地图画行数过大。 \
         尝试启用无损压缩，或者提高最大允许高度");
-    break;
-  case SlopeCraft::errorFlag::MAX_ALLOWED_HEIGHT_LESS_THAN_14:
-    title = tr("最大允许高度太小了");
-    text = tr("有损压缩的最大允许不要低于 14，否则很容易压缩失败");
-    break;
-  case SlopeCraft::errorFlag::USEABLE_COLOR_TOO_FEW:
-    title = tr("允许使用的颜色过少");
-    text = tr("你应该勾选启用尽可能多的基色，颜色太少是不行的！");
-    break;
-  case SlopeCraft::errorFlag::FAILED_TO_COMPRESS:
-    title = tr("导出时 Gzip 压缩文件失败");
-    text = tr("这可能是因为路径中含有中文字符！");
-    break;
-  case SlopeCraft::errorFlag::FAILED_TO_REMOVE:
-    title = tr("删除临时文件失败");
-    text = tr("这可能是因为路径中含有中文字符！");
-    break;
+      break;
+    case SlopeCraft::errorFlag::MAX_ALLOWED_HEIGHT_LESS_THAN_14:
+      title = tr("最大允许高度太小了");
+      text = tr("有损压缩的最大允许不要低于 14，否则很容易压缩失败");
+      break;
+    case SlopeCraft::errorFlag::USEABLE_COLOR_TOO_FEW:
+      title = tr("允许使用的颜色过少");
+      text = tr("你应该勾选启用尽可能多的基色，颜色太少是不行的！");
+      break;
+    case SlopeCraft::errorFlag::FAILED_TO_COMPRESS:
+      title = tr("导出时 Gzip 压缩文件失败");
+      text = tr("这可能是因为路径中含有中文字符！");
+      break;
+    case SlopeCraft::errorFlag::FAILED_TO_REMOVE:
+      title = tr("删除临时文件失败");
+      text = tr("这可能是因为路径中含有中文字符！");
+      break;
   }
   if (isFatal)
     QMessageBox::warning(wind, title, text + detail,
@@ -1912,48 +1859,47 @@ void MainWindow::showWorkingStatue(void *p, SlopeCraft::workStatues statue) {
     title = title.left(title.lastIndexOf(spacer));
   }
 
-  if (statue != SlopeCraft::workStatues::none)
-    title += spacer;
+  if (statue != SlopeCraft::workStatues::none) title += spacer;
 
   switch (statue) {
-  case SlopeCraft::workStatues::none:
-    break;
-  case SlopeCraft::workStatues::buidingHeighMap:
-    title += tr("正在构建高度矩阵");
-    break;
-  case SlopeCraft::workStatues::building3D:
-    title += tr("正在构建三维结构");
-    break;
-  case SlopeCraft::workStatues::collectingColors:
-    title += tr("正在收集整张图片的颜色");
-    break;
-  case SlopeCraft::workStatues::compressing:
-    title += tr("正在压缩立体地图画");
-    break;
-  case SlopeCraft::workStatues::constructingBridges:
-    title += tr("正在为立体地图画搭桥");
-    break;
-  case SlopeCraft::workStatues::converting:
-    title += tr("正在匹配颜色");
-    break;
-  case SlopeCraft::workStatues::dithering:
-    title += tr("正在使用抖动仿色");
-    break;
-  case SlopeCraft::workStatues::flippingToWall:
-    title += tr("正在将平板地图画变为墙面地图画");
-    break;
-  case SlopeCraft::workStatues::writing3D:
-    title += tr("正在写入三维结构");
-    break;
-  case SlopeCraft::workStatues::writingBlockPalette:
-    title += tr("正在写入方块列表");
-    break;
-  case SlopeCraft::workStatues::writingMapDataFiles:
-    title += tr("正在写入地图数据文件");
-    break;
-  case SlopeCraft::workStatues::writingMetaInfo:
-    title += tr("正在写入基础信息");
-    break;
+    case SlopeCraft::workStatues::none:
+      break;
+    case SlopeCraft::workStatues::buidingHeighMap:
+      title += tr("正在构建高度矩阵");
+      break;
+    case SlopeCraft::workStatues::building3D:
+      title += tr("正在构建三维结构");
+      break;
+    case SlopeCraft::workStatues::collectingColors:
+      title += tr("正在收集整张图片的颜色");
+      break;
+    case SlopeCraft::workStatues::compressing:
+      title += tr("正在压缩立体地图画");
+      break;
+    case SlopeCraft::workStatues::constructingBridges:
+      title += tr("正在为立体地图画搭桥");
+      break;
+    case SlopeCraft::workStatues::converting:
+      title += tr("正在匹配颜色");
+      break;
+    case SlopeCraft::workStatues::dithering:
+      title += tr("正在使用抖动仿色");
+      break;
+    case SlopeCraft::workStatues::flippingToWall:
+      title += tr("正在将平板地图画变为墙面地图画");
+      break;
+    case SlopeCraft::workStatues::writing3D:
+      title += tr("正在写入三维结构");
+      break;
+    case SlopeCraft::workStatues::writingBlockPalette:
+      title += tr("正在写入方块列表");
+      break;
+    case SlopeCraft::workStatues::writingMapDataFiles:
+      title += tr("正在写入地图数据文件");
+      break;
+    case SlopeCraft::workStatues::writingMetaInfo:
+      title += tr("正在写入基础信息");
+      break;
   }
 
   wind->setWindowTitle(title);
@@ -1978,7 +1924,6 @@ void MainWindow::on_reportBugs_clicked() {
 }
 
 void MainWindow::checkVersion() {
-
   // QtConcurrent::run(grabVersion,this);
   grabVersion(false);
   return;
@@ -1989,10 +1934,8 @@ QJsonObject MainWindow::GithubAPIJson2Latest3xVer(const QJsonArray &ja) {
     const QJsonObject &jo = jvref.toObject();
     const QString tagName = jo["tag_name"].toString();
     qDebug().noquote().nospace() << "tagName=" << tagName;
-    if (jo["prerelease"] == true)
-      continue;
-    if (jo["draft"] == true)
-      continue;
+    if (jo["prerelease"] == true) continue;
+    if (jo["draft"] == true) continue;
     if (tagName.startsWith("v3.", Qt::CaseInsensitive) ||
         tagName.startsWith("v5.", Qt::CaseInsensitive)) {
       qDebug() << "chosen latest version : " << tagName;
@@ -2101,7 +2044,6 @@ void MainWindow::grabVersion(bool isAuto) {
     isRunning = false;
     return;
   } else {
-
     auto verDialog = new VersionDialog(this);
     verDialog->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
     verDialog->setTexts(QObject::tr("SlopeCraft 已更新"),
@@ -2176,22 +2118,22 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {
-
   switch (event->key()) {
-  case Qt::Key::Key_F5: {
-    QString destName = QFileDialog::getSaveFileName(
-        this, tr("保存截屏"), "", tr("图片 (*.jpg *.jpeg *.tif *.bmp *.png)"));
+    case Qt::Key::Key_F5: {
+      QString destName = QFileDialog::getSaveFileName(
+          this, tr("保存截屏"), "",
+          tr("图片 (*.jpg *.jpeg *.tif *.bmp *.png)"));
 
-    if (destName.isEmpty()) {
+      if (destName.isEmpty()) {
+        break;
+      }
+
+      QPixmap pix = this->grab();
+      pix.save(destName);
       break;
     }
-
-    QPixmap pix = this->grab();
-    pix.save(destName);
-    break;
-  }
-  default:
-    break;
+    default:
+      break;
   }
 
   QMainWindow::keyPressEvent(event);
@@ -2219,7 +2161,6 @@ void MainWindow::selectBlockByString(const std::string &key) {
   Manager->getTokiBaseColors(&tbcs);
 
   for (uint8_t baseColor = 0; baseColor < tbcs.size(); baseColor++) {
-
     std::vector<const TokiBlock *> tbs;
     tbcs[baseColor]->getTokiBlockList(tbs);
     for (uint16_t idx = 0; idx < tbs.size(); idx++) {
@@ -2233,18 +2174,18 @@ void MainWindow::selectBlockByString(const std::string &key) {
 }
 
 void MainWindow::onActionSavePreset() {
-  QString dst =
-      QFileDialog::getSaveFileName(this, tr("保存预设"), "", "*.scPreset.json");
-  if (dst.isEmpty())
-    return;
+  QString dst = QFileDialog::getSaveFileName(
+      this, tr("保存预设"), "",
+      QStringLiteral("*") + MainWindow::sc_preset_extension);
+  if (dst.isEmpty()) return;
   Manager->savePreset(dst);
 }
 
 void MainWindow::onActionLoadPreset() {
   QString src = QFileDialog::getOpenFileName(
-      this, tr("选择预设文件"), this->prevOpenedDir, "*.scPreset.json");
-  if (src.isEmpty())
-    return;
+      this, tr("选择预设文件"), this->prevOpenedDir,
+      QStringLiteral("*") + MainWindow::sc_preset_extension);
+  if (src.isEmpty()) return;
 
   this->prevOpenedDir = QFileInfo(src).filePath();
   Manager->loadPreset(src);
@@ -2309,7 +2250,6 @@ void MainWindow::on_ExWESchem_clicked() {
 }
 
 void MainWindow::exportAvailableColors() {
-
   constexpr int basecolors_per_row = 4;
   constexpr int basecolors_per_col = 16;
 
