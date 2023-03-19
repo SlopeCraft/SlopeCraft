@@ -37,7 +37,7 @@ class PreviewWind;
 class PreviewWind : public QMainWindow {
   Q_OBJECT
 
-public:
+ public:
   explicit PreviewWind(QWidget *parent = nullptr);
 
   std::vector<const QRadioButton *> Src;
@@ -50,12 +50,12 @@ public:
   void showConvertedImage(const QImage &);
   ~PreviewWind();
 
-private slots:
+ private slots:
   void on_SwitchUnit_clicked(bool checked);
 
-private:
+ private:
   Ui::PreviewWind *ui;
 };
 
 QString blockCount2string(int, int = 64);
-#endif // PREVIEWWIND_H
+#endif  // PREVIEWWIND_H

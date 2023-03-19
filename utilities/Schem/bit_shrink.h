@@ -59,11 +59,10 @@ void shrink_bytes_weSchem(const uint16_t *src, const size_t src_count,
                           std::vector<uint8_t> *const dest) noexcept;
 
 class __mushroom_sides {
-
-private:
+ private:
   uint8_t val{0b111111};
 
-public:
+ public:
   __mushroom_sides() = default;
   __mushroom_sides(uint8_t _) : val(_) {}
 
@@ -75,11 +74,12 @@ public:
 
   inline void set_full() noexcept { val = 0b111111; }
 
-  template <side_t side> struct proxy_ref {
-  private:
+  template <side_t side>
+  struct proxy_ref {
+   private:
     uint8_t *const data;
 
-  public:
+   public:
     proxy_ref(uint8_t *__data) : data(__data) {}
     proxy_ref(__mushroom_sides *thisptr) : data(&thisptr->val) {}
     static constexpr uint8_t mask = 1U << uint8_t(side);
@@ -136,30 +136,30 @@ public:
       const side_t dir = side_t(dir_v);
       const char *dir_value = nullptr;
       switch (dir) {
-      case side_t::up:
-        val += "up=";
-        dir_value = up() ? "true" : "false";
-        break;
-      case side_t::down:
-        val += "down=";
-        dir_value = down() ? "true" : "false";
-        break;
-      case side_t::north:
-        val += "north=";
-        dir_value = north() ? "true" : "false";
-        break;
-      case side_t::south:
-        val += "south=";
-        dir_value = south() ? "true" : "false";
-        break;
-      case side_t::east:
-        val += "east=";
-        dir_value = east() ? "true" : "false";
-        break;
-      case side_t::west:
-        val += "west=";
-        dir_value = west() ? "true" : "false";
-        break;
+        case side_t::up:
+          val += "up=";
+          dir_value = up() ? "true" : "false";
+          break;
+        case side_t::down:
+          val += "down=";
+          dir_value = down() ? "true" : "false";
+          break;
+        case side_t::north:
+          val += "north=";
+          dir_value = north() ? "true" : "false";
+          break;
+        case side_t::south:
+          val += "south=";
+          dir_value = south() ? "true" : "false";
+          break;
+        case side_t::east:
+          val += "east=";
+          dir_value = east() ? "true" : "false";
+          break;
+        case side_t::west:
+          val += "west=";
+          dir_value = west() ? "true" : "false";
+          break;
       }
       val += dir_value;
       val.push_back(',');
@@ -212,4 +212,4 @@ public:
   }
 };
 
-#endif // SCHEM_BITSHRINK_H
+#endif  // SCHEM_BITSHRINK_H

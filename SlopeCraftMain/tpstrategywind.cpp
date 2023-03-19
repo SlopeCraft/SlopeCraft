@@ -85,8 +85,7 @@ void tpStrategyWind::grabTpSInfo() {
 
 void tpStrategyWind::on_isBGCCustom_clicked() {
   QColor Temp = QColorDialog::getColor();
-  if (!Temp.isValid())
-    return;
+  if (!Temp.isValid()) return;
   BackGroundColor = qRgb(Temp.red(), Temp.green(), Temp.blue());
   QPalette temp;
   temp.setColor(QPalette::Window, Temp);
