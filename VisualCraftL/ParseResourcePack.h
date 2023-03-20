@@ -472,13 +472,20 @@ struct model_pass_t {
   bool uvlock{false};
 };
 
-using state_list = std::vector<state>;
+class state_list : public std::vector<state> {
+ public:
+  size_t num_1() const noexcept;
+  bool euqals(const state_list &another) const noexcept;
+  bool contains(const state_list &another) const noexcept;
+
+  // bool contains_auto(const state_list &another) noexcept;
+};
 
 bool process_full_id(std::string_view full_id, std::string *namespace_name,
                      std::string *pure_id, state_list *states) noexcept;
 
-/// @return true if sla is equal to slb
-bool match_state_list(const state_list &sla, const state_list &slb) noexcept;
+// bool state_list_equals(const state_list &sla, const state_list &slb)
+// noexcept;
 
 class block_states_variant {
  public:

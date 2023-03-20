@@ -33,24 +33,60 @@ using namespace resource_json;
 
 using njson = nlohmann::json;
 
-bool resource_json::match_state_list(const state_list &sla,
-                                     const state_list &slb) noexcept {
-  if (sla.size() <= 0) return true;
-  if (sla.size() != slb.size()) return false;
+size_t resource_json::state_list::num_1() const noexcept {
+  size_t counter = 0;
+  for (const auto &s : *this) {
+    if (s.value.empty()) {
+      counter++;
+    }
+  }
+  return counter;
+}
+
+bool resource_json::state_list::euqals(
+    const state_list &another) const noexcept {
+  if (this->size() <= 0) return true;
+  if (this->size() != another.size()) return false;
   int match_num = 0;
-  for (const state &sa : sla) {
-    for (const state &sb : slb) {
+  for (const state &sa : *this) {
+    for (const state &sb : another) {
       if ((sa.key == sb.key) && (sa.value == sb.value)) {
         match_num++;
       }
     }
   }
 
-  if (match_num < int(sla.size())) {
+  if (match_num < int(this->size())) {
     return false;
   } else {
     return true;
   }
+}
+
+bool resource_json::state_list::contains(
+    const state_list &another) const noexcept {
+  if (another.size() > this->size()) {
+    return false;
+  }
+
+  for (const state &s_json : another) {
+    bool is_current_state_matched = false;
+    for (const state &s_block : *this) {
+      if (s_json.key != s_block.key) {
+        continue;
+      }
+
+      if (s_block.value == s_json.value) {
+        is_current_state_matched = true;
+        break;
+      }
+    }
+    if (!is_current_state_matched) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 bool resource_json::match_criteria_list(const criteria_list_and &cl,
@@ -83,11 +119,11 @@ bool resource_json::match_criteria_list(const criteria_list_and &cl,
 }
 
 model_pass_t block_states_variant::block_model_name(
-    const state_list &sl) const noexcept {
+    const state_list &sl_blk) const noexcept {
   model_pass_t res;
   res.model_name = nullptr;
   for (const auto &pair : this->LUT) {
-    if (match_state_list(pair.first, sl)) {
+    if (sl_blk.contains(pair.first)) {
       res = model_pass_t(pair.second);
       return res;
     }
@@ -100,6 +136,11 @@ void block_states_variant::sort() noexcept {
   std::sort(LUT.begin(), LUT.end(),
             [](const std::pair<state_list, model_store_t> &a,
                const std::pair<state_list, model_store_t> &b) -> bool {
+              const size_t a_1 = a.first.num_1();
+              const size_t b_1 = b.first.num_1();
+              if (a_1 != b_1) {
+                return a_1 < b_1;
+              }
               return a.first.size() > b.first.size();
             });
 }
