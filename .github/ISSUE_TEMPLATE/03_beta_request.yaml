@@ -1,5 +1,5 @@
-name: Beta Request
-description: Request a beta version
+name: "Beta Request"
+description: "Request a beta version"
 title: "[BETA]: "
 assignees: ["ToKiNoBug", "Cubik65536"]
 

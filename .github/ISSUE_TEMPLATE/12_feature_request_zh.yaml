@@ -1,5 +1,5 @@
-name: 功能请求
-description: 为 SlopeCraft 提供方案或解决思路
+name: "功能请求"
+description: "为 SlopeCraft 提供方案或解决思路"
 title: "[功能请求]: "
 labels: ["enhancement"]
 assignees: ["ToKiNoBug", "Cubik65536"]

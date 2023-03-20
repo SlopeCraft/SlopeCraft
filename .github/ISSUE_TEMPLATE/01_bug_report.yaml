@@ -1,5 +1,5 @@
-name: Bug report
-description: Create a report to help us improve SlopeCraft
+name: "Bug Report"
+description: "Create a report to help us improve SlopeCraft"
 title: "[Bug]: "
 labels: ["bug"]
 assignees: ["ToKiNoBug", "Cubik65536"]

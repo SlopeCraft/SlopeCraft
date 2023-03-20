@@ -1,5 +1,5 @@
-name: Feature request
-description: Suggest an idea for SlopeCraft
+name: "Feature Request"
+description: "Suggest an idea for SlopeCraft"
 title: "[Feature Request]: "
 labels: ["enhancement"]
 assignees: ["ToKiNoBug", "Cubik65536"]
