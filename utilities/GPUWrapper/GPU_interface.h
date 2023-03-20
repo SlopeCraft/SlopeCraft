@@ -23,11 +23,17 @@ This file is part of SlopeCraft.
 #ifndef SLOPECRAFT_UTILITIES_GPUWRAPPER_GPUINTERFACE_H
 #define SLOPECRAFT_UTILITIES_GPUWRAPPER_GPUINTERFACE_H
 
+#include "../SC_GlobalEnums.h"
 #include <array>
 #include <string>
-#include <utilities/SC_GlobalEnums.h>
 
 namespace gpu_wrapper {
+
+#ifdef SLOPECRAFT_GPU_API
+static constexpr bool have_api = true;
+#else
+static constexpr bool have_api = false;
+#endif // #ifdef SLOPECRAFT_GPU_API
 
 const char *api_name() noexcept;
 
