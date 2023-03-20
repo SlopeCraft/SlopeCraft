@@ -89,8 +89,9 @@ bool resource_json::state_list::contains(
   return true;
 }
 
-bool resource_json::match_criteria_list(const criteria_list_and &cl,
-                                        const state_list &sl) noexcept {
+bool resource_json::criteria_list_and::match(
+    const state_list &sl) const noexcept {
+  const auto &cl = *this;
   int match_num = 0;
   for (const criteria &c : cl) {
     std::string_view key = c.key;
@@ -116,6 +117,54 @@ bool resource_json::match_criteria_list(const criteria_list_and &cl,
     return false;
   }
   return true;
+}
+
+bool resource_json::match_criteria_list(const criteria_list_and &cl,
+                                        const state_list &sl) noexcept {
+  return cl.match(sl);
+}
+
+bool resource_json::multipart_pair::match(const state_list &sl) const noexcept {
+  const resource_json::criteria *when =
+      std::get_if<resource_json::criteria>(&this->criteria_variant);
+  if (when != nullptr) {
+    std::string_view key = when->key;
+    const char *slvalue = nullptr;
+    for (const state &s : sl) {
+      if (s.key == key) {
+        slvalue = s.value.data();
+        break;
+      }
+    }
+    // if sl don't have a value for the key of criteria, it is considered as
+    // mismatch
+    if (slvalue == nullptr) {
+      return false;
+    }
+
+    return when->match(slvalue);
+  }
+
+  if (std::get_if<criteria_all_pass>(&this->criteria_variant) != nullptr) {
+    return true;
+  }
+
+  const auto &when_or = std::get<criteria_list_or_and>(this->criteria_variant);
+
+  size_t counter = 0;
+  for (const criteria_list_and &cl : when_or.components) {
+    if (cl.match(sl)) {
+      counter++;
+    }
+  }
+
+  if (when_or.is_or) {
+    return counter > 0;
+  } else {
+    return counter >= when_or.components.size();
+  }
+
+  return false;
 }
 
 model_pass_t block_states_variant::block_model_name(

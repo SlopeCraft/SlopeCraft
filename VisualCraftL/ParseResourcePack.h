@@ -514,7 +514,10 @@ struct criteria {
   }
 };
 
-using criteria_list_and = std::vector<criteria>;
+class criteria_list_and : public std::vector<criteria> {
+ public:
+  bool match(const state_list &sl) const noexcept;
+};
 
 struct criteria_list_or_and {
   std::vector<criteria_list_and> components;
@@ -524,10 +527,11 @@ struct criteria_list_or_and {
 struct criteria_all_pass {};
 
 /// @return true if sl matches every criteria in cl
-bool match_criteria_list(const criteria_list_and &cl,
-                         const state_list &sl) noexcept;
+[[deprecated]] bool match_criteria_list(const criteria_list_and &cl,
+                                        const state_list &sl) noexcept;
 
-struct multipart_pair {
+class multipart_pair {
+ public:
   std::variant<criteria, criteria_list_or_and, criteria_all_pass>
       criteria_variant;
   std::vector<model_store_t> apply_blockmodel;
@@ -536,49 +540,7 @@ struct multipart_pair {
   std::vector<criteria_list_and> when_or;
   */
 
-  inline bool match(const state_list &sl) const noexcept {
-    const resource_json::criteria *when =
-        std::get_if<resource_json::criteria>(&this->criteria_variant);
-    if (when != nullptr) {
-      std::string_view key = when->key;
-      const char *slvalue = nullptr;
-      for (const state &s : sl) {
-        if (s.key == key) {
-          slvalue = s.value.data();
-          break;
-        }
-      }
-      // if sl don't have a value for the key of criteria, it is considered as
-      // mismatch
-      if (slvalue == nullptr) {
-        return false;
-      }
-
-      return when->match(slvalue);
-    }
-
-    if (std::get_if<criteria_all_pass>(&this->criteria_variant) != nullptr) {
-      return true;
-    }
-
-    const auto &when_or =
-        std::get<criteria_list_or_and>(this->criteria_variant);
-
-    size_t counter = 0;
-    for (const criteria_list_and &cl : when_or.components) {
-      if (match_criteria_list(cl, sl)) {
-        counter++;
-      }
-    }
-
-    if (when_or.is_or) {
-      return counter > 0;
-    } else {
-      return counter >= when_or.components.size();
-    }
-
-    return false;
-  }
+  bool match(const state_list &sl) const noexcept;
 };
 
 class block_state_multipart {
