@@ -1,0 +1,22 @@
+name: 其他
+description: 其他类型的问题
+title: "[其他]: "
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > ### 重要！ :warning:
+        > 
+        > issue 专为报告问题以及请求新功能而设。这意味着我们不会在此处接受任何关于使用的问题。
+        > 如果您打开的 issue 不符合要求，它将被关闭。
+        >
+        > 对于使用上的问题，请参考以下资源：
+        > * [在讨论区搜索或提问](https://github.com/SlopeCraft/SlopeCraft/discussions)
+
+  - type: textarea
+    id: description
+    validations:
+      required: true
+    attributes:
+      label: 描述

@@ -1,0 +1,31 @@
+name: Beta 申请
+description: 申请试用版
+title: "[BETA]: "
+assignees: ["ToKiNoBug", "Cubik65536"]
+
+body:
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: “我确认："
+      options:
+        - label: 我希望试用 SlopeCraft 的测试版。
+          required: false
+        - label: 我希望试用 VisualCraft 的测试版。
+          required: false
+        - label: 我明白测试版可能会有错误和不稳定。
+          required: true
+        - label: 我愿意报告错误并提供反馈。
+          required: true
+
+  - type: textarea
+    id: contact
+    validations:
+      required: true
+    attributes:
+      label: 联系方式
+      description: |
+        请请提供您的电子邮件地址或其他联系方式。
+      value: |
+        电子邮件：<您的电子邮件地址>
+      render: Markdown

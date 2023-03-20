@@ -1,0 +1,67 @@
+name: 功能请求
+description: 为 SlopeCraft 提供方案或解决思路
+title: "[功能请求]: "
+labels: ["enhancement"]
+assignees: ["ToKiNoBug", "Cubik65536"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢您为 SlopeCraft 提供新的方案或解决思路！
+        
+        > ### 重要！ :warning:
+        > 
+        > issue 专为报告问题以及请求新功能而设。这意味着我们不会在此处接受任何关于使用的问题。
+        > 如果您打开的 issue 不符合要求，它将被关闭。
+        >
+        > 对于使用上的问题，请参考以下资源：
+        > * [在讨论区搜索或提问](https://github.com/SlopeCraft/SlopeCraft/discussions)
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: "请选择："
+      options:
+        - label: 我正在着手增加这个功能
+          required: false
+
+  - type: textarea
+    id: solution-description
+    validations:
+      required: true
+    attributes:
+      label: 描述您想要的解决方案
+      description: 清晰简洁的描述您想要的解决方案
+
+  - type: textarea
+    id: alternative-description
+    attributes:
+      label: 描述您考虑过的替代方案
+      description: 清晰简洁的描述您考虑过的替代解决方案或功能。
+
+  - type: textarea
+    id: anything-else
+    attributes:
+      label: 还有其他的吗？
+      description: 在此处添加任何与功能请求相关的内容、代码示例或现有实现。
+
+  - type: markdown
+    attributes:
+      value: |
+        ---------
+        
+        在您提交本 issue 之前，请确认以下内容：
+        
+        **1. 是否已经有现有的 issue 请求了这个功能？**
+        
+        请确认是否已经有与该功能请求的 issue。
+        
+        ---------
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: 请确认以下条款
+      options:
+        - label: 我已经查看了 [已有 issue](https://github.com/SlopeCraft/SlopeCraft/issues) 并确定没有人提交过与此功能请求相关的 issue
+          required: true
