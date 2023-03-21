@@ -1,0 +1,22 @@
+name: "Others"
+description: "Others type of issue"
+title: "[Others]: "
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > ### Important! :warning:
+        > 
+        > The issue list is reserved exclusively for bug reports and feature requests. That means we do not accept usage questions.
+        > If you open an issue that does not conform to the requirements, it will be closed.
+        >
+        > For usage questions, please refer to the following resources:
+        >  * [Search or ask in Discussion](https://github.com/SlopeCraft/SlopeCraft/discussions)
+
+  - type: textarea
+    id: description
+    validations:
+      required: true
+    attributes:
+      label: Description

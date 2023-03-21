@@ -1,0 +1,67 @@
+name: "Feature Request"
+description: "Suggest an idea for SlopeCraft"
+title: "[Feature Request]: "
+labels: ["enhancement"]
+assignees: ["ToKiNoBug", "Cubik65536"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to request a feature for SlopeCraft!
+        
+        > ### Important! :warning:
+        > 
+        > The issue list is reserved exclusively for bug reports and feature requests. That means we do not accept usage questions.
+        > If you open an issue that does not conform to the requirements, it will be closed.
+        >
+        > For usage questions, please refer to the following resources:
+        >  * [Search or ask in Discussion](https://github.com/SlopeCraft/SlopeCraft/discussions)
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: "Please choose if applies:"
+      options:
+        - label: I'm currently working on adding this feature.
+          required: false
+
+  - type: textarea
+    id: solution-description
+    validations:
+      required: true
+    attributes:
+      label: Describe the solution you'd like
+      description: A clear and concise description of what you want to happen.
+
+  - type: textarea
+    id: alternative-description
+    attributes:
+      label: Describe alternatives you've considered
+      description: A clear and concise description of any alternative solutions or features you've considered.
+
+  - type: textarea
+    id: anything-else
+    attributes:
+      label: Anything else?
+      description: Add any other context, code examples, or references to existing implementations about the feature request here.
+
+  - type: markdown
+    attributes:
+      value: |
+        ---------
+        
+        Before you submit this issue, please confirm the following:
+        
+        **1. Is there an existing issue for this?**
+        
+        Please search to see if an issue related to this feature request already exists.
+        
+        ---------
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Please accept these terms
+      options:
+        - label: I have searched the [existing issues](https://github.com/SlopeCraft/SlopeCraft/issues) and this has not been posted before
+          required: true
