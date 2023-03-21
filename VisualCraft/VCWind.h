@@ -25,6 +25,7 @@ This file is part of SlopeCraft.
 
 #include <QMainWindow>
 #include <QNetworkAccessManager>
+#include <VCLConfigLoader.h>
 #include <VisualCraftL.h>
 #include <functional>
 #include <map>
@@ -99,9 +100,7 @@ public:
   explicit VCWind(QWidget *parent = nullptr);
   ~VCWind();
 
-  static std::string default_zip_12;
-  static std::string default_zip_latest;
-  static std::string default_json;
+  static VCL_config config;
 
   inline const auto &block_class_widgets() const noexcept {
     return this->map_VC_block_class;
@@ -210,6 +209,8 @@ private:
   QString update_gpu_device(QPoint current_choice) noexcept;
 private slots:
   // for all pages ------------------------------------------
+
+  void on_ac_flush_warnings_triggered() noexcept;
 
   // auto connected
   void on_tabWidget_main_currentChanged(int page) noexcept;

@@ -1,9 +1,37 @@
 {
-    "default_resource_pack_12": [
-        "@VCL_resource_12@"
-    ],
-    "default_resource_pack_latest": [
-        "@VCL_resource_latest@"
+    "default_resource_pack_zip": [
+        [
+            12,
+            "@VCL_resource_12@"
+        ],
+        [
+            13,
+            "@VCL_resource_13@"
+        ],
+        [
+            14,
+            "@VCL_resource_14@"
+        ],
+        [
+            15,
+            "@VCL_resource_15@"
+        ],
+        [
+            16,
+            "@VCL_resource_16@"
+        ],
+        [
+            17,
+            "@VCL_resource_17@"
+        ],
+        [
+            18,
+            "@VCL_resource_18@"
+        ],
+        [
+            19,
+            "@VCL_resource_19@"
+        ]
     ],
     "default_block_state_list": [
         "@CMAKE_SOURCE_DIR@/VisualCraftL/VCL_blocks_fixed.json"

@@ -71,3 +71,4 @@ build/*
 binaries/*
 .vscode/*
 .vs/*
+.cache/*

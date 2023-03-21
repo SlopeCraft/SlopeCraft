@@ -8,8 +8,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     set(vccl_win_sources ${CMAKE_CURRENT_BINARY_DIR}/others/vccl.rc)
 endif()
 
-include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_12.cmake)
-include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_latest.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips.cmake)
 
 configure_file(vccl-config-to-bin-dir.json.in vccl-config.json)
 
@@ -43,7 +42,7 @@ include(${CMAKE_SOURCE_DIR}/cmake/find_nlohmann_json.cmake)
 target_include_directories(vccl PRIVATE ${cli11_include_dir} ${SlopeCraft_Nlohmann_json_include_dir})
 
 find_package(OpenMP REQUIRED)
-target_link_libraries(vccl PRIVATE OpenMP::OpenMP_CXX)
+target_link_libraries(vccl PRIVATE OpenMP::OpenMP_CXX VCLConfigLoader)
 
 qt_finalize_executable(vccl)
 

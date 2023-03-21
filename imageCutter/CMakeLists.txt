@@ -7,7 +7,6 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools REQUIRED)
 
 set(imageCutter_header_files
@@ -33,18 +32,10 @@ set(imageCutter_ts_files
 if(${SlopeCraft_update_ts_files})
     # qt_add_lupdate(imageCutter TSFILES ${imageCutter_ts_files} CutterWind.ui SOURCES ${imageCutter_header_files} ${imageCutter_source_files})
     execute_process(
-        COMMAND ${SlopeCraft_Qt_lupdate_executable} CutterWind.ui ${imageCutter_header_files} ${imageCutter_source_files} "-ts" ${imageCutter_ts_files} -no-obsolete
+        COMMAND ${SlopeCraft_Qt_lupdate_executable} CutterWind.ui ${imageCutter_header_files} ${imageCutter_source_files} "-ts" ${imageCutter_ts_files} ${SlopeCraft_ts_flags}
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 endif()
 
-# message(STATUS "releasing resource files : " ${imageCutter_ts_files})
-set_source_files_properties(${imageCutter_ts_files}
-    PROPERTIES OUTPUT_LOCATION ${CMAKE_CURRENT_SOURCE_DIR})
-qt_add_translation(TEMP ${imageCutter_ts_files})
-
-# message(STATUS "TEMP = " ${TEMP})
-
-# execute_process(COMMAND ${SlopeCraft_Qt_lrelease_executable} ${imageCutter_ts_files} WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 set(imageCutter_project_sources
     CutterWind.h
     CutterWind.cpp
@@ -52,25 +43,20 @@ set(imageCutter_project_sources
     CutterWind.ui
     ${imageCutter_ts_files}
     ${imageCutter_windows_rc_files}
-    imageCutter_translate.qrc
 )
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(imageCutter
-        MANUAL_FINALIZATION
-        ${imageCutter_project_sources}
-    )
+qt_add_executable(imageCutter
+    MANUAL_FINALIZATION
+    ${imageCutter_project_sources})
 
-# qt_create_translation(imageCutter_qm_files ${CMAKE_SOURCE_DIR} ${imageCutter_ts_files})
-else()
-    if(ANDROID)
-        add_library(imageCutter SHARED ${imageCutter_project_sources})
-    else()
-        add_executable(imageCutter ${imageCutter_project_sources})
-    endif()
-
-    qt5_create_translation(imageCutter_qm_files ${CMAKE_SOURCE_DIR} ${imageCutter_ts_files})
-endif()
+# translation
+qt_add_lrelease(imageCutter TS_FILES ${imageCutter_ts_files}
+    QM_FILES_OUTPUT_VARIABLE imageCutter_qm_files)
+qt_add_resources(imageCutter "translations"
+    PREFIX "/i18n"
+    BASE ${CMAKE_CURRENT_BINARY_DIR}
+    FILES ${imageCutter_qm_files}
+)
 
 target_link_libraries(imageCutter
     PRIVATE
@@ -86,8 +72,6 @@ set_target_properties(imageCutter PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
-if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(imageCutter)
-endif()
+qt_finalize_executable(imageCutter)
 
 include(install.cmake)

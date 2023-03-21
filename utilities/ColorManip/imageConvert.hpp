@@ -337,7 +337,7 @@ private:
     const size_t taskCount = tasks.size();
 
 #pragma omp parallel for schedule(dynamic)
-    for (size_t taskIdx = 0; taskIdx < taskCount; taskIdx++) {
+    for (int taskIdx = 0; taskIdx < (int)taskCount; taskIdx++) {
       tasks[taskIdx]->second.compute(tasks[taskIdx]->first);
     }
     // #warning we should parallelize here

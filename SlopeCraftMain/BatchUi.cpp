@@ -25,10 +25,8 @@ This file is part of SlopeCraft.
 
 #include "MainWindow.h"
 
-BatchUi::BatchUi(BatchUi **_self, QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::BatchUi) {
+BatchUi::BatchUi(QWidget *parent) : QMainWindow(parent), ui(new Ui::BatchUi) {
   ui->setupUi(this);
-  self = _self;
   this->setAttribute(Qt::WA_QuitOnClose, false);
 
   // ui->setTypeLite->setChecked(false);
@@ -50,10 +48,7 @@ void BatchUi::closeEvent(QCloseEvent *event) {
   delete this;
 }
 
-BatchUi::~BatchUi() {
-  *self = nullptr;
-  delete ui;
-}
+BatchUi::~BatchUi() { delete ui; }
 
 void BatchUi::setTasks(const QStringList &fileNames) {
 

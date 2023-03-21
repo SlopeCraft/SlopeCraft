@@ -29,6 +29,9 @@ This file is part of SlopeCraft.
 #include <cstddef>
 #include <cstdlib>
 #include <iostream>
+
+#include <process_block_id.h>
+
 // no flip now
 inline uint64_t flip_byte_order(uint64_t val) noexcept {
   uint8_t *const data = reinterpret_cast<uint8_t *>(&val);
@@ -140,77 +143,18 @@ void shrink_bits(const uint16_t *const src, const size_t src_count,
   }
 }
 
-inline bool is_seperator(const char ch) noexcept {
-  switch (ch) {
-  case '[':
-  case ',':
-  case ']':
-    return true;
-  default:
-    return false;
-  }
-}
-
 bool process_block_id(
     const std::string_view id, std::string *const pure_id,
     std::vector<std::pair<std::string, std::string>> *const traits) {
   pure_id->clear();
   traits->clear();
 
-  if (id.find_first_of('[') != id.find_last_of('[')) {
-    // invalid block id
-    return false;
-  }
-  if (id.find_first_of(']') != id.find_last_of(']')) {
-    // invalid block id
-    return false;
-  }
+  std::string nsn{};
 
-  if (id.find('[') == std::string_view::npos) {
-    *pure_id = id;
-    return true;
-  }
+  bool ok = blkid::process_blk_id(id, &nsn, pure_id, traits);
 
-  const int traits_beg_idx = id.find_first_of('[');
-  *pure_id = id.substr(0, traits_beg_idx);
-
-  std::vector<int> keychars;
-  keychars.reserve(id.size() / 3);
-
-  int num_op_eq = 0;
-  int num_sep = 0;
-
-  for (int idx = traits_beg_idx; idx < int(id.size()); idx++) {
-    if (id[idx] == '=') {
-      keychars.push_back(idx);
-      num_op_eq++;
-    }
-    if (is_seperator(id[idx])) {
-      keychars.push_back(idx);
-      num_sep++;
-    }
-  }
-
-  if (num_op_eq + 1 != num_sep) {
-    // wrong block id
-    return false;
-  }
-
-  traits->reserve(num_op_eq);
-
-  for (int op_eq_idx_idx = 0; op_eq_idx_idx < num_op_eq; op_eq_idx_idx++) {
-    const int sep_beg_idx = keychars[2 * op_eq_idx_idx];
-    const int op_eq_idx = keychars[2 * op_eq_idx_idx + 1];
-    const int sep_tail_idx = keychars[2 * op_eq_idx_idx + 2];
-    traits->emplace_back();
-    const int key_length = op_eq_idx - sep_beg_idx - 1;
-    const int value_length = sep_tail_idx - op_eq_idx - 1;
-
-    traits->back().first = id.substr(sep_beg_idx + 1, key_length);
-    traits->back().second = id.substr(op_eq_idx + 1, value_length);
-  }
-
-  return true;
+  *pure_id = nsn + ':' + *pure_id;
+  return ok;
 }
 
 void shrink_bytes_weSchem(const uint16_t *src, const size_t src_count,

@@ -227,3 +227,10 @@ void VCWind::when_network_finished(QNetworkReply *reply,
     return;
   }
 }
+
+#include "CallbackFunctions.h"
+
+void VCWind::on_ac_flush_warnings_triggered() noexcept {
+  VC_callback::callback_receive_report(VCL_report_type_t::warning, "Flush\n",
+                                       true);
+}

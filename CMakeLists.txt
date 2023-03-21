@@ -4,17 +4,24 @@ set(SlopeCraft_version 5.0.0)
 
 project(SlopeCraft VERSION ${SlopeCraft_version} LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 20)
-
-# set(CMAKE_C_EXTENSIONS FALSE)
-# set(CMAKE_CXX_EXTENSIONS FALSE)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN TRUE)
 
 set(SlopeCraft_GPU_API "OpenCL" CACHE STRING "API used to compute. Valid values : OpenCL, None. Metal may be supported.")
 
+option(SlopeCraft_vectorize "Compile with vectorization" ON)
+
+option(SlopeCraft_update_ts_files "Update language files before build. If it is set to ON, everytime CMake reconfigure the project, all .ts files will be updated." OFF)
+
+option(SlopeCraft_update_ts_no_obsolete "Remove obsolete translations from ts files." OFF)
+
+option(SlopeCraft_gprof "Profile with gprof" OFF)
+
 if(${MSVC})
     add_compile_options("/Zc:__cplusplus")
     add_compile_options("/wd4819")
+    add_compile_definitions("ZLIB_WINAPI")
+    add_compile_definitions("Z_HAVE_UNISTD_H")
 else()
     add_compile_options(-Wall -Wreturn-type -Wsign-compare -Wextra)
     add_link_options(-flto)
@@ -49,21 +56,18 @@ include(cmake/find_HeuristicFlow.cmake)
 
 include(cmake/find_qt6.cmake)
 
-# If it is set to ON, everytime CMake reconfigure the project, all .ts files will be updated.
-if(NOT DEFINED SlopeCraft_update_ts_files)
-    option(SlopeCraft_update_ts_files "Update language files before build" OFF CACHE)
-endif()
-
 # set(SlopeCraft_update_ts_files ON)
 
 # find lupdate executable
 if(${SlopeCraft_update_ts_files} AND(NOT DEFINED SlopeCraft_Qt_lupdate_executable))
     find_program(SlopeCraft_Qt_lupdate_executable name lupdate PATHS ${CMAKE_PREFIX_PATH} REQUIRED)
     message(STATUS "Found lupdate at : " ${SlopeCraft_Qt_lupdate_executable})
-endif()
 
-if(NOT DEFINED SlopeCraft_vectorize)
-    option(SlopeCraft_vectorize "Compile with vectorization" ON)
+    if(${SlopeCraft_update_ts_no_obsolete})
+        set(SlopeCraft_ts_flags)
+    else()
+        set(SlopeCraft_ts_flags "-no-obsolete")
+    endif()
 endif()
 
 add_definitions("-D_USE_MATH_DEFINES")
@@ -99,8 +103,6 @@ endif()
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     add_compile_definitions("_CRT_SECURE_NO_WARNINGS")
 endif()
-
-set(SlopeCraft_gprof OFF CACHE BOOL "Profile with gprof")
 
 # profile with gprof
 if(${SlopeCraft_gprof})

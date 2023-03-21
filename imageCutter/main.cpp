@@ -37,28 +37,38 @@ int main(int argc, char *argv[]) {
   QTranslator translator;
   const QStringList uiLanguages = QLocale::system().uiLanguages();
 
-  if (QFile(":/i18n/imageCutter_en_US.qm").exists())
-    qDebug("成功找到资源文件");
-  else
-    qDebug("没有找到资源文件");
+  bool en_US = !uiLanguages.contains("zh");
 
-  if (uiLanguages.contains("zh-CN"))
-    goto makeWindow;
+  bool pop_suprise = false;
 
-  for (const QString &locale : uiLanguages) {
-    const QString baseName = "imageCutter_" + QLocale(locale).name();
-    if (translator.load(":/i18n/" + baseName)) {
-      a.installTranslator(&translator);
-      qDebug("成功加载翻译文件");
+  for (int i = 0; i < argc; i++) {
+    if (std::string_view(argv[i]) == "--lang-force-to-en") {
+      en_US = true;
       break;
+    }
+
+    if (std::string_view(argv[i]) == "--lang-force-to-zh") {
+      en_US = true;
+      break;
+    }
+
+    if (std::string_view(argv[i]) == "--pop-suprise") {
+      pop_suprise = true;
+      continue;
     }
   }
 
-makeWindow:
+  if (en_US) {
+    if (translator.load(":/i18n/imageCutter_en_US.qm")) {
+      a.installTranslator(&translator);
+    } else {
+      qDebug("Failed to load \":/i18n/imageCutter_en_US.qm\"");
+    }
+  }
 
   CutterWind w;
 
-  if (argc >= 2) {
+  if (pop_suprise) {
     int ret = QMessageBox::warning(
         &w, "SlopeCraft compile-time ERROR",
         "Cannot find hand_x128.dll : Hardware not "
@@ -66,7 +76,7 @@ makeWindow:
         "YOU\nHAVE_A_NICE_DAY_DONT_REPORT_THIS_AS_AN_ERROR_ITS_JUST_A_JOKE",
         "ReportError", "Exit", "Ok", 2);
     if (ret <= 0) {
-      QUrl url("https://github.com/ToKiNoBug/SlopeCraft/issues/new/choose");
+      QUrl url("https://github.com/SlopeCraft/SlopeCraft/issues/new/choose");
       QDesktopServices::openUrl(url);
     }
     exit(0);

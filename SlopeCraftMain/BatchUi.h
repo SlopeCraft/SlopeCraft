@@ -44,7 +44,7 @@ class BatchUi : public QMainWindow {
   Q_OBJECT
 
 public:
-  explicit BatchUi(BatchUi **, QWidget *parent);
+  explicit BatchUi(QWidget *parent);
   ~BatchUi();
   void setTasks(const QStringList &);
 
@@ -69,7 +69,6 @@ private slots:
 private:
   Ui::BatchUi *ui;
   std::vector<TaskBox *> taskBoxes;
-  BatchUi **self;
 
   auto ptr2It(TaskBox *widgetPtr) const;
   MainWindow *wind() const;

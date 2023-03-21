@@ -26,8 +26,7 @@ This file is part of SlopeCraft.
 #include "MainWindow.h"
 
 using namespace SlopeCraft;
-AiCvterParameterDialog::AiCvterParameterDialog(AiCvterParameterDialog **_self,
-                                               QWidget *parent)
+AiCvterParameterDialog::AiCvterParameterDialog(QWidget *parent)
     : QDialog(parent), ui(new Ui::AiCvterParameterDialog) {
   ui->setupUi(this);
 
@@ -52,15 +51,9 @@ AiCvterParameterDialog::AiCvterParameterDialog(AiCvterParameterDialog **_self,
 
   ui->enableFailTimes->setChecked(SCL_getMaxFailTimes(src) <
                                   SCL_getMaxGeneration(src));
-
-  self = _self;
-  *self = this;
 }
 
-AiCvterParameterDialog::~AiCvterParameterDialog() {
-  delete ui;
-  *self = nullptr;
-}
+AiCvterParameterDialog::~AiCvterParameterDialog() { delete ui; }
 
 void AiCvterParameterDialog::updateMaxFailTimes() {
   ui->maxFailTimes->setMaximum(ui->maxGeneration->value());

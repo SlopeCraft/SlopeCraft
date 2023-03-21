@@ -12,7 +12,6 @@ set(CMAKE_AUTORCC ON)
 
 find_package(ZLIB 1.2.11 REQUIRED)
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools REQUIRED)
 
 set(MapViewer_header_files
@@ -43,38 +42,24 @@ set(MapViewer_ts_files
 
 if(${SlopeCraft_update_ts_files})
     execute_process(
-        COMMAND ${SlopeCraft_Qt_lupdate_executable} MapViewerWind.ui ${MapViewer_header_files} ${MapViewer_source_files} "-ts" ${MapViewer_ts_files} -no-obsolete
+        COMMAND ${SlopeCraft_Qt_lupdate_executable} MapViewerWind.ui ${MapViewer_header_files} ${MapViewer_source_files} "-ts" ${MapViewer_ts_files} ${SlopeCraft_ts_flags}
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     )
 endif()
-
-set_source_files_properties(${MapViewer_ts_files}
-    PROPERTIES OUTPUT_LOCATION ${CMAKE_CURRENT_SOURCE_DIR})
-qt_add_translation(TEMP ${MapViewer_ts_files})
 
 set(MapViewer_project_sources
     ${MapViewer_header_files}
     ${MapViewer_source_files}
     MapViewerWind.ui
-    images.qrc
     ${MapViewer_ts_files}
     ${MapViewer_windows_rc_files}
 )
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(MapViewer
-        MANUAL_FINALIZATION
-        ${MapViewer_project_sources})
+qt_add_executable(MapViewer
+    MANUAL_FINALIZATION
+    ${MapViewer_project_sources})
 
 # qt_create_translation(MapViewer_qm_files ${CMAKE_SOURCE_DIR} ${MapViewer_ts_files})
-else()
-    if(ANDROID)
-        add_library(MapViewer SHARED ${MapViewer_project_sources})
-    else()
-        add_executable(MapViewer ${MapViewer_project_sources})
-    endif()
-endif()
-
 find_package(OpenMP REQUIRED)
 
 target_link_libraries(MapViewer
@@ -93,8 +78,15 @@ set_target_properties(MapViewer PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
-if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(MapViewer)
-endif()
+# translation
+qt_add_lrelease(MapViewer TS_FILES ${MapViewer_ts_files}
+    QM_FILES_OUTPUT_VARIABLE MapViewer_qm_files)
+qt_add_resources(MapViewer "translations"
+    PREFIX "/i18n"
+    BASE ${CMAKE_CURRENT_BINARY_DIR}
+    FILES ${MapViewer_qm_files}
+)
+
+qt_finalize_executable(MapViewer)
 
 include(install.cmake)

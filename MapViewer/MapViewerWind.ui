@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>SlopeCraft MapViewer</string>
+   <string notr="true">SlopeCraft MapViewer</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -312,8 +312,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>33</height>
+             <width>756</width>
+             <height>449</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="area_show_single_map_layout">
@@ -354,8 +354,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>44</height>
+             <width>756</width>
+             <height>462</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_5">
@@ -412,7 +412,7 @@
         <item row="1" column="1">
          <widget class="QLabel" name="label_show_compose_scaling">
           <property name="text">
-           <string>×1</string>
+           <string notr="true">×1</string>
           </property>
          </widget>
         </item>

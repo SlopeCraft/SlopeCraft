@@ -23,7 +23,6 @@ This file is part of SlopeCraft.
 #ifndef VERSIONDIALOG_H
 #define VERSIONDIALOG_H
 
-#include "ui_VersionDialog.h"
 #include <QCloseEvent>
 #include <QDialog>
 #include <QEvent>
@@ -38,7 +37,7 @@ class QWidget;
 class VersionDialog : public QDialog {
   Q_OBJECT
 public:
-  explicit VersionDialog(VersionDialog **self, QWidget *parent = nullptr);
+  explicit VersionDialog(QWidget *parent = nullptr);
   ~VersionDialog();
   enum userChoice { Yes, No, NoToAll };
 
@@ -67,8 +66,6 @@ protected:
 private:
   Ui::VersionDialog *ui;
   userChoice result;
-
-  VersionDialog **self;
 };
 
 #endif // VERSIONDIALOG_H

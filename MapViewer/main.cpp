@@ -35,13 +35,29 @@ int main(int argc, char *argv[]) {
 
   QTranslator translator;
   const QStringList uiLanguages = QLocale::system().uiLanguages();
-  for (const QString &locale : uiLanguages) {
-    const QString baseName = "MapViewer_" + QLocale(locale).name();
-    if (translator.load(":/i18n/" + baseName)) {
-      a.installTranslator(&translator);
+
+  bool en_US = !uiLanguages.contains("zh");
+
+  for (int i = 0; i < argc; i++) {
+    if (std::string_view(argv[i]) == "--lang-force-to-en") {
+      en_US = true;
+      break;
+    }
+
+    if (std::string_view(argv[i]) == "--lang-force-to-zh") {
+      en_US = true;
       break;
     }
   }
+
+  if (en_US) {
+    if (translator.load(":/i18n/MapViewer_en_US.qm")) {
+      a.installTranslator(&translator);
+    } else {
+      qDebug("Failed to load \":/i18n/MapViewer_en_US.qm\"");
+    }
+  }
+
   MapViewerWind w;
   w.show();
   return a.exec();

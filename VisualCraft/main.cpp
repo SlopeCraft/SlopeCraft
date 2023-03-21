@@ -21,13 +21,13 @@ This file is part of SlopeCraft.
 */
 
 #include <QApplication>
-
-#include "CallbackFunctions.h"
-#include "VCWind.h"
 #include <QDir>
 #include <QFile>
 #include <QMessageBox>
 #include <QTranslator>
+
+#include "CallbackFunctions.h"
+#include "VCWind.h"
 
 QNetworkAccessManager *global_manager{nullptr};
 
@@ -39,13 +39,25 @@ bool parse_config_json(QString &err) noexcept;
 int main(int argc, char **argv) {
   QApplication qapp(argc, argv);
   QDir::setCurrent(QCoreApplication::applicationDirPath());
-  QTranslator translator;
 
   ::is_language_ZH = QLocale::system().uiLanguages().contains("zh");
 
   // this line is used to test the translation
+
+  for (int i = 0; i < argc; i++) {
+    if (std::string_view(argv[i]) == "--lang-force-to-en") {
+      ::is_language_ZH = false;
+      break;
+    }
+    if (std::string_view(argv[i]) == "--lang-force-to-zh") {
+      ::is_language_ZH = true;
+      break;
+    }
+  }
+
   //::is_language_ZH = false;
 
+  QTranslator translator;
   if (!::is_language_ZH) {
     if (translator.load(":/i18n/VisualCraft_en_US.qm")) {
       qapp.installTranslator(&translator);
@@ -54,10 +66,10 @@ int main(int argc, char **argv) {
 
   if (!VCL_is_version_ok()) {
     QMessageBox::critical(
-        nullptr, VCWind::tr("VisualCraftL动态库版本不匹配"),
+        nullptr, VCWind::tr("VisualCraftL 动态库版本不匹配"),
         VCWind::tr(
-            "界面程序编译时使用的VisualCraftL版本为%"
-            "1，而VisualCraftL动态库的版本为%2。通常这是因为动态库版本过低。")
+            "界面程序编译时使用的 VisualCraftL 版本为%"
+            "1，而 VisualCraftL 动态库的版本为%2。通常这是因为动态库版本过低。")
             .arg(SC_VERSION_STR)
             .arg(VCL_version_string()));
     qapp.exit(1);
@@ -90,28 +102,16 @@ int main(int argc, char **argv) {
 
   wind.retrieve_latest_version(::url_for_update, manager, false);
 
-  return qapp.exec();
-}
+  int ret = qapp.exec();
 
-#include <fstream>
-#include <json.hpp>
+  return ret;
+}
 
 bool parse_config_json(QString &err) noexcept {
   err = "";
-  using njson = nlohmann::json;
-  njson jo;
 
-  try {
-    std::fstream file{"./vc-config.json"};
-    jo = njson::parse(file, nullptr, true, true);
-
-    VCWind::default_json = jo.at("default_block_state_list");
-    VCWind::default_zip_12 = jo.at("default_resource_pack_12");
-    VCWind::default_zip_latest = jo.at("default_resource_pack_latest");
-
-  } catch (std::exception &e) {
-    err =
-        VCWind::tr("无法加载配置文件\"./vc-config.json\"。\n%1").arg(e.what());
+  if (!load_config("./vc-config.json", VCWind::config)) {
+    err = VCWind::tr("无法加载配置文件\"./vc-config.json\"。\n%1").arg("");
     return false;
   }
 

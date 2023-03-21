@@ -1,5 +1,4 @@
-include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_12.cmake)
-include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips_for_VCL_latest.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/configure_images.cmake)
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/test_vccl_images)
@@ -15,11 +14,12 @@ set(dither "false")
 # set(dither "true" "false")
 foreach(_layers RANGE 1 3 1)
     foreach(_ver RANGE 12 19)
-        if(_ver EQUAL 12)
-            set(zip_file ${VCL_resource_12})
-            set(generate_schem)
-        else()
-            set(zip_file ${VCL_resource_latest})
+        set(VCL_current_var_name VCL_resource_${mcver})
+        set(zip_file ${VCL_current_var_name})
+
+        set(generate_schem)
+
+        if(NOT _ver EQUAL 12)
             set(generate_schem "--schem")
         endif()
 

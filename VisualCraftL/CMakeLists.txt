@@ -110,7 +110,8 @@ set(VCL_link_libs
     PNG::PNG
     ${VCL_libzip_additions}
     Schem
-    fmt::fmt)
+    fmt::fmt
+    ProcessBlockId)
 
 target_link_libraries(VisualCraftL PRIVATE ${VCL_link_libs})
 target_link_libraries(VisualCraftL_static PUBLIC ${VCL_link_libs})

@@ -423,7 +423,23 @@ bool TokiVC::set_resource_no_lock() noexcept {
   }
 
   TokiVC::pack.set_is_MC12(TokiVC::version == SCL_gameVersion::MC12);
-  TokiVC::pack.override_textures(TokiVC::biome, TokiVC::is_render_quality_fast);
+
+  {
+    std::vector<VCL_block *> blks;
+
+    TokiVC::bsl.available_block_states(TokiVC::version, TokiVC::exposed_face,
+                                       &blks);
+
+    const bool ok = TokiVC::pack.override_required_textures(
+        TokiVC::biome, TokiVC::is_render_quality_fast, blks.data(),
+        blks.size());
+    if (!ok) {
+      VCL_report(VCL_report_type_t::error, "Failed to override textures.");
+      return false;
+    }
+  }
+  // TokiVC::pack.override_textures(TokiVC::biome,
+  // TokiVC::is_render_quality_fast);
 
   TokiVC::bsl.update_foliages(!TokiVC::is_render_quality_fast);
 

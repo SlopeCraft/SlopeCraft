@@ -183,8 +183,10 @@ VCL_EXPORT_FUN void VCL_display_resource_pack(const VCL_resource_pack *rp,
           }
 
           // or_list
-          ss << "when_or : [";
-          for (const auto &cla : std::get<1>(mpp.criteria_variant)) {
+          ss << "when_"
+             << (std::get<1>(mpp.criteria_variant).is_or ? "or" : "and")
+             << " : [";
+          for (const auto &cla : std::get<1>(mpp.criteria_variant).components) {
             ss << '{';
             for (const auto &cr : cla) {
               ss << cr.key << " = [";
