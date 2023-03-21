@@ -311,8 +311,8 @@ bool parse_block_state_list(std::string_view str, state_list *const sl,
   return true;
 }
 
-[[deprecated]] bool parse_block_state_list(std::string_view str,
-                                           state_list *const sl) noexcept {
+bool parse_block_state_list(std::string_view str,
+                            state_list *const sl) noexcept {
   parse_bs_buffer buffer;
 
   return parse_block_state_list(str, sl, buffer);
