@@ -1,0 +1,31 @@
+name: "Beta Request"
+description: "Request a beta version"
+title: "[BETA]: "
+assignees: ["ToKiNoBug", "Cubik65536"]
+
+body:
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: "I confirm that:"
+      options:
+        - label: I want to test the beta version of SlopeCraft.
+          required: false
+        - label: I want to test the beta version of VisualCraft.
+          required: false
+        - label: I know that the beta version may be buggy and unstable.
+          required: true
+        - label: I'm willing to report bugs and provide feedback.
+          required: true
+
+  - type: textarea
+    id: contact
+    validations:
+      required: true
+    attributes:
+      label: Contact
+      description: |
+        Please provide your email address or other contact information.
+      value: |
+        Email: <your email address>
+      render: Markdown

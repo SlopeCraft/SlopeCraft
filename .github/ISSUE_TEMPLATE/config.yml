@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Search or ask in Discussion | 在讨论区搜索或提问
+    url: https://github.com/SlopeCraft/SlopeCraft/discussions
+    about: Ask questions and discuss with SlopeCraft maintainers and community | 和 SlopeCraft 维护者或社区成员交流或提问

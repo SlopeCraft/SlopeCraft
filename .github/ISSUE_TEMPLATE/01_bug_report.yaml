@@ -1,0 +1,120 @@
+name: "Bug Report"
+description: "Create a report to help us improve SlopeCraft"
+title: "[Bug]: "
+labels: ["bug"]
+assignees: ["ToKiNoBug", "Cubik65536"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report an issue.
+        
+        > ### Important! :warning:
+        > 
+        > The issue list is reserved exclusively for bug reports and feature requests. That means we do not accept usage questions.
+        > If you open an issue that does not conform to the requirements, it will be closed.
+        >
+        > For usage questions, please refer to the following resources:
+        > * [Search or ask in Discussion](https://github.com/SlopeCraft/SlopeCraft/discussions)
+        
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: "Please choose if applies:"
+      options:
+        - label: I'm currently working on a fix.
+          required: false
+
+  - type: textarea
+    id: issue-description
+    validations:
+      required: true
+    attributes:
+      label: Issue Description
+      description: |
+        A clear and concise description of what the bug is.
+        Please, explain whether it's a build-time error or a runtime error.
+      value: |
+        When I do <X>, <Y> happens and I see the following error message:
+        
+        ```
+        <error message>
+        ```
+        
+        Expected behavior:
+        
+        When I do <X>, <Z> should happen instead.
+      render: Markdown
+
+
+  - type: textarea
+    id: reproduction
+    validations:
+      required: true
+    attributes:
+      label: Reproduction
+      description: |
+        Add commands used or steps taken to reproduce the behaviour.
+        Include links, references or anything else that will give us more context about the issue you are encountering.
+      value: |
+        1. Download application from Release
+        2. Click '...' after setting <X> to '...'
+        3. See error
+      render: Markdown
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output (if applicable)
+      description: |
+        Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+        When pasting verbose logs, please make sure you remove any sensitive information.
+      render: Shell
+
+  - type: textarea
+    id: environment
+    validations:
+      required: true
+    attributes:
+      label: Environment
+      description: |
+        examples:
+          - **Operating System**: Windows 10 20H2
+          - **SlopeCraft Version**: 3.10.1
+      value: |
+        - **Operating System**:
+        - **SlopeCraft Version**:
+      render: Markdown
+
+  - type: markdown
+    attributes:
+      value: |
+        ---------
+        
+        Before you submit this issue, please confirm the following:
+        
+        **1. Is there an existing issue for this?**
+        
+        Please search to see if an issue already exists for the bug you encountered.
+        
+        **2. Confirm you are submitting a bug report**
+        
+        Please confirm you are submitting a bug report and not a usage question.
+        
+        **3. Confirm this bug still exists in the newest version of SlopeCraft**
+        
+        Please confirm that the bug still exists in the newest version (commit) of SlopeCraft.
+        
+        ---------
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Please accept these terms
+      options:
+        - label: I have searched the [existing issues](https://github.com/SlopeCraft/SlopeCraft/issues) and this has not been posted before
+          required: true
+        - label: This is a bug report
+          required: true
+        - label: This bug still exists
+          required: true
