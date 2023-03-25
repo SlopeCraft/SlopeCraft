@@ -39,14 +39,9 @@ namespace SlopeCraft {
 class AbstractBlock;
 struct AiCvterOpt;
 class Kernel;
-} // namespace SlopeCraft
+}  // namespace SlopeCraft
 
 namespace SlopeCraft {
-
-using AbstractBlock = ::SlopeCraft::AbstractBlock;
-using AiCvterOpt = ::SlopeCraft::AiCvterOpt;
-using Kernel = ::SlopeCraft::Kernel;
-
 using step = ::SCL_step;
 using mapTypes = ::SCL_mapTypes;
 using compressSettings = ::SCL_compressSettings;
@@ -56,58 +51,85 @@ using gameVersion = ::SCL_gameVersion;
 using workStatues = ::SCL_workStatues;
 using errorFlag = ::SCL_errorFlag;
 
-}; // namespace SlopeCraft
+};  // namespace SlopeCraft
 
 namespace SlopeCraft {
 
 class AbstractBlock {
-public:
-  AbstractBlock();
+ public:
+  AbstractBlock() = default;
+  virtual ~AbstractBlock() = default;
   // virtual ~AbstractBlock() {};
 
   /// real size of this block
-  virtual unsigned long long size() const = 0;
+  virtual unsigned long long size() const noexcept = 0;
   /// id of this block
-  virtual const char *getId() const = 0;
+  virtual const char *getId() const noexcept = 0;
   /// first version
-  virtual uint8_t getVersion() const = 0;
+  virtual uint8_t getVersion() const noexcept = 0;
   /// id in 1.12
-  virtual const char *getIdOld() const = 0;
+  virtual const char *getIdOld() const noexcept = 0;
   /// if this block needs a glass block under it
-  virtual bool getNeedGlass() const = 0;
+  virtual bool getNeedGlass() const noexcept = 0;
   /// if this block emits light
-  virtual bool getDoGlow() const = 0;
+  virtual bool getDoGlow() const noexcept = 0;
   /// if this block can be stolen by enderman
-  virtual bool getEndermanPickable() const = 0;
+  virtual bool getEndermanPickable() const noexcept = 0;
   /// if this block can be burnt
-  virtual bool getBurnable() const = 0;
+  virtual bool getBurnable() const noexcept = 0;
+
+  virtual const char *getNameZH() const noexcept = 0;
+  virtual const char *getNameEN() const noexcept = 0;
+
+  constexpr int imageRows() const noexcept { return 16; }
+  constexpr int imageCols() const noexcept { return 16; }
+
+  virtual void getImage(uint32_t *dest, bool is_row_major) const noexcept = 0;
 
   /// set block id
-  virtual void setId(const char *) = 0;
+  virtual void setId(const char *) noexcept = 0;
   /// set first version
-  virtual void setVersion(uint8_t) = 0;
+  virtual void setVersion(uint8_t) noexcept = 0;
   /// set id in 1.12
-  virtual void setIdOld(const char *) = 0;
+  virtual void setIdOld(const char *) noexcept = 0;
   /// set if this block needs a glass block under it
-  virtual void setNeedGlass(bool) = 0;
+  virtual void setNeedGlass(bool) noexcept = 0;
   /// set if this block emits light
-  virtual void setDoGlow(bool) = 0;
+  virtual void setDoGlow(bool) noexcept = 0;
   /// set if this block can be stolen by enderman
-  virtual void setEndermanPickable(bool) = 0;
+  virtual void setEndermanPickable(bool) noexcept = 0;
   /// set if this block can be burnt
-  virtual void setBurnable(bool) = 0;
+  virtual void setBurnable(bool) noexcept = 0;
+
+  virtual void setNameZH(const char *) noexcept = 0;
+  virtual void setNameEN(const char *) noexcept = 0;
+
+  virtual void setImage(const uint32_t *src, bool is_row_major) noexcept = 0;
+
   /// let *b equal to *this
-  void copyTo(AbstractBlock *b) const;
+  virtual void copyTo(AbstractBlock *b) const noexcept = 0;
   /// set this block to air
-  void clear();
+  virtual void clear() noexcept;
+};
+
+class BlockListInterface {
+ public:
+  virtual size_t size() const noexcept = 0;
+  virtual size_t get_blocks(AbstractBlock **,
+                            size_t capacity_in_elements) noexcept;
+
+  virtual size_t get_blocks(const AbstractBlock **,
+                            size_t capacity_in_elements) const noexcept;
+
+  virtual bool contains(const AbstractBlock *) const noexcept = 0;
 };
 
 class Kernel {
-public:
+ public:
   Kernel();
   // virtual ~Kernel() {};
 
-public:
+ public:
   /// function ptr to window object
   virtual void setWindPtr(void *) = 0;
   /// a function ptr to show progress of converting and exporting
@@ -176,12 +198,12 @@ public:
 
   // can do in converted:
   /// construct 3D structure
-  virtual bool
-  build(::SCL_compressSettings = ::SCL_compressSettings::noCompress,
-        unsigned short = 256,
-        ::SCL_glassBridgeSettings = ::SCL_glassBridgeSettings::noBridge,
-        unsigned short = 3, bool fireProof = false,
-        bool endermanProof = false) = 0;
+  virtual bool build(
+      ::SCL_compressSettings = ::SCL_compressSettings::noCompress,
+      unsigned short = 256,
+      ::SCL_glassBridgeSettings = ::SCL_glassBridgeSettings::noBridge,
+      unsigned short = 3, bool fireProof = false,
+      bool endermanProof = false) = 0;
 
   /// get converted image
   virtual void getConvertedImage(int *rows, int *cols,
@@ -225,12 +247,9 @@ public:
   virtual const unsigned short *getBuild(int *xSize = nullptr,
                                          int *ySize = nullptr,
                                          int *zSize = nullptr) const = 0;
-
-protected:
-  /// calling delete is deprecated, use void Kernel::destroy() instead
 };
 
-} // namespace SlopeCraft
+}  // namespace SlopeCraft
 
 // these functions are
 extern "C" {
@@ -241,6 +260,12 @@ SCL_EXPORT void SCL_destroyKernel(Kernel *);
 
 SCL_EXPORT AbstractBlock *SCL_createBlock();
 SCL_EXPORT void SCL_destroyBlock(AbstractBlock *);
+
+SCL_EXPORT BlockListInterface *SCL_createBlockList(
+    const char *filename,
+    bool (*callback_load_image)(const char *, uint32_t *dst_row_major));
+
+SCL_EXPORT void SCL_destroyBlockList(BlockListInterface *);
 
 SCL_EXPORT AiCvterOpt *SCL_createAiCvterOpt();
 SCL_EXPORT void SCL_destroyAiCvterOpt(AiCvterOpt *);
@@ -276,10 +301,10 @@ SCL_EXPORT const float *SCL_getBasicColorMapPtrs();
 
 // SCL_EXPORT uint64_t SCL_mcVersion2VersionNumber(::SCL_gameVersion);
 
-} //  namespace SlopeCraft
+}  //  namespace SlopeCraft
 
-} //  extern "C"
+}  //  extern "C"
 
 // SCL_EXPORT void SCL_test();
 
-#endif // KERNEL_H
+#endif  // KERNEL_H

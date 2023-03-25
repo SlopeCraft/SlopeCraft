@@ -28,46 +28,89 @@ using namespace SlopeCraft;
 #include <iostream>
 #include <string>
 #include <vector>
+#include <utility>
+#include <set>
 
 typedef unsigned char uchar;
 
 typedef std::vector<std::string> stringList;
 
-class simpleBlock : public AbstractBlock {
-public:
+class simpleBlock : public ::SlopeCraft::AbstractBlock {
+ public:
   simpleBlock();
-  virtual ~simpleBlock(){};
+  ~simpleBlock(){};
   std::string id;
   uchar version;
   std::string idOld;
+  std::string nameZH;
+  std::string nameEN;
+  Eigen::ArrayXX<uint32_t> image;
   bool needGlass;
   bool doGlow;
   bool endermanPickable;
   bool burnable;
 
-  unsigned long long size() const { return sizeof(simpleBlock); }
+  unsigned long long size() const noexcept override {
+    return sizeof(simpleBlock);
+  }
 
-  const char *getId() const { return id.data(); };
-  unsigned char getVersion() const { return version; };
-  const char *getIdOld() const { return idOld.data(); };
-  bool getNeedGlass() const { return needGlass; };
-  bool getDoGlow() const { return doGlow; };
-  bool getEndermanPickable() const { return endermanPickable; };
-  bool getBurnable() const { return burnable; };
+  const char *getId() const noexcept override { return id.data(); };
+  uint8_t getVersion() const noexcept override { return version; };
+  const char *getIdOld() const noexcept override { return idOld.data(); };
+  bool getNeedGlass() const noexcept override { return needGlass; };
+  bool getDoGlow() const noexcept override { return doGlow; };
+  bool getEndermanPickable() const noexcept override {
+    return endermanPickable;
+  };
+  bool getBurnable() const noexcept override { return burnable; };
+  const char *getNameZH() const noexcept override {
+    return this->nameZH.c_str();
+  }
+  const char *getNameEN() const noexcept override {
+    return this->nameEN.c_str();
+  }
+  void getImage(uint32_t *dest, bool is_row_major) const noexcept override {
+    if (is_row_major) {
+      Eigen::Map<Eigen::ArrayXX<uint32_t>> map(dest, 16, 16);
+      map = this->image;
+    } else {
+      memcpy(dest, this->image.data(), this->image.size() * sizeof(uint32_t));
+    }
+  }
 
-  void setId(const char *_id) { id = _id; };
-  void setVersion(unsigned char _ver) { version = _ver; };
-  void setIdOld(const char *_idOld) { idOld = _idOld; };
-  void setNeedGlass(bool _needGlass) { needGlass = _needGlass; };
-  void setDoGlow(bool _doGlow) { doGlow = _doGlow; };
-  void setEndermanPickable(bool _enderman) { endermanPickable = _enderman; };
-  void setBurnable(bool _burn) { burnable = _burn; };
+  void setId(const char *_id) noexcept override { id = _id; };
+  void setVersion(unsigned char _ver) noexcept override { version = _ver; };
+  void setIdOld(const char *_idOld) noexcept override { idOld = _idOld; };
+  void setNeedGlass(bool _needGlass) noexcept override {
+    needGlass = _needGlass;
+  };
+  void setDoGlow(bool _doGlow) noexcept override { doGlow = _doGlow; };
+  void setEndermanPickable(bool _enderman) noexcept override {
+    endermanPickable = _enderman;
+  };
+  void setBurnable(bool _burn) noexcept override { burnable = _burn; };
 
-  void destroy() { delete this; }
+  void setNameZH(const char *__nzh) noexcept override { this->nameZH = __nzh; }
+  void setNameEN(const char *__nen) noexcept override { this->nameEN = __nen; }
+  void setImage(const uint32_t *src, bool is_row_major) noexcept override {
+    if (is_row_major) {
+      Eigen::Map<const Eigen::ArrayXX<uint32_t>> map(src, 16, 16);
+      this->image = map;
+    } else {
+      this->image.resize(16, 16);
+      memcpy(this->image.data(), src, 16 * 16 * sizeof(uint32_t));
+    }
+  }
+
+  void copyTo(AbstractBlock *dst) const noexcept override {
+    *static_cast<simpleBlock *>(dst) = *this;
+  }
 
   static bool dealBlockId(const std::string &id, std::string &netBlockId,
                           stringList *proName, stringList *proVal);
   // simpleBlock& operator =(const simpleBlock &);
 };
 
-#endif // SIMPLEBLOCK_H
+#warning define the impl class of blockclass here
+
+#endif  // SIMPLEBLOCK_H

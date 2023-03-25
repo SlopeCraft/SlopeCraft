@@ -28,20 +28,7 @@ using namespace SlopeCraft;
 
 // AbstractBlock *AbstractBlock::create() { return new simpleBlock; }
 
-AbstractBlock::AbstractBlock() {}
-
-void AbstractBlock::copyTo(AbstractBlock *dst) const {
-  dst->setBurnable(getBurnable());
-  dst->setDoGlow(getDoGlow());
-  dst->setEndermanPickable(getEndermanPickable());
-  dst->setId(getId());
-  dst->setIdOld(getIdOld());
-  dst->setNeedGlass(getNeedGlass());
-  dst->setVersion(getVersion());
-  // dst->setWallUseable(getWallUseable());
-}
-
-void AbstractBlock::clear() {
+void AbstractBlock::clear() noexcept {
   setBurnable(false);
   setDoGlow(false);
   setEndermanPickable(false);
@@ -49,6 +36,8 @@ void AbstractBlock::clear() {
   setIdOld("");
   setNeedGlass(false);
   setVersion(0);
+  setNameZH("");
+  setNameEN("");
   // setWallUseable(false);
 }
 
@@ -64,8 +53,15 @@ SCL_EXPORT void SCL_destroyKernel(Kernel *k) {
 }
 
 SCL_EXPORT AbstractBlock *SCL_createBlock() { return new simpleBlock; }
-SCL_EXPORT void SCL_destroyBlock(AbstractBlock *b) {
-  delete static_cast<simpleBlock *>(b);
+SCL_EXPORT void SCL_destroyBlock(AbstractBlock *b) { delete b; }
+
+SCL_EXPORT BlockListInterface *SCL_createBlockList(
+    const char *filename,
+    bool (*callback_load_image)(const char *, uint32_t *dst_row_major)){
+#warning create block list here
+}
+
+SCL_EXPORT void SCL_destroyBlockList(BlockListInterface *) {
 }
 
 SCL_EXPORT AiCvterOpt *SCL_createAiCvterOpt() { return new AiCvterOpt; }

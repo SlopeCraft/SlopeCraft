@@ -30,14 +30,9 @@ simpleBlock::simpleBlock() {
   doGlow = false;
   endermanPickable = false;
   burnable = false;
+
+  image.resize(16, 16);
   // wallUseable=true;
-  /*
-      std::string id;
-      uchar version;
-      std::string idOld;
-      bool needGlass;
-      bool doGlow;
-  */
 }
 
 bool simpleBlock::dealBlockId(const std::string &id, std::string &netBlockId,
@@ -54,7 +49,7 @@ bool simpleBlock::dealBlockId(const std::string &id, std::string &netBlockId,
   // BlockId.indexOf(']');
 
   if (ReadBeg <= 0 || ReadEnd <= 0 || ReadEnd <= ReadBeg) {
-    std::cerr << "方块Id格式出现错误:" << id;
+    std::cerr << "方块 Id 格式出现错误：" << id;
     return false;
   }
 
@@ -65,37 +60,39 @@ bool simpleBlock::dealBlockId(const std::string &id, std::string &netBlockId,
 
   for (short read = ReadBeg; read <= ReadEnd; read++) {
     switch (id.at(read)) {
-    case '[': // 代表找到了一个新的属性
-      ProIndex[0] = read + 1;
-      continue;
+      case '[':  // 代表找到了一个新的属性
+        ProIndex[0] = read + 1;
+        continue;
 
-    case '=': // 识别出了属性名，寻找属性值
-      ProIndex[1] = read - 1;
-      ProValIndex[0] = read + 1;
-      continue;
+      case '=':  // 识别出了属性名，寻找属性值
+        ProIndex[1] = read - 1;
+        ProValIndex[0] = read + 1;
+        continue;
 
-    case ',': // 代表结束了一个属性，并找到了下一个属性
-      ProValIndex[1] = read - 1;
-      proName->push_back(id.substr(ProIndex[0], ProIndex[1] - ProIndex[0] + 1));
-      // BlockId.mid(ProIndex[0],ProIndex[1]-ProIndex[0]+1).toLower());
-      proVal->push_back(
-          id.substr(ProValIndex[0], ProValIndex[1] - ProValIndex[0] + 1));
-      // BlockId.mid(ProValIndex[0],ProValIndex[1]-ProValIndex[0]+1).toLower());
-      ProIndex[0] = -1;
-      ProIndex[1] = -1;
-      ProValIndex[0] = -1;
-      ProValIndex[1] = -1;
+      case ',':  // 代表结束了一个属性，并找到了下一个属性
+        ProValIndex[1] = read - 1;
+        proName->push_back(
+            id.substr(ProIndex[0], ProIndex[1] - ProIndex[0] + 1));
+        // BlockId.mid(ProIndex[0],ProIndex[1]-ProIndex[0]+1).toLower());
+        proVal->push_back(
+            id.substr(ProValIndex[0], ProValIndex[1] - ProValIndex[0] + 1));
+        // BlockId.mid(ProValIndex[0],ProValIndex[1]-ProValIndex[0]+1).toLower());
+        ProIndex[0] = -1;
+        ProIndex[1] = -1;
+        ProValIndex[0] = -1;
+        ProValIndex[1] = -1;
 
-      ProIndex[0] = read + 1;
-      continue;
-    case ']':
-      ProValIndex[1] = read - 1;
-      proName->push_back(id.substr(ProIndex[0], ProIndex[1] - ProIndex[0] + 1));
-      // BlockId.mid(ProIndex[0],ProIndex[1]-ProIndex[0]+1).toLower());
-      proVal->push_back(
-          id.substr(ProValIndex[0], ProValIndex[1] - ProValIndex[0] + 1));
-      // BlockId.mid(ProValIndex[0],ProValIndex[1]-ProValIndex[0]+1).toLower());
-      continue;
+        ProIndex[0] = read + 1;
+        continue;
+      case ']':
+        ProValIndex[1] = read - 1;
+        proName->push_back(
+            id.substr(ProIndex[0], ProIndex[1] - ProIndex[0] + 1));
+        // BlockId.mid(ProIndex[0],ProIndex[1]-ProIndex[0]+1).toLower());
+        proVal->push_back(
+            id.substr(ProValIndex[0], ProValIndex[1] - ProValIndex[0] + 1));
+        // BlockId.mid(ProValIndex[0],ProValIndex[1]-ProValIndex[0]+1).toLower());
+        continue;
     }
   }
   // qDebug()<<proValue->back()<<'='<<proValue->back();
