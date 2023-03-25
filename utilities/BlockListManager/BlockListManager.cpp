@@ -24,22 +24,22 @@ This file is part of SlopeCraft.
 #include "TokiBaseColor.h"
 #include "TokiBlock.h"
 #include <QJsonDocument>
-
+#include <QJsonArray>
 #include <iostream>
+#include <SlopeCraftL.h>
 
 BlockListManager::BlockListManager(QHBoxLayout *_area, QObject *parent)
     : QObject(parent) {
   isApplyingPreset = false;
   area = _area;
-  qDebug() << ((area == nullptr) ? " 错误！_area为空指针" : "");
+  qDebug() << ((area == nullptr) ? " 错误！_area 为空指针" : "");
   QGroupBox *qgb = nullptr;
   QGridLayout *qgl = nullptr;
   TokiBaseColor *tbc = nullptr;
   tbcs.clear();
-  // qDebug("方块列表管理者开始创建QGroupBox");
+  // qDebug("方块列表管理者开始创建 QGroupBox");
   for (uchar baseColor = 0; baseColor < 64; baseColor++) {
-    if (baseColorNames[baseColor].isEmpty())
-      break;
+    if (baseColorNames[baseColor].isEmpty()) break;
     qgb = new QGroupBox(baseColorNames[baseColor]);
     // qDebug("create QGroupBox");
     qgl = new QGridLayout;
@@ -55,28 +55,24 @@ BlockListManager::BlockListManager(QHBoxLayout *_area, QObject *parent)
     connect(tbc, &TokiBaseColor::userClicked, this,
             &BlockListManager::receiveClicked);
   }
-  // qDebug("Manager构造函数完毕");
+  // qDebug("Manager 构造函数完毕");
 }
 
 BlockListManager::~BlockListManager() {
-  for (uchar i = 0; i < tbcs.size(); i++)
-    delete tbcs[i];
+  for (uchar i = 0; i < tbcs.size(); i++) delete tbcs[i];
 }
 
 void BlockListManager::setVersion(uchar _ver) {
-  if (_ver < 12 || _ver > SlopeCraft::SCL_maxAvailableVersion())
-    return;
+  if (_ver < 12 || _ver > SlopeCraft::SCL_maxAvailableVersion()) return;
   TokiBaseColor::mcVer = _ver;
-  for (uchar i = 0; i < tbcs.size(); i++)
-    tbcs[i]->versionCheck();
+  for (uchar i = 0; i < tbcs.size(); i++) tbcs[i]->versionCheck();
 }
 
 void BlockListManager::addBlocks(const QJsonArray &jArray, QString imgDir) {
   std::vector<std::queue<QJsonObject>> tasks;
   tasks.resize(tbcs.size());
   for (ushort i = 0; i < tasks.size(); i++)
-    while (!tasks[i].empty())
-      tasks[i].pop();
+    while (!tasks[i].empty()) tasks[i].pop();
   imgDir.replace("\\", "/");
   QJsonObject temp;
   uchar baseColor;
@@ -86,30 +82,22 @@ void BlockListManager::addBlocks(const QJsonArray &jArray, QString imgDir) {
     temp = jArray[i].toObject();
 
     if (!isValidBlockInfo(temp)) {
-      qDebug() << "出现不合法的json信息：" << temp;
+      qDebug() << "出现不合法的 json 信息：" << temp;
       continue;
     }
-    if (!temp.contains("version"))
-      temp["version"] = 0;
-    if (!temp.contains("idOld"))
-      temp["idOld"] = temp["id"];
-    if (!temp.contains("needGlass"))
-      temp["needGlass"] = false;
-    if (!temp.contains("isGlowing"))
-      temp["isGlowing"] = false;
-    if (!temp.contains("icon"))
-      temp["icon"] = "";
-    if (!temp.contains("endermanPickable"))
-      temp["endermanPickable"] = false;
-    if (!temp.contains("burnable"))
-      temp["burnable"] = false;
-    if (!temp.contains("wallUseable"))
-      temp["wallUseable"] = true;
+    if (!temp.contains("version")) temp["version"] = 0;
+    if (!temp.contains("idOld")) temp["idOld"] = temp["id"];
+    if (!temp.contains("needGlass")) temp["needGlass"] = false;
+    if (!temp.contains("isGlowing")) temp["isGlowing"] = false;
+    if (!temp.contains("icon")) temp["icon"] = "";
+    if (!temp.contains("endermanPickable")) temp["endermanPickable"] = false;
+    if (!temp.contains("burnable")) temp["burnable"] = false;
+    if (!temp.contains("wallUseable")) temp["wallUseable"] = true;
 
     baseColor = temp.value("baseColor").toInt();
     tasks[baseColor].push(temp);
   }
-  // qDebug("已经将全部的QJsonObject装入多个队列，开始创建控件");
+  // qDebug("已经将全部的 QJsonObject 装入多个队列，开始创建控件");
   for (ushort i = 0; i < tasks.size(); i++) {
     // qDebug()<<"基色"<<i<<"有"<<tasks[i].size()<<"个方块";
     while (!tasks[i].empty()) {
@@ -143,20 +131,17 @@ void BlockListManager::setEnabled(uchar baseColor, bool isEnable) {
 }
 
 void BlockListManager::receiveClicked() const {
-  if (isApplyingPreset)
-    return;
+  if (isApplyingPreset) return;
   emit switchToCustom();
   emit blockListChanged();
 }
 
 void BlockListManager::setLabelColors(const QRgb *colors) {
-  for (uchar i = 0; i < tbcs.size(); i++)
-    tbcs[i]->makeLabel(colors[i]);
+  for (uchar i = 0; i < tbcs.size(); i++) tbcs[i]->makeLabel(colors[i]);
 }
 
 void BlockListManager::getEnableList(bool *dest) const {
-  for (uchar i = 0; i < tbcs.size(); i++)
-    dest[i] = tbcs[i]->getEnabled();
+  for (uchar i = 0; i < tbcs.size(); i++) dest[i] = tbcs[i]->getEnabled();
 }
 
 void BlockListManager::getSimpleBlockList(
@@ -192,8 +177,8 @@ std::vector<const TokiBlock *> BlockListManager::getTokiBlockList() const {
   return TBL;
 }
 
-std::vector<const QRadioButton *>
-BlockListManager::getQRadioButtonList() const {
+std::vector<const QRadioButton *> BlockListManager::getQRadioButtonList()
+    const {
   std::vector<const QRadioButton *> TBL(64);
   for (uchar i = 0; i < 64; i++) {
     if (i < tbcs.size())
@@ -250,89 +235,60 @@ void BlockListManager::getBlockPtrs(const SlopeCraft::AbstractBlock **dest,
   dest[idx] = nullptr;
 }
 
-bool BlockListManager::savePreset(const QString &path) const {
-  if (path.isEmpty())
-    return false;
-
-  QJsonArray ja;
-  QJsonObject jo;
-  jo.insert("enabled", true);
-  jo.insert("baseColor", QJsonValue(0));
-  jo.insert("blockId", "minecraft:air");
-  for (uint8_t baseC = 0; baseC < tbcs.size(); baseC++) {
-    jo["enabled"] = tbcs[baseC]->isEnabled;
-    jo["baseColor"] = baseC;
-    jo["blockId"] = tbcs[baseC]->getTokiBlock()->getSimpleBlock()->getId();
-    ja.push_back(jo);
-  }
-
-  QJsonDocument jd(ja);
-
-  QFile dst(path);
-  if (!dst.open(QFile::OpenModeFlag::WriteOnly)) {
+bool BlockListManager::loadPreset(const blockListPreset &preset) {
+  if (preset.values.size() != this->tbcs.size()) {
+    QMessageBox::warning(dynamic_cast<QWidget *>(this->parent()),
+                         tr("加载预设错误"),
+                         tr("预设文件包含的基色数量 (%1) 与实际情况 (%2) 不符")
+                             .arg(preset.values.size())
+                             .arg(this->tbcs.size()));
     return false;
   }
-  dst.write(jd.toJson());
-  dst.close();
+
+  std::vector<const TokiBlock *> blocks_arr;
+
+  for (size_t basecolor = 0; basecolor < this->tbcs.size(); basecolor++) {
+    auto tbc = this->tbcs[basecolor];
+    const auto &pre = preset.values[basecolor];
+
+    this->setEnabled(basecolor, pre.first);
+
+    // find block
+    int matched_block_idx = -1;
+    blocks_arr.clear();
+    tbc->getTokiBlockList(blocks_arr);
+    for (int bidx = 0; bidx < (int)blocks_arr.size(); bidx++) {
+      const char *const blkid = blocks_arr[bidx]->getSimpleBlock()->getId();
+      if (QString::fromUtf8(blkid) == pre.second) {
+        matched_block_idx = bidx;
+        break;
+      }
+    }
+
+    if (matched_block_idx < 0) {
+      QMessageBox::warning(
+          dynamic_cast<QWidget *>(this->parent()), tr("加载预设错误"),
+          tr("预设中为基色%1指定的方块 id 是\"%2\"，没有找到这个方块 id")
+              .arg(basecolor)
+              .arg(pre.second));
+      return false;
+    }
+
+    this->setSelected(basecolor, matched_block_idx);
+  }
 
   return true;
 }
 
-bool BlockListManager::loadPreset(const QString &path) {
-  if (!QFile(path).exists()) {
-    return false;
+blockListPreset BlockListManager::currentPreset() const noexcept {
+  blockListPreset ret;
+  ret.values.resize(this->tbcs.size());
+  for (size_t basecolor = 0; basecolor < this->tbcs.size(); basecolor++) {
+    ret.values[basecolor].first = this->tbcs[basecolor]->getEnabled();
+    ret.values[basecolor].second = QString::fromUtf8(
+        this->tbcs[basecolor]->getTokiBlock()->getSimpleBlock()->getId());
   }
-
-  QJsonDocument jd;
-  {
-    QFile f(path);
-    f.open(QFile::OpenModeFlag::ReadOnly);
-    QByteArray qba = f.readAll();
-    f.close();
-    QJsonParseError pe;
-    jd = QJsonDocument::fromJson(qba, &pe);
-    if (pe.error != QJsonParseError::ParseError::NoError) {
-      QMessageBox::information(nullptr, tr("预设文件格式错误"),
-                               tr("解析预设文件时遇到json格式错误：") + '\n' +
-                                   pe.errorString() + " , " +
-                                   "offset=" + QString::number(pe.offset));
-      return false;
-    }
-  }
-
-  QJsonArray ja = jd.array();
-  std::vector<const TokiBlock *> tbs;
-  for (int idx = 0; idx < ja.size(); idx++) {
-    bool enabled = ja.at(idx)["enabled"].toBool();
-    uint8_t baseC = ja.at(idx)["baseColor"].toInt();
-    std::string id = ja.at(idx)["blockId"].toString().toStdString();
-    if (baseC >= tbcs.size())
-      continue;
-
-    if (baseC != 0) {
-      tbcs[baseC]->checkBox->setChecked(enabled);
-      emit tbcs[baseC]->checkBox->toggled(enabled);
-    }
-    tbcs[baseC]->getTokiBlockList(tbs);
-    uint16_t match = -1;
-    for (uint16_t i = 0; i < tbs.size(); i++) {
-      if (std::string(tbs[i]->getSimpleBlock()->getId()) == id) {
-        match = i;
-        break;
-      }
-    }
-    if (match == uint16_t(-1)) {
-      QMessageBox::information(
-          nullptr, tr("预设文件中包含未知方块"),
-          tr("预设文件中基色") + QString::number(baseC) + tr("对应的方块id") +
-              QString::fromStdString(id) + tr("在方块列表中不存在") + '\n' +
-              tr("将为这个启用默认选项"));
-      match = 0;
-    }
-    setSelected(baseC, match);
-  }
-
-  return true;
+  return ret;
 }
 
 const QString BlockListManager::baseColorNames[64] = {"00 None",

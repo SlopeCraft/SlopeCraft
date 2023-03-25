@@ -13,6 +13,8 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools REQUIRED)
 
 include_directories(${CMAKE_SOURCE_DIR})
 
+include(${CMAKE_SOURCE_DIR}/cmake/find_nlohmann_json.cmake)
+
 set(BlockListManager_header_files
 
     BlockListManager.h
@@ -24,7 +26,8 @@ set(BlockListManager_source_files
 
     BlockListManager.cpp
     TokiBaseColor.cpp
-    TokiBlock.cpp)
+    TokiBlock.cpp
+    BLM_preset.cpp)
 
 set(BlockListManager_ts_files
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockListManager_en_US.ts
@@ -46,10 +49,9 @@ set(BlockListManaer_project_sources
 include_directories(../SlopeCraftL)
 
 add_library(BlockListManager STATIC ${BlockListManaer_project_sources})
-
-target_link_libraries(BlockListManager PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-
+target_link_libraries(BlockListManager PUBLIC Qt${QT_VERSION_MAJOR}::Widgets SlopeCraftL)
 target_compile_definitions(BlockListManager PRIVATE BlockListManager_LIBRARY)
+target_include_directories(BlockListManager PRIVATE ${SlopeCraft_Nlohmann_json_include_dir})
 
 qt_add_lrelease(BlockListManager TS_FILES ${BlockListManager_ts_files}
     QM_FILES_OUTPUT_VARIABLE BlockListManager_qm_files)

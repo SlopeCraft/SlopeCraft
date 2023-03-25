@@ -75,6 +75,7 @@ add_library(SlopeCraftL SHARED ${SlopeCraft_SCL_sources})
 
 # add_library(SlopeCraftL_C SHARED ${SlopeCraft_SCL_sources})
 target_compile_features(SlopeCraftL PRIVATE cxx_std_20)
+target_include_directories(SlopeCraftL INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 # target_compile_features(SlopeCraftL_C PRIVATE cxx_std_20)
 

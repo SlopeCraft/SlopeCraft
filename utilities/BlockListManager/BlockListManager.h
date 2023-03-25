@@ -27,7 +27,6 @@ This file is part of SlopeCraft.
 
 #include <QGroupBox>
 #include <QHBoxLayout>
-#include <QJsonArray>
 #include <QObject>
 #include <QRadioButton>
 
@@ -38,9 +37,23 @@ This file is part of SlopeCraft.
 
 #define DispLine qDebug() << "File = " << __FILE__ << " , Line = " << __LINE__;
 
+struct basecolorOption {
+  uint8_t baseColor{0xFF};
+  bool enabled{false};
+  QString blockId{""};
+};
+
+struct blockListPreset {
+  std::vector<std::pair<bool, QString>> values;
+};
+
+blockListPreset load_preset(QString filename, QString &err) noexcept;
+
+QString serialize_preset(const blockListPreset &preset) noexcept;
+
 class BlockListManager : public QObject {
   Q_OBJECT
-public:
+ public:
   explicit BlockListManager(QHBoxLayout *_area, QObject *parent = nullptr);
 
   ~BlockListManager();
@@ -69,26 +82,27 @@ public:
   int getBlockNum() const;
   void getBlockPtrs(const SlopeCraft::AbstractBlock **, uint8_t *) const;
 
-  bool savePreset(const QString &path) const;
-  bool loadPreset(const QString &path);
+  bool loadPreset(const blockListPreset &preset);
 
-public slots:
+  blockListPreset currentPreset() const noexcept;
 
-signals:
+ public slots:
+
+ signals:
   void translate(Language);
   void switchToCustom() const;
   void blockListChanged() const;
 
-private:
+ private:
   bool isApplyingPreset;
   QHBoxLayout *area;
   std::vector<TokiBaseColor *> tbcs;
   static const QString baseColorNames[64];
 
-private slots:
+ private slots:
   void receiveClicked() const;
 };
 
 bool isValidBlockInfo(const QJsonObject &);
 
-#endif // BLOCKLISTMANAGER_H
+#endif  // BLOCKLISTMANAGER_H

@@ -2178,7 +2178,20 @@ void MainWindow::onActionSavePreset() {
       this, tr("保存预设"), "",
       QStringLiteral("*") + MainWindow::sc_preset_extension);
   if (dst.isEmpty()) return;
-  Manager->savePreset(dst);
+
+  auto preset = this->Manager->currentPreset();
+
+  QString content = serialize_preset(preset);
+
+  QFile ofile(dst);
+  if (!ofile.open(QFile::OpenMode::enum_type::WriteOnly)) {
+    QMessageBox::warning(this, tr("保存预设文件失败"),
+                         tr("无法创建文件\"%1\"").arg(dst));
+    return;
+  }
+
+  ofile.write(content.toUtf8());
+  ofile.close();
 }
 
 void MainWindow::onActionLoadPreset() {
@@ -2188,7 +2201,14 @@ void MainWindow::onActionLoadPreset() {
   if (src.isEmpty()) return;
 
   this->prevOpenedDir = QFileInfo(src).filePath();
-  Manager->loadPreset(src);
+  QString err;
+  auto preset = load_preset(src, err);
+  if (!err.isEmpty()) {
+    QMessageBox::warning(this, tr("加载预设失败"), err);
+    return;
+  }
+
+  this->Manager->loadPreset(preset);
 }
 
 void MainWindow::onActionAiCvterParameters() {
