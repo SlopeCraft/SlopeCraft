@@ -1736,17 +1736,30 @@ void MainWindow::switchLan(Language lang) {
   emit Manager->translate(lang);
 
   if (lang == Language::EN) {
-    if (!trans.load(":/i18n/SlopeCraft_en_US.qm")) {
-      qDebug("Failed to load \":/i18n/SlopeCraft_en_US.qm\"");
+    QString msg{""};
+
+    if (!this->trans_SC.load(":/i18n/SlopeCraft_en_US.qm")) {
+      msg += QStringLiteral("Failed to load translation file \"%1\"\n")
+                 .arg(":/i18n/SlopeCraft_en_US.qm");
+    }
+    if (!this->trans_BLM.load(":/i18n/BlockListManager_en_US.qm")) {
+      msg += QStringLiteral("Failed to load translation file \"%1\"\n")
+                 .arg(":/i18n/BlockListManager_en_US.qm");
+    }
+    if (!msg.isEmpty()) {
+      QMessageBox::warning(this, "Failed to load translation.", msg);
       return;
     }
-    qApp->installTranslator(&trans);
+
+    qApp->installTranslator(&this->trans_SC);
+    qApp->installTranslator(&this->trans_BLM);
     ui->retranslateUi(this);
-    qDebug("Changed language to English");
+    // qDebug("Changed language to English");
   } else {
-    qApp->removeTranslator(&trans);
+    qApp->removeTranslator(&this->trans_SC);
+    qApp->removeTranslator(&this->trans_BLM);
     ui->retranslateUi(this);
-    qDebug("Changed language to Chinese");
+    // qDebug("Changed language to Chinese");
   }
   return;
 }

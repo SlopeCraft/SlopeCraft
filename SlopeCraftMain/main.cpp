@@ -27,10 +27,8 @@ This file is part of SlopeCraft.
 #include <QTranslator>
 
 int main(int argc, char *argv[]) {
-
   QApplication a(argc, argv);
 
-  QTranslator translator;
   const QStringList uiLanguages = QLocale::system().uiLanguages();
 
   qDebug() << uiLanguages;

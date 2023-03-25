@@ -250,7 +250,7 @@ class MainWindow : public QMainWindow {
   QImage rawPic;
 
   // QTranslator translater;
-  // bool Enabled[64];//被启动的方块列表，相当于最终的MIndex
+  // bool Enabled[64];//被启动的方块列表，相当于最终的 MIndex
   static const ushort BLCreative[64];
   static const ushort BLCheaper[64];
   static const ushort BLBetter[64];
@@ -262,7 +262,8 @@ class MainWindow : public QMainWindow {
 
   QString prevOpenedDir{"./"};
   QString ProductDir;
-  QTranslator trans;
+  QTranslator trans_SC;
+  QTranslator trans_BLM;
   bool Collected;
   QProgressBar *proTracker;
   // void applyPre(ushort*BL);
