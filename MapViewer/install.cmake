@@ -27,6 +27,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     file(GLOB MapViewer_Icon ${CMAKE_SOURCE_DIR}/MapViewer/others/MapViewer.icns)
     install(FILES ${MapViewer_Icon}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/MapViewer.app/Contents/Resources)
+    return()
 endif()
 
 message(WARNING "No rule to install MapViewer, because the system is not Windows, linux or MacOS.")
