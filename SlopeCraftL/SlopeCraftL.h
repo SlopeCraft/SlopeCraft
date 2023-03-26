@@ -59,10 +59,7 @@ class AbstractBlock {
  public:
   AbstractBlock() = default;
   virtual ~AbstractBlock() = default;
-  // virtual ~AbstractBlock() {};
 
-  /// real size of this block
-  virtual unsigned long long size() const noexcept = 0;
   /// id of this block
   virtual const char *getId() const noexcept = 0;
   /// first version
@@ -80,6 +77,7 @@ class AbstractBlock {
 
   virtual const char *getNameZH() const noexcept = 0;
   virtual const char *getNameEN() const noexcept = 0;
+  virtual const char *getImageFilename() const noexcept = 0;
 
   constexpr int imageRows() const noexcept { return 16; }
   constexpr int imageCols() const noexcept { return 16; }
@@ -103,6 +101,7 @@ class AbstractBlock {
 
   virtual void setNameZH(const char *) noexcept = 0;
   virtual void setNameEN(const char *) noexcept = 0;
+  virtual void setImageFilename(const char *) noexcept = 0;
 
   virtual void setImage(const uint32_t *src, bool is_row_major) noexcept = 0;
 
@@ -114,12 +113,14 @@ class AbstractBlock {
 
 class BlockListInterface {
  public:
+  BlockListInterface() = default;
+  virtual ~BlockListInterface() = default;
   virtual size_t size() const noexcept = 0;
-  virtual size_t get_blocks(AbstractBlock **,
-                            size_t capacity_in_elements) noexcept;
+  virtual size_t get_blocks(AbstractBlock **, uint8_t *,
+                            size_t capacity_in_elements) noexcept = 0;
 
-  virtual size_t get_blocks(const AbstractBlock **,
-                            size_t capacity_in_elements) const noexcept;
+  virtual size_t get_blocks(const AbstractBlock **, uint8_t *,
+                            size_t capacity_in_elements) const noexcept = 0;
 
   virtual bool contains(const AbstractBlock *) const noexcept = 0;
 };
@@ -255,19 +256,26 @@ class Kernel {
 extern "C" {
 namespace SlopeCraft {
 
-SCL_EXPORT Kernel *SCL_createKernel();
+[[nodiscard]] SCL_EXPORT Kernel *SCL_createKernel();
 SCL_EXPORT void SCL_destroyKernel(Kernel *);
 
-SCL_EXPORT AbstractBlock *SCL_createBlock();
+[[nodiscard]] SCL_EXPORT AbstractBlock *SCL_createBlock();
 SCL_EXPORT void SCL_destroyBlock(AbstractBlock *);
 
-SCL_EXPORT BlockListInterface *SCL_createBlockList(
-    const char *filename,
-    bool (*callback_load_image)(const char *, uint32_t *dst_row_major));
+struct blockListOption {
+  const char *image_dir;
+  bool (*callback_load_image)(const char *, uint32_t *dst_row_major){nullptr};
+  char *errmsg{nullptr};
+  size_t errmsg_capacity{0};
+  size_t *errmsg_len_dest{nullptr};
+};
+
+[[nodiscard]] SCL_EXPORT BlockListInterface *SCL_createBlockList(
+    const char *filename, const blockListOption &option);
 
 SCL_EXPORT void SCL_destroyBlockList(BlockListInterface *);
 
-SCL_EXPORT AiCvterOpt *SCL_createAiCvterOpt();
+[[nodiscard]] SCL_EXPORT AiCvterOpt *SCL_createAiCvterOpt();
 SCL_EXPORT void SCL_destroyAiCvterOpt(AiCvterOpt *);
 
 SCL_EXPORT void SCL_setPopSize(AiCvterOpt *, uint32_t p);

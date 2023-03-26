@@ -29,7 +29,7 @@ using namespace SlopeCraft;
 #include <string>
 #include <vector>
 #include <utility>
-#include <set>
+#include <map>
 
 typedef unsigned char uchar;
 
@@ -44,15 +44,12 @@ class simpleBlock : public ::SlopeCraft::AbstractBlock {
   std::string idOld;
   std::string nameZH;
   std::string nameEN;
+  std::string imageFilename;
   Eigen::ArrayXX<uint32_t> image;
-  bool needGlass;
-  bool doGlow;
-  bool endermanPickable;
-  bool burnable;
-
-  unsigned long long size() const noexcept override {
-    return sizeof(simpleBlock);
-  }
+  bool needGlass{false};
+  bool doGlow{false};
+  bool endermanPickable{false};
+  bool burnable{false};
 
   const char *getId() const noexcept override { return id.data(); };
   uint8_t getVersion() const noexcept override { return version; };
@@ -69,6 +66,11 @@ class simpleBlock : public ::SlopeCraft::AbstractBlock {
   const char *getNameEN() const noexcept override {
     return this->nameEN.c_str();
   }
+
+  const char *getImageFilename() const noexcept override {
+    return this->imageFilename.c_str();
+  }
+
   void getImage(uint32_t *dest, bool is_row_major) const noexcept override {
     if (is_row_major) {
       Eigen::Map<Eigen::ArrayXX<uint32_t>> map(dest, 16, 16);
@@ -102,6 +104,10 @@ class simpleBlock : public ::SlopeCraft::AbstractBlock {
     }
   }
 
+  void setImageFilename(const char *_ifn) noexcept override {
+    this->imageFilename = _ifn;
+  }
+
   void copyTo(AbstractBlock *dst) const noexcept override {
     *static_cast<simpleBlock *>(dst) = *this;
   }
@@ -111,6 +117,32 @@ class simpleBlock : public ::SlopeCraft::AbstractBlock {
   // simpleBlock& operator =(const simpleBlock &);
 };
 
-#warning define the impl class of blockclass here
+class BlockList : public ::SlopeCraft::BlockListInterface {
+ private:
+  std::map<simpleBlock *, uint8_t> m_blocks;
+
+ public:
+  BlockList() = default;
+  ~BlockList();
+
+ public:
+  size_t size() const noexcept override { return m_blocks.size(); }
+  size_t get_blocks(AbstractBlock **dst, uint8_t *,
+                    size_t capacity_in_elements) noexcept override;
+
+  size_t get_blocks(const AbstractBlock **dst, uint8_t *,
+                    size_t capacity_in_elements) const noexcept override;
+
+  bool contains(const AbstractBlock *cp) const noexcept override {
+    return this->m_blocks.contains(
+        static_cast<simpleBlock *>(const_cast<AbstractBlock *>(cp)));
+  }
+
+ public:
+  const auto &blocks() const noexcept { return this->m_blocks; }
+  auto &blocks() noexcept { return this->m_blocks; }
+
+  void clear() noexcept;
+};
 
 #endif  // SIMPLEBLOCK_H

@@ -1,9 +1,11 @@
 project(SlopeCraft_SlopeCraftL VERSION ${SlopeCraft_version} LANGUAGES CXX)
 
 include(${CMAKE_SOURCE_DIR}/cmake/find_nlohmann_json.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/configure_fmtlib.cmake)
 
 find_package(ZLIB 1.2.11 REQUIRED)
 find_package(OpenMP REQUIRED)
+find_package(fmt REQUIRED)
 
 set(SlopeCraft_SCL_windows_rc_files)
 
@@ -74,7 +76,8 @@ set(SlopeCraft_SCL_link_libs
     ColorManip
     NBTWriter
     Schem
-    MapImageCvter)
+    MapImageCvter
+    fmt::fmt)
 
 # link to dependents
 target_link_libraries(SlopeCraftL PUBLIC ${SlopeCraft_SCL_link_libs})

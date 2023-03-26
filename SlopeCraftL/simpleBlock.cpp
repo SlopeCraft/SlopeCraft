@@ -98,3 +98,49 @@ bool simpleBlock::dealBlockId(const std::string &id, std::string &netBlockId,
   // qDebug()<<proValue->back()<<'='<<proValue->back();
   return true;
 }
+
+size_t BlockList::get_blocks(AbstractBlock **dst, uint8_t *dst_basecolor,
+                             size_t capacity_in_elements) noexcept {
+  if (dst == nullptr || dst_basecolor == nullptr || capacity_in_elements <= 0) {
+    return 0;
+  }
+
+  size_t counter = 0;
+  for (auto &ptr : this->m_blocks) {
+    dst[counter] = ptr.first;
+    dst_basecolor[counter] = ptr.second;
+    counter++;
+    if (counter >= capacity_in_elements) {
+      return counter;
+    }
+  }
+  return counter;
+}
+
+size_t BlockList::get_blocks(const AbstractBlock **dst, uint8_t *dst_basecolor,
+                             size_t capacity_in_elements) const noexcept {
+  if (dst == nullptr || dst_basecolor == nullptr || capacity_in_elements <= 0) {
+    return 0;
+  }
+
+  size_t counter = 0;
+  for (auto &ptr : this->m_blocks) {
+    dst[counter] = ptr.first;
+    dst_basecolor[counter] = ptr.second;
+    counter++;
+    if (counter >= capacity_in_elements) {
+      return counter;
+    }
+  }
+  return counter;
+}
+
+void BlockList::clear() noexcept {
+  for (auto &ptr : this->m_blocks) {
+    delete ptr.first;
+  }
+
+  this->m_blocks.clear();
+}
+
+BlockList::~BlockList() { this->clear(); }
