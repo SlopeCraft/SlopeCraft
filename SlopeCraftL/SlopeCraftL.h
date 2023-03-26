@@ -259,8 +259,8 @@ namespace SlopeCraft {
 [[nodiscard]] SCL_EXPORT Kernel *SCL_createKernel();
 SCL_EXPORT void SCL_destroyKernel(Kernel *);
 
-[[deprecated]] [[nodiscard]] SCL_EXPORT AbstractBlock *SCL_createBlock();
-[[deprecated]] SCL_EXPORT void SCL_destroyBlock(AbstractBlock *);
+[[nodiscard]] SCL_EXPORT AbstractBlock *SCL_createBlock();
+SCL_EXPORT void SCL_destroyBlock(AbstractBlock *);
 
 struct blockListOption {
   const char *image_dir;
