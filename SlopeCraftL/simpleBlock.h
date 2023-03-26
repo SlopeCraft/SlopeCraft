@@ -74,7 +74,7 @@ class simpleBlock : public ::SlopeCraft::AbstractBlock {
   void getImage(uint32_t *dest, bool is_row_major) const noexcept override {
     if (is_row_major) {
       Eigen::Map<Eigen::ArrayXX<uint32_t>> map(dest, 16, 16);
-      map = this->image;
+      map = this->image.transpose();
     } else {
       memcpy(dest, this->image.data(), this->image.size() * sizeof(uint32_t));
     }
@@ -97,7 +97,7 @@ class simpleBlock : public ::SlopeCraft::AbstractBlock {
   void setImage(const uint32_t *src, bool is_row_major) noexcept override {
     if (is_row_major) {
       Eigen::Map<const Eigen::ArrayXX<uint32_t>> map(src, 16, 16);
-      this->image = map;
+      this->image = map.transpose();
     } else {
       this->image.resize(16, 16);
       memcpy(this->image.data(), src, 16 * 16 * sizeof(uint32_t));
