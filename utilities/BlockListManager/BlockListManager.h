@@ -24,7 +24,7 @@ This file is part of SlopeCraft.
 #define BLOCKLISTMANAGER_H
 
 #include <queue>
-
+#include <memory>
 #include <QGroupBox>
 #include <QHBoxLayout>
 #include <QObject>
@@ -51,15 +51,32 @@ blockListPreset load_preset(QString filename, QString &err) noexcept;
 
 QString serialize_preset(const blockListPreset &preset) noexcept;
 
+class BlockListDeleter {
+ public:
+  void operator()(SlopeCraft::BlockListInterface *ptr) noexcept {
+    SlopeCraft::SCL_destroyBlockList(ptr);
+  }
+};
+
 class BlockListManager : public QObject {
   Q_OBJECT
+
  public:
   explicit BlockListManager(QHBoxLayout *_area, QObject *parent = nullptr);
 
   ~BlockListManager();
 
-  void addBlocks(const QJsonArray &, QString imgDir);
+  bool setupFixedBlockList(const QString &filename,
+                           const QString &imgdir) noexcept;
+  bool setupCustomBlockList(const QString &filename,
+                            const QString &imgdir) noexcept;
 
+ private:
+  bool impl_setupBlockList(const QString &filename, const QString &dirname,
+                           std::unique_ptr<SlopeCraft::BlockListInterface,
+                                           BlockListDeleter> &dst) noexcept;
+
+ public:
   void applyPreset(const ushort *);
 
   void setSelected(uchar baseColor, ushort blockSeq);
@@ -97,6 +114,12 @@ class BlockListManager : public QObject {
   bool isApplyingPreset;
   QHBoxLayout *area;
   std::vector<TokiBaseColor *> tbcs;
+
+  std::unique_ptr<SlopeCraft::BlockListInterface, BlockListDeleter> BL_fixed{
+      nullptr};
+  std::unique_ptr<SlopeCraft::BlockListInterface, BlockListDeleter> BL_custom{
+      nullptr};
+
   static const QString baseColorNames[64];
 
  private slots:

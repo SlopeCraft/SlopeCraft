@@ -40,26 +40,32 @@ class TokiBlock : public QObject {
   Q_OBJECT
   friend class TokiBaseColor;
 
-public:
-  explicit TokiBlock(QRadioButton *_target, const QJsonObject &json,
-                     const QString &imgDir, ushort _self,
-                     QObject *parent = nullptr);
+ public:
+  explicit TokiBlock(QRadioButton *_target, SlopeCraft::AbstractBlock *blkp,
+                     uint16_t _self, QObject *parent);
+
   ~TokiBlock();
   const QRadioButton *getTarget() const;
   const SlopeCraft::AbstractBlock *getSimpleBlock() const;
-signals:
+
+  QString nameZH() const noexcept {
+    return QString::fromUtf8(this->block->getNameZH());
+  }
+  QString nameEN() const noexcept {
+    return QString::fromUtf8(this->block->getNameEN());
+  }
+
+ signals:
   void radioBtnClicked(ushort);
 
-private:
-  ushort self; // 指明自己是所属基色的第i个方块
+ private:
+  ushort self;  // 指明自己是所属基色的第 i 个方块
   QRadioButton *target;
-  QString nameZH;
-  QString nameEN;
   SlopeCraft::AbstractBlock *block;
   QRadioButton *getNCTarget() const;
-private slots:
+ private slots:
   void translate(Language);
   void onTargetClicked(bool);
 };
 
-#endif // TOKIBLOCK_H
+#endif  // TOKIBLOCK_H

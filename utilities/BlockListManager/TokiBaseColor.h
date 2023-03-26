@@ -39,7 +39,7 @@ class TokiBaseColor : public QObject {
   Q_OBJECT
   friend class BlockListManager;
 
-public:
+ public:
   explicit TokiBaseColor(uchar, QGridLayout *, QObject *parent = nullptr);
   ~TokiBaseColor();
 
@@ -49,18 +49,19 @@ public:
 
   ushort getSelected() const;
 
-  void addTokiBlock(const QJsonObject &json, const QString &imgDir);
+  void addTokiBlock(SlopeCraft::AbstractBlock *blkp) noexcept;
+
   void makeLabel(QRgb);
 
   void getTokiBlockList(std::vector<const TokiBlock *> &) const;
 
   static uchar mcVer;
 
-signals:
+ signals:
   void userClicked();
   void translate(Language);
 
-private:
+ private:
   uchar baseColor;
   bool isEnabled;
   ushort selected;
@@ -69,11 +70,11 @@ private:
   std::vector<TokiBlock *> tbs;
   bool isAllOverVersion() const;
   void setSelected(ushort);
-private slots:
+ private slots:
   void receiveClicked(ushort);
   void updateEnabled(bool);
   void versionCheck();
   void translateCheckBox(Language);
 };
 
-#endif // TOKIBASECOLOR_H
+#endif  // TOKIBASECOLOR_H

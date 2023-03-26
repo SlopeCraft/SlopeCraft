@@ -62,7 +62,6 @@ This file is part of SlopeCraft.
 #include <string>
 #include <unordered_map>
 #include <vector>
-
 #include <Eigen/Dense>
 
 // #define SLOPECRAFTL_WITH_AICVETR
@@ -266,6 +265,7 @@ class MainWindow : public QMainWindow {
   QTranslator trans_BLM;
   bool Collected;
   QProgressBar *proTracker;
+
   // void applyPre(ushort*BL);
 
  private:
@@ -276,11 +276,6 @@ class MainWindow : public QMainWindow {
   void switchLan(Language);
   void kernelSetType();
   void kernelSetImg();
-
-  QJsonArray getFixedBlocksList(QString);
-  QString getFixedBlockListDir(QString);
-  QJsonArray getCustomBlockList(QString);
-  QString getCustomBlockListDir(QString);
 
   void selectBlockByString(const std::string &);
 

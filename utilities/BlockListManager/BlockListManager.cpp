@@ -68,43 +68,75 @@ void BlockListManager::setVersion(uchar _ver) {
   for (uchar i = 0; i < tbcs.size(); i++) tbcs[i]->versionCheck();
 }
 
-void BlockListManager::addBlocks(const QJsonArray &jArray, QString imgDir) {
-  std::vector<std::queue<QJsonObject>> tasks;
-  tasks.resize(tbcs.size());
-  for (ushort i = 0; i < tasks.size(); i++)
-    while (!tasks[i].empty()) tasks[i].pop();
-  imgDir.replace("\\", "/");
-  QJsonObject temp;
-  uchar baseColor;
-  qDebug() << "jArray.size()=" << jArray.size();
-  for (unsigned int i = 0; i < jArray.size(); i++) {
-    // DispLine
-    temp = jArray[i].toObject();
+bool callback_load_image(const char *filename, uint32_t *dst_row_major) {
+  QImage img(QString::fromLocal8Bit(filename));
 
-    if (!isValidBlockInfo(temp)) {
-      qDebug() << "出现不合法的 json 信息：" << temp;
-      continue;
-    }
-    if (!temp.contains("version")) temp["version"] = 0;
-    if (!temp.contains("idOld")) temp["idOld"] = temp["id"];
-    if (!temp.contains("needGlass")) temp["needGlass"] = false;
-    if (!temp.contains("isGlowing")) temp["isGlowing"] = false;
-    if (!temp.contains("icon")) temp["icon"] = "";
-    if (!temp.contains("endermanPickable")) temp["endermanPickable"] = false;
-    if (!temp.contains("burnable")) temp["burnable"] = false;
-    if (!temp.contains("wallUseable")) temp["wallUseable"] = true;
+  if (img.isNull()) {
+    return false;
+  }
 
-    baseColor = temp.value("baseColor").toInt();
-    tasks[baseColor].push(temp);
-  }
-  // qDebug("已经将全部的 QJsonObject 装入多个队列，开始创建控件");
-  for (ushort i = 0; i < tasks.size(); i++) {
-    // qDebug()<<"基色"<<i<<"有"<<tasks[i].size()<<"个方块";
-    while (!tasks[i].empty()) {
-      tbcs[i]->addTokiBlock(tasks[i].front(), imgDir);
-      tasks[i].pop();
+  QImage another = img.convertedTo(QImage::Format_ARGB32).scaled(16, 16);
+
+  memcpy(dst_row_major, another.scanLine(0), 16 * 16 * sizeof(uint32_t));
+  return true;
+}
+
+bool BlockListManager::setupFixedBlockList(const QString &filename,
+                                           const QString &imgdir) noexcept {
+  return this->impl_setupBlockList(filename, imgdir, this->BL_fixed);
+}
+bool BlockListManager::setupCustomBlockList(const QString &filename,
+                                            const QString &imgdir) noexcept {
+  return this->impl_setupBlockList(filename, imgdir, this->BL_custom);
+}
+
+bool BlockListManager::impl_setupBlockList(
+    const QString &filename, const QString &dirname,
+    std::unique_ptr<SlopeCraft::BlockListInterface, BlockListDeleter>
+        &dst) noexcept {
+  std::string errmsg;
+  errmsg.resize(4096);
+  SlopeCraft::blockListOption opt;
+  opt.errmsg = errmsg.data();
+  opt.errmsg_capacity = errmsg.size();
+  size_t msg_len{0};
+  opt.errmsg_len_dest = &msg_len;
+
+  auto img_dir_local8bit = dirname.toLocal8Bit();
+  opt.image_dir = img_dir_local8bit.data();
+
+  opt.callback_load_image = callback_load_image;
+
+  SlopeCraft::BlockListInterface *bli =
+      SlopeCraft::SCL_createBlockList(filename.toLocal8Bit().data(), opt);
+
+  errmsg.resize(msg_len);
+
+  if (!errmsg.empty()) {
+    if (bli == nullptr) {
+      QMessageBox::critical(dynamic_cast<QWidget *>(this->parent()),
+                            tr("解析方块列表失败"),
+                            QString::fromUtf8(errmsg.data()));
+      return false;
+    } else {
+      QMessageBox::warning(dynamic_cast<QWidget *>(this->parent()),
+                           tr("解析方块列表失败"),
+                           QString::fromUtf8(errmsg.data()));
     }
   }
+  dst.reset(bli);
+
+  std::vector<SlopeCraft::AbstractBlock *> blockps;
+  std::vector<uint8_t> basecolors;
+  basecolors.resize(dst->size());
+  blockps.resize(dst->size());
+
+  dst->get_blocks(blockps.data(), basecolors.data(), blockps.size());
+
+  for (size_t idx = 0; idx < dst->size(); idx++) {
+    this->tbcs[basecolors[idx]]->addTokiBlock(blockps[idx]);
+  }
+  return true;
 }
 
 void BlockListManager::applyPreset(const ushort *preset) {

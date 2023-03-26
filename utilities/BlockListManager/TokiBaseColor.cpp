@@ -29,7 +29,7 @@ TokiBaseColor::TokiBaseColor(uchar _baseColor, QGridLayout *_layout,
     : QObject(parent) {
   layout = _layout;
   baseColor = _baseColor;
-  // 负责创建QCheckBox和对应的弹簧
+  // 负责创建 QCheckBox 和对应的弹簧
 
   layout->addWidget(checkBox = new QCheckBox("启用"), 0, 1);
   checkBox->setChecked(false);
@@ -53,17 +53,16 @@ TokiBaseColor::TokiBaseColor(uchar _baseColor, QGridLayout *_layout,
 }
 
 TokiBaseColor::~TokiBaseColor() {
-  for (ushort i = 0; i < tbs.size(); i++)
-    delete tbs[i];
+  for (ushort i = 0; i < tbs.size(); i++) delete tbs[i];
 }
-void TokiBaseColor::addTokiBlock(const QJsonObject &json,
-                                 const QString &imgDir) {
-  // qDebug("addTokiBlock被调用");
+
+void TokiBaseColor::addTokiBlock(SlopeCraft::AbstractBlock *blkp) noexcept {
   QRadioButton *qrb = new QRadioButton;
   int rows = 1 + tbs.size() / 2;
   int cols = 1 + tbs.size() % 2;
   layout->addWidget(qrb, rows, cols);
-  TokiBlock *tb = new TokiBlock(qrb, json, imgDir, tbs.size());
+#warning this may be replaced with nullptr
+  TokiBlock *tb = new TokiBlock(qrb, blkp, tbs.size(), this);
   tbs.push_back(tb);
 
   if (tb->getSimpleBlock()->getVersion() > mcVer) {
@@ -75,7 +74,6 @@ void TokiBaseColor::addTokiBlock(const QJsonObject &json,
           &TokiBaseColor::receiveClicked);
   connect(this, &TokiBaseColor::translate, tb, &TokiBlock::translate);
   connect(tb, &TokiBlock::radioBtnClicked, this, &TokiBaseColor::userClicked);
-  // qDebug("add a TokiBlock");
 }
 
 void TokiBaseColor::makeLabel(QRgb color) {
@@ -102,7 +100,7 @@ void TokiBaseColor::receiveClicked(ushort _selected) {
   versionCheck();
 }
 
-bool TokiBaseColor::isAllOverVersion() const { // 判断是否所有方块都超版本了
+bool TokiBaseColor::isAllOverVersion() const {  // 判断是否所有方块都超版本了
   bool isAllOver = true;
   for (auto it = tbs.cbegin(); it != tbs.cend(); it++) {
     isAllOver &= ((*it)->block->getVersion() > mcVer);
@@ -139,8 +137,7 @@ void TokiBaseColor::versionCheck() {
   }
   ushort maxIndex = 0;
   for (ushort idx = 0; idx < scores.size(); idx++) {
-    if (scores[idx] > scores[maxIndex])
-      maxIndex = idx;
+    if (scores[idx] > scores[maxIndex]) maxIndex = idx;
   }
   selected = maxIndex;
   if (!tbs[selected]->getTarget()->isChecked()) {
@@ -160,12 +157,12 @@ void TokiBaseColor::updateEnabled(bool isChecked) {
 
 void TokiBaseColor::translateCheckBox(Language lang) {
   switch (lang) {
-  case Language::ZH:
-    checkBox->setText("启用");
-    break;
-  case Language::EN:
-    checkBox->setText("Enable");
-    break;
+    case Language::ZH:
+      checkBox->setText("启用");
+      break;
+    case Language::EN:
+      checkBox->setText("Enable");
+      break;
   }
 }
 
