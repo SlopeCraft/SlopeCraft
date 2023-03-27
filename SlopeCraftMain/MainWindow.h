@@ -70,9 +70,10 @@ This file is part of SlopeCraft.
 #include "AiCvterParameterDialog.h"
 #include "BatchUi.h"
 #include "BlockListManager.h"
-#include "VersionDialog.h"
 #include "previewwind.h"
 #include "tpstrategywind.h"
+
+#include <VersionDialog.h>
 
 class MainWindow;
 
@@ -138,6 +139,8 @@ class MainWindow : public QMainWindow {
 
   inline auto kernelPtr() const { return kernel; }
 
+  static QNetworkAccessManager &networkManager() noexcept;
+
  public slots:
   void ReceiveTPS(tpS);
   // 透明像素处理策略：B->替换为背景色；A->空气；W->暂缓，等待处理
@@ -155,6 +158,8 @@ class MainWindow : public QMainWindow {
   void grabVersion(bool isAuto = true);
 
  private slots:
+
+  void when_network_finished(QNetworkReply *reply, bool is_manually);
 
   void contactG();
   void contactB();

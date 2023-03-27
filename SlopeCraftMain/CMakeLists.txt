@@ -24,53 +24,50 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 endif()
 
 set(SlopeCraftMain_header_files
-    ${CMAKE_CURRENT_SOURCE_DIR}/AiCvterParameterDialog.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/BatchUi.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/TaskBox.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/VersionDialog.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/MainWindow.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/previewwind.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/tpstrategywind.h
+    AiCvterParameterDialog.h
+    BatchUi.h
+    TaskBox.h
+    MainWindow.h
+    previewwind.h
+    tpstrategywind.h
 )
 
 set(SlopeCraftMain_source_files
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/AiCvterParameterDialog.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/BatchUi.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/TaskBox.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/VersionDialog.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/MainWindow.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/previewwind.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/tpstrategywind.cpp
+    AiCvterParameterDialog.cpp
+    BatchUi.cpp
+    TaskBox.cpp
+    main.cpp
+    MainWindow.cpp
+    previewwind.cpp
+    tpstrategywind.cpp
 )
 
 set(SlopeCraftMain_ui_files
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/AiCvterParameterDialog.ui
-    ${CMAKE_CURRENT_SOURCE_DIR}/BatchUi.ui
-    ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.ui
-    ${CMAKE_CURRENT_SOURCE_DIR}/previewwind.ui
-    ${CMAKE_CURRENT_SOURCE_DIR}/TaskBox.ui
-    ${CMAKE_CURRENT_SOURCE_DIR}/tpstrategywind.ui
-    ${CMAKE_CURRENT_SOURCE_DIR}/VersionDialog.ui)
+    AiCvterParameterDialog.ui
+    BatchUi.ui
+    mainwindow.ui
+    previewwind.ui
+    TaskBox.ui
+    tpstrategywind.ui)
 
 set(SlopeCraftMain_ts_files
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/others/SlopeCraft_en_US.ts)
+    others/SlopeCraft_en_US.ts)
 
 if(${SlopeCraft_update_ts_files})
     execute_process(
         COMMAND ${SlopeCraft_Qt_lupdate_executable} ${SlopeCraftMain_header_files} ${SlopeCraftMain_source_files} ${SlopeCraftMain_ui_files} "-ts" ${SlopeCraftMain_ts_files} -no-obsolete
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/others
+        WORKING_DIRECTORY others
     )
 endif()
 
 set(SlopeCraftMain_qrc_files
-    ${CMAKE_CURRENT_SOURCE_DIR}/others/BlockTextures.qrc
-    ${CMAKE_CURRENT_SOURCE_DIR}/others/Pics.qrc
+    others/BlockTextures.qrc
+    others/Pics.qrc
 
-    # ${CMAKE_CURRENT_SOURCE_DIR}/others/SlopeCraft_translation.qrc
+    # others/SlopeCraft_translation.qrc
 )
 
 set(SlopeCraftMain_project_sources
@@ -109,6 +106,7 @@ target_link_libraries(SlopeCraft
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Network
     Qt${QT_VERSION_MAJOR}::Concurrent
+    VersionDialog
 )
 
 set_target_properties(SlopeCraft PROPERTIES

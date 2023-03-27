@@ -1739,135 +1739,77 @@ QJsonObject MainWindow::GithubAPIJson2Latest3xVer(const QJsonArray &ja) {
 }
 
 void MainWindow::grabVersion(bool isAuto) {
-  static bool isRunning = false;
-  if (isRunning) {
+  QNetworkRequest request(
+      QUrl("https://api.github.com/repos/SlopeCraft/SlopeCraft/releases"));
+
+  QNetworkReply *reply = networkManager().get(request);
+
+  connect(reply, &QNetworkReply::finished, [this, reply, isAuto]() {
+    this->when_network_finished(reply, !isAuto);
+  });
+}
+
+void MainWindow::when_network_finished(QNetworkReply *reply, bool is_manually) {
+  const QByteArray content = reply->readAll();
+  version_info info;
+  try {
+    info = extract_latest_version(content.data());
+  } catch (std::exception &e) {
+    QMessageBox::warning(
+        this, tr("获取最新版本失败"),
+        tr("解析 \"%1\" "
+           "返回的结果时出现错误：\n\n%"
+           "2\n\n这不是一个致命错误，不影响软件使用。\n解析失败的信息为：\n%3")
+            .arg(reply->url().toString())
+            .arg(e.what())
+            .arg(content),
+        QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore});
+    reply->deleteLater();
     return;
   }
-  isRunning = true;
 
-  static const QString url =
-      "https://api.github.com/repos/SlopeCraft/SlopeCraft/releases";
-
-  QEventLoop tempLoop;
-  QNetworkAccessManager *manager = new QNetworkAccessManager;
-  QNetworkRequest request;
-  request.setUrl(QUrl(url));
-  QNetworkReply *reply = manager->get(request);
-  QObject::connect(reply, &QNetworkReply::finished, &tempLoop,
-                   &QEventLoop::quit);
-  qDebug() << "waitting for reply";
-  tempLoop.exec();
-  qDebug() << reply->isFinished();
-  QByteArray result = reply->readAll();
   reply->deleteLater();
 
-  QJsonParseError error;
-  QJsonDocument jd = QJsonDocument::fromJson(result, &error);
-  if (error.error != error.NoError) {
-    QMessageBox::StandardButton userReply = QMessageBox::information(
-        this, QObject::tr("检查更新时遇到 Json 解析错误"),
-        QObject::tr("网址  ") + url +
-            QObject::tr("  "
-                        "回复的信息无法通过 json "
-                        "解析。\n\n这只是检查更新时遇到的故障，但"
-                        "不要紧，软件该用还能用。\n点击 No "
-                        "以忽略这个错误；点击 NoToAll 则"
-                        "不会再自动检查更新。\n\n具体的错误为：\n") +
-            error.errorString() + QObject::tr("\n\n具体回复的信息为：\n") +
-            result,
-        QMessageBox::StandardButton::No, QMessageBox::StandardButton::NoToAll);
-    if (userReply == QMessageBox::StandardButton::NoToAll) {
-      setAutoCheckUpdate(false);
+  reply->deleteLater();
+
+  const uint64_t latest_ver = info.version_u64;
+
+  const auto &tag_name = info.tag_name;
+
+  const uint64_t ui_ver = SC_VERSION_U64;
+
+  if (ui_ver == latest_ver) {
+    if (is_manually) {
+      QMessageBox::information(this, tr("检查更新成功"),
+                               tr("您在使用的是最新版本"));
     }
-    isRunning = false;
+
     return;
   }
 
-  QJsonArray ja = jd.array();
-
-  bool hasKey = ja.first().toObject().contains("tag_name");
-  if (!hasKey) {
-    QMessageBox::StandardButton userReply = QMessageBox::information(
-        this, QObject::tr("检查更新时返回信息错误"),
-        QObject::tr("网址  ") + url +
-            QObject::tr(
-                "  "
-                "回复的信息中不包含版本号（\"tag_"
-                "name\"）。\n\n这只是检查更新时遇到的故障，但不要紧，软"
-                "件该用还能用。\n点击 No 以忽略这个错误；点击 NoToAll 则不"
-                "会再自动检查更新。\n") +
-            QObject::tr("\n\n具体回复的信息为：\n") + result,
-        QMessageBox::StandardButton::No, QMessageBox::StandardButton::NoToAll);
-    if (userReply == QMessageBox::StandardButton::NoToAll) {
-      setAutoCheckUpdate(false);
+  if (ui_ver > latest_ver) {
+    if (is_manually) {
+      QMessageBox::information(
+          this, tr("检查更新成功"),
+          tr("您使用的版本 (%1) 比已发布的 (%2) 更新，可能是测试版。")
+              .arg(SC_VERSION_STR)
+              .arg(tag_name));
     }
-    isRunning = false;
     return;
   }
 
-  bool isKeyString = ja.first().toObject().value("tag_name").isString();
-  if (!isKeyString) {
-    QMessageBox::StandardButton userReply = QMessageBox::information(
-        this, QObject::tr("检查更新时返回信息错误"),
-        QObject::tr("网址  ") + url +
-            QObject::tr(
-                "  "
-                "回复的信息中，版本号（\"tag_"
-                "name\"）不是字符串。\n\n这只是检查更新时遇到的故障，但"
-                "不要紧，软件该用还能用。\n点击 No 以忽略这个错误；点击 No"
-                "ToAll 则不会再自动检查更新。\n") +
-            QObject::tr("\n\n具体回复的信息为：\n") + result,
-        QMessageBox::StandardButton::No, QMessageBox::StandardButton::NoToAll);
-    if (userReply == QMessageBox::StandardButton::NoToAll) {
-      setAutoCheckUpdate(false);
-    }
-    isRunning = false;
-    return;
-  }
+  {
+    VersionDialog *vd = new VersionDialog(this);
+    vd->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
+    vd->setAttribute(Qt::WidgetAttribute::WA_AlwaysStackOnTop, true);
+    vd->setWindowFlag(Qt::WindowType::Window, true);
 
-  QJsonObject latest3xJo = GithubAPIJson2Latest3xVer(ja);
+    vd->setup_text(
+        tr("VisualCraft 已更新"),
+        tr("最新版本为%1，当前版本为%2").arg(tag_name).arg(SC_VERSION_STR),
+        info.body, info.html_url);
 
-  QString updateInfo = latest3xJo["body"].toString();
-
-  QString latestVersion = latest3xJo["tag_name"].toString();
-  if (latestVersion == selfVersion) {
-    if (!isAuto)
-      QMessageBox::information(this, tr("检查更新完毕"),
-                               tr("现在你正在用的就是最新版本！"));
-    isRunning = false;
-    return;
-  } else {
-    auto verDialog = new VersionDialog(this);
-    verDialog->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
-    verDialog->setTexts(QObject::tr("SlopeCraft 已更新"),
-                        QObject::tr("好消息！好消息！SlopeCraft 更新了！\n") +
-                            QObject::tr("当前版本为") + selfVersion +
-                            QObject::tr("，检查到最新版本为") + latestVersion,
-                        updateInfo);
-
-    verDialog->show();
-    QEventLoop EL(this);
-    connect(this, &MainWindow::closed, verDialog, &VersionDialog::close);
-    connect(verDialog, &VersionDialog::finished, &EL, &QEventLoop::quit);
-
-    EL.exec();
-
-    VersionDialog::userChoice userReply = verDialog->getResult();
-
-    if (userReply == VersionDialog::userChoice::Yes) {
-      QDesktopServices::openUrl(QUrl(latest3xJo["html_url"].toString()));
-      /*
-      if(trans.language()=="zh_CN") {
-          QDesktopServices::openUrl(
-                      QUrl("https://gitee.com/TokiNoBug/SlopeCraft/releases"));
-      }
-      */
-    }
-    if (userReply == VersionDialog::userChoice::NoToAll) {
-      setAutoCheckUpdate(false);
-    }
-
-    isRunning = false;
+    vd->show();
     return;
   }
 }
@@ -2114,4 +2056,9 @@ void MainWindow::exportAvailableColors() {
     this->ProductDir = dest_file;
   }
   return;
+}
+
+QNetworkAccessManager &MainWindow::networkManager() noexcept {
+  static QNetworkAccessManager manager;
+  return manager;
 }
