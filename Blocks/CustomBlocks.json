@@ -204,6 +204,131 @@
             "icon": "dark_prismarine.png",
             "version": 13,
             "idOld": "minecraft:stone_slab[half=top,variant=dark_prismarine]"
+        },
+        {
+            "baseColor": 2,
+            "id": "minecraft:sandstone",
+            "nameZH": "砂岩",
+            "nameEN": "Sand stone",
+            "icon": "sandstone.png",
+            "version": 0
+        },
+        {
+            "baseColor": 2,
+            "id": "minecraft:bone_block[axis=y]",
+            "nameZH": "骨块",
+            "nameEN": "Bone block",
+            "icon": "bone_block_top.png",
+            "version": 0
+        },
+        {
+            "baseColor": 10,
+            "id": "minecraft:granite",
+            "nameZH": "花岗岩",
+            "nameEN": "Granite",
+            "icon": "granite.png",
+            "version": 0,
+            "idOld": "minecraft:stone[variant=granite]"
+        },
+        {
+            "baseColor": 11,
+            "id": "minecraft:andesite",
+            "nameZH": "安山岩",
+            "nameEN": "Andesite",
+            "icon": "andesite.png",
+            "version": 0,
+            "idOld": "minecraft:stone[variant=andesite]"
+        },
+        {
+            "baseColor": 11,
+            "id": "minecraft:polished_andesite",
+            "nameZH": "磨制安山岩",
+            "nameEN": "Polished andesite",
+            "icon": "polished_andesite.png",
+            "version": 0,
+            "idOld": "minecraft:stone[variant=smooth_andesite]"
+        },
+        {
+            "baseColor": 14,
+            "id": "minecraft:diorite",
+            "nameZH": "闪长岩",
+            "nameEN": "Diorite",
+            "icon": "diorite.png",
+            "version": 0,
+            "idOld": "minecraft:stone[variant=diorite]"
+        },
+        {
+            "baseColor": 15,
+            "id": "minecraft:red_sandstone",
+            "nameZH": "红砂岩",
+            "nameEN": "Red sandstone",
+            "icon": "red_sandstone.png",
+            "version": 0,
+            "idOld": "minecraft:red_sandstone[type=red_sandstone]"
+        },
+        {
+            "baseColor": 19,
+            "id": "minecraft:melon",
+            "nameZH": "西瓜",
+            "nameEN": "Melon",
+            "icon": "melon_top.png",
+            "version": 0
+        },
+        {
+            "baseColor": 24,
+            "id": "minecraft:mycelium[snowy=false]",
+            "nameZH": "菌丝",
+            "nameEN": "Mycelium",
+            "icon": "mycelium_top.png",
+            "version": 0
+        },
+        {
+            "baseColor": 27,
+            "id": "minecraft:moss_block",
+            "nameZH": "苔藓块",
+            "nameEN": "Moss block",
+            "icon": "moss_block.png",
+            "version": 17
+        },
+        {
+            "baseColor": 29,
+            "id": "minecraft:basalt[axis=y]",
+            "nameZH": "玄武岩",
+            "nameEN": "Basalt",
+            "icon": "basalt_top.png",
+            "version": 16
+        },
+        {
+            "baseColor": 29,
+            "id": "minecraft:blackstone",
+            "nameZH": "黑石",
+            "nameEN": "Black stone",
+            "icon": "blackstone.png",
+            "version": 16
+        },
+        {
+            "baseColor": 29,
+            "id": "minecraft:crying_obsidian",
+            "nameZH": "哭泣的黑曜石",
+            "nameEN": "Crying obsidian",
+            "icon": "crying_obsidian.png",
+            "version": 16
+        },
+        {
+            "baseColor": 29,
+            "id": "minecraft:netherite_block",
+            "nameZH": "下界合金块",
+            "nameEN": "Netherite block",
+            "icon": "netherite_block.png",
+            "version": 16
+        },
+        {
+            "baseColor": 43,
+            "id": "minecraft:tuff",
+            "nameZH": "凝灰岩",
+            "nameEN": "Tuff",
+            "icon": "tuff.png",
+            "version": 17
         }
     ]
 }
