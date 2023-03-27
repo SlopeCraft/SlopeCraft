@@ -28,4 +28,3 @@ body:
         Please provide your email address or other contact information.
       value: |
         Email: <your email address>
-      render: Markdown
