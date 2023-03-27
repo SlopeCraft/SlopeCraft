@@ -47,17 +47,10 @@ This file is part of SlopeCraft.
 #include <QTranslator>
 #include <QUrl>
 
-#include <QJsonArray>
-#include <QJsonDocument>
-// #include <QJsonError>
-#include <QJsonObject>
-
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
 
-#include <cstring>
-#include <fstream>
 #include <iostream>
 #include <string>
 #include <unordered_map>
@@ -118,9 +111,6 @@ class MainWindow : public QMainWindow {
 
   // 初始化方块列表用
   void InitializeAll();
-  static void putSettings(const QJsonObject &jo);
-
-  static const QString selfVersion;
 
   static constexpr char sc_preset_extension[] = ".sc_preset_json";
 
@@ -152,8 +142,6 @@ class MainWindow : public QMainWindow {
   void turnEn();
 
   void checkVersion();
-
-  void setAutoCheckUpdate(bool);
 
   void grabVersion(bool isAuto = true);
 
@@ -294,12 +282,7 @@ class MainWindow : public QMainWindow {
 
   static void algoProgressRangeSet(void *, int min, int max, int val);
   static void algoProgressAdd(void *, int deltaVal);
-
-  static QJsonObject GithubAPIJson2Latest3xVer(const QJsonArray &);
 };
-
-QJsonObject loadIni(bool = false);
-bool isValidIni(const QJsonObject &);
 
 using EImage = Eigen::ArrayXX<uint32_t>;
 

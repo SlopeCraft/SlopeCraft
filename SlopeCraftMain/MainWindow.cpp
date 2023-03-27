@@ -47,8 +47,6 @@ const ushort MainWindow::BLGlowing[64] = {
     0, 0, 0, 0, 0, 0, 6, 0, 0, 1, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0};
 
-const QString MainWindow::selfVersion = SlopeCraft::SCL_getSCLVersion();
-
 bool MainWindow::isBatchOperating = false;
 
 inline uint32_t inverseColor(uint32_t raw) noexcept {
@@ -1722,22 +1720,6 @@ void MainWindow::checkVersion() {
   return;
 }
 
-QJsonObject MainWindow::GithubAPIJson2Latest3xVer(const QJsonArray &ja) {
-  for (const auto &jvref : ja) {
-    const QJsonObject &jo = jvref.toObject();
-    const QString tagName = jo["tag_name"].toString();
-    qDebug().noquote().nospace() << "tagName=" << tagName;
-    if (jo["prerelease"] == true) continue;
-    if (jo["draft"] == true) continue;
-    if (tagName.startsWith("v3.", Qt::CaseInsensitive) ||
-        tagName.startsWith("v5.", Qt::CaseInsensitive)) {
-      qDebug() << "chosen latest version : " << tagName;
-      return jo;
-    }
-  }
-  return ja.first().toObject();
-}
-
 void MainWindow::grabVersion(bool isAuto) {
   QNetworkRequest request(
       QUrl("https://api.github.com/repos/SlopeCraft/SlopeCraft/releases"));
@@ -1805,27 +1787,13 @@ void MainWindow::when_network_finished(QNetworkReply *reply, bool is_manually) {
     vd->setWindowFlag(Qt::WindowType::Window, true);
 
     vd->setup_text(
-        tr("VisualCraft 已更新"),
+        tr("SlopeCraft 已更新"),
         tr("最新版本为%1，当前版本为%2").arg(tag_name).arg(SC_VERSION_STR),
         info.body, info.html_url);
 
     vd->show();
     return;
   }
-}
-
-void MainWindow::putSettings(const QJsonObject &jo) {
-  QFile ini("./settings.json");
-  ini.open(QFile::OpenModeFlag::ReadWrite | QFile::OpenModeFlag::Text);
-
-  ini.write(QJsonDocument(jo).toJson());
-  ini.close();
-}
-
-void MainWindow::setAutoCheckUpdate(bool autoCheckUpdate) {
-  QJsonObject jo = loadIni();
-  jo["autoCheckUpdates"] = autoCheckUpdate;
-  putSettings(jo);
 }
 
 void MainWindow::onBlockListChanged() {

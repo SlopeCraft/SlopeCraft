@@ -58,8 +58,8 @@ set(SlopeCraftMain_ts_files
 
 if(${SlopeCraft_update_ts_files})
     execute_process(
-        COMMAND ${SlopeCraft_Qt_lupdate_executable} ${SlopeCraftMain_header_files} ${SlopeCraftMain_source_files} ${SlopeCraftMain_ui_files} "-ts" ${SlopeCraftMain_ts_files} -no-obsolete
-        WORKING_DIRECTORY others
+        COMMAND ${SlopeCraft_Qt_lupdate_executable} ${SlopeCraftMain_header_files} ${SlopeCraftMain_source_files} ${SlopeCraftMain_ui_files} "-ts" ${SlopeCraftMain_ts_files} ${SlopeCraft_ts_flags}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     )
 endif()
 

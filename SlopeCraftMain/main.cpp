@@ -47,16 +47,6 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  QJsonObject settings = loadIni(isZH);
-  isZH = (settings.value("Language").toString() == "zh_CN");
-  /*
-  for (const QString &locale : uiLanguages) {
-      const QString baseName = "SlopeCraft_" + QLocale(locale).name();
-      if (translator.load(":/i18n/" + baseName)) {
-          a.installTranslator(&translator);
-          break;
-      }
-  }*/
   MainWindow w;
   w.show();
 
@@ -72,80 +62,7 @@ int main(int argc, char *argv[]) {
   else
     w.turnEn();
 
-  bool autoCheck = settings["autoCheckUpdates"].toBool();
-  if (autoCheck) {
-    w.grabVersion(true);
-  }
+  w.grabVersion(true);
 
   return a.exec();
-}
-
-QJsonObject loadIni(bool isLocalZH) {
-  qDebug("开始寻找初始配置文件");
-  if (QFile("./settings.json").exists()) {
-    qDebug("初始配置文件存在");
-    QFile ini("./settings.json");
-    ini.open(QFile::OpenModeFlag::ReadWrite | QFile::OpenModeFlag::Text);
-    QJsonParseError error;
-    QJsonObject jo = QJsonDocument::fromJson(ini.readAll(), &error).object();
-    ini.close();
-    if (error.error == QJsonParseError::NoError && isValidIni(jo)) {
-      qDebug("初始配置文件解析成功");
-      return jo;
-    } else {
-      qDebug("初始配置文件格式无法解析，将会删除");
-      qDebug() << error.errorString();
-      qDebug() << (ini.remove() ? "删除成功" : "删除失败");
-    }
-  }
-  qDebug("初始配置文件不存在，将重新创建");
-
-  QJsonObject jo;
-  jo["Language"] = (isLocalZH ? "zh_CN" : "en_US");
-  jo["autoCheckUpdates"] = true;
-
-  MainWindow::putSettings(jo);
-  /*
-  QFile ini("./settings.json");
-  ini.open(QFile::OpenModeFlag::WriteOnly|QFile::OpenModeFlag::Text);
-  QString js;
-  if(isLocalZH) {
-      js="{\n    \"Language\":\"zh_CN\",\n    \"autoCheckUpdates\":true\n}";
-  } else
-  {
-      js="{\n    \"Language\":\"en_US\",\n    \"autoCheckUpdates\":true\n}";
-  }
-  ini.write(js.toUtf8());
-  ini.close();
-  */
-  qDebug("创建初始配置文件");
-  return loadIni(isLocalZH);
-}
-
-bool isValidIni(const QJsonObject &jo) {
-  if (jo.isEmpty()) {
-    qDebug("emptyObject");
-    return false;
-  }
-
-  const QStringList langs = {"zh_CN", "en_US"};
-  if (!jo.contains("Language") ||
-      !langs.contains(jo.value("Language").toString())) {
-    qDebug() << (jo.contains("Language")
-                     ? "Language value=" + jo.value("Language").toString()
-                     : "jo doesn't contains Language key");
-    return false;
-  }
-  //
-  if (!jo.contains("autoCheckUpdates")) {
-    qDebug() << "jo doesn't contains key \"autoCheckUpdates\"";
-    return false;
-  }
-  if (!jo["autoCheckUpdates"].isBool()) {
-    qDebug() << "jo[\"autoCheckUpdates\"] is not a boolean value, but "
-             << jo["autoCheckUpdates"];
-    return false;
-  }
-
-  return true;
 }
