@@ -21,7 +21,8 @@ message(STATUS "Downloading cli11.hpp ......")
 
 file(DOWNLOAD
   https://github.com/CLIUtils/CLI11/releases/download/v2.3.2/CLI11.hpp
-  ${CMAKE_SOURCE_DIR}/3rdParty/cli11/CLI11.hpp)
+  ${CMAKE_SOURCE_DIR}/3rdParty/cli11/CLI11.hpp
+  SHOW_PROGRESS)
 
 if(NOT EXISTS ${CMAKE_SOURCE_DIR}/3rdParty/cli11/CLI11.hpp)
   message(ERROR "Failed to download cli11.")

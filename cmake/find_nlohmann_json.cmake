@@ -22,7 +22,8 @@ if(${SlopeCraft_download_njson})
     message(STATUS "Downloading nlohmann json...")
     file(DOWNLOAD 
         "https://github.com/nlohmann/json/releases/download/v3.11.2/json.hpp" 
-        ${CMAKE_SOURCE_DIR}/3rdParty/nlohmann/json.hpp)
+        ${CMAKE_SOURCE_DIR}/3rdParty/nlohmann/json.hpp
+        SHOW_PROGRESS)
 
     message(STATUS "nlohmann json downloaded")
     set(SlopeCraft_download_njson OFF)

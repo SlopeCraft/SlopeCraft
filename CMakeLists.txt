@@ -141,8 +141,8 @@ set(SlopeCraft_readme_and_license_files
 
     LICENSE
     README.md
-    README_EN.md
-    docs/简体中文版协议.txt
+    README-en.md
+    license-translations/LICENSE-zh.md
 )
 
 install(FILES ${SlopeCraft_readme_and_license_files}
