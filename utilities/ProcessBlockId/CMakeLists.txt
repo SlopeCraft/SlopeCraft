@@ -12,3 +12,7 @@ add_executable(test_process_block_id
     test_process_blk_id.cpp)
 
 target_link_libraries(test_process_block_id PRIVATE ProcessBlockId)
+
+if(${LINUX})
+    set_target_properties(ProcessBlockId PROPERTIES POSITION_INDEPENDENT_CODE ON)
+endif()

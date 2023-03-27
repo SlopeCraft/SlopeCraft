@@ -61,7 +61,7 @@ void TokiBaseColor::addTokiBlock(SlopeCraft::AbstractBlock *blkp) noexcept {
   int rows = 1 + tbs.size() / 2;
   int cols = 1 + tbs.size() % 2;
   layout->addWidget(qrb, rows, cols);
-#warning this may be replaced with nullptr
+
   TokiBlock *tb = new TokiBlock(qrb, blkp, tbs.size(), this);
   tbs.push_back(tb);
 
