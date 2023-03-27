@@ -35,7 +35,7 @@ body:
       description: |
         清晰简洁的描述您遇到的错误。
         请告诉我们它是构建时错误还是运行时错误。
-      value: |
+      placeholder: |
         当我执行 <X> 时，会发生 <Y> 并且我看到以下错误消息：
         
         ```
@@ -45,7 +45,6 @@ body:
         预期行为：
         
         当我执行 <X> 时，应该发生 <Z>。
-      render: Markdown
 
   - type: textarea
     id: reproduction
@@ -56,11 +55,10 @@ body:
       description: |
         添加用于重现行为的命令或采取的步骤。
         包括链接、参考资料以及其他任何可以帮助我们了解您遇到的问题的内容。
-      value: |
+      placeholder: |
         1. 从 Release 下载应用
         2. 点击 '...' 并将 <X> 设置为 '...'
         3. 看到错误
-      render: Markdown
 
   - type: textarea
     id: logs
@@ -78,13 +76,13 @@ body:
     attributes:
       label: 环境
       description: |
+        请告诉我们您遇到问题的环境（操作系统、SlopeCraft 版本等）。
         示例：
           - **操作系统**：Windows 10 20H2
           - **SlopeCraft 版本**：3.10.1
       value: |
         - **操作系统**：
         - **SlopeCraft 版本：**：
-      render: Markdown
 
   - type: markdown
     attributes:
@@ -106,6 +104,7 @@ body:
         请确认本错误仍然存在于最新版本（或提交）的 SlopeCraft 中。
         
         ---------
+
   - type: checkboxes
     id: terms
     attributes:

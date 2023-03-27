@@ -58,6 +58,7 @@ body:
         请确认是否已经有与该功能请求的 issue。
         
         ---------
+
   - type: checkboxes
     id: terms
     attributes:

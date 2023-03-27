@@ -35,7 +35,7 @@ body:
       description: |
         A clear and concise description of what the bug is.
         Please, explain whether it's a build-time error or a runtime error.
-      value: |
+      placeholder: |
         When I do <X>, <Y> happens and I see the following error message:
         
         ```
@@ -45,8 +45,6 @@ body:
         Expected behavior:
         
         When I do <X>, <Z> should happen instead.
-      render: Markdown
-
 
   - type: textarea
     id: reproduction
@@ -57,11 +55,10 @@ body:
       description: |
         Add commands used or steps taken to reproduce the behaviour.
         Include links, references or anything else that will give us more context about the issue you are encountering.
-      value: |
+      placeholder: |
         1. Download application from Release
         2. Click '...' after setting <X> to '...'
         3. See error
-      render: Markdown
 
   - type: textarea
     id: logs
@@ -79,13 +76,13 @@ body:
     attributes:
       label: Environment
       description: |
+        Environment (Operating System, SlopeCraft Version, etc.) in which the issue was encountered.
         examples:
           - **Operating System**: Windows 10 20H2
           - **SlopeCraft Version**: 3.10.1
       value: |
         - **Operating System**:
         - **SlopeCraft Version**:
-      render: Markdown
 
   - type: markdown
     attributes:
@@ -107,6 +104,7 @@ body:
         Please confirm that the bug still exists in the newest version (commit) of SlopeCraft.
         
         ---------
+
   - type: checkboxes
     id: terms
     attributes:
