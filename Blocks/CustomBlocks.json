@@ -1,53 +1,51 @@
 {
     "CustomBlocks": [
+        // 这个文件列出了所有用户自定义的方块的信息",
+        // 你可以按照这样的格式自定义添加新的方块，包括 mod 方块",
+        // 但必须遵守 json 格式",
+        // 如果 json 格式出错，整个文件都会无法解析，SlopeCraft 会报错。
         {
+            // baseColor 是这种方块对应的基色，是必填项（非常非常重要！！！！！！！）",
             "baseColor": 15,
+            // id 是这种方块的 id，也是必填项，最好附带完整的方块状态，必须加 minecraft:前缀",
             "id": "minecraft:waxed_cut_copper_slab[type=top,waterlogged=false]",
+            // nameZH 是方块中文名称，必填",
             "nameZH": "涂蜡切制铜上半砖",
+            // nameEN 是方块英文名称，必填",
             "nameEN": "Waxed cut copper slab",
+            // icon 是方块对应图片的文件名，它应当放在 CustomBlocks 文件夹下。必填",
             "icon": "waxed_cut_copper.png",
-            "version": 17,
-            "Hint0": "这个文件列出了所有用户自定义的方块的信息",
-            "Hint1": "你可以按照这样的格式自定义添加新的方块，包括 mod 方块",
-            "Hint2": "但必须遵守 json 格式",
-            "Hint3": "baseColor 是这种方块对应的基色，是必填项（非常非常重要！！！！！！！）",
-            "Hint4": "id 是这种方块的 id，也是必填项，最好附带完整的方块状态，必须加 minecraft:前缀",
-            "Hint5": "nameZH 是方块中文名称，必填",
-            "Hint6": "nameEN 是方块英文名称，必填",
-            "Hint7": "icon 是方块对应图片的文件名，它应当放在 CustomBlocks 文件夹下。必填",
-            "Hint8": "version 是方块最早出现的版本。0 代表早于 1.12，12 代表 1.12，13 代表 1.13，如此类推。255 代表尚未出现的版本",
-            "Hint9": "idOld 是该方块在 1.12 的方块 id（如果有的话），必须加 minecraft:前缀，选填，默认为空字符串",
-            "Hint10": "needGlass 代表这个方块的下方需要依附其他方块，默认为否",
-            "Hint11": "isGlowing 代表这个方块是发光的，默认为否",
-            "Hint12": "endermanPickable 代表这个方块可以被末影人偷走，默认为否",
-            "Hint13": "burnable 代表这个方块会被火焰、岩浆或闪电点燃并燃烧，默认为否",
-            "Hint14": "所有的 Hint 都会被忽略",
-            "Hint15": "如果 json 格式出错，整个文件都会无法解析，SlopeCraft 会报错。"
+            // version 是方块最早出现的版本。0 代表早于 1.12，12 代表 1.12，13 代表 1.13，如此类推。255 代表尚未出现的版本",
+            "version": 17
+            // idOld 是该方块在 1.12 的方块 id（如果有的话），必须加 minecraft:前缀，选填，默认为空字符串",
+            // needGlass 代表这个方块的下方需要依附其他方块，默认为否",
+            // isGlowing 代表这个方块是发光的，默认为否",
+            // endermanPickable 代表这个方块可以被末影人偷走，默认为否",
+            // burnable 代表这个方块会被火焰、岩浆或闪电点燃并燃烧，默认为否
         },
+        // This json file includes information of all custom blocks.
+        // You can add your custom block in such format, including mod-blocks.
+        // But always remember to follow json format
+        // The whole file will failed to be parsed once an error occurred in json format, then SlopeCraft will complain.
         {
+            // baseColor is the base color of this block on map, a compulsory item(EXTREMELY IMPORTANT!!!!)
             "baseColor": 11,
+            // id is the block id with full blockstatus with minecraft: prefix. Compulsory item.
             "id": "minecraft:stone_slab[type=top,waterlogged=false]",
+            // nameZH is the Chinese name. Compulsory item.
             "nameZH": "石头上半砖",
+            // nameEN is the English name. Compulsory item.
             "nameEN": "Stone slab",
+            // icon is the image filename correspoing to this block, the image should be put under CustomBlocks directory. Compulsory item.
             "icon": "stone.png",
+            // version is the earliest version when the block is added to Minecraft. 0 means earlier than 1.12, 12 means 1.12, 13 means 1.13, and so on. 255 means future version.
             "version": 0,
-            "idOld": "minecraft:stone_slab[half=top,variant=stone]",
-            "Hint0": "This json file includes information of all custom blocks.",
-            "Hint1": "You can add your custom block in such format, including mod-blocks.",
-            "Hint2": "But always remember to follow json format",
-            "Hint3": "baseColor is the base color of this block on map, a compulsory item(EXTREMELY IMPORTANT!!!!)",
-            "Hint4": "id is the block id with full blockstatus with minecraft: prefix. Compulsory item.",
-            "Hint5": "nameZH is the Chinese name. Compulsory item.",
-            "Hint6": "nameEN is the English name. Compulsory item.",
-            "Hint7": "icon is the image filename correspoing to this block, the image should be put under CustomBlocks directory. Compulsory item.",
-            "Hint8": "version is the earliest version when the block is added to Minecraft. 0 means earlier than 1.12, 12 means 1.12, 13 means 1.13, and so on. 255 means future version.",
-            "Hint9": "idOld is the blockid in 1.12 (if there is) with minecraft: prefix. default value is an empty string",
-            "Hint10": "needGlass means if this block must be setted on a solid block, default value is false",
-            "Hint11": "isGlowing means if the block glows, default value is false.",
-            "Hint12": "endermanPickable means if the block can be picked by enderman, default value is false",
-            "Hint13": "burnable means if the block can be lit by fire, lava or lightning blot, default value is false",
-            "Hint14": "All hints will be ignored",
-            "Hint15": "The whole file will failed to be parsed once an error occurred in json format, then SlopeCraft will complain."
+            // idOld is the blockid in 1.12 (if there is) with minecraft: prefix. default value is an empty string
+            "idOld": "minecraft:stone_slab[half=top,variant=stone]"
+            // needGlass means if this block must be setted on a solid block, default value is false
+            // isGlowing means if the block glows, default value is false.
+            // endermanPickable means if the block can be picked by enderman, default value is false
+            // burnable means if the block can be lit by fire, lava or lightning blot, default value is false
         },
         {
             "baseColor": 2,
