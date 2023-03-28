@@ -47,6 +47,7 @@ struct blockListPreset {
   std::vector<std::pair<bool, QString>> values;
 };
 
+blockListPreset load_preset(QString filename) noexcept(false);
 blockListPreset load_preset(QString filename, QString &err) noexcept;
 
 QString serialize_preset(const blockListPreset &preset) noexcept;
@@ -77,8 +78,6 @@ class BlockListManager : public QObject {
                                            BlockListDeleter> &dst) noexcept;
 
  public:
-  void applyPreset(const ushort *);
-
   void setSelected(uchar baseColor, ushort blockSeq);
 
   void setEnabled(uchar baseColor, bool isEnable);
@@ -100,6 +99,8 @@ class BlockListManager : public QObject {
   void getBlockPtrs(const SlopeCraft::AbstractBlock **, uint8_t *) const;
 
   bool loadPreset(const blockListPreset &preset);
+
+  bool loadInternalPreset(const blockListPreset &preset) noexcept;
 
   blockListPreset currentPreset() const noexcept;
 

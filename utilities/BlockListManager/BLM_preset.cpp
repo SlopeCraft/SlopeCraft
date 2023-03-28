@@ -87,3 +87,14 @@ QString serialize_preset(const blockListPreset& preset) noexcept {
 
   return QString::fromUtf8(str);
 }
+
+blockListPreset load_preset(QString filename) noexcept(false) {
+  QString err;
+  auto temp = load_preset(filename, err);
+
+  if (!err.isEmpty()) {
+    throw std::runtime_error{err.toUtf8()};
+  }
+
+  return temp;
+}

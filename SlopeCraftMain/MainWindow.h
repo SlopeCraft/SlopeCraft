@@ -241,14 +241,12 @@ class MainWindow : public QMainWindow {
 
   QImage rawPic;
 
-  // QTranslator translater;
-  // bool Enabled[64];//被启动的方块列表，相当于最终的 MIndex
-  static const ushort BLCreative[64];
-  static const ushort BLCheaper[64];
-  static const ushort BLBetter[64];
-  static const ushort BLGlowing[64];
-
   static bool isBatchOperating;
+
+  static blockListPreset preset_vanilla;
+  static blockListPreset preset_elegant;
+  static blockListPreset preset_cheap;
+  static blockListPreset preset_shiny;
 
   tpS Strategy;
 

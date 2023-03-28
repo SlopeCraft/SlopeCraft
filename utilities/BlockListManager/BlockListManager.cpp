@@ -139,17 +139,6 @@ bool BlockListManager::impl_setupBlockList(
   return true;
 }
 
-void BlockListManager::applyPreset(const ushort *preset) {
-  qDebug("applyPreset");
-  isApplyingPreset = true;
-  for (ushort i = 0; i < tbcs.size(); i++) {
-    tbcs[i]->setSelected(preset[i]);
-    tbcs[i]->checkBox->setChecked(true);
-  }
-  isApplyingPreset = false;
-  emit blockListChanged();
-}
-
 void BlockListManager::setSelected(uchar baseColor, ushort blockSeq) {
   isApplyingPreset = true;
   tbcs[baseColor]->setSelected(blockSeq);
@@ -309,7 +298,14 @@ bool BlockListManager::loadPreset(const blockListPreset &preset) {
     this->setSelected(basecolor, matched_block_idx);
   }
 
+  emit blockListChanged();
+
   return true;
+}
+
+bool BlockListManager::loadInternalPreset(
+    const blockListPreset &preset) noexcept {
+  return this->loadPreset(preset);
 }
 
 blockListPreset BlockListManager::currentPreset() const noexcept {

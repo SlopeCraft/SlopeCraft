@@ -30,24 +30,12 @@ This file is part of SlopeCraft.
 
 #include <QPushButton>
 
-const ushort MainWindow::BLCreative[64] = {
-    0, 0, 1, 1, 0, 0, 0, 0, 3, 0, 4, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-const ushort MainWindow::BLCheaper[64] = {
-    0, 0, 0, 0, 1, 0, 5, 2, 3, 0, 4, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-const ushort MainWindow::BLBetter[64] = {
-    0, 1, 1, 0, 0, 1, 0, 2, 0, 0, 3, 2, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0};
-const ushort MainWindow::BLGlowing[64] = {
-    0, 1, 2, 0, 0, 2, 4, 2, 0, 0, 3, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 6, 0, 0, 1, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0};
-
 bool MainWindow::isBatchOperating = false;
+
+blockListPreset MainWindow::preset_vanilla;
+blockListPreset MainWindow::preset_elegant;
+blockListPreset MainWindow::preset_cheap;
+blockListPreset MainWindow::preset_shiny;
 
 inline uint32_t inverseColor(uint32_t raw) noexcept {
   const uint32_t ASeg = raw & (0xFF000000);
@@ -332,7 +320,7 @@ void MainWindow::loadBlockList() {
   kernel->getBaseColorInARGB32(colors);
   Manager->setLabelColors(colors);
   // applyPre(BLBetter);
-  Manager->applyPreset(BLBetter);
+  Manager->loadInternalPreset(preset_elegant);
 }
 
 void MainWindow::InitializeAll() {
@@ -343,6 +331,24 @@ void MainWindow::InitializeAll() {
   if (needInitialize) {
     needInitialize = false;
   }
+
+  try {
+    MainWindow::preset_vanilla =
+        load_preset("./Blocks/Presets/vanilla.sc_preset_json");
+    MainWindow::preset_cheap =
+        load_preset("./Blocks/Presets/cheap.sc_preset_json");
+    MainWindow::preset_elegant =
+        load_preset("./Blocks/Presets/elegant.sc_preset_json");
+    MainWindow::preset_shiny =
+        load_preset("./Blocks/Presets/shiny.sc_preset_json");
+  } catch (std::exception &e) {
+    QMessageBox::critical(this, tr("加载默认预设失败"),
+                          tr("一个或多个内置的预设不能被解析。SlopeCraft "
+                             "可能已经损坏，请重新安装。\n具体报错信息：\n%1")
+                              .arg(e.what()));
+    exit(1);
+  }
+
   if (!Collected) {
     loadBlockList();
     // qDebug("方块列表加载完毕");
@@ -778,16 +784,16 @@ void MainWindow::ChangeToCustom() {
 
 void MainWindow::onPresetsClicked() {
   if (ui->isBLCreative->isChecked()) {
-    Manager->applyPreset(BLCreative);
+    Manager->loadInternalPreset(preset_vanilla);
   }
   if (ui->isBLSurvivalCheaper->isChecked()) {
-    Manager->applyPreset(BLCheaper);
+    Manager->loadInternalPreset(preset_cheap);
   }
   if (ui->isBLSurvivalBetter->isChecked()) {
-    Manager->applyPreset(BLBetter);
+    Manager->loadInternalPreset(preset_elegant);
   }
   if (ui->isBLGlowing->isChecked()) {
-    Manager->applyPreset(BLGlowing);
+    Manager->loadInternalPreset(preset_shiny);
   }
 
   if (ui->isMapSurvival->isChecked()) Manager->setEnabled(12, false);
