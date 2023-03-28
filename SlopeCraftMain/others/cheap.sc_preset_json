@@ -1,0 +1,312 @@
+[
+  {
+    "baseColor": 0,
+    "blockId": "minecraft:glass",
+    "enabled": true
+  },
+  {
+    "baseColor": 1,
+    "blockId": "minecraft:slime_block",
+    "enabled": true
+  },
+  {
+    "baseColor": 2,
+    "blockId": "minecraft:end_stone",
+    "enabled": true
+  },
+  {
+    "baseColor": 3,
+    "blockId": "minecraft:mushroom_stem[east=true,west=true,north=true,south=true,up=true,down=true]",
+    "enabled": true
+  },
+  {
+    "baseColor": 4,
+    "blockId": "minecraft:tnt[unstable=false]",
+    "enabled": true
+  },
+  {
+    "baseColor": 5,
+    "blockId": "minecraft:ice",
+    "enabled": true
+  },
+  {
+    "baseColor": 6,
+    "blockId": "minecraft:grindstone[face=floor,facing=north]",
+    "enabled": true
+  },
+  {
+    "baseColor": 7,
+    "blockId": "minecraft:birch_leaves[distance=7,persistent=true]",
+    "enabled": true
+  },
+  {
+    "baseColor": 8,
+    "blockId": "minecraft:snow_block",
+    "enabled": true
+  },
+  {
+    "baseColor": 9,
+    "blockId": "minecraft:clay",
+    "enabled": true
+  },
+  {
+    "baseColor": 10,
+    "blockId": "minecraft:dirt",
+    "enabled": true
+  },
+  {
+    "baseColor": 11,
+    "blockId": "minecraft:cobblestone",
+    "enabled": true
+  },
+  {
+    "baseColor": 12,
+    "blockId": "minecraft:water[level=0]",
+    "enabled": false
+  },
+  {
+    "baseColor": 13,
+    "blockId": "minecraft:oak_planks",
+    "enabled": true
+  },
+  {
+    "baseColor": 14,
+    "blockId": "minecraft:target[power=0]",
+    "enabled": true
+  },
+  {
+    "baseColor": 15,
+    "blockId": "minecraft:orange_concrete",
+    "enabled": true
+  },
+  {
+    "baseColor": 16,
+    "blockId": "minecraft:magenta_concrete",
+    "enabled": true
+  },
+  {
+    "baseColor": 17,
+    "blockId": "minecraft:light_blue_concrete",
+    "enabled": true
+  },
+  {
+    "baseColor": 18,
+    "blockId": "minecraft:yellow_concrete",
+    "enabled": true
+  },
+  {
+    "baseColor": 19,
+    "blockId": "minecraft:lime_concrete",
+    "enabled": true
+  },
+  {
+    "baseColor": 20,
+    "blockId": "minecraft:pink_concrete",
+    "enabled": true
+  },
+  {
+    "baseColor": 21,
+    "blockId": "minecraft:gray_concrete",
+    "enabled": true
+  },
+  {
+    "baseColor": 22,
+    "blockId": "minecraft:light_gray_concrete",
+    "enabled": true
+  },
+  {
+    "baseColor": 23,
+    "blockId": "minecraft:cyan_concrete",
+    "enabled": true
+  },
+  {
+    "baseColor": 24,
+    "blockId": "minecraft:purple_concrete",
+    "enabled": true
+  },
+  {
+    "baseColor": 25,
+    "blockId": "minecraft:blue_concrete",
+    "enabled": true
+  },
+  {
+    "baseColor": 26,
+    "blockId": "minecraft:brown_concrete",
+    "enabled": true
+  },
+  {
+    "baseColor": 27,
+    "blockId": "minecraft:green_concrete",
+    "enabled": true
+  },
+  {
+    "baseColor": 28,
+    "blockId": "minecraft:red_concrete",
+    "enabled": true
+  },
+  {
+    "baseColor": 29,
+    "blockId": "minecraft:black_concrete",
+    "enabled": true
+  },
+  {
+    "baseColor": 30,
+    "blockId": "minecraft:light_weighted_pressure_plate[power=0]",
+    "enabled": true
+  },
+  {
+    "baseColor": 31,
+    "blockId": "minecraft:prismarine_bricks",
+    "enabled": true
+  },
+  {
+    "baseColor": 32,
+    "blockId": "minecraft:lapis_block",
+    "enabled": true
+  },
+  {
+    "baseColor": 33,
+    "blockId": "minecraft:emerald_block",
+    "enabled": true
+  },
+  {
+    "baseColor": 34,
+    "blockId": "minecraft:spruce_planks",
+    "enabled": true
+  },
+  {
+    "baseColor": 35,
+    "blockId": "minecraft:netherrack",
+    "enabled": true
+  },
+  {
+    "baseColor": 36,
+    "blockId": "minecraft:white_terracotta",
+    "enabled": true
+  },
+  {
+    "baseColor": 37,
+    "blockId": "minecraft:orange_terracotta",
+    "enabled": true
+  },
+  {
+    "baseColor": 38,
+    "blockId": "minecraft:magenta_terracotta",
+    "enabled": true
+  },
+  {
+    "baseColor": 39,
+    "blockId": "minecraft:light_blue_terracotta",
+    "enabled": true
+  },
+  {
+    "baseColor": 40,
+    "blockId": "minecraft:yellow_terracotta",
+    "enabled": true
+  },
+  {
+    "baseColor": 41,
+    "blockId": "minecraft:lime_terracotta",
+    "enabled": true
+  },
+  {
+    "baseColor": 42,
+    "blockId": "minecraft:pink_terracotta",
+    "enabled": true
+  },
+  {
+    "baseColor": 43,
+    "blockId": "minecraft:gray_terracotta",
+    "enabled": true
+  },
+  {
+    "baseColor": 44,
+    "blockId": "minecraft:light_gray_terracotta",
+    "enabled": true
+  },
+  {
+    "baseColor": 45,
+    "blockId": "minecraft:cyan_terracotta",
+    "enabled": true
+  },
+  {
+    "baseColor": 46,
+    "blockId": "minecraft:purple_terracotta",
+    "enabled": true
+  },
+  {
+    "baseColor": 47,
+    "blockId": "minecraft:blue_terracotta",
+    "enabled": true
+  },
+  {
+    "baseColor": 48,
+    "blockId": "minecraft:brown_terracotta",
+    "enabled": true
+  },
+  {
+    "baseColor": 49,
+    "blockId": "minecraft:green_terracotta",
+    "enabled": true
+  },
+  {
+    "baseColor": 50,
+    "blockId": "minecraft:red_terracotta",
+    "enabled": true
+  },
+  {
+    "baseColor": 51,
+    "blockId": "minecraft:black_terracotta",
+    "enabled": true
+  },
+  {
+    "baseColor": 52,
+    "blockId": "minecraft:crimson_nylium",
+    "enabled": true
+  },
+  {
+    "baseColor": 53,
+    "blockId": "minecraft:crimson_planks",
+    "enabled": true
+  },
+  {
+    "baseColor": 54,
+    "blockId": "minecraft:crimson_hyphae[axis=y]",
+    "enabled": true
+  },
+  {
+    "baseColor": 55,
+    "blockId": "minecraft:warped_nylium",
+    "enabled": true
+  },
+  {
+    "baseColor": 56,
+    "blockId": "minecraft:warped_planks",
+    "enabled": true
+  },
+  {
+    "baseColor": 57,
+    "blockId": "minecraft:warped_hyphae[axis=y]",
+    "enabled": true
+  },
+  {
+    "baseColor": 58,
+    "blockId": "minecraft:warped_wart_block",
+    "enabled": true
+  },
+  {
+    "baseColor": 59,
+    "blockId": "minecraft:deepslate",
+    "enabled": true
+  },
+  {
+    "baseColor": 60,
+    "blockId": "minecraft:raw_iron_block",
+    "enabled": true
+  },
+  {
+    "baseColor": 61,
+    "blockId": "minecraft:glow_lichen[down=true,east=false,north=false,south=false,up=false,waterlogged=false]",
+    "enabled": true
+  }
+]
