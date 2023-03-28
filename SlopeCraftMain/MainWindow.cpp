@@ -799,6 +799,12 @@ void MainWindow::onPresetsClicked() {
   if (ui->isMapSurvival->isChecked()) Manager->setEnabled(12, false);
 
   kernel->decreaseStep(SlopeCraft::step::nothing);
+
+  this->kernelSetType();
+  if (!this->rawPic.isNull()) {
+    this->kernelSetImg();
+  }
+
   updateEnables();
 }
 
