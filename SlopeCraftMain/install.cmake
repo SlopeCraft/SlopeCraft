@@ -43,11 +43,11 @@ if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
         DESTINATION ${CMAKE_INSTALL_PREFIX}/SlopeCraft.app/Contents/MacOS/Blocks/CustomBlocks)
     install(FILES ${SlopeCraft_install_png_customblocks}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/SlopeCraft.app/Contents/MacOS/Blocks/CustomBlocks)
-    
+
     # Install presets
-    install(FILES ${SlopeCraft_install_presets} 
+    install(FILES ${SlopeCraft_install_presets}
         DESTINATION ${CMAKE_INTALL_PREFIX}/SlopeCraft.app/Contents/MasOS/Blocks/Presets)
-    install(FILES ${SlopeCraft_install_presets} 
+    install(FILES ${SlopeCraft_install_presets}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/SlopeCraft.app/Contents/MasOS/Blocks/Presets)
     return()
 endif()
@@ -86,11 +86,11 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
         DESTINATION ${CMAKE_INSTALL_PREFIX}/Blocks/CustomBlocks)
     install(FILES ${SlopeCraft_install_png_customblocks}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Blocks/CustomBlocks)
-    
+
     # Install presets
-    install(FILES ${SlopeCraft_install_presets} 
-        DESTINATION ${CMAKE_INTALL_PREFIX}/Blocks/Presets)
-    install(FILES ${SlopeCraft_install_presets} 
+    install(FILES ${SlopeCraft_install_presets}
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/Blocks/Presets)
+    install(FILES ${SlopeCraft_install_presets}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Blocks/Presets)
 
     return()
@@ -126,11 +126,11 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
 
     install(FILES ${SlopeCraft_Icon}
         DESTINATION bin/icons)
-        
+
     # Install presets
-    install(FILES ${SlopeCraft_install_presets} 
+    install(FILES ${SlopeCraft_install_presets}
         DESTINATION bin/Blocks/Presets)
-    install(FILES ${SlopeCraft_install_presets} 
+    install(FILES ${SlopeCraft_install_presets}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Blocks/Presets)
 
     return()
