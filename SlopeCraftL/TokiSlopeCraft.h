@@ -76,11 +76,12 @@ class PrimGlassBuilder;
 class LossyCompressor;
 
 namespace NBT {
-template <bool> class NBTWriter;
+template <bool>
+class NBTWriter;
 };
 
 class TokiSlopeCraft : public ::SlopeCraft::Kernel {
-public:
+ public:
   static const colorset_basic_t Basic;
   static colorset_allowed_t Allowed;
 
@@ -95,7 +96,7 @@ public:
 
   static uint64_t mcVersion2VersionNumber(::SCL_gameVersion);
 
-public:
+ public:
   TokiSlopeCraft();
   virtual ~TokiSlopeCraft();
 
@@ -122,7 +123,7 @@ public:
   unsigned long long size() override { return sizeof(TokiSlopeCraft); }
   // void destroy() override { delete this; }
   void decreaseStep(step) override;
-  void makeTests(const AbstractBlock **, const unsigned char *, const char *,
+  bool makeTests(const AbstractBlock **, const unsigned char *, const char *,
                  char *) override;
   std::string makeTests(const AbstractBlock **, const uint8_t *,
                         const std::string &);
@@ -135,12 +136,12 @@ public:
   bool setType(mapTypes, gameVersion, const bool[64],
                const AbstractBlock *const *const) override;
 
-private:
+ private:
   static bool __impl_setType(mapTypes, gameVersion, const bool[64],
                              const AbstractBlock *const *const,
                              const TokiSlopeCraft *reporter) noexcept;
 
-public:
+ public:
   void getBaseColorInARGB32(unsigned int *const) const override;
   // can do in wait4Image:
   void setRawImage(const unsigned int *src, int rows, int cols) override;
@@ -172,7 +173,7 @@ public:
              unsigned short = 256,
              glassBridgeSettings = SCL_glassBridgeSettings::noBridge,
              unsigned short = 3, bool fireProof = false,
-             bool endermanProof = false) override; // 构建三维结构
+             bool endermanProof = false) override;  // 构建三维结构
   void getConvertedImage(int *rows, int *cols,
                          unsigned int *dest) const override;
   EImage getConovertedImage() const;
@@ -184,9 +185,9 @@ public:
   // can do in builded:
   void exportAsLitematic(const char *TargetName, const char *LiteName,
                          const char *RegionName, char *FileName) const override;
-  std::string exportAsLitematic(const std::string &TargetName, // Local
-                                const std::string &LiteName,   // Utf8
-                                const std::string &RegionName  // Utf8
+  std::string exportAsLitematic(const std::string &TargetName,  // Local
+                                const std::string &LiteName,    // Utf8
+                                const std::string &RegionName   // Utf8
   ) const;
 
   void exportAsStructure(const char *TargetName, char *FileName) const override;
@@ -198,10 +199,10 @@ public:
                        const int requiredModsCount,
                        char *returnVal) const override;
 
-  std::string
-  exportAsWESchem(const std::string &, const std::array<int, 3> &offset,
-                  const std::array<int, 3> &weOffset, const char *Name,
-                  const std::vector<const char *> &requiredMods) const;
+  std::string exportAsWESchem(
+      const std::string &, const std::array<int, 3> &offset,
+      const std::array<int, 3> &weOffset, const char *Name,
+      const std::vector<const char *> &requiredMods) const;
 
   void get3DSize(int *x, int *y, int *z) const override;
   int getHeight() const override;
@@ -216,12 +217,12 @@ public:
                                  int *zSize) const override;
   // const Eigen::Tensor<uchar, 3> &getBuild() const;
 
-private:
+ private:
 #ifdef SCL_CAPI
   friend struct Kernel;
 #else
   friend class Kernel;
-#endif //  #ifdef SLOPECRAFTL_CAPI
+#endif  //  #ifdef SLOPECRAFTL_CAPI
   // friend class TokiColor;
   //  friend void * allowedRGB();
   //  friend void * allowedMap();
@@ -238,14 +239,14 @@ private:
   void (*reportError)(void *, errorFlag, const char *);
   void (*reportWorkingStatue)(void *, workStatues);
 
-  static gameVersion mcVer; // 12,13,14,15,16,17
+  static gameVersion mcVer;  // 12,13,14,15,16,17
   static mapTypes mapType;
   static std::vector<simpleBlock> blockPalette;
 
-private:
+ private:
   static std::unordered_set<TokiSlopeCraft *> kernel_hash_set;
 
-public:
+ public:
   step kernelStep;
   // convertAlgo ConvertAlgo;
 
@@ -258,7 +259,7 @@ public:
   // std::shared_ptr<GACvter::GAConverter> GAConverter{nullptr};
 
   AiCvterOpt AiOpt;
-  Eigen::ArrayXXi mapPic; // stores mapColor
+  Eigen::ArrayXXi mapPic;  // stores mapColor
   Eigen::ArrayXXi Base;
   Eigen::ArrayXXi HighMap;
   Eigen::ArrayXXi LowMap;
@@ -279,10 +280,10 @@ public:
   int64_t sizePic(short dim) const;
 
   // for build
-  // void makeHeight_old();//构建HighMap和LowMap
+  // void makeHeight_old();//构建 HighMap 和 LowMap
   void makeHeight_new();
   // void makeHeightInLine(const uint16_t c);
-  void buildHeight(bool = false, bool = false); // 构建Build
+  void buildHeight(bool = false, bool = false);  // 构建 Build
   void makeBridge();
   // for Litematic
   /*
@@ -298,4 +299,4 @@ public:
 };
 
 // bool compressFile(const char *sourcePath, const char *destPath);
-#endif // TOKISLOPECRAFT_H
+#endif  // TOKISLOPECRAFT_H

@@ -180,7 +180,7 @@ class Kernel {
                                   uint8_t *const map_color_dest = nullptr,
                                   int *const num = nullptr) const = 0;
   /// make a structure that includes all accessible blocks
-  virtual void makeTests(const AbstractBlock **, const uint8_t *, const char *,
+  virtual bool makeTests(const AbstractBlock **, const uint8_t *, const char *,
                          char *) = 0;
 
   // can do in convertionReady:
