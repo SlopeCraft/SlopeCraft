@@ -58,6 +58,7 @@ body:
         Please search to see if an issue related to this feature request already exists.
         
         ---------
+  
   - type: checkboxes
     id: terms
     attributes:
