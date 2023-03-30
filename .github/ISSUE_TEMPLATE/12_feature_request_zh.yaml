@@ -21,7 +21,8 @@ body:
   - type: checkboxes
     id: confirm
     attributes:
-      label: "请选择："
+      label: 请选择：
+      description: 如果您是开发者并且愿意为 SlopeCraft 贡献代码来实现这个功能，请勾选以下选项。
       options:
         - label: 我正在着手增加这个功能
           required: false

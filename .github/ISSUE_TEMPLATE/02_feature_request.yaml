@@ -22,6 +22,7 @@ body:
     id: confirm
     attributes:
       label: "Please choose if applies:"
+      description: If you are a developer and you are willing to contribute codes to implement this feature, please check the following option.
       options:
         - label: I'm currently working on adding this feature.
           required: false
