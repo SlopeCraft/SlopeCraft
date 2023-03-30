@@ -120,6 +120,8 @@ MainWindow::MainWindow(QWidget *parent)
   connect(ui->actionDoki, &QAction::triggered, this, &MainWindow::contactB);
   connect(ui->progressG, &QPushButton::clicked, this, &MainWindow::contactG);
   connect(ui->progressB, &QPushButton::clicked, this, &MainWindow::contactB);
+  connect(ui->progressCheckUpdates, &QPushButton::clicked, this,
+          &MainWindow::checkVersion);
 
   connect(ui->contact, &QPushButton::clicked, this, &MainWindow::contactB);
   connect(ui->contact, &QPushButton::clicked, this, &MainWindow::contactG);
@@ -359,11 +361,11 @@ void MainWindow::InitializeAll() {
 }
 
 void MainWindow::contactG() {
-  QDesktopServices::openUrl(QUrl("github.com/SlopeCraft"));
+  QDesktopServices::openUrl(QUrl("https://github.com/SlopeCraft/SlopeCraft"));
 }
 
 void MainWindow::contactB() {
-  QDesktopServices::openUrl(QUrl("space.bilibili.com/351429231"));
+  QDesktopServices::openUrl(QUrl("https://space.bilibili.com/351429231"));
 }
 
 #ifndef tpSDestroyer
@@ -377,7 +379,7 @@ void MainWindow::turnToPage(int page) {
 
   newtitle += SlopeCraft::SCL_getSCLVersion();
 #ifdef WIN32
-  newtitle += " Copyright © 2021-2023 TokiNoBug    ";  // windows
+  newtitle += " Copyright © 2021-2023 TokiNoBug    ";  // windowsf
 #elif defined(_MAC) || defined(__APPLE__)
   newtitle +=
       " Copyright © 2021-2023 TokiNoBug,AbrasiveBoar, Cubik65536   ";  // macOs
@@ -1764,8 +1766,6 @@ void MainWindow::when_network_finished(QNetworkReply *reply, bool is_manually) {
 
   reply->deleteLater();
 
-  reply->deleteLater();
-
   const uint64_t latest_ver = info.version_u64;
 
   const auto &tag_name = info.tag_name;
@@ -1959,7 +1959,7 @@ void MainWindow::testBlockList() {
   char failed_file_name[512] = "";
   kernel->makeTests(ptr_buffer.data(), base_buffer.data(),
                     targetName.toLocal8Bit().data(), failed_file_name);
-  if (strlen(failed_file_name) <= 0) {
+  if (std::string_view(failed_file_name).empty()) {
     // cerr<<"Success"<<endl;
     return;
   } else {
