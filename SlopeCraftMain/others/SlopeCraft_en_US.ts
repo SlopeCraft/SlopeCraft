@@ -150,7 +150,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../mainwindow.ui" line="223"/>
         <location filename="../mainwindow.ui" line="3936"/>
-        <location filename="../MainWindow.cpp" line="392"/>
+        <location filename="../MainWindow.cpp" line="394"/>
         <source>开始</source>
         <translation>Start</translation>
     </message>
@@ -158,7 +158,7 @@ p, li { white-space: pre-wrap; }
         <location filename="../mainwindow.ui" line="240"/>
         <location filename="../mainwindow.ui" line="1205"/>
         <location filename="../mainwindow.ui" line="3941"/>
-        <location filename="../MainWindow.cpp" line="399"/>
+        <location filename="../MainWindow.cpp" line="401"/>
         <source>导入图片</source>
         <translation>Import image</translation>
     </message>
@@ -178,7 +178,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../mainwindow.ui" line="297"/>
         <location filename="../mainwindow.ui" line="3956"/>
-        <location filename="../MainWindow.cpp" line="417"/>
+        <location filename="../MainWindow.cpp" line="419"/>
         <source>调整颜色</source>
         <translation>Convert to Map</translation>
     </message>
@@ -455,13 +455,13 @@ map files</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="2961"/>
-        <location filename="../MainWindow.cpp" line="441"/>
+        <location filename="../MainWindow.cpp" line="443"/>
         <source>结束</source>
         <translation>Finish</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="3600"/>
-        <location filename="../MainWindow.cpp" line="1516"/>
+        <location filename="../MainWindow.cpp" line="1518"/>
         <source>导出</source>
         <translation>Export</translation>
     </message>
@@ -747,7 +747,7 @@ sequence number</translation>
         <location filename="../mainwindow.ui" line="3856"/>
         <location filename="../mainwindow.ui" line="3859"/>
         <location filename="../mainwindow.ui" line="3862"/>
-        <location filename="../MainWindow.cpp" line="423"/>
+        <location filename="../MainWindow.cpp" line="425"/>
         <source>导出为投影文件</source>
         <translation>Export as litematic</translation>
     </message>
@@ -759,7 +759,7 @@ sequence number</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="3884"/>
-        <location filename="../MainWindow.cpp" line="435"/>
+        <location filename="../MainWindow.cpp" line="437"/>
         <source>导出为地图文件</source>
         <translation>Export as map files</translation>
     </message>
@@ -803,52 +803,52 @@ sequence number</translation>
         <translation>Check updates</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="405"/>
+        <location filename="../MainWindow.cpp" line="407"/>
         <source>设置地图画类型</source>
         <translation>Set map type</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="411"/>
+        <location filename="../MainWindow.cpp" line="413"/>
         <source>设置方块列表</source>
         <translation>Set BlockList</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="619"/>
+        <location filename="../MainWindow.cpp" line="621"/>
         <source>选择图片</source>
         <translation>Select Image</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="572"/>
+        <location filename="../MainWindow.cpp" line="574"/>
         <source>打开图片失败</source>
         <translation>Failed to read image</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="302"/>
+        <location filename="../MainWindow.cpp" line="304"/>
         <source>SlopeCraft 无法加载必需方块列表</source>
         <translation>SlopeCraft failed to load fixed block list</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="303"/>
+        <location filename="../MainWindow.cpp" line="305"/>
         <source>SlopeCraft 必须退出</source>
         <translation>SlopeCraft must exit</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="310"/>
+        <location filename="../MainWindow.cpp" line="312"/>
         <source>SlopeCraft 无法加载可选方块列表</source>
         <translation>SlopeCraft failed to load custom block list</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="310"/>
+        <location filename="../MainWindow.cpp" line="312"/>
         <source>此错误可以忽略</source>
         <translation>This error can be ignored</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="345"/>
+        <location filename="../MainWindow.cpp" line="347"/>
         <source>加载默认预设失败</source>
         <translation>Failed to load default presets</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="346"/>
+        <location filename="../MainWindow.cpp" line="348"/>
         <source>一个或多个内置的预设不能被解析。SlopeCraft 可能已经损坏，请重新安装。
 具体报错信息：
 %1</source>
@@ -857,181 +857,181 @@ Detail information:
 %1</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="573"/>
+        <location filename="../MainWindow.cpp" line="575"/>
         <source>要不试试换一张图片吧！</source>
         <translation>Why not try another one?</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="595"/>
+        <location filename="../MainWindow.cpp" line="597"/>
         <source>图片尺寸：</source>
         <translation>Image size:</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="597"/>
+        <location filename="../MainWindow.cpp" line="599"/>
         <source>像素</source>
         <translation>Pixels</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="602"/>
+        <location filename="../MainWindow.cpp" line="604"/>
         <source>图片中存在透明/半透明像素，已处理，您可以点击“设置”重新选择处理透明/半透明像素的方式。
 重新设置处理方式后，需要重新导入一次。</source>
         <translation>There&apos;s transparent pixels in your image, SlopeCraft has processed it. You can click &quot;Settings&quot; to reset the strategy of processing transparent pixels.
 After you reset the strategy, load the image again.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1336"/>
+        <location filename="../MainWindow.cpp" line="1338"/>
         <source>导出为投影/结构方块文件</source>
         <translation>Export as litematic or structure</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1421"/>
+        <location filename="../MainWindow.cpp" line="1423"/>
         <source>投影文件导出失败</source>
         <translation>Failed to export as litematic.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1422"/>
+        <location filename="../MainWindow.cpp" line="1424"/>
         <source>这可能是汉字编码错误造成的。请检查路径中是否有汉字</source>
         <translation>There might be sth wrong with characters&apos; encoding, check if the filepath includes non-English characters.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1423"/>
+        <location filename="../MainWindow.cpp" line="1425"/>
         <source>错误信息：</source>
         <translation>Error details :</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1472"/>
+        <location filename="../MainWindow.cpp" line="1474"/>
         <source>你输入的起始序号不可用</source>
         <translation>Invalid sequence number.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1480"/>
+        <location filename="../MainWindow.cpp" line="1482"/>
         <source>请选择导出的文件夹</source>
         <translation>Please select a folder for exporting.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1485"/>
+        <location filename="../MainWindow.cpp" line="1487"/>
         <source>你选择的文件夹不存在！</source>
         <translation>Folder dosen&apos;t exist!</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1495"/>
+        <location filename="../MainWindow.cpp" line="1497"/>
         <source>请稍等</source>
         <translation>Please wait</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1569"/>
+        <location filename="../MainWindow.cpp" line="1571"/>
         <source>
 具体信息：</source>
         <translation>Detail: </translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1575"/>
+        <location filename="../MainWindow.cpp" line="1577"/>
         <source>未知游戏版本</source>
         <translation>Unknown game version</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1579"/>
-        <location filename="../MainWindow.cpp" line="1583"/>
-        <location filename="../MainWindow.cpp" line="1587"/>
-        <location filename="../MainWindow.cpp" line="1591"/>
+        <location filename="../MainWindow.cpp" line="1581"/>
+        <location filename="../MainWindow.cpp" line="1585"/>
+        <location filename="../MainWindow.cpp" line="1589"/>
+        <location filename="../MainWindow.cpp" line="1593"/>
         <source>导出原理图失败</source>
         <translation>Failed to export.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1580"/>
+        <location filename="../MainWindow.cpp" line="1582"/>
         <source>方块种类超出上限。</source>
         <translation>The types of blocks overflow.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1584"/>
+        <location filename="../MainWindow.cpp" line="1586"/>
         <source>错误的文件扩展名</source>
         <translation>Invalid file extension name</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1588"/>
+        <location filename="../MainWindow.cpp" line="1590"/>
         <source>三维结构中存在错误的方块</source>
         <translation>Wrong block in 3D structure.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1592"/>
+        <location filename="../MainWindow.cpp" line="1594"/>
         <source>无法创建/打开文件</source>
         <translation>Failed to create/open file</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1601"/>
+        <location filename="../MainWindow.cpp" line="1603"/>
         <source>导出原版结构方块文件失败</source>
         <translation>Failed to export vanilla structure file.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1602"/>
+        <location filename="../MainWindow.cpp" line="1604"/>
         <source>导出时指定不使用结构空位表示空气，但方块列表中不包含空气。</source>
         <translation>When exporting as structure, you assigned not to replace air with structure void, but there is no air in the block palette.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1607"/>
+        <location filename="../MainWindow.cpp" line="1609"/>
         <source>转化原图为地图画时出错</source>
         <translation>Error occurred when converting image to map</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1608"/>
+        <location filename="../MainWindow.cpp" line="1610"/>
         <source>原图为空！你可能没有导入原图！</source>
         <translation>Your source image is empty! You might have forgot to import source image!</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1611"/>
+        <location filename="../MainWindow.cpp" line="1613"/>
         <source>构建高度矩阵时出现错误</source>
         <translation>Error occurred when making height martix</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1612"/>
+        <location filename="../MainWindow.cpp" line="1614"/>
         <source>原版地图画不允许出现第三个阴影（不存在的几何关系不可能生存实装！）
 请检查你的地图画类型，纯文件地图画不可以导出为投影！</source>
         <translation>The third shadow shouldn&apos;t apper in vanilla map!
 Check your map type, remember that file-only map can&apos;t be exported as litematic!</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1617"/>
+        <location filename="../MainWindow.cpp" line="1619"/>
         <source>跳步操作</source>
         <translation>You skipped a step</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1621"/>
+        <location filename="../MainWindow.cpp" line="1623"/>
         <source>有损压缩失败</source>
         <translation>Inteligent lossy compression failed</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1628"/>
+        <location filename="../MainWindow.cpp" line="1630"/>
         <source>最大允许高度太小了</source>
         <translation>The maxmium allowed height is too low</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1632"/>
+        <location filename="../MainWindow.cpp" line="1634"/>
         <source>允许使用的颜色过少</source>
         <translation>Too few colors allowed!</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1633"/>
+        <location filename="../MainWindow.cpp" line="1635"/>
         <source>你应该勾选启用尽可能多的基色，颜色太少是不行的！</source>
         <translation>You should enable as much base colors as possible.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1637"/>
-        <location filename="../MainWindow.cpp" line="1641"/>
+        <location filename="../MainWindow.cpp" line="1639"/>
+        <location filename="../MainWindow.cpp" line="1643"/>
         <source>这可能是因为路径中含有中文字符！</source>
         <translation>This might because of non-English characters in filename of path.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1640"/>
+        <location filename="../MainWindow.cpp" line="1642"/>
         <source>删除临时文件失败</source>
         <translation>Failed to remove temporary file</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1753"/>
+        <location filename="../MainWindow.cpp" line="1755"/>
         <source>获取最新版本失败</source>
         <translation>Failed to check updates</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1754"/>
+        <location filename="../MainWindow.cpp" line="1756"/>
         <source>解析 &quot;%1&quot; 返回的结果时出现错误：
 
 %2
@@ -1074,137 +1074,137 @@ The message that failed to parse:
         <translation>The latest version is %1, and current vesion is %2</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1622"/>
+        <location filename="../MainWindow.cpp" line="1624"/>
         <source>在构建高度矩阵时，有损压缩失败，没能将地图画压缩到目标高度。         这可能是因为地图画行数过大。         尝试启用无损压缩，或者提高最大允许高度</source>
         <translation>Lossy compression failed to compress the maximun height down to max allowed hehight when computing height map. This may be caused by a too large image. Try enabling lossless compression, or enlarge max allowed height.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="429"/>
+        <location filename="../MainWindow.cpp" line="431"/>
         <source>导出为 mcfunction</source>
         <translation>Export as mcfunction</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="620"/>
+        <location filename="../MainWindow.cpp" line="622"/>
         <source>图片 (*.png *.bmp *.jpg *.tif *.GIF )</source>
         <translation>Image (*.png *.bmp *.jpg *.tif *.GIF )</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1321"/>
+        <location filename="../MainWindow.cpp" line="1323"/>
         <source>投影文件 (*.litematic)</source>
         <translation>Litematic file (*.litematic)</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1322"/>
+        <location filename="../MainWindow.cpp" line="1324"/>
         <source>结构方块文件 (*.nbt)</source>
         <translation>Structure file(*.nbt)</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1323"/>
+        <location filename="../MainWindow.cpp" line="1325"/>
         <source>WorldEdit 原理图 (*.schem)</source>
         <translation>WorldEdit schematic (*.schem)</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1373"/>
+        <location filename="../MainWindow.cpp" line="1375"/>
         <source>(xz 坐标=-65±128×整数)</source>
         <translation>(xz coordinate = -65±128×&lt;any integer&gt;)</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1460"/>
+        <location filename="../MainWindow.cpp" line="1462"/>
         <source>你输入的起始序号不可用，请输入大于等于 0 的整数！</source>
         <translation>The initial sequence number is invalid, expected non-negative number!</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1473"/>
+        <location filename="../MainWindow.cpp" line="1475"/>
         <source>请输入大于等于 0 的整数！</source>
         <translation>Please input a non negative number!</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1486"/>
+        <location filename="../MainWindow.cpp" line="1488"/>
         <source>你可以选择存档中的 data 文件夹</source>
         <translation>You can select the &quot;data&quot; dir in the saves of MC.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1595"/>
+        <location filename="../MainWindow.cpp" line="1597"/>
         <source>导出 WorldEdit 原理图失败</source>
         <translation>Failed to export WorldEdit schem</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1596"/>
+        <location filename="../MainWindow.cpp" line="1598"/>
         <source>不支持导出 1.12 WorldEdit 原理图（.schematic 格式），仅支持.schem 格式</source>
         <translation>Exporting as WE schematic is not supported in MC 12(*.schematic), only *.schem is supported</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1618"/>
+        <location filename="../MainWindow.cpp" line="1620"/>
         <source>SlopeCraft 不允许你跳步操作，请按照左侧竖边栏的顺序操作！</source>
         <translation>Skipping any step is not allowed by SlopeCraft</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1629"/>
+        <location filename="../MainWindow.cpp" line="1631"/>
         <source>有损压缩的最大允许不要低于 14，否则很容易压缩失败</source>
         <translation>The maximum height of lossy compression should not be less than 14</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1636"/>
+        <location filename="../MainWindow.cpp" line="1638"/>
         <source>导出时 Gzip 压缩文件失败</source>
         <translation>Failed to compress a exported file</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1671"/>
+        <location filename="../MainWindow.cpp" line="1673"/>
         <source>正在构建高度矩阵</source>
         <translation>Making height matrix</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1674"/>
+        <location filename="../MainWindow.cpp" line="1676"/>
         <source>正在构建三维结构</source>
         <translation>Building 3D structure</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1677"/>
+        <location filename="../MainWindow.cpp" line="1679"/>
         <source>正在收集整张图片的颜色</source>
         <translation>Collecting colors of the whole image</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1680"/>
+        <location filename="../MainWindow.cpp" line="1682"/>
         <source>正在压缩立体地图画</source>
         <translation>Compressing 3D map pixel arts</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1683"/>
+        <location filename="../MainWindow.cpp" line="1685"/>
         <source>正在为立体地图画搭桥</source>
         <translation>Constructing glass bridge</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1686"/>
+        <location filename="../MainWindow.cpp" line="1688"/>
         <source>正在匹配颜色</source>
         <translation>Matching colors</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1689"/>
+        <location filename="../MainWindow.cpp" line="1691"/>
         <source>正在使用抖动仿色</source>
         <translation>Dithering</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1692"/>
+        <location filename="../MainWindow.cpp" line="1694"/>
         <source>正在将平板地图画变为墙面地图画</source>
         <translation>Converting flat map art to wall map art</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1695"/>
+        <location filename="../MainWindow.cpp" line="1697"/>
         <source>正在写入三维结构</source>
         <translation>Writing 3D structure</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1698"/>
+        <location filename="../MainWindow.cpp" line="1700"/>
         <source>正在写入方块列表</source>
         <translation>Writing block palette</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1701"/>
+        <location filename="../MainWindow.cpp" line="1703"/>
         <source>正在写入地图数据文件</source>
         <translation>Writing map data</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1704"/>
+        <location filename="../MainWindow.cpp" line="1706"/>
         <source>正在写入基础信息</source>
         <translation>Writing meta data</translation>
     </message>
