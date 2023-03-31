@@ -46,9 +46,9 @@ if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
 
     # Install presets
     install(FILES ${SlopeCraft_install_presets}
-        DESTINATION ${CMAKE_INTALL_PREFIX}/SlopeCraft.app/Contents/MasOS/Blocks/Presets)
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/SlopeCraft.app/Contents/MacOS/Blocks/Presets)
     install(FILES ${SlopeCraft_install_presets}
-        DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/SlopeCraft.app/Contents/MasOS/Blocks/Presets)
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/SlopeCraft.app/Contents/MacOS/Blocks/Presets)
     return()
 endif()
 
