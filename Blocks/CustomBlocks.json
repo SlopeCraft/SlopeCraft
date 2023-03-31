@@ -272,7 +272,8 @@
             "nameZH": "西瓜",
             "nameEN": "Melon",
             "icon": "melon_top.png",
-            "version": 0
+            "version": 0,
+            "idOld": "minecraft:melon_block"
         },
         {
             "baseColor": 24,
