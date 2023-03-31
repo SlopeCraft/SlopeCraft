@@ -31,6 +31,7 @@ This file is part of SlopeCraft.
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <VersionDialog.h>
+#include <QDir>
 
 void VCWind::on_ac_browse_block_triggered() noexcept {
   BlockBrowser *bb = new BlockBrowser(this);
@@ -48,26 +49,29 @@ void VCWind::on_ac_browse_block_triggered() noexcept {
 
 void VCWind::on_ac_about_VisualCraft_triggered() noexcept {
   QMessageBox::information(
-      this, VCWind::tr("关于VisualCraft"),
-      VCWind::tr("VisualCraft是一款全新的Minecraft像素画生"
-                 "成器，由MC玩家TokiNoBug开发，是SlopeCraft的子项目。与其他类似"
-                 "的软件不同，VisualCraft旨在跟进最新的MC版本(1.12~最新版)"
-                 "、支持最多的MC特性"
-                 "，提供最强大的功能。\n\n") +
-          VCWind::tr("目前VisualCraft能够解析许多第三方资源包，也允许自定义增加"
-                     "加新方块。与传统的思路不同，VisualCraft以方块模型的方式来"
-                     "解析资源包，尽量贴近Minecraft的方式，因此支持各种自定义的"
-                     "方块模型。\n\n") +
-          VCWind::tr("在导出方面，VisualCraft支持Litematica "
-                     "mod的投影(*.litematic)、WorldEdit "
-                     "原理图(*.shem)(仅1.13+可用)、原版结构方块文件(*.nbt)"
-                     "、平面示意图(*.png)等方式。\n\n") +
-          VCWind::tr("VisualCraft支持用各种透明方块互相叠加，产生更多的颜色。软"
-                     "件最多支持不超过65534种颜色，受此限制，像素画的层数不超过"
-                     "3层。\n\n") +
+      this, VCWind::tr("关于 VisualCraft"),
+      VCWind::tr(
+          "VisualCraft 是一款全新的 Minecraft 像素画生"
+          "成器，由 MC 玩家 TokiNoBug 开发，是 SlopeCraft 的子项目。与其他类似"
+          "的软件不同，VisualCraft 旨在跟进最新的 MC 版本 (1.12~最新版)"
+          "、支持最多的 MC 特性"
+          "，提供最强大的功能。\n\n") +
+          VCWind::tr(
+              "目前 VisualCraft 能够解析许多第三方资源包，也允许自定义增加"
+              "加新方块。与传统的思路不同，VisualCraft 以方块模型的方式来"
+              "解析资源包，尽量贴近 Minecraft 的方式，因此支持各种自定义的"
+              "方块模型。\n\n") +
+          VCWind::tr("在导出方面，VisualCraft 支持 Litematica "
+                     "mod 的投影 (*.litematic)、WorldEdit "
+                     "原理图 (*.shem)(仅 1.13+可用)、原版结构方块文件 (*.nbt)"
+                     "、平面示意图 (*.png) 等方式。\n\n") +
+          VCWind::tr(
+              "VisualCraft 支持用各种透明方块互相叠加，产生更多的颜色。软"
+              "件最多支持不超过 65534 种颜色，受此限制，像素画的层数不超过"
+              "3 层。\n\n") +
           (VCWind::tr(
-               "由于颜色数量很多，VisualCraft使用了显卡加速。目前支持的AP"
-               "I有OpenCL。现在正在使用的API是%1")
+               "由于颜色数量很多，VisualCraft 使用了显卡加速。目前支持的 AP"
+               "I 有 OpenCL。现在正在使用的 API 是%1")
                .arg(VCL_get_GPU_api_name())));
 }
 
@@ -97,7 +101,6 @@ void VCWind::on_ac_report_bugs_triggered() noexcept {
 }
 
 void VCWind::on_pb_custom_select_clicked() noexcept {
-
   BlockSelector *bs = new BlockSelector(this);
 
   bs->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
@@ -125,7 +128,6 @@ void VCWind::on_ac_browse_basic_colors_triggered() noexcept {
 }
 
 void VCWind::on_ac_browse_allowed_colors_triggered() noexcept {
-
   ColorBrowser *cb = new ColorBrowser(this);
 
   cb->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
@@ -161,21 +163,35 @@ void VCWind::retrieve_latest_version(QString url_api,
 
 void VCWind::when_network_finished(QNetworkReply *reply,
                                    bool is_manually) noexcept {
-
   const QByteArray content_qba = reply->readAll();
   version_info info;
   try {
     info = extract_latest_version(content_qba.data());
   } catch (std::exception &e) {
+    const QString home_path = QDir::homePath();
+    const QString data_dir_name = "SlopeCraft";
+    QString data_dir = QDir::homePath() + "/" + data_dir_name;
+    QString log_file = data_dir.append("/UpdateCheckFailure.log");
+    {
+      if (!QDir(data_dir).exists()) {
+        QDir{home_path}.mkpath(data_dir_name);
+      }
+
+      QFile log(log_file);
+      log.open(QFile::OpenMode::enum_type::WriteOnly);
+      log.write(content_qba);
+      log.close();
+    }
+
     QMessageBox::warning(
         this, VCWind::tr("获取最新版本失败"),
-        VCWind::tr(
-            "解析 \"%1\" "
-            "返回的结果时出现错误：\n\n%"
-            "2\n\n这不是一个致命错误，不影响软件使用。\n解析失败的信息为：\n%3")
+        VCWind::tr("解析 \"%1\" "
+                   "返回的结果时出现错误：\n\n%"
+                   "2\n\n这不是一个致命错误，不影响软件使用。\n解析失败的信"
+                   "息已经存储在日志文件中 (%3)。")
             .arg(reply->url().toString())
             .arg(e.what())
-            .arg(content_qba),
+            .arg(log_file),
         QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore});
     reply->deleteLater();
     return;
@@ -190,7 +206,6 @@ void VCWind::when_network_finished(QNetworkReply *reply,
   const uint64_t ui_ver = SC_VERSION_U64;
 
   if (ui_ver == latest_ver) {
-
     if (is_manually) {
       QMessageBox::information(this, VCWind::tr("检查更新成功"),
                                VCWind::tr("您在使用的是最新版本"));
@@ -203,7 +218,7 @@ void VCWind::when_network_finished(QNetworkReply *reply,
     if (is_manually) {
       QMessageBox::information(
           this, VCWind::tr("检查更新成功"),
-          VCWind::tr("您使用的版本(%1)比已发布的(%2)更新，可能是测试版。")
+          VCWind::tr("您使用的版本 (%1) 比已发布的 (%2) 更新，可能是测试版。")
               .arg(SC_VERSION_STR)
               .arg(tag_name));
     }
@@ -216,7 +231,7 @@ void VCWind::when_network_finished(QNetworkReply *reply,
     vd->setAttribute(Qt::WidgetAttribute::WA_AlwaysStackOnTop, true);
     vd->setWindowFlag(Qt::WindowType::Window, true);
 
-    vd->setup_text(VCWind::tr("VisualCraft已更新"),
+    vd->setup_text(VCWind::tr("VisualCraft 已更新"),
                    VCWind::tr("最新版本为%1，当前版本为%2（内核版本%3）")
                        .arg(tag_name)
                        .arg(SC_VERSION_STR)
