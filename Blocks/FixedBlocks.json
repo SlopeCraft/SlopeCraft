@@ -1559,10 +1559,10 @@
         },
         {
             "baseColor": 56,
-            "id": "minecraft:waxed_oxidized_cut_copper",
+            "id": "minecraft:waxed_weathered_cut_copper",
             "nameZH": "涂蜡切制生锈铜块",
             "nameEN": "Waxed weathered cut copper",
-            "icon": "waxed_oxidized_cut_copper.png",
+            "icon": "waxed_weathered_cut_copper.png",
             "version": 17
         },
         {
