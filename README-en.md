@@ -15,8 +15,8 @@
         <img src="https://img.shields.io/github/v/release/SlopeCraft/SlopeCraft?style=for-the-badge" />
     </a>
     <br />
-    <img src="https://img.shields.io/badge/C%2B%2B-17-blue?style=for-the-badge" />
-    <img src="https://img.shields.io/badge/Qt-v6.1.0-brightgreen?style=for-the-badge" />
+    <img src="https://img.shields.io/badge/C%2B%2B-20-blue?style=for-the-badge" />
+    <img src="https://img.shields.io/badge/Qt-v6.4.0-brightgreen?style=for-the-badge" />
     <img src="https://img.shields.io/badge/Eigen-v3.4.0-yellowgreen?style=for-the-badge" />
 </p>
 
@@ -44,7 +44,7 @@ This is why maps made by SlopeCraft have higher quality than exporting a picture
    - Linux Users: Download `SlopeCraft-x.x.x-linux.tar.xz`, unzip and run `SlopeCraft`
 
     ::: tips
-        The `x.x.x` mentioned above is the version number of SlopeCraft, for example, `3.10.1`.
+        The `x.x.x` mentioned above is the version number of SlopeCraft, for example, `5.0.0`.
 
 3. Make sure you have read the [FAQ](https://slopecraft.readthedocs.io/en/faq/) and the tutorial before doing anything.
 

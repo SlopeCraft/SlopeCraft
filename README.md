@@ -15,8 +15,8 @@
         <img src="https://img.shields.io/github/v/release/SlopeCraft/SlopeCraft?style=for-the-badge" />
     </a>
     <br />
-    <img src="https://img.shields.io/badge/C%2B%2B-17-blue?style=for-the-badge" />
-    <img src="https://img.shields.io/badge/Qt-v6.1.0-brightgreen?style=for-the-badge" />
+    <img src="https://img.shields.io/badge/C%2B%2B-20-blue?style=for-the-badge" />
+    <img src="https://img.shields.io/badge/Qt-v6.4.0-brightgreen?style=for-the-badge" />
     <img src="https://img.shields.io/badge/Eigen-v3.4.0-yellowgreen?style=for-the-badge" />
 </p>
 
@@ -44,7 +44,7 @@ SlopeCraft 是一款基于 Qt + Eigen + zlib 开发的，用于在 Minecraft 中
    - Linux 用户：下载 `SlopeCraft-x.x.x-linux.tar.xz`，解压后运行 `SlopeCraft`
 
     ::: tips
-        此处的 `x.x.x` 为 SlopeCraft 的版本号，例如 `3.10.1`。
+        此处的 `x.x.x` 为 SlopeCraft 的版本号，例如 `5.0.0`。
 
 3. 在进行任何操作前，请确保你已经阅读了 [常见问题](https://slopecraft.readthedocs.io/faq/) 和使用教程。
 
