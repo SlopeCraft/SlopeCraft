@@ -10,7 +10,7 @@
             // id 是这种方块的 id，也是必填项，最好附带完整的方块状态，必须加 minecraft:前缀",
             "id": "minecraft:waxed_cut_copper_slab[type=top,waterlogged=false]",
             // nameZH 是方块中文名称，必填",
-            "nameZH": "涂蜡切制铜上半砖",
+            "nameZH": "涂蜡切制铜台阶",
             // nameEN 是方块英文名称，必填",
             "nameEN": "Waxed cut copper slab",
             // icon 是方块对应图片的文件名，它应当放在 CustomBlocks 文件夹下。必填",
@@ -33,7 +33,7 @@
             // id is the block id with full blockstatus with minecraft: prefix. Compulsory item.
             "id": "minecraft:stone_slab[type=top,waterlogged=false]",
             // nameZH is the Chinese name. Compulsory item.
-            "nameZH": "石头上半砖",
+            "nameZH": "石头台阶",
             // nameEN is the English name. Compulsory item.
             "nameEN": "Stone slab",
             // icon is the image filename correspoing to this block, the image should be put under CustomBlocks directory. Compulsory item.
@@ -50,7 +50,7 @@
         {
             "baseColor": 2,
             "id": "minecraft:sandstone_slab[type=top,waterlogged=false]",
-            "nameZH": "砂岩上半砖",
+            "nameZH": "砂岩台阶",
             "nameEN": "Sandstone slab",
             "icon": "smooth_sandstone.png",
             "version": 0,
@@ -59,7 +59,7 @@
         {
             "baseColor": 11,
             "id": "minecraft:cobblestone_slab[type=top,waterlogged=false]",
-            "nameZH": "圆石上半砖",
+            "nameZH": "圆石台阶",
             "nameEN": "Cobblestone slab",
             "icon": "cobblestone.png",
             "version": 0,
@@ -68,7 +68,7 @@
         {
             "baseColor": 28,
             "id": "minecraft:brick_slab[type=top,waterlogged=false]",
-            "nameZH": "砖块上半砖",
+            "nameZH": "红砖台阶",
             "nameEN": "Brick slab",
             "icon": "bricks.png",
             "version": 0,
@@ -77,7 +77,7 @@
         {
             "baseColor": 11,
             "id": "minecraft:stone_brick_slab[type=top,waterlogged=false]",
-            "nameZH": "石砖上半砖",
+            "nameZH": "石砖台阶",
             "nameEN": "Stonebrick slab",
             "icon": "stone_bricks.png",
             "version": 0,
@@ -86,7 +86,7 @@
         {
             "baseColor": 35,
             "id": "minecraft:nether_brick_slab[type=top,waterlogged=false]",
-            "nameZH": "地狱砖块上半砖",
+            "nameZH": "下界砖台阶",
             "nameEN": "Nether brick slab",
             "icon": "nether_bricks.png",
             "version": 0,
@@ -95,7 +95,7 @@
         {
             "baseColor": 14,
             "id": "minecraft:quartz_slab[type=top,waterlogged=false]",
-            "nameZH": "石英上半砖",
+            "nameZH": "石英台阶",
             "nameEN": "Quartz slab",
             "icon": "quartz_block.png",
             "version": 0,
@@ -104,7 +104,7 @@
         {
             "baseColor": 13,
             "id": "minecraft:oak_slab[type=top,waterlogged=false]",
-            "nameZH": "橡木上半砖",
+            "nameZH": "橡木台阶",
             "nameEN": "Oak slab",
             "icon": "oak_planks.png",
             "version": 0,
@@ -113,7 +113,7 @@
         {
             "baseColor": 34,
             "id": "minecraft:spruce_slab[type=top,waterlogged=false]",
-            "nameZH": "云杉木上半砖",
+            "nameZH": "云杉木台阶",
             "nameEN": "Spruce slab",
             "icon": "spruce_planks.png",
             "version": 0,
@@ -123,7 +123,7 @@
         {
             "baseColor": 2,
             "id": "minecraft:birch_slab[type=top,waterlogged=false]",
-            "nameZH": "白桦木上半砖",
+            "nameZH": "白桦木台阶",
             "nameEN": "Birch slab",
             "icon": "birch_planks.png",
             "version": 0,
@@ -133,7 +133,7 @@
         {
             "baseColor": 10,
             "id": "minecraft:jungle_slab[type=top,waterlogged=false]",
-            "nameZH": "丛林木上半砖",
+            "nameZH": "丛林木台阶",
             "nameEN": "Jungle slab",
             "icon": "jungle_planks.png",
             "version": 0,
@@ -143,7 +143,7 @@
         {
             "baseColor": 15,
             "id": "minecraft:acacia_slab[type=top,waterlogged=false]",
-            "nameZH": "金合欢木上半砖",
+            "nameZH": "金合欢木台阶",
             "nameEN": "Acacia slab",
             "icon": "acacia_planks.png",
             "version": 0,
@@ -153,7 +153,7 @@
         {
             "baseColor": 26,
             "id": "minecraft:dark_oak_slab[type=top,waterlogged=false]",
-            "nameZH": "黑橡木上半砖",
+            "nameZH": "深色橡木台阶",
             "nameEN": "Dark oak slab",
             "icon": "dark_oak_planks.png",
             "version": 0,
@@ -163,7 +163,7 @@
         {
             "baseColor": 15,
             "id": "minecraft:red_sandstone_slab[type=top,waterlogged=false]",
-            "nameZH": "红砂岩上半砖",
+            "nameZH": "红砂岩台阶",
             "nameEN": "Red sandstone slab",
             "icon": "smooth_red_sandstone.png",
             "version": 0,
@@ -172,7 +172,7 @@
         {
             "baseColor": 16,
             "id": "minecraft:purpur_slab[type=top,waterlogged=false]",
-            "nameZH": "紫珀上半砖",
+            "nameZH": "紫珀台阶",
             "nameEN": "Purpur slab",
             "icon": "purpur_block.png",
             "version": 0,
@@ -181,7 +181,7 @@
         {
             "baseColor": 23,
             "id": "minecraft:prismarine_slab[type=top,waterlogged=false]",
-            "nameZH": "海晶石上半砖",
+            "nameZH": "海晶石台阶",
             "nameEN": "Prismarine slab",
             "icon": "prismarine.png",
             "version": 13,
@@ -190,7 +190,7 @@
         {
             "baseColor": 31,
             "id": "minecraft:prismarine_brick_slab[type=top,waterlogged=false]",
-            "nameZH": "海晶石砖上半砖",
+            "nameZH": "海晶石砖台阶",
             "nameEN": "Prismarine brick slab",
             "icon": "prismarine_bricks.png",
             "version": 13,
@@ -199,7 +199,7 @@
         {
             "baseColor": 31,
             "id": "minecraft:dark_prismarine_slab[type=top,waterlogged=false]",
-            "nameZH": "暗海晶石上半砖",
+            "nameZH": "暗海晶石台阶",
             "nameEN": "Dark prismarine slab",
             "icon": "dark_prismarine.png",
             "version": 13,
@@ -278,7 +278,7 @@
         {
             "baseColor": 24,
             "id": "minecraft:mycelium[snowy=false]",
-            "nameZH": "菌丝",
+            "nameZH": "菌丝体",
             "nameEN": "Mycelium",
             "icon": "mycelium_top.png",
             "version": 0
