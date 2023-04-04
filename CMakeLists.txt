@@ -56,8 +56,6 @@ include(cmake/find_HeuristicFlow.cmake)
 
 include(cmake/find_qt6.cmake)
 
-# set(SlopeCraft_update_ts_files ON)
-
 # find lupdate executable
 if(${SlopeCraft_update_ts_files} AND(NOT DEFINED SlopeCraft_Qt_lupdate_executable))
     find_program(SlopeCraft_Qt_lupdate_executable name lupdate PATHS ${CMAKE_PREFIX_PATH} REQUIRED)

@@ -16,8 +16,10 @@
 message(STATUS "Searching for Qt6. CMAKE_PREFIX_PATH = " ${CMAKE_PREFIX_PATH})
 find_package(QT NAMES Qt6 COMPONENTS Widgets LinguistTools REQUIRED)
 
-# if(NOT ${QT_FOUND})
-# message(FATAL_ERROR "Failed to found Qt6.")
-# endif()
+if(${WIN32})
+    find_program(SlopeCraft_Qt_windeployqt_executable windeployqt PATHS ${CMAKE_PREFIX_PATH})
+endif()
 
-# unset(temp_is_SQrd_valid)
+if(${APPLE})
+    find_program(SlopeCraft_Qt_macdeployqt_executable macdeployqt PATHS ${CMAKE_PREFIX_PATH})
+endif()

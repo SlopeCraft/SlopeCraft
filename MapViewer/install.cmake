@@ -1,9 +1,21 @@
+set(AppName MapViewer)
+configure_file(${CMAKE_SOURCE_DIR}/cmake/deploy_qt.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     install(TARGETS MapViewer
         RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
         BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX}
     )
+
+    # Run windeployqt at build time
+    add_custom_target(Windeployqt-MapViewer ALL
+        COMMAND ${SlopeCraft_Qt_windeployqt_executable} MapViewer.exe
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        DEPENDS MapViewer)
+
+    # Run windeployqt at install time
+    install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake)
+
     return()
 endif()
 

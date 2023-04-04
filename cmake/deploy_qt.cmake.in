@@ -1,0 +1,21 @@
+if(${WIN32})
+    message(STATUS Running windeployqt for @AppName@ ...)
+    execute_process(
+        COMMAND @SlopeCraft_Qt_windeployqt_executable@ @AppName@.exe
+        WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}
+        OUTPUT_QUIET
+        COMMAND_ERROR_IS_FATAL ANY)
+
+    return()
+endif()
+
+if(${APPLE})
+    message(STATUS Running macdeployqt for @AppName@ ...)
+    execute_process(
+        COMMAND @SlopeCraft_Qt_macdeployqt_executable@ @AppName@.app
+        WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}
+        OUTPUT_QUIET
+        COMMAND_ERROR_IS_FATAL ANY)
+
+    return()
+endif()
