@@ -64,6 +64,17 @@ if(${LINUX})
 endif()
 
 if(${APPLE})
+    install(TARGETS VisualCraftL
+        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX})
+
+    # Install zips. In vccl-config.json or vc-config.json, they are refered like ./Blocks_VCL/Vanilla_1_19_3.zip
+    install(FILES ${VCL_app_files}
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/Blocks_VCL)
+
+    install(TARGETS VisualCraftL
+        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/Cpp/bin
+        LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/Cpp/lib)
     return()
 endif()
 

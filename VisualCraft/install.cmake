@@ -32,5 +32,16 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    install(TARGETS VisualCraft
+        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
+        BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX})
+
+    # Install config json file, VisualCraft will try to find it by ./vc-config.json
+    install(FILES vc-config.json
+        DESTINATION ${CMAKE_INSTALL_PREFIX})
+
+    # Run macdeployqt at install time
+    install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake)
+
     return()
 endif()
