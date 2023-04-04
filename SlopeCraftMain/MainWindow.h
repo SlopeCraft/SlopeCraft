@@ -147,7 +147,7 @@ class MainWindow : public QMainWindow {
 
  private slots:
 
-  void when_network_finished(QNetworkReply *reply, bool is_manually);
+  // void when_network_finished(QNetworkReply *reply, bool is_manually);
 
   void contactG();
   void contactB();
@@ -254,6 +254,7 @@ class MainWindow : public QMainWindow {
   QString ProductDir;
   QTranslator trans_SC;
   QTranslator trans_BLM;
+  QTranslator trans_VD;
   bool Collected;
   QProgressBar *proTracker;
 

@@ -25,7 +25,7 @@ This file is part of SlopeCraft.
 #include <QFile>
 #include <QMessageBox>
 #include <QTranslator>
-
+#include <iostream>
 #include "CallbackFunctions.h"
 #include "VCWind.h"
 
@@ -57,11 +57,25 @@ int main(int argc, char **argv) {
 
   //::is_language_ZH = false;
 
-  QTranslator translator;
+  QTranslator translator_self;
+  QTranslator translator_version_dialog;
   if (!::is_language_ZH) {
-    if (translator.load(":/i18n/VisualCraft_en_US.qm")) {
-      qapp.installTranslator(&translator);
+    int err_counter = 0;
+    if (translator_self.load(":/i18n/VisualCraft_en_US.qm")) {
+      qapp.installTranslator(&translator_self);
+    } else {
+      err_counter++;
     }
+
+    if (translator_version_dialog.load(":/i18n/VersionDialog_en_US.qm")) {
+      qapp.installTranslator(&translator_version_dialog);
+    } else {
+      err_counter++;
+    }
+
+    // if (err_counter > 0) {
+    qDebug() << err_counter << " qm file(s) failed to be loaded.";
+    //}
   }
 
   if (!VCL_is_version_ok()) {

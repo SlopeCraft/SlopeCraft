@@ -1538,6 +1538,11 @@ void MainWindow::switchLan(Language lang) {
       msg += QStringLiteral("Failed to load translation file \"%1\"\n")
                  .arg(":/i18n/BlockListManager_en_US.qm");
     }
+    if (!this->trans_VD.load(":/i18n/VersionDialog_en_US.qm")) {
+      msg += QStringLiteral("Failed to load translation file \"%1\"\n")
+                 .arg(":/i18n/VersionDialog_en_US.qm");
+    }
+
     if (!msg.isEmpty()) {
       QMessageBox::warning(this, "Failed to load translation.", msg);
       return;
@@ -1545,11 +1550,13 @@ void MainWindow::switchLan(Language lang) {
 
     qApp->installTranslator(&this->trans_SC);
     qApp->installTranslator(&this->trans_BLM);
+    qApp->installTranslator(&this->trans_VD);
     ui->retranslateUi(this);
     // qDebug("Changed language to English");
   } else {
     qApp->removeTranslator(&this->trans_SC);
     qApp->removeTranslator(&this->trans_BLM);
+    qApp->removeTranslator(&this->trans_VD);
     ui->retranslateUi(this);
     // qDebug("Changed language to Chinese");
   }
@@ -1735,77 +1742,10 @@ void MainWindow::checkVersion() {
 }
 
 void MainWindow::grabVersion(bool isAuto) {
-  QNetworkRequest request(
-      QUrl("https://api.github.com/repos/SlopeCraft/SlopeCraft/releases"));
-
-  QNetworkReply *reply = networkManager().get(request);
-
-  connect(reply, &QNetworkReply::finished, [this, reply, isAuto]() {
-    this->when_network_finished(reply, !isAuto);
-  });
-}
-
-void MainWindow::when_network_finished(QNetworkReply *reply, bool is_manually) {
-  const QByteArray content = reply->readAll();
-  version_info info;
-  try {
-    info = extract_latest_version(content.data());
-  } catch (std::exception &e) {
-    QMessageBox::warning(
-        this, tr("获取最新版本失败"),
-        tr("解析 \"%1\" "
-           "返回的结果时出现错误：\n\n%"
-           "2\n\n这不是一个致命错误，不影响软件使用。\n解析失败的信息为：\n%3")
-            .arg(reply->url().toString())
-            .arg(e.what())
-            .arg(content),
-        QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore});
-    reply->deleteLater();
-    return;
-  }
-
-  reply->deleteLater();
-
-  const uint64_t latest_ver = info.version_u64;
-
-  const auto &tag_name = info.tag_name;
-
-  const uint64_t ui_ver = SC_VERSION_U64;
-
-  if (ui_ver == latest_ver) {
-    if (is_manually) {
-      QMessageBox::information(this, tr("检查更新成功"),
-                               tr("您在使用的是最新版本"));
-    }
-
-    return;
-  }
-
-  if (ui_ver > latest_ver) {
-    if (is_manually) {
-      QMessageBox::information(
-          this, tr("检查更新成功"),
-          tr("您使用的版本 (%1) 比已发布的 (%2) 更新，可能是测试版。")
-              .arg(SC_VERSION_STR)
-              .arg(tag_name));
-    }
-    return;
-  }
-
-  {
-    VersionDialog *vd = new VersionDialog(this);
-    vd->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
-    vd->setAttribute(Qt::WidgetAttribute::WA_AlwaysStackOnTop, true);
-    vd->setWindowFlag(Qt::WindowType::Window, true);
-
-    vd->setup_text(
-        tr("SlopeCraft 已更新"),
-        tr("最新版本为%1，当前版本为%2").arg(tag_name).arg(SC_VERSION_STR),
-        info.body, info.html_url);
-
-    vd->show();
-    return;
-  }
+  VersionDialog::start_network_request(
+      this, "SlopeCraft",
+      QUrl("https://api.github.com/repos/SlopeCraft/SlopeCraft/releases"),
+      networkManager(), !isAuto);
 }
 
 void MainWindow::onBlockListChanged() {

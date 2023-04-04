@@ -220,8 +220,8 @@ QByteArray VCWind::checksum_basic_colorset_option(
 }
 
 // utilitiy functions
-VCL_resource_pack *
-VCWind::create_resource_pack(const basic_colorset_option &opt) noexcept {
+VCL_resource_pack *VCWind::create_resource_pack(
+    const basic_colorset_option &opt) noexcept {
   std::vector<QByteArray> rpfiles_qba;
   rpfiles_qba.reserve(opt.zips.size());
   std::vector<const char *> rpfiles_charp;
@@ -235,8 +235,8 @@ VCWind::create_resource_pack(const basic_colorset_option &opt) noexcept {
 }
 
 // utilitiy functions
-VCL_block_state_list *
-VCWind::create_block_state_list(const basic_colorset_option &opt) noexcept {
+VCL_block_state_list *VCWind::create_block_state_list(
+    const basic_colorset_option &opt) noexcept {
   std::vector<QByteArray> bsl_filenames;
   std::vector<const char *> jsonfiles_charp;
 
@@ -566,11 +566,10 @@ void VCWind::setup_allowed_colorset() noexcept {
   this->ui->ac_browse_allowed_colors->setEnabled(true);
 }
 
-size_t
-VCWind::selected_blocks(std::vector<VCL_block *> *blocks_dest) const noexcept {
+size_t VCWind::selected_blocks(
+    std::vector<VCL_block *> *blocks_dest) const noexcept {
   size_t counter = 0;
-  if (blocks_dest != nullptr)
-    blocks_dest->clear();
+  if (blocks_dest != nullptr) blocks_dest->clear();
   for (auto &pair : this->map_VC_block_class) {
     counter += pair.second->selected_blocks(blocks_dest, true);
   }
@@ -818,49 +817,3 @@ void VCWind::on_ac_load_resource_triggered() noexcept {
 void VCWind::on_ac_set_allowed_triggered() noexcept {
   this->setup_allowed_colorset();
 }
-
-/*
-void VCWind::when_basical_colorset_changed() noexcept {
-  this->is_basical_colorset_changed = true;
-}
-
-void VCWind::when_allowed_colorset_changed() noexcept {
-  this->is_allowed_colorset_changed = true;
-}
-void VCWind::connect_when_basical_colorset_changed() noexcept {
-  connect(this->ui->rdb_direction_up, &QRadioButton::toggled, this,
-          &VCWind::when_basical_colorset_changed);
-  connect(this->ui->rdb_direction_side, &QRadioButton::toggled, this,
-          &VCWind::when_basical_colorset_changed);
-  connect(this->ui->rdb_direction_down, &QRadioButton::toggled, this,
-          &VCWind::when_basical_colorset_changed);
-
-  connect(this->ui->rdb_version_12, &QRadioButton::toggled, this,
-          &VCWind::when_basical_colorset_changed);
-  connect(this->ui->rdb_version_13, &QRadioButton::toggled, this,
-          &VCWind::when_basical_colorset_changed);
-  connect(this->ui->rdb_version_14, &QRadioButton::toggled, this,
-          &VCWind::when_basical_colorset_changed);
-  connect(this->ui->rdb_version_15, &QRadioButton::toggled, this,
-          &VCWind::when_basical_colorset_changed);
-  connect(this->ui->rdb_version_16, &QRadioButton::toggled, this,
-          &VCWind::when_basical_colorset_changed);
-  connect(this->ui->rdb_version_17, &QRadioButton::toggled, this,
-          &VCWind::when_basical_colorset_changed);
-  connect(this->ui->rdb_version_18, &QRadioButton::toggled, this,
-          &VCWind::when_basical_colorset_changed);
-  connect(this->ui->rdb_version_19, &QRadioButton::toggled, this,
-          &VCWind::when_basical_colorset_changed);
-
-  connect(this->ui->sb_max_layers, &QSpinBox::valueChanged, this,
-          &VCWind::when_basical_colorset_changed);
-
-  connect(this->ui->lw_rp, &QListWidget::itemClicked, this,
-          &VCWind::when_basical_colorset_changed);
-  connect(this->ui->lw_bsl, &QListWidget::itemClicked, this,
-          &VCWind::when_basical_colorset_changed);
-  // QListWidget::itemClicked
-}
-*/
-
-// void VCWind::connect_when_allowed_colorset_changed() noexcept {}

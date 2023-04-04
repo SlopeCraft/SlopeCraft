@@ -46,7 +46,7 @@ class VCWind;
 
 class VCWind : public QMainWindow {
   Q_OBJECT
-public:
+ public:
   struct convert_option {
     SCL_convertAlgo algo;
     bool dither;
@@ -74,7 +74,7 @@ public:
     std::vector<VCL_block *> blocks;
   };
 
-private:
+ private:
   // for all pages
   Ui::VCWind *ui;
   VCL_Kernel *const kernel{nullptr};
@@ -96,7 +96,7 @@ private:
 
   // static bool have_special(QListWidget *qlw) noexcept;
 
-public:
+ public:
   explicit VCWind(QWidget *parent = nullptr);
   ~VCWind();
 
@@ -108,25 +108,26 @@ public:
 
   void retrieve_latest_version(QString url_api, QNetworkAccessManager &qnam,
                                bool is_manually) noexcept;
-signals:
+ signals:
   void signal_basic_colorset_changed();
   void signal_allowed_colorset_changed();
 
-private:
+ private:
   // for all pages
   static void callback_progress_range_set(void *, int, int, int) noexcept;
   static void callback_progress_range_add(void *, int) noexcept;
 
-  void when_network_finished(QNetworkReply *reply, bool is_manually) noexcept;
+  // void when_network_finished(QNetworkReply *reply, bool is_manually)
+  // noexcept;
 
   // for page 0 ------------------------------------------
   void setup_ui_select_biome() noexcept;
   //  create and set this->rp
-  [[nodiscard]] static VCL_resource_pack *
-  create_resource_pack(const basic_colorset_option &opt) noexcept;
+  [[nodiscard]] static VCL_resource_pack *create_resource_pack(
+      const basic_colorset_option &opt) noexcept;
   // create and set this->bsl
-  [[nodiscard]] static VCL_block_state_list *
-  create_block_state_list(const basic_colorset_option &opt) noexcept;
+  [[nodiscard]] static VCL_block_state_list *create_block_state_list(
+      const basic_colorset_option &opt) noexcept;
 
   // receive current selected version from ui
   SCL_gameVersion current_selected_version() const noexcept;
@@ -137,8 +138,8 @@ private:
   QByteArray checksum_basic_colorset_option(
       const basic_colorset_option &opt) const noexcept;
 
-  static QByteArray
-  checksum_allowed_colorset_option(const allowed_colorset_option &opt) noexcept;
+  static QByteArray checksum_allowed_colorset_option(
+      const allowed_colorset_option &opt) noexcept;
 
   bool is_basical_colorset_changed() const noexcept;
 
@@ -158,7 +159,7 @@ private:
   void apply_selection(
       std::function<void(const VCL_block *, QCheckBox *)>) noexcept;
 
-public:
+ public:
   void select_blocks(
       std::function<bool(const VCL_block *)> return_true_for_select) noexcept;
 
@@ -168,7 +169,7 @@ public:
   int count_block_matched(std::function<bool(const VCL_block *)>
                               return_true_when_match) const noexcept;
 
-private:
+ private:
   // void connect_when_allowed_colorset_changed() noexcept;
 
   // for page 2 ------------------------------------------
@@ -207,7 +208,7 @@ private:
   void select_default_device() noexcept;
 
   QString update_gpu_device(QPoint current_choice) noexcept;
-private slots:
+ private slots:
   // for all pages ------------------------------------------
 
   void on_ac_flush_warnings_triggered() noexcept;
@@ -290,4 +291,4 @@ private slots:
   void on_combobox_select_device_currentIndexChanged(int idx) noexcept;
 };
 
-#endif // SLOPECRAFT_VISUALCRAFT_VCWIND_H
+#endif  // SLOPECRAFT_VISUALCRAFT_VCWIND_H
