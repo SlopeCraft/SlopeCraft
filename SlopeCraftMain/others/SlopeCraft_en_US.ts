@@ -780,7 +780,7 @@ sequence number</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="3994"/>
-        <location filename="../MainWindow.cpp" line="1893"/>
+        <location filename="../MainWindow.cpp" line="1833"/>
         <source>保存预设</source>
         <translation>Save preset</translation>
     </message>
@@ -919,162 +919,114 @@ After you reset the strategy, load the image again.</translation>
         <translation>Please wait</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1571"/>
+        <location filename="../MainWindow.cpp" line="1578"/>
         <source>
 具体信息：</source>
         <translation>Detail: </translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1577"/>
+        <location filename="../MainWindow.cpp" line="1584"/>
         <source>未知游戏版本</source>
         <translation>Unknown game version</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1581"/>
-        <location filename="../MainWindow.cpp" line="1585"/>
-        <location filename="../MainWindow.cpp" line="1589"/>
-        <location filename="../MainWindow.cpp" line="1593"/>
+        <location filename="../MainWindow.cpp" line="1588"/>
+        <location filename="../MainWindow.cpp" line="1592"/>
+        <location filename="../MainWindow.cpp" line="1596"/>
+        <location filename="../MainWindow.cpp" line="1600"/>
         <source>导出原理图失败</source>
         <translation>Failed to export.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1582"/>
+        <location filename="../MainWindow.cpp" line="1589"/>
         <source>方块种类超出上限。</source>
         <translation>The types of blocks overflow.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1586"/>
+        <location filename="../MainWindow.cpp" line="1593"/>
         <source>错误的文件扩展名</source>
         <translation>Invalid file extension name</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1590"/>
+        <location filename="../MainWindow.cpp" line="1597"/>
         <source>三维结构中存在错误的方块</source>
         <translation>Wrong block in 3D structure.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1594"/>
+        <location filename="../MainWindow.cpp" line="1601"/>
         <source>无法创建/打开文件</source>
         <translation>Failed to create/open file</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1603"/>
+        <location filename="../MainWindow.cpp" line="1610"/>
         <source>导出原版结构方块文件失败</source>
         <translation>Failed to export vanilla structure file.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1604"/>
+        <location filename="../MainWindow.cpp" line="1611"/>
         <source>导出时指定不使用结构空位表示空气，但方块列表中不包含空气。</source>
         <translation>When exporting as structure, you assigned not to replace air with structure void, but there is no air in the block palette.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1609"/>
+        <location filename="../MainWindow.cpp" line="1616"/>
         <source>转化原图为地图画时出错</source>
         <translation>Error occurred when converting image to map</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1610"/>
+        <location filename="../MainWindow.cpp" line="1617"/>
         <source>原图为空！你可能没有导入原图！</source>
         <translation>Your source image is empty! You might have forgot to import source image!</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1613"/>
+        <location filename="../MainWindow.cpp" line="1620"/>
         <source>构建高度矩阵时出现错误</source>
         <translation>Error occurred when making height martix</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1614"/>
+        <location filename="../MainWindow.cpp" line="1621"/>
         <source>原版地图画不允许出现第三个阴影（不存在的几何关系不可能生存实装！）
 请检查你的地图画类型，纯文件地图画不可以导出为投影！</source>
         <translation>The third shadow shouldn&apos;t apper in vanilla map!
 Check your map type, remember that file-only map can&apos;t be exported as litematic!</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1619"/>
+        <location filename="../MainWindow.cpp" line="1626"/>
         <source>跳步操作</source>
         <translation>You skipped a step</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1623"/>
+        <location filename="../MainWindow.cpp" line="1630"/>
         <source>有损压缩失败</source>
         <translation>Inteligent lossy compression failed</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1630"/>
+        <location filename="../MainWindow.cpp" line="1637"/>
         <source>最大允许高度太小了</source>
         <translation>The maxmium allowed height is too low</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1634"/>
+        <location filename="../MainWindow.cpp" line="1641"/>
         <source>允许使用的颜色过少</source>
         <translation>Too few colors allowed!</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1635"/>
+        <location filename="../MainWindow.cpp" line="1642"/>
         <source>你应该勾选启用尽可能多的基色，颜色太少是不行的！</source>
         <translation>You should enable as much base colors as possible.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1639"/>
-        <location filename="../MainWindow.cpp" line="1643"/>
+        <location filename="../MainWindow.cpp" line="1646"/>
+        <location filename="../MainWindow.cpp" line="1650"/>
         <source>这可能是因为路径中含有中文字符！</source>
         <translation>This might because of non-English characters in filename of path.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1642"/>
+        <location filename="../MainWindow.cpp" line="1649"/>
         <source>删除临时文件失败</source>
         <translation>Failed to remove temporary file</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1755"/>
-        <source>获取最新版本失败</source>
-        <translation>Failed to check updates</translation>
-    </message>
-    <message>
-        <location filename="../MainWindow.cpp" line="1756"/>
-        <source>解析 &quot;%1&quot; 返回的结果时出现错误：
-
-%2
-
-这不是一个致命错误，不影响软件使用。
-解析失败的信息为：
-%3</source>
-        <translation>An error occured when parsing the reply of &quot;%1&quot;:
-
-%2
-
-This is not a fatal error, you can still use SlopeCraft.
-The message that failed to parse:
-%3</translation>
-    </message>
-    <message>
-        <location filename="../MainWindow.cpp" line="1777"/>
-        <location filename="../MainWindow.cpp" line="1787"/>
-        <source>检查更新成功</source>
-        <translation>Check for updates successully</translation>
-    </message>
-    <message>
-        <location filename="../MainWindow.cpp" line="1778"/>
-        <source>您在使用的是最新版本</source>
-        <translation>You are using the latest version</translation>
-    </message>
-    <message>
-        <location filename="../MainWindow.cpp" line="1788"/>
-        <source>您使用的版本 (%1) 比已发布的 (%2) 更新，可能是测试版。</source>
-        <translation>The current version (%1) is later than the latest released one(%2), probably a testing version.</translation>
-    </message>
-    <message>
-        <location filename="../MainWindow.cpp" line="1802"/>
-        <source>SlopeCraft 已更新</source>
-        <translation>SlopeCraft has been updated</translation>
-    </message>
-    <message>
-        <location filename="../MainWindow.cpp" line="1803"/>
-        <source>最新版本为%1，当前版本为%2</source>
-        <translation>The latest version is %1, and current vesion is %2</translation>
-    </message>
-    <message>
-        <location filename="../MainWindow.cpp" line="1624"/>
+        <location filename="../MainWindow.cpp" line="1631"/>
         <source>在构建高度矩阵时，有损压缩失败，没能将地图画压缩到目标高度。         这可能是因为地图画行数过大。         尝试启用无损压缩，或者提高最大允许高度</source>
         <translation>Lossy compression failed to compress the maximun height down to max allowed hehight when computing height map. This may be caused by a too large image. Try enabling lossless compression, or enlarge max allowed height.</translation>
     </message>
@@ -1124,165 +1076,157 @@ The message that failed to parse:
         <translation>You can select the &quot;data&quot; dir in the saves of MC.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1597"/>
+        <location filename="../MainWindow.cpp" line="1604"/>
         <source>导出 WorldEdit 原理图失败</source>
         <translation>Failed to export WorldEdit schem</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1598"/>
+        <location filename="../MainWindow.cpp" line="1605"/>
         <source>不支持导出 1.12 WorldEdit 原理图（.schematic 格式），仅支持.schem 格式</source>
         <translation>Exporting as WE schematic is not supported in MC 12(*.schematic), only *.schem is supported</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1620"/>
+        <location filename="../MainWindow.cpp" line="1627"/>
         <source>SlopeCraft 不允许你跳步操作，请按照左侧竖边栏的顺序操作！</source>
         <translation>Skipping any step is not allowed by SlopeCraft</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1631"/>
+        <location filename="../MainWindow.cpp" line="1638"/>
         <source>有损压缩的最大允许不要低于 14，否则很容易压缩失败</source>
         <translation>The maximum height of lossy compression should not be less than 14</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1638"/>
+        <location filename="../MainWindow.cpp" line="1645"/>
         <source>导出时 Gzip 压缩文件失败</source>
         <translation>Failed to compress a exported file</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1673"/>
+        <location filename="../MainWindow.cpp" line="1680"/>
         <source>正在构建高度矩阵</source>
         <translation>Making height matrix</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1676"/>
+        <location filename="../MainWindow.cpp" line="1683"/>
         <source>正在构建三维结构</source>
         <translation>Building 3D structure</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1679"/>
+        <location filename="../MainWindow.cpp" line="1686"/>
         <source>正在收集整张图片的颜色</source>
         <translation>Collecting colors of the whole image</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1682"/>
+        <location filename="../MainWindow.cpp" line="1689"/>
         <source>正在压缩立体地图画</source>
         <translation>Compressing 3D map pixel arts</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1685"/>
+        <location filename="../MainWindow.cpp" line="1692"/>
         <source>正在为立体地图画搭桥</source>
         <translation>Constructing glass bridge</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1688"/>
+        <location filename="../MainWindow.cpp" line="1695"/>
         <source>正在匹配颜色</source>
         <translation>Matching colors</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1691"/>
+        <location filename="../MainWindow.cpp" line="1698"/>
         <source>正在使用抖动仿色</source>
         <translation>Dithering</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1694"/>
+        <location filename="../MainWindow.cpp" line="1701"/>
         <source>正在将平板地图画变为墙面地图画</source>
         <translation>Converting flat map art to wall map art</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1697"/>
+        <location filename="../MainWindow.cpp" line="1704"/>
         <source>正在写入三维结构</source>
         <translation>Writing 3D structure</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1700"/>
+        <location filename="../MainWindow.cpp" line="1707"/>
         <source>正在写入方块列表</source>
         <translation>Writing block palette</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1703"/>
+        <location filename="../MainWindow.cpp" line="1710"/>
         <source>正在写入地图数据文件</source>
         <translation>Writing map data</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1706"/>
+        <location filename="../MainWindow.cpp" line="1713"/>
         <source>正在写入基础信息</source>
         <translation>Writing meta data</translation>
     </message>
     <message>
-        <source>检查更新完毕</source>
-        <translation type="vanished">Check for update</translation>
-    </message>
-    <message>
-        <source>现在你正在用的就是最新版本！</source>
-        <translation type="vanished">You are currently using the latest version!</translation>
-    </message>
-    <message>
-        <location filename="../MainWindow.cpp" line="1824"/>
+        <location filename="../MainWindow.cpp" line="1764"/>
         <source>可用</source>
         <translation> </translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1825"/>
+        <location filename="../MainWindow.cpp" line="1765"/>
         <source>种颜色</source>
         <translation> colors available.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1839"/>
+        <location filename="../MainWindow.cpp" line="1779"/>
         <source>保存截屏</source>
         <translation>Save screenshot</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1840"/>
+        <location filename="../MainWindow.cpp" line="1780"/>
         <source>图片 (*.jpg *.jpeg *.tif *.bmp *.png)</source>
         <translation>Image (*.jpg *.jpeg *.tif *.bmp *.png)</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1864"/>
+        <location filename="../MainWindow.cpp" line="1804"/>
         <source>保存当前显示图片</source>
         <translation>Save current image</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1865"/>
+        <location filename="../MainWindow.cpp" line="1805"/>
         <source>图片 (*.png)</source>
         <translation>Image (*.png)</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1903"/>
+        <location filename="../MainWindow.cpp" line="1843"/>
         <source>保存预设文件失败</source>
         <translation>Failed to save preset file</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1904"/>
+        <location filename="../MainWindow.cpp" line="1844"/>
         <source>无法创建文件&quot;%1&quot;</source>
         <translation>Failed to create file &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1914"/>
+        <location filename="../MainWindow.cpp" line="1854"/>
         <source>选择预设文件</source>
         <translation>Select a preset file</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1922"/>
+        <location filename="../MainWindow.cpp" line="1862"/>
         <source>加载预设失败</source>
         <translation>Failed to load preset</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1954"/>
+        <location filename="../MainWindow.cpp" line="1894"/>
         <source>测试方块列表的结构文件</source>
         <translation>Svae structure file for blocklist testing</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1968"/>
+        <location filename="../MainWindow.cpp" line="1908"/>
         <source>测试方块列表失败</source>
         <translation>Failed to test the block list.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1969"/>
+        <location filename="../MainWindow.cpp" line="1909"/>
         <source>具体信息：</source>
         <translation>Detailed information:</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1999"/>
+        <location filename="../MainWindow.cpp" line="1939"/>
         <source>保存颜色表</source>
         <translation>Save palette</translation>
     </message>
@@ -1359,84 +1303,6 @@ The message that failed to parse:
         <source>组</source>
         <translation>stacks</translation>
     </message>
-    <message>
-        <source>网址  </source>
-        <translation type="vanished">The message that </translation>
-    </message>
-    <message>
-        <source>检查更新时遇到 Json 解析错误</source>
-        <translation type="vanished">Json error when checking for updates</translation>
-    </message>
-    <message>
-        <source>  回复的信息无法通过 json 解析。
-
-这只是检查更新时遇到的故障，但不要紧，软件该用还能用。
-点击 No 以忽略这个错误；点击 NoToAll 则不会再自动检查更新。
-
-具体的错误为：
-</source>
-        <translation type="vanished">
-This is not a fatal error. Click No to ignore, and NoToAll to disable automatic update checking.
-
-Details:
-</translation>
-    </message>
-    <message>
-        <source>
-
-具体回复的信息为：
-</source>
-        <translation type="vanished">
-
-Received message in detail: 
-</translation>
-    </message>
-    <message>
-        <source>检查更新时返回信息错误</source>
-        <translation type="vanished">Received error message when checking for updates.</translation>
-    </message>
-    <message>
-        <source>  回复的信息中不包含版本号（&quot;tag_name&quot;）。
-
-这只是检查更新时遇到的故障，但不要紧，软件该用还能用。
-点击 No 以忽略这个错误；点击 NoToAll 则不会再自动检查更新。
-</source>
-        <translation type="vanished">
-This is not a fatal error. Click No to ignore, and NoToAll to disable automatic update checking.
-
-Details:
-</translation>
-    </message>
-    <message>
-        <source>  回复的信息中，版本号（&quot;tag_name&quot;）不是字符串。
-
-这只是检查更新时遇到的故障，但不要紧，软件该用还能用。
-点击 No 以忽略这个错误；点击 NoToAll 则不会再自动检查更新。
-</source>
-        <translation type="vanished">
-This is not a fatal error. Click No to ignore, and NoToAll to disable automatic update checking.
-
-Details:
-</translation>
-    </message>
-    <message>
-        <source>SlopeCraft 已更新</source>
-        <translation type="vanished">SlopeCraft has been updated</translation>
-    </message>
-    <message>
-        <source>好消息！好消息！SlopeCraft 更新了！
-</source>
-        <translation type="vanished">SlopeCraft has been updated!
-</translation>
-    </message>
-    <message>
-        <source>当前版本为</source>
-        <translation type="vanished">Current version: </translation>
-    </message>
-    <message>
-        <source>，检查到最新版本为</source>
-        <translation type="vanished">, latest version: </translation>
-    </message>
 </context>
 <context>
     <name>TaskBox</name>
@@ -1489,21 +1355,6 @@ Details:
         <location filename="../TaskBox.h" line="63"/>
         <source>图片格式损坏</source>
         <translation>Damaged image</translation>
-    </message>
-</context>
-<context>
-    <name>VersionDialog</name>
-    <message>
-        <source>下载最新版</source>
-        <translation type="vanished">Go to DOWNLOAD</translation>
-    </message>
-    <message>
-        <source>关闭，且不再提醒</source>
-        <translation type="vanished">Don&apos;t remind me</translation>
-    </message>
-    <message>
-        <source>关闭</source>
-        <translation type="vanished">Close</translation>
     </message>
 </context>
 <context>

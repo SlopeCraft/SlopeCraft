@@ -518,7 +518,6 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
     </message>
     <message>
         <location filename="../VCWind.ui" line="1257"/>
-        <location filename="../VCWind_subwindows.cpp" line="51"/>
         <source>关于VisualCraft</source>
         <translation>About VisualCraft</translation>
     </message>
@@ -670,22 +669,22 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
         <translation>Biomes</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="69"/>
+        <location filename="../main.cpp" line="83"/>
         <source>VisualCraftL 动态库版本不匹配</source>
         <translation>The version of VisualCraftL shared lib mismatch</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="70"/>
+        <location filename="../main.cpp" line="84"/>
         <source>界面程序编译时使用的 VisualCraftL 版本为%1，而 VisualCraftL 动态库的版本为%2。通常这是因为动态库版本过低。</source>
         <translation>The version of VisualCraftL at compile-time is %1, while that at runtime is %2. Usually it is because the version of VisualCraftL shared lib is too old.</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="82"/>
+        <location filename="../main.cpp" line="96"/>
         <source>加载配置文件失败。</source>
         <translation>Failed to load configuration file.</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="114"/>
+        <location filename="../main.cpp" line="128"/>
         <source>无法加载配置文件&quot;./vc-config.json&quot;。
 %1</source>
         <translation>Failed to load configuration file &quot;./vc-config.json&apos;. 
@@ -753,33 +752,38 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
         <translation>Convert algorithms(%1 colors avaliable)</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="586"/>
+        <location filename="../VCWind.cpp" line="585"/>
         <source>选择图片（可多选）</source>
         <translation>Select images</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="603"/>
+        <location filename="../VCWind.cpp" line="602"/>
         <source>读取图片失败</source>
         <translation>Failed to load image.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="604"/>
+        <location filename="../VCWind.cpp" line="603"/>
         <source>无法读取图片%1。图片可能是不支持的格式，或者已经损坏。图像过大也可能导致此错误。</source>
         <translation>Failed to load image %1 . The image may be of unsupported format, or has been screwed up. A tooooo large image may also cause this error.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="657"/>
+        <location filename="../VCWind.cpp" line="656"/>
         <source>设置图片失败</source>
         <translation>Failed to set image</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="658"/>
+        <location filename="../VCWind.cpp" line="657"/>
         <source>这个错误不应该发生的，可能是你点儿背。</source>
         <translation>This error is considered to be impossible.</translation>
     </message>
     <message>
         <location filename="../VCWind_subwindows.cpp" line="52"/>
-        <source>VisualCraft是一款全新的Minecraft像素画生成器，由MC玩家TokiNoBug开发，是SlopeCraft的子项目。与其他类似的软件不同，VisualCraft旨在跟进最新的MC版本(1.12~最新版)、支持最多的MC特性，提供最强大的功能。
+        <source>关于 VisualCraft</source>
+        <translation>About VisualCraft</translation>
+    </message>
+    <message>
+        <location filename="../VCWind_subwindows.cpp" line="53"/>
+        <source>VisualCraft 是一款全新的 Minecraft 像素画生成器，由 MC 玩家 TokiNoBug 开发，是 SlopeCraft 的子项目。与其他类似的软件不同，VisualCraft 旨在跟进最新的 MC 版本 (1.12~最新版)、支持最多的 MC 特性，提供最强大的功能。
 
 </source>
         <translation>VisualCraft is a brand-new pixel art generator for Minecraft. It is developed by TokiNoBug, and is a subproject of SlopeCraft. Unlike other counterparts, VisualCraft aims to catch up with latest versions of Minecraft(from 1.12 to latest), providing greatest functions and supporting as much MC features as possible.
@@ -787,8 +791,8 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
 </translation>
     </message>
     <message>
-        <location filename="../VCWind_subwindows.cpp" line="57"/>
-        <source>目前VisualCraft能够解析许多第三方资源包，也允许自定义增加加新方块。与传统的思路不同，VisualCraft以方块模型的方式来解析资源包，尽量贴近Minecraft的方式，因此支持各种自定义的方块模型。
+        <location filename="../VCWind_subwindows.cpp" line="59"/>
+        <source>目前 VisualCraft 能够解析许多第三方资源包，也允许自定义增加加新方块。与传统的思路不同，VisualCraft 以方块模型的方式来解析资源包，尽量贴近 Minecraft 的方式，因此支持各种自定义的方块模型。
 
 </source>
         <translation>Now VisualCraft is able to parse many 3rd party resource packs and allowing to add custom new blocks. Different from traditional methods, VisualCraft understands resource packs by parsing block models, which is rather similiar with what Minecraft does. Thus custom block models are supported.
@@ -796,8 +800,8 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
 </translation>
     </message>
     <message>
-        <location filename="../VCWind_subwindows.cpp" line="61"/>
-        <source>在导出方面，VisualCraft支持Litematica mod的投影(*.litematic)、WorldEdit 原理图(*.shem)(仅1.13+可用)、原版结构方块文件(*.nbt)、平面示意图(*.png)等方式。
+        <location filename="../VCWind_subwindows.cpp" line="64"/>
+        <source>在导出方面，VisualCraft 支持 Litematica mod 的投影 (*.litematic)、WorldEdit 原理图 (*.shem)(仅 1.13+可用)、原版结构方块文件 (*.nbt)、平面示意图 (*.png) 等方式。
 
 </source>
         <translation>When it comes to export, VisualCraft supports multiple formats, like Litematic mod(*.litematic), WorldEdit schematic(*.schem)(1.13+ only), vanilla structure block file(*.nbt), flat diagram image(*.png) and so on.
@@ -805,8 +809,8 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
 </translation>
     </message>
     <message>
-        <location filename="../VCWind_subwindows.cpp" line="65"/>
-        <source>VisualCraft支持用各种透明方块互相叠加，产生更多的颜色。软件最多支持不超过65534种颜色，受此限制，像素画的层数不超过3层。
+        <location filename="../VCWind_subwindows.cpp" line="68"/>
+        <source>VisualCraft 支持用各种透明方块互相叠加，产生更多的颜色。软件最多支持不超过 65534 种颜色，受此限制，像素画的层数不超过3 层。
 
 </source>
         <translation>VisualCraft composes half-transparent blocks to produce more colors. No greater than 65534 colors are supported, and thus the maximum layers should now exceeds 3.
@@ -814,57 +818,9 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
 </translation>
     </message>
     <message>
-        <location filename="../VCWind_subwindows.cpp" line="68"/>
-        <source>由于颜色数量很多，VisualCraft使用了显卡加速。目前支持的API有OpenCL。现在正在使用的API是%1</source>
+        <location filename="../VCWind_subwindows.cpp" line="72"/>
+        <source>由于颜色数量很多，VisualCraft 使用了显卡加速。目前支持的 API 有 OpenCL。现在正在使用的 API 是%1</source>
         <translation>The great amount of colors makes GPU accleration necessary. Now OpenCL is supported, and %1 is what currently being used.</translation>
-    </message>
-    <message>
-        <location filename="../VCWind_subwindows.cpp" line="171"/>
-        <source>获取最新版本失败</source>
-        <translation>Failed to retrieve latest version</translation>
-    </message>
-    <message>
-        <location filename="../VCWind_subwindows.cpp" line="172"/>
-        <source>解析 &quot;%1&quot; 返回的结果时出现错误：
-
-%2
-
-这不是一个致命错误，不影响软件使用。
-解析失败的信息为：
-%3</source>
-        <translation>An error occured when parsing &quot;%1&quot; :
-
-%2
-
-This error is not a fatal one, you can continue to use VisualCraft.
-The original message that can not be parsed is :
-%3</translation>
-    </message>
-    <message>
-        <location filename="../VCWind_subwindows.cpp" line="195"/>
-        <location filename="../VCWind_subwindows.cpp" line="205"/>
-        <source>检查更新成功</source>
-        <translation>Succeded in checking for updates</translation>
-    </message>
-    <message>
-        <location filename="../VCWind_subwindows.cpp" line="196"/>
-        <source>您在使用的是最新版本</source>
-        <translation>You are using the latest version</translation>
-    </message>
-    <message>
-        <location filename="../VCWind_subwindows.cpp" line="206"/>
-        <source>您使用的版本(%1)比已发布的(%2)更新，可能是测试版。</source>
-        <translation>The current version (%1) is later than latest released(%2), it&apos;s probably a testing one.</translation>
-    </message>
-    <message>
-        <location filename="../VCWind_subwindows.cpp" line="219"/>
-        <source>VisualCraft已更新</source>
-        <translation>Update VisualCraft</translation>
-    </message>
-    <message>
-        <location filename="../VCWind_subwindows.cpp" line="220"/>
-        <source>最新版本为%1，当前版本为%2（内核版本%3）</source>
-        <translation>The latest version is %1 and current version is %2(kernel version is %3)</translation>
     </message>
     <message>
         <location filename="../VCWind_gpu.cpp" line="85"/>
