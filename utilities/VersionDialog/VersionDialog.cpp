@@ -26,7 +26,6 @@ This file is part of SlopeCraft.
 
 #include "ui_VersionDialog.h"
 
-
 VersionDialog::VersionDialog(QWidget *parent)
     : QDialog(parent), ui(new Ui::VersionDialog) {
   this->ui->setupUi(this);
@@ -121,4 +120,107 @@ version_info extract_latest_version(
   ret.body = QString::fromUtf8(body.c_str());
   ret.version_u64 = latest_version;
   return ret;
+}
+
+#include <QNetworkReply>
+
+void version_dialog_private_fun_when_network_finished(
+    QWidget *window, QNetworkReply *reply, bool is_manually) noexcept;
+
+void VersionDialog::start_network_request(QWidget *window, const QUrl &url,
+                                          QNetworkAccessManager &manager,
+                                          bool is_manually) noexcept {
+  QNetworkRequest request(url);
+
+  QNetworkReply *reply = manager.get(request);
+
+  connect(reply, &QNetworkReply::finished, [window, reply, is_manually]() {
+    version_dialog_private_fun_when_network_finished(window, reply,
+                                                     is_manually);
+  });
+}
+
+#include <QDir>
+#include <QFile>
+#include <QMessageBox>
+
+void version_dialog_private_fun_when_network_finished(
+    QWidget *window, QNetworkReply *reply, bool is_manually) noexcept {
+  const QByteArray content_qba = reply->readAll();
+  version_info info;
+  try {
+    info = extract_latest_version(content_qba.data());
+  } catch (std::exception &e) {
+    const QString home_path = QDir::homePath();
+    const QString data_dir_name = "SlopeCraft";
+    QString data_dir = QDir::homePath() + "/" + data_dir_name;
+    QString log_file = data_dir.append("/UpdateCheckFailure.log");
+    {
+      if (!QDir(data_dir).exists()) {
+        QDir{home_path}.mkpath(data_dir_name);
+      }
+
+      QFile log(log_file);
+      log.open(QFile::OpenMode::enum_type::WriteOnly);
+      log.write(content_qba);
+      log.close();
+    }
+
+    QMessageBox::warning(
+        window, QWidget::tr("获取最新版本失败"),
+        QWidget::tr("解析 \"%1\" "
+                    "返回的结果时出现错误：\n\n%"
+                    "2\n\n这不是一个致命错误，不影响软件使用。\n解析失败的信"
+                    "息已经存储在日志文件中 (%3)。")
+            .arg(reply->url().toString())
+            .arg(e.what())
+            .arg(log_file),
+        QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore});
+    reply->deleteLater();
+    return;
+  }
+
+  reply->deleteLater();
+
+  const uint64_t latest_ver = info.version_u64;
+
+  const auto &tag_name = info.tag_name;
+
+  const uint64_t ui_ver = SC_VERSION_U64;
+
+  if (ui_ver == latest_ver) {
+    if (is_manually) {
+      QMessageBox::information(window, QWidget::tr("检查更新成功"),
+                               QWidget::tr("您在使用的是最新版本"));
+    }
+
+    return;
+  }
+
+  if (ui_ver > latest_ver) {
+    if (is_manually) {
+      QMessageBox::information(
+          window, QWidget::tr("检查更新成功"),
+          QWidget::tr("您使用的版本 (%1) 比已发布的 (%2) 更新，可能是测试版。")
+              .arg(SC_VERSION_STR)
+              .arg(tag_name));
+    }
+    return;
+  }
+
+  {
+    VersionDialog *vd = new VersionDialog(window);
+    vd->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
+    vd->setAttribute(Qt::WidgetAttribute::WA_AlwaysStackOnTop, true);
+    vd->setWindowFlag(Qt::WindowType::Window, true);
+
+    vd->setup_text(QWidget::tr("VisualCraft 已更新"),
+                   QWidget::tr("最新版本为%1，当前版本为%2")
+                       .arg(tag_name)
+                       .arg(SC_VERSION_STR),
+                   info.body, info.html_url);
+
+    vd->show();
+    return;
+  }
 }

@@ -25,6 +25,8 @@ This file is part of SlopeCraft.
 
 #include <QDialog>
 #include <SC_version_buildtime.h>
+#include <QUrl>
+#include <QNetworkAccessManager>
 
 class VersionDialog;
 
@@ -34,17 +36,22 @@ class VersionDialog;
 
 class VersionDialog : public QDialog {
   Q_OBJECT
-private:
+ private:
   Ui::VersionDialog *ui;
   QString url_download{""};
 
-public:
+ public:
   explicit VersionDialog(QWidget *parent);
   ~VersionDialog();
 
   void setup_text(QString title, QString content, QString markdown_content,
                   QString url_download) noexcept;
-private slots:
+
+  static void start_network_request(QWidget *window, const QUrl &url,
+                                    QNetworkAccessManager &manager,
+                                    bool is_manually) noexcept;
+
+ private slots:
   void on_pb_download_clicked() noexcept;
 };
 
@@ -55,7 +62,7 @@ struct version_info {
   uint64_t version_u64;
 };
 
-version_info
-extract_latest_version(std::string_view json_all_releaese) noexcept(false);
+version_info extract_latest_version(
+    std::string_view json_all_releaese) noexcept(false);
 
-#endif // SLOPECRAFT_VISUALCRAFT_VERSION_DIALOG_H
+#endif  // SLOPECRAFT_VISUALCRAFT_VERSION_DIALOG_H
