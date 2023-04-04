@@ -22,7 +22,7 @@
         {
             "baseColor": 1,
             "id": "minecraft:slime_block",
-            "nameZH": "粘液块",
+            "nameZH": "黏液块",
             "nameEN": "Slime block",
             "icon": "slime_block.png",
             "version": 0,
@@ -50,7 +50,7 @@
         {
             "baseColor": 2,
             "id": "minecraft:glowstone",
-            "nameZH": "萤石",
+            "nameZH": "荧石",
             "nameEN": "Glowstone",
             "icon": "glowstone.png",
             "version": 0,
@@ -76,7 +76,7 @@
         {
             "baseColor": 2,
             "id": "minecraft:turtle_egg[eggs=4,hatch=0]",
-            "nameZH": "海蛋",
+            "nameZH": "海龟蛋",
             "nameEN": "Turtle egg",
             "icon": "turtle_egg.png",
             "version": 13,
@@ -86,7 +86,7 @@
         {
             "baseColor": 2,
             "id": "minecraft:ochre_froglight[axis=y]",
-            "nameZH": "黄色蛙鸣灯",
+            "nameZH": "赭黄蛙明灯",
             "nameEN": "Ochre Froglight",
             "icon": "ochre_froglight_top.png",
             "version": 19,
@@ -173,7 +173,7 @@
         {
             "baseColor": 6,
             "id": "minecraft:heavy_weighted_pressure_plate[power=0]",
-            "nameZH": "铁压力板",
+            "nameZH": "重质测重压力板",
             "nameEN": "Iron pressure plate",
             "icon": "heavy_weighted_pressure_plate.png",
             "version": 0,
@@ -238,7 +238,7 @@
         {
             "baseColor": 7,
             "id": "minecraft:jungle_leaves[distance=7,persistent=true]",
-            "nameZH": "丛林木树叶",
+            "nameZH": "丛林树叶",
             "nameEN": "Jungle leaves",
             "icon": "jungle_leaves.png",
             "version": 0,
@@ -256,7 +256,7 @@
         {
             "baseColor": 7,
             "id": "minecraft:dark_oak_leaves[distance=7,persistent=true]",
-            "nameZH": "黑橡树树叶",
+            "nameZH": "深色橡树树叶",
             "nameEN": "Dark oat leaves",
             "icon": "dark_oak_leaves.png",
             "version": 0,
@@ -339,7 +339,7 @@
         {
             "baseColor": 10,
             "id": "minecraft:brown_mushroom_block[east=true,west=true,north=true,south=true,up=true,down=true]",
-            "nameZH": "棕色蘑菇块",
+            "nameZH": "棕色蘑菇方块",
             "nameEN": "Brown mushroom block",
             "icon": "brown_mushroom_block.png",
             "version": 0,
@@ -383,7 +383,7 @@
         {
             "baseColor": 11,
             "id": "minecraft:smooth_stone",
-            "nameZH": "平滑石",
+            "nameZH": "平滑石头",
             "nameEN": "Smooth stone",
             "icon": "smooth_stone.png",
             "version": 13
@@ -445,7 +445,7 @@
         {
             "baseColor": 14,
             "id": "minecraft:target[power=0]",
-            "nameZH": "靶子",
+            "nameZH": "标靶",
             "nameEN": "Target",
             "icon": "target.png",
             "version": 16
@@ -518,7 +518,7 @@
         {
             "baseColor": 15,
             "id": "minecraft:honey_block",
-            "nameZH": "蜜块",
+            "nameZH": "蜂蜜块",
             "nameEN": "Honey block",
             "icon": "honey_block.png",
             "version": 15
@@ -534,7 +534,7 @@
         {
             "baseColor": 15,
             "id": "minecraft:raw_copper_block",
-            "nameZH": "生铜块",
+            "nameZH": "粗铜块",
             "nameEN": "Raw copper block",
             "icon": "raw_copper_block.png",
             "version": 17
@@ -576,7 +576,7 @@
         {
             "baseColor": 16,
             "id": "minecraft:magenta_stained_glass",
-            "nameZH": "品红染色玻璃",
+            "nameZH": "品红色染色玻璃",
             "nameEN": "Magenta glass",
             "icon": "magenta_stained_glass.png",
             "version": 0,
@@ -593,7 +593,7 @@
         {
             "baseColor": 17,
             "id": "minecraft:light_blue_concrete",
-            "nameZH": "浅蓝混凝土",
+            "nameZH": "淡蓝色混凝土",
             "nameEN": "Light blue concrete",
             "icon": "light_blue_concrete.png",
             "version": 0,
@@ -602,7 +602,7 @@
         {
             "baseColor": 17,
             "id": "minecraft:light_blue_wool",
-            "nameZH": "浅蓝羊毛",
+            "nameZH": "淡蓝色羊毛",
             "nameEN": "light blue wool",
             "icon": "light_blue_wool.png",
             "version": 0,
@@ -611,7 +611,7 @@
         {
             "baseColor": 17,
             "id": "minecraft:light_blue_stained_glass",
-            "nameZH": "浅蓝染色玻璃",
+            "nameZH": "淡蓝色染色玻璃",
             "nameEN": "Light blue glass",
             "icon": "light_blue_stained_glass.png",
             "version": 0,
@@ -647,7 +647,7 @@
         {
             "baseColor": 18,
             "id": "minecraft:hay_block[axis=y]",
-            "nameZH": "干草块",
+            "nameZH": "干草捆",
             "nameEN": "Hay block",
             "icon": "hay_block.png",
             "version": 0
@@ -655,7 +655,7 @@
         {
             "baseColor": 19,
             "id": "minecraft:lime_concrete",
-            "nameZH": "浅绿混凝土",
+            "nameZH": "黄绿色混凝土",
             "nameEN": "Lime concrete",
             "icon": "lime_concrete.png",
             "version": 0,
@@ -664,7 +664,7 @@
         {
             "baseColor": 19,
             "id": "minecraft:lime_wool",
-            "nameZH": "浅绿羊毛",
+            "nameZH": "黄绿色羊毛",
             "nameEN": "Lime wool",
             "icon": "lime_wool.png",
             "version": 0,
@@ -673,7 +673,7 @@
         {
             "baseColor": 19,
             "id": "minecraft:lime_stained_glass",
-            "nameZH": "浅绿染色玻璃",
+            "nameZH": "黄绿色染色玻璃",
             "nameEN": "Lime glass",
             "icon": "lime_stained_glass.png",
             "version": 0,
@@ -682,7 +682,7 @@
         {
             "baseColor": 20,
             "id": "minecraft:pink_concrete",
-            "nameZH": "粉色混凝土",
+            "nameZH": "粉红色混凝土",
             "nameEN": "Pink concrete",
             "icon": "pink_concrete.png",
             "version": 0,
@@ -691,7 +691,7 @@
         {
             "baseColor": 20,
             "id": "minecraft:pink_wool",
-            "nameZH": "粉色羊毛",
+            "nameZH": "粉红色羊毛",
             "nameEN": "Pink wool",
             "icon": "pink_wool.png",
             "version": 0,
@@ -700,7 +700,7 @@
         {
             "baseColor": 20,
             "id": "minecraft:pink_stained_glass",
-            "nameZH": "粉色染色玻璃",
+            "nameZH": "粉红色染色玻璃",
             "nameEN": "Pink glass",
             "icon": "pink_stained_glass.png",
             "version": 0,
@@ -709,7 +709,7 @@
         {
             "baseColor": 20,
             "id": "minecraft:pearlescent_froglight[axis=y]",
-            "nameZH": "紫色蛙鸣灯",
+            "nameZH": "珠光蛙明灯",
             "nameEN": "Verdant Froglight",
             "icon": "pearlescent_froglight_top.png",
             "version": 19,
@@ -754,7 +754,7 @@
         {
             "baseColor": 22,
             "id": "minecraft:light_gray_concrete",
-            "nameZH": "浅灰混凝土",
+            "nameZH": "淡灰色混凝土",
             "nameEN": "Light gray concrete",
             "icon": "light_gray_concrete.png",
             "version": 0,
@@ -763,7 +763,7 @@
         {
             "baseColor": 22,
             "id": "minecraft:light_gray_wool",
-            "nameZH": "浅灰羊毛",
+            "nameZH": "淡灰色羊毛",
             "nameEN": "Light gray wool",
             "icon": "light_gray_wool.png",
             "version": 0,
@@ -773,7 +773,7 @@
         {
             "baseColor": 22,
             "id": "minecraft:light_gray_stained_glass",
-            "nameZH": "浅灰染色玻璃",
+            "nameZH": "淡灰色染色玻璃",
             "nameEN": "Light gray glass",
             "icon": "light_gray_stained_glass.png",
             "version": 0,
@@ -819,7 +819,7 @@
         {
             "baseColor": 23,
             "id": "minecraft:sculk_sensor[power=0,sculk_sensor_phase=inactive,waterlogged=false]",
-            "nameZH": "潜声传感器",
+            "nameZH": "幽匿感测体",
             "nameEN": "Sculk sensor",
             "icon": "sculk_sensor_side.png",
             "version": 19
@@ -919,7 +919,7 @@
         {
             "baseColor": 26,
             "id": "minecraft:dark_oak_planks",
-            "nameZH": "黑橡木木板",
+            "nameZH": "深色橡木木板",
             "nameEN": "Dark oak plank",
             "icon": "dark_oak_planks.png",
             "version": 0,
@@ -1009,7 +1009,7 @@
         {
             "baseColor": 28,
             "id": "minecraft:bricks",
-            "nameZH": "砖块",
+            "nameZH": "红砖块",
             "nameEN": "Bricks",
             "icon": "bricks.png",
             "version": 0,
@@ -1018,7 +1018,7 @@
         {
             "baseColor": 28,
             "id": "minecraft:red_mushroom_block[east=true,west=true,north=true,south=true,up=true,down=true]",
-            "nameZH": "红色蘑菇块",
+            "nameZH": "红色蘑菇方块",
             "nameEN": "Red mushroom block",
             "icon": "red_mushroom_block.png",
             "version": 0,
@@ -1028,7 +1028,7 @@
         {
             "baseColor": 28,
             "id": "minecraft:nether_wart_block",
-            "nameZH": "地狱疣块",
+            "nameZH": "下界疣块",
             "nameEN": "Nether wart block",
             "icon": "nether_wart_block.png",
             "version": 0
@@ -1090,7 +1090,7 @@
         {
             "baseColor": 29,
             "id": "minecraft:coal_block",
-            "nameZH": "煤块",
+            "nameZH": "煤炭块",
             "nameEN": "Coal block",
             "icon": "coal_block.png",
             "version": 0
@@ -1114,7 +1114,7 @@
         {
             "baseColor": 29,
             "id": "minecraft:sculk",
-            "nameZH": "潜声方块",
+            "nameZH": "幽匿块",
             "nameEN": "Sculk block",
             "icon": "sculk.png",
             "version": 19
@@ -1122,7 +1122,7 @@
         {
             "baseColor": 29,
             "id": "minecraft:sculk_catalyst[bloom=false]",
-            "nameZH": "潜声催化剂",
+            "nameZH": "幽匿催发体",
             "nameEN": "Sculk catalyst",
             "icon": "sculk_catalyst_top.png",
             "version": 19
@@ -1130,7 +1130,7 @@
         {
             "baseColor": 29,
             "id": "minecraft:sculk_shrieker[shrieking=false,waterlogged=false]",
-            "nameZH": "潜声尖啸体",
+            "nameZH": "幽匿尖啸体",
             "nameEN": "Sculk shrieker",
             "icon": "sculk_shrieker_side.png",
             "version": 19
@@ -1138,7 +1138,7 @@
         {
             "baseColor": 29,
             "id": "minecraft:sculk_vein[down=true,east=false,north=false,south=false,up=false,waterlogged=false,west=false]",
-            "nameZH": "潜声藤蔓",
+            "nameZH": "幽匿脉络",
             "nameEN": "Sculk vein",
             "icon": "sculk_vein.png",
             "version": 19,
@@ -1155,7 +1155,7 @@
         {
             "baseColor": 30,
             "id": "minecraft:light_weighted_pressure_plate[power=0]",
-            "nameZH": "金压力板",
+            "nameZH": "轻质测重压力板",
             "nameEN": "Gold pressure plate",
             "icon": "light_weighted_pressure_plate.png",
             "version": 0,
@@ -1244,7 +1244,7 @@
         {
             "baseColor": 35,
             "id": "minecraft:netherrack",
-            "nameZH": "地狱岩",
+            "nameZH": "下界岩",
             "nameEN": "Netherrack",
             "icon": "netherrack.png",
             "version": 0
@@ -1252,7 +1252,7 @@
         {
             "baseColor": 35,
             "id": "minecraft:nether_bricks",
-            "nameZH": "地狱砖块",
+            "nameZH": "下界砖块",
             "nameEN": "Nether brick",
             "icon": "nether_bricks.png",
             "version": 0,
@@ -1296,7 +1296,7 @@
         {
             "baseColor": 38,
             "id": "minecraft:magenta_terracotta",
-            "nameZH": "品红陶瓦",
+            "nameZH": "品红色陶瓦",
             "nameEN": "Magenta terracotta",
             "icon": "magenta_terracotta.png",
             "version": 0,
@@ -1305,7 +1305,7 @@
         {
             "baseColor": 39,
             "id": "minecraft:light_blue_terracotta",
-            "nameZH": "浅蓝陶瓦",
+            "nameZH": "淡蓝色陶瓦",
             "nameEN": "Light blue terracotta",
             "icon": "light_blue_terracotta.png",
             "version": 0,
@@ -1323,7 +1323,7 @@
         {
             "baseColor": 41,
             "id": "minecraft:lime_terracotta",
-            "nameZH": "浅绿陶瓦",
+            "nameZH": "黄绿色陶瓦",
             "nameEN": "Lime terracotta",
             "icon": "lime_terracotta.png",
             "version": 0,
@@ -1332,7 +1332,7 @@
         {
             "baseColor": 42,
             "id": "minecraft:pink_terracotta",
-            "nameZH": "粉色陶瓦",
+            "nameZH": "粉红色陶瓦",
             "nameEN": "Pink terracotta",
             "icon": "pink_terracotta.png",
             "version": 0,
@@ -1350,7 +1350,7 @@
         {
             "baseColor": 44,
             "id": "minecraft:light_gray_terracotta",
-            "nameZH": "浅灰陶瓦",
+            "nameZH": "淡灰色陶瓦",
             "nameEN": "Light gray terracotta",
             "icon": "light_gray_terracotta.png",
             "version": 0,
@@ -1359,7 +1359,7 @@
         {
             "baseColor": 44,
             "id": "minecraft:waxed_exposed_copper",
-            "nameZH": "涂蜡斑驳铜块",
+            "nameZH": "斑驳的涂蜡铜块",
             "nameEN": "Waxed exposed copper",
             "icon": "waxed_exposed_copper.png",
             "version": 17
@@ -1367,7 +1367,7 @@
         {
             "baseColor": 44,
             "id": "minecraft:waxed_exposed_cut_copper",
-            "nameZH": "涂蜡切制斑驳铜块",
+            "nameZH": "斑驳的涂蜡切制铜块",
             "nameEN": "Waxed exposed cut copper",
             "icon": "waxed_exposed_cut_copper.png",
             "version": 17
@@ -1481,7 +1481,7 @@
         {
             "baseColor": 53,
             "id": "minecraft:stripped_crimson_stem[axis=y]",
-            "nameZH": "去皮绯红原木",
+            "nameZH": "去皮绯红菌柄",
             "nameEN": "Stripped crimson log",
             "icon": "stripped_crimson_stem.png",
             "version": 16,
@@ -1490,7 +1490,7 @@
         {
             "baseColor": 54,
             "id": "minecraft:crimson_hyphae[axis=y]",
-            "nameZH": "绯红树皮",
+            "nameZH": "绯红菌核",
             "nameEN": "Crimson hyphae",
             "icon": "crimson_hyphae.png",
             "version": 16,
@@ -1499,7 +1499,7 @@
         {
             "baseColor": 54,
             "id": "minecraft:stripped_crimson_hyphae[axis=y]",
-            "nameZH": "去皮绯红树皮",
+            "nameZH": "去皮绯红菌核",
             "nameEN": "Stripped crimson hyphae",
             "icon": "stripped_crimson_hyphae.png",
             "version": 16,
@@ -1508,7 +1508,7 @@
         {
             "baseColor": 55,
             "id": "minecraft:warped_nylium",
-            "nameZH": "扭曲菌岩",
+            "nameZH": "诡异菌岩",
             "nameEN": "Warped nylium",
             "icon": "warped_nylium.png",
             "version": 16,
@@ -1518,7 +1518,7 @@
         {
             "baseColor": 55,
             "id": "minecraft:waxed_oxidized_copper",
-            "nameZH": "涂蜡氧化铜块",
+            "nameZH": "氧化的涂蜡铜块",
             "nameEN": "Waxed oxided copper",
             "icon": "waxed_oxidized_copper.png",
             "version": 17
@@ -1526,7 +1526,7 @@
         {
             "baseColor": 55,
             "id": "minecraft:waxed_oxidized_cut_copper",
-            "nameZH": "涂蜡切制氧化铜块",
+            "nameZH": "氧化的涂蜡切制铜块",
             "nameEN": "Waxed oxided cut copper",
             "icon": "waxed_oxidized_cut_copper.png",
             "version": 17
@@ -1534,7 +1534,7 @@
         {
             "baseColor": 56,
             "id": "minecraft:warped_planks",
-            "nameZH": "扭曲木板",
+            "nameZH": "诡异木板",
             "nameEN": "Warped plank",
             "icon": "warped_planks.png",
             "version": 16,
@@ -1543,7 +1543,7 @@
         {
             "baseColor": 56,
             "id": "minecraft:stripped_warped_stem[axis=y]",
-            "nameZH": "去皮扭曲原木",
+            "nameZH": "去皮诡异菌柄",
             "nameEN": "Stripped warped log",
             "icon": "stripped_warped_stem.png",
             "version": 16,
@@ -1552,7 +1552,7 @@
         {
             "baseColor": 56,
             "id": "minecraft:waxed_weathered_copper",
-            "nameZH": "涂蜡生锈铜块",
+            "nameZH": "锈蚀的涂蜡铜块",
             "nameEN": "Waxed weathered copper",
             "icon": "waxed_weathered_copper.png",
             "version": 17
@@ -1560,7 +1560,7 @@
         {
             "baseColor": 56,
             "id": "minecraft:waxed_weathered_cut_copper",
-            "nameZH": "涂蜡切制生锈铜块",
+            "nameZH": "锈蚀的涂蜡切制铜块",
             "nameEN": "Waxed weathered cut copper",
             "icon": "waxed_weathered_cut_copper.png",
             "version": 17
@@ -1568,7 +1568,7 @@
         {
             "baseColor": 57,
             "id": "minecraft:warped_hyphae[axis=y]",
-            "nameZH": "扭曲树皮",
+            "nameZH": "诡异菌核",
             "nameEN": "Warped hyphae",
             "icon": "warped_hyphae.png",
             "version": 16,
@@ -1577,7 +1577,7 @@
         {
             "baseColor": 57,
             "id": "minecraft:stripped_warped_hyphae[axis=y]",
-            "nameZH": "去皮扭曲树皮",
+            "nameZH": "去皮诡异菌核",
             "nameEN": "Stripped warped hyphae",
             "icon": "stripped_warped_hyphae.png",
             "version": 16,
@@ -1586,7 +1586,7 @@
         {
             "baseColor": 58,
             "id": "minecraft:warped_wart_block",
-            "nameZH": "扭曲疣块",
+            "nameZH": "诡异疣块",
             "nameEN": "Warped wart block",
             "icon": "warped_wart_block.png",
             "version": 16
@@ -1602,7 +1602,7 @@
         {
             "baseColor": 59,
             "id": "minecraft:chiseled_deepslate",
-            "nameZH": "錾制深板岩",
+            "nameZH": "雕纹深板岩",
             "nameEN": "Chiseled deepslate",
             "icon": "chiseled_deepslate.png",
             "version": 17
@@ -1642,7 +1642,7 @@
         {
             "baseColor": 60,
             "id": "minecraft:raw_iron_block",
-            "nameZH": "生铁块",
+            "nameZH": "粗铁块",
             "nameEN": "Raw iron block",
             "icon": "raw_iron_block.png",
             "version": 17
@@ -1662,7 +1662,7 @@
         {
             "baseColor": 61,
             "id": "minecraft:verdant_froglight[axis=y]",
-            "nameZH": "绿色蛙鸣灯",
+            "nameZH": "青翠蛙明灯",
             "nameEN": "Verdant Froglight",
             "icon": "verdant_froglight_top.png",
             "version": 19,
