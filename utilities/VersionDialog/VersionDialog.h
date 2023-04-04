@@ -47,7 +47,8 @@ class VersionDialog : public QDialog {
   void setup_text(QString title, QString content, QString markdown_content,
                   QString url_download) noexcept;
 
-  static void start_network_request(QWidget *window, const QUrl &url,
+  static void start_network_request(QWidget *window, QString software_name,
+                                    const QUrl &url,
                                     QNetworkAccessManager &manager,
                                     bool is_manually) noexcept;
 

@@ -14,16 +14,15 @@ set(VersionDialog_source_files
     VersionDialog.cpp)
 set(VersionDialog_ui_files
     VersionDialog.ui)
+set(VersionDialog_ts_files
+    others/VersionDialog_en_US.ts
+)
 
 set(VersionDialog_project_sources
     ${VersionDialog_header_files}
     ${VersionDialog_source_files}
     ${VersionDialog_ui_files})
 
-# if(${SlopeCraft_update_ts_files})
-# execute_process(COMMAND ${SlopeCraft_Qt_lupdate_executable} ${VersionDialog_header_files} ${VersionDialog_source_files} ${VersionDialog_ui_files} -ts others/VersionDialog_en_US.ts -no-obsolete
-# WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} COMMAND_ERROR_IS_FATAL ANY)
-# endif()
 add_library(VersionDialog STATIC
     ${VersionDialog_project_sources})
 
@@ -33,3 +32,17 @@ target_compile_features(VersionDialog PUBLIC cxx_std_20)
 
 include(${CMAKE_SOURCE_DIR}/cmake/find_nlohmann_json.cmake)
 target_include_directories(VersionDialog PRIVATE ${SlopeCraft_Nlohmann_json_include_dir})
+
+if(${SlopeCraft_update_ts_files})
+    execute_process(COMMAND ${SlopeCraft_Qt_lupdate_executable} ${VersionDialog_header_files} ${VersionDialog_source_files} ${VersionDialog_ui_files} -ts others/VersionDialog_en_US.ts ${SlopeCraft_ts_flags} -no-obsolete
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} COMMAND_ERROR_IS_FATAL ANY)
+endif()
+
+# translation
+qt_add_lrelease(VersionDialog TS_FILES ${VersionDialog_ts_files}
+    QM_FILES_OUTPUT_VARIABLE VD_qm_files)
+qt_add_resources(VersionDialog "VersionDialog_translations"
+    PREFIX "/i18n"
+    BASE ${CMAKE_CURRENT_BINARY_DIR}
+    FILES ${VD_qm_files}
+)

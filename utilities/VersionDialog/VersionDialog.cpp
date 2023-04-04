@@ -125,19 +125,23 @@ version_info extract_latest_version(
 #include <QNetworkReply>
 
 void version_dialog_private_fun_when_network_finished(
-    QWidget *window, QNetworkReply *reply, bool is_manually) noexcept;
+    QWidget *window, QNetworkReply *reply, bool is_manually,
+    QString software_name) noexcept;
 
-void VersionDialog::start_network_request(QWidget *window, const QUrl &url,
+void VersionDialog::start_network_request(QWidget *window,
+                                          QString software_name,
+                                          const QUrl &url,
                                           QNetworkAccessManager &manager,
                                           bool is_manually) noexcept {
   QNetworkRequest request(url);
 
   QNetworkReply *reply = manager.get(request);
 
-  connect(reply, &QNetworkReply::finished, [window, reply, is_manually]() {
-    version_dialog_private_fun_when_network_finished(window, reply,
-                                                     is_manually);
-  });
+  connect(reply, &QNetworkReply::finished,
+          [window, reply, is_manually, software_name]() {
+            version_dialog_private_fun_when_network_finished(
+                window, reply, is_manually, software_name);
+          });
 }
 
 #include <QDir>
@@ -145,7 +149,8 @@ void VersionDialog::start_network_request(QWidget *window, const QUrl &url,
 #include <QMessageBox>
 
 void version_dialog_private_fun_when_network_finished(
-    QWidget *window, QNetworkReply *reply, bool is_manually) noexcept {
+    QWidget *window, QNetworkReply *reply, bool is_manually,
+    QString software_name) noexcept {
   const QByteArray content_qba = reply->readAll();
   version_info info;
   try {
@@ -214,7 +219,7 @@ void version_dialog_private_fun_when_network_finished(
     vd->setAttribute(Qt::WidgetAttribute::WA_AlwaysStackOnTop, true);
     vd->setWindowFlag(Qt::WindowType::Window, true);
 
-    vd->setup_text(QWidget::tr("VisualCraft 已更新"),
+    vd->setup_text(QWidget::tr("%1 已更新").arg(software_name),
                    QWidget::tr("最新版本为%1，当前版本为%2")
                        .arg(tag_name)
                        .arg(SC_VERSION_STR),
