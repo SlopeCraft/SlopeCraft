@@ -9,7 +9,8 @@
 ### Related Issues
 
 <!--- REQUIRED: Tag all related issues (e.g. * #123) -->
-<!--- If this PR resolves the issue please specify (e.g. * closes #123) -->
+<!--- If this PR resolves a bug, please specify (e.g. * fix #123) -->
+<!--- If this PR implements a new feature, please specify (e.g. * resolve #123) -->
 <!--- If this PR addresses multiple issues, these issues must be related to one other -->
 
 * #ISSUE_NUMBER
