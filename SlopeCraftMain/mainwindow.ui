@@ -586,7 +586,7 @@ QWidget#PageStart,#PageEnd{
 
 
 QWidget#PageImPic,#PageType,#PageBL,#PageAdjPic,#PageExLite,#PageExMcF,#PageExDat{
-background-color:#f0f0f0;
+/*background-color:#f0f0f0;*/
 border:2px solid gray
 }
 
@@ -594,51 +594,68 @@ QPushButton:enabled{
 border:2px;
 border-radius:10px;
 border-style:groove;
+/*
 border-color: rgb(136, 136, 136);
 color: rgb(0, 0, 0);
+background-color:rgb(225, 225, 225);
+*/
 padding:2px 4px;
-background-color: rgb(225, 225, 225);
 }
 
 QPushButton:hover{
 border:2px;
 border-radius:10px;
 border-style:solid;
+/*
 border-color: rgb(136, 136, 136);
 color: rgb(0, 0, 0);
+background-color:rgb(241, 241, 241);
+*/
 padding:2px 4px;
-background-color: rgb(241, 241, 241);
 }
 
 QPushButton:!enabled{
 border:2px;
 border-radius:10px;
 border-style:groove;
+/*
 border-color: rgb(136, 136, 136);
 color: rgb(80, 80, 80);
+background-color:rgb(193, 193, 193);
+*/
 padding:2px 4px;
-background-color: rgb(193, 193, 193);
 }
 
 QCommandLinkButton:enabled{
+/*
 color: rgb(0, 0, 0);
-border:0px;
 background-color: rgba(255, 255, 255,128);
+*/
+border:0px;
 font: 11pt &quot;微软雅黑&quot;;
 }
 
 QCommandLinkButton:hover{
+/*
 color: rgb(0, 0, 0);
-border:0px;
 background-color: rgba(255, 255, 255,191);
+*/
+border:0px;
 font: 11pt &quot;微软雅黑&quot;;
 }
 QCommandLinkButton:pressed{
+/*
 color: rgb(0, 0, 0);
-border:0px;
 background-color: rgba(255, 255, 255,223);
+*/
+border:0px;
 font: 11pt &quot;微软雅黑&quot;;
-}</string>
+}
+
+/*
+QLabel,QRadioButton,QCheckBox{
+color:rgb(0,0,0);
+}*/</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
@@ -1822,8 +1839,8 @@ font: 11pt &quot;微软雅黑&quot;;
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>78</width>
-               <height>22</height>
+               <width>554</width>
+               <height>372</height>
               </rect>
              </property>
              <property name="sizePolicy">
