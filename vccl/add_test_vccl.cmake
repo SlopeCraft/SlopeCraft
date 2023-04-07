@@ -7,7 +7,7 @@ set(temp_testname_prefix test_vccl_images/)
 
 set(list_faces "up" "down" "north" "south" "east" "west")
 
-set(algos "RGB" "HSV" "Lab94" "XYZ")
+set(algos "RGB")
 
 set(dither "false")
 

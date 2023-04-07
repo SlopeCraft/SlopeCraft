@@ -31,10 +31,10 @@ int main(int argc, char *argv[]) {
 
   const QStringList uiLanguages = QLocale::system().uiLanguages();
 
-  qDebug() << uiLanguages;
+  // qDebug() << uiLanguages;
 
-  qDebug() << "当前运行路径：" << QCoreApplication::applicationDirPath();
-  // QString DirPath=QCoreApplication::applicationDirPath()+'/';
+  // qDebug() << "当前运行路径：" << QCoreApplication::applicationDirPath();
+  //  QString DirPath=QCoreApplication::applicationDirPath()+'/';
   QDir::setCurrent(QCoreApplication::applicationDirPath());
 
   const QStringList ZHLang = {"zh-CN", "zh", "zh-Hans-CN"};

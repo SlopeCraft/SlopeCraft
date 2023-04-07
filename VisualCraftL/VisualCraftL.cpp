@@ -1198,7 +1198,7 @@ const char *VCL_biome_name_ZH(VCL_biome_t b) noexcept {
   case VCL_biome_t::bamboo_jungle:
     return "竹林";
   case VCL_biome_t::badlands:
-    return "恶地(粘土山)";
+    return "恶地 (粘土山)";
   case VCL_biome_t::eroded_badlands:
     return "风蚀恶地";
   case VCL_biome_t::wooded_badlands:
@@ -1272,7 +1272,7 @@ const char *VCL_biome_name_ZH(VCL_biome_t b) noexcept {
   case VCL_biome_t::end_barrens:
     return "末地荒地";
   case VCL_biome_t::cherry_grove:
-    return "樱花树林(1.20)";
+    return "樱花树林 (1.20)";
   }
   return "Unamed";
 }
