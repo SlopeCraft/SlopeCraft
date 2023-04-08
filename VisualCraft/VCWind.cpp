@@ -28,7 +28,7 @@ This file is part of SlopeCraft.
 #include <QMessageBox>
 #include <iostream>
 #include <magic_enum.hpp>
-
+#include <QByteArrayView>
 #include "VC_block_class.h"
 #include "ui_VCWind.h"
 
@@ -90,7 +90,8 @@ void VCWind::callback_progress_range_add(void *__w, int delta) noexcept {
 // utilitiy functions
 void VCWind::append_default_to_rp_or_bsl(QListWidget *qlw,
                                          bool is_rp) noexcept {
-  const QString txt = is_rp ? VCWind::tr("原版资源包") : VCWind::tr("原版json");
+  const QString txt =
+      is_rp ? VCWind::tr("原版资源包") : VCWind::tr("原版 json");
   QListWidgetItem *qlwi = new QListWidgetItem(txt);
 
   qlwi->setData(Qt::UserRole, true);
@@ -209,12 +210,21 @@ QByteArray VCWind::checksum_basic_colorset_option(
     hash.addData(json.toUtf8());
   }
 
-  hash.addData(QByteArrayView((const char *)&opt.face, sizeof(opt.face)));
-  hash.addData(QByteArrayView((const char *)&opt.version, sizeof(opt.version)));
-  hash.addData(QByteArrayView((const char *)&opt.layers, sizeof(opt.layers)));
-  hash.addData(QByteArrayView((const char *)&opt.biome, sizeof(opt.biome)));
-  hash.addData(QByteArrayView((const char *)&opt.is_leaves_transparent,
-                              sizeof(opt.is_leaves_transparent)));
+#if QT_VERSION > 0x060300
+#define VC_PMACRO_QBAV_CLASS QByteArrayView
+#else
+#define VC_PMACRO_QBAV_CLASS QByteArray
+#endif
+
+  hash.addData(VC_PMACRO_QBAV_CLASS{(const char *)&opt.face, sizeof(opt.face)});
+  hash.addData(
+      VC_PMACRO_QBAV_CLASS{(const char *)&opt.version, sizeof(opt.version)});
+  hash.addData(
+      VC_PMACRO_QBAV_CLASS{(const char *)&opt.layers, sizeof(opt.layers)});
+  hash.addData(
+      VC_PMACRO_QBAV_CLASS{(const char *)&opt.biome, sizeof(opt.biome)});
+  hash.addData(VC_PMACRO_QBAV_CLASS{(const char *)&opt.is_leaves_transparent,
+                                    sizeof(opt.is_leaves_transparent)});
 
   return hash.result();
 }
@@ -286,7 +296,7 @@ void VCWind::on_pb_remove_rp_clicked() noexcept {
 void VCWind::on_pb_add_bsl_clicked() noexcept {
   static QString prev_dir{""};
   QStringList jsons = QFileDialog::getOpenFileNames(
-      this, VCWind::tr("选择方块id json文件"), prev_dir, "*.json");
+      this, VCWind::tr("选择方块 id json 文件"), prev_dir, "*.json");
   if (jsons.size() <= 0) {
     return;
   }
@@ -467,7 +477,7 @@ void VCWind::setup_basical_colorset() noexcept {
   VCL_block_state_list *bsl = VCWind::create_block_state_list(current_option);
   if (bsl == nullptr) {
     QMessageBox::critical(
-        this, VCWind::tr("方块状态列表json解析失败"),
+        this, VCWind::tr("方块状态列表 json 解析失败"),
         VCWind::tr("在此窗口之前弹出的错误信息非常重要，请将它汇报给开发者。"),
         QMessageBox::StandardButtons{QMessageBox::StandardButton::Close});
     VCL_destroy_resource_pack(rp);
@@ -487,7 +497,7 @@ void VCWind::setup_basical_colorset() noexcept {
 
   if (!success) {
     const auto ret = QMessageBox::critical(
-        this, VCWind::tr("资源包/方块状态列表json解析失败"),
+        this, VCWind::tr("资源包/方块状态列表 json 解析失败"),
         VCWind::tr("部分方块的投影图像计算失败，或者总颜色数量超过上限（65534）"
                    "。尝试移除解析失败的资源包/方块列表，或者减小最大层数。"),
         QMessageBox::StandardButtons{QMessageBox::StandardButton::Close});
