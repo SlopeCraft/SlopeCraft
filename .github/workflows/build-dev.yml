@@ -52,7 +52,7 @@ jobs:
       - name: Install qt6
         run: sudo apt install qt6-base-dev qt6-tools-dev-tools qt6-tools-dev qt6-l10n-tools 
       - name: Install OpenCL
-        run: sudo apt install nvidia-cuda-toolkit opencl-c-headers opencl-clhpp-headers
+        run: sudo apt install nvidia-cuda-toolkit cuda-repo-ubuntu2204-11-8-local ocl-icd-libopencl1
         #run: sudo apt install nvidia-opencl-dev 
       - name: List installed packages
         run: apt list --installed
