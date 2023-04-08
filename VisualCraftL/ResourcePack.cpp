@@ -26,7 +26,6 @@ This file is part of SlopeCraft.
 #include <ColorManip/ColorManip.h>
 
 bool VCL_resource_pack::copy(const VCL_resource_pack &src) noexcept {
-
   this->textures_original = src.textures_original;
   this->textures_override = src.textures_override;
   this->block_states = src.block_states;
@@ -67,7 +66,6 @@ bool VCL_resource_pack::filter_model_textures(
     const std::unordered_map<const block_model::EImgRowMajor_t *,
                              const block_model::EImgRowMajor_t *> &filter,
     bool is_missing_error) noexcept {
-
   for (auto &pair : this->block_models) {
     for (auto &ele : pair.second.elements) {
       for (auto &face : ele.faces) {
@@ -76,10 +74,10 @@ bool VCL_resource_pack::filter_model_textures(
           face.texture = it->second;
         } else {
           if (is_missing_error) {
-            std::string msg =
-                fmt::format("Failed to filter image pointer {}. Missing in the "
-                            "filter and is_missing_error is set to true.",
-                            (const void *)face.texture);
+            std::string msg = fmt::format(
+                "Failed to filter image pointer {}. Missing in the "
+                "filter and is_missing_error is set to true.",
+                (const void *)face.texture);
             VCL_report(VCL_report_type_t::error, msg.c_str());
             return false;
           }
@@ -140,8 +138,7 @@ bool process_block_state_list_in_id(
       cur_statement_beg = cur + 1;
     }
 
-    if (cur >= end)
-      break;
+    if (cur >= end) break;
   }
 
   return true;
@@ -151,12 +148,9 @@ bool resource_json::process_full_id(std::string_view full_id,
                                     std::string *namespace_name,
                                     std::string *pure_id,
                                     state_list *states) noexcept {
-  if (namespace_name != nullptr)
-    *namespace_name = "";
-  if (pure_id != nullptr)
-    pure_id->clear();
-  if (states != nullptr)
-    states->clear();
+  if (namespace_name != nullptr) *namespace_name = "";
+  if (pure_id != nullptr) pure_id->clear();
+  if (states != nullptr) states->clear();
 
   if (full_id.find_first_of(':') != full_id.find_last_of(':')) {
     return false;
@@ -177,11 +171,9 @@ bool resource_json::process_full_id(std::string_view full_id,
   const bool have_left_bracket = (idx_left_bracket != full_id.npos);
   const bool have_right_bracket = (idx_right_bracket != full_id.npos);
 
-  if (have_left_bracket != have_right_bracket)
-    return false;
+  if (have_left_bracket != have_right_bracket) return false;
 
-  if (idx_colon != full_id.npos && idx_colon > idx_left_bracket)
-    return false;
+  if (idx_colon != full_id.npos && idx_colon > idx_left_bracket) return false;
 
   if (have_left_bracket && (idx_left_bracket >= idx_right_bracket)) {
     return false;
@@ -219,13 +211,12 @@ bool resource_json::process_full_id(std::string_view full_id,
 std::variant<model_with_rotation, block_model::model>
 VCL_resource_pack::find_model(const std::string &block_state_str,
                               buffer_t &buffer) const noexcept {
-
   if (!resource_json::process_full_id(block_state_str, nullptr, &buffer.pure_id,
                                       &buffer.state_list)) {
-    std::string msg =
-        fmt::format("invalid full block id that can not be parsed to a list "
-                    "of block states : \"{}\"",
-                    block_state_str.c_str());
+    std::string msg = fmt::format(
+        "invalid full block id that can not be parsed to a list "
+        "of block states : \"{}\"",
+        block_state_str.c_str());
 
     VCL_report(VCL_report_type_t::error, msg.c_str());
     return model_with_rotation{nullptr};
@@ -254,10 +245,10 @@ VCL_resource_pack::find_model(const std::string &block_state_str,
     if (buffer.pure_id == "air") {
       return block_model::model{};
     }
-    std::string msg =
-        fmt::format("Undefined reference to block state whose pure block id "
-                    "is : \"{}\"  and full block id is : \"{}\"\n",
-                    buffer.pure_id, block_state_str);
+    std::string msg = fmt::format(
+        "Undefined reference to block state whose pure block id "
+        "is : \"{}\"  and full block id is : \"{}\"\n",
+        buffer.pure_id, block_state_str);
     VCL_report(VCL_report_type_t::error, msg.c_str());
     return model_with_rotation{nullptr};
   }
@@ -270,10 +261,10 @@ VCL_resource_pack::find_model(const std::string &block_state_str,
     // face_exposed = block_model::invrotate(face_exposed, model.x, model.y);
 
     if (model.model_name == nullptr) {
-      std::string msg =
-          fmt::format("No block model for full id : \"{}\", this is usually "
-                      "because block states mismatch.",
-                      block_state_str);
+      std::string msg = fmt::format(
+          "No block model for full id : \"{}\", this is usually "
+          "because block states mismatch.",
+          block_state_str);
       VCL_report(VCL_report_type_t::error, msg.c_str());
       return model_with_rotation{nullptr};
     }
@@ -309,7 +300,6 @@ VCL_resource_pack::find_model(const std::string &block_state_str,
 
   const auto models = multipart.block_model_names(buffer.state_list);
   for (const auto &md : models) {
-
     if constexpr (false) {
       std::string msg =
           fmt::format("x_rot = {}, y_rot = {}", int(md.x), int(md.y));
@@ -371,17 +361,16 @@ VCL_resource_pack::find_model(const std::string &block_state_str,
 bool VCL_resource_pack::compute_projection(
     const std::string &block_state_str, VCL_face_t face_exposed,
     block_model::EImgRowMajor_t *const img, buffer_t &buffer) const noexcept {
-
   std::variant<model_with_rotation, block_model::model> ret =
       this->find_model(block_state_str, buffer);
 
   if (ret.index() == 0) {
     auto model = std::get<0>(ret);
     if (model.model_ptr == nullptr) {
-      std::string msg =
-          fmt::format("failed to find a block model for full id :\"{}\", "
-                      "function find_model returned nullptr\n",
-                      block_state_str.c_str());
+      std::string msg = fmt::format(
+          "failed to find a block model for full id :\"{}\", "
+          "function find_model returned nullptr\n",
+          block_state_str.c_str());
       VCL_report(VCL_report_type_t::error, msg.c_str());
       return false;
     }
@@ -417,12 +406,12 @@ bool VCL_resource_pack::override_texture(
   const auto &img_original = it->second;
 
   if (img_original.rows() != 16 || img_original.cols() != 16) {
-    std::string msg =
-        fmt::format("Failed to override texture \"{0}\" with given "
-                    "color {1:#x}, the image size of "
-                    "original texture \"{0}\" is {2} * {3} instead of 16 * 16",
-                    path_in_original, standard_color, img_original.rows(),
-                    img_original.cols());
+    std::string msg = fmt::format(
+        "Failed to override texture \"{0}\" with given "
+        "color {1:#x}, the image size of "
+        "original texture \"{0}\" is {2} * {3} instead of 16 * 16",
+        path_in_original, standard_color, img_original.rows(),
+        img_original.cols());
     VCL_report(VCL_report_type_t::error, msg.c_str());
     return false;
   }
@@ -475,8 +464,8 @@ bool VCL_resource_pack::override_texture(
   return true;
 }
 
-std::array<int, 2>
-VCL_resource_pack::locate_color_rc(VCL_biome_info info) const noexcept {
+std::array<int, 2> VCL_resource_pack::locate_color_rc(
+    VCL_biome_info info) const noexcept {
   assert(info.downfall == info.downfall);
   assert(info.temperature == info.temperature);
   const float t_adj = std::clamp(info.temperature, 0.0f, 1.0f);
@@ -496,7 +485,6 @@ VCL_resource_pack::locate_color_rc(VCL_biome_info info) const noexcept {
 
 uint32_t VCL_resource_pack::standard_color(VCL_biome_info info,
                                            bool is_foliage) const noexcept {
-
   const auto rc = this->locate_color_rc(info);
 
   const int r = rc[0];
@@ -561,48 +549,6 @@ uint32_t VCL_resource_pack::standard_color(
   return default_result;
 }
 
-#include "textures_need_to_override.h"
-
-bool VCL_resource_pack::override_textures(
-    VCL_biome_t biome, bool replace_transparent_with_black) noexcept {
-  const std::string_view *grass_ids = nullptr;
-  size_t grass_num = 0;
-  const std::string_view *foliage_ids = nullptr;
-  size_t foliage_num = 0;
-  if (this->is_MC12) {
-    grass_ids = VCL_12_grass_texture_names;
-    grass_num = VCL_12_grass_texture_name_size;
-    foliage_ids = VCL_12_foliage_texture_names;
-    foliage_num = VCL_12_foliage_texture_name_size;
-  } else {
-    grass_ids = VCL_latest_grass_texture_names;
-    grass_num = VCL_latest_grass_texture_name_size;
-    foliage_ids = VCL_latest_foliage_texture_names;
-    foliage_num = VCL_latest_foliage_texture_name_size;
-  }
-
-  for (size_t gid = 0; gid < grass_num; gid++) {
-    const bool ok = this->override_texture(
-        grass_ids[gid], this->standard_color(biome, grass_ids[gid]),
-        replace_transparent_with_black);
-    if (!ok) {
-      return false;
-    }
-  }
-
-  for (size_t fid = 0; fid < foliage_num; fid++) {
-
-    const bool ok = this->override_texture(
-        foliage_ids[fid], this->standard_color(biome, foliage_ids[fid]),
-        replace_transparent_with_black);
-    if (!ok) {
-      return false;
-    }
-  }
-
-  return this->update_block_model_textures();
-}
-
 bool VCL_resource_pack::update_block_model_textures() noexcept {
   std::unordered_map<const block_model::EImgRowMajor_t *,
                      const block_model::EImgRowMajor_t *>
@@ -612,12 +558,12 @@ bool VCL_resource_pack::update_block_model_textures() noexcept {
   for (auto &pair : this->textures_override) {
     auto it = this->textures_original.find(pair.first);
     if (it == this->textures_original.end()) {
-      std::string msg =
-          fmt::format("Internal logical error when invoking function "
-                      "\"VCL_resource_pack::update_block_model_textures\" : "
-                      "texture \"{}\" is overrided, but failed to find the "
-                      "image with same id in this->texture_original.",
-                      pair.first);
+      std::string msg = fmt::format(
+          "Internal logical error when invoking function "
+          "\"VCL_resource_pack::update_block_model_textures\" : "
+          "texture \"{}\" is overrided, but failed to find the "
+          "image with same id in this->texture_original.",
+          pair.first);
       VCL_report(VCL_report_type_t::error, msg.c_str());
       return false;
     }
@@ -655,10 +601,10 @@ bool VCL_resource_pack::override_required_textures(
     }
 
     if (is_grass == is_foliage) {
-
-      std::string msg = fmt::format("Failed to override texture for block {} "
-                                    "because it is both grass and foliage.",
-                                    blk.full_id_ptr()->c_str());
+      std::string msg = fmt::format(
+          "Failed to override texture for block {} "
+          "because it is both grass and foliage.",
+          blk.full_id_ptr()->c_str());
       return false;
     }
 
@@ -682,7 +628,6 @@ bool VCL_resource_pack::override_required_textures(
 
     for (const auto &element : md->elements) {
       for (size_t idx = 0; idx < 6; idx++) {
-
         const auto &face = element.faces[idx];
 
         if (is_grass && (idx != (size_t)VCL_face_t::face_up)) {
@@ -702,7 +647,6 @@ bool VCL_resource_pack::override_required_textures(
   }
 
   for (auto &pair : textures_used) {
-
     for (const auto &j : this->textures_original) {
       if (&j.second == pair.first) {
         pair.second.name = j.first.c_str();
@@ -710,10 +654,10 @@ bool VCL_resource_pack::override_required_textures(
     }
 
     if (pair.second.name == nullptr) {
-      std::string msg =
-          fmt::format("Failed to override texture at address {}, because this "
-                      "image cannot be found in this->textures_original.",
-                      (const void *)(pair.first));
+      std::string msg = fmt::format(
+          "Failed to override texture at address {}, because this "
+          "image cannot be found in this->textures_original.",
+          (const void *)(pair.first));
       VCL_report(VCL_report_type_t::error, msg.c_str());
       return false;
     }
