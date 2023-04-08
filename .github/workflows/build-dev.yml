@@ -66,8 +66,13 @@ jobs:
         run: cmake --install ./build
       - name: Get short SHA
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+      - name: Compress
+        run: |
+          cd build/install
+          tar -cf compress.tar ./*
+          xz -9 ./compress.tar
       - name: Upload artifacts - debug
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-linux-debug
-          path: build/install
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-linux-debug.tar.xz
+          path: build/install/compress.tar.xz
