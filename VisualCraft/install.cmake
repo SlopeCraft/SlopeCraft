@@ -38,7 +38,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
 
     # Install config json file, VisualCraft will try to find it by ./vc-config.json
     install(FILES vc-config.json
-        DESTINATION ${CMAKE_INSTALL_PREFIX})
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/VisualCraft.app/Contents/MacOS)
 
     # Run macdeployqt at install time
     install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake)
