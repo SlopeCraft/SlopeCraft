@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Make directories
-        run: mkdir build install
+        run: mkdir build install pack
 
       #- name: List installed
       #  run: apt list --installed
@@ -86,17 +86,23 @@ jobs:
       - name: Get short SHA
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
       
-      - name: Compress
-        run: |
-          cd install
-          tar -cf compress.tar ./*
-          xz -9 ./compress.tar
-          mv ./compress.tar.xz SlopeCraft-dev-${{ env.SHORT_SHA }}-linux.tar.xz
+      - name: Make deb and tar.xz packs with cpack
+        run: | 
+          cd build
+          cpack -G DEB -B ../pack
+          cpack -G TXZ -B ../pack
           cd ..
       
-      - name: Upload artifacts
+      - name: Upload deb pack
         uses: actions/upload-artifact@v3
         with:
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-linux
-          path: install/SlopeCraft-dev-${{ env.SHORT_SHA }}-linux.tar.xz
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-linux-deb
+          path: pack/SlopeCraft*.deb
+          if-no-files-found: error
+
+      - name: Upload tar.xz pack
+        uses: actions/upload-artifact@v3
+        with:
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-linux-tar.xz
+          path: pack/SlopeCraft*.tar.xz
           if-no-files-found: error
