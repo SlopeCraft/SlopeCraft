@@ -35,7 +35,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
 
     # Install config json file, vccl will try to find it by ./vccl-config.json
     install(FILES vccl-config.json
-        DESTINATION ${CMAKE_INSTALL_PREFIX})
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/vccl.app/Contents/MacOS)
 
     # Run macdeployqt at install time
     install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake)

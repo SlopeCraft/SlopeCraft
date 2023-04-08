@@ -11,17 +11,27 @@ jobs:
       - name: Install dependencies
         run: brew install qt@6
       - name: Add /usr/local/lib to PATH
-        run: export $PATH="/usr/local/lib:$PATH"
+        run: echo "/usr/local/lib" >> $GITHUB_PATH
       - name: Check PATH
         run: echo $PATH
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Configure CMake
         run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=/usr/local/Cellar/gcc/12.2.0/bin/gcc-12 -DCMAKE_CXX_COMPILER=/usr/local/Cellar/gcc/12.2.0/bin/g++-12 -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API="None"
-      - name: Build
-        run: cmake --build ./build --parallel
-      - name: Install
-        run: cmake --install ./build
+      - name: Build and Install
+        run: |
+          cd build
+          cmake --build . --parallel
+          cmake --install .
+          cd install
+          macdeployqt SlopeCraft.app
+          chmod +x SlopeCraft.app/Contents/MacOS/SlopeCraft
+          macdeployqt MapViewer.app
+          chmod +x MapViewer.app/Contents/MacOS/MapViewer
+          macdeployqt imageCutter.app
+          chmod +x imageCutter.app/Contents/MacOS/imageCutter
+          chmod +x VisualCraft.app/Contents/MacOS/VisualCraft
+          chmod +x vccl.app/Contents/MacOS/vccl
       - name: Get short SHA
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
       - name: Upload Artifacts
