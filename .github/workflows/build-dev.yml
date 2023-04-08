@@ -21,13 +21,13 @@ jobs:
       - name: Build
         run: cd build && cmake --build . --parallel
       - name: Install
-        run: cmake --install . && cd install
+        run: cd build && cmake --install .
       - name: deployqt for SlopeCraft
-        run: macdeployqt SlopeCraft.app
+        run: cd build/install && macdeployqt SlopeCraft.app
       - name: deployqt for MapViewer
-        run: macdeployqt MapViewer.app
+        run: cd build/install && macdeployqt MapViewer.app
       - name: deployqt for imageCutter
-        run: macdeployqt imageCutter.app
+        run: cd build/install && macdeployqt imageCutter.app
       - name: Get short SHA
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
       - name: Upload Artifacts
