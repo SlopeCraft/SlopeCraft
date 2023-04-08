@@ -6,24 +6,14 @@ jobs:
   macos-build:
     runs-on: macos-latest
     steps:
-      - name: Install GCC compiler
-        run: brew install gcc
       - name: Install Ninja build system
         run: brew install ninja
-      - name: Install CMake
-        run: brew install cmake
       - name: Install dependencies
         run: brew install qt@6
-      - name: Reinstall zlib
-        run: brew reinstall zlib
-      - name: Reinstall libpng
-        run: brew reinstall libpng
-      - name: Reinstall libzip
-        run: brew reinstall libzip
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Configure CMake
-        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=/usr/local/Cellar/gcc/12.2.0/bin/gcc-12 -DCMAKE_CXX_COMPILER=/usr/local/Cellar/gcc/12.2.0/bin/g++-12 -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API="None" -DPNG_LIBRARY=/usr/local/lib
+        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=/usr/local/Cellar/gcc/12.2.0/bin/gcc-12 -DCMAKE_CXX_COMPILER=/usr/local/Cellar/gcc/12.2.0/bin/g++-12 -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API="None"
       - name: Build
         run: cmake --build ./build --parallel
       - name: Install
