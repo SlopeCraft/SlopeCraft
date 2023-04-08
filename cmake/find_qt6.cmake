@@ -14,10 +14,23 @@
 # endif()
 
 message(STATUS "Searching for Qt6. CMAKE_PREFIX_PATH = " ${CMAKE_PREFIX_PATH})
-find_package(QT NAMES Qt6 COMPONENTS Widgets LinguistTools REQUIRED)
+find_package(Qt6 COMPONENTS Widgets LinguistTools REQUIRED)
 
 if(${WIN32})
     find_program(SlopeCraft_Qt_windeployqt_executable windeployqt PATHS ${CMAKE_PREFIX_PATH})
+endif()
+
+if(${LINUX})
+    if(NOT EXISTS ${Qt6_DIR})
+        message(WARNING "Qt6_DIR is not set. No way to find platform plugins")
+    endif()
+
+    #message(STATUS "Qt6_DIR = ${Qt6_DIR}")
+
+    file(GLOB_RECURSE SlopeCraft_Qt_plugin_platform_files "${Qt6_DIR}/../../../plugins/platforms/*")
+    file(GLOB_RECURSE SlopeCraft_Qt_plugin_imageformat_files "${Qt6_DIR}/../../../plugins/imageformats/*")
+
+    #message(STATUS "Qt platform plugin files: ${SlopeCraft_Qt_plugin_platform_files}")
 endif()
 
 if(${APPLE})

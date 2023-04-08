@@ -25,6 +25,9 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
         RUNTIME DESTINATION bin
         BUNDLE DESTINATION lib
     )
+    
+    # Install platforms and imageformats plugins
+    include(${CMAKE_SOURCE_DIR}/cmake/install_plugins.cmake)
     return()
 endif()
 

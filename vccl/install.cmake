@@ -25,6 +25,10 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
         LIBRARY DESTINATION lib)
     install(FILES vccl-config.json
         DESTINATION bin)
+        
+    # Install platforms and imageformats plugins
+    include(${CMAKE_SOURCE_DIR}/cmake/install_plugins.cmake)
+    
     return()
 endif()
 

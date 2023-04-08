@@ -134,6 +134,9 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     file(COPY ${SlopeCraft_install_presets}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Blocks/Presets)
 
+    # Install platforms and imageformats plugins
+    include(${CMAKE_SOURCE_DIR}/cmake/install_plugins.cmake)
+
     return()
 endif()
 
