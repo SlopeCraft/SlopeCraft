@@ -51,9 +51,9 @@ jobs:
         run: sudo apt install libzip-dev zipcmp ziptool zipmerge libpng-dev libeigen3-dev
       - name: Install qt6
         run: sudo apt install qt6-base-dev qt6-tools-dev-tools qt6-tools-dev qt6-l10n-tools 
-      - name: Install nvidia-opencl-dev
-        run: sudo apt install nvidia-opencl-dev
-        #run: sudo apt install nvidia-cuda-toolkit 
+      - name: Install OpenCL
+        run: sudo apt install nvidia-cuda-toolkit opencl-c-headers opencl-clhpp-headers
+        #run: sudo apt install nvidia-opencl-dev 
       - name: List installed packages
         run: apt list --installed
       - name: Checkout repository
