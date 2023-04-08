@@ -40,7 +40,7 @@ jobs:
           name: SlopeCraft-dev-${{ env.SHORT_SHA }}-macos
           path: build/install
   
-  linux-build-none:
+  linux-build:
     runs-on: ubuntu-latest
     steps:
       - name: Make directories
@@ -86,15 +86,17 @@ jobs:
       - name: Get short SHA
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
       
-      - name: Compress as tar
+      - name: Compress
         run: |
           cd install
           tar -cf compress.tar ./*
           xz -9 ./compress.tar
+          mv ./compress.tar.xz SlopeCraft-dev-${{ env.SHORT_SHA }}-linux.tar.xz
           cd ..
       
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-linux.tar.xz
-          path: install/compress.tar.xz
+          #name: SlopeCraft-dev-${{ env.SHORT_SHA }}-linux.tar.xz
+          path: install/SlopeCraft-dev-${{ env.SHORT_SHA }}-linux.tar.xz
+          if-no-files-found: error
