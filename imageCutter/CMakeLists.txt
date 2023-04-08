@@ -7,7 +7,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools REQUIRED)
+find_package(Qt6 COMPONENTS Widgets LinguistTools REQUIRED)
 
 set(imageCutter_header_files
     CutterWind.h
@@ -60,7 +60,7 @@ qt_add_resources(imageCutter "translations"
 
 target_link_libraries(imageCutter
     PRIVATE
-    Qt${QT_VERSION_MAJOR}::Widgets)
+    Qt6::Widgets)
 
 set_target_properties(imageCutter PROPERTIES
     VERSION ${PROJECT_VERSION}

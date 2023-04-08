@@ -12,7 +12,7 @@ set(CMAKE_AUTORCC ON)
 
 find_package(ZLIB 1.2.11 REQUIRED)
 
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools REQUIRED)
+find_package(Qt6 COMPONENTS Widgets LinguistTools REQUIRED)
 
 set(MapViewer_header_files
 
@@ -65,7 +65,7 @@ find_package(OpenMP REQUIRED)
 target_link_libraries(MapViewer
     PRIVATE
     ZLIB::ZLIB
-    Qt${QT_VERSION_MAJOR}::Widgets
+    Qt6::Widgets
     OpenMP::OpenMP_CXX)
 
 set_target_properties(MapViewer PROPERTIES

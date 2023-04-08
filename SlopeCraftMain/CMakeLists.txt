@@ -12,8 +12,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools Network Concurrent REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools Network Concurrent REQUIRED)
+find_package(Qt6 COMPONENTS Widgets LinguistTools Network Concurrent REQUIRED)
 
 set(SlopeCraftMain_windows_rc_file)
 
@@ -103,9 +102,9 @@ target_link_libraries(SlopeCraft
     PRIVATE
     BlockListManager
     SlopeCraftL
-    Qt${QT_VERSION_MAJOR}::Widgets
-    Qt${QT_VERSION_MAJOR}::Network
-    Qt${QT_VERSION_MAJOR}::Concurrent
+    Qt6::Widgets
+    Qt6::Network
+    Qt6::Concurrent
     VersionDialog
 )
 
