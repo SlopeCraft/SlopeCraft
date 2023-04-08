@@ -83,15 +83,14 @@ jobs:
       - name: Get short SHA
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
       
-      - name: Compress as tar.xz
+      - name: Compress as tar
         run: |
           cd install
           tar -cf compress.tar ./*
-          xz -9 ./compress.tar
           cd ..
       
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-linux.tar.xz
-          path: install/compress.tar.xz
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-linux.tar
+          path: install/compress.tar
