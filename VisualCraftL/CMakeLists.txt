@@ -78,7 +78,7 @@ add_library(VisualCraftL_static STATIC
 
 find_package(ZLIB 1.2.11 REQUIRED)
 find_package(PNG 1.4.12 REQUIRED)
-find_package(libzip 1.9.2 REQUIRED)
+find_package(libzip 1.7.0 REQUIRED)
 
 include(${CMAKE_SOURCE_DIR}/cmake/configure_fmtlib.cmake)
 find_package(fmt 9.1.0 REQUIRED)
