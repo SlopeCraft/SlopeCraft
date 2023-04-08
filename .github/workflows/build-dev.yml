@@ -67,6 +67,9 @@ jobs:
       #- name: List all packages
       #  run: apt list --installed
 
+      - name: Install xz (Release as tar.xz)
+        run: sudo apt install xz-utils
+
       - name: Checkout repository
         uses: actions/checkout@v2
 
@@ -76,7 +79,7 @@ jobs:
       - name: CMake build
         run: cmake --build ./build --parallel
       
-      - name: CMake install
+      - name: CMake install # Uptil now, we have not get a prefect way to deploy qt shared libs. This may be finished in cmake script
         run: cmake --install ./build
       #- name: List all files
       #  run: ls -R
@@ -87,10 +90,11 @@ jobs:
         run: |
           cd install
           tar -cf compress.tar ./*
+          xz -9 ./compress.tar
           cd ..
       
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-linux.tar
-          path: install/compress.tar
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-linux.tar.xz
+          path: install/compress.tar.xz
