@@ -46,7 +46,7 @@ jobs:
       - name: List installed
         run: apt list --installed
       - name: Install cmake, ninja
-        run: sudo apt install cmake ninja
+        run: sudo apt install cmake ninja-build
       - name: Install qt6
         run: sudo apt install libqt6widgets6 qt6-base-dev-tools linguist-qt6
       - name: Install cuda tookit (for opencl sdk)
