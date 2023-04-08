@@ -137,13 +137,6 @@ if(EXISTS ${CMAKE_BINARY_DIR}/utilities/ColorManip/__rsc_ColorManip_cl_rc.c)
     endif()
 endif()
 
-set(SlopeCraft_readme_and_license_files
+include(cmake/install.cmake)
 
-    LICENSE
-    README.md
-    README-en.md
-    license-translations/LICENSE-zh.md
-)
-
-install(FILES ${SlopeCraft_readme_and_license_files}
-    DESTINATION ${CMAKE_INSTALL_PREFIX})
+include(cpack/make-packs.cmake)
