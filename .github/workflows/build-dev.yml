@@ -40,7 +40,7 @@ jobs:
           name: SlopeCraft-dev-${{ env.SHORT_SHA }}-macos
           path: build/install
   
-  linux-build:
+  linux-build-none:
     runs-on: ubuntu-latest
     steps:
       - name: List installed
@@ -51,16 +51,20 @@ jobs:
         run: sudo apt install libzip-dev zipcmp ziptool zipmerge libpng-dev libeigen3-dev
       - name: Install qt6
         run: sudo apt install qt6-base-dev qt6-tools-dev-tools qt6-tools-dev qt6-l10n-tools 
-      - name: Install OpenCL
-        run: sudo apt install nvidia-cuda-toolkit nvidia-cuda-dev ocl-icd-libopencl1 ocl-icd-opencl-dev ocl-icd-dev opencl-c-headers opencl-clhpp-headers
-        #run: sudo apt install nvidia-opencl-dev 
-      - name: List installed packages
-        run: apt list --installed
+      #- name: Install OpenCL
+      #  run: sudo apt install nvidia-cuda-toolkit nvidia-cuda-dev ocl-icd-libopencl1 ocl-icd-opencl-dev ocl-icd-dev opencl-c-headers opencl-clhpp-headers
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: CMake configure
-        run: cmake -S . -B ./build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/gcc-12 -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/g++-12 -DCMAKE_INSTALL_PREFIX:PATH=./build/install -DSlopeCraft_GPU_API:STRING=OpenCL -DCMAKE_BUILD_TYPE:STRING=Debug
-      - name: CMake build
+      - name: CMake configure - debug
+        run: cmake -S . -B ./build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/gcc-12 -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/g++-12 -DCMAKE_INSTALL_PREFIX:PATH=./build/install -DSlopeCraft_GPU_API:STRING=None -DCMAKE_BUILD_TYPE:STRING=Debug
+      - name: CMake build - debug
         run: cmake --build ./build --parallel
-      - name: CMake install
+      - name: CMake install - debug
         run: cmake --install ./build
+      - name: Get short SHA
+        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+      - name: Upload artifacts - debug
+        uses: actions/upload-artifact@v2
+        with:
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-linux-debug
+          path: build/install
