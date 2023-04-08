@@ -6,6 +6,8 @@ jobs:
   macos-build:
     runs-on: macos-latest
     steps:
+    # Disable this action temporarily to save time. I will recover them.
+    steps_disable_temporarily:
       - name: Install Ninja build system
         run: brew install ninja
       - name: Install dependencies
