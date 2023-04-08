@@ -20,12 +20,10 @@ jobs:
         run: brew reinstall libpng
       - name: Reinstall libzip
         run: brew reinstall libzip
-      - name: (Temporary) Check lib directory
-        run: ls -al /usr/local/lib
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Configure CMake
-        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=/usr/local/Cellar/gcc/12.2.0/bin/gcc-12 -DCMAKE_CXX_COMPILER=/usr/local/Cellar/gcc/12.2.0/bin/g++-12 -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API="None" -DCMAKE_PREFIX_PATH="/usr/local/lib"
+        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=/usr/local/Cellar/gcc/12.2.0/bin/gcc-12 -DCMAKE_CXX_COMPILER=/usr/local/Cellar/gcc/12.2.0/bin/g++-12 -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API="None" -DPNG_LIBRARY=/usr/local/lib
       - name: Build
         run: cmake --build ./build --parallel
       - name: Install
