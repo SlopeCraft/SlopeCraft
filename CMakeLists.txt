@@ -17,11 +17,14 @@ option(SlopeCraft_update_ts_no_obsolete "Remove obsolete translations from ts fi
 
 option(SlopeCraft_gprof "Profile with gprof" OFF)
 
-if(NOT DEFINED CMAKE_INSTALL_PREFIX)
 # manage the install prefix
-set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install
-    CACHE PATH "Where to install SlopeCraft.")
+if(NOT DEFINED CMAKE_INSTALL_PREFIX)
+set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install)
 endif()
+
+# convert relative path to absolute
+cmake_path(ABSOLUTE_PATH CMAKE_INSTALL_PREFIX OUTPUT_VARIABLE CMAKE_INSTALL_PREFIX)
+message(STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}")
 
 if(${MSVC})
     add_compile_options("/Zc:__cplusplus")
