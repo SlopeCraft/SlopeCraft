@@ -17,6 +17,12 @@ option(SlopeCraft_update_ts_no_obsolete "Remove obsolete translations from ts fi
 
 option(SlopeCraft_gprof "Profile with gprof" OFF)
 
+if(NOT DEFINED CMAKE_INSTALL_PREFIX)
+# manage the install prefix
+set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install
+    CACHE PATH "Where to install SlopeCraft.")
+endif()
+
 if(${MSVC})
     add_compile_options("/Zc:__cplusplus")
     add_compile_options("/wd4819")
@@ -35,12 +41,7 @@ if(NOT CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     Please use gcc.")
 endif()
 
-# manage the install prefix
-set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install
-    CACHE PATH "Where to install SlopeCraft.")
 
-# set(CMAKE_INSTALL_LIBDIR ${CMAKE_INSTALL_PREFIX})
-# set(CMAKE_INSTALL_BINDIR ${CMAKE_INSTALL_PREFIX})
 if(EXISTS ${CMAKE_SOURCE_DIR}/compile_commands.json)
     # delete files here
     file(REMOVE ${CMAKE_SOURCE_DIR}/compile_commands.json)
@@ -132,8 +133,6 @@ if(EXISTS ${CMAKE_BINARY_DIR}/utilities/ColorManip/__rsc_ColorManip_cl_rc.c)
         # file(REMOVE ${CMAKE_BINARY_DIR}/utilities/ColorManip/__rsc_ColorManip_cl_rc.c)
     endif()
 endif()
-
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(SlopeCraft_readme_and_license_files
 
