@@ -17,7 +17,11 @@ set(CPACK_DEBIAN_PACKAGE_DEPENDS
     libqt6network6
     libqt6concurrent6
     libopengl0
+    libqt6opengl6
+    libqt6openglwidgets6
+    libqt6dbus6
     libglx0
+    qt6-qpa-plugins
     ${SlopeCraft_debian_opencl_deps}
     )
 
