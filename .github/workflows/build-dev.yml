@@ -97,6 +97,6 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          #name: SlopeCraft-dev-${{ env.SHORT_SHA }}-linux.tar.xz
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-linux
           path: install/SlopeCraft-dev-${{ env.SHORT_SHA }}-linux.tar.xz
           if-no-files-found: error
