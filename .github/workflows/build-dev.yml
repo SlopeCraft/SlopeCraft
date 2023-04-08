@@ -29,3 +29,15 @@ jobs:
         with:
           name: SlopeCraft-dev-${{ env.SHORT_SHA }}-macos
           path: build/install
+  
+  linux-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: List installed
+        run: apt list --installed > $HOME/installed-packages.txt
+      - name: Upload package list txt
+        uses: actions/upload-artifact@v2
+        with:
+          name: ubuntu-installed-packages.txt
+          path: $HOME/installed-packages.txt
+      
