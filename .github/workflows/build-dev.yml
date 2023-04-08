@@ -44,10 +44,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: List installed
-        run: apt list --installed > $HOME/installed-packages.txt
+        run: apt list --installed > ./installed-packages.txt
       - name: Upload package list txt
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ubuntu-installed-packages.txt
-          path: $HOME/installed-packages.txt
+          path: ./installed-packages.txt
       
