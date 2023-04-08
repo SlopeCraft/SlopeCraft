@@ -50,7 +50,7 @@ jobs:
       - name: Install libzip, libpng, Eigen3
         run: sudo apt install libzip-dev zipcmp ziptool zipmerge libpng-dev libeigen3-dev
       - name: Install qt6
-        run: sudo apt install qt6-base-dev qt6-tools-dev-tools qt6-tools-dev qt6-l10n-tools 
+        run: sudo apt install qt6-base-dev qt6-tools-dev-tools qt6-tools-dev qt6-l10n-tools libqt6widgets6 libqt6gui6 libqt6network6 libqt6concurrent6
       #- name: Install OpenCL
       #  run: sudo apt install nvidia-cuda-toolkit nvidia-cuda-dev ocl-icd-libopencl1 ocl-icd-opencl-dev ocl-icd-dev opencl-c-headers opencl-clhpp-headers
       - name: Checkout repository
