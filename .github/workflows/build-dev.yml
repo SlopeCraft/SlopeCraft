@@ -69,6 +69,8 @@ jobs:
         run: cmake --build ./build --parallel
       - name: CMake install
         run: cmake --install ./build
+      - name: List all files:
+        run: ls -R
       - name: Get short SHA
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
       - name: Compress as tar.xz
