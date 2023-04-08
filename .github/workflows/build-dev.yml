@@ -48,7 +48,7 @@ jobs:
       - name: Make variables
         run: | 
           export CWD=$(pwd)
-          export INSTALL_DIR=#CWD/install
+          export INSTALL_DIR=$CWD/install
           echo $CWD
           echo $INSTALL_DIR
       - name: List installed
