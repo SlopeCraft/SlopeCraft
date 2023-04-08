@@ -1,0 +1,31 @@
+name: Build dev version artifacts
+on: [pull_request, push]
+
+jobs:
+
+  macos-build:
+    runs-on: macos-latest
+    steps:
+      - name: Install GCC compiler
+        run: brew install gcc
+      - name: Install Ninja build system
+        run: brew install ninja
+      - name: Install CMake
+        run: brew install cmake
+      - name: Install dependencies
+        run: brew install qt@6 zlib libpng libzip
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Configure CMake
+        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=/usr/local/Cellar/gcc/12.2.0/bin/gcc-12 -DCMAKE_CXX_COMPILER=/usr/local/Cellar/gcc/12.2.0/bin/g++-12 -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API="None"
+      - name: Build
+        run: cmake --build ./build --parallel
+      - name: Install
+        run: cmake --install ./build
+      - name: Get short SHA
+        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-macos
+          path: build/install
