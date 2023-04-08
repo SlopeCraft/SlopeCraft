@@ -48,8 +48,9 @@ jobs:
       - name: Make variables
         run: | 
           export CWD=$(pwd)
-          export BUILD_DIR=$CWD/build
           export INSTALL_DIR=#CWD/install
+          echo $CWD
+          echo $INSTALL_DIR
       - name: List installed
         run: apt list --installed
       - name: Install cmake, ninja
@@ -69,13 +70,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: CMake configure
-        run: cmake -S . -B $BUILD_DIR -G Ninja -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/gcc-12 -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/g++-12 -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_DIR -DSlopeCraft_GPU_API:STRING=None -DCMAKE_BUILD_TYPE:STRING=Debug
+        run: cmake -S . -B ./build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/gcc-12 -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/g++-12 -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_DIR -DSlopeCraft_GPU_API:STRING=None -DCMAKE_BUILD_TYPE:STRING=Debug
       - name: CMake build
-        run: cmake --build $BUILD_DIR --parallel
+        run: cmake --build ./build --parallel
       - name: CMake install
-        run: cmake --install $BUILD_DIR
-      - name: List all files
-        run: ls -R
+        run: cmake --install ./build
+      #- name: List all files
+      #  run: ls -R
       - name: Get short SHA
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
       - name: Compress as tar.xz
