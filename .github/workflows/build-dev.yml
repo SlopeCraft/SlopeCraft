@@ -14,10 +14,12 @@ jobs:
         run: brew install cmake
       - name: Install dependencies
         run: brew install qt@6 zlib libpng libzip
+      - name: (Temporary) Check lib directory
+        run: ls -al /usr/local/lib
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Configure CMake
-        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=/usr/local/Cellar/gcc/12.2.0/bin/gcc-12 -DCMAKE_CXX_COMPILER=/usr/local/Cellar/gcc/12.2.0/bin/g++-12 -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API="None" -DCMAKE_PREFIX_PATH="/usr/local/Cellar/zlib/*/lib;/usr/local/Cellar/libpng/*/lib;/usr/local/Cellar/libzip/*/lib"
+        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=/usr/local/Cellar/gcc/12.2.0/bin/gcc-12 -DCMAKE_CXX_COMPILER=/usr/local/Cellar/gcc/12.2.0/bin/g++-12 -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API="None"
       - name: Build
         run: cmake --build ./build --parallel
       - name: Install
