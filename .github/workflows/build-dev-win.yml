@@ -13,12 +13,12 @@ jobs:
       #  uses: actions/checkout@v2
       - name: See environment
         run: where.exe cmake ninja 7z clang gcc vcpkg
-      - name: See versions
-        run: |
-          cmake --version
-          ninja --version
-          clang --version
-          gcc --version
+      #- name: See versions
+      #  run: |
+      #    cmake --version
+      #    ninja --version
+      #    clang --version
+      #    gcc --version
       - name: See Path
         run: $env:path -split ';'
       - name: Make dirs
@@ -46,9 +46,9 @@ jobs:
           git checkout v1.2.13
           cd $basedir
           mkdir bin/build-zlib
-          cmake -S 3rdParty/zlib -B bin/build.zlib -DCMAKE_C_COMPILER=$basedir/bin/mingw64/bin/gcc.exe -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$basedir/bin/mingw64
-          cmake --build bin/build.zlib --parallel
-          cmake --install bin/build.zlib
+          cmake -S 3rdParty/zlib -B bin/build-zlib -DCMAKE_C_COMPILER="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$basedir/bin/mingw64 -G Ninja
+          cmake --build bin/build-zlib --parallel
+          cmake --install bin/build-zlib
           
       - name: Upload gcc
         uses: actions/upload-artifact@v3
