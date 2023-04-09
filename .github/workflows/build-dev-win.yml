@@ -40,6 +40,7 @@ jobs:
       - name: Build and install zlib
         run: |
           $basedir=(pwd).path
+          $basedir=($basedir).replace("\\","/")
           cd 3rdParty
           git clone https://github.com/madler/zlib.git
           cd zlib
