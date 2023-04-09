@@ -112,7 +112,14 @@ jobs:
           echo "Number of processors = $env:NUMBER_OF_PROCESSORS"
           cmake --build ./build --parallel 10
       - name: CMake install
-        run: cmake --install ./build
+        run: |
+          $basedir=(pwd).path
+          $basedir=($basedir).replace("\\","/")
+          $exclude_key_words="perl","Strawberry"
+          $new_path=""
+          foreach($p in $env:path.split(';')) {$exclude=$false; foreach($ekw in $exclude_key_words)	{if($p.contains($ekw)) {$exclude=$true;break;}}if(-not($exclude)) {$new_path="$new_path;$p"}}
+          $env:path="$new_path;$basedir/bin/mingw64/bin"
+          cmake --install ./build
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with: 
