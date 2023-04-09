@@ -9,7 +9,17 @@ jobs:
   win-build:
     runs-on: windows-latest
     steps:
-      - name: empty step
-        run: cd .
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: See environment
+        run: |
+          where cmake
+          where ninja 
+          where 7z
+          where cl
+          where clang
+          where gcc
+          where vcpkg
+
 
         #https://github.com/niXman/mingw-builds-binaries/releases/download/12.2.0-rt_v10-rev0/x86_64-12.2.0-release-posix-seh-rt_v10-rev0.7z
