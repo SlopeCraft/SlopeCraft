@@ -93,7 +93,7 @@ jobs:
           $basedir=(pwd).path
           $basedir=($basedir).replace("\\","/")
           mkdir install
-          cmake -S . -B build -G "MinGW Makefiles" -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/g++.exe" -DCMAKE_PREFIX_PATH="$basedir/bin/Qt6.4.0-gcc12-shared" -DCMAKE_INSTALL_PREFIX="$basedir/install" -DCMAKE_BUILD_TYPE=Release -DSlopeCraft_GPU_API=None
+          cmake -S . -B build -G "MinGW Makefiles" -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/g++.exe" -DCMAKE_PREFIX_PATH:PATH="$basedir/bin/Qt6.4.0-gcc12-shared" -DQT6_DIR="$basedir/bin/Qt6.4.0-gcc12-shared/lib/cmake" -DCMAKE_INSTALL_PREFIX:PATH="$basedir/install" -DCMAKE_BUILD_TYPE:STRING=Release -DSlopeCraft_GPU_API:STRING=None
       - name: CMake build
         run: cmake --build ./build --parallel
       - name: CMake install
