@@ -121,12 +121,12 @@ jobs:
           $env:path="$new_path;$basedir/bin/mingw64/bin"
           cmake --install ./build
       - name: Get short SHA
-        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $env:GITHUB_ENV
       - name: Make zip and 7z packs with CPack
         run: |
           mkdir pack
-          cpack ./build -G ZIP -B pack
-          cpack ./build -G 7Z -B pack
+          cpack --config ./build/CPackConfig.cmake -G ZIP -B ./pack
+          cpack --config ./build/CPackConfig.cmake -G 7Z -B ./pack
       - name: Upload zip pack
         uses: actions/upload-artifact@v3
         with: 
