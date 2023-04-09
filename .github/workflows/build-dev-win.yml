@@ -122,11 +122,22 @@ jobs:
           cmake --install ./build
       - name: Get short SHA
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
-      - name: Upload artifacts
+      - name: Make zip and 7z packs with CPack
+        run: |
+          mkdir pack
+          cpack ./build -G ZIP -B pack
+          cpack ./build -G 7Z -B pack
+      - name: Upload zip pack
         uses: actions/upload-artifact@v3
         with: 
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-windows
-          path: install
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-windows.zip
+          path: pack/SlopeCraft*.zip
+          if-no-files-found: error 
+      - name: Upload 7z pack
+        uses: actions/upload-artifact@v3
+        with: 
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-windows.7z
+          path: pack/SlopeCraft*.7z
           if-no-files-found: error 
 
 
