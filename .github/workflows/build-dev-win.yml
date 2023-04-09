@@ -26,12 +26,14 @@ jobs:
           mkdir bin
           mkdir bin/mingw64
           mkdir bin/Qt6.4.0-gcc12-shared
-          mkdir archives
           mkdir build
       - name: Download mingw64
-        run: curl -o archives/gcc12.7z https://github.com/niXman/mingw-builds-binaries/releases/download/12.2.0-rt_v10-rev0/x86_64-12.2.0-release-posix-seh-rt_v10-rev0.7z
+        run: curl -o bin/gcc12.7z https://github.com/niXman/mingw-builds-binaries/releases/download/12.2.0-rt_v10-rev0/x86_64-12.2.0-release-posix-seh-rt_v10-rev0.7z
       - name : Extract mingw
-        run: 7z x archives/gcc12.7z -obin
+        run: | 
+          cd bin
+          7z x gcc12.7z
+          cd ..
       - name: Tree
         run: tree .
 
