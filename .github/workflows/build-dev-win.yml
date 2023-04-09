@@ -129,7 +129,9 @@ jobs:
           $basedir=($basedir).replace("\\","/")
           cd ./build
           cpack -G ZIP -B "$basedir/pack"
+          type "D:/a/SlopeCraft/SlopeCraft/pack/_CPack_Packages/win64/ZIP/PreinstallOutput.log"
           cpack -G 7Z -B "$basedir/pack"
+          type "D:/a/SlopeCraft/SlopeCraft/pack/_CPack_Packages/win64/7Z/PreinstallOutput.log"
       - name: Upload zip pack
         uses: actions/upload-artifact@v3
         with: 
