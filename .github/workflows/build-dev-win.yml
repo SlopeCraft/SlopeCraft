@@ -19,8 +19,8 @@ jobs:
       #    ninja --version
       #    clang --version
       #    gcc --version
-      - name: See Path
-        run: $env:path -split ';'
+      #- name: See Path
+      #  run: $env:path -split ';'
       - name: Make dirs
         run: |
           mkdir bin
@@ -104,8 +104,10 @@ jobs:
       - name: CMake build
         run: |
           $basedir=(pwd).path
-          $basedir=($basedir).replace("\\","/")
-          $env:path="$env:path;$basedir/bin/mingw64/bin"
+          $basedir=($basedir).replace("\\","/")$exclude_key_words="perl","Strawberry"
+          $new_path=""
+          foreach($p in $env:path.split(';')) {$exclude=$false; foreach($ekw in $exclude_key_words)	{if($p.contains($ekw)) {$exclude=$true;break;}}if(-not($exclude)) {$new_path="$new_path;$p"}}
+          $env:path="$new_path;$basedir/bin/mingw64/bin"
           cmake --build ./build --parallel
       - name: CMake install
         run: cmake --install ./build
