@@ -2,7 +2,7 @@ name: Build dev version artifacts for window
 on:
   push:
     branches:
-      - feat-github-action-wind
+      - feat-github-action-win
 
 jobs:
 
@@ -11,3 +11,5 @@ jobs:
     steps:
       - name: empty step
         run: cd .
+
+        #https://github.com/niXman/mingw-builds-binaries/releases/download/12.2.0-rt_v10-rev0/x86_64-12.2.0-release-posix-seh-rt_v10-rev0.7z
