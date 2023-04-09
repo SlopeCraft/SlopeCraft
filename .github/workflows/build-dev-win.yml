@@ -1,0 +1,13 @@
+name: Build dev version artifacts for window
+on:
+  push:
+    branches:
+      - feat-github-action-wind
+
+jobs:
+
+  win-build:
+    runs-on: windows-latest
+    steps:
+      - name: empty step
+        run: cd .
