@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      - name: start cmd
+        run: cmd
       - name: See environment
         run: where cmake ninja 7z cl clang gcc vcpkg
 
