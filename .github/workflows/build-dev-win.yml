@@ -52,8 +52,6 @@ jobs:
           cmake -S 3rdParty/zlib -B bin/build-zlib -G Ninja -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$basedir/bin/mingw64"
           cmake --build bin/build-zlib --parallel
           cmake --install bin/build-zlib
-          Remove-Item -Path "$basedir/3rdParty/zlib" -Recurse
-          Remove-Item -Path "$basedir/bin/build-zlib" -Recurse
       
       - name: Build and install libzip
         run: |
@@ -68,8 +66,6 @@ jobs:
           cmake -S 3rdParty/libzip -B bin/build-libzip -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/g++.exe" -DCMAKE_INSTALL_PREFIX="$basedir/bin/mingw64" -DCMAKE_PREFIX_PATH="$basedir/bin/mingw64" -DBUILD_SHARED_LIBS=true -DLIBZIP_DO_INSTALL=true
           cmake --build bin/build-libzip --parallel
           cmake --install bin/build-libzip
-          Remove-Item -Path "$basedir/3rdParty/libzip" -Recurse
-          Remove-Item -Path "$basedir/bin/build-libzip" -Recurse
 
       - name: Build and install libpng
         run: |
@@ -84,8 +80,6 @@ jobs:
           cmake -S 3rdParty/libpng -B bin/build-libpng -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/g++.exe" -DCMAKE_INSTALL_PREFIX="$basedir/bin/mingw64" -DCMAKE_PREFIX_PATH="$basedir/bin/mingw64"
           cmake --build bin/build-libpng --parallel
           cmake --install bin/build-libpng
-          Remove-Item -Path "$basedir/3rdParty/libpng" -Recurse
-          Remove-Item -Path "$basedir/bin/build-libpng" -Recurse
             
       - name: Download Qt6.4.0-gcc12-shared and extract
         run: |
