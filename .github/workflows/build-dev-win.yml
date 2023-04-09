@@ -85,7 +85,7 @@ jobs:
         run: |
           cmd
           curl -JL -o bin/Qt6.4.0-gcc12-shared.7z "https://github.com/SlopeCraft/VisualCraft-binaries/releases/download/win-binaries/Qt6.4.0-gcc12-shared.7z"
-          7z x -obin bin/Qt6.4.0-gcc12-shared.7z
+          7z x -obin/Qt6.4.0-gcc12-shared bin/Qt6.4.0-gcc12-shared.7z
           exit
         # Qt installation dir: bin/Qt6.4.0-gcc12-shared
       - name: CMake configure
