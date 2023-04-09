@@ -16,6 +16,18 @@
 message(STATUS "Searching for Qt6. CMAKE_PREFIX_PATH = " ${CMAKE_PREFIX_PATH})
 find_package(Qt6 COMPONENTS Widgets LinguistTools REQUIRED)
 
+# find lupdate executable
+if(${SlopeCraft_update_ts_files} AND(NOT DEFINED SlopeCraft_Qt_lupdate_executable))
+    find_program(SlopeCraft_Qt_lupdate_executable name lupdate PATHS ${CMAKE_PREFIX_PATH} REQUIRED)
+    message(STATUS "Found lupdate at : " ${SlopeCraft_Qt_lupdate_executable})
+
+    if(${SlopeCraft_update_ts_no_obsolete})
+        set(SlopeCraft_ts_flags)
+    else()
+        set(SlopeCraft_ts_flags "-no-obsolete")
+    endif()
+endif()
+
 if(${WIN32})
     find_program(SlopeCraft_Qt_windeployqt_executable windeployqt PATHS ${CMAKE_PREFIX_PATH})
 endif()
@@ -25,12 +37,11 @@ if(${LINUX})
         message(WARNING "Qt6_DIR is not set. No way to find platform plugins")
     endif()
 
-    #message(STATUS "Qt6_DIR = ${Qt6_DIR}")
-
+    # message(STATUS "Qt6_DIR = ${Qt6_DIR}")
     file(GLOB_RECURSE SlopeCraft_Qt_plugin_platform_files "${Qt6_DIR}/../../../plugins/platforms/*")
     file(GLOB_RECURSE SlopeCraft_Qt_plugin_imageformat_files "${Qt6_DIR}/../../../plugins/imageformats/*")
 
-    #message(STATUS "Qt platform plugin files: ${SlopeCraft_Qt_plugin_platform_files}")
+    # message(STATUS "Qt platform plugin files: ${SlopeCraft_Qt_plugin_platform_files}")
 endif()
 
 if(${APPLE})

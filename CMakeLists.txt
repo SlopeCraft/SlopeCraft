@@ -19,7 +19,7 @@ option(SlopeCraft_gprof "Profile with gprof" OFF)
 
 # manage the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install)
+    set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install)
 endif()
 
 # convert relative path to absolute
@@ -44,7 +44,6 @@ if(NOT CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     Please use gcc.")
 endif()
 
-
 if(EXISTS ${CMAKE_SOURCE_DIR}/compile_commands.json)
     # delete files here
     file(REMOVE ${CMAKE_SOURCE_DIR}/compile_commands.json)
@@ -60,17 +59,7 @@ include(cmake/find_HeuristicFlow.cmake)
 
 include(cmake/find_qt6.cmake)
 
-# find lupdate executable
-if(${SlopeCraft_update_ts_files} AND(NOT DEFINED SlopeCraft_Qt_lupdate_executable))
-    find_program(SlopeCraft_Qt_lupdate_executable name lupdate PATHS ${CMAKE_PREFIX_PATH} REQUIRED)
-    message(STATUS "Found lupdate at : " ${SlopeCraft_Qt_lupdate_executable})
-
-    if(${SlopeCraft_update_ts_no_obsolete})
-        set(SlopeCraft_ts_flags)
-    else()
-        set(SlopeCraft_ts_flags "-no-obsolete")
-    endif()
-endif()
+include(cmake/install_if_is_shared.cmake)
 
 add_definitions("-D_USE_MATH_DEFINES")
 add_definitions("-DSCL_FIND_GlobalEnums_BY_PATH")
