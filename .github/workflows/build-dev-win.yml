@@ -47,7 +47,7 @@ jobs:
           git checkout v1.2.13
           cd $basedir
           mkdir bin/build-zlib
-          cmake -G Ninja -S 3rdParty/zlib -B bin/build-zlib -DCMAKE_C_COMPILER="bin/mingw64/bin/gcc.exe" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$basedir/bin/mingw64"
+          cmake -G Ninja -S 3rdParty/zlib -B bin/build-zlib -DCMAKE_C_COMPILER="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$basedir/bin/mingw64"
           cmake --build bin/build-zlib --parallel
           cmake --install bin/build-zlib
           
