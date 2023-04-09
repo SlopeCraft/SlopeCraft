@@ -3,8 +3,8 @@ configure_file(${CMAKE_SOURCE_DIR}/cmake/deploy_qt.cmake.in ${CMAKE_CURRENT_BINA
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     install(TARGETS imageCutter
-        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
-        BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX}
+        RUNTIME DESTINATION .
+        BUNDLE DESTINATION .
     )
 
     # Run windeployqt at build time

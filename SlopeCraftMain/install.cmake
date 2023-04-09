@@ -58,7 +58,7 @@ endif()
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     # Install app
     install(TARGETS SlopeCraft
-        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
+        RUNTIME DESTINATION .
     )
 
     # Run windeployqt at build time
@@ -72,25 +72,25 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
 
     # Install FixedBlocks.json, CustomBlocks.json and README.md
     install(FILES ${SlopeCraft_install_jsons}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/Blocks)
+        DESTINATION Blocks)
     file(COPY ${SlopeCraft_install_jsons}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Blocks)
 
     # Install all png files of fixedblocks
     install(FILES ${SlopeCraft_install_png_fixedblocks}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/Blocks/FixedBlocks)
+        DESTINATION Blocks/FixedBlocks)
     file(COPY ${SlopeCraft_install_png_fixedblocks}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Blocks/FixedBlocks)
 
     # Install all png files of customblocks
     install(FILES ${SlopeCraft_install_png_customblocks}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/Blocks/CustomBlocks)
+        DESTINATION Blocks/CustomBlocks)
     file(COPY ${SlopeCraft_install_png_customblocks}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Blocks/CustomBlocks)
 
     # Install presets
     install(FILES ${SlopeCraft_install_presets}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/Blocks/Presets)
+        DESTINATION Blocks/Presets)
     file(COPY ${SlopeCraft_install_presets}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Blocks/Presets)
 
