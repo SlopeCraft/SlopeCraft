@@ -124,14 +124,15 @@ jobs:
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $env:GITHUB_ENV
       - name: Make zip and 7z packs with CPack
         run: |
-          mkdir pack          
           $basedir=(pwd).path
           $basedir=($basedir).replace("\\","/")
+          $exclude_key_words="perl","Strawberry"
+          $new_path=""
+          foreach($p in $env:path.split(';')) {$exclude=$false; foreach($ekw in $exclude_key_words)	{if($p.contains($ekw)) {$exclude=$true;break;}}if(-not($exclude)) {$new_path="$new_path;$p"}}
+          $env:path="$new_path;$basedir/bin/mingw64/bin"
           cd ./build
           cpack -G ZIP -B "$basedir/pack"
-          type "D:/a/SlopeCraft/SlopeCraft/pack/_CPack_Packages/win64/ZIP/PreinstallOutput.log"
           cpack -G 7Z -B "$basedir/pack"
-          type "D:/a/SlopeCraft/SlopeCraft/pack/_CPack_Packages/win64/7Z/PreinstallOutput.log"
       - name: Upload zip pack
         uses: actions/upload-artifact@v3
         with: 
