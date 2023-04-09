@@ -26,7 +26,6 @@ jobs:
           mkdir bin
           mkdir bin/mingw64
           mkdir bin/Qt6.4.0-gcc12-shared
-          mkdir build
           mkdir 3rdParty
 
       - name: Download mingw64 and extract
@@ -85,13 +84,15 @@ jobs:
         run: |
           cmd
           curl -JL -o bin/Qt6.4.0-gcc12-shared.7z "https://github.com/SlopeCraft/VisualCraft-binaries/releases/download/win-binaries/Qt6.4.0-gcc12-shared.7z"
-          7z x -obin/Qt6.4.0-gcc12-shared bin/Qt6.4.0-gcc12-shared.7z
+          7z x -o"bin/Qt6.4.0-gcc12-shared" bin/Qt6.4.0-gcc12-shared.7z
           exit
+          tree /f bin/Qt6.4.0-gcc12-shared
         # Qt installation dir: bin/Qt6.4.0-gcc12-shared
       - name: CMake configure
         run: |
           $basedir=(pwd).path
           $basedir=($basedir).replace("\\","/")
+          mkdir build
           mkdir install
           cmake -S . -B build -G "MinGW Makefiles" -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/g++.exe" -DCMAKE_PREFIX_PATH:PATH="$basedir/bin/Qt6.4.0-gcc12-shared" -DQT6_DIR="$basedir/bin/Qt6.4.0-gcc12-shared/lib/cmake" -DCMAKE_BUILD_TYPE:STRING=Release -DSlopeCraft_GPU_API:STRING=None
       - name: CMake build
