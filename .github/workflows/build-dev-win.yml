@@ -38,8 +38,8 @@ jobs:
           cmd
           curl -JLO "https://github.com/SlopeCraft/VisualCraft-binaries/releases/download/win-binaries/Qt6.4.0-gcc12-shared.7z"
           exit
-      - name: Tree
-        run: tree .
+      - name: List all files
+        run: tree /f
       #- name : Extract mingw
       #  run: | 
       #    cd bin
