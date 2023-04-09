@@ -124,9 +124,12 @@ jobs:
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $env:GITHUB_ENV
       - name: Make zip and 7z packs with CPack
         run: |
-          mkdir pack
-          cpack --config ./build/CPackConfig.cmake -G ZIP -B ./pack
-          cpack --config ./build/CPackConfig.cmake -G 7Z -B ./pack
+          mkdir pack          
+          $basedir=(pwd).path
+          $basedir=($basedir).replace("\\","/")
+          cd ./build
+          cpack -G ZIP -B "$basedir/pack"
+          cpack -G 7Z -B "$basedir/pack"
       - name: Upload zip pack
         uses: actions/upload-artifact@v3
         with: 
