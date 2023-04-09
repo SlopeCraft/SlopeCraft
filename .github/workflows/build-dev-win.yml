@@ -27,6 +27,7 @@ jobs:
           mkdir bin/mingw64
           mkdir bin/Qt6.4.0-gcc12-shared
           mkdir build
+          mkdir 3rdParty
       - name: Download mingw64 and extract
         run: | 
           cmd
@@ -36,13 +37,6 @@ jobs:
         # gcc installation dir: bin/mingw64
         # gcc.exe: bin/mingw64/bin/gcc.exe
         # g++.exe: bin/mingw64/bin/g++.exe
-      - name: Download Qt6.4.0-gcc12-shared and extract
-        run: |
-          cmd
-          curl -JL -o bin/Qt6.4.0-gcc12-shared.7z "https://github.com/SlopeCraft/VisualCraft-binaries/releases/download/win-binaries/Qt6.4.0-gcc12-shared.7z"
-          7z x -obin bin/Qt6.4.0-gcc12-shared.7z
-          exit
-        # Qt installation dir: bin/Qt6.4.0-gcc12-shared
       - name: Build and install zlib
         run: |
           $basedir=(pwd).path
@@ -55,6 +49,14 @@ jobs:
           cmake -S bin/zlib -B bin/build.zlib -DCMAKE_C_COMPILER=$basedir/bin/mingw64/bin/gcc.exe -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$basedir/bin/mingw64
           cmake --build bin/build.zlib --parallel
           cmake --install bin/build.zlib
+          
+      - name: Download Qt6.4.0-gcc12-shared and extract
+        run: |
+          cmd
+          curl -JL -o bin/Qt6.4.0-gcc12-shared.7z "https://github.com/SlopeCraft/VisualCraft-binaries/releases/download/win-binaries/Qt6.4.0-gcc12-shared.7z"
+          7z x -obin bin/Qt6.4.0-gcc12-shared.7z
+          exit
+        # Qt installation dir: bin/Qt6.4.0-gcc12-shared
       #- name: Build and install libzip
       #  run: |
       #    cmd
