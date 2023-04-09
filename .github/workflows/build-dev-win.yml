@@ -41,13 +41,14 @@ jobs:
         run: |
           $basedir=(pwd).path
           $basedir=($basedir).replace("\\","/")
+          echo "basedir = $basedir"
           cd 3rdParty
           git clone https://github.com/madler/zlib.git
           cd zlib
           git checkout v1.2.13
           cd $basedir
           mkdir bin/build-zlib
-          cmake -G Ninja -S 3rdParty/zlib -B bin/build-zlib -DCMAKE_C_COMPILER="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$basedir/bin/mingw64"
+          cmake -S 3rdParty/zlib -B bin/build-zlib -G Ninja -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$basedir/bin/mingw64"
           cmake --build bin/build-zlib --parallel
           cmake --install bin/build-zlib
           
