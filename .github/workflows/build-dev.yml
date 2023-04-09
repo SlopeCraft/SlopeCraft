@@ -1,5 +1,9 @@
 name: Build dev version artifacts
-on: [pull_request, push]
+on: 
+  pull_request:
+  push:
+    branches:
+      - feat-github-action
 
 jobs:
 
