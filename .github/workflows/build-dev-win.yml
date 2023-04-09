@@ -11,10 +11,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: start cmd
-        run: cmd
       - name: See environment
-        run: where cmake ninja 7z cl clang gcc vcpkg
+        run: where.exe cmake ninja 7z cl clang gcc vcpkg
 
 
         #https://github.com/niXman/mingw-builds-binaries/releases/download/12.2.0-rt_v10-rev0/x86_64-12.2.0-release-posix-seh-rt_v10-rev0.7z
