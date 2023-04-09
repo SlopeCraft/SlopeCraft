@@ -40,6 +40,10 @@ if(${WIN32})
         LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/Cpp/lib)
     install(FILES ${VCL_include_headers}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/Cpp/include)
+
+    SlopeCraft_install_if_is_shared(ZLIB::ZLIB ${CMAKE_INSTALL_PREFIX})
+    SlopeCraft_install_if_is_shared(libzip::zip ${CMAKE_INSTALL_PREFIX})
+    SlopeCraft_install_if_is_shared(PNG::PNG ${CMAKE_INSTALL_PREFIX})
     return()
 endif()
 

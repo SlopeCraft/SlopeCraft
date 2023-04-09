@@ -42,9 +42,8 @@ set(VCL_source_files
     VisualCraftL.h
     VisualCraftL.cpp
 
-    #textures_need_to_override.h
-    #textures_need_to_override.cpp
-
+    # textures_need_to_override.h
+    # textures_need_to_override.cpp
     TokiVC.h
     TokiVC.cpp
     TokiVC_flagdiagram.cpp

@@ -39,6 +39,8 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
 
     # install(FILES ${SlopeCraft_SCL_C_include_files}
     # DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/C/include)
+    SlopeCraft_install_if_is_shared(ZLIB::ZLIB ${CMAKE_INSTALL_PREFIX})
+
     return()
 endif()
 

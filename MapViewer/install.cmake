@@ -16,6 +16,8 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     # Run windeployqt at install time
     install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake)
 
+    SlopeCraft_install_if_is_shared(ZLIB::ZLIB ${CMAKE_INSTALL_PREFIX})
+
     return()
 endif()
 
@@ -25,7 +27,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
         RUNTIME DESTINATION bin
         BUNDLE DESTINATION lib
     )
-    
+
     # Install platforms and imageformats plugins
     include(${CMAKE_SOURCE_DIR}/cmake/install_plugins.cmake)
     return()
