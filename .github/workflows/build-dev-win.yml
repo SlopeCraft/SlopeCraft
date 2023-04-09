@@ -83,7 +83,7 @@ jobs:
       - name: Download Qt6.4.0-gcc12-shared and extract
         run: |
           cmd
-          curl -JL -o bin/Qt6.4.0-gcc12-shared.7z "https://github.com/SlopeCraft/VisualCraft-binaries/releases/download/win-binaries/Qt6.4.0-gcc12-shared-pure-build.7z"
+          curl -JL -o bin/Qt6.4.0-gcc12-shared.7z "https://github.com/SlopeCraft/VisualCraft-binaries/releases/download/win-binaries/Qt6.4.0-gcc12-shared-native.7z"
           7z x -o"bin/Qt6.4.0-gcc12-shared" bin/Qt6.4.0-gcc12-shared.7z
           exit
           tree /f bin/Qt6.4.0-gcc12-shared
