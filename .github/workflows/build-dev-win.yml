@@ -52,10 +52,10 @@ jobs:
           
       - name: Upload gcc
         uses: actions/upload-artifact@v3
-          with:
-            name: gcc12-with-zlib
-            path: bin/mingw64
-            if-no-files-found: error    
+        with:
+          name: gcc12-with-zlib
+          path: bin/mingw64
+          if-no-files-found: error    
             
       - name: Download Qt6.4.0-gcc12-shared and extract
         run: |
