@@ -37,7 +37,6 @@ jobs:
         run: |
           cmd
           curl -JLO "https://github.com/SlopeCraft/VisualCraft-binaries/releases/download/win-binaries/Qt6.4.0-gcc12-shared.7z"
-          dir bin/Qt6.4.0-gcc12-shared.7z
           exit
       - name: Tree
         run: tree .
