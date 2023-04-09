@@ -30,7 +30,7 @@ jobs:
       - name: Download mingw64
         run: curl -o archives/gcc12.7z https://github.com/niXman/mingw-builds-binaries/releases/download/12.2.0-rt_v10-rev0/x86_64-12.2.0-release-posix-seh-rt_v10-rev0.7z
       - name : Extract mingw
-        run: 7z x -obin ./archives/gcc12.7z
+        run: 7z x -o.\bin ./archives/gcc12.7z
       - name: Tree
         run: tree .
 
