@@ -51,7 +51,21 @@ jobs:
           cmake -S 3rdParty/zlib -B bin/build-zlib -G Ninja -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$basedir/bin/mingw64"
           cmake --build bin/build-zlib --parallel
           cmake --install bin/build-zlib
-          
+      
+      - name: Build and install libzip
+        run: |
+          $basedir=(pwd).path
+          $basedir=($basedir).replace("\\","/")
+          cd 3rdParty
+          git clone https://github.com/nih-at/libzip.git
+          cd libzip
+          git checkout v1.9.2
+          cd $basedir
+          mkdir bin/build-libzip
+          cmake -S 3rdParty/libzip -B bin/build-libzip -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/g++.exe" -DCMAKE_INSTALL_PREFIX="$basedir/bin/mingw64" -DCMAKE_PREFIX_PATH="$basedir/bin/mingw64" -DBUILD_SHARED_LIBS=true -DLIBZIP_DO_INSTALL=true
+          cmake --build bin/build-libzip --parallel
+          cmake --install bin/build-libzip
+
       - name: Upload gcc
         uses: actions/upload-artifact@v3
         with:
@@ -66,13 +80,4 @@ jobs:
           7z x -obin bin/Qt6.4.0-gcc12-shared.7z
           exit
         # Qt installation dir: bin/Qt6.4.0-gcc12-shared
-      #- name: Build and install libzip
-      #  run: |
-      #    cmd
-      #    cd 3rdParty
-      #    git clone https://github.com/nih-at/libzip.git
-      #    cd libzip
-      #    git checkout v1.9.2
-      #    cd ..
-
-      #    cd ..
+      
