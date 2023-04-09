@@ -19,8 +19,8 @@ jobs:
       #    ninja --version
       #    clang --version
       #    gcc --version
-      #- name: See Path
-      #  run: $env:path -split ';'
+      - name: See Path
+        run: $env:path -split ';'
       - name: Make dirs
         run: |
           mkdir bin
