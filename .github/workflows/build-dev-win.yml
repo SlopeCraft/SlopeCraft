@@ -21,6 +21,17 @@ jobs:
           gcc --version
       - name: See Path
         run: $env:path -split ';'
-
+      - name: Make dirs
+        run: |
+          mkdir bin
+          mkdir archives
+          mkdir bin/mingw64
+          mkdir bin/Qt6.4.0-gcc12-shared
+      - name: Download and extract mingw64
+        run: |
+          curl -o archives/gcc12.7z https://github.com/niXman/mingw-builds-binaries/releases/download/12.2.0-rt_v10-rev0/x86_64-12.2.0-release-posix-seh-rt_v10-rev0.7z
+          7z x archives/gcc12.7z -o./bin
+      - name: Tree
+        run: tree .
 
         #https://github.com/niXman/mingw-builds-binaries/releases/download/12.2.0-rt_v10-rev0/x86_64-12.2.0-release-posix-seh-rt_v10-rev0.7z
