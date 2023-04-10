@@ -106,16 +106,12 @@ jobs:
       - name: CMake build
         run: cmake --build ./build --parallel
       
-      - name: CMake install # Uptil now, we have not get a prefect way to deploy qt shared libs. This may be finished in cmake script
+      - name: CMake install
         run: cmake --install ./build
-      #- name: List all files
-      #  run: ls -R
 
       - name: Run CTest
         if: matrix.build_type == Debug
         run: ctest -j20 --output-on-failure --stop-on-failure
-
-      - name: Make zip and 7z packs with CPack
       
       - name: Get short SHA
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
