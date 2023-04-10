@@ -43,7 +43,7 @@ int main() {
 
   schem.resize(12, 9, 12);
 
-  std::vector<const char *> ids; //= {"minecraft:air", "minecraft:glass"};
+  std::vector<const char *> ids;  //= {"minecraft:air", "minecraft:glass"};
 
   ids.resize(1);
   for (auto &id : ids) {
@@ -85,6 +85,7 @@ int main() {
 
   if (has_error) {
     cout << "error idx = " << err_idx << endl;
+    return 1;
   }
 
   libSchem::litematic_info info;
@@ -98,18 +99,21 @@ int main() {
     cout << "Failed to export file "
          << "test12.litematic" << endl;
     cout << "Error info = " << error_str << endl;
+    return 1;
   }
 
   if (!schem.export_structure("test12.nbt", true, nullptr, &error_str)) {
     cout << "Failed to export file "
          << "test12.nbt" << endl;
     cout << "Error info = " << error_str << endl;
+    return 1;
   }
 
   if (!schem.export_WESchem("test12.schem", weinfo, nullptr, &error_str)) {
     cout << "Failed to export file "
          << "test12.schem" << endl;
     cout << "Error info = " << error_str << endl;
+    return 1;
   }
 
   return 0;
