@@ -11,6 +11,19 @@ jobs:
 
   macos-build:
     runs-on: macos-latest
+    strategy:
+      matrix:
+        build_type: [Release, Debug]
+    env:
+      BUILD_TYPE: ${{ matrix.build_type }}
+    steps:
+      - name: echo matrix variables (build_type = ${{ matrix.build_type }})
+        run: | 
+          echo ${{ matrix.build_type }}
+          echo $matrix
+          echo $matrix.build_type
+          echo $build_type
+          echo $BUILD_TYPE
     steps:
       - name: Install Ninja build system
         run: brew install ninja
@@ -48,7 +61,19 @@ jobs:
   
   linux-build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_type: [Release, Debug]
+    env:
+      BUILD_TYPE: ${{ matrix.build_type }}
     steps:
+      - name: echo matrix variables (build_type = ${{ matrix.build_type }})
+        run: | 
+          echo ${{ matrix.build_type }}
+          echo $matrix
+          echo $matrix.build_type
+          echo $build_type
+          echo $BUILD_TYPE
       - name: Make directories
         run: mkdir build install pack
 
@@ -115,7 +140,19 @@ jobs:
 
   windows-build:
     runs-on: windows-latest
+    strategy:
+      matrix:
+        build_type: [Release, Debug]
+    env:
+      BUILD_TYPE: ${{ matrix.build_type }}
     steps:
+      - name: echo matrix variables (build_type = ${{ matrix.build_type }})
+        run: | 
+          echo ${{ matrix.build_type }}
+          echo $matrix
+          echo $matrix.build_type
+          echo $BUILD_TYPE
+          echo $env:BUILD_TYPE
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Get short SHA
