@@ -118,6 +118,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      - name: Get short SHA
+        run: |
+          echo "GITHUB_SHA = $GITHUB_SHA"
+          $short_sha=$GITHUB_SHA.substring(0,7)
+          echo "short_sha = $short_sha"
+          echo "SHORT_SHA=$short_sha" >> $env:GITHUB_ENV
       #- name: See environment
       #  run: where.exe cmake ninja 7z clang gcc vcpkg
       #- name: See versions
@@ -227,8 +233,6 @@ jobs:
           foreach($p in $env:path.split(';')) {$exclude=$false; foreach($ekw in $exclude_key_words)	{if($p.contains($ekw)) {$exclude=$true;break;}}if(-not($exclude)) {$new_path="$new_path;$p"}}
           $env:path="$new_path;$basedir/bin/mingw64/bin"
           cmake --install ./build
-      - name: Get short SHA
-        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $env:GITHUB_ENV
       - name: Make zip and 7z packs with CPack
         run: |
           $basedir=(pwd).path
@@ -240,16 +244,18 @@ jobs:
           cd ./build
           cpack -G ZIP -B "$basedir/pack"
           cpack -G 7Z -B "$basedir/pack"
+
       - name: Upload zip pack
         uses: actions/upload-artifact@v3
         with: 
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-windows.zip
+          name: SlopeCraft-dev-${{env.SHORT_SHA}}-windows.zip
           path: pack/SlopeCraft*.zip
           if-no-files-found: error 
+
       - name: Upload 7z pack
         uses: actions/upload-artifact@v3
         with: 
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-windows.7z
+          name: SlopeCraft-dev-${{env.SHORT_SHA}}-windows.7z
           path: pack/SlopeCraft*.7z
           if-no-files-found: error 
 
