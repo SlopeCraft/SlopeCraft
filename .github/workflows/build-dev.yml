@@ -110,7 +110,7 @@ jobs:
         run: cmake --install ./build
 
       - name: Run CTest
-        if: matrix.build_type == Debug
+        if: matrix.build_type == "Debug"
         run: ctest -j20 --output-on-failure --stop-on-failure
       
       - name: Get short SHA
@@ -274,7 +274,7 @@ jobs:
           cmake --install ./build
 
       - name: Run CTest
-        if: matrix.build_type == Debug
+        if: matrix.build_type == "Debug"
         run: |
           $basedir=(pwd).path.replace("\\","/")
           $env:path=$env:NEW_PATH
