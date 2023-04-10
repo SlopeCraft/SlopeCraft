@@ -31,7 +31,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Configure CMake
-        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=/usr/local/Cellar/gcc/12.2.0/bin/gcc-12 -DCMAKE_CXX_COMPILER=/usr/local/Cellar/gcc/12.2.0/bin/g++-12 -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API="None" -DCMAKE_BUILD_TYPE=Release
+        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=/usr/local/Cellar/gcc/12.2.0/bin/gcc-12 -DCMAKE_CXX_COMPILER=/usr/local/Cellar/gcc/12.2.0/bin/g++-12 -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API="None" -DCMAKE_BUILD_TYPE=$BUILD_TYPE
       - name: Build and Install
         run: |
           cd build
@@ -51,7 +51,7 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-macos
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-macos
           path: build/install
   
   linux-build:
@@ -96,7 +96,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: CMake configure
-        run: cmake -S . -B ./build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/gcc-12 -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/g++-12 -DCMAKE_INSTALL_PREFIX:PATH=./install -DSlopeCraft_GPU_API:STRING=None -DCMAKE_BUILD_TYPE:STRING=Debug
+        run: cmake -S . -B ./build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/gcc-12 -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/g++-12 -DCMAKE_INSTALL_PREFIX:PATH=./install -DSlopeCraft_GPU_API:STRING=None -DCMAKE_BUILD_TYPE:STRING=$BUILD_TYPE
       
       - name: CMake build
         run: cmake --build ./build --parallel
@@ -118,14 +118,14 @@ jobs:
       - name: Upload deb pack
         uses: actions/upload-artifact@v3
         with:
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-linux-deb
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-linux-deb
           path: pack/SlopeCraft*.deb
           if-no-files-found: error
 
       - name: Upload tar.xz pack
         uses: actions/upload-artifact@v3
         with:
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-linux-tar.xz
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-linux-tar-xz
           path: pack/SlopeCraft*.tar.xz
           if-no-files-found: error
 
@@ -139,7 +139,6 @@ jobs:
     steps:
       - name: echo matrix variables (build_type = ${{ matrix.build_type }})
         run: | 
-          echo "BUILD_TYPE = $BUILD_TYPE"
           echo "env:BUILD_TYPE = $env:BUILD_TYPE"
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -186,7 +185,7 @@ jobs:
           git checkout v1.2.13
           cd $basedir
           mkdir bin/build-zlib
-          cmake -S 3rdParty/zlib -B bin/build-zlib -G Ninja -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$basedir/bin/mingw64"
+          cmake -S 3rdParty/zlib -B bin/build-zlib -G Ninja -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_BUILD_TYPE=$env:BUILD_TYPE -DCMAKE_INSTALL_PREFIX="$basedir/bin/mingw64"
           cmake --build bin/build-zlib --parallel
           cmake --install bin/build-zlib
       
@@ -200,7 +199,7 @@ jobs:
           git checkout v1.9.2
           cd $basedir
           mkdir bin/build-libzip
-          cmake -S 3rdParty/libzip -B bin/build-libzip -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/g++.exe" -DCMAKE_INSTALL_PREFIX="$basedir/bin/mingw64" -DCMAKE_PREFIX_PATH="$basedir/bin/mingw64" -DBUILD_SHARED_LIBS=true -DLIBZIP_DO_INSTALL=true
+          cmake -S 3rdParty/libzip -B bin/build-libzip -G Ninja -DCMAKE_BUILD_TYPE=$env:BUILD_TYPE -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/g++.exe" -DCMAKE_INSTALL_PREFIX="$basedir/bin/mingw64" -DCMAKE_PREFIX_PATH="$basedir/bin/mingw64" -DBUILD_SHARED_LIBS=true -DLIBZIP_DO_INSTALL=true
           cmake --build bin/build-libzip --parallel
           cmake --install bin/build-libzip
 
@@ -214,7 +213,7 @@ jobs:
           git checkout v1.6.39
           cd $basedir
           mkdir bin/build-libpng
-          cmake -S 3rdParty/libpng -B bin/build-libpng -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/g++.exe" -DCMAKE_INSTALL_PREFIX="$basedir/bin/mingw64" -DCMAKE_PREFIX_PATH="$basedir/bin/mingw64"
+          cmake -S 3rdParty/libpng -B bin/build-libpng -G Ninja -DCMAKE_BUILD_TYPE=$env:BUILD_TYPE -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/g++.exe" -DCMAKE_INSTALL_PREFIX="$basedir/bin/mingw64" -DCMAKE_PREFIX_PATH="$basedir/bin/mingw64"
           cmake --build bin/build-libpng --parallel
           cmake --install bin/build-libpng
             
@@ -238,7 +237,7 @@ jobs:
           echo $env:path.split(';')
           mkdir build
           mkdir install
-          cmake -S . -B build -G "MinGW Makefiles" -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/g++.exe" -DCMAKE_PREFIX_PATH:PATH="$basedir/bin/Qt6.4.0-gcc12-shared" -DCMAKE_INSTALL_PREFIX:PATH="$basedir/install" -DCMAKE_BUILD_TYPE:STRING=Release -DSlopeCraft_GPU_API:STRING=None
+          cmake -S . -B build -G "MinGW Makefiles" -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/g++.exe" -DCMAKE_PREFIX_PATH:PATH="$basedir/bin/Qt6.4.0-gcc12-shared" -DCMAKE_INSTALL_PREFIX:PATH="$basedir/install" -DCMAKE_BUILD_TYPE:STRING=$env:BUILD_TYPE -DSlopeCraft_GPU_API:STRING=None
       - name: CMake build
         run: |
           $basedir=(pwd).path
@@ -273,14 +272,14 @@ jobs:
       - name: Upload zip pack
         uses: actions/upload-artifact@v3
         with: 
-          name: SlopeCraft-dev-${{env.SHORT_SHA}}-windows.zip
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-windows-zip
           path: pack/SlopeCraft*.zip
           if-no-files-found: error 
 
       - name: Upload 7z pack
         uses: actions/upload-artifact@v3
         with: 
-          name: SlopeCraft-dev-${{env.SHORT_SHA}}-windows.7z
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-windows-7z
           path: pack/SlopeCraft*.7z
           if-no-files-found: error 
 
