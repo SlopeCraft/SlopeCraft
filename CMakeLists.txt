@@ -17,6 +17,7 @@ option(SlopeCraft_update_ts_no_obsolete "Remove obsolete translations from ts fi
 
 option(SlopeCraft_gprof "Profile with gprof" OFF)
 
+
 # manage the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
     set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install)
@@ -104,6 +105,7 @@ endif()
 add_compile_definitions(SLOPECRAFTL_NOT_INSTALLED)
 add_compile_definitions(VISUALCRAFTL_NOT_INSTALLED)
 include_directories(${CMAKE_BINARY_DIR}/utilities)
+
 
 add_subdirectory(utilities)
 add_subdirectory(imageCutter)

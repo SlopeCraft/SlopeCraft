@@ -5,6 +5,16 @@ file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/test_vccl_images)
 
 set(temp_testname_prefix test_vccl_images/)
 
+file(GLOB test_source_images "${CMAKE_SOURCE_DIR}/binaries/images/*")
+
+set(test_source_images_space_list)
+
+foreach(img ${test_source_images})
+    set(test_source_images_space_list "${test_source_images_space_list} \"${img}\"")
+endforeach(img ${test_source_images})
+
+message(STATUS "test_source_images_space_list = ${test_source_images_space_list}")
+
 set(list_faces "up" "down" "north" "south" "east" "west")
 
 set(algos "RGB")
@@ -34,7 +44,7 @@ foreach(_layers RANGE 1 3 1)
                         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 
                         # COMMAND vccl --bsl ${CMAKE_SOURCE_DIR}/VisualCraftL/VCL_blocks_fixed.json --rp ${zip_file} --mcver ${_ver} --face ${_face} --layers ${_layers} --img ${VCL_test_images} --dither=${_dither} -j1 --out-image --benchmark --prefix ${test_name} --gpu --disable-config
-                        COMMAND vccl --mcver ${_ver} --face ${_face} --layers ${_layers} --img ${CMAKE_SOURCE_DIR}/binaries/images/* --dither=${_dither} -j20 --out-image --benchmark --prefix ${test_name} --gpu --lite --nbt ${generate_schem}
+                        COMMAND vccl --mcver ${_ver} --face ${_face} --layers ${_layers} --img ${test_source_images_space_list} --dither=${_dither} -j20 --out-image --benchmark --prefix ${test_name} --lite --nbt ${generate_schem}
                     )
 
                     #
