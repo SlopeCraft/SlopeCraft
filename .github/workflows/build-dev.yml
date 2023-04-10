@@ -161,6 +161,7 @@ jobs:
 
       - name: Filter perl-related pathes from env:path, and append directory of gcc12 to path
         run: |
+          $basedir=(pwd).path.replace("\\","/")
           $exclude_key_words="perl","Strawberry"
           $new_path=""
           foreach($p in $env:path.split(';')) {$exclude=$false; foreach($ekw in $exclude_key_words)	{if($p.contains($ekw)) {$exclude=$true;break;}}if(-not($exclude)) {$new_path="$new_path;$p"}}
@@ -251,6 +252,7 @@ jobs:
           $BUILD_TYPE=$env:BUILD_TYPE
           $GPU_API=$env:GPU_API
           $env:path=$env:NEW_PATH
+          echo "env:path = $env:path"
           mkdir build
           mkdir install
           cmake -S . -B build -G "MinGW Makefiles" -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/g++.exe" -DCMAKE_PREFIX_PATH:PATH="$basedir/bin/Qt6.4.0-gcc12-shared" -DCMAKE_INSTALL_PREFIX:PATH="$basedir/install" -DCMAKE_BUILD_TYPE="$BUILD_TYPE" -DSlopeCraft_GPU_API:STRING="$GPU_API"
