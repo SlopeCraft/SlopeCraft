@@ -110,6 +110,13 @@ jobs:
         run: cmake --install ./build
       #- name: List all files
       #  run: ls -R
+
+      - name: Run CTest
+        if: matrix.build_type == Debug
+        run: ctest -j20 --output-on-failure --stop-on-failure
+
+      - name: Make zip and 7z packs with CPack
+      
       - name: Get short SHA
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
       
@@ -256,17 +263,27 @@ jobs:
           mkdir build
           mkdir install
           cmake -S . -B build -G "MinGW Makefiles" -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/g++.exe" -DCMAKE_PREFIX_PATH:PATH="$basedir/bin/Qt6.4.0-gcc12-shared" -DCMAKE_INSTALL_PREFIX:PATH="$basedir/install" -DCMAKE_BUILD_TYPE="$BUILD_TYPE" -DSlopeCraft_GPU_API:STRING="$GPU_API"
+      
       - name: CMake build
         run: |
           $basedir=(pwd).path.replace("\\","/")
           $env:path=$env:NEW_PATH
           echo "Number of processors = $env:NUMBER_OF_PROCESSORS"
           cmake --build ./build --parallel 10
+
       - name: CMake install
         run: |
           $basedir=(pwd).path.replace("\\","/")
           $env:path=$env:NEW_PATH
           cmake --install ./build
+
+      - name: Run CTest
+        if: matrix.build_type == Debug
+        run: |
+          $basedir=(pwd).path.replace("\\","/")
+          $env:path=$env:NEW_PATH
+          ctest -j10 --output-on-failure --stop-on-failure
+
       - name: Make zip and 7z packs with CPack
         run: |
           $basedir=(pwd).path.replace("\\","/")
