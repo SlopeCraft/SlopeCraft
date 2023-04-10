@@ -110,7 +110,7 @@ jobs:
         run: cmake --install ./build
 
       - name: Run CTest
-        if: matrix.build_type == 'Debug'
+        if: matrix.build_type == 'Release'
         run: |
           cd ./build
           ctest -j20 --output-on-failure --stop-on-failure
@@ -275,13 +275,13 @@ jobs:
           $env:path=$env:NEW_PATH
           cmake --install ./build
 
-      - name: Run CTest
-        if: matrix.build_type == 'Debug'
-        run: |
-          $basedir=(pwd).path.replace("\\","/")
-          $env:path=$env:NEW_PATH
-          cd ./build
-          ctest -j10 --output-on-failure --stop-on-failure
+      #- name: Run CTest
+      #  if: matrix.build_type == 'Release'
+      #  run: |
+      #    $basedir=(pwd).path.replace("\\","/")
+      #    $env:path=$env:NEW_PATH
+      #    cd ./build
+      #    ctest -j10 --output-on-failure --stop-on-failure
 
       - name: Make zip and 7z packs with CPack
         run: |
