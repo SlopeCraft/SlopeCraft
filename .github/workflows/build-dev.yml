@@ -120,8 +120,8 @@ jobs:
         uses: actions/checkout@v2
       - name: Get short SHA
         run: |
-          echo "GITHUB_SHA = $GITHUB_SHA"
-          $short_sha=$GITHUB_SHA.substring(0,7)
+          echo "GITHUB_SHA = $env:GITHUB_SHA"
+          $short_sha=$env:GITHUB_SHA.substring(0,7)
           echo "short_sha = $short_sha"
           echo "SHORT_SHA=$short_sha" >> $env:GITHUB_ENV
       #- name: See environment
