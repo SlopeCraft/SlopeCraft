@@ -85,13 +85,13 @@ if(${SlopeCraft_vectorize})
     # list(APPEND SlopeCraft_vectorize_flags "-O3")
 endif()
 
-if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+if(${LINUX})
     message(STATUS "setting runpath for linux")
     set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
     set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 endif()
 
-if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+if(${WIN32})
     add_compile_definitions("_CRT_SECURE_NO_WARNINGS")
 endif()
 
@@ -105,9 +105,6 @@ add_compile_definitions(SLOPECRAFTL_NOT_INSTALLED)
 add_compile_definitions(VISUALCRAFTL_NOT_INSTALLED)
 include_directories(${CMAKE_BINARY_DIR}/utilities)
 
-set(SlopeCraft_resource_file_to_touch_and_remove)
-mark_as_advanced(SlopeCraft_resource_file_to_touch_and_remove)
-
 add_subdirectory(utilities)
 add_subdirectory(imageCutter)
 add_subdirectory(SlopeCraftL)
@@ -118,14 +115,5 @@ add_subdirectory(VisualCraftL)
 add_subdirectory(VisualCraft)
 add_subdirectory(vccl)
 
-if(EXISTS ${CMAKE_BINARY_DIR}/utilities/ColorManip/__rsc_ColorManip_cl_rc.c)
-    file(SIZE ${CMAKE_BINARY_DIR}/utilities/ColorManip/__rsc_ColorManip_cl_rc.c size_of_file)
-
-    if(${size_of_file} LESS_EQUAL 0)
-        # file(REMOVE ${CMAKE_BINARY_DIR}/utilities/ColorManip/__rsc_ColorManip_cl_rc.c)
-    endif()
-endif()
-
 include(cmake/install.cmake)
-
 include(cpack/make-packs.cmake)

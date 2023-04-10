@@ -1,0 +1,15 @@
+set(file_to_check @file_to_check@)
+
+if(NOT EXISTS ${file_to_check})
+    return()
+endif()
+
+file(SIZE ${file_to_check} file_size)
+
+if(${file_to_check} GREATER 0)
+    return()
+endif()
+
+message(STATUS "${file_to_check} is found, but it is empty. Remove it so that it will be generated correctly.")
+
+file(REMOVE ${file_to_check})
