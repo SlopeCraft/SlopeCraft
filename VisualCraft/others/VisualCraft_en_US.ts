@@ -314,7 +314,7 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
     </message>
     <message>
         <location filename="../VCWind.ui" line="336"/>
-        <location filename="../VCWind.cpp" line="428"/>
+        <location filename="../VCWind.cpp" line="438"/>
         <source>全部方块</source>
         <translation>All blocks</translation>
     </message>
@@ -691,88 +691,88 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
 %1</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="93"/>
+        <location filename="../VCWind.cpp" line="94"/>
         <source>原版资源包</source>
         <translation>Vanilla</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="93"/>
-        <source>原版json</source>
-        <translation>Default</translation>
-    </message>
-    <message>
-        <location filename="../VCWind.cpp" line="256"/>
+        <location filename="../VCWind.cpp" line="266"/>
         <source>选择资源包</source>
         <translation>Select resource pack</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="289"/>
-        <source>选择方块id json文件</source>
-        <translation>Select block state list json file</translation>
-    </message>
-    <message>
-        <location filename="../VCWind.cpp" line="460"/>
+        <location filename="../VCWind.cpp" line="470"/>
         <source>资源包解析失败</source>
         <translation>Failed to parse resource pack</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="461"/>
         <location filename="../VCWind.cpp" line="471"/>
+        <location filename="../VCWind.cpp" line="481"/>
         <source>在此窗口之前弹出的错误信息非常重要，请将它汇报给开发者。</source>
         <translation>Error messages shown before this window is really important. Report it to the deveploer.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="470"/>
-        <source>方块状态列表json解析失败</source>
-        <translation>Failed to parse block state list json</translation>
+        <location filename="../VCWind.cpp" line="94"/>
+        <source>原版 json</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="490"/>
-        <source>资源包/方块状态列表json解析失败</source>
-        <translation>Failed to parse resource packs or bsl jsons.</translation>
+        <location filename="../VCWind.cpp" line="299"/>
+        <source>选择方块 id json 文件</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="491"/>
+        <location filename="../VCWind.cpp" line="480"/>
+        <source>方块状态列表 json 解析失败</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../VCWind.cpp" line="500"/>
+        <source>资源包/方块状态列表 json 解析失败</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../VCWind.cpp" line="501"/>
         <source>部分方块的投影图像计算失败，或者总颜色数量超过上限（65534）。尝试移除解析失败的资源包/方块列表，或者减小最大层数。</source>
         <translation>Failed to compute projection image for some blocks, or the total color amout exceeds the limit of 65534. You can try removing resource packs or block state list jsons that failed to be parsed, or reduce the max layers.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="551"/>
+        <location filename="../VCWind.cpp" line="561"/>
         <source>设置可用方块失败</source>
         <translation>Failed to set avaliable blocks</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="552"/>
+        <location filename="../VCWind.cpp" line="562"/>
         <source>可能是总颜色数量超过上限（65536），尝试移除解析失败的资源包/方块列表，或者减小最大层数。</source>
         <translation>Probably the count of colors exceeds the upper bound(65536). Try removing some resource packs or jsons, or reduce the maximum layers.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="562"/>
+        <location filename="../VCWind.cpp" line="572"/>
         <source>调色算法 (共%1种颜色)</source>
         <translation>Convert algorithms(%1 colors avaliable)</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="585"/>
+        <location filename="../VCWind.cpp" line="595"/>
         <source>选择图片（可多选）</source>
         <translation>Select images</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="602"/>
+        <location filename="../VCWind.cpp" line="612"/>
         <source>读取图片失败</source>
         <translation>Failed to load image.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="603"/>
+        <location filename="../VCWind.cpp" line="613"/>
         <source>无法读取图片%1。图片可能是不支持的格式，或者已经损坏。图像过大也可能导致此错误。</source>
         <translation>Failed to load image %1 . The image may be of unsupported format, or has been screwed up. A tooooo large image may also cause this error.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="656"/>
+        <location filename="../VCWind.cpp" line="666"/>
         <source>设置图片失败</source>
         <translation>Failed to set image</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="657"/>
+        <location filename="../VCWind.cpp" line="667"/>
         <source>这个错误不应该发生的，可能是你点儿背。</source>
         <translation>This error is considered to be impossible.</translation>
     </message>
