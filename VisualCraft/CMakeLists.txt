@@ -90,9 +90,9 @@ target_compile_features(VisualCraft PRIVATE cxx_std_20)
 
 target_link_libraries(VisualCraft PRIVATE
     VisualCraftL
-    Qt${QT_VERSION_MAJOR}::Widgets
-    Qt${QT_VERSION_MAJOR}::Network
-    Qt${QT_VERSION_MAJOR}::Concurrent
+    Qt6::Widgets
+    Qt6::Network
+    Qt6::Concurrent
     magic_enum::magic_enum
     OpenMP::OpenMP_CXX
     VersionDialog

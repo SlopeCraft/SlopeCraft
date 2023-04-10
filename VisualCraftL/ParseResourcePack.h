@@ -623,9 +623,6 @@ class VCL_resource_pack {
   const Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
       *find_texture(std::string_view path, bool override_only) const noexcept;
 
-  [[deprecated]] bool override_textures(
-      VCL_biome_t biome, bool replace_transparent_with_black) noexcept;
-
   bool override_required_textures(VCL_biome_t biome,
                                   bool replace_transparent_with_black,
                                   const VCL_block *const *const blkpp,
