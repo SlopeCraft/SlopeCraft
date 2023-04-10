@@ -111,7 +111,9 @@ jobs:
 
       - name: Run CTest
         if: matrix.build_type == 'Debug'
-        run: ctest -j20 --output-on-failure --stop-on-failure
+        run: |
+          cd ./build
+          ctest -j20 --output-on-failure --stop-on-failure
       
       - name: Get short SHA
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
@@ -278,6 +280,7 @@ jobs:
         run: |
           $basedir=(pwd).path.replace("\\","/")
           $env:path=$env:NEW_PATH
+          cd ./build
           ctest -j10 --output-on-failure --stop-on-failure
 
       - name: Make zip and 7z packs with CPack
