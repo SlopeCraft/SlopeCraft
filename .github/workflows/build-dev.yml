@@ -24,7 +24,6 @@ jobs:
           echo $matrix.build_type
           echo $build_type
           echo $BUILD_TYPE
-    steps:
       - name: Install Ninja build system
         run: brew install ninja
       - name: Install dependencies
