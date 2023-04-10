@@ -19,10 +19,6 @@ jobs:
     steps:
       - name: echo matrix variables (build_type = ${{ matrix.build_type }})
         run: | 
-          echo ${{ matrix.build_type }}
-          echo $matrix
-          echo $matrix.build_type
-          echo $build_type
           echo $BUILD_TYPE
       - name: Install Ninja build system
         run: brew install ninja
@@ -68,10 +64,6 @@ jobs:
     steps:
       - name: echo matrix variables (build_type = ${{ matrix.build_type }})
         run: | 
-          echo ${{ matrix.build_type }}
-          echo $matrix
-          echo $matrix.build_type
-          echo $build_type
           echo $BUILD_TYPE
       - name: Make directories
         run: mkdir build install pack
@@ -147,11 +139,8 @@ jobs:
     steps:
       - name: echo matrix variables (build_type = ${{ matrix.build_type }})
         run: | 
-          echo ${{ matrix.build_type }}
-          echo $matrix
-          echo $matrix.build_type
-          echo $BUILD_TYPE
-          echo $env:BUILD_TYPE
+          echo "BUILD_TYPE = $BUILD_TYPE"
+          echo "env:BUILD_TYPE = $env:BUILD_TYPE"
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Get short SHA
