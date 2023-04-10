@@ -1,0 +1,26 @@
+# message(STATUS "Copying qt deployed files")
+
+set(SlopeCraft_pack_dest ${CPACK_PACKAGE_DIRECTORY}/_CPack_Packages/${CPACK_SYSTEM_NAME}/${CPACK_GENERATOR}/${CPACK_PACKAGE_FILE_NAME})
+
+message(STATUS "Copying deployed files to ${SlopeCraft_pack_dest}")
+
+file(GLOB deployed_dlls "@CMAKE_INSTALL_PREFIX@/*.dll")
+file(COPY ${deployed_dlls} DESTINATION ${SlopeCraft_pack_dest})
+
+function(SlopeCraft_glob_and_copy sub_dir_name pack_dest)
+    message(STATUS "Copying @CMAKE_INSTALL_PREFIX@/${sub_dir_name} to ${pack_dest}/${sub_dir_name}")
+    file(GLOB temp "@CMAKE_INSTALL_PREFIX@/${sub_dir_name}/*")
+    file(COPY ${temp} DESTINATION ${pack_dest}/${sub_dir_name})
+endfunction(SlopeCraft_glob_and_copy)
+
+SlopeCraft_glob_and_copy(platforms ${SlopeCraft_pack_dest})
+SlopeCraft_glob_and_copy(imageformats ${SlopeCraft_pack_dest})
+SlopeCraft_glob_and_copy(styles ${SlopeCraft_pack_dest})
+SlopeCraft_glob_and_copy(tls ${SlopeCraft_pack_dest})
+SlopeCraft_glob_and_copy(translations ${SlopeCraft_pack_dest})
+
+# message(STATUS "CPACK_PACKAGE_DIRECTORY = ${CPACK_PACKAGE_DIRECTORY}")
+
+# message(STATUS "CPACK_PACKAGE_INSTALL_DIRECTORY = ${CPACK_PACKAGE_INSTALL_DIRECTORY}")
+# message(STATUS "CPACK_INSTALLED_DIRECTORIES = ${CPACK_INSTALLED_DIRECTORIES}")
+# message(STATUS "CMAKE_CURRENT_BINARY_DIR = ${CMAKE_CURRENT_BINARY_DIR}")

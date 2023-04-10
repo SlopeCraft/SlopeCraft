@@ -24,22 +24,26 @@ set(VCL_include_headers
 if(${WIN32})
     # install for app
     install(TARGETS VisualCraftL
-        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
+        RUNTIME DESTINATION .
 
-        # LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}
+        # LIBRARY DESTINATION .
     )
     install(FILES ${VCL_app_files}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/Blocks_VCL)
+        DESTINATION Blocks_VCL)
 
     # install for lib
     install(TARGETS VisualCraftL
-        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/Cpp/bin
-        LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/Cpp/lib)
-    install(TARGETS VisualCraftL_static
-        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/Cpp/bin
-        LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/Cpp/lib)
+        RUNTIME DESTINATION ../install_SlopeCraftL/Cpp/bin
+        LIBRARY DESTINATION ../install_SlopeCraftL/Cpp/lib)
+
+    # install(TARGETS VisualCraftL_static
+    # RUNTIME DESTINATION ../install_SlopeCraftL/Cpp/bin
+    # LIBRARY DESTINATION ../install_SlopeCraftL/Cpp/lib)
     install(FILES ${VCL_include_headers}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/Cpp/include)
+        DESTINATION ../install_SlopeCraftL/Cpp/include)
+    SlopeCraft_install_if_is_shared(ZLIB::ZLIB .)
+    SlopeCraft_install_if_is_shared(libzip::zip .)
+    SlopeCraft_install_if_is_shared(PNG::PNG .)
     return()
 endif()
 

@@ -9,6 +9,10 @@ if(${WIN32})
     return()
 endif()
 
+if(${LINUX})
+    return()
+endif()
+
 if(${APPLE})
     message(STATUS "Running macdeployqt for @AppName@ ...")
     execute_process(

@@ -42,9 +42,8 @@ set(VCL_source_files
     VisualCraftL.h
     VisualCraftL.cpp
 
-    #textures_need_to_override.h
-    #textures_need_to_override.cpp
-
+    # textures_need_to_override.h
+    # textures_need_to_override.cpp
     TokiVC.h
     TokiVC.cpp
     TokiVC_flagdiagram.cpp
@@ -77,8 +76,8 @@ add_library(VisualCraftL_static STATIC
     ${VCL_source_files})
 
 find_package(ZLIB 1.2.11 REQUIRED)
-find_package(PNG 1.6.37 REQUIRED)
-find_package(libzip 1.9.2 REQUIRED)
+find_package(PNG 1.4.12 REQUIRED)
+find_package(libzip 1.7.0 REQUIRED)
 
 include(${CMAKE_SOURCE_DIR}/cmake/configure_fmtlib.cmake)
 find_package(fmt 9.1.0 REQUIRED)

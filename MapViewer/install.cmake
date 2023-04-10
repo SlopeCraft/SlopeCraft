@@ -3,8 +3,8 @@ configure_file(${CMAKE_SOURCE_DIR}/cmake/deploy_qt.cmake.in ${CMAKE_CURRENT_BINA
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     install(TARGETS MapViewer
-        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
-        BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX}
+        RUNTIME DESTINATION .
+        BUNDLE DESTINATION .
     )
 
     # Run windeployqt at build time
@@ -16,6 +16,8 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     # Run windeployqt at install time
     install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake)
 
+    SlopeCraft_install_if_is_shared(ZLIB::ZLIB .)
+
     return()
 endif()
 
@@ -25,6 +27,9 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
         RUNTIME DESTINATION bin
         BUNDLE DESTINATION lib
     )
+
+    # Install platforms and imageformats plugins
+    include(${CMAKE_SOURCE_DIR}/cmake/install_plugins.cmake)
     return()
 endif()
 

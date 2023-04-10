@@ -4,11 +4,11 @@ configure_file(${CMAKE_SOURCE_DIR}/cmake/deploy_qt.cmake.in ${CMAKE_CURRENT_BINA
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     install(TARGETS VisualCraft
-        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
+        RUNTIME DESTINATION .
     )
 
     install(FILES vc-config.json
-        DESTINATION ${CMAKE_INSTALL_PREFIX})
+        DESTINATION .)
 
     # Run windeployqt at build time
     add_custom_target(Windeployqt-VisualCraft ALL
@@ -28,6 +28,10 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
 
     install(FILES vc-config.json
         DESTINATION bin)
+
+    # Install platforms and imageformats plugins
+    include(${CMAKE_SOURCE_DIR}/cmake/install_plugins.cmake)
+
     return()
 endif()
 

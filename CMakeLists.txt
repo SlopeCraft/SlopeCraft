@@ -17,6 +17,15 @@ option(SlopeCraft_update_ts_no_obsolete "Remove obsolete translations from ts fi
 
 option(SlopeCraft_gprof "Profile with gprof" OFF)
 
+# manage the install prefix
+if(NOT DEFINED CMAKE_INSTALL_PREFIX)
+    set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install)
+endif()
+
+# convert relative path to absolute
+cmake_path(ABSOLUTE_PATH CMAKE_INSTALL_PREFIX OUTPUT_VARIABLE CMAKE_INSTALL_PREFIX)
+message(STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}")
+
 if(${MSVC})
     add_compile_options("/Zc:__cplusplus")
     add_compile_options("/wd4819")
@@ -35,12 +44,6 @@ if(NOT CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     Please use gcc.")
 endif()
 
-# manage the install prefix
-set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install
-    CACHE PATH "Where to install SlopeCraft.")
-
-# set(CMAKE_INSTALL_LIBDIR ${CMAKE_INSTALL_PREFIX})
-# set(CMAKE_INSTALL_BINDIR ${CMAKE_INSTALL_PREFIX})
 if(EXISTS ${CMAKE_SOURCE_DIR}/compile_commands.json)
     # delete files here
     file(REMOVE ${CMAKE_SOURCE_DIR}/compile_commands.json)
@@ -56,17 +59,7 @@ include(cmake/find_HeuristicFlow.cmake)
 
 include(cmake/find_qt6.cmake)
 
-# find lupdate executable
-if(${SlopeCraft_update_ts_files} AND(NOT DEFINED SlopeCraft_Qt_lupdate_executable))
-    find_program(SlopeCraft_Qt_lupdate_executable name lupdate PATHS ${CMAKE_PREFIX_PATH} REQUIRED)
-    message(STATUS "Found lupdate at : " ${SlopeCraft_Qt_lupdate_executable})
-
-    if(${SlopeCraft_update_ts_no_obsolete})
-        set(SlopeCraft_ts_flags)
-    else()
-        set(SlopeCraft_ts_flags "-no-obsolete")
-    endif()
-endif()
+include(cmake/install_if_is_shared.cmake)
 
 add_definitions("-D_USE_MATH_DEFINES")
 add_definitions("-DSCL_FIND_GlobalEnums_BY_PATH")
@@ -133,15 +126,6 @@ if(EXISTS ${CMAKE_BINARY_DIR}/utilities/ColorManip/__rsc_ColorManip_cl_rc.c)
     endif()
 endif()
 
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
+include(cmake/install.cmake)
 
-set(SlopeCraft_readme_and_license_files
-
-    LICENSE
-    README.md
-    README-en.md
-    license-translations/LICENSE-zh.md
-)
-
-install(FILES ${SlopeCraft_readme_and_license_files}
-    DESTINATION ${CMAKE_INSTALL_PREFIX})
+include(cpack/make-packs.cmake)

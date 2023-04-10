@@ -17,28 +17,30 @@ set(SlopeCraft_SCL_Cpp_include_files
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     # install for applications
     install(TARGETS SlopeCraftL
-        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
-        LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX})
+        RUNTIME DESTINATION .
+        LIBRARY DESTINATION .)
 
     # install to lib dirs
     install(TARGETS SlopeCraftL
-        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/Cpp/bin
-        LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/Cpp/lib
+        RUNTIME DESTINATION ./../install_SlopeCraftL/Cpp/bin
+        LIBRARY DESTINATION ./../install_SlopeCraftL/Cpp/lib
 
-        # LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/Cpp/lib
+        # LIBRARY DESTINATION ./../install_SlopeCraftL/Cpp/lib
     )
 
     # install(TARGETS SlopeCraftL_C
-    # RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/C/bin
-    # LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/C/lib
+    # RUNTIME DESTINATION ./../install_SlopeCraftL/C/bin
+    # LIBRARY DESTINATION ./../install_SlopeCraftL/C/lib
 
-    # LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/C/lib
+    # LIBRARY DESTINATION ./../install_SlopeCraftL/C/lib
     # )
     install(FILES ${SlopeCraft_SCL_Cpp_include_files}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/Cpp/include)
+        DESTINATION ./../install_SlopeCraftL/Cpp/include)
 
     # install(FILES ${SlopeCraft_SCL_C_include_files}
-    # DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/C/include)
+    # DESTINATION ./../install_SlopeCraftL/C/include)
+    SlopeCraft_install_if_is_shared(ZLIB::ZLIB .)
+
     return()
 endif()
 
