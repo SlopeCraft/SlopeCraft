@@ -47,6 +47,10 @@ void VCWind::on_ac_browse_block_triggered() noexcept {
   bb->show();
 }
 
+void VCWind::on_ac_tutorial_triggered() noexcept {
+  QDesktopServices::openUrl(QUrl{"https://slopecraft.readthedocs.io/"});
+}
+
 void VCWind::on_ac_about_VisualCraft_triggered() noexcept {
   QMessageBox::information(
       this, VCWind::tr("关于 VisualCraft"),

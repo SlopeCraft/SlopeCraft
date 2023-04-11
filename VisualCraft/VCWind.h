@@ -217,6 +217,7 @@ class VCWind : public QMainWindow {
   void on_tabWidget_main_currentChanged(int page) noexcept;
 
   // auto connected
+  void on_ac_tutorial_triggered() noexcept;
   void on_ac_about_VisualCraft_triggered() noexcept;
   void on_ac_contact_bilibili_triggered() noexcept;
   void on_ac_contact_github_repo_triggered() noexcept;

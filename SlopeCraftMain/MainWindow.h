@@ -149,6 +149,8 @@ class MainWindow : public QMainWindow {
 
   // void when_network_finished(QNetworkReply *reply, bool is_manually);
 
+  void on_actionTutorial_triggered();
+
   void contactG();
   void contactB();
   // 翻页的自定义槽

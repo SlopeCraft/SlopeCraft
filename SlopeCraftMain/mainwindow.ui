@@ -3746,6 +3746,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
     </widget>
     <addaction name="actionAboutSlopeCraft"/>
     <addaction name="separator"/>
+    <addaction name="actionTutorial"/>
     <addaction name="menu"/>
     <addaction name="actionReportBugs"/>
     <addaction name="actionCheckUpdates"/>
@@ -4018,6 +4019,11 @@ li.checked::marker { content: &quot;\2612&quot;; }
   <action name="actionExportWESchem">
    <property name="text">
     <string>WE原理图</string>
+   </property>
+  </action>
+  <action name="actionTutorial">
+   <property name="text">
+    <string>使用教程</string>
    </property>
   </action>
  </widget>

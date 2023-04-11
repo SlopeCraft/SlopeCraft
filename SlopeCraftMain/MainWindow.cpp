@@ -360,6 +360,10 @@ void MainWindow::InitializeAll() {
   }
 }
 
+void MainWindow::on_actionTutorial_triggered() {
+  QDesktopServices::openUrl(QUrl{"https://slopecraft.readthedocs.io/"});
+}
+
 void MainWindow::contactG() {
   QDesktopServices::openUrl(QUrl("https://github.com/SlopeCraft/SlopeCraft"));
 }

@@ -1205,6 +1205,7 @@
      <addaction name="ac_contact_github_repo"/>
     </widget>
     <addaction name="ac_about_VisualCraft"/>
+    <addaction name="ac_tutorial"/>
     <addaction name="ac_report_bugs"/>
     <addaction name="menu_contact"/>
     <addaction name="ac_check_update"/>
@@ -1320,6 +1321,11 @@
   <action name="ac_flush_warnings">
    <property name="text">
     <string>刷新警告信息</string>
+   </property>
+  </action>
+  <action name="ac_tutorial">
+   <property name="text">
+    <string>使用教程</string>
    </property>
   </action>
  </widget>

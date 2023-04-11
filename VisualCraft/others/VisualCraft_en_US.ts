@@ -517,51 +517,56 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
         <translation>Contact developer</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1257"/>
+        <location filename="../VCWind.ui" line="1258"/>
         <source>关于VisualCraft</source>
         <translation>About VisualCraft</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1262"/>
+        <location filename="../VCWind.ui" line="1263"/>
         <source>反馈bug</source>
         <translation>Report bugs</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1267"/>
-        <location filename="../VCWind.ui" line="1288"/>
+        <location filename="../VCWind.ui" line="1268"/>
+        <location filename="../VCWind.ui" line="1289"/>
         <source>Github仓库</source>
         <translation>Github repository</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1272"/>
+        <location filename="../VCWind.ui" line="1273"/>
         <source>bilibili</source>
         <translatorcomment>?</translatorcomment>
         <translation>bilibili</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1296"/>
+        <location filename="../VCWind.ui" line="1297"/>
         <source>生成测试投影</source>
         <translation>Generate testing litematic</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1304"/>
+        <location filename="../VCWind.ui" line="1305"/>
         <source>查看所有颜色</source>
         <translation>Browse all colors</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1312"/>
+        <location filename="../VCWind.ui" line="1313"/>
         <source>查看可用颜色</source>
         <translation>Browse avaliable colors</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1317"/>
+        <location filename="../VCWind.ui" line="1318"/>
         <source>检查更新</source>
         <translation>Check updates</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1322"/>
+        <location filename="../VCWind.ui" line="1323"/>
         <source>刷新警告信息</source>
         <translation>Flush warnings</translation>
+    </message>
+    <message>
+        <location filename="../VCWind.ui" line="1328"/>
+        <source>使用教程</source>
+        <translation>Tutorial</translation>
     </message>
     <message>
         <location filename="../VCWind.ui" line="796"/>
@@ -649,22 +654,22 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
         <translation>About</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1234"/>
+        <location filename="../VCWind.ui" line="1235"/>
         <source>方块</source>
         <translation>Blocks</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1239"/>
+        <location filename="../VCWind.ui" line="1240"/>
         <source>加载资源</source>
         <translation>Load resources</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1244"/>
+        <location filename="../VCWind.ui" line="1245"/>
         <source>设置可用的方块</source>
         <translation>Set avaliable blocks</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1252"/>
+        <location filename="../VCWind.ui" line="1253"/>
         <source>生物群系</source>
         <translation>Biomes</translation>
     </message>
@@ -714,22 +719,22 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
     <message>
         <location filename="../VCWind.cpp" line="94"/>
         <source>原版 json</source>
-        <translation type="unfinished"></translation>
+        <translation>Vanilla</translation>
     </message>
     <message>
         <location filename="../VCWind.cpp" line="299"/>
         <source>选择方块 id json 文件</source>
-        <translation type="unfinished"></translation>
+        <translation>Select block id json file</translation>
     </message>
     <message>
         <location filename="../VCWind.cpp" line="480"/>
         <source>方块状态列表 json 解析失败</source>
-        <translation type="unfinished"></translation>
+        <translation>Failed to parse block state json list</translation>
     </message>
     <message>
         <location filename="../VCWind.cpp" line="500"/>
         <source>资源包/方块状态列表 json 解析失败</source>
-        <translation type="unfinished"></translation>
+        <translation>The resource pack or block list json failed to be parsed</translation>
     </message>
     <message>
         <location filename="../VCWind.cpp" line="501"/>
@@ -777,12 +782,12 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
         <translation>This error is considered to be impossible.</translation>
     </message>
     <message>
-        <location filename="../VCWind_subwindows.cpp" line="52"/>
+        <location filename="../VCWind_subwindows.cpp" line="56"/>
         <source>关于 VisualCraft</source>
         <translation>About VisualCraft</translation>
     </message>
     <message>
-        <location filename="../VCWind_subwindows.cpp" line="53"/>
+        <location filename="../VCWind_subwindows.cpp" line="57"/>
         <source>VisualCraft 是一款全新的 Minecraft 像素画生成器，由 MC 玩家 TokiNoBug 开发，是 SlopeCraft 的子项目。与其他类似的软件不同，VisualCraft 旨在跟进最新的 MC 版本 (1.12~最新版)、支持最多的 MC 特性，提供最强大的功能。
 
 </source>
@@ -791,7 +796,7 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
 </translation>
     </message>
     <message>
-        <location filename="../VCWind_subwindows.cpp" line="59"/>
+        <location filename="../VCWind_subwindows.cpp" line="63"/>
         <source>目前 VisualCraft 能够解析许多第三方资源包，也允许自定义增加加新方块。与传统的思路不同，VisualCraft 以方块模型的方式来解析资源包，尽量贴近 Minecraft 的方式，因此支持各种自定义的方块模型。
 
 </source>
@@ -800,7 +805,7 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
 </translation>
     </message>
     <message>
-        <location filename="../VCWind_subwindows.cpp" line="64"/>
+        <location filename="../VCWind_subwindows.cpp" line="68"/>
         <source>在导出方面，VisualCraft 支持 Litematica mod 的投影 (*.litematic)、WorldEdit 原理图 (*.shem)(仅 1.13+可用)、原版结构方块文件 (*.nbt)、平面示意图 (*.png) 等方式。
 
 </source>
@@ -809,7 +814,7 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
 </translation>
     </message>
     <message>
-        <location filename="../VCWind_subwindows.cpp" line="68"/>
+        <location filename="../VCWind_subwindows.cpp" line="72"/>
         <source>VisualCraft 支持用各种透明方块互相叠加，产生更多的颜色。软件最多支持不超过 65534 种颜色，受此限制，像素画的层数不超过3 层。
 
 </source>
@@ -818,7 +823,7 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
 </translation>
     </message>
     <message>
-        <location filename="../VCWind_subwindows.cpp" line="72"/>
+        <location filename="../VCWind_subwindows.cpp" line="76"/>
         <source>由于颜色数量很多，VisualCraft 使用了显卡加速。目前支持的 API 有 OpenCL。现在正在使用的 API 是%1</source>
         <translation>The great amount of colors makes GPU accleration necessary. Now OpenCL is supported, and %1 is what currently being used.</translation>
     </message>
