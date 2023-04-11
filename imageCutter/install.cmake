@@ -1,5 +1,7 @@
 set(AppName imageCutter)
-configure_file(${CMAKE_SOURCE_DIR}/cmake/deploy_qt.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake)
+configure_file(${CMAKE_SOURCE_DIR}/cmake/deploy_qt.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake
+    @ONLY)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     install(TARGETS imageCutter

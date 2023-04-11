@@ -1,3 +1,5 @@
+# This file is expected to be run during installation
+
 if(${WIN32})
     message(STATUS "Running windeployqt for @AppName@ ...")
     execute_process(
@@ -5,6 +7,8 @@ if(${WIN32})
         WORKING_DIRECTORY "@CMAKE_INSTALL_PREFIX@"
         OUTPUT_QUIET
         COMMAND_ERROR_IS_FATAL ANY)
+
+    message(STATUS "Current directory: ${CMAKE_CURRENT_SOURCE_DIR}")
 
     return()
 endif()
