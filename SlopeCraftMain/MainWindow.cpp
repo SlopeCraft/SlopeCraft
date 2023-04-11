@@ -137,7 +137,7 @@ MainWindow::MainWindow(QWidget *parent)
   connect(ui->action_export_avaliable_color_list, &QAction::triggered, this,
           &MainWindow::exportAvailableColors);
 
-  qDebug("成功 connect 所有的菜单");
+  // qDebug("成功 connect 所有的菜单");
 
   connect(ui->NextPage, &QPushButton::clicked, this, &MainWindow::turnToPage2);
   connect(ui->NextPage2, &QPushButton::clicked, this, &MainWindow::turnToPage3);
@@ -155,7 +155,7 @@ MainWindow::MainWindow(QWidget *parent)
   connect(ui->FinshExData, &QPushButton::clicked, this,
           &MainWindow::turnToPage8);
   connect(ui->Exit, &QPushButton::clicked, this, &MainWindow::close);
-  qDebug("成功 connect 所有的翻页按钮");
+  // qDebug("成功 connect 所有的翻页按钮");
 
   connect(ui->isGame12, &QRadioButton::toggled, this,
           &MainWindow::onGameVerClicked);
@@ -259,7 +259,7 @@ void MainWindow::showPreview() {
   int totalNum = 0;
   kernel->getBlockCounts(&totalNum, preWind->BlockCount.data());
 
-  qDebug() << "去重前有：" << preWind->Src.size() << "个元素";
+  // qDebug() << "去重前有：" << preWind->Src.size() << "个元素";
   auto iS = preWind->Src.begin();
   for (auto ib = preWind->BlockCount.begin();
        ib != preWind->BlockCount.end();) {
@@ -278,8 +278,8 @@ void MainWindow::showPreview() {
 
   kernel->get3DSize(&preWind->size[0], &preWind->size[1], &preWind->size[2]);
 
-  qDebug() << "去重后有：" << preWind->Src.size() << "个元素";
-  // preWind->Water=Blocks[12][0];
+  // qDebug() << "去重后有：" << preWind->Src.size() << "个元素";
+  //  preWind->Water=Blocks[12][0];
   preWind->Water = Manager->getQRadioButtonList()[12];
   // preWind->Src[1]=Blocks[1][0];preWind->BlockCount[1]=1919810;
   EImage tempE;
@@ -661,8 +661,8 @@ void MainWindow::on_ImportSettings_clicked() {
 
 void MainWindow::ReceiveTPS(tpS t) {
   this->Strategy = t;
-  qDebug("接收成功");
-  qDebug() << "pTpS=" << t.pTpS << ". hTpS=" << t.hTpS;
+  // qDebug("接收成功");
+  // qDebug() << "pTpS=" << t.pTpS << ". hTpS=" << t.hTpS;
 }
 
 QRgb ComposeColor(const QRgb front, const QRgb back) {
@@ -679,10 +679,10 @@ QRgb ComposeColor(const QRgb front, const QRgb back) {
 
 inline void MainWindow::preProcess(char pureTpStrategy, char halfTpStrategy,
                                    QRgb BGC) {
-  qDebug("调用了 preProcess");
-  // 透明像素处理策略：B->替换为背景色；A->空气；W->暂缓，等待处理
-  // 半透明像素处理策略：B->替换为背景色；C->与背景色叠加；R->保留颜色；W->暂缓，等待处理
-  qDebug("Cpoied");
+  // qDebug("调用了 preProcess");
+  //  透明像素处理策略：B->替换为背景色；A->空气；W->暂缓，等待处理
+  //  半透明像素处理策略：B->替换为背景色；C->与背景色叠加；R->保留颜色；W->暂缓，等待处理
+  // qDebug("Cpoied");
   bool hasTotalTrans = false;
   if (pureTpStrategy != 'W' && halfTpStrategy != 'W') {
     QRgb *CL = nullptr;
@@ -696,7 +696,7 @@ inline void MainWindow::preProcess(char pureTpStrategy, char halfTpStrategy,
               continue;
             case 'A':
               if (!hasTotalTrans) {
-                qDebug() << "发现纯透明像素";
+                // qDebug() << "发现纯透明像素";
                 hasTotalTrans = true;
               }
               CL[c] = qRgba(0, 0, 0, 0);
@@ -950,13 +950,13 @@ void MainWindow::algoProgressAdd(void *p, int deltaVal) {
 
 void MainWindow::on_Convert_clicked() {
   if (kernel->queryStep() < SlopeCraft::step::wait4Image) {
-    qDebug("setType again");
+    // qDebug("setType again");
     onBlockListChanged();
     if (kernel->queryStep() < SlopeCraft::step::wait4Image) return;
   }
 
   if (kernel->queryStep() < SlopeCraft::step::convertionReady) {
-    qDebug("setImage again");
+    // qDebug("setImage again");
     kernelSetImg();
     if (kernel->queryStep() < SlopeCraft::step::convertionReady) return;
   }
@@ -1903,8 +1903,6 @@ void MainWindow::testBlockList() {
     // cerr<<"Success"<<endl;
     return;
   } else {
-    cerr << "Failed to export test file : error info = " << failed_file_name
-         << endl;
     QMessageBox::warning(this, tr("测试方块列表失败"),
                          tr("具体信息：") + failed_file_name);
   }
@@ -1944,13 +1942,12 @@ void MainWindow::exportAvailableColors() {
 
   QImage img(row_pixels, col_pixels, QImage::Format::Format_ARGB32);
 
-  img.fill(0x00FFFFFFU);
-
   if (img.isNull()) {
-    std::cout << "File " << __FILE__ << ", Line " << __LINE__
-              << ", the image is null, memory allocation failed" << endl;
+    QMessageBox::warning(this, tr("保存颜色表失败"), tr("分配内存失败"));
     return;
   }
+
+  img.fill(0x00FFFFFFU);
 
   Eigen::Map<
       Eigen::Array<uint32_t, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>

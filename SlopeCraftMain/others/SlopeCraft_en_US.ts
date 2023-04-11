@@ -1216,19 +1216,29 @@ Check your map type, remember that file-only map can&apos;t be exported as litem
         <translation>Svae structure file for blocklist testing</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1908"/>
+        <location filename="../MainWindow.cpp" line="1906"/>
         <source>测试方块列表失败</source>
         <translation>Failed to test the block list.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1909"/>
+        <location filename="../MainWindow.cpp" line="1907"/>
         <source>具体信息：</source>
         <translation>Detailed information:</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1939"/>
+        <location filename="../MainWindow.cpp" line="1937"/>
         <source>保存颜色表</source>
         <translation>Save palette</translation>
+    </message>
+    <message>
+        <location filename="../MainWindow.cpp" line="1946"/>
+        <source>保存颜色表失败</source>
+        <translation>Failed to save colormap image</translation>
+    </message>
+    <message>
+        <location filename="../MainWindow.cpp" line="1946"/>
+        <source>分配内存失败</source>
+        <translation>Failed to allocate memory for image</translation>
     </message>
 </context>
 <context>
