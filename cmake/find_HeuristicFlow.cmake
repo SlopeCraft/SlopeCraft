@@ -30,7 +30,7 @@ if(${SlopeCraft_download_HeuristicFlow})
     #if()
     message(STATUS "Cloning HeuristicFlow...")
     execute_process(
-        COMMAND git clone https://github.com/ToKiNoBug/HeuristicFlow.git
+        COMMAND git clone https://github.com/SlopeCraft/HeuristicFlow.git
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/3rdParty
         COMMAND_ERROR_IS_FATAL ANY
         ECHO_ERROR_VARIABLE
