@@ -15,7 +15,6 @@ set(CPACK_DEBIAN_PACKAGE_DEPENDS
     libqt6gui6
     libqt6widgets6
     libqt6network6
-    libqt6concurrent6
     libopengl0
     libqt6opengl6
     libqt6openglwidgets6

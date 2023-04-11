@@ -12,7 +12,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 COMPONENTS Widgets LinguistTools Network Concurrent REQUIRED)
+find_package(Qt6 COMPONENTS Widgets LinguistTools Network REQUIRED)
 
 set(SlopeCraftMain_windows_rc_file)
 
@@ -104,7 +104,6 @@ target_link_libraries(SlopeCraft
     SlopeCraftL
     Qt6::Widgets
     Qt6::Network
-    Qt6::Concurrent
     VersionDialog
 )
 

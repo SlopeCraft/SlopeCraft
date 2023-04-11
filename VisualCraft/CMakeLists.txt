@@ -7,7 +7,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 COMPONENTS Widgets LinguistTools Network Concurrent REQUIRED)
+find_package(Qt6 COMPONENTS Widgets LinguistTools Network REQUIRED)
 
 find_package(magic_enum REQUIRED)
 
@@ -92,7 +92,6 @@ target_link_libraries(VisualCraft PRIVATE
     VisualCraftL
     Qt6::Widgets
     Qt6::Network
-    Qt6::Concurrent
     magic_enum::magic_enum
     OpenMP::OpenMP_CXX
     VersionDialog
