@@ -1,3 +1,5 @@
+# This file is expected to be run during cpack
+
 # message(STATUS "Copying qt deployed files")
 
 set(SlopeCraft_pack_dest ${CPACK_PACKAGE_DIRECTORY}/_CPack_Packages/${CPACK_SYSTEM_NAME}/${CPACK_GENERATOR}/${CPACK_PACKAGE_FILE_NAME})
@@ -10,6 +12,7 @@ file(COPY ${deployed_dlls} DESTINATION ${SlopeCraft_pack_dest})
 function(SlopeCraft_glob_and_copy sub_dir_name pack_dest)
     message(STATUS "Copying @CMAKE_INSTALL_PREFIX@/${sub_dir_name} to ${pack_dest}/${sub_dir_name}")
     file(GLOB temp "@CMAKE_INSTALL_PREFIX@/${sub_dir_name}/*")
+
     file(COPY ${temp} DESTINATION ${pack_dest}/${sub_dir_name})
 endfunction(SlopeCraft_glob_and_copy)
 
