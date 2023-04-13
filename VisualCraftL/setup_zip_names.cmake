@@ -1,5 +1,5 @@
 set(VCL_app_files
-    ${CMAKE_CURRENT_SOURCE_DIR}/VCL_blocks_fixed.json)
+    ${CMAKE_SOURCE_DIR}/VisualCraftL/VCL_blocks_fixed.json)
 
 include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips.cmake)
 
