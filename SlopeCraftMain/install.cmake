@@ -21,37 +21,37 @@ if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     # Install for macOS
     # Install app
     install(TARGETS SlopeCraft
-        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
-        BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX}
+        RUNTIME DESTINATION .
+        BUNDLE DESTINATION .
     )
 
     # Install icons
     file(GLOB SlopeCraft_Icon
         ${CMAKE_SOURCE_DIR}/SlopeCraftMain/others/SlopeCraftIconNew.icns)
     install(FILES ${SlopeCraft_Icon}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/SlopeCraft.app/Contents/Resources)
+        DESTINATION SlopeCraft.app/Contents/Resources)
 
     # Install FixedBlocks.json, CustomBlocks.json and README.md
     install(FILES ${SlopeCraft_install_jsons}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/SlopeCraft.app/Contents/MacOS/Blocks)
+        DESTINATION SlopeCraft.app/Contents/MacOS/Blocks)
     file(COPY ${SlopeCraft_install_jsons}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/SlopeCraft.app/Contents/MacOS/Blocks)
 
     # Install all png files of fixedblocks
     install(FILES ${SlopeCraft_install_png_fixedblocks}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/SlopeCraft.app/Contents/MacOS/Blocks/FixedBlocks)
+        DESTINATION SlopeCraft.app/Contents/MacOS/Blocks/FixedBlocks)
     file(COPY ${SlopeCraft_install_png_fixedblocks}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/SlopeCraft.app/Contents/MacOS/Blocks/FixedBlocks)
 
     # Install all png files of customblocks
     install(FILES ${SlopeCraft_install_png_customblocks}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/SlopeCraft.app/Contents/MacOS/Blocks/CustomBlocks)
+        DESTINATION SlopeCraft.app/Contents/MacOS/Blocks/CustomBlocks)
     file(COPY ${SlopeCraft_install_png_customblocks}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/SlopeCraft.app/Contents/MacOS/Blocks/CustomBlocks)
 
     # Install presets
     install(FILES ${SlopeCraft_install_presets}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/SlopeCraft.app/Contents/MacOS/Blocks/Presets)
+        DESTINATION SlopeCraft.app/Contents/MacOS/Blocks/Presets)
     file(COPY ${SlopeCraft_install_presets}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/SlopeCraft.app/Contents/MacOS/Blocks/Presets)
     return()

@@ -35,15 +35,15 @@ endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     install(TARGETS imageCutter
-        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
-        BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX}
+        RUNTIME DESTINATION .
+        BUNDLE DESTINATION .
     )
 
     # Install icon for macOS
     file(GLOB imageCutter_Icon
         ${CMAKE_SOURCE_DIR}/imageCutter/others/imageCutterIconNew.icns)
     install(FILES ${imageCutter_Icon}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/imageCutter.app/Contents/Resources)
+        DESTINATION imageCutter.app/Contents/Resources)
 
     return()
 endif()
