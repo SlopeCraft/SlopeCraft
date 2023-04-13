@@ -40,21 +40,23 @@ jobs:
           cmake --build . --parallel
           cmake --install .
           cd install
-          macdeployqt SlopeCraft.app
           chmod +x SlopeCraft.app/Contents/MacOS/SlopeCraft
-          macdeployqt MapViewer.app
           chmod +x MapViewer.app/Contents/MacOS/MapViewer
-          macdeployqt imageCutter.app
           chmod +x imageCutter.app/Contents/MacOS/imageCutter
           chmod +x VisualCraft.app/Contents/MacOS/VisualCraft
           chmod +x vccl.app/Contents/MacOS/vccl
+      - name: Compress as zip
+        run: | 
+          cd ./build/install
+          zip -9 -r SlopeCraft-5.0.0-macos.zip ./*
+
       - name: Get short SHA
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-macos
-          path: build/install
+          path: build/install/SlopeCraft-5.0.0-macos.zip
   
   linux-build:
     runs-on: ubuntu-latest
