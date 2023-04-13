@@ -38,13 +38,18 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    include(${CMAKE_SOURCE_DIR}/VisualCraftL/setup_zip_names.cmake)
     install(TARGETS VisualCraft
-        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
-        BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX})
+        RUNTIME DESTINATION .
+        BUNDLE DESTINATION .)
 
     # Install config json file, VisualCraft will try to find it by ./vc-config.json
     install(FILES vc-config.json
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/VisualCraft.app/Contents/MacOS)
+        DESTINATION VisualCraft.app/Contents/MacOS)
+
+    # Install zips. In vccl-config.json or vc-config.json, they are refered like ./Blocks_VCL/Vanilla_1_19_3.zip
+    install(FILES ${VCL_app_files}
+        DESTINATION VisualCraft.app/Contents/MacOS/Blocks_VCL)
 
     # Run macdeployqt at install time
     install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake)

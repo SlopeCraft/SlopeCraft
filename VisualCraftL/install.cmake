@@ -1,21 +1,4 @@
-
-
-set(VCL_app_files
-    ${CMAKE_CURRENT_SOURCE_DIR}/VCL_blocks_fixed.json)
-
-include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips.cmake)
-
-foreach(mcver RANGE 12 19)
-    set(VCL_current_var_name VCL_resource_${mcver})
-
-    if(NOT DEFINED ${VCL_current_var_name})
-        message(WARNING "${VCL_current_var_name} is not defined")
-    endif()
-
-    list(APPEND VCL_app_files ${${VCL_current_var_name}})
-endforeach(mcver RANGE 12 19)
-
-unset(mcver)
+include(setup_zip_names.cmake)
 
 set(VCL_include_headers
     VisualCraftL.h
@@ -69,16 +52,16 @@ endif()
 
 if(${APPLE})
     install(TARGETS VisualCraftL
-        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
-        LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX})
+        RUNTIME DESTINATION .
+        LIBRARY DESTINATION .)
 
+    # zips and blocklist jsons are installed inside each macos bundle
     # Install zips. In vccl-config.json or vc-config.json, they are refered like ./Blocks_VCL/Vanilla_1_19_3.zip
-    install(FILES ${VCL_app_files}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/Blocks_VCL)
-
+    # install(FILES ${VCL_app_files}
+    # DESTINATION Blocks_VCL)
     install(TARGETS VisualCraftL
-        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/Cpp/bin
-        LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/../install_SlopeCraftL/Cpp/lib)
+        RUNTIME DESTINATION ../install_SlopeCraftL/Cpp/bin
+        LIBRARY DESTINATION ../install_SlopeCraftL/Cpp/lib)
     return()
 endif()
 
