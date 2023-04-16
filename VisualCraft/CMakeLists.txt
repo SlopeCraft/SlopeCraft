@@ -113,7 +113,7 @@ set_target_properties(VisualCraft PROPERTIES
 # translation
 qt_add_lrelease(VisualCraft TS_FILES ${VisualCraft_ts_files}
     QM_FILES_OUTPUT_VARIABLE VC_qm_files)
-qt_add_resources(VisualCraft "translations"
+qt_add_resources(VisualCraft "VC_translations"
     PREFIX "/i18n"
     BASE ${CMAKE_CURRENT_BINARY_DIR}
     FILES ${VC_qm_files}

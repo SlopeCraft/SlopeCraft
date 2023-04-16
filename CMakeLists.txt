@@ -81,7 +81,7 @@ if(${SlopeCraft_vectorize})
 
     message(STATUS "Vectorize using " ${SlopeCraft_vectorize_flags})
 
-    # add_compile_options(${SlopeCraft_vectorize_flags})
+    add_compile_options(${SlopeCraft_vectorize_flags})
 
     # list(APPEND SlopeCraft_vectorize_flags "-O3")
 endif()
@@ -89,7 +89,8 @@ endif()
 if(${LINUX})
     message(STATUS "setting runpath for linux")
     set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
-    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
+    #set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+    #set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 endif()
 
 if(${WIN32})

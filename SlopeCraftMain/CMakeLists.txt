@@ -88,7 +88,7 @@ qt_add_executable(SlopeCraft
 qt_add_lrelease(SlopeCraft TS_FILES ${SlopeCraftMain_ts_files}
     QM_FILES_OUTPUT_VARIABLE SC_qm_files)
 
-qt_add_resources(SlopeCraft "translations"
+qt_add_resources(SlopeCraft "SC_translations"
     PREFIX "/i18n"
     BASE ${CMAKE_CURRENT_BINARY_DIR}
     FILES ${SC_qm_files})
