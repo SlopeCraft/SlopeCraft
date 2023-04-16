@@ -1030,7 +1030,7 @@ font: 11pt &quot;微软雅黑&quot;;
          <number>9</number>
         </property>
         <item>
-         <widget class="QLabel" name="ShowRawPic">
+         <widget class="AdaptiveLabel" name="ShowRawPic">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -1039,8 +1039,8 @@ font: 11pt &quot;微软雅黑&quot;;
           </property>
           <property name="minimumSize">
            <size>
-            <width>440</width>
-            <height>440</height>
+            <width>0</width>
+            <height>0</height>
            </size>
           </property>
           <property name="styleSheet">
@@ -1056,7 +1056,7 @@ font: 11pt &quot;微软雅黑&quot;;
            <pixmap>:/new/Pic/BG2.png</pixmap>
           </property>
           <property name="scaledContents">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -1822,8 +1822,8 @@ font: 11pt &quot;微软雅黑&quot;;
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>78</width>
-               <height>22</height>
+               <width>554</width>
+               <height>372</height>
               </rect>
              </property>
              <property name="sizePolicy">
@@ -2422,7 +2422,7 @@ Litematica投影</string>
          </layout>
         </item>
         <item row="1" column="0">
-         <widget class="QLabel" name="ShowPic">
+         <widget class="AdaptiveLabel" name="ShowPic">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -2448,7 +2448,7 @@ Litematica投影</string>
            <pixmap>:/new/Pic/BG2.png</pixmap>
           </property>
           <property name="scaledContents">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -4027,6 +4027,13 @@ li.checked::marker { content: &quot;\2612&quot;; }
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>AdaptiveLabel</class>
+   <extends>QLabel</extends>
+   <header>AdaptiveLabel.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>isMapSurvival</tabstop>
   <tabstop>isMapFlat</tabstop>

@@ -100,6 +100,7 @@ qt_add_resources(SlopeCraft "translations"
 # ${CMAKE_SOURCE_DIR}/CMakeLists.txt)
 target_link_libraries(SlopeCraft
     PRIVATE
+    AdaptiveLabel
     BlockListManager
     SlopeCraftL
     Qt6::Widgets
