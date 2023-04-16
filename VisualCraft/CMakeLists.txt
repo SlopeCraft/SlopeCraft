@@ -102,7 +102,7 @@ target_include_directories(VisualCraft PRIVATE ${SlopeCraft_Nlohmann_json_includ
 set_target_properties(VisualCraft PROPERTIES
     VERSION ${PROJECT_VERSION}
 
-    # MACOSX_BUNDLE_ICON_FILE SlopeCraftIconNew.icns
+    MACOSX_BUNDLE_ICON_FILE SlopeCraftIconNew.icns
     MACOSX_BUNDLE_GUI_IDENTIFIER "com.github.ToKiNoBug.SlopeCraft"
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
