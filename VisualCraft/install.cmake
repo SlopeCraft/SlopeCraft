@@ -43,6 +43,12 @@ if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
         RUNTIME DESTINATION .
         BUNDLE DESTINATION .)
 
+    # Install icons
+    file(GLOB SlopeCraft_Icon
+        ${CMAKE_SOURCE_DIR}/VisualCraft/others/VisualCraft.icns)
+    install(FILES ${SlopeCraft_Icon}
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/VisualCraft.app/Contents/Resources)
+
     # Install config json file, VisualCraft will try to find it by ./vc-config.json
     install(FILES vc-config.json
         DESTINATION VisualCraft.app/Contents/MacOS)

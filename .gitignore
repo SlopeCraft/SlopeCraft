@@ -66,12 +66,13 @@ install/
 3rdParty/*
 .vscode/settings.json
 
-### build
+### build ###
 build/*
 binaries/*
-
-### ide
 .vscode/*
 .vs/*
 .cache/*
+
+### CLion ###
 .idea/*
+cmake-build-debug/*
