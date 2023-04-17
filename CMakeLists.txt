@@ -57,9 +57,7 @@ list(LENGTH CMAKE_PREFIX_PATH temp_L)
 include(cmake/find_nlohmann_json.cmake)
 include(cmake/find_Eigen3.cmake)
 include(cmake/find_HeuristicFlow.cmake)
-
 include(cmake/find_qt6.cmake)
-
 include(cmake/install_if_is_shared.cmake)
 
 add_definitions("-D_USE_MATH_DEFINES")
@@ -67,10 +65,8 @@ add_definitions("-DSCL_FIND_GlobalEnums_BY_PATH")
 
 # if don't vectorize, or no suitable flag found, this variable will be empty
 set(SlopeCraft_vectorize_flags)
-
 if(${SlopeCraft_vectorize})
     include(CheckCXXCompilerFlag)
-
     add_definitions("-DSC_VECTORIZE_AVX2")
 
     if(${MSVC})
@@ -80,9 +76,7 @@ if(${SlopeCraft_vectorize})
     endif()
 
     message(STATUS "Vectorize using " ${SlopeCraft_vectorize_flags})
-
     add_compile_options(${SlopeCraft_vectorize_flags})
-
     # list(APPEND SlopeCraft_vectorize_flags "-O3")
 endif()
 
