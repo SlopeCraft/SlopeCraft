@@ -61,7 +61,7 @@ jobs:
       - name: test vccl
         run: |
           cd ./build/install 
-          otool -L ./vccl
+          otool -L -d ./vccl
       #- name: Run VisualCraft in lldb
       #  if: matrix.build_type == 'Debug'
       #  run: |
