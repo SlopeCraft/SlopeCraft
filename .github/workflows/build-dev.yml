@@ -59,8 +59,8 @@ jobs:
           path: build/install/SlopeCraft-5.0.0-macos.zip
       - name: test vccl
         run: |
-        cd ./build/install 
-        ./vccl.app --version
+          cd ./build/install 
+          ./vccl.app --version
       #- name: Run VisualCraft in lldb
       #  if: matrix.build_type == 'Debug'
       #  run: |
