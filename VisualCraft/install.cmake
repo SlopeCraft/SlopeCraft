@@ -47,13 +47,13 @@ if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     file(GLOB SlopeCraft_Icon
         ${CMAKE_SOURCE_DIR}/VisualCraft/others/VisualCraft.icns)
     install(FILES ${SlopeCraft_Icon}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/VisualCraft.app/Contents/Resources)
+        DESTINATION VisualCraft.app/Contents/Resources)
 
     # Install config json file, VisualCraft will try to find it by ./vc-config.json
     install(FILES vc-config.json
         DESTINATION VisualCraft.app/Contents/MacOS)
 
-    # Install zips. In vccl-config.json or vc-config.json, they are refered like ./Blocks_VCL/Vanilla_1_19_3.zip
+    # Install zips. In vccl-config.json or vc-config.json, they are Ereferred like ./Blocks_VCL/Vanilla_1_19_3.zip
     install(FILES ${VCL_app_files}
         DESTINATION VisualCraft.app/Contents/MacOS/Blocks_VCL)
 

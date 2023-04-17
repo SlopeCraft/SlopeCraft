@@ -44,7 +44,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     install(FILES vccl-config.json
         DESTINATION vccl.app/Contents/MacOS)
 
-    # Install zips. In vccl-config.json or vc-config.json, they are refered like ./Blocks_VCL/Vanilla_1_19_3.zip
+    # Install zips. In vccl-config.json or vc-config.json, they are referred like ./Blocks_VCL/Vanilla_1_19_3.zip
     install(FILES ${VCL_app_files}
         DESTINATION vccl.app/Contents/MacOS/Blocks_VCL)
 
