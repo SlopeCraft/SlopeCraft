@@ -283,6 +283,12 @@ class MainWindow : public QMainWindow {
 
   static void algoProgressRangeSet(void *, int min, int max, int val);
   static void algoProgressAdd(void *, int deltaVal);
+
+  int mapRows() const noexcept;
+  int mapCols() const noexcept;
+  int mapCount() const noexcept;
+
+  std::vector<QString> existingMapDataFiles(QString prefix) const noexcept;
 };
 
 using EImage = Eigen::ArrayXX<uint32_t>;

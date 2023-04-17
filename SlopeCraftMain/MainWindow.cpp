@@ -1441,23 +1441,38 @@ void MainWindow::onExportLiteclicked(QString path) {
   return;
 }
 
+constexpr inline int ceil_to_128(int x) noexcept {
+  const bool add_1 = (x % 128) > 0;
+  x = x / 128;
+  if (add_1) {
+    x += 1;
+  }
+  return std::max(1, x);
+}
+
+int MainWindow::mapRows() const noexcept {
+  return ceil_to_128(this->kernel->getImageRows());
+}
+int MainWindow::mapCols() const noexcept {
+  return ceil_to_128(this->kernel->getImageCols());
+}
+int MainWindow::mapCount() const noexcept {
+  return this->mapRows() * this->mapCols();
+}
+
 void MainWindow::on_InputDataIndex_textChanged() {
   bool isIndexValid = false;
   const int indexStart = ui->InputDataIndex->toPlainText().toInt(&isIndexValid);
   isIndexValid = isIndexValid && (indexStart >= 0);
   if (isIndexValid) {
-    if (ceil(kernel->getImageRows() / 128.0f) == 1 &&
-        ceil(kernel->getImageCols() / 128.0f) == 1)
-      ui->ShowDataFileName->setText("map_" + QString::number(indexStart) +
-                                    ".dat");
+    if (this->mapCount() == 1)
+      ui->ShowDataFileName->setText(
+          QStringLiteral("map_%1.dat").arg(indexStart));
     else
       ui->ShowDataFileName->setText(
-          "map_" + QString::number(indexStart) + ".dat" + "~" + "map_" +
-          QString::number(indexStart +
-                          ceil(kernel->getImageRows() / 128.0f) *
-                              ceil(kernel->getImageRows() / 128.0f) -
-                          1) +
-          ".dat");
+          QStringLiteral("map_%1.dat ~ map_%2.dat")
+              .arg(indexStart)
+              .arg(indexStart + this->mapCount() - 1));
     ui->ExportData->setEnabled(true);
     return;
   }
@@ -1469,6 +1484,28 @@ void MainWindow::on_InputDataIndex_textChanged() {
 }
 
 void MainWindow::on_ExportData_clicked() { onExportDataclicked(""); }
+
+std::vector<QString> MainWindow::existingMapDataFiles(
+    QString prefix) const noexcept {
+  std::vector<QString> ret;
+  ret.reserve(this->mapCount());
+  const int start_number = this->ui->InputDataIndex->toPlainText().toInt();
+  if (prefix.back() == '/' || prefix.back() == '\\') {
+  } else {
+    prefix += '/';
+  }
+
+  for (int idx = start_number; idx < this->mapCount() + start_number; idx++) {
+    QString filename = QStringLiteral("map_%1.dat").arg(idx);
+    QString abs_filename = prefix + filename;
+    if (!QFile(abs_filename).exists()) {
+      continue;
+    }
+    ret.emplace_back(filename);
+  }
+
+  return ret;
+}
 
 void MainWindow::onExportDataclicked(QString path) {
   bool isIndexValid = false;
@@ -1492,8 +1529,31 @@ void MainWindow::onExportDataclicked(QString path) {
                              tr("你可以选择存档中的 data 文件夹"));
     return;
   }
-
   this->prevOpenedDir = FolderPath;
+
+  {
+    auto files_to_be_covered = this->existingMapDataFiles(FolderPath);
+    if (files_to_be_covered.size() > 0) {
+      QString files{files_to_be_covered.front()};
+      for (size_t idx = 1; idx < files_to_be_covered.size(); idx++) {
+        files += ';' + files_to_be_covered[idx];
+      }
+
+      auto ret=QMessageBox::warning(
+          this, tr("导出时将会覆盖部分地图文件"),
+          tr("%1 "
+             "个文件将被覆盖：\n%"
+             "2\n\n点击\"Yes\"将继续并覆盖这些文件，点击\"No\"将撤销本次操作。")
+              .arg(files_to_be_covered.size())
+              .arg(files),
+          QMessageBox::StandardButtons{QMessageBox::StandardButton::Yes,
+                                       QMessageBox::StandardButton::No});
+      if(ret==QMessageBox::StandardButton::No) {
+        return;
+      }
+    }
+  }
+
 
   ui->InputDataIndex->setEnabled(false);
   ui->ExportData->setEnabled(false);
@@ -1504,13 +1564,7 @@ void MainWindow::onExportDataclicked(QString path) {
 
   FolderPath = FolderPath.replace('\\', '/');
   ProductDir = FolderPath;
-  const uint32_t fileNum = ceil(kernel->getImageRows() / 128.0f) *
-                           ceil(kernel->getImageRows() / 128.0f);
-  std::vector<char *> unCompressedBuffers(fileNum);
-  for (auto &i : unCompressedBuffers) {
-    i = new char[512];
-  }
-  // int fileCount=0;
+
   kernel->exportAsData(FolderPath.toLocal8Bit().data(), indexStart,
                        //&fileCount,unCompressedBuffers.data()
                        nullptr, nullptr);
