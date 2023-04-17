@@ -48,7 +48,7 @@ jobs:
       - name: Compress as zip
         run: | 
           cd ./build/install
-          zip -9 -r SlopeCraft-5.0.0-macos.zip ./*
+          zip -9 -r -y SlopeCraft-5.0.0-macos.zip ./*
 
       - name: Get short SHA
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
@@ -57,6 +57,10 @@ jobs:
         with:
           name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-macos
           path: build/install/SlopeCraft-5.0.0-macos.zip
+      - name: test vccl
+        run: |
+        cd ./build/install 
+        ./vccl.app --version
       #- name: Run VisualCraft in lldb
       #  if: matrix.build_type == 'Debug'
       #  run: |
