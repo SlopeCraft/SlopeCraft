@@ -1,0 +1,13 @@
+# This script should run during installtion
+
+message(STATUS "Running macdeployqt for @AppName@ ...")
+execute_process(
+    COMMAND "@SlopeCraft_Qt_macdeployqt_executable@" "@AppName@.app"
+    WORKING_DIRECTORY "@CMAKE_INSTALL_PREFIX@/@vccl_prefix@"
+    OUTPUT_QUIET
+    COMMAND_ERROR_IS_FATAL ANY)
+
+file(CREATE_LINK
+    "./@vccl_prefix@/vccl.app/Contents/MacOS/vccl"
+    "@CMAKE_INSTALL_PREFIX@/vccl"
+    SYMBOLIC)
