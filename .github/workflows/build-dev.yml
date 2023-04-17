@@ -58,17 +58,6 @@ jobs:
         with:
           name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-macos
           path: build/install/SlopeCraft-5.0.0-macos.zip
-      - name: test vccl
-        run: |
-          cd ./build/install 
-          ./vccl --version
-      #- name: Run VisualCraft in lldb
-      #  if: matrix.build_type == 'Debug'
-      #  run: |
-      #    cd ./build/install
-      #    lldb ./VisualCraft.app
-      #    run
-      #    quit
   
   linux-build:
     runs-on: ubuntu-latest
