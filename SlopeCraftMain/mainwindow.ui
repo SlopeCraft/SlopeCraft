@@ -33,7 +33,7 @@
    <font/>
   </property>
   <property name="windowTitle">
-   <string notr="true">SlopeCraft v3.10.1  Copyright © 2021-2022 TokiNoBug</string>
+   <string notr="true">SlopeCraft v5.0.1  Copyright © 2021-2023 TokiNoBug</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -674,7 +674,7 @@ font: 11pt &quot;微软雅黑&quot;;
              </font>
             </property>
             <property name="text">
-             <string notr="true">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt; font-weight:700; color:#ffff7f;&quot;&gt;Copyright © 2021-2022 TokiNoBug&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string notr="true">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt; font-weight:700; color:#ffff7f;&quot;&gt;Copyright © 2021-2023 TokiNoBug&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignHCenter|Qt::AlignTop</set>
@@ -1822,8 +1822,8 @@ font: 11pt &quot;微软雅黑&quot;;
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>554</width>
-               <height>372</height>
+               <width>78</width>
+               <height>22</height>
               </rect>
              </property>
              <property name="sizePolicy">
@@ -2449,6 +2449,9 @@ Litematica投影</string>
           </property>
           <property name="scaledContents">
            <bool>false</bool>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
