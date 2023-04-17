@@ -34,8 +34,9 @@ Everything about blocklist is in this directory.
 **CustomBlocks.json** stores all user custom blocks, enabling users to use their favorite blocks in map art. Some slab blocks have been already written in this file as examples. Each block should have a corresponding image in **CustomBlocks** directory. Different blocks can share single image file.
 
 Each block has following attributes:
+
 |       Name       |  Type  | Is Compulsory Item | Default Value | Description                                                                                                |
-| :--------------: | :----: | :----------------: | :-----------: | ---------------------------------------------------------------------------------------------------------- |
+| :--------------: | :----: | :----------------: | :-----------: |:-----------------------------------------------------------------------------------------------------------|
 |    baseColor     |  byte  |        Yes         |               | The base color of this block                                                                               |
 |        id        | string |        Yes         |               | Block id in minecraft with full blockstates, like *minecraft:target[power=0]*                              |
 |     version      |  byte  |        Yes         |               | The earlist version when block is added. 0 means earlier than 1.12, 12 means 1.12, 17 means 1.17 and so on |
