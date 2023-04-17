@@ -23,6 +23,10 @@ This file is part of SlopeCraft.
 #include "TokiSlopeCraft.h"
 #include <zlib.h>
 
+#ifdef RGB
+#undef RGB
+#endif
+
 const Eigen::Array<float, 2, 3> TokiSlopeCraft::DitherMapLR = {
     {0.0 / 16.0, 0.0 / 16.0, 7.0 / 16.0}, {3.0 / 16.0, 5.0 / 16.0, 1.0 / 16.0}};
 const Eigen::Array<float, 2, 3> TokiSlopeCraft::DitherMapRL = {

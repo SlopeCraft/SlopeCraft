@@ -39,6 +39,13 @@ litematic_info::litematic_info()
     : time_created(std::time(nullptr) * 1000),
       time_modified(std::time(nullptr) * 1000) {}
 
+void Schem::resize(int64_t x, int64_t y, int64_t z) noexcept {
+  if (x < 0 || y < 0 || z < 0) {
+    return;
+  }
+  this->xzy.resize(x, z, y);
+}
+
 void Schem::set_block_id(const char *const *const block_ids,
                          const int num) noexcept {
   if (num < 0) {

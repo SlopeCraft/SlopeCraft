@@ -26,6 +26,10 @@ This file is part of SlopeCraft.
 #include <immintrin.h>
 #include <xmmintrin.h>
 
+#ifdef min
+#undef min
+#endif
+
 constexpr uint32_t reverse_color(uint32_t ARGB_src) noexcept {
   return ARGB32(255 - getR(ARGB_src), 255 - getG(ARGB_src),
                 255 - getB(ARGB_src), getA(ARGB_src));

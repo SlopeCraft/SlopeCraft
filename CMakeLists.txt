@@ -17,7 +17,6 @@ option(SlopeCraft_update_ts_no_obsolete "Remove obsolete translations from ts fi
 
 option(SlopeCraft_gprof "Profile with gprof" OFF)
 
-
 # manage the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
     set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install)
@@ -30,8 +29,10 @@ message(STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}")
 if(${MSVC})
     add_compile_options("/Zc:__cplusplus")
     add_compile_options("/wd4819")
-    add_compile_definitions("ZLIB_WINAPI")
-    add_compile_definitions("Z_HAVE_UNISTD_H")
+    add_compile_options("/utf-8")
+
+# add_compile_definitions("ZLIB_WINAPI")
+# 1add_compile_definitions("Z_HAVE_UNISTD_H")
 else()
     add_compile_options(-Wall -Wreturn-type -Wsign-compare -Wextra)
     add_link_options(-flto)
@@ -65,6 +66,7 @@ add_definitions("-DSCL_FIND_GlobalEnums_BY_PATH")
 
 # if don't vectorize, or no suitable flag found, this variable will be empty
 set(SlopeCraft_vectorize_flags)
+
 if(${SlopeCraft_vectorize})
     include(CheckCXXCompilerFlag)
     add_definitions("-DSC_VECTORIZE_AVX2")
@@ -77,14 +79,16 @@ if(${SlopeCraft_vectorize})
 
     message(STATUS "Vectorize using " ${SlopeCraft_vectorize_flags})
     add_compile_options(${SlopeCraft_vectorize_flags})
+
     # list(APPEND SlopeCraft_vectorize_flags "-O3")
 endif()
 
 if(${LINUX})
     message(STATUS "setting runpath for linux")
     set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
-    #set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-    #set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
+
+    # set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+    # set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 endif()
 
 if(${WIN32})
@@ -100,7 +104,6 @@ endif()
 add_compile_definitions(SLOPECRAFTL_NOT_INSTALLED)
 add_compile_definitions(VISUALCRAFTL_NOT_INSTALLED)
 include_directories(${CMAKE_BINARY_DIR}/utilities)
-
 
 add_subdirectory(utilities)
 add_subdirectory(imageCutter)

@@ -47,16 +47,6 @@ Kernel::Kernel() {}
 
 using namespace SlopeCraft;
 
-extern "C" {
-
-SCL_EXPORT Kernel *SCL_createKernel() { return new TokiSlopeCraft; }
-SCL_EXPORT void SCL_destroyKernel(Kernel *k) {
-  delete static_cast<TokiSlopeCraft *>(k);
-}
-
-SCL_EXPORT AbstractBlock *SCL_createBlock() { return new simpleBlock; }
-SCL_EXPORT void SCL_destroyBlock(AbstractBlock *b) { delete b; }
-
 std::pair<uint8_t, simpleBlock> parse_block(
     const nlohmann::json &jo, std::string_view image_dir) noexcept(false) {
   simpleBlock ret;
@@ -150,6 +140,16 @@ BlockListInterface *impl_createBlockList(const char *filename,
 
   return bl;
 }
+
+extern "C" {
+
+SCL_EXPORT Kernel *SCL_createKernel() { return new TokiSlopeCraft; }
+SCL_EXPORT void SCL_destroyKernel(Kernel *k) {
+  delete static_cast<TokiSlopeCraft *>(k);
+}
+
+SCL_EXPORT AbstractBlock *SCL_createBlock() { return new simpleBlock; }
+SCL_EXPORT void SCL_destroyBlock(AbstractBlock *b) { delete b; }
 
 SCL_EXPORT BlockListInterface *SCL_createBlockList(
     const char *filename, const blockListOption &option) {
