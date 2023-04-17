@@ -60,7 +60,7 @@ jobs:
       - name: test vccl
         run: |
           cd ./build/install 
-          ./vccl.app --version
+          ./vccl --version
       #- name: Run VisualCraft in lldb
       #  if: matrix.build_type == 'Debug'
       #  run: |
