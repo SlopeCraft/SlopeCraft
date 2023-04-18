@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install OpenCL
-        run: sudo apt install nvidia-cuda-toolkit libnvidia-compute-525 libnvidia-extra-525 nvidia-utils-525 libnvidia-common-525 opencl-c-headers opencl-clhpp-headers
+        run: sudo apt install nvidia-cuda-toolkit libnvidia-compute-525 libnvidia-extra-525 nvidia-utils-525 libnvidia-common-525 opencl-c-headers opencl-clhpp-headers nvidia-compute-utils-525
         #nvidia-cuda-dev ocl-icd-libopencl1 ocl-icd-opencl-dev ocl-icd-dev 
       - name: List all packages
         run: apt list --installed
