@@ -588,7 +588,7 @@ void MapViewerWind::on_button_load_maps_clicked() {
   }
 
 #pragma omp parallel for schedule(static)
-  for (int idx = 0; idx < this->maps.size(); idx++) {
+  for (int idx = 0; idx < (int)this->maps.size(); idx++) {
     auto &map = this->maps[idx];
     map.image = QImage(128, 128, QImage::Format::Format_ARGB32);
     Eigen::Map<Eigen::Array<ARGB, 128, 128, Eigen::RowMajor>> image_map(
