@@ -9,7 +9,6 @@ jobs:
   
   linux:
     runs-on: ubuntu-latest
-    env:
     steps:
       - name: Install cmake, ninja
         run: sudo apt install cmake ninja-build
