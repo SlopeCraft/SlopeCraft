@@ -55,6 +55,15 @@ set_target_properties(vccl PROPERTIES
     MACOSX_BUNDLE TRUE
 )
 
+if(${WIN32})
+    add_custom_target(SC_create_symlink_VCCL
+        COMMAND mklink VisualCraftL.dll "..\\VisualCraftL\\VisualCraftL.dll"
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        DEPENDS VisualCraftL
+        COMMENT "Create symlink to VisualCraftL.dll for vccl.exe")
+    add_dependencies(SC_create_all_symlinks SC_create_symlink_VCCL)
+endif()
+
 include(install.cmake)
 
 include(add_test_vccl.cmake)

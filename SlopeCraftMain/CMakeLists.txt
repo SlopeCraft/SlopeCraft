@@ -120,4 +120,13 @@ set_target_properties(SlopeCraft PROPERTIES
 
 qt_finalize_executable(SlopeCraft)
 
+if(${WIN32})
+    add_custom_target(SC_create_symlink_SC
+        COMMAND mklink SlopeCraftL.dll "..\\SlopeCraftL\\SlopeCraftL.dll"
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        DEPENDS SlopeCraftL
+        COMMENT "Create symlink to SlopeCraftL.dll for SlopeCraft.exe")
+    add_dependencies(SC_create_all_symlinks SC_create_symlink_SC)
+endif()
+
 include(install.cmake)

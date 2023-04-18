@@ -105,6 +105,11 @@ add_compile_definitions(SLOPECRAFTL_NOT_INSTALLED)
 add_compile_definitions(VISUALCRAFTL_NOT_INSTALLED)
 include_directories(${CMAKE_BINARY_DIR}/utilities)
 
+if(${WIN32})
+    add_custom_target(SC_create_all_symlinks
+        COMMENT "A interface target to create all symlinks on windows")
+endif()
+
 add_subdirectory(utilities)
 add_subdirectory(imageCutter)
 add_subdirectory(SlopeCraftL)
