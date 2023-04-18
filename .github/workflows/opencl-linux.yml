@@ -16,5 +16,7 @@ jobs:
       - name: List all packages
         run: apt list --installed
       - name: find cl.hpp
-        run: sudo find / -name cl.hpp
+        run: | 
+          sudo find / -name cl.hpp > find_clhpp.txt
+          cat ./find_clhpp.txt | grep cl.hpp
 
