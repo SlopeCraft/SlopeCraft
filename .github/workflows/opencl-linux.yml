@@ -23,7 +23,7 @@ jobs:
         run: sudo apt install x11-utils libxcb-xinerama0 libxv1 libgl-dev
         # Without these libs, cmake cannot find Qt6::Gui. But if you install nvidia-cuda-toolkit, they will be installed automatically
       - name: Install OpenCL
-        run: sudo apt install nvidia-cuda-toolkit
+        run: sudo apt install nvidia-cuda-toolkit libnvidia-compute-525 libnvidia-extra-525
         #nvidia-cuda-dev ocl-icd-libopencl1 ocl-icd-opencl-dev ocl-icd-dev opencl-c-headers opencl-clhpp-headers
       - name: List all packages
         run: apt list --installed
