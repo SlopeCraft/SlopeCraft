@@ -23,7 +23,9 @@ jobs:
           wget https://github.com/intel/compute-runtime/releases/download/23.05.25593.11/intel-opencl-icd_23.05.25593.11_amd64.deb
           wget https://github.com/intel/compute-runtime/releases/download/23.05.25593.11/libigdgmm12_22.3.0_amd64.deb
       - name: install
-        run: sudo dpkg -i ./neo/*.deb
+        run: | 
+          sudo apt install ocl-icd-libopencl1
+          sudo dpkg -i ./neo/*.deb
 
       - name: find cl.hpp
         run: sudo find / -name cl.hpp
