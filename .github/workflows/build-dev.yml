@@ -64,7 +64,7 @@ jobs:
     strategy:
       matrix:
         build_type: [Debug, Release]
-        gpu_api: [None]
+        gpu_api: [None, OpenCL]
     env:
       BUILD_TYPE: ${{ matrix.build_type }}
       GPU_API: ${{ matrix.gpu_api }}
@@ -91,11 +91,9 @@ jobs:
       - name: Install additional qt-related packages
         run: sudo apt install x11-utils libxcb-xinerama0 libxv1 libgl-dev
         # Without these libs, cmake cannot find Qt6::Gui. But if you install nvidia-cuda-toolkit, they will be installed automatically
-      #- name: Install OpenCL
-      #  run: sudo apt install nvidia-cuda-toolkit
-        #nvidia-cuda-dev ocl-icd-libopencl1 ocl-icd-opencl-dev ocl-icd-dev opencl-c-headers opencl-clhpp-headers
-      #- name: List all packages
-      #  run: apt list --installed
+      - name: Install intel OpenCL sdk
+        if: matrix.gpu_api == 'OpenCL'
+        run: sudo apt install ocl-icd-libopencl1 ocl-icd-libopencl1 ocl-icd-opencl-dev ocl-icd-dev opencl-c-headers opencl-clhpp-headers
 
       - name: Install xz (Release as tar.xz)
         run: sudo apt install xz-utils
@@ -111,12 +109,6 @@ jobs:
       
       - name: CMake install
         run: cmake --install ./build
-
-      - name: Run CTest
-        if: matrix.build_type == 'Release'
-        run: |
-          cd ./build
-          ctest -j20 --output-on-failure --stop-on-failure
       
       - name: Get short SHA
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
@@ -141,6 +133,12 @@ jobs:
           name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-linux-tar-xz
           path: pack/SlopeCraft*.tar.xz
           if-no-files-found: error
+
+      - name: Run CTest
+        if: matrix.build_type == 'Release'
+        run: |
+          cd ./build
+          ctest -j20 --output-on-failure --stop-on-failure
 
   windows-build:
     runs-on: windows-latest
