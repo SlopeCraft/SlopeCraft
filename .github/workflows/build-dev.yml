@@ -143,29 +143,30 @@ jobs:
         run: |
           cd ./build
           ctest -j20 --output-on-failure --stop-on-failure
+      - name: Test deb pack
+        run: sudo dpkg -i ./pack/*.deb
 
-  linux-test-deb:
-    runs-on: ubunut-latest
-    needs: linux-build
-    strategy:
-      matrix:
-        build_type: [Debug, Release]
-        gpu_api: [None, OpenCL]
-    steps:
-      - name: Get short SHA
-        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
-
-      - name: Download deb
-        uses: actions/download-artifact@v3
-        with: 
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-linux-deb
-
-      - name: ls
-        run: ls .
-
-      - name: Try installing deb
-        run: sudo dpkg -i ./*.deb
-
+ # linux-test-deb:
+ #   runs-on: ubunut-latest
+ #   needs: linux-build
+ #   strategy:
+ #     matrix:
+ #       build_type: [Debug, Release]
+ #       gpu_api: [None, OpenCL]
+ #   steps:
+ #     - name: Get short SHA
+ #       run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+ #
+ #     - name: Download deb
+ #       uses: actions/download-artifact@v3
+ #       with: 
+ #         name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-linux-deb
+ #
+ #     - name: ls
+ #       run: ls .
+ #
+ #     - name: Try installing deb
+ #       run: sudo dpkg -i ./*.deb
 
   windows-build:
     runs-on: windows-latest
