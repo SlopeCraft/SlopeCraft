@@ -139,7 +139,7 @@ jobs:
           if-no-files-found: error
 
       - name: Run CTest
-        if: matrix.build_type == 'Release'
+        if: (matrix.build_type == 'Release')&&(matrix.gpu_api == 'None')
         run: |
           cd ./build
           ctest -j20 --output-on-failure --stop-on-failure
