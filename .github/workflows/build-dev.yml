@@ -86,14 +86,14 @@ jobs:
         run: sudo apt install libzip-dev zipcmp ziptool zipmerge libpng-dev libeigen3-dev
 
       - name: Install qt6
-        run: sudo apt install libqt6widgets6 libqt6gui6 libqt6network6 libqt6concurrent6 qt6-base-dev qt6-tools-dev-tools qt6-tools-dev qt6-l10n-tools
+        run: sudo apt install libqt6widgets6 libqt6gui6 libqt6network6 qt6-base-dev qt6-tools-dev-tools qt6-tools-dev qt6-l10n-tools
       
       - name: Install additional qt-related packages
         run: sudo apt install x11-utils libxcb-xinerama0 libxv1 libgl-dev
         # Without these libs, cmake cannot find Qt6::Gui. But if you install nvidia-cuda-toolkit, they will be installed automatically
       - name: Install OpenCL sdk
         if: matrix.gpu_api == 'OpenCL'
-        run: sudo apt install ocl-icd-libopencl1 ocl-icd-libopencl1 ocl-icd-opencl-dev ocl-icd-dev opencl-c-headers opencl-clhpp-headers
+        run: sudo apt install ocl-icd-libopencl1 ocl-icd-opencl-dev ocl-icd-dev opencl-c-headers opencl-clhpp-headers
 
       - name: Install xz (Release as tar.xz)
         run: sudo apt install xz-utils
