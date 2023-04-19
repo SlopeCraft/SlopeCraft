@@ -24,6 +24,7 @@ This file is part of SlopeCraft.
 #define SLOPECRAFT_UTILITIES_COLORDIRR_OPENCL_H
 #ifdef SLOPECRAFT_NO_CL_HPP
 #include <CL/opencl.hpp>
+#include <CL/cl2.hpp>
 #else
 #include <CL/cl.hpp>
 #endif
