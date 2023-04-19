@@ -64,7 +64,7 @@ jobs:
     strategy:
       matrix:
         build_type: [Debug, Release]
-        gpu_api: [None]
+        gpu_api: [None, OpenCL]
     env:
       BUILD_TYPE: ${{ matrix.build_type }}
       GPU_API: ${{ matrix.gpu_api }}
@@ -91,6 +91,21 @@ jobs:
       - name: Install additional qt-related packages
         run: sudo apt install x11-utils libxcb-xinerama0 libxv1 libgl-dev
         # Without these libs, cmake cannot find Qt6::Gui. But if you install nvidia-cuda-toolkit, they will be installed automatically
+      - name: Install intel OpenCL sdk
+        if: matrix.gpu_api == 'OpenCL'
+        run: |
+          mkdir neo
+          cd neo
+          wget https://github.com/intel/intel-graphics-compiler/releases/download/igc-1.0.13230.7/intel-igc-core_1.0.13230.7_amd64.deb
+          wget https://github.com/intel/intel-graphics-compiler/releases/download/igc-1.0.13230.7/intel-igc-opencl_1.0.13230.7_amd64.deb
+          wget https://github.com/intel/compute-runtime/releases/download/23.05.25593.11/intel-level-zero-gpu-dbgsym_1.3.25593.11_amd64.ddeb
+          wget https://github.com/intel/compute-runtime/releases/download/23.05.25593.11/intel-level-zero-gpu_1.3.25593.11_amd64.deb
+          wget https://github.com/intel/compute-runtime/releases/download/23.05.25593.11/intel-opencl-icd-dbgsym_23.05.25593.11_amd64.ddeb
+          wget https://github.com/intel/compute-runtime/releases/download/23.05.25593.11/intel-opencl-icd_23.05.25593.11_amd64.deb
+          wget https://github.com/intel/compute-runtime/releases/download/23.05.25593.11/libigdgmm12_22.3.0_amd64.deb
+          sudo apt install ocl-icd-libopencl1
+          sudo dpkg -i ./neo/*.deb
+
       #- name: Install OpenCL
       #  run: sudo apt install nvidia-cuda-toolkit
         #nvidia-cuda-dev ocl-icd-libopencl1 ocl-icd-opencl-dev ocl-icd-dev opencl-c-headers opencl-clhpp-headers
