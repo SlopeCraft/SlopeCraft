@@ -94,8 +94,8 @@ if(${SlopeCraft_gprof})
     add_link_options("-pg")
 endif()
 
-add_definitions(_USE_MATH_DEFINES)
-add_definitions(SCL_FIND_GlobalEnums_BY_PATH)
+add_compile_definitions(_USE_MATH_DEFINES)
+add_compile_definitions(SCL_FIND_GlobalEnums_BY_PATH)
 add_compile_definitions(SLOPECRAFTL_NOT_INSTALLED)
 add_compile_definitions(VISUALCRAFTL_NOT_INSTALLED)
 
