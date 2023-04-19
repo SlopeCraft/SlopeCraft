@@ -93,24 +93,7 @@ jobs:
         # Without these libs, cmake cannot find Qt6::Gui. But if you install nvidia-cuda-toolkit, they will be installed automatically
       - name: Install intel OpenCL sdk
         if: matrix.gpu_api == 'OpenCL'
-        run: |
-          mkdir neo
-          cd neo
-          wget https://github.com/intel/intel-graphics-compiler/releases/download/igc-1.0.13230.7/intel-igc-core_1.0.13230.7_amd64.deb
-          wget https://github.com/intel/intel-graphics-compiler/releases/download/igc-1.0.13230.7/intel-igc-opencl_1.0.13230.7_amd64.deb
-          wget https://github.com/intel/compute-runtime/releases/download/23.05.25593.11/intel-level-zero-gpu-dbgsym_1.3.25593.11_amd64.ddeb
-          wget https://github.com/intel/compute-runtime/releases/download/23.05.25593.11/intel-level-zero-gpu_1.3.25593.11_amd64.deb
-          wget https://github.com/intel/compute-runtime/releases/download/23.05.25593.11/intel-opencl-icd-dbgsym_23.05.25593.11_amd64.ddeb
-          wget https://github.com/intel/compute-runtime/releases/download/23.05.25593.11/intel-opencl-icd_23.05.25593.11_amd64.deb
-          wget https://github.com/intel/compute-runtime/releases/download/23.05.25593.11/libigdgmm12_22.3.0_amd64.deb
-          sudo apt install ocl-icd-libopencl1
-          sudo dpkg -i ./neo/*.deb
-
-      #- name: Install OpenCL
-      #  run: sudo apt install nvidia-cuda-toolkit
-        #nvidia-cuda-dev ocl-icd-libopencl1 ocl-icd-opencl-dev ocl-icd-dev opencl-c-headers opencl-clhpp-headers
-      #- name: List all packages
-      #  run: apt list --installed
+        run: sudo apt install ocl-icd-libopencl1 ocl-icd-libopencl1 ocl-icd-opencl-dev ocl-icd-dev opencl-c-headers opencl-clhpp-headers
 
       - name: Install xz (Release as tar.xz)
         run: sudo apt install xz-utils
@@ -126,12 +109,6 @@ jobs:
       
       - name: CMake install
         run: cmake --install ./build
-
-      - name: Run CTest
-        if: matrix.build_type == 'Release'
-        run: |
-          cd ./build
-          ctest -j20 --output-on-failure --stop-on-failure
       
       - name: Get short SHA
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
@@ -156,6 +133,12 @@ jobs:
           name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-linux-tar-xz
           path: pack/SlopeCraft*.tar.xz
           if-no-files-found: error
+
+      - name: Run CTest
+        if: matrix.build_type == 'Release'
+        run: |
+          cd ./build
+          ctest -j20 --output-on-failure --stop-on-failure
 
   windows-build:
     runs-on: windows-latest

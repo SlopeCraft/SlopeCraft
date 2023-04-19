@@ -23,7 +23,6 @@ This file is part of SlopeCraft.
 #include "OCLWrapper.h"
 #include "../GPU_interface.h"
 
-#include <CL/cl.hpp>
 #include <Eigen/Dense>
 #include <stdlib.h>
 #include <utilities/SC_GlobalEnums.h>
@@ -45,7 +44,6 @@ size_t ocl_warpper::platform_num() noexcept {
 
 cl::Platform private_fun_get_platform(size_t platform_idx,
                                       cl_int &err) noexcept {
-
   constexpr size_t buffersize = 128;
 
   cl_platform_id plats[buffersize];
@@ -67,12 +65,10 @@ cl::Platform private_fun_get_platform(size_t platform_idx,
 
 ocl_warpper::ocl_platform::ocl_platform(size_t idx) {
   this->platform = private_fun_get_platform(idx, this->err);
-  if (this->err != CL_SUCCESS)
-    return;
+  if (this->err != CL_SUCCESS) return;
 
   this->name = this->platform.getInfo<CL_PLATFORM_NAME>(&this->err);
-  if (this->err != CL_SUCCESS)
-    return;
+  if (this->err != CL_SUCCESS) return;
 
   this->err = this->platform.getDevices(CL_DEVICE_TYPE_ALL, &this->devices);
 }
@@ -120,10 +116,24 @@ void ocl_warpper::ocl_resource::init_resource() noexcept {
     return;
   }
 
+// Here the code differs according to if there is cl.hpp. API to create
+// cl::Program is different in cl.hpp and opencl.hpp. I don't know why there are
+// 2 differernt opencl C++ bindings.
+#ifndef SLOPECRAFT_NO_CL_HPP
+  // This works with cl.hpp
   std::pair<const char *, size_t> src;
   src.first = (const char *)ColorManip_cl_rc;
   src.second = ColorManip_cl_rc_length;
-  this->program = cl::Program(this->context, {src}, &this->error);
+  this->program = cl::Program{this->context, {src}, &this->error};
+#else
+  // this works with opencl.hpp
+  this->program = cl::Program{
+      this->context,
+      {this->device},
+      std::string{(const char *)ColorManip_cl_rc, ColorManip_cl_rc_length},
+      &this->error};
+#endif
+
   if (!this->ok()) {
     this->err_msg = "Failed to create program with source files.";
     return;
@@ -226,8 +236,9 @@ void ocl_warpper::ocl_resource::resize_task(size_t task_num) noexcept {
       this->context, this->task.rawcolor_f32_3_device,
       task_f32_3_required_bytes, CL_MEM_READ_ONLY, false);
   if (!this->ok()) {
-    this->err_msg = "Failed to allocate device memory for "
-                    "this->task.rawcolor_f32_3_device.";
+    this->err_msg =
+        "Failed to allocate device memory for "
+        "this->task.rawcolor_f32_3_device.";
     return;
   }
 
@@ -235,8 +246,9 @@ void ocl_warpper::ocl_resource::resize_task(size_t task_num) noexcept {
       this->context, this->task.result_idx_u16_device,
       result_idx_required_bytes, CL_MEM_WRITE_ONLY, false);
   if (!this->ok()) {
-    this->err_msg = "Failed to allocate device memory for "
-                    "this->task.result_idx_u16_device.";
+    this->err_msg =
+        "Failed to allocate device memory for "
+        "this->task.result_idx_u16_device.";
     return;
   }
 
@@ -244,8 +256,9 @@ void ocl_warpper::ocl_resource::resize_task(size_t task_num) noexcept {
       this->context, this->task.result_diff_f32_device,
       result_diff_required_bytes, CL_MEM_WRITE_ONLY, false);
   if (!this->ok()) {
-    this->err_msg = "Failed to allocate device memory for "
-                    "this->task.result_diff_f32_device.";
+    this->err_msg =
+        "Failed to allocate device memory for "
+        "this->task.result_diff_f32_device.";
     return;
   }
   return;
@@ -255,8 +268,7 @@ void ocl_warpper::ocl_resource::resize_colorset(size_t color_num) noexcept {
   this->error = private_fun_change_buf_size(
       this->context, this->colorset.colorset_float3,
       color_num * 3 * sizeof(float), CL_MEM_READ_ONLY, false);
-  if (!this->ok())
-    return;
+  if (!this->ok()) return;
 
   this->colorset.colorset_color_num = color_num;
 }
@@ -294,24 +306,23 @@ void ocl_warpper::ocl_resource::set_colorset(
   }
 }
 
-cl::Kernel *
-ocl_warpper::ocl_resource::kernel_by_algo(::SCL_convertAlgo algo) noexcept {
-
+cl::Kernel *ocl_warpper::ocl_resource::kernel_by_algo(
+    ::SCL_convertAlgo algo) noexcept {
   switch (algo) {
-  case SCL_convertAlgo::RGB:
-    return &this->k_RGB;
-  case SCL_convertAlgo::RGB_Better:
-    return &this->k_RGB_Better;
-  case SCL_convertAlgo::HSV:
-    return &this->k_HSV;
-  case SCL_convertAlgo::Lab94:
-    return &this->k_Lab94;
-  case SCL_convertAlgo::Lab00:
-    return &this->k_Lab00;
-  case SCL_convertAlgo::XYZ:
-    return &this->k_XYZ;
-  default:
-    return nullptr;
+    case SCL_convertAlgo::RGB:
+      return &this->k_RGB;
+    case SCL_convertAlgo::RGB_Better:
+      return &this->k_RGB_Better;
+    case SCL_convertAlgo::HSV:
+      return &this->k_HSV;
+    case SCL_convertAlgo::Lab94:
+      return &this->k_Lab94;
+    case SCL_convertAlgo::Lab00:
+      return &this->k_Lab00;
+    case SCL_convertAlgo::XYZ:
+      return &this->k_XYZ;
+    default:
+      return nullptr;
   }
   return nullptr;
 }
@@ -403,7 +414,6 @@ void ocl_warpper::ocl_resource::set_task(const std::array<float, 3> *src,
 */
 
 void ocl_warpper::ocl_resource::set_args(::SCL_convertAlgo algo) noexcept {
-
   this->wait();
   if (!this->ok()) {
     this->err_msg = "Failed to wait.";
@@ -472,7 +482,6 @@ cl_int private_fun_change_buf_size(cl::Context &context, cl::Buffer &buf,
 
 void ocl_warpper::ocl_resource::execute(::SCL_convertAlgo algo,
                                         bool wait) noexcept {
-
   this->set_args(algo);
   if (!this->ok()) {
     this->err_msg = "Failed to set args.";
