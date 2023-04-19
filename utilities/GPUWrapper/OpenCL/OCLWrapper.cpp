@@ -126,12 +126,12 @@ void ocl_warpper::ocl_resource::init_resource() noexcept {
   src.second = ColorManip_cl_rc_length;
   this->program = cl::Program{this->context, {src}, &this->error};
 #else
-  // this works with opencl.hpp
-  this->program = cl::Program{
-      this->context,
-      {this->device},
-      std::string{(const char *)ColorManip_cl_rc, ColorManip_cl_rc_length},
-      &this->error};
+  // This is for opencl.hpp
+  std::string source_code{(const char *)ColorManip_cl_rc,
+                          ColorManip_cl_rc_length};
+  source_code.push_back('\0');
+  this->program =
+      cl::Program{this->context, {this->device}, source_code, &this->error};
 #endif
 
   if (!this->ok()) {
