@@ -27,6 +27,11 @@ target_link_libraries(OCLWrapper PUBLIC OpenCL::OpenCL ColorManip_cl_rc)
 message(STATUS "OpenCL_INCLUDE_DIR = ${OpenCL_INCLUDE_DIR}")
 message(STATUS "OpenCL_INCLUDE_DIRS = ${OpenCL_INCLUDE_DIRS}")
 
+if(NOT EXISTS ${OpenCL_INCLUDE_DIR}/CL/cl.hpp)
+    file(GLOB_RECURSE opencl_hpp_file "${OpenCL_INCLUDE_DIR}/*/cl.hpp")
+    message(WARNING "CL/cl.hpp will not be found correctly. \n Manually found opencl_hpp_file = ${opencl_hpp_file}")
+endif()
+
 target_link_libraries(GPUInterface PUBLIC OCLWrapper)
 target_compile_definitions(GPUInterface PUBLIC SLOPECRAFT_HAVE_OPENCL)
 
