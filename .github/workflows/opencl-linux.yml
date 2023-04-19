@@ -52,7 +52,7 @@ jobs:
           wget https://github.com/intel/compute-runtime/releases/download/23.05.25593.11/intel-opencl-icd_23.05.25593.11_amd64.deb
           wget https://github.com/intel/compute-runtime/releases/download/23.05.25593.11/libigdgmm12_22.3.0_amd64.deb
           sudo apt install ocl-icd-libopencl1
-          sudo dpkg -i 。/*.deb
+          sudo dpkg -i ./*.deb
 
       #- name: Install OpenCL
       #  run: sudo apt install nvidia-cuda-toolkit
