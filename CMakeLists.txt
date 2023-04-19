@@ -48,8 +48,8 @@ endif()
 # warn if not gcc ------------------------------------------------------------
 if(NOT CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     message(WARNING "MSVC or Clang are not fully supported. 
-    You MAY meet werid errors if you continue to build.
-    Please use gcc.")
+        You MAY meet werid errors if you continue to build.
+        Please use gcc.")
 endif()
 
 # configure global dependencies ----------------------------------------------
