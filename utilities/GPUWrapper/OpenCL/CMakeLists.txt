@@ -24,6 +24,9 @@ target_include_directories(OCLWrapper INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_features(OCLWrapper PUBLIC cxx_std_20)
 target_link_libraries(OCLWrapper PUBLIC OpenCL::OpenCL ColorManip_cl_rc)
 
+message(STATUS "OpenCL_INCLUDE_DIR = ${OpenCL_INCLUDE_DIR}")
+message(STATUS "OpenCL_INCLUDE_DIRS = ${OpenCL_INCLUDE_DIRS}")
+
 target_link_libraries(GPUInterface PUBLIC OCLWrapper)
 target_compile_definitions(GPUInterface PUBLIC SLOPECRAFT_HAVE_OPENCL)
 
