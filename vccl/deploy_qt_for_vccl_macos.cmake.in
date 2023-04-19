@@ -11,3 +11,11 @@ file(CREATE_LINK
     "./@vccl_prefix@/vccl.app/Contents/MacOS/vccl"
     "@CMAKE_INSTALL_PREFIX@/vccl"
     SYMBOLIC)
+file(CREATE_LINK
+    "./@vccl_prefix@/vccl.app/Contents/MacOS/vccl-config.json"
+    "@CMAKE_INSTALL_PREFIX@/vccl-config.json"
+    SYMBOLIC)
+file(CREATE_LINK
+    "./@vccl_prefix@/vccl.app/Contents/MacOS/Blocks_VCL"
+    "@CMAKE_INSTALL_PREFIX@/Blocks_VCL"
+    SYMBOLIC)
