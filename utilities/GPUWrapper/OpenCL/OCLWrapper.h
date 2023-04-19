@@ -22,9 +22,13 @@ This file is part of SlopeCraft.
 
 #ifndef SLOPECRAFT_UTILITIES_COLORDIRR_OPENCL_H
 #define SLOPECRAFT_UTILITIES_COLORDIRR_OPENCL_H
+#ifdef SLOPECRAFT_NO_CL_HPP
+#include <CL/opencl.hpp>
+#else
+#include <CL/cl.hpp>
+#endif
 
 #include "../GPU_interface.h"
-#include <CL/cl.hpp>
 #include <array>
 #include <assert.h>
 #include <string>
@@ -35,7 +39,7 @@ namespace ocl_warpper {
 size_t platform_num() noexcept;
 
 class ocl_resource : public ::gpu_wrapper::gpu_interface {
-public:
+ public:
   struct task_rcs {
     // std::vector<uint32_t> buf_unconverted_ARGB_host;
     cl::Buffer rawcolor_f32_3_device;
@@ -50,7 +54,7 @@ public:
     uint16_t colorset_color_num{0};
   };
 
-private:
+ private:
   cl_int error{CL_SUCCESS};
   std::string err_msg{""};
   cl::Platform platform;
@@ -71,10 +75,10 @@ private:
 
   // buffers to for colorset
 
-private:
+ private:
   void init_resource() noexcept;
 
-public:
+ public:
   inline int error_code() const noexcept { return this->error; }
   inline bool ok() const noexcept { return (this->error == CL_SUCCESS); }
 
@@ -82,7 +86,7 @@ public:
     return this->err_msg;
   }
 
-public:
+ public:
   ocl_resource();
 
   ocl_resource(cl::Platform plat, cl::Device dev);
@@ -120,7 +124,7 @@ public:
     return this->local_work_group_size();
   }
 
-private:
+ private:
   void resize_task(size_t task_num) noexcept;
   void resize_colorset(size_t color_num) noexcept;
 
@@ -128,7 +132,7 @@ private:
 
   void set_args(::SCL_convertAlgo algo) noexcept;
 
-public:
+ public:
   // overrided functions
 
   const char *api_v() const noexcept override { return "OpenCL"; }
@@ -173,7 +177,7 @@ public:
 };
 
 class ocl_platform : public ::gpu_wrapper::platform_wrapper {
-public:
+ public:
   ocl_platform() = delete;
   ocl_platform(size_t idx);
   cl::Platform platform;
@@ -190,7 +194,7 @@ public:
 };
 
 class ocl_device : public ::gpu_wrapper::device_wrapper {
-public:
+ public:
   ocl_device() = delete;
   ocl_device(cl::Device);
 
@@ -201,6 +205,6 @@ public:
   const char *name_v() const noexcept override { return this->name.c_str(); }
 };
 
-} // namespace ocl_warpper
+}  // namespace ocl_warpper
 
-#endif // SLOPECRAFT_UTILITIES_COLORDIRR_OPENCL_H
+#endif  // SLOPECRAFT_UTILITIES_COLORDIRR_OPENCL_H

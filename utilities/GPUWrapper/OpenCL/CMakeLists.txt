@@ -35,6 +35,8 @@ if(NOT EXISTS ${OpenCL_INCLUDE_DIR}/CL/cl.hpp)
     message(STATUS "Manually found cl_h_file = ${cl_h_file}")
     message(STATUS "Manually found cl_hpp_file = ${cl_hpp_file}")
     message(STATUS "Manually found opencl_hpp_file = ${opencl_hpp_file}")
+
+    target_compile_definitions(OCLWrapper PRIVATE SLOPECRAFT_NO_CL_HPP)
 endif()
 
 target_link_libraries(GPUInterface PUBLIC OCLWrapper)
