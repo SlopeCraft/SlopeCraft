@@ -146,6 +146,12 @@ int run_task(task_t &task) noexcept {
 
     eig_colorset = map_colorset.transpose();
   }
+
+  if (gpu_wrapper::platform_num() <= 0) {
+    cout << "No avaliable opencl platforms." << endl;
+    return 0;
+  }
+
   auto plat = gpu_wrapper::platform_wrapper::create(task.platidx);
 
   auto dev = gpu_wrapper::device_wrapper::create(plat, task.devidx);
