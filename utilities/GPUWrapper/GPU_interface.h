@@ -33,14 +33,14 @@ namespace gpu_wrapper {
 static constexpr bool have_api = true;
 #else
 static constexpr bool have_api = false;
-#endif // #ifdef SLOPECRAFT_GPU_API
+#endif  // #ifdef SLOPECRAFT_GPU_API
 
 const char *api_name() noexcept;
 
 size_t platform_num() noexcept;
 
 class platform_wrapper {
-public:
+ public:
   platform_wrapper() = default;
   virtual ~platform_wrapper() = default;
 
@@ -50,30 +50,33 @@ public:
 
   // virtual size_t index() const noexcept = 0;
 
-  [[nodiscard]] static platform_wrapper *
-  create(size_t idx, int *errorcode = nullptr) noexcept;
+  [[nodiscard]] static platform_wrapper *create(
+      size_t idx, int *errorcode = nullptr) noexcept;
   static void destroy(platform_wrapper *) noexcept;
 };
 
 class device_wrapper {
-public:
+ public:
   device_wrapper() = default;
   virtual ~device_wrapper() = default;
 
   virtual const char *name_v() const noexcept = 0;
 
-  [[nodiscard]] static device_wrapper *
-  create(platform_wrapper *pw, size_t idx, int *errorcode = nullptr) noexcept;
+  [[nodiscard]] static device_wrapper *create(
+      platform_wrapper *pw, size_t idx, int *errorcode = nullptr) noexcept;
   static void destroy(device_wrapper *) noexcept;
 };
 
 class gpu_interface {
-public:
+ public:
   gpu_interface() = default;
   virtual ~gpu_interface() = default;
 
   [[nodiscard]] static gpu_interface *create(platform_wrapper *pw,
                                              device_wrapper *dw) noexcept;
+  [[nodiscard]] static gpu_interface *create(
+      platform_wrapper *pw, device_wrapper *dw,
+      std::pair<int, std::string> &err) noexcept;
   static void destroy(gpu_interface *) noexcept;
 
   virtual const char *api_v() const noexcept = 0;
@@ -82,9 +85,9 @@ public:
   virtual bool ok_v() const noexcept = 0;
   virtual std::string error_detail_v() const noexcept = 0;
 
-  virtual void
-  set_colorset_v(size_t color_num,
-                 const std::array<const float *, 3> &color_ptrs) noexcept = 0;
+  virtual void set_colorset_v(
+      size_t color_num,
+      const std::array<const float *, 3> &color_ptrs) noexcept = 0;
 
   virtual void set_task_v(size_t task_num,
                           const std::array<float, 3> *data) noexcept = 0;
@@ -104,6 +107,6 @@ public:
   virtual size_t local_work_group_size_v() const noexcept = 0;
 };
 
-} // namespace gpu_wrapper
+}  // namespace gpu_wrapper
 
-#endif // SLOPECRAFT_UTILITIES_GPUWRAPPER_GPUINTERFACE_H
+#endif  // SLOPECRAFT_UTILITIES_GPUWRAPPER_GPUINTERFACE_H

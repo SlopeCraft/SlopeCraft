@@ -130,8 +130,8 @@ void ocl_warpper::ocl_resource::init_resource() noexcept {
   std::string source_code{(const char *)ColorManip_cl_rc,
                           ColorManip_cl_rc_length};
   source_code.push_back('\0');
-  this->program =
-      cl::Program{this->context, {this->device}, source_code, &this->error};
+  this->program = cl::Program{
+      this->context, std::vector<std::string>{source_code}, &this->error};
 #endif
 
   if (!this->ok()) {

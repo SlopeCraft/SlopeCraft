@@ -49,7 +49,6 @@ void ::gpu_wrapper::platform_wrapper::destroy(platform_wrapper *pw) noexcept {
 }
 
 ocl_warpper::ocl_device::ocl_device(cl::Device __dev) : device(__dev) {
-
   this->name = __dev.getInfo<CL_DEVICE_NAME>(&this->err);
 }
 
@@ -72,10 +71,11 @@ ocl_warpper::ocl_device::ocl_device(cl::Device __dev) : device(__dev) {
 void ::gpu_wrapper::device_wrapper::destroy(device_wrapper *dw) noexcept {
   delete static_cast<::ocl_warpper::ocl_device *>(dw);
 }
-
-gpu_wrapper::gpu_interface *
-gpu_wrapper::gpu_interface::create(gpu_wrapper::platform_wrapper *pw,
-                                   gpu_wrapper::device_wrapper *dw) noexcept {
+gpu_wrapper::gpu_interface *gpu_wrapper::gpu_interface::create(
+    gpu_wrapper::platform_wrapper *pw, gpu_wrapper::device_wrapper *dw,
+    std::pair<int, std::string> &err) noexcept {
+  err.first = 0;
+  err.second.clear();
   ocl_warpper::ocl_platform *plat =
       static_cast<ocl_warpper::ocl_platform *>(pw);
   ocl_warpper::ocl_device *dev = static_cast<ocl_warpper::ocl_device *>(dw);
@@ -84,6 +84,8 @@ gpu_wrapper::gpu_interface::create(gpu_wrapper::platform_wrapper *pw,
       new ocl_warpper::ocl_resource(plat->platform, dev->device);
 
   if (!ret->ok()) {
+    err.first = ret->error_code();
+    err.second = ret->error_detail();
     delete ret;
     return nullptr;
   }
@@ -91,8 +93,14 @@ gpu_wrapper::gpu_interface::create(gpu_wrapper::platform_wrapper *pw,
   return static_cast<::gpu_wrapper::gpu_interface *>(ret);
 }
 
-void ::gpu_wrapper::gpu_interface::destroy(gpu_interface *gi) noexcept {
+gpu_wrapper::gpu_interface *gpu_wrapper::gpu_interface::create(
+    gpu_wrapper::platform_wrapper *pw,
+    gpu_wrapper::device_wrapper *dw) noexcept {
+  std::pair<int, std::string> temp;
+  return create(pw, dw, temp);
+}
 
+void ::gpu_wrapper::gpu_interface::destroy(gpu_interface *gi) noexcept {
   delete static_cast<ocl_warpper::ocl_resource *>(gi);
   return;
 }

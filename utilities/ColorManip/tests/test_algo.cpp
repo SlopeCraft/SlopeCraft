@@ -94,7 +94,6 @@ int list_gpu() noexcept {
 
 void fill_c3arr(std::vector<std::array<float, 3>> &dst, std::mt19937 &mt,
                 SCL_convertAlgo algo) noexcept {
-
   std::uniform_real_distribution<float> randf(0, 1);
   for (auto &c3 : dst) {
     for (float &val : c3) {
@@ -102,31 +101,35 @@ void fill_c3arr(std::vector<std::array<float, 3>> &dst, std::mt19937 &mt,
     }
 
     switch (algo) {
-    case SCL_convertAlgo::RGB:
-    case SCL_convertAlgo::RGB_Better:
-      break;
-    case SCL_convertAlgo::HSV:
-      RGB2HSV(c3[0], c3[1], c3[2], c3[0], c3[1], c3[2]);
-      break;
-    case SCL_convertAlgo::Lab00:
-    case SCL_convertAlgo::Lab94:
-      RGB2XYZ(c3[0], c3[1], c3[2], c3[0], c3[1], c3[2]);
-      XYZ2Lab(c3[0], c3[1], c3[2], c3[0], c3[1], c3[2]);
-      break;
-    case SCL_convertAlgo::XYZ:
-      RGB2XYZ(c3[0], c3[1], c3[2], c3[0], c3[1], c3[2]);
-      break;
-    default:
-      abort();
-      break;
+      case SCL_convertAlgo::RGB:
+      case SCL_convertAlgo::RGB_Better:
+        break;
+      case SCL_convertAlgo::HSV:
+        RGB2HSV(c3[0], c3[1], c3[2], c3[0], c3[1], c3[2]);
+        break;
+      case SCL_convertAlgo::Lab00:
+      case SCL_convertAlgo::Lab94:
+        RGB2XYZ(c3[0], c3[1], c3[2], c3[0], c3[1], c3[2]);
+        XYZ2Lab(c3[0], c3[1], c3[2], c3[0], c3[1], c3[2]);
+        break;
+      case SCL_convertAlgo::XYZ:
+        RGB2XYZ(c3[0], c3[1], c3[2], c3[0], c3[1], c3[2]);
+        break;
+      default:
+        abort();
+        break;
     }
   }
 }
 
-#define HANDLE_ERR(gi, ret)                                                    \
-  if (!gi->ok_v()) {                                                           \
-    cout << gi->error_detail_v() << " : " << gi->error_code_v() << endl;       \
-    return ret;                                                                \
+#define HANDLE_ERR(gi, ret)                                              \
+  if (gi == nullptr) {                                                   \
+    cout << "failed to create gpu resource handle. gi==nullptr" << endl; \
+    return ret;                                                          \
+  }                                                                      \
+  if (!gi->ok_v()) {                                                     \
+    cout << gi->error_detail_v() << " : " << gi->error_code_v() << endl; \
+    return ret;                                                          \
   }
 
 int run_task(task_t &task) noexcept {
