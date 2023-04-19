@@ -116,10 +116,20 @@ void ocl_warpper::ocl_resource::init_resource() noexcept {
     return;
   }
 
+#ifndef SLOPECRAFT_NO_CL_HPP
+
   std::pair<const char *, size_t> src;
   src.first = (const char *)ColorManip_cl_rc;
   src.second = ColorManip_cl_rc_length;
-  this->program = cl::Program(this->context, {src}, &this->error);
+  this->program = cl::Program{this->context, {src}, &this->error};
+#else
+  this->program = cl::Program{
+      this->context,
+      {this->device},
+      std::string{(const char *)ColorManip_cl_rc, ColorManip_cl_rc_length},
+      &this->error};
+#endif
+
   if (!this->ok()) {
     this->err_msg = "Failed to create program with source files.";
     return;

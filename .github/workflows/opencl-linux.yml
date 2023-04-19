@@ -44,20 +44,13 @@ jobs:
         run: |
           mkdir neo
           cd neo
-          wget https://github.com/intel/intel-graphics-compiler/releases/download/igc-1.0.13230.7/intel-igc-core_1.0.13230.7_amd64.deb
-          wget https://github.com/intel/intel-graphics-compiler/releases/download/igc-1.0.13230.7/intel-igc-opencl_1.0.13230.7_amd64.deb
-          wget https://github.com/intel/compute-runtime/releases/download/23.05.25593.11/intel-level-zero-gpu-dbgsym_1.3.25593.11_amd64.ddeb
-          wget https://github.com/intel/compute-runtime/releases/download/23.05.25593.11/intel-level-zero-gpu_1.3.25593.11_amd64.deb
-          wget https://github.com/intel/compute-runtime/releases/download/23.05.25593.11/intel-opencl-icd-dbgsym_23.05.25593.11_amd64.ddeb
-          wget https://github.com/intel/compute-runtime/releases/download/23.05.25593.11/intel-opencl-icd_23.05.25593.11_amd64.deb
-          wget https://github.com/intel/compute-runtime/releases/download/23.05.25593.11/libigdgmm12_22.3.0_amd64.deb
-          sudo apt install ocl-icd-libopencl1 ocl-icd-libopencl1 ocl-icd-opencl-dev ocl-icd-dev
-          wget https://old-releases.ubuntu.com/ubuntu/pool/main/k/khronos-opencl-clhpp/opencl-clhpp-headers_2.2.0~~2.0.11+git9-g0192662-1_all.deb
-          sudo dpkg -i ./*.deb
+          sudo apt install ocl-icd-libopencl1 ocl-icd-libopencl1 ocl-icd-opencl-dev ocl-icd-dev opencl-c-headers opencl-clhpp-headers
 
       #- name: Install OpenCL
       #  run: sudo apt install nvidia-cuda-toolkit
         #nvidia-cuda-dev ocl-icd-libopencl1 ocl-icd-opencl-dev ocl-icd-dev opencl-c-headers opencl-clhpp-headers
+        
+        # wget https://old-releases.ubuntu.com/ubuntu/pool/main/k/khronos-opencl-clhpp/opencl-clhpp-headers_2.2.0~~2.0.11+git9-g0192662-1_all.deb
       #- name: List all packages
       #  run: apt list --installed
 
