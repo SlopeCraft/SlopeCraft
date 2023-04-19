@@ -28,6 +28,8 @@ message(STATUS "OpenCL_INCLUDE_DIR = ${OpenCL_INCLUDE_DIR}")
 message(STATUS "OpenCL_INCLUDE_DIRS = ${OpenCL_INCLUDE_DIRS}")
 
 if(NOT EXISTS ${OpenCL_INCLUDE_DIR}/CL/cl.hpp)
+    target_compile_definitions(OCLWrapper PRIVATE SLOPECRAFT_NO_CL_HPP)
+
     file(GLOB_RECURSE cl_h_file "${OpenCL_INCLUDE_DIR}/*/cl.h")
     file(GLOB_RECURSE cl_hpp_file "${OpenCL_INCLUDE_DIR}/*/cl.hpp")
     file(GLOB_RECURSE opencl_hpp_file "${OpenCL_INCLUDE_DIR}/*/opencl.hpp")
@@ -36,7 +38,8 @@ if(NOT EXISTS ${OpenCL_INCLUDE_DIR}/CL/cl.hpp)
     message(STATUS "Manually found cl_hpp_file = ${cl_hpp_file}")
     message(STATUS "Manually found opencl_hpp_file = ${opencl_hpp_file}")
 
-    target_compile_definitions(OCLWrapper PRIVATE SLOPECRAFT_NO_CL_HPP)
+    file(GLOB_RECURSE all_cl_files "${OpenCL_INCLUDE_DIR}/CL*")
+    message(STATUS "All opencl headers: ${all_cl_files}")
 endif()
 
 target_link_libraries(GPUInterface PUBLIC OCLWrapper)
