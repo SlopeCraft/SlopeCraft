@@ -64,7 +64,7 @@ jobs:
     strategy:
       matrix:
         build_type: [Debug, Release]
-        gpu_api: [OpenCL]
+        gpu_api: [None, OpenCL]
     env:
       BUILD_TYPE: ${{ matrix.build_type }}
       GPU_API: ${{ matrix.gpu_api }}
@@ -93,7 +93,11 @@ jobs:
         # Without these libs, cmake cannot find Qt6::Gui. But if you install nvidia-cuda-toolkit, they will be installed automatically
       - name: Install OpenCL sdk
         if: matrix.gpu_api == 'OpenCL'
-        run: sudo apt install ocl-icd-libopencl1 ocl-icd-opencl-dev ocl-icd-dev opencl-c-headers opencl-clhpp-headers
+        run: sudo apt install ocl-icd-libopencl1 ocl-icd-opencl-dev ocl-icd-dev opencl-c-headers opencl-clhpp-headers clinfo
+        
+      - name: See clinfo
+        if: matrix.gpu_api == 'OpenCL'
+        run: clinfo
 
       - name: Install xz (Release as tar.xz)
         run: sudo apt install xz-utils
