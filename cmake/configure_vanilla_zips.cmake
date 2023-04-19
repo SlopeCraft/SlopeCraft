@@ -27,7 +27,7 @@ foreach(mcver RANGE 12 19)
 
     file(DOWNLOAD
         ${VCL_url_prefix}${VCL_current_zip_name}
-        ${CMAKE_SOURCE_DIR}/binaries/${VCL_current_zip_name} SHOW_PROGRESS)
+        ${CMAKE_SOURCE_DIR}/binaries/${VCL_current_zip_name})
 
     if(EXISTS ${CMAKE_SOURCE_DIR}/binaries/${VCL_current_zip_name})
         message(STATUS "Downloaded resoruce pack for MC${mcver}.")

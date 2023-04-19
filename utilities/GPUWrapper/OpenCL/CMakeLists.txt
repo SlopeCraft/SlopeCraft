@@ -38,7 +38,7 @@ if(NOT EXISTS ${OpenCL_INCLUDE_DIR}/CL/cl.hpp)
     message(STATUS "Manually found cl_hpp_file = ${cl_hpp_file}")
     message(STATUS "Manually found opencl_hpp_file = ${opencl_hpp_file}")
 
-    file(GLOB_RECURSE all_cl_files "${OpenCL_INCLUDE_DIR}/CL*")
+    file(GLOB_RECURSE all_cl_files "${OpenCL_INCLUDE_DIR}/CL/*")
     message(STATUS "All opencl headers: ${all_cl_files}")
 endif()
 
