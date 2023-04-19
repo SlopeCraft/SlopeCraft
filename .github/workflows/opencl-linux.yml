@@ -7,13 +7,42 @@ on:
 
 jobs:
   
-  linux:
+  linux-build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_type: [Debug]
+        gpu_api: [OpenCL]
+    env:
+      BUILD_TYPE: ${{ matrix.build_type }}
+      GPU_API: ${{ matrix.gpu_api }}
     steps:
-      - name: make dir
-        run: mkdir neo
-      - name: download
+      - name: echo matrix variables (build_type = ${{ matrix.build_type }})
+        run: | 
+          echo $BUILD_TYPE
+          echo $GPU_API
+      - name: Make directories
+        run: mkdir build install pack
+
+      #- name: List installed
+      #  run: apt list --installed
+
+      - name: Install cmake, ninja
+        run: sudo apt install cmake ninja-build
+
+      - name: Install libzip, libpng, Eigen3
+        run: sudo apt install libzip-dev zipcmp ziptool zipmerge libpng-dev libeigen3-dev
+
+      - name: Install qt6
+        run: sudo apt install libqt6widgets6 libqt6gui6 libqt6network6 libqt6concurrent6 qt6-base-dev qt6-tools-dev-tools qt6-tools-dev qt6-l10n-tools
+      
+      - name: Install additional qt-related packages
+        run: sudo apt install x11-utils libxcb-xinerama0 libxv1 libgl-dev
+        # Without these libs, cmake cannot find Qt6::Gui. But if you install nvidia-cuda-toolkit, they will be installed automatically
+      - name: Install intel OpenCL sdk
+        if: matrix.gpu_api == 'OpenCL'
         run: |
+          mkdir neo
           cd neo
           wget https://github.com/intel/intel-graphics-compiler/releases/download/igc-1.0.13230.7/intel-igc-core_1.0.13230.7_amd64.deb
           wget https://github.com/intel/intel-graphics-compiler/releases/download/igc-1.0.13230.7/intel-igc-opencl_1.0.13230.7_amd64.deb
@@ -22,10 +51,56 @@ jobs:
           wget https://github.com/intel/compute-runtime/releases/download/23.05.25593.11/intel-opencl-icd-dbgsym_23.05.25593.11_amd64.ddeb
           wget https://github.com/intel/compute-runtime/releases/download/23.05.25593.11/intel-opencl-icd_23.05.25593.11_amd64.deb
           wget https://github.com/intel/compute-runtime/releases/download/23.05.25593.11/libigdgmm12_22.3.0_amd64.deb
-      - name: install
-        run: | 
           sudo apt install ocl-icd-libopencl1
           sudo dpkg -i ./neo/*.deb
 
-      - name: find cl.hpp
-        run: sudo find / -name cl.hpp
+      #- name: Install OpenCL
+      #  run: sudo apt install nvidia-cuda-toolkit
+        #nvidia-cuda-dev ocl-icd-libopencl1 ocl-icd-opencl-dev ocl-icd-dev opencl-c-headers opencl-clhpp-headers
+      #- name: List all packages
+      #  run: apt list --installed
+
+      - name: Install xz (Release as tar.xz)
+        run: sudo apt install xz-utils
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: CMake configure
+        run: cmake -S . -B ./build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/gcc-12 -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/g++-12 -DCMAKE_INSTALL_PREFIX:PATH=./install -DSlopeCraft_GPU_API:STRING=$GPU_API -DCMAKE_BUILD_TYPE:STRING=$BUILD_TYPE
+      
+      - name: CMake build
+        run: cmake --build ./build --parallel
+      
+      - name: CMake install
+        run: cmake --install ./build
+
+      - name: Run CTest
+        if: matrix.build_type == 'Release'
+        run: |
+          cd ./build
+          ctest -j20 --output-on-failure --stop-on-failure
+      
+      - name: Get short SHA
+        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+      
+      - name: Make deb and tar.xz packs with cpack
+        run: | 
+          cd build
+          cpack -G DEB -B ../pack
+          cpack -G TXZ -B ../pack
+          cd ..
+      
+      - name: Upload deb pack
+        uses: actions/upload-artifact@v3
+        with:
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-linux-deb
+          path: pack/SlopeCraft*.deb
+          if-no-files-found: error
+
+      - name: Upload tar.xz pack
+        uses: actions/upload-artifact@v3
+        with:
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-linux-tar-xz
+          path: pack/SlopeCraft*.tar.xz
+          if-no-files-found: error
