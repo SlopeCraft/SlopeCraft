@@ -29,17 +29,20 @@ message(STATUS "OpenCL_INCLUDE_DIRS = ${OpenCL_INCLUDE_DIRS}")
 
 if(NOT EXISTS ${OpenCL_INCLUDE_DIR}/CL/cl.hpp)
     target_compile_definitions(OCLWrapper PRIVATE SLOPECRAFT_NO_CL_HPP)
+    message(STATUS "Failed to find cl.hpp. This file doesn't exists in opencl include dir. 
+        SlopeCraft assumes that opencl.hpp exists, and will try to include it.")
 
-    file(GLOB_RECURSE cl_h_file "${OpenCL_INCLUDE_DIR}/*/cl.h")
-    file(GLOB_RECURSE cl_hpp_file "${OpenCL_INCLUDE_DIR}/*/cl.hpp")
-    file(GLOB_RECURSE opencl_hpp_file "${OpenCL_INCLUDE_DIR}/*/opencl.hpp")
-    message(WARNING "CL/cl.hpp will not be found correctly.")
-    message(STATUS "Manually found cl_h_file = ${cl_h_file}")
-    message(STATUS "Manually found cl_hpp_file = ${cl_hpp_file}")
-    message(STATUS "Manually found opencl_hpp_file = ${opencl_hpp_file}")
-
+    # file(GLOB_RECURSE cl_h_file "${OpenCL_INCLUDE_DIR}/*/cl.h")
+    # file(GLOB_RECURSE cl_hpp_file "${OpenCL_INCLUDE_DIR}/*/cl.hpp")
+    # file(GLOB_RECURSE opencl_hpp_file "${OpenCL_INCLUDE_DIR}/*/opencl.hpp")
+    # message(WARNING "CL/cl.hpp will not be found correctly.")
+    # message(STATUS "Manually found cl_h_file = ${cl_h_file}")
+    # message(STATUS "Manually found cl_hpp_file = ${cl_hpp_file}")
+    # message(STATUS "Manually found opencl_hpp_file = ${opencl_hpp_file}")
     file(GLOB_RECURSE all_cl_files "${OpenCL_INCLUDE_DIR}/CL/*")
     message(STATUS "All opencl headers: ${all_cl_files}")
+else()
+    message(STATUS "Found opencl C++ header: ${OpenCL_INCLUDE_DIR}/CL/cl.hpp")
 endif()
 
 target_link_libraries(GPUInterface PUBLIC OCLWrapper)

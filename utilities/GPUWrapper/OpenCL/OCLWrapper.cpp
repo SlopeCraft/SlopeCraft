@@ -116,13 +116,17 @@ void ocl_warpper::ocl_resource::init_resource() noexcept {
     return;
   }
 
+// Here the code differs according to if there is cl.hpp. API to create
+// cl::Program is different in cl.hpp and opencl.hpp. I don't know why there are
+// 2 differernt opencl C++ bindings.
 #ifndef SLOPECRAFT_NO_CL_HPP
-
+  // This works with cl.hpp
   std::pair<const char *, size_t> src;
   src.first = (const char *)ColorManip_cl_rc;
   src.second = ColorManip_cl_rc_length;
   this->program = cl::Program{this->context, {src}, &this->error};
 #else
+  // this works with opencl.hpp
   this->program = cl::Program{
       this->context,
       {this->device},
