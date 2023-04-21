@@ -1,10 +1,5 @@
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-configure_file(SC_version_buildtime.h.in
-    SC_version_buildtime.h)
-
-include(install.cmake)
-
 add_subdirectory(MCDataVersion)
 add_subdirectory(GPUWrapper)
 add_subdirectory(ColorManip)
@@ -18,6 +13,22 @@ add_subdirectory(uiPack)
 add_subdirectory(MapImageCvter)
 add_subdirectory(VersionDialog)
 add_subdirectory(VCLConfigLoader)
+
+function(SC_process_boolean value_name)
+    if(${${value_name}})
+        set(${value_name} "true" PARENT_SCOPE)
+    else()
+        set(${value_name} "false" PARENT_SCOPE)
+    endif()
+endfunction(SC_process_boolean value_name)
+
+SC_process_boolean(SlopeCraft_vectorize)
+SC_process_boolean(SlopeCraft_gprof)
+
+configure_file(SC_version_buildtime.h.in
+    SC_version_buildtime.h)
+
+include(install.cmake)
 
 # add_subdirectory(libAbstractGUI)
 # add_subdirectory(libSCGUI)

@@ -28,6 +28,9 @@ This file is part of SlopeCraft.
 #include <VCLConfigLoader.h>
 #include <magic_enum.hpp>
 
+#include <SC_version_buildtime.h>
+#include <fmt/format.h>
+
 using std::cout, std::endl;
 
 bool validate_input(const inputs &input) noexcept;
@@ -42,9 +45,11 @@ int main(int argc, char **argv) {
     input.prefer_gpu = true;
   }
 
-  app.set_version_flag("--version,-v",
-                       std::string("vccl version : ") + SC_VERSION_STR +
-                           ", VisualCraftL version : " + VCL_version_string());
+  app.set_version_flag("--version,-v", SC_VERSION_STR);
+  bool show_config{false};
+  app.add_flag("--show-config,--sc", show_config,
+               "Show buildtime configuration and exit.")
+      ->default_val(false);
 
   // resource
   app.add_option("--resource-pack,--rp", input.zips, "Resource packs")
@@ -174,6 +179,15 @@ int main(int argc, char **argv) {
       ->default_val(false);
 
   CLI11_PARSE(app, argc, argv);
+
+  if (show_config) {
+    cout << fmt::format("Version : {}\n", SC_VERSION_STR);
+    cout << fmt::format("Build type : {}\n", CMAKE_BUILD_TYPE);
+    cout << fmt::format("GPU API : {}\n", SC_GPU_API);
+    cout << fmt::format("Vectorize : {}\n", SC_VECTORIZE);
+    cout << fmt::format("Gprof : {}\n", SC_GPROF);
+    return 0;
+  }
 
   if (input.list_gpu) {
     return list_gpu();

@@ -30,8 +30,8 @@ This file is part of SlopeCraft.
 #define SC_VERSION_PATCH_U16 @PROJECT_VERSION_PATCH@
 #define SC_VERSION_TWEAK_U16 0
 
-#define SC_MAKE_VERSION_U64(major, minor, patch, tweak)                        \
-  ((uint64_t(major) << 48) | (uint64_t(minor) << 32) |                         \
+#define SC_MAKE_VERSION_U64(major, minor, patch, tweak) \
+  ((uint64_t(major) << 48) | (uint64_t(minor) << 32) |  \
    (uint64_t(patch) << 16) | (uint64_t(tweak)))
 
 #define SC_VERSION_STR "@PROJECT_VERSION@"
@@ -40,4 +40,9 @@ inline constexpr uint64_t SC_VERSION_U64 =
     SC_MAKE_VERSION_U64(SC_VERSION_MAJOR_U16, SC_VERSION_MINOR_U16,
                         SC_VERSION_PATCH_U16, SC_VERSION_TWEAK_U16);
 
-#endif // SLOPECRAFT_SC_VERSON_BUILTTIME_H
+#define CMAKE_BUILD_TYPE "@CMAKE_BUILD_TYPE@"
+#define SC_GPU_API "@SlopeCraft_GPU_API@"
+#define SC_VECTORIZE @SlopeCraft_vectorize@
+#define SC_GPROF @SlopeCraft_gprof@
+
+#endif  // SLOPECRAFT_SC_VERSON_BUILTTIME_H
