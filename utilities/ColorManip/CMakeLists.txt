@@ -5,6 +5,7 @@ project(ColorManip VERSION ${SlopeCraft_version} LANGUAGES C CXX)
 
 # include_directories(../SlopeCraftL)
 find_package(OpenMP REQUIRED)
+find_package(Eigen3 REQUIRED)
 
 add_library(ColorManip
 
@@ -35,7 +36,7 @@ target_include_directories(ColorManip PUBLIC
 target_include_directories(ColorManip PRIVATE
     ${SlopeCraft_HeuristicFlow_include_dir})
 
-target_link_libraries(ColorManip PUBLIC OpenMP::OpenMP_CXX)
+target_link_libraries(ColorManip PUBLIC OpenMP::OpenMP_CXX Eigen3::Eigen)
 
 # target_compile_options(ColorManip BEFORE PUBLIC "-std=c++17")
 target_compile_options(ColorManip PRIVATE ${SlopeCraft_vectorize_flags})
