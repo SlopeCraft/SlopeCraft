@@ -1,10 +1,10 @@
-# This file is expected to be run during installation
+# This file is expected to be run during installation and cpack packaging
 
 if(${WIN32})
     message(STATUS "Running windeployqt for @AppName@ ...")
     execute_process(
         COMMAND "@SlopeCraft_Qt_windeployqt_executable@" "@AppName@.exe"
-        WORKING_DIRECTORY "@CMAKE_INSTALL_PREFIX@"
+        WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}
         OUTPUT_QUIET
         COMMAND_ERROR_IS_FATAL ANY)
 
@@ -21,7 +21,7 @@ if(${APPLE})
     message(STATUS "Running macdeployqt for @AppName@ ...")
     execute_process(
         COMMAND "@SlopeCraft_Qt_macdeployqt_executable@" "@AppName@.app"
-        WORKING_DIRECTORY "@CMAKE_INSTALL_PREFIX@"
+        WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}
         OUTPUT_QUIET
         COMMAND_ERROR_IS_FATAL ANY)
 
