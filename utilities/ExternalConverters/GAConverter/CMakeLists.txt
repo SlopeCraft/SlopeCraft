@@ -18,12 +18,13 @@ set(SlopeCraft_GAConverter_sources
 
 add_library(GAConverter STATIC ${SlopeCraft_GAConverter_sources})
 
-target_include_directories(GAConverter PUBLIC ${SlopeCraft_Eigen3_include_dir}
+target_include_directories(GAConverter PUBLIC
     ${SlopeCraft_HeuristicFlow_include_dir}
     ../../ColorManip
 )
 
-target_link_libraries(GAConverter PUBLIC OpenMP::OpenMP_CXX)
+find_package(Eigen3 REQUIRED)
+target_link_libraries(GAConverter PUBLIC OpenMP::OpenMP_CXX Eigen3::Eigen)
 
 target_compile_features(GAConverter PRIVATE cxx_std_20)
 

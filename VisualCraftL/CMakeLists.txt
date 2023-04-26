@@ -84,7 +84,6 @@ find_package(fmt 9.1.0 REQUIRED)
 
 set(VCL_include_dirs
     ${SlopeCraft_Nlohmann_json_include_dir}
-    ${SlopeCraft_Eigen3_include_dir}
     ${SlopeCraft_HeuristicFlow_include_dir}
     ${CMAKE_SOURCE_DIR})
 target_include_directories(VisualCraftL PRIVATE ${VCL_include_dirs})

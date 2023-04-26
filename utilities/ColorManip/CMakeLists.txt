@@ -30,7 +30,6 @@ target_compile_features(ColorManip PUBLIC cxx_std_20)
 # get_target_property(cm_cxx_std ColorManip CXX_STANDARD)
 # message(STATUS "cm_cxx_std = " ${cm_cxx_std})
 target_include_directories(ColorManip PUBLIC
-    ${SlopeCraft_Eigen3_include_dir}
     ${CMAKE_SOURCE_DIR}/utilities)
 
 target_include_directories(ColorManip PRIVATE

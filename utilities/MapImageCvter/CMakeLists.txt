@@ -9,7 +9,6 @@ add_library(MapImageCvter
 
 target_include_directories(MapImageCvter PUBLIC
     ${CMAKE_SOURCE_DIR}/utilities
-    ${SlopeCraft_Eigen3_include_dir}
     ${SlopeCraft_HeuristicFlow_include_dir}
 )
 

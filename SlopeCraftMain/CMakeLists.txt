@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 project(SlopeCraft_Main VERSION ${SlopeCraft_version} LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 
-include_directories(${SlopeCraft_Eigen3_include_dir}
+include_directories(
     ${CMAKE_SOURCE_DIR}/SlopeCraftL
     ${CMAKE_SOURCE_DIR}/utilities/BlockListManager)
 

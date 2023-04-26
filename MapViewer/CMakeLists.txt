@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.5)
 project(SlopeCraft_MapViewer VERSION ${SlopeCraft_version})
 set(CMAKE_CXX_STANDARD 17)
 
-include_directories(${SlopeCraft_Eigen3_include_dir})
-
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOUIC ON)
@@ -61,12 +59,14 @@ qt_add_executable(MapViewer
 
 # qt_create_translation(MapViewer_qm_files ${CMAKE_SOURCE_DIR} ${MapViewer_ts_files})
 find_package(OpenMP REQUIRED)
+find_package(Eigen3 REQUIRED)
 
 target_link_libraries(MapViewer
     PRIVATE
     ZLIB::ZLIB
     Qt6::Widgets
-    OpenMP::OpenMP_CXX)
+    OpenMP::OpenMP_CXX
+    Eigen3::Eigen)
 
 set_target_properties(MapViewer PROPERTIES
     VERSION ${PROJECT_VERSION}
