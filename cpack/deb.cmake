@@ -9,7 +9,7 @@ if(${SlopeCraft_GPU_API} STREQUAL "OpenCL")
     )
 endif()
 
-set(depend_list
+set(CPACK_DEBIAN_PACKAGE_DEPENDS
     "libzip4"
     "libpng16-16"
     "libqt6core6(>=6.2.4)"
@@ -25,14 +25,7 @@ set(depend_list
     ${SlopeCraft_debian_opencl_deps}
 )
 
-unset(CPACK_DEBIAN_PACKAGE_DEPENDS)
-foreach(depend ${depend_list})
-    if(NOT DEFINED CPACK_DEBIAN_PACKAGE_DEPENDS)
-        set(CPACK_DEBIAN_PACKAGE_DEPENDS "${depend}")
-    else()
-        set(CPACK_DEBIAN_PACKAGE_DEPENDS "${CPACK_DEBIAN_PACKAGE_DEPENDS},${depend}")
-    endif()
-endforeach(depend ${depend_list})
+list(JOIN CPACK_DEBIAN_PACKAGE_DEPENDS "," CPACK_DEBIAN_PACKAGE_DEPENDS)
 
 message(STATUS "CPACK_DEBIAN_PACKAGE_DEPENDS = ${CPACK_DEBIAN_PACKAGE_DEPENDS}")
 
