@@ -156,9 +156,14 @@ void version_dialog_private_fun_when_network_finished(
   try {
     info = extract_latest_version(content_qba.data());
   } catch (std::exception &e) {
-    const QString home_path = QDir::homePath();
+#if WIN32
+    const QString home_path = QDir::homePath() + "/AppData/Local";
     const QString data_dir_name = "SlopeCraft";
-    QString data_dir = QDir::homePath() + "/" + data_dir_name;
+#else
+    const QString home_path = QDir::homePath();
+    const QString data_dir_name = ".SlopeCraft";
+#endif
+    QString data_dir = home_path + "/" + data_dir_name;
     QString log_file = data_dir.append("/UpdateCheckFailure.log");
     {
       if (!QDir(data_dir).exists()) {
