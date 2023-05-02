@@ -10,7 +10,7 @@ file(GLOB SlopeCraft_install_png_customblocks
     "${CMAKE_SOURCE_DIR}/Blocks/CustomBlocks/*.png")
 
 file(GLOB SlopeCraft_install_presets
-    "${CMAKE_CURRENT_SOURCE_DIR}/others/*.sc_preset_json")
+    "${CMAKE_CURRENT_SOURCE_DIR}/others/presets/*.sc_preset_json")
 
 set(AppName SlopeCraft)
 configure_file(${CMAKE_SOURCE_DIR}/cmake/deploy_qt.cmake.in
