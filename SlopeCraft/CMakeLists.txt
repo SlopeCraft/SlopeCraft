@@ -17,11 +17,19 @@ if(${WIN32})
 endif()
 
 set(SlopeCraft_headers
-    SCWind.h)
+    SCWind.h
+    cvt_task.h
+    PoolModel.h
+    AdaptiveListView.h)
+
 set(SlopeCraft_sources
     SCWind.cpp
+    cvt_task.cpp
+    PoolModel.cpp
+    AdaptiveListView.cpp
     main.cpp
     ${SlopeCraft_rc_files})
+
 set(SlopeCraft_uis
     SCWind.ui)
 

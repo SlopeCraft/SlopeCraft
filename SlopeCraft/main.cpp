@@ -1,5 +1,6 @@
 #include <QApplication>
 #include "SCWind.h"
+
 int main(int argc, char** argv) {
   QApplication qapp(argc, argv);
 

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>804</width>
     <height>750</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
     <item row="1" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -109,6 +109,9 @@
                <property name="text">
                 <string notr="true">1.19</string>
                </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
               </widget>
              </item>
             </layout>
@@ -124,6 +127,9 @@
               <widget class="QRadioButton" name="rb_type_3d">
                <property name="text">
                 <string>立体地图画</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -169,7 +175,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>633</width>
+             <width>637</width>
              <height>549</height>
             </rect>
            </property>
@@ -240,6 +246,9 @@
               <widget class="QRadioButton" name="radioButton_3">
                <property name="text">
                 <string>Elegant</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -320,12 +329,15 @@
            </attribute>
            <layout class="QGridLayout" name="gridLayout_7">
             <item row="0" column="0">
-             <widget class="QLabel" name="lb_raw_image">
+             <widget class="AdaptiveLabel" name="lb_raw_image">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="autoFillBackground">
+               <bool>true</bool>
               </property>
               <property name="frameShape">
                <enum>QFrame::Box</enum>
@@ -338,6 +350,12 @@
               </property>
               <property name="text">
                <string/>
+              </property>
+              <property name="scaledContents">
+               <bool>false</bool>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
               </property>
              </widget>
             </item>
@@ -349,12 +367,15 @@
            </attribute>
            <layout class="QGridLayout" name="gridLayout_8">
             <item row="0" column="0">
-             <widget class="QLabel" name="lb_cvted_image">
+             <widget class="AdaptiveLabel" name="lb_cvted_image">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="autoFillBackground">
+               <bool>true</bool>
               </property>
               <property name="frameShape">
                <enum>QFrame::Box</enum>
@@ -367,6 +388,9 @@
               </property>
               <property name="text">
                <string/>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
               </property>
              </widget>
             </item>
@@ -513,6 +537,59 @@
           <property name="topMargin">
            <number>0</number>
           </property>
+          <item row="3" column="0" colspan="2">
+           <widget class="AdaptiveListView" name="lview_pool_cvt">
+            <property name="acceptDrops">
+             <bool>true</bool>
+            </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::NoEditTriggers</set>
+            </property>
+            <property name="dragEnabled">
+             <bool>true</bool>
+            </property>
+            <property name="selectionMode">
+             <enum>QAbstractItemView::ExtendedSelection</enum>
+            </property>
+            <property name="textElideMode">
+             <enum>Qt::ElideLeft</enum>
+            </property>
+            <property name="movement">
+             <enum>QListView::Snap</enum>
+            </property>
+            <property name="flow">
+             <enum>QListView::TopToBottom</enum>
+            </property>
+            <property name="isWrapping" stdset="0">
+             <bool>false</bool>
+            </property>
+            <property name="resizeMode">
+             <enum>QListView::Fixed</enum>
+            </property>
+            <property name="spacing">
+             <number>10</number>
+            </property>
+            <property name="viewMode">
+             <enum>QListView::IconMode</enum>
+            </property>
+            <property name="modelColumn">
+             <number>0</number>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+            <property name="selectionRectVisible">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QPushButton" name="pb_remove_image">
+            <property name="text">
+             <string>删除</string>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="0" colspan="2">
            <widget class="QLabel" name="label">
             <property name="text">
@@ -523,22 +600,25 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
-           <widget class="QPushButton" name="pushButton_7">
-            <property name="text">
-             <string>删除</string>
-            </property>
-           </widget>
-          </item>
           <item row="1" column="0">
-           <widget class="QPushButton" name="pushButton_6">
+           <widget class="QPushButton" name="pb_add_image">
             <property name="text">
              <string>添加</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="0" colspan="2">
-           <widget class="QListView" name="cview_pool_cvt"/>
+          <item row="4" column="0" colspan="2">
+           <widget class="QCheckBox" name="cb_lv_cvt_icon_mode">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>IconMode</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
@@ -610,7 +690,7 @@
            <number>0</number>
           </property>
           <item row="1" column="0" colspan="2">
-           <widget class="QListView" name="cview_pool_export"/>
+           <widget class="AdaptiveListView" name="lview_pool_export"/>
           </item>
           <item row="0" column="0" colspan="2">
            <widget class="QLabel" name="label_2">
@@ -1145,7 +1225,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>804</width>
      <height>22</height>
     </rect>
    </property>
@@ -1170,6 +1250,18 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>AdaptiveLabel</class>
+   <extends>QLabel</extends>
+   <header>AdaptiveLabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>AdaptiveListView</class>
+   <extends>QListView</extends>
+   <header>AdaptiveListView.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
