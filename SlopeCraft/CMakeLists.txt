@@ -9,11 +9,19 @@ set(CMAKE_AUTORCC ON)
 
 find_package(Qt6 COMPONENTS Widgets LinguistTools Network REQUIRED)
 
+set(SlopeCraft_rc_files)
+
+if(${WIN32})
+    configure_file(others/SlopeCraft.rc.in ${CMAKE_CURRENT_BINARY_DIR}/SlopeCraft.rc)
+    set(SlopeCraft_rc_files ${CMAKE_CURRENT_BINARY_DIR}/SlopeCraft.rc)
+endif()
+
 set(SlopeCraft_headers
     SCWind.h)
 set(SlopeCraft_sources
     SCWind.cpp
-    main.cpp)
+    main.cpp
+    ${SlopeCraft_rc_files})
 set(SlopeCraft_uis
     SCWind.ui)
 
