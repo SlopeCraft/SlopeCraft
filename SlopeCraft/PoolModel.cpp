@@ -91,8 +91,18 @@ bool CvtPoolModel::canDropMimeData(const QMimeData* data, Qt::DropAction,
     return false;
   }
 
-  if (data->hasFormat(mime_data_type) &&
-      data->data(mime_data_type).size() % sizeof(int) == 0) {
+  if (!data->hasFormat(mime_data_type)) {
+    return true;
+  }
+
+  const int bytes = data->data(mime_data_type).size();
+
+  if (bytes % sizeof(int) != 0) {
+    return false;
+  }
+
+  // disable moving multiple items, because the behavior is incorrect
+  if (bytes / sizeof(int) == 1) {
     return true;
   }
 
@@ -112,7 +122,7 @@ void map_indices(std::vector<T>& pool, std::vector<int> moved_indices,
                  int begin_idx) noexcept {
   std::list<T> temp_pool;
   for (T& t : pool) {
-    temp_pool.emplace_back(t);
+    temp_pool.emplace_back(std::move(t));
   }
 
   std::sort(moved_indices.begin(), moved_indices.end());
@@ -144,7 +154,7 @@ void map_indices(std::vector<T>& pool, std::vector<int> moved_indices,
 
   pool.clear();
   for (auto& t : temp_pool) {
-    pool.emplace_back(t);
+    pool.emplace_back(std::move(t));
   }
 }
 
@@ -166,7 +176,7 @@ bool CvtPoolModel::dropMimeData(const QMimeData* data, Qt::DropAction action,
   else if (parent.isValid())
     begin_row = parent.row();
   else
-    begin_row = this->rowCount(QModelIndex());
+    begin_row = this->rowCount(QModelIndex{});
 
   {
     auto src_indices = decode_indices(data->data(mime_data_type));

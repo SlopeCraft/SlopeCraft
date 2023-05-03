@@ -81,7 +81,7 @@ void SCWind::on_cb_lv_cvt_icon_mode_clicked() noexcept {
 
   this->ui->lview_pool_cvt->setFlow(QListView::Flow::TopToBottom);
 
-  this->ui->lview_pool_cvt->setSpacing(is_icon_mode ? 16 : 4);
+  this->ui->lview_pool_cvt->setSpacing(is_icon_mode ? 16 : 0);
 }
 
 void SCWind::when_cvt_pool_selectionChanged() noexcept {
