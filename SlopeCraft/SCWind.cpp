@@ -74,12 +74,14 @@ void SCWind::on_pb_remove_image_clicked() noexcept {
 }
 
 void SCWind::on_cb_lv_cvt_icon_mode_clicked() noexcept {
-  this->ui->lview_pool_cvt->setViewMode(
-      (this->ui->cb_lv_cvt_icon_mode->isChecked())
-          ? (QListView::ViewMode::IconMode)
-          : (QListView::ViewMode::ListMode));
+  const bool is_icon_mode = this->ui->cb_lv_cvt_icon_mode->isChecked();
+  this->ui->lview_pool_cvt->setViewMode((is_icon_mode)
+                                            ? (QListView::ViewMode::IconMode)
+                                            : (QListView::ViewMode::ListMode));
 
   this->ui->lview_pool_cvt->setFlow(QListView::Flow::TopToBottom);
+
+  this->ui->lview_pool_cvt->setSpacing(is_icon_mode ? 16 : 4);
 }
 
 void SCWind::when_cvt_pool_selectionChanged() noexcept {

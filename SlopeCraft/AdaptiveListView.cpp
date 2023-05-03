@@ -7,6 +7,9 @@ inline QSize compute_size(QSize widget_size, double ratio = 0.8) noexcept {
 
 AdaptiveListView::AdaptiveListView(QWidget* parent) : QListView(parent) {
   this->setIconSize(compute_size(this->size()));
+  this->setDragEnabled(true);
+  this->setAcceptDrops(true);
+  this->setDropIndicatorShown(true);
 }
 
 AdaptiveListView::~AdaptiveListView() {}

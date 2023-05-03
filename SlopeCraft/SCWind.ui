@@ -175,8 +175,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>637</width>
-             <height>549</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="vlayout_sa_blocklist"/>
@@ -540,13 +540,22 @@
           <item row="3" column="0" colspan="2">
            <widget class="AdaptiveListView" name="lview_pool_cvt">
             <property name="acceptDrops">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
             <property name="editTriggers">
-             <set>QAbstractItemView::NoEditTriggers</set>
+             <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
             </property>
             <property name="dragEnabled">
              <bool>true</bool>
+            </property>
+            <property name="dragDropOverwriteMode">
+             <bool>false</bool>
+            </property>
+            <property name="dragDropMode">
+             <enum>QAbstractItemView::InternalMove</enum>
+            </property>
+            <property name="defaultDropAction">
+             <enum>Qt::CopyAction</enum>
             </property>
             <property name="selectionMode">
              <enum>QAbstractItemView::ExtendedSelection</enum>

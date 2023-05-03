@@ -25,6 +25,27 @@ class CvtPoolModel : public QAbstractListModel {
     emit dataChanged(this->index(0, 0), this->index(this->pool->size(), 0));
   }
 
+  Qt::DropActions supportedDropActions() const override;
+
+  Qt::ItemFlags flags(const QModelIndex& index) const override;
+  QStringList mimeTypes() const override;
+
+  QMimeData* mimeData(const QModelIndexList& indexes) const override;
+
+  bool canDropMimeData(const QMimeData* data, Qt::DropAction action, int row,
+                       int column, const QModelIndex& parent) const override;
+
+  bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row,
+                    int column, const QModelIndex& parent) override;
+  /*/
+    bool setData(const QModelIndex& index, const QVariant& value,
+                 int role) override;
+    Qt::DropActions supportedDragActions() const override;
+
+
+    bool canDropMimeData(const QMimeData* data, Qt::DropAction action, int row,
+                         int column, const QModelIndex& parent) const override;
+  */
  private:
   task_pool_t* pool{nullptr};
   QListView* listview{nullptr};

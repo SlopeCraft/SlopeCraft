@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QImage>
+#include <QVariant>
 
 struct cvt_task {
   QString filename{""};
@@ -14,6 +15,8 @@ struct cvt_task {
 
   static cvt_task load(QString filename, QString& err) noexcept;
 };
+
+Q_DECLARE_METATYPE(cvt_task);
 
 using task_pool_t = std::vector<cvt_task>;
 
