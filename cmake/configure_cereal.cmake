@@ -1,3 +1,5 @@
+set(SKIP_PERFORMANCE_COMPARISON ON)
+
 find_package(cereal)
 
 if(${cereal_FOUND})
