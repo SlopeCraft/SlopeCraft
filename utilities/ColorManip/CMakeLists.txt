@@ -7,6 +7,10 @@ project(ColorManip VERSION ${SlopeCraft_version} LANGUAGES C CXX)
 find_package(OpenMP REQUIRED)
 find_package(Eigen3 REQUIRED)
 
+include(${CMAKE_SOURCE_DIR}/cmake/configure_hash.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/configure_cereal.cmake)
+find_package(cereal REQUIRED)
+
 add_library(ColorManip
 
     ColorManip.h
@@ -17,6 +21,7 @@ add_library(ColorManip
     newColorSet.hpp
     newTokiColor.hpp
     StaticMembers.cpp
+    hash.cpp
 
     colorset_maptical.hpp
     imageConvert.hpp
@@ -26,17 +31,17 @@ add_library(ColorManip
 
 target_compile_features(ColorManip PUBLIC cxx_std_20)
 
-# set_target_properties(ColorManip PROPERTIES CXX_STANDARD_REQUIRED ON)
-
-# get_target_property(cm_cxx_std ColorManip CXX_STANDARD)
-# message(STATUS "cm_cxx_std = " ${cm_cxx_std})
 target_include_directories(ColorManip PUBLIC
-    ${CMAKE_SOURCE_DIR}/utilities)
+    ${CMAKE_SOURCE_DIR}/utilities
+    ${SlopeCraft_Chocobo1_Hash_include_dir})
 
 target_include_directories(ColorManip PRIVATE
     ${SlopeCraft_HeuristicFlow_include_dir})
 
-target_link_libraries(ColorManip PUBLIC OpenMP::OpenMP_CXX Eigen3::Eigen)
+target_link_libraries(ColorManip PUBLIC
+    OpenMP::OpenMP_CXX
+    Eigen3::Eigen
+    cereal::cereal)
 
 # target_compile_options(ColorManip BEFORE PUBLIC "-std=c++17")
 target_compile_options(ColorManip PRIVATE ${SlopeCraft_vectorize_flags})

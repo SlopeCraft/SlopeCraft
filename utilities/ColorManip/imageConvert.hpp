@@ -33,6 +33,7 @@ This file is part of SlopeCraft.
 #include <thread>
 #include <type_traits>
 #include <unordered_map>
+#include <cereal/cereal.hpp>
 
 #include "../SC_GlobalEnums.h"
 #include "ColorManip.h"
@@ -41,30 +42,31 @@ This file is part of SlopeCraft.
 
 #ifdef RGB
 #undef RGB
-#endif // #ifdef RGB
+#endif  // #ifdef RGB
 
 namespace libImageCvt {
 
 using ::Eigen::Dynamic;
 
-static const Eigen::Array<float, 2, 3>
-    dithermap_LR({{0.0 / 16.0, 0.0 / 16.0, 7.0 / 16.0},
-                  {3.0 / 16.0, 5.0 / 16.0, 1.0 / 16.0}});
+static const Eigen::Array<float, 2, 3> dithermap_LR(
+    {{0.0 / 16.0, 0.0 / 16.0, 7.0 / 16.0},
+     {3.0 / 16.0, 5.0 / 16.0, 1.0 / 16.0}});
 
-static const Eigen::Array<float, 2, 3>
-    dithermap_RL({{7.0 / 16.0, 0.0 / 16.0, 0.0 / 16.0},
-                  {1.0 / 16.0, 5.0 / 16.0, 3.0 / 16.0}});
+static const Eigen::Array<float, 2, 3> dithermap_RL(
+    {{7.0 / 16.0, 0.0 / 16.0, 0.0 / 16.0},
+     {1.0 / 16.0, 5.0 / 16.0, 3.0 / 16.0}});
 
-template <bool is_not_optical> struct GPU_wrapper_wrapper {
+template <bool is_not_optical>
+struct GPU_wrapper_wrapper {
   constexpr bool have_gpu_resource() const noexcept { return false; }
 };
 
-template <> struct GPU_wrapper_wrapper<false> {
-
-protected:
+template <>
+struct GPU_wrapper_wrapper<false> {
+ protected:
   gpu_wrapper::gpu_interface *gpu{nullptr};
 
-public:
+ public:
   bool have_gpu_resource() const noexcept { return this->gpu != nullptr; }
 
   void set_gpu_resource(gpu_wrapper::gpu_interface *gi) noexcept {
@@ -81,7 +83,7 @@ public:
 
 template <bool is_not_optical>
 class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
-public:
+ public:
   using basic_colorset_t = colorset_new<true, is_not_optical>;
   using allowed_colorset_t = colorset_new<false, is_not_optical>;
   using TokiColor_t =
@@ -93,15 +95,16 @@ public:
   static const basic_colorset_t &basic_colorset;
   static const allowed_colorset_t &allowed_colorset;
 
-protected:
+ protected:
   Eigen::ArrayXX<ARGB> _raw_image;
   ::SCL_convertAlgo algo;
+  bool dither{false};
   std::unordered_map<convert_unit, TokiColor_t, ::hash_cvt_unit> _color_hash;
 
   Eigen::ArrayXX<ARGB> _dithered_image;
   // Eigen::ArrayXX<colorid_t> colorid_matrix;
 
-public:
+ public:
   uiPack ui;
   // SCL_convertAlgo convert_algo{SCL_convertAlgo::RGB_Better};
 
@@ -117,6 +120,8 @@ public:
   inline void clear_color_hash() noexcept { this->_color_hash.clear(); }
 
   inline ::SCL_convertAlgo convert_algo() const noexcept { return this->algo; }
+
+  inline bool is_dither() const noexcept { return this->dither; }
 
   inline int64_t rows() const noexcept { return _raw_image.rows(); }
   inline int64_t cols() const noexcept { return _raw_image.cols(); }
@@ -147,11 +152,12 @@ public:
     }
   }
 
-  bool convert_image(::SCL_convertAlgo __algo, bool dither,
+  bool convert_image(::SCL_convertAlgo __algo, bool _dither,
                      bool try_gpu = false) noexcept {
     if (__algo == ::SCL_convertAlgo::gaCvter) {
       __algo = ::SCL_convertAlgo::RGB_Better;
     }
+    this->dither = _dither;
 
     ui.rangeSet(0, 100, 0);
 
@@ -163,30 +169,30 @@ public:
     }
     ui.rangeSet(0, 100, 50);
 
-    if (dither) {
+    if (this->dither) {
       switch (this->algo) {
-      case ::SCL_convertAlgo::RGB:
-        this->template __impl_dither<::SCL_convertAlgo::RGB>();
-        break;
-      case ::SCL_convertAlgo::RGB_Better:
-        this->template __impl_dither<::SCL_convertAlgo::RGB_Better>();
-        break;
-      case ::SCL_convertAlgo::HSV:
-        this->template __impl_dither<::SCL_convertAlgo::HSV>();
-        break;
-      case ::SCL_convertAlgo::Lab94:
-        this->template __impl_dither<::SCL_convertAlgo::Lab94>();
-        break;
-      case ::SCL_convertAlgo::Lab00:
-        this->template __impl_dither<::SCL_convertAlgo::Lab00>();
-        break;
-      case ::SCL_convertAlgo::XYZ:
-        this->template __impl_dither<::SCL_convertAlgo::XYZ>();
-        break;
+        case ::SCL_convertAlgo::RGB:
+          this->template __impl_dither<::SCL_convertAlgo::RGB>();
+          break;
+        case ::SCL_convertAlgo::RGB_Better:
+          this->template __impl_dither<::SCL_convertAlgo::RGB_Better>();
+          break;
+        case ::SCL_convertAlgo::HSV:
+          this->template __impl_dither<::SCL_convertAlgo::HSV>();
+          break;
+        case ::SCL_convertAlgo::Lab94:
+          this->template __impl_dither<::SCL_convertAlgo::Lab94>();
+          break;
+        case ::SCL_convertAlgo::Lab00:
+          this->template __impl_dither<::SCL_convertAlgo::Lab00>();
+          break;
+        case ::SCL_convertAlgo::XYZ:
+          this->template __impl_dither<::SCL_convertAlgo::XYZ>();
+          break;
 
-      default:
-        abort();
-        return false;
+        default:
+          abort();
+          return false;
       }
     } else {
       this->_dithered_image = this->_raw_image;
@@ -250,10 +256,10 @@ public:
     converted_image(dest.data());
   }
 
-  inline void
-  converted_image(ARGB *const data_dest, int64_t *const rows_dest = nullptr,
-                  int64_t *const cols_dest = nullptr,
-                  const bool is_dest_col_major = true) const noexcept {
+  inline void converted_image(
+      ARGB *const data_dest, int64_t *const rows_dest = nullptr,
+      int64_t *const cols_dest = nullptr,
+      const bool is_dest_col_major = true) const noexcept {
     if (rows_dest != nullptr) {
       *rows_dest = this->rows();
     }
@@ -288,7 +294,7 @@ public:
     }
   }
 
-private:
+ private:
   void add_colors_to_hash() noexcept {
     // this->_color_hash.clear();
 
@@ -298,8 +304,7 @@ private:
       auto it = _color_hash.find(cu);
 
       // this key isn't inserted
-      if (it == _color_hash.end())
-        this->_color_hash.emplace(cu, TokiColor_t());
+      if (it == _color_hash.end()) this->_color_hash.emplace(cu, TokiColor_t());
     }
   }
 
@@ -308,7 +313,6 @@ private:
       this->match_all_TokiColors_cpu();
       return true;
     } else {
-
       if constexpr (gpu_wrapper::have_api) {
         // If converter have gpu resources, compute by gpu
         if (try_gpu && this->have_gpu_resource()) {
@@ -331,8 +335,7 @@ private:
     tasks.clear();
 
     for (auto &pair : _color_hash) {
-      if (!pair.second.is_result_computed())
-        tasks.emplace_back(&pair);
+      if (!pair.second.is_result_computed()) tasks.emplace_back(&pair);
     }
     const size_t taskCount = tasks.size();
 
@@ -373,7 +376,8 @@ private:
     }
   }
 
-  template <typename = void> bool match_all_TokiColors_gpu() noexcept {
+  template <typename = void>
+  bool match_all_TokiColors_gpu() noexcept {
     static_assert(!is_not_optical,
                   "GPU boosting is only avaliable for VisualCraftL.");
     // static_assert(gpu_wrapper::have_api, "No avaliable GPU api.");
@@ -412,7 +416,6 @@ private:
     if (gpu_task_count > 0) {
       std::vector<std::array<float, 3>> task_colors(gpu_task_count);
       for (size_t tid = 0; tid < gpu_task_count; tid++) {
-
         if (tasks[tid]->first.algo != algo) {
           return false;
         }
@@ -434,30 +437,30 @@ private:
 
     std::array<const float *, 3> colorset_ptrs{nullptr, nullptr, nullptr};
     switch (algo) {
-    case SCL_convertAlgo::RGB:
-    case SCL_convertAlgo::RGB_Better:
-      colorset_ptrs = {TokiColor_t::Allowed->rgb_data(0),
-                       TokiColor_t::Allowed->rgb_data(1),
-                       TokiColor_t::Allowed->rgb_data(2)};
-      break;
-    case SCL_convertAlgo::HSV:
-      colorset_ptrs = {TokiColor_t::Allowed->hsv_data(0),
-                       TokiColor_t::Allowed->hsv_data(1),
-                       TokiColor_t::Allowed->hsv_data(2)};
-      break;
-    case SCL_convertAlgo::Lab94:
-    case SCL_convertAlgo::Lab00:
-      colorset_ptrs = {TokiColor_t::Allowed->lab_data(0),
-                       TokiColor_t::Allowed->lab_data(1),
-                       TokiColor_t::Allowed->lab_data(2)};
-      break;
-    case SCL_convertAlgo::XYZ:
-      colorset_ptrs = {TokiColor_t::Allowed->xyz_data(0),
-                       TokiColor_t::Allowed->xyz_data(1),
-                       TokiColor_t::Allowed->xyz_data(2)};
-      break;
-    default:
-      abort();
+      case SCL_convertAlgo::RGB:
+      case SCL_convertAlgo::RGB_Better:
+        colorset_ptrs = {TokiColor_t::Allowed->rgb_data(0),
+                         TokiColor_t::Allowed->rgb_data(1),
+                         TokiColor_t::Allowed->rgb_data(2)};
+        break;
+      case SCL_convertAlgo::HSV:
+        colorset_ptrs = {TokiColor_t::Allowed->hsv_data(0),
+                         TokiColor_t::Allowed->hsv_data(1),
+                         TokiColor_t::Allowed->hsv_data(2)};
+        break;
+      case SCL_convertAlgo::Lab94:
+      case SCL_convertAlgo::Lab00:
+        colorset_ptrs = {TokiColor_t::Allowed->lab_data(0),
+                         TokiColor_t::Allowed->lab_data(1),
+                         TokiColor_t::Allowed->lab_data(2)};
+        break;
+      case SCL_convertAlgo::XYZ:
+        colorset_ptrs = {TokiColor_t::Allowed->xyz_data(0),
+                         TokiColor_t::Allowed->xyz_data(1),
+                         TokiColor_t::Allowed->xyz_data(2)};
+        break;
+      default:
+        abort();
     }
 
     if (gpu_task_count > 0) {
@@ -505,24 +508,25 @@ private:
   template <SCL_convertAlgo algo>
   inline static ARGB ColorCvt(float c0, float c1, float c2) noexcept {
     switch (algo) {
-    case ::SCL_convertAlgo::RGB:
-    case ::SCL_convertAlgo::RGB_Better:
-    case ::SCL_convertAlgo::gaCvter:
-      return RGB2ARGB(c0, c1, c2);
-    case ::SCL_convertAlgo::HSV:
-      return HSV2ARGB(c0, c1, c2);
-    case ::SCL_convertAlgo::Lab00:
-    case ::SCL_convertAlgo::Lab94:
-      return Lab2ARGB(c0, c1, c2);
-    case ::SCL_convertAlgo::XYZ:
-      return XYZ2ARGB(c0, c1, c2);
+      case ::SCL_convertAlgo::RGB:
+      case ::SCL_convertAlgo::RGB_Better:
+      case ::SCL_convertAlgo::gaCvter:
+        return RGB2ARGB(c0, c1, c2);
+      case ::SCL_convertAlgo::HSV:
+        return HSV2ARGB(c0, c1, c2);
+      case ::SCL_convertAlgo::Lab00:
+      case ::SCL_convertAlgo::Lab94:
+        return Lab2ARGB(c0, c1, c2);
+      case ::SCL_convertAlgo::XYZ:
+        return XYZ2ARGB(c0, c1, c2);
     }
     // unreachable
     abort();
     return 0;
   }
 
-  template <SCL_convertAlgo cvt_algo> void __impl_dither() noexcept {
+  template <SCL_convertAlgo cvt_algo>
+  void __impl_dither() noexcept {
     std::array<Eigen::ArrayXXf, 3> dither_c3;
     for (auto &i : dither_c3) {
       i.setZero(this->rows() + 2, this->cols() + 2);
@@ -638,6 +642,9 @@ private:
   }
 };
 
-} // namespace libImageCvt
+std::vector<uint8_t> hash_of_image(
+    Eigen::Map<const Eigen::ArrayXX<ARGB>> img) noexcept;
 
-#endif // COLORMANIP_IMAGECONVERT_HPP
+}  // namespace libImageCvt
+
+#endif  // COLORMANIP_IMAGECONVERT_HPP

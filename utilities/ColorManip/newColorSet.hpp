@@ -33,6 +33,19 @@ This file is part of SlopeCraft.
 
 // using Eigen::Dynamic;
 
+namespace internal {
+
+struct hash_temp {
+  std::array<std::array<const float *, 3>, 4> color_ptrs;
+  const void *color_id_ptr;
+  int color_count;
+  bool is_maptical;
+};
+
+std::vector<uint8_t> hash_of_colorset(const hash_temp &) noexcept;
+
+}  // namespace internal
+
 template <bool is_basic, bool is_not_optical>
 class colorset_new : public std::conditional_t<
                          is_not_optical,
@@ -40,7 +53,7 @@ class colorset_new : public std::conditional_t<
                                             colorset_maptical_allowed>,
                          std::conditional_t<is_basic, colorset_optical_basic,
                                             colorset_optical_allowed>> {
-public:
+ public:
   template <typename = void>
   colorset_new(const float *const src) : colorset_maptical_basic(src) {
     static_assert(is_basic,
@@ -54,21 +67,40 @@ public:
   inline float color_value(const SCL_convertAlgo algo, const int r,
                            const int c) const noexcept {
     switch (algo) {
-    case SCL_convertAlgo::gaCvter:
-    case SCL_convertAlgo::RGB:
-    case SCL_convertAlgo::RGB_Better:
-      return this->RGB(r, c);
+      case SCL_convertAlgo::gaCvter:
+      case SCL_convertAlgo::RGB:
+      case SCL_convertAlgo::RGB_Better:
+        return this->RGB(r, c);
 
-    case SCL_convertAlgo::HSV:
-      return this->HSV(r, c);
-    case SCL_convertAlgo::Lab94:
-    case SCL_convertAlgo::Lab00:
-      return this->Lab(r, c);
-    case SCL_convertAlgo::XYZ:
-      return this->XYZ(r, c);
+      case SCL_convertAlgo::HSV:
+        return this->HSV(r, c);
+      case SCL_convertAlgo::Lab94:
+      case SCL_convertAlgo::Lab00:
+        return this->Lab(r, c);
+      case SCL_convertAlgo::XYZ:
+        return this->XYZ(r, c);
     }
     return NAN;
   }
+
+  template <typename = void>
+  std::vector<uint8_t> hash() const noexcept {
+    internal::hash_temp temp;
+    temp.color_count = this->color_count();
+    temp.color_ptrs[0] = {this->rgb_data(0), this->rgb_data(1),
+                          this->rgb_data(2)};
+    temp.color_ptrs[1] = {this->hsv_data(0), this->hsv_data(1),
+                          this->hsv_data(2)};
+    temp.color_ptrs[2] = {this->lab_data(0), this->lab_data(1),
+                          this->lab_data(2)};
+    temp.color_ptrs[3] = {this->xyz_data(0), this->xyz_data(1),
+                          this->xyz_data(2)};
+
+    temp.color_id_ptr = this->map_data();
+    temp.is_maptical = is_not_optical;
+
+    return internal::hash_of_colorset(temp);
+  }
 };
 
-#endif // SCL_NEWCOLORSET_HPP
+#endif  // SCL_NEWCOLORSET_HPP

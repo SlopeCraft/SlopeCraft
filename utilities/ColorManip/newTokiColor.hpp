@@ -33,6 +33,7 @@ This file is part of SlopeCraft.
 #include <cmath>
 #include <functional>
 #include <iostream>
+#include <cereal/types/array.hpp>
 
 #ifdef SC_VECTORIZE_AVX2
 #include <immintrin.h>
@@ -72,13 +73,13 @@ inline __m256 _mm256_acos_ps__manually(__m256 x) noexcept {
 }
 
 // #warning rua~
-#endif // SC_VECTORIZE_AVX2
+#endif  // SC_VECTORIZE_AVX2
 
 // using Eigen::Dynamic;
 namespace {
 inline constexpr float threshold = 1e-10f;
 
-} // namespace
+}  // namespace
 struct convert_unit {
   explicit convert_unit(ARGB _a, ::SCL_convertAlgo _c) : _ARGB(_a), algo(_c) {}
   ARGB _ARGB;
@@ -92,36 +93,45 @@ struct convert_unit {
     Eigen::Array3f c3;
     const ::ARGB rawColor = this->_ARGB;
     switch (this->algo) {
-    case ::SCL_convertAlgo::RGB:
-    case ::SCL_convertAlgo::RGB_Better:
-    case ::SCL_convertAlgo::gaCvter:
-      c3[0] = std::max(getR(rawColor) / 255.0f, threshold);
-      c3[1] = std::max(getG(rawColor) / 255.0f, threshold);
-      c3[2] = std::max(getB(rawColor) / 255.0f, threshold);
-      break;
+      case ::SCL_convertAlgo::RGB:
+      case ::SCL_convertAlgo::RGB_Better:
+      case ::SCL_convertAlgo::gaCvter:
+        c3[0] = std::max(getR(rawColor) / 255.0f, threshold);
+        c3[1] = std::max(getG(rawColor) / 255.0f, threshold);
+        c3[2] = std::max(getB(rawColor) / 255.0f, threshold);
+        break;
 
-    case ::SCL_convertAlgo::HSV:
-      RGB2HSV(getR(rawColor) / 255.0f, getG(rawColor) / 255.0f,
-              getB(rawColor) / 255.0f, c3[0], c3[1], c3[2]);
-      break;
-    case ::SCL_convertAlgo::Lab94:
-    case ::SCL_convertAlgo::Lab00:
-      float X, Y, Z;
-      RGB2XYZ(getR(rawColor) / 255.0f, getG(rawColor) / 255.0f,
-              getB(rawColor) / 255.0f, X, Y, Z);
-      XYZ2Lab(X, Y, Z, c3[0], c3[1], c3[2]);
-      break;
-    default:
-      RGB2XYZ(getR(rawColor) / 255.0f, getG(rawColor) / 255.0f,
-              getB(rawColor) / 255.0f, c3[0], c3[1], c3[2]);
-      break;
+      case ::SCL_convertAlgo::HSV:
+        RGB2HSV(getR(rawColor) / 255.0f, getG(rawColor) / 255.0f,
+                getB(rawColor) / 255.0f, c3[0], c3[1], c3[2]);
+        break;
+      case ::SCL_convertAlgo::Lab94:
+      case ::SCL_convertAlgo::Lab00:
+        float X, Y, Z;
+        RGB2XYZ(getR(rawColor) / 255.0f, getG(rawColor) / 255.0f,
+                getB(rawColor) / 255.0f, X, Y, Z);
+        XYZ2Lab(X, Y, Z, c3[0], c3[1], c3[2]);
+        break;
+      default:
+        RGB2XYZ(getR(rawColor) / 255.0f, getG(rawColor) / 255.0f,
+                getB(rawColor) / 255.0f, c3[0], c3[1], c3[2]);
+        break;
     }
     return c3;
+  }
+
+  template <class archive>
+  void save(archive &ar) const {
+    ar(this->_ARGB, this->algo);
+  }
+  template <class archive>
+  void load(archive &ar) {
+    ar(this->_ARGB, this->algo);
   }
 };
 
 struct hash_cvt_unit {
-public:
+ public:
   inline size_t operator()(const convert_unit cu) const noexcept {
     return std::hash<uint32_t>()(cu._ARGB) ^
            std::hash<uint8_t>()(uint8_t(cu.algo));
@@ -132,7 +142,7 @@ template <bool is_not_optical, class basic_t, class allowed_t>
 class newTokiColor
     : public ::std::conditional_t<is_not_optical, newtokicolor_base_maptical,
                                   newtokicolor_base_optical> {
-public:
+ public:
   using Base_t =
       ::std::conditional_t<is_not_optical, newtokicolor_base_maptical,
                            newtokicolor_base_optical>;
@@ -140,13 +150,13 @@ public:
   using result_t = typename Base_t::result_t;
 
   // Eigen::Array3f c3; //   color in some colorspace
-  float ResultDiff; // color diff for the result
+  float ResultDiff;  // color diff for the result
 
   // These two members must be defined by caller
   static const basic_t *const Basic;
   static const allowed_t *const Allowed;
 
-public:
+ public:
   explicit newTokiColor() {
     if constexpr (is_not_optical) {
       this->Result = 0;
@@ -188,22 +198,22 @@ public:
     const Eigen::Array3f c3 = cu.to_c3();
 
     switch (cu.algo) {
-    case ::SCL_convertAlgo::RGB:
-      return applyRGB(c3);
-    case ::SCL_convertAlgo::RGB_Better:
-      return applyRGB_plus(c3);
-    case ::SCL_convertAlgo::HSV:
-      return applyHSV(c3);
-    case ::SCL_convertAlgo::Lab94:
-      return applyLab94(c3);
-    case ::SCL_convertAlgo::Lab00:
-      return applyLab00(c3);
-    case ::SCL_convertAlgo::XYZ:
-      return applyXYZ(c3);
+      case ::SCL_convertAlgo::RGB:
+        return applyRGB(c3);
+      case ::SCL_convertAlgo::RGB_Better:
+        return applyRGB_plus(c3);
+      case ::SCL_convertAlgo::HSV:
+        return applyHSV(c3);
+      case ::SCL_convertAlgo::Lab94:
+        return applyLab94(c3);
+      case ::SCL_convertAlgo::Lab00:
+        return applyLab00(c3);
+      case ::SCL_convertAlgo::XYZ:
+        return applyXYZ(c3);
 
-    default:
-      abort();
-      return result_t(0);
+      default:
+        abort();
+        return result_t(0);
     }
   }
 
@@ -215,19 +225,17 @@ public:
     }
   }
 
-private:
+ private:
   auto find_result(const TempVectorXf_t &diff) noexcept {
     int tempidx = 0;
     this->ResultDiff = diff.minCoeff(&tempidx);
 
     if constexpr (is_not_optical) {
       this->Result = Allowed->Map(tempidx);
-      if (Base_t::needFindSide)
-        this->doSide(diff);
+      if (Base_t::needFindSide) this->doSide(diff);
 
       return this->Result;
     } else {
-
       this->result_color_id = Allowed->color_id(tempidx);
       // std::cout << tempidx << '\t' << this->result_color_id << '\n';
       return this->color_id();
@@ -246,8 +254,7 @@ private:
     }
     if constexpr (is_not_optical) {
       this->Result = Allowed->Map(minidx);
-      if (Base_t::needFindSide)
-        this->doSide(diff);
+      if (Base_t::needFindSide) this->doSide(diff);
 
       return this->Result;
     } else {
@@ -256,7 +263,8 @@ private:
     }
   }
 
-  template <typename = void> void doSide(const TempVectorXf_t &Diff) {
+  template <typename = void>
+  void doSide(const TempVectorXf_t &Diff) {
     static_assert(is_not_optical);
 
     int tempIndex = 0;
@@ -269,60 +277,59 @@ private:
     // using Base_t::DepthCount;
     // using Base_t::needFindSide;
 
-    if (!Base_t::needFindSide)
-      return;
+    if (!Base_t::needFindSide) return;
     // qDebug("开始doSide");
     // qDebug()<<"size(Diff)=["<<Diff.rows()<<','<<Diff.cols()<<']';
     // qDebug()<<"DepthCount="<<(short)DepthCount[0]<<;
     // qDebug()<<"DepthCount=["<<(short)DepthCount[0]<<','<<(short)DepthCount[1]<<','<<(short)DepthCount[2]<<','<<(short)DepthCount[3]<<']';
     // qDebug()<<"DepthIndex=["<<DepthIndexEnd[0]<<','<<DepthIndexEnd[1]<<','<<DepthIndexEnd[2]<<','<<DepthIndexEnd[3]<<']';
     switch (this->Result % 4) {
-    case 3:
-      return;
-    case 0: // 1,2
-      if (Base_t::DepthCount[1]) {
-        this->sideSelectivity[0] =
-            Diff.segment(Base_t::DepthCount[0], Base_t::DepthCount[1])
-                .minCoeff(&tempIndex);
-        this->sideResult[0] = Allowed->Map(Base_t::DepthCount[0] + tempIndex);
-      }
-      if (Base_t::DepthCount[2]) {
-        this->sideSelectivity[1] =
-            Diff.segment(Base_t::DepthCount[0] + Base_t::DepthCount[1],
-                         Base_t::DepthCount[2])
-                .minCoeff(&tempIndex);
-        this->sideResult[1] = Allowed->Map(Base_t::DepthCount[0] +
-                                           Base_t::DepthCount[1] + tempIndex);
-      }
-      break;
-    case 1: // 0,2
-      if (Base_t::DepthCount[0]) {
-        this->sideSelectivity[0] =
-            Diff.segment(0, Base_t::DepthCount[0]).minCoeff(&tempIndex);
-        this->sideResult[0] = Allowed->Map(0 + tempIndex);
-      }
-      if (Base_t::DepthCount[2]) {
-        this->sideSelectivity[1] =
-            Diff.segment(Base_t::DepthCount[0] + Base_t::DepthCount[1],
-                         Base_t::DepthCount[2])
-                .minCoeff(&tempIndex);
-        this->sideResult[1] = Allowed->Map(Base_t::DepthCount[0] +
-                                           Base_t::DepthCount[1] + tempIndex);
-      }
-      break;
-    case 2: // 0,1
-      if (Base_t::DepthCount[0]) {
-        this->sideSelectivity[0] =
-            Diff.segment(0, Base_t::DepthCount[0]).minCoeff(&tempIndex);
-        this->sideResult[0] = Allowed->Map(0 + tempIndex);
-      }
-      if (Base_t::DepthCount[1]) {
-        this->sideSelectivity[1] =
-            Diff.segment(Base_t::DepthCount[0], Base_t::DepthCount[1])
-                .minCoeff(&tempIndex);
-        this->sideResult[1] = Allowed->Map(Base_t::DepthCount[0] + tempIndex);
-      }
-      break;
+      case 3:
+        return;
+      case 0:  // 1,2
+        if (Base_t::DepthCount[1]) {
+          this->sideSelectivity[0] =
+              Diff.segment(Base_t::DepthCount[0], Base_t::DepthCount[1])
+                  .minCoeff(&tempIndex);
+          this->sideResult[0] = Allowed->Map(Base_t::DepthCount[0] + tempIndex);
+        }
+        if (Base_t::DepthCount[2]) {
+          this->sideSelectivity[1] =
+              Diff.segment(Base_t::DepthCount[0] + Base_t::DepthCount[1],
+                           Base_t::DepthCount[2])
+                  .minCoeff(&tempIndex);
+          this->sideResult[1] = Allowed->Map(Base_t::DepthCount[0] +
+                                             Base_t::DepthCount[1] + tempIndex);
+        }
+        break;
+      case 1:  // 0,2
+        if (Base_t::DepthCount[0]) {
+          this->sideSelectivity[0] =
+              Diff.segment(0, Base_t::DepthCount[0]).minCoeff(&tempIndex);
+          this->sideResult[0] = Allowed->Map(0 + tempIndex);
+        }
+        if (Base_t::DepthCount[2]) {
+          this->sideSelectivity[1] =
+              Diff.segment(Base_t::DepthCount[0] + Base_t::DepthCount[1],
+                           Base_t::DepthCount[2])
+                  .minCoeff(&tempIndex);
+          this->sideResult[1] = Allowed->Map(Base_t::DepthCount[0] +
+                                             Base_t::DepthCount[1] + tempIndex);
+        }
+        break;
+      case 2:  // 0,1
+        if (Base_t::DepthCount[0]) {
+          this->sideSelectivity[0] =
+              Diff.segment(0, Base_t::DepthCount[0]).minCoeff(&tempIndex);
+          this->sideResult[0] = Allowed->Map(0 + tempIndex);
+        }
+        if (Base_t::DepthCount[1]) {
+          this->sideSelectivity[1] =
+              Diff.segment(Base_t::DepthCount[0], Base_t::DepthCount[1])
+                  .minCoeff(&tempIndex);
+          this->sideResult[1] = Allowed->Map(Base_t::DepthCount[0] + tempIndex);
+        }
+        break;
     }
     // sideSelectivity[0]-=1.0;sideSelectivity[1]-=1.0;
     // sideSelectivity[0]*=100.0;sideSelectivity[1]*=100.0;
@@ -819,6 +826,21 @@ private:
 
     return find_result(Diff);
   }
+
+ public:
+  template <class archive>
+  void save(archive &ar) const {
+    static_assert(is_not_optical,
+                  "Serialization is only avaliable for maptical maps");
+    ar(this->sideSelectivity, this->sideResult, this->Result, this->ResultDiff);
+  }
+
+  template <class archive>
+  void load(archive &ar) {
+    static_assert(is_not_optical,
+                  "Serialization is only avaliable for maptical maps");
+    ar(this->sideSelectivity, this->sideResult, this->Result, this->ResultDiff);
+  }
 };
 
-#endif // NEWTOKICOLOR_HPP
+#endif  // NEWTOKICOLOR_HPP
