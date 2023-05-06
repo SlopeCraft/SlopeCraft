@@ -1,4 +1,7 @@
 set(SKIP_PERFORMANCE_COMPARISON ON)
+set(BUILD_SANDBOX OFF)
+set(BUILD_DOC OFF)
+set(CEREAL_INSTALL OFF)
 
 find_package(cereal)
 
