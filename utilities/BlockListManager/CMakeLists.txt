@@ -8,29 +8,29 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools REQUIRED)
+find_package(Qt6 COMPONENTS Widgets LinguistTools REQUIRED)
 
-include_directories(${CMAKE_SOURCE_DIR})
-
+# include_directories(${CMAKE_SOURCE_DIR})
 include(${CMAKE_SOURCE_DIR}/cmake/find_nlohmann_json.cmake)
 
 set(BlockListManager_header_files
-
     BlockListManager.h
-    BlockListManager_global.h
-    TokiBaseColor.h
-    TokiBlock.h)
+    BaseColor.h
+    Block.h)
 
 set(BlockListManager_source_files
-
     BlockListManager.cpp
-    TokiBaseColor.cpp
-    TokiBlock.cpp
+    BaseColor.cpp
+    Block.cpp
     BLM_preset.cpp)
 
+set(BlockListManager_ui_files
+    BaseColorWidget.ui
+)
+
 set(BlockListManager_ts_files
-    ${CMAKE_CURRENT_SOURCE_DIR}/BlockListManager_en_US.ts
+
+    # ${CMAKE_CURRENT_SOURCE_DIR}/BlockListManager_en_US.ts
 )
 
 if(${SlopeCraft_update_ts_files})
@@ -43,14 +43,14 @@ endif()
 set(BlockListManaer_project_sources
     ${BlockListManager_header_files}
     ${BlockListManager_source_files}
+    ${BlockListManager_ui_files}
     ${BlockListManager_ts_files}
 )
 
-include_directories(../SlopeCraftL)
-
+# include_directories(../SlopeCraftL)
 add_library(BlockListManager STATIC ${BlockListManaer_project_sources})
-target_link_libraries(BlockListManager PUBLIC Qt${QT_VERSION_MAJOR}::Widgets SlopeCraftL)
-target_compile_definitions(BlockListManager PRIVATE BlockListManager_LIBRARY)
+target_link_libraries(BlockListManager PUBLIC Qt6::Widgets SlopeCraftL)
+target_include_directories(BlockListManager INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(BlockListManager PRIVATE ${SlopeCraft_Nlohmann_json_include_dir})
 
 qt_add_lrelease(BlockListManager TS_FILES ${BlockListManager_ts_files}
