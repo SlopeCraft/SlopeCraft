@@ -263,8 +263,9 @@ class Kernel {
                                          int *zSize = nullptr) const = 0;
 
   // extra functions
-  virtual bool saveCache(const char *cache_dir,
-                         StringDeliver &err) const noexcept = 0;
+  virtual void setCacheDir(const char *) noexcept = 0;
+  virtual const char *cacheDir() const noexcept = 0;
+  virtual bool saveCache(StringDeliver &err) const noexcept = 0;
 };
 
 }  // namespace SlopeCraft

@@ -66,11 +66,11 @@ namespace SlopeCraft
 using namespace SlopeCraft;
 #include <thread>
 
-#define mapColor2Index(mapColor) (64 * (mapColor % 4) + (mapColor / 4))
-#define index2mapColor(index) (4 * (index % 64) + (index / 64))
-#define mapColor2baseColor(mapColor) (mapColor >> 2)
+#define mapColor2Index(mapColor) (64 * ((mapColor) % 4) + ((mapColor) / 4))
+#define index2mapColor(index) (4 * ((index) % 64) + ((index) / 64))
+#define mapColor2baseColor(mapColor) ((mapColor) >> 2)
 #define index2baseColor(index) (mapColor2baseColor(index2mapColor(index)))
-#define mapColor2depth(mapColor) (mapColor % 4)
+#define mapColor2depth(mapColor) ((mapColor) % 4)
 #define index2depth(index) (mapColor2depth(index2mapColor(index)))
 
 class PrimGlassBuilder;
@@ -270,6 +270,8 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   compressSettings compressMethod;
   glassBridgeSettings glassMethod;
   libSchem::Schem schem;
+
+  std::optional<std::string> cache_dir{""};
   // Eigen::Tensor<uchar, 3> Build; // x,y,z
 
   // for setType:
@@ -298,15 +300,17 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
 
   Kernel *toBaseClassPtr() { return this; }
 
-  bool saveCache(const char *cache_dir,
-                 StringDeliver &_err) const noexcept override {
+  void setCacheDir(const char *) noexcept override;
+  const char *cacheDir() const noexcept override;
+
+  bool saveCache(StringDeliver &_err) const noexcept override {
     std::string err;
-    this->saveCache(cache_dir, err);
+    this->saveCache(err);
     write(_err, err);
     return err.empty();
   }
 
-  void saveCache(std::string_view cache_dir, std::string &err) const noexcept;
+  void saveCache(std::string &err) const noexcept;
 };
 
 // bool compressFile(const char *sourcePath, const char *destPath);

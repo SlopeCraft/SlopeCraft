@@ -20,15 +20,30 @@ std::string write_hash(std::string_view filename,
 
 const std::string_view hash_suffix{"*.sha3_512"};
 
-void TokiSlopeCraft::saveCache(std::string_view cache_dir,
-                               std::string &err) const noexcept {
+void TokiSlopeCraft::setCacheDir(const char *d) noexcept {
+  this->cache_dir = d;
+}
+const char *TokiSlopeCraft::cacheDir() const noexcept {
+  if (this->cache_dir.has_value()) {
+    return this->cache_dir.value().c_str();
+  }
+
+  return nullptr;
+}
+
+void TokiSlopeCraft::saveCache(std::string &err) const noexcept {
   if (this->kernelStep < SlopeCraft::step::converted) {
     err = "Can not save cache before the image is converted.";
     return;
   }
 
-  const std::string task_dir =
-      fmt::format("{}/{}", cache_dir, this->image_cvter.task_hash());
+  if (!this->cache_dir.has_value()) {
+    err = "cache dir is not set.";
+    return;
+  }
+
+  const std::string task_dir = fmt::format("{}/{}", this->cache_dir.value(),
+                                           this->image_cvter.task_hash());
 
   namespace stdfs = std::filesystem;
   std::error_code ec;
@@ -41,10 +56,11 @@ void TokiSlopeCraft::saveCache(std::string_view cache_dir,
 
   err.clear();
   std::string temp_err{};
+
   // write colorset hash
   {
-    const std::string name_hash_colorset =
-        fmt::format("{}/{}{}", cache_dir, "colorset", hash_suffix);
+    const std::string name_hash_colorset = fmt::format(
+        "{}/{}{}", this->cache_dir.value(), "colorset", hash_suffix);
 
     temp_err = write_hash(name_hash_colorset, TokiSlopeCraft::Allowed.hash());
     if (!temp_err.empty()) {
