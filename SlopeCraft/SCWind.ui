@@ -170,7 +170,7 @@
           <property name="widgetResizable">
            <bool>true</bool>
           </property>
-          <widget class="QWidget" name="scrollAreaWidgetContents">
+          <widget class="BlockListManager" name="blm">
            <property name="geometry">
             <rect>
              <x>0</x>
@@ -1276,6 +1276,12 @@
    <class>AdaptiveListView</class>
    <extends>QListView</extends>
    <header>AdaptiveListView.h</header>
+  </customwidget>
+  <customwidget>
+   <class>BlockListManager</class>
+   <extends>QWidget</extends>
+   <header>BlockListManager.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

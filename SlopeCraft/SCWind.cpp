@@ -21,6 +21,22 @@ SCWind::SCWind(QWidget *parent)
   this->export_pool_model = new PoolModel{this, &this->tasks};
   this->ui->lview_pool_export->setModel(this->export_pool_model);
   this->export_pool_model->set_listview(this->ui->lview_pool_export);
+
+  this->ui->blm->setup_basecolors(this->kernel);
+  this->ui->blm->set_version_callback(
+      [this]() { return this->selected_version(); });
+
+  this->ui->blm->add_blocklist("./Blocks/FixedBlocks.json",
+                               "./Blocks/FixedBlocks");
+  this->ui->blm->add_blocklist("./Blocks/CustomBlocks.json",
+                               "./Blocks/CustomBlocks");
+
+  this->ui->blm->finish_blocklist();
+
+  for (auto btnp : this->version_buttons()) {
+    connect(btnp, &QRadioButton::toggled, this,
+            &SCWind::when_version_buttons_toggled);
+  }
 }
 
 SCWind::~SCWind() {
@@ -104,4 +120,28 @@ void SCWind::when_cvt_pool_selectionChanged() noexcept {
   this->ui->lb_raw_image->setPixmap(
       QPixmap::fromImage(this->tasks[idx].original_image));
 #warning load converted image here
+}
+
+std::array<const QRadioButton *, 20 - 12 + 1> SCWind::version_buttons()
+    const noexcept {
+  return {this->ui->rb_ver12, this->ui->rb_ver13, this->ui->rb_ver14,
+          this->ui->rb_ver15, this->ui->rb_ver16, this->ui->rb_ver17,
+          this->ui->rb_ver18, this->ui->rb_ver19, this->ui->rb_ver20};
+}
+
+SCL_gameVersion SCWind::selected_version() const noexcept {
+  auto btns = this->version_buttons();
+  for (size_t idx = 0; idx < btns.size(); idx++) {
+    if (btns[idx]->isChecked()) {
+      return SCL_gameVersion(idx + 12);
+    }
+  }
+
+  assert(false);
+
+  return SCL_gameVersion::ANCIENT;
+}
+
+void SCWind::when_version_buttons_toggled() noexcept {
+  this->ui->blm->when_version_updated();
 }

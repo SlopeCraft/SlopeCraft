@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <SlopeCraftL.h>
 #include <memory>
-
+#include <QRadioButton>
 #include <vector>
 
 #include "cvt_task.h"
@@ -28,6 +28,8 @@ class SCWind : public QMainWindow {
 
   void when_cvt_pool_selectionChanged() noexcept;
 
+  void when_version_buttons_toggled() noexcept;
+
  private:
   Ui::SCWind* ui;
   SlopeCraft::Kernel* kernel;
@@ -35,6 +37,10 @@ class SCWind : public QMainWindow {
   task_pool_t tasks;
   CvtPoolModel* cvt_pool_model{nullptr};
   PoolModel* export_pool_model{nullptr};
+
+  std::array<const QRadioButton*, 20 - 12 + 1> version_buttons() const noexcept;
+
+  SCL_gameVersion selected_version() const noexcept;
 };
 
 #endif  // SLOPECRAFT_SLOPECRAFT_SCWIND_H

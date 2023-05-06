@@ -48,7 +48,8 @@ target_link_libraries(SlopeCraft PRIVATE
     Qt6::Network
     SlopeCraftL
     AdaptiveLabel
-    VersionDialog)
+    VersionDialog
+    BlockListManager)
 
 target_include_directories(SlopeCraft PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 

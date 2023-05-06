@@ -325,6 +325,9 @@ SCL_EXPORT void SCL_getColorMapPtrs(const float **const rdata,
 // full palette
 SCL_EXPORT const float *SCL_getBasicColorMapPtrs();
 
+SCL_EXPORT SCL_gameVersion SCL_basecolor_version(uint8_t basecolor);
+SCL_EXPORT uint8_t SCL_maxBaseColor();
+
 // SCL_EXPORT uint64_t SCL_mcVersion2VersionNumber(::SCL_gameVersion);
 
 }  //  namespace SlopeCraft

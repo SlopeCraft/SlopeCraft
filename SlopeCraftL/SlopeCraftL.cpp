@@ -228,4 +228,21 @@ SCL_EXPORT const float *SCL_getBasicColorMapPtrs() {
 SCL_EXPORT const char *SCL_getSCLVersion() {
   return TokiSlopeCraft::getSCLVersion();
 }
+
+SCL_EXPORT SCL_gameVersion SCL_basecolor_version(uint8_t basecolor) {
+  if (basecolor <= 51) {
+    return SCL_gameVersion::ANCIENT;
+  }
+
+  if (basecolor <= 58) {
+    return SCL_gameVersion::MC16;
+  }
+
+  if (basecolor <= 61) {
+    return SCL_gameVersion::MC17;
+  }
+  return SCL_gameVersion::FUTURE;
+}
+
+SCL_EXPORT uint8_t SCL_maxBaseColor() { return 61; }
 }
