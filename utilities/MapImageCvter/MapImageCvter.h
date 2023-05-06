@@ -25,7 +25,9 @@ This file is part of SlopeCraft.
 
 #include <ColorManip/ColorManip.h>
 #include <ColorManip/imageConvert.hpp>
-
+#include <cereal/cereal.hpp>
+#include <cereal/access.hpp>
+#include <cereal/types/unordered_map.hpp>
 #include <memory>
 
 namespace GACvter {
@@ -39,10 +41,10 @@ struct GAOption;
 namespace libMapImageCvt {
 
 class MapImageCvter : public ::libImageCvt::ImageCvter<true> {
-private:
+ private:
   std::unique_ptr<GACvter::GAConverter> gacvter;
 
-public:
+ public:
   using Base_t = ::libImageCvt::ImageCvter<true>;
 
   using TokiColor_t = typename Base_t::TokiColor_t;
@@ -91,7 +93,28 @@ public:
       dest[r] = &it->second;
     }
   }
+
+ public:
+  friend class cereal::access;
+  template <class archive>
+  void save(archive &ar) const {
+    ar(this->_raw_image);
+    ar(this->algo);
+    ar(this->_color_hash);
+    ar(this->_dithered_image);
+  }
+
+  template <class archive>
+  void load(archive &ar) {
+    ar(this->_raw_image);
+    ar(this->algo);
+    ar(this->_color_hash);
+    ar(this->_dithered_image);
+  }
+
+ public:
+  bool save_cache(const char *filename) const noexcept;
 };
 
-} // namespace libMapImageCvt
-#endif // SCL_MAPIMAGECVTER_MAPIMAGECVTER_H
+}  // namespace libMapImageCvt
+#endif  // SCL_MAPIMAGECVTER_MAPIMAGECVTER_H
