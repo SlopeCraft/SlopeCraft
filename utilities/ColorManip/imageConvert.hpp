@@ -640,6 +640,20 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
     }
     return;
   }
+
+ public:
+  uint64_t task_hash() const noexcept {
+    return this->task_hash(this->algo, this->dither);
+  }
+
+  uint64_t task_hash(SCL_convertAlgo a, bool d) const noexcept {
+    const auto &img = this->_raw_image;
+    return std::hash<std::string_view>()(
+
+               std::string_view{(const char *)img.data(),
+                                img.size() * sizeof(uint32_t)}) ^
+           std::hash<char>()((char)a) ^ std::hash<bool>()(d);
+  }
 };
 
 std::vector<uint8_t> hash_of_image(
