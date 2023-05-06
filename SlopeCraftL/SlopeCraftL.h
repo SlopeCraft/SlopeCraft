@@ -55,6 +55,19 @@ using errorFlag = ::SCL_errorFlag;
 
 namespace SlopeCraft {
 
+struct StringDeliver {
+  StringDeliver() = default;
+  StringDeliver(char *p, size_t cap) : data(p), capacity(cap) {}
+  char *const data{nullptr};
+  const size_t capacity{0};
+  size_t size{0};
+  bool is_complete{true};
+
+  constexpr bool is_valid() const noexcept {
+    return this->data != nullptr && this->capacity > 0;
+  }
+};
+
 class AbstractBlock {
  public:
   AbstractBlock() = default;
@@ -248,6 +261,10 @@ class Kernel {
   virtual const unsigned short *getBuild(int *xSize = nullptr,
                                          int *ySize = nullptr,
                                          int *zSize = nullptr) const = 0;
+
+  // extra functions
+  virtual bool saveCache(const char *cache_dir,
+                         StringDeliver &err) const noexcept = 0;
 };
 
 }  // namespace SlopeCraft

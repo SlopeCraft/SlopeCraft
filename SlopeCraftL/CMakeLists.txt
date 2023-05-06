@@ -33,6 +33,7 @@ set(SlopeCraft_SCL_sources
     simpleBlock.h
     SlopeCraftL.h
     SlopeCraftL_global.h
+    WriteStringDeliver.h
 
     AiCvterOpt.cpp
     Colors.cpp
@@ -44,6 +45,7 @@ set(SlopeCraft_SCL_sources
     TokiSlopeCraft_static_funs.cpp
     TokiSlopeCraft_build.cpp
     TokiSlopeCraft_convert.cpp
+    TokiSlopeCraft_cache.cpp
     WaterItem.cpp
     imagePreprocess.cpp
     lossyCompressor.cpp

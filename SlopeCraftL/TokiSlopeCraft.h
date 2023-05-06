@@ -52,6 +52,7 @@ This file is part of SlopeCraft.
 #include <ExternalConverters/GAConverter/GAConverter.h>
 #include <MapImageCvter/MapImageCvter.h>
 #include <Schem/Schem.h>
+#include "WriteStringDeliver.h"
 
 /*
 namespace SlopeCraft
@@ -296,6 +297,16 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   std::string Noder(const short *src, int size) const;
 
   Kernel *toBaseClassPtr() { return this; }
+
+  bool saveCache(const char *cache_dir,
+                 StringDeliver &_err) const noexcept override {
+    std::string err;
+    this->saveCache(cache_dir, err);
+    write(_err, err);
+    return err.empty();
+  }
+
+  void saveCache(std::string_view cache_dir, std::string &err) const noexcept;
 };
 
 // bool compressFile(const char *sourcePath, const char *destPath);
