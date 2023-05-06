@@ -8,7 +8,7 @@
 #include <vector>
 
 #include "cvt_task.h"
-#include "PoolModel.h "
+#include "PoolModel.h"
 
 class SCWind;
 
