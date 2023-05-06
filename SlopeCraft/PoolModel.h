@@ -37,15 +37,7 @@ class CvtPoolModel : public QAbstractListModel {
 
   bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row,
                     int column, const QModelIndex& parent) override;
-  /*/
-    bool setData(const QModelIndex& index, const QVariant& value,
-                 int role) override;
-    Qt::DropActions supportedDragActions() const override;
 
-
-    bool canDropMimeData(const QMimeData* data, Qt::DropAction action, int row,
-                         int column, const QModelIndex& parent) const override;
-  */
  private:
   task_pool_t* pool{nullptr};
   QListView* listview{nullptr};
