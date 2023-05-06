@@ -34,6 +34,7 @@ class SCWind : public QMainWindow {
 
   task_pool_t tasks;
   CvtPoolModel* cvt_pool_model{nullptr};
+  PoolModel* export_pool_model{nullptr};
 };
 
 #endif  // SLOPECRAFT_SLOPECRAFT_SCWIND_H

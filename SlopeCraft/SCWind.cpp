@@ -3,20 +3,24 @@
 #include <QFileDialog>
 #include <QMessageBox>
 // #include "PoolWidget.h"
-
 SCWind::SCWind(QWidget *parent)
     : QMainWindow(parent),
       ui(new Ui::SCWind),
       kernel(SlopeCraft::SCL_createKernel()) {
   this->ui->setupUi(this);
-  this->cvt_pool_model = new CvtPoolModel{this, &this->tasks};
+  assert(this->ui->lview_pool_cvt != nullptr);
+  assert(this->ui->lview_pool_export != nullptr);
 
+  this->cvt_pool_model = new CvtPoolModel{this, &this->tasks};
   this->ui->lview_pool_cvt->setModel(this->cvt_pool_model);
   this->cvt_pool_model->set_listview(this->ui->lview_pool_cvt);
-
   connect(this->ui->lview_pool_cvt->selectionModel(),
           &QItemSelectionModel::selectionChanged, this,
           &SCWind::when_cvt_pool_selectionChanged);
+
+  this->export_pool_model = new PoolModel{this, &this->tasks};
+  this->ui->lview_pool_export->setModel(this->export_pool_model);
+  this->export_pool_model->set_listview(this->ui->lview_pool_export);
 }
 
 SCWind::~SCWind() {
@@ -82,6 +86,8 @@ void SCWind::on_cb_lv_cvt_icon_mode_clicked() noexcept {
   this->ui->lview_pool_cvt->setFlow(QListView::Flow::TopToBottom);
 
   this->ui->lview_pool_cvt->setSpacing(is_icon_mode ? 16 : 0);
+
+  this->cvt_pool_model->refresh();
 }
 
 void SCWind::when_cvt_pool_selectionChanged() noexcept {

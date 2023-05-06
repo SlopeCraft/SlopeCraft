@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>804</width>
-    <height>750</height>
+    <width>920</width>
+    <height>740</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <item row="1" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -175,8 +175,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>637</width>
-             <height>549</height>
+             <width>753</width>
+             <height>539</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="vlayout_sa_blocklist"/>
@@ -699,7 +699,14 @@
            <number>0</number>
           </property>
           <item row="1" column="0" colspan="2">
-           <widget class="AdaptiveListView" name="lview_pool_export"/>
+           <widget class="AdaptiveListView" name="lview_pool_export">
+            <property name="viewMode">
+             <enum>QListView::IconMode</enum>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
           </item>
           <item row="0" column="0" colspan="2">
            <widget class="QLabel" name="label_2">
@@ -722,7 +729,7 @@
            </sizepolicy>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="page_export_3d">
            <layout class="QGridLayout" name="gridLayout_13" columnstretch="1,10,1">
@@ -735,7 +742,7 @@
                </sizepolicy>
               </property>
               <property name="currentIndex">
-               <number>0</number>
+               <number>2</number>
               </property>
               <widget class="QWidget" name="tab_6">
                <attribute name="title">
@@ -1234,7 +1241,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>804</width>
+     <width>920</width>
      <height>22</height>
     </rect>
    </property>
