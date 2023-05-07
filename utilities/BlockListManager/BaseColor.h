@@ -11,6 +11,9 @@ namespace Ui {
 class BaseColorWidget;
 }
 
+using select_callback_t = std::function<int(
+    const std::vector<const SlopeCraft::AbstractBlock*>& blks)>;
+
 class BaseColorWidget : public QGroupBox {
   Q_OBJECT
  private:
@@ -49,6 +52,9 @@ class BaseColorWidget : public QGroupBox {
   void set_enabled(bool enabled) noexcept;
 
   inline auto& block_widgets() noexcept { return this->blocks; }
+
+  void select_by_callback(const select_callback_t& fun);
+
  signals:
   void changed();
 

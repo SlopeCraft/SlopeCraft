@@ -64,6 +64,12 @@ class BlockListManager : public QWidget {
     }
   }
 
+  void select_block_by_callback(const select_callback_t &fun) noexcept {
+    for (auto bcw : this->basecolors) {
+      bcw->select_by_callback(fun);
+    }
+  }
+
   void get_blocklist(std::vector<uint8_t> &enable_list,
                      std::vector<const SlopeCraft::AbstractBlock *> &block_list)
       const noexcept;

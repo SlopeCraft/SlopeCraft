@@ -177,9 +177,11 @@ bool BlockListManager::loadPreset(const blockListPreset &preset) noexcept {
       }
       continue;
     }
+
+    bcw->select_block_soft(matched_idx);
   }
 
-  emit this->changed();
+  // emit this->changed();
 
   return true;
 }

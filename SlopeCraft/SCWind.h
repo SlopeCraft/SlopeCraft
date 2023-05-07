@@ -30,6 +30,12 @@ class SCWind : public QMainWindow {
   void on_pb_load_preset_clicked() noexcept;
   void on_pb_save_preset_clicked() noexcept;
 
+  void on_pb_prefer_concrete_clicked() noexcept;
+  void on_pb_prefer_wool_clicked() noexcept;
+  void on_pb_prefer_glass_clicked() noexcept;
+  void on_pb_prefer_planks_clicked() noexcept;
+  void on_pb_prefer_logs_clicked() noexcept;
+
   void when_cvt_pool_selectionChanged() noexcept;
   void when_version_buttons_toggled() noexcept;
   void when_type_buttons_toggled() noexcept;

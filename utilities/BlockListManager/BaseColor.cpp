@@ -5,6 +5,9 @@
 BaseColorWidget::BaseColorWidget(QWidget* parent, uint8_t _basecolor)
     : QGroupBox(parent), ui(new Ui::BaseColorWidget), basecolor(_basecolor) {
   this->ui->setupUi(this);
+
+  connect(this->ui->cb_enable, &QCheckBox::toggled, this,
+          &BaseColorWidget::changed);
 };
 BaseColorWidget::~BaseColorWidget() { delete this->ui; };
 
@@ -190,4 +193,20 @@ bool BaseColorWidget::is_enabled() const noexcept {
 
 void BaseColorWidget::set_enabled(bool enabled) noexcept {
   this->ui->cb_enable->setChecked(enabled);
+}
+
+void BaseColorWidget::select_by_callback(const select_callback_t& fun) {
+  std::vector<const SlopeCraft::AbstractBlock*> blks;
+  blks.reserve(this->blocks.size());
+  for (auto bw : this->blocks) {
+    blks.emplace_back(bw->attachted_block());
+  }
+
+  const int output = fun(blks);
+
+  if (output < 0 || output >= (int)this->blocks.size()) {
+    return;
+  }
+
+  this->select_block_soft(output);
 }

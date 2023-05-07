@@ -335,6 +335,7 @@ void SCWind::when_preset_clicked() noexcept {
   assert(final_idx >= 0);
 
   if (!this->ui->blm->loadPreset(this->default_presets[final_idx])) {
+    QMessageBox::warning(this, tr("应用预设失败"), "");
     return;
   }
 
@@ -410,4 +411,56 @@ void SCWind::on_pb_save_preset_clicked() noexcept {
     qf.write(str.toUtf8());
     qf.close();
   }
+}
+
+inline int impl_select_blk_by_id(
+    const std::vector<const SlopeCraft::AbstractBlock *> &blks,
+    std::string_view keyword) noexcept {
+  int result = -1;
+  for (int idx = 0; idx < int(blks.size()); idx++) {
+    std::string_view id{blks[idx]->getId()};
+    const auto find = id.find(keyword);
+
+    if (find != std::string_view::npos) {
+      result = idx;
+      break;
+    }
+  }
+
+  return result;
+}
+
+void SCWind::on_pb_prefer_concrete_clicked() noexcept {
+  this->ui->blm->select_block_by_callback(
+      [](const std::vector<const SlopeCraft::AbstractBlock *> &blks) -> int {
+        return impl_select_blk_by_id(blks, "concrete");
+      });
+}
+
+void SCWind::on_pb_prefer_wool_clicked() noexcept {
+  this->ui->blm->select_block_by_callback(
+      [](const std::vector<const SlopeCraft::AbstractBlock *> &blks) -> int {
+        return impl_select_blk_by_id(blks, "wool");
+      });
+}
+
+void SCWind::on_pb_prefer_glass_clicked() noexcept {
+  this->ui->blm->select_block_by_callback(
+      [](const std::vector<const SlopeCraft::AbstractBlock *> &blks) -> int {
+        return impl_select_blk_by_id(blks, "stained_glass");
+      });
+}
+
+void SCWind::on_pb_prefer_planks_clicked() noexcept {
+  this->ui->blm->select_block_by_callback(
+      [](const std::vector<const SlopeCraft::AbstractBlock *> &blks) -> int {
+        return impl_select_blk_by_id(blks, "planks");
+      });
+}
+
+void SCWind::on_pb_prefer_logs_clicked() noexcept {
+  this->ui->blm->select_block_by_callback(
+      [](const std::vector<const SlopeCraft::AbstractBlock *> &blks) -> int {
+        return impl_select_blk_by_id(blks, "log");
+      });
 }

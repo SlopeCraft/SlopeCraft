@@ -25,6 +25,94 @@
         <string>地图画配置</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="2">
+         <widget class="QGroupBox" name="groupBox_3">
+          <property name="title">
+           <string>方块列表预设</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_5">
+           <item row="1" column="2">
+            <widget class="QPushButton" name="pb_load_preset">
+             <property name="text">
+              <string>加载预设</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3">
+            <widget class="QPushButton" name="pb_save_preset">
+             <property name="text">
+              <string>保存当前预设</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="lb_avaliable_colors">
+             <property name="text">
+              <string>可用方块数量：</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0" colspan="4">
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QRadioButton" name="rb_preset_vanilla">
+               <property name="text">
+                <string>Vanilla</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="rb_preset_cheap">
+               <property name="text">
+                <string>Cheap</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="rb_preset_elegant">
+               <property name="text">
+                <string>Elegant</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="rb_preset_shiny">
+               <property name="text">
+                <string>Shiny</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="rb_preset_custom">
+               <property name="text">
+                <string>Custom</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
         <item row="0" column="0" rowspan="3">
          <layout class="QVBoxLayout" name="verticalLayout">
           <property name="leftMargin">
@@ -165,6 +253,48 @@
           </item>
          </layout>
         </item>
+        <item row="0" column="3">
+         <layout class="QGridLayout" name="gridLayout_25">
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <item row="2" column="0">
+           <widget class="QPushButton" name="pb_prefer_glass">
+            <property name="text">
+             <string>优先彩色玻璃</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QPushButton" name="pb_prefer_concrete">
+            <property name="text">
+             <string>优先混凝土</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QPushButton" name="pb_prefer_wool">
+            <property name="text">
+             <string>优先羊毛</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QPushButton" name="pb_prefer_planks">
+            <property name="text">
+             <string>优先木板</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QPushButton" name="pb_prefer_logs">
+            <property name="text">
+             <string>优先原木</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
         <item row="2" column="2" colspan="2">
          <widget class="QScrollArea" name="sa_blocklist_widgets">
           <property name="widgetResizable">
@@ -182,122 +312,6 @@
            <layout class="QVBoxLayout" name="vlayout_sa_blocklist"/>
           </widget>
          </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QGroupBox" name="groupBox_3">
-          <property name="title">
-           <string>方块列表预设</string>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_5">
-           <item row="1" column="2">
-            <widget class="QPushButton" name="pb_load_preset">
-             <property name="text">
-              <string>加载预设</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="3">
-            <widget class="QPushButton" name="pb_save_preset">
-             <property name="text">
-              <string>保存当前预设</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <spacer name="horizontalSpacer">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="lb_avaliable_colors">
-             <property name="text">
-              <string>可用方块数量：</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0" colspan="4">
-            <layout class="QHBoxLayout" name="horizontalLayout">
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QRadioButton" name="rb_preset_vanilla">
-               <property name="text">
-                <string>Vanilla</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QRadioButton" name="rb_preset_cheap">
-               <property name="text">
-                <string>Cheap</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QRadioButton" name="rb_preset_elegant">
-               <property name="text">
-                <string>Elegant</string>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QRadioButton" name="rb_preset_shiny">
-               <property name="text">
-                <string>Shiny</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QRadioButton" name="rb_preset_custom">
-               <property name="text">
-                <string>Custom</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="0" column="3">
-         <layout class="QVBoxLayout" name="verticalLayout_2">
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <item>
-           <widget class="QPushButton" name="pb_prefer_concrete">
-            <property name="text">
-             <string>优先混凝土</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pb_prefer_wool">
-            <property name="text">
-             <string>优先羊毛</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pb_prefer_glass">
-            <property name="text">
-             <string>优先彩色玻璃</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
         </item>
        </layout>
       </widget>
