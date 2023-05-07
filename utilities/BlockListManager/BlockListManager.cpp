@@ -28,6 +28,8 @@ void BlockListManager::setup_basecolors(
     bcw->setTitle(QString::fromUtf8(basecolor_names[bc].data()));
 
     bcw->set_color(bc_arr[bc]);
+
+    connect(bcw, &BaseColorWidget::changed, [this]() { emit this->changed(); });
   }
 }
 
@@ -116,6 +118,23 @@ void BlockListManager::finish_blocklist() noexcept {
 void BlockListManager::when_version_updated() noexcept {
   for (auto bcw : this->basecolors) {
     bcw->when_version_updated(this->callback_get_version());
+  }
+}
+
+void BlockListManager::get_blocklist(
+    std::vector<uint8_t> &enable_list,
+    std::vector<const SlopeCraft::AbstractBlock *> &block_list) const noexcept {
+  enable_list.resize(64);
+  block_list.resize(64);
+
+  for (int bc = 0; bc < (int)this->basecolors.size(); bc++) {
+    enable_list[bc] = this->basecolors[bc]->is_enabled();
+    block_list[bc] = this->basecolors[bc]->selected_block();
+  }
+
+  for (int bc = (int)this->basecolors.size(); bc < 64; bc++) {
+    enable_list[bc] = 0;
+    block_list[bc] = nullptr;
   }
 }
 

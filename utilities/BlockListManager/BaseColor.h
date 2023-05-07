@@ -34,9 +34,19 @@ class BaseColorWidget : public QGroupBox {
 
   int selected_idx() const noexcept;
 
+  bool is_enabled() const noexcept;
+
   const SlopeCraft::AbstractBlock* selected_block() const noexcept {
     return this->blocks[this->selected_idx()]->attachted_block();
   }
+
+  void update_lang(SCL_language lang) noexcept {
+    for (auto bw : this->blocks) {
+      bw->update_lang(lang);
+    }
+  }
+ signals:
+  void changed();
 
  private:
   void add_placeholders() noexcept;

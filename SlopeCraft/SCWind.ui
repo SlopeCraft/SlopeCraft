@@ -669,6 +669,9 @@
           </item>
           <item>
            <widget class="QRadioButton" name="rb_export_flat_diagram">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>平面示意图</string>
             </property>
@@ -698,17 +701,62 @@
           <property name="topMargin">
            <number>0</number>
           </property>
-          <item row="1" column="0" colspan="2">
+          <item row="1" column="0">
            <widget class="AdaptiveListView" name="lview_pool_export">
+            <property name="acceptDrops">
+             <bool>false</bool>
+            </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
+            </property>
+            <property name="dragEnabled">
+             <bool>true</bool>
+            </property>
+            <property name="dragDropOverwriteMode">
+             <bool>false</bool>
+            </property>
+            <property name="dragDropMode">
+             <enum>QAbstractItemView::InternalMove</enum>
+            </property>
+            <property name="defaultDropAction">
+             <enum>Qt::CopyAction</enum>
+            </property>
+            <property name="selectionMode">
+             <enum>QAbstractItemView::ExtendedSelection</enum>
+            </property>
+            <property name="textElideMode">
+             <enum>Qt::ElideLeft</enum>
+            </property>
+            <property name="movement">
+             <enum>QListView::Snap</enum>
+            </property>
+            <property name="flow">
+             <enum>QListView::TopToBottom</enum>
+            </property>
+            <property name="isWrapping" stdset="0">
+             <bool>false</bool>
+            </property>
+            <property name="resizeMode">
+             <enum>QListView::Fixed</enum>
+            </property>
+            <property name="spacing">
+             <number>10</number>
+            </property>
             <property name="viewMode">
              <enum>QListView::IconMode</enum>
+            </property>
+            <property name="modelColumn">
+             <number>0</number>
             </property>
             <property name="wordWrap">
              <bool>true</bool>
             </property>
+            <property name="selectionRectVisible">
+             <bool>true</bool>
+            </property>
            </widget>
           </item>
-          <item row="0" column="0" colspan="2">
+          <item row="0" column="0">
            <widget class="QLabel" name="label_2">
             <property name="text">
              <string>项目池</string>
@@ -721,7 +769,7 @@
          </layout>
         </item>
         <item row="3" column="1">
-         <widget class="QStackedWidget" name="stackedWidget">
+         <widget class="QStackedWidget" name="sw_export">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -734,7 +782,7 @@
           <widget class="QWidget" name="page_export_3d">
            <layout class="QGridLayout" name="gridLayout_13" columnstretch="1,10,1">
             <item row="0" column="0">
-             <widget class="QTabWidget" name="tabWidget_3">
+             <widget class="QTabWidget" name="tw_export_options">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -848,6 +896,9 @@
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
+                  <property name="text">
+                   <string>0</string>
+                  </property>
                  </widget>
                 </item>
                 <item row="0" column="3">
@@ -857,6 +908,9 @@
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
+                  </property>
+                  <property name="text">
+                   <string>0</string>
                   </property>
                  </widget>
                 </item>
@@ -875,6 +929,9 @@
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
+                  <property name="text">
+                   <string>0</string>
+                  </property>
                  </widget>
                 </item>
                 <item row="1" column="2">
@@ -884,6 +941,9 @@
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
+                  </property>
+                  <property name="text">
+                   <string>0</string>
                   </property>
                  </widget>
                 </item>
@@ -895,6 +955,9 @@
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
+                  <property name="text">
+                   <string>0</string>
+                  </property>
                  </widget>
                 </item>
                 <item row="0" column="1">
@@ -904,6 +967,9 @@
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
+                  </property>
+                  <property name="text">
+                   <string>0</string>
                   </property>
                  </widget>
                 </item>
@@ -939,12 +1005,24 @@
                   <property name="prefix">
                    <string>间距：</string>
                   </property>
+                  <property name="minimum">
+                   <number>1</number>
+                  </property>
+                  <property name="maximum">
+                   <number>65536</number>
+                  </property>
+                  <property name="value">
+                   <number>16</number>
+                  </property>
                  </widget>
                 </item>
                 <item row="2" column="0">
                  <widget class="QCheckBox" name="cb_flatdiagram_vline">
                   <property name="text">
                    <string>垂直分割线</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
@@ -956,12 +1034,24 @@
                   <property name="prefix">
                    <string>间距：</string>
                   </property>
+                  <property name="minimum">
+                   <number>1</number>
+                  </property>
+                  <property name="maximum">
+                   <number>65536</number>
+                  </property>
+                  <property name="value">
+                   <number>16</number>
+                  </property>
                  </widget>
                 </item>
                 <item row="0" column="0">
                  <widget class="QCheckBox" name="cb_flatdiagram_hline">
                   <property name="text">
                    <string>水平分割线</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
@@ -992,6 +1082,9 @@
                 <widget class="QCheckBox" name="cb_compress_lossy">
                  <property name="text">
                   <string>有损压缩</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -1099,6 +1192,15 @@
                  </property>
                  <property name="prefix">
                   <string>搭桥间隔：</string>
+                 </property>
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>4096</number>
+                 </property>
+                 <property name="value">
+                  <number>5</number>
                  </property>
                 </widget>
                </item>

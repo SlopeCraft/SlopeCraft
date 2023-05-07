@@ -29,6 +29,11 @@ class SCWind : public QMainWindow {
   void when_cvt_pool_selectionChanged() noexcept;
 
   void when_version_buttons_toggled() noexcept;
+  void when_type_buttons_toggled() noexcept;
+
+  void when_blocklist_changed() noexcept;
+
+  void when_export_type_toggled() noexcept;
 
  private:
   Ui::SCWind* ui;
@@ -38,9 +43,25 @@ class SCWind : public QMainWindow {
   CvtPoolModel* cvt_pool_model{nullptr};
   PoolModel* export_pool_model{nullptr};
 
+  std::array<QRadioButton*, 20 - 12 + 1> version_buttons() noexcept;
   std::array<const QRadioButton*, 20 - 12 + 1> version_buttons() const noexcept;
 
+  std::array<QRadioButton*, 3> type_buttons() noexcept;
+  std::array<const QRadioButton*, 3> type_buttons() const noexcept;
+
+  std::array<QRadioButton*, 5> export_type_buttons() noexcept;
+  std::array<const QRadioButton*, 5> export_type_buttons() const noexcept;
+
   SCL_gameVersion selected_version() const noexcept;
+
+  SCL_mapTypes selected_type() const noexcept;
+
+  void kernel_set_type() noexcept;
+
+  void update_button_states() noexcept;
+
+ signals:
+  void image_changed();
 };
 
 #endif  // SLOPECRAFT_SLOPECRAFT_SCWIND_H

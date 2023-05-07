@@ -58,6 +58,19 @@ class BlockListManager : public QWidget {
 
   void when_version_updated() noexcept;
 
+  void when_lang_updated(SCL_language lang) noexcept {
+    for (auto bcw : this->basecolors) {
+      bcw->update_lang(lang);
+    }
+  }
+
+  void get_blocklist(std::vector<uint8_t> &enable_list,
+                     std::vector<const SlopeCraft::AbstractBlock *> &block_list)
+      const noexcept;
+
+ signals:
+  void changed();
+
  private:
   bool impl_addblocklist(const QString &filename, const QString &dirname,
                          std::unique_ptr<SlopeCraft::BlockListInterface,

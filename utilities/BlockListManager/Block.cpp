@@ -9,3 +9,13 @@ BlockWidget::BlockWidget(QWidget* parent, SlopeCraft::AbstractBlock* _blk)
 
   this->setIcon(QIcon{QPixmap::fromImage(img)});
 };
+void BlockWidget::update_lang(SCL_language lang) noexcept {
+  switch (lang) {
+    case SCL_language::Chinese:
+      this->setText(QString::fromUtf8(this->block->getNameZH()));
+      break;
+    case SCL_language::English:
+      this->setText(QString::fromUtf8(this->block->getNameEN()));
+      break;
+  }
+}

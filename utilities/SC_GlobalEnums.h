@@ -200,4 +200,6 @@ enum class SCL_HalfTpPixelSt : char {
   IgnoreAlpha = 'R'
 };
 
+enum class SCL_language : int { Chinese = 0, English = 1 };
+
 #endif

@@ -25,7 +25,7 @@ class PoolModel : public QAbstractListModel {
   QVariant data(const QModelIndex& idx, int role) const override;
 
   void refresh() noexcept {
-    emit dataChanged(this->index(0, 0), this->index(this->pool->size(), 0));
+    emit dataChanged(this->index(0, 0), this->index(this->rowCount({}), 0));
   }
 
  public:

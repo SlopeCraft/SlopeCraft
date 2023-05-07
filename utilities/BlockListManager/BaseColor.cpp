@@ -37,6 +37,8 @@ void BaseColorWidget::add_block(SlopeCraft::AbstractBlock* ab) noexcept {
   const int row = idx / cols;
 
   dynamic_cast<QGridLayout*>(this->ui->layout_blocks)->addWidget(bw, row, col);
+
+  connect(bw, &QRadioButton::toggled, this, &BaseColorWidget::changed);
 }
 
 void BaseColorWidget::add_placeholders() noexcept {
@@ -120,7 +122,9 @@ void BaseColorWidget::when_version_updated(SCL_gameVersion v) noexcept {
         (SCL_gameVersion)this->blocks[idx]->attachted_block()->getVersion(),
         this->blocks.size(), v));
   }
-
+  if (this->basecolor == 0) {  // basecolor 0 (air) must be selected
+    return;
+  }
   const bool is_version_ok =
       SlopeCraft::SCL_basecolor_version(this->basecolor) <= v;
   this->ui->cb_enable->setChecked(is_version_ok);
@@ -171,4 +175,8 @@ int BaseColorWidget::prefered_block_idx(int checked_idx,
   }
 
   return max_idx;
+}
+
+bool BaseColorWidget::is_enabled() const noexcept {
+  return this->ui->cb_enable->isChecked();
 }

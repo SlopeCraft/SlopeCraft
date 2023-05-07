@@ -16,6 +16,8 @@ class BlockWidget : public QRadioButton {
   ~BlockWidget() = default;
 
   auto attachted_block() const noexcept { return this->block; }
+
+  void update_lang(SCL_language lang) noexcept;
 };
 
 #endif  // SLOPECRAFT_UTILITIES_BLOCKLISTMANAGER_BLOCK_H
