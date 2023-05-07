@@ -62,7 +62,7 @@
   {
     "baseColor": 12,
     "blockId": "minecraft:water[level=0]",
-    "enabled": true
+    "enabled": false
   },
   {
     "baseColor": 13,
