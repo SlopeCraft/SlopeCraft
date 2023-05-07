@@ -91,7 +91,7 @@ SCWind::SCWind(QWidget *parent)
     }
   }
 
-  this->when_blocklist_changed();
+  { this->when_preset_clicked(); }
 }
 
 SCWind::~SCWind() {
@@ -339,8 +339,6 @@ void SCWind::when_preset_clicked() noexcept {
   }
 
   this->preset_buttons_no_custom()[final_idx]->setChecked(true);
-
-#warning apply preset here
 }
 
 void SCWind::when_export_type_toggled() noexcept {
@@ -360,4 +358,25 @@ void SCWind::when_export_type_toggled() noexcept {
   }
 
   this->update_button_states();
+}
+
+void SCWind::on_pb_load_preset_clicked() noexcept {
+  static QString prev_dir{""};
+  QString file = QFileDialog::getOpenFileName(this, tr("选择预设文件"),
+                                              prev_dir, "*.sc_preset_json");
+
+  if (file.isEmpty()) {
+    return;
+  }
+
+  prev_dir = QFileInfo{file}.dir().canonicalPath();
+  QString err;
+  blockListPreset preset = load_preset(file, err);
+  if (!err.isEmpty()) {
+    QMessageBox::warning(this, tr("解析预设文件失败"),
+                         tr("预设文件%1存在错误：%2").arg(file).arg(err));
+    return;
+  }
+
+  this->ui->blm->loadPreset(preset);
 }

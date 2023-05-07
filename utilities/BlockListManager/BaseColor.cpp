@@ -189,5 +189,5 @@ bool BaseColorWidget::is_enabled() const noexcept {
 }
 
 void BaseColorWidget::set_enabled(bool enabled) noexcept {
-  this->ui->cb_enable->setEnabled(enabled);
+  this->ui->cb_enable->setChecked(enabled);
 }

@@ -27,8 +27,9 @@ class SCWind : public QMainWindow {
   void on_pb_remove_image_clicked() noexcept;
   void on_cb_lv_cvt_icon_mode_clicked() noexcept;
 
-  void when_cvt_pool_selectionChanged() noexcept;
+  void on_pb_load_preset_clicked() noexcept;
 
+  void when_cvt_pool_selectionChanged() noexcept;
   void when_version_buttons_toggled() noexcept;
   void when_type_buttons_toggled() noexcept;
   void when_blocklist_changed() noexcept;
