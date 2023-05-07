@@ -380,3 +380,34 @@ void SCWind::on_pb_load_preset_clicked() noexcept {
 
   this->ui->blm->loadPreset(preset);
 }
+
+void SCWind::on_pb_save_preset_clicked() noexcept {
+  static QString prev_dir{""};
+  QString file = QFileDialog::getSaveFileName(this, tr("保存当前预设"),
+                                              prev_dir, "*.sc_preset_json");
+
+  if (file.isEmpty()) {
+    return;
+  }
+
+  prev_dir = QFileInfo{file}.dir().canonicalPath();
+
+  blockListPreset preset = this->ui->blm->to_preset();
+  {
+    QString str = serialize_preset(preset);
+
+    QFile qf{file};
+    qf.open(QFile::OpenMode{QIODevice::WriteOnly | QIODevice::Text});
+
+    if (!qf.isOpen()) {
+      QMessageBox::warning(this, tr("保存预设文件失败"),
+                           tr("无法生成预设文件%1 ，错误信息：%2")
+                               .arg(file)
+                               .arg(qf.errorString()));
+      return;
+    }
+
+    qf.write(str.toUtf8());
+    qf.close();
+  }
+}

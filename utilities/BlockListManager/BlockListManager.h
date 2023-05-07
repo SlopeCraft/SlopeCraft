@@ -70,6 +70,8 @@ class BlockListManager : public QWidget {
 
   bool loadPreset(const blockListPreset &preset) noexcept;
 
+  blockListPreset to_preset() const noexcept;
+
  signals:
   void changed();
 

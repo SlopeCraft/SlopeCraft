@@ -184,6 +184,17 @@ bool BlockListManager::loadPreset(const blockListPreset &preset) noexcept {
   return true;
 }
 
+blockListPreset BlockListManager::to_preset() const noexcept {
+  blockListPreset ret;
+  ret.values.resize(this->basecolors.size());
+  for (size_t basecolor = 0; basecolor < this->basecolors.size(); basecolor++) {
+    ret.values[basecolor].first = this->basecolors[basecolor]->is_enabled();
+    ret.values[basecolor].second = QString::fromUtf8(
+        this->basecolors[basecolor]->selected_block()->getId());
+  }
+  return ret;
+}
+
 std::string_view basecolor_names[64] = {"00 None",
                                         "01 Grass",
                                         "02 Sand",
