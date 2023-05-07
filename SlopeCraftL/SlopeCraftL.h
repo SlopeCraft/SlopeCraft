@@ -185,7 +185,8 @@ class Kernel {
 
   // can do in wait4Image:
   /// set original image from ARGB32 matrix (col-major)
-  virtual void setRawImage(const uint32_t *src, int rows, int cols) = 0;
+  [[deprecated]] virtual void setRawImage(const uint32_t *src, int rows,
+                                          int cols) = 0;
   /// get accessible color count
   virtual unsigned short getColorCount() const = 0;
   /// get usable colors in ARGB32
@@ -220,8 +221,8 @@ class Kernel {
       bool endermanProof = false) = 0;
 
   /// get converted image
-  virtual void getConvertedImage(int *rows, int *cols,
-                                 uint32_t *dest) const = 0;
+  [[deprecated]] virtual void getConvertedImage(int *rows, int *cols,
+                                                uint32_t *dest) const = 0;
   /// export as map data files, returns failed files.
   virtual void exportAsData(const char *FolderPath, const int indexStart,
                             int *fileCount, char **dest) const = 0;
@@ -262,10 +263,19 @@ class Kernel {
                                          int *ySize = nullptr,
                                          int *zSize = nullptr) const = 0;
 
-  // extra functions
+  // Virtual functions added after v5.0.0. Define them in the end of vtable to
+  // matain binary compability
+
+  // added in v5.1.0
   virtual void setCacheDir(const char *) noexcept = 0;
   virtual const char *cacheDir() const noexcept = 0;
   virtual bool saveCache(StringDeliver &err) const noexcept = 0;
+  virtual void setRawImage(const uint32_t *src, int rows, int cols,
+                           bool is_col_major) = 0;
+  virtual void getConvertedImage(int *rows, int *cols, uint32_t *dest,
+                                 bool expected_col_major) const = 0;
+
+  virtual bool check_colorset_hash() const noexcept = 0;
 };
 
 }  // namespace SlopeCraft

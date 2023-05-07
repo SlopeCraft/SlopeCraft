@@ -3,9 +3,7 @@ set(CMAKE_CXX_STANDARD 20)
 find_package(OpenMP REQUIRED)
 
 include(${CMAKE_SOURCE_DIR}/cmake/configure_cereal.cmake)
-include(${CMAKE_SOURCE_DIR}/cmake/configure_bxzstr.cmake)
 find_package(cereal REQUIRED)
-find_package(bxzstr REQUIRED)
 
 add_library(MapImageCvter
     STATIC
@@ -21,8 +19,8 @@ target_link_libraries(MapImageCvter PUBLIC
     ColorManip
     GAConverter
     OpenMP::OpenMP_CXX
-    cereal::cereal
-    bxzstr::bxzstr)
+    cereal::cereal)
+
 target_compile_options(MapImageCvter PRIVATE ${SlopeCraft_vectorize_flags})
 
 target_compile_features(MapImageCvter PUBLIC cxx_std_20)

@@ -14,6 +14,30 @@ struct cvt_task {
   bool is_exported{false};
 
   static cvt_task load(QString filename, QString& err) noexcept;
+
+  void set_converted() noexcept {
+    this->is_converted = true;
+    this->is_built = false;
+    this->is_exported = false;
+  }
+
+  void set_built() noexcept {
+    assert(this->is_converted);
+    this->is_built = true;
+    this->is_exported = false;
+  }
+
+  void set_exported() noexcept {
+    assert(this->is_converted);
+    assert(this->is_built);
+    this->is_exported = true;
+  }
+
+  void set_unconverted() noexcept {
+    this->is_converted = false;
+    this->is_built = false;
+    this->is_exported = false;
+  }
 };
 
 Q_DECLARE_METATYPE(cvt_task);

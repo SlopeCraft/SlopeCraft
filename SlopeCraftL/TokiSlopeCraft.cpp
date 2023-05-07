@@ -360,7 +360,8 @@ void TokiSlopeCraft::getAvailableColors(ARGB *const ARGBDest,
   }
 }
 
-void TokiSlopeCraft::setRawImage(const ARGB *src, int rows, int cols) {
+void TokiSlopeCraft::setRawImage(const ARGB *src, int rows, int cols,
+                                 bool is_col_major) {
   if (kernelStep < SCL_step::wait4Image) {
     reportError(wind, errorFlag::HASTY_MANIPULATION,
                 "You can only import the raw image count after you set the map "
@@ -373,7 +374,7 @@ void TokiSlopeCraft::setRawImage(const ARGB *src, int rows, int cols) {
     return;
   }
 
-  this->image_cvter.set_raw_image(src, rows, cols);
+  this->image_cvter.set_raw_image(src, rows, cols, is_col_major);
 
   kernelStep = SCL_step::convertionReady;
 
@@ -415,11 +416,17 @@ TokiSlopeCraft::ColorSpace TokiSlopeCraft::getColorSpace() const {
   return R;
 }
 
-void TokiSlopeCraft::getConvertedImage(int *rows, int *cols, ARGB *dest) const {
+void TokiSlopeCraft::getConvertedImage(int *rows, int *cols, ARGB *dest,
+                                       bool expected_col_major) const {
   EImage result = getConovertedImage();
   if (rows != nullptr) *rows = result.rows();
   if (cols != nullptr) *cols = result.cols();
-  if (dest != nullptr) memcpy(dest, result.data(), sizeof(ARGB) * sizePic(2));
+  if (!expected_col_major) {
+    result.transposeInPlace();
+  }
+  if (dest != nullptr) {
+    memcpy(dest, result.data(), sizeof(ARGB) * sizePic(2));
+  }
 }
 
 EImage TokiSlopeCraft::getConovertedImage() const {

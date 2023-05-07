@@ -3,6 +3,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <ranges>
+#include <QApplication>
 
 // #include "PoolWidget.h"
 SCWind::SCWind(QWidget *parent)
@@ -11,9 +12,17 @@ SCWind::SCWind(QWidget *parent)
       kernel(SlopeCraft::SCL_createKernel()) {
   this->ui->setupUi(this);
   {
+    const auto pid = QApplication::applicationPid();
+
+    const QString sys_cache_dir = QDir::tempPath();
+    const QString cache_dir =
+        QStringLiteral("%1/SlopeCraft/pid=%2").arg(sys_cache_dir).arg(pid);
+
+    this->kernel->setCacheDir(cache_dir.toLocal8Bit());
+
     this->kernel->setWindPtr(this);
-    this->kernel->setAlgoProgressAdd([](void *, int) {});
-    this->kernel->setAlgoProgressRangeSet([](void *, int, int, int) {});
+    // this->kernel->setAlgoProgressAdd([](void *, int) {});
+    // this->kernel->setAlgoProgressRangeSet([](void *, int, int, int) {});
   }
   // initialize cvt pool model
   {
@@ -91,11 +100,22 @@ SCWind::SCWind(QWidget *parent)
     }
   }
 
-  { this->when_preset_clicked(); }
+  this->when_preset_clicked();
 }
 
 SCWind::~SCWind() {
   delete this->ui;
+
+  {
+    const char *cd = this->kernel->cacheDir();
+    if (cd != nullptr) {
+      QDir cache_dir{QString::fromLocal8Bit(cd)};
+      if (cache_dir.exists()) {
+        cache_dir.removeRecursively();
+      }
+    }
+  }
+
   SlopeCraft::SCL_destroyKernel(this->kernel);
 }
 
@@ -165,19 +185,9 @@ void SCWind::on_cb_lv_cvt_icon_mode_clicked() noexcept {
 }
 
 void SCWind::when_cvt_pool_selectionChanged() noexcept {
-  auto sel = this->ui->lview_pool_cvt->selectionModel()->selectedIndexes();
+  const auto selected_idx = this->selected_cvt_task_idx();
 
-  if (sel.size() <= 0) {
-    this->ui->lb_raw_image->setPixmap({});
-    this->ui->lb_cvted_image->setPixmap({});
-    return;
-  }
-
-  const int idx = sel.front().row();
-
-  this->ui->lb_raw_image->setPixmap(
-      QPixmap::fromImage(this->tasks[idx].original_image));
-#warning load converted image here
+  this->refresh_current_cvt_display(selected_idx);
 }
 
 #define SC_SLOPECRAFT_PRIVATEMACRO_VERSION_BUTTON_LIST              \
@@ -237,6 +247,43 @@ SCL_mapTypes SCWind::selected_type() const noexcept {
   return {};
 }
 
+std::optional<int> SCWind::selected_cvt_task_idx() const noexcept {
+  auto sel = this->ui->lview_pool_cvt->selectionModel()->selectedIndexes();
+  if (sel.size() <= 0) {
+    return std::nullopt;
+  }
+
+  return sel.front().row();
+}
+
+SCL_convertAlgo SCWind::selected_algo() const noexcept {
+  if (this->ui->rb_algo_RGB->isChecked()) {
+    return SCL_convertAlgo::RGB;
+  }
+  if (this->ui->rb_algo_RGB_plus->isChecked()) {
+    return SCL_convertAlgo::RGB_Better;
+  }
+  if (this->ui->rb_algo_Lab94->isChecked()) {
+    return SCL_convertAlgo::Lab94;
+  }
+  if (this->ui->rb_algo_Lab00->isChecked()) {
+    return SCL_convertAlgo::Lab00;
+  }
+  if (this->ui->rb_algo_XYZ->isChecked()) {
+    return SCL_convertAlgo::XYZ;
+  }
+  if (this->ui->rb_algo_GACvter->isChecked()) {
+    return SCL_convertAlgo::gaCvter;
+  }
+
+  assert(false);
+  return {};
+}
+
+bool SCWind::is_dither_selected() const noexcept {
+  return this->ui->cb_algo_dither->isChecked();
+}
+
 void SCWind::when_version_buttons_toggled() noexcept {
   this->ui->blm->when_version_updated();
   this->when_blocklist_changed();
@@ -291,6 +338,21 @@ std::array<const QRadioButton *, 5> SCWind::export_type_buttons()
 std::array<QRadioButton *, 4> SCWind::preset_buttons_no_custom() noexcept {
   return {this->ui->rb_preset_vanilla, this->ui->rb_preset_cheap,
           this->ui->rb_preset_elegant, this->ui->rb_preset_shiny};
+}
+
+#define SC_SLOPECRAFT_PRIVATEMARCO_ALGO_BUTTONS           \
+  {                                                       \
+    this->ui->rb_algo_RGB, this->ui->rb_algo_RGB_plus,    \
+        this->ui->rb_algo_Lab94, this->ui->rb_algo_Lab00, \
+        this->ui->rb_algo_XYZ, this->ui->rb_algo_GACvter  \
+  }
+
+std::array<const QRadioButton *, 6> SCWind::algo_buttons() const noexcept {
+  return SC_SLOPECRAFT_PRIVATEMARCO_ALGO_BUTTONS;
+}
+
+std::array<QRadioButton *, 6> SCWind::algo_buttons() noexcept {
+  return SC_SLOPECRAFT_PRIVATEMARCO_ALGO_BUTTONS;
 }
 
 void SCWind::update_button_states() noexcept {
@@ -463,4 +525,116 @@ void SCWind::on_pb_prefer_logs_clicked() noexcept {
       [](const std::vector<const SlopeCraft::AbstractBlock *> &blks) -> int {
         return impl_select_blk_by_id(blks, "log");
       });
+}
+
+void SCWind::kernel_set_image(int idx) noexcept {
+  assert(idx >= 0);
+  assert(idx < (int)this->tasks.size());
+
+  if (this->kernel->queryStep() < SCL_step::wait4Image) {
+    this->kernel_set_type();
+  }
+
+  const QImage &raw = this->tasks[idx].original_image;
+  this->kernel->setRawImage((const uint32_t *)raw.scanLine(0), raw.height(),
+                            raw.width(), false);
+}
+
+void SCWind::kernel_convert_image() noexcept {
+  assert(this->kernel->queryStep() >= SCL_step::convertionReady);
+
+  if (!this->kernel->convert(this->selected_algo(),
+                             this->is_dither_selected())) {
+    QMessageBox::warning(this, tr("转化图像失败"), tr(""));
+
+    return;
+  }
+}
+
+void SCWind::kernel_make_cache() noexcept {
+  std::string err;
+  err.resize(4096);
+  SlopeCraft::StringDeliver sd{err.data(), err.size()};
+
+  if (!this->kernel->saveCache(sd)) {
+    QString qerr = QString::fromUtf8(sd.data);
+    QMessageBox::warning(this, tr("缓存失败"),
+                         tr("未能创建缓存文件，错误信息：\n%1").arg(qerr));
+  }
+}
+
+bool SCWind::kernel_check_colorset_hash() noexcept {
+  return this->kernel->check_colorset_hash();
+}
+
+void SCWind::on_pb_cvt_current_clicked() noexcept {
+  const auto sel = this->selected_cvt_task_idx();
+
+  if (!sel.has_value()) {
+    QMessageBox::warning(this, tr("未选择图像"),
+                         tr("请在左侧任务池选择一个图像"));
+    return;
+  }
+
+  this->kernel_set_image(sel.value());
+  this->kernel_convert_image();
+  this->tasks[sel.value()].set_converted();
+
+  this->kernel_make_cache();
+  this->refresh_current_cvt_display(sel.value(), true);
+}
+
+QImage SCWind::get_converted_image_from_kernel() const noexcept {
+  assert(this->kernel->queryStep() >= SCL_step::converted);
+
+  const int rows = this->kernel->getImageRows();
+  const int cols = this->kernel->getImageCols();
+
+  QImage img{cols, rows, QImage::Format_ARGB32};
+
+  this->kernel->getConvertedImage(nullptr, nullptr, (uint32_t *)img.scanLine(0),
+                                  false);
+
+  return img;
+}
+
+void SCWind::refresh_current_cvt_display(
+    std::optional<int> selected_idx,
+    bool is_image_coneverted_in_kernel) noexcept {
+  if (!selected_idx.has_value()) {
+    this->ui->lb_raw_image->setPixmap({});
+    this->ui->lb_cvted_image->setPixmap({});
+    return;
+  }
+
+  const int idx = selected_idx.value();
+
+  this->ui->lb_raw_image->setPixmap(
+      QPixmap::fromImage(this->tasks[idx].original_image));
+
+  if (is_image_coneverted_in_kernel) {
+    assert(this->kernel->queryStep() >= SCL_step::converted);
+
+    this->ui->lb_cvted_image->setPixmap(
+        QPixmap::fromImage(this->get_converted_image_from_kernel()));
+    return;
+  }
+
+  if (!this->tasks[idx].is_converted) {
+    this->ui->lb_cvted_image->setPixmap({});
+    return;
+  }
+
+  if (!kernel_check_colorset_hash()) {
+    this->mark_all_task_unconverted();
+    this->image_changed();
+    return;
+  }
+#warning try to load cache here
+}
+
+void SCWind::mark_all_task_unconverted() noexcept {
+  for (auto &task : this->tasks) {
+    task.set_unconverted();
+  }
 }

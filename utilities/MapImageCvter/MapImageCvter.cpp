@@ -24,7 +24,7 @@ This file is part of SlopeCraft.
 
 #include <ExternalConverters/ExternalConverterStaticInterface.h>
 #include <ExternalConverters/GAConverter/GAConverter.h>
-#include <bxzstr.hpp>
+#include <fstream>
 #include <cereal/archives/binary.hpp>
 #include <seralize_funs.hpp>
 
@@ -74,7 +74,7 @@ void libMapImageCvt::MapImageCvter::convert_image(
 
 bool libMapImageCvt::MapImageCvter::save_cache(
     const char *filename) const noexcept {
-  bxz::ofstream ofs{filename, std::ios::binary, bxz::Compression::z, 9};
+  std::ofstream ofs{filename, std::ios::binary};
   if (!ofs) {
     return false;
   }

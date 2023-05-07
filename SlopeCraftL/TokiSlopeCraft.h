@@ -145,7 +145,12 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
  public:
   void getBaseColorInARGB32(unsigned int *const) const override;
   // can do in wait4Image:
-  void setRawImage(const unsigned int *src, int rows, int cols) override;
+  void setRawImage(const unsigned int *src, int rows, int cols) override {
+    this->setRawImage(src, rows, cols, true);
+  }
+
+  void setRawImage(const uint32_t *src, int rows, int cols,
+                   bool is_col_major) override;
 
   uint16_t getColorCount() const override;
   void getAvailableColors(ARGB *const, uint8_t *const,
@@ -176,7 +181,11 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
              unsigned short = 3, bool fireProof = false,
              bool endermanProof = false) override;  // 构建三维结构
   void getConvertedImage(int *rows, int *cols,
-                         unsigned int *dest) const override;
+                         unsigned int *dest) const override {
+    this->getConvertedImage(rows, cols, dest, true);
+  }
+  void getConvertedImage(int *rows, int *cols, uint32_t *dest,
+                         bool expected_col_major) const override;
   EImage getConovertedImage() const;
   void getConvertedMap(int *rows, int *cols, unsigned char *) const override;
   // void getConvertedMap(Eigen::Arra) const;
@@ -216,6 +225,7 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
 
   const unsigned short *getBuild(int *xSize, int *ySize,
                                  int *zSize) const override;
+
   // const Eigen::Tensor<uchar, 3> &getBuild() const;
 
  private:
@@ -311,6 +321,11 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   }
 
   void saveCache(std::string &err) const noexcept;
+
+  std::string task_dir() const noexcept;
+  std::string colorset_hash_file() const noexcept;
+
+  bool check_colorset_hash() const noexcept override;
 };
 
 // bool compressFile(const char *sourcePath, const char *destPath);

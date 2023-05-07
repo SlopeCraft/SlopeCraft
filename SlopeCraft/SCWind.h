@@ -43,6 +43,8 @@ class SCWind : public QMainWindow {
   void when_preset_clicked() noexcept;
   void when_export_type_toggled() noexcept;
 
+  void on_pb_cvt_current_clicked() noexcept;
+
  private:
   Ui::SCWind* ui;
   SlopeCraft::Kernel* kernel;
@@ -64,13 +66,42 @@ class SCWind : public QMainWindow {
 
   std::array<QRadioButton*, 4> preset_buttons_no_custom() noexcept;
 
+  std::array<const QRadioButton*, 6> algo_buttons() const noexcept;
+  std::array<QRadioButton*, 6> algo_buttons() noexcept;
+
   SCL_gameVersion selected_version() const noexcept;
 
   SCL_mapTypes selected_type() const noexcept;
 
+  std::optional<int> selected_cvt_task_idx() const noexcept;
+
+  SCL_convertAlgo selected_algo() const noexcept;
+  bool is_dither_selected() const noexcept;
+
   void kernel_set_type() noexcept;
 
   void update_button_states() noexcept;
+
+  void kernel_set_image(int idx) noexcept;
+  void kernel_convert_image() noexcept;
+
+  void kernel_make_cache() noexcept;
+
+  bool kernel_check_colorset_hash() noexcept;
+
+  void refresh_current_cvt_display(std::optional<int> idx,
+                                   bool is_image_coneverted_in_kernel) noexcept;
+  QImage get_converted_image_from_kernel() const noexcept;
+
+  void refresh_current_cvt_display(std::optional<int> idx) noexcept {
+    this->refresh_current_cvt_display(idx, false);
+  }
+
+  void refresh_current_cvt_display() noexcept {
+    this->refresh_current_cvt_display(this->selected_cvt_task_idx());
+  }
+
+  void mark_all_task_unconverted() noexcept;
 
  signals:
   void image_changed();
