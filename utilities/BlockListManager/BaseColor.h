@@ -28,7 +28,7 @@ class BaseColorWidget : public QGroupBox {
 
   void finish_blocks() noexcept;
 
-  void select_block(int idx) noexcept;
+  void select_block_soft(int idx) noexcept;
 
   void when_version_updated(SCL_gameVersion v) noexcept;
 
@@ -45,11 +45,17 @@ class BaseColorWidget : public QGroupBox {
       bw->update_lang(lang);
     }
   }
+
+  void set_enabled(bool enabled) noexcept;
+
+  inline auto& block_widgets() noexcept { return this->blocks; }
  signals:
   void changed();
 
  private:
   void add_placeholders() noexcept;
+
+  void select_block_direct(int idx) noexcept;
 
   int prefered_block_idx(int checked_idx, SCL_gameVersion ver) const noexcept;
 

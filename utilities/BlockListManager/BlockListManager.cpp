@@ -138,6 +138,52 @@ void BlockListManager::get_blocklist(
   }
 }
 
+bool BlockListManager::loadPreset(const blockListPreset &preset) noexcept {
+  if (preset.values.size() != this->basecolors.size()) {
+    QMessageBox::warning(dynamic_cast<QWidget *>(this->parent()),
+                         tr("加载预设错误"),
+                         tr("预设文件包含的基色数量 (%1) 与实际情况 (%2) 不符")
+                             .arg(preset.values.size())
+                             .arg(this->basecolors.size()));
+    return false;
+  }
+
+  for (int bc = 0; bc < (int)preset.values.size(); bc++) {
+    auto &bcw = this->basecolors[bc];
+
+    bcw->set_enabled(preset.values[bc].first);
+
+    auto &bws = bcw->block_widgets();
+    int matched_idx = -1;
+    for (int idx = 0; idx < (int)bws.size(); idx++) {
+      if (QString::fromLatin1(bws[idx]->attachted_block()->getId()) ==
+          preset.values[bc].second) {
+        matched_idx = idx;
+        break;
+      }
+    }
+
+    if (matched_idx < 0) {
+      auto ret = QMessageBox::warning(
+          dynamic_cast<QWidget *>(this->parent()), tr("加载预设错误"),
+          tr("预设中为基色%1指定的方块 id 是\"%2\"，没有找到这个方块 id")
+              .arg(bc)
+              .arg(preset.values[bc].second),
+          QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore,
+                                       QMessageBox::StandardButton::Close});
+      if (ret == QMessageBox::StandardButton::Close) {
+        abort();
+        return false;
+      }
+      continue;
+    }
+  }
+
+  emit this->changed();
+
+  return true;
+}
+
 std::string_view basecolor_names[64] = {"00 None",
                                         "01 Grass",
                                         "02 Sand",

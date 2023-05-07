@@ -84,7 +84,7 @@ void BaseColorWidget::finish_blocks() noexcept {
   this->add_placeholders();
   assert(this->blocks.size() > 0);
 
-  this->select_block(0);
+  this->select_block_direct(0);
 
   const SCL_gameVersion v =
       reinterpret_cast<const BlockListManager*>(this->parent())->version();
@@ -97,7 +97,7 @@ void BaseColorWidget::finish_blocks() noexcept {
   }
 }
 
-void BaseColorWidget::select_block(int idx) noexcept {
+void BaseColorWidget::select_block_direct(int idx) noexcept {
   assert(idx >= 0);
 
   assert(idx < (int)this->blocks.size());
@@ -111,10 +111,17 @@ void BaseColorWidget::select_block(int idx) noexcept {
   this->blocks[idx]->setChecked(true);
 }
 
+void BaseColorWidget::select_block_soft(int idx) noexcept {
+  const int new_select = this->prefered_block_idx(
+      idx, dynamic_cast<BlockListManager*>(this->parent())->version());
+
+  this->select_block_direct(new_select);
+}
+
 void BaseColorWidget::when_version_updated(SCL_gameVersion v) noexcept {
   const int new_select = this->prefered_block_idx(v);
 
-  this->select_block(new_select);
+  this->select_block_direct(new_select);
 
   for (int idx = 0; idx < int(this->blocks.size()); idx++) {
     this->blocks[idx]->setDisabled(should_be_disabled(
@@ -179,4 +186,8 @@ int BaseColorWidget::prefered_block_idx(int checked_idx,
 
 bool BaseColorWidget::is_enabled() const noexcept {
   return this->ui->cb_enable->isChecked();
+}
+
+void BaseColorWidget::set_enabled(bool enabled) noexcept {
+  this->ui->cb_enable->setEnabled(enabled);
 }

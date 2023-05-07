@@ -66,6 +66,30 @@ SCWind::SCWind(QWidget *parent)
               &SCWind::when_export_type_toggled);
     }
   }
+  {
+    for (QRadioButton *rbp : this->preset_buttons_no_custom()) {
+      connect(rbp, &QRadioButton::clicked, this, &SCWind::when_preset_clicked);
+    }
+  }
+
+  {
+    try {
+      this->default_presets[0] =
+          load_preset("./Blocks/Presets/vanilla.sc_preset_json");
+      this->default_presets[1] =
+          load_preset("./Blocks/Presets/cheap.sc_preset_json");
+      this->default_presets[2] =
+          load_preset("./Blocks/Presets/elegant.sc_preset_json");
+      this->default_presets[3] =
+          load_preset("./Blocks/Presets/shiny.sc_preset_json");
+    } catch (std::exception &e) {
+      QMessageBox::critical(this, tr("加载默认预设失败"),
+                            tr("一个或多个内置的预设不能被解析。SlopeCraft "
+                               "可能已经损坏，请重新安装。\n具体报错信息：\n%1")
+                                .arg(e.what()));
+      abort();
+    }
+  }
 
   this->when_blocklist_changed();
 }
@@ -223,7 +247,11 @@ void SCWind::when_type_buttons_toggled() noexcept {
   this->update_button_states();
 }
 
-void SCWind::when_blocklist_changed() noexcept { this->kernel_set_type(); }
+void SCWind::when_blocklist_changed() noexcept {
+  this->kernel_set_type();
+  this->ui->rb_preset_custom->setChecked(true);
+  // this->ui->rb_preset_
+}
 
 void SCWind::kernel_set_type() noexcept {
   std::vector<uint8_t> a;
@@ -260,6 +288,11 @@ std::array<const QRadioButton *, 5> SCWind::export_type_buttons()
   return SC_SLOPECRAFT_PREIVATEMACRO_EXPORT_TYPE_BUTTONS;
 }
 
+std::array<QRadioButton *, 4> SCWind::preset_buttons_no_custom() noexcept {
+  return {this->ui->rb_preset_vanilla, this->ui->rb_preset_cheap,
+          this->ui->rb_preset_elegant, this->ui->rb_preset_shiny};
+}
+
 void SCWind::update_button_states() noexcept {
   {
     const bool disable_3d = (this->selected_type() == SCL_mapTypes::FileOnly);
@@ -287,6 +320,27 @@ void SCWind::update_button_states() noexcept {
 
     this->ui->rb_export_flat_diagram->setEnabled(enable_flatdiagram);
   }
+}
+
+void SCWind::when_preset_clicked() noexcept {
+  int final_idx = -1;
+
+  for (int idx = 0; idx < (int)this->preset_buttons_no_custom().size(); idx++) {
+    if (this->preset_buttons_no_custom()[idx]->isChecked()) {
+      final_idx = idx;
+      break;
+    }
+  }
+
+  assert(final_idx >= 0);
+
+  if (!this->ui->blm->loadPreset(this->default_presets[final_idx])) {
+    return;
+  }
+
+  this->preset_buttons_no_custom()[final_idx]->setChecked(true);
+
+#warning apply preset here
 }
 
 void SCWind::when_export_type_toggled() noexcept {

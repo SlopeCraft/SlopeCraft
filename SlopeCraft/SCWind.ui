@@ -236,14 +236,14 @@
               </widget>
              </item>
              <item>
-              <widget class="QRadioButton" name="radioButton_2">
+              <widget class="QRadioButton" name="rb_preset_cheap">
                <property name="text">
                 <string>Cheap</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QRadioButton" name="radioButton_3">
+              <widget class="QRadioButton" name="rb_preset_elegant">
                <property name="text">
                 <string>Elegant</string>
                </property>
@@ -253,14 +253,14 @@
               </widget>
              </item>
              <item>
-              <widget class="QRadioButton" name="radioButton_4">
+              <widget class="QRadioButton" name="rb_preset_shiny">
                <property name="text">
                 <string>Shiny</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QRadioButton" name="radioButton_5">
+              <widget class="QRadioButton" name="rb_preset_custom">
                <property name="text">
                 <string>Custom</string>
                </property>

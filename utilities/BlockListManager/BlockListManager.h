@@ -68,6 +68,8 @@ class BlockListManager : public QWidget {
                      std::vector<const SlopeCraft::AbstractBlock *> &block_list)
       const noexcept;
 
+  bool loadPreset(const blockListPreset &preset) noexcept;
+
  signals:
   void changed();
 

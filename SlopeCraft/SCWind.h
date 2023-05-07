@@ -6,6 +6,7 @@
 #include <memory>
 #include <QRadioButton>
 #include <vector>
+#include <BlockListManager.h>
 
 #include "cvt_task.h"
 #include "PoolModel.h"
@@ -30,9 +31,8 @@ class SCWind : public QMainWindow {
 
   void when_version_buttons_toggled() noexcept;
   void when_type_buttons_toggled() noexcept;
-
   void when_blocklist_changed() noexcept;
-
+  void when_preset_clicked() noexcept;
   void when_export_type_toggled() noexcept;
 
  private:
@@ -43,6 +43,8 @@ class SCWind : public QMainWindow {
   CvtPoolModel* cvt_pool_model{nullptr};
   PoolModel* export_pool_model{nullptr};
 
+  std::array<blockListPreset, 4> default_presets;
+
   std::array<QRadioButton*, 20 - 12 + 1> version_buttons() noexcept;
   std::array<const QRadioButton*, 20 - 12 + 1> version_buttons() const noexcept;
 
@@ -51,6 +53,8 @@ class SCWind : public QMainWindow {
 
   std::array<QRadioButton*, 5> export_type_buttons() noexcept;
   std::array<const QRadioButton*, 5> export_type_buttons() const noexcept;
+
+  std::array<QRadioButton*, 4> preset_buttons_no_custom() noexcept;
 
   SCL_gameVersion selected_version() const noexcept;
 
