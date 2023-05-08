@@ -29,6 +29,7 @@ This file is part of SlopeCraft.
 #include <cereal/access.hpp>
 #include <cereal/types/unordered_map.hpp>
 #include <memory>
+#include <exception>
 
 namespace GACvter {
 class GAConverter;
@@ -97,11 +98,16 @@ class MapImageCvter : public ::libImageCvt::ImageCvter<true> {
   void load_from_itermediate(MapImageCvter &&temp) noexcept {
     this->_raw_image = std::move(temp._raw_image);
     this->algo = temp.algo;
-    this->_color_hash = std::move(temp._color_hash);
     this->_dithered_image = std::move(temp._dithered_image);
 
     assert(this->_raw_image.rows() == this->_dithered_image.rows());
     assert(this->_raw_image.cols() == this->_dithered_image.cols());
+    if (this->_color_hash.empty()) {
+      this->_color_hash = std::move(temp._color_hash);
+    } else {
+      temp._color_hash.merge(this->_color_hash);
+      this->_color_hash = std::move(temp._color_hash);
+    }
   }
 
  private:
@@ -112,19 +118,58 @@ class MapImageCvter : public ::libImageCvt::ImageCvter<true> {
     assert(this->_raw_image.cols() == this->_dithered_image.cols());
     ar(this->_raw_image);
     ar(this->algo);
-    ar(this->_color_hash);
+    // ar(this->_color_hash);
     ar(this->_dithered_image);
+    // save required colorset
+    {
+      std::unordered_set<uint32_t> colors_dithered_img;
+      colors_dithered_img.reserve(this->_dithered_image.size());
+      for (int64_t i = 0; i < this->_dithered_image.size(); i++) {
+        colors_dithered_img.emplace(this->_dithered_image(i));
+      }
+
+      const size_t size_colorset = colors_dithered_img.size();
+      ar(size_colorset);
+      for (uint32_t color : colors_dithered_img) {
+        auto it =
+            this->color_hash().find(convert_unit{color, this->convert_algo()});
+        assert(it != this->color_hash().end());
+
+        ar(it->first, it->second);
+      }
+    }
   }
 
   template <class archive>
   void load(archive &ar) {
     ar(this->_raw_image);
     ar(this->algo);
-    ar(this->_color_hash);
+    // ar(this->_color_hash);
     ar(this->_dithered_image);
 
     assert(this->_raw_image.rows() == this->_dithered_image.rows());
     assert(this->_raw_image.cols() == this->_dithered_image.cols());
+
+    {
+      size_t size_colorset{0};
+      ar(size_colorset);
+      for (size_t idx = 0; idx < size_colorset; idx++) {
+        convert_unit key;
+        TokiColor_t val;
+        ar(key, val);
+
+        this->_color_hash.emplace(key, val);
+      }
+
+      for (int64_t i = 0; i < this->_dithered_image.size(); i++) {
+        auto it = this->_color_hash.find(
+            convert_unit{this->_dithered_image(i), this->convert_algo()});
+        if (it == this->_color_hash.end()) {
+          throw std::runtime_error{
+              "One or more colors not found in cached colorhash"};
+        }
+      }
+    }
   }
 
  public:
