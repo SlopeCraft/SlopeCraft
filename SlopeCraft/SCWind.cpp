@@ -270,6 +270,16 @@ SCL_mapTypes SCWind::selected_type() const noexcept {
   return {};
 }
 
+std::vector<int> SCWind::selected_indices() const noexcept {
+  std::vector<int> ret;
+  auto sel = this->ui->lview_pool_cvt->selectionModel()->selectedIndexes();
+  ret.reserve(sel.size());
+  for (auto &midx : sel) {
+    ret.emplace_back(midx.row());
+  }
+  return ret;
+}
+
 std::optional<int> SCWind::selected_cvt_task_idx() const noexcept {
   auto sel = this->ui->lview_pool_cvt->selectionModel()->selectedIndexes();
   if (sel.size() <= 0) {
@@ -702,4 +712,116 @@ void SCWind::mark_all_task_unconverted() noexcept {
 
 void SCWind::when_algo_btn_clicked() noexcept {
   this->refresh_current_cvt_display(this->selected_cvt_task_idx());
+}
+
+void SCWind::on_pb_save_converted_clicked() noexcept {
+  const auto selected = this->selected_indices();
+  if (selected.size() <= 0) {
+    QMessageBox::warning(this, tr("未选择图像"),
+                         tr("请在左侧任务池选择一个或多个图像"));
+    return;
+  }
+  static QString prev_dir{""};
+  if (selected.size() == 1) {
+    QString filename = QFileDialog::getSaveFileName(this, tr("保存转化后图像"),
+                                                    prev_dir, "*.png;*.jpg");
+    if (filename.isEmpty()) {
+      return;
+    }
+    prev_dir = QFileInfo{filename}.dir().dirName();
+
+    const int idx = selected.front();
+
+    this->export_current_cvted_image(idx, filename);
+    return;
+  }
+
+  QString out_dir =
+      QFileDialog::getExistingDirectory(this, tr("保存转化后图像"), prev_dir);
+  if (out_dir.isEmpty()) {
+    return;
+  }
+  prev_dir = out_dir;
+
+  bool yes_to_all_replace_existing{false};
+  bool no_to_all_replace_existing{false};
+  for (int idx : selected) {
+    auto &task = this->tasks[idx];
+    QString filename = QStringLiteral("%1/%2.png")
+                           .arg(out_dir)
+                           .arg(QFileInfo{task.filename}.baseName());
+
+    if (QFile{filename}.exists()) {
+      if (no_to_all_replace_existing) {
+        continue;
+      }
+      if (yes_to_all_replace_existing) {
+        goto save_image;
+      }
+
+      auto ret = QMessageBox::warning(
+          this, tr("将要覆盖已存在的图像"),
+          tr("%1将被覆盖，确认覆盖吗？").arg(filename),
+          QMessageBox::StandardButtons{QMessageBox::StandardButton::Yes,
+                                       QMessageBox::StandardButton::No,
+                                       QMessageBox::StandardButton::YesToAll,
+                                       QMessageBox::StandardButton::NoToAll});
+      bool replace{false};
+      switch (ret) {
+        case QMessageBox::StandardButton::Yes:
+          replace = true;
+          break;
+        case QMessageBox::StandardButton::YesToAll:
+          replace = true;
+          yes_to_all_replace_existing = true;
+          break;
+        case QMessageBox::StandardButton::NoToAll:
+          replace = false;
+          no_to_all_replace_existing = true;
+          break;
+        default:
+          replace = false;
+          break;
+      }
+
+      if (!replace) {
+        continue;
+      }
+    }
+
+  save_image:
+
+    this->export_current_cvted_image(idx, filename);
+  }
+}
+
+void SCWind::export_current_cvted_image(int idx, QString filename) noexcept {
+  assert(idx >= 0);
+  assert(idx < (int)this->tasks.size());
+
+  this->kernel_set_image(idx);
+  if (!this->kernel->load_convert_cache(this->selected_algo(),
+                                        this->is_dither_selected())) {
+    const auto ret = QMessageBox::warning(
+        this, tr("无法保存第%1个转化后图像").arg(idx + 1),
+        tr("该图像未被转化，或者转化之后修改了颜色表/转化算法。请重新转化它。"),
+        QMessageBox::StandardButtons{QMessageBox::StandardButton::Ok,
+                                     QMessageBox::StandardButton::Ignore});
+    if (ret == QMessageBox::StandardButton::Ok) {
+      this->kernel_convert_image();
+      this->kernel_make_cache();
+      this->tasks[idx].set_converted();
+    } else {
+      return;
+    }
+  }
+
+  bool ok = this->get_converted_image_from_kernel().save(filename);
+  if (!ok) {
+    QMessageBox::warning(
+        this, tr("保存图像失败"),
+        tr("保存%1时失败。可能是因为文件路径错误，或者图片格式不支持。")
+            .arg(filename));
+    return;
+  }
 }

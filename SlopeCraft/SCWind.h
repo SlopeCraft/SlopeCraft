@@ -46,6 +46,7 @@ class SCWind : public QMainWindow {
 
   void on_pb_cvt_current_clicked() noexcept;
   void on_pb_cvt_all_clicked() noexcept;
+  void on_pb_save_converted_clicked() noexcept;
 
  private:
   Ui::SCWind* ui;
@@ -77,6 +78,7 @@ class SCWind : public QMainWindow {
 
   SCL_mapTypes selected_type() const noexcept;
 
+  std::vector<int> selected_indices() const noexcept;
   std::optional<int> selected_cvt_task_idx() const noexcept;
 
   SCL_convertAlgo selected_algo() const noexcept;
@@ -106,6 +108,8 @@ class SCWind : public QMainWindow {
   }
 
   void mark_all_task_unconverted() noexcept;
+
+  void export_current_cvted_image(int idx, QString filename) noexcept;
 
  signals:
   void image_changed();
