@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="1" column="0">
-     <widget class="QTabWidget" name="tabWidget">
+     <widget class="QTabWidget" name="tw_main">
       <property name="currentIndex">
        <number>0</number>
       </property>
@@ -321,7 +321,7 @@
        </attribute>
        <layout class="QGridLayout" name="gridLayout_6" columnstretch="1,10,1,1">
         <item row="0" column="1" rowspan="6">
-         <widget class="QTabWidget" name="tabWidget_2">
+         <widget class="QTabWidget" name="tw_cvt_image">
           <property name="minimumSize">
            <size>
             <width>500</width>
@@ -329,13 +329,25 @@
            </size>
           </property>
           <property name="tabPosition">
-           <enum>QTabWidget::East</enum>
+           <enum>QTabWidget::North</enum>
           </property>
           <property name="tabShape">
            <enum>QTabWidget::Rounded</enum>
           </property>
           <property name="currentIndex">
            <number>0</number>
+          </property>
+          <property name="elideMode">
+           <enum>Qt::ElideNone</enum>
+          </property>
+          <property name="documentMode">
+           <bool>false</bool>
+          </property>
+          <property name="tabsClosable">
+           <bool>false</bool>
+          </property>
+          <property name="tabBarAutoHide">
+           <bool>false</bool>
           </property>
           <widget class="QWidget" name="tab_4">
            <attribute name="title">
@@ -542,7 +554,7 @@
         <item row="6" column="1" colspan="3">
          <widget class="QProgressBar" name="pbar_cvt">
           <property name="value">
-           <number>24</number>
+           <number>0</number>
           </property>
          </widget>
         </item>
@@ -706,7 +718,7 @@
         <item row="4" column="1">
          <widget class="QProgressBar" name="pbar_export">
           <property name="value">
-           <number>24</number>
+           <number>0</number>
           </property>
          </widget>
         </item>

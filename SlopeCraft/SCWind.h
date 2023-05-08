@@ -7,7 +7,7 @@
 #include <QRadioButton>
 #include <vector>
 #include <BlockListManager.h>
-
+#include <QProgressBar>
 #include "cvt_task.h"
 #include "PoolModel.h"
 
@@ -44,6 +44,7 @@ class SCWind : public QMainWindow {
   void when_export_type_toggled() noexcept;
 
   void on_pb_cvt_current_clicked() noexcept;
+  void on_pb_cvt_all_clicked() noexcept;
 
  private:
   Ui::SCWind* ui;
@@ -68,6 +69,8 @@ class SCWind : public QMainWindow {
 
   std::array<const QRadioButton*, 6> algo_buttons() const noexcept;
   std::array<QRadioButton*, 6> algo_buttons() noexcept;
+
+  QProgressBar* current_bar() noexcept;
 
   SCL_gameVersion selected_version() const noexcept;
 

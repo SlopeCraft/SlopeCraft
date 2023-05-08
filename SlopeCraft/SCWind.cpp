@@ -21,8 +21,25 @@ SCWind::SCWind(QWidget *parent)
     this->kernel->setCacheDir(cache_dir.toLocal8Bit());
 
     this->kernel->setWindPtr(this);
-    // this->kernel->setAlgoProgressAdd([](void *, int) {});
-    // this->kernel->setAlgoProgressRangeSet([](void *, int, int, int) {});
+    this->kernel->setProgressRangeSet(
+        [](void *_self, int min, int max, int val) {
+          SCWind *const self = reinterpret_cast<SCWind *>(_self);
+          QProgressBar *const bar = self->current_bar();
+          if (bar == nullptr) return;
+
+          bar->setMinimum(min);
+          bar->setMaximum(max);
+          bar->setValue(val);
+        });
+    this->kernel->setProgressAdd([](void *_self, int delta) {
+      SCWind *const self = reinterpret_cast<SCWind *>(_self);
+      QProgressBar *const bar = self->current_bar();
+      if (bar == nullptr) return;
+
+      bar->setValue(bar->value() + delta);
+    });
+
+    this->kernel->setKeepAwake([](void *) { QApplication::processEvents(); });
   }
   // initialize cvt pool model
   {
@@ -355,6 +372,19 @@ std::array<QRadioButton *, 6> SCWind::algo_buttons() noexcept {
   return SC_SLOPECRAFT_PRIVATEMARCO_ALGO_BUTTONS;
 }
 
+QProgressBar *SCWind::current_bar() noexcept {
+  const int cid = this->ui->tw_main->currentIndex();
+  switch (cid) {
+    case 1:
+      return this->ui->pbar_cvt;
+    case 2:
+      return this->ui->pbar_export;
+      break;
+    default:
+      return nullptr;
+  }
+}
+
 void SCWind::update_button_states() noexcept {
   {
     const bool disable_3d = (this->selected_type() == SCL_mapTypes::FileOnly);
@@ -582,6 +612,22 @@ void SCWind::on_pb_cvt_current_clicked() noexcept {
 
   this->kernel_make_cache();
   this->refresh_current_cvt_display(sel.value(), true);
+  this->ui->tw_cvt_image->setCurrentIndex(1);
+  // this->ui->
+}
+
+void SCWind::on_pb_cvt_all_clicked() noexcept {
+  for (int idx = 0; idx < (int)this->tasks.size(); idx++) {
+    auto &task = this->tasks[idx];
+    if (task.is_converted) {
+      continue;
+    }
+
+    this->kernel_set_image(idx);
+    this->kernel_convert_image();
+    this->kernel_make_cache();
+    task.set_converted();
+  }
 }
 
 QImage SCWind::get_converted_image_from_kernel() const noexcept {
