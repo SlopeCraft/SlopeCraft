@@ -43,7 +43,7 @@ std::string TokiSlopeCraft::task_dir() const noexcept {
 }
 
 std::string TokiSlopeCraft::task_dir(uint64_t hash) const noexcept {
-  return fmt::format("{}/{}", this->cache_dir.value(), hash);
+  return fmt::format("{}/{:x}", this->cache_dir.value(), hash);
 }
 std::string TokiSlopeCraft::task_dir(SCL_convertAlgo algo,
                                      bool dither) const noexcept {
@@ -70,13 +70,14 @@ void TokiSlopeCraft::saveCache(std::string &err) const noexcept {
 
   namespace stdfs = std::filesystem;
   std::error_code ec;
-  if (!stdfs::create_directories(task_dir, ec)) {
-    err = fmt::format(
-        "Failed to create dir named \"{}\", error code = {}, message = {}",
-        task_dir, ec.value(), ec.message());
-    return;
+  if (!stdfs::is_directory(task_dir)) {
+    if (!stdfs::create_directories(task_dir, ec)) {
+      err = fmt::format(
+          "Failed to create dir named \"{}\", error code = {}, message = {}",
+          task_dir, ec.value(), ec.message());
+      return;
+    }
   }
-
   err.clear();
   std::string temp_err{};
 
@@ -149,6 +150,10 @@ bool TokiSlopeCraft::load_convert_cache(SCL_convertAlgo algo,
     reportError(
         wind, errorFlag::HASTY_MANIPULATION,
         "You can load convert cache only after you set the original image");
+    return false;
+  }
+
+  if (!this->check_colorset_hash()) {
     return false;
   }
 
