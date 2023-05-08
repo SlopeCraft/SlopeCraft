@@ -81,6 +81,7 @@ inline constexpr float threshold = 1e-10f;
 
 }  // namespace
 struct convert_unit {
+  convert_unit() = default;
   explicit convert_unit(ARGB _a, ::SCL_convertAlgo _c) : _ARGB(_a), algo(_c) {}
   ARGB _ARGB;
   ::SCL_convertAlgo algo;

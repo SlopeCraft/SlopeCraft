@@ -80,12 +80,53 @@ bool libMapImageCvt::MapImageCvter::save_cache(
   }
 
   {
-    cereal::BinaryOutputArchive boa(ofs);
+    cereal::BinaryOutputArchive boa{ofs};
 
     boa(*this);
   }
 
   ofs.close();
 
+  return true;
+}
+
+bool libMapImageCvt::MapImageCvter::examine_cache(
+    const char *filename, uint64_t expected_task_hash,
+    MapImageCvter *itermediate) const noexcept {
+  std::ifstream ifs{filename, std::ios::binary};
+  if (!ifs) {  // cache file not exist
+    return false;
+  }
+  MapImageCvter im;
+
+  try {
+    cereal::BinaryInputArchive bia{ifs};
+    bia(im);
+  } catch (...) {  // the cache is broken
+    return false;
+  }
+
+  if (im.task_hash() != expected_task_hash) {  // the cache may be modified
+    return false;
+  }
+
+  if (itermediate != nullptr) {
+    itermediate->load_from_itermediate(std::move(im));
+  }
+
+  return true;
+}
+
+bool libMapImageCvt::MapImageCvter::load_cache(
+    const char *filename, uint64_t expected_task_hash) noexcept {
+  MapImageCvter temp;
+  if (!this->examine_cache(filename, expected_task_hash, &temp)) {
+    return false;
+  }
+
+  this->load_from_itermediate(std::move(temp));
+
+  assert(this->_raw_image.rows() == this->_dithered_image.rows());
+  assert(this->_raw_image.cols() == this->_dithered_image.cols());
   return true;
 }

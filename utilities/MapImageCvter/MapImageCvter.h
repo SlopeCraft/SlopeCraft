@@ -93,11 +93,23 @@ class MapImageCvter : public ::libImageCvt::ImageCvter<true> {
       dest[r] = &it->second;
     }
   }
+  // temp is a temporary container to pass ownership
+  void load_from_itermediate(MapImageCvter &&temp) noexcept {
+    this->_raw_image = std::move(temp._raw_image);
+    this->algo = temp.algo;
+    this->_color_hash = std::move(temp._color_hash);
+    this->_dithered_image = std::move(temp._dithered_image);
 
- public:
+    assert(this->_raw_image.rows() == this->_dithered_image.rows());
+    assert(this->_raw_image.cols() == this->_dithered_image.cols());
+  }
+
+ private:
   friend class cereal::access;
   template <class archive>
   void save(archive &ar) const {
+    assert(this->_raw_image.rows() == this->_dithered_image.rows());
+    assert(this->_raw_image.cols() == this->_dithered_image.cols());
     ar(this->_raw_image);
     ar(this->algo);
     ar(this->_color_hash);
@@ -110,10 +122,16 @@ class MapImageCvter : public ::libImageCvt::ImageCvter<true> {
     ar(this->algo);
     ar(this->_color_hash);
     ar(this->_dithered_image);
+
+    assert(this->_raw_image.rows() == this->_dithered_image.rows());
+    assert(this->_raw_image.cols() == this->_dithered_image.cols());
   }
 
  public:
   bool save_cache(const char *filename) const noexcept;
+  bool examine_cache(const char *filename, uint64_t expected_task_hash,
+                     MapImageCvter *itermediate = nullptr) const noexcept;
+  bool load_cache(const char *filename, uint64_t expected_task_hash) noexcept;
 };
 
 }  // namespace libMapImageCvt

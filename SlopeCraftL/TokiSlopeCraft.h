@@ -322,10 +322,17 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
 
   void saveCache(std::string &err) const noexcept;
 
+ private:
   std::string task_dir() const noexcept;
+  std::string task_dir(uint64_t) const noexcept;
+  std::string task_dir(SCL_convertAlgo algo, bool dither) const noexcept;
   std::string colorset_hash_file() const noexcept;
 
+  static std::string conevrt_cache_filename(std::string_view taskdir) noexcept;
+
+ public:
   bool check_colorset_hash() const noexcept override;
+  bool load_convert_cache(SCL_convertAlgo algo, bool dither) noexcept override;
 };
 
 // bool compressFile(const char *sourcePath, const char *destPath);

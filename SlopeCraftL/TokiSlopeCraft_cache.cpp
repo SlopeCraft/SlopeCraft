@@ -39,8 +39,20 @@ std::string TokiSlopeCraft::colorset_hash_file() const noexcept {
 }
 
 std::string TokiSlopeCraft::task_dir() const noexcept {
-  return fmt::format("{}/{}", this->cache_dir.value(),
-                     this->image_cvter.task_hash());
+  return this->task_dir(this->image_cvter.task_hash());
+}
+
+std::string TokiSlopeCraft::task_dir(uint64_t hash) const noexcept {
+  return fmt::format("{}/{}", this->cache_dir.value(), hash);
+}
+std::string TokiSlopeCraft::task_dir(SCL_convertAlgo algo,
+                                     bool dither) const noexcept {
+  return this->task_dir(this->image_cvter.task_hash(algo, dither));
+}
+
+std::string TokiSlopeCraft::conevrt_cache_filename(
+    std::string_view taskdir) noexcept {
+  return fmt::format("{}/convert", taskdir);
 }
 
 void TokiSlopeCraft::saveCache(std::string &err) const noexcept {
@@ -79,7 +91,8 @@ void TokiSlopeCraft::saveCache(std::string &err) const noexcept {
     }
   }
 
-  const std::string convert_cache_file = fmt::format("{}/convert", task_dir);
+  const std::string convert_cache_file =
+      TokiSlopeCraft::conevrt_cache_filename(task_dir);
 
   if (!this->image_cvter.save_cache(convert_cache_file.c_str())) {
     err = fmt::format("Failed to save image cvter cache.");
@@ -90,6 +103,12 @@ void TokiSlopeCraft::saveCache(std::string &err) const noexcept {
 }
 
 bool TokiSlopeCraft::check_colorset_hash() const noexcept {
+  if (this->kernelStep < SCL_step::wait4Image) {
+    reportError(wind, errorFlag::HASTY_MANIPULATION,
+                "You can check for colorset only after you set the map type");
+    return false;
+  }
+
   const std::string hash_file = this->colorset_hash_file();
   std::vector<uint8_t> buf;
   {
@@ -122,4 +141,31 @@ bool TokiSlopeCraft::check_colorset_hash() const noexcept {
   }
 
   return true;
+}
+
+bool TokiSlopeCraft::load_convert_cache(SCL_convertAlgo algo,
+                                        bool dither) noexcept {
+  if (this->kernelStep < SCL_step::convertionReady) {
+    reportError(
+        wind, errorFlag::HASTY_MANIPULATION,
+        "You can load convert cache only after you set the original image");
+    return false;
+  }
+
+  const uint64_t expected_task_hash = this->image_cvter.task_hash(algo, dither);
+
+  const std::string expected_task_dir = this->task_dir(expected_task_hash);
+
+  const std::string expected_cache_file =
+      this->conevrt_cache_filename(expected_task_dir);
+
+  const bool ok = this->image_cvter.load_cache(expected_cache_file.c_str(),
+                                               expected_task_hash);
+
+  if (ok) {
+    this->mapPic = this->image_cvter.mapcolor_matrix().cast<int>();
+    this->kernelStep = SCL_step::converted;
+    return true;
+  }
+  return false;
 }

@@ -266,16 +266,24 @@ class Kernel {
   // Virtual functions added after v5.0.0. Define them in the end of vtable to
   // matain binary compability
 
-  // added in v5.1.0
-  virtual void setCacheDir(const char *) noexcept = 0;
-  virtual const char *cacheDir() const noexcept = 0;
-  virtual bool saveCache(StringDeliver &err) const noexcept = 0;
+  // added in v5.1.0  --------------------------------------------------
+  // replacement for setRawImage(const uint32_t*,int,int)
   virtual void setRawImage(const uint32_t *src, int rows, int cols,
                            bool is_col_major) = 0;
+  // replacement for getConvertedImage(int *rows, int *cols, uint32_t
+  // *dest)const
   virtual void getConvertedImage(int *rows, int *cols, uint32_t *dest,
                                  bool expected_col_major) const = 0;
-
+  virtual void setCacheDir(const char *) noexcept = 0;
+  virtual const char *cacheDir() const noexcept = 0;
+  // requires step >= converted
+  virtual bool saveCache(StringDeliver &err) const noexcept = 0;
+  // requires step >= wait4image
   virtual bool check_colorset_hash() const noexcept = 0;
+
+  // requires step >= convertion ready
+  virtual bool load_convert_cache(SCL_convertAlgo algo,
+                                  bool dither) noexcept = 0;
 };
 
 }  // namespace SlopeCraft

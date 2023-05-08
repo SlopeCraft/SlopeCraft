@@ -620,8 +620,8 @@ void SCWind::refresh_current_cvt_display(
     return;
   }
 
+  this->ui->lb_cvted_image->setPixmap({});
   if (!this->tasks[idx].is_converted) {
-    this->ui->lb_cvted_image->setPixmap({});
     return;
   }
 
@@ -630,7 +630,16 @@ void SCWind::refresh_current_cvt_display(
     this->image_changed();
     return;
   }
-#warning try to load cache here
+
+  this->kernel_set_image(idx);
+
+  if (!this->kernel->load_convert_cache(this->selected_algo(),
+                                        this->is_dither_selected())) {
+    return;
+  }
+
+  this->ui->lb_cvted_image->setPixmap(
+      QPixmap::fromImage(this->get_converted_image_from_kernel()));
 }
 
 void SCWind::mark_all_task_unconverted() noexcept {
