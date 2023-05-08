@@ -328,7 +328,12 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   std::string task_dir(SCL_convertAlgo algo, bool dither) const noexcept;
   std::string colorset_hash_file() const noexcept;
 
+  bool check_coloset_hash_by_filename(std::string_view filename) const noexcept;
+
   static std::string conevrt_cache_filename(std::string_view taskdir) noexcept;
+  static std::string cache_owned_hash_filename(
+      std::string_view taskdir) noexcept;
+  bool check_cache_owned_hash(uint64_t task_hash) const noexcept;
 
  public:
   bool check_colorset_hash() const noexcept override;

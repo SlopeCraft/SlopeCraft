@@ -55,6 +55,11 @@ std::string TokiSlopeCraft::conevrt_cache_filename(
   return fmt::format("{}/convert", taskdir);
 }
 
+std::string TokiSlopeCraft::cache_owned_hash_filename(
+    std::string_view taskdir) noexcept {
+  return fmt::format("{}/private_hash{}", taskdir, hash_suffix);
+}
+
 void TokiSlopeCraft::saveCache(std::string &err) const noexcept {
   if (this->kernelStep < SlopeCraft::step::converted) {
     err = "Can not save cache before the image is converted.";
@@ -81,11 +86,18 @@ void TokiSlopeCraft::saveCache(std::string &err) const noexcept {
   err.clear();
   std::string temp_err{};
 
-  // write colorset hash
+  // write 2 colorset hash files
   {
     const std::string name_hash_colorset = this->colorset_hash_file();
+    const auto hash = TokiSlopeCraft::Allowed.hash();
 
-    temp_err = write_hash(name_hash_colorset, TokiSlopeCraft::Allowed.hash());
+    temp_err = write_hash(name_hash_colorset, hash);
+    if (!temp_err.empty()) {
+      err = fmt::format("Failed to save colorset hash. Detail: {}", temp_err);
+      return;
+    }
+
+    temp_err = write_hash(this->cache_owned_hash_filename(task_dir), hash);
     if (!temp_err.empty()) {
       err = fmt::format("Failed to save colorset hash. Detail: {}", temp_err);
       return;
@@ -103,23 +115,23 @@ void TokiSlopeCraft::saveCache(std::string &err) const noexcept {
   return;
 }
 
-bool TokiSlopeCraft::check_colorset_hash() const noexcept {
+bool TokiSlopeCraft::check_coloset_hash_by_filename(
+    std::string_view filename) const noexcept {
   if (this->kernelStep < SCL_step::wait4Image) {
     reportError(wind, errorFlag::HASTY_MANIPULATION,
                 "You can check for colorset only after you set the map type");
     return false;
   }
 
-  const std::string hash_file = this->colorset_hash_file();
   std::vector<uint8_t> buf;
   {
-    std::ifstream ifs{hash_file, std::ios::binary};
+    std::ifstream ifs{filename.data(), std::ios::binary};
 
     if (!ifs) {  // file not exist
       return false;
     }
 
-    const size_t file_size = std::filesystem::file_size(hash_file);
+    const size_t file_size = std::filesystem::file_size(filename.data());
     if (file_size <= 0) {  // empty file
       return false;
     }
@@ -144,6 +156,15 @@ bool TokiSlopeCraft::check_colorset_hash() const noexcept {
   return true;
 }
 
+bool TokiSlopeCraft::check_colorset_hash() const noexcept {
+  return this->check_coloset_hash_by_filename(this->colorset_hash_file());
+}
+
+bool TokiSlopeCraft::check_cache_owned_hash(uint64_t task_hash) const noexcept {
+  return this->check_coloset_hash_by_filename(
+      this->cache_owned_hash_filename(this->task_dir(task_hash)));
+}
+
 bool TokiSlopeCraft::load_convert_cache(SCL_convertAlgo algo,
                                         bool dither) noexcept {
   if (this->kernelStep < SCL_step::convertionReady) {
@@ -158,6 +179,10 @@ bool TokiSlopeCraft::load_convert_cache(SCL_convertAlgo algo,
   }
 
   const uint64_t expected_task_hash = this->image_cvter.task_hash(algo, dither);
+
+  if (!this->check_cache_owned_hash(expected_task_hash)) {
+    return false;
+  }
 
   const std::string expected_task_dir = this->task_dir(expected_task_hash);
 
