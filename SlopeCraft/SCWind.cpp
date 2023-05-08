@@ -86,16 +86,22 @@ SCWind::SCWind(QWidget *parent)
     connect(this->ui->blm, &BlockListManager::changed, this,
             &SCWind::when_blocklist_changed);
   }
-  {
-    for (QRadioButton *rbp : this->export_type_buttons()) {
-      connect(rbp, &QRadioButton::clicked, this,
-              &SCWind::when_export_type_toggled);
-    }
+
+  for (QRadioButton *rbp : this->export_type_buttons()) {
+    connect(rbp, &QRadioButton::clicked, this,
+            &SCWind::when_export_type_toggled);
+  }
+
+  for (QRadioButton *rbp : this->preset_buttons_no_custom()) {
+    connect(rbp, &QRadioButton::clicked, this, &SCWind::when_preset_clicked);
   }
   {
-    for (QRadioButton *rbp : this->preset_buttons_no_custom()) {
-      connect(rbp, &QRadioButton::clicked, this, &SCWind::when_preset_clicked);
+    for (QRadioButton *rbp : this->algo_buttons()) {
+      connect(rbp, &QRadioButton::clicked, this,
+              &SCWind::when_algo_btn_clicked);
     }
+    connect(this->ui->cb_algo_dither, &QCheckBox::clicked, this,
+            &SCWind::when_algo_btn_clicked);
   }
 
   {
@@ -692,4 +698,8 @@ void SCWind::mark_all_task_unconverted() noexcept {
   for (auto &task : this->tasks) {
     task.set_unconverted();
   }
+}
+
+void SCWind::when_algo_btn_clicked() noexcept {
+  this->refresh_current_cvt_display(this->selected_cvt_task_idx());
 }

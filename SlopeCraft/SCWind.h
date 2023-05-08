@@ -42,6 +42,7 @@ class SCWind : public QMainWindow {
   void when_blocklist_changed() noexcept;
   void when_preset_clicked() noexcept;
   void when_export_type_toggled() noexcept;
+  void when_algo_btn_clicked() noexcept;
 
   void on_pb_cvt_current_clicked() noexcept;
   void on_pb_cvt_all_clicked() noexcept;
