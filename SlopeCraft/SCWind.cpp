@@ -50,14 +50,18 @@ SCWind::SCWind(QWidget *parent)
             &QItemSelectionModel::selectionChanged, this,
             &SCWind::when_cvt_pool_selectionChanged);
 
-    this->export_pool_model = new PoolModel{this, &this->tasks};
+    this->export_pool_model = new ExportPoolModel{this, &this->tasks};
     this->ui->lview_pool_export->setModel(this->export_pool_model);
     this->export_pool_model->set_listview(this->ui->lview_pool_export);
 
     connect(this, &SCWind::image_changed, this->cvt_pool_model,
             &CvtPoolModel::refresh);
     connect(this, &SCWind::image_changed, this->export_pool_model,
-            &PoolModel::refresh);
+            &ExportPoolModel::refresh);
+    connect(this, &SCWind::image_changed, [this]() {
+      this->ui->lview_pool_cvt->doItemsLayout();
+      this->ui->lview_pool_export->doItemsLayout();
+    });
   }
 
   // initialize blm
@@ -629,6 +633,8 @@ void SCWind::on_pb_cvt_current_clicked() noexcept {
   this->kernel_make_cache();
   this->refresh_current_cvt_display(sel.value(), true);
   this->ui->tw_cvt_image->setCurrentIndex(1);
+
+  emit this->image_changed();
   // this->ui->
 }
 
@@ -644,6 +650,7 @@ void SCWind::on_pb_cvt_all_clicked() noexcept {
     this->kernel_make_cache();
     task.set_converted();
   }
+  emit this->image_changed();
 }
 
 QImage SCWind::get_converted_image_from_kernel() const noexcept {
@@ -689,7 +696,7 @@ void SCWind::refresh_current_cvt_display(
 
   if (!kernel_check_colorset_hash()) {
     this->mark_all_task_unconverted();
-    this->image_changed();
+    emit this->image_changed();
     return;
   }
 
@@ -799,6 +806,8 @@ void SCWind::export_current_cvted_image(int idx, QString filename) noexcept {
   assert(idx >= 0);
   assert(idx < (int)this->tasks.size());
 
+  bool have_image_cvted{false};
+
   this->kernel_set_image(idx);
   if (!this->kernel->loadConvertCache(this->selected_algo(),
                                       this->is_dither_selected())) {
@@ -811,9 +820,14 @@ void SCWind::export_current_cvted_image(int idx, QString filename) noexcept {
       this->kernel_convert_image();
       this->kernel_make_cache();
       this->tasks[idx].set_converted();
+      have_image_cvted = true;
     } else {
       return;
     }
+  }
+
+  if (have_image_cvted) {
+    emit this->image_changed();
   }
 
   bool ok = this->get_converted_image_from_kernel().save(filename);

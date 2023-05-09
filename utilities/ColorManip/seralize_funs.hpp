@@ -7,22 +7,24 @@
 #include <cereal/types/vector.hpp>
 
 namespace cereal {
-template <class archive>
-void save(archive &ar, const Eigen::ArrayXX<ARGB> &img) {
+template <class archive, typename T>
+void save(archive &ar, const Eigen::ArrayXX<T> &img) {
+  static_assert(std::is_arithmetic_v<T>, "T must be arithmetic");
   ar(cereal::make_size_tag(img.rows()));
   ar(cereal::make_size_tag(img.cols()));
-  ar(cereal::binary_data(img.data(), img.size() * sizeof(ARGB)));
+  ar(cereal::binary_data(img.data(), img.size() * sizeof(T)));
 }
 
-template <class archive>
-void load(archive &ar, Eigen::ArrayXX<ARGB> &img) {
+template <class archive, typename T>
+void load(archive &ar, Eigen::ArrayXX<T> &img) {
+  static_assert(std::is_arithmetic_v<T>, "T must be arithmetic");
   Eigen::Index rows{0}, cols{0};
 
   ar(cereal::make_size_tag(rows));
   ar(cereal::make_size_tag(cols));
 
   img.resize(rows, cols);
-  ar(cereal::binary_data(img.data(), rows * cols * sizeof(ARGB)));
+  ar(cereal::binary_data(img.data(), rows * cols * sizeof(T)));
 }
 }  // namespace cereal
 

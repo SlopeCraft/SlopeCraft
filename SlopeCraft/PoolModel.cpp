@@ -196,3 +196,30 @@ bool CvtPoolModel::dropMimeData(const QMimeData* data, Qt::DropAction action,
 
   return true;
 }
+
+ExportPoolModel::ExportPoolModel(QObject* parent, task_pool_t* poolptr)
+    : PoolModel(parent, poolptr) {}
+
+ExportPoolModel::~ExportPoolModel() {}
+
+QVariant ExportPoolModel::data(const QModelIndex& midx, int role) const {
+  const int fidx = this->export_idx_to_full_idx(midx.row());
+  assert(fidx >= 0);
+  assert(fidx < (int)this->pool->size());
+
+  if (role == Qt::ItemDataRole::DisplayRole) {
+    return this->pool->at(fidx).filename;
+  }
+
+  if (role == Qt::ItemDataRole::DecorationRole) {
+    assert(this->_listview != nullptr);
+    if (this->_listview->viewMode() == QListView::ViewMode::ListMode) {
+      return QVariant{};
+    }
+    auto raw_image = QPixmap::fromImage(this->pool->at(fidx).original_image);
+    auto img = raw_image.scaledToWidth(this->_listview->size().width());
+    return QIcon{raw_image};
+  }
+
+  return QVariant{};
+}

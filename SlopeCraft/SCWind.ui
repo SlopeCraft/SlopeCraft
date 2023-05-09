@@ -722,6 +722,16 @@
           <property name="topMargin">
            <number>0</number>
           </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>项目池</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
           <item row="1" column="0">
            <widget class="AdaptiveListView" name="lview_pool_export">
             <property name="acceptDrops">
@@ -777,13 +787,13 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_2">
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="cb_lv_export_icon_mode">
             <property name="text">
-             <string>项目池</string>
+             <string>Icon mode</string>
             </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -802,6 +812,109 @@
           </property>
           <widget class="QWidget" name="page_export_3d">
            <layout class="QGridLayout" name="gridLayout_13" columnstretch="1,10,1">
+            <item row="4" column="0" rowspan="2">
+             <widget class="QGroupBox" name="groupBox_7">
+              <property name="title">
+               <string>其他选项</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_14">
+               <item row="0" column="0">
+                <widget class="QCheckBox" name="cb_fireproof">
+                 <property name="text">
+                  <string>防火</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QCheckBox" name="cb_enderproof">
+                 <property name="text">
+                  <string>防末影人</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QGroupBox" name="groupBox_5">
+              <property name="title">
+               <string>压缩高度</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_16">
+               <item row="1" column="0">
+                <widget class="QCheckBox" name="cb_compress_lossy">
+                 <property name="text">
+                  <string>有损压缩</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QCheckBox" name="cb_compress_lossless">
+                 <property name="text">
+                  <string>无损压缩</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QSpinBox" name="sb_max_height">
+                 <property name="suffix">
+                  <string/>
+                 </property>
+                 <property name="prefix">
+                  <string>最大允许高度：</string>
+                 </property>
+                 <property name="minimum">
+                  <number>14</number>
+                 </property>
+                 <property name="maximum">
+                  <number>32767</number>
+                 </property>
+                 <property name="value">
+                  <number>256</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QGroupBox" name="groupBox_6">
+              <property name="title">
+               <string>搭桥</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_15">
+               <item row="0" column="0">
+                <widget class="QCheckBox" name="cb_glass_bridge">
+                 <property name="text">
+                  <string>允许搭桥</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QSpinBox" name="sb_glass_bridge_interval">
+                 <property name="suffix">
+                  <string> 层</string>
+                 </property>
+                 <property name="prefix">
+                  <string>搭桥间隔：</string>
+                 </property>
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>4096</number>
+                 </property>
+                 <property name="value">
+                  <number>5</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
             <item row="0" column="0">
              <widget class="QTabWidget" name="tw_export_options">
               <property name="sizePolicy">
@@ -1093,149 +1206,7 @@
               </widget>
              </widget>
             </item>
-            <item row="1" column="0">
-             <widget class="QGroupBox" name="groupBox_5">
-              <property name="title">
-               <string>压缩高度</string>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_16">
-               <item row="1" column="0">
-                <widget class="QCheckBox" name="cb_compress_lossy">
-                 <property name="text">
-                  <string>有损压缩</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="0">
-                <widget class="QCheckBox" name="cb_compress_lossless">
-                 <property name="text">
-                  <string>无损压缩</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0">
-                <widget class="QSpinBox" name="sb_max_height">
-                 <property name="suffix">
-                  <string/>
-                 </property>
-                 <property name="prefix">
-                  <string>最大允许高度：</string>
-                 </property>
-                 <property name="minimum">
-                  <number>14</number>
-                 </property>
-                 <property name="maximum">
-                  <number>32767</number>
-                 </property>
-                 <property name="value">
-                  <number>256</number>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item row="4" column="2">
-             <widget class="QGroupBox" name="groupBox_9">
-              <property name="title">
-               <string>预览</string>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_18">
-               <item row="1" column="0">
-                <widget class="QPushButton" name="pb_preview_materials">
-                 <property name="text">
-                  <string>预览材料表</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="0">
-                <widget class="QPushButton" name="pb_preview_compress_effect">
-                 <property name="text">
-                  <string>预览压缩效果</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0">
-                <widget class="QPushButton" name="pb_build3d">
-                 <property name="text">
-                  <string>预构建三维结构</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item row="0" column="1" rowspan="3" colspan="2">
-             <widget class="QLabel" name="lb_compressed_effect">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::Box</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Sunken</enum>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QGroupBox" name="groupBox_6">
-              <property name="title">
-               <string>搭桥</string>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_15">
-               <item row="0" column="0">
-                <widget class="QCheckBox" name="cb_glass_bridge">
-                 <property name="text">
-                  <string>允许搭桥</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0">
-                <widget class="QSpinBox" name="sb_glass_bridge_interval">
-                 <property name="suffix">
-                  <string> 层</string>
-                 </property>
-                 <property name="prefix">
-                  <string>搭桥间隔：</string>
-                 </property>
-                 <property name="minimum">
-                  <number>1</number>
-                 </property>
-                 <property name="maximum">
-                  <number>4096</number>
-                 </property>
-                 <property name="value">
-                  <number>5</number>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item row="3" column="2">
-             <widget class="QPushButton" name="pb_export_all">
-              <property name="text">
-               <string>全部导出</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1" rowspan="2">
+            <item row="4" column="1" rowspan="2">
              <widget class="QGroupBox" name="groupBox_8">
               <property name="title">
                <string>大小与方块数量</string>
@@ -1258,28 +1229,62 @@
               </layout>
              </widget>
             </item>
-            <item row="3" column="0" rowspan="2">
-             <widget class="QGroupBox" name="groupBox_7">
-              <property name="title">
-               <string>其他选项</string>
+            <item row="0" column="2" rowspan="6">
+             <layout class="QVBoxLayout" name="verticalLayout_2">
+              <property name="topMargin">
+               <number>0</number>
               </property>
-              <layout class="QGridLayout" name="gridLayout_14">
-               <item row="0" column="0">
-                <widget class="QCheckBox" name="cb_fireproof">
-                 <property name="text">
-                  <string>防火</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0">
-                <widget class="QCheckBox" name="cb_enderproof">
-                 <property name="text">
-                  <string>防末影人</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
+              <item>
+               <spacer name="verticalSpacer_6">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pb_export_all">
+                <property name="text">
+                 <string>全部导出</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="groupBox_9">
+                <property name="title">
+                 <string>预览</string>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_18">
+                 <item row="1" column="0">
+                  <widget class="QPushButton" name="pb_preview_materials">
+                   <property name="text">
+                    <string>预览材料表</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QPushButton" name="pb_preview_compress_effect">
+                   <property name="text">
+                    <string>预览压缩效果</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QPushButton" name="pb_build3d">
+                   <property name="text">
+                    <string>预构建三维结构</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
             </item>
            </layout>
           </widget>

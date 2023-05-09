@@ -328,6 +328,13 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
 
   void save_convert_cache(std::string &err) const noexcept;
 
+  bool saveBuildCache(StringDeliver &_err) const noexcept override {
+    std::string err = this->make_build_cache();
+    write(_err, err);
+    return err.empty();
+  }
+  std::string make_build_cache() const noexcept;
+
  private:
   std::string task_dir() const noexcept;
   std::string task_dir(uint64_t) const noexcept;
@@ -361,8 +368,6 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   static std::string build_cache_filename(
       std::string_view build_task_dir) noexcept;
 
-  std::string make_build_cache() const noexcept;
-
   struct build_cache_ir {
     Eigen::ArrayXXi mapPic;
     libSchem::Schem schem;
@@ -370,8 +375,6 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
 
   static bool exmaine_build_cache(std::string_view filename,
                                   uint64_t build_task_hash,
-                                  std::span<std::string_view> blkid,
-                                  const build_options &bo,
                                   build_cache_ir *ir = nullptr) noexcept;
 
  public:

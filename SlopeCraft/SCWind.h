@@ -22,6 +22,13 @@ class SCWind : public QMainWindow {
  public:
   explicit SCWind(QWidget* parent = nullptr);
   ~SCWind();
+  enum class export_type {
+    litematica,
+    vanilla_structure,
+    WE_schem,
+    flat_diagram,
+    data_file
+  };
  private slots:
   void on_pb_add_image_clicked() noexcept;
   void on_pb_remove_image_clicked() noexcept;
@@ -54,7 +61,7 @@ class SCWind : public QMainWindow {
 
   task_pool_t tasks;
   CvtPoolModel* cvt_pool_model{nullptr};
-  PoolModel* export_pool_model{nullptr};
+  ExportPoolModel* export_pool_model{nullptr};
 
   std::array<blockListPreset, 4> default_presets;
 

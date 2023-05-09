@@ -5,6 +5,7 @@
 #include <functional>
 #include <filesystem>
 #include <md5.h>
+#include <utilities/ColorManip/seralize_funs.hpp>
 
 namespace stdfs = std::filesystem;
 std::string write_hash(std::string_view filename,
@@ -291,9 +292,7 @@ std::string TokiSlopeCraft::make_build_cache() const noexcept {
 }
 
 bool TokiSlopeCraft::exmaine_build_cache(std::string_view filename,
-                                         uint64_t build_task_hash,
-                                         std::span<std::string_view> blkid,
-                                         const build_options &bo,
+                                         uint64_t expected_task_hash,
                                          build_cache_ir *ir) noexcept {
 #warning read and exmaine cache here.
 }

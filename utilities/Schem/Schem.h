@@ -33,6 +33,7 @@ This file is part of SlopeCraft.
 #include <cereal/access.hpp>
 #include <cereal/cereal.hpp>
 #include <cereal/types/string.hpp>
+#include <cereal/types/vector.hpp>
 #include <exception>
 
 #include "SC_GlobalEnums.h"

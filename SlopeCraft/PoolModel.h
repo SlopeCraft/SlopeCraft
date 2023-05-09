@@ -16,7 +16,12 @@ class PoolModel : public QAbstractListModel {
   explicit PoolModel(QObject* parent = nullptr, task_pool_t* poolptr = nullptr);
   ~PoolModel();
 
-  int rowCount(const QModelIndex&) const override { return this->pool->size(); }
+  int rowCount(const QModelIndex& midx) const override {
+    if (midx.isValid()) {
+      return 0;
+    }
+    return this->pool->size();
+  }
 
   QModelIndex parent(const QModelIndex&) const override {
     return QModelIndex{};
@@ -24,6 +29,7 @@ class PoolModel : public QAbstractListModel {
 
   QVariant data(const QModelIndex& idx, int role) const override;
 
+ public slots:
   void refresh() noexcept {
     emit dataChanged(this->index(0, 0), this->index(this->rowCount({}), 0));
   }
@@ -59,6 +65,55 @@ class CvtPoolModel : public PoolModel {
 
   bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row,
                     int column, const QModelIndex& parent) override;
+};
+
+class ExportPoolModel : public PoolModel {
+  Q_OBJECT
+ public:
+  explicit ExportPoolModel(QObject* parent = nullptr,
+                           task_pool_t* poolptr = nullptr);
+  ~ExportPoolModel();
+
+  int rowCount(const QModelIndex& midx) const override {
+    if (midx.isValid()) {
+      return 0;
+    }
+    int num = 0;
+    for (const auto& i : *this->pool) {
+      if (i.is_converted) {
+        num++;
+      }
+    }
+    return num;
+  }
+
+  std::vector<int> iteration_map() const noexcept {
+    std::vector<int> ret;
+    ret.reserve(this->pool->size());
+    for (int i = 0; i < (int)this->pool->size(); i++) {
+      if (this->pool->at(i).is_converted) {
+        ret.emplace_back(i);
+      }
+    }
+    return ret;
+  }
+
+  int export_idx_to_full_idx(int eidx) const noexcept {
+    assert(eidx >= 0);
+    for (int fidx = 0; fidx < (int)this->pool->size(); fidx++) {
+      if (pool->at(fidx).is_converted) {
+        eidx--;
+      }
+      if (eidx < 0) {
+        return fidx;
+      }
+    }
+
+    assert(false);
+    return INT_MAX;
+  }
+
+  QVariant data(const QModelIndex& idx, int role) const override;
 };
 
 #endif  // SLOPECRAFT_SLOPECRAFT_POOLMODEL_H
