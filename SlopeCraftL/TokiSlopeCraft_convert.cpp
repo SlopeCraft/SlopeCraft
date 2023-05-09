@@ -126,18 +126,15 @@ bool TokiSlopeCraft::convert(convertAlgo algo, bool dither) {
 void TokiSlopeCraft::exportAsData(const char *FolderPath, const int indexStart,
                                   int *fileCount, char **dest) const {
   std::vector<std::string> uFL = exportAsData(FolderPath, indexStart);
-  if (fileCount != nullptr)
-    *fileCount = uFL.size();
+  if (fileCount != nullptr) *fileCount = uFL.size();
   if (dest != nullptr)
     for (uint16_t i = 0; i < uFL.size(); i++) {
-      if (dest[i] != nullptr)
-        std::strcpy(dest[i], uFL[i].data());
+      if (dest[i] != nullptr) std::strcpy(dest[i], uFL[i].data());
     }
 }
 
 std::vector<std::string> TokiSlopeCraft::exportAsData(std::string FolderPath,
                                                       int indexStart) const {
-
   std::vector<std::string> failed_file_list;
 
   if (kernelStep < SCL_step::converted) {
@@ -158,7 +155,7 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(std::string FolderPath,
   // const int maxcc=cols*128;
   progressRangeSet(wind, 0, 128 * rows * cols, 0);
 
-  int offset[2] = {0, 0}; // r,c
+  int offset[2] = {0, 0};  // r,c
   int currentIndex = indexStart;
 
   reportWorkingStatue(wind, workStatues::writingMapDataFiles);
@@ -184,20 +181,20 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(std::string FolderPath,
       }
 
       switch (mcVer) {
-      case SCL_gameVersion::MC12:
-      case SCL_gameVersion::MC13:
-        break;
-      case SCL_gameVersion::MC14:
-      case SCL_gameVersion::MC15:
-      case SCL_gameVersion::MC16:
-      case SCL_gameVersion::MC17:
-      case SCL_gameVersion::MC18:
-      case SCL_gameVersion::MC19:
-        MapFile.writeInt("DataVersion", mcVersion2VersionNumber(mcVer));
-        break;
-      default:
-        cerr << "Wrong game version!\n";
-        break;
+        case SCL_gameVersion::MC12:
+        case SCL_gameVersion::MC13:
+          break;
+        case SCL_gameVersion::MC14:
+        case SCL_gameVersion::MC15:
+        case SCL_gameVersion::MC16:
+        case SCL_gameVersion::MC17:
+        case SCL_gameVersion::MC18:
+        case SCL_gameVersion::MC19:
+          MapFile.writeInt("DataVersion", mcVersion2VersionNumber(mcVer));
+          break;
+        default:
+          cerr << "Wrong game version!\n";
+          break;
       }
       static const std::string ExportedBy =
           "Exported by SlopeCraft " +
@@ -212,43 +209,43 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(std::string FolderPath,
         MapFile.writeInt("xCenter", 0);
         MapFile.writeInt("zCenter", 0);
         switch (mcVer) {
-        case SCL_gameVersion::MC12:
-          MapFile.writeByte("dimension", 114);
-          MapFile.writeShort("height", 128);
-          MapFile.writeShort("width", 128);
-          break;
-        case SCL_gameVersion::MC13:
-          MapFile.writeListHead("banners", NBT::Compound, 0);
-          MapFile.writeListHead("frames", NBT::Compound, 0);
-          MapFile.writeInt("dimension", 889464);
-          break;
-        case SCL_gameVersion::MC14:
-          MapFile.writeListHead("banners", NBT::Compound, 0);
-          MapFile.writeListHead("frames", NBT::Compound, 0);
-          MapFile.writeInt("dimension", 0);
-          MapFile.writeByte("locked", 1);
-          break;
-        case SCL_gameVersion::MC15:
-          MapFile.writeListHead("banners", NBT::Compound, 0);
-          MapFile.writeListHead("frames", NBT::Compound, 0);
-          MapFile.writeInt("dimension", 0);
-          MapFile.writeByte("locked", 1);
-          break;
-        case SCL_gameVersion::MC16:
-        case SCL_gameVersion::MC17:
-        case SCL_gameVersion::MC18:
-        case SCL_gameVersion::MC19:
-          MapFile.writeListHead("banners", NBT::Compound, 0);
-          MapFile.writeListHead("frames", NBT::Compound, 0);
-          MapFile.writeString("dimension", "minecraft:overworld");
-          MapFile.writeByte("locked", 1);
-          break;
-        default:
-          cerr << "Wrong game version!\n";
-          this->reportError(this->wind, errorFlag::UNKNOWN_MAJOR_GAME_VERSION,
-                            "Unknown major game version!");
-          failed_file_list.emplace_back(current_filename);
-          continue;
+          case SCL_gameVersion::MC12:
+            MapFile.writeByte("dimension", 114);
+            MapFile.writeShort("height", 128);
+            MapFile.writeShort("width", 128);
+            break;
+          case SCL_gameVersion::MC13:
+            MapFile.writeListHead("banners", NBT::Compound, 0);
+            MapFile.writeListHead("frames", NBT::Compound, 0);
+            MapFile.writeInt("dimension", 889464);
+            break;
+          case SCL_gameVersion::MC14:
+            MapFile.writeListHead("banners", NBT::Compound, 0);
+            MapFile.writeListHead("frames", NBT::Compound, 0);
+            MapFile.writeInt("dimension", 0);
+            MapFile.writeByte("locked", 1);
+            break;
+          case SCL_gameVersion::MC15:
+            MapFile.writeListHead("banners", NBT::Compound, 0);
+            MapFile.writeListHead("frames", NBT::Compound, 0);
+            MapFile.writeInt("dimension", 0);
+            MapFile.writeByte("locked", 1);
+            break;
+          case SCL_gameVersion::MC16:
+          case SCL_gameVersion::MC17:
+          case SCL_gameVersion::MC18:
+          case SCL_gameVersion::MC19:
+            MapFile.writeListHead("banners", NBT::Compound, 0);
+            MapFile.writeListHead("frames", NBT::Compound, 0);
+            MapFile.writeString("dimension", "minecraft:overworld");
+            MapFile.writeByte("locked", 1);
+            break;
+          default:
+            cerr << "Wrong game version!\n";
+            this->reportError(this->wind, errorFlag::UNKNOWN_MAJOR_GAME_VERSION,
+                              "Unknown major game version!");
+            failed_file_list.emplace_back(current_filename);
+            continue;
         }
 
         MapFile.writeByteArrayHead("colors", 16384);

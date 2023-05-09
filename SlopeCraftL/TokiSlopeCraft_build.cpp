@@ -167,6 +167,25 @@ std::string TokiSlopeCraft::exportAsLitematic(
   return "";
 }
 
+std::vector<std::string_view> TokiSlopeCraft::schem_block_id_list()
+    const noexcept {
+  std::vector<std::string_view> temp;
+  temp.reserve(64);
+  temp.emplace_back("minecraft:air");
+
+  for (const auto &block : TokiSlopeCraft::blockPalette) {
+    std::string_view id_at_curversion = (this->mcVer == SCL_gameVersion::MC12)
+                                            ? (block.getIdOld())
+                                            : (block.getId());
+    if ("minecraft:air" == id_at_curversion) {
+      break;
+    } else {
+      temp.emplace_back(id_at_curversion);
+    }
+  }
+  return temp;
+}
+
 bool TokiSlopeCraft::build(compressSettings cS, uint16_t mAH,
                            glassBridgeSettings gBS, uint16_t bI, bool fireProof,
                            bool endermanProof) {
@@ -186,22 +205,8 @@ bool TokiSlopeCraft::build(compressSettings cS, uint16_t mAH,
   }
   // cerr << "Setting block palette..." << endl;
   {
-    std::vector<const char *> temp;
-    temp.reserve(64);
-    temp.emplace_back("minecraft:air");
-
-    for (const auto &block : TokiSlopeCraft::blockPalette) {
-      const char *id_at_curversion = (this->mcVer == SCL_gameVersion::MC12)
-                                         ? (block.getIdOld())
-                                         : (block.getId());
-      if (std::strcmp("minecraft:air", id_at_curversion) == 0) {
-        break;
-      } else {
-        temp.emplace_back(id_at_curversion);
-      }
-    }
-
-    schem.set_block_id(temp.data(), temp.size());
+    auto temp = this->schem_block_id_list();
+    schem.set_block_id(temp);
   }
 
   schem.set_MC_major_version_number(TokiSlopeCraft::mcVer);
@@ -224,23 +229,25 @@ bool TokiSlopeCraft::build(compressSettings cS, uint16_t mAH,
 
   progressRangeSet(wind, 0, 9 * sizePic(2), 0);
   // cerr << "start makeHeight" << endl;
+  {
+    Eigen::ArrayXXi Base, HighMap, LowMap;
+    std::unordered_map<TokiPos, waterItem> WaterList;
+    progressAdd(wind, sizePic(2));
 
-  mapPic = this->image_cvter.mapcolor_matrix().cast<int>();
-  progressAdd(wind, sizePic(2));
+    makeHeight_new(Base, HighMap, LowMap, WaterList);
+    // cerr << "makeHeight finished" << endl;
+    progressRangeSet(wind, 0, 9 * sizePic(2), 5 * sizePic(2));
 
-  makeHeight_new();
-  // cerr << "makeHeight finished" << endl;
-  progressRangeSet(wind, 0, 9 * sizePic(2), 5 * sizePic(2));
+    reportWorkingStatue(wind, workStatues::building3D);
+    // cerr << "start buildHeight" << endl;
+    buildHeight(fireProof, endermanProof, Base, HighMap, LowMap, WaterList);
+    // cerr << "buildHeight finished" << endl;
+    progressRangeSet(wind, 0, 9 * sizePic(2), 8 * sizePic(2));
 
-  reportWorkingStatue(wind, workStatues::building3D);
-  // cerr << "start buildHeight" << endl;
-  buildHeight(fireProof, endermanProof);
-  // cerr << "buildHeight finished" << endl;
-  progressRangeSet(wind, 0, 9 * sizePic(2), 8 * sizePic(2));
-
-  reportWorkingStatue(wind, workStatues::constructingBridges);
-  // cerr << "start makeBridge" << endl;
-  makeBridge();
+    reportWorkingStatue(wind, workStatues::constructingBridges);
+    // cerr << "start makeBridge" << endl;
+    makeBridge();
+  }
   // cerr << "makeBridge finished" << endl;
   progressRangeSet(wind, 0, 9 * sizePic(2), 9 * sizePic(2));
 
@@ -251,24 +258,26 @@ bool TokiSlopeCraft::build(compressSettings cS, uint16_t mAH,
   return true;
 }
 
-void TokiSlopeCraft::makeHeight_new() {
+void TokiSlopeCraft::makeHeight_new(
+    Eigen::ArrayXXi &Base, Eigen::ArrayXXi &HighMap, Eigen::ArrayXXi &LowMap,
+    std::unordered_map<TokiPos, waterItem> &WaterList) {
   Base.setZero(sizePic(0) + 1, sizePic(1));
-  WaterList.clear();
   HighMap.setZero(sizePic(0) + 1, sizePic(1));
   LowMap.setZero(sizePic(0) + 1, sizePic(1));
+  WaterList.clear();
   bool allowNaturalCompress = compressMethod == compressSettings::Both ||
                               compressMethod == compressSettings::NaturalOnly;
   // std::vector<const TokiColor*> src;
   // cerr << "makeHeight_new\n";
 
-  if ((mapPic - 4 * (mapPic / 4) >= 3).any()) {
+  if ((this->mapPic - 4 * (this->mapPic / 4) >= 3).any()) {
     std::string msg =
-        "Fatal error : SlopeCraftLib3 found map color with depth 3 in a "
+        "Fatal error : SlopeCraftL found map color with depth 3 in a "
         "vanilla map.\n Map contents (map color matrix in col-major) :\n[";
 
-    for (int c = 0; c < mapPic.cols(); c++) {
-      for (int r = 0; r < mapPic.rows(); r++) {
-        msg += std::to_string(mapPic(r, c)) + ',';
+    for (int c = 0; c < this->mapPic.cols(); c++) {
+      for (int r = 0; r < this->mapPic.rows(); r++) {
+        msg += std::to_string(this->mapPic(r, c)) + ',';
       }
       msg += ";\n";
     }
@@ -282,7 +291,7 @@ void TokiSlopeCraft::makeHeight_new() {
     // cerr << "Coloumn " << c << '\n';
     HeightLine HL;
     // getTokiColorPtr(c,&src[0]);
-    HL.make(mapPic.col(c), allowNaturalCompress);
+    HL.make(this->mapPic.col(c), allowNaturalCompress);
 
     if (HL.maxHeight() > maxAllowedHeight &&
         (compressMethod == compressSettings::ForcedOnly ||
@@ -303,7 +312,7 @@ void TokiSlopeCraft::makeHeight_new() {
       }
       Eigen::ArrayXi temp;
       HL.make(&ptr[0], Compressor->getResult(), allowNaturalCompress, &temp);
-      mapPic.col(c) = temp;
+      this->mapPic.col(c) = temp;
     }
 
     Base.col(c) = HL.getBase();
@@ -325,7 +334,10 @@ void TokiSlopeCraft::makeHeight_new() {
   // schem.y_range() = HighMap.maxCoeff() + 1; // y
 }
 
-void TokiSlopeCraft::buildHeight(bool fireProof, bool endermanProof) {
+void TokiSlopeCraft::buildHeight(
+    bool fireProof, bool endermanProof, const Eigen::ArrayXXi &Base,
+    const Eigen::ArrayXXi &, const Eigen::ArrayXXi &LowMap,
+    const std::unordered_map<TokiPos, waterItem> &WaterList) {
   /*
 {
   std::array<int64_t, 3> tempSize3D({schem.x_range(), schem.y_range(),
@@ -388,7 +400,7 @@ schem.z_range()}); Build.resize(tempSize3D);
 
   progressAdd(wind, sizePic(2));
 
-  for (auto it = WaterList.cbegin(); it != WaterList.cend(); it++) {
+  for (auto it = WaterList.cbegin(); it != WaterList.cend(); ++it) {
     x = TokiCol(it->first) + 1;
     z = TokiRow(it->first);
     y = waterHigh(it->second);

@@ -33,6 +33,7 @@ This file is part of SlopeCraft.
 #include <queue>
 #include <unordered_map>
 #include <vector>
+#include <span>
 
 #include "Colors.h"
 #include "SCLDefines.h"
@@ -53,6 +54,8 @@ This file is part of SlopeCraft.
 #include <MapImageCvter/MapImageCvter.h>
 #include <Schem/Schem.h>
 #include "WriteStringDeliver.h"
+
+#include <cereal/cereal.hpp>
 
 /*
 namespace SlopeCraft
@@ -271,10 +274,12 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
 
   AiCvterOpt AiOpt;
   Eigen::ArrayXXi mapPic;  // stores mapColor
+  /*
   Eigen::ArrayXXi Base;
   Eigen::ArrayXXi HighMap;
   Eigen::ArrayXXi LowMap;
   std::unordered_map<TokiPos, waterItem> WaterList;
+  */
   uint16_t maxAllowedHeight;
   uint16_t bridgeInterval;
   compressSettings compressMethod;
@@ -294,9 +299,14 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
 
   // for build
   // void makeHeight_old();//构建 HighMap 和 LowMap
-  void makeHeight_new();
+  void makeHeight_new(Eigen::ArrayXXi &Base, Eigen::ArrayXXi &HighMap,
+                      Eigen::ArrayXXi &LowMap,
+                      std::unordered_map<TokiPos, waterItem> &WaterList);
   // void makeHeightInLine(const uint16_t c);
-  void buildHeight(bool = false, bool = false);  // 构建 Build
+  void buildHeight(
+      bool fireProof, bool endermanProof, const Eigen::ArrayXXi &Base,
+      const Eigen::ArrayXXi &HighMap, const Eigen::ArrayXXi &LowMap,
+      const std::unordered_map<TokiPos, waterItem> &WaterList);  // 构建 Build
   void makeBridge();
   // for Litematic
   /*
@@ -313,14 +323,14 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   void setCacheDir(const char *) noexcept override;
   const char *cacheDir() const noexcept override;
 
-  bool saveCache(StringDeliver &_err) const noexcept override {
+  bool saveConvertCache(StringDeliver &_err) const noexcept override {
     std::string err;
-    this->saveCache(err);
+    this->save_cache(err);
     write(_err, err);
     return err.empty();
   }
 
-  void saveCache(std::string &err) const noexcept;
+  void save_cache(std::string &err) const noexcept;
 
  private:
   std::string task_dir() const noexcept;
@@ -335,9 +345,38 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
       std::string_view taskdir) noexcept;
   bool check_cache_owned_hash(uint64_t task_hash) const noexcept;
 
+ private:
+  struct build_options {
+    uint16_t maxAllowedHeight;
+    uint16_t bridgeInterval;
+    compressSettings compressMethod;
+    glassBridgeSettings glassMethod;
+  };
+  static uint64_t build_task_hash(const Eigen::ArrayXXi &mapPic,
+                                  std::span<std::string_view> blkid,
+                                  const build_options &) noexcept;
+  uint64_t build_task_hash() const noexcept;
+
+  std::vector<std::string_view> schem_block_id_list() const noexcept;
+
+  static std::string build_task_dir(std::string_view cvt_task_dir,
+                                    uint64_t build_task_hash) noexcept;
+  std::string build_task_dir() const noexcept;
+
+  struct build_cache_ir {
+    Eigen::ArrayXXi mapPic;
+    libSchem::Schem schem;
+  };
+
+  static bool exmaine_build_cache(std::string_view filename,
+                                  uint64_t build_task_hash,
+                                  std::span<std::string_view> blkid,
+                                  const build_options &bo,
+                                  build_cache_ir *ir = nullptr) noexcept;
+
  public:
-  bool check_colorset_hash() const noexcept override;
-  bool load_convert_cache(SCL_convertAlgo algo, bool dither) noexcept override;
+  bool checkColorsetHash() const noexcept override;
+  bool loadConvertCache(SCL_convertAlgo algo, bool dither) noexcept override;
 };
 
 // bool compressFile(const char *sourcePath, const char *destPath);
