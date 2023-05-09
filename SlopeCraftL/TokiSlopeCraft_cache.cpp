@@ -4,6 +4,7 @@
 #include <span>
 #include <functional>
 #include <filesystem>
+#include <md5.h>
 
 std::string write_hash(std::string_view filename,
                        const std::vector<uint8_t> &hash) noexcept {
@@ -60,7 +61,7 @@ std::string TokiSlopeCraft::cache_owned_hash_filename(
   return fmt::format("{}/private_hash{}", taskdir, hash_suffix);
 }
 
-void TokiSlopeCraft::saveCache(std::string &err) const noexcept {
+void TokiSlopeCraft::save_cache(std::string &err) const noexcept {
   if (this->kernelStep < SlopeCraft::step::converted) {
     err = "Can not save cache before the image is converted.";
     return;
@@ -156,7 +157,7 @@ bool TokiSlopeCraft::check_coloset_hash_by_filename(
   return true;
 }
 
-bool TokiSlopeCraft::check_colorset_hash() const noexcept {
+bool TokiSlopeCraft::checkColorsetHash() const noexcept {
   return this->check_coloset_hash_by_filename(this->colorset_hash_file());
 }
 
@@ -165,8 +166,8 @@ bool TokiSlopeCraft::check_cache_owned_hash(uint64_t task_hash) const noexcept {
       this->cache_owned_hash_filename(this->task_dir(task_hash)));
 }
 
-bool TokiSlopeCraft::load_convert_cache(SCL_convertAlgo algo,
-                                        bool dither) noexcept {
+bool TokiSlopeCraft::loadConvertCache(SCL_convertAlgo algo,
+                                      bool dither) noexcept {
   if (this->kernelStep < SCL_step::convertionReady) {
     reportError(
         wind, errorFlag::HASTY_MANIPULATION,
@@ -174,7 +175,7 @@ bool TokiSlopeCraft::load_convert_cache(SCL_convertAlgo algo,
     return false;
   }
 
-  if (!this->check_colorset_hash()) {
+  if (!this->checkColorsetHash()) {
     return false;
   }
 
@@ -199,3 +200,57 @@ bool TokiSlopeCraft::load_convert_cache(SCL_convertAlgo algo,
   }
   return false;
 }
+
+uint64_t TokiSlopeCraft::build_task_hash(const Eigen::ArrayXXi &mapPic,
+                                         std::span<std::string_view> blkid,
+                                         const build_options &bo) noexcept {
+  Chocobo1::MD5 hash;
+  {
+    const int64_t rows{mapPic.rows()}, cols{mapPic.cols()};
+    hash.addData(&rows, sizeof(rows));
+    hash.addData(&cols, sizeof(cols));
+  }
+  hash.addData(mapPic.data(), mapPic.size() * sizeof(mapPic(0)));
+
+  for (auto str : blkid) {
+    hash.addData(str.data(), str.size());
+  }
+
+  hash.addData(&bo.maxAllowedHeight, sizeof(bo.maxAllowedHeight));
+  hash.addData(&bo.bridgeInterval, sizeof(bo.bridgeInterval));
+  hash.addData(&bo.compressMethod, sizeof(bo.compressMethod));
+  hash.addData(&bo.glassMethod, sizeof(bo.glassMethod));
+
+  hash.finalize();
+
+  auto bytes = hash.toArray();
+
+  static_assert(bytes.size() == 16);
+
+  const uint64_t *const hash_data = (const uint64_t *)bytes.data();
+  return hash_data[0] ^ hash_data[1];
+}
+
+uint64_t TokiSlopeCraft::build_task_hash() const noexcept {
+  assert(this->kernelStep >= SCL_step::builded);
+  auto sbil = this->schem_block_id_list();
+  return build_task_hash(
+      this->mapPic, sbil,
+      build_options{this->maxAllowedHeight, this->bridgeInterval,
+                    this->compressMethod, this->glassMethod});
+}
+
+std::string TokiSlopeCraft::build_task_dir(std::string_view cvt_task_dir,
+                                           uint64_t build_task_hash) noexcept {
+  return fmt::format("{}/{:x}", cvt_task_dir, build_task_hash);
+}
+
+std::string TokiSlopeCraft::build_task_dir() const noexcept {
+  return build_task_dir(this->task_dir(), this->build_task_hash());
+}
+
+bool TokiSlopeCraft::exmaine_build_cache(std::string_view filename,
+                                         uint64_t build_task_hash,
+                                         std::span<std::string_view> blkid,
+                                         const build_options &bo,
+                                         build_cache_ir *ir) noexcept {}

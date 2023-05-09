@@ -277,13 +277,12 @@ class Kernel {
   virtual void setCacheDir(const char *) noexcept = 0;
   virtual const char *cacheDir() const noexcept = 0;
   // requires step >= converted
-  virtual bool saveCache(StringDeliver &err) const noexcept = 0;
+  virtual bool saveConvertCache(StringDeliver &err) const noexcept = 0;
   // requires step >= wait4image
-  virtual bool check_colorset_hash() const noexcept = 0;
+  virtual bool checkColorsetHash() const noexcept = 0;
 
   // requires step >= convertion ready
-  virtual bool load_convert_cache(SCL_convertAlgo algo,
-                                  bool dither) noexcept = 0;
+  virtual bool loadConvertCache(SCL_convertAlgo algo, bool dither) noexcept = 0;
 };
 
 }  // namespace SlopeCraft

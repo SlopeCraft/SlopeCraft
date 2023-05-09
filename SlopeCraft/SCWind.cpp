@@ -602,7 +602,7 @@ void SCWind::kernel_make_cache() noexcept {
   err.resize(4096);
   SlopeCraft::StringDeliver sd{err.data(), err.size()};
 
-  if (!this->kernel->saveCache(sd)) {
+  if (!this->kernel->saveConvertCache(sd)) {
     QString qerr = QString::fromUtf8(sd.data);
     QMessageBox::warning(this, tr("缓存失败"),
                          tr("未能创建缓存文件，错误信息：\n%1").arg(qerr));
@@ -610,7 +610,7 @@ void SCWind::kernel_make_cache() noexcept {
 }
 
 bool SCWind::kernel_check_colorset_hash() noexcept {
-  return this->kernel->check_colorset_hash();
+  return this->kernel->checkColorsetHash();
 }
 
 void SCWind::on_pb_cvt_current_clicked() noexcept {
@@ -695,8 +695,8 @@ void SCWind::refresh_current_cvt_display(
 
   this->kernel_set_image(idx);
 
-  if (!this->kernel->load_convert_cache(this->selected_algo(),
-                                        this->is_dither_selected())) {
+  if (!this->kernel->loadConvertCache(this->selected_algo(),
+                                      this->is_dither_selected())) {
     return;
   }
 
@@ -800,8 +800,8 @@ void SCWind::export_current_cvted_image(int idx, QString filename) noexcept {
   assert(idx < (int)this->tasks.size());
 
   this->kernel_set_image(idx);
-  if (!this->kernel->load_convert_cache(this->selected_algo(),
-                                        this->is_dither_selected())) {
+  if (!this->kernel->loadConvertCache(this->selected_algo(),
+                                      this->is_dither_selected())) {
     const auto ret = QMessageBox::warning(
         this, tr("无法保存第%1个转化后图像").arg(idx + 1),
         tr("该图像未被转化，或者转化之后修改了颜色表/转化算法。请重新转化它。"),

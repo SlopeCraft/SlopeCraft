@@ -2,6 +2,7 @@ project(SlopeCraft_SlopeCraftL VERSION ${SlopeCraft_version} LANGUAGES CXX)
 
 include(${CMAKE_SOURCE_DIR}/cmake/find_nlohmann_json.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/configure_fmtlib.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/configure_hash.cmake)
 
 find_package(ZLIB 1.2.11 REQUIRED)
 find_package(OpenMP REQUIRED)
@@ -66,6 +67,7 @@ target_include_directories(SlopeCraftL INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(SlopeCraftL PRIVATE
     ${SlopeCraft_Nlohmann_json_include_dir}
     ${SlopeCraft_HeuristicFlow_include_dir}
+    ${SlopeCraft_Chocobo1_Hash_include_dir}
 
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}/utilities)
