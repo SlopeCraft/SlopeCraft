@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <md5.h>
 
+namespace stdfs = std::filesystem;
 std::string write_hash(std::string_view filename,
                        const std::vector<uint8_t> &hash) noexcept {
   std::ofstream ofs{filename.data(), std::ios::binary};
@@ -61,7 +62,7 @@ std::string TokiSlopeCraft::cache_owned_hash_filename(
   return fmt::format("{}/private_hash{}", taskdir, hash_suffix);
 }
 
-void TokiSlopeCraft::save_cache(std::string &err) const noexcept {
+void TokiSlopeCraft::save_convert_cache(std::string &err) const noexcept {
   if (this->kernelStep < SlopeCraft::step::converted) {
     err = "Can not save cache before the image is converted.";
     return;
@@ -249,8 +250,50 @@ std::string TokiSlopeCraft::build_task_dir() const noexcept {
   return build_task_dir(this->task_dir(), this->build_task_hash());
 }
 
+std::string TokiSlopeCraft::build_cache_filename(
+    std::string_view build_task_dir) noexcept {
+  return fmt::format("{}/build", build_task_dir);
+}
+
+std::string TokiSlopeCraft::make_build_cache() const noexcept {
+  if (this->kernelStep < SlopeCraft::step::builded) {
+    return "Can not save cache before the 3d structure id built.";
+  }
+
+  const std::string build_cache_dir = build_task_dir();
+  if (!stdfs::is_directory(build_cache_dir)) {
+    std::error_code ec;
+
+    if (!stdfs::create_directories(build_cache_dir, ec)) {
+      return fmt::format(
+          "Failed to create dir named \"{}\", error code = {}, message = {}",
+          build_cache_dir, ec.value(), ec.message());
+    }
+  }
+  const std::string build_cache_file = build_cache_filename(build_cache_dir);
+  {
+    std::ofstream ofs{build_cache_file, std::ios::binary};
+
+    if (!ofs) {
+      return fmt::format("ofstream failed to open cache file {}",
+                         build_cache_file);
+    }
+
+    {
+      cereal::BinaryOutputArchive boa{ofs};
+      boa(this->mapPic);
+      boa(this->schem);
+    }
+    ofs.close();
+  }
+
+  return {};
+}
+
 bool TokiSlopeCraft::exmaine_build_cache(std::string_view filename,
                                          uint64_t build_task_hash,
                                          std::span<std::string_view> blkid,
                                          const build_options &bo,
-                                         build_cache_ir *ir) noexcept {}
+                                         build_cache_ir *ir) noexcept {
+#warning read and exmaine cache here.
+}

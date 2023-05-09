@@ -56,6 +56,7 @@ This file is part of SlopeCraft.
 #include "WriteStringDeliver.h"
 
 #include <cereal/cereal.hpp>
+#include <cereal/archives/binary.hpp>
 
 /*
 namespace SlopeCraft
@@ -232,11 +233,6 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   // const Eigen::Tensor<uchar, 3> &getBuild() const;
 
  private:
-#ifdef SCL_CAPI
-  friend struct Kernel;
-#else
-  friend class Kernel;
-#endif  //  #ifdef SLOPECRAFTL_CAPI
   // friend class TokiColor;
   //  friend void * allowedRGB();
   //  friend void * allowedMap();
@@ -325,12 +321,12 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
 
   bool saveConvertCache(StringDeliver &_err) const noexcept override {
     std::string err;
-    this->save_cache(err);
+    this->save_convert_cache(err);
     write(_err, err);
     return err.empty();
   }
 
-  void save_cache(std::string &err) const noexcept;
+  void save_convert_cache(std::string &err) const noexcept;
 
  private:
   std::string task_dir() const noexcept;
@@ -362,6 +358,10 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   static std::string build_task_dir(std::string_view cvt_task_dir,
                                     uint64_t build_task_hash) noexcept;
   std::string build_task_dir() const noexcept;
+  static std::string build_cache_filename(
+      std::string_view build_task_dir) noexcept;
+
+  std::string make_build_cache() const noexcept;
 
   struct build_cache_ir {
     Eigen::ArrayXXi mapPic;
