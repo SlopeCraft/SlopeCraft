@@ -27,6 +27,7 @@ This file is part of SlopeCraft.
 #include <ctime>
 #include <filesystem>
 #include <iostream>
+#include <fmt/format.h>
 
 #include "../NBTWriter/NBTWriter.h"
 #include "bit_shrink.h"
@@ -46,6 +47,19 @@ void Schem::resize(int64_t x, int64_t y, int64_t z) noexcept {
   this->xzy.resize(x, z, y);
 }
 
+std::string Schem::check_size() const noexcept {
+  return check_size(this->x_range(), this->y_range(), this->z_range());
+}
+
+std::string Schem::check_size(int64_t x, int64_t y, int64_t z) noexcept {
+  if (x < 0 || y < 0 || z < 0) {
+    return fmt::format(
+        "Size in one or more dimensions is negative. x= {}, y= {}, z= {}", x, y,
+        z);
+  }
+  return {};
+}
+
 void Schem::set_block_id(const char *const *const block_ids,
                          const int num) noexcept {
   if (num < 0) {
@@ -58,6 +72,13 @@ void Schem::set_block_id(const char *const *const block_ids,
 
   for (int idx = 0; idx < num; idx++) {
     this->block_id_list[idx] = block_ids[idx];
+  }
+}
+
+void Schem::set_block_id(std::span<std::string_view> id) noexcept {
+  this->block_id_list.resize(id.size());
+  for (size_t idx = 0; idx < id.size(); idx++) {
+    this->block_id_list[idx] = id[idx];
   }
 }
 

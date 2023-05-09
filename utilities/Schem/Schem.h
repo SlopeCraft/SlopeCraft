@@ -29,6 +29,11 @@ This file is part of SlopeCraft.
 #include <type_traits>
 #include <unsupported/Eigen/CXX11/Tensor>
 #include <vector>
+#include <span>
+#include <cereal/access.hpp>
+#include <cereal/cereal.hpp>
+#include <cereal/types/string.hpp>
+#include <exception>
 
 #include "SC_GlobalEnums.h"
 
@@ -80,6 +85,9 @@ class Schem {
     xzy.resize(x, y, z);
     xzy.setZero();
   }
+
+  std::string check_size() const noexcept;
+  static std::string check_size(int64_t x, int64_t y, int64_t z) noexcept;
 
   inline void set_zero() noexcept { xzy.setZero(); }
 
@@ -160,6 +168,7 @@ class Schem {
 
   /// Schem will copy these strings
   void set_block_id(const char *const *const block_ids, const int num) noexcept;
+  void set_block_id(std::span<std::string_view> id) noexcept;
 
   inline MCDataVersion::MCDataVersion_t MC_version_number() const noexcept {
     return this->MC_data_ver;
@@ -222,6 +231,36 @@ class Schem {
                       const WorldEditSchem_info &info = WorldEditSchem_info(),
                       SCL_errorFlag *const error_flag = nullptr,
                       std::string *const error_str = nullptr) const noexcept;
+
+ private:
+  friend class cereal::access;
+
+  template <class archive>
+  void save(archive &ar) const {
+    ar(this->MC_major_ver);
+    ar(this->MC_data_ver);
+    ar(this->block_id_list);
+    const int64_t x{this->x_range()}, y{this->y_range()}, z{this->z_range()};
+    ar(x, y, z);
+    ar(cereal::binary_data(this->data(), this->size()));
+  }
+
+  template <class archive>
+  void load(archive &ar) {
+    ar(this->MC_major_ver);
+    ar(this->MC_data_ver);
+    ar(this->block_id_list);
+    int64_t x, y, z;
+    ar(x, y, z);
+    {
+      std::string err = check_size(x, y, z);
+      if (!err.empty()) {
+        throw std::runtime_error{err};
+      }
+    }
+    this->resize(x, y, z);
+    ar(cereal::binary_data(this->data(), this->size()));
+  }
 };
 
 }  // namespace libSchem
