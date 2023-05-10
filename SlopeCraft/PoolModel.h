@@ -125,6 +125,21 @@ class ExportPoolModel : public PoolModel {
     return INT_MAX;
   }
 
+  cvt_task* export_idx_to_task_ptr(int eidx) const noexcept {
+    assert(eidx >= 0);
+    for (int fidx = 0; fidx < (int)this->pool->size(); fidx++) {
+      if (pool->at(fidx).is_converted) {
+        eidx--;
+      }
+      if (eidx < 0) {
+        return &this->pool->at(fidx);
+      }
+    }
+
+    assert(false);
+    return nullptr;
+  }
+
   QVariant data(const QModelIndex& idx, int role) const override;
 };
 

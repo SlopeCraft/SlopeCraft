@@ -213,11 +213,11 @@ class Kernel {
 
   // can do in converted:
   /// construct 3D structure
-  virtual bool build(
+  [[deprecated]] virtual bool build(
       ::SCL_compressSettings = ::SCL_compressSettings::noCompress,
-      unsigned short = 256,
+      uint16_t maxAllowedHeight = 256,
       ::SCL_glassBridgeSettings = ::SCL_glassBridgeSettings::noBridge,
-      unsigned short = 3, bool fireProof = false,
+      uint16_t glassInterval = 3, bool fireProof = false,
       bool endermanProof = false) = 0;
 
   /// get converted image
@@ -284,6 +284,17 @@ class Kernel {
   // requires step >= convertion ready
   virtual bool loadConvertCache(SCL_convertAlgo algo, bool dither) noexcept = 0;
 
+  struct build_options {
+    uint64_t version{SC_VERSION_U64};
+    uint16_t maxAllowedHeight;
+    uint16_t bridgeInterval;
+    compressSettings compressMethod;
+    glassBridgeSettings glassMethod;
+    bool fire_proof;
+    bool enderman_proof;
+  };
+
+  virtual bool build(const build_options &option) noexcept = 0;
   // requires step >= built
   virtual bool saveBuildCache(StringDeliver &err) const noexcept = 0;
 };

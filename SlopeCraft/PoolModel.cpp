@@ -162,9 +162,8 @@ QMimeData* CvtPoolModel::mimeData(const QModelIndexList& indexes) const {
   return ret;
 }
 
-bool CvtPoolModel::canDropMimeData(const QMimeData* data, Qt::DropAction,
-                                   int row, int col,
-                                   const QModelIndex& parent) const {
+bool CvtPoolModel::canDropMimeData(const QMimeData* data, Qt::DropAction, int,
+                                   int col, const QModelIndex& parent) const {
   if (parent.isValid()) {
     return false;
   }

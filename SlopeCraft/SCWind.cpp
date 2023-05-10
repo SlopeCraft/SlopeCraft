@@ -53,6 +53,9 @@ SCWind::SCWind(QWidget *parent)
     this->export_pool_model = new ExportPoolModel{this, &this->tasks};
     this->ui->lview_pool_export->setModel(this->export_pool_model);
     this->export_pool_model->set_listview(this->ui->lview_pool_export);
+    connect(this->ui->lview_pool_export->selectionModel(),
+            &QItemSelectionModel::selectionChanged, this,
+            &SCWind::when_export_pool_selectionChanged);
 
     connect(this, &SCWind::image_changed, this->cvt_pool_model,
             &CvtPoolModel::refresh);
@@ -107,7 +110,7 @@ SCWind::SCWind(QWidget *parent)
     connect(this->ui->cb_algo_dither, &QCheckBox::clicked, this,
             &SCWind::when_algo_btn_clicked);
   }
-
+  // setup presets
   {
     try {
       this->default_presets[0] =
@@ -293,6 +296,26 @@ std::optional<int> SCWind::selected_cvt_task_idx() const noexcept {
   return sel.front().row();
 }
 
+std::vector<cvt_task *> SCWind::selected_export_task_list() const noexcept {
+  auto selected_eidx =
+      this->ui->lview_pool_export->selectionModel()->selectedIndexes();
+  std::vector<cvt_task *> ret;
+  ret.reserve(selected_eidx.size());
+  for (auto &midx : selected_eidx) {
+    ret.emplace_back(
+        this->export_pool_model->export_idx_to_task_ptr(midx.row()));
+  }
+  return ret;
+}
+std::optional<cvt_task *> SCWind::selected_export_task() const noexcept {
+  auto selected = this->selected_export_task_list();
+  if (selected.empty()) {
+    return std::nullopt;
+  }
+
+  return selected.front();
+}
+
 SCL_convertAlgo SCWind::selected_algo() const noexcept {
   if (this->ui->rb_algo_RGB->isChecked()) {
     return SCL_convertAlgo::RGB;
@@ -319,6 +342,64 @@ SCL_convertAlgo SCWind::selected_algo() const noexcept {
 
 bool SCWind::is_dither_selected() const noexcept {
   return this->ui->cb_algo_dither->isChecked();
+}
+
+bool SCWind::is_lossless_compression_selected() const noexcept {
+  return this->ui->cb_compress_lossless->isChecked();
+}
+bool SCWind::is_lossy_compression_selected() const noexcept {
+  return this->ui->cb_compress_lossy->isChecked();
+}
+int SCWind::current_max_height() const noexcept {
+  return this->ui->sb_max_height->value();
+}
+
+SCL_compressSettings SCWind::current_compress_method() const noexcept {
+  if (this->is_lossless_compression_selected()) {
+    if (this->is_lossy_compression_selected()) {
+      return SCL_compressSettings::Both;
+    } else {
+      return SCL_compressSettings::NaturalOnly;
+    }
+  } else {
+    if (this->is_lossless_compression_selected()) {
+      return SCL_compressSettings::ForcedOnly;
+    } else {
+      return SCL_compressSettings::noCompress;
+    }
+  }
+}
+
+bool SCWind::is_glass_bridge_selected() const noexcept {
+  return this->ui->cb_glass_bridge->isChecked();
+}
+int SCWind::current_glass_brigde_interval() const noexcept {
+  return this->ui->sb_glass_bridge_interval->value();
+}
+SCL_glassBridgeSettings SCWind::current_glass_method() const noexcept {
+  if (this->is_glass_bridge_selected()) {
+    return SCL_glassBridgeSettings::withBridge;
+  }
+  return SCL_glassBridgeSettings::noBridge;
+}
+
+bool SCWind::is_fire_proof_selected() const noexcept {
+  return this->ui->cb_fireproof->isChecked();
+}
+bool SCWind::is_enderman_proof_selected() const noexcept {
+  return this->ui->cb_enderproof->isChecked();
+}
+
+SlopeCraft::Kernel::build_options SCWind::current_build_option()
+    const noexcept {
+  return SlopeCraft::Kernel::build_options{
+      SC_VERSION_U64,
+      (uint16_t)this->current_max_height(),
+      (uint16_t)this->current_glass_brigde_interval(),
+      this->current_compress_method(),
+      this->current_glass_method(),
+      this->is_fire_proof_selected(),
+      this->is_enderman_proof_selected()};
 }
 
 void SCWind::when_version_buttons_toggled() noexcept {
@@ -601,7 +682,7 @@ void SCWind::kernel_convert_image() noexcept {
   }
 }
 
-void SCWind::kernel_make_cache() noexcept {
+void SCWind::kernel_make_cvt_cache() noexcept {
   std::string err;
   err.resize(4096);
   SlopeCraft::StringDeliver sd{err.data(), err.size()};
@@ -630,7 +711,7 @@ void SCWind::on_pb_cvt_current_clicked() noexcept {
   this->kernel_convert_image();
   this->tasks[sel.value()].set_converted();
 
-  this->kernel_make_cache();
+  this->kernel_make_cvt_cache();
   this->refresh_current_cvt_display(sel.value(), true);
   this->ui->tw_cvt_image->setCurrentIndex(1);
 
@@ -647,7 +728,7 @@ void SCWind::on_pb_cvt_all_clicked() noexcept {
 
     this->kernel_set_image(idx);
     this->kernel_convert_image();
-    this->kernel_make_cache();
+    this->kernel_make_cvt_cache();
     task.set_converted();
   }
   emit this->image_changed();
@@ -818,7 +899,7 @@ void SCWind::export_current_cvted_image(int idx, QString filename) noexcept {
                                      QMessageBox::StandardButton::Ignore});
     if (ret == QMessageBox::StandardButton::Ok) {
       this->kernel_convert_image();
-      this->kernel_make_cache();
+      this->kernel_make_cvt_cache();
       this->tasks[idx].set_converted();
       have_image_cvted = true;
     } else {
@@ -837,5 +918,83 @@ void SCWind::export_current_cvted_image(int idx, QString filename) noexcept {
         tr("保存%1时失败。可能是因为文件路径错误，或者图片格式不支持。")
             .arg(filename));
     return;
+  }
+}
+
+void SCWind::on_cb_compress_lossy_toggled(bool checked) noexcept {
+  this->ui->sb_max_height->setEnabled(checked);
+}
+
+void SCWind::kernel_build_3d() noexcept {
+  if (!this->kernel->build(this->current_build_option())) {
+    QMessageBox::warning(this, tr("构建三维结构失败"),
+                         tr("构建三维结构时，出现错误。可能是因为尝试跳步。"));
+    return;
+  }
+}
+
+void SCWind::on_pb_build3d_clicked() noexcept {
+  auto taskopt = this->selected_export_task();
+  if (!taskopt.has_value()) {
+    QMessageBox::warning(this, tr("未选择图像"),
+                         tr("请在左侧任务池选择一个图像"));
+    return;
+  }
+  assert(taskopt.value() != nullptr);
+
+  cvt_task &task = *taskopt.value();
+
+  if (!task.is_converted) [[unlikely]] {
+    QMessageBox::warning(this, tr("该图像尚未被转化"),
+                         tr("必须先转化一个图像，然后再为它构建三维结构"));
+    return;
+  }
+
+  this->kernel_build_3d();
+  this->kernel_make_build_cache();
+
+  task.set_built();
+  this->refresh_current_build_display(&task, true);
+}
+
+void SCWind::refresh_current_build_display(
+    std::optional<cvt_task *> taskp, bool is_image_built_in_kernel) noexcept {
+  this->ui->lb_show_3dsize->setText(tr("大小："));
+  this->ui->lb_show_block_count->setText(tr("方块数量："));
+  if (!taskp.has_value()) {
+    return;
+  }
+
+  int x{-1}, y{-1}, z{-1};
+  int64_t block_count{-1};
+  if (is_image_built_in_kernel) {
+    this->kernel->get3DSize(&x, &y, &z);
+    block_count = this->kernel->getBlockCounts();
+  } else {
+    if (taskp.value()->is_built) {
+#warning load build cache here
+    } else {
+      return;
+    }
+  }
+
+  this->ui->lb_show_3dsize->setText(
+      tr("大小： %1 × %2 × %3").arg(x).arg(y).arg(z));
+  this->ui->lb_show_block_count->setText(tr("方块数量：%1").arg(block_count));
+}
+
+void SCWind::when_export_pool_selectionChanged() noexcept {
+  this->refresh_current_build_display(this->selected_export_task());
+}
+
+void SCWind::kernel_make_build_cache() noexcept {
+  std::string err;
+  err.resize(4096);
+  SlopeCraft::StringDeliver sd{err.data(), err.size()};
+
+  if (!this->kernel->saveBuildCache(sd)) {
+    QString qerr = QString::fromUtf8(sd.data);
+    QMessageBox::warning(this, tr("缓存失败"),
+                         tr("未能创建缓存文件，错误信息：\n%1").arg(qerr));
   }
 }

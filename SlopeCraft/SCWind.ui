@@ -18,7 +18,7 @@
     <item row="1" column="0">
      <widget class="QTabWidget" name="tw_main">
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -658,62 +658,7 @@
        <attribute name="title">
         <string>导出</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_10">
-        <item row="0" column="1" colspan="2">
-         <layout class="QHBoxLayout" name="horizontalLayout_2">
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <item>
-           <widget class="QRadioButton" name="rb_export_lite">
-            <property name="text">
-             <string>Litematica</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="rb_export_nbt">
-            <property name="text">
-             <string>结构方块文件</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="rb_export_WE">
-            <property name="text">
-             <string>WE原理图</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="rb_export_flat_diagram">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string>平面示意图</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="rb_export_fileonly">
-            <property name="text">
-             <string>地图文件</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="4" column="1">
-         <widget class="QProgressBar" name="pbar_export">
-          <property name="value">
-           <number>0</number>
-          </property>
-         </widget>
-        </item>
+       <layout class="QGridLayout" name="gridLayout_10" rowstretch="0,0,0,0,0" columnstretch="1,4,0">
         <item row="0" column="0" rowspan="5">
          <layout class="QGridLayout" name="gridLayout_12">
           <property name="leftMargin">
@@ -787,13 +732,58 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
-           <widget class="QCheckBox" name="cb_lv_export_icon_mode">
+         </layout>
+        </item>
+        <item row="4" column="1">
+         <widget class="QProgressBar" name="pbar_export">
+          <property name="value">
+           <number>0</number>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QRadioButton" name="rb_export_lite">
             <property name="text">
-             <string>Icon mode</string>
+             <string>Litematica</string>
             </property>
             <property name="checked">
              <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="rb_export_nbt">
+            <property name="text">
+             <string>结构方块文件</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="rb_export_WE">
+            <property name="text">
+             <string>WE原理图</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="rb_export_flat_diagram">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>平面示意图</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="rb_export_fileonly">
+            <property name="text">
+             <string>地图文件</string>
             </property>
            </widget>
           </item>
@@ -918,13 +908,13 @@
             <item row="0" column="0">
              <widget class="QTabWidget" name="tw_export_options">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
               <property name="currentIndex">
-               <number>2</number>
+               <number>0</number>
               </property>
               <widget class="QWidget" name="tab_6">
                <attribute name="title">
@@ -1008,7 +998,7 @@
                 <item row="2" column="1" colspan="3">
                  <widget class="QLineEdit" name="le_WE_region_name">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
@@ -1025,7 +1015,7 @@
                 <item row="0" column="2">
                  <widget class="QLineEdit" name="le_WE_offset_Y">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
@@ -1038,7 +1028,7 @@
                 <item row="0" column="3">
                  <widget class="QLineEdit" name="le_WE_offset_Z">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
@@ -1058,7 +1048,7 @@
                 <item row="1" column="1">
                  <widget class="QLineEdit" name="le_WE_weoffset_X">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
@@ -1071,7 +1061,7 @@
                 <item row="1" column="2">
                  <widget class="QLineEdit" name="le_WE_weoffset_Y">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
@@ -1084,7 +1074,7 @@
                 <item row="1" column="3">
                  <widget class="QLineEdit" name="le_WE_weoffset_Z">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
@@ -1097,7 +1087,7 @@
                 <item row="0" column="1">
                  <widget class="QLineEdit" name="le_WE_offset_X">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
@@ -1214,6 +1204,12 @@
               <layout class="QGridLayout" name="gridLayout_17">
                <item row="0" column="0">
                 <widget class="QLabel" name="lb_show_3dsize">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="text">
                   <string>大小：</string>
                  </property>
@@ -1221,6 +1217,12 @@
                </item>
                <item row="1" column="0">
                 <widget class="QLabel" name="lb_show_block_count">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="text">
                   <string>方块数量：</string>
                  </property>
