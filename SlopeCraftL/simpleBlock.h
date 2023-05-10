@@ -114,6 +114,17 @@ class simpleBlock : public ::SlopeCraft::AbstractBlock {
 
   static bool dealBlockId(const std::string &id, std::string &netBlockId,
                           stringList *proName, stringList *proVal);
+
+  const char *idForVersion(SCL_gameVersion ver) const noexcept override {
+    if (ver >= SCL_gameVersion::MC13) {
+      return this->getId();
+    }
+
+    if (this->idOld.empty()) {
+      return this->getId();
+    }
+    return this->getIdOld();
+  };
   // simpleBlock& operator =(const simpleBlock &);
 };
 

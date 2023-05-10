@@ -174,9 +174,8 @@ std::vector<std::string_view> TokiSlopeCraft::schem_block_id_list()
   temp.emplace_back("minecraft:air");
 
   for (const auto &block : TokiSlopeCraft::blockPalette) {
-    std::string_view id_at_curversion = (this->mcVer == SCL_gameVersion::MC12)
-                                            ? (block.getIdOld())
-                                            : (block.getId());
+    std::string_view id_at_curversion =
+        block.idForVersion(TokiSlopeCraft::mcVer);
     if ("minecraft:air" == id_at_curversion) {
       break;
     } else {

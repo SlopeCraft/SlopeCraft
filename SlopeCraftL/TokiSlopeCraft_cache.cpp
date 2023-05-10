@@ -282,6 +282,7 @@ std::string TokiSlopeCraft::make_build_cache() const noexcept {
     {
       cereal::BinaryOutputArchive boa{ofs};
       boa(this->mapPic);
+      boa(this->build_opt);
       boa(this->schem);
     }
     ofs.close();
@@ -293,5 +294,62 @@ std::string TokiSlopeCraft::make_build_cache() const noexcept {
 bool TokiSlopeCraft::exmaine_build_cache(std::string_view filename,
                                          uint64_t expected_task_hash,
                                          build_cache_ir *ir) noexcept {
-#warning read and exmaine cache here.
+  build_cache_ir temp;
+  {
+    if (!stdfs::is_regular_file(filename)) {
+      return false;
+    }
+    std::ifstream ifs{filename.data(), std::ios::binary};
+    cereal::BinaryInputArchive bia{ifs};
+    try {
+      bia(temp.mapPic);
+      bia(temp.build_option);
+      bia(temp.schem);
+    } catch (std::exception &) {
+      return false;
+    }
+  }
+  {
+    std::vector<std::string_view> blkids;
+    blkids.reserve(temp.schem.palette().size());
+    for (const auto &bid : temp.schem.palette()) {
+      blkids.emplace_back(bid);
+    }
+
+    const uint64_t hash =
+        TokiSlopeCraft::build_task_hash(temp.mapPic, blkids, temp.build_option);
+
+    if (hash != expected_task_hash) {
+      return false;
+    }
+  }
+
+  if (ir != nullptr) {
+    *ir = std::move(temp);
+  }
+  return true;
+}
+
+bool TokiSlopeCraft::loadBuildCache(const build_options &option) noexcept {
+  if (this->kernelStep < SCL_step::converted) {
+    reportError(wind, errorFlag::HASTY_MANIPULATION,
+                "You can load build cache only after you convert a image");
+    return false;
+  }
+  const std::string cache_filename =
+      this->build_cache_filename(this->task_dir());
+  auto sbil = this->schem_block_id_list();
+  const uint64_t expected_hash = build_task_hash(this->mapPic, sbil, option);
+
+  build_cache_ir ir;
+  if (!this->exmaine_build_cache(cache_filename, expected_hash, &ir)) {
+    return false;
+  }
+
+  this->mapPic = std::move(ir.mapPic);
+  this->build_opt = option;
+  this->schem = std::move(ir.schem);
+
+  this->kernelStep = SCL_step::builded;
+  return true;
 }

@@ -335,6 +335,8 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
     write(_err, err);
     return err.empty();
   }
+
+  bool loadBuildCache(const build_options &option) noexcept override;
   std::string make_build_cache() const noexcept;
 
  private:
@@ -366,6 +368,7 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
 
   struct build_cache_ir {
     Eigen::ArrayXXi mapPic;
+    build_options build_option;
     libSchem::Schem schem;
   };
 
@@ -377,6 +380,16 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   bool checkColorsetHash() const noexcept override;
   bool loadConvertCache(SCL_convertAlgo algo, bool dither) noexcept override;
 };
+
+template <class archive>
+void serialize(SlopeCraft::Kernel::build_options &opt, archive &ar) noexcept {
+  ar(opt.maxAllowedHeight);
+  ar(opt.bridgeInterval);
+  ar(opt.compressMethod);
+  ar(opt.glassMethod);
+  ar(opt.fire_proof);
+  ar(opt.enderman_proof);
+}
 
 // bool compressFile(const char *sourcePath, const char *destPath);
 #endif  // TOKISLOPECRAFT_H

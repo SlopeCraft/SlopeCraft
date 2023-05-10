@@ -122,6 +122,8 @@ class AbstractBlock {
   virtual void copyTo(AbstractBlock *b) const noexcept = 0;
   /// set this block to air
   virtual void clear() noexcept;
+
+  virtual const char *idForVersion(SCL_gameVersion ver) const noexcept = 0;
 };
 
 class BlockListInterface {
@@ -297,6 +299,8 @@ class Kernel {
   virtual bool build(const build_options &option) noexcept = 0;
   // requires step >= built
   virtual bool saveBuildCache(StringDeliver &err) const noexcept = 0;
+
+  virtual bool loadBuildCache(const build_options &option) noexcept = 0;
 };
 
 }  // namespace SlopeCraft
