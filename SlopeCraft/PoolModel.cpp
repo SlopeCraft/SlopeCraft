@@ -2,15 +2,28 @@
 #include <QMimeData>
 #include <list>
 #include <ranges>
+#include <QPainter>
+#include <QMessageBox>
 
 PoolModel::PoolModel(QObject* parent, task_pool_t* poolptr)
     : QAbstractListModel(parent), pool(poolptr) {}
 
 PoolModel::~PoolModel() {}
 
+const QPixmap& PoolModel::icon_empty() noexcept {
+  static QPixmap img{":/images/empty.png"};
+  return img;
+}
+
+const QPixmap& PoolModel::icon_converted() noexcept {
+  static QPixmap img{":/images/converted.png"};
+  return img;
+}
+
 QVariant PoolModel::data(const QModelIndex& idx, int role) const {
+  const auto& task = this->pool->at(idx.row());
   if (role == Qt::ItemDataRole::DisplayRole) {
-    return this->pool->at(idx.row()).filename;
+    return task.filename;
   }
 
   if (role == Qt::ItemDataRole::DecorationRole) {
@@ -18,13 +31,76 @@ QVariant PoolModel::data(const QModelIndex& idx, int role) const {
     if (this->_listview->viewMode() == QListView::ViewMode::ListMode) {
       return QVariant{};
     }
-    auto raw_image =
-        QPixmap::fromImage(this->pool->at(idx.row()).original_image);
+    auto raw_image = QPixmap::fromImage(task.original_image);
     auto img = raw_image.scaledToWidth(this->_listview->size().width());
-    return QIcon{raw_image};
+
+    if (!task.is_converted) {
+      this->draw_icon(img, icon_empty(), 0);
+    } else {
+      this->draw_icon(img, icon_converted(), 0);
+    }
+
+    return QIcon{img};
   }
 
   return QVariant{};
+}
+
+QPixmap scale_up_to_3232(const QPixmap& original_pixmap,
+                         QSize min_size) noexcept {
+  const QSize old_size = original_pixmap.size();
+  const QSize new_size{std::min(old_size.width(), min_size.width()),
+                       std::min(old_size.height(), min_size.height())};
+  if (old_size == new_size) {
+    return original_pixmap;
+  }
+  QImage new_img{new_size, QImage::Format_ARGB32};
+  memset(new_img.scanLine(0), 0, new_img.sizeInBytes());
+  {
+    const QImage old_img{
+        original_pixmap.toImage().convertToFormat(QImage::Format_ARGB32)};
+    const uint32_t* const src =
+        reinterpret_cast<const uint32_t*>(old_img.scanLine(0));
+    uint32_t* const dst = reinterpret_cast<uint32_t*>(new_img.scanLine(0));
+
+    for (int r = 0; r < old_size.height(); r++) {
+      for (int c = 0; c < old_size.width(); c++) {
+        dst[r * new_size.width() + c] = src[r * old_size.width() + c];
+      }
+    }
+  }
+  return QPixmap::fromImage(new_img);
+}
+
+void PoolModel::draw_icon(QPixmap& image, const QPixmap& icon, int index,
+                          QWidget* ptr_to_report_error) noexcept {
+  assert(index >= 0);
+  if (icon.size() != QSize{32, 32}) [[unlikely]] {
+    QMessageBox::critical(
+        ptr_to_report_error, QObject::tr("绘制图标时发现错误"),
+        tr("被绘制的图标尺寸应当是32*32，但实际上是%1*%"
+           "2。这属于SlopeCraft内部错误，请向开发者反馈。SlopeCraft必须崩溃。")
+            .arg(icon.size().height())
+            .arg(icon.size().width()));
+    abort();
+    return;
+  }
+  {
+    const QSize expected_min_size{(index + 1) * 32, 32};
+
+    if (image.height() < expected_min_size.height() ||
+        image.width() < expected_min_size.width()) [[unlikely]] {
+      image = scale_up_to_3232(image, expected_min_size);
+    }
+  }
+  QPainter painter{&image};
+
+  const QSize img_size = image.size();
+
+  const int x = img_size.width() - (index + 1) * 32;
+  const int y = img_size.height() - 32;
+  painter.drawPixmap(x, y, icon);
+  painter.end();
 }
 
 CvtPoolModel::CvtPoolModel(QObject* parent, task_pool_t* poolptr)
@@ -207,8 +283,10 @@ QVariant ExportPoolModel::data(const QModelIndex& midx, int role) const {
   assert(fidx >= 0);
   assert(fidx < (int)this->pool->size());
 
+  const auto& task = this->pool->at(fidx);
+
   if (role == Qt::ItemDataRole::DisplayRole) {
-    return this->pool->at(fidx).filename;
+    return task.filename;
   }
 
   if (role == Qt::ItemDataRole::DecorationRole) {
@@ -216,9 +294,14 @@ QVariant ExportPoolModel::data(const QModelIndex& midx, int role) const {
     if (this->_listview->viewMode() == QListView::ViewMode::ListMode) {
       return QVariant{};
     }
-    auto raw_image = QPixmap::fromImage(this->pool->at(fidx).original_image);
+    auto raw_image = QPixmap::fromImage(task.original_image);
     auto img = raw_image.scaledToWidth(this->_listview->size().width());
-    return QIcon{raw_image};
+    if (!task.is_built) {
+      this->draw_icon(img, icon_empty(), 0);
+    } else {
+      this->draw_icon(img, icon_converted(), 0);
+    }
+    return QIcon{img};
   }
 
   return QVariant{};

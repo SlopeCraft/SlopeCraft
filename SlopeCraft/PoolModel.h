@@ -5,12 +5,16 @@
 #include <QAbstractItemModel>
 #include <QListView>
 #include <cvt_task.h>
+#include <QImage>
 
 class PoolModel : public QAbstractListModel {
   Q_OBJECT
  protected:
   task_pool_t* pool{nullptr};
   QListView* _listview{nullptr};
+
+  static const QPixmap& icon_empty() noexcept;
+  static const QPixmap& icon_converted() noexcept;
 
  public:
   explicit PoolModel(QObject* parent = nullptr, task_pool_t* poolptr = nullptr);
@@ -44,6 +48,14 @@ class PoolModel : public QAbstractListModel {
     return this->_listview;
   }
   void set_listview(QListView* lv) noexcept { this->_listview = lv; }
+
+  static void draw_icon(QPixmap& image, const QPixmap& icon, int index,
+                        QWidget* ptr_to_report_error) noexcept;
+
+  void draw_icon(QPixmap& image, const QPixmap& icon,
+                 int index) const noexcept {
+    draw_icon(image, icon, index, this->_listview);
+  }
 };
 
 class CvtPoolModel : public PoolModel {

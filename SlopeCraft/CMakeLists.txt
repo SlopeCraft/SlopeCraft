@@ -63,6 +63,13 @@ set_target_properties(SlopeCraft PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
+file(GLOB SlopeCraft_qrc_images "${CMAKE_CURRENT_SOURCE_DIR}/others/images/*.png")
+message(STATUS "SlopeCraft_qrc_images = ${SlopeCraft_qrc_images}")
+qt_add_resources(SlopeCraft "SC_images"
+    PREFIX "/images/"
+    BASE ${CMAKE_CURRENT_SOURCE_DIR}/others/images
+    FILES ${SlopeCraft_qrc_images})
+
 qt_finalize_executable(SlopeCraft)
 
 if(${WIN32})
