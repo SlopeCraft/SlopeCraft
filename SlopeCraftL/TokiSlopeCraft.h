@@ -179,11 +179,16 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   }
 
   // can do in converted:
-  bool build(compressSettings = SCL_compressSettings::noCompress,
-             unsigned short = 256,
-             glassBridgeSettings = SCL_glassBridgeSettings::noBridge,
-             unsigned short = 3, bool fireProof = false,
-             bool endermanProof = false) override;  // 构建三维结构
+  // 构建三维结构
+  bool build(compressSettings cs = SCL_compressSettings::noCompress,
+             unsigned short mah = 256,
+             glassBridgeSettings gbs = SCL_glassBridgeSettings::noBridge,
+             unsigned short gi = 3, bool fp = false, bool ep = false) override {
+    return this->build(build_options{SC_VERSION_U64, mah, gi, cs, gbs, fp, ep});
+  }
+
+  bool build(const build_options &option) noexcept override;
+
   void getConvertedImage(int *rows, int *cols,
                          unsigned int *dest) const override {
     this->getConvertedImage(rows, cols, dest, true);
@@ -276,10 +281,7 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   Eigen::ArrayXXi LowMap;
   std::unordered_map<TokiPos, waterItem> WaterList;
   */
-  uint16_t maxAllowedHeight;
-  uint16_t bridgeInterval;
-  compressSettings compressMethod;
-  glassBridgeSettings glassMethod;
+  build_options build_opt;
   libSchem::Schem schem;
 
   std::optional<std::string> cache_dir{""};
@@ -349,12 +351,6 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   bool check_cache_owned_hash(uint64_t task_hash) const noexcept;
 
  private:
-  struct build_options {
-    uint16_t maxAllowedHeight;
-    uint16_t bridgeInterval;
-    compressSettings compressMethod;
-    glassBridgeSettings glassMethod;
-  };
   static uint64_t build_task_hash(const Eigen::ArrayXXi &mapPic,
                                   std::span<std::string_view> blkid,
                                   const build_options &) noexcept;

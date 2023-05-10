@@ -186,9 +186,13 @@ std::vector<std::string_view> TokiSlopeCraft::schem_block_id_list()
   return temp;
 }
 
-bool TokiSlopeCraft::build(compressSettings cS, uint16_t mAH,
-                           glassBridgeSettings gBS, uint16_t bI, bool fireProof,
-                           bool endermanProof) {
+bool TokiSlopeCraft::build(const build_options &option) noexcept {
+  /*
+  bool TokiSlopeCraft::build(compressSettings cS, uint16_t mAH,
+                             glassBridgeSettings gBS, uint16_t bI, bool
+  fireProof, bool endermanProof){
+                             */
+
   if (kernelStep < SCL_step::converted) {
     reportError(
         wind, errorFlag::HASTY_MANIPULATION,
@@ -196,7 +200,7 @@ bool TokiSlopeCraft::build(compressSettings cS, uint16_t mAH,
     cerr << "hasty!" << endl;
     return false;
   }
-  if (mAH < 14) {
+  if (option.maxAllowedHeight < 14) {
     cerr << "maxAllowedHeight is less than 14!" << endl;
     reportError(wind, errorFlag::MAX_ALLOWED_HEIGHT_LESS_THAN_14,
                 "Your maximum allowed height is less than 14, which made lossy "
@@ -215,15 +219,17 @@ bool TokiSlopeCraft::build(compressSettings cS, uint16_t mAH,
 
   // cerr << "ready to build" << endl;
 
-  compressMethod = cS;
-  glassMethod = gBS;
+  this->build_opt.compressMethod = option.compressMethod;
+  this->build_opt.glassMethod = option.glassMethod;
   if (isFlat() || !isVanilla()) {
-    compressMethod = compressSettings::noCompress;
-    glassMethod = glassBridgeSettings::noBridge;
+    this->build_opt.compressMethod = compressSettings::noCompress;
+    this->build_opt.glassMethod = glassBridgeSettings::noBridge;
   }
 
-  maxAllowedHeight = mAH;
-  bridgeInterval = bI;
+  this->build_opt.maxAllowedHeight = option.maxAllowedHeight;
+  this->build_opt.bridgeInterval = option.bridgeInterval;
+  this->build_opt.fire_proof = option.fire_proof;
+  this->build_opt.enderman_proof = option.enderman_proof;
 
   reportWorkingStatue(wind, workStatues::buidingHeighMap);
 
@@ -240,7 +246,8 @@ bool TokiSlopeCraft::build(compressSettings cS, uint16_t mAH,
 
     reportWorkingStatue(wind, workStatues::building3D);
     // cerr << "start buildHeight" << endl;
-    buildHeight(fireProof, endermanProof, Base, HighMap, LowMap, WaterList);
+    buildHeight(this->build_opt.fire_proof, this->build_opt.enderman_proof,
+                Base, HighMap, LowMap, WaterList);
     // cerr << "buildHeight finished" << endl;
     progressRangeSet(wind, 0, 9 * sizePic(2), 8 * sizePic(2));
 
@@ -265,8 +272,9 @@ void TokiSlopeCraft::makeHeight_new(
   HighMap.setZero(sizePic(0) + 1, sizePic(1));
   LowMap.setZero(sizePic(0) + 1, sizePic(1));
   WaterList.clear();
-  bool allowNaturalCompress = compressMethod == compressSettings::Both ||
-                              compressMethod == compressSettings::NaturalOnly;
+  bool allowNaturalCompress =
+      this->build_opt.compressMethod == compressSettings::Both ||
+      this->build_opt.compressMethod == compressSettings::NaturalOnly;
   // std::vector<const TokiColor*> src;
   // cerr << "makeHeight_new\n";
 
@@ -293,17 +301,17 @@ void TokiSlopeCraft::makeHeight_new(
     // getTokiColorPtr(c,&src[0]);
     HL.make(this->mapPic.col(c), allowNaturalCompress);
 
-    if (HL.maxHeight() > maxAllowedHeight &&
-        (compressMethod == compressSettings::ForcedOnly ||
-         compressMethod == compressSettings::Both)) {
+    if (HL.maxHeight() > this->build_opt.maxAllowedHeight &&
+        (this->build_opt.compressMethod == compressSettings::ForcedOnly ||
+         this->build_opt.compressMethod == compressSettings::Both)) {
       std::vector<const TokiColor *> ptr(getImageRows());
 
       this->image_cvter.col_TokiColor_ptrs(c, ptr.data());
       // getTokiColorPtr(c, &ptr[0]);
 
       Compressor->setSource(HL.getBase(), &ptr[0]);
-      bool success =
-          Compressor->compress(maxAllowedHeight, allowNaturalCompress);
+      bool success = Compressor->compress(this->build_opt.maxAllowedHeight,
+                                          allowNaturalCompress);
       if (!success) {
         std::string msg = "Failed to compress the 3D structure at coloum " +
                           std::to_string(c);
@@ -416,7 +424,7 @@ schem.z_range()}); Build.resize(tempSize3D);
 
 void TokiSlopeCraft::makeBridge() {
   if (mapType != mapTypes::Slope) return;
-  if (glassMethod != glassBridgeSettings::withBridge) return;
+  if (this->build_opt.glassMethod != glassBridgeSettings::withBridge) return;
 
   int step = sizePic(2) / schem.y_range();
 
@@ -425,7 +433,7 @@ void TokiSlopeCraft::makeBridge() {
   for (uint32_t y = 0; y < schem.y_range(); y++) {
     keepAwake(wind);
     progressAdd(wind, step);
-    if (y % (bridgeInterval + 1) == 0) {
+    if (y % (this->build_opt.bridgeInterval + 1) == 0) {
       std::array<int, 3> start, extension;  // x,z,y
       start[0] = 0;
       start[1] = 0;

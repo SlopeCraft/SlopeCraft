@@ -222,6 +222,8 @@ uint64_t TokiSlopeCraft::build_task_hash(const Eigen::ArrayXXi &mapPic,
   hash.addData(&bo.bridgeInterval, sizeof(bo.bridgeInterval));
   hash.addData(&bo.compressMethod, sizeof(bo.compressMethod));
   hash.addData(&bo.glassMethod, sizeof(bo.glassMethod));
+  hash.addData(&bo.fire_proof, sizeof(bo.fire_proof));
+  hash.addData(&bo.enderman_proof, sizeof(bo.enderman_proof));
 
   hash.finalize();
 
@@ -236,10 +238,7 @@ uint64_t TokiSlopeCraft::build_task_hash(const Eigen::ArrayXXi &mapPic,
 uint64_t TokiSlopeCraft::build_task_hash() const noexcept {
   assert(this->kernelStep >= SCL_step::builded);
   auto sbil = this->schem_block_id_list();
-  return build_task_hash(
-      this->mapPic, sbil,
-      build_options{this->maxAllowedHeight, this->bridgeInterval,
-                    this->compressMethod, this->glassMethod});
+  return build_task_hash(this->mapPic, sbil, this->build_opt);
 }
 
 std::string TokiSlopeCraft::build_task_dir(std::string_view cvt_task_dir,
