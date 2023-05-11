@@ -596,6 +596,8 @@ void SCWind::refresh_current_cvt_display(
 
   if (!this->kernel->loadConvertCache(this->selected_algo(),
                                       this->is_dither_selected())) {
+    this->tasks[idx].set_unconverted();
+    emit this->image_changed();
     return;
   }
 
