@@ -3,6 +3,7 @@ project(SlopeCraft_GAConverter VERSION ${SlopeCraft_version} LANGUAGES CXX)
 
 # set(CMAKE_CXX_STANDARD 20)
 find_package(OpenMP REQUIRED)
+find_package(Heu REQUIRED)
 
 set(SlopeCraft_GAConverter_sources
 
@@ -19,12 +20,11 @@ set(SlopeCraft_GAConverter_sources
 add_library(GAConverter STATIC ${SlopeCraft_GAConverter_sources})
 
 target_include_directories(GAConverter PUBLIC
-    ${SlopeCraft_HeuristicFlow_include_dir}
     ../../ColorManip
 )
 
 find_package(Eigen3 REQUIRED)
-target_link_libraries(GAConverter PUBLIC OpenMP::OpenMP_CXX Eigen3::Eigen)
+target_link_libraries(GAConverter PUBLIC OpenMP::OpenMP_CXX Eigen3::Eigen Heu::Genetic)
 
 target_compile_features(GAConverter PRIVATE cxx_std_20)
 

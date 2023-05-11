@@ -6,6 +6,7 @@ project(ColorManip VERSION ${SlopeCraft_version} LANGUAGES C CXX)
 # include_directories(../SlopeCraftL)
 find_package(OpenMP REQUIRED)
 find_package(Eigen3 REQUIRED)
+find_package(Heu REQUIRED)
 
 include(${CMAKE_SOURCE_DIR}/cmake/configure_hash.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/configure_cereal.cmake)
@@ -35,8 +36,8 @@ target_include_directories(ColorManip PUBLIC
     ${CMAKE_SOURCE_DIR}/utilities
     ${SlopeCraft_Chocobo1_Hash_include_dir})
 
-target_include_directories(ColorManip PRIVATE
-    ${SlopeCraft_HeuristicFlow_include_dir})
+target_link_libraries(ColorManip PRIVATE
+    Heu::Genetic)
 
 target_link_libraries(ColorManip PUBLIC
     OpenMP::OpenMP_CXX

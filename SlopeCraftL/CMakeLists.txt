@@ -9,7 +9,8 @@ find_package(ZLIB 1.2.11 REQUIRED)
 find_package(OpenMP REQUIRED)
 find_package(fmt REQUIRED)
 find_package(Eigen3 REQUIRED)
-find_package(zstr)
+find_package(zstr REQUIRED)
+find_package(Heu REQUIRED)
 
 set(SlopeCraft_SCL_windows_rc_files)
 
@@ -68,7 +69,6 @@ target_compile_features(SlopeCraftL PRIVATE cxx_std_20)
 target_include_directories(SlopeCraftL INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(SlopeCraftL PRIVATE
     ${SlopeCraft_Nlohmann_json_include_dir}
-    ${SlopeCraft_HeuristicFlow_include_dir}
     ${SlopeCraft_Chocobo1_Hash_include_dir}
 
     ${CMAKE_SOURCE_DIR}
@@ -85,7 +85,8 @@ set(SlopeCraft_SCL_link_libs
     MapImageCvter
     fmt::fmt
     Eigen3::Eigen
-    zstr::zstr)
+    zstr::zstr
+    Heu::Genetic)
 
 # link to dependents
 target_link_libraries(SlopeCraftL PUBLIC ${SlopeCraft_SCL_link_libs})
