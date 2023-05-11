@@ -281,6 +281,7 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   Eigen::ArrayXXi LowMap;
   std::unordered_map<TokiPos, waterItem> WaterList;
   */
+
   build_options build_opt;
   libSchem::Schem schem;
 
@@ -380,16 +381,6 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   bool checkColorsetHash() const noexcept override;
   bool loadConvertCache(SCL_convertAlgo algo, bool dither) noexcept override;
 };
-
-template <class archive>
-void serialize(SlopeCraft::Kernel::build_options &opt, archive &ar) noexcept {
-  ar(opt.maxAllowedHeight);
-  ar(opt.bridgeInterval);
-  ar(opt.compressMethod);
-  ar(opt.glassMethod);
-  ar(opt.fire_proof);
-  ar(opt.enderman_proof);
-}
 
 // bool compressFile(const char *sourcePath, const char *destPath);
 #endif  // TOKISLOPECRAFT_H

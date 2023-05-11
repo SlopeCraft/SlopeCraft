@@ -254,6 +254,21 @@ std::string TokiSlopeCraft::build_cache_filename(
     std::string_view build_task_dir) noexcept {
   return fmt::format("{}/build", build_task_dir);
 }
+namespace cereal {
+template <class archive>
+void save(archive &ar, const SlopeCraft::Kernel::build_options &opt) noexcept {
+  ar(opt.maxAllowedHeight, opt.bridgeInterval, opt.compressMethod,
+     opt.glassMethod);
+  ar(opt.fire_proof, opt.enderman_proof);
+}
+
+template <class archive>
+void load(archive &ar, SlopeCraft::Kernel::build_options &opt) noexcept {
+  ar(opt.maxAllowedHeight, opt.bridgeInterval, opt.compressMethod,
+     opt.glassMethod);
+  ar(opt.fire_proof, opt.enderman_proof);
+}
+}  // namespace cereal
 
 std::string TokiSlopeCraft::make_build_cache() const noexcept {
   if (this->kernelStep < SlopeCraft::step::builded) {
@@ -336,10 +351,10 @@ bool TokiSlopeCraft::loadBuildCache(const build_options &option) noexcept {
                 "You can load build cache only after you convert a image");
     return false;
   }
-  const std::string cache_filename =
-      this->build_cache_filename(this->task_dir());
   auto sbil = this->schem_block_id_list();
   const uint64_t expected_hash = build_task_hash(this->mapPic, sbil, option);
+  const std::string cache_filename = this->build_cache_filename(
+      this->build_task_dir(this->task_dir(), expected_hash));
 
   build_cache_ir ir;
   if (!this->exmaine_build_cache(cache_filename, expected_hash, &ir)) {

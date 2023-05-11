@@ -967,16 +967,22 @@ void SCWind::refresh_current_build_display(
 
   int x{-1}, y{-1}, z{-1};
   int64_t block_count{-1};
-  if (is_image_built_in_kernel) {
-    this->kernel->get3DSize(&x, &y, &z);
-    block_count = this->kernel->getBlockCounts();
-  } else {
-    if (taskp.value()->is_built) {
-#warning load build cache here
+  {
+    if (is_image_built_in_kernel) {
+      // the caller garentee that the image is built in kernel
     } else {
-      return;
+      if (taskp.value()->is_built) {
+        // try to load cache
+        if (!this->kernel->loadBuildCache(this->current_build_option())) {
+          return;
+        }
+      } else {
+        return;
+      }
     }
   }
+  this->kernel->get3DSize(&x, &y, &z);
+  block_count = this->kernel->getBlockCounts();
 
   this->ui->lb_show_3dsize->setText(
       tr("大小： %1 × %2 × %3").arg(x).arg(y).arg(z));

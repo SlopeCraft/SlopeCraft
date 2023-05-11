@@ -113,7 +113,6 @@ class SCWind : public QMainWindow {
   SlopeCraft::Kernel::build_options current_build_option() const noexcept;
 
   // kernel related functions
-
   void kernel_set_type() noexcept;
 
   void update_button_states() noexcept;
