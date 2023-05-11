@@ -4,19 +4,27 @@ project(Schem VERSION ${SlopeCraft_version} LANGUAGES CXX)
 add_library(Schem
 
     Schem.h
-
     Schem.cpp
     bit_shrink.h
-    bit_shrink.cpp)
+    bit_shrink.cpp
+    mushroom.h
+    mushroom.cpp)
 find_package(Eigen3 REQUIRED)
 
 include(${CMAKE_SOURCE_DIR}/cmake/configure_cereal.cmake)
 find_package(cereal REQUIRED)
 include(${CMAKE_SOURCE_DIR}/cmake/configure_fmtlib.cmake)
 find_package(fmt REQUIRED)
+include(${CMAKE_SOURCE_DIR}/cmake/configure_magic_enum.cmake)
+find_package(magic_enum REQUIRED)
 
 # target_compile_options(Schem BEFORE PUBLIC -std=c++17)
-target_link_libraries(Schem PUBLIC NBTWriter Eigen3::Eigen cereal::cereal fmt::fmt)
+target_link_libraries(Schem PUBLIC
+    NBTWriter
+    Eigen3::Eigen
+    cereal::cereal
+    fmt::fmt
+    magic_enum::magic_enum)
 target_compile_features(Schem PUBLIC cxx_std_20)
 target_link_libraries(Schem PUBLIC MCDataVersion ProcessBlockId)
 

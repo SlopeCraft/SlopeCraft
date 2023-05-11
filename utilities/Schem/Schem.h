@@ -217,6 +217,8 @@ class Schem {
 
   void process_mushroom_states() noexcept;
 
+  void process_mushroom_states_fast() noexcept;
+
  public:
   bool export_litematic(std::string_view filename,
                         const litematic_info &info = litematic_info(),
