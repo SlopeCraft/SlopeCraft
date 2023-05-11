@@ -25,6 +25,7 @@ set(SlopeCraft_headers
 
 set(SlopeCraft_sources
     SCWind.cpp
+    SCWind_slots.cpp
     cvt_task.cpp
     PoolModel.cpp
     AdaptiveListView.cpp

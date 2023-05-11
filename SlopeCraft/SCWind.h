@@ -59,6 +59,7 @@ class SCWind : public QMainWindow {
 
   void on_pb_build3d_clicked() noexcept;
   void on_pb_preview_materials_clicked() noexcept;
+  void on_pb_export_all_clicked() noexcept;
 
  private:
   Ui::SCWind* ui;
@@ -110,8 +111,11 @@ class SCWind : public QMainWindow {
 
   bool is_fire_proof_selected() const noexcept;
   bool is_enderman_proof_selected() const noexcept;
+  bool is_connect_mushroom_selected() const noexcept;
 
   SlopeCraft::Kernel::build_options current_build_option() const noexcept;
+
+  export_type selected_export_type() const noexcept;
 
   // kernel related functions
   void kernel_set_type() noexcept;
@@ -155,5 +159,7 @@ class SCWind : public QMainWindow {
  signals:
   void image_changed();
 };
+
+QString extension_of_export_type(SCWind::export_type) noexcept;
 
 #endif  // SLOPECRAFT_SLOPECRAFT_SCWIND_H
