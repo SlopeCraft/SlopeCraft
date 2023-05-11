@@ -379,6 +379,9 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
  public:
   bool checkColorsetHash() const noexcept override;
   bool loadConvertCache(SCL_convertAlgo algo, bool dither) noexcept override;
+
+  int getSchemPalette(const char **dest_id,
+                      size_t dest_capacity) const noexcept override;
 };
 
 // bool compressFile(const char *sourcePath, const char *destPath);

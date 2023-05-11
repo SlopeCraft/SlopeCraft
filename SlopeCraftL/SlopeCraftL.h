@@ -293,13 +293,21 @@ class Kernel {
     glassBridgeSettings glassMethod;
     bool fire_proof;
     bool enderman_proof;
+
+    // added
+    // bool connect_mushrooms;
   };
 
   virtual bool build(const build_options &option) noexcept = 0;
   // requires step >= built
   virtual bool saveBuildCache(StringDeliver &err) const noexcept = 0;
 
+  // requires step >= converted
   virtual bool loadBuildCache(const build_options &option) noexcept = 0;
+
+  // requires step >= built
+  virtual int getSchemPalette(const char **dest_id,
+                              size_t dest_capacity) const noexcept = 0;
 };
 
 }  // namespace SlopeCraft

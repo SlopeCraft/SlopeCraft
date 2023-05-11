@@ -586,3 +586,29 @@ std::string TokiSlopeCraft::exportAsWESchem(
 
   return "";
 }
+
+int TokiSlopeCraft::getSchemPalette(const char **dest_id,
+                                    size_t dest_capacity) const noexcept {
+  if (kernelStep < SCL_step::builded) {
+    reportError(wind, errorFlag::HASTY_MANIPULATION,
+                "You can only export a map to structure after you build the 3D "
+                "structure.");
+    return -1;
+  }
+
+  const int ret = this->schem.palette_size();
+
+  if (dest_id == nullptr || dest_capacity <= 0) {
+    return ret;
+  }
+
+  size_t write_counter = 0;
+  for (const auto &id : this->schem.palette()) {
+    if (write_counter < dest_capacity) {
+      dest_id[write_counter] = id.c_str();
+      write_counter++;
+    }
+  }
+
+  return ret;
+}
