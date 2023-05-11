@@ -3,11 +3,13 @@ project(SlopeCraft_SlopeCraftL VERSION ${SlopeCraft_version} LANGUAGES CXX)
 include(${CMAKE_SOURCE_DIR}/cmake/find_nlohmann_json.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/configure_fmtlib.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/configure_hash.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/configure_zstr.cmake)
 
 find_package(ZLIB 1.2.11 REQUIRED)
 find_package(OpenMP REQUIRED)
 find_package(fmt REQUIRED)
 find_package(Eigen3 REQUIRED)
+find_package(zstr)
 
 set(SlopeCraft_SCL_windows_rc_files)
 
@@ -82,7 +84,8 @@ set(SlopeCraft_SCL_link_libs
     Schem
     MapImageCvter
     fmt::fmt
-    Eigen3::Eigen)
+    Eigen3::Eigen
+    zstr::zstr)
 
 # link to dependents
 target_link_libraries(SlopeCraftL PUBLIC ${SlopeCraft_SCL_link_libs})

@@ -7,6 +7,8 @@
 #include <md5.h>
 #include <utilities/ColorManip/seralize_funs.hpp>
 
+#include <zstr.hpp>
+
 namespace stdfs = std::filesystem;
 std::string write_hash(std::string_view filename,
                        const std::vector<uint8_t> &hash) noexcept {
@@ -252,7 +254,7 @@ std::string TokiSlopeCraft::build_task_dir() const noexcept {
 
 std::string TokiSlopeCraft::build_cache_filename(
     std::string_view build_task_dir) noexcept {
-  return fmt::format("{}/build", build_task_dir);
+  return fmt::format("{}/build.gz", build_task_dir);
 }
 namespace cereal {
 template <class archive>
@@ -287,8 +289,8 @@ std::string TokiSlopeCraft::make_build_cache() const noexcept {
   }
   const std::string build_cache_file = build_cache_filename(build_cache_dir);
   {
-    std::ofstream ofs{build_cache_file, std::ios::binary};
-
+    // std::ofstream ofs{build_cache_file, std::ios::binary};
+    zstr::ofstream ofs{build_cache_file, std::ios::binary, Z_BEST_COMPRESSION};
     if (!ofs) {
       return fmt::format("ofstream failed to open cache file {}",
                          build_cache_file);
@@ -314,7 +316,8 @@ bool TokiSlopeCraft::exmaine_build_cache(std::string_view filename,
     if (!stdfs::is_regular_file(filename)) {
       return false;
     }
-    std::ifstream ifs{filename.data(), std::ios::binary};
+    // std::ifstream ifs{filename.data(), std::ios::binary};
+    zstr::ifstream ifs{filename.data(), std::ios::binary};
     cereal::BinaryInputArchive bia{ifs};
     try {
       bia(temp.mapPic);
