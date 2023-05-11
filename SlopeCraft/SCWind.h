@@ -58,6 +58,7 @@ class SCWind : public QMainWindow {
   void on_pb_save_converted_clicked() noexcept;
 
   void on_pb_build3d_clicked() noexcept;
+  void on_pb_preview_materials_clicked() noexcept;
 
  private:
   Ui::SCWind* ui;

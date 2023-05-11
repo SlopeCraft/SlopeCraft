@@ -972,7 +972,12 @@ void SCWind::refresh_current_build_display(
       // the caller garentee that the image is built in kernel
     } else {
       if (taskp.value()->is_built) {
-        // try to load cache
+        // try to load convert cache
+        if (!this->kernel->loadConvertCache(this->selected_algo(),
+                                            this->is_dither_selected())) {
+          return;
+        }
+        // try to load build cache
         if (!this->kernel->loadBuildCache(this->current_build_option())) {
           return;
         }
@@ -1003,4 +1008,50 @@ void SCWind::kernel_make_build_cache() noexcept {
     QMessageBox::warning(this, tr("缓存失败"),
                          tr("未能创建缓存文件，错误信息：\n%1").arg(qerr));
   }
+}
+
+void SCWind::on_pb_preview_materials_clicked() noexcept {
+  auto taskopt = this->selected_export_task();
+  if (!taskopt.has_value()) {
+    QMessageBox::warning(this, tr("未选择图像"),
+                         tr("请在左侧任务池选择一个图像"));
+    return;
+  }
+  assert(taskopt.value() != nullptr);
+
+  cvt_task &task = *taskopt.value();
+  if (!task.is_converted) [[unlikely]] {
+    QMessageBox::warning(this, tr("该图像尚未被转化"),
+                         tr("必须先转化一个图像，然后再为它构建三维结构"));
+    return;
+  }
+  QString errtitle;
+  QString errmsg;
+  // try to load cache
+  [this, &errtitle, &errmsg]() {
+    if (this->kernel->queryStep() >= SCL_step::builded) {
+      return;
+    }
+    if (!this->kernel->loadConvertCache(this->selected_algo(),
+                                        this->is_dither_selected())) {
+      errtitle = tr("该图像尚未被转化");
+      errmsg =
+          tr("可能是在转化完成之后又修改了转化算法，因此之前的转化无效。必须重"
+             "新转化该图像。");
+      return;
+    }
+    if (!this->kernel->loadBuildCache(this->current_build_option())) {
+      errtitle = tr("尚未构建三维结构");
+      errmsg = tr(
+          "在预览材料表之前，必须先构建三维结构。出现这个警告，可能是因为你"
+          "在构建三维结构之后，又修改了三维结构的选项，因此之前的结果无效。");
+    }
+  }();
+
+  if (!errtitle.isEmpty()) {
+    QMessageBox::warning(this, errtitle, errmsg);
+    return;
+  }
+
+#warning show mat list here
 }

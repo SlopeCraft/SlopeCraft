@@ -261,9 +261,8 @@ class Kernel {
   /// get sum block count
   virtual int64_t getBlockCounts() const = 0;
   /// get 3d structure in 3d-matrix (col major)
-  virtual const unsigned short *getBuild(int *xSize = nullptr,
-                                         int *ySize = nullptr,
-                                         int *zSize = nullptr) const = 0;
+  virtual const uint16_t *getBuild(int *xSize = nullptr, int *ySize = nullptr,
+                                   int *zSize = nullptr) const = 0;
 
   // Virtual functions added after v5.0.0. Define them in the end of vtable to
   // matain binary compability

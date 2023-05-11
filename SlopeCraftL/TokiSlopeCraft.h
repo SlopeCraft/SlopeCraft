@@ -232,8 +232,7 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   int64_t getBlockCounts(std::vector<int64_t> *) const;
   int64_t getBlockCounts() const override;
 
-  const unsigned short *getBuild(int *xSize, int *ySize,
-                                 int *zSize) const override;
+  const uint16_t *getBuild(int *xSize, int *ySize, int *zSize) const override;
 
   // const Eigen::Tensor<uchar, 3> &getBuild() const;
 

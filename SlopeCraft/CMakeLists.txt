@@ -20,18 +20,21 @@ set(SlopeCraft_headers
     SCWind.h
     cvt_task.h
     PoolModel.h
-    AdaptiveListView.h)
+    AdaptiveListView.h
+    PreviewWind.h)
 
 set(SlopeCraft_sources
     SCWind.cpp
     cvt_task.cpp
     PoolModel.cpp
     AdaptiveListView.cpp
+    PreviewWind.cpp
     main.cpp
     ${SlopeCraft_rc_files})
 
 set(SlopeCraft_uis
-    SCWind.ui)
+    SCWind.ui
+    PreviewWind.ui)
 
 set(SlopeCraft_project_files
     ${SlopeCraft_headers}
