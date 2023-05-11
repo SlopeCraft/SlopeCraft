@@ -204,13 +204,14 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   // can do in builded:
   void exportAsLitematic(const char *TargetName, const char *LiteName,
                          const char *RegionName, char *FileName) const override;
-  std::string exportAsLitematic(const std::string &TargetName,  // Local
-                                const std::string &LiteName,    // Utf8
-                                const std::string &RegionName   // Utf8
+  std::string exportAsLitematic(std::string_view TargetName,  // Local
+                                std::string_view LiteName,    // Utf8
+                                std::string_view RegionName   // Utf8
   ) const;
 
   void exportAsStructure(const char *TargetName, char *FileName) const override;
-  std::string exportAsStructure(const std::string &) const;
+  std::string exportAsStructure(std::string_view filename,
+                                bool is_air_structure_void) const;
 
   void exportAsWESchem(const char *fileName, const int (&offset)[3],
                        const int (&weOffset)[3], const char *Name,
@@ -218,10 +219,11 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
                        const int requiredModsCount,
                        char *returnVal) const override;
 
-  std::string exportAsWESchem(
-      const std::string &, const std::array<int, 3> &offset,
-      const std::array<int, 3> &weOffset, const char *Name,
-      const std::vector<const char *> &requiredMods) const;
+  std::string exportAsWESchem(std::string_view filename,
+                              std::span<const int, 3> offset,
+                              std::span<const int, 3> weOffset,
+                              std::string_view Name,
+                              std::span<const char *const> requiredMods) const;
 
   void get3DSize(int *x, int *y, int *z) const override;
   int getHeight() const override;
@@ -382,6 +384,38 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
 
   int getSchemPalette(const char **dest_id,
                       size_t dest_capacity) const noexcept override;
+
+  bool exportAsLitematic(
+      const char *filename_local,
+      const litematic_options &option) const noexcept override {
+    auto err = this->exportAsLitematic(filename_local, option.litename_utf8,
+                                       option.region_name_utf8);
+    return err.empty();
+  }
+
+  bool exportStructure(
+      const char *filename_local,
+      const vanilla_structure_options &option) const noexcept override {
+    auto err =
+        this->exportAsStructure(filename_local, option.is_air_structure_void);
+    return err.empty();
+  }
+
+  bool exportAsWESchem(const char *filename_local,
+                       const WE_schem_options &option) const noexcept override {
+    const bool have_req = option.num_required_mods > 0 &&
+                          option.required_mods_name_utf8 != nullptr;
+    std::span<const char *const> sp{};
+
+    if (have_req) {
+      sp = {option.required_mods_name_utf8,
+            option.num_required_mods + option.required_mods_name_utf8};
+    }
+    auto err = this->exportAsWESchem(filename_local, option.offset,
+                                     option.we_offset, "", sp);
+
+    return err.empty();
+  }
 };
 
 // bool compressFile(const char *sourcePath, const char *destPath);

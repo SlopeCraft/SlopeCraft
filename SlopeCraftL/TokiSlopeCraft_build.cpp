@@ -134,8 +134,8 @@ void TokiSlopeCraft::exportAsLitematic(const char *TargetName,
 }
 
 std::string TokiSlopeCraft::exportAsLitematic(
-    const std::string &TargetName, const std::string &LiteName,
-    const std::string &RegionName) const {
+    std::string_view TargetName, std::string_view LiteName,
+    std::string_view RegionName) const {
   if (kernelStep < SCL_step::builded) {
     reportError(wind, errorFlag::HASTY_MANIPULATION,
                 "You can only export a map to litematic after you build the 3D "
@@ -225,10 +225,7 @@ bool TokiSlopeCraft::build(const build_options &option) noexcept {
     this->build_opt.glassMethod = glassBridgeSettings::noBridge;
   }
 
-  this->build_opt.maxAllowedHeight = option.maxAllowedHeight;
-  this->build_opt.bridgeInterval = option.bridgeInterval;
-  this->build_opt.fire_proof = option.fire_proof;
-  this->build_opt.enderman_proof = option.enderman_proof;
+  this->build_opt = option;
 
   reportWorkingStatue(wind, workStatues::buidingHeighMap);
 
@@ -253,6 +250,10 @@ bool TokiSlopeCraft::build(const build_options &option) noexcept {
     reportWorkingStatue(wind, workStatues::constructingBridges);
     // cerr << "start makeBridge" << endl;
     makeBridge();
+  }
+
+  if (option.connect_mushrooms) {
+    this->schem.process_mushroom_states_fast();
   }
   // cerr << "makeBridge finished" << endl;
   progressRangeSet(wind, 0, 9 * sizePic(2), 9 * sizePic(2));
@@ -481,13 +482,13 @@ void TokiSlopeCraft::makeBridge() {
 
 void TokiSlopeCraft::exportAsStructure(const char *TargetName,
                                        char *FileName) const {
-  std::string temp = exportAsStructure(TargetName);
+  std::string temp = exportAsStructure(TargetName, true);
 
   if (FileName != nullptr) std::strcpy(temp.data(), FileName);
 }
 
 std::string TokiSlopeCraft::exportAsStructure(
-    const std::string &TargetName) const {
+    std::string_view filename, bool is_air_structure_void) const {
   if (kernelStep < SCL_step::builded) {
     reportError(wind, errorFlag::HASTY_MANIPULATION,
                 "You can only export a map to structure after you build the 3D "
@@ -500,8 +501,8 @@ std::string TokiSlopeCraft::exportAsStructure(
 
   errorFlag flag = errorFlag::NO_ERROR_OCCUR;
   std::string error_string;
-  const bool success =
-      schem.export_structure(TargetName, true, &flag, &error_string);
+  const bool success = schem.export_structure(filename, is_air_structure_void,
+                                              &flag, &error_string);
 
   if (!success) {
     this->reportError(this->wind, flag, error_string.data());
@@ -535,8 +536,8 @@ void TokiSlopeCraft::exportAsWESchem(const char *fileName,
       _reqMods.emplace_back(requiredMods[idx]);
     }
 
-  const std::string retVal = this->exportAsWESchem(
-      std::string(fileName), _offset, _weOffset, Name, _reqMods);
+  const std::string retVal =
+      this->exportAsWESchem(fileName, _offset, _weOffset, Name, _reqMods);
   if (returnVal != nullptr) {
     strcpy(returnVal, retVal.data());
   }
@@ -544,9 +545,9 @@ void TokiSlopeCraft::exportAsWESchem(const char *fileName,
 }
 
 std::string TokiSlopeCraft::exportAsWESchem(
-    const std::string &targetName, const std::array<int, 3> &offset,
-    const std::array<int, 3> &, const char *Name,
-    const std::vector<const char *> &requiredMods) const {
+    std::string_view filename, std::span<const int, 3> offset,
+    std::span<const int, 3> weOffset, std::string_view Name,
+    std::span<const char *const> requiredMods) const {
   if (kernelStep < SCL_step::builded) {
     reportError(wind, errorFlag::HASTY_MANIPULATION,
                 "You can only export a map to structure after you build the 3D "
@@ -562,7 +563,8 @@ std::string TokiSlopeCraft::exportAsWESchem(
   libSchem::WorldEditSchem_info info;
 
   info.schem_name_utf8 = Name;
-  info.offset = offset;
+  memcpy(info.offset.data(), offset.data(), sizeof(info.offset));
+  memcpy(info.WE_offset.data(), weOffset.data(), sizeof(info.WE_offset));
 
   info.required_mods_utf8.resize(requiredMods.size());
 
@@ -575,7 +577,7 @@ std::string TokiSlopeCraft::exportAsWESchem(
   errorFlag flag = errorFlag::NO_ERROR_OCCUR;
   std::string error_string;
   const bool success =
-      schem.export_WESchem(targetName, info, &flag, &error_string);
+      schem.export_WESchem(filename, info, &flag, &error_string);
 
   if (!success) {
     this->reportError(this->wind, flag, error_string.data());

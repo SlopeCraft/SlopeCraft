@@ -233,14 +233,15 @@ class Kernel {
 
   // can do in builded:
   /// export map into litematica files (*.litematic)
-  virtual void exportAsLitematic(const char *localEncoding_TargetName,
-                                 const char *utf8_LiteName,
-                                 const char *utf8_RegionName,
-                                 char *localEncoding_returnVal) const = 0;
+  [[deprecated]] virtual void exportAsLitematic(
+      const char *localEncoding_TargetName, const char *utf8_LiteName,
+      const char *utf8_RegionName, char *localEncoding_returnVal) const = 0;
+
   /// export map into Structure files (*.NBT)
-  virtual void exportAsStructure(const char *localEncoding_TargetName,
-                                 char *localEncoding_FileName) const = 0;
-  virtual void exportAsWESchem(
+  [[deprecated]] virtual void exportAsStructure(
+      const char *localEncoding_TargetName,
+      char *localEncoding_FileName) const = 0;
+  [[deprecated]] virtual void exportAsWESchem(
       const char *localEncoding_fileName, const int (&offset)[3] = {0, 0, 0},
       const int (&weOffset)[3] = {0, 0, 0}, const char *utf8_Name = "",
       const char *const *const utf8_requiredMods = nullptr,
@@ -267,7 +268,7 @@ class Kernel {
   // Virtual functions added after v5.0.0. Define them in the end of vtable to
   // matain binary compability
 
-  // added in v5.1.0  --------------------------------------------------
+  // introduced in v5.1.0  -----------------------------------------------------
   // replacement for setRawImage(const uint32_t*,int,int)
   virtual void setRawImage(const uint32_t *src, int rows, int cols,
                            bool is_col_major) = 0;
@@ -287,15 +288,15 @@ class Kernel {
 
   struct build_options {
     uint64_t version{SC_VERSION_U64};
-    uint16_t maxAllowedHeight;
-    uint16_t bridgeInterval;
-    compressSettings compressMethod;
-    glassBridgeSettings glassMethod;
-    bool fire_proof;
-    bool enderman_proof;
+    uint16_t maxAllowedHeight{256};
+    uint16_t bridgeInterval{3};
+    compressSettings compressMethod{::SCL_compressSettings::noCompress};
+    glassBridgeSettings glassMethod{::SCL_glassBridgeSettings::noBridge};
+    bool fire_proof{false};
+    bool enderman_proof{false};
 
-    // added
-    // bool connect_mushrooms;
+    // added in v5.1.0
+    bool connect_mushrooms{false};
   };
 
   virtual bool build(const build_options &option) noexcept = 0;
@@ -308,6 +309,34 @@ class Kernel {
   // requires step >= built
   virtual int getSchemPalette(const char **dest_id,
                               size_t dest_capacity) const noexcept = 0;
+
+  struct litematic_options {
+    uint64_t version{SC_VERSION_U64};
+    const char *litename_utf8 = "by SlopeCraft";
+    const char *region_name_utf8 = "by SlopeCraft";
+  };
+  virtual bool exportAsLitematic(
+      const char *filename_local,
+      const litematic_options &option) const noexcept = 0;
+
+  struct vanilla_structure_options {
+    uint64_t version{SC_VERSION_U64};
+    bool is_air_structure_void{true};
+  };
+  virtual bool exportStructure(
+      const char *filename_local,
+      const vanilla_structure_options &option) const noexcept = 0;
+
+  struct WE_schem_options {
+    uint64_t version{SC_VERSION_U64};
+    int offset[3] = {0, 0, 0};
+    int we_offset[3] = {0, 0, 0};
+    const char *const *required_mods_name_utf8{nullptr};
+    int num_required_mods{0};
+  };
+  virtual bool exportAsWESchem(
+      const char *filename_local,
+      const WE_schem_options &option) const noexcept = 0;
 };
 
 }  // namespace SlopeCraft

@@ -226,6 +226,7 @@ uint64_t TokiSlopeCraft::build_task_hash(const Eigen::ArrayXXi &mapPic,
   hash.addData(&bo.glassMethod, sizeof(bo.glassMethod));
   hash.addData(&bo.fire_proof, sizeof(bo.fire_proof));
   hash.addData(&bo.enderman_proof, sizeof(bo.enderman_proof));
+  hash.addData(&bo.connect_mushrooms, sizeof(bo.connect_mushrooms));
 
   hash.finalize();
 
@@ -261,14 +262,14 @@ template <class archive>
 void save(archive &ar, const SlopeCraft::Kernel::build_options &opt) noexcept {
   ar(opt.maxAllowedHeight, opt.bridgeInterval, opt.compressMethod,
      opt.glassMethod);
-  ar(opt.fire_proof, opt.enderman_proof);
+  ar(opt.fire_proof, opt.enderman_proof, opt.connect_mushrooms);
 }
 
 template <class archive>
 void load(archive &ar, SlopeCraft::Kernel::build_options &opt) noexcept {
   ar(opt.maxAllowedHeight, opt.bridgeInterval, opt.compressMethod,
      opt.glassMethod);
-  ar(opt.fire_proof, opt.enderman_proof);
+  ar(opt.fire_proof, opt.enderman_proof, opt.connect_mushrooms);
 }
 }  // namespace cereal
 
