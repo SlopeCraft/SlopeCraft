@@ -38,6 +38,11 @@ struct cvt_task {
     this->is_built = false;
     this->is_exported = false;
   }
+
+  void set_unbuilt() noexcept {
+    this->is_built = false;
+    this->is_exported = false;
+  }
 };
 
 Q_DECLARE_METATYPE(cvt_task);

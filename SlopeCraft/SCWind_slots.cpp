@@ -311,6 +311,14 @@ void SCWind::on_pb_build3d_clicked() noexcept {
                          tr("必须先转化一个图像，然后再为它构建三维结构"));
     return;
   }
+  {
+    const int gidx = taskopt.value() - this->tasks.data();
+    this->kernel_set_image(gidx);
+    if (!this->kernel->loadConvertCache(this->selected_algo(),
+                                        this->is_dither_selected())) {
+      this->kernel_convert_image();
+    }
+  }
 
   this->kernel_build_3d();
   this->kernel_make_build_cache();

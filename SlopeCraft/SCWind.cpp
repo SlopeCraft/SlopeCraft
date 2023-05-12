@@ -541,10 +541,6 @@ void SCWind::kernel_make_cvt_cache() noexcept {
   }
 }
 
-bool SCWind::kernel_check_colorset_hash() noexcept {
-  return this->kernel->checkColorsetHash();
-}
-
 QImage SCWind::get_converted_image_from_kernel() const noexcept {
   assert(this->kernel->queryStep() >= SCL_step::converted);
 
@@ -586,11 +582,12 @@ void SCWind::refresh_current_cvt_display(
     return;
   }
 
-  if (!kernel_check_colorset_hash()) {
-    this->mark_all_task_unconverted();
-    emit this->image_changed();
-    return;
-  }
+  /*
+    if (!kernel_check_colorset_hash()) {
+      this->mark_all_task_unconverted();
+      emit this->image_changed();
+      return;
+    }*/
 
   this->kernel_set_image(idx);
 
@@ -679,10 +676,12 @@ void SCWind::refresh_current_build_display(
         // try to load convert cache
         if (!this->kernel->loadConvertCache(this->selected_algo(),
                                             this->is_dither_selected())) {
+          taskp.value()->set_unconverted();
           return;
         }
         // try to load build cache
         if (!this->kernel->loadBuildCache(this->current_build_option())) {
+          taskp.value()->set_unbuilt();
           return;
         }
       } else {

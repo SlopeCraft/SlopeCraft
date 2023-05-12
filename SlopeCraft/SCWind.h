@@ -127,7 +127,7 @@ class SCWind : public QMainWindow {
 
   void kernel_make_cvt_cache() noexcept;
 
-  bool kernel_check_colorset_hash() noexcept;
+  // bool kernel_check_colorset_hash() noexcept;
 
   void kernel_build_3d() noexcept;
   void kernel_make_build_cache() noexcept;
