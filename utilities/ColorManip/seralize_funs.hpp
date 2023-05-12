@@ -23,6 +23,10 @@ void load(archive &ar, Eigen::ArrayXX<T> &img) {
   ar(cereal::make_size_tag(rows));
   ar(cereal::make_size_tag(cols));
 
+  if (rows < 0 || cols < 0) {
+    throw std::runtime_error{"Negative size"};
+  }
+
   img.resize(rows, cols);
   ar(cereal::binary_data(img.data(), rows * cols * sizeof(T)));
 }
