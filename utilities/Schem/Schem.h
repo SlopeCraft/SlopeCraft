@@ -245,7 +245,8 @@ class Schem {
     ar(this->block_id_list);
     const int64_t x{this->x_range()}, y{this->y_range()}, z{this->z_range()};
     ar(x, y, z);
-    ar(cereal::binary_data(this->data(), this->size()));
+    ar(cereal::binary_data(this->xzy.data(),
+                           this->xzy.size() * sizeof(uint16_t)));
   }
 
   template <class archive>
@@ -262,7 +263,8 @@ class Schem {
       }
     }
     this->resize(x, y, z);
-    ar(cereal::binary_data(this->data(), this->size()));
+    ar(cereal::binary_data(this->xzy.data(),
+                           this->xzy.size() * sizeof(uint16_t)));
   }
 };
 
