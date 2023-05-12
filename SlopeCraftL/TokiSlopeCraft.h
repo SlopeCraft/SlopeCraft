@@ -208,6 +208,37 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
                                 std::string_view LiteName,    // Utf8
                                 std::string_view RegionName   // Utf8
   ) const;
+  bool exportAsLitematic(
+      const char *filename_local,
+      const litematic_options &option) const noexcept override {
+    auto err = this->exportAsLitematic(filename_local, option.litename_utf8,
+                                       option.region_name_utf8);
+    return err.empty();
+  }
+
+  bool exportStructure(
+      const char *filename_local,
+      const vanilla_structure_options &option) const noexcept override {
+    auto err =
+        this->exportAsStructure(filename_local, option.is_air_structure_void);
+    return err.empty();
+  }
+
+  bool exportAsWESchem(const char *filename_local,
+                       const WE_schem_options &option) const noexcept override {
+    const bool have_req = option.num_required_mods > 0 &&
+                          option.required_mods_name_utf8 != nullptr;
+    std::span<const char *const> sp{};
+
+    if (have_req) {
+      sp = {option.required_mods_name_utf8,
+            option.num_required_mods + option.required_mods_name_utf8};
+    }
+    auto err = this->exportAsWESchem(filename_local, option.offset,
+                                     option.we_offset, "", sp);
+
+    return err.empty();
+  }
 
   void exportAsStructure(const char *TargetName, char *FileName) const override;
   std::string exportAsStructure(std::string_view filename,
@@ -330,36 +361,71 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
     return err.empty();
   }
 
-  void save_convert_cache(std::string &err) const noexcept;
+  bool loadConvertCache(SCL_convertAlgo algo, bool dither) noexcept override {
+    return this->load_convert_cache(algo, dither);
+  }
+
+  int getSchemPalette(const char **dest_id,
+                      size_t dest_capacity) const noexcept override;
 
   bool saveBuildCache(StringDeliver &_err) const noexcept override {
-    std::string err = this->make_build_cache();
+    std::string err;
+    this->save_build_cache(err);
     write(_err, err);
     return err.empty();
   }
 
-  bool loadBuildCache(const build_options &option) noexcept override;
-  std::string make_build_cache() const noexcept;
+  bool loadBuildCache(const build_options &option) noexcept override {
+    return this->load_build_cache(option);
+  }
 
  private:
-  std::string task_dir() const noexcept;
-  std::string task_dir(uint64_t) const noexcept;
-  std::string task_dir(SCL_convertAlgo algo, bool dither) const noexcept;
-  std::string colorset_hash_file() const noexcept;
+  // determined by mcver, map type and allowed colorest
+  static std::vector<uint8_t> type_hash() noexcept;
+  static std::string type_dir_of(std::string_view root_cache_dir) noexcept;
+  inline std::string current_type_dir() const noexcept {
+    return type_dir_of(this->cache_dir.value());
+  }
+  std::string type_hash_filename() const noexcept;
+  std::string save_type_hash() const noexcept;
+  bool check_type_hash() const noexcept;
 
-  bool check_coloset_hash_by_filename(std::string_view filename) const noexcept;
+  // determined by image, convert algo and dither
+  static std::string convert_dir(std::string_view type_dir,
+                                 uint64_t task_hash) noexcept;
+  std::string convert_dir_of(SCL_convertAlgo algo, bool dither) const noexcept;
+  std::string current_convert_dir() const noexcept;
+  static std::string convert_cache_filename_of(
+      std::string_view convert_dir) noexcept;
+  std::string current_convert_cache_filename() const noexcept;
+  void save_convert_cache(std::string &err) const noexcept;
+  bool load_convert_cache(SCL_convertAlgo algo, bool dither) noexcept;
 
-  static std::string conevrt_cache_filename(std::string_view taskdir) noexcept;
-  static std::string cache_owned_hash_filename(
-      std::string_view taskdir) noexcept;
-  bool check_cache_owned_hash(uint64_t task_hash) const noexcept;
+  // determined by mapPic, palette from type and build_options
+  static std::vector<uint8_t> build_task_hash_of(
+      const Eigen::ArrayXXi &mapPic, std::span<std::string_view> blkids,
+      const build_options &opt) noexcept;
+  std::vector<uint8_t> current_build_task_hash() const noexcept;
+  static std::string build_dir_of(std::string_view convert_dir,
+                                  uint64_t short_hash) noexcept;
+  std::string current_build_dir() const noexcept;
+  static std::string build_cache_filename_of(
+      std::string_view build_dir) noexcept;
+  std::string current_build_cache_filename() const noexcept;
+  void save_build_cache(std::string &err) const noexcept;
+  struct build_cache_ir {
+    Eigen::ArrayXXi mapPic;
+    build_options build_option;
+    libSchem::Schem schem;
+  };
+  static std::string build_hash_filename_of(
+      std::string_view build_dir) noexcept;
+  bool exmaine_build_cache(const build_options &opt,
+                           std::span<const uint8_t> expected_sha3_512,
+                           build_cache_ir *ir) const noexcept;
+  bool load_build_cache(const build_options &opt) noexcept;
 
  private:
-  static uint64_t build_task_hash(const Eigen::ArrayXXi &mapPic,
-                                  std::span<std::string_view> blkid,
-                                  const build_options &) noexcept;
-  uint64_t build_task_hash() const noexcept;
-
   std::vector<std::string_view> schem_block_id_list() const noexcept;
 
   static std::string build_task_dir(std::string_view cvt_task_dir,
@@ -368,54 +434,9 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   static std::string build_cache_filename(
       std::string_view build_task_dir) noexcept;
 
-  struct build_cache_ir {
-    Eigen::ArrayXXi mapPic;
-    build_options build_option;
-    libSchem::Schem schem;
-  };
-
   static bool exmaine_build_cache(std::string_view filename,
                                   uint64_t build_task_hash,
                                   build_cache_ir *ir = nullptr) noexcept;
-
- public:
-  bool checkColorsetHash() const noexcept override;
-  bool loadConvertCache(SCL_convertAlgo algo, bool dither) noexcept override;
-
-  int getSchemPalette(const char **dest_id,
-                      size_t dest_capacity) const noexcept override;
-
-  bool exportAsLitematic(
-      const char *filename_local,
-      const litematic_options &option) const noexcept override {
-    auto err = this->exportAsLitematic(filename_local, option.litename_utf8,
-                                       option.region_name_utf8);
-    return err.empty();
-  }
-
-  bool exportStructure(
-      const char *filename_local,
-      const vanilla_structure_options &option) const noexcept override {
-    auto err =
-        this->exportAsStructure(filename_local, option.is_air_structure_void);
-    return err.empty();
-  }
-
-  bool exportAsWESchem(const char *filename_local,
-                       const WE_schem_options &option) const noexcept override {
-    const bool have_req = option.num_required_mods > 0 &&
-                          option.required_mods_name_utf8 != nullptr;
-    std::span<const char *const> sp{};
-
-    if (have_req) {
-      sp = {option.required_mods_name_utf8,
-            option.num_required_mods + option.required_mods_name_utf8};
-    }
-    auto err = this->exportAsWESchem(filename_local, option.offset,
-                                     option.we_offset, "", sp);
-
-    return err.empty();
-  }
 };
 
 // bool compressFile(const char *sourcePath, const char *destPath);

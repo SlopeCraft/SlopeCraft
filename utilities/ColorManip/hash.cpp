@@ -2,7 +2,7 @@
 #include "imageConvert.hpp"
 
 #include <sha3.h>
-
+/*
 std::vector<uint8_t> internal::hash_of_colorset(
     const hash_temp &temp) noexcept {
   Chocobo1::SHA3_512 stream;
@@ -20,6 +20,8 @@ std::vector<uint8_t> internal::hash_of_colorset(
 
   return stream.finalize().toVector();
 }
+
+*/
 
 std::vector<uint8_t> libImageCvt::hash_of_image(
     Eigen::Map<const Eigen::ArrayXX<ARGB>> img) noexcept {

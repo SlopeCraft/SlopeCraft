@@ -42,7 +42,7 @@ struct hash_temp {
   bool is_maptical;
 };
 
-std::vector<uint8_t> hash_of_colorset(const hash_temp &) noexcept;
+// std::vector<uint8_t> hash_of_colorset(const hash_temp &) noexcept;
 
 }  // namespace internal
 
@@ -83,8 +83,9 @@ class colorset_new : public std::conditional_t<
     return NAN;
   }
 
+ private:
   template <typename = void>
-  std::vector<uint8_t> hash() const noexcept {
+  internal::hash_temp hash_temp() const noexcept {
     internal::hash_temp temp;
     temp.color_count = this->color_count();
     temp.color_ptrs[0] = {this->rgb_data(0), this->rgb_data(1),
@@ -98,8 +99,30 @@ class colorset_new : public std::conditional_t<
 
     temp.color_id_ptr = this->map_data();
     temp.is_maptical = is_not_optical;
-
+    return temp;
+  }
+  /*
+  template <typename = void>
+  std::vector<uint8_t> hash() const noexcept {
     return internal::hash_of_colorset(temp);
+  }
+  */
+
+ public:
+  template <class hash_stream>
+  void hash_add_data(hash_stream &stream) const noexcept {
+    auto temp = this->hash_temp();
+
+    for (const auto &cptrs : temp.color_ptrs) {
+      for (const float *fptr : cptrs) {
+        stream.addData(fptr, temp.color_count * sizeof(float));
+      }
+    }
+
+    stream.addData(temp.color_id_ptr,
+                   temp.color_count *
+                       (temp.is_maptical ? sizeof(uint8_t) : sizeof(uint16_t)));
+    stream.addData(&temp.color_count, sizeof(temp.color_count));
   }
 };
 

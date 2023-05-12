@@ -269,6 +269,8 @@ class Kernel {
   // matain binary compability
 
   // introduced in v5.1.0  -----------------------------------------------------
+  virtual void setCacheDir(const char *) noexcept = 0;
+  virtual const char *cacheDir() const noexcept = 0;
   // replacement for setRawImage(const uint32_t*,int,int)
   virtual void setRawImage(const uint32_t *src, int rows, int cols,
                            bool is_col_major) = 0;
@@ -276,16 +278,6 @@ class Kernel {
   // *dest)const
   virtual void getConvertedImage(int *rows, int *cols, uint32_t *dest,
                                  bool expected_col_major) const = 0;
-  virtual void setCacheDir(const char *) noexcept = 0;
-  virtual const char *cacheDir() const noexcept = 0;
-  // requires step >= wait4image
-  virtual bool checkColorsetHash() const noexcept = 0;
-  // requires step >= converted
-  virtual bool saveConvertCache(StringDeliver &err) const noexcept = 0;
-
-  // requires step >= convertion ready
-  virtual bool loadConvertCache(SCL_convertAlgo algo, bool dither) noexcept = 0;
-
   struct build_options {
     uint64_t version{SC_VERSION_U64};
     uint16_t maxAllowedHeight{256};
@@ -298,8 +290,15 @@ class Kernel {
     // added in v5.1.0
     bool connect_mushrooms{false};
   };
-
   virtual bool build(const build_options &option) noexcept = 0;
+  // requires step >= wait4image
+  // virtual bool checkColorsetHash() const noexcept = 0;
+  // requires step >= converted
+  virtual bool saveConvertCache(StringDeliver &err) const noexcept = 0;
+
+  // requires step >= convertion ready
+  virtual bool loadConvertCache(SCL_convertAlgo algo, bool dither) noexcept = 0;
+
   // requires step >= built
   virtual bool saveBuildCache(StringDeliver &err) const noexcept = 0;
 

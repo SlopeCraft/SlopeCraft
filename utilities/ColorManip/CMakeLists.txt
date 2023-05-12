@@ -22,8 +22,8 @@ add_library(ColorManip
     newColorSet.hpp
     newTokiColor.hpp
     StaticMembers.cpp
-    hash.cpp
 
+    hash.cpp
     colorset_maptical.hpp
     imageConvert.hpp
     newColorSet.hpp
