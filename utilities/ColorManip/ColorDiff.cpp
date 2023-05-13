@@ -23,6 +23,8 @@ This file is part of SlopeCraft.
 #include "ColorManip.h"
 #include <cmath>
 
+#include "newTokiColor.hpp"
+
 inline float square(float x) { return x * x; }
 
 constexpr float thre = 1e-10f;
@@ -76,7 +78,6 @@ float color_diff_RGB_plus(const float r1, const float g1, const float b1,
 
 float color_diff_HSV(float h1, float s1, float v1, float h2, float s2,
                      float v2) noexcept {
-
   const float sv_1 = s1 * v1;
   const float sv_2 = s2 * v2;
 
@@ -85,4 +86,48 @@ float color_diff_HSV(float h1, float s1, float v1, float h2, float s2,
   const float dZ = 50.0f * (v1 - v2);
 
   return dX * dX + dY * dY + dZ * dZ;
+}
+
+void colordiff_RGB_batch(std::span<const float> r1p, std::span<const float> g1p,
+                         std::span<const float> b1p,
+                         std::span<const float, 3> rgb2,
+                         std::span<float> dest) noexcept {
+  assert(r1p.size() == g1p.size());
+  assert(g1p.size() == b1p.size());
+  assert(b1p.size() == dest.size());
+
+  const int color_count = r1p.size();
+
+#ifdef SC_VECTORIZE_AVX2
+  const __m256 r2 = _mm256_set1_ps(rgb2[0]);
+  const __m256 g2 = _mm256_set1_ps(rgb2[1]);
+  const __m256 b2 = _mm256_set1_ps(rgb2[2]);
+
+  for (int i = 0; i < color_count; i += num_float_per_m256) {
+    const int offset = i;
+    assert(offset + num_float_per_m256 < color_count);
+    __m256 r1 = _mm256_load_ps(r1p.data() + offset);
+    __m256 g1 = _mm256_load_ps(g1p.data() + offset);
+    __m256 b1 = _mm256_load_ps(b1p.data() + offset);
+
+    __m256 dr = _mm256_sub_ps(r1, r2);
+    __m256 dg = _mm256_sub_ps(g1, g2);
+    __m256 db = _mm256_sub_ps(b1, b2);
+
+    dr = _mm256_mul_ps(dr, dr);
+    dg = _mm256_mul_ps(dg, dg);
+    db = _mm256_mul_ps(db, db);
+
+    _mm256_store_ps(dest.data() + offset,
+                    _mm256_add_ps(dr, _mm256_add_ps(dg, db)));
+  }
+  const int loop_start =
+      (color_count / num_float_per_m256) * num_float_per_m256;
+#else
+  const int loop_start = 0;
+#endif
+  for (int i = loop_start; i < color_count; i++) {
+    dest[i] = square(r1p[i] - rgb2[0]) + square(g1p[i] - rgb2[1]) +
+              square(b1p[i] - rgb2[2]);
+  }
 }

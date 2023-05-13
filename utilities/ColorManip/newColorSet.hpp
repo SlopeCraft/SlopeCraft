@@ -28,7 +28,7 @@ This file is part of SlopeCraft.
 #include <Eigen/Dense>
 #include <cmath>
 #include <type_traits>
-
+#include <span>
 #include <SC_GlobalEnums.h>
 
 // using Eigen::Dynamic;
@@ -81,6 +81,22 @@ class colorset_new : public std::conditional_t<
         return this->XYZ(r, c);
     }
     return NAN;
+  }
+
+  std::span<const float> rgb_data_span(int ch) const noexcept {
+    return {this->rgb_data(ch), (size_t)this->color_count()};
+  }
+
+  std::span<const float> hsv_data_span(int ch) const noexcept {
+    return {this->hsv_data(ch), (size_t)this->color_count()};
+  }
+
+  std::span<const float> lab_data_span(int ch) const noexcept {
+    return {this->lab_data(ch), (size_t)this->color_count()};
+  }
+
+  std::span<const float> xyz_data_span(int ch) const noexcept {
+    return {this->xyz_data(ch), (size_t)this->color_count()};
   }
 
  private:
