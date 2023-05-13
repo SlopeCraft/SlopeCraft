@@ -230,8 +230,8 @@ class TempVecOptical : public Eigen::Map<Eigen::ArrayXf> {
 
 class newtokicolor_base_optical {
  public:
-  // using TempVectorXf_t = TempVecOptical;
-  using TempVectorXf_t = Eigen::ArrayXf;
+  using TempVectorXf_t = TempVecOptical;
+  // using TempVectorXf_t = Eigen::ArrayXf;
   using result_t = uint16_t;
 
  protected:
