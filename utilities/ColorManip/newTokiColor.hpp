@@ -384,7 +384,8 @@ class newTokiColor
     auto Diff0_2 = (Allowed->rgb(0) - c3[0]).square();
     auto Diff1_2 = (Allowed->rgb(1) - c3[1]).square();
     auto Diff2_2 = (Allowed->rgb(2) - c3[2]).square();
-    TempVectorXf_t Diff = Diff0_2 + Diff1_2 + Diff2_2;
+    TempVectorXf_t Diff{Allowed->color_count(), 1};
+    Diff = Diff0_2 + Diff1_2 + Diff2_2;
 #endif
 
     // Data.CurrentColor-=allowedColors;
@@ -673,7 +674,8 @@ class newTokiColor
     auto Diff1_2 = (Allowed->xyz(1) - c3[1]).square();
     auto Diff2_2 = (Allowed->xyz(2) - c3[2]).square();
 
-    TempVectorXf_t Diff = Diff0_2 + Diff1_2 + Diff2_2;
+    TempVectorXf_t Diff(Allowed->color_count(), 1);
+    Diff = Diff0_2 + Diff1_2 + Diff2_2;
 #endif
     // Data.CurrentColor-=allowedColors;
     return find_result(Diff);
@@ -798,7 +800,9 @@ class newTokiColor
     // const ColorList &allowedColors = Allowed->Lab;
     auto deltaL_2 = (Allowed->lab(0) - L).square();
     float C1_2 = a * a + b * b;
-    TempVectorXf_t C2_2 = Allowed->lab(1).square() + Allowed->lab(2).square();
+
+    TempVectorXf_t C2_2(Allowed->color_count(), 1);
+    C2_2 = Allowed->lab(1).square() + Allowed->lab(2).square();
     auto deltaCab_2 = (sqrt(C1_2) - C2_2.sqrt()).square();
     auto deltaHab_2 = (Allowed->lab(1) - a).square() +
                       (Allowed->lab(2) - b).square() - deltaCab_2;
@@ -807,7 +811,8 @@ class newTokiColor
     // K2=0.015f
     float SC_2 = (sqrt(C1_2) * 0.045f + 1.0f) * (sqrt(C1_2) * 0.045f + 1.0f);
     auto SH_2 = (C2_2.sqrt() * 0.015f + 1.0f).square();
-    TempVectorXf_t Diff = deltaL_2 + deltaCab_2 / SC_2 + deltaHab_2 / SH_2;
+    TempVectorXf_t Diff(Allowed->color_count(), 1);
+    Diff = deltaL_2 + deltaCab_2 / SC_2 + deltaHab_2 / SH_2;
 #endif
     return find_result(Diff);
   }

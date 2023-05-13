@@ -67,6 +67,12 @@ endif()
 # if don't vectorize, or no suitable flag found, this variable will be empty
 set(SlopeCraft_vectorize_flags)
 
+if(NOT ${SlopeCraft_vectorize})
+    if(NOT ${SlopeCraft_GPU_API} STREQUAL "None")
+        message(STATUS "You enabled GPU boosting, but disabled vectorization")
+    endif()
+endif()
+
 if(${SlopeCraft_vectorize})
     include(CheckCXXCompilerFlag)
     add_definitions("-DSC_VECTORIZE_AVX2")

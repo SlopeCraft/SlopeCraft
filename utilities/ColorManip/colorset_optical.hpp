@@ -29,16 +29,16 @@ This file is part of SlopeCraft.
 #include <cmath>
 
 class alignas(32) colorset_optical_base {
-protected:
+ protected:
   std::array<Eigen::ArrayXf, 3> __rgb;
   std::array<Eigen::ArrayXf, 3> __hsv;
   std::array<Eigen::ArrayXf, 3> __lab;
   std::array<Eigen::ArrayXf, 3> __xyz;
 
-private:
+ private:
   int _color_count;
 
-public:
+ public:
   inline int color_count() const noexcept { return _color_count; }
 
   inline float RGB(int r, int c) const noexcept { return __rgb[c](r); }
@@ -57,7 +57,7 @@ public:
   inline auto xyz(int c) const noexcept { return __xyz[c].head(_color_count); }
   inline const float *xyz_data(int c) const noexcept { return __xyz[c].data(); }
 
-protected:
+ protected:
   void resize(int new_color_count) noexcept {
     if (new_color_count < 0) {
       new_color_count = 0;
@@ -75,7 +75,7 @@ protected:
 };
 
 class colorset_optical_basic : public colorset_optical_base {
-public:
+ public:
   /// in the basic colorset, id=idx;
   inline uint16_t color_id(uint16_t idx) const noexcept { return idx; }
   colorset_optical_basic() { this->resize(0); }
@@ -132,17 +132,17 @@ public:
     return color_id;
   }
 
-  inline uint16_t
-  colorindex_of_colorid(const uint16_t color_id) const noexcept {
+  inline uint16_t colorindex_of_colorid(
+      const uint16_t color_id) const noexcept {
     return this->colorindex_of_id(color_id);
   }
 };
 
 class colorset_optical_allowed : public colorset_optical_base {
-public:
+ public:
   static constexpr uint16_t invalid_color_id = 0xFFFF;
 
-private:
+ private:
   Eigen::Array<uint16_t, Eigen::Dynamic, 1> __color_id;
 
   void resize(int new_color_count) {
@@ -151,7 +151,7 @@ private:
     __color_id.fill(invalid_color_id);
   }
 
-public:
+ public:
   colorset_optical_allowed() { this->resize(0); }
 
   bool apply_allowed(const colorset_optical_basic &src,
@@ -199,11 +199,11 @@ public:
 };
 
 class TempVecOptical : public Eigen::Map<Eigen::ArrayXf> {
-public:
+ public:
   static constexpr size_t capacity = 65536;
   using Base_t = Eigen::Map<Eigen::ArrayXf>;
 
-public:
+ public:
   TempVecOptical(int rows, int cols)
       : Base_t((float *)SC_aligned_alloc(64, capacity * sizeof(float)), rows,
                cols) {
@@ -229,18 +229,19 @@ public:
 };
 
 class newtokicolor_base_optical {
-public:
-  using TempVectorXf_t = TempVecOptical;
+ public:
+  // using TempVectorXf_t = TempVecOptical;
+  using TempVectorXf_t = Eigen::ArrayXf;
   using result_t = uint16_t;
 
-protected:
+ protected:
   result_t result_color_id{
-      colorset_optical_allowed::invalid_color_id}; // the final color index
-public:
+      colorset_optical_allowed::invalid_color_id};  // the final color index
+ public:
   inline result_t color_id() const noexcept { return result_color_id; }
   inline bool is_result_computed() const noexcept {
     return (result_color_id != colorset_optical_allowed::invalid_color_id);
   }
 };
 
-#endif // COLORMANIP_COLORSET_OPTICAL_HPP
+#endif  // COLORMANIP_COLORSET_OPTICAL_HPP
