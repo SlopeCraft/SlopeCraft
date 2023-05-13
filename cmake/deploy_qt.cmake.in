@@ -3,7 +3,7 @@
 if(${WIN32})
     message(STATUS "Running windeployqt for @AppName@ ...")
     execute_process(
-        COMMAND "@SlopeCraft_Qt_windeployqt_executable@" "@AppName@.exe"
+        COMMAND "@SlopeCraft_Qt_windeployqt_executable@" --force --no-translations "@AppName@.exe"
         WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}
         OUTPUT_QUIET
         COMMAND_ERROR_IS_FATAL ANY)

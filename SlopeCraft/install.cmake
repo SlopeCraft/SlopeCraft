@@ -64,10 +64,11 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     )
 
     # Run windeployqt at build time
-    add_custom_target(Windeployqt-SlopeCraft ALL
-        COMMAND ${SlopeCraft_Qt_windeployqt_executable} SlopeCraft.exe
+    add_custom_target(Windeployqt-SlopeCraft
+        COMMAND ${SlopeCraft_Qt_windeployqt_executable} --force --no-translations SlopeCraft.exe
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         DEPENDS SlopeCraft)
+    add_dependencies(SC_deploy_all Windeployqt-SlopeCraft)
 
     # Run windeployqt at install time
     install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake)

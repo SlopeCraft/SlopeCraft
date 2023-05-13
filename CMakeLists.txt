@@ -119,6 +119,9 @@ include_directories(${CMAKE_BINARY_DIR}/utilities)
 if(${WIN32})
     add_custom_target(SC_create_all_symlinks
         COMMENT "A interface target to create all symlinks on windows")
+
+    add_custom_target(SC_deploy_all
+        COMMENT "A interface target to run windeployqt for all targets")
 endif()
 
 # Sub dirss ------------------------------------------------------------------

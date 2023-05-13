@@ -13,10 +13,11 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
         DESTINATION .)
 
     # Run windeployqt at build time
-    add_custom_target(Windeployqt-VisualCraft ALL
-        COMMAND ${SlopeCraft_Qt_windeployqt_executable} VisualCraft.exe
+    add_custom_target(Windeployqt-VisualCraft
+        COMMAND ${SlopeCraft_Qt_windeployqt_executable} --force --no-translations VisualCraft.exe
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         DEPENDS VisualCraft)
+    add_dependencies(SC_deploy_all Windeployqt-VisualCraft)
 
     # Run windeployqt at install time
     install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake)

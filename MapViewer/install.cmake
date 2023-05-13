@@ -10,10 +10,11 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     )
 
     # Run windeployqt at build time
-    add_custom_target(Windeployqt-MapViewer ALL
-        COMMAND ${SlopeCraft_Qt_windeployqt_executable} MapViewer.exe
+    add_custom_target(Windeployqt-MapViewer
+        COMMAND ${SlopeCraft_Qt_windeployqt_executable} --force --no-translations MapViewer.exe
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         DEPENDS MapViewer)
+    add_dependencies(SC_deploy_all Windeployqt-MapViewer)
 
     # Run windeployqt at install time
     install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake)

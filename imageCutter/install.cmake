@@ -10,10 +10,11 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     )
 
     # Run windeployqt at build time
-    add_custom_target(Windeployqt-imageCutter ALL
-        COMMAND ${SlopeCraft_Qt_windeployqt_executable} imageCutter.exe
+    add_custom_target(Windeployqt-imageCutter
+        COMMAND ${SlopeCraft_Qt_windeployqt_executable} --force --no-translations imageCutter.exe
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         DEPENDS imageCutter)
+    add_dependencies(SC_deploy_all Windeployqt-imageCutter)
 
     # Run windeployqt at install time
     install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake)

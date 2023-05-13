@@ -11,10 +11,11 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
         DESTINATION .)
 
     # Run windeployqt at build time
-    add_custom_target(Windeployqt-vccl ALL
-        COMMAND ${SlopeCraft_Qt_windeployqt_executable} vccl.exe
+    add_custom_target(Windeployqt-vccl
+        COMMAND ${SlopeCraft_Qt_windeployqt_executable} --force --no-translations vccl.exe
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         DEPENDS vccl)
+    add_dependencies(SC_deploy_all Windeployqt-vccl)
 
     # Run windeployqt at install time
     install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake)
