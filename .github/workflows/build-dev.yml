@@ -329,14 +329,14 @@ jobs:
       - name: Upload zip pack
         uses: actions/upload-artifact@v3
         with: 
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-windows-zip
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-vec=${{ matrix.vectorize }}-windows-zip
           path: pack/SlopeCraft*.zip
           if-no-files-found: error 
 
       - name: Upload 7z pack
         uses: actions/upload-artifact@v3
         with: 
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-windows-7z
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-vec=${{ matrix.vectorize }}-windows-7z
           path: pack/SlopeCraft*.7z
           if-no-files-found: error 
 
