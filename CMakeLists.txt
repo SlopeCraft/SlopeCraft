@@ -30,6 +30,8 @@ option(SlopeCraft_update_ts_no_obsolete "Remove obsolete translations from ts fi
 
 option(SlopeCraft_gprof "Profile with gprof" OFF)
 
+option(SlopeCraft_sanitize "Build with sanitizer" OFF)
+
 # manage the install prefix --------------------------------------------------
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
     set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install)
@@ -98,6 +100,10 @@ endif()
 if(${SlopeCraft_gprof})
     add_compile_options("-pg")
     add_link_options("-pg")
+endif()
+
+if(${SlopeCraft_sanitize})
+    set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-fsanitize=address")
 endif()
 
 add_compile_definitions(_USE_MATH_DEFINES)
