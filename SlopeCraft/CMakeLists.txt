@@ -46,6 +46,8 @@ qt_add_executable(SlopeCraft
     MANUAL_FINALIZATION
     ${SlopeCraft_project_files})
 
+target_compile_features(SlopeCraft PRIVATE cxx_std_20)
+
 target_link_libraries(SlopeCraft PRIVATE
     Qt6::Core
     Qt6::Widgets

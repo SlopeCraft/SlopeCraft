@@ -117,6 +117,13 @@ class SCWind : public QMainWindow {
 
   export_type selected_export_type() const noexcept;
 
+  std::optional<SlopeCraft::Kernel::litematic_options> current_litematic_option(
+      QString& err) const noexcept;
+  std::optional<SlopeCraft::Kernel::vanilla_structure_options>
+  current_nbt_option(QString& err) const noexcept;
+  std::optional<SlopeCraft::Kernel::WE_schem_options> current_schem_option(
+      QString& err) const noexcept;
+
   // kernel related functions
   void kernel_set_type() noexcept;
 

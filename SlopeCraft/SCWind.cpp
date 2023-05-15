@@ -730,3 +730,90 @@ QString extension_of_export_type(SCWind::export_type et) noexcept {
   assert(false);
   return "Invalid_export_type";
 }
+
+std::optional<SlopeCraft::Kernel::litematic_options>
+SCWind::current_litematic_option(QString &err) const noexcept {
+  err.clear();
+  static std::string litename;
+  static std::string region_name;
+
+  litename = this->ui->le_lite_name->text().toUtf8().data();
+  region_name = this->ui->le_lite_region_name->text().toUtf8().data();
+
+  return SlopeCraft::Kernel::litematic_options{
+      .litename_utf8 = litename.data(), .region_name_utf8 = region_name.data()};
+}
+
+std::optional<SlopeCraft::Kernel::vanilla_structure_options>
+SCWind::current_nbt_option(QString &err) const noexcept {
+  err.clear();
+
+  return SlopeCraft::Kernel::vanilla_structure_options{
+      .is_air_structure_void = this->ui->cb_nbt_air_void->isChecked()};
+}
+
+std::optional<SlopeCraft::Kernel::WE_schem_options>
+SCWind::current_schem_option(QString &err) const noexcept {
+  err.clear();
+
+  SlopeCraft::Kernel::WE_schem_options ret;
+
+  {
+    const std::array<QLineEdit *, 3> le_offset{this->ui->le_WE_offset_X,
+                                               this->ui->le_WE_offset_Y,
+                                               this->ui->le_WE_offset_Z};
+
+    for (size_t idx = 0; idx < le_offset.size(); idx++) {
+      bool ok;
+
+      ret.offset[idx] = le_offset[idx]->text().toInt(&ok);
+      if (!ok) {
+        err = tr("WE原理图参数有错：输入给offset的值\"%"
+                 "1\"不是一个有效的坐标，应当输入一个整数。")
+                  .arg(le_offset[idx]->text());
+        return std::nullopt;
+      }
+    }
+  }
+
+  {
+    const std::array<QLineEdit *, 3> le_weoffset{this->ui->le_WE_weoffset_X,
+                                                 this->ui->le_WE_weoffset_Y,
+                                                 this->ui->le_WE_weoffset_Z};
+
+    for (size_t idx = 0; idx < le_weoffset.size(); idx++) {
+      bool ok;
+
+      ret.we_offset[idx] = le_weoffset[idx]->text().toInt(&ok);
+      if (!ok) {
+        err = tr("WE原理图参数有错：输入给we offset的值\"%"
+                 "1\"不是一个有效的数字，应当输入一个整数。")
+                  .arg(le_weoffset[idx]->text());
+        return std::nullopt;
+      }
+    }
+  }
+  static std::string region_name;
+  region_name = this->ui->le_WE_region_name->text().toUtf8().data();
+
+  static std::vector<const char *> mod_charp;
+  {
+    static std::vector<std::string> mod_names;
+
+    const auto mod_names_q =
+        this->ui->le_WE_mods->toPlainText().replace("\r\n", "\n").split('\n');
+
+    mod_names.resize(mod_names_q.size());
+    mod_charp.resize(mod_names_q.size());
+
+    for (int idx = 0; idx < mod_names_q.size(); idx++) {
+      mod_names[idx] = mod_names_q[idx].toUtf8().data();
+      mod_charp[idx] = mod_names[idx].c_str();
+    }
+  }
+
+  ret.num_required_mods = mod_charp.size();
+  ret.required_mods_name_utf8 = mod_charp.data();
+
+  return ret;
+}

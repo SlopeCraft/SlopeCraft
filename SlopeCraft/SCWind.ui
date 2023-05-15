@@ -1122,6 +1122,9 @@
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
+                  <property name="placeholderText">
+                   <string>在这里输入依赖mod的名字。用换行符分割多个mod</string>
+                  </property>
                  </widget>
                 </item>
                </layout>
