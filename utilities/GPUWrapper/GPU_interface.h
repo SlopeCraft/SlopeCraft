@@ -26,6 +26,7 @@ This file is part of SlopeCraft.
 #include "../SC_GlobalEnums.h"
 #include <array>
 #include <string>
+#include <stdint.h>
 
 namespace gpu_wrapper {
 

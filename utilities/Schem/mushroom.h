@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <optional>
 #include <functional>
+#include <stdint.h>
 
 namespace libSchem {
 namespace internal {

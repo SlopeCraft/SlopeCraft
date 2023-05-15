@@ -5,6 +5,7 @@
 #include <utility>
 #include <ranges>
 #include <vector>
+#include <stdint.h>
 
 namespace blkid {
 
