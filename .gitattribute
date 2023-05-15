@@ -1,0 +1,5 @@
+* text=crlf
+*.bat text eol=crlf
+*.sh text eol=lf
+*.jpg -text
+*.png -text
