@@ -78,4 +78,19 @@ void colordiff_RGB_batch(std::span<const float> r1, std::span<const float> g1,
                          std::span<const float, 3> rgb2,
                          std::span<float> dest) noexcept;
 
+void colordiff_RGBplus_batch(std::span<const float> r1, std::span<const float> g1,
+                             std::span<const float> b1,
+                             std::span<const float, 3> rgb2,
+                             std::span<float> dest) noexcept;
+
+void colordiff_HSV_batch(std::span<const float> h1, std::span<const float> s1,
+                         std::span<const float> v1,
+                         std::span<const float, 3> hsv2,
+                         std::span<float> dest) noexcept;
+
+void colordiff_Lab94_batch(std::span<const float> l1, std::span<const float> a1,
+                         std::span<const float> b1,
+                         std::span<const float, 3> lab2,
+                         std::span<float> dest) noexcept;
+
 #endif

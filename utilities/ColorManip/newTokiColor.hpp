@@ -35,45 +35,6 @@ This file is part of SlopeCraft.
 #include <iostream>
 #include <cereal/types/array.hpp>
 
-#ifdef SC_VECTORIZE_AVX2
-#include <immintrin.h>
-#include <xmmintrin.h>
-
-constexpr int num_float_per_m256 = 256 / 32;
-
-union alignas(32) f32_i32 {
-  float f32[8];
-  int i32[8];
-  __m256i m256i;
-};
-
-inline void take_abs_f32_8(float *p) noexcept {
-  for (size_t i = 0; i < 8; i++) {
-    *p = std::abs(*p);
-  }
-}
-
-/**
- * This function is a candidate when the real instruction can't be used.
- */
-
-/**
- * This function is a candidate when the real instruction can't be used.
- */
-inline __m256 _mm256_acos_ps__manually(__m256 x) noexcept {
-  alignas(32) float y[num_float_per_m256];
-
-  _mm256_store_ps(y, x);
-
-  for (int i = 0; i < num_float_per_m256; i++) {
-    y[i] = std::acos(y[i]);
-  }
-
-  return _mm256_load_ps(y);
-}
-
-// #warning rua~
-#endif  // SC_VECTORIZE_AVX2
 
 // using Eigen::Dynamic;
 namespace {
@@ -275,15 +236,8 @@ class newTokiColor
     this->sideSelectivity[1] = 1e35f;
     this->sideResult[1] = 0;
 
-    // using Base_t::DepthCount;
-    // using Base_t::needFindSide;
-
     if (!Base_t::needFindSide) return;
-    // qDebug("开始doSide");
-    // qDebug()<<"size(Diff)=["<<Diff.rows()<<','<<Diff.cols()<<']';
-    // qDebug()<<"DepthCount="<<(short)DepthCount[0]<<;
-    // qDebug()<<"DepthCount=["<<(short)DepthCount[0]<<','<<(short)DepthCount[1]<<','<<(short)DepthCount[2]<<','<<(short)DepthCount[3]<<']';
-    // qDebug()<<"DepthIndex=["<<DepthIndexEnd[0]<<','<<DepthIndexEnd[1]<<','<<DepthIndexEnd[2]<<','<<DepthIndexEnd[3]<<']';
+
     switch (this->Result % 4) {
       case 3:
         return;
@@ -334,10 +288,7 @@ class newTokiColor
     }
     // sideSelectivity[0]-=1.0;sideSelectivity[1]-=1.0;
     // sideSelectivity[0]*=100.0;sideSelectivity[1]*=100.0;
-    /*
-    qDebug()<<"side[0]=["<<sideResult[0]<<','<<sideSelectivity[0]<<']';
-    qDebug()<<"side[1]=["<<sideResult[1]<<','<<sideSelectivity[1]<<']';
-    qDebug()<<"ResultDiff="<<ResultDiff;*/
+
     return;
   }
 
@@ -355,163 +306,20 @@ class newTokiColor
 
   auto applyRGB_plus(const Eigen::Array3f &c3) noexcept {
     // const ColorList &allowedColors = Allowed->_RGB;
+
+    TempVectorXf_t Diff(Allowed->color_count(), 1);
+    std::span<float> diff_span{Diff.data(), (size_t)Diff.size()};
+    std::span<const float, 3> c3span{c3.data(), 3};
+    colordiff_RGBplus_batch(Allowed->rgb_data_span(0),
+                            Allowed->rgb_data_span(1),
+                            Allowed->rgb_data_span(2), c3span, diff_span);
+
+    // Data.CurrentColor-=allowedColors;
+    const auto ret = find_result(Diff);
+    return ret;
+
+#if false
     constexpr float w_r = 1.0f, w_g = 2.0f, w_b = 1.0f;
-#if false && defined(SC_VECTORIZE_AVX2)
-
-    TempVectorXf_t dist(Allowed->color_count(), 1);
-
-    const float _r2 = c3[0], _g2 = c3[1], _b2 = c3[2];
-
-    const __m256 r2 = _mm256_set1_ps(_r2), g2 = _mm256_set1_ps(_g2),
-                 b2 = _mm256_set1_ps(_b2);
-    const __m256 thre = _mm256_set1_ps(threshold);
-
-    const float rr_plus_gg_plus_bb_2 = (_r2 * _r2 + _g2 * _g2 + _b2 * _b2);
-    int i;
-    for (i = 0; i < Allowed->color_count(); i += num_float_per_m256) {
-      __m256 r1 = _mm256_load_ps(Allowed->rgb_data(0) + i);
-      __m256 g1 = _mm256_load_ps(Allowed->rgb_data(1) + i);
-      __m256 b1 = _mm256_load_ps(Allowed->rgb_data(2) + i);
-
-      __m256 deltaR = _mm256_sub_ps(r1, r2);
-      __m256 deltaG = _mm256_sub_ps(g1, g2);
-      __m256 deltaB = _mm256_sub_ps(b1, b2);
-
-      __m256 SqrModSquare;
-      {
-        __m256 temp_r = _mm256_mul_ps(r1, r1);
-        __m256 temp_g = _mm256_mul_ps(g1, g1);
-        __m256 temp_b = _mm256_mul_ps(b1, b1);
-
-        SqrModSquare = _mm256_add_ps(
-            _mm256_add_ps(temp_r, temp_g),
-            _mm256_add_ps(temp_b, _mm256_set1_ps(rr_plus_gg_plus_bb_2)));
-      }
-
-      __m256 sigma_rgb;
-      {
-        __m256 temp1 = _mm256_add_ps(r1, g1);
-        __m256 temp2 = _mm256_add_ps(g1, _mm256_set1_ps(_r2 + _g2 + _b2));
-        sigma_rgb = _mm256_mul_ps(_mm256_add_ps(temp1, temp2),
-                                  _mm256_set1_ps(1.0f / 3));
-      }
-      __m256 sigma_rgb_plus_thre =
-          _mm256_add_ps(sigma_rgb, _mm256_set1_ps(threshold));
-
-      const __m256 r1_plus_r2 = _mm256_add_ps(r1, r2);
-      const __m256 g1_plus_g2 = _mm256_add_ps(g1, g2);
-      const __m256 b1_plus_b2 = _mm256_add_ps(b1, b2);
-      __m256 S_r, S_g, S_b;
-      {
-        const __m256 m256_1f = _mm256_set1_ps(1.0f);
-        __m256 temp_r = _mm256_div_ps(r1_plus_r2, sigma_rgb_plus_thre);
-        __m256 temp_g = _mm256_div_ps(g1_plus_g2, sigma_rgb_plus_thre);
-        __m256 temp_b = _mm256_div_ps(b1_plus_b2, sigma_rgb_plus_thre);
-
-        S_r = _mm256_min_ps(temp_r, m256_1f);
-        S_g = _mm256_min_ps(temp_g, m256_1f);
-        S_b = _mm256_min_ps(temp_b, m256_1f);
-      }
-
-      __m256 sumRGBsquare;
-      {
-        __m256 r1r2 = _mm256_mul_ps(r1, r2);
-        __m256 g1g2 = _mm256_mul_ps(g1, g2);
-        __m256 b1b2 = _mm256_mul_ps(b1, b2);
-        sumRGBsquare = _mm256_add_ps(r1r2, _mm256_add_ps(g1g2, b1b2));
-      }
-
-      __m256 theta;
-      {
-        __m256 temp1 =
-            _mm256_div_ps(sumRGBsquare, _mm256_add_ps(SqrModSquare, thre));
-        //__m256 _mm256_rsqrt_ps (__m256 a)
-        /*
-        __m256 temp1 = _mm256_mul_ps(
-            sumRGBsquare, _mm256_rsqrt_ps(_mm256_add_ps(SqrModSquare, thre)));
-            */
-        temp1 = _mm256_div_ps(temp1, _mm256_set1_ps(1.01f));
-        __m256 temp2;
-        {
-          alignas(32) float arr[8];
-          _mm256_store_ps(arr, temp1);
-          for (size_t i = 0; i < 8; i++) {
-            arr[i] = std::acos(arr[i]);
-          }
-          temp2 = _mm256_load_ps(arr);
-        }
-        //__m256 temp2 = _mm256_acos_ps__manually(temp1);
-        theta = _mm256_mul_ps(temp2, _mm256_set1_ps(2.0f / M_PI));
-      }
-
-      alignas(32) float arr[8];
-      __m256 OnedDeltaR =
-          _mm256_div_ps((_mm256_store_ps(arr, deltaR), take_abs_f32_8(arr),
-                         _mm256_load_ps(arr)),
-                        _mm256_add_ps(r1_plus_r2, thre));
-      __m256 OnedDeltaG =
-          _mm256_div_ps((_mm256_store_ps(arr, deltaG), take_abs_f32_8(arr),
-                         _mm256_load_ps(arr)),
-                        _mm256_add_ps(g1_plus_g2, thre));
-      __m256 OnedDeltaB =
-          _mm256_div_ps((_mm256_store_ps(arr, deltaB), take_abs_f32_8(arr),
-                         _mm256_load_ps(arr)),
-                        _mm256_add_ps(b1_plus_b2, thre));
-
-      __m256 sumOnedDelta = _mm256_add_ps(_mm256_add_ps(OnedDeltaR, OnedDeltaG),
-                                          _mm256_add_ps(OnedDeltaB, thre));
-
-      __m256 S_tr = _mm256_div_ps(
-          OnedDeltaR, _mm256_mul_ps(sumOnedDelta, _mm256_mul_ps(S_r, S_r)));
-      __m256 S_tg = _mm256_div_ps(
-          OnedDeltaG, _mm256_mul_ps(sumOnedDelta, _mm256_mul_ps(S_g, S_g)));
-      __m256 S_tb = _mm256_div_ps(
-          OnedDeltaB, _mm256_mul_ps(sumOnedDelta, _mm256_mul_ps(S_b, S_b)));
-
-      __m256 S_theta = _mm256_add_ps(S_tr, _mm256_add_ps(S_tg, S_tb));
-
-      __m256 S_ratio;
-      {
-        __m256 max_r = _mm256_max_ps(r1, r2);
-        __m256 max_g = _mm256_max_ps(g1, g2);
-        __m256 max_b = _mm256_max_ps(b1, b2);
-        S_ratio = _mm256_max_ps(max_r, _mm256_max_ps(max_g, max_b));
-      }
-
-      __m256 diff;
-      {
-        __m256 temp_r =
-            _mm256_mul_ps(_mm256_mul_ps(_mm256_mul_ps(S_r, S_r),
-                                        _mm256_mul_ps(deltaR, deltaR)),
-                          _mm256_set1_ps(w_r));
-        __m256 temp_g =
-            _mm256_mul_ps(_mm256_mul_ps(_mm256_mul_ps(S_g, S_g),
-                                        _mm256_mul_ps(deltaG, deltaG)),
-                          _mm256_set1_ps(w_g));
-        __m256 temp_b =
-            _mm256_mul_ps(_mm256_mul_ps(_mm256_mul_ps(S_b, S_b),
-                                        _mm256_mul_ps(deltaB, deltaB)),
-                          _mm256_set1_ps(w_b));
-        __m256 wr_plus_wr_plus_wb = _mm256_set1_ps(w_r + w_b + w_g);
-        __m256 temp_X =
-            _mm256_div_ps(_mm256_add_ps(_mm256_add_ps(temp_r, temp_g), temp_b),
-                          wr_plus_wr_plus_wb);
-
-        __m256 temp_Y = _mm256_mul_ps(_mm256_mul_ps(S_theta, S_ratio),
-                                      _mm256_mul_ps(theta, theta));
-
-        diff = _mm256_add_ps(temp_X, temp_Y);
-      }
-
-      _mm256_store_ps(dist.data() + i, diff);
-    }
-
-    for (; i < Allowed->color_count(); i++) {
-      dist(i) = color_diff_RGB_plus(Allowed->RGB(i, 0), Allowed->RGB(i, 1),
-                                    Allowed->RGB(i, 2), _r2, _g2, _b2);
-    }
-
-#else
     float R = c3[0];
     float g = c3[1];
     float b = c3[2];
@@ -570,23 +378,19 @@ class newTokiColor
     }
     //+S_theta*S_ratio*theta.square()
 #endif
-    return find_result(dist);
+    return find_result(Diff);
   }
 
   auto applyHSV(const Eigen::Array3f &c3) noexcept {
     // const ColorList &allowedColors = Allowed->HSV;
 
     TempVectorXf_t Diff(Allowed->color_count(), 1);
-    for (int idx = 0; idx < Allowed->color_count(); idx++) {
-      const float diff =
-          color_diff_HSV(c3[0], c3[1], c3[2], Allowed->HSV(idx, 0),
-                         Allowed->HSV(idx, 1), Allowed->HSV(idx, 2));
-      if constexpr (is_not_optical) {
-        Diff[idx] = diff;
-      } else {
-        Diff.base()[idx] = diff;
-      }
-    }
+    std::span<float> diff_span{Diff.data(), (size_t)Diff.size()};
+    std::span<const float, 3> c3span{c3.data(), 3};
+
+    colordiff_HSV_batch(Allowed->hsv_data_span(0), Allowed->hsv_data_span(1),
+                        Allowed->hsv_data_span(2), c3span, diff_span);
+
     return find_result(Diff);
   }
 
@@ -603,138 +407,11 @@ class newTokiColor
   }
 
   auto applyLab94(const Eigen::Array3f &c3) noexcept {
-#ifdef SC_VECTORIZE_AVX2
     TempVectorXf_t Diff(Allowed->color_count(), 1);
-
-    __m256 L2 = _mm256_set1_ps(c3[0]);
-    __m256 a2 = _mm256_set1_ps(c3[1]);
-    __m256 b2 = _mm256_set1_ps(c3[2]);
-    //__m256 C1_2;
-    __m256 SC_2, sqrt_C1_2;
-    {
-      // float L = c3[0];
-      float a = c3[1];
-      float b = c3[2];
-      float _C1_2 = a * a + b * b;
-      float _SC_2 =
-          (sqrt(_C1_2) * 0.045f + 1.0f) * (sqrt(_C1_2) * 0.045f + 1.0f);
-
-      // C1_2 = _mm256_set1_ps(_C1_2);
-      SC_2 = _mm256_set1_ps(_SC_2);
-      sqrt_C1_2 = _mm256_set1_ps(sqrt(_C1_2));
-    }
-
-    int i;
-    for (i = 0; i < Allowed->color_count(); i += num_float_per_m256) {
-      __m256 L1 = _mm256_load_ps(Allowed->lab_data(0) + i);
-      __m256 a1 = _mm256_load_ps(Allowed->lab_data(1) + i);
-      __m256 b1 = _mm256_load_ps(Allowed->lab_data(2) + i);
-      //      auto deltaL_2 = (Allowed->lab(0) - L).square();
-
-      __m256 deltaL_2;
-      {
-        __m256 Ldiff = _mm256_sub_ps(L1, L2);
-        deltaL_2 = _mm256_mul_ps(Ldiff, Ldiff);
-      }
-
-      __m256 C2_2 = _mm256_add_ps(_mm256_mul_ps(a1, a1), _mm256_mul_ps(b1, b1));
-
-      __m256 deltaCab_2;
-      {
-        __m256 temp = _mm256_sub_ps(sqrt_C1_2, _mm256_sqrt_ps(C2_2));
-        deltaCab_2 = _mm256_mul_ps(temp, temp);
-      }
-
-      __m256 deltaHab_2;
-      {
-        __m256 a_diff = _mm256_sub_ps(a1, a2);
-        __m256 b_diff = _mm256_sub_ps(b1, b2);
-
-        deltaHab_2 = _mm256_add_ps(_mm256_mul_ps(a_diff, a_diff),
-                                   _mm256_mul_ps(b_diff, b_diff));
-        deltaHab_2 = _mm256_sub_ps(deltaHab_2, deltaCab_2);
-      }
-
-      // constexpr float SL = 1;
-      //  constexpr float kL = 1;
-      // constexpr float K1 = 0.045f;
-      constexpr float K2 = 0.015f;
-
-      __m256 SH_2;
-      {
-        __m256 temp = _mm256_add_ps(
-            _mm256_mul_ps(_mm256_sqrt_ps(C2_2), _mm256_set1_ps(K2)),
-            _mm256_set1_ps(1.0f));
-        SH_2 = _mm256_mul_ps(temp, temp);
-      }
-
-      __m256 diff;
-      {
-        __m256 temp_C = _mm256_div_ps(deltaCab_2, SC_2);
-        __m256 temp_H = _mm256_div_ps(deltaHab_2, SH_2);
-        diff = _mm256_add_ps(deltaL_2, _mm256_add_ps(temp_C, temp_H));
-      }
-
-      _mm256_store_ps(Diff.data() + i, diff);
-    }
-
-    const float L = c3[0];
-    const float a = c3[1];
-    const float b = c3[2];
-    float _C1_2 = a * a + b * b;
-    float _SC_2 = (sqrt(_C1_2) * 0.045f + 1.0f) * (sqrt(_C1_2) * 0.045f + 1.0f);
-
-    for (; i < Allowed->color_count(); i++) {
-      // auto deltaL_2 = (Allowed->lab(0) - L).square();
-
-      const float deltaL_2 =
-          (Allowed->Lab(i, 0) - L) * (Allowed->Lab(i, 0) - L);
-
-      const float C2_2 = Allowed->Lab(i, 1) * Allowed->Lab(i, 1) +
-                         Allowed->Lab(i, 2) * Allowed->Lab(i, 2);
-      float deltaCab_2;
-      {
-        float temp = sqrt(_C1_2) - sqrt(C2_2);
-        deltaCab_2 = temp * temp;
-      }
-
-      float deltaHab_2;
-      {
-        float diff_a = Allowed->Lab(i, 1) - a;
-        float diff_b = Allowed->Lab(i, 2) - b;
-        deltaHab_2 = diff_a * diff_a + diff_b * diff_b;
-      }
-
-      float SH_2;
-      {
-        float temp = sqrt(C2_2) * 0.015f + 1.0f;
-        SH_2 = temp * temp;
-      }
-      // delete &SH_2;
-      Diff(i) = deltaL_2 + deltaCab_2 / _SC_2 + deltaHab_2 / SH_2;
-    }
-
-#else
-    float L = c3[0];
-    float a = c3[1];
-    float b = c3[2];
-    // const ColorList &allowedColors = Allowed->Lab;
-    auto deltaL_2 = (Allowed->lab(0) - L).square();
-    float C1_2 = a * a + b * b;
-
-    TempVectorXf_t C2_2(Allowed->color_count(), 1);
-    C2_2 = Allowed->lab(1).square() + Allowed->lab(2).square();
-    auto deltaCab_2 = (sqrt(C1_2) - C2_2.sqrt()).square();
-    auto deltaHab_2 = (Allowed->lab(1) - a).square() +
-                      (Allowed->lab(2) - b).square() - deltaCab_2;
-    // SL=1,kL=1
-    // K1=0.045f
-    // K2=0.015f
-    float SC_2 = (sqrt(C1_2) * 0.045f + 1.0f) * (sqrt(C1_2) * 0.045f + 1.0f);
-    auto SH_2 = (C2_2.sqrt() * 0.015f + 1.0f).square();
-    TempVectorXf_t Diff(Allowed->color_count(), 1);
-    Diff = deltaL_2 + deltaCab_2 / SC_2 + deltaHab_2 / SH_2;
-#endif
+    std::span<float> diff_span{Diff.data(), (size_t)Diff.size()};
+    std::span<const float, 3> c3span{c3.data(), 3};
+    colordiff_Lab94_batch(Allowed->lab_data_span(0), Allowed->lab_data_span(1),
+                        Allowed->lab_data_span(2), c3span, diff_span);
     return find_result(Diff);
   }
 
