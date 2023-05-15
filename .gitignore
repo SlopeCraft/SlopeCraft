@@ -75,4 +75,4 @@ binaries/*
 
 ### CLion ###
 .idea/*
-cmake-build-debug/*
+cmake-build-*
