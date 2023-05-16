@@ -722,7 +722,7 @@ QString extension_of_export_type(SCWind::export_type et) noexcept {
     case SCWind::export_type::WE_schem:
       return "schem";
     case SCWind::export_type::flat_diagram:
-      return "png";
+      return "flat-diagram.png";
     case SCWind::export_type::data_file:
       return "dat";
   }
@@ -816,4 +816,30 @@ SCWind::current_schem_option(QString &err) const noexcept {
   ret.required_mods_name_utf8 = mod_charp.data();
 
   return ret;
+}
+
+std::optional<SlopeCraft::Kernel::flag_diagram_options>
+SCWind::current_flatdiagram_option(QString &err) const noexcept {
+  err.clear();
+
+  int row_margin = this->ui->sb_flatdiagram_hmargin->value();
+  int col_margin = this->ui->sb_flatdiagram_vmargin->value();
+
+  if (row_margin <= 0 || col_margin <= 0) {
+    err =
+        tr("平面示意图的分割线间距无效：水平间距为 %1， 垂直间距为 %2， "
+           "但间距必须为正数。");
+    return std::nullopt;
+  }
+
+  if (!this->ui->cb_flatdiagram_hline->isChecked()) {
+    row_margin = -1;
+  }
+
+  if (!this->ui->cb_flatdiagram_vline->isChecked()) {
+    col_margin = -1;
+  }
+
+  return SlopeCraft::Kernel::flag_diagram_options{
+      .split_line_row_margin = row_margin, .split_line_col_margin = col_margin};
 }

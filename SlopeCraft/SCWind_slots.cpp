@@ -6,8 +6,12 @@
 #include <QApplication>
 
 void SCWind::on_pb_add_image_clicked() noexcept {
-  auto files =
-      QFileDialog::getOpenFileNames(this, tr("选择图片"), "", "*.png;*.jpg");
+#ifdef WIN32
+  const char *filter = "*.png;*.jpg";
+#else
+  const char *filter = "*.png;;*.jpg";
+#endif
+  auto files = QFileDialog::getOpenFileNames(this, tr("选择图片"), "", filter);
 
   if (files.empty()) {
     return;
@@ -373,10 +377,69 @@ void SCWind::on_pb_preview_materials_clicked() noexcept {
 #warning show mat list here
 }
 
+#define SC_PRIVATE_MACRO_PROCESS_IF_ERR_on_pb_export_all_clicked \
+  if (!temp.has_value()) {                                       \
+    process_err(err);                                            \
+    return;                                                      \
+  }
+
+#define SC_PRIVATE_MARCO_PROCESS_EXPORT_ERROR_on_pb_export_all_clicked \
+  if (report_err_fun(export_name, taskp) ==                            \
+      QMessageBox::StandardButton::Ignore) {                           \
+    continue;                                                          \
+  } else {                                                             \
+    return;                                                            \
+  }
+
 void SCWind::on_pb_export_all_clicked() noexcept {
   auto tasks_to_export = this->selected_export_task_list();
 
-  if (tasks_to_export.size() <= 0) {
+  const auto export_type = this->selected_export_type();
+  SlopeCraft::Kernel::litematic_options opt_lite;
+  SlopeCraft::Kernel::vanilla_structure_options opt_nbt;
+  SlopeCraft::Kernel::WE_schem_options opt_WE;
+  SlopeCraft::Kernel::flag_diagram_options opt_fd;
+  {
+    QString err;
+    auto process_err = [this](const QString &err) {
+      QMessageBox::warning(this, tr("导出设置有错"),
+                           tr("导出设置存在如下错误：\n%1").arg(err));
+    };
+    switch (export_type) {
+      case export_type::litematica: {
+        auto temp = this->current_litematic_option(err);
+        SC_PRIVATE_MACRO_PROCESS_IF_ERR_on_pb_export_all_clicked;
+        opt_lite = temp.value();
+        break;
+      }
+      case export_type::vanilla_structure: {
+        auto temp = this->current_nbt_option(err);
+        SC_PRIVATE_MACRO_PROCESS_IF_ERR_on_pb_export_all_clicked;
+        opt_nbt = temp.value();
+        break;
+      }
+      case export_type::WE_schem: {
+        auto temp = this->current_schem_option(err);
+        SC_PRIVATE_MACRO_PROCESS_IF_ERR_on_pb_export_all_clicked;
+        opt_WE = temp.value();
+        break;
+      }
+      case export_type::flat_diagram: {
+        auto temp = this->current_flatdiagram_option(err);
+        SC_PRIVATE_MACRO_PROCESS_IF_ERR_on_pb_export_all_clicked;
+        opt_fd = temp.value();
+        break;
+      }
+      default:
+        QMessageBox::warning(
+            this, tr("你点错按钮了"),
+            tr("导出为纯文件地图画的按钮在另外一页。按理来说你不应该能点击这个"
+               "按钮，这可能是一个小小的bug（特性）。"));
+        return;
+    }
+  }
+
+  if (tasks_to_export.empty()) {
     QMessageBox::warning(this, tr("无可导出的任务"),
                          tr("任务池为空，请先转化一个或一些图像"));
     return;
@@ -453,6 +516,46 @@ void SCWind::on_pb_export_all_clicked() noexcept {
     }
     taskp->set_built();
 
-#warning export here
+    const std::string export_name =
+        get_export_name(*taskp).toLocal8Bit().data();
+
+    auto report_err_fun = [this](std::string_view export_name,
+                                 const cvt_task *taskp) {
+      return QMessageBox::warning(
+          this, tr("导出失败"),
+          tr("导出%1时失败。原图像文件名为%"
+             "2\n点击Ignore将跳过这个图像，点击Cancel将放弃导出任务。")
+              .arg(export_name.data())
+              .arg(taskp->filename),
+          QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore,
+                                       QMessageBox::StandardButton::Cancel});
+    };
+
+    switch (export_type) {
+      case export_type::litematica:
+        if (!this->kernel->exportAsLitematic(export_name.c_str(), opt_lite)) {
+          SC_PRIVATE_MARCO_PROCESS_EXPORT_ERROR_on_pb_export_all_clicked;
+        }
+        break;
+
+      case export_type::vanilla_structure:
+        if (!this->kernel->exportAsStructure(export_name.c_str(), opt_nbt)) {
+          SC_PRIVATE_MARCO_PROCESS_EXPORT_ERROR_on_pb_export_all_clicked;
+        }
+        break;
+      case export_type::WE_schem:
+        if (!this->kernel->exportAsWESchem(export_name.c_str(), opt_WE)) {
+          SC_PRIVATE_MARCO_PROCESS_EXPORT_ERROR_on_pb_export_all_clicked;
+        }
+        break;
+      case export_type::flat_diagram:
+        if (!this->kernel->exportAsFlatDiagram(export_name.c_str(), opt_fd)) {
+          SC_PRIVATE_MARCO_PROCESS_EXPORT_ERROR_on_pb_export_all_clicked;
+        }
+        break;
+      default:
+        assert(false);
+        return;
+    }
   }
 }

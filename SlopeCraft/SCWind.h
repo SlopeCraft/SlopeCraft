@@ -123,6 +123,8 @@ class SCWind : public QMainWindow {
   current_nbt_option(QString& err) const noexcept;
   std::optional<SlopeCraft::Kernel::WE_schem_options> current_schem_option(
       QString& err) const noexcept;
+  std::optional<SlopeCraft::Kernel::flag_diagram_options>
+  current_flatdiagram_option(QString& err) const noexcept;
 
   // kernel related functions
   void kernel_set_type() noexcept;
