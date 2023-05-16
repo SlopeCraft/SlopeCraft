@@ -256,6 +256,20 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
                               std::string_view Name,
                               std::span<const char *const> requiredMods) const;
 
+  bool exportAsFlatDiagram(const char *filename_local,
+                           const flag_diagram_options &option,
+                           StringDeliver *_err) const noexcept override {
+    std::string err = this->exportAsFlatDiagram(filename_local, option);
+    if (_err != nullptr) {
+      write(*_err, err);
+    }
+    return err.empty();
+  }
+
+  std::string exportAsFlatDiagram(
+      std::string_view filename,
+      const flag_diagram_options &option) const noexcept;
+
   void get3DSize(int *x, int *y, int *z) const override;
   int getHeight() const override;
   int getXRange() const override;
@@ -437,6 +451,9 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   static bool exmaine_build_cache(std::string_view filename,
                                   uint64_t build_task_hash,
                                   build_cache_ir *ir = nullptr) noexcept;
+
+  static const simpleBlock *find_block_for_idx(int idx,
+                                               std::string_view blkid) noexcept;
 };
 
 // bool compressFile(const char *sourcePath, const char *destPath);

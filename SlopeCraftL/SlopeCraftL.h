@@ -336,6 +336,18 @@ class Kernel {
   virtual bool exportAsWESchem(
       const char *filename_local,
       const WE_schem_options &option) const noexcept = 0;
+
+  struct flag_diagram_options {
+    const uint64_t lib_version{SC_VERSION_U64};
+
+    int32_t split_line_row_margin;  // 0 or negative number means no split lines
+    int32_t split_line_col_margin;  // 0 or negative number means no split lines
+    int png_compress_level{9};
+    int png_compress_memory_level{8};
+  };
+  virtual bool exportAsFlatDiagram(
+      const char *filename_local, const flag_diagram_options &option,
+      StringDeliver *err = nullptr) const noexcept = 0;
 };
 
 }  // namespace SlopeCraft
