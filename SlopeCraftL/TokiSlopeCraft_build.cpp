@@ -618,7 +618,7 @@ int TokiSlopeCraft::getSchemPalette(const char **dest_id,
 #include <FlatDiagram.h>
 #include <fmt/format.h>
 
-std::string TokiSlopeCraft::exportAsFlatDiagram(
+std::string TokiSlopeCraft::export_flat_diagram(
     std::string_view filename,
     const flag_diagram_options &option) const noexcept {
   if (kernelStep < SCL_step::builded) {

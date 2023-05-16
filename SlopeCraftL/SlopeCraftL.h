@@ -322,7 +322,7 @@ class Kernel {
     uint64_t version{SC_VERSION_U64};
     bool is_air_structure_void{true};
   };
-  virtual bool exportStructure(
+  virtual bool exportAsStructure(
       const char *filename_local,
       const vanilla_structure_options &option) const noexcept = 0;
 
@@ -338,16 +338,19 @@ class Kernel {
       const WE_schem_options &option) const noexcept = 0;
 
   struct flag_diagram_options {
-    const uint64_t lib_version{SC_VERSION_U64};
+    uint64_t lib_version{SC_VERSION_U64};
 
-    int32_t split_line_row_margin;  // 0 or negative number means no split lines
-    int32_t split_line_col_margin;  // 0 or negative number means no split lines
+    // 0 or negative number means no split lines
+    int32_t split_line_row_margin{0};
+    // 0 or negative number means no split lines
+    int32_t split_line_col_margin{0};
     int png_compress_level{9};
     int png_compress_memory_level{8};
+    StringDeliver *err{nullptr};
   };
   virtual bool exportAsFlatDiagram(
-      const char *filename_local, const flag_diagram_options &option,
-      StringDeliver *err = nullptr) const noexcept = 0;
+      const char *filename_local,
+      const flag_diagram_options &option) const noexcept = 0;
 };
 
 }  // namespace SlopeCraft

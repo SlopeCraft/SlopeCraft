@@ -216,7 +216,7 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
     return err.empty();
   }
 
-  bool exportStructure(
+  bool exportAsStructure(
       const char *filename_local,
       const vanilla_structure_options &option) const noexcept override {
     auto err =
@@ -256,17 +256,17 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
                               std::string_view Name,
                               std::span<const char *const> requiredMods) const;
 
-  bool exportAsFlatDiagram(const char *filename_local,
-                           const flag_diagram_options &option,
-                           StringDeliver *_err) const noexcept override {
-    std::string err = this->exportAsFlatDiagram(filename_local, option);
-    if (_err != nullptr) {
-      write(*_err, err);
+  bool exportAsFlatDiagram(
+      const char *filename_local,
+      const flag_diagram_options &option) const noexcept override {
+    std::string err = this->export_flat_diagram(filename_local, option);
+    if (option.err != nullptr) {
+      write(*option.err, err);
     }
     return err.empty();
   }
 
-  std::string exportAsFlatDiagram(
+  std::string export_flat_diagram(
       std::string_view filename,
       const flag_diagram_options &option) const noexcept;
 
