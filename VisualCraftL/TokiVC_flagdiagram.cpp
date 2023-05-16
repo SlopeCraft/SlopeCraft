@@ -23,8 +23,6 @@ This file is part of SlopeCraft.
 #include "TokiVC.h"
 #include "VCL_internal.h"
 #include "VisualCraftL.h"
-#include <immintrin.h>
-#include <xmmintrin.h>
 
 #ifdef min
 #undef min

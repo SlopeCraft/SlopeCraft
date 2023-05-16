@@ -75,14 +75,15 @@ target_include_directories(SlopeCraftL PRIVATE
     ${CMAKE_SOURCE_DIR}/utilities)
 
 set(SlopeCraft_SCL_link_libs
-
-    ZLIB::ZLIB
-    OpenMP::OpenMP_CXX
     GAConverter
     ColorManip
     NBTWriter
     Schem
     MapImageCvter
+    FlatDiagram
+
+    ZLIB::ZLIB
+    OpenMP::OpenMP_CXX
     fmt::fmt
     Eigen3::Eigen
     zstr::zstr

@@ -13,6 +13,7 @@ add_subdirectory(uiPack)
 add_subdirectory(MapImageCvter)
 add_subdirectory(VersionDialog)
 add_subdirectory(VCLConfigLoader)
+add_subdirectory(FlatDiagram)
 
 function(SC_process_boolean value_name)
     if(${${value_name}})
