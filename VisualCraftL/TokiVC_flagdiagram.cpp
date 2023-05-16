@@ -237,9 +237,9 @@ bool TokiVC::export_flag_diagram(const char *png_filename,
             "a subproject of SlopeCraft, developed by TokiNoBug."),
         std::make_pair<std::string, std::string>(
             "Comment",
-            "VisualCraftL is a free software published "
+            "SlopeCraft is a free software published "
             "under GPLv3 license. You can find "
-            "its repository at https://github.com/ToKiNoBug/SlopeCraft")};
+            "its repository at https://github.com/SlopeCraft/SlopeCraft")};
 
     std::array<png_text, txt.size()> png_txts;
 
