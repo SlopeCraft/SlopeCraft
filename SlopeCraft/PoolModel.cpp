@@ -57,18 +57,11 @@ QPixmap scale_up_to_3232(const QPixmap& original_pixmap,
   QImage new_img{new_size, QImage::Format_ARGB32};
   memset(new_img.scanLine(0), 0, new_img.sizeInBytes());
   {
-    const QImage old_img{
-        original_pixmap.toImage().convertToFormat(QImage::Format_ARGB32)};
-    const uint32_t* const src =
-        reinterpret_cast<const uint32_t*>(old_img.scanLine(0));
-    uint32_t* const dst = reinterpret_cast<uint32_t*>(new_img.scanLine(0));
-
-    for (int r = 0; r < old_size.height(); r++) {
-      for (int c = 0; c < old_size.width(); c++) {
-        dst[r * new_size.width() + c] = src[r * old_size.width() + c];
-      }
-    }
+    QPainter p{&new_img};
+    p.drawPixmap(0, 0, original_pixmap);
+    p.end();
   }
+
   return QPixmap::fromImage(new_img);
 }
 
