@@ -245,4 +245,9 @@ SCL_EXPORT SCL_gameVersion SCL_basecolor_version(uint8_t basecolor) {
 }
 
 SCL_EXPORT uint8_t SCL_maxBaseColor() { return 61; }
+
+SCL_EXPORT int SCL_getBlockPalette(const AbstractBlock **blkpp,
+                                   size_t capacity) {
+  return TokiSlopeCraft::getBlockPalette(blkpp, capacity);
+}
 }

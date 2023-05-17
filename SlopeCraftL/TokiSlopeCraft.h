@@ -454,6 +454,10 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
 
   static const simpleBlock *find_block_for_idx(int idx,
                                                std::string_view blkid) noexcept;
+
+ public:
+  static int getBlockPalette(const AbstractBlock **blkpp,
+                             size_t capacity) noexcept;
 };
 
 // bool compressFile(const char *sourcePath, const char *destPath);

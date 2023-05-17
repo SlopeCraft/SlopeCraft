@@ -520,18 +520,50 @@ void TokiSlopeCraft::getBlockCounts(int *total, int detail[64]) const {
 }
 
 int64_t TokiSlopeCraft::getBlockCounts(std::vector<int64_t> *dest) const {
-  if (dest == nullptr) {
-    return -1;
-  }
   if (kernelStep < SCL_step::builded) return -1;
-  dest->resize(64);
-  for (int i = 0; i < 64; i++) (*dest)[i] = 0;
-  for (int i = 0; i < schem.size(); i++) {
-    if (schem(i)) (*dest)[schem(i) - 1]++;
+
+  const bool is_dest_nonnull = (dest != nullptr);
+  if (is_dest_nonnull) {
+    dest->resize(64);
+    for (int i = 0; i < 64; i++) dest->at(i) = 0;
   }
-  int totalBlockCount = 0;
-  for (int i = 0; i < 64; i++) totalBlockCount += (*dest)[i];
-  return totalBlockCount;
+
+  int64_t total = 0;
+
+  // map ele_t in schem to index in blockPalette(material index)
+  std::vector<int> map_ele_to_material;
+  {
+    map_ele_to_material.resize(TokiSlopeCraft::blockPalette.size());
+    std::fill(map_ele_to_material.begin(), map_ele_to_material.end(), -1);
+
+    for (int ele = 1; ele < this->schem.palette_size(); ele++) {
+      std::string_view blkid = this->schem.palette()[ele];
+
+      const simpleBlock *sbp =
+          TokiSlopeCraft::find_block_for_idx(ele - 1, blkid);
+      assert(sbp != nullptr);
+
+      int64_t idx = sbp - TokiSlopeCraft::blockPalette.data();
+      assert(idx >= 0);
+      assert(idx < (int64_t)TokiSlopeCraft::blockPalette.size());
+
+      map_ele_to_material[ele] = idx;
+    }
+  }
+
+  for (int i = 0; i < schem.size(); i++) {
+    if (schem(i) == 0) {
+      continue;
+    }
+
+    total++;
+    if (is_dest_nonnull) {
+      const int mat_idx = map_ele_to_material[schem(i)];
+      assert(mat_idx >= 0);
+      dest->at(mat_idx)++;
+    }
+  }
+  return total;
 }
 
 int64_t TokiSlopeCraft::getBlockCounts() const {

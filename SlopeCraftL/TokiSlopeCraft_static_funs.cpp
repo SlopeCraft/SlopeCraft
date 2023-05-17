@@ -121,3 +121,26 @@ const simpleBlock *TokiSlopeCraft::find_block_for_idx(
 
   return blkp;
 }
+
+int TokiSlopeCraft::getBlockPalette(const AbstractBlock **blkpp,
+                                    size_t capacity) noexcept {
+  const size_t palette_size = std::min<int>(
+      SCL_maxBaseColor() + 1, TokiSlopeCraft::blockPalette.size());
+  if (blkpp == nullptr || capacity <= 0) {
+    return palette_size;
+  }
+
+  for (size_t idx = 0; idx < palette_size; idx++) {
+    if (capacity <= idx) {
+      break;
+    }
+
+    blkpp[idx] = &TokiSlopeCraft::blockPalette[idx];
+  }
+
+  for (size_t idx = palette_size; idx < capacity; idx++) {
+    blkpp[idx] = nullptr;
+  }
+
+  return palette_size;
+}
