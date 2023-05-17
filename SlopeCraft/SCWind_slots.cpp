@@ -388,8 +388,6 @@ void SCWind::on_pb_preview_materials_clicked() noexcept {
   pw->show();
 
   pw->setup_data(this->kernel);
-
-#warning show mat list here
 }
 
 #define SC_PRIVATE_MACRO_PROCESS_IF_ERR_on_pb_export_all_clicked \

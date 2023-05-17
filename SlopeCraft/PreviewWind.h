@@ -35,15 +35,21 @@ class PreviewWind : public QDialog {
 
   const auto& material_list() const noexcept { return this->mat_list; }
   void setup_data(const SlopeCraft::Kernel* kernel) noexcept;
+
+  enum class sort_option { no_sort, ascending, descending };
+
+  bool is_unit_stack() const noexcept;
+  sort_option current_sort_option() const noexcept;
 };
 
 class MaterialModel : public QAbstractTableModel {
   Q_OBJECT
  private:
   const std::vector<material_item>* mat_list{nullptr};
+  const PreviewWind* const pwind;
 
  public:
-  explicit MaterialModel(QObject* parent = nullptr);
+  explicit MaterialModel(PreviewWind* parent = nullptr);
   ~MaterialModel();
 
   auto mat_list_pointer() const noexcept { return this->mat_list; }
