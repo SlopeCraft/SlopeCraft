@@ -35,7 +35,6 @@ This file is part of SlopeCraft.
 #include <iostream>
 #include <cereal/types/array.hpp>
 
-
 // using Eigen::Dynamic;
 namespace {
 inline constexpr float threshold = 1e-10f;
@@ -189,6 +188,12 @@ class newTokiColor
 
  private:
   auto find_result(const TempVectorXf_t &diff) noexcept {
+    if (diff.isNaN().any()) {
+      for (int idx = 0; idx < diff.size(); idx++) {
+        assert(!std::isnan(diff[idx]));
+        assert(diff[idx] >= 0);
+      }
+    }
     int tempidx = 0;
     this->ResultDiff = diff.minCoeff(&tempidx);
 
@@ -209,6 +214,8 @@ class newTokiColor
     float min = diff[0];
 
     for (int i = 1; i < int(diff.size()); i++) {
+      assert(!std::isnan(diff[i]));
+      assert(diff[i] >= 0);
       if (diff[i] < min) {
         minidx = i;
         min = diff[i];
@@ -411,7 +418,7 @@ class newTokiColor
     std::span<float> diff_span{Diff.data(), (size_t)Diff.size()};
     std::span<const float, 3> c3span{c3.data(), 3};
     colordiff_Lab94_batch(Allowed->lab_data_span(0), Allowed->lab_data_span(1),
-                        Allowed->lab_data_span(2), c3span, diff_span);
+                          Allowed->lab_data_span(2), c3span, diff_span);
     return find_result(Diff);
   }
 

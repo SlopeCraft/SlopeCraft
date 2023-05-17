@@ -34,7 +34,7 @@ float color_diff_RGB_plus(const float r1, const float g1, const float b1,
   constexpr float w_r = 1.0f, w_g = 2.0f, w_b = 1.0f;
 
   const float SqrModSquare =
-      (r1 * r1 + g1 * g1 + b1 * b1) * (r2 * r2 + g2 * g2 + b2 * b2);
+      std::sqrt((r1 * r1 + g1 * g1 + b1 * b1) * (r2 * r2 + g2 * g2 + b2 * b2));
 
   const float deltaR = r1 - r2;
   const float deltaG = g1 - g2;
@@ -72,6 +72,9 @@ float color_diff_RGB_plus(const float r1, const float g1, const float b1,
           (w_r + w_g + w_b) +
       S_theta * S_ratio * theta * theta;
 
+  assert(!std::isnan(result));
+  assert(result >= 0);
+
   return result;
 }
 
@@ -101,27 +104,8 @@ union alignas(32) f32_i32 {
 
 inline void take_abs_f32_8(float *p) noexcept {
   for (size_t i = 0; i < 8; i++) {
-    *p = std::abs(*p);
+    p[i] = std::abs(p[i]);
   }
-}
-
-/**
- * This function is a candidate when the real instruction can't be used.
- */
-
-/**
- * This function is a candidate when the real instruction can't be used.
- */
-inline __m256 _mm256_acos_ps__manually(__m256 x) noexcept {
-  alignas(32) float y[num_float_per_m256];
-
-  _mm256_store_ps(y, x);
-
-  for (int i = 0; i < num_float_per_m256; i++) {
-    y[i] = std::acos(y[i]);
-  }
-
-  return _mm256_load_ps(y);
 }
 
 // #warning rua~
@@ -171,6 +155,16 @@ void colordiff_RGB_batch(std::span<const float> r1p, std::span<const float> g1p,
   }
 }
 
+#define SC_PRIVATE_MARCO_assert_if_nan(vec) \
+  {                                         \
+    float temp[8];                          \
+    _mm256_store_ps(temp, (vec));           \
+    for (float f : temp) {                  \
+      assert(!std::isnan(f));               \
+      assert(f >= 0);                       \
+    }                                       \
+  }
+
 void colordiff_RGBplus_batch(std::span<const float> r1p,
                              std::span<const float> g1p,
                              std::span<const float> b1p,
@@ -179,6 +173,8 @@ void colordiff_RGBplus_batch(std::span<const float> r1p,
   assert(r1p.size() == g1p.size());
   assert(g1p.size() == b1p.size());
   assert(b1p.size() == dest.size());
+
+  std::fill(dest.begin(), dest.end(), NAN);
 
   const int color_count = r1p.size();
   const float _r2 = c3[0], _g2 = c3[1], _b2 = c3[2];
@@ -203,14 +199,18 @@ void colordiff_RGBplus_batch(std::span<const float> r1p,
 
     __m256 SqrModSquare;
     {
-      __m256 temp_r = _mm256_mul_ps(r1, r1);
-      __m256 temp_g = _mm256_mul_ps(g1, g1);
-      __m256 temp_b = _mm256_mul_ps(b1, b1);
+      const __m256 temp_r = _mm256_mul_ps(r1, r1);
+      const __m256 temp_g = _mm256_mul_ps(g1, g1);
+      const __m256 temp_b = _mm256_mul_ps(b1, b1);
 
-      SqrModSquare = _mm256_add_ps(
-          _mm256_add_ps(temp_r, temp_g),
-          _mm256_add_ps(temp_b, _mm256_set1_ps(rr_plus_gg_plus_bb_2)));
+      const __m256 rr_plus_gg_plus_bb_1 =
+          _mm256_add_ps(temp_r, _mm256_add_ps(temp_g, temp_b));
+
+      SqrModSquare = _mm256_mul_ps(rr_plus_gg_plus_bb_1,
+                                   _mm256_set1_ps(rr_plus_gg_plus_bb_2));
+      SqrModSquare = _mm256_sqrt_ps(SqrModSquare);
     }
+    SC_PRIVATE_MARCO_assert_if_nan(SqrModSquare);
 
     __m256 sigma_rgb;
     {
@@ -259,13 +259,14 @@ void colordiff_RGBplus_batch(std::span<const float> r1p,
       {
         alignas(32) float arr[8];
         _mm256_store_ps(arr, temp1);
-        for (size_t i = 0; i < 8; i++) {
-          arr[i] = std::acos(arr[i]);
+        for (float &f : arr) {
+          f = std::acos(f);
+          assert(!std::isnan(f));
         }
         temp2 = _mm256_load_ps(arr);
       }
       //__m256 temp2 = _mm256_acos_ps__manually(temp1);
-      theta = _mm256_mul_ps(temp2, _mm256_set1_ps(2.0f / M_PI));
+      theta = _mm256_mul_ps(temp2, _mm256_set1_ps(2.0 / M_PI));
     }
 
     alignas(32) float arr[8];
@@ -322,6 +323,15 @@ void colordiff_RGBplus_batch(std::span<const float> r1p,
                                     _mm256_mul_ps(theta, theta));
 
       diff = _mm256_add_ps(temp_X, temp_Y);
+
+      {
+        float temp[8];
+        _mm256_store_ps(temp, diff);
+        for (float f : temp) {
+          assert(!std::isnan(f));
+          assert(f >= 0);
+        }
+      }
     }
 
     _mm256_store_ps(dest.data() + i, diff);
