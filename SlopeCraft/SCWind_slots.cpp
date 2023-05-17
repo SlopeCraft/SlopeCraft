@@ -4,6 +4,7 @@
 #include <QMessageBox>
 #include <ranges>
 #include <QApplication>
+#include <PreviewWind.h>
 
 void SCWind::on_pb_add_image_clicked() noexcept {
 #ifdef WIN32
@@ -373,6 +374,20 @@ void SCWind::on_pb_preview_materials_clicked() noexcept {
     QMessageBox::warning(this, errtitle, errmsg);
     return;
   }
+
+  PreviewWind *pw = new PreviewWind{this};
+
+  pw->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
+  pw->setAttribute(Qt::WidgetAttribute::WA_AlwaysStackOnTop, true);
+  // bb->setAttribute(Qt::WidgetAttribute::WA_NativeWindow, true);
+  pw->setWindowFlag(Qt::WindowType::Window, true);
+
+  // connect(this, &VCWind::signal_allowed_colorset_changed, pw,
+  // &QWidget::deleteLater);
+
+  pw->show();
+
+  pw->setup_data(this->kernel);
 
 #warning show mat list here
 }
