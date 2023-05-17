@@ -25,7 +25,7 @@ void SCWind::on_pb_add_image_clicked() noexcept {
     if (!err.isEmpty()) {
       auto ret = QMessageBox::critical(
           this, tr("打开图像失败"),
-          tr("无法打开图像 %1 。常见原因：图像尺寸太大。\n详细信息： %2")
+          tr("无法打开图像 %1。常见原因：图像尺寸太大。\n详细信息： %2")
               .arg(filename)
               .arg(err),
           QMessageBox::StandardButtons{QMessageBox::StandardButton::Close,
@@ -116,7 +116,7 @@ void SCWind::on_pb_save_preset_clicked() noexcept {
 
     if (!qf.isOpen()) {
       QMessageBox::warning(this, tr("保存预设文件失败"),
-                           tr("无法生成预设文件%1 ，错误信息：%2")
+                           tr("无法生成预设文件%1，错误信息：%2")
                                .arg(file)
                                .arg(qf.errorString()));
       return;
@@ -447,7 +447,7 @@ void SCWind::on_pb_export_all_clicked() noexcept {
         QMessageBox::warning(
             this, tr("你点错按钮了"),
             tr("导出为纯文件地图画的按钮在另外一页。按理来说你不应该能点击这个"
-               "按钮，这可能是一个小小的bug（特性）。"));
+               "按钮，这可能是一个小小的 bug（特性）。"));
         return;
     }
   }
@@ -537,7 +537,7 @@ void SCWind::on_pb_export_all_clicked() noexcept {
       return QMessageBox::warning(
           this, tr("导出失败"),
           tr("导出%1时失败。原图像文件名为%"
-             "2\n点击Ignore将跳过这个图像，点击Cancel将放弃导出任务。")
+             "2\n点击 Ignore 将跳过这个图像，点击 Cancel 将放弃导出任务。")
               .arg(export_name.data())
               .arg(taskp->filename),
           QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore,

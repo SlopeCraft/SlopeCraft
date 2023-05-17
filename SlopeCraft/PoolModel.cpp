@@ -71,8 +71,8 @@ void PoolModel::draw_icon(QPixmap& image, const QPixmap& icon, int index,
   if (icon.size() != QSize{32, 32}) [[unlikely]] {
     QMessageBox::critical(
         ptr_to_report_error, QObject::tr("绘制图标时发现错误"),
-        tr("被绘制的图标尺寸应当是32*32，但实际上是%1*%"
-           "2。这属于SlopeCraft内部错误，请向开发者反馈。SlopeCraft必须崩溃。")
+        tr("被绘制的图标尺寸应当是 32*32，但实际上是%1*%"
+           "2。这属于 SlopeCraft 内部错误，请向开发者反馈。SlopeCraft 必须崩溃。")
             .arg(icon.size().height())
             .arg(icon.size().width()));
     abort();

@@ -1110,7 +1110,7 @@
                 <item row="3" column="0">
                  <widget class="QLabel" name="label_11">
                   <property name="text">
-                   <string>依赖mod名称</string>
+                   <string>依赖 mod 名称</string>
                   </property>
                  </widget>
                 </item>
@@ -1123,7 +1123,7 @@
                    </sizepolicy>
                   </property>
                   <property name="placeholderText">
-                   <string>在这里输入依赖mod的名字。用换行符分割多个mod</string>
+                   <string>在这里输入依赖 mod 的名字。用换行符分割多个 mod</string>
                   </property>
                  </widget>
                 </item>

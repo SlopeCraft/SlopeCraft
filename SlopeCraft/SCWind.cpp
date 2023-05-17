@@ -768,7 +768,7 @@ SCWind::current_schem_option(QString &err) const noexcept {
 
       ret.offset[idx] = le_offset[idx]->text().toInt(&ok);
       if (!ok) {
-        err = tr("WE原理图参数有错：输入给offset的值\"%"
+        err = tr("WE 原理图参数有错：输入给 offset 的值\"%"
                  "1\"不是一个有效的坐标，应当输入一个整数。")
                   .arg(le_offset[idx]->text());
         return std::nullopt;
@@ -786,7 +786,7 @@ SCWind::current_schem_option(QString &err) const noexcept {
 
       ret.we_offset[idx] = le_weoffset[idx]->text().toInt(&ok);
       if (!ok) {
-        err = tr("WE原理图参数有错：输入给we offset的值\"%"
+        err = tr("WE 原理图参数有错：输入给 we offset 的值\"%"
                  "1\"不是一个有效的数字，应当输入一个整数。")
                   .arg(le_weoffset[idx]->text());
         return std::nullopt;
@@ -827,7 +827,7 @@ SCWind::current_flatdiagram_option(QString &err) const noexcept {
 
   if (row_margin <= 0 || col_margin <= 0) {
     err =
-        tr("平面示意图的分割线间距无效：水平间距为 %1， 垂直间距为 %2， "
+        tr("平面示意图的分割线间距无效：水平间距为 %1，垂直间距为 %2， "
            "但间距必须为正数。");
     return std::nullopt;
   }
