@@ -78,6 +78,12 @@ qt_add_resources(SlopeCraft "SC_images"
 
 qt_finalize_executable(SlopeCraft)
 
+if(ON)
+    qt_add_lupdate(SlopeCraft
+        TS_FILES others/SlopeCraft_en_US.ts
+    )
+endif()
+
 if(${WIN32})
     add_custom_target(SC_create_symlink_SC
         COMMAND mklink SlopeCraftL.dll "..\\SlopeCraftL\\SlopeCraftL.dll"
