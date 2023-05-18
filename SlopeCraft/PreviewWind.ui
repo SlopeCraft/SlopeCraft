@@ -99,6 +99,9 @@
    </item>
    <item row="0" column="3">
     <widget class="QComboBox" name="cb_sort_option">
+     <property name="currentIndex">
+      <number>2</number>
+     </property>
      <item>
       <property name="text">
        <string>不排序</string>

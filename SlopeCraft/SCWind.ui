@@ -1333,7 +1333,11 @@
              </layout>
             </item>
             <item row="2" column="0" colspan="3">
-             <widget class="QTableView" name="tview_export_fileonly"/>
+             <widget class="QTableView" name="tview_export_fileonly">
+              <attribute name="horizontalHeaderStretchLastSection">
+               <bool>true</bool>
+              </attribute>
+             </widget>
             </item>
             <item row="1" column="0" colspan="3">
              <layout class="QHBoxLayout" name="horizontalLayout_4">

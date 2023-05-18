@@ -21,7 +21,8 @@ set(SlopeCraft_headers
     cvt_task.h
     PoolModel.h
     AdaptiveListView.h
-    PreviewWind.h)
+    PreviewWind.h
+    ExportTableModel.h)
 
 set(SlopeCraft_sources
     SCWind.cpp
@@ -30,6 +31,8 @@ set(SlopeCraft_sources
     PoolModel.cpp
     AdaptiveListView.cpp
     PreviewWind.cpp
+    ExportTableModel.cpp
+
     main.cpp
     ${SlopeCraft_rc_files})
 
@@ -76,13 +79,11 @@ qt_add_resources(SlopeCraft "SC_images"
     BASE ${CMAKE_CURRENT_SOURCE_DIR}/others/images
     FILES ${SlopeCraft_qrc_images})
 
-qt_finalize_executable(SlopeCraft)
+qt_add_lupdate(SlopeCraft
+    TS_FILES others/SlopeCraft_en_US.ts
+)
 
-if(ON)
-    qt_add_lupdate(SlopeCraft
-        TS_FILES others/SlopeCraft_en_US.ts
-    )
-endif()
+qt_finalize_executable(SlopeCraft)
 
 if(${WIN32})
     add_custom_target(SC_create_symlink_SC

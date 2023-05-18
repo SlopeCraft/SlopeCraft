@@ -157,7 +157,7 @@ void colordiff_RGB_batch(std::span<const float> r1p, std::span<const float> g1p,
 
 #define SC_PRIVATE_MARCO_assert_if_nan(vec) \
   {                                         \
-    std::array<float, 8> temp;              \
+    alignas(32) std::array<float, 8> temp;  \
     {                                       \
       _mm256_store_ps(temp.data(), (vec));  \
       for (float f : temp) {                \
@@ -212,7 +212,7 @@ void colordiff_RGBplus_batch(std::span<const float> r1p,
                                    _mm256_set1_ps(rr_plus_gg_plus_bb_2));
       SqrModSquare = _mm256_sqrt_ps(SqrModSquare);
     }
-    // SC_PRIVATE_MARCO_assert_if_nan(SqrModSquare);
+    SC_PRIVATE_MARCO_assert_if_nan(SqrModSquare);
 
     __m256 sigma_rgb;
     {
@@ -325,8 +325,8 @@ void colordiff_RGBplus_batch(std::span<const float> r1p,
                                     _mm256_mul_ps(theta, theta));
 
       diff = _mm256_add_ps(temp_X, temp_Y);
-      if (false) {
-        float temp[8];
+      if (true) {
+        alignas(32) float temp[8];
         _mm256_store_ps(temp,
                         diff);  // this line crashes on win11, the address of
                                 // temp[7] is 0xfffffffff. I can't understand

@@ -126,6 +126,7 @@ class MapImageCvter : public ::libImageCvt::ImageCvter<true> {
       colors_dithered_img.reserve(this->_dithered_image.size());
       for (int64_t i = 0; i < this->_dithered_image.size(); i++) {
         colors_dithered_img.emplace(this->_dithered_image(i));
+        colors_dithered_img.emplace(this->_raw_image(i));
       }
 
       const size_t size_colorset = colors_dithered_img.size();

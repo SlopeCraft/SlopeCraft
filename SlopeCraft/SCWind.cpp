@@ -4,6 +4,7 @@
 #include <QMessageBox>
 #include <ranges>
 #include <QApplication>
+#include <QTableWidget>
 
 // #include "PoolWidget.h"
 SCWind::SCWind(QWidget *parent)
@@ -65,6 +66,17 @@ SCWind::SCWind(QWidget *parent)
       this->ui->lview_pool_cvt->doItemsLayout();
       this->ui->lview_pool_export->doItemsLayout();
     });
+  }
+  {
+    this->export_table_model = new ExportTableModel{this, &this->tasks};
+    this->ui->tview_export_fileonly->setModel(this->export_table_model);
+
+    connect(this, &SCWind::image_changed, this->export_table_model,
+            &ExportTableModel::refresh);
+    connect(this->ui->sb_file_start_idx, &QSpinBox::valueChanged,
+            this->export_table_model, &ExportTableModel::refresh);
+    connect(this, &SCWind::image_changed, this->export_table_model,
+            &ExportTableModel::refresh);
   }
 
   // initialize blm
@@ -842,4 +854,8 @@ SCWind::current_flatdiagram_option(QString &err) const noexcept {
 
   return SlopeCraft::Kernel::flag_diagram_options{
       .split_line_row_margin = row_margin, .split_line_col_margin = col_margin};
+}
+
+int SCWind::current_map_begin_seq_number() const noexcept {
+  return this->ui->sb_file_start_idx->value();
 }

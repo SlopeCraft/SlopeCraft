@@ -10,6 +10,7 @@
 #include <QProgressBar>
 #include "cvt_task.h"
 #include "PoolModel.h"
+#include "ExportTableModel.h"
 
 class SCWind;
 
@@ -68,9 +69,13 @@ class SCWind : public QMainWindow {
   task_pool_t tasks;
   CvtPoolModel* cvt_pool_model{nullptr};
   ExportPoolModel* export_pool_model{nullptr};
+  ExportTableModel* export_table_model{nullptr};
 
   std::array<blockListPreset, 4> default_presets;
 
+  QString fileonly_export_dir{""};
+
+ public:
   std::array<QRadioButton*, 20 - 12 + 1> version_buttons() noexcept;
   std::array<const QRadioButton*, 20 - 12 + 1> version_buttons() const noexcept;
 
@@ -126,6 +131,13 @@ class SCWind : public QMainWindow {
   std::optional<SlopeCraft::Kernel::flag_diagram_options>
   current_flatdiagram_option(QString& err) const noexcept;
 
+  int current_map_begin_seq_number() const noexcept;
+
+  inline QString data_export_dir() const noexcept {
+    return this->fileonly_export_dir;
+  }
+
+ private:
   // kernel related functions
   void kernel_set_type() noexcept;
 
