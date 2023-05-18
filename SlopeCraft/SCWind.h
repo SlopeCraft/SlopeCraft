@@ -62,6 +62,8 @@ class SCWind : public QMainWindow {
   void on_pb_preview_materials_clicked() noexcept;
   void on_pb_export_all_clicked() noexcept;
 
+  void on_pb_export_file_clicked() noexcept;
+
  private:
   Ui::SCWind* ui;
   SlopeCraft::Kernel* kernel;
@@ -73,7 +75,7 @@ class SCWind : public QMainWindow {
 
   std::array<blockListPreset, 4> default_presets;
 
-  QString fileonly_export_dir{""};
+  // QString fileonly_export_dir{""};
 
  public:
   std::array<QRadioButton*, 20 - 12 + 1> version_buttons() noexcept;
@@ -132,10 +134,6 @@ class SCWind : public QMainWindow {
   current_flatdiagram_option(QString& err) const noexcept;
 
   int current_map_begin_seq_number() const noexcept;
-
-  inline QString data_export_dir() const noexcept {
-    return this->fileonly_export_dir;
-  }
 
  private:
   // kernel related functions

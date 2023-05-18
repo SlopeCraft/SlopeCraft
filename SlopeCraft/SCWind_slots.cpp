@@ -572,3 +572,72 @@ void SCWind::on_pb_export_all_clicked() noexcept {
     }
   }
 }
+
+void SCWind::on_pb_export_file_clicked() noexcept {
+  static QString prev_dir{""};
+  const QString dir =
+      QFileDialog::getExistingDirectory(this, tr("设置导出位置"), prev_dir);
+
+  if (dir.isEmpty()) {
+    return;
+  }
+
+  prev_dir = dir;
+
+  const int seq_first = this->current_map_begin_seq_number();
+  {
+    int exisiting_num = 0;
+    QString to_be_replaced{""};
+    to_be_replaced.reserve(4096);
+
+    const int seq_last =
+        map_range_at_index(this->tasks, seq_first, this->tasks.size() - 1).last;
+
+    for (int seq = seq_first; seq <= seq_last; seq++) {
+      QString filename = map_data_filename(dir, seq);
+      if (QFile{filename}.exists()) {
+        if (exisiting_num > 0) {
+          to_be_replaced.push_back('\n');
+        }
+        to_be_replaced.append(filename);
+        exisiting_num++;
+      }
+    }
+
+    if (exisiting_num > 0) {
+      const auto ret = QMessageBox::warning(
+          this, tr("%1 个文件将被替换").arg(exisiting_num),
+          tr("以下文件将被替换：\n%1\n点击 Yes "
+             "将替换它们，点击 No 将取消这次导出。")
+              .arg(to_be_replaced),
+          QMessageBox::StandardButtons{QMessageBox::StandardButton::Yes,
+                                       QMessageBox::StandardButton::No});
+
+      if (ret != QMessageBox::StandardButton::Yes) {
+        return;
+      }
+    }
+  }
+
+  for (int idx = 0; idx < int(this->tasks.size()); idx++) {
+    auto &task = this->tasks.at(idx);
+    this->kernel_set_image(idx);
+    bool need_to_convert{true};
+    if (task.is_converted) {
+      if (this->kernel->loadConvertCache(this->selected_algo(),
+                                         this->is_dither_selected())) {
+        need_to_convert = false;
+      }
+    }
+
+    if (need_to_convert) {
+      this->kernel_convert_image();
+    }
+
+    const int cur_seq_beg =
+        map_range_at_index(this->tasks, seq_first, idx).first;
+
+    this->kernel->exportAsData(dir.toLocal8Bit().data(), cur_seq_beg, nullptr,
+                               nullptr);
+  }
+}

@@ -93,10 +93,9 @@ QVariant ExportTableModel::data(const QModelIndex& qmi,
       case 3:
         return QStringLiteral("%1 ~ %2").arg(range.first).arg(range.last);
       case 4:
-        return map_data_filename(this->scwind()->data_export_dir(),
-                                 range.first);
+        return QStringLiteral("map_%1.dat").arg(range.first);
       case 5:
-        return map_data_filename(this->scwind()->data_export_dir(), range.last);
+        return QStringLiteral("map_%1.dat").arg(range.last);
     }
   }
 

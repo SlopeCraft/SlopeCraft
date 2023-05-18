@@ -1334,6 +1334,9 @@
             </item>
             <item row="2" column="0" colspan="3">
              <widget class="QTableView" name="tview_export_fileonly">
+              <property name="alternatingRowColors">
+               <bool>true</bool>
+              </property>
               <attribute name="horizontalHeaderStretchLastSection">
                <bool>true</bool>
               </attribute>
@@ -1348,13 +1351,6 @@
                <widget class="QSpinBox" name="sb_file_start_idx">
                 <property name="prefix">
                  <string>地图画起始序号：</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="pb_set_file_export_dir">
-                <property name="text">
-                 <string>设置导出文件夹</string>
                 </property>
                </widget>
               </item>
