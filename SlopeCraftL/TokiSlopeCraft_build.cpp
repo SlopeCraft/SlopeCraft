@@ -19,6 +19,7 @@ This file is part of SlopeCraft.
     github:https://github.com/SlopeCraft/SlopeCraft
     bilibili:https://space.bilibili.com/351429231
 */
+#include <unsupported/Eigen/CXX11/Tensor>
 
 #include "TokiSlopeCraft.h"
 
@@ -441,8 +442,8 @@ void TokiSlopeCraft::makeBridge() {
       extension[0] = schem.x_range();
       extension[1] = schem.z_range();
       extension[2] = 1;
-      TokiMap targetMap = ySlice2TokiMap(
-          schem.tensor().slice(start, extension).cast<uint8_t>());
+      TokiMap targetMap =
+          ySlice2TokiMap_u16(schem.tensor().slice(start, extension));
       glassMap glass;
       cerr << "Construct glass bridge at y=" << y << endl;
       glass = glassBuilder->makeBridge(targetMap);
@@ -460,11 +461,10 @@ void TokiSlopeCraft::makeBridge() {
       extension[0] = schem.x_range();
       extension[1] = 1;
       extension[2] = schem.z_range();
-      TokiMap yCur = ySlice2TokiMap(
-          schem.tensor().slice(start, extension).cast<uint8_t>());
+      TokiMap yCur = ySlice2TokiMap_u16(schem.tensor().slice(start, extension));
       start[1] = y - 1;
-      TokiMap yBelow = ySlice2TokiMap(
-          schem.tensor().slice(start, extension).cast<uint8_t>());
+      TokiMap yBelow =
+          ySlice2TokiMap_u16(schem.tensor().slice(start, extension));
       cerr << "Construct glass bridge between y=" << y << " and y=" << y - 1
            << endl;
       glassMap glass = connectBetweenLayers(yCur, yBelow, nullptr);

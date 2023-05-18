@@ -47,7 +47,7 @@ typedef TokiMap glassMap;
 typedef TokiMap walkableMap;
 
 class edge {
-public:
+ public:
   edge();
   edge(uint32_t begIdx, uint32_t endIdx);
   // edge(uint32_t begIdx,uint32_t endIdx);
@@ -66,7 +66,7 @@ public:
 };
 
 class pairedEdge : public std::pair<TokiPos, TokiPos> {
-public:
+ public:
   pairedEdge();
   pairedEdge(TokiPos, TokiPos);
   pairedEdge(uint16_t r1, uint16_t c1, uint16_t r2, uint16_t c2);
@@ -77,17 +77,19 @@ public:
   void drawEdge(glassMap &, bool drawHead = false) const;
 };
 
-TokiMap ySlice2TokiMap(const Eigen::Tensor<uint8_t, 3> &);
+TokiMap ySlice2TokiMap(const Eigen::Tensor<uint8_t, 3> &) noexcept;
+TokiMap ySlice2TokiMap_u16(const Eigen::Tensor<uint16_t, 3> &) noexcept;
 
 glassMap connectBetweenLayers(const TokiMap &, const TokiMap &,
                               walkableMap *walkable);
-// 返回值是架构在相对较高的一层上的，walkable是各层俯视图叠加
+// 返回值是架构在相对较高的一层上的，walkable 是各层俯视图叠加
 
 class PrimGlassBuilder {
-public:
+ public:
   PrimGlassBuilder();
 
-  template <typename T, size_t S> friend class tf::ObjectPool;
+  template <typename T, size_t S>
+  friend class tf::ObjectPool;
   void *_object_pool_block;
 
   static const uint32_t unitL = 32;
@@ -100,7 +102,7 @@ public:
   void (**progressAddPtr)(void *, int);
   void (**keepAwakePtr)(void *);
 
-private:
+ private:
   std::vector<TokiPos> targetPoints;
   std::list<edge> edges;
   std::vector<pairedEdge> tree;
@@ -116,4 +118,4 @@ inline tf::ObjectPool<PrimGlassBuilder> pgb;
 
 EImage TokiMap2EImage(const TokiMap &);
 
-#endif // PRIMGLASSBUILDER_H
+#endif  // PRIMGLASSBUILDER_H
