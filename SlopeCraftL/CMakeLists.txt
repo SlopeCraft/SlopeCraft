@@ -23,7 +23,8 @@ endif()
 
 set(SlopeCraft_SCL_sources
     ${CMAKE_SOURCE_DIR}/utilities/SC_GlobalEnums.h
-    AiCvterOpt.h
+
+    # AiCvterOpt.h
     Colors.h
     HeightLine.h
 
@@ -39,7 +40,7 @@ set(SlopeCraft_SCL_sources
     SlopeCraftL_global.h
     WriteStringDeliver.h
 
-    AiCvterOpt.cpp
+    # AiCvterOpt.cpp
     Colors.cpp
     ColorSource.cpp
     HeightLine.cpp

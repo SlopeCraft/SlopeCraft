@@ -37,8 +37,8 @@ This file is part of SlopeCraft.
 // declare classes
 namespace SlopeCraft {
 class AbstractBlock;
-struct AiCvterOpt;
 class Kernel;
+struct AiCvterOpt;
 }  // namespace SlopeCraft
 
 namespace SlopeCraft {
@@ -54,6 +54,15 @@ using errorFlag = ::SCL_errorFlag;
 };  // namespace SlopeCraft
 
 namespace SlopeCraft {
+
+struct AiCvterOpt {
+  uint64_t version{SC_VERSION_U64};
+  size_t popSize{50};
+  size_t maxGeneration{200};
+  size_t maxFailTimes{50};
+  double crossoverProb{0.8};
+  double mutationProb{0.01};
+};
 
 struct StringDeliver {
   StringDeliver() = default;
@@ -378,20 +387,20 @@ struct blockListOption {
 
 SCL_EXPORT void SCL_destroyBlockList(BlockListInterface *);
 
-[[nodiscard]] SCL_EXPORT AiCvterOpt *SCL_createAiCvterOpt();
-SCL_EXPORT void SCL_destroyAiCvterOpt(AiCvterOpt *);
+[[deprecated]] [[nodiscard]] SCL_EXPORT AiCvterOpt *SCL_createAiCvterOpt();
+[[deprecated]] SCL_EXPORT void SCL_destroyAiCvterOpt(AiCvterOpt *);
 
-SCL_EXPORT void SCL_setPopSize(AiCvterOpt *, uint32_t p);
-SCL_EXPORT void SCL_setMaxGeneration(AiCvterOpt *, uint32_t p);
-SCL_EXPORT void SCL_setMaxFailTimes(AiCvterOpt *, uint32_t p);
-SCL_EXPORT void SCL_setCrossoverProb(AiCvterOpt *, double p);
-SCL_EXPORT void SCL_setMutationProb(AiCvterOpt *, double p);
+[[deprecated]] SCL_EXPORT void SCL_setPopSize(AiCvterOpt *, uint32_t p);
+[[deprecated]] SCL_EXPORT void SCL_setMaxGeneration(AiCvterOpt *, uint32_t p);
+[[deprecated]] SCL_EXPORT void SCL_setMaxFailTimes(AiCvterOpt *, uint32_t p);
+[[deprecated]] SCL_EXPORT void SCL_setCrossoverProb(AiCvterOpt *, double p);
+[[deprecated]] SCL_EXPORT void SCL_setMutationProb(AiCvterOpt *, double p);
 
-SCL_EXPORT uint32_t SCL_getPopSize(const AiCvterOpt *);
-SCL_EXPORT uint32_t SCL_getMaxGeneration(const AiCvterOpt *);
-SCL_EXPORT uint32_t SCL_getMaxFailTimes(const AiCvterOpt *);
-SCL_EXPORT double SCL_getCrossoverProb(const AiCvterOpt *);
-SCL_EXPORT double SCL_getMutationProb(const AiCvterOpt *);
+[[deprecated]] SCL_EXPORT uint32_t SCL_getPopSize(const AiCvterOpt *);
+[[deprecated]] SCL_EXPORT uint32_t SCL_getMaxGeneration(const AiCvterOpt *);
+[[deprecated]] SCL_EXPORT uint32_t SCL_getMaxFailTimes(const AiCvterOpt *);
+[[deprecated]] SCL_EXPORT double SCL_getCrossoverProb(const AiCvterOpt *);
+[[deprecated]] SCL_EXPORT double SCL_getMutationProb(const AiCvterOpt *);
 
 SCL_EXPORT void SCL_preprocessImage(
     uint32_t *ARGB32ptr, const uint64_t imageSize,

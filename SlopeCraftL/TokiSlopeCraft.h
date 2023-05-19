@@ -46,8 +46,6 @@ This file is part of SlopeCraft.
 
 #include <NBTWriter/NBTWriter.h>
 
-#include "AiCvterOpt.h"
-
 #include <ColorManip/imageConvert.hpp>
 #include <ColorManip/newColorSet.hpp>
 #include <ExternalConverters/GAConverter/GAConverter.h>
