@@ -22,7 +22,8 @@ set(SlopeCraft_headers
     PoolModel.h
     AdaptiveListView.h
     PreviewWind.h
-    ExportTableModel.h)
+    ExportTableModel.h
+    AiCvterParameterDialog.h)
 
 set(SlopeCraft_sources
     SCWind.cpp
@@ -32,13 +33,15 @@ set(SlopeCraft_sources
     AdaptiveListView.cpp
     PreviewWind.cpp
     ExportTableModel.cpp
+    AiCvterParameterDialog.cpp
 
     main.cpp
     ${SlopeCraft_rc_files})
 
 set(SlopeCraft_uis
     SCWind.ui
-    PreviewWind.ui)
+    PreviewWind.ui
+    AiCvterParameterDialog.ui)
 
 set(SlopeCraft_project_files
     ${SlopeCraft_headers}

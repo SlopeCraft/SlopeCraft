@@ -1397,6 +1397,15 @@
     <property name="title">
      <string>高级</string>
     </property>
+    <widget class="QMenu" name="menucache">
+     <property name="title">
+      <string>缓存</string>
+     </property>
+     <addaction name="ac_cache_dir_open"/>
+     <addaction name="ac_clear_cache"/>
+    </widget>
+    <addaction name="ac_GAcvter_options"/>
+    <addaction name="menucache"/>
    </widget>
    <widget class="QMenu" name="menu_3">
     <property name="title">
@@ -1408,6 +1417,26 @@
    <addaction name="menu_3"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="ac_GAcvter_options">
+   <property name="text">
+    <string>GA转化器参数</string>
+   </property>
+  </action>
+  <action name="ac_open_cache_dir">
+   <property name="text">
+    <string>open_cache_dir</string>
+   </property>
+  </action>
+  <action name="ac_cache_dir_open">
+   <property name="text">
+    <string>打开缓存文件夹</string>
+   </property>
+  </action>
+  <action name="ac_clear_cache">
+   <property name="text">
+    <string>清除缓存</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>

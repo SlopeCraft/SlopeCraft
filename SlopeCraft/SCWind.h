@@ -64,6 +64,12 @@ class SCWind : public QMainWindow {
 
   void on_pb_export_file_clicked() noexcept;
 
+ private slots:
+  void on_ac_GAcvter_options_triggered() noexcept;
+
+  void on_ac_cache_dir_open_triggered() noexcept;
+  void on_ac_clear_cache_triggered() noexcept;
+
  private:
   Ui::SCWind* ui;
   SlopeCraft::Kernel* kernel;

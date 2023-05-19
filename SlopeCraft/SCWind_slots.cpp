@@ -4,7 +4,9 @@
 #include <QMessageBox>
 #include <ranges>
 #include <QApplication>
-#include <PreviewWind.h>
+#include <QDesktopServices>
+#include "PreviewWind.h"
+#include "AiCvterParameterDialog.h"
 
 void SCWind::on_pb_add_image_clicked() noexcept {
 #ifdef WIN32
@@ -639,5 +641,77 @@ void SCWind::on_pb_export_file_clicked() noexcept {
 
     this->kernel->exportAsData(dir.toLocal8Bit().data(), cur_seq_beg, nullptr,
                                nullptr);
+  }
+}
+
+void SCWind::on_ac_GAcvter_options_triggered() noexcept {
+  AiCvterParameterDialog *acpd = new AiCvterParameterDialog{this, this->kernel};
+
+  acpd->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
+  acpd->setAttribute(Qt::WidgetAttribute::WA_AlwaysStackOnTop, true);
+  acpd->setWindowFlag(Qt::WindowType::Window, true);
+  // bb->setAttribute(Qt::WidgetAttribute::WA_NativeWindow, true);
+  acpd->show();
+}
+
+void SCWind::on_ac_cache_dir_open_triggered() noexcept {
+  auto cache_dir = QString::fromLocal8Bit(this->kernel->cacheDir());
+  QDesktopServices::openUrl(QUrl::fromLocalFile(cache_dir));
+}
+
+void SCWind::on_ac_clear_cache_triggered() noexcept {
+  const auto cache_dir_name = QString::fromLocal8Bit(this->kernel->cacheDir());
+
+  QDir cache_dir{cache_dir_name};
+
+  if (!cache_dir.exists()) {
+    return;
+  }
+
+  for (auto &task : this->tasks) {
+    task.set_unconverted();
+  }
+
+  emit this->image_changed();
+
+  const auto entries = cache_dir.entryList();
+
+  auto remove_cache_fun = [](QString filename) -> bool {
+    if (QFileInfo{filename}.isFile()) {
+      return QFile{filename}.remove();
+    } else {
+      return QDir{filename}.removeRecursively();
+    }
+  };
+
+  for (const auto &name : entries) {
+    if (name == "." || name == "..") {
+      continue;
+    }
+
+    QString filename = QStringLiteral("%1/%2").arg(cache_dir_name).arg(name);
+
+    while (true) {
+      if (remove_cache_fun(filename)) {
+        break;
+      }
+
+      const auto ret = QMessageBox::warning(
+          this, tr("删除缓存失败"),
+          tr("无法删除文件或文件夹\"%1\"。\n点击 Ignore 以跳过，点击 Retry "
+             "以重试，点击 Cancel 以取消这次操作")
+              .arg(filename),
+          QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore,
+                                       QMessageBox::StandardButton::Retry,
+                                       QMessageBox::StandardButton::Cancel});
+
+      if (ret == QMessageBox::StandardButton::Retry) {
+        continue;
+      }
+      if (ret == QMessageBox::StandardButton::Ignore) {
+        break;
+      }
+      return;  // QMessageBox::StandardButton::Cancel and for closing the dialog
+    }
   }
 }
