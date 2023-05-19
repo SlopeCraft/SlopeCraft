@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AiCvterParameterDialog</class>
+ <widget class="QDialog" name="AiCvterParameterDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>325</width>
+    <height>120</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Ai转化器参数</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="1" column="0">
+    <widget class="QSpinBox" name="sb_max_early_stop">
+     <property name="prefix">
+      <string>最大提前收敛代数：</string>
+     </property>
+     <property name="minimum">
+      <number>10</number>
+     </property>
+     <property name="maximum">
+      <number>3000</number>
+     </property>
+     <property name="singleStep">
+      <number>10</number>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QDoubleSpinBox" name="dsb_crossover_prob">
+     <property name="prefix">
+      <string>交叉概率：</string>
+     </property>
+     <property name="suffix">
+      <string/>
+     </property>
+     <property name="maximum">
+      <double>1.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.010000000000000</double>
+     </property>
+     <property name="value">
+      <double>0.800000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QSpinBox" name="sb_pop_size">
+     <property name="minimumSize">
+      <size>
+       <width>150</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="suffix">
+      <string/>
+     </property>
+     <property name="prefix">
+      <string>种群数量：</string>
+     </property>
+     <property name="minimum">
+      <number>30</number>
+     </property>
+     <property name="maximum">
+      <number>500</number>
+     </property>
+     <property name="singleStep">
+      <number>10</number>
+     </property>
+     <property name="value">
+      <number>50</number>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QSpinBox" name="sb_max_gen">
+     <property name="minimumSize">
+      <size>
+       <width>150</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="prefix">
+      <string>最大进化代数：</string>
+     </property>
+     <property name="minimum">
+      <number>50</number>
+     </property>
+     <property name="maximum">
+      <number>3000</number>
+     </property>
+     <property name="singleStep">
+      <number>10</number>
+     </property>
+     <property name="value">
+      <number>200</number>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QDoubleSpinBox" name="dsb_mutate_prob">
+     <property name="prefix">
+      <string>变异概率：</string>
+     </property>
+     <property name="decimals">
+      <number>3</number>
+     </property>
+     <property name="maximum">
+      <double>1.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.001000000000000</double>
+     </property>
+     <property name="value">
+      <double>0.010000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="2">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>AiCvterParameterDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>AiCvterParameterDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
