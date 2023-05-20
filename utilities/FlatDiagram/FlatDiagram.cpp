@@ -1,13 +1,10 @@
+#include <png.h>
 #include "FlatDiagram.h"
 #include <stdlib.h>
 #include <vector>
-#include <png.h>
 #include <stdio.h>
 
 #include <fmt/format.h>
-
-using EImgRowMajor_t =
-    Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 
 void libFlatDiagram::reverse_color(uint32_t *ptr, size_t num_pixels) noexcept {
   // this can be vertorized by compiler optimization
@@ -25,12 +22,10 @@ void libFlatDiagram::ARGB_to_AGBR(uint32_t *ptr, size_t num_pixels) noexcept {
 }
 
 void libFlatDiagram::draw_flat_diagram_to_memory(
-    uint32_t *image_u8c3_rowmajor, const fd_option &opt,
+    Eigen::Map<EImgRowMajor_t> buffer, const fd_option &opt,
     const get_blk_image_callback_t &blk_image_at) {
-  Eigen::Map<EImgRowMajor_t> map{
-      image_u8c3_rowmajor, (opt.row_end - opt.row_start) * 16, opt.cols * 16};
-
-  memset(image_u8c3_rowmajor, 0, map.size() * sizeof(uint32_t));
+  assert(buffer.cols() == opt.cols * 16);
+  assert(buffer.rows() >= (opt.row_end - opt.row_start) * 16);
 
   // copy block images
   for (int64_t r = opt.row_start; r < opt.row_end; r++) {
@@ -45,7 +40,7 @@ void libFlatDiagram::draw_flat_diagram_to_memory(
       const bool is_aligned = is_dst_aligned && is_src_aligned;
       */
 
-      map.block<16, 16>(r_pixel_beg, c_pixel_beg) = blk_image_at(r, c);
+      buffer.block<16, 16>(r_pixel_beg, c_pixel_beg) = blk_image_at(r, c);
     }
   }
 
@@ -54,7 +49,7 @@ void libFlatDiagram::draw_flat_diagram_to_memory(
         (br % opt.split_line_row_margin == 0)) {
       const int64_t pr = (br - opt.row_start) * 16;
 
-      reverse_color(&map(pr, 0), map.cols());
+      reverse_color(&buffer(pr, 0), buffer.cols());
     }
   }
 
@@ -63,8 +58,8 @@ void libFlatDiagram::draw_flat_diagram_to_memory(
         (bc % opt.split_line_col_margin == 0)) {
       const int64_t pc = bc * 16;
 
-      for (int64_t pr = 0; pr < map.rows(); pr++) {
-        map(pr, pc) = reverse_color(map(pr, pc));
+      for (int64_t pr = 0; pr < buffer.rows(); pr++) {
+        buffer(pr, pc) = reverse_color(buffer(pr, pc));
       }
     }
   }
@@ -138,12 +133,21 @@ std::string libFlatDiagram::export_flat_diagram(
     opt_temp.row_start = ridx;
     opt_temp.row_end = ridx + rows_this_time;
 
-    draw_flat_diagram_to_memory(buffer.data(), opt, blk_image_at);
+    draw_flat_diagram_to_memory({buffer.data(), buffer.rows(), buffer.cols()},
+                                opt_temp, blk_image_at);
 
     ARGB_to_AGBR(buffer.data(), rows_this_time * 16 * opt.cols * 16);
 
     for (int64_t pix_r = 0; pix_r < rows_this_time * 16; pix_r++) {
+      // The row pointer should only be converted to const uint8_t*, but there
+      // is a terrible bug on libpng from brew makes this code fail to compile:
+      // binary interface function png_write_row is trampered to
+      // `void png_write_row(png_structrp png_ptr, png_bytep row)`.
+      // This bug doesn't exist in windows and linux, but only with libpng
+      // installed with homebrew.
       png_write_row(png, reinterpret_cast<const uint8_t *>(&buffer(pix_r, 0)));
+      // This is terrible because a const pointer have to be converted to
+      // non-constant
     }
   }
 

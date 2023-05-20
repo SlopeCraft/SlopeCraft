@@ -10,6 +10,9 @@
 
 namespace libFlatDiagram {
 
+using EImgRowMajor_t =
+    Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
+
 constexpr uint32_t reverse_color(uint32_t ARGB_src) noexcept {
   return ARGB32(255 - getR(ARGB_src), 255 - getG(ARGB_src),
                 255 - getB(ARGB_src), getA(ARGB_src));
@@ -49,7 +52,7 @@ using get_blk_image_callback_t =
 
 constexpr size_t callback_size = sizeof(get_blk_image_callback_t);
 
-void draw_flat_diagram_to_memory(uint32_t *image_u8c3_rowmajor,
+void draw_flat_diagram_to_memory(Eigen::Map<EImgRowMajor_t> buffer,
                                  const fd_option &opt,
                                  const get_blk_image_callback_t &blk_image_at);
 
