@@ -49,4 +49,10 @@ Q_DECLARE_METATYPE(cvt_task);
 
 using task_pool_t = std::vector<cvt_task>;
 
+int converted_task_count(const task_pool_t&) noexcept;
+
+int map_export_idx_to_full_idx(const task_pool_t&, int eidx) noexcept;
+
+std::vector<int> iteration_map(const task_pool_t& pool) noexcept;
+
 #endif  // SLOPECRAFT_SLOPECRAFT_CVT_TASK_H

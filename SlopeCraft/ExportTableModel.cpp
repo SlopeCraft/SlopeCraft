@@ -49,7 +49,7 @@ void ExportTableModel::refresh() noexcept {
 }
 
 int ExportTableModel::rowCount(const QModelIndex&) const noexcept {
-  return this->pool->size();
+  return ::converted_task_count(*this->pool);
 }
 
 int ExportTableModel::columnCount(const QModelIndex&) const noexcept {
@@ -65,11 +65,12 @@ QVariant ExportTableModel::data(const QModelIndex& qmi,
   const int r = qmi.row();
   const int c = qmi.column();
 
-  if (r < 0 || r >= (int)this->pool->size()) {
+  if (r < 0 || r >= (int)this->rowCount({})) {
     return {};
   }
 
-  const auto& task = this->pool->at(r);
+  const auto& task =
+      this->pool->at(::map_export_idx_to_full_idx(*this->pool, r));
 
   if (role == Qt::ItemDataRole::DisplayRole) {
     const QSize map_size = map_size_of_images(task.original_image.size());

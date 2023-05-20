@@ -90,54 +90,23 @@ class ExportPoolModel : public PoolModel {
     if (midx.isValid()) {
       return 0;
     }
-    int num = 0;
-    for (const auto& i : *this->pool) {
-      if (i.is_converted) {
-        num++;
-      }
-    }
-    return num;
+    return converted_task_count(*this->pool);
   }
 
   std::vector<int> iteration_map() const noexcept {
-    std::vector<int> ret;
-    ret.reserve(this->pool->size());
-    for (int i = 0; i < (int)this->pool->size(); i++) {
-      if (this->pool->at(i).is_converted) {
-        ret.emplace_back(i);
-      }
-    }
-    return ret;
+    return ::iteration_map(*this->pool);
   }
 
   int export_idx_to_full_idx(int eidx) const noexcept {
-    assert(eidx >= 0);
-    for (int fidx = 0; fidx < (int)this->pool->size(); fidx++) {
-      if (pool->at(fidx).is_converted) {
-        eidx--;
-      }
-      if (eidx < 0) {
-        return fidx;
-      }
-    }
-
-    assert(false);
-    return INT_MAX;
+    return ::map_export_idx_to_full_idx(*this->pool, eidx);
   }
 
   cvt_task* export_idx_to_task_ptr(int eidx) const noexcept {
-    assert(eidx >= 0);
-    for (int fidx = 0; fidx < (int)this->pool->size(); fidx++) {
-      if (pool->at(fidx).is_converted) {
-        eidx--;
-      }
-      if (eidx < 0) {
-        return &this->pool->at(fidx);
-      }
+    const int pidx = this->export_idx_to_full_idx(eidx);
+    if (pidx >= (int)this->pool->size()) {
+      return nullptr;
     }
-
-    assert(false);
-    return nullptr;
+    return &this->pool->at(pidx);
   }
 
   QVariant data(const QModelIndex& idx, int role) const override;
