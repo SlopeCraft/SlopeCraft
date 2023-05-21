@@ -181,6 +181,8 @@ class SCWind : public QMainWindow {
 
   void export_current_cvted_image(int idx, QString filename) noexcept;
 
+  void report_error(::SCL_errorFlag flag, const char* msg) noexcept;
+
  signals:
   void image_changed();
 };

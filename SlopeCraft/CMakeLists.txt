@@ -8,6 +8,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
 find_package(Qt6 COMPONENTS Widgets LinguistTools Network REQUIRED)
+find_package(magic_enum REQUIRED)
 
 set(SlopeCraft_rc_files)
 
@@ -58,6 +59,8 @@ target_link_libraries(SlopeCraft PRIVATE
     Qt6::Core
     Qt6::Widgets
     Qt6::Network
+    magic_enum::magic_enum
+
     SlopeCraftL
     AdaptiveLabel
     VersionDialog

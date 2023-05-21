@@ -5,6 +5,7 @@
 #include <ranges>
 #include <QApplication>
 #include <QTableWidget>
+#include <magic_enum.hpp>
 
 // #include "PoolWidget.h"
 SCWind::SCWind(QWidget *parent)
@@ -41,6 +42,10 @@ SCWind::SCWind(QWidget *parent)
     });
 
     this->kernel->setKeepAwake([](void *) { QApplication::processEvents(); });
+    this->kernel->setReportError(
+        [](void *_this, ::SCL_errorFlag err, const char *msg) {
+          reinterpret_cast<SCWind *>(_this)->report_error(err, msg);
+        });
   }
   // initialize cvt pool model
   {
@@ -858,4 +863,31 @@ SCWind::current_flatdiagram_option(QString &err) const noexcept {
 
 int SCWind::current_map_begin_seq_number() const noexcept {
   return this->ui->sb_file_start_idx->value();
+}
+
+void SCWind::report_error(::SCL_errorFlag flag, const char *msg) noexcept {
+  if (flag == SCL_errorFlag::NO_ERROR_OCCUR) {
+    return;
+  }
+  using sb = QMessageBox::StandardButton;
+  using sbs = QMessageBox::StandardButtons;
+
+  auto flag_name = magic_enum::enum_name(flag);
+
+  const QString errmsg = tr("错误类型：%1，错误码：%2。详细信息：\n%3")
+                             .arg(flag_name.data())
+                             .arg(int(flag))
+                             .arg(msg);
+
+  const auto ret = QMessageBox::critical(
+      this, tr("SlopeCraft 出现错误"),
+      tr("%1\n\n点击 Ok 以忽略这个错误，点击 Close 将退出 SlopeCraft。")
+          .arg(errmsg),
+      sbs{sb::Ok, sb::Close});
+
+  if (ret == sb::Close) {
+    exit(0);
+  }
+
+  return;
 }
