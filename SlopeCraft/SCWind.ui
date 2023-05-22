@@ -1392,6 +1392,8 @@
     <property name="title">
      <string>语言</string>
     </property>
+    <addaction name="ac_lang_ZH"/>
+    <addaction name="ac_lang_EN"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
@@ -1406,15 +1408,37 @@
     </widget>
     <addaction name="ac_GAcvter_options"/>
     <addaction name="menucache"/>
+    <addaction name="ac_test_blocklist"/>
+    <addaction name="acget_current_colorlist"/>
    </widget>
    <widget class="QMenu" name="menu_3">
     <property name="title">
      <string>关于</string>
     </property>
+    <widget class="QMenu" name="menucontact">
+     <property name="title">
+      <string>联系作者</string>
+     </property>
+     <addaction name="ac_contact_Github"/>
+     <addaction name="ac_contact_Bilibili"/>
+    </widget>
+    <addaction name="ac_about"/>
+    <addaction name="menucontact"/>
+    <addaction name="ac_report_bugs"/>
+    <addaction name="ac_check_updates"/>
+   </widget>
+   <widget class="QMenu" name="menuhelp">
+    <property name="title">
+     <string>帮助</string>
+    </property>
+    <addaction name="ac_document"/>
+    <addaction name="ac_tutorial"/>
+    <addaction name="ac_faq"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
    <addaction name="menu_3"/>
+   <addaction name="menuhelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="ac_GAcvter_options">
@@ -1435,6 +1459,78 @@
   <action name="ac_clear_cache">
    <property name="text">
     <string>清除缓存</string>
+   </property>
+  </action>
+  <action name="ac_lang_ZH">
+   <property name="text">
+    <string>简体中文</string>
+   </property>
+  </action>
+  <action name="ac_lang_EN">
+   <property name="text">
+    <string>English</string>
+   </property>
+  </action>
+  <action name="ac_about">
+   <property name="text">
+    <string>关于 SlopeCraft</string>
+   </property>
+  </action>
+  <action name="ac_contact_Github">
+   <property name="text">
+    <string notr="true">Github</string>
+   </property>
+   <property name="iconText">
+    <string notr="true">Github</string>
+   </property>
+   <property name="toolTip">
+    <string notr="true">Github</string>
+   </property>
+  </action>
+  <action name="ac_contact_Bilibili">
+   <property name="text">
+    <string notr="true">Bilibili</string>
+   </property>
+   <property name="iconText">
+    <string notr="true">Bilibili</string>
+   </property>
+   <property name="toolTip">
+    <string notr="true">Bilibili</string>
+   </property>
+  </action>
+  <action name="ac_report_bugs">
+   <property name="text">
+    <string>反馈 bug</string>
+   </property>
+  </action>
+  <action name="ac_check_updates">
+   <property name="text">
+    <string>检查更新</string>
+   </property>
+  </action>
+  <action name="ac_test_blocklist">
+   <property name="text">
+    <string>测试方块列表</string>
+   </property>
+  </action>
+  <action name="acget_current_colorlist">
+   <property name="text">
+    <string>输出当前颜色表</string>
+   </property>
+  </action>
+  <action name="ac_document">
+   <property name="text">
+    <string>查看 SlopeCraft 文档</string>
+   </property>
+  </action>
+  <action name="ac_tutorial">
+   <property name="text">
+    <string>使用教程</string>
+   </property>
+  </action>
+  <action name="ac_faq">
+   <property name="text">
+    <string>常见问题</string>
    </property>
   </action>
  </widget>
