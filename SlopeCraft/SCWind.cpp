@@ -920,13 +920,14 @@ void SCWind::report_error(::SCL_errorFlag flag, const char *msg) noexcept {
 
 void SCWind::set_lang(::SCL_language lang) noexcept {
   this->language = lang;
-  for (auto &trans : this->translators) {
+  for (auto trans : this->translators) {
     if (this->language == ::SCL_language::Chinese) {
       QApplication::removeTranslator(trans);
     } else {
       QApplication::installTranslator(trans);
     }
   }
+  this->ui->retranslateUi(this);
 
   this->ui->blm->when_lang_updated(lang);
 }

@@ -73,21 +73,21 @@
              <item>
               <widget class="QRadioButton" name="rb_preset_vanilla">
                <property name="text">
-                <string>Vanilla</string>
+                <string notr="true">Vanilla</string>
                </property>
               </widget>
              </item>
              <item>
               <widget class="QRadioButton" name="rb_preset_cheap">
                <property name="text">
-                <string>Cheap</string>
+                <string notr="true">Cheap</string>
                </property>
               </widget>
              </item>
              <item>
               <widget class="QRadioButton" name="rb_preset_elegant">
                <property name="text">
-                <string>Elegant</string>
+                <string notr="true">Elegant</string>
                </property>
                <property name="checked">
                 <bool>true</bool>
@@ -97,14 +97,14 @@
              <item>
               <widget class="QRadioButton" name="rb_preset_shiny">
                <property name="text">
-                <string>Shiny</string>
+                <string notr="true">Shiny</string>
                </property>
               </widget>
              </item>
              <item>
               <widget class="QRadioButton" name="rb_preset_custom">
                <property name="text">
-                <string>Custom</string>
+                <string notr="true">Custom</string>
                </property>
               </widget>
              </item>
@@ -530,7 +530,7 @@
              <bool>true</bool>
             </property>
             <property name="text">
-             <string>IconMode</string>
+             <string>显示缩略图</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -555,21 +555,21 @@
            <item row="3" column="0">
             <widget class="QRadioButton" name="rb_algo_Lab00">
              <property name="text">
-              <string>Lab00</string>
+              <string notr="true">Lab00</string>
              </property>
             </widget>
            </item>
            <item row="2" column="0">
             <widget class="QRadioButton" name="rb_algo_Lab94">
              <property name="text">
-              <string>Lab94</string>
+              <string notr="true">Lab94</string>
              </property>
             </widget>
            </item>
            <item row="1" column="0">
             <widget class="QRadioButton" name="rb_algo_RGB_plus">
              <property name="text">
-              <string>RGB+</string>
+              <string notr="true">RGB+</string>
              </property>
              <property name="checked">
               <bool>true</bool>
@@ -579,21 +579,21 @@
            <item row="0" column="0">
             <widget class="QRadioButton" name="rb_algo_RGB">
              <property name="text">
-              <string>RGB</string>
+              <string notr="true">RGB</string>
              </property>
             </widget>
            </item>
            <item row="4" column="0">
             <widget class="QRadioButton" name="rb_algo_XYZ">
              <property name="text">
-              <string>XYZ</string>
+              <string notr="true">XYZ</string>
              </property>
             </widget>
            </item>
            <item row="5" column="0">
             <widget class="QRadioButton" name="rb_algo_GACvter">
              <property name="text">
-              <string>GACvter</string>
+              <string notr="true">GACvter</string>
              </property>
             </widget>
            </item>
@@ -749,7 +749,7 @@
           <item>
            <widget class="QRadioButton" name="rb_export_lite">
             <property name="text">
-             <string>Litematica</string>
+             <string notr="true">Litematica</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -975,6 +975,9 @@
                  <widget class="QCheckBox" name="cb_nbt_air_void">
                   <property name="text">
                    <string>用结构空位替代空气</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
@@ -1463,12 +1466,18 @@
   </action>
   <action name="ac_lang_ZH">
    <property name="text">
-    <string>简体中文</string>
+    <string notr="true">简体中文</string>
+   </property>
+   <property name="iconText">
+    <string notr="true">简体中文</string>
    </property>
   </action>
   <action name="ac_lang_EN">
    <property name="text">
-    <string>English</string>
+    <string notr="true">English</string>
+   </property>
+   <property name="iconText">
+    <string notr="true">English</string>
    </property>
   </action>
   <action name="ac_about">
