@@ -83,6 +83,8 @@ class SCWind : public QMainWindow {
   void on_ac_cache_dir_open_triggered() noexcept;
   void on_ac_clear_cache_triggered() noexcept;
 
+  void on_ac_about_triggered() noexcept;
+
  private:
   Ui::SCWind* ui;
   SlopeCraft::Kernel* kernel;

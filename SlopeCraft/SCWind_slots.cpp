@@ -7,6 +7,7 @@
 #include <QDesktopServices>
 #include "PreviewWind.h"
 #include "AiCvterParameterDialog.h"
+#include "VersionDialog.h"
 
 void SCWind::on_pb_add_image_clicked() noexcept {
 #ifdef WIN32
@@ -714,4 +715,57 @@ void SCWind::on_ac_clear_cache_triggered() noexcept {
       return;  // QMessageBox::StandardButton::Cancel and for closing the dialog
     }
   }
+}
+
+void SCWind::connect_slots() noexcept {
+  // ac_contact_Github
+
+  connect(this->ui->ac_lang_ZH, &QAction::triggered,
+          [this]() { this->set_lang(::SCL_language::Chinese); });
+  connect(this->ui->ac_lang_EN, &QAction::triggered,
+          [this]() { this->set_lang(::SCL_language::English); });
+
+  connect(this->ui->ac_contact_Github, &QAction::triggered, []() {
+    QDesktopServices::openUrl(QUrl("https://github.com/SlopeCraft/SlopeCraft"));
+  });
+  connect(this->ui->ac_contact_Bilibili, &QAction::triggered, []() {
+    QDesktopServices::openUrl(QUrl("https://space.bilibili.com/351429231"));
+  });
+  connect(this->ui->ac_report_bugs, &QAction::triggered, []() {
+    QDesktopServices::openUrl(
+        QUrl("https://github.com/SlopeCraft/SlopeCraft/issues/new/choose"));
+  });
+  // ac_check_updates
+
+  connect(this->ui->ac_tutorial, &QAction::triggered, []() {
+    QDesktopServices::openUrl(QUrl("https://slopecraft.readthedocs.io/"));
+  });
+  connect(this->ui->ac_faq, &QAction::triggered, []() {
+    QDesktopServices::openUrl(QUrl("https://slopecraft.readthedocs.io/faq/"));
+  });
+
+  connect(this->ui->ac_check_updates, &QAction::triggered, [this]() {
+    VersionDialog::start_network_request(this, "SlopeCraft",
+                                         QUrl{SCWind::update_url},
+                                         SCWind::network_manager(), true);
+  });
+}
+
+void SCWind::on_ac_about_triggered() noexcept {
+  QString info;
+  info +=
+      tr("感谢你使用 SlopeCraft，我是开发者 TokiNoBug。SlopeCraft "
+         "是由我开发的一款立体地图画生成器，主要用于在 minecraft "
+         "中制造可以生存实装的立体地图画（但同样支持传统的平板地图画）。立体地"
+         "图画的优势在于拥有更高的“画质”，此处不再详述。你正在使用的是 "
+         "SlopeCraft 的第 5 代版本，在开发时使用了 Qt，zlib 和 eigen "
+         "等开源软件，对上述库的开发者表示感谢。也感谢 Mojang，整个软件就是为 "
+         "minecraft 而设计的。AbrasiveBoar902 "
+         "为本软件的设计和优化贡献了不少力量；Cubik65536 为本软件在 MacOS "
+         "的适配做出了贡献。");
+  info += "\n\n";
+  info += tr("本软件遵循 GPL-3.0 及以后版本 (GPL-3.0 or later) 协议开放源码。");
+  info += "\n\n";
+  info += tr("版权所有 © 2021-2023 SlopeCraft 开发者");
+  QMessageBox::information(this, tr("关于 SlopeCraft"), info);
 }
