@@ -2,17 +2,28 @@
 #include <QKeyEvent>
 #include <QApplication>
 #include <QClipboard>
+#include <algorithm>
 
 CopyableTableView::CopyableTableView(QWidget* parent) : QTableView(parent) {}
 
 CopyableTableView::~CopyableTableView() = default;
+
+bool qmi_sorter(const QModelIndex& a, const QModelIndex& b) noexcept {
+  if (a.row() != b.row()) {
+    return a.row() < b.row();
+  }
+
+  return a.column() < b.column();
+}
 
 bool CopyableTableView::event(QEvent* event) noexcept {
   if (event->type() == QEvent::Type::KeyPress) {
     QKeyEvent* const ke = dynamic_cast<QKeyEvent*>(event);
     if (ke != nullptr) {
       if (ke->matches(QKeySequence::StandardKey::Copy)) {
-        const auto sel = this->selectedIndexes();
+        auto sel = this->selectedIndexes();
+
+        std::sort(sel.begin(), sel.end(), qmi_sorter);
 
         QString text;
         text.reserve(sel.size() * 64);
