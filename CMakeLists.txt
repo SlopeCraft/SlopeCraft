@@ -139,6 +139,11 @@ if(${WIN32})
         COMMENT "A interface target to run windeployqt for all targets")
 endif()
 
+# # Language related variables
+if(${SlopeCraft_update_ts_no_obsolete})
+    list(APPEND SC_lupdate_flags "-no-obsolete")
+endif()
+
 # Sub dirss ------------------------------------------------------------------
 add_subdirectory(utilities)
 add_subdirectory(imageCutter)

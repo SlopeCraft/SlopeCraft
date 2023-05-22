@@ -38,13 +38,6 @@ endif()
 set(MapViewer_ts_files
     MapViewer_en_US.ts)
 
-if(${SlopeCraft_update_ts_files})
-    execute_process(
-        COMMAND ${SlopeCraft_Qt_lupdate_executable} MapViewerWind.ui ${MapViewer_header_files} ${MapViewer_source_files} "-ts" ${MapViewer_ts_files} ${SlopeCraft_ts_flags}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    )
-endif()
-
 set(MapViewer_project_sources
     ${MapViewer_header_files}
     ${MapViewer_source_files}
@@ -76,6 +69,12 @@ set_target_properties(MapViewer PROPERTIES
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
+)
+
+qt_add_lupdate(MapViewer
+    TS_FILES ${MapViewer_ts_files}
+    SOURCES ${MapViewer_project_sources}
+    OPTIONS ${SC_lupdate_flags}
 )
 
 # translation

@@ -29,13 +29,6 @@ endif()
 set(imageCutter_ts_files
     imageCutter_en_US.ts)
 
-if(${SlopeCraft_update_ts_files})
-    # qt_add_lupdate(imageCutter TSFILES ${imageCutter_ts_files} CutterWind.ui SOURCES ${imageCutter_header_files} ${imageCutter_source_files})
-    execute_process(
-        COMMAND ${SlopeCraft_Qt_lupdate_executable} CutterWind.ui ${imageCutter_header_files} ${imageCutter_source_files} "-ts" ${imageCutter_ts_files} ${SlopeCraft_ts_flags}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
-endif()
-
 set(imageCutter_project_sources
     CutterWind.h
     CutterWind.cpp
@@ -50,6 +43,12 @@ qt_add_executable(imageCutter
     ${imageCutter_project_sources})
 
 # translation
+qt_add_lupdate(imageCutter
+    TS_FILES ${imageCutter_ts_files}
+    SOURCES ${imageCutter_project_sources}
+    OPTIONS ${SC_lupdate_flags}
+)
+
 qt_add_lrelease(imageCutter TS_FILES ${imageCutter_ts_files}
     QM_FILES_OUTPUT_VARIABLE imageCutter_qm_files)
 qt_add_resources(imageCutter "translations"

@@ -46,10 +46,15 @@ set(SlopeCraft_uis
     PreviewWind.ui
     AiCvterParameterDialog.ui)
 
+set(SlopeCraft_ts_files
+    others/SlopeCraft_en_US.ts
+)
+
 set(SlopeCraft_project_files
     ${SlopeCraft_headers}
     ${SlopeCraft_sources}
-    ${SlopeCraft_uis})
+    ${SlopeCraft_uis}
+    ${SlopeCraft_ts_files})
 
 qt_add_executable(SlopeCraft
     MANUAL_FINALIZATION
@@ -88,7 +93,9 @@ qt_add_resources(SlopeCraft "SC_images"
     FILES ${SlopeCraft_qrc_images})
 
 qt_add_lupdate(SlopeCraft
-    TS_FILES others/SlopeCraft_en_US.ts
+    TS_FILES ${SlopeCraft_ts_files}
+    SOURCES ${SlopeCraft_project_files}
+    OPTIONS ${SC_lupdate_flags}
 )
 
 qt_finalize_executable(SlopeCraft)
