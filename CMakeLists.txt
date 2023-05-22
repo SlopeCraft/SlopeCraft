@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 # set version -----------------------------------------------------------------
-set(SlopeCraft_version 5.0.1)
+set(SlopeCraft_version 5.1.0)
 
 # set basic project attributes ------------------------------------------------
 project(SlopeCraft VERSION ${SlopeCraft_version} LANGUAGES C CXX)
@@ -152,7 +152,7 @@ add_subdirectory(imageCutter)
 add_subdirectory(SlopeCraftL)
 
 # add_subdirectory(SlopeCraftMain)
-# add_subdirectory(SlopeCraft)
+add_subdirectory(SlopeCraft)
 add_subdirectory(MapViewer)
 add_subdirectory(tests)
 add_subdirectory(VisualCraftL)

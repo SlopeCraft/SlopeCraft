@@ -9,6 +9,7 @@
 #include <BlockListManager.h>
 #include <QProgressBar>
 #include <QTranslator>
+#include <QNetworkAccessManager>
 #include "cvt_task.h"
 #include "PoolModel.h"
 #include "ExportTableModel.h"
@@ -21,9 +22,20 @@ class SCWind;
 
 class SCWind : public QMainWindow {
   Q_OBJECT
+ private:
+  void connect_slots() noexcept;
+
  public:
   explicit SCWind(QWidget* parent = nullptr);
   ~SCWind();
+
+  inline static QNetworkAccessManager& network_manager() noexcept {
+    static QNetworkAccessManager manager;
+    return manager;
+  }
+
+  const static QString update_url;
+
   enum class export_type {
     litematica,
     vanilla_structure,

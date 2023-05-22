@@ -6,6 +6,45 @@
 #include <QApplication>
 #include <QTableWidget>
 #include <magic_enum.hpp>
+#include <QDesktopServices>
+#include "VersionDialog.h"
+
+const QString SCWind::update_url{
+    "https://api.github.com/repos/SlopeCraft/SlopeCraft/releases"};
+
+void SCWind::connect_slots() noexcept {
+  // ac_contact_Github
+
+  connect(this->ui->ac_lang_ZH, &QAction::triggered,
+          [this]() { this->set_lang(::SCL_language::Chinese); });
+  connect(this->ui->ac_lang_EN, &QAction::triggered,
+          [this]() { this->set_lang(::SCL_language::English); });
+
+  connect(this->ui->ac_contact_Github, &QAction::triggered, []() {
+    QDesktopServices::openUrl(QUrl("https://github.com/SlopeCraft/SlopeCraft"));
+  });
+  connect(this->ui->ac_contact_Bilibili, &QAction::triggered, []() {
+    QDesktopServices::openUrl(QUrl("https://space.bilibili.com/351429231"));
+  });
+  connect(this->ui->ac_report_bugs, &QAction::triggered, []() {
+    QDesktopServices::openUrl(
+        QUrl("https://github.com/SlopeCraft/SlopeCraft/issues/new/choose"));
+  });
+  // ac_check_updates
+
+  connect(this->ui->ac_tutorial, &QAction::triggered, []() {
+    QDesktopServices::openUrl(QUrl("https://slopecraft.readthedocs.io/"));
+  });
+  connect(this->ui->ac_faq, &QAction::triggered, []() {
+    QDesktopServices::openUrl(QUrl("https://slopecraft.readthedocs.io/faq/"));
+  });
+
+  connect(this->ui->ac_check_updates, &QAction::triggered, [this]() {
+    VersionDialog::start_network_request(this, "SlopeCraft",
+                                         QUrl{SCWind::update_url},
+                                         SCWind::network_manager(), true);
+  });
+}
 
 // #include "PoolWidget.h"
 SCWind::SCWind(QWidget *parent)
@@ -13,6 +52,8 @@ SCWind::SCWind(QWidget *parent)
       ui(new Ui::SCWind),
       kernel(SlopeCraft::SCL_createKernel()) {
   this->ui->setupUi(this);
+
+  this->connect_slots();
   {
     // create translators
     const char *const translator_filenames[] = {
@@ -32,11 +73,6 @@ SCWind::SCWind(QWidget *parent)
 
       this->translators.emplace_back(t);
     }
-
-    connect(this->ui->ac_lang_ZH, &QAction::triggered,
-            [this]() { this->set_lang(::SCL_language::Chinese); });
-    connect(this->ui->ac_lang_EN, &QAction::triggered,
-            [this]() { this->set_lang(::SCL_language::English); });
   }
 
   {
