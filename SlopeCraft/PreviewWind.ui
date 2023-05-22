@@ -14,19 +14,6 @@
    <string>查看材料列表</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="0" colspan="2">
-    <widget class="QLabel" name="lb_block_count">
-     <property name="accessibleName">
-      <string/>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="2">
     <widget class="QCheckBox" name="cb_show_in_stacks">
      <property name="sizePolicy">
@@ -40,6 +27,19 @@
      </property>
      <property name="checked">
       <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="2">
+    <widget class="QLabel" name="lb_block_count">
+     <property name="accessibleName">
+      <string/>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="text">
+      <string/>
      </property>
     </widget>
    </item>
@@ -76,7 +76,7 @@
     </widget>
    </item>
    <item row="2" column="0" colspan="4">
-    <widget class="QTableView" name="tv_mat">
+    <widget class="CopyableTableView" name="tv_mat">
      <property name="alternatingRowColors">
       <bool>true</bool>
      </property>
@@ -121,6 +121,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CopyableTableView</class>
+   <extends>QTableView</extends>
+   <header>CopyableTableView.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

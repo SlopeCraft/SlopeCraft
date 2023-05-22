@@ -24,7 +24,8 @@ set(SlopeCraft_headers
     AdaptiveListView.h
     PreviewWind.h
     ExportTableModel.h
-    AiCvterParameterDialog.h)
+    AiCvterParameterDialog.h
+    CopyableTableView.h)
 
 set(SlopeCraft_sources
     SCWind.cpp
@@ -35,6 +36,7 @@ set(SlopeCraft_sources
     PreviewWind.cpp
     ExportTableModel.cpp
     AiCvterParameterDialog.cpp
+    CopyableTableView.cpp
 
     main.cpp
     ${SlopeCraft_rc_files})

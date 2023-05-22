@@ -3,6 +3,7 @@
 #include <QString>
 #include <QModelIndex>
 #include <algorithm>
+#include "CopyableTableView.h"
 
 PreviewWind::PreviewWind(QWidget* parent)
     : QDialog(parent), ui(new Ui::PreviewWind) {
@@ -18,6 +19,12 @@ PreviewWind::PreviewWind(QWidget* parent)
           &MaterialModel::refresh);
   connect(this->ui->cb_sort_option, &QComboBox::currentIndexChanged, this->mmp,
           &MaterialModel::refresh);
+  this->ui->tv_mat->setModel(this->mmp);
+
+  connect(this->ui->tv_mat, &CopyableTableView::copied, [this]() noexcept {
+    this->setWindowTitle(
+        tr("%1 -- 表格内容已复制到剪贴板").arg(tr("查看材料列表")));
+  });
 }
 
 PreviewWind::~PreviewWind() { delete this->ui; }
@@ -64,9 +71,10 @@ void PreviewWind::setup_data(const SlopeCraft::Kernel* kernel) noexcept {
     this->set_size(sz);
   }
 
-  this->ui->tv_mat->setModel(this->mmp);
-  this->mmp->refresh();
-  this->ui->tv_mat->doItemsLayout();
+  // this->ui->tv_mat->setModel(this->mmp);
+  emit this->mmp->layoutChanged();
+  // this->mmp->refresh();
+  // this->ui->tv_mat->doItemsLayout();
 }
 
 bool PreviewWind::is_unit_stack() const noexcept {
