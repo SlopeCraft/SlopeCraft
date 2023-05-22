@@ -14,6 +14,32 @@ SCWind::SCWind(QWidget *parent)
       kernel(SlopeCraft::SCL_createKernel()) {
   this->ui->setupUi(this);
   {
+    // create translators
+    const char *const translator_filenames[] = {
+        ":/i18n/SlopeCraft_en_US.qm", ":/i18n/BlockListManager_en_US.qm",
+        ":/i18n/VersionDialog_en_US.qm"};
+    /*this->translators.reserve(sizeof(translator_filenames) /
+                              sizeof(const char *));
+                              */
+    for (const char *tf : translator_filenames) {
+      QTranslator *t = new QTranslator{this};
+      QString filename = QString::fromUtf8(tf);
+      const bool ok = t->load(filename);
+      if (!ok) {
+        QMessageBox::warning(this, "Failed to load translate file",
+                             QStringLiteral("Failed to load %1").arg(filename));
+      }
+
+      this->translators.emplace_back(t);
+    }
+
+    connect(this->ui->ac_lang_ZH, &QAction::triggered,
+            [this]() { this->set_lang(::SCL_language::Chinese); });
+    connect(this->ui->ac_lang_EN, &QAction::triggered,
+            [this]() { this->set_lang(::SCL_language::English); });
+  }
+
+  {
     const auto pid = QApplication::applicationPid();
 
     const QString sys_cache_dir = QDir::tempPath();
@@ -890,4 +916,17 @@ void SCWind::report_error(::SCL_errorFlag flag, const char *msg) noexcept {
   }
 
   return;
+}
+
+void SCWind::set_lang(::SCL_language lang) noexcept {
+  this->language = lang;
+  for (auto &trans : this->translators) {
+    if (this->language == ::SCL_language::Chinese) {
+      QApplication::removeTranslator(trans);
+    } else {
+      QApplication::installTranslator(trans);
+    }
+  }
+
+  this->ui->blm->when_lang_updated(lang);
 }

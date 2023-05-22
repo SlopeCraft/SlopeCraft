@@ -29,18 +29,12 @@ set(BlockListManager_ui_files
 )
 
 set(BlockListManager_ts_files
+    others/BlockListManager_en_US.ts
 
     # ${CMAKE_CURRENT_SOURCE_DIR}/BlockListManager_en_US.ts
 )
 
-if(${SlopeCraft_update_ts_files})
-    execute_process(
-        COMMAND ${SlopeCraft_Qt_lupdate_executable} ${BlockListManager_header_files} ${BlockListManager_source_files} "-ts" ${BlockListManager_ts_files} ${SlopeCraft_ts_flags}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    )
-endif()
-
-set(BlockListManaer_project_sources
+set(BlockListManager_project_sources
     ${BlockListManager_header_files}
     ${BlockListManager_source_files}
     ${BlockListManager_ui_files}
@@ -48,11 +42,16 @@ set(BlockListManaer_project_sources
 )
 
 # include_directories(../SlopeCraftL)
-add_library(BlockListManager STATIC ${BlockListManaer_project_sources})
+add_library(BlockListManager STATIC ${BlockListManager_project_sources})
 target_link_libraries(BlockListManager PUBLIC Qt6::Widgets SlopeCraftL)
 target_include_directories(BlockListManager INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(BlockListManager PRIVATE ${SlopeCraft_Nlohmann_json_include_dir})
 
+qt_add_lupdate(BlockListManager
+    TS_FILES ${BlockListManager_ts_files}
+    SOURCES ${BlockListManager_project_sources}
+    OPTIONS ${SC_lupdate_flags}
+)
 qt_add_lrelease(BlockListManager TS_FILES ${BlockListManager_ts_files}
     QM_FILES_OUTPUT_VARIABLE BlockListManager_qm_files)
 qt_add_resources(BlockListManager "BLM_translations"

@@ -3,6 +3,7 @@
 #include <QString>
 #include <QModelIndex>
 #include <algorithm>
+#include "SCWind.h"
 #include "CopyableTableView.h"
 
 PreviewWind::PreviewWind(QWidget* parent)
@@ -177,7 +178,13 @@ QVariant MaterialModel::data(const QModelIndex& qmi, int role) const noexcept {
 
   if (role == Qt::ItemDataRole::DisplayRole) {
     if (c == 0) {
-      return QString::fromUtf8(mat.blk->getNameZH());
+      const auto lang =
+          dynamic_cast<const SCWind*>(this->pwind->parent())->lang();
+      if (lang == ::SCL_language::Chinese) {
+        return QString::fromUtf8(mat.blk->getNameZH());
+      } else {
+        return QString::fromUtf8(mat.blk->getNameEN());
+      }
     }
 
     if (c == 1) {

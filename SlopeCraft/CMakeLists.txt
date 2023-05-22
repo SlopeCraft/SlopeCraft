@@ -98,6 +98,14 @@ qt_add_lupdate(SlopeCraft
     OPTIONS ${SC_lupdate_flags}
 )
 
+qt_add_lrelease(SlopeCraft TS_FILES ${SlopeCraft_ts_files}
+    QM_FILES_OUTPUT_VARIABLE SC_qm_files)
+
+qt_add_resources(SlopeCraft "SC_translations"
+    PREFIX "/i18n"
+    BASE ${CMAKE_CURRENT_BINARY_DIR}
+    FILES ${SC_qm_files})
+
 qt_finalize_executable(SlopeCraft)
 
 if(${WIN32})

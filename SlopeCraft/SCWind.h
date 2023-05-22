@@ -8,6 +8,7 @@
 #include <vector>
 #include <BlockListManager.h>
 #include <QProgressBar>
+#include <QTranslator>
 #include "cvt_task.h"
 #include "PoolModel.h"
 #include "ExportTableModel.h"
@@ -81,6 +82,9 @@ class SCWind : public QMainWindow {
 
   std::array<blockListPreset, 4> default_presets;
 
+  SCL_language language{SCL_language::Chinese};
+  std::vector<QTranslator*> translators;
+
   // QString fileonly_export_dir{""};
 
  public:
@@ -140,6 +144,9 @@ class SCWind : public QMainWindow {
   current_flatdiagram_option(QString& err) const noexcept;
 
   int current_map_begin_seq_number() const noexcept;
+
+  inline auto lang() const noexcept { return this->language; }
+  void set_lang(::SCL_language lang) noexcept;
 
  private:
   // kernel related functions
