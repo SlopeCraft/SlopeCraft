@@ -140,6 +140,8 @@ if(${WIN32})
 endif()
 
 # # Language related variables
+set(SC_lupdate_flags -no-ui-lines)
+
 if(${SlopeCraft_update_ts_no_obsolete})
     list(APPEND SC_lupdate_flags "-no-obsolete")
 endif()
@@ -150,7 +152,7 @@ add_subdirectory(imageCutter)
 add_subdirectory(SlopeCraftL)
 
 # add_subdirectory(SlopeCraftMain)
-add_subdirectory(SlopeCraft)
+# add_subdirectory(SlopeCraft)
 add_subdirectory(MapViewer)
 add_subdirectory(tests)
 add_subdirectory(VisualCraftL)
