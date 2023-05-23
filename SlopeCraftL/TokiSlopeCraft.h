@@ -128,8 +128,6 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   void decreaseStep(step) override;
   bool makeTests(const AbstractBlock **, const unsigned char *, const char *,
                  char *) override;
-  std::string makeTests(const AbstractBlock **, const uint8_t *,
-                        const std::string &);
   void setAiCvterOpt(const AiCvterOpt *) override;
   const AiCvterOpt *aiCvterOpt() const override;
 
@@ -390,6 +388,19 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   bool loadBuildCache(const build_options &option) noexcept override {
     return this->load_build_cache(option);
   }
+
+  bool makeTests(const char *filename,
+                 const test_blocklist_options &option) const noexcept override {
+    std::string err = this->impl_make_tests(filename, option);
+    if (option.err != nullptr) {
+      write(*option.err, err);
+    }
+    return err.empty();
+  }
+
+  std::string impl_make_tests(
+      std::string_view filename,
+      const test_blocklist_options &option) const noexcept;
 
  private:
   // determined by mcver, map type and allowed colorest

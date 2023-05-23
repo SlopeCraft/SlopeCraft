@@ -20,7 +20,7 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 #include <unsupported/Eigen/CXX11/Tensor>
-
+#include <fmt/format.h>
 #include "TokiSlopeCraft.h"
 
 bool TokiSlopeCraft::makeTests(const AbstractBlock **src,
@@ -35,20 +35,29 @@ bool TokiSlopeCraft::makeTests(const AbstractBlock **src,
 
     return false;
   }
+  size_t blk_count{0};
+  for (;; blk_count++) {
+    if (src[blk_count] == nullptr) {
+      break;
+    }
+  }
+  test_blocklist_options opt;
+  opt.block_ptrs = src;
+  opt.basecolors = baseColor;
+  opt.block_count = blk_count;
+  std::string err = this->impl_make_tests(dst, opt);
 
-  std::string s = makeTests(src, baseColor, std::string(dst));
-  if (_unFileName != nullptr) std::strcpy(_unFileName, s.data());
+  if (_unFileName != nullptr) std::strcpy(_unFileName, err.data());
 
-  return s.empty();
+  return err.empty();
 }
 
-std::string TokiSlopeCraft::makeTests(const AbstractBlock **src,
-                                      const uint8_t *src_baseColor,
-                                      const std::string &fileName) {
-  if (!fileName.ends_with(".nbt")) {
+std::string TokiSlopeCraft::impl_make_tests(
+    std::string_view filename,
+    const test_blocklist_options &option) const noexcept {
+  if (!filename.ends_with(".nbt")) {
     return "File name should ends with \".nbt\"";
   }
-
   libSchem::Schem test;
   test.set_MC_major_version_number(::TokiSlopeCraft::mcVer);
   test.set_MC_version_number(
@@ -58,23 +67,17 @@ std::string TokiSlopeCraft::makeTests(const AbstractBlock **src,
   std::vector<uint8_t> realBaseColor;
   realSrc.clear();
   realBaseColor.clear();
-  for (uint32_t idx = 0; src[idx] != nullptr; idx++) {
-    if (src[idx]->getVersion() > (int)mcVer) {
+  for (size_t idx = 0; idx < option.block_count; idx++) {
+    if (option.block_ptrs[idx]->getVersion() > (int)mcVer) {
       continue;
     }
-    realSrc.emplace_back(static_cast<const simpleBlock *>(src[idx]));
-    realBaseColor.emplace_back(src_baseColor[idx]);
+    realSrc.emplace_back(
+        static_cast<const simpleBlock *>(option.block_ptrs[idx]));
+    realBaseColor.emplace_back(option.basecolors[idx]);
   }
 
   std::vector<std::vector<int>> blocks;
   blocks.resize(64);
-
-  for (auto &it : blocks) {
-    while (!it.empty()) {
-      it.clear();
-      // it.reserve(16);
-    }
-  }
 
   for (uint32_t idx = 0; idx < realSrc.size(); idx++) {
     blocks[realBaseColor[idx]].push_back(idx);
@@ -85,11 +88,7 @@ std::string TokiSlopeCraft::makeTests(const AbstractBlock **src,
     ids.reserve(realSrc.size() + 1);
     ids.emplace_back("minecraft:air");
     for (auto i : realSrc) {
-      if (TokiSlopeCraft::mcVer == SCL_gameVersion::MC12) {
-        ids.emplace_back(i->getIdOld());
-      } else {
-        ids.emplace_back(i->getId());
-      }
+      ids.emplace_back(i->idForVersion(TokiSlopeCraft::mcVer));
     }
 
     test.set_block_id(ids.data(), ids.size());
@@ -115,11 +114,12 @@ std::string TokiSlopeCraft::makeTests(const AbstractBlock **src,
 
   SCL_errorFlag err;
   std::string detail;
-  const bool success = test.export_structure(fileName, true, &err, &detail);
+  const bool success = test.export_structure(filename, true, &err, &detail);
 
   if (!success) {
-    return std::string("Failed to export structure file ") + fileName +
-           ", error code = " + std::to_string(int(err)) + ", detail: " + detail;
+    return fmt::format(
+        "Failed to export structure file {}, error code = {}, detail: {}",
+        filename, int(err), detail);
   } else {
     return {};
   }

@@ -53,6 +53,8 @@ class BaseColorWidget : public QGroupBox {
 
   inline auto& block_widgets() noexcept { return this->blocks; }
 
+  inline const auto& block_widgets() const noexcept { return this->blocks; }
+
   void select_by_callback(const select_callback_t& fun);
 
  signals:

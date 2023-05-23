@@ -769,3 +769,109 @@ void SCWind::on_ac_about_triggered() noexcept {
   info += tr("版权所有 © 2021-2023 SlopeCraft 开发者");
   QMessageBox::information(this, tr("关于 SlopeCraft"), info);
 }
+
+void SCWind::on_ac_get_current_colorlist_triggered() noexcept {
+  if (this->kernel->queryStep() < SCL_step::wait4Image) {
+    this->kernel_set_type();
+  }
+  constexpr int basecolors_per_row = 4;
+  constexpr int basecolors_per_col = 16;
+
+  static_assert(basecolors_per_row * basecolors_per_col == 64);
+
+  constexpr int row_pixels = basecolors_per_row * 4;
+  constexpr int col_pixels = basecolors_per_col * 1;
+
+  static_assert(row_pixels * col_pixels == 256);
+  static QString prev_dir{""};
+  const QString dest_file =
+      QFileDialog::getSaveFileName(this, tr("保存颜色表"), prev_dir, "*.png");
+
+  if (dest_file.isEmpty()) {
+    return;
+  }
+
+  prev_dir = QFileInfo{dest_file}.dir().path();
+
+  QImage img(row_pixels, col_pixels, QImage::Format::Format_ARGB32);
+
+  if (img.isNull()) {
+    QMessageBox::warning(this, tr("保存颜色表失败"), tr("分配内存失败"));
+    return;
+  }
+
+  img.fill(0x00FFFFFFU);
+
+  uint32_t *const img_data = reinterpret_cast<uint32_t *>(img.scanLine(0));
+  /*
+  Eigen::Map<
+      Eigen::Array<uint32_t, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>
+      map(reinterpret_cast<uint32_t *>(img.scanLine(0)), row_pixels,
+          col_pixels);
+*/
+  uint32_t argb_colors[256];
+  uint8_t map_colors[256];
+  const int available_colors = kernel->getColorCount();
+  kernel->getAvailableColors(argb_colors, map_colors);
+
+  for (int cidx = 0; cidx < available_colors; cidx++) {
+    /*
+    const int basecolor = (map_colors[cidx] / 4);
+    const int shade = (map_colors[cidx] % 4);
+    const int pixel_row = basecolor / basecolors_per_col;
+    const int pixel_col = (basecolor % basecolors_per_col) * 4 + shade;
+    */
+    img_data[map_colors[cidx]] = argb_colors[cidx];
+    // map(map_colors[cidx]) = argb_colors[cidx];
+  }
+
+  if (!img.save(dest_file)) {
+    QMessageBox::warning(this, tr("保存颜色表失败"),
+                         tr("无法生成文件 %1").arg(dest_file));
+  }
+}
+
+void SCWind::on_ac_test_blocklist_triggered() noexcept {
+  if (this->kernel->queryStep() < SCL_step::wait4Image) {
+    this->kernel_set_type();
+  }
+
+  static QString prev_dir;
+  QString filename =
+      QFileDialog::getSaveFileName(this, tr("保存测试文件"), prev_dir, "*.nbt");
+  if (filename.isEmpty()) {
+    return;
+  }
+  prev_dir = QFileInfo{filename}.dir().path();
+
+  std::vector<const SlopeCraft::AbstractBlock *> blks;
+  std::vector<uint8_t> basecolors;
+  for (uint8_t basecolor = 0; basecolor <= SlopeCraft::SCL_maxBaseColor();
+       basecolor++) {
+    const auto bcwp = this->ui->blm->basecolorwidget_at(basecolor);
+    for (const auto &bwp : bcwp->block_widgets()) {
+      blks.emplace_back(bwp->attachted_block());
+      basecolors.emplace_back(basecolor);
+    }
+  }
+
+  assert(blks.size() == basecolors.size());
+
+  std::string err;
+  err.resize(4096);
+  SlopeCraft::StringDeliver sd{err.data(), err.size()};
+
+  SlopeCraft::Kernel::test_blocklist_options opt;
+  opt.block_count = blks.size();
+  opt.block_ptrs = blks.data();
+  opt.basecolors = basecolors.data();
+  opt.err = &sd;
+
+  if (!this->kernel->makeTests(filename.toLocal8Bit().data(), opt)) {
+    QString qerr = QString::fromUtf8(err.data());
+    QMessageBox::warning(this, tr("输出测试文件失败"),
+                         tr("保存测试文件 %1 时出现错误。详细信息：\n%2")
+                             .arg(filename)
+                             .arg(qerr));
+  }
+}

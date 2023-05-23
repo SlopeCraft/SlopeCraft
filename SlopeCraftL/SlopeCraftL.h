@@ -205,8 +205,8 @@ class Kernel {
                                   uint8_t *const map_color_dest = nullptr,
                                   int *const num = nullptr) const = 0;
   /// make a structure that includes all accessible blocks
-  virtual bool makeTests(const AbstractBlock **, const uint8_t *, const char *,
-                         char *) = 0;
+  [[deprecated]] virtual bool makeTests(const AbstractBlock **, const uint8_t *,
+                                        const char *, char *) = 0;
 
   // can do in convertionReady:
   /// convert original image to map
@@ -347,7 +347,7 @@ class Kernel {
       const WE_schem_options &option) const noexcept = 0;
 
   struct flag_diagram_options {
-    uint64_t lib_version{SC_VERSION_U64};
+    uint64_t version{SC_VERSION_U64};
 
     // 0 or negative number means no split lines
     int32_t split_line_row_margin{0};
@@ -360,6 +360,17 @@ class Kernel {
   virtual bool exportAsFlatDiagram(
       const char *filename_local,
       const flag_diagram_options &option) const noexcept = 0;
+
+  struct test_blocklist_options {
+    uint64_t version{SC_VERSION_U64};
+    const AbstractBlock *const *block_ptrs{nullptr};
+    const uint8_t *basecolors{nullptr};
+    size_t block_count{0};
+    StringDeliver *err{nullptr};
+  };
+  virtual bool makeTests(
+      const char *filename,
+      const test_blocklist_options &option) const noexcept = 0;
 };
 
 }  // namespace SlopeCraft

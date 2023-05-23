@@ -78,6 +78,10 @@ class BlockListManager : public QWidget {
 
   blockListPreset to_preset() const noexcept;
 
+  const BaseColorWidget *basecolorwidget_at(size_t basecolor) const noexcept {
+    return this->basecolors[basecolor];
+  }
+
  signals:
   void changed();
 

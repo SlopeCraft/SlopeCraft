@@ -89,6 +89,9 @@ class SCWind : public QMainWindow {
 
   void on_ac_about_triggered() noexcept;
 
+  void on_ac_get_current_colorlist_triggered() noexcept;
+  void on_ac_test_blocklist_triggered() noexcept;
+
  private:
   Ui::SCWind* ui;
   SlopeCraft::Kernel* kernel;
