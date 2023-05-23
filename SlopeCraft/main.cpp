@@ -9,6 +9,7 @@ int main(int argc, char** argv) {
   SCWind wind;
 
   wind.show();
+  wind.setWindowTitle(SCWind::default_wind_title());
 
   QDir::setCurrent(QCoreApplication::applicationDirPath());
 

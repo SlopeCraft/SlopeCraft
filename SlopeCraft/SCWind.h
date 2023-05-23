@@ -34,6 +34,10 @@ class SCWind : public QMainWindow {
     return manager;
   }
 
+  static const QString& default_wind_title() noexcept;
+
+  static QString workStatus_to_string(::SCL_workStatues) noexcept;
+
   const static QString update_url;
 
   enum class export_type {

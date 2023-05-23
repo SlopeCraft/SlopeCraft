@@ -73,6 +73,19 @@ SCWind::SCWind(QWidget *parent)
         [](void *_this, ::SCL_errorFlag err, const char *msg) {
           reinterpret_cast<SCWind *>(_this)->report_error(err, msg);
         });
+    this->kernel->setReportWorkingStatue([](void *_this, ::SCL_workStatues ws) {
+      SCWind *const wind = reinterpret_cast<SCWind *>(_this);
+
+      const QString status_str = SCWind::workStatus_to_string(ws);
+      QString wind_title;
+      if (status_str.isEmpty()) {
+        wind_title = SCWind::default_wind_title();
+      } else {
+        wind_title = QStringLiteral("%1  |  %2")
+                         .arg(SCWind::default_wind_title(), status_str);
+      }
+      wind->setWindowTitle(wind_title);
+    });
   }
   // initialize cvt pool model
   {
@@ -931,4 +944,73 @@ void SCWind::set_lang(::SCL_language lang) noexcept {
   this->ui->retranslateUi(this);
 
   this->ui->blm->when_lang_updated(lang);
+}
+
+QString impl_default_title() noexcept {
+  QString newtitle =
+      QStringLiteral("SlopeCraft %1").arg(SlopeCraft::SCL_getSCLVersion());
+
+#ifdef WIN32
+  newtitle +=
+      " Copyright © 2021-2023 TokiNoBug, AbrasiveBoar, Mifan-T";  // windowsf
+#elif defined(_MAC) || defined(__APPLE__)
+  newtitle +=
+      " Copyright © 2021-2023 TokiNoBug, AbrasiveBoar, Cubik65536, Mifan-T";  // macOs
+#else
+  newtitle +=
+      " Copyright © 2021-2023 TokiNoBug, AbrasiveBoar, Mifan-T";  // unknown
+                                                                  // platform
+#endif
+
+  return newtitle;
+}
+
+const QString &SCWind::default_wind_title() noexcept {
+  static const QString title = impl_default_title();
+  return title;
+}
+
+QString SCWind::workStatus_to_string(::SCL_workStatues status) noexcept {
+  switch (status) {
+    case SlopeCraft::workStatues::none:
+      break;
+    case SlopeCraft::workStatues::buidingHeighMap:
+      return tr("正在构建高度矩阵");
+      break;
+    case SlopeCraft::workStatues::building3D:
+      return tr("正在构建三维结构");
+      break;
+    case SlopeCraft::workStatues::collectingColors:
+      return tr("正在收集整张图片的颜色");
+      break;
+    case SlopeCraft::workStatues::compressing:
+      return tr("正在压缩立体地图画");
+      break;
+    case SlopeCraft::workStatues::constructingBridges:
+      return tr("正在为立体地图画搭桥");
+      break;
+    case SlopeCraft::workStatues::converting:
+      return tr("正在匹配颜色");
+      break;
+    case SlopeCraft::workStatues::dithering:
+      return tr("正在使用抖动仿色");
+      break;
+    case SlopeCraft::workStatues::flippingToWall:
+      return tr("正在将平板地图画变为墙面地图画");
+      break;
+    case SlopeCraft::workStatues::writing3D:
+      return tr("正在写入三维结构");
+      break;
+    case SlopeCraft::workStatues::writingBlockPalette:
+      return tr("正在写入方块列表");
+      break;
+    case SlopeCraft::workStatues::writingMapDataFiles:
+      return tr("正在写入地图数据文件");
+      break;
+    case SlopeCraft::workStatues::writingMetaInfo:
+      return tr("正在写入基础信息");
+      break;
+  }
+
+  return {};
 }
