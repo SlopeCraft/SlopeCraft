@@ -25,7 +25,8 @@ set(SlopeCraft_headers
     PreviewWind.h
     ExportTableModel.h
     AiCvterParameterDialog.h
-    CopyableTableView.h)
+    CopyableTableView.h
+    TransparentStrategyWind.h)
 
 set(SlopeCraft_sources
     SCWind.cpp
@@ -37,6 +38,7 @@ set(SlopeCraft_sources
     ExportTableModel.cpp
     AiCvterParameterDialog.cpp
     CopyableTableView.cpp
+    TransparentStrategyWind.cpp
 
     main.cpp
     ${SlopeCraft_rc_files})
@@ -44,7 +46,8 @@ set(SlopeCraft_sources
 set(SlopeCraft_uis
     SCWind.ui
     PreviewWind.ui
-    AiCvterParameterDialog.ui)
+    AiCvterParameterDialog.ui
+    TransparentStrategyWind.ui)
 
 set(SlopeCraft_ts_files
     others/SlopeCraft_en_US.ts
