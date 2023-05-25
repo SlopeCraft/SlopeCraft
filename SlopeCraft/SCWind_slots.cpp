@@ -8,6 +8,7 @@
 #include "PreviewWind.h"
 #include "AiCvterParameterDialog.h"
 #include "VersionDialog.h"
+#include "TransparentStrategyWind.h"
 
 void SCWind::on_pb_add_image_clicked() noexcept {
 #ifdef WIN32
@@ -20,6 +21,8 @@ void SCWind::on_pb_add_image_clicked() noexcept {
   if (files.empty()) {
     return;
   }
+
+  std::optional<TransparentStrategyWind::strategy> strategy_opt{std::nullopt};
 
   QString err;
   for (const auto &filename : files) {
@@ -39,6 +42,24 @@ void SCWind::on_pb_add_image_clicked() noexcept {
       } else {
         abort();
       }
+    }
+
+    // have transparent pixels
+    if (SlopeCraft::SCL_haveTransparentPixel(
+            (const uint32_t *)task.original_image.scanLine(0),
+            task.original_image.sizeInBytes() / sizeof(uint32_t))) {
+      if (!strategy_opt.has_value()) {
+        strategy_opt = TransparentStrategyWind::ask_for_strategy(this);
+      }
+
+      if (!strategy_opt.has_value()) {
+        continue;
+      }
+      const auto &st = strategy_opt.value();
+      SlopeCraft::SCL_preprocessImage(
+          (uint32_t *)task.original_image.scanLine(0),
+          task.original_image.sizeInBytes() / sizeof(uint32_t),
+          st.pure_transparent, st.half_transparent, st.background_color);
     }
 
     this->tasks.emplace_back(task);

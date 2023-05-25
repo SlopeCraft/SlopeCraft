@@ -419,6 +419,9 @@ SCL_EXPORT void SCL_preprocessImage(
     const SCL_HalfTpPixelSt = SCL_HalfTpPixelSt::ComposeWithBackGround,
     uint32_t backGround = 0xFFFFFFFF);
 
+SCL_EXPORT bool SCL_haveTransparentPixel(const uint32_t *ARGB32,
+                                         const uint64_t imageSize);
+
 SCL_EXPORT uint8_t SCL_maxAvailableVersion();
 
 SCL_EXPORT const char *SCL_getSCLVersion();

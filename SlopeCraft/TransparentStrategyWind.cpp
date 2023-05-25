@@ -32,6 +32,12 @@ SCL_HalfTpPixelSt TransparentStrategyWind::half_strategy() const noexcept {
 }
 
 uint32_t TransparentStrategyWind::background_color() const noexcept {
+  if (this->ui->cb_background_white->isChecked()) {
+    return 0xFFFFFFFF;
+  }
+  if (this->ui->cb_background_gray->isChecked()) {
+    return 0xFFDCDCDC;
+  }
   auto pl = this->ui->lb_show_custom_color->palette();
   auto color = pl.color(QPalette::ColorRole::Window).toRgb();
 
@@ -42,6 +48,14 @@ TransparentStrategyWind::strategy TransparentStrategyWind::current_strategy()
     const noexcept {
   return {this->pure_strategy(), this->half_strategy(),
           this->background_color()};
+}
+
+void TransparentStrategyWind::on_pb_confirm_clicked() noexcept {
+  emit this->accept();
+}
+
+void TransparentStrategyWind::on_pb_cancel_clicked() noexcept {
+  emit this->reject();
 }
 
 std::optional<TransparentStrategyWind::strategy>

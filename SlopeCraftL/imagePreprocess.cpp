@@ -48,40 +48,51 @@ void SCL_EXPORT SCL_preprocessImage(ARGB *data, const uint64_t imageSize,
                                     ARGB backGround) {
   backGround |= 0xFF000000;
 
-  if (data == nullptr)
-    return;
-  if (imageSize <= 0)
-    return;
+  if (data == nullptr) return;
+  if (imageSize <= 0) return;
 
   for (uint64_t i = 0; i < imageSize; i++) {
-    if (getA(data[i]) == 0) { // pure transparent
+    if (getA(data[i]) == 0) {  // pure transparent
       switch (pSt) {
-      case SCL_PureTpPixelSt::ReplaceWithBackGround:
-        data[i] = backGround;
-        break;
-      default:
-        break;
+        case SCL_PureTpPixelSt::ReplaceWithBackGround:
+          data[i] = backGround;
+          break;
+        default:
+          break;
       }
     }
 
-    if (getA(data[i]) < 255) { //  half transparent
+    if (getA(data[i]) < 255) {  //  half transparent
       switch (hSt) {
-      case SCL_HalfTpPixelSt::ReplaceWithBackGround:
-        data[i] = backGround;
-        break;
-      case SCL_HalfTpPixelSt::ComposeWithBackGround:
-        data[i] = composeColor(data[i], backGround);
-        break;
-      default:
-        data[i] |= 0xFF000000;
-        break;
+        case SCL_HalfTpPixelSt::ReplaceWithBackGround:
+          data[i] = backGround;
+          break;
+        case SCL_HalfTpPixelSt::ComposeWithBackGround:
+          data[i] = composeColor(data[i], backGround);
+          break;
+        default:
+          data[i] |= 0xFF000000;
+          break;
       }
     }
   }
 }
 
+SCL_EXPORT bool SCL_haveTransparentPixel(const uint32_t *ARGB32,
+                                         const uint64_t imageSize) {
+  for (uint64_t i = 0; i < imageSize; i++) {
+    const uint32_t argb = ARGB32[i];
+
+    if (getA(argb) != 255) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 unsigned char SCL_EXPORT SCL_maxAvailableVersion() { return 19; }
 
 #ifndef SCL_CAPI
-} //  namespace SlopeCraft
+}  //  namespace SlopeCraft
 #endif
