@@ -1,12 +1,12 @@
 #include "TransparentStrategyWind.h"
 #include "ui_TransparentStrategyWind.h"
+#include <QColorDialog>
 
 TransparentStrategyWind::TransparentStrategyWind(QWidget* parent)
     : QDialog{parent}, ui{new Ui::TransparentStrategyWind} {
   this->ui->setupUi(this);
 
   QPalette pl;
-  pl.setColor(QPalette::ColorRole::Text, Qt::black);
   pl.setColor(QPalette::ColorRole::Window, QColor(Qt::GlobalColor::white));
 
   this->ui->lb_show_custom_color->setPalette(pl);
@@ -56,6 +56,19 @@ void TransparentStrategyWind::on_pb_confirm_clicked() noexcept {
 
 void TransparentStrategyWind::on_pb_cancel_clicked() noexcept {
   emit this->reject();
+}
+
+void TransparentStrategyWind::on_cb_background_custom_clicked() noexcept {
+  auto color =
+      QColorDialog::getColor(Qt::GlobalColor::white, this, tr("设置背景色"));
+  if (!color.isValid()) {
+    this->ui->cb_background_gray->setChecked(true);
+  }
+
+  QPalette pl;
+  pl.setColor(QPalette::ColorRole::Window, color);
+
+  this->ui->lb_show_custom_color->setPalette(pl);
 }
 
 std::optional<TransparentStrategyWind::strategy>

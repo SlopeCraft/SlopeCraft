@@ -17,6 +17,8 @@ class TransparentStrategyWind : public QDialog {
   void on_pb_confirm_clicked() noexcept;
   void on_pb_cancel_clicked() noexcept;
 
+  void on_cb_background_custom_clicked() noexcept;
+
  public:
   explicit TransparentStrategyWind(QWidget *parent = nullptr);
   ~TransparentStrategyWind();

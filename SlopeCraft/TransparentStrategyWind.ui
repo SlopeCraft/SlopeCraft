@@ -51,7 +51,7 @@
          <string notr="true">background-color: rgb(255, 255, 255);</string>
         </property>
         <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
+         <enum>QFrame::Box</enum>
         </property>
         <property name="text">
          <string/>
@@ -67,8 +67,11 @@
       </item>
       <item row="2" column="1">
        <widget class="QLabel" name="lb_show_custom_color">
+        <property name="autoFillBackground">
+         <bool>true</bool>
+        </property>
         <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
+         <enum>QFrame::Box</enum>
         </property>
         <property name="text">
          <string/>
@@ -81,7 +84,7 @@
          <string notr="true">background-color: rgb(220, 220, 220);</string>
         </property>
         <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
+         <enum>QFrame::Box</enum>
         </property>
         <property name="text">
          <string/>
