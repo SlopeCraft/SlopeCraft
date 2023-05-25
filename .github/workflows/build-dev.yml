@@ -19,6 +19,8 @@ jobs:
       BUILD_TYPE: ${{ matrix.build_type }}
       GPU_API: ${{ matrix.gpu_api }}
     steps:
+      - name: brew update
+        run: brew update
       - name: echo matrix variables (build_type = ${{ matrix.build_type }})
         run: | 
           echo $BUILD_TYPE
