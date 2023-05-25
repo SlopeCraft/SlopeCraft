@@ -6,10 +6,7 @@ TransparentStrategyWind::TransparentStrategyWind(QWidget* parent)
     : QDialog{parent}, ui{new Ui::TransparentStrategyWind} {
   this->ui->setupUi(this);
 
-  QPalette pl;
-  pl.setColor(QPalette::ColorRole::Window, QColor(Qt::GlobalColor::white));
-
-  this->ui->lb_show_custom_color->setPalette(pl);
+  this->on_pb_reset_clicked();
 }
 
 TransparentStrategyWind::~TransparentStrategyWind() { delete this->ui; }
@@ -67,6 +64,16 @@ void TransparentStrategyWind::on_cb_background_custom_clicked() noexcept {
 
   QPalette pl;
   pl.setColor(QPalette::ColorRole::Window, color);
+
+  this->ui->lb_show_custom_color->setPalette(pl);
+}
+
+void TransparentStrategyWind::on_pb_reset_clicked() noexcept {
+  this->ui->cb_pure_background->setChecked(true);
+  this->ui->cb_half_compose->setChecked(true);
+  this->ui->cb_background_gray->setChecked(true);
+  QPalette pl;
+  pl.setColor(QPalette::ColorRole::Window, QColor(Qt::GlobalColor::white));
 
   this->ui->lb_show_custom_color->setPalette(pl);
 }
