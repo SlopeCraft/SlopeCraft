@@ -68,6 +68,13 @@ if(${WIN32})
     include(cmake/install_if_is_shared.cmake)
 endif()
 
+# Find libpng
+if(${APPLE})
+    find_package(PNG 1.6 REQUIRED CONFIG PATHS ${CMAKE_PREFIX_PATH} NO_CMAKE_SYSTEM_PATH)
+else()
+    find_package(PNG 1.6 REQUIRED)
+endif()
+
 # Add compile options --------------------------------------------------------
 # if don't vectorize, or no suitable flag found, this variable will be empty
 set(SlopeCraft_vectorize_flags)

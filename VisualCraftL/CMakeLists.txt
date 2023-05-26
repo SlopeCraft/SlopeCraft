@@ -76,7 +76,6 @@ add_library(VisualCraftL_static STATIC
     ${VCL_source_files})
 
 find_package(ZLIB 1.2.11 REQUIRED)
-find_package(PNG 1.6 REQUIRED PATHS ${CMAKE_PREFIX_PATH})
 find_package(libzip 1.7.0 REQUIRED)
 
 include(${CMAKE_SOURCE_DIR}/cmake/configure_fmtlib.cmake)
