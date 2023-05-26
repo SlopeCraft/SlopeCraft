@@ -1,6 +1,6 @@
 project(ColorManip VERSION ${SlopeCraft_version} LANGUAGES C CXX)
 
-find_package(PNG REQUIRED)
+find_package(PNG 1.6 REQUIRED)
 
 include(${CMAKE_SOURCE_DIR}/cmake/find_Eigen3.cmake)
 find_package(Eigen3 REQUIRED)

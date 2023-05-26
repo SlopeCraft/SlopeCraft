@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - dev
-      #- update-sc-ui
+      - update-sc-ui
 
 jobs:
   macos-build:
