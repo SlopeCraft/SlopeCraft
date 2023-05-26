@@ -68,7 +68,7 @@ include(cmake/find_qt6.cmake)
 if(${APPLE})
     find_package(PNG 1.6 REQUIRED
         NO_CMAKE_SYSTEM_PATH
-        PATHS ${CMAKE_PREFIX_PATH})
+    )
 else()
     find_package(PNG 1.6 REQUIRED)
 endif()
