@@ -66,7 +66,9 @@ include(cmake/find_qt6.cmake)
 
 # Find libpng
 if(${APPLE})
-    find_package(PNG 1.6 REQUIRED NO_CMAKE_SYSTEM_PATH)
+    find_package(PNG 1.6 REQUIRED
+        NO_CMAKE_SYSTEM_PATH
+        PATHS ${CMAKE_PREFIX_PATH})
 else()
     find_package(PNG 1.6 REQUIRED)
 endif()
