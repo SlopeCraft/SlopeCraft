@@ -10,12 +10,6 @@ jobs:
   macos-check-libpng:
     runs-on: macos-latest
     steps:
-      - name: brew update
-        run: | 
-          brew update-reset
-          brew update
-      - name: install libpng
-        run: brew install libpng
       - name: find png.h
         run: find /Library -name png.h -print
       - name: cat png.h
@@ -27,5 +21,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with: 
           name: libpng headers on macos from brew
-          path: /Library/Frameworks/Mono.framework/Headers/png.h
+          path: /Library/Frameworks/Mono.framework/Headers/png*
           if-no-files-found: error 
