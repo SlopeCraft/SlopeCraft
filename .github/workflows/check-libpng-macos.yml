@@ -10,8 +10,6 @@ jobs:
   macos-check-libpng:
     runs-on: macos-latest
     steps:
-      - name: find png.h
-        run: find /Library -name png.h -print
       - name: cat png.h
         run: cat /Library/Frameworks/Mono.framework/Headers/png.h
       - name: cat png.h with grep
