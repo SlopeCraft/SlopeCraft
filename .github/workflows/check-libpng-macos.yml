@@ -19,5 +19,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with: 
           name: libpng headers on macos from brew
-          path: /Library/Frameworks/Mono.framework/Headers/png*
+          path: /Library/Frameworks/Mono.framework/Headers/png.h
           if-no-files-found: error 
