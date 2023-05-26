@@ -8,19 +8,6 @@ on:
       #- update-sc-ui
 
 jobs:
-
-  macos-check-libpng:
-    runs-on: macos-latest
-    steps:
-      - name: brew update
-        run: | 
-          brew update-reset
-          brew update
-      - name: install libpng
-        run: brew install libpng
-      - name: find png.h
-        run: find . -name png.h
-
   macos-build:
     runs-on: macos-latest
     strategy:

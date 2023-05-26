@@ -11,8 +11,10 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: brew update
-        run: brew update
+        run: | 
+          brew update-reset
+          brew update
       - name: install libpng
         run: brew install libpng
       - name: find png.h
-        run: find . -name png.h
+        run: find / -name png.h -print
