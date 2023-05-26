@@ -73,7 +73,8 @@ set(VisualCraft_project_sources
     ${VisualCraft_header_files}
     ${VisualCraft_source_files}
     ${VisualCraft_ui_files}
-    ${VisualCraft_ts_files}
+
+    # ${VisualCraft_ts_files}
     ${VisualCraft_win_files}
 )
 

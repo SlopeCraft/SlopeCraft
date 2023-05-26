@@ -38,7 +38,8 @@ set(BlockListManager_project_sources
     ${BlockListManager_header_files}
     ${BlockListManager_source_files}
     ${BlockListManager_ui_files}
-    ${BlockListManager_ts_files}
+
+    # ${BlockListManager_ts_files}
 )
 
 # include_directories(../SlopeCraftL)

@@ -34,7 +34,8 @@ set(imageCutter_project_sources
     CutterWind.cpp
     main.cpp
     CutterWind.ui
-    ${imageCutter_ts_files}
+
+    # ${imageCutter_ts_files}
     ${imageCutter_windows_rc_files}
 )
 

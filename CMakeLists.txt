@@ -140,7 +140,8 @@ if(${WIN32})
 endif()
 
 # # Language related variables
-set(SC_lupdate_flags -no-ui-lines)
+# set(SC_lupdate_flags -no-ui-lines)
+set(SC_lupdate_flags)
 
 if(${SlopeCraft_update_ts_no_obsolete})
     list(APPEND SC_lupdate_flags "-no-obsolete")

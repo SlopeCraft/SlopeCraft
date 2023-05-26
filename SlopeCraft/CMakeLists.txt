@@ -57,7 +57,9 @@ set(SlopeCraft_project_files
     ${SlopeCraft_headers}
     ${SlopeCraft_sources}
     ${SlopeCraft_uis}
-    ${SlopeCraft_ts_files})
+
+    # ${SlopeCraft_ts_files}
+)
 
 qt_add_executable(SlopeCraft
     MANUAL_FINALIZATION

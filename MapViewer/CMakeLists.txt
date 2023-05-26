@@ -42,7 +42,8 @@ set(MapViewer_project_sources
     ${MapViewer_header_files}
     ${MapViewer_source_files}
     MapViewerWind.ui
-    ${MapViewer_ts_files}
+
+    # ${MapViewer_ts_files}
     ${MapViewer_windows_rc_files}
 )
 
