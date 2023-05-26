@@ -64,15 +64,15 @@ include(cmake/find_Eigen3.cmake)
 include(cmake/find_HeuristicFlow.cmake)
 include(cmake/find_qt6.cmake)
 
-if(${WIN32})
-    include(cmake/install_if_is_shared.cmake)
-endif()
-
 # Find libpng
 if(${APPLE})
-    find_package(PNG 1.6 REQUIRED CONFIG PATHS ${CMAKE_PREFIX_PATH} NO_CMAKE_SYSTEM_PATH)
+    find_package(PNG 1.6 REQUIRED NO_CMAKE_SYSTEM_PATH)
 else()
     find_package(PNG 1.6 REQUIRED)
+endif()
+
+if(${WIN32})
+    include(cmake/install_if_is_shared.cmake)
 endif()
 
 # Add compile options --------------------------------------------------------
