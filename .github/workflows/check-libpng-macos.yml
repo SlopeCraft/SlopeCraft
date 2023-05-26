@@ -17,15 +17,15 @@ jobs:
       - name: install libpng
         run: brew install libpng
       - name: find png.h
-        run: find /System/Volumes/Data/usr/local -name png.h -print
+        run: find /Library -name png.h -print
       - name: cat png.h
-        run: cat /System/Volumes/Data/usr/local/Cellar/libpng/1.6.39/include/libpng16/png.h
+        run: cat /Library/Frameworks/Mono.framework/Headers/png.h
       - name: cat png.h with grep
-        run: cat /System/Volumes/Data/usr/local/Cellar/libpng/1.6.39/include/libpng16/png.h | grep png_write_row
+        run: cat /Library/Frameworks/Mono.framework/Headers/png.h | grep png_write_row
 
       - name: Upload png.h and png_conf.h
         uses: actions/upload-artifact@v3
         with: 
           name: libpng headers on macos from brew
-          path: /System/Volumes/Data/usr/local/Cellar/libpng/*
+          path: /Library/Frameworks/Mono.framework/Headers/png.h
           if-no-files-found: error 
