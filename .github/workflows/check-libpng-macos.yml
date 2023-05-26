@@ -15,9 +15,12 @@ jobs:
       - name: cat png.h with grep
         run: cat /Library/Frameworks/Mono.framework/Headers/png.h | grep png_write_row
 
+      - name: copy png.j
+        run: cp /Library/Frameworks/Mono.framework/Headers/png.h .
+
       - name: Upload png.h and png_conf.h
         uses: actions/upload-artifact@v3
         with: 
           name: libpng headers on macos from brew
-          path: /Library/Frameworks/Mono.framework/Headers/png.h
+          path: ./png.h
           if-no-files-found: error 
