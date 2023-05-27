@@ -210,3 +210,10 @@ void BaseColorWidget::select_by_callback(const select_callback_t& fun) {
 
   this->select_block_soft(output);
 }
+
+void BaseColorWidget::update_lang(SCL_language lang) noexcept {
+  this->ui->retranslateUi(this);
+  for (auto bw : this->blocks) {
+    bw->update_lang(lang);
+  }
+}

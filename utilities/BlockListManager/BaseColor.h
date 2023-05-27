@@ -43,11 +43,7 @@ class BaseColorWidget : public QGroupBox {
     return this->blocks[this->selected_idx()]->attachted_block();
   }
 
-  void update_lang(SCL_language lang) noexcept {
-    for (auto bw : this->blocks) {
-      bw->update_lang(lang);
-    }
-  }
+  void update_lang(SCL_language lang) noexcept;
 
   void set_enabled(bool enabled) noexcept;
 
