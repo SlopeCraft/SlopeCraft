@@ -77,6 +77,7 @@ class SCWind : public QMainWindow {
 
   void on_pb_build3d_clicked() noexcept;
   void on_pb_preview_materials_clicked() noexcept;
+  void on_pb_preview_compress_effect_clicked() noexcept;
   void on_pb_export_all_clicked() noexcept;
 
   void on_pb_export_file_clicked() noexcept;
@@ -109,6 +110,8 @@ class SCWind : public QMainWindow {
   // QString fileonly_export_dir{""};
 
  public:
+  const SlopeCraft::Kernel* kernel_ptr() const noexcept { return this->kernel; }
+
   std::array<QRadioButton*, 20 - 12 + 1> version_buttons() noexcept;
   std::array<const QRadioButton*, 20 - 12 + 1> version_buttons() const noexcept;
 

@@ -731,19 +731,30 @@ void TokiSlopeCraft::getCompressedImage(
     return;
   }
 
-  Eigen::Map<EImage> dest{dest_ptr, this->image_cvter.rows(),
-                          this->image_cvter.cols()};
-  dest.fill(0xFF000000);
-
   const auto LUT = this->LUT_mapcolor_to_argb();
 
-  for (int r = 0; r < this->image_cvter.rows(); r++) {
-    for (int c = 0; c < this->image_cvter.cols(); c++) {
-      dest(r, c) = LUT[this->mapPic(r, c)];
+  auto fun = [this, &LUT](auto &dst) {
+    for (int r = 0; r < this->image_cvter.rows(); r++) {
+      for (int c = 0; c < this->image_cvter.cols(); c++) {
+        const auto map_color = this->mapPic(r, c);
+        if (mapColor2baseColor(map_color) == 0) {  //  if base ==0
+          dst(r, c) = ARGB32(0, 0, 0, 0);
+          continue;
+        }
+        const int index = mapColor2Index(map_color);
+        dst(r, c) = LUT[index];
+      }
     }
-  }
+  };
 
-  if (!expected_col_major) {
-    dest.transposeInPlace();
+  if (expected_col_major) {
+    Eigen::Map<EImage> dest{dest_ptr, this->image_cvter.rows(),
+                            this->image_cvter.cols()};
+    fun(dest);
+  } else {
+    Eigen::Map<
+        Eigen::Array<uint32_t, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>
+        dest{dest_ptr, this->image_cvter.rows(), this->image_cvter.cols()};
+    fun(dest);
   }
 }

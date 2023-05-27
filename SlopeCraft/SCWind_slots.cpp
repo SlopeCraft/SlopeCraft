@@ -9,6 +9,7 @@
 #include "AiCvterParameterDialog.h"
 #include "VersionDialog.h"
 #include "TransparentStrategyWind.h"
+#include "CompressEffectViewer.h"
 
 void SCWind::on_pb_add_image_clicked() noexcept {
 #ifdef WIN32
@@ -412,6 +413,48 @@ void SCWind::on_pb_preview_materials_clicked() noexcept {
   pw->show();
 
   pw->setup_data(this->kernel);
+}
+
+void SCWind::on_pb_preview_compress_effect_clicked() noexcept {
+  auto sel_opt = this->selected_export_task();
+  if (!sel_opt.has_value()) {
+    QMessageBox::warning(this, tr("未选择图像"),
+                         tr("请在左侧任务池选择一个图像"));
+    return;
+  }
+  const auto sel = sel_opt.value();
+  QString errtitle{""}, errmsg{""};
+  if (!sel->is_built) {
+    errtitle = tr("尚未构建三维结构");
+    errmsg =
+        tr("在预览材料表之前，必须先构建三维结构。出现这个警告，可能是因为你"
+           "在构建三维结构之后，又修改了三维结构的选项，因此之前的结果无效。");
+  }
+  if (!this->kernel->loadConvertCache(this->selected_algo(),
+                                      this->is_dither_selected())) {
+    errtitle = tr("该图像尚未被转化");
+    errmsg =
+        tr("可能是在转化完成之后又修改了转化算法，因此之前的转化无效。必须重"
+           "新转化该图像。");
+  }
+  if (!this->kernel->loadBuildCache(this->current_build_option())) {
+    errtitle = tr("尚未构建三维结构");
+    errmsg =
+        tr("在预览材料表之前，必须先构建三维结构。出现这个警告，可能是因为你"
+           "在构建三维结构之后，又修改了三维结构的选项，因此之前的结果无效。");
+  }
+  if (!errtitle.isEmpty()) {
+    QMessageBox::warning(this, errtitle, errmsg);
+    return;
+  }
+
+  CompressEffectViewer *cev = new CompressEffectViewer{this};
+
+  cev->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
+  cev->setWindowFlag(Qt::WindowType::Window, true);
+  // cev->setAttribute(Qt::WidgetAttribute::WA_AlwaysStackOnTop, true);
+  //  bb->setAttribute(Qt::WidgetAttribute::WA_NativeWindow, true);
+  cev->show();
 }
 
 #define SC_PRIVATE_MACRO_PROCESS_IF_ERR_on_pb_export_all_clicked \
