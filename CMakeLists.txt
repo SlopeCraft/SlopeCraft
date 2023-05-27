@@ -58,20 +58,14 @@ if(NOT CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 endif()
 
 # configure global dependencies ----------------------------------------------
+include(cmake/configure_libpng.cmake)
+find_package(PNG 1.6 REQUIRED)
+
 include(cmake/add_compiler_path_to_prefix.cmake)
 include(cmake/find_nlohmann_json.cmake)
 include(cmake/find_Eigen3.cmake)
 include(cmake/find_HeuristicFlow.cmake)
 include(cmake/find_qt6.cmake)
-
-# Find libpng
-if(${APPLE})
-    find_package(PNG 1.6 REQUIRED
-        NO_CMAKE_SYSTEM_PATH
-    )
-else()
-    find_package(PNG 1.6 REQUIRED)
-endif()
 
 if(${WIN32})
     include(cmake/install_if_is_shared.cmake)
