@@ -24,8 +24,8 @@ void AdaptiveLabel::refresh_image() noexcept {
   }
   auto label_size = this->size();
 
-  label_size.setHeight(std::max(label_size.height(), 1));
-  label_size.setWidth(std::max(label_size.width(), 1));
+  label_size.setHeight(std::max(label_size.height() - 2, 1));
+  label_size.setWidth(std::max(label_size.width() - 2, 1));
 
   QPixmap scaled =
       this->real_image.scaled(label_size, Qt::AspectRatioMode::KeepAspectRatio,

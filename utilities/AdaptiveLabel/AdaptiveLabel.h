@@ -1,3 +1,6 @@
+#ifndef SLOPECRAFT_UTILITIES_ADAPTIVELABEL_ADAPTIVELABEL_H
+#define SLOPECRAFT_UTILITIES_ADAPTIVELABEL_ADAPTIVELABEL_H
+
 #include <QLabel>
 #include <QPixmap>
 #include <QResizeEvent>
@@ -33,3 +36,5 @@ class AdaptiveLabel : public QLabel {
   using QLabel::setText;
   using QLabel::sizePolicy;
 };
+
+#endif  // SLOPECRAFT_UTILITIES_ADAPTIVELABEL_ADAPTIVELABEL_H
