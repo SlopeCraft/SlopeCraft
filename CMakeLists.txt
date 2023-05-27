@@ -59,8 +59,6 @@ endif()
 
 # configure global dependencies ----------------------------------------------
 include(cmake/configure_libpng.cmake)
-
-# find_package(PNG 1.6 REQUIRED)
 include(cmake/add_compiler_path_to_prefix.cmake)
 include(cmake/find_nlohmann_json.cmake)
 include(cmake/find_Eigen3.cmake)
