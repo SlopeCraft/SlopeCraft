@@ -300,6 +300,9 @@ class Kernel {
     bool connect_mushrooms{false};
   };
   virtual bool build(const build_options &option) noexcept = 0;
+
+  virtual void getCompressedImage(int *row, int *cols, uint32_t *dest,
+                                  bool expected_col_major) const noexcept = 0;
   // requires step >= wait4image
   // virtual bool checkColorsetHash() const noexcept = 0;
   // requires step >= converted

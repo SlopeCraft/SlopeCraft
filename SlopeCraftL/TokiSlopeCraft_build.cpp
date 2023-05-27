@@ -709,3 +709,41 @@ std::string TokiSlopeCraft::export_flat_diagram(
 
   return fmt::format("Failed to export flat diagram. Details: {}", err);
 }
+
+void TokiSlopeCraft::getCompressedImage(
+    int *rows, int *cols, uint32_t *dest_ptr,
+    bool expected_col_major) const noexcept {
+  if (kernelStep < SCL_step::builded) {
+    reportError(wind, errorFlag::HASTY_MANIPULATION,
+                "You can only export a map to structure after you build the 3D "
+                "structure.");
+    return;
+  }
+
+  if (rows != nullptr) {
+    *rows = this->image_cvter.rows();
+  }
+  if (cols != nullptr) {
+    *cols = this->image_cvter.cols();
+  }
+
+  if (dest_ptr == nullptr) {
+    return;
+  }
+
+  Eigen::Map<EImage> dest{dest_ptr, this->image_cvter.rows(),
+                          this->image_cvter.cols()};
+  dest.fill(0xFF000000);
+
+  const auto LUT = this->LUT_mapcolor_to_argb();
+
+  for (int r = 0; r < this->image_cvter.rows(); r++) {
+    for (int c = 0; c < this->image_cvter.cols(); c++) {
+      dest(r, c) = LUT[this->mapPic(r, c)];
+    }
+  }
+
+  if (!expected_col_major) {
+    dest.transposeInPlace();
+  }
+}

@@ -398,6 +398,9 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
     return err.empty();
   }
 
+  void getCompressedImage(int *row, int *cols, uint32_t *dest,
+                          bool expected_col_major) const noexcept override;
+
   std::string impl_make_tests(
       std::string_view filename,
       const test_blocklist_options &option) const noexcept;
@@ -463,6 +466,8 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
 
   static const simpleBlock *find_block_for_idx(int idx,
                                                std::string_view blkid) noexcept;
+
+  std::array<uint32_t, 256> LUT_mapcolor_to_argb() const noexcept;
 
  public:
   static int getBlockPalette(const AbstractBlock **blkpp,

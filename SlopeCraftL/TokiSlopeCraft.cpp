@@ -418,7 +418,7 @@ TokiSlopeCraft::ColorSpace TokiSlopeCraft::getColorSpace() const {
 
 void TokiSlopeCraft::getConvertedImage(int *rows, int *cols, ARGB *dest,
                                        bool expected_col_major) const {
-  EImage result = getConovertedImage();
+  EImage result = this->getConovertedImage();
   if (rows != nullptr) *rows = result.rows();
   if (cols != nullptr) *cols = result.cols();
   if (!expected_col_major) {
@@ -439,27 +439,31 @@ EImage TokiSlopeCraft::getConovertedImage() const {
     return cvtedImg;
   }
 
-  Eigen::Array<ARGB, 256, 1> argbLUT;
-  for (int idx = 0; idx < 256; idx++) {
-    argbLUT[idx] =
-        RGB2ARGB(Basic.RGB(idx, 0), Basic.RGB(idx, 1), Basic.RGB(idx, 2));
-  }
+  const auto argbLUT = this->LUT_mapcolor_to_argb();
 
-  // RGBint =(RGBint > 255).select(Eigen::ArrayXXi::Constant(256, 3, 255),
-  // RGBint);
-  // short Index;
   for (short r = 0; r < sizePic(0); r++) {
     for (short c = 0; c < sizePic(1); c++) {
-      if (mapColor2baseColor(this->mapPic(r, c)) == 0) {  //  if base ==0
+      const auto map_color = this->image_cvter.color_id(r, c);
+      if (mapColor2baseColor(map_color) == 0) {  //  if base ==0
         cvtedImg(r, c) = ARGB32(0, 0, 0, 0);
         continue;
       }
-      const int Index = mapColor2Index(this->mapPic(r, c));
+      const int Index = mapColor2Index(map_color);
 
       cvtedImg(r, c) = argbLUT[Index];
     }
   }
   return cvtedImg;
+}
+
+std::array<uint32_t, 256> TokiSlopeCraft::LUT_mapcolor_to_argb()
+    const noexcept {
+  std::array<uint32_t, 256> argbLUT;
+  for (int idx = 0; idx < 256; idx++) {
+    argbLUT[idx] =
+        RGB2ARGB(Basic.RGB(idx, 0), Basic.RGB(idx, 1), Basic.RGB(idx, 2));
+  }
+  return argbLUT;
 }
 
 void TokiSlopeCraft::getConvertedMap(int *rows, int *cols,
