@@ -443,13 +443,16 @@ void VCWind::setup_block_widgets() noexcept {
 }
 
 bool VCWind::is_basical_colorset_changed() const noexcept {
-  static QByteArray hash_prev{""};
+  // static QByteArray hash_prev{""};
   auto curr_opt = this->current_basic_option();
   QByteArray curr_hash = this->checksum_basic_colorset_option(curr_opt);
-  const bool ret = hash_prev != curr_hash;
-  hash_prev = curr_hash;
+  const bool ret = this->basical_option_hash_prev != curr_hash;
 
   return ret;
+}
+
+void VCWind::update_hash_basic(const basic_colorset_option &opt) noexcept {
+  this->basical_option_hash_prev = this->checksum_basic_colorset_option(opt);
 }
 
 void VCWind::setup_basical_colorset() noexcept {
@@ -507,6 +510,7 @@ void VCWind::setup_basical_colorset() noexcept {
     }
   }
 
+  this->update_hash_basic(current_option);
   this->setup_block_widgets();
   this->ui->ac_browse_basic_colors->setEnabled(true);
 }
@@ -525,15 +529,19 @@ QByteArray VCWind::checksum_allowed_colorset_option(
 
 bool VCWind::is_allowed_colorset_changed(
     allowed_colorset_option *opt) const noexcept {
-  static QByteArray prev_hash{""};
+  // static QByteArray prev_hash{""};
   this->selected_blocks(&opt->blocks);
   QByteArray cur_hash = VCWind::checksum_allowed_colorset_option(*opt);
 
-  const bool ret = prev_hash != cur_hash;
+  const bool ret = this->allowed_option_hash_prev != cur_hash;
 
-  prev_hash = cur_hash;
+  // prev_hash = cur_hash;
 
   return ret;
+}
+
+void VCWind::update_hash_allowed(const allowed_colorset_option &opt) noexcept {
+  this->allowed_option_hash_prev = this->checksum_allowed_colorset_option(opt);
 }
 
 void VCWind::setup_allowed_colorset() noexcept {
@@ -568,10 +576,10 @@ void VCWind::setup_allowed_colorset() noexcept {
     }
   }
 
+  this->update_hash_allowed(cur_option);
   this->ui->gb_convert_algo->setTitle(
       VCWind::tr("调色算法 (共%1种颜色)")
           .arg(VCL_get_allowed_colors(nullptr, 0)));
-
   this->clear_convert_cache();
   this->ui->ac_browse_allowed_colors->setEnabled(true);
 }

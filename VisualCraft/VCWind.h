@@ -78,10 +78,13 @@ class VCWind : public QMainWindow {
   // for all pages
   Ui::VCWind *ui;
   VCL_Kernel *const kernel{nullptr};
+
   // for page 0
   // VCL_resource_pack *rp{nullptr};
   // VCL_block_state_list *bsl{nullptr};
   // bool is_basical_colorset_changed{true};
+  QByteArray basical_option_hash_prev{""};
+  QByteArray allowed_option_hash_prev{""};
 
   // for page 1
   std::map<VCL_block_class_t, VC_block_class *> map_VC_block_class{};
@@ -128,6 +131,9 @@ class VCWind : public QMainWindow {
   // create and set this->bsl
   [[nodiscard]] static VCL_block_state_list *create_block_state_list(
       const basic_colorset_option &opt) noexcept;
+
+  void update_hash_basic(const basic_colorset_option &opt) noexcept;
+  void update_hash_allowed(const allowed_colorset_option &opt) noexcept;
 
   // receive current selected version from ui
   SCL_gameVersion current_selected_version() const noexcept;
