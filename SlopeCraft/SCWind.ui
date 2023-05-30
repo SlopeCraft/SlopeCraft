@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>920</width>
-    <height>740</height>
+    <height>865</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <item row="1" column="0">
      <widget class="QTabWidget" name="tw_main">
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -305,8 +305,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>753</width>
-             <height>539</height>
+             <width>731</width>
+             <height>619</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="vlayout_sa_blocklist"/>
@@ -1372,6 +1372,31 @@
               </item>
              </layout>
             </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap>others/images/map_icon.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1" colspan="2">
+             <widget class="QLabel" name="label_4">
+              <property name="text">
+               <string>💡tips:  设置地图画起始序号后，点击“导出”，选择输出地图数据文件的位置，就完成导出任务了。
+
+在下面的表格里可以看到每个图像对应的文件名。</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
            </layout>
           </widget>
          </widget>
@@ -1388,7 +1413,7 @@
      <x>0</x>
      <y>0</y>
      <width>920</width>
-     <height>22</height>
+     <height>27</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">

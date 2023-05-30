@@ -72,7 +72,7 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
     </message>
     <message>
         <location filename="../BlockBrowser.ui" line="54"/>
-        <location filename="../BlockBrowser.cpp" line="227"/>
+        <location filename="../BlockBrowser.cpp" line="226"/>
         <source>保存当前图片</source>
         <translation>Save current image</translation>
     </message>
@@ -136,7 +136,7 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
     </message>
     <message>
         <location filename="../BlockBrowser.ui" line="159"/>
-        <location filename="../BlockBrowser.cpp" line="258"/>
+        <location filename="../BlockBrowser.cpp" line="257"/>
         <source>方块类别：</source>
         <translation>Block class: </translation>
     </message>
@@ -146,12 +146,12 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
         <translation>Impossible error</translation>
     </message>
     <message>
-        <location filename="../BlockBrowser.cpp" line="241"/>
+        <location filename="../BlockBrowser.cpp" line="240"/>
         <source>保存图片失败</source>
         <translation>Failed to save image.</translation>
     </message>
     <message>
-        <location filename="../BlockBrowser.cpp" line="242"/>
+        <location filename="../BlockBrowser.cpp" line="241"/>
         <source>不知道怎么回事，反正就是没存上。</source>
         <translation>I don&apos;t know why.</translation>
     </message>
@@ -706,13 +706,13 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
         <translation>Select resource pack</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="470"/>
+        <location filename="../VCWind.cpp" line="473"/>
         <source>资源包解析失败</source>
         <translation>Failed to parse resource pack</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="471"/>
-        <location filename="../VCWind.cpp" line="481"/>
+        <location filename="../VCWind.cpp" line="474"/>
+        <location filename="../VCWind.cpp" line="484"/>
         <source>在此窗口之前弹出的错误信息非常重要，请将它汇报给开发者。</source>
         <translation>Error messages shown before this window is really important. Report it to the deveploer.</translation>
     </message>
@@ -727,57 +727,57 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
         <translation>Select block id json file</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="480"/>
+        <location filename="../VCWind.cpp" line="483"/>
         <source>方块状态列表 json 解析失败</source>
         <translation>Failed to parse block state json list</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="500"/>
+        <location filename="../VCWind.cpp" line="506"/>
         <source>资源包/方块状态列表 json 解析失败</source>
         <translation>The resource pack or block list json failed to be parsed</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="501"/>
+        <location filename="../VCWind.cpp" line="507"/>
         <source>部分方块的投影图像计算失败，或者总颜色数量超过上限（65534）。尝试移除解析失败的资源包/方块列表，或者减小最大层数。</source>
         <translation>Failed to compute projection image for some blocks, or the total color amout exceeds the limit of 65534. You can try removing resource packs or block state list jsons that failed to be parsed, or reduce the max layers.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="561"/>
+        <location filename="../VCWind.cpp" line="572"/>
         <source>设置可用方块失败</source>
         <translation>Failed to set avaliable blocks</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="562"/>
+        <location filename="../VCWind.cpp" line="573"/>
         <source>可能是总颜色数量超过上限（65536），尝试移除解析失败的资源包/方块列表，或者减小最大层数。</source>
         <translation>Probably the count of colors exceeds the upper bound(65536). Try removing some resource packs or jsons, or reduce the maximum layers.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="572"/>
+        <location filename="../VCWind.cpp" line="584"/>
         <source>调色算法 (共%1种颜色)</source>
         <translation>Convert algorithms(%1 colors avaliable)</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="595"/>
+        <location filename="../VCWind.cpp" line="606"/>
         <source>选择图片（可多选）</source>
         <translation>Select images</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="612"/>
+        <location filename="../VCWind.cpp" line="623"/>
         <source>读取图片失败</source>
         <translation>Failed to load image.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="613"/>
+        <location filename="../VCWind.cpp" line="624"/>
         <source>无法读取图片%1。图片可能是不支持的格式，或者已经损坏。图像过大也可能导致此错误。</source>
         <translation>Failed to load image %1 . The image may be of unsupported format, or has been screwed up. A tooooo large image may also cause this error.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="666"/>
+        <location filename="../VCWind.cpp" line="677"/>
         <source>设置图片失败</source>
         <translation>Failed to set image</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="667"/>
+        <location filename="../VCWind.cpp" line="678"/>
         <source>这个错误不应该发生的，可能是你点儿背。</source>
         <translation>This error is considered to be impossible.</translation>
     </message>
@@ -873,14 +873,67 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
         <translation>%1 rows, %2 cols</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="96"/>
+        <location filename="../VCWind_export.cpp" line="95"/>
         <source>错误操作</source>
         <translation>Invalid operation</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="97"/>
-        <source>设置任何一种导出类型的输出位置时，都需要在左侧的combo box中选择一个导出类型。请先选择一种导出类型，再设置导出位置。</source>
+        <location filename="../VCWind_export.cpp" line="96"/>
+        <source>设置任何一种导出类型的输出位置时，都需要在左侧的 combo box 中选择一个导出类型。请先选择一种导出类型，再设置导出位置。</source>
         <translation>When you set the output directory for any type of export, you should select the type of export with the combobox in the left. Please select a type first.</translation>
+    </message>
+    <message>
+        <location filename="../VCWind_export.cpp" line="175"/>
+        <source>导出 litematica 失败</source>
+        <translation>Failed to export as litematic</translation>
+    </message>
+    <message>
+        <location filename="../VCWind_export.cpp" line="176"/>
+        <source>VisualCraftL 不能为图像&quot;%1&quot;生成投影文件&quot;%2&quot;。</source>
+        <translation>VisualCraft failed to generate litematic file &quot;%2&quot; for image &quot;%1&quot;.</translation>
+    </message>
+    <message>
+        <location filename="../VCWind_export.cpp" line="200"/>
+        <source>VisualCraftL 不能为图像&quot;%1&quot;生成结构方块文件&quot;%2&quot;。</source>
+        <translation>VisualCraft failed to generate structure file &quot;%2&quot; for image &quot;%1&quot;.</translation>
+    </message>
+    <message>
+        <location filename="../VCWind_export.cpp" line="241"/>
+        <source>导出 World Edit 原理图失败</source>
+        <translation>Failed to export as WE schematic</translation>
+    </message>
+    <message>
+        <location filename="../VCWind_export.cpp" line="242"/>
+        <source>VisualCraftL 不能为图像&quot;%1&quot;生成 World Edit 原理图&quot;%2&quot;。</source>
+        <translation>VisualCraft failed to generate WE schematic file &quot;%2&quot; for image &quot;%1&quot;.</translation>
+    </message>
+    <message>
+        <location filename="../VCWind_export.cpp" line="265"/>
+        <source>QImage 未能生成&quot;%1&quot;。</source>
+        <translation>QImage failed to generate &quot;%1&quot;.</translation>
+    </message>
+    <message>
+        <location filename="../VCWind_export.cpp" line="284"/>
+        <source>应输入%1个以&quot;;&quot;分隔的文件名，但实际上输入了%2 个。
+您输入的%2个文件名是：
+%3</source>
+        <translation>You should input %1 filenames separeted by &quot;;&quot;, but %2 is(are) given infact.
+The %2 filename(s) you give is:
+%3</translation>
+    </message>
+    <message>
+        <location filename="../VCWind_export.cpp" line="354"/>
+        <source>导出页码表格中的图片&quot;%1&quot;不能在 this-&gt;image_cache 中找到对应的缓存。请将这个错误反馈给软件开发者。</source>
+        <translation>Cache of image named &quot;%1&quot; in the export table cannot be found in this-&gt;image_cache. Please send this as a feedback to the developer.</translation>
+    </message>
+    <message>
+        <location filename="../VCWind_export.cpp" line="436"/>
+        <source>VisualCraftL 不能为图像&quot;%1&quot;构建三维结构。</source>
+        <translation>VisualCraft failed to build 3D structure for image &quot;%1&quot;.</translation>
+    </message>
+    <message>
+        <source>设置任何一种导出类型的输出位置时，都需要在左侧的combo box中选择一个导出类型。请先选择一种导出类型，再设置导出位置。</source>
+        <translation type="vanished">When you set the output directory for any type of export, you should select the type of export with the combobox in the left. Please select a type first.</translation>
     </message>
     <message>
         <location filename="../VCWind_export.cpp" line="283"/>
@@ -888,11 +941,10 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
         <translation>Invalid input for flatdiagram</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="284"/>
         <source>应输入%1个以&quot;;&quot;分隔的文件名，但实际上输入了%2个。
 您输入的%2个文件名是：
 %3</source>
-        <translation>You should input %1 filenames separeted by &quot;;&quot;, but %2 is(are) given infact.
+        <translation type="vanished">You should input %1 filenames separeted by &quot;;&quot;, but %2 is(are) given infact.
 The %2 filename(s) you give is:
 %3</translation>
     </message>
@@ -912,9 +964,8 @@ The %2 filename(s) you give is:
         <translation>Impossible error</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="354"/>
         <source>导出页码表格中的图片&quot;%1&quot;不能在this-&gt;image_cache中找到对应的缓存。请将这个错误反馈给软件开发者。</source>
-        <translation>Cache of image named &quot;%1&quot; in the export table cannot be found in this-&gt;image_cache. Please send this as a feedback to the developer.</translation>
+        <translation type="vanished">Cache of image named &quot;%1&quot; in the export table cannot be found in this-&gt;image_cache. Please send this as a feedback to the developer.</translation>
     </message>
     <message>
         <location filename="../VCWind_export.cpp" line="264"/>
@@ -922,9 +973,8 @@ The %2 filename(s) you give is:
         <translation>Failed to save the converted image</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="265"/>
         <source>QImage未能生成&quot;%1&quot;。</source>
-        <translation>QImage failed to generate &quot;%1&quot;.</translation>
+        <translation type="vanished">QImage failed to generate &quot;%1&quot;.</translation>
     </message>
     <message>
         <location filename="../VCWind_export.cpp" line="435"/>
@@ -932,39 +982,33 @@ The %2 filename(s) you give is:
         <translation>Failed to build 3D structure</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="436"/>
         <source>VisualCraftL不能为图像&quot;%1&quot;构建三维结构。</source>
-        <translation>VisualCraft failed to build 3D structure for image &quot;%1&quot;.</translation>
+        <translation type="vanished">VisualCraft failed to build 3D structure for image &quot;%1&quot;.</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="176"/>
         <source>导出litematica失败</source>
-        <translation>Failed to export as litematic</translation>
+        <translation type="vanished">Failed to export as litematic</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="177"/>
         <source>VisualCraftL不能为图像&quot;%1&quot;生成投影文件&quot;%2&quot;。</source>
-        <translation>VisualCraft failed to generate litematic file &quot;%2&quot; for image &quot;%1&quot;.</translation>
+        <translation type="vanished">VisualCraft failed to generate litematic file &quot;%2&quot; for image &quot;%1&quot;.</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="200"/>
+        <location filename="../VCWind_export.cpp" line="199"/>
         <source>导出原版结构方块文件失败</source>
         <translation>Failed to export as vanilla structure</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="201"/>
         <source>VisualCraftL不能为图像&quot;%1&quot;生成结构方块文件&quot;%2&quot;。</source>
-        <translation>VisualCraft failed to generate structure file &quot;%2&quot; for image &quot;%1&quot;.</translation>
+        <translation type="vanished">VisualCraft failed to generate structure file &quot;%2&quot; for image &quot;%1&quot;.</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="242"/>
         <source>导出World Edit原理图失败</source>
-        <translation>Failed to export as WE schematic</translation>
+        <translation type="vanished">Failed to export as WE schematic</translation>
     </message>
     <message>
-        <location filename="../VCWind_export.cpp" line="243"/>
         <source>VisualCraftL不能为图像&quot;%1&quot;生成World Edit原理图&quot;%2&quot;。</source>
-        <translation>VisualCraft failed to generate WE schematic file &quot;%2&quot; for image &quot;%1&quot;.</translation>
+        <translation type="vanished">VisualCraft failed to generate WE schematic file &quot;%2&quot; for image &quot;%1&quot;.</translation>
     </message>
 </context>
 <context>
