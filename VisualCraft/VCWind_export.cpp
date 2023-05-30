@@ -90,13 +90,12 @@ void VCWind::flush_export_tabel() noexcept {
 }
 
 void VCWind::on_pb_select_export_dir_clicked() noexcept {
-
   if (this->ui->combobox_export_type->currentIndex() < 0) {
     QMessageBox::warning(
         this, VCWind::tr("错误操作"),
         VCWind::tr(
-            "设置任何一种导出类型的输出位置时，都需要在左侧的combo "
-            "box中选择一个导出类型。请先选择一种导出类型，再设置导出位置。"),
+            "设置任何一种导出类型的输出位置时，都需要在左侧的 combo "
+            "box 中选择一个导出类型。请先选择一种导出类型，再设置导出位置。"),
         QMessageBox::StandardButtons{QMessageBox::StandardButton::Ok});
     return;
   }
@@ -111,30 +110,30 @@ void VCWind::on_pb_select_export_dir_clicked() noexcept {
   bool strip_image_extension = true;
   int dest_col = -1;
   switch (this->ui->combobox_export_type->currentIndex()) {
-  case 0:
-    suffix = ".litematic";
-    dest_col = VCWind::export_col_lite;
-    break;
-  case 1:
-    suffix = ".nbt";
-    dest_col = VCWind::export_col_structure;
-    break;
-  case 2:
-    suffix = ".schem";
-    dest_col = VCWind::export_col_schem;
-    break;
-  case 3:
-    suffix = "";
-    dest_col = VCWind::export_col_converted;
-    strip_image_extension = false;
-    break;
-  case 4:
-    suffix = ".png";
-    dest_col = VCWind::export_col_flagdiagram;
-    break;
-  default:
-    abort();
-    return;
+    case 0:
+      suffix = ".litematic";
+      dest_col = VCWind::export_col_lite;
+      break;
+    case 1:
+      suffix = ".nbt";
+      dest_col = VCWind::export_col_structure;
+      break;
+    case 2:
+      suffix = ".schem";
+      dest_col = VCWind::export_col_schem;
+      break;
+    case 3:
+      suffix = "";
+      dest_col = VCWind::export_col_converted;
+      strip_image_extension = false;
+      break;
+    case 4:
+      suffix = ".png";
+      dest_col = VCWind::export_col_flagdiagram;
+      break;
+    default:
+      abort();
+      return;
   }
 
   const int c = dest_col;
@@ -173,8 +172,8 @@ bool VCWind::export_lite(const QString &lite_dest,
       this->ui->pte_lite_regionname->toPlainText().toUtf8().data());
   if (!success) {
     const auto ret = QMessageBox::critical(
-        this, VCWind::tr("导出litematica失败"),
-        VCWind::tr("VisualCraftL不能为图像\"%1\"生成投影文件\"%2\"。")
+        this, VCWind::tr("导出 litematica 失败"),
+        VCWind::tr("VisualCraftL 不能为图像\"%1\"生成投影文件\"%2\"。")
             .arg(image_filename)
             .arg(lite_dest),
         QMessageBox::StandardButtons{QMessageBox::StandardButton::Close,
@@ -198,7 +197,7 @@ bool VCWind::export_structure(const QString &nbt_dest,
   if (!success) {
     const auto ret = QMessageBox::critical(
         this, VCWind::tr("导出原版结构方块文件失败"),
-        VCWind::tr("VisualCraftL不能为图像\"%1\"生成结构方块文件\"%2\"。")
+        VCWind::tr("VisualCraftL 不能为图像\"%1\"生成结构方块文件\"%2\"。")
             .arg(image_filename)
             .arg(nbt_dest),
         QMessageBox::StandardButtons{QMessageBox::StandardButton::Close,
@@ -239,8 +238,9 @@ bool VCWind::export_schem(const QString &schem_dest,
       mods_charp.data(), mods_charp.size());
   if (!success) {
     const auto ret = QMessageBox::critical(
-        this, VCWind::tr("导出World Edit原理图失败"),
-        VCWind::tr("VisualCraftL不能为图像\"%1\"生成World Edit原理图\"%2\"。")
+        this, VCWind::tr("导出 World Edit 原理图失败"),
+        VCWind::tr(
+            "VisualCraftL 不能为图像\"%1\"生成 World Edit 原理图\"%2\"。")
             .arg(image_filename)
             .arg(schem_dest),
         QMessageBox::StandardButtons{QMessageBox::StandardButton::Close,
@@ -262,7 +262,7 @@ bool VCWind::export_converted(const QString &converted_image_dest_path,
   if (!success) {
     const auto ret = QMessageBox::critical(
         this, VCWind::tr("保存转化后图像失败"),
-        VCWind::tr("QImage未能生成\"%1\"。").arg(converted_image_dest_path),
+        VCWind::tr("QImage 未能生成\"%1\"。").arg(converted_image_dest_path),
         QMessageBox::StandardButtons{QMessageBox::StandardButton::Close,
                                      QMessageBox::StandardButton::Ignore},
         QMessageBox::StandardButton::Close);
@@ -282,7 +282,7 @@ bool VCWind::export_flatdiagram(const QString &diagram_dest) noexcept {
     const auto ret = QMessageBox::critical(
         this, VCWind::tr("平面示意图输入错误"),
         VCWind::tr("应输入%1个以\";\"分隔的文件名，但实际上输入了%"
-                   "2个。\n您输入的%2个文件名是：\n%3")
+                   "2 个。\n您输入的%2个文件名是：\n%3")
             .arg(VCL_get_max_block_layers())
             .arg(qsl.size())
             .arg(diagram_dest),
@@ -351,8 +351,8 @@ void VCWind::on_pb_execute_clicked() noexcept {
     if (it == this->image_cache.end()) {
       QMessageBox::critical(
           this, VCWind::tr("致命逻辑错误"),
-          VCWind::tr("导出页码表格中的图片\"%1\"不能在this->image_"
-                     "cache中找到对应的缓存。请将这个错误反馈给软件开发者。")
+          VCWind::tr("导出页码表格中的图片\"%1\"不能在 this->image_"
+                     "cache 中找到对应的缓存。请将这个错误反馈给软件开发者。")
               .arg(image_filename));
       abort();
     }
@@ -433,7 +433,7 @@ void VCWind::on_pb_execute_clicked() noexcept {
     if (!success) {
       const auto ret = QMessageBox::critical(
           this, VCWind::tr("构建三维结构失败"),
-          VCWind::tr("VisualCraftL不能为图像\"%1\"构建三维结构。")
+          VCWind::tr("VisualCraftL 不能为图像\"%1\"构建三维结构。")
               .arg(image_filename),
           QMessageBox::StandardButtons{QMessageBox::StandardButton::Close,
                                        QMessageBox::StandardButton::Ignore},

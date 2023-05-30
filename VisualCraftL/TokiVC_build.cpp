@@ -49,12 +49,9 @@ int64_t TokiVC::xyz_size(int64_t *x, int64_t *y, int64_t *z) const noexcept {
     return -1;
   }
 
-  if (x != nullptr)
-    *x = this->schem.x_range();
-  if (y != nullptr)
-    *y = this->schem.y_range();
-  if (z != nullptr)
-    *z = this->schem.z_range();
+  if (x != nullptr) *x = this->schem.x_range();
+  if (y != nullptr) *y = this->schem.y_range();
+  if (z != nullptr) *z = this->schem.z_range();
   return this->schem.size();
 }
 
@@ -80,10 +77,10 @@ bool TokiVC::build() noexcept {
   std::atomic_bool ret = true;
 
   const Eigen::ArrayXX<uint16_t> color_id_mat = this->img_cvter.color_id();
-#pragma omp parallel for schedule(static)
+#warning resume omp here
+  // #pragma omp parallel for schedule(static)
   for (int64_t r = 0; r < this->img_cvter.rows(); r++) {
     for (int64_t c = 0; c < this->img_cvter.cols(); c++) {
-
       const auto &variant =
           TokiVC::LUT_basic_color_idx_to_blocks[color_id_mat(r, c)];
 
@@ -106,7 +103,7 @@ bool TokiVC::build() noexcept {
         for (size_t di = 0; di < 3; di++) {
           if (coord[di] < 0 || coord[di] >= range[di]) {
             std::string msg =
-                fmt::format("coordiante out of range : {}, {}, {}.\n", coord[0],
+                fmt::format("coordinate out of range : {}, {}, {}.\n", coord[0],
                             coord[1], coord[2]);
             VCL_report(VCL_report_type_t::error, msg.c_str());
           }
@@ -116,10 +113,10 @@ bool TokiVC::build() noexcept {
 
         auto it = TokiVC::blocks_allowed.find(blkp);
         if (it == TokiVC::blocks_allowed.end()) {
-          std::string msg =
-              fmt::format("Failed to find VCL_block at address {} named {} in "
-                          "allowed blocks. This is an internal error.",
-                          (const void *)blkp, blkp->full_id_ptr()->c_str());
+          std::string msg = fmt::format(
+              "Failed to find VCL_block at address {} named {} in "
+              "allowed blocks. This is an internal error.",
+              (const void *)blkp, blkp->full_id_ptr()->c_str());
           VCL_report(VCL_report_type_t::error, msg.c_str());
           ret = false;
         }
@@ -143,7 +140,6 @@ bool TokiVC::build() noexcept {
 bool TokiVC::export_litematic(const char *localEncoding_filename,
                               const char *utf8_litename,
                               const char *utf8_regionname) const noexcept {
-
   std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
 
   if (this->_step < VCL_Kernel_step::VCL_built) {
@@ -171,10 +167,10 @@ bool TokiVC::export_litematic(const char *localEncoding_filename,
                                                &flag, &detail);
 
   if (!ok) {
-    std::string err =
-        fmt::format("VisualCraftL failed to export a litematic. Error "
-                    "number(SCSL_errorFlag) = {}, detail : {}",
-                    int(flag), detail);
+    std::string err = fmt::format(
+        "VisualCraftL failed to export a litematic. Error "
+        "number(SCSL_errorFlag) = {}, detail : {}",
+        int(flag), detail);
     VCL_report(VCL_report_type_t::error, err.c_str());
     return false;
   }
@@ -183,7 +179,6 @@ bool TokiVC::export_litematic(const char *localEncoding_filename,
 
 bool TokiVC::export_structure(const char *localEncoding_TargetName,
                               bool is_air_structure_void) const noexcept {
-
   std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
 
   if (this->_step < VCL_Kernel_step::VCL_built) {
@@ -198,10 +193,10 @@ bool TokiVC::export_structure(const char *localEncoding_TargetName,
       localEncoding_TargetName, is_air_structure_void, &flag, &detail);
 
   if (!ok) {
-    std::string err =
-        fmt::format("VisualCraftL failed to export a structure. Error "
-                    "number(SCSL_errorFlag) = {}, detail : {}",
-                    int(flag), detail);
+    std::string err = fmt::format(
+        "VisualCraftL failed to export a structure. Error "
+        "number(SCSL_errorFlag) = {}, detail : {}",
+        int(flag), detail);
     VCL_report(VCL_report_type_t::error, err.c_str());
     return false;
   }
@@ -239,10 +234,10 @@ bool TokiVC::export_WESchem(const char *localEncoding_fileName,
   const bool ok =
       this->schem.export_WESchem(localEncoding_fileName, info, &flag, &detail);
   if (!ok) {
-    std::string err =
-        fmt::format("VisualCraftL failed to export a WorldEdit schem. Error "
-                    "number(SCSL_errorFlag) = {}, detail : {}",
-                    int(flag), detail);
+    std::string err = fmt::format(
+        "VisualCraftL failed to export a WorldEdit schem. Error "
+        "number(SCSL_errorFlag) = {}, detail : {}",
+        int(flag), detail);
     VCL_report(VCL_report_type_t::error, err.c_str());
     return false;
   }

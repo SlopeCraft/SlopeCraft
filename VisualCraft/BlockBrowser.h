@@ -37,20 +37,20 @@ class VCWind;
 
 class BlockBrowser : public QWidget {
   Q_OBJECT
-private:
+ private:
   Ui::BlockBrowser *ui;
 
-  void fecth_content() noexcept;
+  void fetch_content() noexcept;
 
-private slots:
-  // manuually connected
+ private slots:
+  // manually connected
   void update_display() noexcept;
 
   // auto connected
   void on_pb_save_current_image_clicked() noexcept;
   void on_combobox_select_blk_all_currentIndexChanged(int idx) noexcept;
 
-public:
+ public:
   explicit BlockBrowser(QWidget *parent);
   ~BlockBrowser();
 
@@ -58,4 +58,4 @@ public:
   const VCWind *parent() const noexcept;
 };
 
-#endif // SLOPECRAFT_VISUALCRAFT_BLOCKBROWSER_H
+#endif  // SLOPECRAFT_VISUALCRAFT_BLOCKBROWSER_H

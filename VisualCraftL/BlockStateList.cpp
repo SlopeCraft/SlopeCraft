@@ -97,14 +97,14 @@ version_set parse_version_set(const nlohmann::json &jo,
   return {};
 }
 
-#define VCL_PRIVATE_MACRO_PARSE_ATTRIBUTE(key_str, key_enum)                   \
-  if (jo.contains(#key_str)) {                                                 \
-    if (!jo.at(#key_str).is_boolean()) {                                       \
-      *ok = false;                                                             \
-      return {};                                                               \
-    }                                                                          \
-                                                                               \
-    ret.set_attribute(VCL_block::attribute::key_enum, jo.at(#key_str));        \
+#define VCL_PRIVATE_MACRO_PARSE_ATTRIBUTE(key_str, key_enum)            \
+  if (jo.contains(#key_str)) {                                          \
+    if (!jo.at(#key_str).is_boolean()) {                                \
+      *ok = false;                                                      \
+      return {};                                                        \
+    }                                                                   \
+                                                                        \
+    ret.set_attribute(VCL_block::attribute::key_enum, jo.at(#key_str)); \
   }
 
 VCL_block parse_block(const nlohmann::json &jo, bool *const ok) {
@@ -319,7 +319,6 @@ void VCL_block_state_list::update_foliages(
 
 VCL_block_class_t string_to_block_class(std::string_view str,
                                         bool *ok) noexcept {
-
   auto ret = magic_enum::enum_cast<VCL_block_class_t>(str);
   if (ok != nullptr) {
     *ok = ret.has_value();

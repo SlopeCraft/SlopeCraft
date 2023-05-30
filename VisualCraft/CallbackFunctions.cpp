@@ -23,6 +23,7 @@ This file is part of SlopeCraft.
 #include "CallbackFunctions.h"
 #include <QMessageBox>
 #include <sstream>
+#include <QThread>
 
 QWidget *VC_callback::wind{nullptr};
 
@@ -31,37 +32,45 @@ void VC_callback::callback_receive_report(VCL_report_type_t type,
                                           bool flush) noexcept {
   static std::stringstream ss_warning;
 
+  QWidget *wind_ptr{nullptr};
+  if (wind != nullptr && QThread::currentThread() == wind->thread()) {
+    wind_ptr == wind;
+  }
+
   switch (type) {
-  case VCL_report_type_t::information: {
-    QMessageBox::information(wind, "Information", QString::fromLocal8Bit(msg));
-    return;
-  }
-  case VCL_report_type_t::warning: {
-    ss_warning << msg;
+    case VCL_report_type_t::information: {
+      QMessageBox::information(wind_ptr, "Information",
+                               QString::fromLocal8Bit(msg));
+      return;
+    }
+    case VCL_report_type_t::warning: {
+      ss_warning << msg;
 
-    if (flush) {
-      std::string res;
-      ss_warning >> res;
+      if (flush) {
+        std::string res;
+        ss_warning >> res;
 
-      if (res.empty()) {
-        return;
+        if (res.empty()) {
+          return;
+        }
+        QMessageBox::warning(wind_ptr, "Warning", QString::fromLocal8Bit(res));
       }
-      QMessageBox::warning(wind, "Warning", QString::fromLocal8Bit(res));
+      return;
     }
-    return;
-  }
-  case VCL_report_type_t::error: {
-    auto ret = QMessageBox::critical(
-        wind, "Fatal error", QString::fromLocal8Bit(msg),
-        QMessageBox::StandardButtons{QMessageBox::StandardButton::Close,
-                                     QMessageBox::StandardButton::Ignore},
-        QMessageBox::StandardButton::Close);
+    case VCL_report_type_t::error: {
+      QString text = QString::fromLocal8Bit(msg);
 
-    if (ret == QMessageBox::StandardButton::Close) {
-      exit(1919810);
+      auto ret = QMessageBox::critical(
+          wind_ptr, "Fatal error", text,
+          QMessageBox::StandardButtons{QMessageBox::StandardButton::Close,
+                                       QMessageBox::StandardButton::Ignore},
+          QMessageBox::StandardButton::Close);
+
+      if (ret == QMessageBox::StandardButton::Close) {
+        exit(1919810);
+      }
+      return;
     }
-    return;
-  }
   }
   abort();
 }

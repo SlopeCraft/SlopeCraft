@@ -498,6 +498,9 @@ void VCWind::setup_basical_colorset() noexcept {
 
   const bool success = VCL_set_resource_move(&rp, &bsl, option);
 
+  VCL_destroy_block_state_list(bsl);
+  VCL_destroy_resource_pack(rp);
+
   if (!success) {
     const auto ret = QMessageBox::critical(
         this, VCWind::tr("资源包/方块状态列表 json 解析失败"),

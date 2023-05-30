@@ -26,6 +26,7 @@ This file is part of SlopeCraft.
 
 #include <mutex>
 #include <sstream>
+#include <span>
 
 #include "BlockStateList.h"
 #include "ParseResourcePack.h"
@@ -511,7 +512,7 @@ VCL_EXPORT_FUN bool VCL_set_allowed_blocks(
     const VCL_block *const *const blocks_allowed, size_t num_block_allowed) {
   std::unique_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
 
-  return TokiVC::set_allowed_no_lock(blocks_allowed, num_block_allowed);
+  return TokiVC::set_allowed_no_lock({blocks_allowed, num_block_allowed});
 }
 VCL_EXPORT_FUN void VCL_discard_allowed_blocks() {
   std::unique_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
@@ -560,7 +561,7 @@ VCL_EXPORT_FUN size_t VCL_get_allowed_color_id(
   std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
 
   if (!TokiVC_internal::is_basic_color_set_ready ||
-      !TokiVC_internal::is_basic_color_set_ready) {
+      !TokiVC_internal::is_allowed_color_set_ready) {
     return 0;
   }
 
@@ -785,7 +786,7 @@ VCL_EXPORT_FUN bool VCL_compare_block(const VCL_block *b1,
     }
   }
 
-  return std::less<std::string>()(*b1->full_id_ptr(), *b2->full_id_ptr());
+  return std::less<std::string_view>()(*b1->full_id_ptr(), *b2->full_id_ptr());
 }
 
 VCL_EXPORT_FUN VCL_block_class_t VCL_string_to_block_class(const char *str,

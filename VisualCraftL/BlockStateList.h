@@ -28,29 +28,29 @@ This file is part of SlopeCraft.
 #include <unordered_map>
 #include <utilities/SC_GlobalEnums.h>
 #include <vector>
-
+#include <functional>
 #include <Eigen/Dense>
 
 #include "VisualCraftL.h"
 
 constexpr inline size_t major_version_to_idx(SCL_gameVersion v) noexcept {
   switch (v) {
-  case SCL_gameVersion::FUTURE:
-    return 31;
+    case SCL_gameVersion::FUTURE:
+      return 31;
 
-  default:
-    return size_t(v);
+    default:
+      return size_t(v);
   }
 }
 
 class version_set {
-private:
+ private:
   std::bitset<32> set{0};
 
-public:
+ public:
   version_set() = default;
 
-  version_set(uint32_t val) : set(val) {}
+  explicit version_set(uint32_t val) : set(val) {}
 
   static version_set all() noexcept {
     version_set ret(~uint32_t(0));
@@ -88,10 +88,9 @@ public:
 class VCL_block_state_list;
 
 class VCL_block {
-
   friend class VCL_block_state_list;
 
-public:
+ public:
   VCL_block();
   VCL_block(const std::string *full_id_ptr);
 
@@ -181,7 +180,6 @@ public:
   }
 
   inline const std::string &id_for_schem(SCL_gameVersion v) const noexcept {
-
     for (const auto &pair : this->id_replace_list) {
       if (pair.first == v) {
         return pair.second;
@@ -190,22 +188,22 @@ public:
     return *this->full_id_p;
   }
 
-private:
+ private:
   void initialize_attributes() noexcept;
   // members
-public:
+ public:
   version_set version_info;
 
-private:
+ private:
   std::bitset<32> attributes;
 
-public:
+ public:
   VCL_block_class_t block_class{VCL_block_class_t::others};
 
-private:
+ private:
   const std::string *full_id_p{nullptr};
 
-public:
+ public:
   Eigen::Array<uint32_t, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
       project_image_on_exposed_face{0, 0};
   std::string name_ZH{""};
@@ -214,15 +212,16 @@ public:
 };
 
 class VCL_block_state_list {
-private:
+ private:
   std::unordered_map<std::string, VCL_block> states;
 
-public:
+ public:
+  using is_allowed_callback_t = std::function<bool(const VCL_block *)>;
   bool add(std::string_view filename) noexcept;
 
-  void
-  available_block_states(SCL_gameVersion v, VCL_face_t f,
-                         std::vector<VCL_block *> *const str_list) noexcept;
+  void available_block_states(
+      SCL_gameVersion v, VCL_face_t f,
+      std::vector<VCL_block *> *const str_list) noexcept;
 
   void avaliable_block_states_by_transparency(
       SCL_gameVersion v, VCL_face_t f,
@@ -248,4 +247,4 @@ public:
 VCL_block_class_t string_to_block_class(std::string_view str,
                                         bool *ok = nullptr) noexcept;
 
-#endif // SLOPECRAFT_VISUALCRAFT_BLOCKSTATELIST_H
+#endif  // SLOPECRAFT_VISUALCRAFT_BLOCKSTATELIST_H

@@ -80,7 +80,7 @@ bool is_basic_color_set_ready = false;
 bool is_allowed_color_set_ready = false;
 
 std::set<TokiVC *> TokiVC_register;
-} // namespace TokiVC_internal
+}  // namespace TokiVC_internal
 
 TokiVC::TokiVC() {
   TokiVC_internal::global_lock.lock();
@@ -342,7 +342,6 @@ bool compare_blocks_variant(
     const std::variant<const VCL_block *, std::vector<const VCL_block *>> &a,
     const std::variant<const VCL_block *, std::vector<const VCL_block *>>
         &b) noexcept {
-
   if (blocks_count(a) != blocks_count(b)) {
     return blocks_count(a) < blocks_count(b);
   }
@@ -364,7 +363,6 @@ void convert_blocks_and_colors_from_hash_vector(
     std::vector<std::array<uint8_t, 3>> &colors_temp,
     std::vector<std::variant<const VCL_block *, std::vector<const VCL_block *>>>
         &LUT_bcitb) noexcept {
-
   std::vector<mutlihash_color_blocks::iterator> selected_variants;
   selected_variants.reserve(src.size());
 
@@ -411,15 +409,15 @@ void convert_blocks_and_colors_from_hash_vector(
 
 bool TokiVC::set_resource_no_lock() noexcept {
   switch (TokiVC::version) {
-  case SCL_gameVersion::ANCIENT:
-  case SCL_gameVersion::FUTURE: {
-    std::string msg =
-        fmt::format("Invalid MC version : {}\n", int(TokiVC::version));
-    VCL_report(VCL_report_type_t::error, msg.c_str());
-    return false;
-  }
-  default:
-    break;
+    case SCL_gameVersion::ANCIENT:
+    case SCL_gameVersion::FUTURE: {
+      std::string msg =
+          fmt::format("Invalid MC version : {}\n", int(TokiVC::version));
+      VCL_report(VCL_report_type_t::error, msg.c_str());
+      return false;
+    }
+    default:
+      break;
   }
 
   TokiVC::pack.set_is_MC12(TokiVC::version == SCL_gameVersion::MC12);
@@ -551,26 +549,45 @@ bool TokiVC::set_resource_no_lock() noexcept {
   return true;
 }
 
-bool TokiVC::set_allowed_no_lock(const VCL_block *const *const blocks_allowed,
-                                 size_t num_block_allowed) noexcept {
+bool is_color_allowed(
+    const std::variant<const VCL_block *, std::vector<const VCL_block *>>
+        &variant,
+    const std::unordered_map<const VCL_block *, uint16_t>
+        &blks_allowed) noexcept {
+  if (variant.index() == 0) {
+    return blks_allowed.contains(std::get<0>(variant));
+  } else {
+    const auto &blocks = std::get<1>(variant);
+    for (const VCL_block *blkp : blocks) {
+      if (!blks_allowed.contains(blkp)) {
+        return false;
+        // here continue only skips one for loop!
+      }
+    }
+    return true;
+  }
+}
+
+bool TokiVC::set_allowed_no_lock(
+    std::span<const VCL_block *const> blocks_ptr_allowed) noexcept {
   if (!TokiVC_internal::is_basic_color_set_ready) {
-    VCL_report(
-        VCL_report_type_t::error,
-        "You can not set the allowed blocks before basic color set is ready.");
+    VCL_report(VCL_report_type_t::error,
+               "You can not set the allowed blocks before basic color set is "
+               "ready.");
     return false;
   }
 
   TokiVC::blocks_allowed.clear();
-  TokiVC::blocks_allowed.reserve(num_block_allowed);
+  TokiVC::blocks_allowed.reserve(blocks_ptr_allowed.size());
 
-  for (size_t i = 0; i < num_block_allowed; i++) {
-    if (blocks_allowed[i] == nullptr ||
-        blocks_allowed[i]->full_id_ptr() == nullptr) {
+  for (size_t i = 0; i < blocks_ptr_allowed.size(); i++) {
+    if (blocks_ptr_allowed[i] == nullptr ||
+        blocks_ptr_allowed[i]->full_id_ptr() == nullptr) {
       VCL_report(VCL_report_type_t::error, "Invalid VCL_block pointer.");
       return false;
     }
 
-    TokiVC::blocks_allowed.emplace(blocks_allowed[i], 0xFFFF);
+    TokiVC::blocks_allowed.emplace(blocks_ptr_allowed[i], 0xFFFF);
   }
 
   {
@@ -589,7 +606,7 @@ bool TokiVC::set_allowed_no_lock(const VCL_block *const *const blocks_allowed,
 
     if (counter_air != 1) {
       std::string msg =
-          fmt::format("Types of air block is {}, expected 1.", counter_air);
+          fmt::format("Types of air block is {}, but expected 1.", counter_air);
       VCL_report(VCL_report_type_t::error, msg.c_str());
       return false;
     }
@@ -597,7 +614,7 @@ bool TokiVC::set_allowed_no_lock(const VCL_block *const *const blocks_allowed,
 
   std::vector<uint8_t> allowed_list;
   allowed_list.resize(TokiVC::LUT_basic_color_idx_to_blocks.size());
-  memset(allowed_list.data(), 0, allowed_list.size());
+  std::fill(allowed_list.begin(), allowed_list.end(), 0);
 
   if constexpr (false) {
     std::string msg = fmt::format("TokiVC::colorset_basic.color_count() = {}.",
@@ -608,24 +625,14 @@ bool TokiVC::set_allowed_no_lock(const VCL_block *const *const blocks_allowed,
   for (size_t idx = 0; idx < TokiVC::LUT_basic_color_idx_to_blocks.size();
        idx++) {
     const auto &variant = LUT_basic_color_idx_to_blocks[idx];
-    // allowed_list[idx] = false;
-    if (variant.index() == 0) {
-      if (!TokiVC::blocks_allowed.contains(std::get<0>(variant))) {
-        continue;
-      }
-    } else {
-      for (const VCL_block *blkp : std::get<1>(variant)) {
-        if (!TokiVC::blocks_allowed.contains(blkp)) {
-          continue;
-        }
-      }
+    if (is_color_allowed(variant, TokiVC::blocks_allowed)) {
+      allowed_list[idx] = 1;
     }
-
-    allowed_list[idx] = true;
   }
+
   if (!TokiVC::colorset_allowed.apply_allowed(
           TokiVC::colorset_basic,
-          reinterpret_cast<bool *>(allowed_list.data()))) {
+          reinterpret_cast<const bool *>(allowed_list.data()))) {
     VCL_report(VCL_report_type_t::error,
                "Function \"TokiVC::colorset_allowed.apply_allowed\" failed.");
     return false;

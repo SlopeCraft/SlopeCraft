@@ -37,19 +37,19 @@ This file is part of SlopeCraft.
 #include <variant>
 
 class VCL_GPU_Platform {
-public:
+ public:
   ~VCL_GPU_Platform() { gpu_wrapper::platform_wrapper::destroy(this->pw); }
   gpu_wrapper::platform_wrapper *pw{nullptr};
 };
 
 class VCL_GPU_Device {
-public:
+ public:
   ~VCL_GPU_Device() { gpu_wrapper::device_wrapper::destroy(this->dw); }
   gpu_wrapper::device_wrapper *dw{nullptr};
 };
 
 class TokiVC : public VCL_Kernel {
-public:
+ public:
   TokiVC();
   virtual ~TokiVC();
   void set_ui(void *uiptr, void (*progressRangeSet)(void *, int, int, int),
@@ -138,7 +138,7 @@ public:
                       const char *const *const utf8_requiredMods = nullptr,
                       const int requiredModsCount = 0) const noexcept override;
 
-public:
+ public:
   static libImageCvt::template ImageCvter<false>::basic_colorset_t
       colorset_basic;
   static libImageCvt::template ImageCvter<false>::allowed_colorset_t
@@ -153,8 +153,8 @@ public:
   static VCL_biome_t biome;
 
   static bool set_resource_no_lock() noexcept;
-  static bool set_allowed_no_lock(const VCL_block *const *const blocks_allowed,
-                                  size_t num_block_allowed) noexcept;
+  static bool set_allowed_no_lock(
+      std::span<const VCL_block *const> blocks_ptr_allowed) noexcept;
 
   static bool export_test_litematic_no_lock(const char *filename) noexcept;
 
@@ -162,14 +162,14 @@ public:
     return TokiVC::LUT_basic_color_idx_to_blocks;
   }
 
-private:
+ private:
   static std::vector<
       std::variant<const VCL_block *, std::vector<const VCL_block *>>>
       LUT_basic_color_idx_to_blocks;
 
   static std::unordered_map<const VCL_block *, uint16_t> blocks_allowed;
 
-private:
+ private:
   VCL_Kernel_step _step{VCL_Kernel_step::VCL_wait_for_resource};
   bool imgcvter_prefer_gpu{false};
 
@@ -187,6 +187,6 @@ namespace TokiVC_internal {
 extern std::shared_mutex global_lock;
 extern bool is_basic_color_set_ready;
 extern bool is_allowed_color_set_ready;
-} // namespace TokiVC_internal
+}  // namespace TokiVC_internal
 
-#endif // SLOPECRAFT_VISUALCRAFTL_TOKIVC_H
+#endif  // SLOPECRAFT_VISUALCRAFTL_TOKIVC_H

@@ -33,7 +33,7 @@ BlockBrowser::BlockBrowser(QWidget *parent)
     : QWidget(parent), ui(new Ui::BlockBrowser) {
   ui->setupUi(this);
 
-  this->fecth_content();
+  this->fetch_content();
 
   connect(this->ui->combobox_select_blk, &QComboBox::currentIndexChanged, this,
           &BlockBrowser::update_display);
@@ -52,8 +52,8 @@ const VCWind *BlockBrowser::parent() const noexcept {
   return dynamic_cast<const VCWind *>(QWidget::parentWidget());
 }
 
-void BlockBrowser::fecth_content() noexcept {
-  // fecth content for avaliable blocks
+void BlockBrowser::fetch_content() noexcept {
+  // fetch content for available blocks
   this->ui->combobox_select_blk->clear();
   this->ui->combobox_select_face->clear();
 
@@ -141,7 +141,6 @@ void BlockBrowser::fecth_content() noexcept {
 }
 
 void BlockBrowser::update_display() noexcept {
-
   if (this->ui->combobox_select_blk->currentIndex() < 0) {
     return;
   }
