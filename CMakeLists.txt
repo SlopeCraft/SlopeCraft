@@ -35,6 +35,11 @@ option(SlopeCraft_sanitize "Build with sanitizer" OFF)
 set(SlopeCraft_vccl_test_gpu_platform_idx 0 CACHE STRING "The opencl platform index used to test vccl")
 set(SlopeCraft_vccl_test_gpu_device_idx 0 CACHE STRING "The opencl device index used to test vccl")
 
+if(${WIN32})
+    set(SlopeCraft_windeployqt_flags_install "--no-translations;--force" CACHE STRING "Flags to run windeployqt during installation")
+    set(SlopeCraft_windeployqt_flags_build ${SlopeCraft_windeployqt_flags_install} CACHE STRING "Flags to run windeployqt in build dir")
+endif()
+
 # manage the install prefix --------------------------------------------------
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
     set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install)
