@@ -33,7 +33,7 @@ function(SlopeCraft_install_lib lib_location dest)
             list(LENGTH dll_location len)
 
             if(len LESS_EQUAL 0)
-                message(WARNING "Trying to install dll of ${lib_location}, but failed to find ${dll_name}. 
+                message(FATAL_ERROR "Trying to install dll of ${lib_location}, but failed to find ${dll_name}. 
                     The released package may failed to find this dll.")
                 return()
             endif()
@@ -52,8 +52,11 @@ function(SlopeCraft_install_lib lib_location dest)
     endif()
 
     if((extension MATCHES ".a") OR(extension MATCHES ".lib"))
+        message(STATUS "\"${lib_location}\" is a static library, skip installation of it.")
         return()
     endif()
+
+    message(FATAL_ERROR "Unknown library extension: ${extension}")
 endfunction(SlopeCraft_install_lib)
 
 function(SlopeCraft_install_if_is_shared target dest)
