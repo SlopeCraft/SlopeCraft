@@ -27,8 +27,10 @@ This file is part of SlopeCraft.
 #include <stdlib.h>
 #include <utilities/SC_GlobalEnums.h>
 
+extern "C" {
 extern const unsigned char ColorManip_cl_rc[];
 extern const unsigned int ColorManip_cl_rc_length;
+}
 
 size_t ocl_warpper::platform_num() noexcept {
   cl_uint ret;
