@@ -442,10 +442,9 @@ void TokiSlopeCraft::makeBridge() {
       extension[0] = schem.x_range();
       extension[1] = schem.z_range();
       extension[2] = 1;
-      TokiMap targetMap =
-          ySlice2TokiMap_u16(schem.tensor().slice(start, extension));
+      TokiMap targetMap = ySlice2TokiMap_u16(schem.tensor(), start, extension);
       glassMap glass;
-      cerr << "Construct glass bridge at y=" << y << endl;
+      // cerr << "Construct glass bridge at y=" << y << endl;
       glass = glassBuilder->makeBridge(targetMap);
       for (int r = 0; r < glass.rows(); r++)
         for (int c = 0; c < glass.cols(); c++)
@@ -454,26 +453,6 @@ void TokiSlopeCraft::makeBridge() {
             schem(r, y, c) = PrimGlassBuilder::glass;
     } else {
       continue;
-      std::array<int, 3> start, extension;
-      start[0] = 0;
-      start[1] = y;
-      start[2] = 0;
-      extension[0] = schem.x_range();
-      extension[1] = 1;
-      extension[2] = schem.z_range();
-      TokiMap yCur = ySlice2TokiMap_u16(schem.tensor().slice(start, extension));
-      start[1] = y - 1;
-      TokiMap yBelow =
-          ySlice2TokiMap_u16(schem.tensor().slice(start, extension));
-      cerr << "Construct glass bridge between y=" << y << " and y=" << y - 1
-           << endl;
-      glassMap glass = connectBetweenLayers(yCur, yBelow, nullptr);
-
-      for (int r = 0; r < glass.rows(); r++)
-        for (int c = 0; c < glass.cols(); c++)
-          if (schem(r, y, c) == PrimGlassBuilder::air &&
-              glass(r, c) == PrimGlassBuilder::glass)
-            schem(r, y, c) = PrimGlassBuilder::glass;
     }
   }
   algoProgressRangeSet(wind, 0, 100, 100);

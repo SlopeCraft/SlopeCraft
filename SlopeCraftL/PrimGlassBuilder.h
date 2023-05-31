@@ -35,6 +35,7 @@ This file is part of SlopeCraft.
 #include <stack>
 #include <unsupported/Eigen/CXX11/Tensor>
 #include <vector>
+#include <utilities/Schem/Schem.h>
 
 // using namespace Eigen;
 
@@ -77,8 +78,13 @@ class pairedEdge : public std::pair<TokiPos, TokiPos> {
   void drawEdge(glassMap &, bool drawHead = false) const;
 };
 
-TokiMap ySlice2TokiMap(const Eigen::Tensor<uint8_t, 3> &) noexcept;
-TokiMap ySlice2TokiMap_u16(const Eigen::Tensor<uint16_t, 3> &) noexcept;
+[[deprecated]] TokiMap ySlice2TokiMap(
+    const Eigen::Tensor<uint8_t, 3> &) noexcept;
+[[deprecated]] TokiMap ySlice2TokiMap_u16(
+    const Eigen::Tensor<uint16_t, 3> &) noexcept;
+TokiMap ySlice2TokiMap_u16(const Eigen::Tensor<uint16_t, 3> &xzy,
+                           std::span<const int, 3> start_xzy,
+                           std::span<const int, 3> extension_xzy) noexcept;
 
 glassMap connectBetweenLayers(const TokiMap &, const TokiMap &,
                               walkableMap *walkable);

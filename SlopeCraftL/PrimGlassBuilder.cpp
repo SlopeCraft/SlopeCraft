@@ -480,3 +480,21 @@ TokiMap ySlice2TokiMap(const Eigen::Tensor<uint8_t, 3> &raw) noexcept {
 TokiMap ySlice2TokiMap_u16(const Eigen::Tensor<uint16_t, 3> &raw) noexcept {
   return impl_ySlice2TokiMap(raw);
 }
+
+TokiMap ySlice2TokiMap_u16(const Eigen::Tensor<uint16_t, 3> &xzy,
+                           std::span<const int, 3> start_xzy,
+                           std::span<const int, 3> extension_xzy) noexcept {
+  // assert(raw.dimension(2) == 1);
+  assert(extension_xzy[2] == 1);
+
+  TokiMap result;
+
+  result.setZero(extension_xzy[0], extension_xzy[1]);
+  for (int x = 0; x < result.rows(); x++) {
+    for (int z = 0; z < result.cols(); z++) {
+      if (xzy(x + start_xzy[0], z + start_xzy[1], start_xzy[2]) > 1)
+        result(x, z) = PrimGlassBuilder::target;
+    }
+  }
+  return result;
+}
