@@ -77,8 +77,8 @@ bool TokiVC::build() noexcept {
   std::atomic_bool ret = true;
 
   const Eigen::ArrayXX<uint16_t> color_id_mat = this->img_cvter.color_id();
-#warning resume omp here
-  // #pragma omp parallel for schedule(static)
+  // #warning resume omp here
+#pragma omp parallel for schedule(static)
   for (int64_t r = 0; r < this->img_cvter.rows(); r++) {
     for (int64_t c = 0; c < this->img_cvter.cols(); c++) {
       const auto &variant =
