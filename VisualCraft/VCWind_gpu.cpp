@@ -20,15 +20,17 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
-#include <cpuid.h>
 #include <omp.h>
 
-#include <QMessageBox>
 #include <iostream>
 #include <thread>
 
+#include <QMessageBox>
+
 #include "VCWind.h"
 #include "ui_VCWind.h"
+
+#include <cpuid.h>
 
 std::string get_cpu_name(bool &error) noexcept {
   int buffer[5];
@@ -93,7 +95,7 @@ void VCWind::refresh_gpu_info() noexcept {
     QString platname{};
     if (plat == nullptr) {
       platname =
-          VCWind::tr("无法获取platform信息. 请检查驱动. OpenCL错误码: %1.")
+          VCWind::tr("无法获取 platform 信息。请检查驱动。OpenCL 错误码：%1.")
               .arg(errcode);
     } else {
       platname = QString::fromLocal8Bit(VCL_get_platform_name(plat));
@@ -116,7 +118,7 @@ void VCWind::refresh_gpu_info() noexcept {
       QString devicename{};
       if (dev == nullptr) {
         devicename =
-            VCWind::tr("无法获取device信息. 请检查驱动. OpenCL错误码: %1")
+            VCWind::tr("无法获取 device 信息。请检查驱动。OpenCL 错误码：%1")
                 .arg(errcode);
       } else {
         devicename = QString::fromLocal8Bit(VCL_get_device_name(dev));
@@ -197,20 +199,20 @@ QString VCWind::update_gpu_device(QPoint current_choice) noexcept {
 
   VCL_GPU_Platform *plat = VCL_get_platform(current_choice.x());
   if (plat == nullptr) {
-    return VCWind::tr("创建GPU平台失败，平台序号为%1，设备序号为%2")
+    return VCWind::tr("创建 GPU 平台失败，平台序号为%1，设备序号为%2")
         .arg(current_choice.x())
         .arg(current_choice.y());
   }
 
   VCL_GPU_Device *dev = VCL_get_device(plat, current_choice.y());
   if (dev == nullptr) {
-    return VCWind::tr("创建GPU设备失败，平台序号为%1，设备序号为%2")
+    return VCWind::tr("创建 GPU 设备失败，平台序号为%1，设备序号为%2")
         .arg(current_choice.x())
         .arg(current_choice.y());
   }
 
   if (!this->kernel->set_gpu_resource(plat, dev)) {
-    return VCWind::tr("设置GPU设备失败。，平台序号为%1，设备序号为%2")
+    return VCWind::tr("设置 GPU 设备失败。，平台序号为%1，设备序号为%2")
         .arg(current_choice.x())
         .arg(current_choice.y());
   }

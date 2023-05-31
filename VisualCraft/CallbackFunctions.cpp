@@ -34,7 +34,7 @@ void VC_callback::callback_receive_report(VCL_report_type_t type,
 
   QWidget *wind_ptr{nullptr};
   if (wind != nullptr && QThread::currentThread() == wind->thread()) {
-    wind_ptr == wind;
+    wind_ptr = wind;
   }
 
   switch (type) {
