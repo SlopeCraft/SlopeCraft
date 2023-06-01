@@ -140,6 +140,7 @@ jobs:
       - name: CMake build
         shell: cmd
         run: |
+          tree ./build
           cmake --build ./build --parallel 10
 
       - name: CMake install
