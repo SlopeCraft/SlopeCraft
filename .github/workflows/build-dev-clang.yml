@@ -52,7 +52,8 @@ jobs:
           foreach($p in $env:path.split(';')) {$exclude=$false; foreach($ekw in $exclude_key_words)	{if($p.contains($ekw)) {$exclude=$true;break;}}if(-not($exclude)) {$new_path="$new_path;$p"}}
           echo "New path : $env:path.split(';')"
           echo "NEW_PATH=$env:path" >> $env:GITHUB_ENV
-
+          
+      - name: make dirs
         run: |
           mkdir bin
           mkdir bin/Qt6.5.0-msvc-shared
