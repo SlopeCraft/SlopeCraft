@@ -44,7 +44,7 @@ VS_VERSION_INFO VERSIONINFO
 				VALUE "CompanyName", "\0"
 				VALUE "FileDescription", "Minecraft Map Pixel Art Tool\0"
 				VALUE "FileVersion", "@PROJECT_VERSION@.0\0"
-				VALUE "LegalCopyright", "Copyright TokiNoBug 2021-2022\0"
+				VALUE "LegalCopyright", "Copyright TokiNoBug 2021-2023\0"
 				VALUE "OriginalFilename", "SlopeCraft.exe\0"
 				VALUE "ProductName", "SlopeCraft\0"
 				VALUE "ProductVersion", "@PROJECT_VERSION@.0\0"
