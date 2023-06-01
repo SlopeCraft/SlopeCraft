@@ -120,7 +120,7 @@ jobs:
           tree /f bin/Qt6.5.0-msvc-shared
         # Qt installation dir: bin/Qt6.5.0-msvc-shared
       - name: CMake configure
-        shell: cmd
+        shell: pwsh
         run: |
           $basedir=(pwd).path.replace("\\","/")
           $BUILD_TYPE=$env:BUILD_TYPE
