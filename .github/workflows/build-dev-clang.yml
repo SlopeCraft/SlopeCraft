@@ -34,7 +34,7 @@ jobs:
           where clang
           where clang-cl
           clang --version
-          $env:path="C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build;$env:path"
+          $env:path="'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build';$env:path"
           vcvars64.bat
 
 
