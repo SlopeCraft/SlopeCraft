@@ -115,7 +115,8 @@ jobs:
         # Qt installation dir: bin/Qt6.5.0-msvc-shared
       - name: CMake configure
         run: |
-          powershell.exe -c  "& 'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat'"
+          $env:path="$env:path;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build"
+          vcvars64.bat
           $basedir=(pwd).path.replace("\\","/")
           $BUILD_TYPE=$env:BUILD_TYPE
           $GPU_API=$env:GPU_API
@@ -126,7 +127,6 @@ jobs:
       
       - name: CMake build
         run: |
-          powershell.exe -c  "& 'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat'"
           $basedir=(pwd).path.replace("\\","/")
           $env:path=$env:NEW_PATH
           echo "Number of processors = $env:NUMBER_OF_PROCESSORS"
@@ -134,14 +134,12 @@ jobs:
 
       - name: CMake install
         run: |
-          powershell.exe -c  "& 'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat'"
           $basedir=(pwd).path.replace("\\","/")
           $env:path=$env:NEW_PATH
           cmake --install ./build
 
       - name: Make zip and 7z packs with CPack
         run: |
-          powershell.exe -c  "& 'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat'"
           $basedir=(pwd).path.replace("\\","/")
           $env:path=$env:NEW_PATH
           cd ./build
