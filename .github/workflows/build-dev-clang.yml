@@ -104,7 +104,7 @@ jobs:
           cd $basedir
           mkdir bin/build-libpng
           "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
-          cmake -S 3rdParty/libpng -B bin/build-libpng -G Ninja -DCMAKE_BUILD_TYPE="Release" -DCMAKE_C_COMPILER:FILEPATH=clang-cl -DCMAKE_CXX_COMPILER:FILEPATH=clang-cl -DCMAKE_INSTALL_PREFIX="$basedir/bin/dependencies" -DCMAKE_PREFIX_PATH="$basedir/bin/dependencies"
+          cmake -S 3rdParty/libpng -B bin/build-libpng -G Ninja -DCMAKE_BUILD_TYPE="Release" -DCMAKE_C_COMPILER:FILEPATH=clang-cl -DCMAKE_CXX_COMPILER:FILEPATH=clang-cl -DCMAKE_INSTALL_PREFIX="$basedir/bin/dependencies" -DCMAKE_PREFIX_PATH="$basedir/bin/dependencies" -DPNG_SHARED:BOOL=true -DPNG_STATIC:BOOL=false
           cmake --build bin/build-libpng --parallel
           cmake --install bin/build-libpng
             
