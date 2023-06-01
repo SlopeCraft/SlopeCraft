@@ -34,7 +34,8 @@ jobs:
           where clang
           where clang-cl
           clang --version
-          Invoke-Expression "& 'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat'"
+
+        # Invoke-Expression "& 'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat'"
 
 
       - name: Checkout repository
@@ -62,6 +63,10 @@ jobs:
           mkdir bin/Qt6.5.0-msvc-shared
           mkdir 3rdParty
           mkdir bin/dependencies
+
+      - name: make a symlink for vcvars64.bat to avoid space containing path for fucking powershell, holy shit, I can not even call vcvars64.bat due in pwsh because & can not be used in github actions!!!!
+        shell: cmd
+        run: mklink bin\vcvars64.bat "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
 
       - name: Build and install zlib
         run: |
@@ -115,8 +120,9 @@ jobs:
           tree /f bin/Qt6.5.0-msvc-shared
         # Qt installation dir: bin/Qt6.5.0-msvc-shared
       - name: CMake configure
+        shell: cmd
         run: |
-          Invoke-Expression "& 'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat'"
+          .\bin\vcvars64.bat
           $basedir=(pwd).path.replace("\\","/")
           $BUILD_TYPE=$env:BUILD_TYPE
           $GPU_API=$env:GPU_API
