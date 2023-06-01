@@ -128,34 +128,28 @@ jobs:
           echo "env:path = $env:path"
           mkdir build
           mkdir install
-          echo 'cmake -S . -B $basedir/build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=clang-cl -DCMAKE_CXX_COMPILER:FILEPATH=clang-cl -DCMAKE_PREFIX_PATH:PATH=$basedir/bin/Qt6.5.0-msvc-shared -DCMAKE_INSTALL_PREFIX:PATH=$basedir/install -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DSlopeCraft_GPU_API:STRING=$GPU_API -DSlopeCraft_vectorize:BOOL=$VECTORIZE -DSlopeCraft_windeployqt_flags_install:STRING=--no-translation;-release' > run-cmake-configure.bat
+        #echo 'cmake -S . -B $basedir/build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=clang-cl -DCMAKE_CXX_COMPILER:FILEPATH=clang-cl -DCMAKE_PREFIX_PATH:PATH=$basedir/bin/Qt6.5.0-msvc-shared -DCMAKE_INSTALL_PREFIX:PATH=$basedir/install -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DSlopeCraft_GPU_API:STRING=$GPU_API -DSlopeCraft_vectorize:BOOL=$VECTORIZE -DSlopeCraft_windeployqt_flags_install:STRING=--no-translation;-release' > run-cmake-configure.bat
 
           
       - name: CMake configure
         shell: cmd
         run: |
           "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-          type .\run-cmake-configure.bat
-          .\run-cmake-configure.bat
-        #cmake -S . -B ./build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=clang-cl -DCMAKE_CXX_COMPILER:FILEPATH=clang-cl -DCMAKE_PREFIX_PATH:PATH=./bin/Qt6.5.0-msvc-shared -DCMAKE_INSTALL_PREFIX:PATH=./install -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DSlopeCraft_GPU_API:STRING=$GPU_API -DSlopeCraft_vectorize:BOOL=$VECTORIZE -DSlopeCraft_windeployqt_flags_install:STRING=--no-translation;-release
+          cmake -S . -B ./build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=clang-cl -DCMAKE_CXX_COMPILER:FILEPATH=clang-cl -DCMAKE_PREFIX_PATH:PATH=./bin/Qt6.5.0-msvc-shared -DCMAKE_INSTALL_PREFIX:PATH=./install -DCMAKE_BUILD_TYPE="${{ matrix.build_type }}" -DSlopeCraft_GPU_API:STRING="${{ matrix.gpu_api }}" -DSlopeCraft_vectorize:BOOL="${{ matrix.vectorize }}" -DSlopeCraft_windeployqt_flags_install:STRING=--no-translation;-release
 
       - name: CMake build
+        shell: cmd
         run: |
-          $basedir=(pwd).path.replace("\\","/")
-          $env:path=$env:NEW_PATH
-          echo "Number of processors = $env:NUMBER_OF_PROCESSORS"
           cmake --build ./build --parallel 10
 
       - name: CMake install
+        shell: cmd
         run: |
-          $basedir=(pwd).path.replace("\\","/")
-          $env:path=$env:NEW_PATH
           cmake --install ./build
 
       - name: Make zip and 7z packs with CPack
         run: |
           $basedir=(pwd).path.replace("\\","/")
-          $env:path=$env:NEW_PATH
           cd ./build
           cpack -G ZIP -B "$basedir/pack"
           cpack -G 7Z -B "$basedir/pack"
