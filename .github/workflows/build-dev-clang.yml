@@ -29,13 +29,15 @@ jobs:
           echo "env:BUILD_TYPE = $env:BUILD_TYPE"
           echo "env:GPU_API = $env:GPU_API"
 
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
       - name: check clang
         run: | 
-          clang -v
-          clang-cl
+          where clang
+          where clang-cl
+          clang --version
+
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
       - name: Get short SHA
         run: |
@@ -52,7 +54,7 @@ jobs:
           foreach($p in $env:path.split(';')) {$exclude=$false; foreach($ekw in $exclude_key_words)	{if($p.contains($ekw)) {$exclude=$true;break;}}if(-not($exclude)) {$new_path="$new_path;$p"}}
           echo "New path : $env:path.split(';')"
           echo "NEW_PATH=$env:path" >> $env:GITHUB_ENV
-          
+
       - name: make dirs
         run: |
           mkdir bin
