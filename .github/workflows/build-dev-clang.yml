@@ -119,7 +119,7 @@ jobs:
           exit
           tree /f bin/Qt6.5.0-msvc-shared
         # Qt installation dir: bin/Qt6.5.0-msvc-shared
-      - name: CMake configure
+      - name: Prepare for CMake configure
         shell: pwsh
         run: |
           $basedir=(pwd).path.replace("\\","/")
@@ -128,12 +128,17 @@ jobs:
           echo "env:path = $env:path"
           mkdir build
           mkdir install
-          echo "cmake -S . -B build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=clang-cl -DCMAKE_CXX_COMPILER:FILEPATH=clang-cl -DCMAKE_PREFIX_PATH:PATH=$basedir/bin/Qt6.5.0-msvc-shared -DCMAKE_INSTALL_PREFIX:PATH=$basedir/install -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DSlopeCraft_GPU_API:STRING=$GPU_API -DSlopeCraft_vectorize:BOOL=$VECTORIZE -DSlopeCraft_windeployqt_flags_install:STRING=--no-translation;-release" > run-cmake-configure.bat
+          echo 'cmake -S . -B build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=clang-cl -DCMAKE_CXX_COMPILER:FILEPATH=clang-cl -DCMAKE_PREFIX_PATH:PATH=$basedir/bin/Qt6.5.0-msvc-shared -DCMAKE_INSTALL_PREFIX:PATH=$basedir/install -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DSlopeCraft_GPU_API:STRING=$GPU_API -DSlopeCraft_vectorize:BOOL=$VECTORIZE -DSlopeCraft_windeployqt_flags_install:STRING=--no-translation;-release' > run-cmake-configure.bat
           cmd
           "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
           .\run-cmake-configure.bat
           
-      
+      - name: CMake configure
+        shell: cmd
+        run: |
+          "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
+          .\run-cmake-configure.bat
+
       - name: CMake build
         run: |
           $basedir=(pwd).path.replace("\\","/")
