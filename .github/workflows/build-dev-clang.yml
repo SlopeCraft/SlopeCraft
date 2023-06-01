@@ -134,7 +134,7 @@ jobs:
       - name: CMake configure
         shell: cmd
         run: |
-          "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" & cmake -S . -B ./build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=clang-cl -DCMAKE_CXX_COMPILER:FILEPATH=clang-cl -DCMAKE_PREFIX_PATH:PATH=./bin/Qt6.5.0-msvc-shared -DCMAKE_INSTALL_PREFIX:PATH=./install -DCMAKE_BUILD_TYPE="${{ matrix.build_type }}" -DSlopeCraft_GPU_API:STRING="${{ matrix.gpu_api }}" -DSlopeCraft_vectorize:BOOL="${{ matrix.vectorize }}" -DSlopeCraft_windeployqt_flags_install:STRING=--no-translation;-release
+          "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" & cmake -S . -B ./build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=clang-cl -DCMAKE_CXX_COMPILER:FILEPATH=clang-cl -DCMAKE_PREFIX_PATH:PATH=./bin/Qt6.5.0-msvc-shared;./bin/dependencies -DCMAKE_INSTALL_PREFIX:PATH=./install -DCMAKE_BUILD_TYPE="${{ matrix.build_type }}" -DSlopeCraft_GPU_API:STRING="${{ matrix.gpu_api }}" -DSlopeCraft_vectorize:BOOL="${{ matrix.vectorize }}" -DSlopeCraft_windeployqt_flags_install:STRING=--no-translation;-release
 
       - name: CMake build
         shell: cmd
