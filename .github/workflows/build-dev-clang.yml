@@ -73,7 +73,6 @@ jobs:
           git checkout v1.2.13
           cd $basedir
           mkdir bin/build-zlib
-          & "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
           cmake -S 3rdParty/zlib -B bin/build-zlib -G Ninja -DCMAKE_C_COMPILER:FILEPATH=clang -DCMAKE_BUILD_TYPE="Release" -DCMAKE_INSTALL_PREFIX="$basedir/bin/dependencies"
           cmake --build bin/build-zlib --parallel
           cmake --install bin/build-zlib
@@ -88,7 +87,6 @@ jobs:
           git checkout v1.9.2
           cd $basedir
           mkdir bin/build-libzip
-          & "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
           cmake -S 3rdParty/libzip -B bin/build-libzip -G Ninja -DCMAKE_BUILD_TYPE="Release" -DCMAKE_C_COMPILER:FILEPATH=clang -DCMAKE_CXX_COMPILER:FILEPATH=clang++ -DCMAKE_INSTALL_PREFIX="$basedir/bin/dependencies" -DCMAKE_PREFIX_PATH="$basedir/bin/dependencies" -DBUILD_SHARED_LIBS=true -DLIBZIP_DO_INSTALL=true -DENABLE_BZIP2=false -DENABLE_LZMA=false -DENABLE_ZSTD=false
           cmake --build bin/build-libzip --parallel
           cmake --install bin/build-libzip
@@ -103,7 +101,6 @@ jobs:
           git checkout v1.6.39
           cd $basedir
           mkdir bin/build-libpng
-          & "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
           cmake -S 3rdParty/libpng -B bin/build-libpng -G Ninja -DCMAKE_BUILD_TYPE="Release" -DCMAKE_C_COMPILER:FILEPATH=clang -DCMAKE_INSTALL_PREFIX="$basedir/bin/dependencies" -DCMAKE_PREFIX_PATH="$basedir/bin/dependencies" -DPNG_SHARED:BOOL=true -DPNG_STATIC:BOOL=false
           cmake --build bin/build-libpng --parallel
           cmake --install bin/build-libpng
@@ -118,13 +115,13 @@ jobs:
         # Qt installation dir: bin/Qt6.5.0-msvc-shared
       - name: CMake configure
         run: |
+          & "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
           $basedir=(pwd).path.replace("\\","/")
           $BUILD_TYPE=$env:BUILD_TYPE
           $GPU_API=$env:GPU_API
           echo "env:path = $env:path"
           mkdir build
           mkdir install
-          & "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
           cmake -S . -B build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=clang-cl -DCMAKE_CXX_COMPILER:FILEPATH=clang-cl -DCMAKE_PREFIX_PATH:PATH="$basedir/bin/Qt6.5.0-msvc-shared" -DCMAKE_INSTALL_PREFIX:PATH="$basedir/install" -DCMAKE_BUILD_TYPE="$BUILD_TYPE" -DSlopeCraft_GPU_API:STRING="$GPU_API" -DSlopeCraft_vectorize:BOOL=$VECTORIZE -DSlopeCraft_windeployqt_flags_install:STRING="--no-translation;-release"
       
       - name: CMake build
