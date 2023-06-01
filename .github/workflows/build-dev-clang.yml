@@ -34,6 +34,8 @@ jobs:
           where clang
           where clang-cl
           clang --version
+          $env:path="C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build;$env:path"
+          vcvars64.bat
 
 
       - name: Checkout repository
@@ -115,7 +117,7 @@ jobs:
         # Qt installation dir: bin/Qt6.5.0-msvc-shared
       - name: CMake configure
         run: |
-          $env:path="$env:path;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build"
+          $env:path="C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build;$env:path"
           vcvars64.bat
           $basedir=(pwd).path.replace("\\","/")
           $BUILD_TYPE=$env:BUILD_TYPE
