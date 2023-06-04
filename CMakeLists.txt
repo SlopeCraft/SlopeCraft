@@ -55,13 +55,6 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/compile_commands.json)
     file(REMOVE ${CMAKE_SOURCE_DIR}/compile_commands.json)
 endif()
 
-# warn if not gcc ------------------------------------------------------------
-if(NOT CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    message(WARNING "MSVC or Clang are not fully supported. 
-        You MAY meet werid errors if you continue to build.
-        Please use gcc.")
-endif()
-
 # configure global dependencies ----------------------------------------------
 include(cmake/configure_libpng.cmake)
 include(cmake/add_compiler_path_to_prefix.cmake)
