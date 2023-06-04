@@ -60,7 +60,7 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-macos
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-macos-gcc
           path: build/install/SlopeCraft-5.0.0-macos.zip
   
   linux-build:
@@ -134,14 +134,14 @@ jobs:
       - name: Upload deb pack
         uses: actions/upload-artifact@v3
         with:
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-linux-deb
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-linux-gcc-deb
           path: pack/SlopeCraft*.deb
           if-no-files-found: error
 
       - name: Upload tar.xz pack
         uses: actions/upload-artifact@v3
         with:
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-linux-tar-xz
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-linux-gcc-tar-xz
           path: pack/SlopeCraft*.tar.xz
           if-no-files-found: error
 
@@ -332,17 +332,17 @@ jobs:
           cpack -G ZIP -B "$basedir/pack"
           cpack -G 7Z -B "$basedir/pack"
 
-      - name: Upload zip pack
-        uses: actions/upload-artifact@v3
-        with: 
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-vec=${{ matrix.vectorize }}-windows-zip
-          path: pack/SlopeCraft*.zip
-          if-no-files-found: error 
+      #- name: Upload zip pack
+      #  uses: actions/upload-artifact@v3
+      #  with: 
+      #    name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-vec=${{ matrix.vectorize }}-windows-zip
+      #    path: pack/SlopeCraft*.zip
+      #    if-no-files-found: error 
 
       - name: Upload 7z pack
         uses: actions/upload-artifact@v3
         with: 
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-vec=${{ matrix.vectorize }}-windows-7z
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-vec=${{ matrix.vectorize }}-windows-gcc-7z
           path: pack/SlopeCraft*.7z
           if-no-files-found: error 
 

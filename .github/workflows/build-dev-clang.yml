@@ -136,17 +136,17 @@ jobs:
           cpack -G ZIP -B "$basedir/pack"
           cpack -G 7Z -B "$basedir/pack"
 
-      - name: Upload zip pack
-        uses: actions/upload-artifact@v3
-        with: 
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-vec=${{ matrix.vectorize }}-windows-zip
-          path: pack/SlopeCraft*.zip
-          if-no-files-found: error 
+      #- name: Upload zip pack
+      #  uses: actions/upload-artifact@v3
+      #  with: 
+      #    name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-vec=${{ matrix.vectorize }}-windows-clang-zip
+      #    path: pack/SlopeCraft*.zip
+      #    if-no-files-found: error 
 
       - name: Upload 7z pack
         uses: actions/upload-artifact@v3
         with: 
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-vec=${{ matrix.vectorize }}-windows-7z
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-vec=${{ matrix.vectorize }}-windows-clang-7z
           path: pack/SlopeCraft*.7z
           if-no-files-found: error 
 
@@ -167,11 +167,11 @@ jobs:
         run: | 
           echo $BUILD_TYPE
           echo $GPU_API
-      - name: Install Ninja build system
-        run: brew install ninja
+      - name: Install build system
+        run: brew install ninja cmake
       - name: Install dependencies
         run: | 
-          brew install libpng qt@6 eigen3
+          brew install libpng qt@6 eigen
           brew reinstall libomp
       - name: Add /usr/local/lib to PATH
         run: echo "/usr/local/lib" >> $GITHUB_PATH
@@ -203,5 +203,5 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-macos
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-macos-clang
           path: build/install/SlopeCraft-5.0.0-macos.zip
