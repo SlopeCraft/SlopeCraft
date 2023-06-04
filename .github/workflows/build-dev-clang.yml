@@ -172,6 +172,7 @@ jobs:
       - name: Install dependencies
         run: | 
           brew install libpng
+          brew install libomp
           brew install qt@6
       - name: Add /usr/local/lib to PATH
         run: echo "/usr/local/lib" >> $GITHUB_PATH
