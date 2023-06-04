@@ -30,7 +30,11 @@ This file is part of SlopeCraft.
 #include "VCWind.h"
 #include "ui_VCWind.h"
 
+#ifdef _MSC_VER
+#include <intrin.h>
+#else
 #include <cpuid.h>
+#endif
 
 std::string get_cpu_name(bool &error) noexcept {
   int buffer[5];
@@ -43,7 +47,12 @@ std::string get_cpu_name(bool &error) noexcept {
   for (auto i : input) {
     memset(buffer, 0, sizeof(buffer));
     try {
+#ifdef _MSC_VER
+      __cpuid(buffer, i);
+#else
       __cpuid(i, buffer[0], buffer[1], buffer[2], buffer[3]);
+#endif
+
     } catch (std::exception &e) {
       strcpy(str, "Instruction cpuid failed. Detail : ");
       strcpy(str, e.what());
