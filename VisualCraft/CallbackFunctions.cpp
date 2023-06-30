@@ -44,7 +44,9 @@ void VC_callback::callback_receive_report(VCL_report_type_t type,
       return;
     }
     case VCL_report_type_t::warning: {
-      ss_warning << msg;
+      if (msg != nullptr) {
+        ss_warning << msg;
+      }
 
       if (flush) {
         std::string res;

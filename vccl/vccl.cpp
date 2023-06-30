@@ -62,7 +62,7 @@ int main(int argc, char **argv) {
   int __version;
   app.add_option("--mcver", __version, "MC version")
       ->default_val(19)
-      ->check(CLI::Range(12, 19, "Avaliable versions"));
+      ->check(CLI::Range(12, 20, "Avaliable versions"));
 
   app.add_option("--layers,--layer", input.layers, "Max layers")
       ->default_val(1)

@@ -78,6 +78,13 @@
              <string>游戏版本</string>
             </property>
             <layout class="QGridLayout" name="gridLayout_3">
+             <item row="5" column="0">
+              <widget class="QRadioButton" name="rdb_version_18">
+               <property name="text">
+                <string notr="true">1.18</string>
+               </property>
+              </widget>
+             </item>
              <item row="2" column="1">
               <widget class="QRadioButton" name="rdb_version_15">
                <property name="text">
@@ -85,31 +92,10 @@
                </property>
               </widget>
              </item>
-             <item row="0" column="0">
-              <widget class="QRadioButton" name="rdb_version_12">
-               <property name="text">
-                <string notr="true">1.12</string>
-               </property>
-              </widget>
-             </item>
              <item row="4" column="0">
               <widget class="QRadioButton" name="rdb_version_16">
                <property name="text">
                 <string notr="true">1.16</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QRadioButton" name="rdb_version_13">
-               <property name="text">
-                <string notr="true">1.13</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
-              <widget class="QRadioButton" name="rdb_version_14">
-               <property name="text">
-                <string notr="true">1.14</string>
                </property>
               </widget>
              </item>
@@ -130,10 +116,31 @@
                </property>
               </widget>
              </item>
-             <item row="5" column="0">
-              <widget class="QRadioButton" name="rdb_version_18">
+             <item row="0" column="1">
+              <widget class="QRadioButton" name="rdb_version_13">
                <property name="text">
-                <string notr="true">1.18</string>
+                <string notr="true">1.13</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QRadioButton" name="rdb_version_12">
+               <property name="text">
+                <string notr="true">1.12</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QRadioButton" name="rdb_version_14">
+               <property name="text">
+                <string notr="true">1.14</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="0">
+              <widget class="QRadioButton" name="rdb_version_20">
+               <property name="text">
+                <string>1.20</string>
                </property>
               </widget>
              </item>
@@ -346,8 +353,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>861</width>
-                  <height>273</height>
+                  <width>885</width>
+                  <height>302</height>
                  </rect>
                 </property>
                 <layout class="QGridLayout" name="gl_sa_blocks"/>
@@ -1161,7 +1168,7 @@
      <x>0</x>
      <y>0</y>
      <width>1057</width>
-     <height>27</height>
+     <height>22</height>
     </rect>
    </property>
    <property name="font">

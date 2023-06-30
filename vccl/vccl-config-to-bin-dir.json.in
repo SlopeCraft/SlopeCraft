@@ -31,6 +31,10 @@
         [
             19,
             "@VCL_resource_19@"
+        ],
+        [
+            20,
+            "@VCL_resource_20@"
         ]
     ],
     "default_block_state_list": [

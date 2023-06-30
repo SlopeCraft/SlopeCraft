@@ -1,39 +1,43 @@
 {
-    "default_resource_pack_zip": [
-        [
-            12,
-            "./Blocks_VCL/Vanilla_1_12_2.zip"
-        ],
-        [
-            13,
-            "./Blocks_VCL/Vanilla_1_13_2.zip"
-        ],
-        [
-            14,
-            "./Blocks_VCL/Vanilla_1_14_4.zip"
-        ],
-        [
-            15,
-            "./Blocks_VCL/Vanilla_1_15_2.zip"
-        ],
-        [
-            16,
-            "./Blocks_VCL/Vanilla_1_16_5.zip"
-        ],
-        [
-            17,
-            "./Blocks_VCL/Vanilla_1_17_1.zip"
-        ],
-        [
-            18,
-            "./Blocks_VCL/Vanilla_1_18_2.zip"
-        ],
-        [
-            19,
-            "./Blocks_VCL/Vanilla_1_19_3.zip"
-        ]
+  "default_resource_pack_zip": [
+    [
+      12,
+      "./Blocks_VCL/Vanilla_1_12_2.zip"
     ],
-    "default_block_state_list": [
-        "./Blocks_VCL/VCL_blocks_fixed.json"
+    [
+      13,
+      "./Blocks_VCL/Vanilla_1_13_2.zip"
+    ],
+    [
+      14,
+      "./Blocks_VCL/Vanilla_1_14_4.zip"
+    ],
+    [
+      15,
+      "./Blocks_VCL/Vanilla_1_15_2.zip"
+    ],
+    [
+      16,
+      "./Blocks_VCL/Vanilla_1_16_5.zip"
+    ],
+    [
+      17,
+      "./Blocks_VCL/Vanilla_1_17_1.zip"
+    ],
+    [
+      18,
+      "./Blocks_VCL/Vanilla_1_18_2.zip"
+    ],
+    [
+      19,
+      "./Blocks_VCL/Vanilla_1_19_3.zip"
+    ],
+    [
+      20,
+      "./Blocks_VCL/Vanilla_1_20_1.zip"
     ]
+  ],
+  "default_block_state_list": [
+    "./Blocks_VCL/VCL_blocks_fixed.json"
+  ]
 }
