@@ -50,6 +50,8 @@ enum class SCL_gameVersion : int {
   MC18 = 18,
   /// 1.19
   MC19 = 19,
+  /// 1.20
+  MC20 = 20,
   /// future version
   FUTURE = 255
 };
@@ -151,7 +153,7 @@ enum class SCL_errorFlag : int {
   /// is_air_structure_void to false and you don't have minecraft:air in the
   /// palette
   EXPORT_SCHEM_STRUCTURE_REQUIRES_AIR = 0x0C,
-  /// the major game version is less that MC12 or greater than MC19
+  /// the major game version is less that MC12 or greater than MC20
   UNKNOWN_MAJOR_GAME_VERSION = 0x0D,
   /// Exporting as WESchem doesn't support MC12, since the format of schematic
   /// is greatly different.

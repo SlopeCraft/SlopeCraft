@@ -30,6 +30,31 @@ This file is part of SlopeCraft.
 namespace MCDataVersion {
 
 enum class MCDataVersion_t : int {
+
+  Java_1_20_1 = 3465,
+  Java_1_20_1__rc1 = 3464,
+  Java_1_20 = 3463,
+  Java_1_20__rc1 = 3462,
+  Java_1_20__pre7 = 3461,
+  Java_1_20__pre6 = 3460,
+  Java_1_20__pre5 = 3458,
+  Java_1_20__pre4 = 3457,
+  Java_1_20__pre3 = 3456,
+  Java_1_20__pre2 = 3455,
+  Java_1_20__pre1 = 3454,
+  Snapshot_23w_18a = 3453,
+  Snapshot_23w_17a = 3452,
+  Snapshot_23w_16a = 3449,
+  Snapshot_23w_14a = 3445,
+  Snapshot_23w_13a = 3442,
+  Snapshot_23w_12a = 3442,
+  Java_1_19_4 = 3337,
+  Java_1_19_4__rc3 = 3336,
+  Java_1_19_4__rc2 = 3335,
+  Java_1_19_4__rc1 = 3334,
+  Java_1_19_4__pre4 = 3333,
+  Java_1_19_4__pre3 = 3332,
+  Java_1_19_4__pre2 = 3331,
   Java_1_19_4__pre1 = 3330,
   Snapshot_23w07a = 3329,
   Snapshot_23w06a = 3326,
@@ -515,5 +540,5 @@ inline bool is_data_version_suitable(SCL_gameVersion v,
   return true;
 }
 
-} // namespace MCDataVersion
-#endif // SLOPECRAFT_UTILITIES_MCDATAVERSION_H
+}  // namespace MCDataVersion
+#endif  // SLOPECRAFT_UTILITIES_MCDATAVERSION_H

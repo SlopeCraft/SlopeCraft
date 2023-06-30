@@ -861,6 +861,7 @@ void MainWindow::kernelSetType() {
     if (ui->isGame17->isChecked()) ver = SlopeCraft::gameVersion::MC17;
     if (ui->isGame18->isChecked()) ver = SlopeCraft::gameVersion::MC18;
     if (ui->isGame19->isChecked()) ver = SlopeCraft::gameVersion::MC19;
+    if (ui->isGame20->isChecked()) ver = SlopeCraft::gameVersion::MC20;
   }
 
   bool allowedBaseColor[64];
@@ -1539,7 +1540,7 @@ void MainWindow::onExportDataclicked(QString path) {
         files += ';' + files_to_be_covered[idx];
       }
 
-      auto ret=QMessageBox::warning(
+      auto ret = QMessageBox::warning(
           this, tr("导出时将会覆盖部分地图文件"),
           tr("%1 "
              "个文件将被覆盖：\n%"
@@ -1548,12 +1549,11 @@ void MainWindow::onExportDataclicked(QString path) {
               .arg(files),
           QMessageBox::StandardButtons{QMessageBox::StandardButton::Yes,
                                        QMessageBox::StandardButton::No});
-      if(ret==QMessageBox::StandardButton::No) {
+      if (ret == QMessageBox::StandardButton::No) {
         return;
       }
     }
   }
-
 
   ui->InputDataIndex->setEnabled(false);
   ui->ExportData->setEnabled(false);
@@ -1686,8 +1686,8 @@ void MainWindow::showError(void *p, SlopeCraft::errorFlag error,
       break;
     case SlopeCraft::errorFlag::LOSSYCOMPRESS_FAILED:
       title = tr("有损压缩失败");
-      text = tr(
-          "在构建高度矩阵时，有损压缩失败，没能将地图画压缩到目标高度。 \
+      text =
+          tr("在构建高度矩阵时，有损压缩失败，没能将地图画压缩到目标高度。 \
         这可能是因为地图画行数过大。 \
         尝试启用无损压缩，或者提高最大允许高度");
       break;

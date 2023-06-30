@@ -46,21 +46,15 @@ uint64_t TokiSlopeCraft::mcVersion2VersionNumber(SCL_gameVersion g) {
     case SCL_gameVersion::ANCIENT:
       return 114514;
     case SCL_gameVersion::MC12:
-      return 1631;
     case SCL_gameVersion::MC13:
-      return 1976;
     case SCL_gameVersion::MC14:
-      return 2230;
     case SCL_gameVersion::MC15:
-      return 2230;
     case SCL_gameVersion::MC16:
-      return 2586;
     case SCL_gameVersion::MC17:
-      return 2730;
     case SCL_gameVersion::MC18:
-      return 2865;
     case SCL_gameVersion::MC19:
-      return 3105;  // 1.19.0
+    case SCL_gameVersion::MC20:
+      return uint64_t(MCDataVersion::suggested_version(g));
     default:
       return 1919810;
   }

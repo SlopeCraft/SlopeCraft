@@ -190,6 +190,7 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(std::string FolderPath,
         case SCL_gameVersion::MC17:
         case SCL_gameVersion::MC18:
         case SCL_gameVersion::MC19:
+        case SCL_gameVersion::MC20:
           MapFile.writeInt("DataVersion", mcVersion2VersionNumber(mcVer));
           break;
         default:
@@ -235,6 +236,7 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(std::string FolderPath,
           case SCL_gameVersion::MC17:
           case SCL_gameVersion::MC18:
           case SCL_gameVersion::MC19:
+          case SCL_gameVersion::MC20:
             MapFile.writeListHead("banners", NBT::Compound, 0);
             MapFile.writeListHead("frames", NBT::Compound, 0);
             MapFile.writeString("dimension", "minecraft:overworld");
