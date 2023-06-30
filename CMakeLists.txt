@@ -9,13 +9,13 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN TRUE)
 
-if(${LINUX})
+if (${LINUX})
     message(STATUS "setting runpath for linux")
     set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
 
     # set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
     # set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
-endif()
+endif ()
 
 enable_testing()
 
@@ -35,25 +35,25 @@ option(SlopeCraft_sanitize "Build with sanitizer" OFF)
 set(SlopeCraft_vccl_test_gpu_platform_idx 0 CACHE STRING "The opencl platform index used to test vccl")
 set(SlopeCraft_vccl_test_gpu_device_idx 0 CACHE STRING "The opencl device index used to test vccl")
 
-if(${WIN32})
+if (${WIN32})
     set(SlopeCraft_windeployqt_flags_install "--no-translations" CACHE STRING "Flags to run windeployqt during installation")
     set(SlopeCraft_windeployqt_flags_build "${SlopeCraft_windeployqt_flags_install};--force" CACHE STRING "Flags to run windeployqt in build dir")
-endif()
+endif ()
 
 # manage the install prefix --------------------------------------------------
-if(NOT DEFINED CMAKE_INSTALL_PREFIX)
+if (NOT DEFINED CMAKE_INSTALL_PREFIX)
     set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install)
-endif()
+endif ()
 
 # convert relative path to absolute ------------------------------------------
 cmake_path(ABSOLUTE_PATH CMAKE_INSTALL_PREFIX OUTPUT_VARIABLE CMAKE_INSTALL_PREFIX)
 message(STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}")
 
 # Remove old compilation database --------------------------------------------
-if(EXISTS ${CMAKE_SOURCE_DIR}/compile_commands.json)
+if (EXISTS ${CMAKE_SOURCE_DIR}/compile_commands.json)
     # delete files here
     file(REMOVE ${CMAKE_SOURCE_DIR}/compile_commands.json)
-endif()
+endif ()
 
 # configure global dependencies ----------------------------------------------
 include(cmake/configure_libpng.cmake)
@@ -63,50 +63,50 @@ include(cmake/find_Eigen3.cmake)
 include(cmake/find_HeuristicFlow.cmake)
 include(cmake/find_qt6.cmake)
 
-if(${WIN32})
+if (${WIN32})
     include(cmake/install_if_is_shared.cmake)
-endif()
+endif ()
 
 # Add compile options --------------------------------------------------------
 # if don't vectorize, or no suitable flag found, this variable will be empty
 set(SlopeCraft_vectorize_flags)
 
-if(NOT ${SlopeCraft_vectorize})
-    if(NOT ${SlopeCraft_GPU_API} STREQUAL "None")
+if (NOT ${SlopeCraft_vectorize})
+    if (NOT ${SlopeCraft_GPU_API} STREQUAL "None")
         message(STATUS "You enabled GPU boosting, but disabled vectorization")
-    endif()
-endif()
+    endif ()
+endif ()
 
-if(${SlopeCraft_vectorize})
+if (${SlopeCraft_vectorize})
     include(CheckCXXCompilerFlag)
     add_definitions("-DSC_VECTORIZE_AVX2")
 
-    if(${MSVC})
+    if (${MSVC})
         set(SlopeCraft_vectorize_flags "/arch:AVX2")
-    else()
+    else ()
         set(SlopeCraft_vectorize_flags -mavx -mavx2 -mfma)
-    endif()
+    endif ()
 
     message(STATUS "Vectorize using " ${SlopeCraft_vectorize_flags})
     add_compile_options(${SlopeCraft_vectorize_flags})
 
     # list(APPEND SlopeCraft_vectorize_flags "-O3")
-endif()
+endif ()
 
-if(${WIN32})
+if (${WIN32})
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
-endif()
+endif ()
 
 # Add global compile options -------------------------------------------------
 # profile with gprof
-if(${SlopeCraft_gprof})
+if (${SlopeCraft_gprof})
     add_compile_options("-pg")
     add_link_options("-pg")
-endif()
+endif ()
 
-if(${SlopeCraft_sanitize})
+if (${SlopeCraft_sanitize})
     set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-fsanitize=address")
-endif()
+endif ()
 
 add_compile_definitions(_USE_MATH_DEFINES)
 add_compile_definitions(SCL_FIND_GlobalEnums_BY_PATH)
@@ -114,34 +114,35 @@ add_compile_definitions(SLOPECRAFTL_NOT_INSTALLED)
 add_compile_definitions(VISUALCRAFTL_NOT_INSTALLED)
 
 # Add compile options for different compilers
-if(${MSVC})
+if (${MSVC})
     add_compile_options("/Zc:__cplusplus")
     add_compile_options("/wd4819")
     add_compile_options("/utf-8")
-else()
+    add_compile_options("/EHsc")
+else ()
     add_compile_options(-Wall -Wreturn-type -Wsign-compare -Wextra)
     add_link_options(-flto)
-endif()
+endif ()
 
 # Add global include dirs ----------------------------------------------------
 include_directories(${CMAKE_BINARY_DIR}/utilities)
 
 # Add global custom targets on windows ---------------------------------------
-if(${WIN32})
+if (${WIN32})
     add_custom_target(SC_create_all_symlinks
-        COMMENT "A interface target to create all symlinks on windows")
+            COMMENT "A interface target to create all symlinks on windows")
 
     add_custom_target(SC_deploy_all
-        COMMENT "A interface target to run windeployqt for all targets")
-endif()
+            COMMENT "A interface target to run windeployqt for all targets")
+endif ()
 
 # # Language related variables
 # set(SC_lupdate_flags -no-ui-lines)
 set(SC_lupdate_flags)
 
-if(${SlopeCraft_update_ts_no_obsolete})
+if (${SlopeCraft_update_ts_no_obsolete})
     list(APPEND SC_lupdate_flags "-no-obsolete")
-endif()
+endif ()
 
 # Sub dirss ------------------------------------------------------------------
 add_subdirectory(utilities)
