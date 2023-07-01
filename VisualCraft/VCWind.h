@@ -192,6 +192,9 @@ class VCWind : public QMainWindow {
 
   void flush_export_tabel() noexcept;
 
+  [[nodiscard]] std::unordered_map<std::string_view, QCheckBox *>
+  id_blockclass_map() noexcept;
+
   static constexpr int export_col_filename = 0;
   static constexpr int export_col_imagesize = 1;
   static constexpr int export_col_lite = 2;
@@ -267,8 +270,12 @@ class VCWind : public QMainWindow {
   // auto connected
   void on_pb_custom_select_clicked() noexcept;
 
+  void on_pb_load_preset_clicked() noexcept;
+  void on_pb_save_preset_clicked() noexcept;
+
   // manually connected
   void setup_block_widgets() noexcept;
+
   // void when_allowed_colorset_changed() noexcept;
   //  for page 2 ------------------------------------------
 

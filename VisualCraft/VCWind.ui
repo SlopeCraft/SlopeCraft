@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>1057</width>
-    <height>476</height>
+    <height>479</height>
    </rect>
   </property>
   <property name="font">
@@ -337,33 +337,6 @@
           <string>方块列表</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_5">
-          <item row="0" column="1">
-           <widget class="QGroupBox" name="gb_blocks">
-            <property name="title">
-             <string>全部方块</string>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_11">
-             <item row="0" column="0">
-              <widget class="QScrollArea" name="sa_blocks">
-               <property name="widgetResizable">
-                <bool>true</bool>
-               </property>
-               <widget class="QWidget" name="scrollAreaWidgetContents">
-                <property name="geometry">
-                 <rect>
-                  <x>0</x>
-                  <y>0</y>
-                  <width>885</width>
-                  <height>302</height>
-                 </rect>
-                </property>
-                <layout class="QGridLayout" name="gl_sa_blocks"/>
-               </widget>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
           <item row="0" column="0">
            <widget class="QGroupBox" name="groupBox_6">
             <property name="title">
@@ -430,6 +403,56 @@
                <property name="text">
                 <string>按类反选</string>
                </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QGroupBox" name="groupBox_7">
+            <property name="title">
+             <string>预设</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_23">
+             <item row="0" column="0">
+              <widget class="QPushButton" name="pb_load_preset">
+               <property name="text">
+                <string>加载预设</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QPushButton" name="pb_save_preset">
+               <property name="text">
+                <string>保存当前预设</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="0" column="1" rowspan="2">
+           <widget class="QGroupBox" name="gb_blocks">
+            <property name="title">
+             <string>全部方块</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_11">
+             <item row="0" column="0">
+              <widget class="QScrollArea" name="sa_blocks">
+               <property name="widgetResizable">
+                <bool>true</bool>
+               </property>
+               <widget class="QWidget" name="scrollAreaWidgetContents">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>885</width>
+                  <height>305</height>
+                 </rect>
+                </property>
+                <layout class="QGridLayout" name="gl_sa_blocks"/>
+               </widget>
               </widget>
              </item>
             </layout>
