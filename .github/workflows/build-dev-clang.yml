@@ -1,11 +1,10 @@
-name: Build dev version artifacts
-on: 
+name: Beta version built with clang(for windows and macos)
+on:
   pull_request:
   push:
     branches:
       - main
       - dev
-      - update-sc-ui
 
 jobs:
 
@@ -13,9 +12,9 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        build_type: [Debug, Release]
-        gpu_api: [None]
-        vectorize: [true, false]
+        build_type: [ Debug, Release ]
+        gpu_api: [ None ]
+        vectorize: [ true, false ]
         exclude:
           - gpu_api: OpenCL
             vectorize: false
@@ -25,12 +24,12 @@ jobs:
       VECTORIZE: ${{ matrix.vectorize }}
     steps:
       - name: echo matrix variables (build_type = ${{ matrix.build_type }})
-        run: | 
+        run: |
           echo "env:BUILD_TYPE = $env:BUILD_TYPE"
           echo "env:GPU_API = $env:GPU_API"
 
       - name: check clang
-        run: | 
+        run: |
           where clang
           where clang-cl
           clang --version
@@ -54,7 +53,7 @@ jobs:
           mkdir bin/Qt6.5.0-msvc-shared
           mkdir 3rdParty
           mkdir bin/dependencies
-          
+
       - name: Build and install zlib
         run: |
           $basedir=(pwd).path.replace("\\","/")
@@ -69,7 +68,7 @@ jobs:
           cmake -S 3rdParty/zlib -B bin/build-zlib -G Ninja -DCMAKE_C_COMPILER:FILEPATH=clang -DCMAKE_BUILD_TYPE="Release" -DCMAKE_INSTALL_PREFIX="$basedir/bin/dependencies"
           cmake --build bin/build-zlib --parallel
           cmake --install bin/build-zlib
-      
+
       - name: Build and install libzip
         run: |
           $basedir=(pwd).path.replace("\\","/")
@@ -100,7 +99,7 @@ jobs:
 
       - name: Install Eigen3
         run: vcpkg install --triplet=x64-windows eigen3
-            
+
       - name: Download Qt6.5.0-msvc-shared and extract
         run: |
           cmd
@@ -108,8 +107,8 @@ jobs:
           7z x -o"bin/Qt6.5.0-msvc-shared" bin/Qt6.5.0-msvc-shared.7z
           exit
           tree /f bin/Qt6.5.0-msvc-shared
-        # Qt installation dir: bin/Qt6.5.0-msvc-shared
-          
+          # Qt installation dir: bin/Qt6.5.0-msvc-shared
+
       - name: CMake configure
         shell: cmd
         run: |
@@ -145,18 +144,18 @@ jobs:
 
       - name: Upload 7z pack
         uses: actions/upload-artifact@v3
-        with: 
+        with:
           name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-vec=${{ matrix.vectorize }}-windows-clang-7z
           path: pack/SlopeCraft*.7z
-          if-no-files-found: error 
+          if-no-files-found: error
 
-    
+
   macos-build:
     runs-on: macos-latest
     strategy:
       matrix:
-        build_type: [Debug, Release]
-        gpu_api: [None]
+        build_type: [ Debug, Release ]
+        gpu_api: [ None ]
     env:
       BUILD_TYPE: ${{ matrix.build_type }}
       GPU_API: ${{ matrix.gpu_api }}
@@ -164,13 +163,13 @@ jobs:
       - name: brew update
         run: brew update
       - name: echo matrix variables (build_type = ${{ matrix.build_type }})
-        run: | 
+        run: |
           echo $BUILD_TYPE
           echo $GPU_API
       - name: Install build system
         run: brew install ninja cmake
       - name: Install dependencies
-        run: | 
+        run: |
           brew install libpng qt@6 eigen
           brew reinstall libomp
       - name: Add /usr/local/lib to PATH
@@ -194,7 +193,7 @@ jobs:
           chmod +x vccl-contents/vccl.app/Contents/MacOS/vccl
       # chmod +x vccl.app/Contents/MacOS/vccl
       - name: Compress as zip
-        run: | 
+        run: |
           cd ./build/install
           zip -9 -r -y SlopeCraft-5.0.0-macos.zip ./*
 

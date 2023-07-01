@@ -1,19 +1,18 @@
-name: Build dev version artifacts
-on: 
+name: Beta version built with gcc(for windows, linux and macos)
+on:
   pull_request:
   push:
     branches:
       - main
       - dev
-      - update-sc-ui
 
 jobs:
   macos-build:
     runs-on: macos-latest
     strategy:
       matrix:
-        build_type: [Debug, Release]
-        gpu_api: [None]
+        build_type: [ Debug, Release ]
+        gpu_api: [ None ]
     env:
       BUILD_TYPE: ${{ matrix.build_type }}
       GPU_API: ${{ matrix.gpu_api }}
@@ -21,13 +20,13 @@ jobs:
       - name: brew update
         run: brew update
       - name: echo matrix variables (build_type = ${{ matrix.build_type }})
-        run: | 
+        run: |
           echo $BUILD_TYPE
           echo $GPU_API
       - name: Install Ninja build system
         run: brew install ninja
       - name: Install dependencies
-        run: | 
+        run: |
           brew install libpng
           brew install qt@6
       - name: Add /usr/local/lib to PATH
@@ -51,7 +50,7 @@ jobs:
           chmod +x vccl-contents/vccl.app/Contents/MacOS/vccl
       # chmod +x vccl.app/Contents/MacOS/vccl
       - name: Compress as zip
-        run: | 
+        run: |
           cd ./build/install
           zip -9 -r -y SlopeCraft-5.0.0-macos.zip ./*
 
@@ -67,19 +66,19 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        build_type: [Debug, Release]
-        gpu_api: [None, OpenCL]
+        build_type: [ Debug, Release ]
+        gpu_api: [ None, OpenCL ]
     env:
       BUILD_TYPE: ${{ matrix.build_type }}
       GPU_API: ${{ matrix.gpu_api }}
     steps:
       - name: echo matrix variables (build_type = ${{ matrix.build_type }})
-        run: | 
+        run: |
           echo $BUILD_TYPE
           echo $GPU_API
       - name: apt update
         run: sudo apt update
-        
+
       - name: Make directories
         run: mkdir build install pack
 
@@ -94,14 +93,14 @@ jobs:
 
       - name: Install qt6
         run: sudo apt install libqt6widgets6 libqt6gui6 libqt6network6 qt6-base-dev qt6-tools-dev-tools qt6-tools-dev qt6-l10n-tools
-      
+
       - name: Install additional qt-related packages
         run: sudo apt install x11-utils libxcb-xinerama0 libxv1 libgl-dev
         # Without these libs, cmake cannot find Qt6::Gui. But if you install nvidia-cuda-toolkit, they will be installed automatically
       - name: Install OpenCL sdk
         if: matrix.gpu_api == 'OpenCL'
         run: sudo apt install ocl-icd-libopencl1 ocl-icd-opencl-dev ocl-icd-dev opencl-c-headers opencl-clhpp-headers clinfo
-        
+
       - name: See clinfo
         if: matrix.gpu_api == 'OpenCL'
         run: clinfo
@@ -114,23 +113,23 @@ jobs:
 
       - name: CMake configure
         run: cmake -S . -B ./build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/gcc-12 -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/g++-12 -DCMAKE_INSTALL_PREFIX:PATH=./install -DSlopeCraft_GPU_API:STRING=$GPU_API -DCMAKE_BUILD_TYPE:STRING=$BUILD_TYPE
-      
+
       - name: CMake build
         run: cmake --build ./build --parallel
-      
+
       - name: CMake install
         run: cmake --install ./build
-      
+
       - name: Get short SHA
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
-      
+
       - name: Make deb and tar.xz packs with cpack
-        run: | 
+        run: |
           cd build
           cpack -G DEB -B ../pack
           cpack -G TXZ -B ../pack
           cd ..
-      
+
       - name: Upload deb pack
         uses: actions/upload-artifact@v3
         with:
@@ -153,35 +152,35 @@ jobs:
       - name: Test deb pack
         run: sudo dpkg -i ./pack/*.deb
 
- # linux-test-deb:
- #   runs-on: ubunut-latest
- #   needs: linux-build
- #   strategy:
- #     matrix:
- #       build_type: [Debug, Release]
- #       gpu_api: [None, OpenCL]
- #   steps:
- #     - name: Get short SHA
- #       run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
- #
- #     - name: Download deb
- #       uses: actions/download-artifact@v3
- #       with: 
- #         name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-linux-deb
- #
- #     - name: ls
- #       run: ls .
- #
- #     - name: Try installing deb
- #       run: sudo dpkg -i ./*.deb
+  # linux-test-deb:
+  #   runs-on: ubunut-latest
+  #   needs: linux-build
+  #   strategy:
+  #     matrix:
+  #       build_type: [Debug, Release]
+  #       gpu_api: [None, OpenCL]
+  #   steps:
+  #     - name: Get short SHA
+  #       run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+  #
+  #     - name: Download deb
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-linux-deb
+  #
+  #     - name: ls
+  #       run: ls .
+  #
+  #     - name: Try installing deb
+  #       run: sudo dpkg -i ./*.deb
 
   windows-build:
     runs-on: windows-latest
     strategy:
       matrix:
-        build_type: [Debug, Release]
-        gpu_api: [None]
-        vectorize: [true, false]
+        build_type: [ Debug, Release ]
+        gpu_api: [ None ]
+        vectorize: [ true, false ]
         exclude:
           - gpu_api: OpenCL
             vectorize: false
@@ -191,7 +190,7 @@ jobs:
       VECTORIZE: ${{ matrix.vectorize }}
     steps:
       - name: echo matrix variables (build_type = ${{ matrix.build_type }})
-        run: | 
+        run: |
           echo "env:BUILD_TYPE = $env:BUILD_TYPE"
           echo "env:GPU_API = $env:GPU_API"
 
@@ -233,7 +232,7 @@ jobs:
           mkdir 3rdParty
 
       - name: Download mingw64 and extract
-        run: | 
+        run: |
           cmd
           curl -JL -o bin/gcc12.7z "https://github.com/niXman/mingw-builds-binaries/releases/download/12.2.0-rt_v10-rev0/x86_64-12.2.0-release-posix-seh-rt_v10-rev0.7z"
           7z x -obin bin/gcc12.7z
@@ -255,7 +254,7 @@ jobs:
           cmake -S 3rdParty/zlib -B bin/build-zlib -G Ninja -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_BUILD_TYPE="$BUILD_TYPE" -DCMAKE_INSTALL_PREFIX="$basedir/bin/mingw64"
           cmake --build bin/build-zlib --parallel
           cmake --install bin/build-zlib
-      
+
       - name: Build and install libzip
         run: |
           $basedir=(pwd).path.replace("\\","/")
@@ -283,7 +282,7 @@ jobs:
           cmake -S 3rdParty/libpng -B bin/build-libpng -G Ninja -DCMAKE_BUILD_TYPE="$BUILD_TYPE" -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/g++.exe" -DCMAKE_INSTALL_PREFIX="$basedir/bin/mingw64" -DCMAKE_PREFIX_PATH="$basedir/bin/mingw64"
           cmake --build bin/build-libpng --parallel
           cmake --install bin/build-libpng
-            
+
       - name: Download Qt6.4.0-gcc12-shared and extract
         run: |
           cmd
@@ -302,7 +301,7 @@ jobs:
           mkdir build
           mkdir install
           cmake -S . -B build -G "MinGW Makefiles" -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/g++.exe" -DCMAKE_PREFIX_PATH:PATH="$basedir/bin/Qt6.4.0-gcc12-shared" -DCMAKE_INSTALL_PREFIX:PATH="$basedir/install" -DCMAKE_BUILD_TYPE="$BUILD_TYPE" -DSlopeCraft_GPU_API:STRING="$GPU_API" -DSlopeCraft_vectorize:BOOL=$VECTORIZE
-      
+
       - name: CMake build
         run: |
           $basedir=(pwd).path.replace("\\","/")
@@ -341,10 +340,10 @@ jobs:
 
       - name: Upload 7z pack
         uses: actions/upload-artifact@v3
-        with: 
+        with:
           name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-vec=${{ matrix.vectorize }}-windows-gcc-7z
           path: pack/SlopeCraft*.7z
-          if-no-files-found: error 
+          if-no-files-found: error
 
 
       #- name: Tree /f
@@ -356,7 +355,7 @@ jobs:
       #    path: bin/all_files_on_D.txt
       #    if-no-files-found: error 
 
-      
+
 
       #- name: Upload gcc
       #  uses: actions/upload-artifact@v3
