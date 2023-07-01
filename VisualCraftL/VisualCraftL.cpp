@@ -1417,3 +1417,157 @@ VCL_EXPORT_FUN uint32_t VCL_locate_colormap(const VCL_resource_pack *rp,
 
   return rp->standard_color(info, !is_grass);
 }
+
+class VCL_preset {
+ public:
+  std::unordered_set<std::string> ids;
+  std::unordered_set<VCL_block_class_t> classes;
+};
+
+void write_to_string_deliver(std::string_view sv,
+                             VCL_string_deliver *strp) noexcept {
+  if (strp == nullptr) {
+    return;
+  }
+  if (strp->data == nullptr || strp->capacity <= 0) {
+    return;
+  }
+
+  const size_t written_bytes = std::min(sv.size(), strp->capacity - 1);
+  memcpy(strp->data, sv.data(), written_bytes);
+  strp->size = written_bytes;
+  strp->data[strp->capacity - 1] = '\0';
+}
+
+#include <json.hpp>
+#include <fstream>
+using njson = nlohmann::json;
+
+VCL_EXPORT VCL_preset *VCL_create_preset() { return new VCL_preset{}; }
+VCL_EXPORT VCL_preset *VCL_load_preset(const char *filename,
+                                       VCL_string_deliver *error) {
+  write_to_string_deliver("", error);
+  njson block_ids;
+  njson block_classes;
+  try {
+    std::ifstream ifs{filename};
+    auto nj = njson::parse(ifs, nullptr, true, true);
+    block_ids = std::move(nj.at("block_ids"));
+    block_classes = std::move(nj.at("block_classes"));
+  } catch (std::exception &e) {
+    auto err = fmt::format("Exception occurred when parsing {}, detail: {}",
+                           filename, e.what());
+    write_to_string_deliver(err, error);
+    return nullptr;
+  }
+
+  VCL_preset *p = new VCL_preset{};
+  p->ids.reserve(block_ids.size());
+
+  for (auto &pair : block_ids.items()) {
+    p->ids.emplace(std::move(pair.key()));
+  }
+  for (auto &pair : block_classes.items()) {
+    auto cls = magic_enum::enum_cast<VCL_block_class_t>(pair.key());
+    if (!cls.has_value()) {
+      auto err = fmt::format(
+          "Invalid block class \"{}\" can not be converted to "
+          "VCL_block_class_t",
+          pair.key());
+      write_to_string_deliver(err, error);
+      delete p;
+      return nullptr;
+    }
+    p->classes.emplace(cls.value());
+  }
+  return p;
+}
+
+VCL_EXPORT bool VCL_save_preset(const VCL_preset *p, const char *filename,
+                                VCL_string_deliver *error) {
+  write_to_string_deliver("", error);
+  njson nj;
+  {
+    njson classes, ids;
+    for (const auto &id : p->ids) {
+      ids.emplace(id, njson::object_t{});
+    }
+    for (const auto cls : p->classes) {
+      classes.emplace(magic_enum::enum_name(cls), njson::object_t{});
+    }
+    nj.emplace("block_ids", std::move(ids));
+    nj.emplace("block_classes", std::move(classes));
+  }
+
+  std::ofstream ofs{filename};
+  if (!ofs) {
+    write_to_string_deliver(fmt::format("Failed to open/create {}", filename),
+                            error);
+    return false;
+  }
+  ofs << nj.dump(2);
+  ofs.close();
+  return true;
+}
+
+VCL_EXPORT void VCL_destroy_preset(VCL_preset *p) { delete p; }
+
+VCL_EXPORT bool VCL_preset_contains_id(const VCL_preset *p, const char *id) {
+  return p->ids.contains(id);
+}
+
+VCL_EXPORT void VCL_preset_emplace_id(VCL_preset *p, const char *id) {
+  p->ids.emplace(id);
+}
+
+VCL_EXPORT bool VCL_preset_contains_class(const VCL_preset *p,
+                                          VCL_block_class_t cls) {
+  return p->classes.contains(cls);
+}
+
+VCL_EXPORT void VCL_preset_emplace_class(VCL_preset *p, VCL_block_class_t cls) {
+  p->classes.emplace(cls);
+}
+
+VCL_EXPORT void VCL_preset_clear(VCL_preset *p) {
+  p->ids.clear();
+  p->classes.clear();
+}
+
+VCL_EXPORT size_t VCL_preset_num_ids(const VCL_preset *p) {
+  return p->ids.size();
+}
+
+VCL_EXPORT size_t VCL_preset_get_ids(const VCL_preset *p, const char **id_dest,
+                                     size_t capacity) {
+  size_t written_num{0};
+
+  for (const auto &pair : p->ids) {
+    if (capacity <= written_num) {
+      break;
+    }
+
+    id_dest[written_num] = pair.c_str();
+    written_num++;
+  }
+  return written_num;
+}
+
+VCL_EXPORT size_t VCL_preset_num_classes(const VCL_preset *p) {
+  return p->classes.size();
+}
+
+VCL_EXPORT size_t VCL_preset_get_classes(const VCL_preset *p,
+                                         VCL_block_class_t *class_dest,
+                                         size_t capacity) {
+  size_t written_num{0};
+  for (const auto cls : p->classes) {
+    if (capacity <= written_num) {
+      break;
+    }
+
+    class_dest[written_num] = cls;
+    written_num++;
+  }
+  return written_num;
+}

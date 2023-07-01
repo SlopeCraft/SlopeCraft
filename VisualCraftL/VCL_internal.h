@@ -29,4 +29,7 @@ This file is part of SlopeCraft.
 
 void VCL_report(VCL_report_type_t, const char *, bool flush = false) noexcept;
 
-#endif // SLOPECRAFT_VISUALCRAFTL_VCL_INTERNAL_H
+void write_to_string_deliver(std::string_view sv,
+                             VCL_string_deliver *strp) noexcept;
+
+#endif  // SLOPECRAFT_VISUALCRAFTL_VCL_INTERNAL_H
