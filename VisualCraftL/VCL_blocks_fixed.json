@@ -594,6 +594,22 @@
     "version": "all",
     "is_foliage": true
   },
+  "minecraft:mangrove_leaves[distance=7,persistent=true]": {
+    "burnable": true,
+    "class": "leaves",
+    "nameEN": "Mangrove leaves",
+    "nameZH": "红树树叶",
+    "version": 19,
+    "is_foliage": true
+  },
+  "minecraft:cherry_leaves[distance=7,persistent=true]": {
+    "burnable": true,
+    "class": "leaves",
+    "nameEN": "Cherry leaves",
+    "nameZH": "樱花树叶",
+    "version": 20,
+    "is_foliage": true
+  },
   "minecraft:blue_ice": {
     "class": "natural",
     "nameEN": "Blue ice",
@@ -3577,7 +3593,146 @@
     "nameEN": "Bamboo planks",
     "nameZH": "竹板",
     "class": "planks",
-    "version": 20
+    "version": 20,
+    "burnable": true
+  },
+  "minecraft:cherry_planks": {
+    "nameEN": "Cherry planks",
+    "nameZH": "樱花木板",
+    "class": "planks",
+    "version": 20,
+    "burnable": true
+  },
+  "minecraft:bamboo_mosaic": {
+    "nameEN": "Bamboo mosaic",
+    "nameZH": "竹马赛克",
+    "class": "planks",
+    "version": 20,
+    "burnable": true
+  },
+  "minecraft:bamboo_block[axis=y]": {
+    "class": "wood",
+    "nameEN": "Bamboo block (Y axis)",
+    "nameZH": "竹块 (Y 轴)",
+    "version": 20,
+    "burnable": true
+  },
+  "minecraft:bamboo_block[axis=x]": {
+    "class": "wood",
+    "nameEN": "Bamboo block (X axis)",
+    "nameZH": "竹块 (X 轴)",
+    "version": 20,
+    "faces": [
+      "east",
+      "west",
+      "up",
+      "down"
+    ],
+    "burnable": true
+  },
+  "minecraft:bamboo_block[axis=z]": {
+    "class": "wood",
+    "nameEN": "Bamboo block (Z axis)",
+    "nameZH": "竹块 (Z 轴)",
+    "version": 20,
+    "faces": [
+      "north",
+      "south"
+    ],
+    "burnable": true
+  },
+  "minecraft:stripped_bamboo_block[axis=y]": {
+    "class": "wood",
+    "nameEN": "Bamboo block (Y axis)",
+    "nameZH": "去皮竹块 (Y 轴)",
+    "version": 20,
+    "burnable": true
+  },
+  "minecraft:stripped_bamboo_block[axis=x]": {
+    "class": "wood",
+    "nameEN": "Bamboo block (X axis)",
+    "nameZH": "去皮竹块 (X 轴)",
+    "version": 20,
+    "faces": [
+      "east",
+      "west",
+      "up",
+      "down"
+    ],
+    "burnable": true
+  },
+  "minecraft:stripped_bamboo_block[axis=z]": {
+    "class": "wood",
+    "nameEN": "Bamboo block (Z axis)",
+    "nameZH": "去皮竹块 (Z 轴)",
+    "version": 20,
+    "faces": [
+      "north",
+      "south"
+    ],
+    "burnable": true
+  },
+  "minecraft:cherry_log[axis=y]": {
+    "class": "wood",
+    "nameEN": "Cherry log (Y axis)",
+    "nameZH": "樱花原木 (Y 轴)",
+    "version": 20,
+    "burnable": true
+  },
+  "minecraft:cherry_log[axis=x]": {
+    "class": "wood",
+    "nameEN": "Cherry log (X axis)",
+    "nameZH": "樱花原木 (X 轴)",
+    "version": 20,
+    "faces": [
+      "east",
+      "west",
+      "up",
+      "down"
+    ],
+    "burnable": true
+  },
+  "minecraft:cherry_log[axis=z]": {
+    "class": "wood",
+    "nameEN": "Cherry log (Z axis)",
+    "nameZH": "樱花原木 (Z 轴)",
+    "version": 20,
+    "faces": [
+      "north",
+      "south"
+    ],
+    "burnable": true
+  },
+  "minecraft:stripped_cherry_log[axis=y]": {
+    "class": "wood",
+    "nameEN": "Cherry log (Y axis)",
+    "nameZH": "去皮樱花原木 (Y 轴)",
+    "version": 20,
+    "burnable": true
+  },
+  "minecraft:stripped_cherry_log[axis=x]": {
+    "class": "wood",
+    "nameEN": "Cherry log (X axis)",
+    "nameZH": "去皮樱花原木 (X 轴)",
+    "version": 20,
+    "faces": [
+      "east",
+      "west",
+      "up",
+      "down"
+    ],
+    "burnable": true
+  },
+  "minecraft:stripped_cherry_log[axis=z]": {
+    "class": "wood",
+    "nameEN": "Cherry log (Z axis)",
+    "nameZH": "去皮樱花原木 (Z 轴)",
+    "version": 20,
+    "faces": [
+      "north",
+      "south"
+    ],
+    "burnable": true
   }
   /*,
     "minecraft:beacon": {
