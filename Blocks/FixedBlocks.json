@@ -1721,6 +1721,14 @@
       "icon": "cherry_leaves.png",
       "version": 20,
       "burnable": true
+    },
+    {
+      "baseColor": 50,
+      "id": "minecraft:decorated_pot",
+      "nameZH": "陶罐",
+      "nameEN": "Decorated pot",
+      "icon": "burn_pottery_pattern.png",
+      "version": 20
     }
   ]
 }
