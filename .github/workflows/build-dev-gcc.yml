@@ -52,7 +52,7 @@ jobs:
       - name: Compress as zip
         run: |
           cd ./build/install
-          zip -9 -r -y SlopeCraft-5.2.0-macos.zip ./*
+          zip -9 -r -y SlopeCraft-5.1.0-macos.zip ./*
 
       - name: Get short SHA
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
@@ -60,7 +60,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-macos-gcc
-          path: build/install/SlopeCraft-5.2.0-macos.zip
+          path: build/install/SlopeCraft-5.1.0-macos.zip
   
   linux-build:
     runs-on: ubuntu-latest
