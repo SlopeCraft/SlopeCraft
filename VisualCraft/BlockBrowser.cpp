@@ -102,7 +102,7 @@ void BlockBrowser::fetch_content() noexcept {
         QVariant::fromValue((void *)blk));
   }
   {
-    this->ui->tw_version->setRowCount(19 - 12 + 1);
+    this->ui->tw_version->setRowCount(20 - 12 + 1);
     this->ui->tw_version->setColumnCount(2);
     // if (false)
     for (int r = 0; r < this->ui->tw_version->rowCount(); r++) {
@@ -265,7 +265,7 @@ void BlockBrowser::on_combobox_select_blk_all_currentIndexChanged(
 
   this->ui->tb_blockid_all->setText(VCL_get_block_id(blk));
 
-  for (int v = 12; v <= 19; v++) {
+  for (int v = 12; v <= 20; v++) {
     const int r = v - 12;
     QTableWidgetItem *qtwi = this->ui->tw_version->item(r, 1);
     assert(qtwi != nullptr);

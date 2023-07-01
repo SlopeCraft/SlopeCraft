@@ -31,7 +31,6 @@ This file is part of SlopeCraft.
 using std::cout, std::endl;
 
 int main(int argc, char **argv) {
-
   CLI::App app;
   std::vector<std::string> input_files;
 
@@ -45,7 +44,7 @@ int main(int argc, char **argv) {
   int __version;
   app.add_option("--version", __version, "MC version.")
       ->default_val(19)
-      ->check(CLI::Range(12, 19, "Avaliable versions."));
+      ->check(CLI::Range(12, int(max_version), "Avaliable versions."));
   int __layers;
   app.add_option("--layers", __layers, "Max layers")
       ->default_val(3)
@@ -83,7 +82,6 @@ int main(int argc, char **argv) {
   }
 
   {
-
     std::vector<const char *> zip_filenames, json_filenames;
 
     for (const std::string &i : input_files) {
@@ -140,7 +138,6 @@ int main(int argc, char **argv) {
         return 1;
       }
     } else {
-
       if (!VCL_set_resource_copy(rp, bsl, option)) {
         cout << "Failed to set resource pack" << endl;
         VCL_destroy_block_state_list(bsl);
@@ -169,7 +166,6 @@ int main(int argc, char **argv) {
     return 1;
   }
   if (!VCL_set_allowed_blocks(blocks.data(), blocks.size())) {
-
     cout << "VCL_set_allowed_blocks failed." << endl;
 
     VCL_destroy_kernel(kernel);

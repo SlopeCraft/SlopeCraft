@@ -36,7 +36,7 @@ const colorset_basic_t TokiSlopeCraft::Basic(SlopeCraft::RGBBasicSource);
 colorset_allowed_t TokiSlopeCraft::Allowed;
 
 gameVersion TokiSlopeCraft::mcVer{
-    SCL_gameVersion::MC17};  // 12,13,14,15,16,17,18,19
+    SCL_gameVersion::MC17};  // 12,13,14,15,16,17,18,19,20
 mapTypes TokiSlopeCraft::mapType;
 std::vector<simpleBlock> TokiSlopeCraft::blockPalette(0);
 

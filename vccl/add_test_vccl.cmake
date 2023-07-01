@@ -44,7 +44,7 @@ endif ()
 
 # set(dither "true" "false")
 foreach (_layers RANGE 1 3 1)
-    foreach (_ver RANGE 12 19)
+    foreach (_ver RANGE 12 20)
         set(VCL_current_var_name VCL_resource_${mcver})
         set(zip_file ${VCL_current_var_name})
 
@@ -73,7 +73,7 @@ foreach (_layers RANGE 1 3 1)
                 endforeach (_dither ${dither})
             endforeach (_algo ${algos})
         endforeach (_face ${list_faces})
-    endforeach (_ver RANGE 12 19)
+    endforeach (_ver RANGE 12 20)
 endforeach (_layers RANGE 1 3 1)
 
 

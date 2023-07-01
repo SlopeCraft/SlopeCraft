@@ -35,7 +35,6 @@ bool rewrite_png(const char *const filename,
                                     Eigen::RowMajor> &img) noexcept;
 
 int main(int argc, char **argv) {
-
   CLI::App app;
 
   std::vector<std::string> input_files;
@@ -57,7 +56,7 @@ int main(int argc, char **argv) {
     int __version;
     app.add_option("--version", __version, "MC version.")
         ->default_val(19)
-        ->check(CLI::Range(12, 19, "Avaliable versions."));
+        ->check(CLI::Range(12, int(max_version), "Avaliable versions."));
     /*
         int __layers;
         app.add_option("--layers", __layers, "Max layers")

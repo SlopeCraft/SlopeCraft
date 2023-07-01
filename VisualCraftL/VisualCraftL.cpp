@@ -1260,7 +1260,7 @@ const char *VCL_biome_name_ZH(VCL_biome_t b) noexcept {
     case VCL_biome_t::end_barrens:
       return "末地荒地";
     case VCL_biome_t::cherry_grove:
-      return "樱花树林 (1.20)";
+      return "樱花树林";
   }
   return "Unamed";
 }

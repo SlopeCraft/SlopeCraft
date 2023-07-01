@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-    <img src="https://img.shields.io/badge/Minecraft-1.12~1.19-green?style=for-the-badge" />
+    <img src="https://img.shields.io/badge/Minecraft-1.12~1.20-green?style=for-the-badge" />
     <a href="LICENSE">
         <img src="https://img.shields.io/badge/License-GPL--3.0-important?style=for-the-badge" />
     </a>
@@ -39,12 +39,12 @@ SlopeCraft 是一款基于 Qt + Eigen + zlib 开发的，用于在 Minecraft 中
 1. 从 [Release](https://github.com/SlopeCraft/SlopeCraft/releases/latest) 页面下载最新版本的 SlopeCraft。
 
 2. 运行 SlopeCraft
-   - Windows 用户：下载 `SlopeCraft-x.x.x-win.zip`，解压后运行 `SlopeCraft.exe`
-   - macOS 用户：下载 `SlopeCraft-x.x.x-mac.zip`，解压后将 `SlopeCraft.app` 拖入应用程序文件夹并运行 `SlopeCraft`
-   - Linux 用户：下载 `SlopeCraft-x.x.x-linux.tar.xz`，解压后运行 `SlopeCraft`
+    - Windows 用户：下载 `SlopeCraft-x.x.x-win.zip`，解压后运行 `SlopeCraft.exe`
+    - macOS 用户：下载 `SlopeCraft-x.x.x-mac.zip`，解压后将 `SlopeCraft.app` 拖入应用程序文件夹并运行 `SlopeCraft`
+    - Linux 用户：下载 `SlopeCraft-x.x.x-linux.tar.xz`，解压后运行 `SlopeCraft`
 
-    ::: tips
-        此处的 `x.x.x` 为 SlopeCraft 的版本号，例如 `5.0.0`。
+   ::: tips
+   此处的 `x.x.x` 为 SlopeCraft 的版本号，例如 `5.0.0`。
 
 3. 在进行任何操作前，请确保你已经阅读了 [常见问题](https://slopecraft.readthedocs.io/faq/) 和使用教程。
 
