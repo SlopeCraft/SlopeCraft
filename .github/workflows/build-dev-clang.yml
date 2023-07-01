@@ -1,4 +1,4 @@
-name: Beta version built with clang(for windows and macos)
+name: Beta version built with clang(for windows and macos) (macos build is hidden)
 on:
   pull_request:
   push:
@@ -150,57 +150,57 @@ jobs:
           if-no-files-found: error
 
 
-  macos-build:
-    runs-on: macos-latest
-    strategy:
-      matrix:
-        build_type: [ Debug, Release ]
-        gpu_api: [ None ]
-    env:
-      BUILD_TYPE: ${{ matrix.build_type }}
-      GPU_API: ${{ matrix.gpu_api }}
-    steps:
-      - name: brew update
-        run: brew update
-      - name: echo matrix variables (build_type = ${{ matrix.build_type }})
-        run: |
-          echo $BUILD_TYPE
-          echo $GPU_API
-      - name: Install build system
-        run: brew install ninja cmake
-      - name: Install dependencies
-        run: |
-          brew install libpng qt@6 eigen
-          brew reinstall libomp
-      - name: Add /usr/local/lib to PATH
-        run: echo "/usr/local/lib" >> $GITHUB_PATH
-      - name: Check PATH
-        run: echo $PATH
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      - name: Configure CMake
-        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH=/System/Volumes/Data/usr/local/Cellar
-      - name: Build and Install
-        run: |
-          cd build
-          cmake --build . --parallel
-          cmake --install .
-          cd install
-          chmod +x SlopeCraft.app/Contents/MacOS/SlopeCraft
-          chmod +x MapViewer.app/Contents/MacOS/MapViewer
-          chmod +x imageCutter.app/Contents/MacOS/imageCutter
-          chmod +x VisualCraft.app/Contents/MacOS/VisualCraft
-          chmod +x vccl-contents/vccl.app/Contents/MacOS/vccl
-      # chmod +x vccl.app/Contents/MacOS/vccl
-      - name: Compress as zip
-        run: |
-          cd ./build/install
-          zip -9 -r -y SlopeCraft-5.1.0-macos.zip ./*
-
-      - name: Get short SHA
-        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-macos-clang
-          path: build/install/SlopeCraft-5.1.0-macos.zip
+#  macos-build:
+#    runs-on: macos-latest
+#    strategy:
+#      matrix:
+#        build_type: [ Debug, Release ]
+#        gpu_api: [ None ]
+#    env:
+#      BUILD_TYPE: ${{ matrix.build_type }}
+#      GPU_API: ${{ matrix.gpu_api }}
+#    steps:
+#      - name: brew update
+#        run: brew update
+#      - name: echo matrix variables (build_type = ${{ matrix.build_type }})
+#        run: |
+#          echo $BUILD_TYPE
+#          echo $GPU_API
+#      - name: Install build system
+#        run: brew install ninja cmake
+#      - name: Install dependencies
+#        run: |
+#          brew install libpng qt@6 eigen
+#          brew reinstall libomp
+#      - name: Add /usr/local/lib to PATH
+#        run: echo "/usr/local/lib" >> $GITHUB_PATH
+#      - name: Check PATH
+#        run: echo $PATH
+#      - name: Checkout repository
+#        uses: actions/checkout@v2
+#      - name: Configure CMake
+#        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH=/System/Volumes/Data/usr/local/Cellar
+#      - name: Build and Install
+#        run: |
+#          cd build
+#          cmake --build . --parallel
+#          cmake --install .
+#          cd install
+#          chmod +x SlopeCraft.app/Contents/MacOS/SlopeCraft
+#          chmod +x MapViewer.app/Contents/MacOS/MapViewer
+#          chmod +x imageCutter.app/Contents/MacOS/imageCutter
+#          chmod +x VisualCraft.app/Contents/MacOS/VisualCraft
+#          chmod +x vccl-contents/vccl.app/Contents/MacOS/vccl
+#      # chmod +x vccl.app/Contents/MacOS/vccl
+#      - name: Compress as zip
+#        run: |
+#          cd ./build/install
+#          zip -9 -r -y SlopeCraft-5.1.0-macos.zip ./*
+#
+#      - name: Get short SHA
+#        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+#      - name: Upload Artifacts
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-macos-clang
+#          path: build/install/SlopeCraft-5.1.0-macos.zip
