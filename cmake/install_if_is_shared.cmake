@@ -1,8 +1,23 @@
+if (${WIN32})
+    include(${CMAKE_SOURCE_DIR}/cmake/scan_deps_for_lib.cmake)
+endif ()
+
 function(SlopeCraft_install_lib lib_location dest)
     cmake_path(GET lib_location EXTENSION extension)
 
+    if (extension STREQUAL ".dll")
+        message(STATUS "Install ${lib_location} to ${dest}")
+        install(FILES ${lib_location}
+                DESTINATION ${dest})
+        return()
+    endif ()
+
     # message(STATUS "extension of ${lib_location} is ${extension}")
-    if((extension MATCHES ".dll.a") OR(extension MATCHES ".dll.lib"))
+    is_export_library(${lib_location} is_export)
+    message(STATUS "is_export = ${is_export}")
+
+    if (${is_export})
+        message(STATUS "${lib_location} is a export library")
         cmake_path(GET lib_location STEM lib_stem)
 
         # message(STATUS "lib_stem = ${lib_stem}")
@@ -21,40 +36,33 @@ function(SlopeCraft_install_lib lib_location dest)
         # PATH_SUFFIXES bin
         # NO_CACHE)
         find_library(dll_location
-            NAMES lib_stem
-            PATHS ${search_dir}
-            PATH_SUFFIXES bin
-            NO_CACHE)
+                NAMES lib_stem
+                PATHS ${search_dir}
+                PATH_SUFFIXES bin
+                NO_CACHE)
 
-        if(NOT dll_location)
+        if (NOT dll_location)
             # message(STATUS "find_library failed to find ${dll_name}, retry with file GLOB")
             file(GLOB dll_location "${search_dir}/bin/${lib_stem}*.dll")
 
             list(LENGTH dll_location len)
 
-            if(len LESS_EQUAL 0)
+            if (len LESS_EQUAL 0)
                 message(FATAL_ERROR "Trying to install dll of ${lib_location}, but failed to find ${dll_name}. 
                     The released package may failed to find this dll.")
                 return()
-            endif()
-        endif()
+            endif ()
+        endif ()
 
         SlopeCraft_install_lib(${dll_location} ${dest})
 
         return()
-    endif()
+    endif ()
 
-    if(extension MATCHES ".dll")
-        message(STATUS "Install ${lib_location} to ${dest}")
-        install(FILES ${lib_location}
-            DESTINATION ${dest})
-        return()
-    endif()
-
-    if((extension MATCHES ".a") OR(extension MATCHES ".lib"))
+    if ((extension MATCHES ".a") OR (extension MATCHES ".lib"))
         message(STATUS "\"${lib_location}\" is a static library, skip installation of it.")
         return()
-    endif()
+    endif ()
 
     message(FATAL_ERROR "Unknown library extension: ${extension}")
 endfunction(SlopeCraft_install_lib)
@@ -74,22 +82,22 @@ function(SlopeCraft_install_if_is_shared target dest)
     # message(STATUS "Location of ${target} is : ${target_location}")
     set(skip_this false)
 
-    if(${target_type} STREQUAL EXECUTABLE)
+    if (${target_type} STREQUAL EXECUTABLE)
         set(skip_this true)
-    endif()
+    endif ()
 
-    if(${target_type} STREQUAL STATIC_LIBRARY)
+    if (${target_type} STREQUAL STATIC_LIBRARY)
         set(skip_this true)
-    endif()
+    endif ()
 
-    if(${target_type} STREQUAL OBJECT_LIBRARY)
+    if (${target_type} STREQUAL OBJECT_LIBRARY)
         set(skip_this true)
-    endif()
+    endif ()
 
-    if(${skip_this})
+    if (${skip_this})
         message(STATUS "Skip installing ${target} because it is not a shared lib. TYPE = ${target_type}")
         return()
-    endif()
+    endif ()
 
     SlopeCraft_install_lib(${target_location} ${dest})
 endfunction(SlopeCraft_install_if_is_shared)
