@@ -487,3 +487,19 @@ void VCWind::on_pb_execute_clicked() noexcept {
     this->setup_image(pair.second.first);
   }
 }
+
+void VCWind::on_ac_export_test_schem_triggered() noexcept {
+  static QString prev_dir{""};
+  QString file = QFileDialog::getSaveFileName(
+      this, tr("保存测试投影"), prev_dir, "*.litematic;;*.nbt;;*.schem");
+  if (file.isEmpty()) {
+    return;
+  }
+  prev_dir = QFileInfo{file}.dir().absolutePath();
+
+  bool ok = VCL_export_test_litematic(file.toLocal8Bit().data());
+  if (!ok) {
+    QMessageBox::warning(this, tr("无法输出测试投影"),
+                         tr("详细错误信息在之前的窗口中"));
+  }
+}

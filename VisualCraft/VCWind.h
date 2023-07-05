@@ -221,6 +221,7 @@ class VCWind : public QMainWindow {
   // for all pages ------------------------------------------
 
   void on_ac_flush_warnings_triggered() noexcept;
+  void on_ac_export_test_schem_triggered() noexcept;
 
   // auto connected
   void on_tabWidget_main_currentChanged(int page) noexcept;

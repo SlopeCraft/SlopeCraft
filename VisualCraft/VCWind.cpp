@@ -552,6 +552,7 @@ void VCWind::update_hash_allowed(const allowed_colorset_option &opt) noexcept {
 
 void VCWind::setup_allowed_colorset() noexcept {
   this->setup_basical_colorset();
+  this->ui->ac_export_test_schem->setEnabled(true);
 
   allowed_colorset_option cur_option;
   if (VCL_is_allowed_colorset_ok() &&
