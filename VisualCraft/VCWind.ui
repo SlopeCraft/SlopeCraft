@@ -140,7 +140,7 @@
              <item row="6" column="0">
               <widget class="QRadioButton" name="rdb_version_20">
                <property name="text">
-                <string>1.20</string>
+                <string notr="true">1.20</string>
                </property>
               </widget>
              </item>
@@ -447,8 +447,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>885</width>
-                  <height>305</height>
+                  <width>98</width>
+                  <height>28</height>
                  </rect>
                 </property>
                 <layout class="QGridLayout" name="gl_sa_blocks"/>

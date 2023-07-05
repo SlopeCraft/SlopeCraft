@@ -184,11 +184,14 @@ void VCWind::on_combobox_select_device_currentIndexChanged(int idx) noexcept {
 
   if (!err.isEmpty()) {
     auto ret = QMessageBox::critical(
-        this, VCWind::tr("设置计算设备失败"), err,
+        this, VCWind::tr("设置计算设备失败"),
+        tr("%1\n\n这不是一个致命错误，您可以选择其他的显卡，或者只使用 CPU "
+           "计算。点击 Ignore 将忽略这个错误，点击 Close 将关闭 VisualCraft")
+            .arg(err),
         QMessageBox::StandardButtons{QMessageBox::StandardButton::Close,
                                      QMessageBox::StandardButton::Ignore});
     if (ret == QMessageBox::StandardButton::Close) {
-      abort();
+      exit(1);
     }
   }
 }
