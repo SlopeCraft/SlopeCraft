@@ -1,4 +1,4 @@
-name: Beta version built with gcc(for windows, linux and macos)
+name: gcc build(for windows, linux and macos)
 on:
   pull_request:
   push:
@@ -17,8 +17,10 @@ jobs:
       BUILD_TYPE: ${{ matrix.build_type }}
       GPU_API: ${{ matrix.gpu_api }}
     steps:
-      - name: brew update
-        run: brew update
+      - name: brew upgrade & update
+        run: |
+          brew upgrade
+          brew update
       - name: echo matrix variables (build_type = ${{ matrix.build_type }})
         run: |
           echo $BUILD_TYPE

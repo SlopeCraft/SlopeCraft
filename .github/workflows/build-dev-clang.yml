@@ -1,4 +1,4 @@
-name: Beta version built with clang(for windows and macos) (macos build is hidden)
+name: clang build(for windows and macos) (macos build is hidden)
 on:
   pull_request:
   push:
