@@ -19,6 +19,7 @@ if (${WIN32})
         find_library(dll_file
                 NAMES ${dllname}
                 PATHS ${CMAKE_PREFIX_PATH}
+                PATH_SUFFIXES bin
                 NO_CMAKE_INSTALL_PREFIX
                 NO_CACHE)
 
@@ -26,6 +27,7 @@ if (${WIN32})
             find_file(dll_file
                     NAMES "lib${dllname}.dll"
                     PATHS ${CMAKE_PREFIX_PATH}
+                    PATH_SUFFIXES bin
                     NO_CMAKE_INSTALL_PREFIX
                     NO_CACHE)
         endif ()
