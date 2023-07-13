@@ -1,10 +1,10 @@
 set(SlopeCraft_Eigen3_found OFF)
-find_package(Eigen3 3.4.0)
+find_package(Eigen3 3.4.0 QUIET)
 
-if(${Eigen3_FOUND})
+if (${Eigen3_FOUND})
     message(STATUS "EIGEN3_INCLUDE_DIR = ${EIGEN3_INCLUDE_DIR}")
     return()
-endif()
+endif ()
 
 include(FetchContent)
 

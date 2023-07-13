@@ -3,11 +3,11 @@ set(BUILD_SANDBOX OFF)
 set(BUILD_DOC OFF)
 set(CEREAL_INSTALL OFF)
 
-find_package(cereal)
+find_package(cereal QUIET)
 
-if(${cereal_FOUND})
+if (${cereal_FOUND})
     return()
-endif()
+endif ()
 
 include(FetchContent)
 
