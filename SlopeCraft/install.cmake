@@ -82,7 +82,8 @@ if (CMAKE_SYSTEM_NAME MATCHES "Windows")
         FLAGS ${SlopeCraft_windeployqt_flags_install})
     DLLD_add_deploy(SlopeCraft
         BUILD_MODE
-        INSTALL_MODE INSTALL_DESTINATION .)
+        INSTALL_MODE INSTALL_DESTINATION .
+        IGNORE SlopeCraftL.dll)
 
     # Install FixedBlocks.json, CustomBlocks.json and README.md
     install(FILES ${SlopeCraft_install_jsons}

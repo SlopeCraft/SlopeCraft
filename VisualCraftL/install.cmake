@@ -18,6 +18,9 @@ if (${WIN32})
     install(TARGETS VisualCraftL
         RUNTIME DESTINATION ../install_SlopeCraftL/Cpp/bin
         LIBRARY DESTINATION ../install_SlopeCraftL/Cpp/lib)
+    
+    DLLD_add_deploy(VisualCraftL
+        INSTALL_MODE INSTALL_DESTINATION .)
 
     # install(TARGETS VisualCraftL_static
     # RUNTIME DESTINATION ../install_SlopeCraftL/Cpp/bin
@@ -27,6 +30,7 @@ if (${WIN32})
     #    SlopeCraft_install_if_is_shared(ZLIB::ZLIB .)
     #    SlopeCraft_install_if_is_shared(libzip::zip .)
     #    SlopeCraft_install_if_is_shared(PNG::PNG .)
+
     return()
 endif ()
 

@@ -20,7 +20,8 @@ if (CMAKE_SYSTEM_NAME MATCHES "Windows")
         FLAGS ${SlopeCraft_windeployqt_flags_install})
     DLLD_add_deploy(VisualCraft
         BUILD_MODE
-        INSTALL_MODE INSTALL_DESTINATION .)
+        INSTALL_MODE INSTALL_DESTINATION .
+        IGNORE VisualCraftL.dll libVisualCraftL.dll)
 
     #    # Run windeployqt at build time
     #    add_custom_target(Windeployqt-VisualCraft
@@ -67,10 +68,13 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
 
     # Install zips. In vccl-config.json or vc-config.json, they are referred like ./Blocks_VCL/Vanilla_1_19_3.zip
     install(FILES ${VCL_app_files}
-        DESTINATION VisualCraft.app/Contents/MacOS/Blocks_VCL)
+        DESTINATION VisualCraft.app/Contents/MacOS/Blocks_VCL
+        )
+    QD_add_deployqt(VisualCraft
+        INSTALL_MODE INSTALL_DESTINATION .)
 
     # Run macdeployqt at install time
-    install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake)
+    #install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake)
 
     return()
 endif ()

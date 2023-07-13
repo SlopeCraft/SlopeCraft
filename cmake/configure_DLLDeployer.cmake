@@ -12,8 +12,8 @@ function(SC_download url filename)
 
     message(STATUS "Downloading ${url} ...")
     file(DOWNLOAD ${url} ${filename}
-            SHOW_PROGRESS
-            REQUIRED)
+        SHOW_PROGRESS
+        REQUIRED)
 
     file(SIZE ${filename} size)
     if (${size} LESS_EQUAL 0)
@@ -25,10 +25,10 @@ set(DLLD_download_dir ${CMAKE_SOURCE_DIR}/3rdParty/DLLDeployer)
 set(DLLD_file ${DLLD_download_dir}/DLLDeployer.cmake)
 set(QD_file ${DLLD_download_dir}/QtDeployer.cmake)
 
-SC_download(https://github.com/SlopeCraft/DLLDeployer/releases/download/v1.1/DLLDeployer.cmake
-        ${DLLD_file})
+SC_download(https://github.com/SlopeCraft/DLLDeployer/releases/download/v1.3/DLLDeployer.cmake
+    ${DLLD_file})
 include(${DLLD_file})
 
-SC_download(https://github.com/SlopeCraft/DLLDeployer/releases/download/v1.1/QtDeployer.cmake
-        ${QD_file})
+SC_download(https://github.com/SlopeCraft/DLLDeployer/releases/download/v1.3/QtDeployer.cmake
+    ${QD_file})
 include(${QD_file})

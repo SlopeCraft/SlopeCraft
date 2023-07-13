@@ -18,7 +18,8 @@ if (CMAKE_SYSTEM_NAME MATCHES "Windows")
         FLAGS ${SlopeCraft_windeployqt_flags_install})
     DLLD_add_deploy(vccl
         BUILD_MODE
-        INSTALL_MODE INSTALL_DESTINATION .)
+        INSTALL_MODE INSTALL_DESTINATION .
+        IGNORE VisualCraftL.dll libVisualCraftL.dll)
 
     #    # Run windeployqt at build time
     #    add_custom_target(Windeployqt-vccl
