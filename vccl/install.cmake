@@ -1,29 +1,39 @@
 set(AppName vccl)
 
-configure_file(${CMAKE_SOURCE_DIR}/cmake/deploy_qt.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake
-    @ONLY)
+#configure_file(${CMAKE_SOURCE_DIR}/cmake/deploy_qt.cmake.in
+#    ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake
+#    @ONLY)
 
-if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+if (CMAKE_SYSTEM_NAME MATCHES "Windows")
     install(TARGETS vccl
         RUNTIME DESTINATION .)
     install(FILES vccl-config.json
         DESTINATION .)
 
-    # Run windeployqt at build time
-    add_custom_target(Windeployqt-vccl
-        COMMAND ${SlopeCraft_Qt_windeployqt_executable} vccl.exe ${SlopeCraft_windeployqt_flags_build}
-        COMMAND_EXPAND_LISTS
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-        DEPENDS vccl)
-    add_dependencies(SC_deploy_all Windeployqt-vccl)
+    QD_add_deployqt(vccl
+        BUILD_MODE
+        FLAGS ${SlopeCraft_windeployqt_flags_build})
+    QD_add_deployqt(vccl
+        INSTALL_MODE INSTALL_DESTINATION .
+        FLAGS ${SlopeCraft_windeployqt_flags_install})
+    DLLD_add_deploy(vccl
+        BUILD_MODE
+        INSTALL_MODE INSTALL_DESTINATION .)
 
-    # Run windeployqt at install time
-    install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake)
+    #    # Run windeployqt at build time
+    #    add_custom_target(Windeployqt-vccl
+    #        COMMAND ${SlopeCraft_Qt_windeployqt_executable} vccl.exe ${SlopeCraft_windeployqt_flags_build}
+    #        COMMAND_EXPAND_LISTS
+    #        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    #        DEPENDS vccl)
+    #    add_dependencies(SC_deploy_all Windeployqt-vccl)
+    #
+    #    # Run windeployqt at install time
+    #    install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake)
     return()
-endif()
+endif ()
 
-if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     install(TARGETS vccl
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib)
@@ -34,9 +44,9 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     include(${CMAKE_SOURCE_DIR}/cmake/install_plugins.cmake)
 
     return()
-endif()
+endif ()
 
-if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     set(vccl_prefix vccl-contents)
 
     configure_file(deploy_qt_for_vccl_macos.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt_for_vccl_macos.cmake)
@@ -57,4 +67,4 @@ if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     # Do not run deploy_qt.cmake, but a specialied one
     install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt_for_vccl_macos.cmake)
     return()
-endif()
+endif ()

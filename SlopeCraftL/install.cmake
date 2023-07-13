@@ -12,9 +12,9 @@ set(SlopeCraft_SCL_Cpp_include_files
     ${CMAKE_SOURCE_DIR}/utilities/SC_GlobalEnums.h
     SlopeCraftL.h
     SlopeCraftL_global.h
-)
+    )
 
-if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+if (CMAKE_SYSTEM_NAME MATCHES "Windows")
     # install for applications
     install(TARGETS SlopeCraftL
         RUNTIME DESTINATION .
@@ -26,7 +26,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
         LIBRARY DESTINATION ./../install_SlopeCraftL/Cpp/lib
 
         # LIBRARY DESTINATION ./../install_SlopeCraftL/Cpp/lib
-    )
+        )
 
     # install(TARGETS SlopeCraftL_C
     # RUNTIME DESTINATION ./../install_SlopeCraftL/C/bin
@@ -39,13 +39,13 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
 
     # install(FILES ${SlopeCraft_SCL_C_include_files}
     # DESTINATION ./../install_SlopeCraftL/C/include)
-    SlopeCraft_install_if_is_shared(ZLIB::ZLIB .)
-    SlopeCraft_install_if_is_shared(PNG::PNG .)
+    #    SlopeCraft_install_if_is_shared(ZLIB::ZLIB .)
+    #    SlopeCraft_install_if_is_shared(PNG::PNG .)
 
     return()
-endif()
+endif ()
 
-if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     message(STATUS "Install SlopeCraft for linux")
 
     # install for applications
@@ -56,9 +56,9 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     install(FILES ${SlopeCraft_SCL_Cpp_include_files}
         DESTINATION include)
     return()
-endif()
+endif ()
 
-if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     # install for applications
     install(TARGETS SlopeCraftL
         RUNTIME DESTINATION .
@@ -70,7 +70,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
         LIBRARY DESTINATION ../install_SlopeCraftL/Cpp/lib
 
         # LIBRARY DESTINATION ../install_SlopeCraftL/Cpp/lib
-    )
+        )
 
     # install(TARGETS SlopeCraftL_C
     # RUNTIME DESTINATION ../install_SlopeCraftL/C/bin
@@ -84,6 +84,6 @@ if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     # install(FILES ${SlopeCraft_SCL_C_include_files}
     # DESTINATION ../install_SlopeCraftL/C/include)
     return()
-endif()
+endif ()
 
 # add_subdirectory(SCL_C)

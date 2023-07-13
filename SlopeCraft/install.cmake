@@ -13,17 +13,17 @@ file(GLOB SlopeCraft_install_presets
     "${CMAKE_CURRENT_SOURCE_DIR}/others/presets/*.sc_preset_json")
 
 set(AppName SlopeCraft)
-configure_file(${CMAKE_SOURCE_DIR}/cmake/deploy_qt.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake
-    @ONLY)
+#configure_file(${CMAKE_SOURCE_DIR}/cmake/deploy_qt.cmake.in
+#    ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake
+#    @ONLY)
 
-if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     # Install for macOS
     # Install app
     install(TARGETS SlopeCraft
         RUNTIME DESTINATION .
         BUNDLE DESTINATION .
-    )
+        )
 
     # Install icons
     file(GLOB SlopeCraft_Icon
@@ -55,24 +55,34 @@ if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     file(COPY ${SlopeCraft_install_presets}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/SlopeCraft.app/Contents/MacOS/Blocks/Presets)
     return()
-endif()
+endif ()
 
-if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+if (CMAKE_SYSTEM_NAME MATCHES "Windows")
     # Install app
     install(TARGETS SlopeCraft
         RUNTIME DESTINATION .
-    )
+        )
 
-    # Run windeployqt at build time
-    add_custom_target(Windeployqt-SlopeCraft
-        COMMAND ${SlopeCraft_Qt_windeployqt_executable} SlopeCraft.exe ${SlopeCraft_windeployqt_flags_build}
-        COMMAND_EXPAND_LISTS
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-        DEPENDS SlopeCraft)
-    add_dependencies(SC_deploy_all Windeployqt-SlopeCraft)
+    #    # Run windeployqt at build time
+    #    add_custom_target(Windeployqt-SlopeCraft
+    #        COMMAND ${SlopeCraft_Qt_windeployqt_executable} SlopeCraft.exe ${SlopeCraft_windeployqt_flags_build}
+    #        COMMAND_EXPAND_LISTS
+    #        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    #        DEPENDS SlopeCraft)
+    #    add_dependencies(SC_deploy_all Windeployqt-SlopeCraft)
+    #
+    #    # Run windeployqt at install time
+    #    install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake)
 
-    # Run windeployqt at install time
-    install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake)
+    QD_add_deployqt(SlopeCraft
+        BUILD_MODE
+        FLAGS ${SlopeCraft_windeployqt_flags_build})
+    QD_add_deployqt(SlopeCraft
+        INSTALL_MODE INSTALL_DESTINATION .
+        FLAGS ${SlopeCraft_windeployqt_flags_install})
+    DLLD_add_deploy(SlopeCraft
+        BUILD_MODE
+        INSTALL_MODE INSTALL_DESTINATION .)
 
     # Install FixedBlocks.json, CustomBlocks.json and README.md
     install(FILES ${SlopeCraft_install_jsons}
@@ -99,15 +109,15 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Blocks/Presets)
 
     return()
-endif()
+endif ()
 
-if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     # set_target_properties(SlopeCraft PROPERTIES INSTALL_RPATH "../lib")
     # Install for Linux
     # Install app
     install(TARGETS SlopeCraft
         RUNTIME DESTINATION bin
-    )
+        )
 
     # Install FixedBlocks.json, CustomBlocks.json and README.md
     install(FILES ${SlopeCraft_install_jsons}
@@ -142,6 +152,6 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     include(${CMAKE_SOURCE_DIR}/cmake/install_plugins.cmake)
 
     return()
-endif()
+endif ()
 
 message(WARNING "No rule to install SlopeCraft and images, because the system is not Windows, linux or MacOS.")

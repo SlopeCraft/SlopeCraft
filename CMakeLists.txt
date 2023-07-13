@@ -64,7 +64,8 @@ include(cmake/find_HeuristicFlow.cmake)
 include(cmake/find_qt6.cmake)
 
 if (${WIN32})
-    include(cmake/install_if_is_shared.cmake)
+    #include(cmake/install_if_is_shared.cmake)
+    include(cmake/configure_DLLDeployer.cmake)
 endif ()
 
 # Add compile options --------------------------------------------------------
@@ -130,10 +131,10 @@ include_directories(${CMAKE_BINARY_DIR}/utilities)
 # Add global custom targets on windows ---------------------------------------
 if (${WIN32})
     add_custom_target(SC_create_all_symlinks
-            COMMENT "A interface target to create all symlinks on windows")
+        COMMENT "A interface target to create all symlinks on windows")
 
     add_custom_target(SC_deploy_all
-            COMMENT "A interface target to run windeployqt for all targets")
+        COMMENT "A interface target to run windeployqt for all targets")
 endif ()
 
 # # Language related variables

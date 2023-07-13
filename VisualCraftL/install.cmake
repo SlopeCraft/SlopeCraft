@@ -4,13 +4,13 @@ set(VCL_include_headers
     VisualCraftL.h
     VisualCraftL_global.h)
 
-if(${WIN32})
+if (${WIN32})
     # install for app
     install(TARGETS VisualCraftL
         RUNTIME DESTINATION .
 
         # LIBRARY DESTINATION .
-    )
+        )
     install(FILES ${VCL_app_files}
         DESTINATION Blocks_VCL)
 
@@ -24,13 +24,13 @@ if(${WIN32})
     # LIBRARY DESTINATION ../install_SlopeCraftL/Cpp/lib)
     install(FILES ${VCL_include_headers}
         DESTINATION ../install_SlopeCraftL/Cpp/include)
-    SlopeCraft_install_if_is_shared(ZLIB::ZLIB .)
-    SlopeCraft_install_if_is_shared(libzip::zip .)
-    SlopeCraft_install_if_is_shared(PNG::PNG .)
+    #    SlopeCraft_install_if_is_shared(ZLIB::ZLIB .)
+    #    SlopeCraft_install_if_is_shared(libzip::zip .)
+    #    SlopeCraft_install_if_is_shared(PNG::PNG .)
     return()
-endif()
+endif ()
 
-if(${LINUX})
+if (${LINUX})
     install(TARGETS VisualCraftL
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib)
@@ -48,9 +48,9 @@ if(${LINUX})
     # RUNTIME DESTINATION bin
     # LIBRARY DESTINATION lib)
     return()
-endif()
+endif ()
 
-if(${APPLE})
+if (${APPLE})
     install(TARGETS VisualCraftL
         RUNTIME DESTINATION .
         LIBRARY DESTINATION .)
@@ -63,6 +63,6 @@ if(${APPLE})
         RUNTIME DESTINATION ../install_SlopeCraftL/Cpp/bin
         LIBRARY DESTINATION ../install_SlopeCraftL/Cpp/lib)
     return()
-endif()
+endif ()
 
 message(WARNING "No rule to install VisualCraftL")
