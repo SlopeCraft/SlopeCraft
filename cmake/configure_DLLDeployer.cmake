@@ -24,11 +24,14 @@ endfunction(SC_download)
 set(DLLD_download_dir ${CMAKE_SOURCE_DIR}/3rdParty/DLLDeployer)
 set(DLLD_file ${DLLD_download_dir}/DLLDeployer.cmake)
 set(QD_file ${DLLD_download_dir}/QtDeployer.cmake)
+if (${WIN32})
+    SC_download(https://github.com/SlopeCraft/DLLDeployer/releases/download/v1.3/DLLDeployer.cmake
+        ${DLLD_file})
+    include(${DLLD_file})
+endif ()
 
-SC_download(https://github.com/SlopeCraft/DLLDeployer/releases/download/v1.3/DLLDeployer.cmake
-    ${DLLD_file})
-include(${DLLD_file})
-
-SC_download(https://github.com/SlopeCraft/DLLDeployer/releases/download/v1.3/QtDeployer.cmake
-    ${QD_file})
-include(${QD_file})
+if (WIN32 OR APPLE)
+    SC_download(https://github.com/SlopeCraft/DLLDeployer/releases/download/v1.3/QtDeployer.cmake
+        ${QD_file})
+    include(${QD_file})
+endif ()

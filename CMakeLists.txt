@@ -63,10 +63,7 @@ include(cmake/find_Eigen3.cmake)
 include(cmake/find_HeuristicFlow.cmake)
 include(cmake/find_qt6.cmake)
 
-if (${WIN32})
-    #include(cmake/install_if_is_shared.cmake)
-    include(cmake/configure_DLLDeployer.cmake)
-endif ()
+include(cmake/configure_DLLDeployer.cmake)
 
 # Add compile options --------------------------------------------------------
 # if don't vectorize, or no suitable flag found, this variable will be empty
