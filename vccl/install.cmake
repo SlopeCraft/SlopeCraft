@@ -49,7 +49,7 @@ endif ()
 
 if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     set(vccl_prefix vccl-contents)
-
+    find_program(SlopeCraft_Qt_macdeployqt_executable macdeployqt REQUIRED)
     configure_file(deploy_qt_for_vccl_macos.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt_for_vccl_macos.cmake)
 
     include(${CMAKE_SOURCE_DIR}/VisualCraftL/setup_zip_names.cmake)
