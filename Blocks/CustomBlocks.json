@@ -66,6 +66,15 @@
       "idOld": "minecraft:stone_slab[half=top,variant=cobblestone]"
     },
     {
+      "baseColor": 11,
+      "id": "minecraft:smooth_stone_slab[type=top,waterlogged=false]",
+      "nameZH": "平滑石台阶",
+      "nameEN": "Smooth stone slab",
+      "icon": "smooth_stone.png",
+      "version": 0,
+      "idOld": "minecraft:stone_slab[half=top,variant=smooth_stone]"
+    },
+    {
       "baseColor": 28,
       "id": "minecraft:brick_slab[type=top,waterlogged=false]",
       "nameZH": "红砖台阶",
@@ -161,6 +170,60 @@
       "burnable": true
     },
     {
+      "baseColor": 53,
+      "id": "minecraft:crimson_slab[type=top,waterlogged=false]",
+      "nameZH": "绯红木台阶",
+      "nameEN": "Crimson slab",
+      "icon": "crimson_planks.png",
+      "version": 16,
+      "burnable": true
+    },
+    {
+      "baseColor": 56,
+      "id": "minecraft:warped_slab[type=top,waterlogged=false]",
+      "nameZH": "诡异木台阶",
+      "nameEN": "Warped slab",
+      "icon": "warped_planks.png",
+      "version": 16,
+      "burnable": true
+    },
+    {
+      "baseColor": 28,
+      "id": "minecraft:mangrove_slab[type=top,waterlogged=false]",
+      "nameZH": "红树木台阶",
+      "nameEN": "Mangrove slab",
+      "icon": "mangrove_planks.png",
+      "version": 19,
+      "burnable": true
+    },
+    {
+      "baseColor": 36,
+      "id": "minecraft:cherry_slab[type=top,waterlogged=false]",
+      "nameZH": "樱花木台阶",
+      "nameEN": "Cherry slab",
+      "icon": "cherry_slab.png",
+      "version": 20,
+      "burnable": true
+    },
+    {
+      "baseColor": 18,
+      "id": "minecraft:bamboo_slab[type=top,waterlogged=false]",
+      "nameZH": "竹台阶",
+      "nameEN": "Bamboo slab",
+      "icon": "bamboo_planks.png",
+      "version": 20,
+      "burnable": true
+    },
+    {
+      "baseColor": 18,
+      "id": "minecraft:bamboo_mosaic_slab[type=top,waterlogged=false]",
+      "nameZH": "竹马赛克台阶",
+      "nameEN": "Bamboo mosaic slab",
+      "icon": "bamboo_mosaic.png",
+      "version": 20,
+      "burnable": true
+    },
+    {
       "baseColor": 15,
       "id": "minecraft:red_sandstone_slab[type=top,waterlogged=false]",
       "nameZH": "红砂岩台阶",
@@ -229,6 +292,15 @@
       "icon": "granite.png",
       "version": 0,
       "idOld": "minecraft:stone[variant=granite]"
+    },
+    {
+      "baseColor": 10,
+      "id": "minecraft:granite_slab[type=top,waterlogged=false]",
+      "nameZH": "花岗岩台阶",
+      "nameEN": "Granite slab",
+      "icon": "granite_slab.png",
+      "version": 0,
+      "idOld": "minecraft:stone_slab[half=top,variant=granite]"
     },
     {
       "baseColor": 11,
@@ -332,13 +404,12 @@
       "version": 17
     },
     {
-      "baseColor": 36,
-      "id": "minecraft:cherry_slab[type=top,waterlogged=false]",
-      "nameZH": "樱花木台阶",
-      "nameEN": "Cherry slab",
-      "icon": "cherry_slab.png",
-      "version": 20,
-      "burnable": true
+      "baseColor": 2,
+      "id": "minecraft:end_stone_brick_slab[type=top,waterlogged=false]",
+      "nameZH": "末地石砖台阶",
+      "nameEN": "Endstone brick slab",
+      "icon": "end_stone_bricks.png",
+      "version": 0
     }
   ]
 }
