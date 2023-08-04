@@ -14,7 +14,7 @@
       // nameEN 是方块英文名称，必填",
       "nameEN": "Waxed cut copper slab",
       // icon 是方块对应图片的文件名，它应当放在 CustomBlocks 文件夹下。必填",
-      "icon": "waxed_cut_copper.png",
+      "icon": "waxed_cut_copper_slab.png",
       // version 是方块最早出现的版本。0 代表早于 1.12，12 代表 1.12，13 代表 1.13，如此类推。255 代表尚未出现的版本",
       "version": 17
       // idOld 是该方块在 1.12 的方块 id（如果有的话），必须加 minecraft:前缀，选填，默认为空字符串",
@@ -37,7 +37,7 @@
       // nameEN is the English name. Compulsory item.
       "nameEN": "Stone slab",
       // icon is the image filename correspoing to this block, the image should be put under CustomBlocks directory. Compulsory item.
-      "icon": "stone.png",
+      "icon": "stone_slab.png",
       // version is the earliest version when the block is added to Minecraft. 0 means earlier than 1.12, 12 means 1.12, 13 means 1.13, and so on. 255 means future version.
       "version": 0,
       // idOld is the blockid in 1.12 (if there is) with minecraft: prefix. default value is an empty string
@@ -52,7 +52,7 @@
       "id": "minecraft:sandstone_slab[type=top,waterlogged=false]",
       "nameZH": "砂岩台阶",
       "nameEN": "Sandstone slab",
-      "icon": "smooth_sandstone.png",
+      "icon": "smooth_sandstone_slab.png",
       "version": 0,
       "idOld": "minecraft:stone_slab[half=top,variant=sandstone]"
     },
@@ -61,7 +61,7 @@
       "id": "minecraft:cobblestone_slab[type=top,waterlogged=false]",
       "nameZH": "圆石台阶",
       "nameEN": "Cobblestone slab",
-      "icon": "cobblestone.png",
+      "icon": "cobblestone_slab.png",
       "version": 0,
       "idOld": "minecraft:stone_slab[half=top,variant=cobblestone]"
     },
@@ -70,7 +70,7 @@
       "id": "minecraft:smooth_stone_slab[type=top,waterlogged=false]",
       "nameZH": "平滑石台阶",
       "nameEN": "Smooth stone slab",
-      "icon": "smooth_stone.png",
+      "icon": "smooth_stone_slab.png",
       "version": 0,
       "idOld": "minecraft:stone_slab[half=top,variant=smooth_stone]"
     },
@@ -79,7 +79,7 @@
       "id": "minecraft:brick_slab[type=top,waterlogged=false]",
       "nameZH": "红砖台阶",
       "nameEN": "Brick slab",
-      "icon": "bricks.png",
+      "icon": "bricks_slab.png",
       "version": 0,
       "idOld": "minecraft:stone_slab[half=top,variant=brick]"
     },
@@ -88,7 +88,7 @@
       "id": "minecraft:stone_brick_slab[type=top,waterlogged=false]",
       "nameZH": "石砖台阶",
       "nameEN": "Stonebrick slab",
-      "icon": "stone_bricks.png",
+      "icon": "stone_bricks_slab.png",
       "version": 0,
       "idOld": "minecraft:stone_slab[half=top,variant=stone_brick]"
     },
@@ -97,7 +97,7 @@
       "id": "minecraft:nether_brick_slab[type=top,waterlogged=false]",
       "nameZH": "下界砖台阶",
       "nameEN": "Nether brick slab",
-      "icon": "nether_bricks.png",
+      "icon": "nether_bricks_slab.png",
       "version": 0,
       "idOld": "minecraft:stone_slab[half=top,variant=nether_brick]"
     },
@@ -106,7 +106,7 @@
       "id": "minecraft:quartz_slab[type=top,waterlogged=false]",
       "nameZH": "石英台阶",
       "nameEN": "Quartz slab",
-      "icon": "quartz_block.png",
+      "icon": "quartz_block_slab.png",
       "version": 0,
       "idOld": "minecraft:stone_slab[half=top,variant=quartz]"
     },
@@ -115,7 +115,7 @@
       "id": "minecraft:oak_slab[type=top,waterlogged=false]",
       "nameZH": "橡木台阶",
       "nameEN": "Oak slab",
-      "icon": "oak_planks.png",
+      "icon": "oak_planks_slab.png",
       "version": 0,
       "idOld": "minecraft:wooden_slab[half=top,variant=oak]"
     },
@@ -124,7 +124,7 @@
       "id": "minecraft:spruce_slab[type=top,waterlogged=false]",
       "nameZH": "云杉木台阶",
       "nameEN": "Spruce slab",
-      "icon": "spruce_planks.png",
+      "icon": "spruce_planks_slab.png",
       "version": 0,
       "idOld": "minecraft:wooden_slab[half=top,variant=spruce]",
       "burnable": true
@@ -134,7 +134,7 @@
       "id": "minecraft:birch_slab[type=top,waterlogged=false]",
       "nameZH": "白桦木台阶",
       "nameEN": "Birch slab",
-      "icon": "birch_planks.png",
+      "icon": "birch_planks_slab.png",
       "version": 0,
       "idOld": "minecraft:wooden_slab[half=top,variant=birch]",
       "burnable": true
@@ -144,7 +144,7 @@
       "id": "minecraft:jungle_slab[type=top,waterlogged=false]",
       "nameZH": "丛林木台阶",
       "nameEN": "Jungle slab",
-      "icon": "jungle_planks.png",
+      "icon": "jungle_planks_slab.png",
       "version": 0,
       "idOld": "minecraft:wooden_slab[half=top,variant=jungle]",
       "burnable": true
@@ -154,7 +154,7 @@
       "id": "minecraft:acacia_slab[type=top,waterlogged=false]",
       "nameZH": "金合欢木台阶",
       "nameEN": "Acacia slab",
-      "icon": "acacia_planks.png",
+      "icon": "acacia_planks_slab.png",
       "version": 0,
       "idOld": "minecraft:wooden_slab[half=top,variant=acacia]",
       "burnable": true
@@ -164,7 +164,7 @@
       "id": "minecraft:dark_oak_slab[type=top,waterlogged=false]",
       "nameZH": "深色橡木台阶",
       "nameEN": "Dark oak slab",
-      "icon": "dark_oak_planks.png",
+      "icon": "dark_oak_planks_slab.png",
       "version": 0,
       "idOld": "minecraft:wooden_slab[half=top,variant=dark_oak]",
       "burnable": true
@@ -174,7 +174,7 @@
       "id": "minecraft:crimson_slab[type=top,waterlogged=false]",
       "nameZH": "绯红木台阶",
       "nameEN": "Crimson slab",
-      "icon": "crimson_planks.png",
+      "icon": "crimson_planks_slab.png",
       "version": 16,
       "burnable": true
     },
@@ -183,7 +183,7 @@
       "id": "minecraft:warped_slab[type=top,waterlogged=false]",
       "nameZH": "诡异木台阶",
       "nameEN": "Warped slab",
-      "icon": "warped_planks.png",
+      "icon": "warped_planks_slab.png",
       "version": 16,
       "burnable": true
     },
@@ -192,7 +192,7 @@
       "id": "minecraft:mangrove_slab[type=top,waterlogged=false]",
       "nameZH": "红树木台阶",
       "nameEN": "Mangrove slab",
-      "icon": "mangrove_planks.png",
+      "icon": "mangrove_planks_slab.png",
       "version": 19,
       "burnable": true
     },
@@ -201,7 +201,7 @@
       "id": "minecraft:cherry_slab[type=top,waterlogged=false]",
       "nameZH": "樱花木台阶",
       "nameEN": "Cherry slab",
-      "icon": "cherry_slab.png",
+      "icon": "cherry_slab_slab.png",
       "version": 20,
       "burnable": true
     },
@@ -210,7 +210,7 @@
       "id": "minecraft:bamboo_slab[type=top,waterlogged=false]",
       "nameZH": "竹台阶",
       "nameEN": "Bamboo slab",
-      "icon": "bamboo_planks.png",
+      "icon": "bamboo_planks_slab.png",
       "version": 20,
       "burnable": true
     },
@@ -219,7 +219,7 @@
       "id": "minecraft:bamboo_mosaic_slab[type=top,waterlogged=false]",
       "nameZH": "竹马赛克台阶",
       "nameEN": "Bamboo mosaic slab",
-      "icon": "bamboo_mosaic.png",
+      "icon": "bamboo_mosaic_slab.png",
       "version": 20,
       "burnable": true
     },
@@ -228,7 +228,7 @@
       "id": "minecraft:red_sandstone_slab[type=top,waterlogged=false]",
       "nameZH": "红砂岩台阶",
       "nameEN": "Red sandstone slab",
-      "icon": "smooth_red_sandstone.png",
+      "icon": "smooth_red_sandstone_slab.png",
       "version": 0,
       "idOld": "minecraft:stone_slab2[half=top,variant=red_sandstone]"
     },
@@ -237,7 +237,7 @@
       "id": "minecraft:purpur_slab[type=top,waterlogged=false]",
       "nameZH": "紫珀台阶",
       "nameEN": "Purpur slab",
-      "icon": "purpur_block.png",
+      "icon": "purpur_block_slab.png",
       "version": 0,
       "idOld": "minecraft:purpur_slab[half=top,variant=default]"
     },
@@ -246,7 +246,7 @@
       "id": "minecraft:prismarine_slab[type=top,waterlogged=false]",
       "nameZH": "海晶石台阶",
       "nameEN": "Prismarine slab",
-      "icon": "prismarine.png",
+      "icon": "prismarine_slab.png",
       "version": 13,
       "idOld": "minecraft:stone_slab[half=top,variant=prismarine]"
     },
@@ -255,7 +255,7 @@
       "id": "minecraft:prismarine_brick_slab[type=top,waterlogged=false]",
       "nameZH": "海晶石砖台阶",
       "nameEN": "Prismarine brick slab",
-      "icon": "prismarine_bricks.png",
+      "icon": "prismarine_bricks_slab.png",
       "version": 13,
       "idOld": "minecraft:stone_slab[half=top,variant=prismarine_bricks]"
     },
@@ -264,9 +264,17 @@
       "id": "minecraft:dark_prismarine_slab[type=top,waterlogged=false]",
       "nameZH": "暗海晶石台阶",
       "nameEN": "Dark prismarine slab",
-      "icon": "dark_prismarine.png",
+      "icon": "dark_prismarine_slab.png",
       "version": 13,
       "idOld": "minecraft:stone_slab[half=top,variant=dark_prismarine]"
+    },
+    {
+      "baseColor": 2,
+      "id": "minecraft:end_stone_brick_slab[type=top,waterlogged=false]",
+      "nameZH": "末地石砖台阶",
+      "nameEN": "Endstone brick slab",
+      "icon": "end_stone_bricks_slab.png",
+      "version": 0
     },
     {
       "baseColor": 2,
@@ -402,14 +410,6 @@
       "nameEN": "Tuff",
       "icon": "tuff.png",
       "version": 17
-    },
-    {
-      "baseColor": 2,
-      "id": "minecraft:end_stone_brick_slab[type=top,waterlogged=false]",
-      "nameZH": "末地石砖台阶",
-      "nameEN": "Endstone brick slab",
-      "icon": "end_stone_bricks.png",
-      "version": 0
     }
   ]
 }
