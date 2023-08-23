@@ -270,6 +270,14 @@ class VCL_Kernel {
       const int (&weOffset)[3] = {0, 0, 0}, const char *utf8_Name = "",
       const char *const *const utf8_requiredMods = nullptr,
       const int requiredModsCount = 0) const noexcept = 0;
+
+  struct gpu_options {
+    const uint64_t lib_version{SC_VERSION_U64};
+    VCL_string_deliver *error_message{nullptr};
+  };
+  virtual bool set_gpu_resource(const VCL_GPU_Platform *,
+                                const VCL_GPU_Device *,
+                                const gpu_options &option) noexcept = 0;
   /*
 /// export map into Structure files (*.NBT)
 virtual void exportAsWESchem(

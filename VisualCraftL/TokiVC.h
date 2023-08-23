@@ -61,20 +61,11 @@ class TokiVC : public VCL_Kernel {
 
   bool set_gpu_resource(const VCL_GPU_Platform *p,
                         const VCL_GPU_Device *d) noexcept override {
-    if (this->img_cvter.have_gpu_resource()) {
-      gpu_wrapper::gpu_interface::destroy(this->img_cvter.gpu_resource());
-    }
-    auto platp = static_cast<gpu_wrapper::platform_wrapper *>(p->pw);
-    auto devp = static_cast<gpu_wrapper::device_wrapper *>(d->dw);
-
-    auto gi = gpu_wrapper::gpu_interface::create(platp, devp);
-    if (gi == nullptr || !gi->ok_v()) {
-      return false;
-    }
-
-    this->img_cvter.set_gpu_resource(gi);
-    return this->img_cvter.gpu_resource()->ok_v();
+    return this->set_gpu_resource(p, d, {});
   }
+
+  bool set_gpu_resource(const VCL_GPU_Platform *p, const VCL_GPU_Device *d,
+                        const gpu_options &option) noexcept override;
 
   bool prefer_gpu() const noexcept override {
     return this->imgcvter_prefer_gpu;

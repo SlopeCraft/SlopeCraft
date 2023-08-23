@@ -737,3 +737,26 @@ void TokiVC::converted_image(uint32_t *dest, int64_t *rows, int64_t *cols,
 
   this->img_cvter.converted_image(dest, rows, cols, !write_dest_row_major);
 }
+
+bool TokiVC::set_gpu_resource(const VCL_GPU_Platform *p,
+                              const VCL_GPU_Device *d,
+                              const gpu_options &option) noexcept {
+  if (this->img_cvter.have_gpu_resource()) {
+    gpu_wrapper::gpu_interface::destroy(this->img_cvter.gpu_resource());
+  }
+  auto platp = static_cast<gpu_wrapper::platform_wrapper *>(p->pw);
+  auto devp = static_cast<gpu_wrapper::device_wrapper *>(d->dw);
+
+  std::pair<int, std::string> err;
+  auto gi = gpu_wrapper::gpu_interface::create(platp, devp, err);
+  if (gi == nullptr || !gi->ok_v()) {
+    err.second = fmt::format("{}, error code = {}", err.second, err.first);
+    write_to_string_deliver(err.second, option.error_message);
+    return false;
+  } else {
+    write_to_string_deliver("", option.error_message);
+  }
+
+  this->img_cvter.set_gpu_resource(gi);
+  return this->img_cvter.gpu_resource()->ok_v();
+}

@@ -26,6 +26,7 @@ This file is part of SlopeCraft.
 #include <Eigen/Dense>
 #include <stdlib.h>
 #include <utilities/SC_GlobalEnums.h>
+#include <fmt/format.h>
 
 extern "C" {
 extern const unsigned char ColorManip_cl_rc[];
@@ -141,9 +142,23 @@ void ocl_warpper::ocl_resource::init_resource() noexcept {
     return;
   }
 
-  this->error = this->program.build();
+  this->error = this->program.build(
+      "-cl-mad-enable -cl-unsafe-math-optimizations "
+      "-cl-single-precision-constant",
+      nullptr, nullptr);
   if (!this->ok()) {
-    this->err_msg = "Failed to build program.";
+    cl_int ec_get_build_log{CL_SUCCESS};
+    auto build_log = this->program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(
+        this->device, &ec_get_build_log);
+    if (ec_get_build_log == CL_SUCCESS) {
+      this->err_msg =
+          fmt::format("Failed to build program. Build log:\n{}", build_log);
+    } else {
+      this->err_msg = fmt::format(
+          "Failed to build program, and then failed to retrieve build log with "
+          "error code {}",
+          ec_get_build_log);
+    }
     return;
   }
 

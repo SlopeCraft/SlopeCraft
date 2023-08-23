@@ -222,11 +222,22 @@ QString VCWind::update_gpu_device(QPoint current_choice) noexcept {
         .arg(current_choice.x())
         .arg(current_choice.y());
   }
-
-  if (!this->kernel->set_gpu_resource(plat, dev)) {
-    return VCWind::tr("设置 GPU 设备失败。，平台序号为%1，设备序号为%2")
-        .arg(current_choice.x())
-        .arg(current_choice.y());
+  {
+    std::string error_msg;
+    error_msg.resize(4096);
+    VCL_Kernel::gpu_options gpu_options;
+    VCL_string_deliver s{
+        .data = error_msg.data(), .size = 0, .capacity = error_msg.size()};
+    gpu_options.error_message = &s;
+    if (!this->kernel->set_gpu_resource(plat, dev, gpu_options)) {
+      error_msg.resize(s.size);
+      return VCWind::tr(
+                 "设置 GPU "
+                 "设备失败。平台序号为%1，设备序号为%2，详细错误信息：\n%3")
+          .arg(current_choice.x())
+          .arg(current_choice.y())
+          .arg(error_msg.data());
+    }
   }
 
   VCL_release_device(dev);
