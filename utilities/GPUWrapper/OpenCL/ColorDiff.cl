@@ -21,8 +21,8 @@ This file is part of SlopeCraft.
 */
 
 #define SC_OCL_SPOT_NAN true
-//#define SC_OCL_SPOT_NAN false
-
+__constant const float pi_fp32 = M_PI;
+// #define SC_OCL_SPOT_NAN false
 
 /// Function definations
 // compute sum(v*v)
@@ -57,7 +57,6 @@ float color_diff_RGB_XYZ(float3 RGB1, float3 RGB2) {
 }
 
 float color_diff_RGB_Better(float3 rgb1, float3 rgb2) {
-
   const float w_r = 1.0f, w_g = 2.0f, w_b = 1.0f;
   const float3 w_vec3 = {w_r, w_g, w_b};
   const float thre = 1e-4f;
@@ -69,20 +68,20 @@ float color_diff_RGB_Better(float3 rgb1, float3 rgb2) {
 
   const float SigmaRGB = (sum3(rgb1) + sum3(rgb2)) / 3.0f;
   const float3 S_rgb_vec3 = fmin((rgb1 + rgb2) / (SigmaRGB + thre), one_vec3);
-  
-      
-  if(SC_OCL_SPOT_NAN&&have_nan(S_rgb_vec3)) {
+
+  if (SC_OCL_SPOT_NAN && have_nan(S_rgb_vec3)) {
     printf("S_rgb_vec3 contains nan.\n");
     return NAN;
   }
 
   const float sumRGBSquare = dot(rgb1, rgb2);
 
-  const float theta =
-      2.0f / M_PI * acos((sumRGBSquare * rsqrt(SqrModSquare + thre)) / 1.01f);
+  const float theta = 2.0f / pi_fp32 *
+                      acos((sumRGBSquare * rsqrt(SqrModSquare + thre)) / 1.01f);
 
-  if(SC_OCL_SPOT_NAN&&isnan(theta)) {
-    printf("theta is nan. sumRGBSquare = %f, SqrModSquare = %f.\n",sumRGBSquare,SqrModSquare);
+  if (SC_OCL_SPOT_NAN && isnan(theta)) {
+    printf("theta is nan. sumRGBSquare = %f, SqrModSquare = %f.\n",
+           sumRGBSquare, SqrModSquare);
     return NAN;
   }
 
@@ -92,8 +91,8 @@ float color_diff_RGB_Better(float3 rgb1, float3 rgb2) {
 
   const float3 S_t_rgb_vec3 =
       OnedDelta_rgb_vec3 / sumOnedDelta * S_rgb_vec3 * S_rgb_vec3;
-      
-  if(SC_OCL_SPOT_NAN&&have_nan(S_t_rgb_vec3)) {
+
+  if (SC_OCL_SPOT_NAN && have_nan(S_t_rgb_vec3)) {
     printf("S_t_rgb_vec3 contains nan.\n");
     return NAN;
   }
@@ -108,13 +107,13 @@ float color_diff_RGB_Better(float3 rgb1, float3 rgb2) {
       S_rgb_vec3 * S_rgb_vec3 * delta_rgb_vec3 * delta_rgb_vec3 * w_vec3;
 
   const float part1 = sum3(SS_w_delta_delta_vec3) / sum3(w_vec3);
-  if(SC_OCL_SPOT_NAN&&isnan(part1)) {
+  if (SC_OCL_SPOT_NAN && isnan(part1)) {
     printf("part1 is nan.\n");
     return NAN;
   }
 
   const float part2 = S_theta * S_ratio * theta * theta;
-  if(SC_OCL_SPOT_NAN&&isnan(part2)) {
+  if (SC_OCL_SPOT_NAN && isnan(part2)) {
     printf("part2 is nan.\n");
     return NAN;
   }
@@ -165,10 +164,9 @@ float color_diff_Lab94(float3 lab1_vec3, float3 lab2_vec3) {
 }
 
 float color_diff_Lab00(float3 lab1_vec3, float3 lab2_vec3) {
-
-  const float kL = 1.0;
-  const float kC = 1.0;
-  const float kH = 1.0;
+  const float kL = 1.0f;
+  const float kC = 1.0f;
+  const float kH = 1.0f;
   const float L1 = lab1_vec3[0];
   const float a1 = lab1_vec3[1];
   const float b1 = lab1_vec3[2];
@@ -192,16 +190,14 @@ float color_diff_Lab00(float3 lab1_vec3, float3 lab2_vec3) {
   else
     h1p = atan2(b1, a1p);
 
-  if (h1p < 0)
-    h1p += 2 * M_PI;
+  if (h1p < 0) h1p += 2 * pi_fp32;
 
   if (b2 == 0 && a2p == 0)
     h2p = 0;
   else
     h2p = atan2(b2, a2p);
-    
-  if (h2p < 0)
-    h2p += 2 * M_PI;
+
+  if (h2p < 0) h2p += 2 * pi_fp32;
 
   float dLp = L2 - L1;
   float dCp = C2p - C1p;
@@ -233,20 +229,20 @@ float color_diff_Lab00(float3 lab1_vec3, float3 lab2_vec3) {
     mhp = (h1p + h2p - radians(360.0f)) / 2;
   }
 
-  float T = 1 - 0.17 * cos(mhp - radians(30.0f)) + 0.24 * cos(2 * mhp) +
-            0.32 * cos(3 * mhp + radians(6.0f)) -
-            0.20 * cos(4 * mhp - radians(63.0f));
+  float T = 1 - 0.17f * cos(mhp - radians(30.0f)) + 0.24f * cos(2 * mhp) +
+            0.32f * cos(3 * mhp + radians(6.0f)) -
+            0.20f * cos(4 * mhp - radians(63.0f));
 
   float dTheta =
       radians(30.0f) * exp(-square((mhp - radians(275.0f)) / radians(25.0f)));
 
   float RC = 2 * sqrt(pow(mCp, 7) / (pow(25.0f, 7.0f) + pow(mCp, 7.0f)));
   float square_mLp_minus_50 = square(mLp - 50);
-  float SL = 1 + 0.015 * square_mLp_minus_50 / sqrt(20 + square_mLp_minus_50);
+  float SL = 1 + 0.015f * square_mLp_minus_50 / sqrt(20 + square_mLp_minus_50);
 
-  float SC = 1 + 0.045 * mCp;
+  float SC = 1 + 0.045f * mCp;
 
-  float SH = 1 + 0.015 * mCp * T;
+  float SH = 1 + 0.015f * mCp * T;
 
   float RT = -RC * sin(2 * dTheta);
 
@@ -257,51 +253,54 @@ float color_diff_Lab00(float3 lab1_vec3, float3 lab2_vec3) {
   return Diffsquare;
 }
 
-
-#define SC_MAKE_COLORDIFF_KERNEL_FUN(kfun_name, diff_fun)                      \
-  __kernel void kfun_name(                                                     \
-      __global const float *colorset_colors, const ushort colorset_size,       \
-      __global const float *unconverted_colors,                                \
-      __global ushort *result_idx_dst, __global float *result_diff_dst) {      \
-    const size_t global_idx = get_global_id(0);                                \
-    const float3 unconverted = {unconverted_colors[global_idx * 3 + 0],        \
-                                unconverted_colors[global_idx * 3 + 1],        \
-                                unconverted_colors[global_idx * 3 + 2]};       \
-    if (true && have_nan(unconverted)) {                                       \
-      printf("Nan spotted at unconverted. Unconverted = {%f,%f,%f}, "          \
-             "get_global_id = %llu.\n",                                        \
-             unconverted[0], unconverted[1], unconverted[2], global_idx);      \
-      return;                                                                  \
-    }                                                                          \
-                                                                               \
-    ushort result_idx = USHRT_MAX - 1;                                         \
-    float result_diff = FLT_MAX / 2;                                           \
-                                                                               \
-    for (ushort idx = 0; idx < colorset_size; idx++) {                         \
-      const float3 color_ava = {colorset_colors[idx * 3 + 0],                  \
-                                colorset_colors[idx * 3 + 1],                  \
-                                colorset_colors[idx * 3 + 2]};                 \
-    if (true && have_nan(color_ava)) {                                         \
-      printf("Nan spotted at color_ava. color_ava = {%f,%f,%f}, "              \
-             "get_global_id = %llu.\n",                                        \
-             color_ava[0], color_ava[1], color_ava[2], global_idx);            \
-      return;                                                                  \
-    }                                                                          \
-                                                                               \
-      const float diff_sq = diff_fun(color_ava, unconverted);                  \
-      if (true && isnan(diff_sq)) {                                            \
-        printf("Spotted nan at idx = %u.\n", (idx));                           \
-        return;                                                                \
-      }                                                                        \
-      if (result_diff > diff_sq) {                                             \
-        /* this branch may be optimized */                                     \
-        result_idx = idx;                                                      \
-        result_diff = diff_sq;                                                 \
-      }                                                                        \
-    }                                                                          \
-                                                                               \
-    result_idx_dst[global_idx] = result_idx;                                   \
-    result_diff_dst[global_idx] = result_diff;                                 \
+#define SC_MAKE_COLORDIFF_KERNEL_FUN(kfun_name, diff_fun)                 \
+  __kernel void kfun_name(                                                \
+      __global const float *colorset_colors, const ushort colorset_size,  \
+      __global const float *unconverted_colors,                           \
+      __global ushort *result_idx_dst, __global float *result_diff_dst) { \
+    const size_t global_idx = get_global_id(0);                           \
+    const float3 unconverted = {unconverted_colors[global_idx * 3 + 0],   \
+                                unconverted_colors[global_idx * 3 + 1],   \
+                                unconverted_colors[global_idx * 3 + 2]};  \
+    if (true && have_nan(unconverted)) {                                  \
+      printf(                                                             \
+          "Nan spotted at unconverted. Unconverted = {%f,%f,%f}, "        \
+          "get_global_id = %u.\n",                                        \
+          unconverted[0], unconverted[1], unconverted[2],                 \
+          (unsigned int)global_idx);                                      \
+      return;                                                             \
+    }                                                                     \
+                                                                          \
+    ushort result_idx = USHRT_MAX - 1;                                    \
+    float result_diff = FLT_MAX / 2;                                      \
+                                                                          \
+    for (ushort idx = 0; idx < colorset_size; idx++) {                    \
+      const float3 color_ava = {colorset_colors[idx * 3 + 0],             \
+                                colorset_colors[idx * 3 + 1],             \
+                                colorset_colors[idx * 3 + 2]};            \
+      if (true && have_nan(color_ava)) {                                  \
+        printf(                                                           \
+            "Nan spotted at color_ava. color_ava = {%f,%f,%f}, "          \
+            "get_global_id = %u.\n",                                      \
+            color_ava[0], color_ava[1], color_ava[2],                     \
+            (unsigned int)global_idx);                                    \
+        return;                                                           \
+      }                                                                   \
+                                                                          \
+      const float diff_sq = diff_fun(color_ava, unconverted);             \
+      if (true && isnan(diff_sq)) {                                       \
+        printf("Spotted nan at idx = %u.\n", (idx));                      \
+        return;                                                           \
+      }                                                                   \
+      if (result_diff > diff_sq) {                                        \
+        /* this branch may be optimized */                                \
+        result_idx = idx;                                                 \
+        result_diff = diff_sq;                                            \
+      }                                                                   \
+    }                                                                     \
+                                                                          \
+    result_idx_dst[global_idx] = result_idx;                              \
+    result_diff_dst[global_idx] = result_diff;                            \
   }
 
 SC_MAKE_COLORDIFF_KERNEL_FUN(match_color_RGB, color_diff_RGB_XYZ)
