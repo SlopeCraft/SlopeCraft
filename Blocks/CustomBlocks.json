@@ -311,6 +311,24 @@
       "idOld": "minecraft:stone_slab[half=top,variant=granite]"
     },
     {
+      "baseColor": 10,
+      "id": "minecraft:polished_granite",
+      "nameZH": "磨制花岗岩",
+      "nameEN": "Polished granite",
+      "icon": "polished_granite.png",
+      "version": 0,
+      "idOld": "minecraft:stone[variant=smooth_granite]"
+    },
+    {
+      "baseColor": 10,
+      "id": "minecraft:polished_granite_slab[type=top,waterlogged=false]",
+      "nameZH": "磨制花岗岩台阶",
+      "nameEN": "Polished granite slab",
+      "icon": "polished_granite_slab.png",
+      "version": 0,
+      "idOld": "minecraft:stone_slab[half=top,variant=polished_granite]"
+    },
+    {
       "baseColor": 11,
       "id": "minecraft:andesite",
       "nameZH": "安山岩",
@@ -318,6 +336,15 @@
       "icon": "andesite.png",
       "version": 0,
       "idOld": "minecraft:stone[variant=andesite]"
+    },
+    {
+      "baseColor": 11,
+      "id": "minecraft:andesite_slab[type=top,waterlogged=false]",
+      "nameZH": "安山岩台阶",
+      "nameEN": "Andesite slab",
+      "icon": "andesite_slab.png",
+      "version": 0,
+      "idOld": "minecraft:stone_slab[half=top,variant=andesite]"
     },
     {
       "baseColor": 11,
@@ -329,6 +356,15 @@
       "idOld": "minecraft:stone[variant=smooth_andesite]"
     },
     {
+      "baseColor": 11,
+      "id": "minecraft:polished_andesite_slab[type=top,waterlogged=false]",
+      "nameZH": "磨制安山岩台阶",
+      "nameEN": "Polished andesite slab",
+      "icon": "polished_andesite_slab.png",
+      "version": 0,
+      "idOld": "minecraft:stone_slab[half=top,variant=polished_andesite]"
+    },
+    {
       "baseColor": 14,
       "id": "minecraft:diorite",
       "nameZH": "闪长岩",
@@ -336,6 +372,33 @@
       "icon": "diorite.png",
       "version": 0,
       "idOld": "minecraft:stone[variant=diorite]"
+    },
+    {
+      "baseColor": 14,
+      "id": "minecraft:diorite_slab[type=top,waterlogged=false]",
+      "nameZH": "闪长岩台阶",
+      "nameEN": "Diorite slab",
+      "icon": "diorite_slab.png",
+      "version": 0,
+      "idOld": "minecraft:stone_slab[half=top,variant=diorite]"
+    },
+    {
+      "baseColor": 14,
+      "id": "minecraft:polished_diorite",
+      "nameZH": "磨制闪长岩",
+      "nameEN": "Polished diorite",
+      "icon": "polished_diorite.png",
+      "version": 0,
+      "idOld": "minecraft:stone[variant=smooth_diorite]"
+    },
+    {
+      "baseColor": 14,
+      "id": "minecraft:polished_diorite_slab[type=top,waterlogged=false]",
+      "nameZH": "磨制闪长岩台阶",
+      "nameEN": "Polished diorite slab",
+      "icon": "polished_diorite_slab.png",
+      "version": 0,
+      "idOld": "minecraft:stone_slab[half=top,variant=polished_diorite]"
     },
     {
       "baseColor": 15,

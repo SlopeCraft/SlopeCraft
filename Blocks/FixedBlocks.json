@@ -319,15 +319,6 @@
     },
     {
       "baseColor": 10,
-      "id": "minecraft:polished_granite",
-      "nameZH": "磨制花岗岩",
-      "nameEN": "Polished granite",
-      "icon": "polished_granite.png",
-      "version": 0,
-      "idOld": "minecraft:stone[variant=smooth_granite]"
-    },
-    {
-      "baseColor": 10,
       "id": "minecraft:jungle_planks",
       "nameZH": "丛林木板",
       "nameEN": "Jungle plank",
@@ -415,15 +406,6 @@
       "version": 0,
       "idOld": "minecraft:planks[variant=oak]",
       "burnable": true
-    },
-    {
-      "baseColor": 14,
-      "id": "minecraft:polished_diorite",
-      "nameZH": "磨制闪长岩",
-      "nameEN": "Polished diorite",
-      "icon": "polished_diorite.png",
-      "version": 0,
-      "idOld": "minecraft:stone[variant=smooth_diorite]"
     },
     {
       "baseColor": 14,
