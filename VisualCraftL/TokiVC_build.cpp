@@ -81,8 +81,11 @@ bool TokiVC::build() noexcept {
 #pragma omp parallel for schedule(static)
   for (int64_t r = 0; r < this->img_cvter.rows(); r++) {
     for (int64_t c = 0; c < this->img_cvter.cols(); c++) {
-      const auto &variant =
-          TokiVC::LUT_basic_color_idx_to_blocks[color_id_mat(r, c)];
+      auto color_id = color_id_mat(r, c);
+      if (color_id >= 0xFFFF)
+        continue;  // full transparent pixels, use air instead
+
+      const auto &variant = TokiVC::LUT_basic_color_idx_to_blocks[color_id];
 
       const VCL_block *const *blockpp = nullptr;
       size_t depth_current = 0;
