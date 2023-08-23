@@ -60,6 +60,7 @@ void SCL_EXPORT SCL_preprocessImage(ARGB *data, const uint64_t imageSize,
         default:
           break;
       }
+      continue;
     }
 
     if (getA(data[i]) < 255) {  //  half transparent
