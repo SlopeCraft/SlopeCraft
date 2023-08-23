@@ -13,7 +13,7 @@ CompressEffectViewer::CompressEffectViewer(SCWind* parent)
   auto kernel = parent->kernel_ptr();
   const int rows = kernel->getImageRows();
   const int cols = kernel->getImageCols();
-  QImage img{rows, cols, QImage::Format_ARGB32};
+  QImage img{cols, rows, QImage::Format_ARGB32};
 
   kernel->getCompressedImage(
       nullptr, nullptr, reinterpret_cast<uint32_t*>(img.scanLine(0)), false);
