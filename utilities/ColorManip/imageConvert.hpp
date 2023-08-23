@@ -555,7 +555,7 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
     for (int64_t row = 0; row < this->rows(); row++) {
       if (is_dir_LR)
         for (int64_t col = 0; col < this->cols(); col++) {
-          if (::getA(this->_raw_image(row, col) <= 0)) {
+          if (::getA(this->_raw_image(row, col)) <= 0) {
             continue;
           }
 
@@ -596,7 +596,7 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
         }
       else
         for (int64_t col = this->cols() - 1; col >= 0; col--) {
-          if (::getA(this->_raw_image(row, col) <= 0)) {
+          if (::getA(this->_raw_image(row, col)) <= 0) {
             continue;
           }
 
