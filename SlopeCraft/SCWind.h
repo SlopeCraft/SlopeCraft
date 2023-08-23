@@ -61,6 +61,7 @@ class SCWind : public QMainWindow {
   void on_pb_prefer_glass_clicked() noexcept;
   void on_pb_prefer_planks_clicked() noexcept;
   void on_pb_prefer_logs_clicked() noexcept;
+  void on_pb_prefer_slabs_clicked() noexcept;
 
   void when_cvt_pool_selectionChanged() noexcept;
   void when_export_pool_selectionChanged() noexcept;

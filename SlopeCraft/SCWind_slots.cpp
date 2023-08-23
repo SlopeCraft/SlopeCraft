@@ -204,6 +204,13 @@ void SCWind::on_pb_prefer_logs_clicked() noexcept {
       });
 }
 
+void SCWind::on_pb_prefer_slabs_clicked() noexcept {
+  this->ui->blm->select_block_by_callback(
+      [](const std::vector<const SlopeCraft::AbstractBlock *> &blks) -> int {
+        return impl_select_blk_by_id(blks, "_slab");
+      });
+}
+
 void SCWind::on_pb_cvt_current_clicked() noexcept {
   const auto sel = this->selected_cvt_task_idx();
 
