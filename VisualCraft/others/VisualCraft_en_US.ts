@@ -858,7 +858,7 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
         <translation>Failed to retrieve device infomation, please check your deiver. OpenCL error code: %1</translation>
     </message>
     <message>
-        <location filename="../VCWind_gpu.cpp" line="188"/>
+        <location filename="../VCWind_gpu.cpp" line="190"/>
         <source>%1
 
 这不是一个致命错误，您可以选择其他的显卡，或者只使用 CPU 计算。点击 Ignore 将忽略这个错误，点击 Close 将关闭 VisualCraft</source>
@@ -867,22 +867,24 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
 This is not a fatal error, you can use other GPUs or your CPU instead. Click Ignore will ignore this error, or click Close to close VisualCraft</translation>
     </message>
     <message>
-        <location filename="../VCWind_gpu.cpp" line="214"/>
+        <location filename="../VCWind_gpu.cpp" line="216"/>
         <source>创建 GPU 平台失败，平台序号为%1，设备序号为%2</source>
         <translation>Failed to create GPU platform, Platform index = %1, device index = %2</translation>
     </message>
     <message>
-        <location filename="../VCWind_gpu.cpp" line="221"/>
+        <location filename="../VCWind_gpu.cpp" line="223"/>
         <source>创建 GPU 设备失败，平台序号为%1，设备序号为%2</source>
         <translation>Failed to create GPU device, Platform index = %1, device index = %2</translation>
     </message>
     <message>
-        <location filename="../VCWind_gpu.cpp" line="227"/>
-        <source>设置 GPU 设备失败。，平台序号为%1，设备序号为%2</source>
-        <translation>Failed to set GPU device. Platform index = %1, device index = %2</translation>
+        <location filename="../VCWind_gpu.cpp" line="236"/>
+        <source>设置 GPU 设备失败。平台序号为%1，设备序号为%2，详细错误信息：
+%3</source>
+        <translation>Failed to set GPU device. Platform index = %1, device index = %2, detailed information:
+%3</translation>
     </message>
     <message>
-        <location filename="../VCWind_gpu.cpp" line="187"/>
+        <location filename="../VCWind_gpu.cpp" line="189"/>
         <source>设置计算设备失败</source>
         <translation>Failed to set compute device</translation>
     </message>
