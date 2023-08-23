@@ -6,19 +6,23 @@ add_library(GPUInterface STATIC
 target_include_directories(GPUInterface INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_features(GPUInterface PUBLIC cxx_std_20)
 
-if(${LINUX})
-    set_target_properties(GPUInterface PROPERTIES TARGET_INDENPENDENT_CODE TRUE)
-endif()
+include(${CMAKE_SOURCE_DIR}/cmake/configure_fmtlib.cmake)
+find_package(fmt REQUIRED)
+target_link_libraries(GPUInterface PUBLIC fmt::fmt)
 
-if(${SlopeCraft_GPU_API} STREQUAL "OpenCL")
+if (${LINUX})
+    set_target_properties(GPUInterface PROPERTIES TARGET_INDENPENDENT_CODE TRUE)
+endif ()
+
+if (${SlopeCraft_GPU_API} STREQUAL "OpenCL")
     add_subdirectory(OpenCL)
     target_compile_definitions(GPUInterface PUBLIC -DSLOPECRAFT_GPU_API="OpenCL")
     return()
-endif()
+endif ()
 
-if(${SlopeCraft_GPU_API} STREQUAL "None")
+if (${SlopeCraft_GPU_API} STREQUAL "None")
     add_subdirectory(None)
     return()
-endif()
+endif ()
 
 message(FATAL_ERROR "Invalid value for \"SlopeCraft_GPU_API\" : ${SlopeCraft_GPU_API}")
