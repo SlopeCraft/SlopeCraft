@@ -95,11 +95,11 @@ std::string TokiSlopeCraft::impl_make_tests(
   }
 
   int xSize = 0;
-  constexpr int zSize = 64, ySize = 1;
+  constexpr int zSize = 64, ySize = 2;
   for (const auto &it : blocks) {
     xSize = std::max(size_t(xSize), it.size());
   }
-  test.resize(xSize, ySize, zSize);
+  test.resize(xSize + 1, ySize, zSize);
   test.set_zero();
 
   for (uint8_t base = 0; base < 64; base++) {
@@ -110,6 +110,7 @@ std::string TokiSlopeCraft::impl_make_tests(
 
       test(xPos, yPos, zPos) = blocks[base][idx] + 1;
     }
+    test(blocks[base].size(), 1, base) = 1;  // glass block
   }
 
   SCL_errorFlag err;
