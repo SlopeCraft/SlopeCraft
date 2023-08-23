@@ -1,4 +1,5 @@
 #include "../GPU_interface.h"
+#include <climits>
 
 const char *gpu_wrapper::api_name() noexcept { return "None"; }
 
