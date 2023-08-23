@@ -39,9 +39,9 @@
       // icon is the image filename correspoing to this block, the image should be put under CustomBlocks directory. Compulsory item.
       "icon": "stone_slab.png",
       // version is the earliest version when the block is added to Minecraft. 0 means earlier than 1.12, 12 means 1.12, 13 means 1.13, and so on. 255 means future version.
-      "version": 0,
+      "version": 14
       // idOld is the blockid in 1.12 (if there is) with minecraft: prefix. default value is an empty string
-      "idOld": "minecraft:stone_slab[half=top,variant=stone]"
+
       // needGlass means if this block must be setted on a solid block, default value is false
       // isGlowing means if the block glows, default value is false.
       // endermanPickable means if the block can be picked by enderman, default value is false
@@ -274,7 +274,7 @@
       "nameZH": "末地石砖台阶",
       "nameEN": "Endstone brick slab",
       "icon": "end_stone_bricks_slab.png",
-      "version": 0
+      "version": 14
     },
     {
       "baseColor": 2,
@@ -307,8 +307,7 @@
       "nameZH": "花岗岩台阶",
       "nameEN": "Granite slab",
       "icon": "granite_slab.png",
-      "version": 0,
-      "idOld": "minecraft:stone_slab[half=top,variant=granite]"
+      "version": 14
     },
     {
       "baseColor": 10,
@@ -325,8 +324,7 @@
       "nameZH": "磨制花岗岩台阶",
       "nameEN": "Polished granite slab",
       "icon": "polished_granite_slab.png",
-      "version": 0,
-      "idOld": "minecraft:stone_slab[half=top,variant=polished_granite]"
+      "version": 14
     },
     {
       "baseColor": 11,
@@ -343,8 +341,7 @@
       "nameZH": "安山岩台阶",
       "nameEN": "Andesite slab",
       "icon": "andesite_slab.png",
-      "version": 0,
-      "idOld": "minecraft:stone_slab[half=top,variant=andesite]"
+      "version": 14
     },
     {
       "baseColor": 11,
@@ -361,8 +358,7 @@
       "nameZH": "磨制安山岩台阶",
       "nameEN": "Polished andesite slab",
       "icon": "polished_andesite_slab.png",
-      "version": 0,
-      "idOld": "minecraft:stone_slab[half=top,variant=polished_andesite]"
+      "version": 14
     },
     {
       "baseColor": 14,
@@ -379,8 +375,7 @@
       "nameZH": "闪长岩台阶",
       "nameEN": "Diorite slab",
       "icon": "diorite_slab.png",
-      "version": 0,
-      "idOld": "minecraft:stone_slab[half=top,variant=diorite]"
+      "version": 14
     },
     {
       "baseColor": 14,
@@ -397,8 +392,7 @@
       "nameZH": "磨制闪长岩台阶",
       "nameEN": "Polished diorite slab",
       "icon": "polished_diorite_slab.png",
-      "version": 0,
-      "idOld": "minecraft:stone_slab[half=top,variant=polished_diorite]"
+      "version": 14
     },
     {
       "baseColor": 15,
@@ -468,7 +462,7 @@
     },
     {
       "baseColor": 59,
-      "id": "minecraft:deepslate_bricks_slab[type=top,waterlogged=false]",
+      "id": "minecraft:deepslate_brick_slab[type=top,waterlogged=false]",
       "nameZH": "深板岩砖台阶",
       "nameEN": "Deepslate bricks slab",
       "icon": "deepslate_bricks_slab.png",
@@ -476,7 +470,7 @@
     },
     {
       "baseColor": 59,
-      "id": "minecraft:deepslate_tiles_slab[type=top,waterlogged=false]",
+      "id": "minecraft:deepslate_tile_slab[type=top,waterlogged=false]",
       "nameZH": "深板岩瓦台阶",
       "nameEN": "Deepslate tiles slab",
       "icon": "deepslate_tiles_slab.png",
@@ -524,7 +518,7 @@
     },
     {
       "baseColor": 44,
-      "id": "minecraft:mud_bricks_slab[type=top,waterlogged=false]",
+      "id": "minecraft:mud_brick_slab[type=top,waterlogged=false]",
       "nameZH": "泥砖台阶",
       "nameEN": "Mud bricks slab",
       "icon": "mud_bricks_slab.png",
