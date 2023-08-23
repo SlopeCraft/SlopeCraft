@@ -374,6 +374,8 @@ void SCWind::on_pb_preview_materials_clicked() noexcept {
   assert(taskopt.value() != nullptr);
 
   cvt_task &task = *taskopt.value();
+  const ptrdiff_t index = &task - this->tasks.data();
+  assert(index >= 0 && index < this->tasks.size());
   if (!task.is_converted) [[unlikely]] {
     QMessageBox::warning(this, tr("该图像尚未被转化"),
                          tr("必须先转化一个图像，然后再为它构建三维结构"));
@@ -381,6 +383,7 @@ void SCWind::on_pb_preview_materials_clicked() noexcept {
   }
   QString errtitle;
   QString errmsg;
+  this->kernel_set_image(index);
   // try to load cache
   [this, &errtitle, &errmsg]() {
     if (this->kernel->queryStep() >= SCL_step::builded) {
