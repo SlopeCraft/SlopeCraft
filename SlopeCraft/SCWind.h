@@ -50,6 +50,8 @@ class SCWind : public QMainWindow {
  private slots:
   void on_pb_add_image_clicked() noexcept;
   void on_pb_remove_image_clicked() noexcept;
+  void on_pb_replace_image_clicked() noexcept;
+
   void on_cb_lv_cvt_icon_mode_clicked() noexcept;
   void on_cb_compress_lossy_toggled(bool checked) noexcept;
 
@@ -107,6 +109,8 @@ class SCWind : public QMainWindow {
 
   SCL_language language{SCL_language::Chinese};
   std::vector<QTranslator*> translators;
+
+  QString prev_load_image_dir{""};
 
   // QString fileonly_export_dir{""};
 

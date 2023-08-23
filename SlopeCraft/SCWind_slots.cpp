@@ -11,17 +11,20 @@
 #include "TransparentStrategyWind.h"
 #include "CompressEffectViewer.h"
 
-void SCWind::on_pb_add_image_clicked() noexcept {
 #ifdef WIN32
-  const char *filter = "*.png;*.jpg";
+const char *SC_image_filter = "*.png;*.jpg";
 #else
-  const char *filter = "*.png;;*.jpg";
+const char *SC_image_filter = "*.png;;*.jpg";
 #endif
-  auto files = QFileDialog::getOpenFileNames(this, tr("选择图片"), "", filter);
+
+void SCWind::on_pb_add_image_clicked() noexcept {
+  auto files = QFileDialog::getOpenFileNames(
+      this, tr("选择图片"), this->prev_load_image_dir, SC_image_filter);
 
   if (files.empty()) {
     return;
   }
+  this->prev_load_image_dir = QFileInfo{files.front()}.dir().absolutePath();
 
   std::optional<TransparentStrategyWind::strategy> strategy_opt{std::nullopt};
 
@@ -33,8 +36,7 @@ void SCWind::on_pb_add_image_clicked() noexcept {
       auto ret = QMessageBox::critical(
           this, tr("打开图像失败"),
           tr("无法打开图像 %1。常见原因：图像尺寸太大。\n详细信息： %2")
-              .arg(filename)
-              .arg(err),
+              .arg(filename, err),
           QMessageBox::StandardButtons{QMessageBox::StandardButton::Close,
                                        QMessageBox::StandardButton::Ignore});
 
@@ -85,6 +87,42 @@ void SCWind::on_pb_remove_image_clicked() noexcept {
   }
 
   emit this->image_changed();
+}
+
+void SCWind::on_pb_replace_image_clicked() noexcept {
+  auto selected = this->ui->lview_pool_cvt->selectionModel()->selectedIndexes();
+  if (selected.empty()) {
+    QMessageBox::warning(this, tr("请选择将被替换的图像"),
+                         tr("必须先选择一个或多个图像，然后才能替换它们。"));
+    return;
+  }
+
+  const QString file = QFileDialog::getOpenFileName(
+      this, tr("选择图片"), this->prev_load_image_dir, SC_image_filter);
+  if (file.isEmpty()) {
+    return;
+  }
+  this->prev_load_image_dir = QFileInfo{file}.dir().absolutePath();
+  QString err;
+  auto task = cvt_task::load(file, err);
+  if (!err.isEmpty()) {
+    auto ret = QMessageBox::critical(
+        this, tr("打开图像失败"),
+        tr("无法打开图像 %1。常见原因：图像尺寸太大。\n详细信息： %2")
+            .arg(file, err),
+        QMessageBox::StandardButtons{QMessageBox::StandardButton::Close,
+                                     QMessageBox::StandardButton::Ignore});
+
+    if (ret == QMessageBox::Ignore) {
+      return;
+    } else {
+      abort();
+    }
+  }
+  for (const auto &qmi : selected) {
+    this->tasks[qmi.row()] = task;
+  }
+  this->cvt_pool_model->refresh();
 }
 
 void SCWind::on_cb_lv_cvt_icon_mode_clicked() noexcept {
@@ -521,10 +559,10 @@ void SCWind::on_pb_export_all_clicked() noexcept {
         break;
       }
       default:
-        QMessageBox::warning(
-            this, tr("你点错按钮了"),
-            tr("导出为纯文件地图画的按钮在另外一页。按理来说你不应该能点击这个"
-               "按钮，这可能是一个小小的 bug（特性）。"));
+        QMessageBox::warning(this, tr("你点错按钮了"),
+                             tr("导出为纯文件地图画的按钮在另外一页。按理来说"
+                                "你不应该能点击这个"
+                                "按钮，这可能是一个小小的 bug（特性）。"));
         return;
     }
   }
@@ -786,7 +824,8 @@ void SCWind::on_ac_clear_cache_triggered() noexcept {
       if (ret == QMessageBox::StandardButton::Ignore) {
         break;
       }
-      return;  // QMessageBox::StandardButton::Cancel and for closing the dialog
+      return;  // QMessageBox::StandardButton::Cancel and for closing the
+               // dialog
     }
   }
 }

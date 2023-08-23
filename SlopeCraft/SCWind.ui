@@ -544,6 +544,13 @@
             </property>
            </widget>
           </item>
+          <item row="2" column="0">
+           <widget class="QPushButton" name="pb_replace_image">
+            <property name="text">
+             <string>替换</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
         <item row="0" column="2" colspan="2">
