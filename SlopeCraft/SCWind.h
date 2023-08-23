@@ -121,6 +121,8 @@ class SCWind : public QMainWindow {
 
   std::array<QRadioButton*, 5> export_type_buttons() noexcept;
   std::array<const QRadioButton*, 5> export_type_buttons() const noexcept;
+  std::vector<QRadioButton*> valid_export_type_buttons(
+      SCL_mapTypes type) const noexcept;
 
   std::array<QRadioButton*, 4> preset_buttons_no_custom() noexcept;
 

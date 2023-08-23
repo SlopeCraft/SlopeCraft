@@ -418,6 +418,16 @@ void SCWind::when_version_buttons_toggled() noexcept {
 void SCWind::when_type_buttons_toggled() noexcept {
   this->when_blocklist_changed();
   this->update_button_states();
+  {
+    auto valid_buttons = this->valid_export_type_buttons(this->selected_type());
+    for (auto btnp : valid_buttons) {
+      if (btnp->isChecked()) {
+        return;
+      }
+    }
+    valid_buttons[0]->click();
+  }
+  // this->when_export_type_toggled();
 }
 
 void SCWind::when_blocklist_changed() noexcept {
@@ -459,6 +469,19 @@ std::array<QRadioButton *, 5> SCWind::export_type_buttons() noexcept {
 std::array<const QRadioButton *, 5> SCWind::export_type_buttons()
     const noexcept {
   return SC_SLOPECRAFT_PREIVATEMACRO_EXPORT_TYPE_BUTTONS;
+}
+
+std::vector<QRadioButton *> SCWind::valid_export_type_buttons(
+    SCL_mapTypes type) const noexcept {
+  switch (type) {
+    case SCL_mapTypes::Slope:
+      return {this->ui->rb_export_lite, this->ui->rb_export_nbt,
+              this->ui->rb_export_WE, this->ui->rb_export_fileonly};
+    case SCL_mapTypes::Flat:
+      return SC_SLOPECRAFT_PREIVATEMACRO_EXPORT_TYPE_BUTTONS;
+    case SCL_mapTypes::FileOnly:
+      return {this->ui->rb_export_fileonly};
+  }
 }
 
 std::array<QRadioButton *, 4> SCWind::preset_buttons_no_custom() noexcept {
@@ -666,6 +689,10 @@ void SCWind::mark_all_task_unconverted() noexcept {
 }
 
 void SCWind::when_algo_btn_clicked() noexcept {
+  for (size_t i = 0; i < this->tasks.size(); i++) {
+    this->tasks[i].set_unconverted();
+  }
+  this->cvt_pool_model->refresh();
   this->refresh_current_cvt_display(this->selected_cvt_task_idx());
 }
 
