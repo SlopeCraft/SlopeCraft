@@ -452,6 +452,54 @@
     },
     {
       "baseColor": 29,
+      "id": "minecraft:blackstone_slab[type=top,waterlogged=false]",
+      "nameZH": "黑石台阶",
+      "nameEN": "Black stone slab",
+      "icon": "blackstone_slab.png",
+      "version": 16
+    },
+    {
+      "baseColor": 29,
+      "id": "minecraft:polished_blackstone_slab[type=top,waterlogged=false]",
+      "nameZH": "磨制黑石台阶",
+      "nameEN": "Polished black stone slab",
+      "icon": "polished_blackstone_slab.png",
+      "version": 16
+    },
+    {
+      "baseColor": 59,
+      "id": "minecraft:deepslate_bricks_slab[type=top,waterlogged=false]",
+      "nameZH": "深板岩砖台阶",
+      "nameEN": "Deepslate bricks slab",
+      "icon": "deepslate_bricks_slab.png",
+      "version": 17
+    },
+    {
+      "baseColor": 59,
+      "id": "minecraft:deepslate_tiles_slab[type=top,waterlogged=false]",
+      "nameZH": "深板岩瓦台阶",
+      "nameEN": "Deepslate tiles slab",
+      "icon": "deepslate_tiles_slab.png",
+      "version": 17
+    },
+    {
+      "baseColor": 59,
+      "id": "minecraft:cobbled_deepslate_slab[type=top,waterlogged=false]",
+      "nameZH": "深板岩圆石台阶",
+      "nameEN": "Cobbled deepslate slab",
+      "icon": "cobbled_deepslate_slab.png",
+      "version": 17
+    },
+    {
+      "baseColor": 59,
+      "id": "minecraft:polished_deepslate_slab[type=top,waterlogged=false]",
+      "nameZH": "磨制深板岩台阶",
+      "nameEN": "Polished deepslate slab",
+      "icon": "polished_deepslate_slab.png",
+      "version": 17
+    },
+    {
+      "baseColor": 29,
       "id": "minecraft:crying_obsidian",
       "nameZH": "哭泣的黑曜石",
       "nameEN": "Crying obsidian",
@@ -473,6 +521,14 @@
       "nameEN": "Tuff",
       "icon": "tuff.png",
       "version": 17
+    },
+    {
+      "baseColor": 44,
+      "id": "minecraft:mud_bricks_slab[type=top,waterlogged=false]",
+      "nameZH": "泥砖台阶",
+      "nameEN": "Mud bricks slab",
+      "icon": "mud_bricks_slab.png",
+      "version": 19
     }
   ]
 }
