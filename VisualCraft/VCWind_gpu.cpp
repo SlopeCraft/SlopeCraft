@@ -138,7 +138,9 @@ void VCWind::refresh_gpu_info() noexcept {
 
       twi->addChild(twi_device);
 
-      this->ui->combobox_select_device->addItem(devicename, QPoint(pid, did));
+      this->ui->combobox_select_device->addItem(
+          QStringLiteral("%1 / %2").arg(platname, devicename),
+          QPoint(pid, did));
 
       VCL_release_device(dev);
     }
