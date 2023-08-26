@@ -1,4 +1,5 @@
 #include "process_block_id.h"
+#include <string>
 
 bool blkid::is_valid_id(std::string_view str) noexcept {
   if (str.find_first_of(':') != str.find_first_of(':')) {
