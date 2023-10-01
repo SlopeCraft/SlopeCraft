@@ -199,6 +199,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+
+      - name: Install ninja
+        run: |
+          choco install ninja
+          ninja --version
+
       - name: Get short SHA
         run: |
           echo "GITHUB_SHA = $env:GITHUB_SHA"
