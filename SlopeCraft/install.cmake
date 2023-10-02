@@ -26,10 +26,11 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
         )
 
     # Install icons
-    file(GLOB SlopeCraft_Icon
-        ${CMAKE_SOURCE_DIR}/SlopeCraftMain/others/SlopeCraftIconNew.icns)
+    set(SlopeCraft_Icon
+        ${CMAKE_SOURCE_DIR}/SlopeCraft/others/SlopeCraftIconNew.icns)
     install(FILES ${SlopeCraft_Icon}
-        DESTINATION SlopeCraft.app/Contents/Resources)
+        DESTINATION SlopeCraft.app/Contents/Resources
+        RENAME SlopeCraft.icns)
 
     # Install FixedBlocks.json, CustomBlocks.json and README.md
     install(FILES ${SlopeCraft_install_jsons}

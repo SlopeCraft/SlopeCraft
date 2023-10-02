@@ -130,6 +130,8 @@ SCWind::SCWind(QWidget *parent)
     this->ui->blm->set_version_callback(
         [this]() { return this->selected_version(); });
 
+    QDir::setCurrent(QCoreApplication::applicationDirPath());
+
     this->ui->blm->add_blocklist("./Blocks/FixedBlocks.json",
                                  "./Blocks/FixedBlocks");
     this->ui->blm->add_blocklist("./Blocks/CustomBlocks.json",
