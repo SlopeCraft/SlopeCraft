@@ -1,6 +1,7 @@
 #include "BlockListManager.h"
 #include <string_view>
 #include <QMessageBox>
+#include <QDir>
 
 extern std::string_view basecolor_names[64];
 
@@ -68,7 +69,9 @@ bool BlockListManager::impl_addblocklist(
 
   errmsg.resize(msg_len);
 
+
   if (!errmsg.empty()) {
+    errmsg.append(QStringLiteral("\npwd: %1").arg(QFileInfo{"."}.absolutePath()).toLocal8Bit());
     if (bli == nullptr) {
       QMessageBox::critical(dynamic_cast<QWidget *>(this->parent()),
                             tr("解析方块列表失败"),
