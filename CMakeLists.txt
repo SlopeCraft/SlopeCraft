@@ -20,9 +20,14 @@ endif ()
 enable_testing()
 
 # configure options -----------------------------------------------------------
-set(SlopeCraft_GPU_API "OpenCL" CACHE STRING "API used to compute. Valid values : OpenCL, None. Metal may be supported.")
+if (NOT ${APPLE})
+    set(SlopeCraft_GPU_API "OpenCL" CACHE STRING "API used to compute. Valid values : OpenCL, None. Metal may be supported.")
+    option(SlopeCraft_vectorize "Compile with vectorization" ON)
+else ()
+    set(SlopeCraft_GPU_API "None" CACHE STRING "API used to compute. Valid values : OpenCL, None. Metal may be supported.")
+    option(SlopeCraft_vectorize "Compile with vectorization" OFF)
+endif ()
 
-option(SlopeCraft_vectorize "Compile with vectorization" ON)
 
 option(SlopeCraft_update_ts_files "Update language files before build. If it is set to ON, everytime CMake reconfigure the project, all .ts files will be updated." OFF)
 
