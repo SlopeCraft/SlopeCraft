@@ -70,8 +70,8 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     install(FILES ${VCL_app_files}
         DESTINATION VisualCraft.app/Contents/MacOS/Blocks_VCL
         )
-    QD_add_deployqt(VisualCraft
-        INSTALL_MODE INSTALL_DESTINATION .)
+    #QD_add_deployqt(VisualCraft
+    #    INSTALL_MODE INSTALL_DESTINATION .)
 
     # Run macdeployqt at install time
     #install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake)
