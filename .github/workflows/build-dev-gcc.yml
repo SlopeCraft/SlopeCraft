@@ -226,6 +226,11 @@ jobs:
       #    gcc --version
       #- name: See Path
       #  run: $env:path -split ';'
+      - name: Install ninja
+        run: |
+          choco install ninja
+          ninja --version
+          
       - name: Make dirs
         run: |
           mkdir bin

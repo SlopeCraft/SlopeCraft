@@ -482,6 +482,7 @@ std::vector<QRadioButton *> SCWind::valid_export_type_buttons(
     case SCL_mapTypes::FileOnly:
       return {this->ui->rb_export_fileonly};
   }
+  return {};
 }
 
 std::array<QRadioButton *, 4> SCWind::preset_buttons_no_custom() noexcept {

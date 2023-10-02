@@ -134,7 +134,10 @@ class MapImageCvter : public ::libImageCvt::ImageCvter<true> {
       for (uint32_t color : colors_dithered_img) {
         auto it =
             this->color_hash().find(convert_unit{color, this->convert_algo()});
-        assert(it != this->color_hash().end());
+        if (it == this->color_hash().end()) {
+          assert(getA(color) <= 0);
+          continue;
+        }
 
         ar(it->first, it->second);
       }

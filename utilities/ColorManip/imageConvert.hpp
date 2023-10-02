@@ -197,6 +197,18 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
     } else {
       this->_dithered_image = this->_raw_image;
     }
+
+    //    for (int64_t idx = 0; idx < this->_dithered_image.size(); idx++) {
+    //      const auto current_color{this->_dithered_image(idx)};
+    //      if (getA(current_color) > 0) {
+    //        continue;
+    //      }
+    //      const convert_unit key{current_color, this->algo};
+    //      if (!this->_color_hash.contains(key)) {
+    //        this->_color_hash.emplace(key, uint8_t{0});
+    //      }
+    //    }
+
     ui.rangeSet(0, 100, 100);
     return true;
     // fill_coloridmat_by_hash(this->colorid_matrix);
@@ -207,10 +219,16 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
     result.setZero(this->rows(), this->cols());
 
     for (int64_t idx = 0; idx < this->size(); idx++) {
-      auto it = this->_color_hash.find(
-          convert_unit(this->_dithered_image(idx), this->algo));
+      const auto current_color = this->_dithered_image(idx);
+
+      auto it = this->_color_hash.find(convert_unit(current_color, this->algo));
 
       if (it == this->_color_hash.end()) {
+        if (getA(current_color) <= 0) {
+          result(idx) = 0;
+          continue;
+        }
+
         abort();
       }
 
@@ -242,10 +260,13 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
     assert(r >= 0 && r < this->rows());
     assert(c >= 0 && c < this->cols());
 
-    auto it = this->_color_hash.find(
-        convert_unit{this->_dithered_image(r, c), this->algo});
+    const auto current_color = this->_dithered_image(r, c);
+    auto it = this->_color_hash.find(convert_unit{current_color, this->algo});
     if (it == this->_color_hash.end()) {
-      abort();
+      if (getA(current_color) > 0) {
+        abort();
+      }
+      return 0;
     }
     return it->second.color_id();
   }
