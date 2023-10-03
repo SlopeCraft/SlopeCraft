@@ -43,14 +43,14 @@ jobs:
           choco install ninja
           ninja --version
 
-      - name: Install zlib, libpng and libzip with vcpkg
+      - name: Install deps with vcpkg
         run: |
           dir C:\vcpkg
-          vcpkg install zlib libpng libzip --triplet=x64-windows
+          vcpkg install --triplet=x64-windows zlib libpng libzip eigen3
           dir C:\vcpkg\installed
           dir C:\vcpkg\installed\x64-windows
           dir C:\vcpkg\installed\x64-windows\debug
-          rd /s /q C:\vcpkg\installed\x64-windows\debug
+          rd /s/q C:\vcpkg\installed\x64-windows\debug
         
         
         # Invoke-Expression "& 'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat'"
@@ -73,51 +73,51 @@ jobs:
           mkdir 3rdParty
           mkdir bin/dependencies
 
-      - name: Build and install zlib
-        run: |
-          $basedir=(pwd).path.replace("\\","/")
-          echo "basedir = $basedir"
-          $BUILD_TYPE=$env:BUILD_TYPE
-          cd 3rdParty
-          git clone https://github.com/madler/zlib.git
-          cd zlib
-          git checkout v1.2.13
-          cd $basedir
-          mkdir bin/build-zlib
-          cmake -S 3rdParty/zlib -B bin/build-zlib -G Ninja -DCMAKE_C_COMPILER:FILEPATH=clang -DCMAKE_BUILD_TYPE="Release" -DCMAKE_INSTALL_PREFIX="$basedir/bin/dependencies"
-          cmake --build bin/build-zlib --parallel
-          cmake --install bin/build-zlib
+      #      - name: Build and install zlib
+      #        run: |
+      #          $basedir=(pwd).path.replace("\\","/")
+      #          echo "basedir = $basedir"
+      #          $BUILD_TYPE=$env:BUILD_TYPE
+      #          cd 3rdParty
+      #          git clone https://github.com/madler/zlib.git
+      #          cd zlib
+      #          git checkout v1.2.13
+      #          cd $basedir
+      #          mkdir bin/build-zlib
+      #          cmake -S 3rdParty/zlib -B bin/build-zlib -G Ninja -DCMAKE_C_COMPILER:FILEPATH=clang -DCMAKE_BUILD_TYPE="Release" -DCMAKE_INSTALL_PREFIX="$basedir/bin/dependencies"
+      #          cmake --build bin/build-zlib --parallel
+      #          cmake --install bin/build-zlib
+      #
+      #      - name: Build and install libzip
+      #        run: |
+      #          $basedir=(pwd).path.replace("\\","/")
+      #          $BUILD_TYPE=$env:BUILD_TYPE
+      #          cd 3rdParty
+      #          git clone https://github.com/nih-at/libzip.git
+      #          cd libzip
+      #          git checkout v1.9.2
+      #          cd $basedir
+      #          mkdir bin/build-libzip
+      #          cmake -S 3rdParty/libzip -B bin/build-libzip -G Ninja -DCMAKE_BUILD_TYPE="Release" -DCMAKE_C_COMPILER:FILEPATH=clang -DCMAKE_CXX_COMPILER:FILEPATH=clang++ -DCMAKE_INSTALL_PREFIX="$basedir/bin/dependencies" -DCMAKE_PREFIX_PATH="$basedir/bin/dependencies" -DBUILD_SHARED_LIBS=true -DLIBZIP_DO_INSTALL=true -DENABLE_BZIP2=false -DENABLE_LZMA=false -DENABLE_ZSTD=false
+      #          cmake --build bin/build-libzip --parallel
+      #          cmake --install bin/build-libzip
+      #
+      #      - name: Build and install libpng
+      #        run: |
+      #          $basedir=(pwd).path.replace("\\","/")
+      #          $BUILD_TYPE=$env:BUILD_TYPE
+      #          cd 3rdParty
+      #          git clone https://github.com/glennrp/libpng.git
+      #          cd libpng
+      #          git checkout v1.6.39
+      #          cd $basedir
+      #          mkdir bin/build-libpng
+      #          cmake -S 3rdParty/libpng -B bin/build-libpng -G Ninja -DCMAKE_BUILD_TYPE="Release" -DCMAKE_C_COMPILER:FILEPATH=clang -DCMAKE_INSTALL_PREFIX="$basedir/bin/dependencies" -DCMAKE_PREFIX_PATH="$basedir/bin/dependencies" -DPNG_SHARED:BOOL=true -DPNG_STATIC:BOOL=false
+      #          cmake --build bin/build-libpng --parallel
+      #          cmake --install bin/build-libpng
 
-      - name: Build and install libzip
-        run: |
-          $basedir=(pwd).path.replace("\\","/")
-          $BUILD_TYPE=$env:BUILD_TYPE
-          cd 3rdParty
-          git clone https://github.com/nih-at/libzip.git
-          cd libzip
-          git checkout v1.9.2
-          cd $basedir
-          mkdir bin/build-libzip
-          cmake -S 3rdParty/libzip -B bin/build-libzip -G Ninja -DCMAKE_BUILD_TYPE="Release" -DCMAKE_C_COMPILER:FILEPATH=clang -DCMAKE_CXX_COMPILER:FILEPATH=clang++ -DCMAKE_INSTALL_PREFIX="$basedir/bin/dependencies" -DCMAKE_PREFIX_PATH="$basedir/bin/dependencies" -DBUILD_SHARED_LIBS=true -DLIBZIP_DO_INSTALL=true -DENABLE_BZIP2=false -DENABLE_LZMA=false -DENABLE_ZSTD=false
-          cmake --build bin/build-libzip --parallel
-          cmake --install bin/build-libzip
-
-      - name: Build and install libpng
-        run: |
-          $basedir=(pwd).path.replace("\\","/")
-          $BUILD_TYPE=$env:BUILD_TYPE
-          cd 3rdParty
-          git clone https://github.com/glennrp/libpng.git
-          cd libpng
-          git checkout v1.6.39
-          cd $basedir
-          mkdir bin/build-libpng
-          cmake -S 3rdParty/libpng -B bin/build-libpng -G Ninja -DCMAKE_BUILD_TYPE="Release" -DCMAKE_C_COMPILER:FILEPATH=clang -DCMAKE_INSTALL_PREFIX="$basedir/bin/dependencies" -DCMAKE_PREFIX_PATH="$basedir/bin/dependencies" -DPNG_SHARED:BOOL=true -DPNG_STATIC:BOOL=false
-          cmake --build bin/build-libpng --parallel
-          cmake --install bin/build-libpng
-
-      - name: Install Eigen3
-        run: vcpkg install --triplet=x64-windows eigen3
+      #      - name: Install Eigen3
+      #        run: vcpkg install --triplet=x64-windows eigen3
 
       - name: Download Qt6.5.0-msvc-shared and extract
         run: |
@@ -134,7 +134,7 @@ jobs:
           mkdir build
           mkdir install
           set PATH=C:\Program Files\PowerShell\7;C:\vcpkg;C:\Program Files (x86)\NSIS\;C:\Program Files\dotnet;C:\Program Files (x86)\GitHub CLI;C:\Program Files\Git\bin;C:\Program Files\OpenSSL\bin;C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin;C:\Program Files\Microsoft\jdk-11.0.16.101-hotspot\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\dotnet\;C:\Program Files\PowerShell\7\;C:\Program Files\Microsoft\Web Platform Installer\;C:\Program Files\CMake\bin;C:\Program Files\Microsoft SDKs\Service Fabric\Tools\ServiceFabricLocalClusterManager;C:\Program Files\Git\cmd;C:\Program Files\GitHub CLI\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\LLVM\bin;C:\Users\runneradmin\.dotnet\tools;C:\Users\runneradmin\.cargo\bin;C:\Users\runneradmin\AppData\Local\Microsoft\WindowsApps
-          "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" & cmake -S . -B ./build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=clang-cl -DCMAKE_CXX_COMPILER:FILEPATH=clang-cl -DCMAKE_RC_COMPILER:FILEPATH=llvm-rc -DCMAKE_PREFIX_PATH:PATH=D:/a/SlopeCraft/SlopeCraft/bin/Qt6.5.0-msvc-shared;D:/a/SlopeCraft/SlopeCraft/bin/dependencies;C:/vcpkg/installed/x64-windows -DCMAKE_INSTALL_PREFIX:PATH=D:/a/SlopeCraft/SlopeCraft/install -DCMAKE_BUILD_TYPE="${{ matrix.build_type }}" -DSlopeCraft_GPU_API:STRING="${{ matrix.gpu_api }}" -DSlopeCraft_vectorize:BOOL="${{ matrix.vectorize }}" -DSlopeCraft_windeployqt_flags_install:STRING=-release;--no-translations
+          "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" & cmake -S . -B ./build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=clang-cl -DCMAKE_CXX_COMPILER:FILEPATH=clang-cl -DCMAKE_RC_COMPILER:FILEPATH=llvm-rc -DCMAKE_PREFIX_PATH:PATH=D:/a/SlopeCraft/SlopeCraft/bin/Qt6.5.0-msvc-shared;C:/vcpkg/installed/x64-windows -DCMAKE_INSTALL_PREFIX:PATH=D:/a/SlopeCraft/SlopeCraft/install -DCMAKE_BUILD_TYPE="${{ matrix.build_type }}" -DSlopeCraft_GPU_API:STRING="${{ matrix.gpu_api }}" -DSlopeCraft_vectorize:BOOL="${{ matrix.vectorize }}" -DSlopeCraft_windeployqt_flags_install:STRING=-release;--no-translations
 
       - name: CMake build
         shell: cmd
