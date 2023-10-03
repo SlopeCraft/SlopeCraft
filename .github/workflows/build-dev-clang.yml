@@ -51,7 +51,7 @@ jobs:
           dir C:\vcpkg\installed
           dir C:\vcpkg\installed\x64-windows
           dir C:\vcpkg\installed\x64-windows\debug
-          rd /s/q C:\vcpkg\installed\x64-windows\debug
+        # rd /s/q C:\vcpkg\installed\x64-windows\debug
         
         
         # Invoke-Expression "& 'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat'"
