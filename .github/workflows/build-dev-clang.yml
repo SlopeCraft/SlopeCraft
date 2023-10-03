@@ -47,7 +47,9 @@ jobs:
         run: |
           dir C:\vcpkg
           vcpkg install zlib libpng libzip --triplet=x64-windows
+          dir C:\vcpkg\installed
           dir C:\vcpkg\installed\x64-windows
+          dir C:\vcpkg\installed\x64-windows\debug
           rd /s /q C:\vcpkg\installed\x64-windows\debug
         
         
