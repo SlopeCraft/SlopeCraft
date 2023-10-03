@@ -28,6 +28,10 @@ jobs:
           echo "env:BUILD_TYPE = $env:BUILD_TYPE"
           echo "env:GPU_API = $env:GPU_API"
 
+      - name: Check vcpkg
+        run: |
+          dir C:\vcpkg
+
       - name: check clang
         run: |
           where clang
@@ -41,7 +45,7 @@ jobs:
 
       - name: Install zlib, libpng and libzip with vcpkg
         run: |
-          dir C:\vcpkg\installed
+          dir C:\vcpkg
           vcpkg install zlib libpng libzip --triplet=x64-windows
           dir C:\vcpkg\installed\x64-windows
           rd /s /q C:\vcpkg\installed\x64-windows\debug
