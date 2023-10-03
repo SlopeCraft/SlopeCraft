@@ -41,8 +41,11 @@ jobs:
 
       - name: Install zlib, libpng and libzip with vcpkg
         run: |
+          dir C:\vcpkg\installed
           vcpkg install zlib libpng libzip --triplet=x64-windows
-          dir %VCPKG_INSTALLATION_ROOT%/install        
+          dir C:\vcpkg\installed\x64-windows
+          rd /s /q C:\vcpkg\installed\x64-windows\debug
+        
         
         # Invoke-Expression "& 'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat'"
 
