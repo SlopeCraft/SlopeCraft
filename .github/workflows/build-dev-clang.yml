@@ -39,6 +39,11 @@ jobs:
           choco install ninja
           ninja --version
 
+      - name: Install zlib, libpng and libzip with vcpkg
+        run: |
+          vcpkg install zlib libpng libzip --triplet=x64-windows
+          dir %VCPKG_INSTALLATION_ROOT%/install        
+        
         # Invoke-Expression "& 'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat'"
 
 
