@@ -28,16 +28,6 @@ jobs:
           echo "env:BUILD_TYPE = $env:BUILD_TYPE"
           echo "env:GPU_API = $env:GPU_API"
 
-      - name: Check vcpkg
-        run: |
-          dir C:\vcpkg
-
-      - name: check clang
-        run: |
-          where clang
-          where clang-cl
-          clang --version
-
       - name: Install ninja
         run: |
           choco install ninja
@@ -45,17 +35,7 @@ jobs:
 
       - name: Install deps with vcpkg
         shell: cmd
-        run: |
-          dir C:\vcpkg
-          vcpkg install --triplet=x64-windows zlib libpng libzip eigen3
-          dir C:\vcpkg\installed
-          dir C:\vcpkg\installed\x64-windows
-          dir C:\vcpkg\installed\x64-windows\debug
-        # rd /s/q C:\vcpkg\installed\x64-windows\debug
-        
-        
-        # Invoke-Expression "& 'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat'"
-
+        run: vcpkg install --triplet=x64-windows zlib libpng libzip eigen3
 
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -72,53 +52,6 @@ jobs:
           mkdir bin
           mkdir bin/Qt6.5.0-msvc-shared
           mkdir 3rdParty
-          mkdir bin/dependencies
-
-      #      - name: Build and install zlib
-      #        run: |
-      #          $basedir=(pwd).path.replace("\\","/")
-      #          echo "basedir = $basedir"
-      #          $BUILD_TYPE=$env:BUILD_TYPE
-      #          cd 3rdParty
-      #          git clone https://github.com/madler/zlib.git
-      #          cd zlib
-      #          git checkout v1.2.13
-      #          cd $basedir
-      #          mkdir bin/build-zlib
-      #          cmake -S 3rdParty/zlib -B bin/build-zlib -G Ninja -DCMAKE_C_COMPILER:FILEPATH=clang -DCMAKE_BUILD_TYPE="Release" -DCMAKE_INSTALL_PREFIX="$basedir/bin/dependencies"
-      #          cmake --build bin/build-zlib --parallel
-      #          cmake --install bin/build-zlib
-      #
-      #      - name: Build and install libzip
-      #        run: |
-      #          $basedir=(pwd).path.replace("\\","/")
-      #          $BUILD_TYPE=$env:BUILD_TYPE
-      #          cd 3rdParty
-      #          git clone https://github.com/nih-at/libzip.git
-      #          cd libzip
-      #          git checkout v1.9.2
-      #          cd $basedir
-      #          mkdir bin/build-libzip
-      #          cmake -S 3rdParty/libzip -B bin/build-libzip -G Ninja -DCMAKE_BUILD_TYPE="Release" -DCMAKE_C_COMPILER:FILEPATH=clang -DCMAKE_CXX_COMPILER:FILEPATH=clang++ -DCMAKE_INSTALL_PREFIX="$basedir/bin/dependencies" -DCMAKE_PREFIX_PATH="$basedir/bin/dependencies" -DBUILD_SHARED_LIBS=true -DLIBZIP_DO_INSTALL=true -DENABLE_BZIP2=false -DENABLE_LZMA=false -DENABLE_ZSTD=false
-      #          cmake --build bin/build-libzip --parallel
-      #          cmake --install bin/build-libzip
-      #
-      #      - name: Build and install libpng
-      #        run: |
-      #          $basedir=(pwd).path.replace("\\","/")
-      #          $BUILD_TYPE=$env:BUILD_TYPE
-      #          cd 3rdParty
-      #          git clone https://github.com/glennrp/libpng.git
-      #          cd libpng
-      #          git checkout v1.6.39
-      #          cd $basedir
-      #          mkdir bin/build-libpng
-      #          cmake -S 3rdParty/libpng -B bin/build-libpng -G Ninja -DCMAKE_BUILD_TYPE="Release" -DCMAKE_C_COMPILER:FILEPATH=clang -DCMAKE_INSTALL_PREFIX="$basedir/bin/dependencies" -DCMAKE_PREFIX_PATH="$basedir/bin/dependencies" -DPNG_SHARED:BOOL=true -DPNG_STATIC:BOOL=false
-      #          cmake --build bin/build-libpng --parallel
-      #          cmake --install bin/build-libpng
-
-      #      - name: Install Eigen3
-      #        run: vcpkg install --triplet=x64-windows eigen3
 
       - name: Download Qt6.5.0-msvc-shared and extract
         run: |
@@ -215,7 +148,7 @@ jobs:
 #      - name: Compress as zip
 #        run: |
 #          cd ./build/install
-#          zip -9 -r -y SlopeCraft-5.1.0-macos.zip ./*
+#          zip -9 -r -y SlopeCraft-5.2.0-macos.zip ./*
 #
 #      - name: Get short SHA
 #        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
@@ -223,4 +156,4 @@ jobs:
 #        uses: actions/upload-artifact@v2
 #        with:
 #          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-macos-clang
-#          path: build/install/SlopeCraft-5.1.0-macos.zip
+#          path: build/install/SlopeCraft*.zip
