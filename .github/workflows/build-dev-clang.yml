@@ -44,6 +44,7 @@ jobs:
           ninja --version
 
       - name: Install deps with vcpkg
+        shell: cmd
         run: |
           dir C:\vcpkg
           vcpkg install --triplet=x64-windows zlib libpng libzip eigen3
