@@ -38,8 +38,12 @@ QString get_cpu_name(bool &error) noexcept {
   const char *command = "wmic cpu get name";
 #elif defined(__linux__)
   const char *command = "sh -c \"cat /proc/cpuinfo | grep name\"";
+#elif defined(__APPLE__)
+  const char * command="sysctl machdep.cpu.brand_string";
 #else
-#warning "Unknown OS"
+#warning Unknown OS
+  const char * command=nullptr;
+  return {};
 #endif
 
   proc.startCommand(command);
@@ -86,6 +90,23 @@ QString get_cpu_name(bool &error) noexcept {
   }
   const auto cpu_name = line0_splitted[1];
 
+#elif defined(__APPLE__)
+  output.remove('\n');
+  auto split_out=output.split(':');
+  if (split_out.size()<2) {
+    return {};
+  }
+  if (split_out[0]!="machdep.cpu.brand_string") {
+    return {};
+  }
+  auto cpu_name=split_out[1];
+  cpu_name.remove('\t');
+  while(cpu_name.front()==' ') {
+    cpu_name.removeFirst();
+  }
+  while(cpu_name.back()==' ') {
+    cpu_name.removeLast();
+  }
 #else
 #warning "Unknown OS"
   QString cpu_name{};
@@ -95,7 +116,7 @@ QString get_cpu_name(bool &error) noexcept {
 }
 
 void VCWind::refresh_gpu_info() noexcept {
-  this->ui->sb_threads->setValue(std::thread::hardware_concurrency());
+  this->ui->sb_threads->setValue((int)std::thread::hardware_concurrency());
 
   this->ui->tw_gpu->clear();
   this->ui->combobox_select_device->clear();
