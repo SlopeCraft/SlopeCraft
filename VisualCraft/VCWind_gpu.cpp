@@ -26,49 +26,72 @@ This file is part of SlopeCraft.
 #include <thread>
 
 #include <QMessageBox>
-
+#include <QProcess>
 #include "VCWind.h"
 #include "ui_VCWind.h"
 
-#ifdef _MSC_VER
-#include <intrin.h>
+QString get_cpu_name(bool &error) noexcept {
+  QProcess proc{0};
+  error = true;
+
+#ifdef WIN32
+  const char *command = "wmic cpu get name";
+#elif defined(__linux__)
+  const char *command = "sh -c \"cat /proc/cpuinfo | grep name\"";
 #else
-#include <cpuid.h>
+#warning "Unknown OS"
 #endif
 
-std::string get_cpu_name(bool &error) noexcept {
-  int buffer[5];
-  uint8_t *const buffer_cptr = reinterpret_cast<uint8_t *>(buffer);
-  constexpr uint32_t input[3] = {0x80000002, 0x80000003, 0x80000004};
-
-  char str[1024] = "";
-
-  error = false;
-  for (auto i : input) {
-    memset(buffer, 0, sizeof(buffer));
-    try {
-#ifdef _MSC_VER
-      __cpuid(buffer, i);
-#else
-      __cpuid(i, buffer[0], buffer[1], buffer[2], buffer[3]);
-#endif
-
-    } catch (std::exception &e) {
-      strcpy(str, "Instruction cpuid failed. Detail : ");
-      strcpy(str, e.what());
-      error = true;
-      return str;
-    }
-    if constexpr (false) {
-      for (size_t o = 0; o < 4 * sizeof(uint32_t); o++) {
-        std::cout << (int)buffer_cptr[o] << ", ";
-      }
-      std::cout << std::endl;
-    }
-
-    strcat(str, reinterpret_cast<char *>(buffer_cptr));
+  proc.startCommand(command);
+  if (!proc.waitForStarted()) {
+    return {};
   }
-  return str;
+  if (!proc.waitForFinished()) {
+    return {};
+  }
+
+  QString output = QString::fromUtf8(proc.readAllStandardOutput());
+
+#ifdef WIN32
+  output = output.remove(QChar{'\r'});
+  auto splitted = output.split('\n');
+  if (splitted.size() < 2) {
+    return {};
+  }
+
+  if (splitted[0].remove(QChar{' '}) != QStringLiteral("Name")) {
+    return {};
+  }
+
+  const auto cpu_name = splitted[1];
+
+#elif defined(__linux__)
+
+  output.remove('\t');
+
+  auto spilitted = output.split('\n');
+  if (spilitted.size() <= 0) {
+    return {};
+  }
+  const auto line0 = spilitted[0];
+  if (!line0.contains(':')) {
+    return {};
+  }
+  auto line0_splitted = line0.split(':');
+  if (line0_splitted.size() != 2) {
+    return {};
+  }
+  if (line0_splitted[0].remove(' ') != "modelname") {
+    return {};
+  }
+  const auto cpu_name = line0_splitted[1];
+
+#else
+#warning "Unknown OS"
+  QString cpu_name{};
+#endif
+  error = false;
+  return cpu_name;
 }
 
 void VCWind::refresh_gpu_info() noexcept {
@@ -79,7 +102,8 @@ void VCWind::refresh_gpu_info() noexcept {
 
   {
     bool error = false;
-    QString text("CPU : " + QString::fromUtf8(get_cpu_name(error)));
+    QString text("CPU : " + get_cpu_name(error));
+    // QString text("CPU : " +);
     QTreeWidgetItem *cpu = new QTreeWidgetItem;
     cpu->setText(0, text);
     if (error) {
