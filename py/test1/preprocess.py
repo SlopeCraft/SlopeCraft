@@ -147,7 +147,7 @@ def main():
     # tomli_w.dump(metainfos, open(os.path.join(out_dir, "total_info.toml"), 'wb'))
 
 
-class ZipDataSet(torch.utils.data.Dataset):
+class ZipDataset(torch.utils.data.Dataset):
     config: dict[str, Any]
     zip: zipfile.ZipFile
 
