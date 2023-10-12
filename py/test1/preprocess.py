@@ -1,3 +1,4 @@
+import copy
 import cv2
 import os
 import pathlib
@@ -158,13 +159,17 @@ class ZipDataset(torch.utils.data.Dataset):
 
         self.config = tomllib.load(open(config_file, "rb"))
         print(f"Loading {zip_file}...")
-        self.zip = zipfile.ZipFile(zip_file)
+        self.zip = zipfile.ZipFile(zip_file, mode='r')
 
     def __len__(self) -> int:
         return len(self.zip.filelist)
 
+    @staticmethod
+    def read_image_binary(zip_info: zipfile.ZipInfo, zip_obj: zipfile.ZipFile) -> bytes:
+        return zip_obj.read(name=zip_info)
+
     def decode_image(self, zip_info: zipfile.ZipInfo) -> torch.Tensor:
-        encoded = self.zip.read(name=zip_info)
+        encoded = self.read_image_binary(zip_info, self.zip)
         encoded_nparr = np.frombuffer(encoded, dtype=np.uint8)
         image = cv2.imdecode(encoded_nparr, flags=cv2.IMREAD_COLOR)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)

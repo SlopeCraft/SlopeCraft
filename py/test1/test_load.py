@@ -12,12 +12,13 @@ def main():
     args = parser.parse_args()
 
     ds = pp.ZipDataset(args.input)
-    dl = torch.utils.data.DataLoader(ds, batch_size=64,
+    dl = torch.utils.data.DataLoader(ds, batch_size=1024,
                                      shuffle=True,
                                      pin_memory=True,
-                                     num_workers=0)
+                                     num_workers=0 if os.name == 'nt' else 1)
 
     for batch_index, img in enumerate(dl):
+        img = img.to('cuda')
         pass
         print(f"Batch {batch_index}")
 
