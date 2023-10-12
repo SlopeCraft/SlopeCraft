@@ -47,7 +47,6 @@ Testing
 Makefile
 cmake_install.cmake
 install_manifest.txt
-compile_commands.json
 CTestTestfile.cmake
 _deps
 
@@ -76,3 +75,7 @@ binaries/*
 ### CLion ###
 .idea/*
 cmake-build-*
+
+### PyCharm ###
+py/preprocessed
+py/outputs
