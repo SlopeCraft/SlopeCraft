@@ -3,17 +3,21 @@ import random
 import matplotlib.pyplot as plt
 import torch.utils.data
 import os
+import argparse
 
 
 def main():
-    dS = pp.ZipDataSet("preprocessed/埃罗芒阿-128x128.zip")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("input", type=str)
+    args = parser.parse_args()
 
-    dL = torch.utils.data.DataLoader(dS, batch_size=64,
+    ds = pp.ZipDataset(args.input)
+    dl = torch.utils.data.DataLoader(ds, batch_size=64,
                                      shuffle=True,
                                      pin_memory=True,
                                      num_workers=0)
 
-    for batch_index, img in enumerate(dL):
+    for batch_index, img in enumerate(dl):
         pass
         print(f"Batch {batch_index}")
 
