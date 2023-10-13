@@ -1,4 +1,6 @@
 import copy
+import io
+
 import cv2
 import os
 import pathlib
@@ -165,11 +167,11 @@ class ZipDataset(torch.utils.data.Dataset):
         return len(self.zip.filelist)
 
     @staticmethod
-    def read_image_binary(zip_info: zipfile.ZipInfo, zip_obj: zipfile.ZipFile) -> bytes:
+    def read_image_binary(zip_info: zipfile.ZipInfo) -> bytes:
         return zip_obj.read(name=zip_info)
 
     def decode_image(self, zip_info: zipfile.ZipInfo) -> torch.Tensor:
-        encoded = self.read_image_binary(zip_info, self.zip)
+        encoded = self.read_image_binary(zip_info)
         encoded_nparr = np.frombuffer(encoded, dtype=np.uint8)
         image = cv2.imdecode(encoded_nparr, flags=cv2.IMREAD_COLOR)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -187,6 +189,34 @@ class ZipDataset(torch.utils.data.Dataset):
     #     for zip_info in self.zip.filelist:
     #         tensor=self.decode_image(zip_info)
     #         yield tensor
+
+
+class MPZipDataset(ZipDataset):
+    major_pid: int
+    zip_dict: dict[int, zipfile.ZipFile]
+
+    def __init__(self, zip_file: str, major_pid: int = os.getpid()):
+        super().__init__(zip_file)
+        self.major_pid = os.getpid()
+        self.zip_dict = {}
+
+    def select_zip_obj(self) -> zipfile.ZipFile:
+        pid = os.getpid()
+        if pid == self.major_pid:
+            return self.zip
+
+        if pid not in self.zip_dict:
+            print(f"Reloading {self.zip.filename} for process {pid}...")
+            # new_zip = zipfile.ZipFile(self.zip.filename, mode='r')
+            new_zip = self.zip
+            new_zip.fp = io.open(self.zip.filename,self.zip.fp.mode)
+            self.zip_dict[pid] = new_zip
+
+        return self.zip_dict[pid]
+
+    # @override
+    def read_image_binary(self, zip_info: zipfile.ZipInfo) -> bytes:
+        return self.select_zip_obj().read(zip_info)
 
 
 if __name__ == "__main__":

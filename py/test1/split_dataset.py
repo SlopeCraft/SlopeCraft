@@ -15,7 +15,10 @@ def picked_count(size: int, ratio: float, max_count: int) -> int:
     return min(max_count, int(size * ratio))
 
 
-def export_subdataset(filename: str, src: zipfile.ZipFile, filelist: list[zipfile.ZipInfo], metainfo: dict[str, Any]):
+def export_subdataset(filename: str,
+                      src: zipfile.ZipFile,
+                      filelist: list[zipfile.ZipInfo],
+                      metainfo: dict[str, Any]):
     dst = zipfile.ZipFile(filename, 'w', compression=zipfile.ZIP_STORED)
     for info in filelist:
         content = src.read(info)

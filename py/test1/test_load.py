@@ -11,11 +11,11 @@ def main():
     parser.add_argument("input", type=str)
     args = parser.parse_args()
 
-    ds = pp.ZipDataset(args.input)
-    dl = torch.utils.data.DataLoader(ds, batch_size=1024,
+    ds = pp.MPZipDataset(args.input)
+    dl = torch.utils.data.DataLoader(ds, batch_size=64,
                                      shuffle=True,
                                      pin_memory=True,
-                                     num_workers=0 if os.name == 'nt' else 1)
+                                     num_workers=0 if os.name == 'nt' else 8)
 
     for batch_index, img in enumerate(dl):
         img = img.to('cuda')
