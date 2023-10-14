@@ -12,7 +12,11 @@ if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
 endif ()
 
 if (${APPLE})
-    set(CPACK_SYSTEM_NAME "${CMAKE_SYSTEM_NAME}-${CMAKE_OSX_ARCHITECTURES}")
+    set(cpu_arch ${CMAKE_SYSTEM_PROCESSOR})
+    if (${cpu_arch} STREQUAL "AMD64")
+        set(cpu_arch "x86_64")
+    endif ()
+    set(CPACK_SYSTEM_NAME "${CMAKE_SYSTEM_NAME}-${cpu_arch}")
 endif ()
 
 include(${CMAKE_SOURCE_DIR}/cpack/deb.cmake)
