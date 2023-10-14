@@ -118,6 +118,35 @@ jobs:
       - name: pwd
         run: pwd
 
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Configure CMake
+        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH=/System/Volumes/Data/usr/local/Cellar
+      - name: Build and Install
+        run: |
+          cd build
+          cmake --build . --parallel
+          cmake --install .
+          cd install
+      #          chmod +x SlopeCraft.app/Contents/MacOS/SlopeCraft
+      #          chmod +x MapViewer.app/Contents/MacOS/MapViewer
+      #          chmod +x imageCutter.app/Contents/MacOS/imageCutter
+      #          chmod +x VisualCraft.app/Contents/MacOS/VisualCraft
+      #          chmod +x vccl-contents/vccl.app/Contents/MacOS/vccl
+      # chmod +x vccl.app/Contents/MacOS/vccl
+      - name: Compress as zip
+        run: |
+          cd ./build/install
+          zip -9 -r -y SlopeCraft-5.2.0-macos.zip ./*
+
+      - name: Get short SHA
+        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-macos-m2-clang
+          path: build/install/SlopeCraft*.zip
+
 
 
 #  macos-build:
