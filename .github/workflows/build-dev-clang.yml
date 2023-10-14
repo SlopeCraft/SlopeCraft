@@ -103,6 +103,23 @@ jobs:
           if-no-files-found: error
 
 
+
+  macos-build-m2:
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        build_type: [ Debug, Release ]
+        gpu_api: [ None ]
+    env:
+      BUILD_TYPE: ${{ matrix.build_type }}
+      GPU_API: ${{ matrix.gpu_api }}
+
+    steps:
+      - name: pwd
+        run: pwd
+
+
+
 #  macos-build:
 #    runs-on: macos-latest
 #    strategy:
