@@ -10,7 +10,9 @@ find_package(Heu REQUIRED)
 
 include(${CMAKE_SOURCE_DIR}/cmake/configure_hash.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/configure_cereal.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/configure_xsimd.cmake)
 find_package(cereal REQUIRED)
+find_package(xsimd REQUIRED)
 
 add_library(ColorManip
 
@@ -42,14 +44,15 @@ target_link_libraries(ColorManip PRIVATE
 target_link_libraries(ColorManip PUBLIC
     OpenMP::OpenMP_CXX
     Eigen3::Eigen
-    cereal::cereal)
+    cereal::cereal
+    xsimd)
 
 # target_compile_options(ColorManip BEFORE PUBLIC "-std=c++17")
 target_compile_options(ColorManip PRIVATE ${SlopeCraft_vectorize_flags})
 
-if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     set_target_properties(ColorManip PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
-endif()
+endif ()
 
 # ColorManip links to GPUInterface
 target_link_libraries(ColorManip PUBLIC GPUInterface)
@@ -57,7 +60,7 @@ target_include_directories(ColorManip INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 find_package(OpenCL 3.0)
 
-if(${OpenCL_FOUND})
+if (${OpenCL_FOUND})
     add_executable(test_init_program tests/test_init_program.cpp)
     target_link_libraries(test_init_program PRIVATE OpenMP::OpenMP_CXX ColorManip)
 
@@ -67,9 +70,9 @@ if(${OpenCL_FOUND})
     include(${CMAKE_SOURCE_DIR}/cmake/configure_cli11.cmake)
     target_include_directories(test_algo PRIVATE ${cli11_include_dir})
 
-    foreach(_algo r R H X l L)
+    foreach (_algo r R H X l L)
         add_test(NAME test_algo_${_algo}
             COMMAND test_algo --algo ${_algo} --platform-idx 0 --device-idx 0
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-    endforeach(_algo r R H X l L)
-endif()
+    endforeach (_algo r R H X l L)
+endif ()
