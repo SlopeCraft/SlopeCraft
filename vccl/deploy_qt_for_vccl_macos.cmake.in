@@ -7,15 +7,17 @@
 #    OUTPUT_QUIET
 #    COMMAND_ERROR_IS_FATAL ANY)
 
+message(STATUS "CMAKE_CURRENT_SOURCE_DIR = ${CMAKE_CURRENT_SOURCE_DIR}")
+
 file(CREATE_LINK
-    "./@vccl_prefix@/vccl.app/Contents/MacOS/vccl"
+    "@vccl_prefix@/vccl.app/Contents/MacOS/vccl"
     "vccl"
     SYMBOLIC)
 file(CREATE_LINK
-    "./@vccl_prefix@/vccl.app/Contents/MacOS/vccl-config.json"
+    "@vccl_prefix@/vccl.app/Contents/MacOS/vccl-config.json"
     "vccl-config.json"
     SYMBOLIC)
 file(CREATE_LINK
-    "./@vccl_prefix@/vccl.app/Contents/MacOS/Blocks_VCL"
+    "@vccl_prefix@/vccl.app/Contents/MacOS/Blocks_VCL"
     "Blocks_VCL"
     SYMBOLIC)
