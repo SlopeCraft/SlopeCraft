@@ -252,6 +252,43 @@ void colordiff_RGBplus_batch(std::span<const float> r1p,
   }
 }
 
+void colordiff_HSV_batch(std::span<const float> h1p, std::span<const float> s1p,
+                         std::span<const float> v1p,
+                         std::span<const float, 3> hsv2,
+                         std::span<float> dest) noexcept {
+  assert(h1p.size() == s1p.size());
+  assert(s1p.size() == v1p.size());
+  assert(v1p.size() == dest.size());
+
+  const size_t color_count = h1p.size();
+  const size_t vec_size = color_count - color_count % batch_size;
+
+  const float h2 = hsv2[0];
+  const float s2 = hsv2[1];
+  const float v2 = hsv2[2];
+
+  for (size_t idx = 0; idx < vec_size; idx += batch_size) {
+    const batch_t h1 = batch_t::load_aligned(h1p.data() + idx);
+    const batch_t s1 = batch_t::load_aligned(s1p.data() + idx);
+    const batch_t v1 = batch_t::load_aligned(v1p.data() + idx);
+    auto sv_1 = s1 * v1;
+    auto sv_2 = s2 * v2;
+
+    const auto dX = 50.0f * (cos(h1) * sv_1 - std::cos(h2) * sv_2);
+    const auto dY = 50.0f * (sin(h1) * sv_1 - std::sin(h2) * sv_2);
+    const auto dZ = 50.0f * (v1 - v2);
+
+    const auto diff = dX * dX + dY * dY + dZ * dZ;
+    diff.store_aligned(dest.data() + idx);
+  }
+
+  for (size_t idx = vec_size; idx < color_count; idx++) {
+    const float diff =
+        color_diff_HSV(hsv2[0], hsv2[1], hsv2[2], h1p[idx], s1p[idx], v1p[idx]);
+    dest[idx] = diff;
+  }
+}
+
 #ifdef SC_VECTORIZE_AVX2
 #include <immintrin.h>
 #include <xmmintrin.h>
@@ -284,210 +321,6 @@ inline void take_abs_f32_8(float *p) noexcept {
       }                                     \
     }                                       \
   }
-
-// void colordiff_RGBplus_batch(std::span<const float> r1p,
-//                              std::span<const float> g1p,
-//                              std::span<const float> b1p,
-//                              std::span<const float, 3> c3,
-//                              std::span<float> dest) noexcept {
-//   assert(r1p.size() == g1p.size());
-//   assert(g1p.size() == b1p.size());
-//   assert(b1p.size() == dest.size());
-//
-//   std::fill(dest.begin(), dest.end(), NAN);
-//
-//   const int color_count = r1p.size();
-//   const float _r2 = c3[0], _g2 = c3[1], _b2 = c3[2];
-// #ifdef SC_VECTORIZE_AVX2
-//
-//   const __m256 r2 = _mm256_set1_ps(_r2), g2 = _mm256_set1_ps(_g2),
-//                b2 = _mm256_set1_ps(_b2);
-//   const __m256 thre = _mm256_set1_ps(threshold);
-//
-//   const float rr_plus_gg_plus_bb_2 = (_r2 * _r2 + _g2 * _g2 + _b2 * _b2);
-//   constexpr float w_r = 1.0f, w_g = 2.0f, w_b = 1.0f;
-//
-//   for (int i = 0; i + num_float_per_m256 <= color_count;
-//        i += num_float_per_m256) {
-//     __m256 r1 = _mm256_load_ps(r1p.data() + i);
-//     __m256 g1 = _mm256_load_ps(g1p.data() + i);
-//     __m256 b1 = _mm256_load_ps(b1p.data() + i);
-//
-//     __m256 deltaR = _mm256_sub_ps(r1, r2);
-//     __m256 deltaG = _mm256_sub_ps(g1, g2);
-//     __m256 deltaB = _mm256_sub_ps(b1, b2);
-//
-//     __m256 SqrModSquare;
-//     {
-//       const __m256 temp_r = _mm256_mul_ps(r1, r1);
-//       const __m256 temp_g = _mm256_mul_ps(g1, g1);
-//       const __m256 temp_b = _mm256_mul_ps(b1, b1);
-//
-//       const __m256 rr_plus_gg_plus_bb_1 =
-//           _mm256_add_ps(temp_r, _mm256_add_ps(temp_g, temp_b));
-//
-//       SqrModSquare = _mm256_mul_ps(rr_plus_gg_plus_bb_1,
-//                                    _mm256_set1_ps(rr_plus_gg_plus_bb_2));
-//       SqrModSquare = _mm256_sqrt_ps(SqrModSquare);
-//     }
-//     SC_PRIVATE_MARCO_assert_if_nan(SqrModSquare);
-//
-//     __m256 sigma_rgb;
-//     {
-//       __m256 temp1 = _mm256_add_ps(r1, g1);
-//       __m256 temp2 = _mm256_add_ps(g1, _mm256_set1_ps(_r2 + _g2 + _b2));
-//       sigma_rgb =
-//           _mm256_mul_ps(_mm256_add_ps(temp1, temp2), _mm256_set1_ps(1.0f /
-//           3));
-//     }
-//     __m256 sigma_rgb_plus_thre =
-//         _mm256_add_ps(sigma_rgb, _mm256_set1_ps(threshold));
-//
-//     const __m256 r1_plus_r2 = _mm256_add_ps(r1, r2);
-//     const __m256 g1_plus_g2 = _mm256_add_ps(g1, g2);
-//     const __m256 b1_plus_b2 = _mm256_add_ps(b1, b2);
-//     __m256 S_r, S_g, S_b;
-//     {
-//       const __m256 m256_1f = _mm256_set1_ps(1.0f);
-//       __m256 temp_r = _mm256_div_ps(r1_plus_r2, sigma_rgb_plus_thre);
-//       __m256 temp_g = _mm256_div_ps(g1_plus_g2, sigma_rgb_plus_thre);
-//       __m256 temp_b = _mm256_div_ps(b1_plus_b2, sigma_rgb_plus_thre);
-//
-//       S_r = _mm256_min_ps(temp_r, m256_1f);
-//       S_g = _mm256_min_ps(temp_g, m256_1f);
-//       S_b = _mm256_min_ps(temp_b, m256_1f);
-//     }
-//
-//     __m256 sumRGBsquare;
-//     {
-//       __m256 r1r2 = _mm256_mul_ps(r1, r2);
-//       __m256 g1g2 = _mm256_mul_ps(g1, g2);
-//       __m256 b1b2 = _mm256_mul_ps(b1, b2);
-//       sumRGBsquare = _mm256_add_ps(r1r2, _mm256_add_ps(g1g2, b1b2));
-//     }
-//
-//     __m256 theta;
-//     {
-//       __m256 temp1 =
-//           _mm256_div_ps(sumRGBsquare, _mm256_add_ps(SqrModSquare, thre));
-//       //__m256 _mm256_rsqrt_ps (__m256 a)
-//       /*
-//       __m256 temp1 = _mm256_mul_ps(
-//           sumRGBsquare, _mm256_rsqrt_ps(_mm256_add_ps(SqrModSquare, thre)));
-//           */
-//       temp1 = _mm256_div_ps(temp1, _mm256_set1_ps(1.01f));
-//       __m256 temp2;
-//       {
-//         alignas(32) float arr[8];
-//         _mm256_store_ps(arr, temp1);
-//         for (float &f : arr) {
-//           f = std::acos(f);
-//           assert(!std::isnan(f));
-//         }
-//         temp2 = _mm256_load_ps(arr);
-//       }
-//       //__m256 temp2 = _mm256_acos_ps__manually(temp1);
-//       theta = _mm256_mul_ps(temp2, _mm256_set1_ps(2.0 / M_PI));
-//     }
-//
-//     alignas(32) float arr[8];
-//     __m256 OnedDeltaR =
-//         _mm256_div_ps((_mm256_store_ps(arr, deltaR), take_abs_f32_8(arr),
-//                        _mm256_load_ps(arr)),
-//                       _mm256_add_ps(r1_plus_r2, thre));
-//     __m256 OnedDeltaG =
-//         _mm256_div_ps((_mm256_store_ps(arr, deltaG), take_abs_f32_8(arr),
-//                        _mm256_load_ps(arr)),
-//                       _mm256_add_ps(g1_plus_g2, thre));
-//     __m256 OnedDeltaB =
-//         _mm256_div_ps((_mm256_store_ps(arr, deltaB), take_abs_f32_8(arr),
-//                        _mm256_load_ps(arr)),
-//                       _mm256_add_ps(b1_plus_b2, thre));
-//
-//     __m256 sumOnedDelta = _mm256_add_ps(_mm256_add_ps(OnedDeltaR,
-//     OnedDeltaG),
-//                                         _mm256_add_ps(OnedDeltaB, thre));
-//
-//     __m256 S_tr = _mm256_div_ps(
-//         OnedDeltaR, _mm256_mul_ps(sumOnedDelta, _mm256_mul_ps(S_r, S_r)));
-//     __m256 S_tg = _mm256_div_ps(
-//         OnedDeltaG, _mm256_mul_ps(sumOnedDelta, _mm256_mul_ps(S_g, S_g)));
-//     __m256 S_tb = _mm256_div_ps(
-//         OnedDeltaB, _mm256_mul_ps(sumOnedDelta, _mm256_mul_ps(S_b, S_b)));
-//
-//     __m256 S_theta = _mm256_add_ps(S_tr, _mm256_add_ps(S_tg, S_tb));
-//
-//     __m256 S_ratio;
-//     {
-//       __m256 max_r = _mm256_max_ps(r1, r2);
-//       __m256 max_g = _mm256_max_ps(g1, g2);
-//       __m256 max_b = _mm256_max_ps(b1, b2);
-//       S_ratio = _mm256_max_ps(max_r, _mm256_max_ps(max_g, max_b));
-//     }
-//
-//     __m256 diff;
-//     {
-//       __m256 temp_r = _mm256_mul_ps(
-//           _mm256_mul_ps(_mm256_mul_ps(S_r, S_r), _mm256_mul_ps(deltaR,
-//           deltaR)), _mm256_set1_ps(w_r));
-//       __m256 temp_g = _mm256_mul_ps(
-//           _mm256_mul_ps(_mm256_mul_ps(S_g, S_g), _mm256_mul_ps(deltaG,
-//           deltaG)), _mm256_set1_ps(w_g));
-//       __m256 temp_b = _mm256_mul_ps(
-//           _mm256_mul_ps(_mm256_mul_ps(S_b, S_b), _mm256_mul_ps(deltaB,
-//           deltaB)), _mm256_set1_ps(w_b));
-//       __m256 wr_plus_wr_plus_wb = _mm256_set1_ps(w_r + w_b + w_g);
-//       __m256 temp_X =
-//           _mm256_div_ps(_mm256_add_ps(_mm256_add_ps(temp_r, temp_g), temp_b),
-//                         wr_plus_wr_plus_wb);
-//
-//       __m256 temp_Y = _mm256_mul_ps(_mm256_mul_ps(S_theta, S_ratio),
-//                                     _mm256_mul_ps(theta, theta));
-//
-//       diff = _mm256_add_ps(temp_X, temp_Y);
-//       if (true) {
-//         alignas(32) float temp[8];
-//         _mm256_store_ps(temp,
-//                         diff);  // this line crashes on win11, the address of
-//                                 // temp[7] is 0xfffffffff. I can't understand
-//                                 // this, maybe a compiler-error?
-//         for (float f : temp) {
-//           assert(!std::isnan(f));
-//           assert(f >= 0);
-//         }
-//       }
-//     }
-//
-//     _mm256_store_ps(dest.data() + i, diff);
-//   }
-//
-//   const int loop_start =
-//       (color_count / num_float_per_m256) * num_float_per_m256;
-// #else
-//   const int loop_start = 0;
-// #endif
-//
-//   for (int i = loop_start; i < color_count; i++) {
-//     dest[i] = color_diff_RGB_plus(r1p[i], g1p[i], b1p[i], _r2, _g2, _b2);
-//   }
-// }
-
-void colordiff_HSV_batch(std::span<const float> h1p, std::span<const float> s1p,
-                         std::span<const float> v1p,
-                         std::span<const float, 3> hsv2,
-                         std::span<float> dest) noexcept {
-  assert(h1p.size() == s1p.size());
-  assert(s1p.size() == v1p.size());
-  assert(v1p.size() == dest.size());
-
-  const int color_count = h1p.size();
-
-  for (int idx = 0; idx < color_count; idx++) {
-    const float diff =
-        color_diff_HSV(hsv2[0], hsv2[1], hsv2[2], h1p[idx], s1p[idx], v1p[idx]);
-    dest[idx] = diff;
-  }
-}
 
 void colordiff_Lab94_batch(std::span<const float> l1p,
                            std::span<const float> a1p,
