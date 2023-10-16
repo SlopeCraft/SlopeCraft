@@ -66,6 +66,7 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
         DESTINATION ${vccl_prefix}/vccl.app/Contents/MacOS/Blocks_VCL)
 
     # Do not run deploy_qt.cmake, but a specialied one
-    install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt_for_vccl_macos.cmake)
+    install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt_for_vccl_macos.cmake
+        DESTINATION .)
     return()
 endif ()
