@@ -49,8 +49,11 @@ endif ()
 
 if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     set(vccl_prefix vccl-contents)
+    set(deployqt_vccl_script ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt_for_vccl_macos.cmake)
     find_program(SlopeCraft_Qt_macdeployqt_executable macdeployqt REQUIRED)
-    configure_file(deploy_qt_for_vccl_macos.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt_for_vccl_macos.cmake)
+    configure_file(deploy_qt_for_vccl_macos.cmake.in
+        ${deployqt_vccl_script}
+        @ONLY)
 
     include(${CMAKE_SOURCE_DIR}/VisualCraftL/setup_zip_names.cmake)
     install(TARGETS vccl
@@ -66,7 +69,7 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
         DESTINATION ${vccl_prefix}/vccl.app/Contents/MacOS/Blocks_VCL)
 
     # Do not run deploy_qt.cmake, but a specialied one
-    install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt_for_vccl_macos.cmake
+    install(SCRIPT ${deployqt_vccl_script}
         DESTINATION .)
     return()
 endif ()
