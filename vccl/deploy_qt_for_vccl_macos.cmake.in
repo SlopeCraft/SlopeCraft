@@ -1,5 +1,16 @@
 # This script should run during installation
 
+set(this_script_file @deployqt_vccl_script@)
+option(install_mode "" ON)
+
+if(install_mode)
+    execute_process(COMMAND ${CMAKE_COMMAND} -Dinstall_mode:BOOL=false -P ${this_script_file}
+        WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}
+        COMMAND_ERROR_IS_FATAL ANY
+    )
+    return()
+endif()
+
 #message(STATUS "Running macdeployqt for @AppName@ ...")
 #execute_process(
 #    COMMAND "@SlopeCraft_Qt_macdeployqt_executable@" "@AppName@.app"
@@ -7,7 +18,7 @@
 #    OUTPUT_QUIET
 #    COMMAND_ERROR_IS_FATAL ANY)
 
-message(STATUS "CMAKE_CURRENT_SOURCE_DIR = ${CMAKE_CURRENT_SOURCE_DIR}")
+# message(WARNING "CMAKE_CURRENT_SOURCE_DIR = ${CMAKE_SOURCE_DIR}")
 
 file(CREATE_LINK
     "@vccl_prefix@/vccl.app/Contents/MacOS/vccl"
