@@ -243,7 +243,7 @@ jobs:
         run: |
           mkdir bin
           mkdir bin/mingw64
-          mkdir bin/Qt6.4.0-gcc12-shared
+          mkdir bin/Qt6.5.0-gcc11-shared-offical
           mkdir 3rdParty
 
       - name: Download mingw64 and extract
@@ -264,14 +264,14 @@ jobs:
           echo "env:path = $env:path"
           vcpkg install --triplet=x64-mingw-dynamic zlib libpng libzip eigen3 xsimd
 
-      - name: Download Qt6.4.0-gcc12-shared and extract
+      - name: Download Qt6.5.0-gcc11-shared-offical and extract
         run: |
           cmd
-          curl -JL -o bin/Qt6.4.0-gcc12-shared.7z "https://github.com/SlopeCraft/VisualCraft-binaries/releases/download/win-binaries/Qt6.4.0-gcc12-shared-native.7z"
-          7z x -o"bin/Qt6.4.0-gcc12-shared" bin/Qt6.4.0-gcc12-shared.7z
+          curl -JL -o bin/Qt6.5.0-gcc11-shared-offical.7z "https://github.com/SlopeCraft/VisualCraft-binaries/releases/download/win-binaries/Qt6.5.0-gcc11-shared-offical.7z"
+          7z x -o"bin/Qt6.5.0-gcc11-shared-offical" bin/Qt6.5.0-gcc11-shared-offical.7z
           exit
-          tree /f bin/Qt6.4.0-gcc12-shared
-        # Qt installation dir: bin/Qt6.4.0-gcc12-shared
+          tree /f bin/Qt6.5.0-gcc11-shared-offical
+        # Qt installation dir: bin/Qt6.5.0-gcc11-shared-offical
       - name: CMake configure
         run: |
           $basedir=(pwd).path.replace("\\","/")
@@ -281,7 +281,7 @@ jobs:
           echo "env:path = $env:path"
           mkdir build
           mkdir install
-          cmake -S . -B build -G "MinGW Makefiles" -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/g++.exe" -DCMAKE_PREFIX_PATH:PATH="$basedir/bin/Qt6.4.0-gcc12-shared;C:/vcpkg/installed/x64-mingw-dynamic" -DCMAKE_INSTALL_PREFIX:PATH="$basedir/install" -DCMAKE_BUILD_TYPE="$BUILD_TYPE" -DSlopeCraft_GPU_API:STRING="$GPU_API" -DSlopeCraft_vectorize:BOOL=$VECTORIZE
+          cmake -S . -B build -G "MinGW Makefiles" -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/g++.exe" -DCMAKE_PREFIX_PATH:PATH="$basedir/bin/Qt6.5.0-gcc11-shared-offical;C:/vcpkg/installed/x64-mingw-dynamic" -DCMAKE_INSTALL_PREFIX:PATH="$basedir/install" -DCMAKE_BUILD_TYPE="$BUILD_TYPE" -DSlopeCraft_GPU_API:STRING="$GPU_API" -DSlopeCraft_vectorize:BOOL=$VECTORIZE
 
       - name: CMake build
         run: |
