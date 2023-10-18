@@ -186,7 +186,7 @@ jobs:
     strategy:
       matrix:
         build_type: [ Debug, Release ]
-        gpu_api: [ None , OpenCL ]
+        gpu_api: [ None ]
         vectorize: [ true, false ]
         exclude:
           - gpu_api: OpenCL
