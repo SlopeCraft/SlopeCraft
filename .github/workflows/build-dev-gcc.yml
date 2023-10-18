@@ -193,7 +193,7 @@ jobs:
     strategy:
       matrix:
         build_type: [ Debug, Release ]
-        gpu_api: [ None ]
+        gpu_api: [ None , OpenCL ]
         vectorize: [ true, false ]
         exclude:
           - gpu_api: OpenCL
@@ -263,6 +263,17 @@ jobs:
           $env:path=$env:NEW_PATH
           echo "env:path = $env:path"
           vcpkg install --triplet=x64-mingw-dynamic zlib libpng libzip eigen3 xsimd
+
+
+      - name: Install OpenCL with vcpkg
+        if: matrix.gpu_api == 'OpenCL'
+        run: |
+          $basedir=(pwd).path.replace("\\","/")
+          $BUILD_TYPE=$env:BUILD_TYPE
+          $GPU_API=$env:GPU_API
+          $env:path=$env:NEW_PATH
+          echo "env:path = $env:path"
+          vcpkg install opencl --triplet=x64-mingw-dynamic
 
       - name: Download Qt6.5.0-gcc11-shared-offical and extract
         run: |

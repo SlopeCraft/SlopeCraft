@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         build_type: [ Debug, Release ]
-        gpu_api: [ None ]
+        gpu_api: [ None, OpenCL ]
         vectorize: [ true, false ]
         exclude:
           - gpu_api: OpenCL
@@ -36,6 +36,10 @@ jobs:
       - name: Install deps with vcpkg
         shell: cmd
         run: vcpkg install --triplet=x64-windows zlib libpng libzip eigen3 xsimd
+
+      - name: Install OpenCL with vcpkg
+        if: matrix.gpu_api == 'OpenCL'
+        run: vcpkg install opencl --triplet=x64-windows
 
       - name: Checkout repository
         uses: actions/checkout@v2
