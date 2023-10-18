@@ -83,19 +83,7 @@ if (NOT ${SlopeCraft_vectorize})
 endif ()
 
 if (${SlopeCraft_vectorize})
-    include(CheckCXXCompilerFlag)
-    add_definitions("-DSC_VECTORIZE_AVX2")
-
-    if (${MSVC})
-        set(SlopeCraft_vectorize_flags "/arch:AVX2")
-    else ()
-        set(SlopeCraft_vectorize_flags -mavx -mavx2 -mfma)
-    endif ()
-
-    message(STATUS "Vectorize using " ${SlopeCraft_vectorize_flags})
-    add_compile_options(${SlopeCraft_vectorize_flags})
-
-    # list(APPEND SlopeCraft_vectorize_flags "-O3")
+    include(cmake/select_vectorize_flag.cmake)
 endif ()
 
 if (${WIN32})
