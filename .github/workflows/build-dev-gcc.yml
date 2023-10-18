@@ -31,6 +31,7 @@ jobs:
         run: |
           brew install libpng
           brew install qt@6
+          brew install xsimd
       - name: Add /usr/local/lib to PATH
         run: echo "/usr/local/lib" >> $GITHUB_PATH
       - name: Check PATH
@@ -90,8 +91,8 @@ jobs:
       - name: Install cmake, ninja
         run: sudo apt install cmake ninja-build
 
-      - name: Install libzip, libpng, Eigen3
-        run: sudo apt install libzip-dev zipcmp ziptool zipmerge libpng-dev libeigen3-dev
+      - name: Install libzip, libpng, Eigen3, and xsimd
+        run: sudo apt install libzip-dev zipcmp ziptool zipmerge libpng-dev libeigen3-dev libxsimd-dev
 
       - name: Install qt6
         run: sudo apt install libqt6widgets6 libqt6gui6 libqt6network6 qt6-base-dev qt6-tools-dev-tools qt6-tools-dev qt6-l10n-tools
@@ -222,21 +223,11 @@ jobs:
           echo "New path : $env:path.split(';')"
           echo "NEW_PATH=$env:path" >> $env:GITHUB_ENV
 
-      #- name: See environment
-      #  run: where.exe cmake ninja 7z clang gcc vcpkg
-      #- name: See versions
-      #  run: |
-      #    cmake --version
-      #    ninja --version
-      #    clang --version
-      #    gcc --version
-      #- name: See Path
-      #  run: $env:path -split ';'
       - name: Install ninja
         run: |
           choco install ninja
           ninja --version
-          
+
       - name: Make dirs
         run: |
           mkdir bin
@@ -253,48 +244,14 @@ jobs:
         # gcc installation dir: bin/mingw64
         # gcc.exe: bin/mingw64/bin/gcc.exe
         # g++.exe: bin/mingw64/bin/g++.exe
-      - name: Build and install zlib
-        run: |
-          $basedir=(pwd).path.replace("\\","/")
-          echo "basedir = $basedir"
-          $BUILD_TYPE=$env:BUILD_TYPE
-          cd 3rdParty
-          git clone https://github.com/madler/zlib.git
-          cd zlib
-          git checkout v1.2.13
-          cd $basedir
-          mkdir bin/build-zlib
-          cmake -S 3rdParty/zlib -B bin/build-zlib -G Ninja -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_BUILD_TYPE="$BUILD_TYPE" -DCMAKE_INSTALL_PREFIX="$basedir/bin/mingw64"
-          cmake --build bin/build-zlib --parallel
-          cmake --install bin/build-zlib
-
-      - name: Build and install libzip
+      - name: Install deps with vcpkg
         run: |
           $basedir=(pwd).path.replace("\\","/")
           $BUILD_TYPE=$env:BUILD_TYPE
-          cd 3rdParty
-          git clone https://github.com/nih-at/libzip.git
-          cd libzip
-          git checkout v1.9.2
-          cd $basedir
-          mkdir bin/build-libzip
-          cmake -S 3rdParty/libzip -B bin/build-libzip -G Ninja -DCMAKE_BUILD_TYPE="$BUILD_TYPE" -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/g++.exe" -DCMAKE_INSTALL_PREFIX="$basedir/bin/mingw64" -DCMAKE_PREFIX_PATH="$basedir/bin/mingw64" -DBUILD_SHARED_LIBS=true -DLIBZIP_DO_INSTALL=true -DENABLE_BZIP2=false -DENABLE_LZMA=false -DENABLE_ZSTD=false
-          cmake --build bin/build-libzip --parallel
-          cmake --install bin/build-libzip
-
-      - name: Build and install libpng
-        run: |
-          $basedir=(pwd).path.replace("\\","/")
-          $BUILD_TYPE=$env:BUILD_TYPE
-          cd 3rdParty
-          git clone https://github.com/glennrp/libpng.git
-          cd libpng
-          git checkout v1.6.39
-          cd $basedir
-          mkdir bin/build-libpng
-          cmake -S 3rdParty/libpng -B bin/build-libpng -G Ninja -DCMAKE_BUILD_TYPE="$BUILD_TYPE" -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/g++.exe" -DCMAKE_INSTALL_PREFIX="$basedir/bin/mingw64" -DCMAKE_PREFIX_PATH="$basedir/bin/mingw64"
-          cmake --build bin/build-libpng --parallel
-          cmake --install bin/build-libpng
+          $GPU_API=$env:GPU_API
+          $env:path=$env:NEW_PATH
+          echo "env:path = $env:path"
+          vcpkg install --triplet=x64-mingw-dynamic zlib libpng libzip eigen3 xsimd
 
       - name: Download Qt6.4.0-gcc12-shared and extract
         run: |
@@ -313,7 +270,7 @@ jobs:
           echo "env:path = $env:path"
           mkdir build
           mkdir install
-          cmake -S . -B build -G "MinGW Makefiles" -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/g++.exe" -DCMAKE_PREFIX_PATH:PATH="$basedir/bin/Qt6.4.0-gcc12-shared" -DCMAKE_INSTALL_PREFIX:PATH="$basedir/install" -DCMAKE_BUILD_TYPE="$BUILD_TYPE" -DSlopeCraft_GPU_API:STRING="$GPU_API" -DSlopeCraft_vectorize:BOOL=$VECTORIZE
+          cmake -S . -B build -G "MinGW Makefiles" -DCMAKE_C_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER:FILEPATH="$basedir/bin/mingw64/bin/g++.exe" -DCMAKE_PREFIX_PATH:PATH="$basedir/bin/Qt6.4.0-gcc12-shared;C:/vcpkg/installed/x64-mingw-dynamic" -DCMAKE_INSTALL_PREFIX:PATH="$basedir/install" -DCMAKE_BUILD_TYPE="$BUILD_TYPE" -DSlopeCraft_GPU_API:STRING="$GPU_API" -DSlopeCraft_vectorize:BOOL=$VECTORIZE
 
       - name: CMake build
         run: |

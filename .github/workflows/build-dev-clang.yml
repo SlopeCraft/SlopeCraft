@@ -35,7 +35,7 @@ jobs:
 
       - name: Install deps with vcpkg
         shell: cmd
-        run: vcpkg install --triplet=x64-windows zlib libpng libzip eigen3
+        run: vcpkg install --triplet=x64-windows zlib libpng libzip eigen3 xsimd
 
       - name: Checkout repository
         uses: actions/checkout@v2
