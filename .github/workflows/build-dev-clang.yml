@@ -107,6 +107,57 @@ jobs:
           if-no-files-found: error
 
 
+  macos-build-intel:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        build_type: [ Debug, Release ]
+        gpu_api: [ None ]
+    env:
+      BUILD_TYPE: ${{ matrix.build_type }}
+      GPU_API: ${{ matrix.gpu_api }}
+    steps:
+      - name: brew upgrade & update
+        run: |
+          brew upgrade
+          brew update
+      - name: echo matrix variables (build_type = ${{ matrix.build_type }})
+        run: |
+          echo $BUILD_TYPE
+          echo $GPU_API
+      - name: Install Ninja build system
+        run: brew install ninja
+      - name: Install dependencies
+        run: |
+          brew install libpng
+          brew install qt@6
+          brew install xsimd
+      - name: Add /usr/local/lib to PATH
+        run: echo "/usr/local/lib" >> $GITHUB_PATH
+      - name: Check PATH
+        run: echo $PATH
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Configure CMake
+        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH=/System/Volumes/Data/usr/local/Cellar
+      - name: Build
+        run: |
+          cd build
+          cmake --build . --parallel
+      # chmod +x vccl.app/Contents/MacOS/vccl
+      - name: CPack
+        run: |
+          cd ./build
+          cpack -G ZIP
+
+      - name: Get short SHA
+        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-macos-intel-clang
+          path: build/SlopeCraft*.zip
+
 
   macos-build-m2:
     runs-on: self-hosted
