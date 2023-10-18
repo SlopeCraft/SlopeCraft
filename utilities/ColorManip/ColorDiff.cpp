@@ -205,7 +205,6 @@ void colordiff_RGBplus_batch(std::span<const float> r1p,
       theta = temp2 * float(2.0 / M_PI);
     }
 
-    alignas(32) float arr[8];
     const batch_t OnedDeltaR = abs(deltaR) / (r1_plus_r2 * thre);
     const batch_t OnedDeltaG = abs(deltaG) / (g1_plus_g2 * thre);
     const batch_t OnedDeltaB = abs(deltaB) / (b1_plus_b2 * thre);
@@ -289,39 +288,6 @@ void colordiff_HSV_batch(std::span<const float> h1p, std::span<const float> s1p,
   }
 }
 
-#ifdef SC_VECTORIZE_AVX2
-#include <immintrin.h>
-#include <xmmintrin.h>
-
-constexpr int num_float_per_m256 = 256 / 32;
-
-union alignas(32) f32_i32 {
-  float f32[8];
-  int i32[8];
-  __m256i m256i;
-};
-
-inline void take_abs_f32_8(float *p) noexcept {
-  for (size_t i = 0; i < 8; i++) {
-    p[i] = std::abs(p[i]);
-  }
-}
-
-// #warning rua~
-#endif  // SC_VECTORIZE_AVX2
-
-#define SC_PRIVATE_MARCO_assert_if_nan(vec) \
-  {                                         \
-    alignas(32) std::array<float, 8> temp;  \
-    {                                       \
-      _mm256_store_ps(temp.data(), (vec));  \
-      for (float f : temp) {                \
-        assert(!std::isnan(f));             \
-        assert(f >= 0);                     \
-      }                                     \
-    }                                       \
-  }
-
 void colordiff_Lab94_batch(std::span<const float> l1p,
                            std::span<const float> a1p,
                            std::span<const float> b1p,
@@ -333,55 +299,42 @@ void colordiff_Lab94_batch(std::span<const float> l1p,
   assert(a1p.size() == b1p.size());
   assert(b1p.size() == dest.size());
 
-  const int color_count = l1p.size();
+  const size_t color_count = l1p.size();
+  const size_t vec_size = color_count - color_count % batch_size;
 
-#ifdef SC_VECTORIZE_AVX2
-  const __m256 L2 = _mm256_set1_ps(c3[0]);
-  const __m256 a2 = _mm256_set1_ps(c3[1]);
-  const __m256 b2 = _mm256_set1_ps(c3[2]);
+  const float L2 = c3[0];
+  const float a2 = c3[1];
+  const float b2 = c3[2];
   //__m256 C1_2;
-  __m256 SC_2, sqrt_C1_2;
-  {
-    // float L = c3[0];
-    float a = c3[1];
-    float b = c3[2];
-    float _C1_2 = a * a + b * b;
-    float _SC_2 = (sqrt(_C1_2) * 0.045f + 1.0f) * (sqrt(_C1_2) * 0.045f + 1.0f);
+  const float sqrt_C1_2 = sqrt(a2 * a2 + b2 * b2);
+  const float SC_2 = square(sqrt_C1_2 * 0.045f + 1.0f);
 
-    // C1_2 = _mm256_set1_ps(_C1_2);
-    SC_2 = _mm256_set1_ps(_SC_2);
-    sqrt_C1_2 = _mm256_set1_ps(sqrt(_C1_2));
-  }
+  for (size_t i = 0; i < vec_size; i += batch_size) {
+    batch_t L1 = batch_t::load_aligned(l1p.data() + i);
+    batch_t a1 = batch_t::load_aligned(a1p.data() + i);
+    batch_t b1 = batch_t::load_aligned(b1p.data() + i);
 
-  for (int i = 0; i + num_float_per_m256 <= color_count;
-       i += num_float_per_m256) {
-    __m256 L1 = _mm256_load_ps(l1p.data() + i);
-    __m256 a1 = _mm256_load_ps(a1p.data() + i);
-    __m256 b1 = _mm256_load_ps(b1p.data() + i);
-    //      auto deltaL_2 = (Allowed->lab(0) - L).square();
-
-    __m256 deltaL_2;
+    batch_t deltaL_2;
     {
-      __m256 Ldiff = _mm256_sub_ps(L1, L2);
-      deltaL_2 = _mm256_mul_ps(Ldiff, Ldiff);
+      batch_t Ldiff = L1 - L2;
+      deltaL_2 = (Ldiff * Ldiff);
     }
 
-    __m256 C2_2 = _mm256_add_ps(_mm256_mul_ps(a1, a1), _mm256_mul_ps(b1, b1));
+    batch_t C2_2 = ((a1 * a1) + (b1 * b1));
 
-    __m256 deltaCab_2;
+    batch_t deltaCab_2;
     {
-      __m256 temp = _mm256_sub_ps(sqrt_C1_2, _mm256_sqrt_ps(C2_2));
-      deltaCab_2 = _mm256_mul_ps(temp, temp);
+      batch_t temp = (sqrt_C1_2 - sqrt(C2_2));
+      deltaCab_2 = (temp * temp);
     }
 
-    __m256 deltaHab_2;
+    batch_t deltaHab_2;
     {
-      __m256 a_diff = _mm256_sub_ps(a1, a2);
-      __m256 b_diff = _mm256_sub_ps(b1, b2);
+      batch_t a_diff = (a1 - a2);
+      batch_t b_diff = (b1 - b2);
 
-      deltaHab_2 = _mm256_add_ps(_mm256_mul_ps(a_diff, a_diff),
-                                 _mm256_mul_ps(b_diff, b_diff));
-      deltaHab_2 = _mm256_sub_ps(deltaHab_2, deltaCab_2);
+      deltaHab_2 = ((a_diff * a_diff) + (b_diff * b_diff));
+      deltaHab_2 = (deltaHab_2 - deltaCab_2);
     }
 
     // constexpr float SL = 1;
@@ -389,30 +342,21 @@ void colordiff_Lab94_batch(std::span<const float> l1p,
     // constexpr float K1 = 0.045f;
     constexpr float K2 = 0.015f;
 
-    __m256 SH_2;
+    batch_t SH_2;
     {
-      __m256 temp =
-          _mm256_add_ps(_mm256_mul_ps(_mm256_sqrt_ps(C2_2), _mm256_set1_ps(K2)),
-                        _mm256_set1_ps(1.0f));
-      SH_2 = _mm256_mul_ps(temp, temp);
+      batch_t temp = ((sqrt(C2_2) * K2) + 1.0f);
+      SH_2 = (temp * temp);
     }
 
-    __m256 diff;
+    batch_t diff;
     {
-      __m256 temp_C = _mm256_div_ps(deltaCab_2, SC_2);
-      __m256 temp_H = _mm256_div_ps(deltaHab_2, SH_2);
-      diff = _mm256_add_ps(deltaL_2, _mm256_add_ps(temp_C, temp_H));
+      batch_t temp_C = (deltaCab_2 / SC_2);
+      batch_t temp_H = (deltaHab_2 / SH_2);
+      diff = (deltaL_2 + (temp_C + temp_H));
     }
 
-    _mm256_store_ps(dest.data() + i, diff);
+    diff.store_aligned(dest.data() + i);
   }
-
-  const int loop_start =
-      (color_count / num_float_per_m256) * num_float_per_m256;
-#else
-  const int loop_start = 0;
-
-#endif
 
   {
     const float L = c3[0];
@@ -422,7 +366,7 @@ void colordiff_Lab94_batch(std::span<const float> l1p,
     const float _SC_2 =
         (sqrt(_C1_2) * 0.045f + 1.0f) * (sqrt(_C1_2) * 0.045f + 1.0f);
 
-    for (int i = loop_start; i < color_count; i++) {
+    for (size_t i = vec_size; i < color_count; i++) {
       // auto deltaL_2 = (Allowed->lab(0) - L).square();
 
       const float deltaL_2 = (l1p[i] - L) * (l1p[i] - L);
