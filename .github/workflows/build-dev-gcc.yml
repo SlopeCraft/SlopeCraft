@@ -7,7 +7,7 @@ on:
       - dev
 
 jobs:
-  macos-build:
+  macos-build-intel:
     runs-on: macos-latest
     strategy:
       matrix:
@@ -40,22 +40,15 @@ jobs:
         uses: actions/checkout@v2
       - name: Configure CMake
         run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=gcc-12 -DCMAKE_CXX_COMPILER=g++-12 -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH=/System/Volumes/Data/usr/local/Cellar
-      - name: Build and Install
+      - name: Build
         run: |
           cd build
           cmake --build . --parallel
-          cmake --install .
-          cd install
-          chmod +x SlopeCraft.app/Contents/MacOS/SlopeCraft
-          chmod +x MapViewer.app/Contents/MacOS/MapViewer
-          chmod +x imageCutter.app/Contents/MacOS/imageCutter
-          chmod +x VisualCraft.app/Contents/MacOS/VisualCraft
-          chmod +x vccl-contents/vccl.app/Contents/MacOS/vccl
       # chmod +x vccl.app/Contents/MacOS/vccl
-      - name: Compress as zip
+      - name: CPack
         run: |
-          cd ./build/install
-          zip -9 -r -y SlopeCraft-5.1.0-macos.zip ./*
+          cd ./build
+          cpack -G ZIP
 
       - name: Get short SHA
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
@@ -63,7 +56,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-macos-gcc
-          path: build/install/SlopeCraft-5.1.0-macos.zip
+          path: build/SlopeCraft*.zip
   
   linux-build:
     runs-on: ubuntu-latest
