@@ -91,8 +91,19 @@ jobs:
       - name: Install cmake, ninja
         run: sudo apt install cmake ninja-build
 
-      - name: Install libzip, libpng, Eigen3, and xsimd
-        run: sudo apt install libzip-dev zipcmp ziptool zipmerge libpng-dev libeigen3-dev libxsimd-dev
+      - name: Install libzip, libpng, Eigen3
+        run: sudo apt install libzip-dev zipcmp ziptool zipmerge libpng-dev libeigen3-dev
+
+      - name: Install xsimd
+        run: |
+          cd build
+          git clone https://github.com/xtensor-stack/xsimd.git
+          cd xsimd
+          git checkout 11.1.0
+          cmake -S . -B build-xsimd
+          sudo cmake --install ./build-xsimd
+          cd ..
+          rm -rf ./*
 
       - name: Install qt6
         run: sudo apt install libqt6widgets6 libqt6gui6 libqt6network6 qt6-base-dev qt6-tools-dev-tools qt6-tools-dev qt6-l10n-tools
@@ -266,7 +277,7 @@ jobs:
           $basedir=(pwd).path.replace("\\","/")
           $BUILD_TYPE=$env:BUILD_TYPE
           $GPU_API=$env:GPU_API
-          $env:path=$env:NEW_PATH
+          $env:path="$basedir/bin/mingw64/bin;$env:path"
           echo "env:path = $env:path"
           mkdir build
           mkdir install
