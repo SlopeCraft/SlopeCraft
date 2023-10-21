@@ -1,4 +1,4 @@
-name: macos build(for m-series CPUs)
+name: macOS (Apple Silicon) Build
 on:
   pull_request:
   push:

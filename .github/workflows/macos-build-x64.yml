@@ -1,4 +1,4 @@
-name: macos build(for intel CPUs)
+name: macOS (x64) Build
 on:
   pull_request:
   push:
