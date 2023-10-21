@@ -37,7 +37,7 @@ jobs:
       - name: Check PATH
         run: echo $PATH
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Configure CMake
         run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=gcc-12 -DCMAKE_CXX_COMPILER=g++-12 -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH=/System/Volumes/Data/usr/local/Cellar
       - name: Build
@@ -53,7 +53,7 @@ jobs:
       - name: Get short SHA
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-macos-gcc
           path: build/SlopeCraft*.zip
@@ -92,7 +92,7 @@ jobs:
       - name: Check PATH
         run: echo $PATH
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Configure CMake
         run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=/usr/local/opt/llvm/bin/clang -DCMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++ -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH=/System/Volumes/Data/usr/local/Cellar
       - name: Build
@@ -108,7 +108,7 @@ jobs:
       - name: Get short SHA
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-macos-intel-clang
           path: build/SlopeCraft*.zip

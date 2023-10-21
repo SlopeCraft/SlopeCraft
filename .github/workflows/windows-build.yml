@@ -41,7 +41,7 @@ jobs:
         run: vcpkg install opencl --triplet=x64-windows
 
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Get short SHA
         run: |
@@ -126,7 +126,7 @@ jobs:
           echo "env:GPU_API = $env:GPU_API"
 
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
 
       - name: Install ninja
