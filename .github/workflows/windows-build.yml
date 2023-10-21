@@ -1,4 +1,4 @@
-name: gcc build(for windows, linux and macos)
+name: windows build
 on:
   pull_request:
   push:
@@ -7,181 +7,105 @@ on:
       - dev
 
 jobs:
-  macos-build-intel:
-    runs-on: macos-latest
-    strategy:
-      matrix:
-        build_type: [ Debug, Release ]
-        gpu_api: [ None ]
-    env:
-      BUILD_TYPE: ${{ matrix.build_type }}
-      GPU_API: ${{ matrix.gpu_api }}
-    steps:
-      - name: brew upgrade & update
-        run: |
-          brew upgrade
-          brew update
-      - name: echo matrix variables (build_type = ${{ matrix.build_type }})
-        run: |
-          echo $BUILD_TYPE
-          echo $GPU_API
-      - name: Install Ninja build system
-        run: brew install ninja
-      - name: Install dependencies
-        run: |
-          brew install libpng
-          brew install qt@6
-          brew install xsimd
-      - name: Add /usr/local/lib to PATH
-        run: echo "/usr/local/lib" >> $GITHUB_PATH
-      - name: Check PATH
-        run: echo $PATH
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      - name: Configure CMake
-        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=gcc-12 -DCMAKE_CXX_COMPILER=g++-12 -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH=/System/Volumes/Data/usr/local/Cellar
-      - name: Build
-        run: |
-          cd build
-          cmake --build . --parallel
-      # chmod +x vccl.app/Contents/MacOS/vccl
-      - name: CPack
-        run: |
-          cd ./build
-          cpack -G ZIP
-
-      - name: Get short SHA
-        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-macos-gcc
-          path: build/SlopeCraft*.zip
-  
-  linux-build:
-    runs-on: ubuntu-latest
+  clang:
+    runs-on: windows-latest
     strategy:
       matrix:
         build_type: [ Debug, Release ]
         gpu_api: [ None, OpenCL ]
+        vectorize: [ true, false ]
+        exclude:
+          - gpu_api: OpenCL
+            vectorize: false
     env:
       BUILD_TYPE: ${{ matrix.build_type }}
       GPU_API: ${{ matrix.gpu_api }}
+      VECTORIZE: ${{ matrix.vectorize }}
     steps:
       - name: echo matrix variables (build_type = ${{ matrix.build_type }})
         run: |
-          echo $BUILD_TYPE
-          echo $GPU_API
-      - name: apt update
-        run: sudo apt update
+          echo "env:BUILD_TYPE = $env:BUILD_TYPE"
+          echo "env:GPU_API = $env:GPU_API"
 
-      - name: Make directories
-        run: mkdir build install pack
-
-      #- name: List installed
-      #  run: apt list --installed
-
-      - name: Install cmake, ninja
-        run: sudo apt install cmake ninja-build
-
-      - name: Install libzip, libpng, Eigen3
-        run: sudo apt install libzip-dev zipcmp ziptool zipmerge libpng-dev libeigen3-dev
-
-      - name: Install xsimd
+      - name: Install ninja
         run: |
-          cd build
-          git clone https://github.com/xtensor-stack/xsimd.git
-          cd xsimd
-          git checkout 11.1.0
-          cmake -S . -B build-xsimd
-          sudo cmake --install ./build-xsimd
-          cd ..
-          rm -rf ./*
+          choco install ninja
+          ninja --version
 
-      - name: Install qt6
-        run: sudo apt install libqt6widgets6 libqt6gui6 libqt6network6 qt6-base-dev qt6-tools-dev-tools qt6-tools-dev qt6-l10n-tools
+      - name: Install deps with vcpkg
+        shell: cmd
+        run: vcpkg install --triplet=x64-windows zlib libpng libzip eigen3 xsimd
 
-      - name: Install additional qt-related packages
-        run: sudo apt install x11-utils libxcb-xinerama0 libxv1 libgl-dev
-        # Without these libs, cmake cannot find Qt6::Gui. But if you install nvidia-cuda-toolkit, they will be installed automatically
-      - name: Install OpenCL sdk
+      - name: Install OpenCL with vcpkg
         if: matrix.gpu_api == 'OpenCL'
-        run: sudo apt install ocl-icd-libopencl1 ocl-icd-opencl-dev ocl-icd-dev opencl-c-headers opencl-clhpp-headers clinfo
-
-      - name: See clinfo
-        if: matrix.gpu_api == 'OpenCL'
-        run: clinfo
-
-      - name: Install xz (Release as tar.xz)
-        run: sudo apt install xz-utils
+        run: vcpkg install opencl --triplet=x64-windows
 
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Get short SHA
+        run: |
+          echo "GITHUB_SHA = $env:GITHUB_SHA"
+          $short_sha=$env:GITHUB_SHA.substring(0,7)
+          echo "short_sha = $short_sha"
+          echo "SHORT_SHA=$short_sha" >> $env:GITHUB_ENV
+
+      - name: make dirs
+        run: |
+          mkdir bin
+          mkdir bin/Qt6.5.0-msvc-shared
+          mkdir 3rdParty
+
+      - name: Download Qt6.5.0-msvc-shared and extract
+        run: |
+          cmd
+          curl -JL -o bin/Qt6.5.0-msvc-shared.7z "https://github.com/SlopeCraft/VisualCraft-binaries/releases/download/win-binaries/Qt6.5.0-msvc-shared.7z"
+          7z x -o"bin/Qt6.5.0-msvc-shared" bin/Qt6.5.0-msvc-shared.7z
+          exit
+          tree /f bin/Qt6.5.0-msvc-shared
+          # Qt installation dir: bin/Qt6.5.0-msvc-shared
+
       - name: CMake configure
-        run: cmake -S . -B ./build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/gcc-12 -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/g++-12 -DCMAKE_INSTALL_PREFIX:PATH=./install -DSlopeCraft_GPU_API:STRING=$GPU_API -DCMAKE_BUILD_TYPE:STRING=$BUILD_TYPE
+        shell: cmd
+        run: |
+          mkdir build
+          mkdir install
+          set PATH=C:\Program Files\PowerShell\7;C:\vcpkg;C:\Program Files (x86)\NSIS\;C:\Program Files\dotnet;C:\Program Files (x86)\GitHub CLI;C:\Program Files\Git\bin;C:\Program Files\OpenSSL\bin;C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin;C:\Program Files\Microsoft\jdk-11.0.16.101-hotspot\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\dotnet\;C:\Program Files\PowerShell\7\;C:\Program Files\Microsoft\Web Platform Installer\;C:\Program Files\CMake\bin;C:\Program Files\Microsoft SDKs\Service Fabric\Tools\ServiceFabricLocalClusterManager;C:\Program Files\Git\cmd;C:\Program Files\GitHub CLI\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\LLVM\bin;C:\Users\runneradmin\.dotnet\tools;C:\Users\runneradmin\.cargo\bin;C:\Users\runneradmin\AppData\Local\Microsoft\WindowsApps
+          "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" & cmake -S . -B ./build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=clang-cl -DCMAKE_CXX_COMPILER:FILEPATH=clang-cl -DCMAKE_RC_COMPILER:FILEPATH=llvm-rc -DCMAKE_PREFIX_PATH:PATH=D:/a/SlopeCraft/SlopeCraft/bin/Qt6.5.0-msvc-shared;C:/vcpkg/installed/x64-windows -DCMAKE_INSTALL_PREFIX:PATH=D:/a/SlopeCraft/SlopeCraft/install -DCMAKE_BUILD_TYPE="${{ matrix.build_type }}" -DSlopeCraft_GPU_API:STRING="${{ matrix.gpu_api }}" -DSlopeCraft_vectorize:BOOL="${{ matrix.vectorize }}" -DSlopeCraft_windeployqt_flags_install:STRING=-release;--no-translations
 
       - name: CMake build
-        run: cmake --build ./build --parallel
+        shell: cmd
+        run: |
+          tree ./build
+          cmake --build ./build --parallel 10
 
       - name: CMake install
-        run: cmake --install ./build
-
-      - name: Get short SHA
-        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
-
-      - name: Make deb and tar.xz packs with cpack
+        shell: cmd
         run: |
-          cd build
-          cpack -G DEB -B ../pack
-          cpack -G TXZ -B ../pack
-          cd ..
+          cmake --install ./build
 
-      - name: Upload deb pack
-        uses: actions/upload-artifact@v3
-        with:
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-linux-gcc-deb
-          path: pack/SlopeCraft*.deb
-          if-no-files-found: error
-
-      - name: Upload tar.xz pack
-        uses: actions/upload-artifact@v3
-        with:
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-linux-gcc-tar-xz
-          path: pack/SlopeCraft*.tar.xz
-          if-no-files-found: error
-
-      - name: Run CTest
-        if: (matrix.build_type == 'Release')&&(matrix.gpu_api == 'None')
+      - name: Make zip and 7z packs with CPack
         run: |
+          $basedir=(pwd).path.replace("\\","/")
           cd ./build
-          ctest -j20 --output-on-failure --stop-on-failure
-      - name: Test deb pack
-        run: sudo dpkg -i ./pack/*.deb
+          cpack -G ZIP -B "$basedir/pack"
+          cpack -G 7Z -B "$basedir/pack"
 
-  # linux-test-deb:
-  #   runs-on: ubunut-latest
-  #   needs: linux-build
-  #   strategy:
-  #     matrix:
-  #       build_type: [Debug, Release]
-  #       gpu_api: [None, OpenCL]
-  #   steps:
-  #     - name: Get short SHA
-  #       run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
-  #
-  #     - name: Download deb
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-linux-deb
-  #
-  #     - name: ls
-  #       run: ls .
-  #
-  #     - name: Try installing deb
-  #       run: sudo dpkg -i ./*.deb
+      #- name: Upload zip pack
+      #  uses: actions/upload-artifact@v3
+      #  with:
+      #    name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-vec=${{ matrix.vectorize }}-windows-clang-zip
+      #    path: pack/SlopeCraft*.zip
+      #    if-no-files-found: error
 
-  windows-build:
+      - name: Upload 7z pack
+        uses: actions/upload-artifact@v3
+        with:
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-vec=${{ matrix.vectorize }}-windows-clang-7z
+          path: pack/SlopeCraft*.7z
+          if-no-files-found: error
+
+  gcc:
     runs-on: windows-latest
     strategy:
       matrix:
@@ -318,10 +242,10 @@ jobs:
 
       #- name: Upload zip pack
       #  uses: actions/upload-artifact@v3
-      #  with: 
+      #  with:
       #    name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-vec=${{ matrix.vectorize }}-windows-zip
       #    path: pack/SlopeCraft*.zip
-      #    if-no-files-found: error 
+      #    if-no-files-found: error
 
       - name: Upload 7z pack
         uses: actions/upload-artifact@v3
@@ -338,7 +262,7 @@ jobs:
       #  with:
       #    name: all_files_on_D.txt
       #    path: bin/all_files_on_D.txt
-      #    if-no-files-found: error 
+      #    if-no-files-found: error
 
 
 
@@ -347,4 +271,4 @@ jobs:
       #  with:
       #    name: gcc12-with-zlib,libzip,libpng
       #    path: bin/mingw64
-      #    if-no-files-found: error    
+      #    if-no-files-found: error
