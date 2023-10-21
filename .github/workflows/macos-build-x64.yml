@@ -25,10 +25,6 @@ jobs:
         run: |
           echo $BUILD_TYPE
           echo $GPU_API
-      - name: Install LLVM clang
-        run: brew install llvm
-      - name: Check clang
-        run: clang --version
       - name: Install Ninja build system
         run: brew install ninja
       - name: Install dependencies
@@ -76,6 +72,10 @@ jobs:
       #   run: |
       #     brew update
       #     brew upgrade
+      - name: Install LLVM clang
+        run: brew install llvm
+      - name: Check clang
+        run: clang --version
       - name: echo matrix variables (build_type = ${{ matrix.build_type }})
         run: |
           echo $BUILD_TYPE
