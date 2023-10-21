@@ -17,10 +17,10 @@ jobs:
       BUILD_TYPE: ${{ matrix.build_type }}
       GPU_API: ${{ matrix.gpu_api }}
     steps:
-      - name: brew upgrade & update
-        run: |
-          brew update
-          brew upgrade
+      # - name: brew upgrade & update
+      #   run: |
+      #     brew update
+      #     brew upgrade
       - name: echo matrix variables (build_type = ${{ matrix.build_type }})
         run: |
           echo $BUILD_TYPE
@@ -72,10 +72,10 @@ jobs:
       BUILD_TYPE: ${{ matrix.build_type }}
       GPU_API: ${{ matrix.gpu_api }}
     steps:
-      - name: brew upgrade & update
-        run: |
-          brew update
-          brew upgrade
+      # - name: brew upgrade & update
+      #   run: |
+      #     brew update
+      #     brew upgrade
       - name: echo matrix variables (build_type = ${{ matrix.build_type }})
         run: |
           echo $BUILD_TYPE
