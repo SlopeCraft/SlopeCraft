@@ -130,106 +130,106 @@ jobs:
   #     - name: Try installing deb
   #       run: sudo dpkg -i ./*.deb
 
-  clang:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        build_type: [ Debug, Release ]
-        gpu_api: [ None, OpenCL ]
-    env:
-      BUILD_TYPE: ${{ matrix.build_type }}
-      GPU_API: ${{ matrix.gpu_api }}
-    steps:
-      - name: echo matrix variables (build_type = ${{ matrix.build_type }})
-        run: |
-          echo $BUILD_TYPE
-          echo $GPU_API
-      - name: apt update
-        run: sudo apt update
-
-      - name: Make directories
-        run: mkdir build install pack
-
-      #- name: List installed
-      #  run: apt list --installed
-
-      - name: Install clang-15, cmake, ninja
-        run: sudo apt install clang-15 cmake ninja-build
-
-      - name: Install libzip, libpng, Eigen3, openmp
-        run: sudo apt install libzip-dev zipcmp ziptool zipmerge libpng-dev libeigen3-dev libomp5-15
-
-      - name: Install xsimd
-        run: |
-          cd build
-          git clone https://github.com/xtensor-stack/xsimd.git
-          cd xsimd
-          git checkout 11.1.0
-          cmake -S . -B build-xsimd
-          sudo cmake --install ./build-xsimd
-          cd ..
-          rm -rf ./*
-
-      - name: Install qt6
-        run: sudo apt install libqt6widgets6 libqt6gui6 libqt6network6 qt6-base-dev qt6-tools-dev-tools qt6-tools-dev qt6-l10n-tools
-
-      - name: Install additional qt-related packages
-        run: sudo apt install x11-utils libxcb-xinerama0 libxv1 libgl-dev
-        # Without these libs, cmake cannot find Qt6::Gui. But if you install nvidia-cuda-toolkit, they will be installed automatically
-      - name: Install OpenCL sdk
-        if: matrix.gpu_api == 'OpenCL'
-        run: sudo apt install ocl-icd-libopencl1 ocl-icd-opencl-dev ocl-icd-dev opencl-c-headers opencl-clhpp-headers clinfo
-
-      - name: See clinfo
-        if: matrix.gpu_api == 'OpenCL'
-        run: clinfo
-
-      - name: Install xz (Release as tar.xz)
-        run: sudo apt install xz-utils
-
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: CMake configure
-        run: cmake -S . -B ./build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=clang-15 -DCMAKE_CXX_COMPILER:FILEPATH=clang++-15 -DCMAKE_INSTALL_PREFIX:PATH=./install -DSlopeCraft_GPU_API:STRING=$GPU_API -DCMAKE_BUILD_TYPE:STRING=$BUILD_TYPE
-
-      - name: CMake build
-        run: cmake --build ./build --parallel
-
-      - name: CMake install
-        run: cmake --install ./build
-
-      - name: Get short SHA
-        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
-
-      - name: Make deb and tar.xz packs with cpack
-        run: |
-          cd build
-          cpack -G DEB -B ../pack
-          cpack -G TXZ -B ../pack
-          cd ..
-
-      - name: Upload deb pack
-        uses: actions/upload-artifact@v3
-        with:
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-linux-clang-deb
-          path: pack/SlopeCraft*.deb
-          if-no-files-found: error
-
-      - name: Upload tar.xz pack
-        uses: actions/upload-artifact@v3
-        with:
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-linux-clang-tar-xz
-          path: pack/SlopeCraft*.tar.xz
-          if-no-files-found: error
-
-      - name: Run CTest
-        if: (matrix.build_type == 'Release')&&(matrix.gpu_api == 'None')
-        run: |
-          cd ./build
-          ctest -j20 --output-on-failure --stop-on-failure
-      - name: Test deb pack
-        run: sudo dpkg -i ./pack/*.deb
+  #  clang:
+  #    runs-on: ubuntu-latest
+  #    strategy:
+  #      matrix:
+  #        build_type: [ Debug, Release ]
+  #        gpu_api: [ None, OpenCL ]
+  #    env:
+  #      BUILD_TYPE: ${{ matrix.build_type }}
+  #      GPU_API: ${{ matrix.gpu_api }}
+  #    steps:
+  #      - name: echo matrix variables (build_type = ${{ matrix.build_type }})
+  #        run: |
+  #          echo $BUILD_TYPE
+  #          echo $GPU_API
+  #      - name: apt update
+  #        run: sudo apt update
+  #
+  #      - name: Make directories
+  #        run: mkdir build install pack
+  #
+  #      #- name: List installed
+  #      #  run: apt list --installed
+  #
+  #      - name: Install clang-15, cmake, ninja
+  #        run: sudo apt install clang-15 cmake ninja-build
+  #
+  #      - name: Install libzip, libpng, Eigen3, openmp
+  #        run: sudo apt install libzip-dev zipcmp ziptool zipmerge libpng-dev libeigen3-dev libomp5-15
+  #
+  #      - name: Install xsimd
+  #        run: |
+  #          cd build
+  #          git clone https://github.com/xtensor-stack/xsimd.git
+  #          cd xsimd
+  #          git checkout 11.1.0
+  #          cmake -S . -B build-xsimd
+  #          sudo cmake --install ./build-xsimd
+  #          cd ..
+  #          rm -rf ./*
+  #
+  #      - name: Install qt6
+  #        run: sudo apt install libqt6widgets6 libqt6gui6 libqt6network6 qt6-base-dev qt6-tools-dev-tools qt6-tools-dev qt6-l10n-tools
+  #
+  #      - name: Install additional qt-related packages
+  #        run: sudo apt install x11-utils libxcb-xinerama0 libxv1 libgl-dev
+  #        # Without these libs, cmake cannot find Qt6::Gui. But if you install nvidia-cuda-toolkit, they will be installed automatically
+  #      - name: Install OpenCL sdk
+  #        if: matrix.gpu_api == 'OpenCL'
+  #        run: sudo apt install ocl-icd-libopencl1 ocl-icd-opencl-dev ocl-icd-dev opencl-c-headers opencl-clhpp-headers clinfo
+  #
+  #      - name: See clinfo
+  #        if: matrix.gpu_api == 'OpenCL'
+  #        run: clinfo
+  #
+  #      - name: Install xz (Release as tar.xz)
+  #        run: sudo apt install xz-utils
+  #
+  #      - name: Checkout repository
+  #        uses: actions/checkout@v4
+  #
+  #      - name: CMake configure
+  #        run: cmake -S . -B ./build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=clang-15 -DCMAKE_CXX_COMPILER:FILEPATH=clang++-15 -DCMAKE_INSTALL_PREFIX:PATH=./install -DSlopeCraft_GPU_API:STRING=$GPU_API -DCMAKE_BUILD_TYPE:STRING=$BUILD_TYPE
+  #
+  #      - name: CMake build
+  #        run: cmake --build ./build --parallel
+  #
+  #      - name: CMake install
+  #        run: cmake --install ./build
+  #
+  #      - name: Get short SHA
+  #        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+  #
+  #      - name: Make deb and tar.xz packs with cpack
+  #        run: |
+  #          cd build
+  #          cpack -G DEB -B ../pack
+  #          cpack -G TXZ -B ../pack
+  #          cd ..
+  #
+  #      - name: Upload deb pack
+  #        uses: actions/upload-artifact@v3
+  #        with:
+  #          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-linux-clang-deb
+  #          path: pack/SlopeCraft*.deb
+  #          if-no-files-found: error
+  #
+  #      - name: Upload tar.xz pack
+  #        uses: actions/upload-artifact@v3
+  #        with:
+  #          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-linux-clang-tar-xz
+  #          path: pack/SlopeCraft*.tar.xz
+  #          if-no-files-found: error
+  #
+  #      - name: Run CTest
+  #        if: (matrix.build_type == 'Release')&&(matrix.gpu_api == 'None')
+  #        run: |
+  #          cd ./build
+  #          ctest -j20 --output-on-failure --stop-on-failure
+  #      - name: Test deb pack
+  #        run: sudo dpkg -i ./pack/*.deb
 
   # linux-test-deb:
   #   runs-on: ubunut-latest
