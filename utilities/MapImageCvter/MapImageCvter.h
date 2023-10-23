@@ -118,6 +118,7 @@ class MapImageCvter : public ::libImageCvt::ImageCvter<true> {
     assert(this->_raw_image.cols() == this->_dithered_image.cols());
     ar(this->_raw_image);
     ar(this->algo);
+    ar(this->dither);
     // ar(this->_color_hash);
     ar(this->_dithered_image);
     // save required colorset
@@ -148,6 +149,7 @@ class MapImageCvter : public ::libImageCvt::ImageCvter<true> {
   void load(archive &ar) {
     ar(this->_raw_image);
     ar(this->algo);
+    ar(this->dither);
     // ar(this->_color_hash);
     ar(this->_dithered_image);
 

@@ -446,7 +446,7 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   };
   static std::string build_hash_filename_of(
       std::string_view build_dir) noexcept;
-  bool exmaine_build_cache(const build_options &opt,
+  bool examine_build_cache(const build_options &opt,
                            std::span<const uint8_t> expected_sha3_512,
                            build_cache_ir *ir) const noexcept;
   bool load_build_cache(const build_options &opt) noexcept;

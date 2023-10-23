@@ -325,10 +325,13 @@ void TokiSlopeCraft::save_build_cache(std::string &err) const noexcept {
   return;
 }
 
-bool TokiSlopeCraft::exmaine_build_cache(
+bool TokiSlopeCraft::examine_build_cache(
     const build_options &opt, std::span<const uint8_t> expected_sha3_512,
     build_cache_ir *ir) const noexcept {
   assert(this->kernelStep >= SCL_step::converted);
+
+  // this->build_task_hash_of(this->mapPic,this->schem_block_id_list(),opt);
+
   const std::string build_dir = build_dir_of(this->current_convert_dir(),
                                              to_short_hash(expected_sha3_512));
 
@@ -373,7 +376,7 @@ bool TokiSlopeCraft::load_build_cache(const build_options &opt) noexcept {
 
   build_cache_ir ir;
 
-  if (!this->exmaine_build_cache(opt, expected_hash, &ir)) {
+  if (!this->examine_build_cache(opt, expected_hash, &ir)) {
     return false;
   }
 
