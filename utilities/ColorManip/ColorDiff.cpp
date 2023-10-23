@@ -211,9 +211,9 @@ void colordiff_RGBplus_batch(std::span<const float> r1p,
 
     const batch_t sumOnedDelta = OnedDeltaR + OnedDeltaG + OnedDeltaB + thre;
 
-    batch_t S_tr = OnedDeltaR / (sumOnedDelta * (S_r * S_r));
-    batch_t S_tg = OnedDeltaG / (sumOnedDelta * (S_g * S_g));
-    batch_t S_tb = OnedDeltaB / (sumOnedDelta * (S_b * S_b));
+    batch_t S_tr = OnedDeltaR / sumOnedDelta * (S_r * S_r);
+    batch_t S_tg = OnedDeltaG / sumOnedDelta * (S_g * S_g);
+    batch_t S_tb = OnedDeltaB / sumOnedDelta * (S_b * S_b);
 
     batch_t S_theta = S_tr + S_tg + S_tb;
 
