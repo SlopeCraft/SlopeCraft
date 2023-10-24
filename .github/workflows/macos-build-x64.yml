@@ -109,7 +109,9 @@ jobs:
           cpack -G ZIP
 
       - name: Test installation
-        run: cmake --install .
+        run: |
+          cd build
+          cmake --install .
       # chmod +x vccl.app/Contents/MacOS/vccl
 
       - name: Get short SHA
