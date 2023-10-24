@@ -3,20 +3,20 @@
 set(this_script_file @deployqt_vccl_script@)
 option(install_mode "" ON)
 
-if(install_mode)
+if (install_mode)
     execute_process(COMMAND ${CMAKE_COMMAND} -Dinstall_mode:BOOL=false -P ${this_script_file}
         WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}
         COMMAND_ERROR_IS_FATAL ANY
     )
     return()
-endif()
+endif ()
 
-message(STATUS "Running macdeployqt for @AppName@ ...")
-execute_process(
-    COMMAND "@SlopeCraft_Qt_macdeployqt_executable@" "@AppName@.app"
-    WORKING_DIRECTORY "@vccl_prefix@"
-    OUTPUT_QUIET
-    COMMAND_ERROR_IS_FATAL ANY)
+#message(STATUS "Running macdeployqt for @AppName@ ...")
+#execute_process(
+#    COMMAND "@SlopeCraft_Qt_macdeployqt_executable@" "@AppName@.app"
+#    WORKING_DIRECTORY "@vccl_prefix@"
+#    OUTPUT_QUIET
+#    COMMAND_ERROR_IS_FATAL ANY)
 
 # message(WARNING "CMAKE_CURRENT_SOURCE_DIR = ${CMAKE_SOURCE_DIR}")
 

@@ -4,7 +4,7 @@ set(AppName VisualCraft)
 if (CMAKE_SYSTEM_NAME MATCHES "Windows")
     install(TARGETS VisualCraft
         RUNTIME DESTINATION .
-        )
+    )
 
     install(FILES vc-config.json
         DESTINATION .)
@@ -26,7 +26,7 @@ endif ()
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     install(TARGETS VisualCraft
         RUNTIME DESTINATION bin
-        )
+    )
 
     install(FILES vc-config.json
         DESTINATION bin)
@@ -56,9 +56,9 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     # Install zips. In vccl-config.json or vc-config.json, they are referred like ./Blocks_VCL/Vanilla_1_19_3.zip
     install(FILES ${VCL_app_files}
         DESTINATION VisualCraft.app/Contents/MacOS/Blocks_VCL
-        )
-    QD_add_deployqt(VisualCraft
-        INSTALL_MODE INSTALL_DESTINATION .)
+    )
+    #    QD_add_deployqt(VisualCraft
+    #        INSTALL_MODE INSTALL_DESTINATION .)
 
     return()
 endif ()

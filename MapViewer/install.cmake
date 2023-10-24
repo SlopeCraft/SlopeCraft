@@ -6,7 +6,7 @@ set(AppName MapViewer)
 if (CMAKE_SYSTEM_NAME MATCHES "Windows")
     install(TARGETS MapViewer
         RUNTIME DESTINATION .
-        )
+    )
 
     QD_add_deployqt(MapViewer
         BUILD_MODE
@@ -26,7 +26,7 @@ if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     install(TARGETS MapViewer
         RUNTIME DESTINATION bin
         BUNDLE DESTINATION lib
-        )
+    )
 
     # Install platforms and imageformats plugins
     include(${CMAKE_SOURCE_DIR}/cmake/install_plugins.cmake)
@@ -37,7 +37,7 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     install(TARGETS MapViewer
         RUNTIME DESTINATION .
         BUNDLE DESTINATION .
-        )
+    )
 
     # Install icon for macOS
     # MapViewer.app
@@ -45,8 +45,8 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     install(FILES ${MapViewer_Icon}
         DESTINATION MapViewer.app/Contents/Resources)
 
-    QD_add_deployqt(MapViewer
-            INSTALL_MODE INSTALL_DESTINATION .)
+    #    QD_add_deployqt(MapViewer
+    #            INSTALL_MODE INSTALL_DESTINATION .)
 
     return()
 endif ()

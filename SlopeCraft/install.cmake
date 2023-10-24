@@ -23,7 +23,7 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     install(TARGETS SlopeCraft
         RUNTIME DESTINATION .
         BUNDLE DESTINATION .
-        )
+    )
 
     # Install icons
     set(SlopeCraft_Icon
@@ -56,8 +56,8 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     file(COPY ${SlopeCraft_install_presets}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/SlopeCraft.app/Contents/MacOS/Blocks/Presets)
 
-    QD_add_deployqt(SlopeCraft
-        INSTALL_MODE INSTALL_DESTINATION .)
+    #    QD_add_deployqt(SlopeCraft
+    #        INSTALL_MODE INSTALL_DESTINATION .)
 
     return()
 endif ()
@@ -66,7 +66,7 @@ if (CMAKE_SYSTEM_NAME MATCHES "Windows")
     # Install app
     install(TARGETS SlopeCraft
         RUNTIME DESTINATION .
-        )
+    )
 
     #    # Run windeployqt at build time
     #    add_custom_target(Windeployqt-SlopeCraft
@@ -123,7 +123,7 @@ if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     # Install app
     install(TARGETS SlopeCraft
         RUNTIME DESTINATION bin
-        )
+    )
 
     # Install FixedBlocks.json, CustomBlocks.json and README.md
     install(FILES ${SlopeCraft_install_jsons}

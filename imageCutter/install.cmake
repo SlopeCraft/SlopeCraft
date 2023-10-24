@@ -6,7 +6,7 @@ set(AppName imageCutter)
 if (CMAKE_SYSTEM_NAME MATCHES "Windows")
     install(TARGETS imageCutter
         RUNTIME DESTINATION .
-        )
+    )
 
     QD_add_deployqt(imageCutter
         BUILD_MODE
@@ -37,7 +37,7 @@ if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     install(TARGETS imageCutter
         RUNTIME DESTINATION bin
         BUNDLE DESTINATION lib
-        )
+    )
 
     # Install platforms and imageformats plugins
     include(${CMAKE_SOURCE_DIR}/cmake/install_plugins.cmake)
@@ -48,7 +48,7 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     install(TARGETS imageCutter
         RUNTIME DESTINATION .
         BUNDLE DESTINATION .
-        )
+    )
 
     # Install icon for macOS
     file(GLOB imageCutter_Icon
@@ -56,8 +56,8 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     install(FILES ${imageCutter_Icon}
         DESTINATION imageCutter.app/Contents/Resources)
 
-    QD_add_deployqt(imageCutter
-            INSTALL_MODE INSTALL_DESTINATION .)
+    #    QD_add_deployqt(imageCutter
+    #            INSTALL_MODE INSTALL_DESTINATION .)
 
     return()
 endif ()
