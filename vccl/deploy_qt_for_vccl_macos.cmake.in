@@ -11,12 +11,12 @@ if(install_mode)
     return()
 endif()
 
-#message(STATUS "Running macdeployqt for @AppName@ ...")
-#execute_process(
-#    COMMAND "@SlopeCraft_Qt_macdeployqt_executable@" "@AppName@.app"
-#    WORKING_DIRECTORY "@vccl_prefix@"
-#    OUTPUT_QUIET
-#    COMMAND_ERROR_IS_FATAL ANY)
+message(STATUS "Running macdeployqt for @AppName@ ...")
+execute_process(
+    COMMAND "@SlopeCraft_Qt_macdeployqt_executable@" "@AppName@.app"
+    WORKING_DIRECTORY "@vccl_prefix@"
+    OUTPUT_QUIET
+    COMMAND_ERROR_IS_FATAL ANY)
 
 # message(WARNING "CMAKE_CURRENT_SOURCE_DIR = ${CMAKE_SOURCE_DIR}")
 

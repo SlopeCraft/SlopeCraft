@@ -18,19 +18,6 @@ if (CMAKE_SYSTEM_NAME MATCHES "Windows")
         BUILD_MODE
         INSTALL_MODE INSTALL_DESTINATION .)
 
-    #    # Run windeployqt at build time
-    #    add_custom_target(Windeployqt-MapViewer
-    #        COMMAND ${SlopeCraft_Qt_windeployqt_executable} MapViewer.exe ${SlopeCraft_windeployqt_flags_build}
-    #        COMMAND_EXPAND_LISTS
-    #        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    #        DEPENDS MapViewer)
-    #    add_dependencies(SC_deploy_all Windeployqt-MapViewer)
-    #
-    #    # Run windeployqt at install time
-    #    install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake)
-    #
-    #    SlopeCraft_install_if_is_shared(ZLIB::ZLIB .)
-
     return()
 endif ()
 
@@ -57,6 +44,10 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     file(GLOB MapViewer_Icon ${CMAKE_SOURCE_DIR}/MapViewer/others/MapViewer.icns)
     install(FILES ${MapViewer_Icon}
         DESTINATION MapViewer.app/Contents/Resources)
+
+    QD_add_deployqt(MapViewer
+            INSTALL_MODE INSTALL_DESTINATION .)
+
     return()
 endif ()
 

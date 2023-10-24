@@ -55,6 +55,10 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
         DESTINATION SlopeCraft.app/Contents/MacOS/Blocks/Presets)
     file(COPY ${SlopeCraft_install_presets}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/SlopeCraft.app/Contents/MacOS/Blocks/Presets)
+
+    QD_add_deployqt(SlopeCraft
+        INSTALL_MODE INSTALL_DESTINATION .)
+
     return()
 endif ()
 

@@ -56,6 +56,9 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     install(FILES ${imageCutter_Icon}
         DESTINATION imageCutter.app/Contents/Resources)
 
+    QD_add_deployqt(imageCutter
+            INSTALL_MODE INSTALL_DESTINATION .)
+
     return()
 endif ()
 

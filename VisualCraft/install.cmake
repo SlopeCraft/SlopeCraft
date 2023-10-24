@@ -1,8 +1,5 @@
 set(AppName VisualCraft)
 
-#configure_file(${CMAKE_SOURCE_DIR}/cmake/deploy_qt.cmake.in
-#    ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake
-#    @ONLY)
 
 if (CMAKE_SYSTEM_NAME MATCHES "Windows")
     install(TARGETS VisualCraft
@@ -23,16 +20,6 @@ if (CMAKE_SYSTEM_NAME MATCHES "Windows")
         INSTALL_MODE INSTALL_DESTINATION .
         IGNORE VisualCraftL.dll libVisualCraftL.dll)
 
-    #    # Run windeployqt at build time
-    #    add_custom_target(Windeployqt-VisualCraft
-    #        COMMAND ${SlopeCraft_Qt_windeployqt_executable} VisualCraft.exe ${SlopeCraft_windeployqt_flags_build}
-    #        COMMAND_EXPAND_LISTS
-    #        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    #        DEPENDS VisualCraft)
-    #    add_dependencies(SC_deploy_all Windeployqt-VisualCraft)
-    #
-    #    # Run windeployqt at install time
-    #    install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake)
     return()
 endif ()
 
@@ -70,11 +57,8 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     install(FILES ${VCL_app_files}
         DESTINATION VisualCraft.app/Contents/MacOS/Blocks_VCL
         )
-    #QD_add_deployqt(VisualCraft
-    #    INSTALL_MODE INSTALL_DESTINATION .)
-
-    # Run macdeployqt at install time
-    #install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/deploy_qt.cmake)
+    QD_add_deployqt(VisualCraft
+        INSTALL_MODE INSTALL_DESTINATION .)
 
     return()
 endif ()
