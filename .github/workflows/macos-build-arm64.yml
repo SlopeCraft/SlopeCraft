@@ -29,12 +29,14 @@ jobs:
         run: |
           cd build
           cmake --build . --parallel
-      - name: CMake Install
-        run: cmake --install .
       - name: CPack
         run: |
-          cd install
+          cd build
           cpack -G ZIP
+      - name: Test installation
+        run: |
+          cd build
+          cmake --install .
 
       - name: Get short SHA
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
