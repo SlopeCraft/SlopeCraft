@@ -44,10 +44,12 @@ jobs:
         run: |
           cd build
           cmake --build . --parallel
+      - name: CMake Install
+        run: cmake --install .
       # chmod +x vccl.app/Contents/MacOS/vccl
       - name: CPack
         run: |
-          cd ./build
+          cd install
           cpack -G ZIP
 
       - name: Get short SHA
@@ -99,10 +101,12 @@ jobs:
         run: |
           cd build
           cmake --build . --parallel
+      - name: CMake Install
+        run: cmake --install .
       # chmod +x vccl.app/Contents/MacOS/vccl
       - name: CPack
         run: |
-          cd ./build
+          cd install
           cpack -G ZIP
 
       - name: Get short SHA
