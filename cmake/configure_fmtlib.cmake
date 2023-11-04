@@ -11,7 +11,7 @@ if (NOT ${fmt_FOUND})
     FetchContent_Declare(
         fmt
         GIT_REPOSITORY https://github.com/fmtlib/fmt.git
-        GIT_TAG "9.1.0"
+        GIT_TAG "10.1.1"
         OVERRIDE_FIND_PACKAGE
 
         # QUIET false
@@ -19,7 +19,7 @@ if (NOT ${fmt_FOUND})
         # FETCHCONTENT_TRY_FIND_PACKAGE_MODE ALWAYS FIND_PACKAGE_ARGS find_fmt_args
     )
 
-    message(STATUS "Downaloding and building fmtlib......")
+    message(STATUS "Downaloding......")
 
     FetchContent_MakeAvailable(fmt)
     find_package(fmt REQUIRED)
