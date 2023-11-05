@@ -1,5 +1,5 @@
 #version 450
-#extension GL_EXT_shader_8bit_storage: enable
+//#extension GL_EXT_shader_8bit_storage: enable
 #extension GL_EXT_shader_16bit_storage: enable
 
 #extension GL_EXT_debug_printf: enable
@@ -27,7 +27,7 @@ layout (local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
 layout (std140, binding = 0) readonly buffer bufOpt {
     uint task_num;
     uint colorset_size;
-    uint8_t algo;
+    uint algo;
 } option;
 layout (binding = 1) readonly buffer bufCC {
     float colorset_colors[];
