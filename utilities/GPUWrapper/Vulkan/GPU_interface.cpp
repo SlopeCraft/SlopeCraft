@@ -183,7 +183,6 @@ device_wrapper* device_wrapper::create(gpu_wrapper::platform_wrapper* pw,
         VK_KHR_STORAGE_BUFFER_STORAGE_CLASS_EXTENSION_NAME,
         VK_KHR_16BIT_STORAGE_EXTENSION_NAME,
     };
-
     dci.enabledExtensionCount = extensions.size();
     dci.ppEnabledExtensionNames = extensions.data();
 
@@ -247,6 +246,8 @@ class gpu_impl : public gpu_interface {
 
   std::shared_ptr<kp::Algorithm> algorithm;
 
+  std::shared_ptr<kp::Sequence> sequence;
+
   size_t task_count{UINT64_MAX};
   uint16_t color_count{UINT16_MAX};
 
@@ -284,7 +285,9 @@ class gpu_impl : public gpu_interface {
     this->algorithm = this->manager.algorithm(
         {this->compute_option, this->colorset, this->tasks, this->result_diff,
          this->result_idx},
-        get_spirv(), {64, 1, 1});
+        get_spirv());
+
+    this->sequence = this->manager.sequence();
   }
 
   const char* api_v() const noexcept final { return "Vulkan"; }
@@ -318,13 +321,14 @@ class gpu_impl : public gpu_interface {
   }
 
   void wait_v() noexcept final {
-    this->manager.sequence()->eval();
-    fmt::println("Computation result: [");
-    for (uint32_t i = 0; i < this->task_count; i++) {
-      fmt::println("\t[idx = {}, diff = {}]", this->result_idx->data()[i],
-                   this->result_diff->data()[i]);
-    }
-    fmt::println("]");
+    this->sequence->eval();
+    //    fmt::println("Computation result: [");
+    //    for (uint32_t i = 0; i < this->task_count; i++) {
+    //      fmt::println("\t[task {}, result idx = {}, result diff = {}]", i,
+    //                   this->result_idx->data()[i],
+    //                   this->result_diff->data()[i]);
+    //    }
+    //    fmt::println("]");
   }
 
   void execute_v(::SCL_convertAlgo algo, bool wait) noexcept final {
@@ -332,17 +336,18 @@ class gpu_impl : public gpu_interface {
                        uint32_t(algo)};
     this->compute_option->setData({option});
 
-    this->manager.sequence()->record<kp::OpTensorSyncDevice>(
+    this->sequence->record<kp::OpTensorSyncDevice>(
         {this->compute_option, this->colorset, this->tasks});
 
     const uint32_t local_wg_size = this->local_work_group_size_v();
 
     const uint32_t work_group_num =
         ceil_up_to(this->task_count, local_wg_size) / local_wg_size;
-    this->algorithm->setWorkgroup({work_group_num, 1, 1});
-    
-    this->manager.sequence()
-        ->record<kp::OpAlgoDispatch>(this->algorithm)
+    this->algorithm->rebuild({this->compute_option, this->colorset, this->tasks,
+                              this->result_diff, this->result_idx},
+                             get_spirv(), {work_group_num, 1, 1});
+
+    this->sequence->record<kp::OpAlgoDispatch>(this->algorithm)
         ->record<kp::OpTensorSyncLocal>({this->result_diff, this->result_idx});
 
     if (wait) {

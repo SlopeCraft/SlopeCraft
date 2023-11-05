@@ -35,11 +35,11 @@ layout (binding = 1) readonly buffer bufCC {
 layout (binding = 2) readonly buffer bufUC {
     float unconverted_colors[];
 };
-layout (binding = 3) writeonly buffer bufRID {
-    uint16_t result_idx_dst[];
-};
-layout (binding = 4) writeonly buffer bufRDD {
+layout (binding = 3) writeonly buffer bufRDD {
     float result_diff_dst[];
+};
+layout (binding = 4) writeonly buffer bufRID {
+    uint16_t result_idx_dst[];
 };
 
 
@@ -72,6 +72,7 @@ void main() {
     if (global_idx >= option.task_num) {
         return;
     }
+    //debugPrintfEXT("global_idx = %u, task_num = %u, colorset_size = %u, algo = %u", global_idx, option.colorset_size, option.algo);
     compute(global_idx);
 }
 
