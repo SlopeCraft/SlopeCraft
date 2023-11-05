@@ -37,19 +37,35 @@ std::vector<uint32_t> get_spirv() noexcept {
 enum class vkerr : int { create_device_failure, create_instance_failure };
 
 std::shared_ptr<vk::Instance> get_vk_instance() noexcept {
-  static std::mutex lock;
-  static std::shared_ptr<vk::Instance> instance{nullptr};
+  vk::ApplicationInfo app_info{"VisualCraftL", VK_MAKE_VERSION(5, 0, 0),
+                               "NoEngine", VK_MAKE_VERSION(1, 0, 0),
+                               VK_API_VERSION_1_3};
+  vk::InstanceCreateInfo ici;
+  ici.pApplicationInfo = &app_info;
+  std::array<const char*, 1> extension_names{
+      VK_EXT_DEBUG_REPORT_EXTENSION_NAME,
+  };
+  ici.enabledExtensionCount = extension_names.size();
+  ici.ppEnabledExtensionNames = extension_names.data();
 
-  std::unique_lock<std::mutex> lkgd{lock};
-  if (instance == nullptr) {
-    vk::ApplicationInfo app_info{"VisualCraftL", VK_MAKE_VERSION(5, 0, 0),
-                                 "NoEngine", VK_MAKE_VERSION(1, 0, 0),
-                                 VK_API_VERSION_1_3};
-    auto instance_r = vk::createInstance(vk::InstanceCreateInfo{{}, &app_info});
-    instance = std::make_shared<vk::Instance>(instance_r);
+  std::array<const char*, 1> layer_names{
+      //"VK_LAYER_LUNARG_assistant_layer",
+      //"VK_LAYER_LUNARG_standard_validation",
+      "VK_LAYER_KHRONOS_validation",
+  };
+  ici.enabledLayerCount = layer_names.size();
+  ici.ppEnabledLayerNames = layer_names.data();
+
+  try {
+    auto instance_r = vk::createInstance(ici);
+    auto instance = std::make_shared<vk::Instance>(instance_r);
     assert(instance != nullptr);
+    return instance;
+
+  } catch (const std::exception& e) {
+    auto msg = e.what();
+    return nullptr;
   }
-  return instance;
 }
 
 const char* api_name() noexcept { return "Vulkan"; }
@@ -79,9 +95,9 @@ void platform_wrapper::destroy(gpu_wrapper::platform_wrapper* p) noexcept {
 class device_impl : public device_wrapper {
  public:
   uint32_t device_index;
-  // std::shared_ptr<vk::PhysicalDevice> phy_device;
+  std::shared_ptr<vk::PhysicalDevice> phy_device;
   vk::PhysicalDeviceProperties properties;
-  // std::shared_ptr<vk::Device> device;
+  std::shared_ptr<vk::Device> device;
   uint32_t selected_queue_family_index{};
   const char* name_v() const noexcept final {
     return this->properties.deviceName;
@@ -145,11 +161,12 @@ std::optional<uint32_t> select_queue_family(
 device_wrapper* device_wrapper::create(gpu_wrapper::platform_wrapper* pw,
                                        size_t idx, int* errorcode) noexcept {
   auto& plat = dynamic_cast<platform_impl&>(*pw);
-  auto deivces = plat.instance->enumeratePhysicalDevices();
+  auto devices = plat.instance->enumeratePhysicalDevices();
 
   auto result = new device_impl;
   result->device_index = idx;
-  auto phy_device = deivces[idx];
+  result->phy_device = std::make_shared<vk::PhysicalDevice>(devices[idx]);
+  auto& phy_device = *result->phy_device;
   result->properties = phy_device.getProperties();
   {
     auto qf_props = phy_device.getQueueFamilyProperties();
@@ -159,6 +176,44 @@ device_wrapper* device_wrapper::create(gpu_wrapper::platform_wrapper* pw,
       return nullptr;
     }
     result->selected_queue_family_index = sqfi_opt.value();
+  }
+  {
+    vk::DeviceCreateInfo dci{};
+    std::array<const char*, 2> extensions{
+        VK_KHR_STORAGE_BUFFER_STORAGE_CLASS_EXTENSION_NAME,
+        VK_KHR_16BIT_STORAGE_EXTENSION_NAME,
+    };
+
+    dci.enabledExtensionCount = extensions.size();
+    dci.ppEnabledExtensionNames = extensions.data();
+
+    // check if 16 bit support is fully ok
+    vk::PhysicalDeviceFeatures2 pdf2;
+    vk::PhysicalDeviceVulkan11Features pdfv11;
+    pdf2.pNext = &pdfv11;
+    phy_device.getFeatures2(&pdf2);
+    assert(pdf2.features.shaderInt16);
+    assert(pdfv11.uniformAndStorageBuffer16BitAccess);
+    assert(pdfv11.storageBuffer16BitAccess);
+    dci.pEnabledFeatures = nullptr;
+    dci.pNext = &pdf2;
+
+    // queue info
+    vk::DeviceQueueCreateInfo dqci;
+    dqci.queueCount = 1;
+    constexpr float prior = 1.0f;
+    dqci.pQueuePriorities = &prior;
+    dqci.queueFamilyIndex = result->selected_queue_family_index;
+
+    dci.pQueueCreateInfos = &dqci;
+    dci.queueCreateInfoCount = 1;
+
+    try {
+      result->device =
+          std::make_shared<vk::Device>(phy_device.createDevice(dci));
+    } catch (const std::exception& e) {
+      return nullptr;
+    }
   }
 
   return result;
@@ -171,7 +226,7 @@ void device_wrapper::destroy(gpu_wrapper::device_wrapper* dw) noexcept {
 struct task_option {
   uint32_t task_num;
   uint32_t color_count;
-  uint8_t algo;
+  uint32_t algo;
 };
 
 class gpu_impl : public gpu_interface {
@@ -207,11 +262,14 @@ class gpu_impl : public gpu_interface {
   }
 
  public:
-  gpu_impl(uint32_t phy_device_idx, uint32_t selected_queue_index)
-      : manager{phy_device_idx,
-                {},
-                {VK_KHR_8BIT_STORAGE_EXTENSION_NAME,
-                 VK_KHR_16BIT_STORAGE_EXTENSION_NAME}} {
+  gpu_impl(platform_impl& pi, device_impl& di)
+      : manager{pi.instance, di.phy_device, di.device} {
+    // setup compute queues that ought to be setup by manager constructor
+    this->manager.computeQueueFamilyIndices() = {
+        di.selected_queue_family_index};
+    this->manager.computeQueues() = {std::make_shared<vk::Queue>(
+        di.device->getQueue(di.selected_queue_family_index, 0))};
+
     this->compute_option = this->manager.tensorT<task_option>({task_option{}});
 
     this->colorset =
@@ -259,11 +317,19 @@ class gpu_impl : public gpu_interface {
     memcpy(this->tasks->data(), data, task_num * sizeof(float[3]));
   }
 
-  void wait_v() noexcept final { this->manager.sequence()->eval(); }
+  void wait_v() noexcept final {
+    this->manager.sequence()->eval();
+    fmt::println("Computation result: [");
+    for (uint32_t i = 0; i < this->task_count; i++) {
+      fmt::println("\t[idx = {}, diff = {}]", this->result_idx->data()[i],
+                   this->result_diff->data()[i]);
+    }
+    fmt::println("]");
+  }
 
   void execute_v(::SCL_convertAlgo algo, bool wait) noexcept final {
     task_option option{uint32_t(this->task_count), this->color_count,
-                       uint8_t(algo)};
+                       uint32_t(algo)};
     this->compute_option->setData({option});
 
     this->manager.sequence()->record<kp::OpTensorSyncDevice>(
@@ -274,12 +340,13 @@ class gpu_impl : public gpu_interface {
     const uint32_t work_group_num =
         ceil_up_to(this->task_count, local_wg_size) / local_wg_size;
     this->algorithm->setWorkgroup({work_group_num, 1, 1});
+    
     this->manager.sequence()
         ->record<kp::OpAlgoDispatch>(this->algorithm)
         ->record<kp::OpTensorSyncLocal>({this->result_diff, this->result_idx});
 
     if (wait) {
-      this->manager.sequence()->eval();
+      this->wait_v();
     }
   }
 
@@ -301,18 +368,20 @@ class gpu_impl : public gpu_interface {
   std::string error_detail_v() const noexcept final { return {}; }
 };
 
-// gpu_interface* gpu_interface::create(gpu_wrapper::platform_wrapper* pw,
-//                                      gpu_wrapper::device_wrapper* dw)
-//                                      noexcept {
-//
-// }
+gpu_interface* gpu_interface::create(gpu_wrapper::platform_wrapper* pw,
+                                     gpu_wrapper::device_wrapper* dw) noexcept {
+  std::pair<int, std::string> temp;
+  return create(pw, dw, temp);
+}
 gpu_interface* gpu_interface::create(
-    platform_wrapper*, device_wrapper* dw,
+    platform_wrapper* pw, device_wrapper* dw,
     std::pair<int, std::string>& err) noexcept {
+  auto p = dynamic_cast<platform_impl*>(pw);
   auto d = dynamic_cast<device_impl*>(dw);
   err.first = 0;
   // err.second.clear();
-  return new gpu_impl{d->device_index, d->selected_queue_family_index};
+  return new gpu_impl{*p, *d};
+  // return new gpu_impl{d->device_index, d->selected_queue_family_index};
 }
 
 void gpu_interface::destroy(gpu_wrapper::gpu_interface* gi) noexcept {
