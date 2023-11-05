@@ -4,7 +4,7 @@ include(CheckCXXCompilerFlag)
 
 message(STATUS "System processor arch = ${CMAKE_SYSTEM_PROCESSOR}")
 
-if (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "AMD64")
+if ((${CMAKE_SYSTEM_PROCESSOR} STREQUAL "AMD64") OR (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64"))
     if (${MSVC})
         set(SlopeCraft_vectorize_flags "/arch:AVX2")
     else ()

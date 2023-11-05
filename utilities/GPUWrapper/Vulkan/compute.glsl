@@ -22,7 +22,9 @@ const uint ALGO_XYZ = 88;
 
 const bool SC_OCL_SPOT_NAN = true;
 
-layout (binding = 0) readonly buffer bufOpt {
+layout (local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
+
+layout (std140, binding = 0) readonly buffer bufOpt {
     uint task_num;
     uint colorset_size;
     uint8_t algo;
@@ -67,6 +69,9 @@ void compute(const uint global_idx);
 void main() {
 
     const uint global_idx = gl_GlobalInvocationID.x;
+    if (global_idx >= option.task_num) {
+        return;
+    }
     compute(global_idx);
 }
 
@@ -86,37 +91,37 @@ void compute(const uint global_idx) {
         colorset_colors[idx * 3 + 2] };
         if (true && have_nan(color_ava)) {
             debugPrintfEXT(
-                "Nan spotted at color_ava. color_ava = {%f,%f,%f}, get_global_id = %u.n",
-                color_ava[0], color_ava[1], color_ava[2],
-                uint(global_idx));
+            "Nan spotted at color_ava. color_ava = {%f,%f,%f}, get_global_id = %u.n",
+            color_ava[0], color_ava[1], color_ava[2],
+            uint(global_idx));
             return;
         }
 
         float diff_sq = 0;
 
-    /*
+        /*
 
-float color_diff_RGB_XYZ(vec3 RGB1, vec3 RGB2);
-float color_diff_RGB_Better(vec3 rgb1, vec3 rgb2);
-float color_diff_HSV(vec3 hsv1_vec3, vec3 hsv2_vec3);
-float color_diff_Lab94(vec3 lab1_vec3, vec3 lab2_vec3);
-float color_diff_Lab00(vec3 lab1_vec3, vec3 lab2_vec3);
-*/
+    float color_diff_RGB_XYZ(vec3 RGB1, vec3 RGB2);
+    float color_diff_RGB_Better(vec3 rgb1, vec3 rgb2);
+    float color_diff_HSV(vec3 hsv1_vec3, vec3 hsv2_vec3);
+    float color_diff_Lab94(vec3 lab1_vec3, vec3 lab2_vec3);
+    float color_diff_Lab00(vec3 lab1_vec3, vec3 lab2_vec3);
+    */
         switch (uint(option.algo)) {
             case ALGO_RGB_BETTER:
-                diff_sq = color_diff_RGB_Better(color_ava, unconverted);
-                break;
+            diff_sq = color_diff_RGB_Better(color_ava, unconverted);
+            break;
             case ALGO_HSV:
-                diff_sq = color_diff_HSV(color_ava, unconverted);
-                break;
+            diff_sq = color_diff_HSV(color_ava, unconverted);
+            break;
             case ALGO_LAB94:
-                diff_sq = color_diff_Lab94(color_ava, unconverted);
-                break;
+            diff_sq = color_diff_Lab94(color_ava, unconverted);
+            break;
             case ALGO_LAB00:
-                diff_sq = color_diff_Lab00(color_ava, unconverted);
-                break;
-            default:
-                diff_sq = color_diff_RGB_XYZ(color_ava, unconverted);
+            diff_sq = color_diff_Lab00(color_ava, unconverted);
+            break;
+            default :
+            diff_sq = color_diff_RGB_XYZ(color_ava, unconverted);
 
         }
         if (true && isnan(diff_sq)) {
@@ -124,7 +129,7 @@ float color_diff_Lab00(vec3 lab1_vec3, vec3 lab2_vec3);
             return;
         }
         if (result_diff > diff_sq) {
-        /* this branch may be optimized */
+            /* this branch may be optimized */
             result_idx = idx;
             result_diff = diff_sq;
         }
@@ -156,11 +161,11 @@ float color_diff_RGB_Better(vec3 rgb1, vec3 rgb2) {
     const float sumRGBSquare = dot(rgb1, rgb2);
 
     const float theta = 2.0f / pi_fp32 *
-    acos((sumRGBSquare / sqrt(SqrModSquare + thre)) / 1.01f);
+    acos((sumRGBSquare * inversesqrt(SqrModSquare + thre)) / 1.01f);
 
     if (SC_OCL_SPOT_NAN && isnan(theta)) {
         debugPrintfEXT("theta is nan. sumRGBSquare = %f, SqrModSquare = %f.\n",
-                       sumRGBSquare, SqrModSquare);
+        sumRGBSquare, SqrModSquare);
         return NAN;
     }
 
@@ -321,7 +326,7 @@ float color_diff_Lab00(vec3 lab1_vec3, vec3 lab2_vec3) {
 
     float RC = 2 * sqrt(pow(mCp, 7) / (pow(25.0f, 7.0f) + pow(mCp, 7.0f)));
     float square_mLp_minus_50 = square(mLp - 50);
-    float SL = 1 + 0.015f * square_mLp_minus_50 / sqrt(20 + square_mLp_minus_50);
+    float SL = 1 + 0.015f * square_mLp_minus_50 * inversesqrt(20 + square_mLp_minus_50);
 
     float SC = 1 + 0.045f * mCp;
 
