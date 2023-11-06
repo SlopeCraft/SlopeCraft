@@ -430,7 +430,7 @@ class newTokiColor
     // const ColorList &allow = Allowed->Lab;
     TempVectorXf_t Diff(Allowed->color_count(), 1);
 
-    for (short i = 0; i < Allowed->color_count(); i++) {
+    for (int i = 0; i < Allowed->color_count(); i++) {
       Diff(i) = Lab00_diff(L1s, a1s, b1s, Allowed->Lab(i, 0),
                            Allowed->Lab(i, 1), Allowed->Lab(i, 2));
     }
