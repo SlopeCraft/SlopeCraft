@@ -608,7 +608,7 @@ Filenames of each image can be seen in the table below.</translation>
     </message>
     <message>
         <location filename="../SCWind.ui" line="1523"/>
-        <location filename="../SCWind_slots.cpp" line="882"/>
+        <location filename="../SCWind_slots.cpp" line="885"/>
         <source>关于 SlopeCraft</source>
         <translation>About SlopeCraft</translation>
     </message>
@@ -995,31 +995,32 @@ Click Ignore to skip, Retry to retry and Cancel to cancel</translation>
         <translation>SlopeCraft is a Minecraft 3D pixel map arts generator developed by ToKiNoBug, mainly used to generate 3D pixel map arts that can be implemented in vanilla Minecraft survival mode (but also supports traditional flat pixel map arts).</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="873"/>
+        <location filename="../SCWind_slots.cpp" line="874"/>
         <source>本软件的开发持续集成与 macOS 软件适配由 iXOR Technology (Cubik65536 以及贡献者) 提供</source>
         <translation>The continuous integration solution and macOS version maintenance of this software is provided by iXOR Technology (Cubik65536 and contributors)</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="875"/>
+        <location filename="../SCWind_slots.cpp" line="876"/>
+        <source>感谢 AbrasiveBoar902 为本软件的设计和优化贡献的力量</source>
         <translation>Thanks to AbrasiveBoar902 for his contribution to the design and optimization of this software</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="876"/>
+        <location filename="../SCWind_slots.cpp" line="878"/>
         <source>感谢 67au 为本软件的 macOS 与 Linux 适配做出的贡献</source>
         <translation>Thanks to 67au for his contribution during the development of macOS and Linux version of this software</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="877"/>
+        <location filename="../SCWind_slots.cpp" line="880"/>
         <source>SlopeCraft 在开发时使用了 Qt，zlib 和 eigen 等开源库，对上述库的开发者表示感谢。</source>
         <translation>Open source libraries such as Qt, zlib and eigen are used during the development of SlopeCraft, thanks to the developers of these libraries.</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="879"/>
+        <location filename="../SCWind_slots.cpp" line="882"/>
         <source>本软件遵循 GPL-3.0 及以后版本 (GPL-3.0 or later) 协议开放源码。</source>
         <translation>This program is released under license GPL-3.0 or later.</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="881"/>
+        <location filename="../SCWind_slots.cpp" line="884"/>
         <source>Copyright © 2021-2023 SlopeCraft 开发者 (TokiNoBug, AbrasiveBoar, iXOR Technology, Mifan-T, 以及贡献者). 版权所有</source>
         <translation>Copyright © 2021-2023 SlopeCraft Developers (TokiNoBug, AbrasiveBoar, iXOR Technology, Mifan-T, and contributors). All rights reserved.</translation>
     </message>
@@ -1084,38 +1085,38 @@ Click Ignore to skip, Retry to retry and Cancel to cancel</translation>
         <translation>Writing meta data</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="900"/>
+        <location filename="../SCWind_slots.cpp" line="903"/>
         <source>保存颜色表</source>
         <translation>Save palette</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="911"/>
-        <location filename="../SCWind_slots.cpp" line="941"/>
+        <location filename="../SCWind_slots.cpp" line="914"/>
+        <location filename="../SCWind_slots.cpp" line="944"/>
         <source>保存颜色表失败</source>
         <translation>Failed to save colormap image</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="911"/>
+        <location filename="../SCWind_slots.cpp" line="914"/>
         <source>分配内存失败</source>
         <translation>Failed to allocate memory for image</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="942"/>
+        <location filename="../SCWind_slots.cpp" line="945"/>
         <source>无法生成文件 %1</source>
         <translation>Failed to generate %1</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="953"/>
+        <location filename="../SCWind_slots.cpp" line="956"/>
         <source>保存测试文件</source>
         <translation>Save testing file</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="984"/>
+        <location filename="../SCWind_slots.cpp" line="987"/>
         <source>输出测试文件失败</source>
         <translation>Failed to save testing file</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="985"/>
+        <location filename="../SCWind_slots.cpp" line="988"/>
         <source>保存测试文件 %1 时出现错误。详细信息：
 %2</source>
         <translation>An error occured when saving test file %1. Details:

@@ -870,10 +870,13 @@ void SCWind::on_ac_about_triggered() noexcept {
   info += "\n\n";
   info += tr("SlopeCraft 是一款由 ToKiNoBug 开发的立体地图画生成器，主要用于"
       "在 Minecraft 中制造可以生存实装的立体地图画（但同样支持传统的平板地图画）。");
+  info += "\n";
   info += tr("本软件的开发持续集成与 macOS 软件适配由 iXOR Technology (Cubik65536 以及贡献者) 提供");
   info += "\n\n";
   info += tr("感谢 AbrasiveBoar902 为本软件的设计和优化贡献的力量");
+  info += "\n";
   info += tr("感谢 67au 为本软件的 macOS 与 Linux 适配做出的贡献");
+  info += "\n";
   info += tr("SlopeCraft 在开发时使用了 Qt，zlib 和 eigen 等开源库，对上述库的开发者表示感谢。");
   info += "\n\n";
   info += tr("本软件遵循 GPL-3.0 及以后版本 (GPL-3.0 or later) 协议开放源码。");
