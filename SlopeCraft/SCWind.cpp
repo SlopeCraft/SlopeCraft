@@ -977,22 +977,7 @@ void SCWind::set_lang(::SCL_language lang) noexcept {
 }
 
 QString impl_default_title() noexcept {
-  QString newtitle =
-      QStringLiteral("SlopeCraft %1").arg(SlopeCraft::SCL_getSCLVersion());
-
-#ifdef WIN32
-  newtitle +=
-      " Copyright © 2021-2023 TokiNoBug, AbrasiveBoar, Mifan-T";  // windowsf
-#elif defined(_MAC) || defined(__APPLE__)
-  newtitle +=
-      " Copyright © 2021-2023 TokiNoBug, AbrasiveBoar, Cubik65536, Mifan-T";  // macOs
-#else
-  newtitle +=
-      " Copyright © 2021-2023 TokiNoBug, AbrasiveBoar, Mifan-T";  // unknown
-                                                                  // platform
-#endif
-
-  return newtitle;
+  return QStringLiteral("SlopeCraft %1").arg(SlopeCraft::SCL_getSCLVersion());
 }
 
 const QString &SCWind::default_wind_title() noexcept {
