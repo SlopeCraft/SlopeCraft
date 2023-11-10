@@ -866,20 +866,19 @@ void SCWind::connect_slots() noexcept {
 
 void SCWind::on_ac_about_triggered() noexcept {
   QString info;
-  info +=
-      tr("感谢你使用 SlopeCraft，我是开发者 TokiNoBug。SlopeCraft "
-         "是由我开发的一款立体地图画生成器，主要用于在 minecraft "
-         "中制造可以生存实装的立体地图画（但同样支持传统的平板地图画）。立体地"
-         "图画的优势在于拥有更高的“画质”，此处不再详述。你正在使用的是 "
-         "SlopeCraft 的第 5 代版本，在开发时使用了 Qt，zlib 和 eigen "
-         "等开源软件，对上述库的开发者表示感谢。也感谢 Mojang，整个软件就是为 "
-         "minecraft 而设计的。AbrasiveBoar902 "
-         "为本软件的设计和优化贡献了不少力量；Cubik65536 为本软件在 MacOS "
-         "的适配做出了贡献。");
+  info += QStringLiteral("SlopeCraft %1").arg(SlopeCraft::SCL_getSCLVersion());
+  info += "\n\n";
+  info += tr("SlopeCraft 是一款由 ToKiNoBug 开发的立体地图画生成器，主要用于"
+      "在 Minecraft 中制造可以生存实装的立体地图画（但同样支持传统的平板地图画）。");
+  info += tr("本软件的开发持续集成与 macOS 软件适配由 iXOR Technology (Cubik65536 以及贡献者) 提供");
+  info += "\n\n";
+  info += tr("感谢 AbrasiveBoar902 为本软件的设计和优化贡献的力量");
+  info += tr("感谢 67au 为本软件的 macOS 与 Linux 适配做出的贡献");
+  info += tr("SlopeCraft 在开发时使用了 Qt，zlib 和 eigen 等开源库，对上述库的开发者表示感谢。");
   info += "\n\n";
   info += tr("本软件遵循 GPL-3.0 及以后版本 (GPL-3.0 or later) 协议开放源码。");
   info += "\n\n";
-  info += tr("版权所有 © 2021-2023 SlopeCraft 开发者");
+  info += tr("Copyright © 2021-2023 SlopeCraft 开发者 (TokiNoBug, AbrasiveBoar, iXOR Technology, Mifan-T, 以及贡献者). 版权所有");
   QMessageBox::information(this, tr("关于 SlopeCraft"), info);
 }
 
