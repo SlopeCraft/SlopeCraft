@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 # set version -----------------------------------------------------------------
-set(SlopeCraft_version 5.2.0)
+set(SlopeCraft_version 5.2.1)
 
 # set basic project attributes ------------------------------------------------
 project(SlopeCraft VERSION ${SlopeCraft_version} LANGUAGES C CXX)
