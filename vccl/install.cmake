@@ -71,5 +71,6 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     # Do not run deploy_qt.cmake, but a specialied one
     install(SCRIPT ${deployqt_vccl_script}
         DESTINATION .)
+
     return()
 endif ()

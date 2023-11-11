@@ -45,8 +45,11 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     install(FILES ${MapViewer_Icon}
         DESTINATION MapViewer.app/Contents/Resources)
 
-    #    QD_add_deployqt(MapViewer
-    #            INSTALL_MODE INSTALL_DESTINATION .)
+    QD_add_deployqt(MapViewer
+        INSTALL_MODE INSTALL_DESTINATION .)
+
+    include(${CMAKE_SOURCE_DIR}/cmake/run_codesign.cmake)
+    RCS_add_codesign(MapViewer)
 
     return()
 endif ()

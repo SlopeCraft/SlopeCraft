@@ -57,8 +57,12 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     install(FILES ${VCL_app_files}
         DESTINATION VisualCraft.app/Contents/MacOS/Blocks_VCL
     )
-    #    QD_add_deployqt(VisualCraft
-    #        INSTALL_MODE INSTALL_DESTINATION .)
+
+    QD_add_deployqt(VisualCraft
+        INSTALL_MODE INSTALL_DESTINATION .)
+
+    include(${CMAKE_SOURCE_DIR}/cmake/run_codesign.cmake)
+    RCS_add_codesign(VisualCraft)
 
     return()
 endif ()

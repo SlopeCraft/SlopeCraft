@@ -56,8 +56,11 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     install(FILES ${imageCutter_Icon}
         DESTINATION imageCutter.app/Contents/Resources)
 
-    #    QD_add_deployqt(imageCutter
-    #            INSTALL_MODE INSTALL_DESTINATION .)
+    QD_add_deployqt(imageCutter
+        INSTALL_MODE INSTALL_DESTINATION .)
+
+    include(${CMAKE_SOURCE_DIR}/cmake/run_codesign.cmake)
+    RCS_add_codesign(imageCutter)
 
     return()
 endif ()
