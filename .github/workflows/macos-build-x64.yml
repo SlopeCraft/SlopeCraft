@@ -45,7 +45,7 @@ jobs:
       - name: Check PATH
         run: echo $PATH
       - name: Configure CMake
-        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=gcc-12 -DCMAKE_CXX_COMPILER=g++-12 -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH="$HOME/Downloads/Qt6.6.0-appleclang-static-x86_64;/System/Volumes/Data/usr/local/Cellar" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13 -DSlopeCraft_macdeployqt_flags_install="-no-plugins"
+        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH="$HOME/Downloads/Qt6.6.0-appleclang-static-x86_64;/System/Volumes/Data/usr/local/Cellar" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13 -DSlopeCraft_macdeployqt_flags_install="-no-plugins"
       - name: Build
         run: |
           cd build
