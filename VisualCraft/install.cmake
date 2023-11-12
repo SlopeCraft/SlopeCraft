@@ -59,7 +59,8 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     )
 
     QD_add_deployqt(VisualCraft
-        INSTALL_MODE INSTALL_DESTINATION .)
+        INSTALL_MODE INSTALL_DESTINATION .
+        FLAGS ${SlopeCraft_macdeployqt_flags_install})
 
     include(${CMAKE_SOURCE_DIR}/cmake/run_codesign.cmake)
     RCS_add_codesign(VisualCraft)

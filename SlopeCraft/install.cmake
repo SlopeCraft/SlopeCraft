@@ -57,7 +57,8 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/SlopeCraft.app/Contents/MacOS/Blocks/Presets)
 
     QD_add_deployqt(SlopeCraft
-        INSTALL_MODE INSTALL_DESTINATION .)
+        INSTALL_MODE INSTALL_DESTINATION .
+        FLAGS ${SlopeCraft_macdeployqt_flags_install})
 
     include(${CMAKE_SOURCE_DIR}/cmake/run_codesign.cmake)
     RCS_add_codesign(SlopeCraft)

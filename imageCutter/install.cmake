@@ -57,7 +57,8 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
         DESTINATION imageCutter.app/Contents/Resources)
 
     QD_add_deployqt(imageCutter
-        INSTALL_MODE INSTALL_DESTINATION .)
+        INSTALL_MODE INSTALL_DESTINATION .
+        FLAGS ${SlopeCraft_macdeployqt_flags_install})
 
     include(${CMAKE_SOURCE_DIR}/cmake/run_codesign.cmake)
     RCS_add_codesign(imageCutter)

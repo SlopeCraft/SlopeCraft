@@ -1,6 +1,7 @@
 # This script should run during installation
 
 set(this_script_file @deployqt_vccl_script@)
+set(macdeployqt_flags @SlopeCraft_macdeployqt_flags_install@)
 option(install_mode "" ON)
 
 if (install_mode)
@@ -13,7 +14,7 @@ endif ()
 
 message(STATUS "Running macdeployqt for @AppName@ ...")
 execute_process(
-    COMMAND "@SlopeCraft_Qt_macdeployqt_executable@" "@AppName@.app"
+    COMMAND "@SlopeCraft_Qt_macdeployqt_executable@" "@AppName@.app" "${macdeployqt_flags}"
     WORKING_DIRECTORY "@vccl_prefix@"
     OUTPUT_QUIET
     COMMAND_ERROR_IS_FATAL ANY)

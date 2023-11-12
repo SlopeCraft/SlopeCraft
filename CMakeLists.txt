@@ -47,6 +47,10 @@ if (${WIN32})
     set(SlopeCraft_windeployqt_flags_build "${SlopeCraft_windeployqt_flags_install};--force" CACHE STRING "Flags to run windeployqt in build dir")
 endif ()
 
+if (${APPLE})
+    set(SlopeCraft_macdeployqt_flags_install "" CACHE STRING "Flags to run macdeployqt during installation")
+    # set(SlopeCraft_macdeployqt_flags_build "${SlopeCraft_windeployqt_flags_install};--force" CACHE STRING "Flags to run macdeployqt in build dir")
+endif ()
 # manage the install prefix --------------------------------------------------
 if (NOT DEFINED CMAKE_INSTALL_PREFIX)
     set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install)
