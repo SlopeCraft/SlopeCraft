@@ -14,13 +14,13 @@ jobs:
 
       - name: clone qtbase
         run: |
-          git clone https://github.com/qt/qtbase.git
+          git clone https://github.com/qt/qtbase.git --recursive
           cd qtbase
           git checkout v6.6.0
 
       - name: clone qttools
         run: |
-          git clone https://github.com/qt/qttools.git
+          git clone https://github.com/qt/qttools.git --recursive
           cd qttools
           git checkout v6.6.0
 
