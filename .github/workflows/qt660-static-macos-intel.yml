@@ -1,0 +1,63 @@
+name: macOS (x64) Build
+on:
+  pull_request:
+  push:
+    branches:
+      - qt6-static-mac-intel
+
+jobs:
+  build-qt660-static:
+    runs-on: macos-latest
+    steps:
+      - name: Install deps
+        run: brew install cmake ninja libzip libpng
+
+      - name: clone qtbase
+        run: |
+          git clone https://github.com/qt/qtbase.git
+          cd qtbase
+          git checkout v6.6.0
+
+      - name: clone qttools
+        run: |
+          git clone https://github.com/qt/qttools.git
+          cd qttools
+          git checkout v6.6.0
+
+      - name: make dirs
+        run: mkdir build install
+
+      - name: configure qtbase
+        run: |
+          cd build
+           ../qtbase/configure --prefix=../install -static -release -nomake tests -skip qtdoc
+
+      - name: build qtbase
+        run: |
+          cd build
+          cmake --build . --parallel
+
+      - name: install qtbase
+        run: |
+          cd build
+          cmake --install .
+          rm -rf ./*
+
+      - name: configure, build and install qttools
+        run: |
+          cd build
+          ../install/bin/qt-configure-module ../qttools
+          cmake --build . --parallel
+          cmake --install .
+          rm -rf ./*
+
+      - name: Compress
+        run: |
+          zip -y -9 -r qt6.6.0-static-mac-intel.zip ./install/*
+
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: qt6.6.0-static-mac-intel
+          path: qt6.6.0-static-mac-intel.zip
+
