@@ -7,67 +7,6 @@ on:
       - dev
 
 jobs:
-  gcc:
-    runs-on: macos-latest
-    strategy:
-      matrix:
-        build_type: [ Debug, Release ]
-        gpu_api: [ None ]
-    env:
-      BUILD_TYPE: ${{ matrix.build_type }}
-      GPU_API: ${{ matrix.gpu_api }}
-    steps:
-      # - name: brew upgrade & update
-      #   run: |
-      #     brew update
-      #     brew upgrade
-      - name: echo matrix variables (build_type = ${{ matrix.build_type }})
-        run: |
-          echo $BUILD_TYPE
-          echo $GPU_API
-      - name: Install Ninja build system
-        run: brew install ninja
-      - name: Install dependencies
-        run: |
-          brew install libpng xsimd libzip p7zip
-
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Download Qt6.6.0-appleclang-static-x86_64.7z and extract
-        run: |
-          curl -JL -o ~/Downloads/Qt6.6.0-appleclang-static-x86_64.7z https://github.com/SlopeCraft/VisualCraft-binaries/releases/download/mac-binaries/Qt6.6.0-appleclang-static-x86_64.7z
-          7z x -o"$HOME/Downloads/Qt6.6.0-appleclang-static-x86_64" ~/Downloads/Qt6.6.0-appleclang-static-x86_64.7z
-          chmod +x ~/Downloads/Qt6.6.0-appleclang-static-x86_64/bin/*
-          chmod +x ~/Downloads/Qt6.6.0-appleclang-static-x86_64/libexec/*
-
-      - name: Add /usr/local/lib to PATH
-        run: echo "/usr/local/lib" >> $GITHUB_PATH
-      - name: Check PATH
-        run: echo $PATH
-      - name: Configure CMake
-        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH="$HOME/Downloads/Qt6.6.0-appleclang-static-x86_64;/System/Volumes/Data/usr/local/Cellar" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13 -DSlopeCraft_macdeployqt_flags_install="-no-plugins"
-      - name: Build
-        run: |
-          cd build
-          cmake --build . --parallel
-      - name: CPack
-        run: |
-          cd build
-          cpack -G ZIP
-      - name: Test installation
-        run: |
-          cd build
-          cmake --install .
-      # chmod +x vccl.app/Contents/MacOS/vccl
-
-      - name: Get short SHA
-        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-macos-x64-gcc
-          path: build/SlopeCraft*.zip
-
   clang:
     runs-on: macos-latest
     strategy:
@@ -133,3 +72,64 @@ jobs:
         with:
           name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-macos-x64-clang
           path: build/SlopeCraft*.zip
+
+  #  gcc:
+  #    runs-on: macos-latest
+  #    strategy:
+  #      matrix:
+  #        build_type: [ Debug, Release ]
+  #        gpu_api: [ None ]
+  #    env:
+  #      BUILD_TYPE: ${{ matrix.build_type }}
+  #      GPU_API: ${{ matrix.gpu_api }}
+  #    steps:
+  #      # - name: brew upgrade & update
+  #      #   run: |
+  #      #     brew update
+  #      #     brew upgrade
+  #      - name: echo matrix variables (build_type = ${{ matrix.build_type }})
+  #        run: |
+  #          echo $BUILD_TYPE
+  #          echo $GPU_API
+  #      - name: Install Ninja build system
+  #        run: brew install ninja
+  #      - name: Install dependencies
+  #        run: |
+  #          brew install libpng xsimd libzip p7zip
+  #
+  #      - name: Checkout repository
+  #        uses: actions/checkout@v4
+  #      - name: Download Qt6.6.0-appleclang-static-x86_64.7z and extract
+  #        run: |
+  #          curl -JL -o ~/Downloads/Qt6.6.0-appleclang-static-x86_64.7z https://github.com/SlopeCraft/VisualCraft-binaries/releases/download/mac-binaries/Qt6.6.0-appleclang-static-x86_64.7z
+  #          7z x -o"$HOME/Downloads/Qt6.6.0-appleclang-static-x86_64" ~/Downloads/Qt6.6.0-appleclang-static-x86_64.7z
+  #          chmod +x ~/Downloads/Qt6.6.0-appleclang-static-x86_64/bin/*
+  #          chmod +x ~/Downloads/Qt6.6.0-appleclang-static-x86_64/libexec/*
+  #
+  #      - name: Add /usr/local/lib to PATH
+  #        run: echo "/usr/local/lib" >> $GITHUB_PATH
+  #      - name: Check PATH
+  #        run: echo $PATH
+  #      - name: Configure CMake
+  #        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH="$HOME/Downloads/Qt6.6.0-appleclang-static-x86_64;/System/Volumes/Data/usr/local/Cellar" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13 -DSlopeCraft_macdeployqt_flags_install="-no-plugins"
+  #      - name: Build
+  #        run: |
+  #          cd build
+  #          cmake --build . --parallel
+  #      - name: CPack
+  #        run: |
+  #          cd build
+  #          cpack -G ZIP
+  #      - name: Test installation
+  #        run: |
+  #          cd build
+  #          cmake --install .
+  #      # chmod +x vccl.app/Contents/MacOS/vccl
+  #
+  #      - name: Get short SHA
+  #        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+  #      - name: Upload Artifacts
+  #        uses: actions/upload-artifact@v3
+  #        with:
+  #          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-macos-x64-gcc
+  #          path: build/SlopeCraft*.zip
