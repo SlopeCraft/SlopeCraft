@@ -98,7 +98,7 @@ jobs:
       - name: Download Qt6.6.0-appleclang-static-x86_64.7z and extract
         run: |
           curl -JL -o ~/Downloads/Qt6.6.0-appleclang-static-x86_64.7z https://github.com/SlopeCraft/VisualCraft-binaries/releases/download/mac-binaries/Qt6.6.0-appleclang-static-x86_64.7z
-          7z x -o"~/Downloads/Qt6.6.0-appleclang-static-x86_64" ~/Downloads/Qt6.6.0-appleclang-static-x86_64.7z
+          7z x -o"$HOME/Downloads/Qt6.6.0-appleclang-static-x86_64" ~/Downloads/Qt6.6.0-appleclang-static-x86_64.7z
           ls ~/Downloads
           ls ~/Downloads/Qt6.6.0-appleclang-static-x86_64
 
