@@ -1,4 +1,4 @@
-name: macOS (x64) Build
+name: Build static qt for mac-intel
 on:
   pull_request:
   push:
