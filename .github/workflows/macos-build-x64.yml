@@ -30,16 +30,19 @@ jobs:
       - name: Install dependencies
         run: |
           brew install libpng
-          brew install qt@6
           brew install xsimd
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Download Qt6.6.0-appleclang-static-x86_64.7z and extract
+        run: |
+          curl -JL -o 3rdParty/Qt6.6.0-appleclang-static-x86_64.7z https://github.com/SlopeCraft/VisualCraft-binaries/releases/download/mac-binaries/Qt6.6.0-appleclang-static-x86_64.7z
+          7z x -o"3rdParty/Qt6.6.0-appleclang-static-x86_64" 3rdParty/Qt6.6.0-appleclang-static-x86_64.7z
       - name: Add /usr/local/lib to PATH
         run: echo "/usr/local/lib" >> $GITHUB_PATH
       - name: Check PATH
         run: echo $PATH
-      - name: Checkout repository
-        uses: actions/checkout@v4
       - name: Configure CMake
-        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=gcc-12 -DCMAKE_CXX_COMPILER=g++-12 -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH=/System/Volumes/Data/usr/local/Cellar -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13
+        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=gcc-12 -DCMAKE_CXX_COMPILER=g++-12 -DCMAKE_PREFIX_PATH=3rdParty/Qt6.6.0-appleclang-static-x86_64 -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH=/System/Volumes/Data/usr/local/Cellar -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13
       - name: Build
         run: |
           cd build
@@ -89,16 +92,21 @@ jobs:
       - name: Install dependencies
         run: |
           brew install libpng
-          brew install qt@6
           brew install xsimd
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Download Qt6.6.0-appleclang-static-x86_64.7z and extract
+        run: |
+          curl -JL -o 3rdParty/Qt6.6.0-appleclang-static-x86_64.7z https://github.com/SlopeCraft/VisualCraft-binaries/releases/download/mac-binaries/Qt6.6.0-appleclang-static-x86_64.7z
+          7z x -o"3rdParty/Qt6.6.0-appleclang-static-x86_64" 3rdParty/Qt6.6.0-appleclang-static-x86_64.7z
+
       - name: Add /usr/local/lib to PATH
         run: echo "/usr/local/lib" >> $GITHUB_PATH
       - name: Check PATH
         run: echo $PATH
-      - name: Checkout repository
-        uses: actions/checkout@v4
       - name: Configure CMake
-        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=/usr/local/opt/llvm/bin/clang -DCMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++ -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH=/System/Volumes/Data/usr/local/Cellar -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13
+        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=/usr/local/opt/llvm/bin/clang -DCMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++ -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH=3rdParty/Qt6.6.0-appleclang-static-x86_64;/System/Volumes/Data/usr/local/Cellar -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13
       - name: Build
         run: |
           cd build
