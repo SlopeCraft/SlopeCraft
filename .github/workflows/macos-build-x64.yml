@@ -35,8 +35,8 @@ jobs:
         uses: actions/checkout@v4
       - name: Download Qt6.6.0-appleclang-static-x86_64.7z and extract
         run: |
-          curl -JL -o 3rdParty/Qt6.6.0-appleclang-static-x86_64.7z https://github.com/SlopeCraft/VisualCraft-binaries/releases/download/mac-binaries/Qt6.6.0-appleclang-static-x86_64.7z
-          7z x -o"3rdParty/Qt6.6.0-appleclang-static-x86_64" 3rdParty/Qt6.6.0-appleclang-static-x86_64.7z
+          curl -JL -o ./3rdParty/Qt6.6.0-appleclang-static-x86_64.7z https://github.com/SlopeCraft/VisualCraft-binaries/releases/download/mac-binaries/Qt6.6.0-appleclang-static-x86_64.7z
+          7z x -o"./3rdParty/Qt6.6.0-appleclang-static-x86_64" ./3rdParty/Qt6.6.0-appleclang-static-x86_64.7z
       - name: Add /usr/local/lib to PATH
         run: echo "/usr/local/lib" >> $GITHUB_PATH
       - name: Check PATH
@@ -98,8 +98,8 @@ jobs:
         uses: actions/checkout@v4
       - name: Download Qt6.6.0-appleclang-static-x86_64.7z and extract
         run: |
-          curl -JL -o 3rdParty/Qt6.6.0-appleclang-static-x86_64.7z https://github.com/SlopeCraft/VisualCraft-binaries/releases/download/mac-binaries/Qt6.6.0-appleclang-static-x86_64.7z
-          7z x -o"3rdParty/Qt6.6.0-appleclang-static-x86_64" 3rdParty/Qt6.6.0-appleclang-static-x86_64.7z
+          curl -JL -o ./3rdParty/Qt6.6.0-appleclang-static-x86_64.7z https://github.com/SlopeCraft/VisualCraft-binaries/releases/download/mac-binaries/Qt6.6.0-appleclang-static-x86_64.7z
+          7z x -o"./3rdParty/Qt6.6.0-appleclang-static-x86_64" ./3rdParty/Qt6.6.0-appleclang-static-x86_64.7z
 
       - name: Add /usr/local/lib to PATH
         run: echo "/usr/local/lib" >> $GITHUB_PATH
