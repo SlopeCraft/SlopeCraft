@@ -27,6 +27,7 @@ jobs:
         run: |
           whoami
           pwd
+          ls $HOME
           ls $HOME/Documents/cpp/qt/qt6.6.0-static -l
 
       - name: Configure CMake
