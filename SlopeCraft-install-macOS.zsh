@@ -36,19 +36,20 @@ brew install qt
 brew install zlib libpng libzip xsimd
 
 echo "Cloning git repo"
-cd ~
-git clone https://github.com/SlopeCraft/SlopeCraft.git && cd SlopeCraft
+cd ~ || exit
+git clone https://github.com/SlopeCraft/SlopeCraft.git && cd SlopeCraft || exit
 
 echo "Configuring CMake... This step might take a while."
 cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_INSTALL_PREFIX=./build/install -DCMAKE_BUILD_TYPE=Release
 
 echo "Building... This step might take a while."
-cd build
+cd build || exit
 cmake --build . --parallel
 
 echo "Installing and Deploying"
 cmake --install .
-cd install
+cd install || exit
+# shellcheck disable=SC2035
 macdeployqt *.app
 
 echo "Get your app files at $(pwd)!"
