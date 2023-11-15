@@ -33,13 +33,14 @@ jobs:
         run: brew install ninja
       - name: Install dependencies
         run: |
-          brew install libpng xsimd p7zip libzip
+          brew install libpng xsimd p7zip libzip zstd xz
 
       - name: Find liblzma and libzstd dylibs
         run: |
-          find / -name liblzma.5.dylib 2>/dev/null
-          find / -name libzstd.1.dylib 2>/dev/null
-
+          find /usr/local/Cellar -name liblzma.5.dylib 2>/dev/null
+          find /usr/local/Cellar -name libzstd.1.dylib 2>/dev/null
+          
+          find
 
       - name: Checkout repository
         uses: actions/checkout@v4
