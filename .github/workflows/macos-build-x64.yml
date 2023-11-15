@@ -37,8 +37,8 @@ jobs:
 
       - name: Find liblzma and libzstd dylibs
         run: |
-          find /opt/homebrew -name liblzma.5.dylib
-          find /opt/homebrew -name libzstd.1.dylib
+          find / -name liblzma.5.dylib 2>/dev/null
+          find / -name libzstd.1.dylib 2>/dev/null
 
 
       - name: Checkout repository
