@@ -59,7 +59,7 @@ jobs:
       - name: Download Qt6.5.0-msvc-shared and extract
         run: |
           cmd
-          curl -JL -o bin/Qt6.5.0-msvc-shared.7z "https://github.com/SlopeCraft/QtBinaries/releases/download/qt6.5.0-x86_64-mingw-windows/Qt6.5.0-gcc11-shared-offical.7z"
+          curl -JL -o bin/Qt6.5.0-msvc-shared.7z "https://github.com/SlopeCraft/QtBinaries/releases/download/qt6.5.0-x86_64-msvc-windows/Qt6.5.0-msvc-shared.7z"
           7z x -o"bin/Qt6.5.0-msvc-shared" bin/Qt6.5.0-msvc-shared.7z
           exit
           tree /f bin/Qt6.5.0-msvc-shared
