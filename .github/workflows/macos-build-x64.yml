@@ -42,10 +42,12 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Download Qt6.6.0-appleclang-static-x86_64.7z and extract
+      - name: Download qt6.6.0-static-x86_64-apple-darwin.tar.xz and extract
         run: |
-          curl -JL -o ~/Downloads/Qt6.6.0-appleclang-static-x86_64.7z https://github.com/SlopeCraft/QtBinaries/releases/download/qt6.6.0-x86_64-apple-darwin/Qt6.6.0-appleclang-static-x86_64.7z
-          7z x -o"$HOME/Downloads/Qt6.6.0-appleclang-static-x86_64" ~/Downloads/Qt6.6.0-appleclang-static-x86_64.7z
+          curl -JL -o ~/Downloads/qt6.6.0-static-x86_64-apple-darwin.tar.xz https://github.com/SlopeCraft/QtBinaries/releases/download/qt6.6.0-x86_64-apple-darwin/qt6.6.0-static-x86_64-apple-darwin.tar.xz
+          cd ~/Downloads
+          tar xzf qt6.6.0-static-x86_64-apple-darwin.tar.xz
+          mv qt6.6.0-static-x86_64-apple-darwin Qt6.6.0-appleclang-static-x86_64
           chmod +x ~/Downloads/Qt6.6.0-appleclang-static-x86_64/bin/*
           chmod +x ~/Downloads/Qt6.6.0-appleclang-static-x86_64/libexec/*
 
@@ -121,10 +123,10 @@ jobs:
   #
   #      - name: Checkout repository
   #        uses: actions/checkout@v4
-  #      - name: Download Qt6.6.0-appleclang-static-x86_64.7z and extract
+  #      - name: Download qt6.6.0-static-x86_64-apple-darwin.tar.xz and extract
   #        run: |
-  #          curl -JL -o ~/Downloads/Qt6.6.0-appleclang-static-x86_64.7z https://github.com/SlopeCraft/VisualCraft-binaries/releases/download/mac-binaries/Qt6.6.0-appleclang-static-x86_64.7z
-  #          7z x -o"$HOME/Downloads/Qt6.6.0-appleclang-static-x86_64" ~/Downloads/Qt6.6.0-appleclang-static-x86_64.7z
+  #          curl -JL -o ~/Downloads/qt6.6.0-static-x86_64-apple-darwin.tar.xz https://github.com/SlopeCraft/VisualCraft-binaries/releases/download/mac-binaries/qt6.6.0-static-x86_64-apple-darwin.tar.xz
+  #          7z x -o"$HOME/Downloads/Qt6.6.0-appleclang-static-x86_64" ~/Downloads/qt6.6.0-static-x86_64-apple-darwin.tar.xz
   #          chmod +x ~/Downloads/Qt6.6.0-appleclang-static-x86_64/bin/*
   #          chmod +x ~/Downloads/Qt6.6.0-appleclang-static-x86_64/libexec/*
   #
