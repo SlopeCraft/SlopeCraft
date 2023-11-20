@@ -60,8 +60,11 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
         INSTALL_MODE INSTALL_DESTINATION .
         FLAGS ${SlopeCraft_macdeployqt_flags_install})
 
-    include(${CMAKE_SOURCE_DIR}/cmake/run_codesign.cmake)
-    RCS_add_codesign(SlopeCraft)
+    DylibD_add_deploy(SlopeCraft
+        INSTALL_DESTINATION .
+        RPATH_POLICY REPLACE)
+    RCS_add_codesign(SlopeCraft
+        INSTALL_DESTINATION .)
 
     return()
 endif ()

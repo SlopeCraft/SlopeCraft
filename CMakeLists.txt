@@ -75,6 +75,7 @@ include(cmake/find_HeuristicFlow.cmake)
 include(cmake/find_qt6.cmake)
 
 include(cmake/configure_DLLDeployer.cmake)
+include(cmake/configure_DylibDeployer.cmake)
 
 # Add compile options --------------------------------------------------------
 # if don't vectorize, or no suitable flag found, this variable will be empty
