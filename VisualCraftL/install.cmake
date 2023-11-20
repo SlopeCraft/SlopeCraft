@@ -10,7 +10,7 @@ if (${WIN32})
         RUNTIME DESTINATION .
 
         # LIBRARY DESTINATION .
-        )
+    )
     install(FILES ${VCL_app_files}
         DESTINATION Blocks_VCL)
 
@@ -18,7 +18,7 @@ if (${WIN32})
     install(TARGETS VisualCraftL
         RUNTIME DESTINATION ../install_SlopeCraftL/Cpp/bin
         LIBRARY DESTINATION ../install_SlopeCraftL/Cpp/lib)
-    
+
     DLLD_add_deploy(VisualCraftL
         INSTALL_MODE INSTALL_DESTINATION .)
 
@@ -55,17 +55,17 @@ if (${LINUX})
 endif ()
 
 if (${APPLE})
-    install(TARGETS VisualCraftL
-        RUNTIME DESTINATION .
-        LIBRARY DESTINATION .)
+    #    install(TARGETS VisualCraftL
+    #        RUNTIME DESTINATION .
+    #        LIBRARY DESTINATION .)
 
     # zips and blocklist jsons are installed inside each macos bundle
     # Install zips. In vccl-config.json or vc-config.json, they are refered like ./Blocks_VCL/Vanilla_1_19_3.zip
     # install(FILES ${VCL_app_files}
     # DESTINATION Blocks_VCL)
-    install(TARGETS VisualCraftL
-        RUNTIME DESTINATION ../install_SlopeCraftL/Cpp/bin
-        LIBRARY DESTINATION ../install_SlopeCraftL/Cpp/lib)
+    #    install(TARGETS VisualCraftL
+    #        RUNTIME DESTINATION ../install_SlopeCraftL/Cpp/bin
+    #        LIBRARY DESTINATION ../install_SlopeCraftL/Cpp/lib)
     return()
 endif ()
 

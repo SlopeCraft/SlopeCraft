@@ -12,7 +12,7 @@ set(SlopeCraft_SCL_Cpp_include_files
     ${CMAKE_SOURCE_DIR}/utilities/SC_GlobalEnums.h
     SlopeCraftL.h
     SlopeCraftL_global.h
-    )
+)
 
 if (CMAKE_SYSTEM_NAME MATCHES "Windows")
     # install for applications
@@ -26,7 +26,7 @@ if (CMAKE_SYSTEM_NAME MATCHES "Windows")
         LIBRARY DESTINATION ./../install_SlopeCraftL/Cpp/lib
 
         # LIBRARY DESTINATION ./../install_SlopeCraftL/Cpp/lib
-        )
+    )
 
     # install(TARGETS SlopeCraftL_C
     # RUNTIME DESTINATION ./../install_SlopeCraftL/C/bin
@@ -63,17 +63,17 @@ endif ()
 
 if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     # install for applications
-    install(TARGETS SlopeCraftL
-        RUNTIME DESTINATION .
-        LIBRARY DESTINATION .)
+    #    install(TARGETS SlopeCraftL
+    #        RUNTIME DESTINATION .
+    #        LIBRARY DESTINATION .)
 
     # install to lib dirs
-    install(TARGETS SlopeCraftL
-        RUNTIME DESTINATION ../install_SlopeCraftL/Cpp/bin
-        LIBRARY DESTINATION ../install_SlopeCraftL/Cpp/lib
-
-        # LIBRARY DESTINATION ../install_SlopeCraftL/Cpp/lib
-        )
+    #    install(TARGETS SlopeCraftL
+    #        RUNTIME DESTINATION ../install_SlopeCraftL/Cpp/bin
+    #        LIBRARY DESTINATION ../install_SlopeCraftL/Cpp/lib
+    #
+    #        # LIBRARY DESTINATION ../install_SlopeCraftL/Cpp/lib
+    #        )
 
     # install(TARGETS SlopeCraftL_C
     # RUNTIME DESTINATION ../install_SlopeCraftL/C/bin
@@ -81,8 +81,8 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     #
     # LIBRARY DESTINATION ../install_SlopeCraftL/C/lib
     # )
-    install(FILES ${SlopeCraft_SCL_Cpp_include_files}
-        DESTINATION ../install_SlopeCraftL/Cpp/include)
+    #    install(FILES ${SlopeCraft_SCL_Cpp_include_files}
+    #        DESTINATION ../install_SlopeCraftL/Cpp/include)
 
     # install(FILES ${SlopeCraft_SCL_C_include_files}
     # DESTINATION ../install_SlopeCraftL/C/include)

@@ -58,6 +58,10 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
         DESTINATION VisualCraft.app/Contents/MacOS/Blocks_VCL
     )
 
+    install(TARGETS VisualCraftL
+        RUNTIME DESTINATION VisualCraft.app/Contents/Frameworks
+        LIBRARY DESTINATION VisualCraft.app/Contents/Frameworks)
+
     QD_add_deployqt(VisualCraft
         INSTALL_MODE INSTALL_DESTINATION .
         FLAGS ${SlopeCraft_macdeployqt_flags_install})
