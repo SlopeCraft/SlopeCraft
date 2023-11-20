@@ -45,21 +45,21 @@ jobs:
           cd build
           cmake --install .
 
-      - name: Fix VisualCraft.app
-        run: |
-          cd build/install
-          cd VisualCraft.app/Contents/Frameworks
-          cp /opt/homebrew/lib/libzstd.1.dylib .
-          cp /opt/homebrew/lib/liblzma.5.dylib .
-          install_name_tool libzip.5.dylib -change @loader_path/../../../../opt/xz/lib/liblzma.5.dylib @loader_path/liblzma.5.dylib
-          install_name_tool libzip.5.dylib -change @loader_path/../../../../opt/zstd/lib/libzstd.1.dylib @loader_path/libzstd.1.dylib
-          cd ../../..
-          codesign --force --deep --sign=- VisualCraft.app
+      #      - name: Fix VisualCraft.app
+      #        run: |
+      #          cd build/install
+      #          cd VisualCraft.app/Contents/Frameworks
+      #          cp /opt/homebrew/lib/libzstd.1.dylib .
+      #          cp /opt/homebrew/lib/liblzma.5.dylib .
+      #          install_name_tool libzip.5.dylib -change @loader_path/../../../../opt/xz/lib/liblzma.5.dylib @loader_path/liblzma.5.dylib
+      #          install_name_tool libzip.5.dylib -change @loader_path/../../../../opt/zstd/lib/libzstd.1.dylib @loader_path/libzstd.1.dylib
+      #          cd ../../..
+      #          codesign --force --deep --sign=- VisualCraft.app
 
       - name: Compress as zip
         run: |
           cd build
-          7z a SlopeCraft-5.2.1-macOS-arm64.zip -tzip -mx=9 -mmt -m0=XZ -snl ./install/*
+          7z a SlopeCraft-5.2.1-macOS-Apple-Silicon.zip -tzip -mx=9 -mmt -m0=XZ -snl ./install/*
 
       - name: Get short SHA
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
