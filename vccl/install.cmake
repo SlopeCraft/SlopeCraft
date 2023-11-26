@@ -69,8 +69,8 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
         DESTINATION ${vccl_prefix}/vccl.app/Contents/MacOS/Blocks_VCL)
 
     install(TARGETS VisualCraftL
-        RUNTIME DESTINATION VisualCraft.app/Contents/Frameworks
-        LIBRARY DESTINATION VisualCraft.app/Contents/Frameworks)
+        RUNTIME DESTINATION ${vccl_prefix}/vccl.app/Contents/Frameworks
+        LIBRARY DESTINATION ${vccl_prefix}/vccl.app/Contents/Frameworks)
 
     # Do not run deploy_qt.cmake, but a specialied one
     install(SCRIPT ${deployqt_vccl_script}
