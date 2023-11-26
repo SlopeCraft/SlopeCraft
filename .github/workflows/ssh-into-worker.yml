@@ -1,0 +1,13 @@
+name: SSH
+on:
+  push:
+    branches:
+      - ssh-into-worker
+
+jobs:
+  Linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Debug Session
+        uses: csexton/debugger-action@master
