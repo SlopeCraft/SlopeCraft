@@ -4,7 +4,7 @@ set(SC_CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 
 set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 
-find_package(fmt QUIET)
+find_package(fmt 9.1.0 QUIET)
 
 if (NOT ${fmt_FOUND})
     include(FetchContent)

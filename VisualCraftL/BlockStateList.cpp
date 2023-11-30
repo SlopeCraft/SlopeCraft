@@ -258,7 +258,7 @@ bool VCL_block_state_list::add(std::string_view filename) noexcept {
     if (!ok) {
       std::string msg = fmt::format(
           "Failed to parse {},  : invalid value for block state {} : {}",
-          filename, pair.key(), pair.value());
+          filename, pair.key().c_str(), to_string(pair.value()));
       ::VCL_report(VCL_report_type_t::error, msg.c_str());
       return false;
     }
