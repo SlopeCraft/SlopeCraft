@@ -4,7 +4,8 @@ include(CheckCXXCompilerFlag)
 
 message(STATUS "System processor arch = ${CMAKE_SYSTEM_PROCESSOR}")
 
-if (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "AMD64")
+set(amd64_arch_names AMD64 x86_64)
+if (${CMAKE_SYSTEM_PROCESSOR} IN_LIST amd64_arch_names)
     if (${MSVC})
         set(SlopeCraft_vectorize_flags "/arch:AVX2")
     else ()
@@ -16,7 +17,7 @@ elseif (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "arm64")
     #        set(SlopeCraft_vectorize_flags -mcpu=apple-m1 -mfpu=neon)
     #    endif ()
 else ()
-    message(WARNING "Unknown cpu arch, using -march=native")
+    message(WARNING "Unknown cpu arch \"${CMAKE_SYSTEM_PROCESSOR}\", using -march=native")
 endif ()
 
 
