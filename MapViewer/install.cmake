@@ -28,6 +28,12 @@ if (CMAKE_SYSTEM_NAME MATCHES "Linux")
         BUNDLE DESTINATION lib
     )
 
+    install(FILES others/MapViewer_64.png
+        DESTINATION share/pixmaps
+        RENAME com.github.SlopeCraft.MapViewer.png)
+    install(FILES others/MapViewer.desktop
+        DESTINATION share/applications)
+
     # Install platforms and imageformats plugins
     include(${CMAKE_SOURCE_DIR}/cmake/install_plugins.cmake)
     return()

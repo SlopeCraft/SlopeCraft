@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=imageCutter
+Comment=Image preprocessor for SlopeCraft
+Exec=imageCutter
+Icon=com.github.SlopeCraft.imageCutter.png
+Type=Application
+Keywords=SlopeCraft;

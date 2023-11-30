@@ -31,6 +31,12 @@ if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     install(FILES vc-config.json
         DESTINATION bin)
 
+    install(FILES others/Vc_256.png
+        DESTINATION share/pixmaps
+        RENAME com.github.SlopeCraft.VisualCraft.png)
+    install(FILES others/VisualCraft.desktop
+        DESTINATION share/applications)
+
     # Install platforms and imageformats plugins
     include(${CMAKE_SOURCE_DIR}/cmake/install_plugins.cmake)
 

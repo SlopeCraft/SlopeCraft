@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=MapViewer
+Comment=Minecraft map browser
+Exec=MapViewer
+Icon=com.github.SlopeCraft.MapViewer.png
+Type=Application
+Keywords=SlopeCraft;

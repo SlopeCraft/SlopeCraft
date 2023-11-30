@@ -154,10 +154,12 @@ if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     file(COPY ${SlopeCraft_install_png_customblocks}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Blocks/CustomBlocks)
 
-    file(GLOB SlopeCraft_Icon ${CMAKE_SOURCE_DIR}/SlopeCraftMain/others/SlopeCraftIconNew.png)
 
-    install(FILES ${SlopeCraft_Icon}
-        DESTINATION bin/icons)
+    install(FILES others/SlopeCraftIconNew.png
+        DESTINATION share/pixmaps
+        RENAME com.github.SlopeCraft.SlopeCraft.png)
+    install(FILES others/SlopeCraft.desktop
+        DESTINATION share/applications)
 
     # Install presets
     install(FILES ${SlopeCraft_install_presets}

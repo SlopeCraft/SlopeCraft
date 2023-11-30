@@ -39,6 +39,12 @@ if (CMAKE_SYSTEM_NAME MATCHES "Linux")
         BUNDLE DESTINATION lib
     )
 
+    install(FILES others/imageCutterIconNew.png
+        DESTINATION share/pixmaps
+        RENAME com.github.SlopeCraft.imageCutter.png)
+    install(FILES others/imageCutter.desktop
+        DESTINATION share/applications)
+
     # Install platforms and imageformats plugins
     include(${CMAKE_SOURCE_DIR}/cmake/install_plugins.cmake)
     return()

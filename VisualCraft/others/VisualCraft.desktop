@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=VisualCraft
+Comment=Visual Pixel Art Generator for Minecraft
+Exec=VisualCraft
+Icon=com.github.SlopeCraft.VisualCraft.png
+Type=Application
+Keywords=SlopeCraft;
