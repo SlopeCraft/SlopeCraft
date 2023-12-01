@@ -57,7 +57,7 @@ if (CMAKE_SYSTEM_NAME MATCHES "Linux")
         LIBRARY DESTINATION lib)
 
     install(FILES ${SlopeCraft_SCL_Cpp_include_files}
-        DESTINATION include)
+        DESTINATION include/SlopeCraft)
     return()
 endif ()
 

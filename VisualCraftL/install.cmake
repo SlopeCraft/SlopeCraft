@@ -46,7 +46,7 @@ if (${LINUX})
     install(FILES ${VCL_app_files}
         DESTINATION bin/Blocks_VCL)
     install(FILES ${VCL_include_headers}
-        DESTINATION include)
+        DESTINATION include/SlopeCraft)
 
     # install(TARGETS libzip::zip
     # RUNTIME DESTINATION bin
