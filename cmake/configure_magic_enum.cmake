@@ -2,6 +2,12 @@
 
 cmake_minimum_required(VERSION 3.14)
 
+find_package(magic_enum 0.8.2 QUIET)
+
+if (${magic_enum_FOUND})
+    return()
+endif ()
+
 include(FetchContent)
 
 FetchContent_Declare(magic_enum
