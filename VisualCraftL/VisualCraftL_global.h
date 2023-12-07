@@ -23,7 +23,12 @@ This file is part of SlopeCraft.
 #ifndef SLOPECRAFT_VISUALCRAFT_VISUALCRAFTL_GLOBAL_H
 #define SLOPECRAFT_VISUALCRAFT_VISUALCRAFTL_GLOBAL_H
 
-// #ifdef VISUALCRAFTL_BUILD
+#ifdef Q_DECL_EXPORT
+#undef Q_DECL_EXPORT
+#endif
+#ifdef Q_DECL_IMPORT
+#undef Q_DECL_IMPORT
+#endif
 
 #if defined(_MSC_VER) || defined(WIN64) || defined(_WIN64) ||  \
     defined(__WIN64__) || defined(WIN32) || defined(_WIN32) || \

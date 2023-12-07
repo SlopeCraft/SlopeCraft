@@ -62,7 +62,7 @@ void compose_blocks(QImage &dst, const QImage &src, int idx,
   const int rows = src.height();
 
   const int col_begin = idx * (rows + margin);
-  const int col_end = col_begin + rows;
+  [[maybe_unused]] const int col_end = col_begin + rows;
 
   assert(dst.width() >= col_end);
 
@@ -131,7 +131,6 @@ void ColorBrowser::setup_table(const uint16_t *const color_id_list,
         color_id_list[idx], pair.first.data(), &pair.second);
 
     if (num <= 0) {
-
       const auto ret = QMessageBox::warning(
           this, ColorBrowser::tr("获取颜色表失败"),
           ColorBrowser::tr(
@@ -149,7 +148,6 @@ void ColorBrowser::setup_table(const uint16_t *const color_id_list,
         abort();
         return;
       } else {
-
         // ignore the error
         pair.first.resize(0);
         continue;
@@ -171,7 +169,6 @@ void ColorBrowser::setup_table(const uint16_t *const color_id_list,
     VCL_model *const model =
         VCL_get_block_model(pair.first, VCL_get_resource_pack());
     if (model == nullptr) {
-
       const auto ret = QMessageBox::warning(
           this, ColorBrowser::tr("计算投影图像失败"),
           ColorBrowser::tr("在尝试获取方块 \"%1\" 的方块模型时出现错误。")
@@ -194,7 +191,6 @@ void ColorBrowser::setup_table(const uint16_t *const color_id_list,
         reinterpret_cast<uint32_t *>(proj.scanLine(0)), proj.sizeInBytes());
 
     if (!ok) {
-
       const auto ret = QMessageBox::warning(
           this, ColorBrowser::tr("计算投影图像失败"),
           ColorBrowser::tr(

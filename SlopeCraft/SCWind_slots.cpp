@@ -413,7 +413,7 @@ void SCWind::on_pb_preview_materials_clicked() noexcept {
 
   cvt_task &task = *taskopt.value();
   const ptrdiff_t index = &task - this->tasks.data();
-  assert(index >= 0 && index < this->tasks.size());
+  assert(index >= 0 && index < ptrdiff_t(this->tasks.size()));
   if (!task.is_converted) [[unlikely]] {
     QMessageBox::warning(this, tr("该图像尚未被转化"),
                          tr("必须先转化一个图像，然后再为它构建三维结构"));
@@ -868,20 +868,28 @@ void SCWind::on_ac_about_triggered() noexcept {
   QString info;
   info += QStringLiteral("SlopeCraft %1").arg(SlopeCraft::SCL_getSCLVersion());
   info += "\n\n";
-  info += tr("SlopeCraft 是一款由 ToKiNoBug 开发的立体地图画生成器，主要用于"
-      "在 Minecraft 中制造可以生存实装的立体地图画（但同样支持传统的平板地图画）。");
+  info +=
+      tr("SlopeCraft 是一款由 ToKiNoBug 开发的立体地图画生成器，主要用于"
+         "在 Minecraft "
+         "中制造可以生存实装的立体地图画（但同样支持传统的平板地图画）。");
   info += "\n";
-  info += tr("本软件的开发持续集成与 macOS 软件适配由 iXOR Technology (Cubik65536 以及贡献者) 提供");
+  info +=
+      tr("本软件的开发持续集成与 macOS 软件适配由 iXOR Technology (Cubik65536 "
+         "以及贡献者) 提供");
   info += "\n\n";
   info += tr("感谢 AbrasiveBoar902 为本软件的设计和优化贡献的力量");
   info += "\n";
   info += tr("感谢 67au 为本软件的 macOS 与 Linux 适配做出的贡献");
   info += "\n";
-  info += tr("SlopeCraft 在开发时使用了 Qt，zlib 和 eigen 等开源库，对上述库的开发者表示感谢。");
+  info +=
+      tr("SlopeCraft 在开发时使用了 Qt，zlib 和 eigen "
+         "等开源库，对上述库的开发者表示感谢。");
   info += "\n\n";
   info += tr("本软件遵循 GPL-3.0 及以后版本 (GPL-3.0 or later) 协议开放源码。");
   info += "\n\n";
-  info += tr("Copyright © 2021-2023 SlopeCraft 开发者 (TokiNoBug, AbrasiveBoar, iXOR Technology, Mifan-T, 以及贡献者). 版权所有");
+  info +=
+      tr("Copyright © 2021-2023 SlopeCraft 开发者 (TokiNoBug, AbrasiveBoar, "
+         "iXOR Technology, Mifan-T, 以及贡献者). 版权所有");
   QMessageBox::information(this, tr("关于 SlopeCraft"), info);
 }
 

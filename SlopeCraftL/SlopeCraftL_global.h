@@ -23,8 +23,15 @@ This file is part of SlopeCraft.
 #ifndef SLOPECRAFTL_GLOBAL_H
 #define SLOPECRAFTL_GLOBAL_H
 
-#if defined(_MSC_VER) || defined(WIN64) || defined(_WIN64) ||                  \
-    defined(__WIN64__) || defined(WIN32) || defined(_WIN32) ||                 \
+#ifdef Q_DECL_EXPORT
+#undef Q_DECL_EXPORT
+#endif
+#ifdef Q_DECL_IMPORT
+#undef Q_DECL_IMPORT
+#endif
+
+#if defined(_MSC_VER) || defined(WIN64) || defined(_WIN64) ||  \
+    defined(__WIN64__) || defined(WIN32) || defined(_WIN32) || \
     defined(__WIN32__) || defined(__NT__)
 #define Q_DECL_EXPORT __declspec(dllexport)
 #define Q_DECL_IMPORT __declspec(dllimport)
@@ -53,6 +60,6 @@ This file is part of SlopeCraft.
 #include <SC_version_buildtime.h>
 #else
 #include "SC_version_buildtime.h"
-#endif // SLOPECRAFTL_NOT_INSTALLED
+#endif  // SLOPECRAFTL_NOT_INSTALLED
 
-#endif // SLOPECRAFTL_GLOBAL_H
+#endif  // SLOPECRAFTL_GLOBAL_H

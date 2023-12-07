@@ -326,7 +326,8 @@ void TokiSlopeCraft::save_build_cache(std::string &err) const noexcept {
 }
 
 bool TokiSlopeCraft::examine_build_cache(
-    const build_options &opt, std::span<const uint8_t> expected_sha3_512,
+    [[maybe_unused]] const build_options &opt,
+    std::span<const uint8_t> expected_sha3_512,
     build_cache_ir *ir) const noexcept {
   assert(this->kernelStep >= SCL_step::converted);
 

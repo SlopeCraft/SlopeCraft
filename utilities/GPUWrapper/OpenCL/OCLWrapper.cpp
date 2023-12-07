@@ -111,8 +111,8 @@ void ocl_warpper::ocl_resource::init_resource() noexcept {
     return;
   }
 
-  this->queue =
-      cl::CommandQueue(this->context, this->device, NULL, &this->error);
+  this->queue = cl::CommandQueue(this->context, this->device,
+                                 cl::QueueProperties::None, &this->error);
 
   if (!this->ok()) {
     this->err_msg = "Failed to create command queue.";

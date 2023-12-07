@@ -129,7 +129,7 @@ void colordiff_RGB_batch(std::span<const float> r1p, std::span<const float> g1p,
   }
 }
 
-inline void assert_if_nan(batch_t val) noexcept {
+inline void assert_if_nan([[maybe_unused]] batch_t val) noexcept {
   for (size_t i = 0; i < batch_size; i++) {
     assert(!std::isnan(val.get(i)));
   }
