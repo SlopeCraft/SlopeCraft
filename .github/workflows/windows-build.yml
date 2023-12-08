@@ -42,9 +42,9 @@ jobs:
         if: matrix.gpu_api == 'OpenCL'
         run: vcpkg install opencl --triplet=x64-windows
 
-      - name: Install Vulkan with vcpkg
-        if: matrix.gpu_api == 'Vulkan'
-        run: vcpkg install vulkan vulkan-headers --triplet=x64-windows
+      #      - name: Install Vulkan with vcpkg
+      #        if: matrix.gpu_api == 'Vulkan'
+      #        run: vcpkg install vulkan vulkan-headers --triplet=x64-windows
 
       - name: Checkout repository
         uses: actions/checkout@v4
