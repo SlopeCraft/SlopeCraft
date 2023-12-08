@@ -36,7 +36,7 @@ jobs:
 
       - name: Install deps with vcpkg
         shell: cmd
-        run: vcpkg install --triplet=x64-windows zlib libpng bzip2 zstd liblzma libzip eigen3 xsimd boost-iostreams
+        run: vcpkg install --triplet=x64-windows zlib libpng bzip2 zstd liblzma libzip eigen3 xsimd boost-iostreams boost-uuid
 
       - name: Install OpenCL with vcpkg
         if: matrix.gpu_api == 'OpenCL'
