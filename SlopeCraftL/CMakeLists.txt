@@ -3,23 +3,26 @@ project(SlopeCraft_SlopeCraftL VERSION ${SlopeCraft_version} LANGUAGES CXX)
 include(${CMAKE_SOURCE_DIR}/cmake/find_nlohmann_json.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/configure_fmtlib.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/configure_hash.cmake)
-include(${CMAKE_SOURCE_DIR}/cmake/configure_zstr.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/configure_boost.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/configure_zstd.cmake)
 
 find_package(ZLIB 1.2.11 REQUIRED)
 find_package(OpenMP REQUIRED)
 find_package(fmt REQUIRED)
 find_package(Eigen3 REQUIRED)
-find_package(zstr REQUIRED)
+#find_package(zstr REQUIRED)
 find_package(Heu REQUIRED)
+find_package(Boost COMPONENTS iostreams REQUIRED)
+find_package(zstd REQUIRED)
 
 set(SlopeCraft_SCL_windows_rc_files)
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     message(STATUS "Configuring on Windows. Adding rc file to " ${PROJECT_NAME})
     configure_file(others/SlopeCraftL.rc.in others/SlopeCraftL.rc)
     set(SlopeCraft_SCL_windows_rc_files
         ${CMAKE_CURRENT_BINARY_DIR}/others/SlopeCraftL.rc)
-endif()
+endif ()
 
 set(SlopeCraft_SCL_sources
     ${CMAKE_SOURCE_DIR}/utilities/SC_GlobalEnums.h
@@ -87,17 +90,18 @@ set(SlopeCraft_SCL_link_libs
     OpenMP::OpenMP_CXX
     fmt::fmt
     Eigen3::Eigen
-    zstr::zstr
-    Heu::Genetic)
+    Heu::Genetic
+    Boost::iostreams
+    ${SC_zstd_target_name})
 
 # link to dependents
 target_link_libraries(SlopeCraftL PUBLIC ${SlopeCraft_SCL_link_libs})
 
 target_compile_options(SlopeCraftL PRIVATE ${SlopeCraft_vectorize_flags})
 
-if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     target_compile_options(SlopeCraftL PRIVATE "-fvisibility=hidden" "-fPIC")
-endif()
+endif ()
 
 # set shared-lib properties
 set_target_properties(SlopeCraftL PROPERTIES
@@ -108,9 +112,9 @@ set_target_properties(SlopeCraftL PROPERTIES
     MACOSX_BUNDLE TRUE
 )
 
-if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+if (CMAKE_SYSTEM_NAME MATCHES "Windows")
     set_target_properties(SlopeCraftL PROPERTIES
         PREFIX "")
-endif()
+endif ()
 
 include(install.cmake)

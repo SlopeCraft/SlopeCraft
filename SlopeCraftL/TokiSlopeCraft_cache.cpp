@@ -8,7 +8,10 @@
 #include <sha3.h>
 #include <utilities/ColorManip/seralize_funs.hpp>
 
-#include <zstr.hpp>
+#include <boost/iostreams/filtering_stream.hpp>
+#include <boost/iostreams/device/file.hpp>
+#include <boost/iostreams/filter/zstd.hpp>
+#include <zstd.h>
 
 namespace stdfs = std::filesystem;
 // common utilities ------------------------------------
@@ -276,7 +279,7 @@ std::string TokiSlopeCraft::current_build_dir() const noexcept {
 
 std::string TokiSlopeCraft::build_cache_filename_of(
     std::string_view build_dir) noexcept {
-  return fmt::format("{}/build.gz", build_dir);
+  return fmt::format("{}/build.zst", build_dir);
 }
 
 std::string TokiSlopeCraft::current_build_cache_filename() const noexcept {
@@ -305,7 +308,16 @@ void TokiSlopeCraft::save_build_cache(std::string &err) const noexcept {
   const std::string filename = build_cache_filename_of(build_dir);
   {
     // std::ofstream ofs{build_cache_file, std::ios::binary};
-    zstr::ofstream ofs{filename, std::ios::binary, Z_DEFAULT_COMPRESSION};
+    boost::iostreams::filtering_ostream ofs{};
+    ofs.set_auto_close(true);
+    {
+      boost::iostreams::zstd_params params;
+      params.level = uint32_t(ZSTD_defaultCLevel());
+      ofs.push(boost::iostreams::zstd_compressor{params});
+      ofs.push(boost::iostreams::file_sink{filename, std::ios::binary});
+    }
+
+    // zstr::ofstream ofs{filename, std::ios::binary, Z_DEFAULT_COMPRESSION};
     if (!ofs) {
       err = fmt::format("ofstream failed to open cache file {}", filename);
       return;
@@ -317,7 +329,7 @@ void TokiSlopeCraft::save_build_cache(std::string &err) const noexcept {
       boa(this->build_opt);
       boa(this->schem);
     }
-    ofs.close();
+    // ofs.close();
   }
 
   auto sha3_512 = this->current_build_task_hash();
@@ -344,7 +356,15 @@ bool TokiSlopeCraft::examine_build_cache(
   build_cache_ir temp;
   try {
     auto filename = this->build_cache_filename_of(build_dir);
-    zstr::ifstream ifs{filename, std::ios::binary};
+    // zstr::ifstream ifs{filename, std::ios::binary};
+    boost::iostreams::filtering_istream ifs;
+    ifs.set_auto_close(true);
+    {
+      boost::iostreams::zstd_params params;
+      params.level = uint32_t(ZSTD_defaultCLevel());
+      ifs.push(boost::iostreams::zstd_decompressor{});
+      ifs.push(boost::iostreams::file_source{filename, std::ios::binary});
+    }
     if (!ifs) {
       return false;
     }
@@ -355,7 +375,7 @@ bool TokiSlopeCraft::examine_build_cache(
       bia(temp.build_option);
       bia(temp.schem);
     }
-    ifs.close();
+    // ifs.close();
   } catch (...) {
     return false;
   }
