@@ -4,14 +4,15 @@
 #include <span>
 #include <functional>
 #include <filesystem>
-#include <md5.h>
-#include <sha3.h>
 #include <utilities/ColorManip/seralize_funs.hpp>
 
 #include <boost/iostreams/filtering_stream.hpp>
 #include <boost/iostreams/device/file.hpp>
 #include <boost/iostreams/filter/zstd.hpp>
 #include <zstd.h>
+
+#include <boost/uuid/detail/md5.hpp>
+#include <boost/uuid/detail/sha1.hpp>
 
 namespace stdfs = std::filesystem;
 // common utilities ------------------------------------
@@ -89,7 +90,7 @@ const char *TokiSlopeCraft::cacheDir() const noexcept {
 
 const std::string_view hash_suffix{".sha3_512"};
 
-#define SC_HASH_ADD_DATA(hasher, obj) hasher.addData(&obj, sizeof(obj));
+#define SC_HASH_ADD_DATA(hasher, obj) hasher.process_bytes(&obj, sizeof(obj));
 
 uint64_t to_short_hash(std::span<const uint8_t> full_hash) noexcept {
   assert(full_hash.size() >= 8);
@@ -106,14 +107,19 @@ uint64_t to_short_hash(std::span<const uint8_t> full_hash) noexcept {
 }
 // type hash and dir ------------------------------------
 std::vector<uint8_t> TokiSlopeCraft::type_hash() noexcept {
-  Chocobo1::SHA3_512 hash;
+  // Chocobo1::SHA3_512 hash;
+  boost::uuids::detail::sha1 hash;
   SC_HASH_ADD_DATA(hash, TokiSlopeCraft::mapType);
   SC_HASH_ADD_DATA(hash, TokiSlopeCraft::mcVer);
 
   TokiSlopeCraft::Allowed.hash_add_data(hash);
 
-  hash.finalize();
-  return hash.toVector();
+  boost::uuids::detail::sha1::digest_type digest;
+  hash.get_digest(digest);
+  std::span<const uint8_t> dig{reinterpret_cast<const uint8_t *>(digest),
+                               sizeof(digest)};
+
+  return {dig.begin(), dig.end()};
 }
 
 std::string TokiSlopeCraft::type_dir_of(std::string_view cache_dir) noexcept {
@@ -235,17 +241,18 @@ void load(archive &ar, SlopeCraft::Kernel::build_options &opt) noexcept {
 std::vector<uint8_t> TokiSlopeCraft::build_task_hash_of(
     const Eigen::ArrayXXi &mapPic, std::span<std::string_view> blkids,
     const build_options &opt) noexcept {
-  Chocobo1::SHA3_512 hash;
+  boost::uuids::detail::sha1 hash;
+  // Chocobo1::SHA3_512 hash;
   {
     const int64_t rows{mapPic.rows()};
     const int64_t cols{mapPic.cols()};
     SC_HASH_ADD_DATA(hash, rows);
     SC_HASH_ADD_DATA(hash, cols);
-    hash.addData(mapPic.data(), mapPic.size() * sizeof(uint32_t));
+    hash.process_bytes(mapPic.data(), mapPic.size() * sizeof(uint32_t));
   }
 
   for (auto blkid : blkids) {
-    hash.addData(blkid.data(), blkid.size());
+    hash.process_bytes(blkid.data(), blkid.size());
   }
   {
     SC_HASH_ADD_DATA(hash, opt.maxAllowedHeight);
@@ -256,8 +263,12 @@ std::vector<uint8_t> TokiSlopeCraft::build_task_hash_of(
     SC_HASH_ADD_DATA(hash, opt.enderman_proof);
     SC_HASH_ADD_DATA(hash, opt.connect_mushrooms);
   }
+  boost::uuids::detail::sha1::digest_type digest;
+  hash.get_digest(digest);
+  std::span<const uint8_t> dig{reinterpret_cast<const uint8_t *>(digest),
+                               sizeof(digest)};
 
-  return hash.finalize().toVector();
+  return {dig.begin(), dig.end()};
 }
 
 std::vector<uint8_t> TokiSlopeCraft::current_build_task_hash() const noexcept {

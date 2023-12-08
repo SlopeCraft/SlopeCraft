@@ -131,14 +131,15 @@ class colorset_new : public std::conditional_t<
 
     for (const auto &cptrs : temp.color_ptrs) {
       for (const float *fptr : cptrs) {
-        stream.addData(fptr, temp.color_count * sizeof(float));
+        stream.process_bytes(fptr, temp.color_count * sizeof(float));
       }
     }
 
-    stream.addData(temp.color_id_ptr,
-                   temp.color_count *
-                       (temp.is_maptical ? sizeof(uint8_t) : sizeof(uint16_t)));
-    stream.addData(&temp.color_count, sizeof(temp.color_count));
+    stream.process_bytes(
+        temp.color_id_ptr,
+        temp.color_count *
+            (temp.is_maptical ? sizeof(uint8_t) : sizeof(uint16_t)));
+    stream.process_bytes(&temp.color_count, sizeof(temp.color_count));
   }
 };
 

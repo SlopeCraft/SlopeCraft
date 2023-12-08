@@ -8,11 +8,12 @@ find_package(OpenMP REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(Heu REQUIRED)
 
-include(${CMAKE_SOURCE_DIR}/cmake/configure_hash.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/configure_boost.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/configure_cereal.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/configure_xsimd.cmake)
 find_package(cereal REQUIRED)
 find_package(xsimd REQUIRED)
+find_package(Boost REQUIRED)
 
 add_library(ColorManip
 
@@ -37,6 +38,8 @@ target_compile_features(ColorManip PUBLIC cxx_std_20)
 target_include_directories(ColorManip PUBLIC
     ${CMAKE_SOURCE_DIR}/utilities
     ${SlopeCraft_Chocobo1_Hash_include_dir})
+target_include_directories(ColorManip PRIVATE
+    ${Boost_INCLUDE_DIRS})
 
 target_link_libraries(ColorManip PRIVATE
     Heu::Genetic)

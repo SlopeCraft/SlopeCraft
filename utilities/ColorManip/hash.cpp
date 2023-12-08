@@ -1,7 +1,10 @@
 #include "newColorSet.hpp"
 #include "imageConvert.hpp"
+#include <span>
+#include <boost/uuid/detail/sha1.hpp>
 
-#include <sha3.h>
+namespace buuid = boost::uuids::detail;
+
 /*
 std::vector<uint8_t> internal::hash_of_colorset(
     const hash_temp &temp) noexcept {
@@ -25,15 +28,20 @@ std::vector<uint8_t> internal::hash_of_colorset(
 
 std::vector<uint8_t> libImageCvt::hash_of_image(
     Eigen::Map<const Eigen::ArrayXX<ARGB>> img) noexcept {
-  Chocobo1::SHA3_512 stream;
+  buuid::sha1 hash;
   {
     const auto rows{img.rows()};
     const auto cols{img.cols()};
-    stream.addData(&rows, sizeof(rows));
-    stream.addData(&cols, sizeof(cols));
+    hash.process_bytes(&rows, sizeof(rows));
+    hash.process_bytes(&cols, sizeof(cols));
   }
 
-  stream.addData(img.data(), sizeof(uint32_t) * img.size());
+  hash.process_bytes(img.data(), sizeof(uint32_t) * img.size());
+  buuid::sha1::digest_type dig;
+  hash.get_digest(dig);
 
-  return stream.finalize().toVector();
+  std::span<const uint8_t> temp{reinterpret_cast<const uint8_t*>(dig),
+                                sizeof(dig)};
+
+  return {temp.begin(), temp.end()};
 }
