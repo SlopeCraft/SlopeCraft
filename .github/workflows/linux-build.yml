@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         build_type: [ Debug, Release ]
-        gpu_api: [ None, OpenCL ]
+        gpu_api: [ None, OpenCL, Vulkan ]
     env:
       BUILD_TYPE: ${{ matrix.build_type }}
       GPU_API: ${{ matrix.gpu_api }}
@@ -53,9 +53,13 @@ jobs:
       - name: Install additional qt-related packages
         run: sudo apt install x11-utils libxcb-xinerama0 libxv1 libgl-dev
         # Without these libs, cmake cannot find Qt6::Gui. But if you install nvidia-cuda-toolkit, they will be installed automatically
-      - name: Install OpenCL sdk
+      - name: Install OpenCL SDK
         if: matrix.gpu_api == 'OpenCL'
         run: sudo apt install ocl-icd-libopencl1 ocl-icd-opencl-dev ocl-icd-dev opencl-c-headers opencl-clhpp-headers clinfo
+
+      - name: Install Vulkan SDK
+        if: matrix.gpu_api == 'Vulkan'
+        run: sudo apt install vulkan-tools vulkan-utils libvulkan1
 
       - name: See clinfo
         if: matrix.gpu_api == 'OpenCL'
