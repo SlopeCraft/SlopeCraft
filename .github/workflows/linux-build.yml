@@ -55,7 +55,10 @@ jobs:
         # Without these libs, cmake cannot find Qt6::Gui. But if you install nvidia-cuda-toolkit, they will be installed automatically
       - name: Install OpenCL SDK
         if: matrix.gpu_api == 'OpenCL'
-        run: sudo apt install ocl-icd-libopencl1 ocl-icd-opencl-dev ocl-icd-dev opencl-c-headers opencl-clhpp-headers clinfo
+        run: |
+          sudo apt install ocl-icd-libopencl1 ocl-icd-opencl-dev ocl-icd-dev opencl-c-headers opencl-clhpp-headers clinfo
+          whereis glslc 
+          glslc --version
 
       - name: Install Vulkan SDK
         if: matrix.gpu_api == 'Vulkan'
