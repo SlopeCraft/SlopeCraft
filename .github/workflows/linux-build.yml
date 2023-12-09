@@ -59,7 +59,7 @@ jobs:
 
       - name: Install Vulkan SDK
         if: matrix.gpu_api == 'Vulkan'
-        run: sudo apt install vulkan-tools slibvulkan1
+        run: sudo apt install vulkan-tools libvulkan1
 
       - name: See clinfo
         if: matrix.gpu_api == 'OpenCL'
