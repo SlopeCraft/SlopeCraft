@@ -57,19 +57,14 @@ jobs:
         if: matrix.gpu_api == 'OpenCL'
         run: |
           sudo apt install ocl-icd-libopencl1 ocl-icd-opencl-dev ocl-icd-dev opencl-c-headers opencl-clhpp-headers clinfo
-          whereis glslc 
-          glslc --version
+          clinfo
 
       - name: Install Vulkan SDK
         if: matrix.gpu_api == 'Vulkan'
-        run: sudo apt install vulkan-tools libvulkan1
-
-      - name: See clinfo
-        if: matrix.gpu_api == 'OpenCL'
-        run: clinfo
-
-      - name: Install xz (Release as tar.xz)
-        run: sudo apt install xz-utils
+        run: |
+          sudo apt install vulkan-tools libvulkan1
+          whereis glslc 
+          glslc --version
 
       - name: Checkout repository
         uses: actions/checkout@v4
