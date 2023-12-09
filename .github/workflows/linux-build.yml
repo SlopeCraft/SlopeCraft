@@ -33,8 +33,8 @@ jobs:
       - name: Install cmake, ninja
         run: sudo apt install cmake ninja-build
 
-      - name: Install libzip, libpng, Eigen3
-        run: sudo apt install libzip-dev zipcmp ziptool zipmerge libpng-dev libeigen3-dev libboost-all-dev
+      - name: Install dependencies
+        run: sudo apt install zstd xz-utils bzip2 libzip-dev zipcmp ziptool zipmerge libpng-dev libeigen3-dev libboost-all-dev
 
       - name: Install xsimd
         run: |
