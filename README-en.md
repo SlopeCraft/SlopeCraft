@@ -1,6 +1,7 @@
 [中文](README.md) | **English** <!-- lang -->
 
-<h1 align="center">SlopeCraft</h1>
+![SlopeCraft logo](docs/SlopeCraft_ba-style@nulla.top.png)
+
 
 <p align="center">
   <b>Get your Minecraft pixel painting in multiple kinds of forms!</b>
