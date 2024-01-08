@@ -1,6 +1,6 @@
 **中文** | [English](README-en.md) <!-- lang -->
 
-<h1 align="center">SlopeCraft</h1>
+![SlopeCraft logo](docs/SlopeCraft_ba-style@nulla.top.png)
 
 <p align="center">
   <b>生成多种样式的 Minecraft 地图画！</b>
