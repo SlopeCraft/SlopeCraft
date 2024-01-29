@@ -21,7 +21,7 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     # Install for macOS
     # Install app
     install(TARGETS SlopeCraft
-        #EXPORT SlopeCraftTargets
+        EXPORT SlopeCraftTargets
         RUNTIME DESTINATION .
         BUNDLE DESTINATION .
     )
@@ -58,7 +58,7 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/SlopeCraft.app/Contents/MacOS/Blocks/Presets)
 
     install(TARGETS SlopeCraftL
-        EXPORT SlopeCraftTargets
+        #EXPORT SlopeCraftTargets
         RUNTIME DESTINATION SlopeCraft.app/Contents/Frameworks
         LIBRARY DESTINATION SlopeCraft.app/Contents/Frameworks)
 
