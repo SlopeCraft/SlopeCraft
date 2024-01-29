@@ -11,7 +11,7 @@ find_package(fmt REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(Heu REQUIRED)
 find_package(Boost COMPONENTS iostreams REQUIRED)
-find_package(zstd REQUIRED)
+#find_package(zstd REQUIRED)
 
 set(SlopeCraft_SCL_windows_rc_files)
 
