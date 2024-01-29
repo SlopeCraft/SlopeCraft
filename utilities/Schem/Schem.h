@@ -35,6 +35,7 @@ This file is part of SlopeCraft.
 #include <cereal/types/string.hpp>
 #include <cereal/types/vector.hpp>
 #include <exception>
+#include <concepts>
 
 #include "SC_GlobalEnums.h"
 
@@ -267,6 +268,22 @@ class Schem {
                            this->xzy.size() * sizeof(uint16_t)));
   }
 };
+
+/**
+ * Find minimum value >= a that can is multiple of b
+ * @tparam int_t
+ * @param a
+ * @param b
+ * @return
+ */
+template <typename int_t, typename uint_t>
+  requires std::integral<int_t> && std::integral<uint_t>
+constexpr int_t ceil_up_to(int_t a, uint_t b) {
+  if (a % b == 0) {
+    return a;
+  }
+  return ((a / b) + 1) * b;
+}
 
 }  // namespace libSchem
 

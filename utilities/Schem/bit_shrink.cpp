@@ -21,15 +21,12 @@ This file is part of SlopeCraft.
 */
 
 #include "bit_shrink.h"
-
+#include "Schem.h"
 #include <memory.h>
 
-#include <array>
 #include <cmath>
 #include <cstddef>
 #include <cstdlib>
-#include <iostream>
-
 #include <process_block_id.h>
 
 // no flip now
@@ -111,17 +108,17 @@ void shrink_bits(const uint16_t *const src, const size_t src_count,
   const int bits_per_element = std::ceil(std::log2(block_types));
 
   //::std::cout << "bits_per_element = " << bits_per_element << ::std::endl;
-
-  if (bits_per_element > 16) {
-    exit(1);
-    return;
-  }
+  assert(bits_per_element <= 16);
+  //  if (bits_per_element > 16) {
+  //    exit(1);
+  //    return;
+  //  }
 
   const size_t total_bits = bits_per_element * src_count;
-  const size_t bytes_required = std::ceil(total_bits / 8.0);
+  const size_t bytes_required = libSchem::ceil_up_to(total_bits, 8);
 
   const size_t uint64_t_required =
-      std::ceil(bytes_required / float(sizeof(uint64_t)));
+      libSchem::ceil_up_to(bytes_required, sizeof(uint64_t));
 
   dest->resize(uint64_t_required);
   memset(dest->data(), 0, bytes_required);
