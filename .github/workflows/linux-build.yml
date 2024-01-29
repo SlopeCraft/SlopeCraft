@@ -66,7 +66,7 @@ jobs:
           cd ..
           wget https://storage.googleapis.com/shaderc/artifacts/prod/graphics_shader_compiler/shaderc/linux/continuous_clang_release/446/20240123-122115/install.tgz
           tar xvf install.tgz
-          sudo mv -r install/* /usr
+          sudo mv install/* /usr
           whereis glslc 
           glslc --version
 
