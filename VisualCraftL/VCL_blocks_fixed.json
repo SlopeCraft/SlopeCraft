@@ -25,8 +25,7 @@
     "endermanPickable": true,
     "nameEN": "Clay block",
     "nameZH": "黏土块",
-    "version": "all",
-    "reproducible": false
+    "version": "all"
   },
   "minecraft:black_concrete": {
     "background": true,
@@ -893,8 +892,7 @@
     "class": "nether",
     "nameEN": "Nether brick",
     "nameZH": "地狱砖块",
-    "version": 13,
-    "reproducible": false
+    "version": 13
   },
   "minecraft:nether_wart_block": {
     "class": "nether",
@@ -913,8 +911,7 @@
     "class": "nether",
     "nameEN": "Soul sand",
     "nameZH": "灵魂沙",
-    "version": "all",
-    "reproducible": false
+    "version": "all"
   },
   "minecraft:soul_soil": {
     "class": "nether",
@@ -1653,8 +1650,7 @@
     ],
     "nameEN": "Nether brick slab",
     "nameZH": "地狱砖块上半砖",
-    "version": 13,
-    "reproducible": false
+    "version": 13
   },
   "minecraft:oak_slab[half=top]": {
     "burnable": true,
@@ -1997,15 +1993,19 @@
     "class": "stone",
     "nameEN": "Polished diorite",
     "nameZH": "磨制闪长岩",
-    "version": 13,
-    "reproducible": false
+    "version": 13
   },
   "minecraft:polished_granite": {
     "class": "stone",
     "nameEN": "Polished granite",
     "nameZH": "磨制花岗岩",
-    "version": 13,
-    "reproducible": false
+    "version": 13
+  },
+  "minecraft:polished_andesite": {
+    "class": "stone",
+    "nameEN": "Polished andesite",
+    "nameZH": "磨制安山岩",
+    "version": 13
   },
   "minecraft:quartz_block": {
     "class": "ore",
@@ -2523,15 +2523,13 @@
     "class": "the_end",
     "nameEN": "End stone",
     "nameZH": "末地石",
-    "version": "all",
-    "reproducible": false
+    "version": "all"
   },
   "minecraft:end_stone_bricks": {
     "class": "the_end",
     "nameEN": "Endstone bricks",
     "nameZH": "末地石砖",
-    "version": 13,
-    "reproducible": false
+    "version": 13
   },
   "minecraft:purpur_block": {
     "class": "the_end",
