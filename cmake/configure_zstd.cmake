@@ -1,4 +1,5 @@
-find_package(zstd
+find_package(ZSTD
+    CONFIG
     REQUIRED)
 
 set(SC_zstd_target_name "")
