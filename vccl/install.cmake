@@ -72,7 +72,7 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
         DESTINATION ${vccl_prefix}/vccl.app/Contents/MacOS/Blocks_VCL)
 
     install(TARGETS VisualCraftL
-        EXPORT SlopeCraftTargets
+        #EXPORT SlopeCraftTargets
         RUNTIME DESTINATION ${vccl_prefix}/vccl.app/Contents/Frameworks
         LIBRARY DESTINATION ${vccl_prefix}/vccl.app/Contents/Frameworks)
 

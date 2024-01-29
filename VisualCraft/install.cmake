@@ -68,7 +68,7 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     )
 
     install(TARGETS VisualCraftL
-        EXPORT SlopeCraftTargets
+        # EXPORT SlopeCraftTargets
         RUNTIME DESTINATION VisualCraft.app/Contents/Frameworks
         LIBRARY DESTINATION VisualCraft.app/Contents/Frameworks)
 

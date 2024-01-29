@@ -54,30 +54,10 @@ if (CMAKE_SYSTEM_NAME MATCHES "Linux")
 endif ()
 
 if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
-    # install for applications
-    #    install(TARGETS SlopeCraftL
-    #        RUNTIME DESTINATION .
-    #        LIBRARY DESTINATION .)
-
-    # install to lib dirs
-    #    install(TARGETS SlopeCraftL
-    #        RUNTIME DESTINATION ../install_SlopeCraftL/Cpp/bin
-    #        LIBRARY DESTINATION ../install_SlopeCraftL/Cpp/lib
-    #
-    #        # LIBRARY DESTINATION ../install_SlopeCraftL/Cpp/lib
-    #        )
-
-    # install(TARGETS SlopeCraftL_C
-    # RUNTIME DESTINATION ../install_SlopeCraftL/C/bin
-    # LIBRARY DESTINATION ../install_SlopeCraftL/C/lib
-    #
-    # LIBRARY DESTINATION ../install_SlopeCraftL/C/lib
-    # )
-    #    install(FILES ${SlopeCraft_SCL_Cpp_include_files}
-    #        DESTINATION ../install_SlopeCraftL/Cpp/include)
-
-    # install(FILES ${SlopeCraft_SCL_C_include_files}
-    # DESTINATION ../install_SlopeCraftL/C/include)
+    install(TARGETS SlopeCraftL
+        EXPORT SlopeCraftTargets
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib)
     return()
 endif ()
 

@@ -40,7 +40,10 @@ if (${LINUX})
 endif ()
 
 if (${APPLE})
-    # VCL is installed into vccl or VC
+    install(TARGETS VisualCraftL
+        EXPORT SlopeCraftTargets
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib)
     return()
 endif ()
 
