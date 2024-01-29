@@ -323,7 +323,12 @@ void TokiSlopeCraft::save_build_cache(std::string &err) const noexcept {
     ofs.set_auto_close(true);
     {
       boost::iostreams::zstd_params params;
+      // ZSTD_defaultCLevel() doesn't exist below zstd 1.5
+#if ZSTD_VERSION_MINOR >= 5
       params.level = uint32_t(ZSTD_defaultCLevel());
+#else
+      params.level = uint32_t(ZSTD_CLEVEL_DEFAULT);
+#endif
       ofs.push(boost::iostreams::zstd_compressor{params});
       ofs.push(boost::iostreams::file_sink{filename, std::ios::binary});
     }
