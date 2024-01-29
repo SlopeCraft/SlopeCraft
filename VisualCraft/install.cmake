@@ -3,6 +3,7 @@ set(AppName VisualCraft)
 
 if (CMAKE_SYSTEM_NAME MATCHES "Windows")
     install(TARGETS VisualCraft
+        EXPORT SlopeCraftTargets
         RUNTIME DESTINATION .
     )
 
@@ -25,6 +26,7 @@ endif ()
 
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     install(TARGETS VisualCraft
+        EXPORT SlopeCraftTargets
         RUNTIME DESTINATION bin
     )
 
@@ -46,6 +48,7 @@ endif ()
 if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     include(${CMAKE_SOURCE_DIR}/VisualCraftL/setup_zip_names.cmake)
     install(TARGETS VisualCraft
+        EXPORT SlopeCraftTargets
         RUNTIME DESTINATION .
         BUNDLE DESTINATION .)
 
@@ -65,6 +68,7 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     )
 
     install(TARGETS VisualCraftL
+        EXPORT SlopeCraftTargets
         RUNTIME DESTINATION VisualCraft.app/Contents/Frameworks
         LIBRARY DESTINATION VisualCraft.app/Contents/Frameworks)
 

@@ -5,6 +5,7 @@ set(AppName imageCutter)
 
 if (CMAKE_SYSTEM_NAME MATCHES "Windows")
     install(TARGETS imageCutter
+        EXPORT SlopeCraftTargets
         RUNTIME DESTINATION .
     )
 
@@ -35,6 +36,7 @@ endif ()
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     # et_target_properties(imageCutter PROPERTIES INSTALL_RPATH "../lib")
     install(TARGETS imageCutter
+        EXPORT SlopeCraftTargets
         RUNTIME DESTINATION bin
         BUNDLE DESTINATION lib
     )
@@ -52,6 +54,7 @@ endif ()
 
 if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     install(TARGETS imageCutter
+        EXPORT SlopeCraftTargets
         RUNTIME DESTINATION .
         BUNDLE DESTINATION .
     )

@@ -6,6 +6,7 @@ set(AppName vccl)
 
 if (CMAKE_SYSTEM_NAME MATCHES "Windows")
     install(TARGETS vccl
+        EXPORT SlopeCraftTargets
         RUNTIME DESTINATION .)
     install(FILES vccl-config.json
         DESTINATION .)
@@ -36,6 +37,7 @@ endif ()
 
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     install(TARGETS vccl
+        EXPORT SlopeCraftTargets
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib)
     install(FILES vccl-config.json
@@ -57,6 +59,7 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
 
     include(${CMAKE_SOURCE_DIR}/VisualCraftL/setup_zip_names.cmake)
     install(TARGETS vccl
+        EXPORT SlopeCraftTargets
         RUNTIME DESTINATION ${vccl_prefix}
         BUNDLE DESTINATION ${vccl_prefix})
 
@@ -69,6 +72,7 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
         DESTINATION ${vccl_prefix}/vccl.app/Contents/MacOS/Blocks_VCL)
 
     install(TARGETS VisualCraftL
+        EXPORT SlopeCraftTargets
         RUNTIME DESTINATION ${vccl_prefix}/vccl.app/Contents/Frameworks
         LIBRARY DESTINATION ${vccl_prefix}/vccl.app/Contents/Frameworks)
 

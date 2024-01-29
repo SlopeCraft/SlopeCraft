@@ -7,23 +7,23 @@ set(VCL_enable_internal_test OFF)
 
 include(config_versions.cmake)
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     file(STRINGS others/VisualCraftL.def.in VCL_def_funs)
 
     set(VCL_counter 0)
     file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/others/VisualCraftL.def "")
 
-    foreach(VCL_fun_name ${VCL_def_funs})
+    foreach (VCL_fun_name ${VCL_def_funs})
         file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/others/VisualCraftL.def ${VCL_fun_name})
 
-        if(VCL_counter GREATER 0)
+        if (VCL_counter GREATER 0)
             file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/others/VisualCraftL.def "    @" ${VCL_counter} "\n")
-        else()
+        else ()
             file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/others/VisualCraftL.def "\n")
-        endif()
+        endif ()
 
         math(EXPR VCL_counter "${VCL_counter} +1")
-    endforeach(VCL_fun_name ${VCL_def_funs})
+    endforeach (VCL_fun_name ${VCL_def_funs})
 
     unset(VCL_def_funs)
     unset(VCL_counter)
@@ -32,9 +32,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
         ${CMAKE_CURRENT_BINARY_DIR}/others/VisualCraftL.def
         ${CMAKE_CURRENT_BINARY_DIR}/others/VisualCraftL.rc)
 
-else()
+else ()
     set(VCL_win_sources)
-endif()
+endif ()
 
 # find_package(OpenCL)
 set(VCL_source_files
@@ -89,14 +89,11 @@ target_include_directories(VisualCraftL PRIVATE ${VCL_include_dirs})
 target_include_directories(VisualCraftL_static PUBLIC ${VCL_include_dirs})
 
 target_include_directories(VisualCraftL PUBLIC
-    ${CMAKE_SOURCE_DIR}/utilities)
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/utilities>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:include>)
 target_include_directories(VisualCraftL_static PUBLIC
-    ${CMAKE_SOURCE_DIR}/utilities)
-
-target_include_directories(VisualCraftL PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_BINARY_DIR}/utilities)
-target_include_directories(VisualCraftL_static PUBLIC
+    ${CMAKE_SOURCE_DIR}/utilities
     ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(VCL_link_libs
@@ -110,7 +107,7 @@ set(VCL_link_libs
     fmt::fmt
     ProcessBlockId)
 
-target_link_libraries(VisualCraftL PRIVATE ${VCL_link_libs})
+target_link_libraries(VisualCraftL PRIVATE $<BUILD_INTERFACE:${VCL_link_libs}>)
 target_link_libraries(VisualCraftL_static PUBLIC ${VCL_link_libs})
 
 # message(STATUS "ret = " ${ret})
@@ -124,35 +121,35 @@ target_compile_options(VisualCraftL PRIVATE ${SlopeCraft_vectorize_flags})
 target_compile_options(VisualCraftL_static PRIVATE ${SlopeCraft_vectorize_flags})
 
 # target_compile_options(VisualCraftL PRIVATE "-std=c++20")
-if(NOT ${MSVC})
+if (NOT ${MSVC})
     target_compile_options(VisualCraftL PUBLIC "-flto")
 
     # target_compile_options(VisualCraftL PUBLIC "-Wall")
-endif()
+endif ()
 
-if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+if (CMAKE_SYSTEM_NAME MATCHES "Windows")
     # if the system is windows, remove the "lib" prefix.
     set_target_properties(VisualCraftL PROPERTIES PREFIX "")
-endif()
+endif ()
 
-if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     target_compile_options(VisualCraftL
         PUBLIC "-fvisibility=hidden"
     )
     get_target_property(VCL_libzip_type libzip::zip TYPE)
     get_target_property(VCL_libzip_location libzip::zip LOCATION)
 
-    if(VCL_libzip_type STREQUAL "SHARED_LIBRARY")
+    if (VCL_libzip_type STREQUAL "SHARED_LIBRARY")
         get_filename_component(VCL_libzip_dir ${VCL_libzip_location} DIRECTORY)
         message(STATUS "VCL_libzip_dir = " ${VCL_libzip_dir})
 
         # target_link_directories(VisualCraftL PUBLIC ${VCL_libzip_dir})
-        target_link_libraries(VisualCraftL PUBLIC libzip::zip)
+        target_link_libraries(VisualCraftL PUBLIC $<BUILD_INTERFACE:libzip::zip>)
         target_link_libraries(VisualCraftL_static PUBLIC libzip::zip)
-    endif()
+    endif ()
 
     # target_link_options(VisualCraftL PRIVATE -rpath=${VCL_libzip_dir})
-endif()
+endif ()
 
 set_target_properties(VisualCraftL PROPERTIES
     VERSION ${PROJECT_VERSION}

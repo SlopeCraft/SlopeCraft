@@ -68,11 +68,12 @@ add_library(SlopeCraftL SHARED ${SlopeCraft_SCL_sources})
 
 # add_library(SlopeCraftL_C SHARED ${SlopeCraft_SCL_sources})
 target_compile_features(SlopeCraftL PRIVATE cxx_std_20)
-target_include_directories(SlopeCraftL INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(SlopeCraftL INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:include>)
 target_include_directories(SlopeCraftL PRIVATE
     ${SlopeCraft_Nlohmann_json_include_dir}
     ${SlopeCraft_Chocobo1_Hash_include_dir}
-
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}/utilities)
 
@@ -93,7 +94,7 @@ set(SlopeCraft_SCL_link_libs
     ${SC_zstd_target_name})
 
 # link to dependents
-target_link_libraries(SlopeCraftL PUBLIC ${SlopeCraft_SCL_link_libs})
+target_link_libraries(SlopeCraftL PUBLIC $<BUILD_INTERFACE:${SlopeCraft_SCL_link_libs}>)
 
 target_compile_options(SlopeCraftL PRIVATE ${SlopeCraft_vectorize_flags})
 

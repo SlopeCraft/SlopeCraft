@@ -5,6 +5,7 @@ set(AppName MapViewer)
 
 if (CMAKE_SYSTEM_NAME MATCHES "Windows")
     install(TARGETS MapViewer
+        EXPORT SlopeCraftTargets
         RUNTIME DESTINATION .
     )
 
@@ -24,6 +25,7 @@ endif ()
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     # set_target_properties(MapViewer PROPERTIES INSTALL_RPATH "../lib")
     install(TARGETS MapViewer
+        EXPORT SlopeCraftTargets
         RUNTIME DESTINATION bin
         BUNDLE DESTINATION lib
     )
@@ -41,6 +43,7 @@ endif ()
 
 if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     install(TARGETS MapViewer
+        EXPORT SlopeCraftTargets
         RUNTIME DESTINATION .
         BUNDLE DESTINATION .
     )

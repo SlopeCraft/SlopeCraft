@@ -13,20 +13,15 @@ set(SlopeCraft_SCL_Cpp_include_files
     SlopeCraftL.h
     SlopeCraftL_global.h
 )
+install(FILES ${SlopeCraft_SCL_Cpp_include_files}
+    DESTINATION include/SlopeCraft)
 
 if (CMAKE_SYSTEM_NAME MATCHES "Windows")
     # install for applications
     install(TARGETS SlopeCraftL
+        EXPORT SlopeCraftTargets
         RUNTIME DESTINATION .
         LIBRARY DESTINATION .)
-
-    # install to lib dirs
-    install(TARGETS SlopeCraftL
-        RUNTIME DESTINATION ./../install_SlopeCraftL/Cpp/bin
-        LIBRARY DESTINATION ./../install_SlopeCraftL/Cpp/lib
-
-        # LIBRARY DESTINATION ./../install_SlopeCraftL/Cpp/lib
-    )
 
     # install(TARGETS SlopeCraftL_C
     # RUNTIME DESTINATION ./../install_SlopeCraftL/C/bin
@@ -34,8 +29,6 @@ if (CMAKE_SYSTEM_NAME MATCHES "Windows")
 
     # LIBRARY DESTINATION ./../install_SlopeCraftL/C/lib
     # )
-    install(FILES ${SlopeCraft_SCL_Cpp_include_files}
-        DESTINATION ./../install_SlopeCraftL/Cpp/include)
 
     DLLD_add_deploy(SlopeCraftL
         INSTALL_MODE INSTALL_DESTINATION .)
@@ -53,11 +46,10 @@ if (CMAKE_SYSTEM_NAME MATCHES "Linux")
 
     # install for applications
     install(TARGETS SlopeCraftL
+        EXPORT SlopeCraftTargets
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib)
 
-    install(FILES ${SlopeCraft_SCL_Cpp_include_files}
-        DESTINATION include/SlopeCraft)
     return()
 endif ()
 

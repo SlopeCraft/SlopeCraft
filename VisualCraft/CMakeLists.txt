@@ -13,12 +13,12 @@ find_package(magic_enum REQUIRED)
 
 find_package(OpenMP REQUIRED)
 
-if(${WIN32})
+if (${WIN32})
     configure_file(others/VisualCraft.rc.in others/VisualCraft.rc)
     set(VisualCraft_win_files ${CMAKE_CURRENT_BINARY_DIR}/others/VisualCraft.rc)
-else()
+else ()
     set(VisualCraft_win_files)
-endif()
+endif ()
 
 set(VisualCraft_header_files
     VCWind.h
@@ -126,13 +126,13 @@ include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips.cmake)
 
 configure_file(vc-config-to-bin-dir.json.in vc-config.json)
 
-if(${WIN32})
+if (${WIN32})
     add_custom_target(SC_create_symlink_VC
         COMMAND mklink VisualCraftL.dll "..\\VisualCraftL\\VisualCraftL.dll"
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         DEPENDS VisualCraftL
         COMMENT "Create symlink to VisualCraftL.dll for VisualCraft.exe")
     add_dependencies(SC_create_all_symlinks SC_create_symlink_VC)
-endif()
+endif ()
 
 include(install.cmake)
