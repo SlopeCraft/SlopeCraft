@@ -62,7 +62,7 @@ jobs:
       - name: Install Vulkan SDK
         if: matrix.gpu_api == 'Vulkan'
         run: |
-          sudo apt install vulkan-tools libvulkan1 glslang-tools 
+          sudo apt install vulkan-tools libvulkan1 libvulkan-dev glslang-tools 
           cd ..
           wget https://storage.googleapis.com/shaderc/artifacts/prod/graphics_shader_compiler/shaderc/linux/continuous_clang_release/446/20240123-122115/install.tgz
           tar xf install.tgz
