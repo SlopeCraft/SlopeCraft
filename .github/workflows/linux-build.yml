@@ -34,7 +34,7 @@ jobs:
         run: sudo apt install cmake ninja-build
 
       - name: Install dependencies
-        run: sudo apt install zstd libzstd-dev xz-utils bzip2 libzip-dev zipcmp ziptool zipmerge libpng-dev libeigen3-dev libboost-all-dev
+        run: sudo apt install zstd libzstd-dev xz-utils bzip2 libzip-dev zipcmp ziptool zipmerge libpng-dev libeigen3-dev libboost-all-dev tl-expected
 
       - name: Install xsimd
         run: |

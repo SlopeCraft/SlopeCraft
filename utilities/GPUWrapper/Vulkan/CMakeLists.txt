@@ -10,11 +10,15 @@ find_package(Eigen3 REQUIRED)
 include(${CMAKE_SOURCE_DIR}/cmake/configure_kompute.cmake)
 find_package(kompute REQUIRED)
 
+include(${CMAKE_SOURCE_DIR}/cmake/configure_tl_expected.cmake)
+find_package(tl-expected REQUIRED)
+
 target_sources(GPUInterface PRIVATE GPU_interface.cpp)
 target_link_libraries(GPUInterface PUBLIC
     Vulkan::Vulkan
     kompute::kompute
-    Eigen3::Eigen)
+    Eigen3::Eigen
+    tl::expected)
 target_compile_features(GPUInterface PRIVATE cxx_std_20)
 
 get_target_property(glslc_exe Vulkan::glslc LOCATION)
