@@ -80,7 +80,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: CMake configure
-        run: cmake -S . -B ./build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/gcc-12 -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/g++-12 -DCMAKE_INSTALL_PREFIX:PATH=./install -DSlopeCraft_GPU_API:STRING=$GPU_API -DCMAKE_BUILD_TYPE:STRING=$BUILD_TYPE
+        run: cmake -S . -B ./build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/gcc-12 -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/g++-12 -DCMAKE_INSTALL_PREFIX:PATH=./install -DSlopeCraft_GPU_API:STRING=$GPU_API -DCMAKE_BUILD_TYPE:STRING=$BUILD_TYPE -DKOMPUTE_OPT_DISABLE_VULKAN_VERSION_CHECK=ON
 
       - name: CMake build
         run: cmake --build ./build --parallel
