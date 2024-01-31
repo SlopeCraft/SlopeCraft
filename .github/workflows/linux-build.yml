@@ -71,7 +71,6 @@ jobs:
           whereis glslc 
           glslc --version
           whereis vulkaninfo
-          vulkaninfo --version
 
         #
         #vulkan-sdk
