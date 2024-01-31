@@ -377,7 +377,11 @@ bool TokiSlopeCraft::examine_build_cache(
     ifs.set_auto_close(true);
     {
       boost::iostreams::zstd_params params;
+#if ZSTD_VERSION_MINOR >= 5
       params.level = uint32_t(ZSTD_defaultCLevel());
+#else
+      params.level = uint32_t(ZSTD_CLEVEL_DEFAULT);
+#endif
       ifs.push(boost::iostreams::zstd_decompressor{});
       ifs.push(boost::iostreams::file_source{filename, std::ios::binary});
     }
