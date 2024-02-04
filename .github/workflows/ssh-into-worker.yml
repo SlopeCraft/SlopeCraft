@@ -35,7 +35,7 @@ jobs:
         run: |
           cd /Users/runner/Documents/llvm-project
           mkdir build install
-          cmake -S llvm -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=./build/install -DLLVM_ENABLE_PROJECTS=clang;lld" "-DLLVM_ENABLE_RUNTIMES=compiler-rt;libcxx;libcxxabi;openmp;libunwind" -DLLVM_TARGET_TRIPLE=aarch64-apple-darwin -DBUILD_SHARED_LIBS=ON
+          cmake -S llvm -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=./build/install "-DLLVM_ENABLE_PROJECTS=clang;lld" "-DLLVM_ENABLE_RUNTIMES=compiler-rt;libcxx;libcxxabi;openmp;libunwind" -DLLVM_TARGET_TRIPLE=aarch64-apple-darwin -DLLVM_HOST_TRIPLE=x86_64-apple-darwin DBUILD_SHARED_LIBS=ON
       - name: Build
         run: |
           cd /Users/runner/Documents/llvm-project/build
