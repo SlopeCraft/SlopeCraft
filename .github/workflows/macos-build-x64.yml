@@ -24,7 +24,9 @@ jobs:
       #     brew update
       #     brew upgrade
       - name: Install LLVM clang
-        run: brew install llvm
+        run: |
+          brew update
+          brew install llvm
       - name: Check clang
         run: /usr/local/opt/llvm/bin/clang --version
       - name: echo matrix variables (build_type = ${{ matrix.build_type }})
