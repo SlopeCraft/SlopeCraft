@@ -46,7 +46,7 @@ jobs:
       - name: Install Vulkan sdk
         if: matrix.gpu_api == 'Vulkan'
         run: |
-          brew install molten-vk glslang vulkan-header vulkan-loader vulkan-tools vulkan-profiles
+          brew install molten-vk glslang vulkan-headers vulkan-loader vulkan-tools vulkan-profiles
           whereis glslc
 
       - name: Checkout repository
