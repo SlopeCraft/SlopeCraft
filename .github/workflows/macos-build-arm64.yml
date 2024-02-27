@@ -14,7 +14,7 @@ jobs:
         run: |
           brew install cmake xz p7zip llvm ninja qt@6
           whereis qmake
-                  
+        
         
         #vcpkg install --triplet=arm64-osx zlib zstd libzip eigen3 xsimd libpng boost
 
@@ -31,7 +31,9 @@ jobs:
           cd qtbase-6.6.0
           mkdir build
           cd build
-          ../configure -shared -release -nomake examples -nomake tests -prefix $HOME/qt6.6.0-x86_64-mac-to-arm64-mac -- -DCMAKE_TOOLCHAIN_FILE=$HOME/x86_64-mac-to-arm64-mac.cmake -device macx-clang
+          ../configure -shared -release -nomake examples -nomake tests -prefix $HOME/qt6.6.0-x86_64-mac-to-arm64-mac -device macx-clang -- -DCMAKE_TOOLCHAIN_FILE=$HOME/x86_64-mac-to-arm64-mac.cmake
+          cmake --build . --parallel
+          cmake --install .
 
       - name: Cross compile qttools 6.6.0
         run: |
