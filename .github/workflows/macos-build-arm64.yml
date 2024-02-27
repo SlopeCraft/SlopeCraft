@@ -7,71 +7,100 @@ on:
       - dev
 
 jobs:
-  clang:
-    runs-on: self-hosted
-    strategy:
-      matrix:
-        build_type: [ Debug, Release ]
-        gpu_api: [ None ]
-    env:
-      BUILD_TYPE: ${{ matrix.build_type }}
-      GPU_API: ${{ matrix.gpu_api }}
-
+  clang-x86_64-to-arm64:
+    runs-on: macos-latest
     steps:
-      - name: pwd
-        run: pwd
+      - name: Install dependents
+        run: |
+          brew install cmake xz p7zip llvm ninja qt@6
+          vcpkg install --triplet=arm64-osx zlib zstd libzip eigen3 xsimd libpng boost
+          whereis qmake
 
       - name: Checkout repository
         uses: actions/checkout@v4
-      #      - name: Check env
-      #        run: |
-      #          whoami
-      #          pwd
-      #          ls $HOME
-      #          ls $HOME/Documents/cpp/qt/qt6.6.0-static -l
 
-      - name: Install dependencies
+      - name: Cross compile qtbase 6.6.0
         run: |
-          brew install boost
-
-      - name: Configure CMake
-        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=/opt/homebrew/opt/llvm/bin/clang -DCMAKE_CXX_COMPILER=/opt/homebrew/opt/llvm/bin/clang++ -DCMAKE_PREFIX_PATH="$HOME/Documents/cpp/qt/qt6.6.0-static" -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0
-      - name: Build
-        run: |
+          cp cmake/tool_chain_files/x86_64-mac-to-arm64-mac.cmake $HOME
+          mkdir $HOME/qt6.6.0-x86_64-mac-to-arm64-mac
+          wget https://download.qt.io/official_releases/qt/6.6/6.6.0/submodules/qtbase-everywhere-src-6.6.0.tar.xz
+          tar xf qtbase-everywhere-src-6.6.0.tar.xz
+          mv qtbase-everywhere-src-6.6.0 qtbase-6.6.0
+          cd qtbase-6.6.0
+          mkdir build
           cd build
-          cmake --build . --parallel
-      #      - name: CPack
-      #        run: |
-      #          cd build
-      #          cpack -G ZIP
-      - name: Install
+          ../configure -shared -release -nomake examples -nomake tests -prefix $HOME/qt6.6.0-x86_64-mac-to-arm64-mac -- -DCMAKE_TOOLCHAIN_FILE=$HOME/x86_64-mac-to-arm64-mac.cmake -device macx-clang
+
+      - name: Cross compile qttools 6.6.0
         run: |
-          cd build
-          cmake --install .
+          wget https://download.qt.io/official_releases/qt/6.6/6.6.0/submodules/qttools-everywhere-src-6.6.0.tar.xz   
+          tar xf qttools-everywhere-src-6.6.0.tar.xz    
 
-      #      - name: Fix VisualCraft.app
-      #        run: |
-      #          cd build/install
-      #          cd VisualCraft.app/Contents/Frameworks
-      #          cp /opt/homebrew/lib/libzstd.1.dylib .
-      #          cp /opt/homebrew/lib/liblzma.5.dylib .
-      #          install_name_tool libzip.5.dylib -change @loader_path/../../../../opt/xz/lib/liblzma.5.dylib @loader_path/liblzma.5.dylib
-      #          install_name_tool libzip.5.dylib -change @loader_path/../../../../opt/zstd/lib/libzstd.1.dylib @loader_path/libzstd.1.dylib
-      #          cd ../../..
-      #          codesign --force --deep --sign=- VisualCraft.app
-
-      - name: Compress as zip
-        run: |
-          cd build
-          7z a SlopeCraft-5.2.1-macOS-Apple-Silicon.zip -tzip -mx=9 -mmt -m0=XZ -snl ./install/*
-
-      - name: Get short SHA
-        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-macos-m2-clang
-          path: build/SlopeCraft*.zip
+  #  clang:
+  #    runs-on: self-hosted
+  #    strategy:
+  #      matrix:
+  #        build_type: [ Debug, Release ]
+  #        gpu_api: [ None ]
+  #    env:
+  #      BUILD_TYPE: ${{ matrix.build_type }}
+  #      GPU_API: ${{ matrix.gpu_api }}
+  #
+  #    steps:
+  #      - name: pwd
+  #        run: pwd
+  #
+  #      - name: Checkout repository
+  #        uses: actions/checkout@v4
+  #      #      - name: Check env
+  #      #        run: |
+  #      #          whoami
+  #      #          pwd
+  #      #          ls $HOME
+  #      #          ls $HOME/Documents/cpp/qt/qt6.6.0-static -l
+  #
+  #      - name: Install dependencies
+  #        run: |
+  #          brew install boost
+  #
+  #      - name: Configure CMake
+  #        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=/opt/homebrew/opt/llvm/bin/clang -DCMAKE_CXX_COMPILER=/opt/homebrew/opt/llvm/bin/clang++ -DCMAKE_PREFIX_PATH="$HOME/Documents/cpp/qt/qt6.6.0-static" -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0
+  #      - name: Build
+  #        run: |
+  #          cd build
+  #          cmake --build . --parallel
+  #      #      - name: CPack
+  #      #        run: |
+  #      #          cd build
+  #      #          cpack -G ZIP
+  #      - name: Install
+  #        run: |
+  #          cd build
+  #          cmake --install .
+  #
+  #      #      - name: Fix VisualCraft.app
+  #      #        run: |
+  #      #          cd build/install
+  #      #          cd VisualCraft.app/Contents/Frameworks
+  #      #          cp /opt/homebrew/lib/libzstd.1.dylib .
+  #      #          cp /opt/homebrew/lib/liblzma.5.dylib .
+  #      #          install_name_tool libzip.5.dylib -change @loader_path/../../../../opt/xz/lib/liblzma.5.dylib @loader_path/liblzma.5.dylib
+  #      #          install_name_tool libzip.5.dylib -change @loader_path/../../../../opt/zstd/lib/libzstd.1.dylib @loader_path/libzstd.1.dylib
+  #      #          cd ../../..
+  #      #          codesign --force --deep --sign=- VisualCraft.app
+  #
+  #      - name: Compress as zip
+  #        run: |
+  #          cd build
+  #          7z a SlopeCraft-5.2.1-macOS-Apple-Silicon.zip -tzip -mx=9 -mmt -m0=XZ -snl ./install/*
+  #
+  #      - name: Get short SHA
+  #        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+  #      - name: Upload Artifacts
+  #        uses: actions/upload-artifact@v3
+  #        with:
+  #          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-macos-m2-clang
+  #          path: build/SlopeCraft*.zip
 
 
 
@@ -128,4 +157,4 @@ jobs:
   #        uses: actions/upload-artifact@v3
   #        with:
   #          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-macos-clang
-  #          path: build/install/SlopeCraft*.zip
+#          path: build/install/SlopeCraft*.zip
