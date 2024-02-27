@@ -13,9 +13,11 @@ jobs:
       matrix:
         build_type: [ Debug, Release ]
         gpu_api: [ None ]
+        vectorize: [ ON, OFF ]
     env:
       BUILD_TYPE: ${{ matrix.build_type }}
       GPU_API: ${{ matrix.gpu_api }}
+      VECTORIZE: ${{ matrix.vectorize }}
     steps:
       # - name: brew upgrade & update
       #   run: |
@@ -29,6 +31,7 @@ jobs:
         run: |
           echo $BUILD_TYPE
           echo $GPU_API
+          echo $VECTORIZE
       - name: Install Ninja build system
         run: brew install ninja
       - name: Install dependencies
@@ -56,7 +59,7 @@ jobs:
       - name: Check PATH
         run: echo $PATH
       - name: Configure CMake #
-        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=/usr/local/opt/llvm/bin/clang -DCMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++ -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH="$HOME/Downloads/Qt6.6.0-appleclang-static-x86_64;/System/Volumes/Data/usr/local/Cellar" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DSlopeCraft_macdeployqt_flags_install="-no-plugins"
+        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=/usr/local/opt/llvm/bin/clang -DCMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++ -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -D$SlopeCraft_vectorize=$VECTORIZE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH="$HOME/Downloads/Qt6.6.0-appleclang-static-x86_64;/System/Volumes/Data/usr/local/Cellar" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DSlopeCraft_macdeployqt_flags_install="-no-plugins"
       - name: Build
         run: |
           cd build
@@ -94,7 +97,7 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-macos-x64-clang
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-vectorize-${{ matrix.vectorize }}-macos-x64-clang
           path: build/SlopeCraft*.zip
 
   #  gcc:
