@@ -3,6 +3,8 @@ include_guard(GLOBAL)
 
 set(CMAKE_SYSTEM_NAME Darwin)
 set(CMAKE_SYSTEM_PROCESSOR aarch64)
+set(CMAKE_C_COMPILER_TARGET "aarch64-apple-darwin")
+set(CMAKE_CXX_COMPILER_TARGET "aarch64-apple-darwin")
 
 set(TARGET_SYSROOT "")
 set(CMAKE_SYSROOT ${TARGET_SYSROOT})
@@ -20,7 +22,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS}")
 
 set(QT_COMPILER_FLAGS "-march=armv8-a")
 set(QT_COMPILER_FLAGS_RELEASE "-O3 -pipe")
-set(QT_LINKER_FLAGS "-Wl,-O -Wl,--hash-style=gnu -Wl,--as-needed")
+#set(QT_LINKER_FLAGS "-Wl,-O -Wl,--hash-style=gnu -Wl,--as-needed")
 
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)

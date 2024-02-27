@@ -25,20 +25,19 @@ jobs:
         run: |
           cp cmake/tool_chain_files/x86_64-mac-to-arm64-mac.cmake $HOME
           mkdir $HOME/qt6.6.0-x86_64-mac-to-arm64-mac
-          wget https://download.qt.io/official_releases/qt/6.6/6.6.0/submodules/qtbase-everywhere-src-6.6.0.tar.xz
-          tar xf qtbase-everywhere-src-6.6.0.tar.xz
-          mv qtbase-everywhere-src-6.6.0 qtbase-6.6.0
+          git clone https://github.com/qt/qtbase.git qtbase-6.6.0 --recursive
           cd qtbase-6.6.0
+          git checkout v6.6.0
           mkdir build
           cd build
           ../configure -shared -release -nomake examples -nomake tests -prefix $HOME/qt6.6.0-x86_64-mac-to-arm64-mac -qt-host-path /usr/local/bin -device macx-clang -- -DCMAKE_TOOLCHAIN_FILE=$HOME/x86_64-mac-to-arm64-mac.cmake
           cmake --build . --parallel
           cmake --install .
 
-      - name: Cross compile qttools 6.6.0
-        run: |
-          wget https://download.qt.io/official_releases/qt/6.6/6.6.0/submodules/qttools-everywhere-src-6.6.0.tar.xz   
-          tar xf qttools-everywhere-src-6.6.0.tar.xz    
+  #      - name: Cross compile qttools 6.6.0
+  #        run: |
+  #          wget https://download.qt.io/official_releases/qt/6.6/6.6.0/submodules/qttools-everywhere-src-6.6.0.tar.xz
+  #          tar xf qttools-everywhere-src-6.6.0.tar.xz
 
   #  clang:
   #    runs-on: self-hosted
