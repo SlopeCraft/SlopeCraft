@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 3.18)
 include_guard(GLOBAL)
 
 set(CMAKE_SYSTEM_NAME Darwin)
-set(CMAKE_SYSTEM_PROCESSOR aarch64)
-set(CMAKE_C_COMPILER_TARGET "aarch64-apple-darwin")
-set(CMAKE_CXX_COMPILER_TARGET "aarch64-apple-darwin")
+set(CMAKE_SYSTEM_PROCESSOR arm64)
+set(CMAKE_C_COMPILER_TARGET "arm64-apple-darwin")
+set(CMAKE_CXX_COMPILER_TARGET "arm64-apple-darwin")
 
 set(TARGET_SYSROOT "")
 set(CMAKE_SYSROOT ${TARGET_SYSROOT})
@@ -20,7 +20,7 @@ set(CMAKE_CXX_COMPILER /usr/local/opt/llvm/bin/clang++)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -I${TARGET_SYSROOT}/usr/include")
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS}")
 
-set(QT_COMPILER_FLAGS "-march=armv8-a")
+set(QT_COMPILER_FLAGS "-march=arm64")
 set(QT_COMPILER_FLAGS_RELEASE "-O3 -pipe")
 #set(QT_LINKER_FLAGS "-Wl,-O -Wl,--hash-style=gnu -Wl,--as-needed")
 
