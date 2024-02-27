@@ -114,8 +114,8 @@ class newTokiColor
   float ResultDiff;  // color diff for the result
 
   // These two members must be defined by caller
-  static const basic_t *const Basic;
-  static const allowed_t *const Allowed;
+  //  static const basic_t *const Basic;
+  //  static const allowed_t *const Allowed;
 
  public:
   explicit newTokiColor() {
@@ -136,7 +136,7 @@ class newTokiColor
     this->result_color_id = __result_color_id;
   }
 
-  auto compute(convert_unit cu) noexcept {
+  auto compute(convert_unit cu, const allowed_t &allowed) noexcept {
     if (getA(cu._ARGB) == 0) {
       if constexpr (is_not_optical) {
         this->Result = 0;
@@ -160,17 +160,17 @@ class newTokiColor
 
     switch (cu.algo) {
       case ::SCL_convertAlgo::RGB:
-        return applyRGB(c3);
+        return applyRGB(c3, allowed);
       case ::SCL_convertAlgo::RGB_Better:
-        return applyRGB_plus(c3);
+        return applyRGB_plus(c3, allowed);
       case ::SCL_convertAlgo::HSV:
-        return applyHSV(c3);
+        return applyHSV(c3, allowed);
       case ::SCL_convertAlgo::Lab94:
-        return applyLab94(c3);
+        return applyLab94(c3, allowed);
       case ::SCL_convertAlgo::Lab00:
-        return applyLab00(c3);
+        return applyLab00(c3, allowed);
       case ::SCL_convertAlgo::XYZ:
-        return applyXYZ(c3);
+        return applyXYZ(c3, allowed);
 
       default:
         abort();
@@ -187,7 +187,9 @@ class newTokiColor
   }
 
  private:
-  auto find_result(const TempVectorXf_t &diff) noexcept {
+  auto find_result(const TempVectorXf_t &diff,
+                   const allowed_t &allowed_colorset) noexcept {
+    const allowed_t *Allowed = &allowed_colorset;
     if (diff.isNaN().any()) {
       for (int idx = 0; idx < diff.size(); idx++) {
         assert(!std::isnan(diff[idx]));
@@ -199,7 +201,7 @@ class newTokiColor
 
     if constexpr (is_not_optical) {
       this->Result = Allowed->Map(tempidx);
-      if (Base_t::needFindSide) this->doSide(diff);
+      if (Base_t::needFindSide) this->doSide(diff, allowed_colorset);
 
       return this->Result;
     } else {
@@ -209,7 +211,9 @@ class newTokiColor
     }
   }
 
-  auto find_result(const std::vector<float> &diff) noexcept {
+  auto find_result(const std::vector<float> &diff,
+                   const allowed_t &allowed_colorset) noexcept {
+    const allowed_t *Allowed = &allowed_colorset;
     int minidx = 0;
     float min = diff[0];
 
@@ -233,7 +237,8 @@ class newTokiColor
   }
 
   template <typename = void>
-  void doSide(const TempVectorXf_t &Diff) {
+  void doSide(const TempVectorXf_t &Diff, const allowed_t &allowed_colorset) {
+    const allowed_t *Allowed = &allowed_colorset;
     static_assert(is_not_optical);
 
     int tempIndex = 0;
@@ -299,7 +304,9 @@ class newTokiColor
     return;
   }
 
-  auto applyRGB(const Eigen::Array3f &c3) noexcept {
+  auto applyRGB(const Eigen::Array3f &c3,
+                const allowed_t &allowed_colorset) noexcept {
+    const allowed_t *Allowed = &allowed_colorset;
     TempVectorXf_t Diff(Allowed->color_count(), 1);
     std::span<float> diff_span{Diff.data(), (size_t)Diff.size()};
     std::span<const float, 3> c3span{c3.data(), 3};
@@ -307,11 +314,13 @@ class newTokiColor
                         Allowed->rgb_data_span(2), c3span, diff_span);
 
     // Data.CurrentColor-=allowedColors;
-    const auto ret = find_result(Diff);
+    const auto ret = find_result(Diff, allowed_colorset);
     return ret;
   }
 
-  auto applyRGB_plus(const Eigen::Array3f &c3) noexcept {
+  auto applyRGB_plus(const Eigen::Array3f &c3,
+                     const allowed_t &allowed_colorset) noexcept {
+    const allowed_t *Allowed = &allowed_colorset;
     // const ColorList &allowedColors = Allowed->_RGB;
 
     TempVectorXf_t Diff(Allowed->color_count(), 1);
@@ -322,7 +331,7 @@ class newTokiColor
                             Allowed->rgb_data_span(2), c3span, diff_span);
 
     // Data.CurrentColor-=allowedColors;
-    const auto ret = find_result(Diff);
+    const auto ret = find_result(Diff, allowed_colorset);
     return ret;
 
 #if false
@@ -384,11 +393,13 @@ class newTokiColor
                     S_theta * S_ratio * theta.square();
     }
     //+S_theta*S_ratio*theta.square()
+    return find_result(Diff, allowed_colorset);
 #endif
-    return find_result(Diff);
   }
 
-  auto applyHSV(const Eigen::Array3f &c3) noexcept {
+  auto applyHSV(const Eigen::Array3f &c3,
+                const allowed_t &allowed_colorset) noexcept {
+    const allowed_t *Allowed = &allowed_colorset;
     // const ColorList &allowedColors = Allowed->HSV;
 
     TempVectorXf_t Diff(Allowed->color_count(), 1);
@@ -398,10 +409,12 @@ class newTokiColor
     colordiff_HSV_batch(Allowed->hsv_data_span(0), Allowed->hsv_data_span(1),
                         Allowed->hsv_data_span(2), c3span, diff_span);
 
-    return find_result(Diff);
+    return find_result(Diff, allowed_colorset);
   }
 
-  auto applyXYZ(const Eigen::Array3f &c3) noexcept {
+  auto applyXYZ(const Eigen::Array3f &c3,
+                const allowed_t &allowed_colorset) noexcept {
+    const allowed_t *Allowed = &allowed_colorset;
     TempVectorXf_t Diff(Allowed->color_count(), 1);
     std::span<float> diff_span{Diff.data(), (size_t)Diff.size()};
     std::span<const float, 3> c3span{c3.data(), 3};
@@ -409,20 +422,24 @@ class newTokiColor
                         Allowed->xyz_data_span(2), c3span, diff_span);
 
     // Data.CurrentColor-=allowedColors;
-    const auto ret = find_result(Diff);
+    const auto ret = find_result(Diff, allowed_colorset);
     return ret;
   }
 
-  auto applyLab94(const Eigen::Array3f &c3) noexcept {
+  auto applyLab94(const Eigen::Array3f &c3,
+                  const allowed_t &allowed_colorset) noexcept {
+    const allowed_t *Allowed = &allowed_colorset;
     TempVectorXf_t Diff(Allowed->color_count(), 1);
     std::span<float> diff_span{Diff.data(), (size_t)Diff.size()};
     std::span<const float, 3> c3span{c3.data(), 3};
     colordiff_Lab94_batch(Allowed->lab_data_span(0), Allowed->lab_data_span(1),
                           Allowed->lab_data_span(2), c3span, diff_span);
-    return find_result(Diff);
+    return find_result(Diff, allowed_colorset);
   }
 
-  auto applyLab00(const Eigen::Array3f &c3) noexcept {
+  auto applyLab00(const Eigen::Array3f &c3,
+                  const allowed_t &allowed_colorset) noexcept {
+    const allowed_t *Allowed = &allowed_colorset;
     // int tempIndex = 0;
     const float L1s = c3[0];
     const float a1s = c3[1];
@@ -435,7 +452,7 @@ class newTokiColor
                            Allowed->Lab(i, 1), Allowed->Lab(i, 2));
     }
 
-    return find_result(Diff);
+    return find_result(Diff, allowed_colorset);
   }
 
  public:

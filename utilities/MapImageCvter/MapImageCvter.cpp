@@ -30,8 +30,11 @@ This file is part of SlopeCraft.
 
 using namespace libImageCvt;
 
-libMapImageCvt::MapImageCvter::MapImageCvter()
-    : gacvter(new GACvter::GAConverter) {}
+libMapImageCvt::MapImageCvter::MapImageCvter(
+    const Base_t::basic_colorset_t &basic,
+    const Base_t::allowed_colorset_t &allowed)
+    : libImageCvt::ImageCvter<true>{basic, allowed},
+      gacvter(new GACvter::GAConverter) {}
 
 void libMapImageCvt::MapImageCvter::convert_image(
     const ::SCL_convertAlgo algo, bool dither,
@@ -97,7 +100,7 @@ bool libMapImageCvt::MapImageCvter::examine_cache(
   if (!ifs) {  // cache file not exist
     return false;
   }
-  MapImageCvter im;
+  MapImageCvter im{this->basic_colorset, this->allowed_colorset};
 
   try {
     cereal::BinaryInputArchive bia{ifs};
@@ -119,7 +122,7 @@ bool libMapImageCvt::MapImageCvter::examine_cache(
 
 bool libMapImageCvt::MapImageCvter::load_cache(
     const char *filename, uint64_t expected_task_hash) noexcept {
-  MapImageCvter temp;
+  MapImageCvter temp{this->basic_colorset, this->allowed_colorset};
   if (!this->examine_cache(filename, expected_task_hash, &temp)) {
     return false;
   }

@@ -21,7 +21,6 @@ This file is part of SlopeCraft.
 */
 
 #include "TokiSlopeCraft.h"
-#include <zlib.h>
 
 #ifdef RGB
 #undef RGB
@@ -44,15 +43,15 @@ std::unordered_set<TokiSlopeCraft *> TokiSlopeCraft::kernel_hash_set;
 
 std::mutex SCL_internal_lock;
 
-template <>
-const colorset_basic_t &libImageCvt::ImageCvter<true>::basic_colorset =
-    TokiSlopeCraft::Basic;
+// template <>
+// const colorset_basic_t &libImageCvt::ImageCvter<true>::basic_colorset =
+//     TokiSlopeCraft::Basic;
+//
+// template <>
+// const colorset_allowed_t &libImageCvt::ImageCvter<true>::allowed_colorset =
+//     TokiSlopeCraft::Allowed;
 
-template <>
-const colorset_allowed_t &libImageCvt::ImageCvter<true>::allowed_colorset =
-    TokiSlopeCraft::Allowed;
-
-TokiSlopeCraft::TokiSlopeCraft() {
+TokiSlopeCraft::TokiSlopeCraft() : image_cvter{Basic, Allowed} {
   kernelStep = step::nothing;
   this->image_cvter.clear_images();
   this->image_cvter.clear_color_hash();

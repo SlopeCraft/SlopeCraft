@@ -92,10 +92,15 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
   using coloridx_t = colorid_t;
 
   // These static member must be implemented by caller
-  static const basic_colorset_t &basic_colorset;
-  static const allowed_colorset_t &allowed_colorset;
+  //  static const basic_colorset_t &basic_colorset;
+  //  static const allowed_colorset_t &allowed_colorset;
+
+  ImageCvter(const basic_colorset_t &basic, const allowed_colorset_t &allowed)
+      : basic_colorset{basic}, allowed_colorset{allowed} {}
 
  protected:
+  const basic_colorset_t &basic_colorset;
+  const allowed_colorset_t &allowed_colorset;
   Eigen::ArrayXX<ARGB> _raw_image;
   ::SCL_convertAlgo algo;
   bool dither{false};
@@ -362,7 +367,8 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
 
 #pragma omp parallel for schedule(dynamic)
     for (int taskIdx = 0; taskIdx < (int)taskCount; taskIdx++) {
-      tasks[taskIdx]->second.compute(tasks[taskIdx]->first);
+      tasks[taskIdx]->second.compute(tasks[taskIdx]->first,
+                                     this->allowed_colorset);
     }
     // #warning we should parallelize here
     /*
@@ -415,7 +421,7 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
     for (auto &pair : this->_color_hash) {
       if (!pair.second.is_result_computed()) {
         if ((pair.first._ARGB & 0xFF'00'00'00) == 0) {
-          pair.second.compute(pair.first);
+          pair.second.compute(pair.first, this->allowed_colorset);
         } else {
           tasks.emplace_back(&pair);
         }
@@ -460,25 +466,25 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
     switch (algo) {
       case SCL_convertAlgo::RGB:
       case SCL_convertAlgo::RGB_Better:
-        colorset_ptrs = {TokiColor_t::Allowed->rgb_data(0),
-                         TokiColor_t::Allowed->rgb_data(1),
-                         TokiColor_t::Allowed->rgb_data(2)};
+        colorset_ptrs = {this->allowed_colorset.rgb_data(0),
+                         this->allowed_colorset.rgb_data(1),
+                         this->allowed_colorset.rgb_data(2)};
         break;
       case SCL_convertAlgo::HSV:
-        colorset_ptrs = {TokiColor_t::Allowed->hsv_data(0),
-                         TokiColor_t::Allowed->hsv_data(1),
-                         TokiColor_t::Allowed->hsv_data(2)};
+        colorset_ptrs = {this->allowed_colorset.hsv_data(0),
+                         this->allowed_colorset.hsv_data(1),
+                         this->allowed_colorset.hsv_data(2)};
         break;
       case SCL_convertAlgo::Lab94:
       case SCL_convertAlgo::Lab00:
-        colorset_ptrs = {TokiColor_t::Allowed->lab_data(0),
-                         TokiColor_t::Allowed->lab_data(1),
-                         TokiColor_t::Allowed->lab_data(2)};
+        colorset_ptrs = {this->allowed_colorset.lab_data(0),
+                         this->allowed_colorset.lab_data(1),
+                         this->allowed_colorset.lab_data(2)};
         break;
       case SCL_convertAlgo::XYZ:
-        colorset_ptrs = {TokiColor_t::Allowed->xyz_data(0),
-                         TokiColor_t::Allowed->xyz_data(1),
-                         TokiColor_t::Allowed->xyz_data(2)};
+        colorset_ptrs = {this->allowed_colorset.xyz_data(0),
+                         this->allowed_colorset.xyz_data(1),
+                         this->allowed_colorset.xyz_data(2)};
         break;
       default:
         abort();
@@ -486,7 +492,7 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
 
     if (gpu_task_count > 0) {
       // set colorset for ocl
-      this->gpu->set_colorset_v(TokiColor_t::Allowed->color_count(),
+      this->gpu->set_colorset_v(this->allowed_colorset.color_count(),
                                 colorset_ptrs);
       if (!this->gpu->ok_v()) {
         return false;
@@ -500,7 +506,7 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
     // compute rest tasks on cpu
     for (uint64_t ctid = 0; ctid < cpu_task_count; ctid++) {
       const uint64_t tid = gpu_task_count + ctid;
-      tasks[tid]->second.compute(tasks[tid]->first);
+      tasks[tid]->second.compute(tasks[tid]->first, this->allowed_colorset);
     }
 
     if (gpu_task_count > 0) {
@@ -515,11 +521,11 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
         TokiColor_t &tc = tasks[tid]->second;
 
         const uint16_t tempidx = this->gpu->result_idx_v()[tid];
-        if (tempidx >= TokiColor_t::Allowed->color_count()) {
+        if (tempidx >= this->allowed_colorset.color_count()) {
           abort();
         }
 
-        tc.set_gpu_result(TokiColor_t::Allowed->color_id(tempidx),
+        tc.set_gpu_result(this->allowed_colorset.color_id(tempidx),
                           this->gpu->result_diff_v()[tid]);
       }
 
@@ -592,7 +598,7 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
             convert_unit cu(current_argb, this->algo);
             auto ret = this->_color_hash.emplace(cu, TokiColor_t());
             it_to_old_color = ret.first;
-            it_to_old_color->second.compute(cu);
+            it_to_old_color->second.compute(cu, this->allowed_colorset);
             // inserted_count++;
           }
 
@@ -631,7 +637,7 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
           if (it_to_old_color == this->_color_hash.end()) {
             auto ret = this->_color_hash.emplace(cu, TokiColor_t());
             it_to_old_color = ret.first;
-            it_to_old_color->second.compute(cu);
+            it_to_old_color->second.compute(cu, this->allowed_colorset);
             // inserted_count++;
           }
 

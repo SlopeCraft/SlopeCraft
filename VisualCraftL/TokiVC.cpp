@@ -36,29 +36,29 @@ libImageCvt::template ImageCvter<false>::allowed_colorset_t
     TokiVC::colorset_allowed;
 
 // bind static members for template classes
-template <>
-const libImageCvt::template ImageCvter<false>::basic_colorset_t
-    &libImageCvt::template ImageCvter<false>::basic_colorset =
-        TokiVC::colorset_basic;
-
-template <>
-const libImageCvt::template ImageCvter<false>::allowed_colorset_t
-    &libImageCvt::template ImageCvter<false>::allowed_colorset =
-        TokiVC::colorset_allowed;
-
-template <>
-const libImageCvt::template ImageCvter<false>::basic_colorset_t
-    *const newTokiColor<
-        false, libImageCvt::template ImageCvter<false>::basic_colorset_t,
-        libImageCvt::template ImageCvter<false>::allowed_colorset_t>::Basic =
-        &TokiVC::colorset_basic;
-
-template <>
-const libImageCvt::template ImageCvter<false>::allowed_colorset_t
-    *const newTokiColor<
-        false, libImageCvt::template ImageCvter<false>::basic_colorset_t,
-        libImageCvt::template ImageCvter<false>::allowed_colorset_t>::Allowed =
-        &TokiVC::colorset_allowed;
+// template <>
+// const libImageCvt::template ImageCvter<false>::basic_colorset_t
+//    &libImageCvt::template ImageCvter<false>::basic_colorset =
+//        TokiVC::colorset_basic;
+//
+// template <>
+// const libImageCvt::template ImageCvter<false>::allowed_colorset_t
+//    &libImageCvt::template ImageCvter<false>::allowed_colorset =
+//        TokiVC::colorset_allowed;
+//
+// template <>
+// const libImageCvt::template ImageCvter<false>::basic_colorset_t
+//    *const newTokiColor<
+//        false, libImageCvt::template ImageCvter<false>::basic_colorset_t,
+//        libImageCvt::template ImageCvter<false>::allowed_colorset_t>::Basic =
+//        &TokiVC::colorset_basic;
+//
+// template <>
+// const libImageCvt::template ImageCvter<false>::allowed_colorset_t
+//    *const newTokiColor<
+//        false, libImageCvt::template ImageCvter<false>::basic_colorset_t,
+//        libImageCvt::template ImageCvter<false>::allowed_colorset_t>::Allowed
+//        = &TokiVC::colorset_allowed;
 
 // global variables that VCL uses
 VCL_resource_pack TokiVC::pack;
@@ -82,7 +82,7 @@ bool is_allowed_color_set_ready = false;
 std::set<TokiVC *> TokiVC_register;
 }  // namespace TokiVC_internal
 
-TokiVC::TokiVC() {
+TokiVC::TokiVC() : img_cvter{colorset_basic, colorset_allowed} {
   TokiVC_internal::global_lock.lock();
   if (TokiVC_internal::is_basic_color_set_ready) {
     this->_step = VCL_Kernel_step::VCL_wait_for_image;

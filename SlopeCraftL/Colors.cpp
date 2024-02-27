@@ -25,10 +25,10 @@ This file is part of SlopeCraft.
 
 #include <ExternalConverters/ExternalConverterStaticInterface.h>
 
-template <>
-const colorset_allowed_t *const TokiColor::Allowed = &TokiSlopeCraft::Allowed;
-template <>
-const colorset_basic_t *const TokiColor::Basic = &TokiSlopeCraft::Basic;
+// template <>
+// const colorset_allowed_t *const TokiColor::Allowed =
+// &TokiSlopeCraft::Allowed; template <> const colorset_basic_t *const
+// TokiColor::Basic = &TokiSlopeCraft::Basic;
 
 namespace SlopeCraft {
 int colorCount4External() { return TokiSlopeCraft::Allowed.color_count(); }
@@ -50,7 +50,7 @@ AllowedMapList4External() {
       TokiSlopeCraft::Allowed.map_data(), colorCount4External());
 }
 
-} //  end namespace SlopeCraft
+}  //  end namespace SlopeCraft
 
 void SCL_testHSV() {
   const float rgb[][3] = {{0, 0, 0}, {1, 1, 1}, {0.99, 0, 0}, {0, 1, 0},

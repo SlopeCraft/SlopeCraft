@@ -209,7 +209,7 @@ bool TokiSlopeCraft::load_convert_cache(SCL_convertAlgo algo,
     return false;
   }
 
-  libMapImageCvt::MapImageCvter temp;
+  libMapImageCvt::MapImageCvter temp{Basic, Allowed};
   const uint64_t expected_hash = this->image_cvter.task_hash(algo, dither);
   const std::string filename = this->convert_cache_filename_of(
       convert_dir(this->current_type_dir(), expected_hash));
