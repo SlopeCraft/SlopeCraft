@@ -13,6 +13,7 @@ jobs:
       - name: Install dependents
         run: |
           brew install cmake xz p7zip llvm ninja
+          vcpkg install --triplet=arm64-osx zlib zstd
           wget https://github.com/SlopeCraft/QtBinaries/releases/download/qt6.6.0-x86_64-apple-darwin/qt6.6.0-static-x86_64-apple-darwin.tar.xz
           tar xf qt6.6.0-static-x86_64-apple-darwin.tar.xz
           mv qt6.6.0-static-x86_64-apple-darwin $HOME
@@ -32,7 +33,7 @@ jobs:
           git checkout v6.6.0
           mkdir build
           cd build
-          ../configure -shared -release -nomake examples -nomake tests -prefix $HOME/qt6.6.0-x86_64-mac-to-arm64-mac -qt-host-path $HOME/qt6.6.0-static-x86_64-apple-darwin -platform macx-clang -- -DCMAKE_TOOLCHAIN_FILE=$HOME/x86_64-mac-to-arm64-mac.cmake
+          ../configure -shared -release -nomake examples -nomake tests -prefix $HOME/qt6.6.0-x86_64-mac-to-arm64-mac -qt-host-path $HOME/qt6.6.0-static-x86_64-apple-darwin -platform macx-clang -- -DCMAKE_TOOLCHAIN_FILE=$HOME/x86_64-mac-to-arm64-mac.cmake -DCMAKE_PREFIX_PATH=/usr/local/share/vcpkg/installed/arm64-osx
           cmake --build . --parallel
           cmake --install .
           rm -rf ./*
