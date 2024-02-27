@@ -25,42 +25,42 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Cross compile qtbase 6.6.0
+      - name: Cross compile qtbase 6.6.2
         run: |
           cp cmake/tool_chain_files/x86_64-mac-to-arm64-mac.cmake $HOME
-          mkdir $HOME/qt6.6.0-x86_64-mac-to-arm64-mac
+          mkdir $HOME/qt6.6.2-x86_64-mac-to-arm64-mac
           git clone https://github.com/qt/qtbase.git qtbase --recursive
           cd qtbase
-          git checkout v6.6.0
+          git checkout v6.6.2
           mkdir build
           cd build
-          ../configure -shared -release -nomake examples -nomake tests -prefix $HOME/qt6.6.0-x86_64-mac-to-arm64-mac -qt-host-path $HOME/qt6.6.0-static-x86_64-apple-darwin -platform macx-clang -- -DCMAKE_TOOLCHAIN_FILE=$HOME/x86_64-mac-to-arm64-mac.cmake -DCMAKE_PREFIX_PATH=/usr/local/share/vcpkg/installed/arm64-osx
+          ../configure -shared -release -nomake examples -nomake tests -prefix $HOME/qt6.6.2-x86_64-mac-to-arm64-mac -qt-host-path $HOME/qt6.6.2-static-x86_64-apple-darwin -platform macx-clang -- -DCMAKE_TOOLCHAIN_FILE=$HOME/x86_64-mac-to-arm64-mac.cmake -DCMAKE_PREFIX_PATH=/usr/local/share/vcpkg/installed/arm64-osx
           cmake --build . --parallel
           cmake --install .
           rm -rf ./*
 
-      - name: Cross compile qttools 6.6.0
+      - name: Cross compile qttools 6.6.2
         run: |
           git clone https://github.com/qt/qttools.git qttools --recursive
           cd qttools
-          git checkout v6.6.0
+          git checkout v6.6.2
           mkdir build
           cd build
-          $HOME/qt6.6.0-x86_64-mac-to-arm64-mac/bin/qt-configure-module ..
+          $HOME/qt6.6.2-x86_64-mac-to-arm64-mac/bin/qt-configure-module ..
           cmake --build . --parallel
           cmake --install .
           rm -rf ./*
 
       - name: Compress installed Qt binaries
         run: |
-          tar cvf qt6.6.0-x86_64-mac-to-arm64-mac.tar $HOME/qt6.6.0-x86_64-mac-to-arm64-mac/*
-          xz -9 qt6.6.0-x86_64-mac-to-arm64-mac.tar -T0
+          tar cvf qt6.6.2-x86_64-mac-to-arm64-mac.tar $HOME/qt6.6.2-x86_64-mac-to-arm64-mac/*
+          xz -9 qt6.6.2-x86_64-mac-to-arm64-mac.tar -T0
 
-      - name: Upload Qt6.6.0-host-x86_64-mac-target-arm64-mac
+      - name: Upload Qt6.6.2-host-x86_64-mac-target-arm64-mac
         uses: actions/upload-artifact@v3
         with:
-          name: Qt6.6.0-host-x86_64-mac-target-arm64-mac
-          path: qt6.6.0-x86_64-mac-to-arm64-mac.tar.xz
+          name: Qt6.6.2-host-x86_64-mac-target-arm64-mac
+          path: qt6.6.2-x86_64-mac-to-arm64-mac.tar.xz
 
   #  clang:
   #    runs-on: self-hosted
