@@ -13,39 +13,41 @@ jobs:
   #        uses: csexton/debugger-action@master
 
 
-  #  macOS-x64:
-  #    runs-on: macos-latest
-  #    steps:
-  #      - uses: actions/checkout@v2
-  #      - name: Setup Debug Session
-  #        uses: csexton/debugger-action@master
-
-  build-macos-x64-to-arm64:
+  macOS-x64:
     runs-on: macos-latest
     steps:
       - name: Install deps
         run: brew install cmake ninja zlib zstd xz
-      - name: Clone LLVM
-        run: |
-          cd /Users/runner/Documents
-          git clone https://github.com/llvm/llvm-project
-          cd llvm-project
-          git checkout llvmorg-17.0.6
-      - name: CMake configure
-        run: |
-          cd /Users/runner/Documents/llvm-project
-          mkdir build install
-          cmake -S llvm -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=./build/install "-DLLVM_ENABLE_PROJECTS=clang;lld" "-DLLVM_ENABLE_RUNTIMES=compiler-rt;libcxx;libcxxabi;openmp;libunwind" -DLLVM_TARGET_TRIPLE=aarch64-apple-darwin -DLLVM_HOST_TRIPLE=x86_64-apple-darwin DBUILD_SHARED_LIBS=ON
-      - name: Build
-        run: |
-          cd /Users/runner/Documents/llvm-project/build
-          cmake --build . --parallel
-      - name: CPack
-        run: |
-          cd /Users/runner/Documents/llvm-project/build
-          cpack -G TXZ
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: LLVM-17.0.6-macos-intel
-          path: /Users/runner/Documents/llvm-project/build/*.tar.xz
+      - uses: actions/checkout@v2
+      - name: Setup Debug Session
+        uses: csexton/debugger-action@master
+
+#  build-macos-x64-to-arm64:
+#    runs-on: macos-latest
+#    steps:
+#      - name: Install deps
+#        run: brew install cmake ninja zlib zstd xz
+#      - name: Clone LLVM
+#        run: |
+#          cd /Users/runner/Documents
+#          git clone https://github.com/llvm/llvm-project
+#          cd llvm-project
+#          git checkout llvmorg-17.0.6
+#      - name: CMake configure
+#        run: |
+#          cd /Users/runner/Documents/llvm-project
+#          mkdir build install
+#          cmake -S llvm -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=./build/install "-DLLVM_ENABLE_PROJECTS=clang;lld" "-DLLVM_ENABLE_RUNTIMES=compiler-rt;libcxx;libcxxabi;openmp;libunwind" -DLLVM_TARGET_TRIPLE=aarch64-apple-darwin -DLLVM_HOST_TRIPLE=x86_64-apple-darwin DBUILD_SHARED_LIBS=ON
+#      - name: Build
+#        run: |
+#          cd /Users/runner/Documents/llvm-project/build
+#          cmake --build . --parallel
+#      - name: CPack
+#        run: |
+#          cd /Users/runner/Documents/llvm-project/build
+#          cpack -G TXZ
+#      - name: Upload Artifacts
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: LLVM-17.0.6-macos-intel
+#          path: /Users/runner/Documents/llvm-project/build/*.tar.xz
