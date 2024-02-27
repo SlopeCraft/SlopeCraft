@@ -13,8 +13,10 @@ jobs:
       - name: Install dependents
         run: |
           brew install cmake xz p7zip llvm ninja qt@6
-          vcpkg install --triplet=arm64-osx zlib zstd libzip eigen3 xsimd libpng boost
           whereis qmake
+                  
+        
+        #vcpkg install --triplet=arm64-osx zlib zstd libzip eigen3 xsimd libpng boost
 
       - name: Checkout repository
         uses: actions/checkout@v4
