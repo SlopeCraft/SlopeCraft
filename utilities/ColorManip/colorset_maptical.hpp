@@ -51,9 +51,9 @@ class newtokicolor_base_maptical {
   uint8_t Result{0};  // 最终调色结果
 
  public:
-  static bool needFindSide;
-  static std::array<uint8_t, 4> DepthCount;
-  // static ::SCL_convertAlgo convertAlgo;
+  // static bool needFindSide;
+  // static std::array<uint8_t, 4> DepthCount;
+  //  static ::SCL_convertAlgo convertAlgo;
 
  public:
   inline bool is_result_computed() const noexcept { return (Result != 0); }
@@ -130,7 +130,14 @@ class alignas(32) colorset_maptical_allowed {
   // std::array<uint8_t, 256> __map;
   int _color_count;
 
+  std::array<uint8_t, 4> depth_counter;
+
  public:
+  bool need_find_side{false};
+  [[nodiscard]] const std::array<uint8_t, 4> &depth_count() const noexcept {
+    return this->depth_counter;
+  }
+
   inline int color_count() const noexcept { return _color_count; }
 
   inline float RGB(int r, int c) const noexcept {
@@ -230,14 +237,13 @@ class alignas(32) colorset_maptical_allowed {
         writeidx++;
       }
     }
-
-    newtokicolor_base_maptical::DepthCount.fill(0);
+    this->depth_counter.fill(0);
     for (int idx = 0; idx < this->color_count(); idx++) {
       const uint8_t mapcolor = this->Map(idx);
       const uint8_t base = mapcolor >> 2;
       if (base != 0) {
         const uint8_t depth = mapcolor & 0b11;
-        newtokicolor_base_maptical::DepthCount[depth]++;
+        this->depth_counter[depth]++;
       }
     }
 

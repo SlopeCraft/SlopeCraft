@@ -34,6 +34,7 @@ This file is part of SlopeCraft.
 #include <functional>
 #include <iostream>
 #include <cereal/types/array.hpp>
+#include <span>
 
 // using Eigen::Dynamic;
 namespace {
@@ -189,7 +190,6 @@ class newTokiColor
  private:
   auto find_result(const TempVectorXf_t &diff,
                    const allowed_t &allowed_colorset) noexcept {
-    const allowed_t *Allowed = &allowed_colorset;
     if (diff.isNaN().any()) {
       for (int idx = 0; idx < diff.size(); idx++) {
         assert(!std::isnan(diff[idx]));
@@ -200,20 +200,19 @@ class newTokiColor
     this->ResultDiff = diff.minCoeff(&tempidx);
 
     if constexpr (is_not_optical) {
-      this->Result = Allowed->Map(tempidx);
-      if (Base_t::needFindSide) this->doSide(diff, allowed_colorset);
+      this->Result = allowed_colorset.Map(tempidx);
+      if (allowed_colorset.need_find_side) this->doSide(diff, allowed_colorset);
 
       return this->Result;
     } else {
-      this->result_color_id = Allowed->color_id(tempidx);
+      this->result_color_id = allowed_colorset.color_id(tempidx);
       // std::cout << tempidx << '\t' << this->result_color_id << '\n';
       return this->color_id();
     }
   }
 
-  auto find_result(const std::vector<float> &diff,
+  auto find_result(std::span<const float> &diff,
                    const allowed_t &allowed_colorset) noexcept {
-    const allowed_t *Allowed = &allowed_colorset;
     int minidx = 0;
     float min = diff[0];
 
@@ -226,19 +225,18 @@ class newTokiColor
       }
     }
     if constexpr (is_not_optical) {
-      this->Result = Allowed->Map(minidx);
-      if (Base_t::needFindSide) this->doSide(diff);
+      this->Result = allowed_colorset.Map(minidx);
+      if (allowed_colorset.need_find_side) this->doSide(diff);
 
       return this->Result;
     } else {
-      this->result_color_id = Allowed->color_id(minidx);
+      this->result_color_id = allowed_colorset.color_id(minidx);
       return this->color_id();
     }
   }
 
   template <typename = void>
   void doSide(const TempVectorXf_t &Diff, const allowed_t &allowed_colorset) {
-    const allowed_t *Allowed = &allowed_colorset;
     static_assert(is_not_optical);
 
     int tempIndex = 0;
@@ -248,53 +246,63 @@ class newTokiColor
     this->sideSelectivity[1] = 1e35f;
     this->sideResult[1] = 0;
 
-    if (!Base_t::needFindSide) return;
+    if (!allowed_colorset.need_find_side) return;
 
     switch (this->Result % 4) {
       case 3:
         return;
       case 0:  // 1,2
-        if (Base_t::DepthCount[1]) {
+        if (allowed_colorset.depth_count()[1]) {
           this->sideSelectivity[0] =
-              Diff.segment(Base_t::DepthCount[0], Base_t::DepthCount[1])
+              Diff.segment(allowed_colorset.depth_count()[0],
+                           allowed_colorset.depth_count()[1])
                   .minCoeff(&tempIndex);
-          this->sideResult[0] = Allowed->Map(Base_t::DepthCount[0] + tempIndex);
+          this->sideResult[0] = allowed_colorset.Map(
+              allowed_colorset.depth_count()[0] + tempIndex);
         }
-        if (Base_t::DepthCount[2]) {
+        if (allowed_colorset.depth_count()[2]) {
           this->sideSelectivity[1] =
-              Diff.segment(Base_t::DepthCount[0] + Base_t::DepthCount[1],
-                           Base_t::DepthCount[2])
+              Diff.segment(allowed_colorset.depth_count()[0] +
+                               allowed_colorset.depth_count()[1],
+                           allowed_colorset.depth_count()[2])
                   .minCoeff(&tempIndex);
-          this->sideResult[1] = Allowed->Map(Base_t::DepthCount[0] +
-                                             Base_t::DepthCount[1] + tempIndex);
+          this->sideResult[1] = allowed_colorset.Map(
+              allowed_colorset.depth_count()[0] +
+              allowed_colorset.depth_count()[1] + tempIndex);
         }
         break;
       case 1:  // 0,2
-        if (Base_t::DepthCount[0]) {
+        if (allowed_colorset.depth_count()[0]) {
           this->sideSelectivity[0] =
-              Diff.segment(0, Base_t::DepthCount[0]).minCoeff(&tempIndex);
-          this->sideResult[0] = Allowed->Map(0 + tempIndex);
-        }
-        if (Base_t::DepthCount[2]) {
-          this->sideSelectivity[1] =
-              Diff.segment(Base_t::DepthCount[0] + Base_t::DepthCount[1],
-                           Base_t::DepthCount[2])
+              Diff.segment(0, allowed_colorset.depth_count()[0])
                   .minCoeff(&tempIndex);
-          this->sideResult[1] = Allowed->Map(Base_t::DepthCount[0] +
-                                             Base_t::DepthCount[1] + tempIndex);
+          this->sideResult[0] = allowed_colorset.Map(0 + tempIndex);
+        }
+        if (allowed_colorset.depth_count()[2]) {
+          this->sideSelectivity[1] =
+              Diff.segment(allowed_colorset.depth_count()[0] +
+                               allowed_colorset.depth_count()[1],
+                           allowed_colorset.depth_count()[2])
+                  .minCoeff(&tempIndex);
+          this->sideResult[1] = allowed_colorset.Map(
+              allowed_colorset.depth_count()[0] +
+              allowed_colorset.depth_count()[1] + tempIndex);
         }
         break;
       case 2:  // 0,1
-        if (Base_t::DepthCount[0]) {
+        if (allowed_colorset.depth_count()[0]) {
           this->sideSelectivity[0] =
-              Diff.segment(0, Base_t::DepthCount[0]).minCoeff(&tempIndex);
-          this->sideResult[0] = Allowed->Map(0 + tempIndex);
-        }
-        if (Base_t::DepthCount[1]) {
-          this->sideSelectivity[1] =
-              Diff.segment(Base_t::DepthCount[0], Base_t::DepthCount[1])
+              Diff.segment(0, allowed_colorset.depth_count()[0])
                   .minCoeff(&tempIndex);
-          this->sideResult[1] = Allowed->Map(Base_t::DepthCount[0] + tempIndex);
+          this->sideResult[0] = allowed_colorset.Map(0 + tempIndex);
+        }
+        if (allowed_colorset.depth_count()[1]) {
+          this->sideSelectivity[1] =
+              Diff.segment(allowed_colorset.depth_count()[0],
+                           allowed_colorset.depth_count()[1])
+                  .minCoeff(&tempIndex);
+          this->sideResult[1] = allowed_colorset.Map(
+              allowed_colorset.depth_count()[0] + tempIndex);
         }
         break;
     }
@@ -306,12 +314,12 @@ class newTokiColor
 
   auto applyRGB(const Eigen::Array3f &c3,
                 const allowed_t &allowed_colorset) noexcept {
-    const allowed_t *Allowed = &allowed_colorset;
-    TempVectorXf_t Diff(Allowed->color_count(), 1);
+    TempVectorXf_t Diff(allowed_colorset.color_count(), 1);
     std::span<float> diff_span{Diff.data(), (size_t)Diff.size()};
     std::span<const float, 3> c3span{c3.data(), 3};
-    colordiff_RGB_batch(Allowed->rgb_data_span(0), Allowed->rgb_data_span(1),
-                        Allowed->rgb_data_span(2), c3span, diff_span);
+    colordiff_RGB_batch(allowed_colorset.rgb_data_span(0),
+                        allowed_colorset.rgb_data_span(1),
+                        allowed_colorset.rgb_data_span(2), c3span, diff_span);
 
     // Data.CurrentColor-=allowedColors;
     const auto ret = find_result(Diff, allowed_colorset);
@@ -320,15 +328,14 @@ class newTokiColor
 
   auto applyRGB_plus(const Eigen::Array3f &c3,
                      const allowed_t &allowed_colorset) noexcept {
-    const allowed_t *Allowed = &allowed_colorset;
-    // const ColorList &allowedColors = Allowed->_RGB;
+    // const ColorList &allowedColors = allowed_colorset._RGB;
 
-    TempVectorXf_t Diff(Allowed->color_count(), 1);
+    TempVectorXf_t Diff(allowed_colorset.color_count(), 1);
     std::span<float> diff_span{Diff.data(), (size_t)Diff.size()};
     std::span<const float, 3> c3span{c3.data(), 3};
-    colordiff_RGBplus_batch(Allowed->rgb_data_span(0),
-                            Allowed->rgb_data_span(1),
-                            Allowed->rgb_data_span(2), c3span, diff_span);
+    colordiff_RGBplus_batch(
+        allowed_colorset.rgb_data_span(0), allowed_colorset.rgb_data_span(1),
+        allowed_colorset.rgb_data_span(2), c3span, diff_span);
 
     // Data.CurrentColor-=allowedColors;
     const auto ret = find_result(Diff, allowed_colorset);
@@ -340,45 +347,45 @@ class newTokiColor
     float g = c3[1];
     float b = c3[2];
     auto SqrModSquare = ((R * R + g * g + b * b) *
-                         (Allowed->rgb(0).square() + Allowed->rgb(1).square() +
-                          Allowed->rgb(2).square()))
+                         (allowed_colorset.rgb(0).square() + allowed_colorset.rgb(1).square() +
+                          allowed_colorset.rgb(2).square()))
                             .sqrt();
-    auto deltaR = (R - Allowed->rgb(0));
-    auto deltaG = (g - Allowed->rgb(1));
-    auto deltaB = (b - Allowed->rgb(2));
+    auto deltaR = (R - allowed_colorset.rgb(0));
+    auto deltaG = (g - allowed_colorset.rgb(1));
+    auto deltaB = (b - allowed_colorset.rgb(2));
     auto SigmaRGB =
-        (R + g + b + Allowed->rgb(0) + Allowed->rgb(1) + Allowed->rgb(2)) /
+        (R + g + b + allowed_colorset.rgb(0) + allowed_colorset.rgb(1) + allowed_colorset.rgb(2)) /
         3.0f;
     auto S_r =
-        ((Allowed->rgb(0) + R) < SigmaRGB)
-            .select((Allowed->rgb(0) + R) / (SigmaRGB + threshold), 1.0f);
+        ((allowed_colorset.rgb(0) + R) < SigmaRGB)
+            .select((allowed_colorset.rgb(0) + R) / (SigmaRGB + threshold), 1.0f);
     auto S_g =
-        ((Allowed->rgb(1) + g) < SigmaRGB)
-            .select((Allowed->rgb(1) + g) / (SigmaRGB + threshold), 1.0f);
+        ((allowed_colorset.rgb(1) + g) < SigmaRGB)
+            .select((allowed_colorset.rgb(1) + g) / (SigmaRGB + threshold), 1.0f);
     auto S_b =
-        ((Allowed->rgb(2) + b) < SigmaRGB)
-            .select((Allowed->rgb(2) + b) / (SigmaRGB + threshold), 1.0f);
+        ((allowed_colorset.rgb(2) + b) < SigmaRGB)
+            .select((allowed_colorset.rgb(2) + b) / (SigmaRGB + threshold), 1.0f);
     auto sumRGBsquare =
-        R * Allowed->rgb(0) + g * Allowed->rgb(1) + b * Allowed->rgb(2);
+        R * allowed_colorset.rgb(0) + g * allowed_colorset.rgb(1) + b * allowed_colorset.rgb(2);
     auto theta =
         2.0 / M_PI * (sumRGBsquare / (SqrModSquare + threshold) / 1.01f).acos();
-    auto OnedDeltaR = deltaR.abs() / (R + Allowed->rgb(0) + threshold);
-    auto OnedDeltaG = deltaG.abs() / (g + Allowed->rgb(1) + threshold);
-    auto OnedDeltaB = deltaB.abs() / (b + Allowed->rgb(2) + threshold);
+    auto OnedDeltaR = deltaR.abs() / (R + allowed_colorset.rgb(0) + threshold);
+    auto OnedDeltaG = deltaG.abs() / (g + allowed_colorset.rgb(1) + threshold);
+    auto OnedDeltaB = deltaB.abs() / (b + allowed_colorset.rgb(2) + threshold);
     auto sumOnedDelta = OnedDeltaR + OnedDeltaG + OnedDeltaB + threshold;
     auto S_tr = OnedDeltaR / sumOnedDelta * S_r.square();
     auto S_tg = OnedDeltaG / sumOnedDelta * S_g.square();
     auto S_tb = OnedDeltaB / sumOnedDelta * S_b.square();
     auto S_theta = S_tr + S_tg + S_tb;
 
-    auto Rmax = Allowed->rgb(0)
-                    .max(Allowed->rgb(1))
-                    .max(Allowed->rgb(2))
+    auto Rmax = allowed_colorset.rgb(0)
+                    .max(allowed_colorset.rgb(1))
+                    .max(allowed_colorset.rgb(2))
                     .max(threshold);
     // auto Rmax = allowedColors.rowwise().maxCoeff();
     auto S_ratio = Rmax.max(std::max(R, std::max(g, b)));
 
-    TempVectorXf_t dist(Allowed->color_count(), 1);
+    TempVectorXf_t dist(allowed_colorset.color_count(), 1);
     if constexpr (is_not_optical) {
       dist = (S_r.square() * w_r * deltaR.square() +
               S_g.square() * w_g * deltaG.square() +
@@ -399,27 +406,27 @@ class newTokiColor
 
   auto applyHSV(const Eigen::Array3f &c3,
                 const allowed_t &allowed_colorset) noexcept {
-    const allowed_t *Allowed = &allowed_colorset;
-    // const ColorList &allowedColors = Allowed->HSV;
+    // const ColorList &allowedColors = allowed_colorset.HSV;
 
-    TempVectorXf_t Diff(Allowed->color_count(), 1);
+    TempVectorXf_t Diff(allowed_colorset.color_count(), 1);
     std::span<float> diff_span{Diff.data(), (size_t)Diff.size()};
     std::span<const float, 3> c3span{c3.data(), 3};
 
-    colordiff_HSV_batch(Allowed->hsv_data_span(0), Allowed->hsv_data_span(1),
-                        Allowed->hsv_data_span(2), c3span, diff_span);
+    colordiff_HSV_batch(allowed_colorset.hsv_data_span(0),
+                        allowed_colorset.hsv_data_span(1),
+                        allowed_colorset.hsv_data_span(2), c3span, diff_span);
 
     return find_result(Diff, allowed_colorset);
   }
 
   auto applyXYZ(const Eigen::Array3f &c3,
                 const allowed_t &allowed_colorset) noexcept {
-    const allowed_t *Allowed = &allowed_colorset;
-    TempVectorXf_t Diff(Allowed->color_count(), 1);
+    TempVectorXf_t Diff(allowed_colorset.color_count(), 1);
     std::span<float> diff_span{Diff.data(), (size_t)Diff.size()};
     std::span<const float, 3> c3span{c3.data(), 3};
-    colordiff_RGB_batch(Allowed->xyz_data_span(0), Allowed->xyz_data_span(1),
-                        Allowed->xyz_data_span(2), c3span, diff_span);
+    colordiff_RGB_batch(allowed_colorset.xyz_data_span(0),
+                        allowed_colorset.xyz_data_span(1),
+                        allowed_colorset.xyz_data_span(2), c3span, diff_span);
 
     // Data.CurrentColor-=allowedColors;
     const auto ret = find_result(Diff, allowed_colorset);
@@ -428,28 +435,28 @@ class newTokiColor
 
   auto applyLab94(const Eigen::Array3f &c3,
                   const allowed_t &allowed_colorset) noexcept {
-    const allowed_t *Allowed = &allowed_colorset;
-    TempVectorXf_t Diff(Allowed->color_count(), 1);
+    TempVectorXf_t Diff(allowed_colorset.color_count(), 1);
     std::span<float> diff_span{Diff.data(), (size_t)Diff.size()};
     std::span<const float, 3> c3span{c3.data(), 3};
-    colordiff_Lab94_batch(Allowed->lab_data_span(0), Allowed->lab_data_span(1),
-                          Allowed->lab_data_span(2), c3span, diff_span);
+    colordiff_Lab94_batch(allowed_colorset.lab_data_span(0),
+                          allowed_colorset.lab_data_span(1),
+                          allowed_colorset.lab_data_span(2), c3span, diff_span);
     return find_result(Diff, allowed_colorset);
   }
 
   auto applyLab00(const Eigen::Array3f &c3,
                   const allowed_t &allowed_colorset) noexcept {
-    const allowed_t *Allowed = &allowed_colorset;
     // int tempIndex = 0;
     const float L1s = c3[0];
     const float a1s = c3[1];
     const float b1s = c3[2];
-    // const ColorList &allow = Allowed->Lab;
-    TempVectorXf_t Diff(Allowed->color_count(), 1);
+    // const ColorList &allow = allowed_colorset.Lab;
+    TempVectorXf_t Diff(allowed_colorset.color_count(), 1);
 
-    for (int i = 0; i < Allowed->color_count(); i++) {
-      Diff(i) = Lab00_diff(L1s, a1s, b1s, Allowed->Lab(i, 0),
-                           Allowed->Lab(i, 1), Allowed->Lab(i, 2));
+    for (int i = 0; i < allowed_colorset.color_count(); i++) {
+      Diff(i) =
+          Lab00_diff(L1s, a1s, b1s, allowed_colorset.Lab(i, 0),
+                     allowed_colorset.Lab(i, 1), allowed_colorset.Lab(i, 2));
     }
 
     return find_result(Diff, allowed_colorset);

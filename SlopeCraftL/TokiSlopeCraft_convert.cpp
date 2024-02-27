@@ -252,9 +252,9 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(std::string FolderPath,
 
         MapFile.writeByteArrayHead("colors", 16384);
         {
-          uchar ColorCur = 0;
           for (short rr = 0; rr < 128; rr++) {
             for (short cc = 0; cc < 128; cc++) {
+              uint8_t ColorCur;
               if (rr + offset[0] < mapPic.rows() &&
                   cc + offset[1] < mapPic.cols())
                 ColorCur = mapPic(rr + offset[0], cc + offset[1]);

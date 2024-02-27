@@ -203,7 +203,7 @@ bool TokiSlopeCraft::__impl_setType(mapTypes type, gameVersion ver,
   TokiSlopeCraft::mapType = type;
   TokiSlopeCraft::mcVer = ver;
 
-  TokiColor::needFindSide = (TokiSlopeCraft::mapType == mapTypes::Slope);
+  Allowed.need_find_side = (TokiSlopeCraft::mapType == mapTypes::Slope);
 
   TokiSlopeCraft::blockPalette.resize(64);
 
