@@ -12,6 +12,7 @@ jobs:
     steps:
       - name: Install dependents
         run: |
+          brew remove zlib
           brew install cmake xz p7zip llvm ninja
           vcpkg install --triplet=arm64-osx zlib zstd
           wget https://github.com/SlopeCraft/QtBinaries/releases/download/qt6.6.0-x86_64-apple-darwin/qt6.6.0-static-x86_64-apple-darwin.tar.xz

@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.18)
 include_guard(GLOBAL)
 
+set(CMAKE_CROSSCOMPILING ON)
 set(CMAKE_SYSTEM_NAME Darwin)
 set(CMAKE_SYSTEM_PROCESSOR arm64)
 set(CMAKE_C_COMPILER_TARGET "arm64-apple-darwin")
@@ -17,6 +18,8 @@ set(CMAKE_SYSROOT ${TARGET_SYSROOT})
 # if you use other version of gcc and g++ than gcc/g++ 9, you must change the following variables
 set(CMAKE_C_COMPILER /usr/local/opt/llvm/bin/clang)
 set(CMAKE_CXX_COMPILER /usr/local/opt/llvm/bin/clang++)
+set(CMAKE_C_LINK_EXECUTABLE /usr/local/opt/llvm/bin/lld)
+set(CMAKE_CXX_LINK_EXECUTABLE /usr/local/opt/llvm/bin/lld)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -I${TARGET_SYSROOT}/usr/include")
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS}")
