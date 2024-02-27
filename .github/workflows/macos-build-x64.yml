@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         build_type: [ Debug, Release ]
-        gpu_api: [ None ]
+        gpu_api: [ None, Vulkan ]
         vectorize: [ ON, OFF ]
     env:
       BUILD_TYPE: ${{ matrix.build_type }}
@@ -42,6 +42,10 @@ jobs:
       #        run: |
       #          find /usr/local/Cellar -name liblzma.5.dylib 2>/dev/null
       #          find /usr/local/Cellar -name libzstd.1.dylib 2>/dev/null
+
+      - name: Install Vulkan sdk
+        if: matrix.gpu_api == 'Vulkan'
+        run: brew install molten-vk
 
       - name: Checkout repository
         uses: actions/checkout@v4

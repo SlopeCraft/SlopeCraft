@@ -26,7 +26,6 @@ This file is part of SlopeCraft.
 #include <mutex>
 #include <set>
 #include <shared_mutex>
-#include <stack>
 #include <unordered_map>
 #include <variant>
 
@@ -34,31 +33,6 @@ libImageCvt::template ImageCvter<false>::basic_colorset_t
     TokiVC::colorset_basic;
 libImageCvt::template ImageCvter<false>::allowed_colorset_t
     TokiVC::colorset_allowed;
-
-// bind static members for template classes
-// template <>
-// const libImageCvt::template ImageCvter<false>::basic_colorset_t
-//    &libImageCvt::template ImageCvter<false>::basic_colorset =
-//        TokiVC::colorset_basic;
-//
-// template <>
-// const libImageCvt::template ImageCvter<false>::allowed_colorset_t
-//    &libImageCvt::template ImageCvter<false>::allowed_colorset =
-//        TokiVC::colorset_allowed;
-//
-// template <>
-// const libImageCvt::template ImageCvter<false>::basic_colorset_t
-//    *const newTokiColor<
-//        false, libImageCvt::template ImageCvter<false>::basic_colorset_t,
-//        libImageCvt::template ImageCvter<false>::allowed_colorset_t>::Basic =
-//        &TokiVC::colorset_basic;
-//
-// template <>
-// const libImageCvt::template ImageCvter<false>::allowed_colorset_t
-//    *const newTokiColor<
-//        false, libImageCvt::template ImageCvter<false>::basic_colorset_t,
-//        libImageCvt::template ImageCvter<false>::allowed_colorset_t>::Allowed
-//        = &TokiVC::colorset_allowed;
 
 // global variables that VCL uses
 VCL_resource_pack TokiVC::pack;
@@ -136,12 +110,12 @@ bool add_projection_image_for_bsl(const std::vector<VCL_block *> &bs_list,
       return false;
     }
 
-    if constexpr (false) {
-      std::string msg =
-          fmt::format("Computing projection image for full id \"{}\"\n",
-                      blkp->full_id_ptr()->c_str());
-      VCL_report(VCL_report_type_t::information, msg.c_str());
-    }
+    //    {
+    //      std::string msg =
+    //          fmt::format("Computing projection image for full id \"{}\"\n",
+    //                      blkp->full_id_ptr()->c_str());
+    //      VCL_report(VCL_report_type_t::information, msg.c_str());
+    //    }
 
     block_model::EImgRowMajor_t *img = &blkp->project_image_on_exposed_face;
 
@@ -478,11 +452,11 @@ bool TokiVC::set_resource_no_lock() noexcept {
       return false;
     }
 
-    if constexpr (false) {
-      std::string msg = fmt::format("Size of map_color_blocks = {}\n",
-                                    map_color_blocks.size());
-      VCL_report(VCL_report_type_t::information, msg.c_str());
-    }
+    //    {
+    //      std::string msg = fmt::format("Size of map_color_blocks = {}\n",
+    //                                    map_color_blocks.size());
+    //      VCL_report(VCL_report_type_t::information, msg.c_str());
+    //    }
 
     for (int layers = 2; layers <= max_block_layers; layers++) {
       if (!add_color_trans_to_trans_start_recurse(
@@ -493,11 +467,11 @@ bool TokiVC::set_resource_no_lock() noexcept {
       }
     }
 
-    if constexpr (false) {
-      std::string msg = fmt::format("Size of map_color_blocks = {}\n",
-                                    map_color_blocks.size());
-      VCL_report(VCL_report_type_t::information, msg.c_str());
-    }
+    //    {
+    //      std::string msg = fmt::format("Size of map_color_blocks = {}\n",
+    //                                    map_color_blocks.size());
+    //      VCL_report(VCL_report_type_t::information, msg.c_str());
+    //    }
 
     std::vector<std::array<uint8_t, 3>> colors_temp;
     TokiVC::LUT_basic_color_idx_to_blocks.clear();
@@ -616,11 +590,13 @@ bool TokiVC::set_allowed_no_lock(
   allowed_list.resize(TokiVC::LUT_basic_color_idx_to_blocks.size());
   std::fill(allowed_list.begin(), allowed_list.end(), 0);
 
-  if constexpr (false) {
-    std::string msg = fmt::format("TokiVC::colorset_basic.color_count() = {}.",
-                                  TokiVC::colorset_basic.color_count());
-    VCL_report(VCL_report_type_t::information, msg.c_str());
-  }
+  //  {
+  //    std::string msg = fmt::format("TokiVC::colorset_basic.color_count() =
+  //                                  {}
+  //                                      .",
+  //                                  TokiVC::colorset_basic.color_count());
+  //    VCL_report(VCL_report_type_t::information, msg.c_str());
+  //  }
 
   for (size_t idx = 0; idx < TokiVC::LUT_basic_color_idx_to_blocks.size();
        idx++) {
