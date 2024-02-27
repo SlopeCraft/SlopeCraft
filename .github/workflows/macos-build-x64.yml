@@ -45,7 +45,9 @@ jobs:
 
       - name: Install Vulkan sdk
         if: matrix.gpu_api == 'Vulkan'
-        run: brew install molten-vk
+        run: |
+          brew install molten-vk glslang vulkan-header vulkan-loader vulkan-tools vulkan-profiles
+          whereis glslc
 
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -62,7 +64,7 @@ jobs:
         run: echo "/usr/local/lib" >> $GITHUB_PATH
       - name: Check PATH
         run: echo $PATH
-      - name: Configure CMake #
+      - name: Configure CMake
         run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=/usr/local/opt/llvm/bin/clang -DCMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++ -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -DSlopeCraft_vectorize=$VECTORIZE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH="$HOME/Downloads/Qt6.6.0-appleclang-static-x86_64;/System/Volumes/Data/usr/local/Cellar" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DSlopeCraft_macdeployqt_flags_install="-no-plugins"
       - name: Build
         run: |
