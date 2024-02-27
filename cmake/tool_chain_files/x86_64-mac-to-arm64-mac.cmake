@@ -20,7 +20,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS}")
 
 set(QT_COMPILER_FLAGS "-march=armv8-a")
 set(QT_COMPILER_FLAGS_RELEASE "-O3 -pipe")
-set(QT_LINKER_FLAGS "-Wl,-O1 -Wl,--hash-style=gnu -Wl,--as-needed")
+set(QT_LINKER_FLAGS "-Wl,-O -Wl,--hash-style=gnu -Wl,--as-needed")
 
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
