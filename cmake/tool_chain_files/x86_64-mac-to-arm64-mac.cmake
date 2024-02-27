@@ -21,7 +21,7 @@ set(CMAKE_CXX_COMPILER /usr/local/opt/llvm/bin/clang++)
 set(CMAKE_C_LINK_EXECUTABLE /usr/local/opt/llvm/bin/lld)
 set(CMAKE_CXX_LINK_EXECUTABLE /usr/local/opt/llvm/bin/lld)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -I${TARGET_SYSROOT}/usr/include")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -I${TARGET_SYSROOT}/usr/include -fuse-ld=lld")
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS}")
 
 set(QT_COMPILER_FLAGS "-march=arm64")
