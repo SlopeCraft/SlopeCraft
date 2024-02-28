@@ -19,12 +19,12 @@ jobs:
       GPU_API: ${{ matrix.gpu_api }}
       VECTORIZE: ${{ matrix.vectorize }}
     steps:
-      - name: brew upgrade & update
-        run: |
-          brew update
-          brew remove aws-sam-cli pipx cfn-lint
-          brew remove python
-          brew upgrade
+      #      - name: brew upgrade & update
+      #        run: |
+      #          brew update
+      #          brew remove aws-sam-cli pipx cfn-lint
+      #          brew remove python
+      #          brew upgrade
       - name: Install LLVM clang
         run: |
           brew install llvm
@@ -49,7 +49,7 @@ jobs:
       - name: Install Vulkan sdk
         if: matrix.gpu_api == 'Vulkan'
         run: |
-          brew install molten-vk vulkan-headers vulkan-loader vulkan-tools vulkan-profiles glslang shaderc
+          brew install molten-vk vulkan-headers vulkan-loader vulkan-tools glslang shaderc
           whereis glslc
           glslc --version
 
