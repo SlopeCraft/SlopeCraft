@@ -19,13 +19,12 @@ jobs:
       GPU_API: ${{ matrix.gpu_api }}
       VECTORIZE: ${{ matrix.vectorize }}
     steps:
-      # - name: brew upgrade & update
-      #   run: |
-      #     brew update
-      #     brew upgrade
-      - name: Install LLVM clang
+      - name: brew upgrade & update
         run: |
           brew update
+          brew upgrade
+      - name: Install LLVM clang
+        run: |
           brew install llvm
       - name: Check clang
         run: /usr/local/opt/llvm/bin/clang --version
