@@ -22,7 +22,8 @@ jobs:
       - name: brew upgrade & update
         run: |
           brew update
-          brew remove python aws-sam-cli pipx
+          brew remove aws-sam-cli pipx cfn-lint
+          brew remove python
           brew upgrade
       - name: Install LLVM clang
         run: |
