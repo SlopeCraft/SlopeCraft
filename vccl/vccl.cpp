@@ -181,11 +181,11 @@ int main(int argc, char **argv) {
   CLI11_PARSE(app, argc, argv);
 
   if (show_config) {
-    cout << fmt::format("Version : {}\n", SC_VERSION_STR);
-    cout << fmt::format("Build type : {}\n", CMAKE_BUILD_TYPE);
-    cout << fmt::format("GPU API : {}\n", SC_GPU_API);
-    cout << fmt::format("Vectorize : {}\n", SC_VECTORIZE);
-    cout << fmt::format("Gprof : {}\n", SC_GPROF);
+    fmt::println("Version : {}", SC_VERSION_STR);
+    fmt::println("Build type : {}", CMAKE_BUILD_TYPE);
+    fmt::println("GPU API : {}", SC_GPU_API);
+    fmt::println("Vectorize : {}", SC_VECTORIZE);
+    fmt::println("Gprof : {}", SC_GPROF);
     return 0;
   }
 
