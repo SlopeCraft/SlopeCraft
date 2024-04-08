@@ -51,7 +51,7 @@ using gameVersion = ::SCL_gameVersion;
 using workStatues = ::SCL_workStatues;
 using errorFlag = ::SCL_errorFlag;
 
-};  // namespace SlopeCraft
+}  // namespace SlopeCraft
 
 namespace SlopeCraft {
 
@@ -388,16 +388,16 @@ SCL_EXPORT void SCL_destroyKernel(Kernel *);
 [[nodiscard]] SCL_EXPORT AbstractBlock *SCL_createBlock();
 SCL_EXPORT void SCL_destroyBlock(AbstractBlock *);
 
-struct blockListOption {
-  const char *image_dir;
-  bool (*callback_load_image)(const char *, uint32_t *dst_row_major){nullptr};
+struct blockListOption2 {
+  bool (*callback_load_image)(const uint8_t *buffer, size_t bytes,
+                              uint32_t *dst_row_major){nullptr};
   char *errmsg{nullptr};
   size_t errmsg_capacity{0};
   size_t *errmsg_len_dest{nullptr};
 };
 
 [[nodiscard]] SCL_EXPORT BlockListInterface *SCL_createBlockList(
-    const char *filename, const blockListOption &option);
+    const char *zip_filename, const blockListOption2 &option);
 
 SCL_EXPORT void SCL_destroyBlockList(BlockListInterface *);
 

@@ -30,8 +30,7 @@ using namespace SlopeCraft;
 #include <vector>
 #include <utility>
 #include <map>
-
-typedef unsigned char uchar;
+#include <memory>
 
 typedef std::vector<std::string> stringList;
 
@@ -40,7 +39,7 @@ class simpleBlock : public ::SlopeCraft::AbstractBlock {
   simpleBlock();
   ~simpleBlock(){};
   std::string id;
-  uchar version;
+  uint8_t version;
   std::string idOld;
   std::string nameZH;
   std::string nameEN;
@@ -112,8 +111,9 @@ class simpleBlock : public ::SlopeCraft::AbstractBlock {
     *static_cast<simpleBlock *>(dst) = *this;
   }
 
-  static bool dealBlockId(const std::string &id, std::string &netBlockId,
-                          stringList *proName, stringList *proVal);
+  //  static bool processBlockId(std::string_view id, std::string &netBlockId,
+  //                             std::vector<std::string_view> &proName,
+  //                             std::vector<std::string_view> &proVal);
 
   const char *idForVersion(SCL_gameVersion ver) const noexcept override {
     if (ver >= SCL_gameVersion::MC13) {
@@ -130,7 +130,7 @@ class simpleBlock : public ::SlopeCraft::AbstractBlock {
 
 class BlockList : public ::SlopeCraft::BlockListInterface {
  private:
-  std::map<simpleBlock *, uint8_t> m_blocks;
+  std::map<std::unique_ptr<simpleBlock>, uint8_t> m_blocks;
 
  public:
   BlockList() = default;
@@ -145,8 +145,9 @@ class BlockList : public ::SlopeCraft::BlockListInterface {
                     size_t capacity_in_elements) const noexcept override;
 
   bool contains(const AbstractBlock *cp) const noexcept override {
+    const simpleBlock *ptr = dynamic_cast<const simpleBlock *>(cp);
     return this->m_blocks.contains(
-        static_cast<simpleBlock *>(const_cast<AbstractBlock *>(cp)));
+        reinterpret_cast<std::unique_ptr<simpleBlock> &>(ptr));
   }
 
  public:
