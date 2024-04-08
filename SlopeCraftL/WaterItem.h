@@ -29,19 +29,27 @@ using TokiPos = uint32_t;
 // typedef unsigned int TokiPos;
 //  typedef unsigned int waterItem;
 using waterItem = uint32_t;
-extern const TokiPos nullPos;
-extern const waterItem nullWater;
-extern const short WaterColumnSize[3];
-TokiPos TokiRC(int row, int col); // 前16bit存储row，后16bit存储col
-short TokiRow(TokiPos);
-short TokiCol(TokiPos);
+constexpr TokiPos TokiRC(int row, int col) {  // 前16bit存储row，后16bit存储col
+  /*unsigned int u;
+  *((int16_t*)&u)=row;
+  *(((int16_t*)&u)+1)=col;
+  return u;*/
+  return (row << 16) | (col & 0x0000FFFF);
+}
+
+constexpr int16_t TokiRow(TokiPos pos) { return pos >> 16; }
+constexpr int16_t TokiCol(TokiPos pos) { return pos & 0x0000FFFF; }
+
+constexpr TokiPos nullPos = TokiRC(-1, -1);
+constexpr waterItem nullWater = TokiRC(-32768, -32768);
+constexpr int16_t WaterColumnSize[3] = {11, 6, 1};
 
 constexpr waterItem (*TokiWater)(int, int) = TokiRC;
-constexpr short (*waterHigh)(waterItem) = TokiRow;
-constexpr short (*waterLow)(waterItem) = TokiCol;
+constexpr int16_t (*waterHigh)(waterItem) = TokiRow;
+constexpr int16_t (*waterLow)(waterItem) = TokiCol;
 /*
-waterItem TokiWater(short high,short low);//前两字节存储high，后两字节存储low
-short waterHigh(waterItem);
-short waterLow(waterItem);*/
+waterItem TokiWater(int16_t high,int16_t
+low);//前两字节存储high，后两字节存储low int16_t waterHigh(waterItem); int16_t
+waterLow(waterItem);*/
 
-#endif // WATERITEM_H
+#endif  // WATERITEM_H
