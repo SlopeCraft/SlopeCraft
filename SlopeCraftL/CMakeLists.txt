@@ -4,6 +4,7 @@ include(${CMAKE_SOURCE_DIR}/cmake/find_nlohmann_json.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/configure_fmtlib.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/configure_boost.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/configure_zstd.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/configure_libpng.cmake)
 
 find_package(ZLIB 1.2.11 REQUIRED)
 find_package(OpenMP REQUIRED)
@@ -13,6 +14,7 @@ find_package(Heu REQUIRED)
 find_package(Boost COMPONENTS iostreams REQUIRED)
 find_package(libzip REQUIRED)
 find_package(tl-expected REQUIRED)
+find_package(PNG REQUIRED)
 #find_package(zstd REQUIRED)
 
 set(SlopeCraft_SCL_windows_rc_files)
@@ -85,6 +87,7 @@ set(SlopeCraft_SCL_link_libs
     Schem
     MapImageCvter
     FlatDiagram
+    libpng_reader
 
     ZLIB::ZLIB
     OpenMP::OpenMP_CXX
@@ -97,7 +100,7 @@ set(SlopeCraft_SCL_link_libs
     ${SC_zstd_target_name})
 
 # link to dependents
-target_link_libraries(SlopeCraftL PUBLIC $<BUILD_INTERFACE:${SlopeCraft_SCL_link_libs}>)
+target_link_libraries(SlopeCraftL PRIVATE $<BUILD_INTERFACE:${SlopeCraft_SCL_link_libs}>)
 
 target_compile_options(SlopeCraftL PRIVATE ${SlopeCraft_vectorize_flags})
 
@@ -151,11 +154,13 @@ endfunction()
 SC_create_SCL_block_list(${CMAKE_SOURCE_DIR}/Blocks/FixedBlocks "${CMAKE_BINARY_DIR}/SCL_block_lists/FixedBlocks.zip")
 SC_create_SCL_block_list(${CMAKE_SOURCE_DIR}/Blocks/CustomBlocks "${CMAKE_BINARY_DIR}/SCL_block_lists/CustomBlocks.zip")
 
+
 add_executable(test_scl_load_blocklist tests/load_scl_blocklist.cpp)
-target_link_libraries(test_scl_load_blocklist PRIVATE libzip::zip fmt::fmt tl::expected)
+target_link_libraries(test_scl_load_blocklist PRIVATE SlopeCraftL)
 target_compile_features(test_scl_load_blocklist PRIVATE cxx_std_23)
 if (${WIN32})
-    DLLD_add_deploy(test_scl_load_blocklist BUILD_MODE)
+    DLLD_add_deploy(SlopeCraftL BUILD_MODE)
+    DLLD_add_deploy(test_scl_load_blocklist BUILD_MODE VERBOSE)
 endif ()
 
 

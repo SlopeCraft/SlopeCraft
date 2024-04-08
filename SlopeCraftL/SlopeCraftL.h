@@ -388,16 +388,14 @@ SCL_EXPORT void SCL_destroyKernel(Kernel *);
 [[nodiscard]] SCL_EXPORT AbstractBlock *SCL_createBlock();
 SCL_EXPORT void SCL_destroyBlock(AbstractBlock *);
 
-struct blockListOption2 {
-  bool (*callback_load_image)(const uint8_t *buffer, size_t bytes,
-                              uint32_t *dst_row_major){nullptr};
-  char *errmsg{nullptr};
-  size_t errmsg_capacity{0};
-  size_t *errmsg_len_dest{nullptr};
+struct BlockListCreateOption {
+  uint64_t version{SC_VERSION_U64};
+  StringDeliver *warnings{nullptr};
+  StringDeliver *error{nullptr};
 };
 
 [[nodiscard]] SCL_EXPORT BlockListInterface *SCL_createBlockList(
-    const char *zip_filename, const blockListOption2 &option);
+    const char *zip_filename, const BlockListCreateOption &option);
 
 SCL_EXPORT void SCL_destroyBlockList(BlockListInterface *);
 
