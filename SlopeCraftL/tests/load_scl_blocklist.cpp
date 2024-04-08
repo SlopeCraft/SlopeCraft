@@ -1,5 +1,5 @@
-#include <fmt/format.h>
-#include <png.h>
+#include <cstdio>
+#include <string>
 #include <SlopeCraftL.h>
 
 int main(int argc, char** argv) {
