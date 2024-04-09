@@ -164,10 +164,12 @@ jobs:
           echo "New path : $env:path.split(';')"
           echo "NEW_PATH=$env:path" >> $env:GITHUB_ENV
 
-      - name: Install ninja
+      - name: Install ninja and 7z
         run: |
           choco install ninja
           ninja --version
+          choco install 7zip --pre
+          7z
 
       - name: Make dirs
         run: |
@@ -194,7 +196,7 @@ jobs:
           echo "env:path = $env:path"
           mkdir C:\vcpkg\downloads
           curl -JL -o C:/vcpkg/downloads/tukaani-project-xz-v5.4.4.tar.gz "https://github.com/xz-mirror/xz/archive/refs/tags/v5.4.4.tar.gz"
-          vcpkg install --triplet=x64-mingw-dynamic zlib bzip2 zstd liblzma libpng libzip eigen3 xsimd boost-iostreams boost-uuid tl-expected
+          vcpkg install --triplet=x64-mingw-dynamic zlib bzip2 zstd liblzma libpng libzip eigen3 xsimd boost-iostreams boost-uuid tl-expected magic-enum
 
 
       - name: Install OpenCL with vcpkg
