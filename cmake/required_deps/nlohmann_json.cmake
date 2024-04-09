@@ -23,7 +23,7 @@ if (${SlopeCraft_download_njson})
     file(DOWNLOAD
         "https://github.com/nlohmann/json/releases/download/v3.11.3/json.hpp"
         ${CMAKE_SOURCE_DIR}/3rdParty/nlohmann/json.hpp
-        HASH 9bea4c8066ef4a1c206b2be5a36302f8926f7fdc6087af5d20b417d0cf103ea6
+        EXPECTED_HASH SHA512=DA77FA48CA883DACF5CE147B2354E9D957AD66EDF72A7103FF5A8611C5CDA77B64F1F0CA60491295574EE158CECCCFE7797CD36FAAC5B47E75687400AC60769D
         SHOW_PROGRESS)
 
     message(STATUS "nlohmann json downloaded")
