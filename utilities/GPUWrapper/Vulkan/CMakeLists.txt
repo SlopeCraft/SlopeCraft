@@ -1,16 +1,11 @@
-include(${CMAKE_SOURCE_DIR}/cmake/find_ResourceCreator.cmake)
-include(${CMAKE_SOURCE_DIR}/3rdParty/ResourceCreator.cmake/ResourceCreator.cmake)
-include(${CMAKE_SOURCE_DIR}/cmake/find_Eigen3.cmake)
-
 find_package(Vulkan
     COMPONENTS glslc
     REQUIRED)
 find_package(Eigen3 REQUIRED)
 
-include(${CMAKE_SOURCE_DIR}/cmake/configure_kompute.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/optional_deps/kompute.cmake)
 find_package(kompute REQUIRED)
 
-include(${CMAKE_SOURCE_DIR}/cmake/configure_tl_expected.cmake)
 find_package(tl-expected REQUIRED)
 
 target_sources(GPUInterface PRIVATE GPU_interface.cpp)
