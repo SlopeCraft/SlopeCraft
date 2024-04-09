@@ -12,10 +12,10 @@ find_package(magic_enum REQUIRED)
 
 set(SlopeCraft_rc_files)
 
-if(${WIN32})
+if (${WIN32})
     configure_file(others/SlopeCraft.rc.in ${CMAKE_CURRENT_BINARY_DIR}/SlopeCraft.rc)
     set(SlopeCraft_rc_files ${CMAKE_CURRENT_BINARY_DIR}/SlopeCraft.rc)
-endif()
+endif ()
 
 set(SlopeCraft_headers
     SCWind.h
@@ -28,6 +28,7 @@ set(SlopeCraft_headers
     CopyableTableView.h
     TransparentStrategyWind.h
     CompressEffectViewer.h
+    BlockListDialog.h
 )
 
 set(SlopeCraft_sources
@@ -42,6 +43,7 @@ set(SlopeCraft_sources
     CopyableTableView.cpp
     TransparentStrategyWind.cpp
     CompressEffectViewer.cpp
+    BlockListDialog.cpp
 
     main.cpp
     ${SlopeCraft_rc_files})
@@ -52,6 +54,7 @@ set(SlopeCraft_uis
     AiCvterParameterDialog.ui
     TransparentStrategyWind.ui
     CompressEffectViewer.ui
+    BlockListDialog.ui
 )
 
 set(SlopeCraft_ts_files
@@ -70,7 +73,7 @@ qt_add_executable(SlopeCraft
     MANUAL_FINALIZATION
     ${SlopeCraft_project_files})
 
-target_compile_features(SlopeCraft PRIVATE cxx_std_20)
+target_compile_features(SlopeCraft PRIVATE cxx_std_23)
 
 target_link_libraries(SlopeCraft PRIVATE
     Qt6::Core
@@ -118,13 +121,13 @@ qt_add_resources(SlopeCraft "SC_translations"
 
 qt_finalize_executable(SlopeCraft)
 
-if(${WIN32})
+if (${WIN32})
     add_custom_target(SC_create_symlink_SC
         COMMAND mklink SlopeCraftL.dll "..\\SlopeCraftL\\SlopeCraftL.dll"
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         DEPENDS SlopeCraftL
         COMMENT "Create symlink to SlopeCraftL.dll for SlopeCraft.exe")
     add_dependencies(SC_create_all_symlinks SC_create_symlink_SC)
-endif()
+endif ()
 
 include(install.cmake)

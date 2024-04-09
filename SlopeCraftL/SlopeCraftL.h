@@ -75,6 +75,11 @@ struct StringDeliver {
   constexpr bool is_valid() const noexcept {
     return this->data != nullptr && this->capacity > 0;
   }
+
+  template <class string_t>
+  [[nodiscard]] static StringDeliver from_string(string_t &s) noexcept {
+    return StringDeliver{s.data(), s.size()};
+  }
 };
 
 class AbstractBlock {
@@ -104,7 +109,7 @@ class AbstractBlock {
   constexpr int imageRows() const noexcept { return 16; }
   constexpr int imageCols() const noexcept { return 16; }
 
-  virtual void getImage(uint32_t *dest, bool is_row_major) const noexcept = 0;
+  virtual void getImage(uint32_t *dest_row_major) const noexcept = 0;
 
   /// set block id
   virtual void setId(const char *) noexcept = 0;

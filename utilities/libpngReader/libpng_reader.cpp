@@ -126,7 +126,6 @@ parse_png_into_argb32(std::span<const uint8_t> encoded,
 
   std::vector<uint8_t *> row_ptrs;
   row_ptrs.resize(height);
-
   for (int r = 0; r < int(height); r++) {
     row_ptrs[r] = reinterpret_cast<uint8_t *>(pixels.data() + r * width);
   }

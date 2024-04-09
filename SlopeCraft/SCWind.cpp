@@ -132,10 +132,8 @@ SCWind::SCWind(QWidget *parent)
 
     QDir::setCurrent(QCoreApplication::applicationDirPath());
 
-    this->ui->blm->add_blocklist("./Blocks/FixedBlocks.json",
-                                 "./Blocks/FixedBlocks");
-    this->ui->blm->add_blocklist("./Blocks/CustomBlocks.json",
-                                 "./Blocks/CustomBlocks");
+    this->ui->blm->add_blocklist("./Blocks/FixedBlocks.zip");
+    this->ui->blm->add_blocklist("./Blocks/CustomBlocks.zip");
 
     this->ui->blm->finish_blocklist();
 

@@ -44,7 +44,7 @@ class simpleBlock : public ::SlopeCraft::AbstractBlock {
   std::string nameZH;
   std::string nameEN;
   std::string imageFilename;
-  Eigen::ArrayXX<uint32_t> image;
+  Eigen::Array<uint32_t, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> image;
   bool needGlass{false};
   bool doGlow{false};
   bool endermanPickable{false};
@@ -70,13 +70,9 @@ class simpleBlock : public ::SlopeCraft::AbstractBlock {
     return this->imageFilename.c_str();
   }
 
-  void getImage(uint32_t *dest, bool is_row_major) const noexcept override {
-    if (is_row_major) {
-      Eigen::Map<Eigen::ArrayXX<uint32_t>> map(dest, 16, 16);
-      map = this->image.transpose();
-    } else {
-      memcpy(dest, this->image.data(), this->image.size() * sizeof(uint32_t));
-    }
+  void getImage(uint32_t *dest_row_major) const noexcept override {
+    memcpy(dest_row_major, this->image.data(),
+           this->image.size() * sizeof(uint32_t));
   }
 
   void setId(const char *_id) noexcept override { id = _id; };

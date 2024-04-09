@@ -283,7 +283,7 @@ impl_create_block_list_from_zip(const char *zip_path) noexcept {
       }
     }
     assert(buf_pixel.size() == 16 * 16);
-    memcpy(pair.first->image.data(), buf_pixel.data(), 256);
+    memcpy(pair.first->image.data(), buf_pixel.data(), 256 * sizeof(uint32_t));
   }
 
   return {bl, warnings};

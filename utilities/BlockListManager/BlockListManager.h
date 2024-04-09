@@ -32,7 +32,7 @@ class BlockListDeleter {
 class BlockListManager : public QWidget {
   Q_OBJECT
  private:
-  std::vector<BaseColorWidget *> basecolors;
+  std::vector<std::unique_ptr<BaseColorWidget>> basecolor_widgets;
   std::vector<std::unique_ptr<SlopeCraft::BlockListInterface, BlockListDeleter>>
       blockslists;
   std::function<SCL_gameVersion()> callback_get_version{nullptr};
@@ -43,7 +43,7 @@ class BlockListManager : public QWidget {
 
   void setup_basecolors(const SlopeCraft::Kernel *kernel) noexcept;
 
-  bool add_blocklist(QString filename, QString dirname) noexcept;
+  bool add_blocklist(QString filename) noexcept;
 
   void finish_blocklist() noexcept;
 
@@ -59,13 +59,13 @@ class BlockListManager : public QWidget {
   void when_version_updated() noexcept;
 
   void when_lang_updated(SCL_language lang) noexcept {
-    for (auto bcw : this->basecolors) {
+    for (auto &bcw : this->basecolor_widgets) {
       bcw->update_lang(lang);
     }
   }
 
   void select_block_by_callback(const select_callback_t &fun) noexcept {
-    for (auto bcw : this->basecolors) {
+    for (auto &bcw : this->basecolor_widgets) {
       bcw->select_by_callback(fun);
     }
   }
@@ -79,16 +79,15 @@ class BlockListManager : public QWidget {
   blockListPreset to_preset() const noexcept;
 
   const BaseColorWidget *basecolorwidget_at(size_t basecolor) const noexcept {
-    return this->basecolors[basecolor];
+    return this->basecolor_widgets[basecolor].get();
   }
 
  signals:
   void changed();
 
  private:
-  bool impl_addblocklist(const QString &filename, const QString &dirname,
-                         std::unique_ptr<SlopeCraft::BlockListInterface,
-                                         BlockListDeleter> &dst) noexcept;
+  std::unique_ptr<SlopeCraft::BlockListInterface, BlockListDeleter>
+  impl_addblocklist(const QString &filename) noexcept;
 };
 
 #endif  // SLOPECRAFT_UTILITIES_BLOCKLISTMANAGER_BLOCKLISTMANAGER_H
