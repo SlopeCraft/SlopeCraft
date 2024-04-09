@@ -1,23 +1,10 @@
-# https://github.com/isRyven/ResourceCreator.cmake.git
-set(SlopeCraft_rc_creator_found OFF)
 
-if(EXISTS ${CMAKE_SOURCE_DIR}/3rdParty/ResourceCreator.cmake/.git)
-    set(SlopeCraft_rc_creator_found TRUE)
-    return()
-endif()
-
-message(STATUS "Cloning ResourceCreator.cmake...")
-execute_process(
-    COMMAND git clone "https://github.com/SlopeCraft/ResourceCreator.cmake.git"
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/3rdParty
-    COMMAND_ERROR_IS_FATAL ANY
+message(STATUS "Downloading ResourceCreator.cmake...")
+file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/3rdParty/")
+set(SC_RC_location "${CMAKE_BINARY_DIR}/3rdParty/ResourceCreator.cmake")
+file(DOWNLOAD "https://github.com/SlopeCraft/ResourceCreator.cmake/releases/download/v0.0.0/ResourceCreator.cmake"
+    ${SC_RC_location}
+    EXPECTED_HASH SHA512=241799A7BCC3A0AF1BD32FFD350EEEF0751D4D86DA7F11CFA6BD8F979E150F1585E9F55CBBBBAAB5C59C7379F5F93C27BF8E414BB0A603DFC5D07136C37EC6FA
 )
 
-execute_process(
-    COMMAND git checkout v0.0.0
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/3rdParty/ResourceCreator.cmake
-    COMMAND_ERROR_IS_FATAL ANY
-)
-
-
-set(SlopeCraft_rc_creator_found TRUE)
+include(${SC_RC_location})
