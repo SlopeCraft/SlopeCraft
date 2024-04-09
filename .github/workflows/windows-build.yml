@@ -142,7 +142,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-
       - name: Install ninja
         run: |
           choco install ninja
@@ -193,6 +192,8 @@ jobs:
           $GPU_API=$env:GPU_API
           $env:path=$env:NEW_PATH
           echo "env:path = $env:path"
+          mkdir C:\vcpkg\downloads
+          curl -JL -o C:/vcpkg/downloads/tukaani-project-xz-v5.4.4.tar.gz "https://github.com/xz-mirror/xz/archive/refs/tags/v5.4.4.tar.gz"
           vcpkg install --triplet=x64-mingw-dynamic zlib bzip2 zstd liblzma libpng libzip eigen3 xsimd boost-iostreams boost-uuid
 
 
