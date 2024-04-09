@@ -31,9 +31,9 @@ jobs:
 
       - name: Install ninja
         run: |
+          where 7z
           choco install ninja
           ninja --version
-          where 7z
 
       - name: Install deps with vcpkg
         shell: cmd
