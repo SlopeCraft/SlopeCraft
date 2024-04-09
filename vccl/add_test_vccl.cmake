@@ -1,5 +1,3 @@
-include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips.cmake)
-include(${CMAKE_SOURCE_DIR}/cmake/configure_images.cmake)
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/test_vccl_images)
 
@@ -62,12 +60,12 @@ foreach (_layers RANGE 1 3 1)
 
                     # message(STATUS ${test_name})
                     add_test(NAME ${test_name}
-                            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+                        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 
-                            # COMMAND vccl --bsl ${CMAKE_SOURCE_DIR}/VisualCraftL/VCL_blocks_fixed.json --rp ${zip_file} --mcver ${_ver} --face ${_face} --layers ${_layers} --img ${VCL_test_images} --dither=${_dither} -j1 --out-image --benchmark --prefix ${test_name} --gpu --disable-config
-                            COMMAND vccl --img ${test_source_images} --mcver ${_ver} --face ${_face} --layers ${_layers} --dither=${_dither} -j20 --out-image --benchmark --prefix ${test_name} --lite --nbt ${generate_schem} ${gpu_flags}
-                            COMMAND_EXPAND_LISTS
-                            )
+                        # COMMAND vccl --bsl ${CMAKE_SOURCE_DIR}/VisualCraftL/VCL_blocks_fixed.json --rp ${zip_file} --mcver ${_ver} --face ${_face} --layers ${_layers} --img ${VCL_test_images} --dither=${_dither} -j1 --out-image --benchmark --prefix ${test_name} --gpu --disable-config
+                        COMMAND vccl --img ${test_source_images} --mcver ${_ver} --face ${_face} --layers ${_layers} --dither=${_dither} -j20 --out-image --benchmark --prefix ${test_name} --lite --nbt ${generate_schem} ${gpu_flags}
+                        COMMAND_EXPAND_LISTS
+                    )
 
                     #
                 endforeach (_dither ${dither})

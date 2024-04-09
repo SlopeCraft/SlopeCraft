@@ -2,7 +2,6 @@
 find_package(OpenCL 3.0 REQUIRED)
 
 message(STATUS "Configuring OpenCL")
-include(${CMAKE_SOURCE_DIR}/cmake/find_ResourceCreator.cmake)
 include(${CMAKE_SOURCE_DIR}/3rdParty/ResourceCreator.cmake/ResourceCreator.cmake)
 
 target_sources(GPUInterface PRIVATE

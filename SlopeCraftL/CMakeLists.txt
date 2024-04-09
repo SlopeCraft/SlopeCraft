@@ -1,11 +1,5 @@
 project(SlopeCraft_SlopeCraftL VERSION ${SlopeCraft_version} LANGUAGES CXX)
 
-include(${CMAKE_SOURCE_DIR}/cmake/find_nlohmann_json.cmake)
-include(${CMAKE_SOURCE_DIR}/cmake/configure_fmtlib.cmake)
-include(${CMAKE_SOURCE_DIR}/cmake/configure_boost.cmake)
-include(${CMAKE_SOURCE_DIR}/cmake/configure_zstd.cmake)
-include(${CMAKE_SOURCE_DIR}/cmake/configure_libpng.cmake)
-
 find_package(ZLIB 1.2.11 REQUIRED)
 find_package(OpenMP REQUIRED)
 find_package(fmt REQUIRED)

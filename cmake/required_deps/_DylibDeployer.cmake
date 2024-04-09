@@ -2,7 +2,7 @@ if (NOT APPLE)
     return()
 endif ()
 
-include(${CMAKE_CURRENT_LIST_DIR}/configure_DLLDeployer.cmake)
+include(_DLLDeployer.cmake)
 
 set(DylibD_download_dir ${CMAKE_SOURCE_DIR}/3rdParty/DylibDeployer.cmake)
 set(DylibD_file ${DylibD_download_dir}/DylibDeployer.cmake)

@@ -67,15 +67,14 @@ if (EXISTS ${CMAKE_SOURCE_DIR}/compile_commands.json)
 endif ()
 
 # configure global dependencies ----------------------------------------------
-include(cmake/configure_libpng.cmake)
-include(cmake/add_compiler_path_to_prefix.cmake)
-include(cmake/find_nlohmann_json.cmake)
-include(cmake/find_Eigen3.cmake)
-include(cmake/find_HeuristicFlow.cmake)
-include(cmake/find_qt6.cmake)
 
-include(cmake/configure_DLLDeployer.cmake)
-include(cmake/configure_DylibDeployer.cmake)
+include(cmake/add_compiler_path_to_prefix.cmake)
+
+file(GLOB required_dep_cmake_files "${CMAKE_SOURCE_DIR}/cmake/required_deps/*.cmake")
+foreach (file ${required_dep_cmake_files})
+    include(${file})
+endforeach ()
+
 
 # Add compile options --------------------------------------------------------
 # if don't vectorize, or no suitable flag found, this variable will be empty
