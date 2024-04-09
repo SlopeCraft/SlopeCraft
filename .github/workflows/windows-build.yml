@@ -162,7 +162,7 @@ jobs:
           $exclude_key_words="perl","Strawberry"
           $new_path=""
           foreach($p in $env:path.split(';')) {$exclude=$false; foreach($ekw in $exclude_key_words)	{if($p.contains($ekw)) {$exclude=$true;break;}}if(-not($exclude)) {$new_path="$new_path;$p"}}
-          $env:path="$basedir/bin/mingw64/bin;$new_path"
+          $env:path="$basedir/bin/mingw64/bin;C:/Program Files/7-Zip;$new_path"
           echo "New path : $env:path.split(';')"
           echo "NEW_PATH=$env:path" >> $env:GITHUB_ENV
 
