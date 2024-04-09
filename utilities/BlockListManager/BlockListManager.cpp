@@ -11,11 +11,8 @@ BlockListManager::~BlockListManager() {}
 
 void BlockListManager::setup_basecolors(
     const SlopeCraft::Kernel *kernel) noexcept {
-  for (auto bcp : this->basecolors) {
-    delete bcp;
-  }
-  this->basecolors.clear();
-  this->basecolors.reserve(64);
+  this->basecolor_widgets.clear();
+  this->basecolor_widgets.reserve(64);
   const int max_basecolor = SlopeCraft::SCL_maxBaseColor();
 
   uint32_t bc_arr[64];
@@ -23,87 +20,81 @@ void BlockListManager::setup_basecolors(
   kernel->getBaseColorInARGB32(bc_arr);
 
   for (int bc = 0; bc <= max_basecolor; bc++) {
-    BaseColorWidget *bcw = new BaseColorWidget(this, bc);
-    this->layout()->addWidget(bcw);
-    this->basecolors.push_back(bcw);
+    std::unique_ptr<BaseColorWidget> bcw{new BaseColorWidget(this, bc)};
+    this->layout()->addWidget(bcw.get());
     bcw->setTitle(QString::fromUtf8(basecolor_names[bc].data()));
-
     bcw->set_color(bc_arr[bc]);
 
-    connect(bcw, &BaseColorWidget::changed, [this]() { emit this->changed(); });
+    connect(bcw.get(), &BaseColorWidget::changed,
+            [this]() { emit this->changed(); });
+    this->basecolor_widgets.push_back(std::move(bcw));
   }
 }
 
-bool callback_load_image(const char *filename, uint32_t *dst_row_major) {
-  QImage img(QString::fromLocal8Bit(filename));
+// bool callback_load_image(const char *filename, uint32_t *dst_row_major) {
+//   QImage img(QString::fromLocal8Bit(filename));
+//
+//   if (img.isNull()) {
+//     return false;
+//   }
+//
+//   QImage another = img.convertedTo(QImage::Format_ARGB32).scaled(16, 16);
+//
+//   memcpy(dst_row_major, another.scanLine(0), 16 * 16 * sizeof(uint32_t));
+//   return true;
+// }
 
-  if (img.isNull()) {
-    return false;
-  }
-
-  QImage another = img.convertedTo(QImage::Format_ARGB32).scaled(16, 16);
-
-  memcpy(dst_row_major, another.scanLine(0), 16 * 16 * sizeof(uint32_t));
-  return true;
-}
-
-bool BlockListManager::impl_addblocklist(
-    const QString &filename, const QString &dirname,
-    std::unique_ptr<SlopeCraft::BlockListInterface, BlockListDeleter>
-        &dst) noexcept {
+std::unique_ptr<SlopeCraft::BlockListInterface, BlockListDeleter>
+BlockListManager::impl_addblocklist(const QString &filename) noexcept {
   std::string errmsg;
-  errmsg.resize(4096);
-  SlopeCraft::blockListOption opt;
-  opt.errmsg = errmsg.data();
-  opt.errmsg_capacity = errmsg.size();
-  size_t msg_len{0};
-  opt.errmsg_len_dest = &msg_len;
-
-  auto img_dir_local8bit = dirname.toLocal8Bit();
-  opt.image_dir = img_dir_local8bit.data();
-
-  opt.callback_load_image = callback_load_image;
+  errmsg.resize(8192);
+  auto sd_err = SlopeCraft::StringDeliver::from_string(errmsg);
+  std::string warning;
+  warning.resize(8192);
+  auto sd_warn = SlopeCraft::StringDeliver::from_string(warning);
+  SlopeCraft::BlockListCreateOption option{SC_VERSION_U64, &sd_warn, &sd_err};
 
   SlopeCraft::BlockListInterface *bli =
-      SlopeCraft::SCL_createBlockList(filename.toLocal8Bit().data(), opt);
+      SlopeCraft::SCL_createBlockList(filename.toLocal8Bit().data(), option);
 
-  errmsg.resize(msg_len);
-
+  errmsg.resize(sd_err.size);
+  warning.resize(sd_warn.size);
 
   if (!errmsg.empty()) {
-    errmsg.append(QStringLiteral("\npwd: %1").arg(QFileInfo{"."}.absolutePath()).toLocal8Bit());
+    errmsg.append(QStringLiteral("\npwd: %1")
+                      .arg(QFileInfo{"."}.absolutePath())
+                      .toLocal8Bit());
     if (bli == nullptr) {
       QMessageBox::critical(dynamic_cast<QWidget *>(this->parent()),
                             tr("解析方块列表失败"),
                             QString::fromUtf8(errmsg.data()));
-      return false;
+      return {nullptr};
     } else {
       QMessageBox::warning(dynamic_cast<QWidget *>(this->parent()),
                            tr("解析方块列表失败"),
-                           QString::fromUtf8(errmsg.data()));
+                           QString::fromUtf8(warning.data()));
     }
   }
-  dst.reset(bli);
 
   std::vector<SlopeCraft::AbstractBlock *> blockps;
-  std::vector<uint8_t> basecolors;
-  basecolors.resize(dst->size());
-  blockps.resize(dst->size());
+  std::vector<uint8_t> base_colors;
+  base_colors.resize(bli->size());
+  blockps.resize(bli->size());
 
-  dst->get_blocks(blockps.data(), basecolors.data(), blockps.size());
+  bli->get_blocks(blockps.data(), base_colors.data(), blockps.size());
 
-  for (size_t idx = 0; idx < dst->size(); idx++) {
-    this->basecolors[basecolors[idx]]->add_block(blockps[idx]);
+  for (size_t idx = 0; idx < bli->size(); idx++) {
+    this->basecolor_widgets[base_colors[idx]]->add_block(blockps[idx]);
   }
 
-  return true;
+  return std::unique_ptr<SlopeCraft::BlockListInterface, BlockListDeleter>{bli};
 }
 
-bool BlockListManager::add_blocklist(QString filename,
-                                     QString dirname) noexcept {
-  std::unique_ptr<SlopeCraft::BlockListInterface, BlockListDeleter> tmp;
+bool BlockListManager::add_blocklist(QString filename) noexcept {
+  std::unique_ptr<SlopeCraft::BlockListInterface, BlockListDeleter> tmp =
+      this->impl_addblocklist(filename);
 
-  if (!this->impl_addblocklist(filename, dirname, tmp)) {
+  if (!tmp) {
     return false;
   }
 
@@ -113,13 +104,13 @@ bool BlockListManager::add_blocklist(QString filename,
 }
 
 void BlockListManager::finish_blocklist() noexcept {
-  for (auto bcw : this->basecolors) {
+  for (auto &bcw : this->basecolor_widgets) {
     bcw->finish_blocks();
   }
 }
 
 void BlockListManager::when_version_updated() noexcept {
-  for (auto bcw : this->basecolors) {
+  for (auto &bcw : this->basecolor_widgets) {
     bcw->when_version_updated(this->callback_get_version());
   }
 }
@@ -130,29 +121,29 @@ void BlockListManager::get_blocklist(
   enable_list.resize(64);
   block_list.resize(64);
 
-  for (int bc = 0; bc < (int)this->basecolors.size(); bc++) {
-    enable_list[bc] = this->basecolors[bc]->is_enabled();
-    block_list[bc] = this->basecolors[bc]->selected_block();
+  for (int bc = 0; bc < (int)this->basecolor_widgets.size(); bc++) {
+    enable_list[bc] = this->basecolor_widgets[bc]->is_enabled();
+    block_list[bc] = this->basecolor_widgets[bc]->selected_block();
   }
 
-  for (int bc = (int)this->basecolors.size(); bc < 64; bc++) {
+  for (int bc = (int)this->basecolor_widgets.size(); bc < 64; bc++) {
     enable_list[bc] = 0;
     block_list[bc] = nullptr;
   }
 }
 
 bool BlockListManager::loadPreset(const blockListPreset &preset) noexcept {
-  if (preset.values.size() != this->basecolors.size()) {
+  if (preset.values.size() != this->basecolor_widgets.size()) {
     QMessageBox::warning(dynamic_cast<QWidget *>(this->parent()),
                          tr("加载预设错误"),
                          tr("预设文件包含的基色数量 (%1) 与实际情况 (%2) 不符")
                              .arg(preset.values.size())
-                             .arg(this->basecolors.size()));
+                             .arg(this->basecolor_widgets.size()));
     return false;
   }
 
   for (int bc = 0; bc < (int)preset.values.size(); bc++) {
-    auto &bcw = this->basecolors[bc];
+    auto &bcw = this->basecolor_widgets[bc];
 
     bcw->set_enabled(preset.values[bc].first);
 
@@ -175,8 +166,8 @@ bool BlockListManager::loadPreset(const blockListPreset &preset) noexcept {
           QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore,
                                        QMessageBox::StandardButton::Close});
       if (ret == QMessageBox::StandardButton::Close) {
-        abort();
-        return false;
+        exit(__LINE__);
+        // return false;
       }
       continue;
     }
@@ -191,11 +182,13 @@ bool BlockListManager::loadPreset(const blockListPreset &preset) noexcept {
 
 blockListPreset BlockListManager::to_preset() const noexcept {
   blockListPreset ret;
-  ret.values.resize(this->basecolors.size());
-  for (size_t basecolor = 0; basecolor < this->basecolors.size(); basecolor++) {
-    ret.values[basecolor].first = this->basecolors[basecolor]->is_enabled();
+  ret.values.resize(this->basecolor_widgets.size());
+  for (size_t basecolor = 0; basecolor < this->basecolor_widgets.size();
+       basecolor++) {
+    ret.values[basecolor].first =
+        this->basecolor_widgets[basecolor]->is_enabled();
     ret.values[basecolor].second = QString::fromUtf8(
-        this->basecolors[basecolor]->selected_block()->getId());
+        this->basecolor_widgets[basecolor]->selected_block()->getId());
   }
   return ret;
 }

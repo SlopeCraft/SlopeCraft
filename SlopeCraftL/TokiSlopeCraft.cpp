@@ -383,7 +383,7 @@ void TokiSlopeCraft::setRawImage(const ARGB *src, int rows, int cols,
 void TokiSlopeCraft::getBaseColorInARGB32(ARGB *const dest) const {
   if (dest == nullptr) return;
 
-  for (uchar base = 0; base < 64; base++)
+  for (uint8_t base = 0; base < 64; base++)
     dest[base] =
         ARGB32(255 * Basic.RGB(128 + base, 0), 255 * Basic.RGB(128 + base, 1),
                255 * Basic.RGB(128 + base, 2), 255);

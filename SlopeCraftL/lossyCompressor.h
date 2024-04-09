@@ -30,6 +30,7 @@ This file is part of SlopeCraft.
 #include <list>
 #include <random>
 #include <vector>
+#include <memory>
 
 #include "Colors.h"
 #include "HeightLine.h"
@@ -40,7 +41,7 @@ This file is part of SlopeCraft.
 class solver_t;
 
 class LossyCompressor {
-public:
+ public:
   LossyCompressor();
   ~LossyCompressor();
   void setSource(const Eigen::ArrayXi &, const TokiColor *[]);
@@ -53,9 +54,9 @@ public:
   void (**progressAddPtr)(void *, int);
   void (**keepAwakePtr)(void *);
 
-private:
+ private:
   friend class solver_t;
-  solver_t *solver;
+  std::unique_ptr<solver_t> solver;
   std::vector<const TokiColor *> source;
 
   static uint16_t maxGeneration;
@@ -64,4 +65,4 @@ private:
 };
 
 double randD();
-#endif // LOSSYCOMPRESSOR_H
+#endif  // LOSSYCOMPRESSOR_H

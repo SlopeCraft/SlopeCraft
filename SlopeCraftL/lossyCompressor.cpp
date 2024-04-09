@@ -29,12 +29,12 @@ This file is part of SlopeCraft.
 
 const double initializeNonZeroRatio = 0.05;
 
-const uint16_t popSize = 50;
+constexpr uint16_t popSize = 50;
 uint16_t maxFailTimes = 30;
 uint16_t LossyCompressor::maxGeneration = 600;
-const double crossoverProb = 0.9;
-const double mutateProb = 0.01;
-const uint32_t reportRate = 50;
+constexpr double crossoverProb = 0.9;
+constexpr double mutateProb = 0.01;
+constexpr uint32_t reportRate = 50;
 
 using Var_t = Eigen::ArrayX<uint8_t>;
 
@@ -83,7 +83,7 @@ class solver_t
           heu::RecordOption::DONT_RECORD_FITNESS, heu::SelectMethod::Tournament,
           args_t, iFun, fFun, heu::GADefaults<Var_t, args_t>::cFunSwapXs,
           heu::GADefaults<Var_t, args_t>::mFun> {
-public:
+ public:
   void customOptAfterEachGeneration() {
     if (this->generation() % reportRate == 0) {
       std::clock_t &prevClock = this->_args.prevClock;
@@ -98,12 +98,11 @@ public:
   }
 };
 
-LossyCompressor::LossyCompressor() {
-  solver = new solver_t;
+LossyCompressor::LossyCompressor() : solver{new solver_t{}} {
   solver->setTournamentSize(3);
 }
 
-LossyCompressor::~LossyCompressor() { delete solver; }
+LossyCompressor::~LossyCompressor() {}
 
 void LossyCompressor::setSource(const Eigen::ArrayXi &_base,
                                 const TokiColor **src) {
@@ -121,12 +120,15 @@ void LossyCompressor::setSource(const Eigen::ArrayXi &_base,
 void LossyCompressor::runGenetic(uint16_t maxHeight,
                                  bool allowNaturalCompress) {
   {
-    static heu::GAOption opt;
+    heu::GAOption opt;
     opt.crossoverProb = crossoverProb;
     opt.maxFailTimes = maxFailTimes;
     opt.maxGenerations = maxGeneration;
     opt.mutateProb = mutateProb;
     opt.populationSize = popSize;
+    solver->setOption(opt);
+  }
+  {
     solver_t::ArgsType args;
     args.setDimensions(source.size());
     args.src = source.data();
@@ -134,17 +136,14 @@ void LossyCompressor::runGenetic(uint16_t maxHeight,
     args.maxHeight = maxHeight;
     args.ptr = this;
     args.prevClock = std::clock();
-
-    solver->setOption(opt);
     solver->setArgs(args);
-    solver->initializePop();
   }
+  solver->initializePop();
 
   solver->run();
 }
 
 bool LossyCompressor::compress(uint16_t maxHeight, bool allowNaturalCompress) {
-
   (*progressRangeSetPtr)(*windPtr, 0, maxGeneration, 0);
 
   // std::cerr<<"Genetic algorithm started\n";
@@ -152,8 +151,8 @@ bool LossyCompressor::compress(uint16_t maxHeight, bool allowNaturalCompress) {
   maxFailTimes = 30;
   maxGeneration = 200;
   while (tryTimes < 3) {
-    runGenetic(maxHeight, allowNaturalCompress);
-    if (resultFitness() <= 0) {
+    this->runGenetic(maxHeight, allowNaturalCompress);
+    if (this->resultFitness() <= 0) {
       tryTimes++;
       maxFailTimes = -1;
       maxGeneration *= 2;
@@ -164,7 +163,9 @@ bool LossyCompressor::compress(uint16_t maxHeight, bool allowNaturalCompress) {
 }
 
 const Eigen::ArrayX<uint8_t> &LossyCompressor::getResult() const {
-  return solver->result();
+  return this->solver->result();
 }
 
-double LossyCompressor::resultFitness() const { return solver->bestFitness(); }
+double LossyCompressor::resultFitness() const {
+  return this->solver->bestFitness();
+}

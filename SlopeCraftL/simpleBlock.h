@@ -30,8 +30,7 @@ using namespace SlopeCraft;
 #include <vector>
 #include <utility>
 #include <map>
-
-typedef unsigned char uchar;
+#include <memory>
 
 typedef std::vector<std::string> stringList;
 
@@ -40,12 +39,12 @@ class simpleBlock : public ::SlopeCraft::AbstractBlock {
   simpleBlock();
   ~simpleBlock(){};
   std::string id;
-  uchar version;
+  uint8_t version;
   std::string idOld;
   std::string nameZH;
   std::string nameEN;
   std::string imageFilename;
-  Eigen::ArrayXX<uint32_t> image;
+  Eigen::Array<uint32_t, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> image;
   bool needGlass{false};
   bool doGlow{false};
   bool endermanPickable{false};
@@ -71,13 +70,9 @@ class simpleBlock : public ::SlopeCraft::AbstractBlock {
     return this->imageFilename.c_str();
   }
 
-  void getImage(uint32_t *dest, bool is_row_major) const noexcept override {
-    if (is_row_major) {
-      Eigen::Map<Eigen::ArrayXX<uint32_t>> map(dest, 16, 16);
-      map = this->image.transpose();
-    } else {
-      memcpy(dest, this->image.data(), this->image.size() * sizeof(uint32_t));
-    }
+  void getImage(uint32_t *dest_row_major) const noexcept override {
+    memcpy(dest_row_major, this->image.data(),
+           this->image.size() * sizeof(uint32_t));
   }
 
   void setId(const char *_id) noexcept override { id = _id; };
@@ -112,8 +107,9 @@ class simpleBlock : public ::SlopeCraft::AbstractBlock {
     *static_cast<simpleBlock *>(dst) = *this;
   }
 
-  static bool dealBlockId(const std::string &id, std::string &netBlockId,
-                          stringList *proName, stringList *proVal);
+  //  static bool processBlockId(std::string_view id, std::string &netBlockId,
+  //                             std::vector<std::string_view> &proName,
+  //                             std::vector<std::string_view> &proVal);
 
   const char *idForVersion(SCL_gameVersion ver) const noexcept override {
     if (ver >= SCL_gameVersion::MC13) {
@@ -130,7 +126,7 @@ class simpleBlock : public ::SlopeCraft::AbstractBlock {
 
 class BlockList : public ::SlopeCraft::BlockListInterface {
  private:
-  std::map<simpleBlock *, uint8_t> m_blocks;
+  std::map<std::unique_ptr<simpleBlock>, uint8_t> m_blocks;
 
  public:
   BlockList() = default;
@@ -145,8 +141,9 @@ class BlockList : public ::SlopeCraft::BlockListInterface {
                     size_t capacity_in_elements) const noexcept override;
 
   bool contains(const AbstractBlock *cp) const noexcept override {
+    const simpleBlock *ptr = dynamic_cast<const simpleBlock *>(cp);
     return this->m_blocks.contains(
-        static_cast<simpleBlock *>(const_cast<AbstractBlock *>(cp)));
+        reinterpret_cast<std::unique_ptr<simpleBlock> &>(ptr));
   }
 
  public:

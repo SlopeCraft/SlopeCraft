@@ -4,6 +4,7 @@ include(${CMAKE_SOURCE_DIR}/cmake/find_nlohmann_json.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/configure_fmtlib.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/configure_boost.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/configure_zstd.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/configure_libpng.cmake)
 
 find_package(ZLIB 1.2.11 REQUIRED)
 find_package(OpenMP REQUIRED)
@@ -11,6 +12,9 @@ find_package(fmt REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(Heu REQUIRED)
 find_package(Boost COMPONENTS iostreams REQUIRED)
+find_package(libzip REQUIRED)
+find_package(tl-expected REQUIRED)
+find_package(PNG REQUIRED)
 #find_package(zstd REQUIRED)
 
 set(SlopeCraft_SCL_windows_rc_files)
@@ -52,7 +56,6 @@ set(SlopeCraft_SCL_sources
     TokiSlopeCraft_build.cpp
     TokiSlopeCraft_convert.cpp
     TokiSlopeCraft_cache.cpp
-    WaterItem.cpp
     imagePreprocess.cpp
     lossyCompressor.cpp
     simpleBlock.cpp
@@ -84,6 +87,7 @@ set(SlopeCraft_SCL_link_libs
     Schem
     MapImageCvter
     FlatDiagram
+    libpng_reader
 
     ZLIB::ZLIB
     OpenMP::OpenMP_CXX
@@ -91,10 +95,12 @@ set(SlopeCraft_SCL_link_libs
     Eigen3::Eigen
     Heu::Genetic
     Boost::iostreams
+    libzip::zip
+    tl::expected
     ${SC_zstd_target_name})
 
 # link to dependents
-target_link_libraries(SlopeCraftL PUBLIC $<BUILD_INTERFACE:${SlopeCraft_SCL_link_libs}>)
+target_link_libraries(SlopeCraftL PRIVATE $<BUILD_INTERFACE:${SlopeCraft_SCL_link_libs}>)
 
 target_compile_options(SlopeCraftL PRIVATE ${SlopeCraft_vectorize_flags})
 
@@ -115,5 +121,47 @@ if (CMAKE_SYSTEM_NAME MATCHES "Windows")
     set_target_properties(SlopeCraftL PROPERTIES
         PREFIX "")
 endif ()
+
+function(SC_create_SCL_block_list src_dir archive_path)
+    if (NOT EXISTS "${src_dir}/BlockList.json")
+        message(FATAL_ERROR "${src_dir}/BlockList.json doesn't exist, block list json is missing")
+    endif ()
+
+    cmake_path(GET archive_path PARENT_PATH archive_dir)
+    file(MAKE_DIRECTORY ${archive_dir})
+
+    if (EXISTS ${archive_path})
+        file(REMOVE ${archive_path})
+    endif ()
+
+    #    file(GLOB_RECURSE file_list "${src_dir}/*.png")
+    #
+    #    file(ARCHIVE_CREATE OUTPUT temp.zip PATHS ${src_dir} "${src_dir}/BlockList.json" FORMAT zip
+    #        #COMPRESSION Zstd
+    #        #COMPRESSION_LEVEL 9
+    #    )
+
+    find_program(z7_exe NAMES 7z REQUIRED
+        DOC "Find 7z to archive SlopeCraft block lists. 7z is required because file(ARCHIVE_CREATE in cmake too stupid to be used"
+        HINTS "C:/Program Files/7-Zip/7z.exe")
+
+    execute_process(COMMAND ${z7_exe} a ${archive_path} -scsUTF-8 "${src_dir}/*" -tZIP
+        COMMAND_ERROR_IS_FATAL ANY)
+
+
+endfunction()
+
+SC_create_SCL_block_list(${CMAKE_SOURCE_DIR}/Blocks/FixedBlocks "${CMAKE_BINARY_DIR}/SCL_block_lists/FixedBlocks.zip")
+SC_create_SCL_block_list(${CMAKE_SOURCE_DIR}/Blocks/CustomBlocks "${CMAKE_BINARY_DIR}/SCL_block_lists/CustomBlocks.zip")
+
+
+add_executable(test_scl_load_blocklist tests/load_scl_blocklist.cpp)
+target_link_libraries(test_scl_load_blocklist PRIVATE SlopeCraftL)
+target_compile_features(test_scl_load_blocklist PRIVATE cxx_std_23)
+if (${WIN32})
+    DLLD_add_deploy(SlopeCraftL BUILD_MODE)
+    DLLD_add_deploy(test_scl_load_blocklist BUILD_MODE VERBOSE)
+endif ()
+
 
 include(install.cmake)
