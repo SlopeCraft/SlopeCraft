@@ -136,6 +136,7 @@ function(SC_create_SCL_block_list src_dir archive_path)
     #    )
 
     find_program(z7_exe NAMES 7z REQUIRED
+        HINTS "C:/Program Files/7-Zip/7z.exe;/usr/bin/7z"
         DOC "Find 7z to archive SlopeCraft block lists. 7z is required because file(ARCHIVE_CREATE in cmake too stupid to be used"
         HINTS "C:/Program Files/7-Zip/7z.exe")
 
