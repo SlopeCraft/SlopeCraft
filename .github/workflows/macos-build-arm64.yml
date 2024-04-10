@@ -44,8 +44,8 @@ jobs:
           cd ~/Downloads
           tar xzf qt6.6.0-static-arm64-apple-darwin.tar.xz
           ls -l
-          chmod +x ~/Downloads/qt6.6.0-static-arm64-apple-darwin/bin/*
-          chmod +x ~/Downloads/qt6.6.0-static-arm64-apple-darwin/libexec/*
+          chmod +x ~/Downloads/qt6.6.0-arm64-apple-darwin/bin/*
+          chmod +x ~/Downloads/qt6.6.0-arm64-apple-darwin/libexec/*
 
       - name: Install Vulkan sdk
         if: matrix.gpu_api == 'Vulkan'
@@ -55,7 +55,7 @@ jobs:
           glslc --version
 
       - name: Configure CMake
-        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=/usr/local/opt/llvm/bin/clang -DCMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++ -DCMAKE_PREFIX_PATH="$HOME/Downloads/qt6.6.0-static-arm64-apple-darwin" -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0
+        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=/usr/local/opt/llvm/bin/clang -DCMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++ -DCMAKE_PREFIX_PATH="$HOME/Downloads/qt6.6.0-arm64-apple-darwin" -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0
       - name: Build
         run: |
           cd build
