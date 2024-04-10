@@ -222,7 +222,7 @@ jobs:
           $basedir=(pwd).path.replace("\\","/")
           $BUILD_TYPE=$env:BUILD_TYPE
           $GPU_API=$env:GPU_API
-          $env:path="$basedir/bin/mingw64/bin;$env:path"
+          $env:path="$basedir/bin/mingw64/bin;C:/Program Files/7-Zip;$env:path"
           echo "env:path = $env:path"
           mkdir build
           mkdir install
