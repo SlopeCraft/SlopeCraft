@@ -1,7 +1,5 @@
 set(VCL_app_files
-        ${CMAKE_SOURCE_DIR}/VisualCraftL/VCL_blocks_fixed.json)
-
-include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips.cmake)
+    ${CMAKE_SOURCE_DIR}/VisualCraftL/VCL_blocks_fixed.json)
 
 foreach (mcver RANGE 12 20)
     set(VCL_current_var_name VCL_resource_${mcver})

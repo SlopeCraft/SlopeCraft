@@ -11,11 +11,8 @@ add_library(Schem
     mushroom.cpp)
 find_package(Eigen3 REQUIRED)
 
-include(${CMAKE_SOURCE_DIR}/cmake/configure_cereal.cmake)
 find_package(cereal REQUIRED)
-include(${CMAKE_SOURCE_DIR}/cmake/configure_fmtlib.cmake)
 find_package(fmt REQUIRED)
-include(${CMAKE_SOURCE_DIR}/cmake/configure_magic_enum.cmake)
 find_package(magic_enum REQUIRED)
 
 # target_compile_options(Schem BEFORE PUBLIC -std=c++17)
@@ -28,6 +25,6 @@ target_link_libraries(Schem PUBLIC
 target_compile_features(Schem PUBLIC cxx_std_20)
 target_link_libraries(Schem PUBLIC MCDataVersion ProcessBlockId)
 
-if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     set_target_properties(Schem PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
-endif()
+endif ()

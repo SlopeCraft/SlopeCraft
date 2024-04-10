@@ -1,0 +1,526 @@
+[
+  // 这个文件列出了所有用户自定义的方块的信息",
+  // 你可以按照这样的格式自定义添加新的方块，包括 mod 方块",
+  // 但必须遵守 json 格式",
+  // 如果 json 格式出错，整个文件都会无法解析，SlopeCraft 会报错。
+  {
+    // baseColor 是这种方块对应的基色，是必填项（非常非常重要！！！！！！！）",
+    "baseColor": 15,
+    // id 是这种方块的 id，也是必填项，最好附带完整的方块状态，必须加 minecraft:前缀",
+    "id": "minecraft:waxed_cut_copper_slab[type=top,waterlogged=false]",
+    // nameZH 是方块中文名称，必填",
+    "nameZH": "涂蜡切制铜台阶",
+    // nameEN 是方块英文名称，必填",
+    "nameEN": "Waxed cut copper slab",
+    // icon 是方块对应图片的文件名，它应当放在 CustomBlocks 文件夹下。必填",
+    "icon": "waxed_cut_copper_slab.png",
+    // version 是方块最早出现的版本。0 代表早于 1.12，12 代表 1.12，13 代表 1.13，如此类推。255 代表尚未出现的版本",
+    "version": 17
+    // idOld 是该方块在 1.12 的方块 id（如果有的话），必须加 minecraft:前缀，选填，默认为空字符串",
+    // needGlass 代表这个方块的下方需要依附其他方块，默认为否",
+    // isGlowing 代表这个方块是发光的，默认为否",
+    // endermanPickable 代表这个方块可以被末影人偷走，默认为否",
+    // burnable 代表这个方块会被火焰、岩浆或闪电点燃并燃烧，默认为否
+  },
+  // This json file includes information of all custom blocks.
+  // You can add your custom block in such format, including mod-blocks.
+  // But always remember to follow json format
+  // The whole file will failed to be parsed once an error occurred in json format, then SlopeCraft will complain.
+  {
+    // baseColor is the base color of this block on map, a compulsory item(EXTREMELY IMPORTANT!!!!)
+    "baseColor": 11,
+    // id is the block id with full blockstatus with minecraft: prefix. Compulsory item.
+    "id": "minecraft:stone_slab[type=top,waterlogged=false]",
+    // nameZH is the Chinese name. Compulsory item.
+    "nameZH": "石头台阶",
+    // nameEN is the English name. Compulsory item.
+    "nameEN": "Stone slab",
+    // icon is the image filename correspoing to this block, the image should be put under CustomBlocks directory. Compulsory item.
+    "icon": "stone_slab.png",
+    // version is the earliest version when the block is added to Minecraft. 0 means earlier than 1.12, 12 means 1.12, 13 means 1.13, and so on. 255 means future version.
+    "version": 14
+    // idOld is the blockid in 1.12 (if there is) with minecraft: prefix. default value is an empty string
+
+    // needGlass means if this block must be setted on a solid block, default value is false
+    // isGlowing means if the block glows, default value is false.
+    // endermanPickable means if the block can be picked by enderman, default value is false
+    // burnable means if the block can be lit by fire, lava or lightning blot, default value is false
+  },
+  {
+    "baseColor": 2,
+    "id": "minecraft:sandstone_slab[type=top,waterlogged=false]",
+    "nameZH": "砂岩台阶",
+    "nameEN": "Sandstone slab",
+    "icon": "smooth_sandstone_slab.png",
+    "version": 0,
+    "idOld": "minecraft:stone_slab[half=top,variant=sandstone]"
+  },
+  {
+    "baseColor": 11,
+    "id": "minecraft:cobblestone_slab[type=top,waterlogged=false]",
+    "nameZH": "圆石台阶",
+    "nameEN": "Cobblestone slab",
+    "icon": "cobblestone_slab.png",
+    "version": 0,
+    "idOld": "minecraft:stone_slab[half=top,variant=cobblestone]"
+  },
+  {
+    "baseColor": 11,
+    "id": "minecraft:smooth_stone_slab[type=top,waterlogged=false]",
+    "nameZH": "平滑石台阶",
+    "nameEN": "Smooth stone slab",
+    "icon": "smooth_stone_slab.png",
+    "version": 0,
+    "idOld": "minecraft:stone_slab[half=top,variant=smooth_stone]"
+  },
+  {
+    "baseColor": 28,
+    "id": "minecraft:brick_slab[type=top,waterlogged=false]",
+    "nameZH": "红砖台阶",
+    "nameEN": "Brick slab",
+    "icon": "bricks_slab.png",
+    "version": 0,
+    "idOld": "minecraft:stone_slab[half=top,variant=brick]"
+  },
+  {
+    "baseColor": 11,
+    "id": "minecraft:stone_brick_slab[type=top,waterlogged=false]",
+    "nameZH": "石砖台阶",
+    "nameEN": "Stonebrick slab",
+    "icon": "stone_bricks_slab.png",
+    "version": 0,
+    "idOld": "minecraft:stone_slab[half=top,variant=stone_brick]"
+  },
+  {
+    "baseColor": 35,
+    "id": "minecraft:nether_brick_slab[type=top,waterlogged=false]",
+    "nameZH": "下界砖台阶",
+    "nameEN": "Nether brick slab",
+    "icon": "nether_bricks_slab.png",
+    "version": 0,
+    "idOld": "minecraft:stone_slab[half=top,variant=nether_brick]"
+  },
+  {
+    "baseColor": 14,
+    "id": "minecraft:quartz_slab[type=top,waterlogged=false]",
+    "nameZH": "石英台阶",
+    "nameEN": "Quartz slab",
+    "icon": "quartz_block_slab.png",
+    "version": 0,
+    "idOld": "minecraft:stone_slab[half=top,variant=quartz]"
+  },
+  {
+    "baseColor": 13,
+    "id": "minecraft:oak_slab[type=top,waterlogged=false]",
+    "nameZH": "橡木台阶",
+    "nameEN": "Oak slab",
+    "icon": "oak_planks_slab.png",
+    "version": 0,
+    "idOld": "minecraft:wooden_slab[half=top,variant=oak]"
+  },
+  {
+    "baseColor": 34,
+    "id": "minecraft:spruce_slab[type=top,waterlogged=false]",
+    "nameZH": "云杉木台阶",
+    "nameEN": "Spruce slab",
+    "icon": "spruce_planks_slab.png",
+    "version": 0,
+    "idOld": "minecraft:wooden_slab[half=top,variant=spruce]",
+    "burnable": true
+  },
+  {
+    "baseColor": 2,
+    "id": "minecraft:birch_slab[type=top,waterlogged=false]",
+    "nameZH": "白桦木台阶",
+    "nameEN": "Birch slab",
+    "icon": "birch_planks_slab.png",
+    "version": 0,
+    "idOld": "minecraft:wooden_slab[half=top,variant=birch]",
+    "burnable": true
+  },
+  {
+    "baseColor": 10,
+    "id": "minecraft:jungle_slab[type=top,waterlogged=false]",
+    "nameZH": "丛林木台阶",
+    "nameEN": "Jungle slab",
+    "icon": "jungle_planks_slab.png",
+    "version": 0,
+    "idOld": "minecraft:wooden_slab[half=top,variant=jungle]",
+    "burnable": true
+  },
+  {
+    "baseColor": 15,
+    "id": "minecraft:acacia_slab[type=top,waterlogged=false]",
+    "nameZH": "金合欢木台阶",
+    "nameEN": "Acacia slab",
+    "icon": "acacia_planks_slab.png",
+    "version": 0,
+    "idOld": "minecraft:wooden_slab[half=top,variant=acacia]",
+    "burnable": true
+  },
+  {
+    "baseColor": 26,
+    "id": "minecraft:dark_oak_slab[type=top,waterlogged=false]",
+    "nameZH": "深色橡木台阶",
+    "nameEN": "Dark oak slab",
+    "icon": "dark_oak_planks_slab.png",
+    "version": 0,
+    "idOld": "minecraft:wooden_slab[half=top,variant=dark_oak]",
+    "burnable": true
+  },
+  {
+    "baseColor": 53,
+    "id": "minecraft:crimson_slab[type=top,waterlogged=false]",
+    "nameZH": "绯红木台阶",
+    "nameEN": "Crimson slab",
+    "icon": "crimson_planks_slab.png",
+    "version": 16,
+    "burnable": true
+  },
+  {
+    "baseColor": 56,
+    "id": "minecraft:warped_slab[type=top,waterlogged=false]",
+    "nameZH": "诡异木台阶",
+    "nameEN": "Warped slab",
+    "icon": "warped_planks_slab.png",
+    "version": 16,
+    "burnable": true
+  },
+  {
+    "baseColor": 28,
+    "id": "minecraft:mangrove_slab[type=top,waterlogged=false]",
+    "nameZH": "红树木台阶",
+    "nameEN": "Mangrove slab",
+    "icon": "mangrove_planks_slab.png",
+    "version": 19,
+    "burnable": true
+  },
+  {
+    "baseColor": 36,
+    "id": "minecraft:cherry_slab[type=top,waterlogged=false]",
+    "nameZH": "樱花木台阶",
+    "nameEN": "Cherry slab",
+    "icon": "cherry_slab_slab.png",
+    "version": 20,
+    "burnable": true
+  },
+  {
+    "baseColor": 18,
+    "id": "minecraft:bamboo_slab[type=top,waterlogged=false]",
+    "nameZH": "竹台阶",
+    "nameEN": "Bamboo slab",
+    "icon": "bamboo_planks_slab.png",
+    "version": 20,
+    "burnable": true
+  },
+  {
+    "baseColor": 18,
+    "id": "minecraft:bamboo_mosaic_slab[type=top,waterlogged=false]",
+    "nameZH": "竹马赛克台阶",
+    "nameEN": "Bamboo mosaic slab",
+    "icon": "bamboo_mosaic_slab.png",
+    "version": 20,
+    "burnable": true
+  },
+  {
+    "baseColor": 15,
+    "id": "minecraft:red_sandstone_slab[type=top,waterlogged=false]",
+    "nameZH": "红砂岩台阶",
+    "nameEN": "Red sandstone slab",
+    "icon": "smooth_red_sandstone_slab.png",
+    "version": 0,
+    "idOld": "minecraft:stone_slab2[half=top,variant=red_sandstone]"
+  },
+  {
+    "baseColor": 16,
+    "id": "minecraft:purpur_slab[type=top,waterlogged=false]",
+    "nameZH": "紫珀台阶",
+    "nameEN": "Purpur slab",
+    "icon": "purpur_block_slab.png",
+    "version": 0,
+    "idOld": "minecraft:purpur_slab[half=top,variant=default]"
+  },
+  {
+    "baseColor": 23,
+    "id": "minecraft:prismarine_slab[type=top,waterlogged=false]",
+    "nameZH": "海晶石台阶",
+    "nameEN": "Prismarine slab",
+    "icon": "prismarine_slab.png",
+    "version": 13,
+    "idOld": "minecraft:stone_slab[half=top,variant=prismarine]"
+  },
+  {
+    "baseColor": 31,
+    "id": "minecraft:prismarine_brick_slab[type=top,waterlogged=false]",
+    "nameZH": "海晶石砖台阶",
+    "nameEN": "Prismarine brick slab",
+    "icon": "prismarine_bricks_slab.png",
+    "version": 13,
+    "idOld": "minecraft:stone_slab[half=top,variant=prismarine_bricks]"
+  },
+  {
+    "baseColor": 31,
+    "id": "minecraft:dark_prismarine_slab[type=top,waterlogged=false]",
+    "nameZH": "暗海晶石台阶",
+    "nameEN": "Dark prismarine slab",
+    "icon": "dark_prismarine_slab.png",
+    "version": 13,
+    "idOld": "minecraft:stone_slab[half=top,variant=dark_prismarine]"
+  },
+  {
+    "baseColor": 2,
+    "id": "minecraft:end_stone_brick_slab[type=top,waterlogged=false]",
+    "nameZH": "末地石砖台阶",
+    "nameEN": "Endstone brick slab",
+    "icon": "end_stone_bricks_slab.png",
+    "version": 14
+  },
+  {
+    "baseColor": 2,
+    "id": "minecraft:sandstone",
+    "nameZH": "砂岩",
+    "nameEN": "Sand stone",
+    "icon": "sandstone.png",
+    "version": 0
+  },
+  {
+    "baseColor": 2,
+    "id": "minecraft:bone_block[axis=y]",
+    "nameZH": "骨块",
+    "nameEN": "Bone block",
+    "icon": "bone_block_top.png",
+    "version": 0
+  },
+  {
+    "baseColor": 10,
+    "id": "minecraft:granite",
+    "nameZH": "花岗岩",
+    "nameEN": "Granite",
+    "icon": "granite.png",
+    "version": 0,
+    "idOld": "minecraft:stone[variant=granite]"
+  },
+  {
+    "baseColor": 10,
+    "id": "minecraft:granite_slab[type=top,waterlogged=false]",
+    "nameZH": "花岗岩台阶",
+    "nameEN": "Granite slab",
+    "icon": "granite_slab.png",
+    "version": 14
+  },
+  {
+    "baseColor": 10,
+    "id": "minecraft:polished_granite",
+    "nameZH": "磨制花岗岩",
+    "nameEN": "Polished granite",
+    "icon": "polished_granite.png",
+    "version": 0,
+    "idOld": "minecraft:stone[variant=smooth_granite]"
+  },
+  {
+    "baseColor": 10,
+    "id": "minecraft:polished_granite_slab[type=top,waterlogged=false]",
+    "nameZH": "磨制花岗岩台阶",
+    "nameEN": "Polished granite slab",
+    "icon": "polished_granite_slab.png",
+    "version": 14
+  },
+  {
+    "baseColor": 11,
+    "id": "minecraft:andesite",
+    "nameZH": "安山岩",
+    "nameEN": "Andesite",
+    "icon": "andesite.png",
+    "version": 0,
+    "idOld": "minecraft:stone[variant=andesite]"
+  },
+  {
+    "baseColor": 11,
+    "id": "minecraft:andesite_slab[type=top,waterlogged=false]",
+    "nameZH": "安山岩台阶",
+    "nameEN": "Andesite slab",
+    "icon": "andesite_slab.png",
+    "version": 14
+  },
+  {
+    "baseColor": 11,
+    "id": "minecraft:polished_andesite",
+    "nameZH": "磨制安山岩",
+    "nameEN": "Polished andesite",
+    "icon": "polished_andesite.png",
+    "version": 0,
+    "idOld": "minecraft:stone[variant=smooth_andesite]"
+  },
+  {
+    "baseColor": 11,
+    "id": "minecraft:polished_andesite_slab[type=top,waterlogged=false]",
+    "nameZH": "磨制安山岩台阶",
+    "nameEN": "Polished andesite slab",
+    "icon": "polished_andesite_slab.png",
+    "version": 14
+  },
+  {
+    "baseColor": 14,
+    "id": "minecraft:diorite",
+    "nameZH": "闪长岩",
+    "nameEN": "Diorite",
+    "icon": "diorite.png",
+    "version": 0,
+    "idOld": "minecraft:stone[variant=diorite]"
+  },
+  {
+    "baseColor": 14,
+    "id": "minecraft:diorite_slab[type=top,waterlogged=false]",
+    "nameZH": "闪长岩台阶",
+    "nameEN": "Diorite slab",
+    "icon": "diorite_slab.png",
+    "version": 14
+  },
+  {
+    "baseColor": 14,
+    "id": "minecraft:polished_diorite",
+    "nameZH": "磨制闪长岩",
+    "nameEN": "Polished diorite",
+    "icon": "polished_diorite.png",
+    "version": 0,
+    "idOld": "minecraft:stone[variant=smooth_diorite]"
+  },
+  {
+    "baseColor": 14,
+    "id": "minecraft:polished_diorite_slab[type=top,waterlogged=false]",
+    "nameZH": "磨制闪长岩台阶",
+    "nameEN": "Polished diorite slab",
+    "icon": "polished_diorite_slab.png",
+    "version": 14
+  },
+  {
+    "baseColor": 15,
+    "id": "minecraft:red_sandstone",
+    "nameZH": "红砂岩",
+    "nameEN": "Red sandstone",
+    "icon": "red_sandstone.png",
+    "version": 0,
+    "idOld": "minecraft:red_sandstone[type=red_sandstone]"
+  },
+  {
+    "baseColor": 19,
+    "id": "minecraft:melon",
+    "nameZH": "西瓜",
+    "nameEN": "Melon",
+    "icon": "melon_top.png",
+    "version": 0,
+    "idOld": "minecraft:melon_block"
+  },
+  {
+    "baseColor": 24,
+    "id": "minecraft:mycelium[snowy=false]",
+    "nameZH": "菌丝体",
+    "nameEN": "Mycelium",
+    "icon": "mycelium_top.png",
+    "version": 0
+  },
+  {
+    "baseColor": 27,
+    "id": "minecraft:moss_block",
+    "nameZH": "苔藓块",
+    "nameEN": "Moss block",
+    "icon": "moss_block.png",
+    "version": 17
+  },
+  {
+    "baseColor": 29,
+    "id": "minecraft:basalt[axis=y]",
+    "nameZH": "玄武岩",
+    "nameEN": "Basalt",
+    "icon": "basalt_top.png",
+    "version": 16
+  },
+  {
+    "baseColor": 29,
+    "id": "minecraft:blackstone",
+    "nameZH": "黑石",
+    "nameEN": "Black stone",
+    "icon": "blackstone.png",
+    "version": 16
+  },
+  {
+    "baseColor": 29,
+    "id": "minecraft:blackstone_slab[type=top,waterlogged=false]",
+    "nameZH": "黑石台阶",
+    "nameEN": "Black stone slab",
+    "icon": "blackstone_slab.png",
+    "version": 16
+  },
+  {
+    "baseColor": 29,
+    "id": "minecraft:polished_blackstone_slab[type=top,waterlogged=false]",
+    "nameZH": "磨制黑石台阶",
+    "nameEN": "Polished black stone slab",
+    "icon": "polished_blackstone_slab.png",
+    "version": 16
+  },
+  {
+    "baseColor": 59,
+    "id": "minecraft:deepslate_brick_slab[type=top,waterlogged=false]",
+    "nameZH": "深板岩砖台阶",
+    "nameEN": "Deepslate bricks slab",
+    "icon": "deepslate_bricks_slab.png",
+    "version": 17
+  },
+  {
+    "baseColor": 59,
+    "id": "minecraft:deepslate_tile_slab[type=top,waterlogged=false]",
+    "nameZH": "深板岩瓦台阶",
+    "nameEN": "Deepslate tiles slab",
+    "icon": "deepslate_tiles_slab.png",
+    "version": 17
+  },
+  {
+    "baseColor": 59,
+    "id": "minecraft:cobbled_deepslate_slab[type=top,waterlogged=false]",
+    "nameZH": "深板岩圆石台阶",
+    "nameEN": "Cobbled deepslate slab",
+    "icon": "cobbled_deepslate_slab.png",
+    "version": 17
+  },
+  {
+    "baseColor": 59,
+    "id": "minecraft:polished_deepslate_slab[type=top,waterlogged=false]",
+    "nameZH": "磨制深板岩台阶",
+    "nameEN": "Polished deepslate slab",
+    "icon": "polished_deepslate_slab.png",
+    "version": 17
+  },
+  {
+    "baseColor": 29,
+    "id": "minecraft:crying_obsidian",
+    "nameZH": "哭泣的黑曜石",
+    "nameEN": "Crying obsidian",
+    "icon": "crying_obsidian.png",
+    "version": 16
+  },
+  {
+    "baseColor": 29,
+    "id": "minecraft:netherite_block",
+    "nameZH": "下界合金块",
+    "nameEN": "Netherite block",
+    "icon": "netherite_block.png",
+    "version": 16
+  },
+  {
+    "baseColor": 43,
+    "id": "minecraft:tuff",
+    "nameZH": "凝灰岩",
+    "nameEN": "Tuff",
+    "icon": "tuff.png",
+    "version": 17
+  },
+  {
+    "baseColor": 44,
+    "id": "minecraft:mud_brick_slab[type=top,waterlogged=false]",
+    "nameZH": "泥砖台阶",
+    "nameEN": "Mud bricks slab",
+    "icon": "mud_bricks_slab.png",
+    "version": 19
+  }
+]

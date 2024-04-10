@@ -10,9 +10,6 @@ set(CMAKE_AUTORCC ON)
 
 find_package(Qt6 COMPONENTS Widgets LinguistTools REQUIRED)
 
-# include_directories(${CMAKE_SOURCE_DIR})
-include(${CMAKE_SOURCE_DIR}/cmake/find_nlohmann_json.cmake)
-
 set(BlockListManager_header_files
     BlockListManager.h
     BaseColor.h

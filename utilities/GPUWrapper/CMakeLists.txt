@@ -6,7 +6,6 @@ add_library(GPUInterface STATIC
 target_include_directories(GPUInterface INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_features(GPUInterface PUBLIC cxx_std_20)
 
-include(${CMAKE_SOURCE_DIR}/cmake/configure_fmtlib.cmake)
 find_package(fmt REQUIRED)
 target_link_libraries(GPUInterface PUBLIC fmt::fmt)
 

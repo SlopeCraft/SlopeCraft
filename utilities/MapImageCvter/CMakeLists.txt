@@ -1,8 +1,6 @@
 set(CMAKE_CXX_STANDARD 20)
 
 find_package(OpenMP REQUIRED)
-
-include(${CMAKE_SOURCE_DIR}/cmake/configure_cereal.cmake)
 find_package(cereal REQUIRED)
 
 add_library(MapImageCvter
@@ -25,6 +23,6 @@ target_compile_options(MapImageCvter PRIVATE ${SlopeCraft_vectorize_flags})
 
 target_compile_features(MapImageCvter PUBLIC cxx_std_20)
 
-if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     set_target_properties(MapImageCvter PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
-endif()
+endif ()

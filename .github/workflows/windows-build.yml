@@ -30,13 +30,18 @@ jobs:
           echo "env:GPU_API = $env:GPU_API"
 
       - name: Install ninja
+        shell: cmd
         run: |
+          "C:\Program Files\7-Zip\7z.exe"
           choco install ninja
           ninja --version
 
       - name: Install deps with vcpkg
         shell: cmd
-        run: vcpkg install --triplet=x64-windows zlib libpng bzip2 zstd liblzma libzip eigen3 xsimd boost-iostreams boost-uuid
+        run: |
+          mkdir C:\vcpkg\downloads
+          curl -JL -o C:/vcpkg/downloads/tukaani-project-xz-v5.4.4.tar.gz "https://github.com/xz-mirror/xz/archive/refs/tags/v5.4.4.tar.gz"
+          vcpkg install --triplet=x64-windows zlib libpng bzip2 zstd liblzma libzip eigen3 xsimd boost-iostreams boost-uuid tl-expected
 
       - name: Install OpenCL with vcpkg
         if: matrix.gpu_api == 'OpenCL'
@@ -139,7 +144,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-
       - name: Install ninja
         run: |
           choco install ninja
@@ -158,7 +162,7 @@ jobs:
           $exclude_key_words="perl","Strawberry"
           $new_path=""
           foreach($p in $env:path.split(';')) {$exclude=$false; foreach($ekw in $exclude_key_words)	{if($p.contains($ekw)) {$exclude=$true;break;}}if(-not($exclude)) {$new_path="$new_path;$p"}}
-          $env:path="$basedir/bin/mingw64/bin;$new_path"
+          $env:path="$basedir/bin/mingw64/bin;C:/Program Files/7-Zip;$new_path"
           echo "New path : $env:path.split(';')"
           echo "NEW_PATH=$env:path" >> $env:GITHUB_ENV
 
@@ -190,7 +194,9 @@ jobs:
           $GPU_API=$env:GPU_API
           $env:path=$env:NEW_PATH
           echo "env:path = $env:path"
-          vcpkg install --triplet=x64-mingw-dynamic zlib bzip2 zstd liblzma libpng libzip eigen3 xsimd boost-iostreams boost-uuid
+          mkdir C:\vcpkg\downloads
+          curl -JL -o C:/vcpkg/downloads/tukaani-project-xz-v5.4.4.tar.gz "https://github.com/xz-mirror/xz/archive/refs/tags/v5.4.4.tar.gz"
+          vcpkg install --triplet=x64-mingw-dynamic zlib bzip2 zstd liblzma libpng libzip eigen3 xsimd boost-iostreams boost-uuid tl-expected magic-enum
 
 
       - name: Install OpenCL with vcpkg
@@ -216,7 +222,7 @@ jobs:
           $basedir=(pwd).path.replace("\\","/")
           $BUILD_TYPE=$env:BUILD_TYPE
           $GPU_API=$env:GPU_API
-          $env:path="$basedir/bin/mingw64/bin;$env:path"
+          $env:path="$basedir/bin/mingw64/bin;C:/Program Files/7-Zip;$env:path"
           echo "env:path = $env:path"
           mkdir build
           mkdir install

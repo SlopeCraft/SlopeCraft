@@ -7,132 +7,154 @@ on:
       - dev
 
 jobs:
-  nothing:
-    runs-on: macos-latest
+  clang:
+    runs-on: macos-14
+    strategy:
+      matrix:
+        build_type: [ Debug, Release ]
+        gpu_api: [ None, Vulkan ]
+    env:
+      BUILD_TYPE: ${{ matrix.build_type }}
+      GPU_API: ${{ matrix.gpu_api }}
+
     steps:
-      - name: checkout
-        run: echo "rua"
+      - name: Check environment
+        run: |
+          uname -r
+          brew install screenfetch
+          screenfetch
 
-#  clang-x86_64-to-arm64:
-#    runs-on: macos-latest
-#    steps:
-#      - name: Install dependents
-#        run: |
-#          brew remove zlib
-#          brew install cmake xz p7zip llvm ninja
-#          vcpkg install --triplet=arm64-osx zlib zstd
-#          wget https://github.com/SlopeCraft/QtBinaries/releases/download/qt6.6.0-x86_64-apple-darwin/qt6.6.0-static-x86_64-apple-darwin.tar.xz
-#          tar xf qt6.6.0-static-x86_64-apple-darwin.tar.xz
-#          mv qt6.6.0-static-x86_64-apple-darwin $HOME
-#
-#
-#        #vcpkg install --triplet=arm64-osx zlib zstd libzip eigen3 xsimd libpng boost
-#
-#      - name: Checkout repository
-#        uses: actions/checkout@v4
-#
-#      - name: Cross compile qtbase 6.6.2
-#        run: |
-#          cp cmake/tool_chain_files/x86_64-mac-to-arm64-mac.cmake $HOME
-#          mkdir $HOME/qt6.6.2-x86_64-mac-to-arm64-mac
-#          git clone https://github.com/qt/qtbase.git qtbase --recursive
-#          cd qtbase
-#          git checkout v6.6.2
-#          mkdir build
-#          cd build
-#          ../configure -shared -release -nomake examples -nomake tests -prefix $HOME/qt6.6.2-x86_64-mac-to-arm64-mac -qt-host-path $HOME/qt6.6.0-static-x86_64-apple-darwin -platform macx-clang -- -DCMAKE_TOOLCHAIN_FILE=$HOME/x86_64-mac-to-arm64-mac.cmake -DCMAKE_PREFIX_PATH=/usr/local/share/vcpkg/installed/arm64-osx
-#          cmake --build . --parallel
-#          cmake --install .
-#          rm -rf ./*
-#
-#      - name: Cross compile qttools 6.6.2
-#        run: |
-#          git clone https://github.com/qt/qttools.git qttools --recursive
-#          cd qttools
-#          git checkout v6.6.2
-#          mkdir build
-#          cd build
-#          $HOME/qt6.6.2-x86_64-mac-to-arm64-mac/bin/qt-configure-module ..
-#          cmake --build . --parallel
-#          cmake --install .
-#          rm -rf ./*
-#
-#      - name: Compress installed Qt binaries
-#        run: |
-#          tar cvf qt6.6.2-x86_64-mac-to-arm64-mac.tar $HOME/qt6.6.2-x86_64-mac-to-arm64-mac/*
-#          xz -9 qt6.6.2-x86_64-mac-to-arm64-mac.tar -T0
-#
-#      - name: Upload Qt6.6.2-host-x86_64-mac-target-arm64-mac
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: Qt6.6.2-host-x86_64-mac-target-arm64-mac
-#          path: qt6.6.2-x86_64-mac-to-arm64-mac.tar.xz
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      #      - name: Check env
+      #        run: |
+      #          whoami
+      #          pwd
+      #          ls $HOME
+      #          ls $HOME/Documents/cpp/qt/qt6.6.0-static -l
 
-#  clang:
-#    runs-on: self-hosted
-#    strategy:
-#      matrix:
-#        build_type: [ Debug, Release ]
-#        gpu_api: [ None ]
-#    env:
-#      BUILD_TYPE: ${{ matrix.build_type }}
-#      GPU_API: ${{ matrix.gpu_api }}
-#
-#    steps:
-#      - name: pwd
-#        run: pwd
-#
-#      - name: Checkout repository
-#        uses: actions/checkout@v4
-#      #      - name: Check env
-#      #        run: |
-#      #          whoami
-#      #          pwd
-#      #          ls $HOME
-#      #          ls $HOME/Documents/cpp/qt/qt6.6.0-static -l
-#
-#      - name: Install dependencies
-#        run: |
-#          brew install boost
-#
-#      - name: Configure CMake
-#        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=/opt/homebrew/opt/llvm/bin/clang -DCMAKE_CXX_COMPILER=/opt/homebrew/opt/llvm/bin/clang++ -DCMAKE_PREFIX_PATH="$HOME/Documents/cpp/qt/qt6.6.0-static" -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0
-#      - name: Build
-#        run: |
-#          cd build
-#          cmake --build . --parallel
-#      #      - name: CPack
-#      #        run: |
-#      #          cd build
-#      #          cpack -G ZIP
-#      - name: Install
-#        run: |
-#          cd build
-#          cmake --install .
-#
-#      #      - name: Fix VisualCraft.app
-#      #        run: |
-#      #          cd build/install
-#      #          cd VisualCraft.app/Contents/Frameworks
-#      #          cp /opt/homebrew/lib/libzstd.1.dylib .
-#      #          cp /opt/homebrew/lib/liblzma.5.dylib .
-#      #          install_name_tool libzip.5.dylib -change @loader_path/../../../../opt/xz/lib/liblzma.5.dylib @loader_path/liblzma.5.dylib
-#      #          install_name_tool libzip.5.dylib -change @loader_path/../../../../opt/zstd/lib/libzstd.1.dylib @loader_path/libzstd.1.dylib
-#      #          cd ../../..
-#      #          codesign --force --deep --sign=- VisualCraft.app
-#
-#      - name: Compress as zip
-#        run: |
-#          cd build
-#          7z a SlopeCraft-5.2.1-macOS-Apple-Silicon.zip -tzip -mx=9 -mmt -m0=XZ -snl ./install/*
-#
-#      - name: Get short SHA
-#        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
-#      - name: Upload Artifacts
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-macos-m2-clang
-#          path: build/SlopeCraft*.zip
+      - name: Install dependencies
+        run: |
+          brew install llvm boost ninja libpng xsimd p7zip libzip zstd xz eigen boost tl-expected magic_enum fmt sevenzip
+
+      #https://github.com/SlopeCraft/QtBinaries/releases/download/qt6.6.0-arm64-apple-darwin/qt6.6.0-static-arm64-apple-darwin.tar.xz
+      - name: Install qt6.6.0-static
+        run: |
+          brew install qt@6
+      #          curl -JL -o ~/Downloads/qt6.6.0-static-arm64-apple-darwin.tar.xz https://github.com/SlopeCraft/QtBinaries/releases/download/qt6.6.0-arm64-apple-darwin/qt6.6.0-static-arm64-apple-darwin.tar.xz
+      #          cd ~/Downloads
+      #          tar xzf qt6.6.0-static-arm64-apple-darwin.tar.xz
+      #          ls -l
+      #          chmod +x ~/Downloads/qt6.6.0-arm64-apple-darwin/bin/*
+      #          chmod +x ~/Downloads/qt6.6.0-arm64-apple-darwin/libexec/*
+
+      - name: Install Vulkan sdk
+        if: matrix.gpu_api == 'Vulkan'
+        run: |
+          brew install molten-vk vulkan-headers vulkan-loader vulkan-tools glslang shaderc
+          whereis glslc
+          glslc --version
+
+      - name: Configure CMake
+        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=/opt/homebrew/opt/llvm/bin/clang -DCMAKE_CXX_COMPILER=/opt/homebrew/opt/llvm/bin/clang++ -DCMAKE_PREFIX_PATH="$HOME/Downloads/qt6.6.0-arm64-apple-darwin" -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0 -DKOMPUTE_OPT_DISABLE_VULKAN_VERSION_CHECK=ON
+      - name: Build
+        run: |
+          cd build
+          cmake --build . --parallel
+      #      - name: CPack
+      #        run: |
+      #          cd build
+      #          cpack -G ZIP
+      - name: Install
+        run: |
+          cd build
+          cmake --install .
+
+      #      - name: Fix VisualCraft.app
+      #        run: |
+      #          cd build/install
+      #          cd VisualCraft.app/Contents/Frameworks
+      #          cp /opt/homebrew/lib/libzstd.1.dylib .
+      #          cp /opt/homebrew/lib/liblzma.5.dylib .
+      #          install_name_tool libzip.5.dylib -change @loader_path/../../../../opt/xz/lib/liblzma.5.dylib @loader_path/liblzma.5.dylib
+      #          install_name_tool libzip.5.dylib -change @loader_path/../../../../opt/zstd/lib/libzstd.1.dylib @loader_path/libzstd.1.dylib
+      #          cd ../../..
+      #          codesign --force --deep --sign=- VisualCraft.app
+
+      - name: Compress as zip
+        run: |
+          cd build
+          7z a SlopeCraft-5.2.1-macOS-Apple-Silicon.zip -tzip -mx=9 -mmt -m0=XZ -snl ./install/*
+
+      - name: Get short SHA
+        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-macos-m2-clang
+          path: build/SlopeCraft*.zip
+  #  nothing:
+  #    runs-on: macos-latest
+  #    steps:
+  #      - name: checkout
+  #        run: echo "rua"
+
+  #  clang-x86_64-to-arm64:
+  #    runs-on: macos-latest
+  #    steps:
+  #      - name: Install dependents
+  #        run: |
+  #          brew remove zlib
+  #          brew install cmake xz p7zip llvm ninja
+  #          vcpkg install --triplet=arm64-osx zlib zstd
+  #          wget https://github.com/SlopeCraft/QtBinaries/releases/download/qt6.6.0-x86_64-apple-darwin/qt6.6.0-static-x86_64-apple-darwin.tar.xz
+  #          tar xf qt6.6.0-static-x86_64-apple-darwin.tar.xz
+  #          mv qt6.6.0-static-x86_64-apple-darwin $HOME
+  #
+  #
+  #        #vcpkg install --triplet=arm64-osx zlib zstd libzip eigen3 xsimd libpng boost
+  #
+  #      - name: Checkout repository
+  #        uses: actions/checkout@v4
+  #
+  #      - name: Cross compile qtbase 6.6.2
+  #        run: |
+  #          cp cmake/tool_chain_files/x86_64-mac-to-arm64-mac.cmake $HOME
+  #          mkdir $HOME/qt6.6.2-x86_64-mac-to-arm64-mac
+  #          git clone https://github.com/qt/qtbase.git qtbase --recursive
+  #          cd qtbase
+  #          git checkout v6.6.2
+  #          mkdir build
+  #          cd build
+  #          ../configure -shared -release -nomake examples -nomake tests -prefix $HOME/qt6.6.2-x86_64-mac-to-arm64-mac -qt-host-path $HOME/qt6.6.0-static-x86_64-apple-darwin -platform macx-clang -- -DCMAKE_TOOLCHAIN_FILE=$HOME/x86_64-mac-to-arm64-mac.cmake -DCMAKE_PREFIX_PATH=/usr/local/share/vcpkg/installed/arm64-osx
+  #          cmake --build . --parallel
+  #          cmake --install .
+  #          rm -rf ./*
+  #
+  #      - name: Cross compile qttools 6.6.2
+  #        run: |
+  #          git clone https://github.com/qt/qttools.git qttools --recursive
+  #          cd qttools
+  #          git checkout v6.6.2
+  #          mkdir build
+  #          cd build
+  #          $HOME/qt6.6.2-x86_64-mac-to-arm64-mac/bin/qt-configure-module ..
+  #          cmake --build . --parallel
+  #          cmake --install .
+  #          rm -rf ./*
+  #
+  #      - name: Compress installed Qt binaries
+  #        run: |
+  #          tar cvf qt6.6.2-x86_64-mac-to-arm64-mac.tar $HOME/qt6.6.2-x86_64-mac-to-arm64-mac/*
+  #          xz -9 qt6.6.2-x86_64-mac-to-arm64-mac.tar -T0
+  #
+  #      - name: Upload Qt6.6.2-host-x86_64-mac-target-arm64-mac
+  #        uses: actions/upload-artifact@v3
+  #        with:
+  #          name: Qt6.6.2-host-x86_64-mac-target-arm64-mac
+  #          path: qt6.6.2-x86_64-mac-to-arm64-mac.tar.xz
+
+
 
 
 

@@ -200,7 +200,7 @@ QVariant MaterialModel::data(const QModelIndex& qmi, int role) const noexcept {
   if (role == Qt::ItemDataRole::DecorationRole) {
     if (c == 0) {
       QImage img{16, 16, QImage::Format_ARGB32};
-      mat.blk->getImage((uint32_t*)img.scanLine(0), true);
+      mat.blk->getImage((uint32_t*)img.scanLine(0));
       return QIcon{QPixmap::fromImage(img)};
     }
   }

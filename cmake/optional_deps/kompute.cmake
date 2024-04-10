@@ -1,4 +1,4 @@
-include(${CMAKE_SOURCE_DIR}/cmake/configure_fmtlib.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/../required_deps/fmtlib.cmake)
 
 find_package(Vulkan REQUIRED)
 

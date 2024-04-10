@@ -1,16 +1,8 @@
 project(ColorManip VERSION ${SlopeCraft_version} LANGUAGES C CXX)
 
-# set(CMAKE_CXX_STANDARD 20)
-# set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-# include_directories(../SlopeCraftL)
 find_package(OpenMP REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(Heu REQUIRED)
-
-include(${CMAKE_SOURCE_DIR}/cmake/configure_boost.cmake)
-include(${CMAKE_SOURCE_DIR}/cmake/configure_cereal.cmake)
-include(${CMAKE_SOURCE_DIR}/cmake/configure_xsimd.cmake)
 find_package(cereal REQUIRED)
 find_package(xsimd REQUIRED)
 find_package(Boost REQUIRED)
@@ -69,7 +61,6 @@ if (${OpenCL_FOUND})
     add_executable(test_algo tests/test_algo.cpp)
     target_link_libraries(test_algo PRIVATE OpenMP::OpenMP_CXX ColorManip)
 
-    include(${CMAKE_SOURCE_DIR}/cmake/configure_cli11.cmake)
     target_include_directories(test_algo PRIVATE ${cli11_include_dir})
 
     foreach (_algo r R H X l L)

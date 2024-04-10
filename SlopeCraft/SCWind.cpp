@@ -132,10 +132,8 @@ SCWind::SCWind(QWidget *parent)
 
     QDir::setCurrent(QCoreApplication::applicationDirPath());
 
-    this->ui->blm->add_blocklist("./Blocks/FixedBlocks.json",
-                                 "./Blocks/FixedBlocks");
-    this->ui->blm->add_blocklist("./Blocks/CustomBlocks.json",
-                                 "./Blocks/CustomBlocks");
+    this->ui->blm->add_blocklist("./Blocks/FixedBlocks.zip");
+    this->ui->blm->add_blocklist("./Blocks/CustomBlocks.zip");
 
     this->ui->blm->finish_blocklist();
 
@@ -514,7 +512,6 @@ QProgressBar *SCWind::current_bar() noexcept {
       return this->ui->pbar_cvt;
     case 2:
       return this->ui->pbar_export;
-      break;
     default:
       return nullptr;
   }
@@ -754,7 +751,6 @@ void SCWind::refresh_current_build_display(
   }
 
   int x{-1}, y{-1}, z{-1};
-  int64_t block_count{-1};
   {
     if (is_image_built_in_kernel) {
       // the caller garentee that the image is built in kernel
@@ -777,7 +773,7 @@ void SCWind::refresh_current_build_display(
     }
   }
   this->kernel->get3DSize(&x, &y, &z);
-  block_count = this->kernel->getBlockCounts();
+  const int64_t block_count = this->kernel->getBlockCounts();
 
   this->ui->lb_show_3dsize->setText(
       tr("大小： %1 × %2 × %3").arg(x).arg(y).arg(z));
@@ -991,40 +987,28 @@ QString SCWind::workStatus_to_string(::SCL_workStatues status) noexcept {
       break;
     case SlopeCraft::workStatues::buidingHeighMap:
       return tr("正在构建高度矩阵");
-      break;
     case SlopeCraft::workStatues::building3D:
       return tr("正在构建三维结构");
-      break;
     case SlopeCraft::workStatues::collectingColors:
       return tr("正在收集整张图片的颜色");
-      break;
     case SlopeCraft::workStatues::compressing:
       return tr("正在压缩立体地图画");
-      break;
     case SlopeCraft::workStatues::constructingBridges:
       return tr("正在为立体地图画搭桥");
-      break;
     case SlopeCraft::workStatues::converting:
       return tr("正在匹配颜色");
-      break;
     case SlopeCraft::workStatues::dithering:
       return tr("正在使用抖动仿色");
-      break;
     case SlopeCraft::workStatues::flippingToWall:
       return tr("正在将平板地图画变为墙面地图画");
-      break;
     case SlopeCraft::workStatues::writing3D:
       return tr("正在写入三维结构");
-      break;
     case SlopeCraft::workStatues::writingBlockPalette:
       return tr("正在写入方块列表");
-      break;
     case SlopeCraft::workStatues::writingMapDataFiles:
       return tr("正在写入地图数据文件");
-      break;
     case SlopeCraft::workStatues::writingMetaInfo:
       return tr("正在写入基础信息");
-      break;
   }
 
   return {};

@@ -26,17 +26,16 @@ This file is part of SlopeCraft.
 #include <filesystem>
 #include <fmt/format.h>
 #include <fstream>
-#include <json.hpp>
 #include <omp.h>
 
 void cb_progress_range_set(void *, int, int, int) {}
 void cb_progress_add(void *, int) {}
 
 using std::cout, std::endl;
-#define VCCL_PRIVATE_MACRO_MAKE_CASE(enum_val)                                 \
-  if (str == #enum_val) {                                                      \
-    ok = true;                                                                 \
-    return SCL_convertAlgo::enum_val;                                          \
+#define VCCL_PRIVATE_MACRO_MAKE_CASE(enum_val) \
+  if (str == #enum_val) {                      \
+    ok = true;                                 \
+    return SCL_convertAlgo::enum_val;          \
   }
 
 SCL_convertAlgo str_to_algo(std::string_view str, bool &ok) noexcept {
@@ -57,7 +56,6 @@ int list_gpu() {
   const size_t plat_num = VCL_platform_num();
   cout << plat_num << " platforms found on this computer : \n";
   for (size_t pid = 0; pid < plat_num; pid++) {
-
     VCL_GPU_Platform *plat = VCL_get_platform(pid);
     if (plat == nullptr) {
       cout << "Failed to get platform " << pid << '\n';
@@ -155,7 +153,6 @@ int set_allowed(VCL_block_state_list *bsl, const inputs &input) noexcept {
   return 0;
 }
 
-
 void list_supported_formats() noexcept {
   auto fmts = QImageReader::supportedImageFormats();
   cout << "Supported image formats : ";
@@ -183,9 +180,8 @@ int run(const inputs &input) noexcept {
 
   kernel->set_prefer_gpu(input.prefer_gpu);
   if (input.prefer_gpu) {
-    bool ok = true;
+    bool ok;
     while (true) {
-
       auto plat = VCL_get_platform(input.platform_idx);
       if (plat == nullptr) {
         ok = false;
@@ -231,7 +227,7 @@ int run(const inputs &input) noexcept {
     wt = omp_get_wtime() - wt;
 
     if (input.benchmark) {
-      cout << fmt::format(
+      fmt::print(
           "Parsing resource pack and block state list in {} miliseconds.\n",
           wt * 1000);
     }
@@ -245,8 +241,7 @@ int run(const inputs &input) noexcept {
   }
 
   if (input.show_color_num) {
-    cout << fmt::format("{} colors avaliable.\n",
-                        VCL_get_allowed_colors(nullptr, 0));
+    fmt::println("{} colors avaliable.", VCL_get_allowed_colors(nullptr, 0));
   }
 
   if (input.export_test_lite) {
@@ -255,15 +250,14 @@ int run(const inputs &input) noexcept {
     wt = omp_get_wtime();
 
     if (!VCL_export_test_litematic(filename.c_str())) {
-      cout << fmt::format("Failed to export test litematic \"{}\"", filename)
-           << endl;
+      fmt::print("Failed to export test litematic \"{}\"\n", filename);
       return __LINE__;
     }
 
     wt = omp_get_wtime() - wt;
 
     if (input.benchmark) {
-      cout << fmt::format("Exported \"{}\" in {} seconds.\n", filename, wt);
+      fmt::print("Exported \"{}\" in {} seconds.\n", filename, wt);
     }
   }
 
@@ -280,7 +274,7 @@ int run(const inputs &input) noexcept {
     QImage img(QString::fromLocal8Bit(img_filename.c_str()));
 
     if (img.isNull()) {
-      cout << fmt::format("Failed to open image {}", img_filename) << endl;
+      fmt::print("Failed to open image {}\n", img_filename);
       VCL_destroy_kernel(kernel);
       return __LINE__;
     }
@@ -308,8 +302,8 @@ int run(const inputs &input) noexcept {
     wt = omp_get_wtime() - wt;
 
     if (input.benchmark) {
-      cout << fmt::format("Converted {} pixels in {} seconds.\n",
-                          img.height() * img.width(), wt);
+      fmt::print("Converted {} pixels in {} seconds.\n",
+                 img.height() * img.width(), wt);
     }
 
     if (input.make_converted_image) {
@@ -324,7 +318,7 @@ int run(const inputs &input) noexcept {
       const bool ok = img.save(QString::fromLocal8Bit(dst_name_str.c_str()));
 
       if (!ok) {
-        cout << fmt::format("Failed to save image {}\n", dst_name_str);
+        fmt::print("Failed to save image {}\n", dst_name_str);
         return __LINE__;
       }
       // cout << dst_path << endl;
@@ -333,7 +327,6 @@ int run(const inputs &input) noexcept {
     if (input.make_flat_diagram) {
       double wtime[3];
       for (uint8_t layer = 0; layer < input.layers; layer++) {
-
         std::string dst_name_str(input.prefix);
         dst_name_str += pure_filename_no_extension;
         dst_name_str += "_flagdiagram_layer=";
@@ -347,16 +340,14 @@ int run(const inputs &input) noexcept {
         option.split_line_col_margin = input.flat_diagram_splitline_margin_col;
         wtime[layer] = omp_get_wtime();
         if (!kernel->export_flag_diagram(dst_name_str.c_str(), option, layer)) {
-          cout << fmt::format("Failed to export flat diagram {}\n",
-                              dst_name_str);
+          fmt::print("Failed to export flat diagram {}\n", dst_name_str);
           return __LINE__;
         }
         wtime[layer] = omp_get_wtime() - wtime[layer];
       }
 
       if (input.benchmark) {
-        cout << fmt::format("Export flatdiagram containing {} images in ",
-                            input.layers);
+        fmt::print("Export flatdiagram containing {} images in ", input.layers);
         for (int i = 0; i < input.layers; i++) {
           cout << wtime[i] << ", ";
         }
@@ -376,8 +367,7 @@ int run(const inputs &input) noexcept {
     wt = omp_get_wtime() - wt;
 
     if (input.benchmark) {
-      cout << fmt::format("Built {} blocks in {} seconds.\n",
-                          kernel->xyz_size(), wt);
+      fmt::print("Built {} blocks in {} seconds.\n", kernel->xyz_size(), wt);
     }
 
     if (input.make_litematic) {
@@ -390,13 +380,13 @@ int run(const inputs &input) noexcept {
       wt = omp_get_wtime() - wt;
 
       if (!success) {
-        cout << fmt::format("Failed to export {}.", filename) << endl;
+        fmt::println("Failed to export {}.", filename);
         return __LINE__;
       }
 
       if (input.benchmark) {
-        cout << fmt::format("Export litematic with {} blocks in {} seconds.\n",
-                            kernel->xyz_size(), wt);
+        fmt::println("Export litematic with {} blocks in {} seconds.",
+                     kernel->xyz_size(), wt);
       }
     }
 
@@ -410,13 +400,13 @@ int run(const inputs &input) noexcept {
       wt = omp_get_wtime() - wt;
 
       if (!success) {
-        cout << fmt::format("Failed to export {}.", filename) << endl;
+        fmt::println("Failed to export {}.", filename);
         return __LINE__;
       }
 
       if (input.benchmark) {
-        cout << fmt::format("Export WE schem with {} blocks in {} seconds.\n",
-                            kernel->xyz_size(), wt);
+        fmt::print("Export WE schem with {} blocks in {} seconds.\n",
+                   kernel->xyz_size(), wt);
       }
     }
 
@@ -430,12 +420,12 @@ int run(const inputs &input) noexcept {
       wt = omp_get_wtime() - wt;
 
       if (!success) {
-        cout << fmt::format("Failed to export {}.", filename) << endl;
+        fmt::println("Failed to export {}.", filename);
         return __LINE__;
       }
 
       if (input.benchmark) {
-        cout << fmt::format(
+        fmt::print(
             "Export vanilla structure file with {} blocks in {} seconds.\n",
             kernel->xyz_size(), wt);
       }

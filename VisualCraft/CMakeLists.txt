@@ -122,8 +122,6 @@ qt_add_resources(VisualCraft "VC_translations"
 
 qt_finalize_executable(VisualCraft)
 
-include(${CMAKE_SOURCE_DIR}/cmake/configure_vanilla_zips.cmake)
-
 configure_file(vc-config-to-bin-dir.json.in vc-config.json)
 
 if (${WIN32})

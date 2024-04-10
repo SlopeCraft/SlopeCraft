@@ -8,7 +8,7 @@ on:
 
 jobs:
   clang:
-    runs-on: macos-latest
+    runs-on: macos-13
     strategy:
       matrix:
         build_type: [ Debug, Release ]
@@ -19,6 +19,11 @@ jobs:
       GPU_API: ${{ matrix.gpu_api }}
       VECTORIZE: ${{ matrix.vectorize }}
     steps:
+      - name: Check environment
+        run: |
+          uname -r
+          brew install screenfetch
+          screenfetch
       #      - name: brew upgrade & update
       #        run: |
       #          brew update
@@ -39,7 +44,7 @@ jobs:
         run: brew install ninja
       - name: Install dependencies
         run: |
-          brew install libpng xsimd p7zip libzip zstd xz eigen boost tl-expected magic_enum fmt
+          brew install libpng xsimd p7zip libzip zstd xz eigen boost tl-expected magic_enum fmt sevenzip
 
       #      - name: Find liblzma and libzstd dylibs
       #        run: |

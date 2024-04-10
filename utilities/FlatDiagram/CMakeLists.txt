@@ -1,9 +1,6 @@
 project(ColorManip VERSION ${SlopeCraft_version} LANGUAGES C CXX)
 
-include(${CMAKE_SOURCE_DIR}/cmake/find_Eigen3.cmake)
 find_package(Eigen3 REQUIRED)
-
-include(${CMAKE_SOURCE_DIR}/cmake/configure_fmtlib.cmake)
 find_package(fmt REQUIRED)
 
 add_library(FlatDiagram STATIC

@@ -20,11 +20,16 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
+#include <fmt/format.h>
+#include <json.hpp>
+#include <tl/expected.hpp>
+#include <zip.h>
+#include <libpng_reader.h>
+
 #include "SlopeCraftL.h"
 #include "TokiSlopeCraft.h"
 #include "simpleBlock.h"
-#include <fmt/format.h>
-#include <json.hpp>
+#include "WriteStringDeliver.h"
 
 using namespace SlopeCraft;
 
@@ -47,8 +52,8 @@ Kernel::Kernel() {}
 
 using namespace SlopeCraft;
 
-std::pair<uint8_t, simpleBlock> parse_block(
-    const nlohmann::json &jo, std::string_view image_dir) noexcept(false) {
+std::pair<uint8_t, simpleBlock> parse_block(const nlohmann::json &jo) noexcept(
+    false) {
   simpleBlock ret;
   const int basecolor = jo.at("baseColor");
   if (basecolor < 0 || basecolor >= 64) {
@@ -58,12 +63,7 @@ std::pair<uint8_t, simpleBlock> parse_block(
   ret.id = jo.at("id");
   ret.nameZH = jo.at("nameZH");
   ret.nameEN = jo.at("nameEN");
-  {
-    std::string filename = image_dir.data();
-    filename += '/';
-    filename += jo.at("icon");
-    ret.imageFilename = filename;
-  }
+  ret.imageFilename = jo.at("icon");
   ret.version = jo.at("version");
   if (jo.contains("idOld")) {
     ret.idOld = jo.at("idOld");
@@ -90,55 +90,203 @@ std::pair<uint8_t, simpleBlock> parse_block(
   return {basecolor, ret};
 }
 
-BlockListInterface *impl_createBlockList(const char *filename,
-                                         const blockListOption &option,
-                                         std::string &errmsg) noexcept {
-  errmsg.reserve(4096);
-  errmsg.clear();
+// BlockListInterface *impl_createBlockList(const char *filename,
+//                                          const blockListOption &option,
+//                                          std::string &errmsg) noexcept {
+//   errmsg.reserve(4096);
+//   errmsg.clear();
+//
+//   BlockList *bl = new BlockList;
+//   using njson = nlohmann::json;
+//   try {
+//     std::ifstream ifs(filename);
+//     njson jo = njson::parse(ifs, nullptr, true, true);
+//
+//     njson::array_t arr;
+//     if (jo.contains("FixedBlocks")) {
+//       arr = std::move(jo.at("FixedBlocks"));
+//     } else {
+//       arr = std::move(jo.at("CustomBlocks"));
+//     }
+//
+//     // parse blocks
+//     for (size_t idx = 0; idx < arr.size(); idx++) {
+//       auto temp = parse_block(arr[idx], option.image_dir);
+//
+//       auto ptr = new simpleBlock;
+//       *ptr = std::move(temp.second);
+//       bl->blocks().emplace(ptr, temp.first);
+//     }
+//
+//   } catch (std::exception &e) {
+//     delete bl;
+//     errmsg += fmt::format(
+//         "Exception occured when parsing blocklist json: \"{}\"\n", e.what());
+//     return nullptr;
+//   }
+//
+//   // load images
+//   for (auto &pair : bl->blocks()) {
+//     pair.first->image.resize(16, 16);
+//     if (!option.callback_load_image(pair.first->getImageFilename(),
+//                                     pair.first->image.data())) {
+//       errmsg += fmt::format(
+//           "Failed to load image \"{}\", this error will be ignored.\n",
+//           pair.first->getImageFilename());
+//       continue;
+//     }
+//     pair.first->image.transposeInPlace();
+//   }
+//
+//   return bl;
+// }
+
+struct zip_deleter {
+  void operator()(zip_t *archive) const noexcept {
+    if (archive == nullptr) {
+      return;
+    }
+    zip_close(archive);
+  }
+};
+
+std::tuple<tl::expected<BlockListInterface *, std::string>, std::string>
+impl_create_block_list_from_zip(const char *zip_path) noexcept {
+  std::string warnings{};
+  int error_code = ZIP_ER_OK;
+  std::unique_ptr<zip_t, zip_deleter> archive{
+      zip_open(zip_path, ZIP_RDONLY | ZIP_CHECKCONS, &error_code)};
+  if (archive == nullptr) {
+    return {tl::make_unexpected(fmt::format(
+                "Failed to open archive \"{}\" with libzip error code {}",
+                zip_path, error_code)),
+            warnings};
+  }
+  if (error_code != ZIP_ER_OK) {
+    auto ret = tl::make_unexpected(fmt::format(
+        "Failed to open archive \"{}\" : \"{}\" libzip error code = {}",
+        zip_path, zip_strerror(archive.get()), error_code));
+    return {ret, warnings};
+  }
+
+  auto extract_file =
+      [zip_path, &archive](
+          const char *filename,
+          std::vector<uint8_t> &dest) -> tl::expected<void, std::string> {
+    dest.clear();
+
+    int error_code = ZIP_ER_OK;
+    const int64_t index_i =
+        zip_name_locate(archive.get(), filename, ZIP_FL_UNCHANGED);
+    if (index_i < 0) {
+      return tl::make_unexpected(fmt::format(
+          "File \"{}\" doesn't exist in archive \"{}\"", filename, zip_path));
+    }
+    const uint64_t index = uint64_t(index_i);
+
+    zip_stat_t stat;
+    error_code = zip_stat_index(archive.get(), index, ZIP_FL_UNCHANGED, &stat);
+    if (error_code != ZIP_ER_OK) {
+      return tl::make_unexpected(fmt::format(
+          "Failed to get size of file \"{}\"  in archive \"{}\" : \"{}\", "
+          "error code = {}",
+          filename, zip_path, zip_strerror(archive.get()), error_code));
+    }
+
+    const uint64_t file_size = stat.size;
+    dest.resize(file_size);
+
+    auto file = zip_fopen(archive.get(), filename, ZIP_FL_UNCHANGED);
+    if (file == nullptr) {
+      return tl::make_unexpected(
+          fmt::format("Failed to extract \"{}\" from archive \"{}\" : \"{}\" ",
+                      filename, zip_path, zip_strerror(archive.get())));
+    }
+
+    const int64_t read_bytes = zip_fread(file, dest.data(), dest.size());
+    if (read_bytes != int64_t(file_size)) {
+      return tl::make_unexpected(
+          fmt::format("Failed to extract \"{}\" from archive \"{}\", expected "
+                      "{} bytes, but extracted {} bytes : \"{}\" ",
+                      filename, zip_path, file_size, read_bytes,
+                      zip_strerror(archive.get())));
+    }
+    return {};
+  };
+
+  std::vector<uint8_t> buffer;
+  {
+    auto err = extract_file("BlockList.json", buffer);
+    if (!err) {
+      return {tl::make_unexpected(err.error()), warnings};
+    }
+  }
 
   BlockList *bl = new BlockList;
+
   using njson = nlohmann::json;
   try {
-    std::ifstream ifs(filename);
-    njson jo = njson::parse(ifs, nullptr, true, true);
-
-    njson::array_t arr;
-    if (jo.contains("FixedBlocks")) {
-      arr = std::move(jo.at("FixedBlocks"));
-    } else {
-      arr = std::move(jo.at("CustomBlocks"));
+    njson jo = njson::parse(buffer, nullptr, true, true);
+    if (!jo.is_array()) {
+      return {tl::make_unexpected(
+                  fmt::format("Json should contain an array directly")),
+              warnings};
     }
 
     // parse blocks
-    for (size_t idx = 0; idx < arr.size(); idx++) {
-      auto temp = parse_block(arr[idx], option.image_dir);
-
-      auto ptr = new simpleBlock;
-      *ptr = std::move(temp.second);
-      bl->blocks().emplace(ptr, temp.first);
+    for (size_t idx = 0; idx < jo.size(); idx++) {
+      auto [version, block] = parse_block(jo[idx]);
+      bl->blocks().emplace(std::make_unique<simpleBlock>(block), version);
     }
 
-  } catch (std::exception &e) {
+  } catch (const std::exception &e) {
     delete bl;
-    errmsg += fmt::format(
-        "Exception occured when parsing blocklist json: \"{}\"\n", e.what());
-    return nullptr;
+    return {tl::make_unexpected(
+                fmt::format("nlohmann json exception : {}", e.what())),
+            warnings};
   }
-
   // load images
+  std::vector<uint32_t> buf_pixel;
   for (auto &pair : bl->blocks()) {
-    pair.first->image.resize(16, 16);
-    if (!option.callback_load_image(pair.first->getImageFilename(),
-                                    pair.first->image.data())) {
-      errmsg += fmt::format(
-          "Failed to load image \"{}\", this error will be ignored.\n",
-          pair.first->getImageFilename());
-      continue;
+    {
+      auto err = extract_file(pair.first->imageFilename.c_str(), buffer);
+      if (!err) {
+        warnings +=
+            fmt::format("{}, required by {}", err.error(), pair.first->id);
+        continue;
+      }
     }
-    pair.first->image.transposeInPlace();
+
+    pair.first->image.resize(16, 16);
+    {
+      auto [result, warns] = parse_png_into_argb32(buffer, buf_pixel);
+      warnings += warns;
+
+      if (!result) {
+        fmt::format_to(std::back_insert_iterator{warnings},
+                       "Failed to load image \"{}\" because \"{}\"\n",
+                       pair.first->getImageFilename(), result.error());
+        //        for (uint8_t byte : buffer) {
+        //          printf("%02X ", int(byte));
+        //        }
+        //        printf("\n");
+        continue;
+      }
+      auto image_size = result.value();
+      if (image_size.rows != 16 || image_size.cols != 16) {
+        fmt::format_to(std::back_insert_iterator{warnings},
+                       "{} has invalid shape, expected 16x16, but found {} "
+                       "rows x {} cols.\n",
+                       pair.first->getImageFilename(), image_size.rows,
+                       image_size.cols);
+        continue;
+      }
+    }
+    assert(buf_pixel.size() == 16 * 16);
+    memcpy(pair.first->image.data(), buf_pixel.data(), 256 * sizeof(uint32_t));
   }
 
-  return bl;
+  return {bl, warnings};
 }
 
 extern "C" {
@@ -152,29 +300,16 @@ SCL_EXPORT AbstractBlock *SCL_createBlock() { return new simpleBlock; }
 SCL_EXPORT void SCL_destroyBlock(AbstractBlock *b) { delete b; }
 
 SCL_EXPORT BlockListInterface *SCL_createBlockList(
-    const char *filename, const blockListOption &option) {
-  const bool can_write_err =
-      (option.errmsg != nullptr) && (option.errmsg_capacity > 0);
+    const char *zip_filename, const BlockListCreateOption &option) {
+  auto [res, warnings] = impl_create_block_list_from_zip(zip_filename);
 
-  std::string errmsg;
-
-  BlockListInterface *ret = impl_createBlockList(filename, option, errmsg);
-
-  if (can_write_err) {
-    memset(option.errmsg, 0, option.errmsg_capacity);
-    const size_t copy_len = std::min(option.errmsg_capacity, errmsg.size());
-
-    memcpy(option.errmsg, errmsg.c_str(), copy_len);
-    if (option.errmsg_len_dest != nullptr) {
-      *option.errmsg_len_dest = copy_len;
-    }
-  } else {
-    if (option.errmsg_len_dest != nullptr) {
-      *option.errmsg_len_dest = 0;
-    }
+  SlopeCraft::write(*option.warnings, warnings);
+  if (!res) {
+    SlopeCraft::write(*option.error, res.error());
+    return nullptr;
   }
 
-  return ret;
+  return res.value();
 }
 
 SCL_EXPORT void SCL_destroyBlockList(BlockListInterface *) {}
