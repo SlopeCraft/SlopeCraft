@@ -135,10 +135,7 @@ function(SC_create_SCL_block_list src_dir archive_path)
     #        #COMPRESSION_LEVEL 9
     #    )
 
-    find_program(z7_exe NAMES 7z REQUIRED
-        HINTS "C:/Program Files/7-Zip/7z.exe;/usr/bin/7z"
-        DOC "Find 7z to archive SlopeCraft block lists. 7z is required because file(ARCHIVE_CREATE in cmake too stupid to be used"
-        HINTS "C:/Program Files/7-Zip/7z.exe")
+    include(${CMAKE_SOURCE_DIR}/cmake/optional_deps/7z.cmake)
 
     execute_process(COMMAND ${z7_exe} a ${archive_path} -scsUTF-8 "${src_dir}/*" -tZIP
         COMMAND_ERROR_IS_FATAL ANY)
