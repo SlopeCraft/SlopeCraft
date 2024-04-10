@@ -8,7 +8,7 @@ on:
 
 jobs:
   clang:
-    runs-on: macos-latest-xlarge
+    runs-on: macos-14
     strategy:
       matrix:
         build_type: [ Debug, Release ]
@@ -18,8 +18,8 @@ jobs:
       GPU_API: ${{ matrix.gpu_api }}
 
     steps:
-      - name: pwd
-        run: pwd
+      - name: Check environment
+        run: uname -r
 
       - name: Checkout repository
         uses: actions/checkout@v4

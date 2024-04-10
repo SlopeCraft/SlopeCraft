@@ -8,7 +8,7 @@ on:
 
 jobs:
   clang:
-    runs-on: macos-latest
+    runs-on: macos-13
     strategy:
       matrix:
         build_type: [ Debug, Release ]
@@ -19,6 +19,8 @@ jobs:
       GPU_API: ${{ matrix.gpu_api }}
       VECTORIZE: ${{ matrix.vectorize }}
     steps:
+      - name: Check environment
+        run: uname -r
       #      - name: brew upgrade & update
       #        run: |
       #          brew update
