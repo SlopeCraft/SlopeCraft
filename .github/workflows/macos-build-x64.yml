@@ -20,7 +20,10 @@ jobs:
       VECTORIZE: ${{ matrix.vectorize }}
     steps:
       - name: Check environment
-        run: uname -r
+        run: |
+          uname -r
+          brew install screenfetch
+          screenfetch
       #      - name: brew upgrade & update
       #        run: |
       #          brew update

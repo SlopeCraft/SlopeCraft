@@ -19,7 +19,10 @@ jobs:
 
     steps:
       - name: Check environment
-        run: uname -r
+        run: |
+          uname -r
+          brew install screenfetch
+          screenfetch
 
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -40,6 +43,7 @@ jobs:
           curl -JL -o ~/Downloads/qt6.6.0-static-arm64-apple-darwin.tar.xz https://github.com/SlopeCraft/QtBinaries/releases/download/qt6.6.0-arm64-apple-darwin/qt6.6.0-static-arm64-apple-darwin.tar.xz
           cd ~/Downloads
           tar xzf qt6.6.0-static-arm64-apple-darwin.tar.xz
+          ls -l
           chmod +x ~/Downloads/qt6.6.0-static-arm64-apple-darwin/bin/*
           chmod +x ~/Downloads/qt6.6.0-static-arm64-apple-darwin/libexec/*
 
