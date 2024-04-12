@@ -470,8 +470,8 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   std::array<uint32_t, 256> LUT_mapcolor_to_argb() const noexcept;
 
  public:
-  int getBlockPalette(const AbstractBlock **blkpp,
-                      size_t capacity) const noexcept;
+  size_t getBlockPalette(const AbstractBlock **blkpp,
+                         size_t capacity) const noexcept override;
 };
 
 // bool compressFile(const char *sourcePath, const char *destPath);
