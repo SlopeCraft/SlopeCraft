@@ -44,6 +44,7 @@ struct CvterInfo {
   std::unordered_map<ARGB, order_t> iniTool;
   uiPack ui;
   mapColor2Gray_LUT_t mapColor2Gray{};
+  const colorset_allowed_t* allowed_colorset{nullptr};
 };
 
 }  //  namespace GACvter

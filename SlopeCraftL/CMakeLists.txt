@@ -9,6 +9,7 @@ find_package(Boost COMPONENTS iostreams REQUIRED)
 find_package(libzip REQUIRED)
 find_package(tl-expected REQUIRED)
 find_package(PNG REQUIRED)
+find_package(cereal REQUIRED)
 #find_package(zstd REQUIRED)
 
 set(SlopeCraft_SCL_windows_rc_files)
@@ -37,6 +38,7 @@ set(Slope_SCL_internal_headers
     simpleBlock.h
     SlopeCraftL_global.h
     WriteStringDeliver.h
+    Colorset.h
 )
 
 set(SlopeCraft_SCL_sources
@@ -58,11 +60,10 @@ set(SlopeCraft_SCL_sources
     lossyCompressor.cpp
     simpleBlock.cpp
     SlopeCraftL.cpp
+    Colorset.cpp
 
     #${SlopeCraft_SCL_internal_headers}
     ${SlopeCraft_SCL_windows_rc_files}
-    Colorset.cpp
-    Colorset.h
 )
 
 # add this definations to both targets
@@ -99,6 +100,7 @@ set(SlopeCraft_SCL_link_libs
     Boost::iostreams
     libzip::zip
     tl::expected
+    cereal::cereal
     ${SC_zstd_target_name})
 
 # link to dependents

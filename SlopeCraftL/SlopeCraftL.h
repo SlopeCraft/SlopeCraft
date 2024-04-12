@@ -154,6 +154,14 @@ class BlockListInterface {
   virtual bool contains(const AbstractBlock *) const noexcept = 0;
 };
 
+struct ColorMapPtrs {
+  const float *r_data;
+  const float *g_data;
+  const float *b_data;
+  const uint8_t *map_data;
+  int num_colors;
+};
+
 class Kernel {
  public:
   Kernel();

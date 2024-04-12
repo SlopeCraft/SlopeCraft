@@ -180,7 +180,7 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(std::string FolderPath,
         continue;
       }
 
-      switch (mcVer) {
+      switch (this->colorset.mc_version) {
         case SCL_gameVersion::MC12:
         case SCL_gameVersion::MC13:
           break;
@@ -191,7 +191,8 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(std::string FolderPath,
         case SCL_gameVersion::MC18:
         case SCL_gameVersion::MC19:
         case SCL_gameVersion::MC20:
-          MapFile.writeInt("DataVersion", mcVersion2VersionNumber(mcVer));
+          MapFile.writeInt("DataVersion",
+                           mcVersion2VersionNumber(this->colorset.mc_version));
           break;
         default:
           cerr << "Wrong game version!\n";
@@ -209,7 +210,7 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(std::string FolderPath,
         MapFile.writeByte("unlimitedTracking", 0);
         MapFile.writeInt("xCenter", 0);
         MapFile.writeInt("zCenter", 0);
-        switch (mcVer) {
+        switch (this->colorset.mc_version) {
           case SCL_gameVersion::MC12:
             MapFile.writeByte("dimension", 114);
             MapFile.writeShort("height", 128);

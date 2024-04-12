@@ -197,7 +197,7 @@ void GACvter::GAConverter::setRawImage(const EImage &src) noexcept {
   this->_args.iniTool.reserve(colorHash.size());
 
   for (auto &i : colorHash) {
-    i.second.calculate(i.first);
+    i.second.calculate(i.first, *this->_args.allowed_colorset);
     this->_args.iniTool[i.first] = 0;
   }
 

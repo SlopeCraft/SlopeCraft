@@ -31,24 +31,24 @@ This file is part of SlopeCraft.
 // TokiColor::Basic = &TokiSlopeCraft::Basic;
 
 namespace SlopeCraft {
-int colorCount4External() { return TokiSlopeCraft::Allowed.color_count(); }
+// int colorCount4External() { return TokiSlopeCraft::Allowed.color_count(); }
 
 extern Eigen::Map<const Eigen::ArrayXf> BasicRGB4External(int channel) {
   return Eigen::Map<const Eigen::ArrayXf>(
-      &TokiSlopeCraft::Basic.RGB_mat()(0, channel),
-      TokiSlopeCraft::Basic.color_count());
+      &color_set::basic->RGB_mat()(0, channel),
+      color_set::basic->color_count());
 }
 
-Eigen::Map<const Eigen::ArrayXf> AllowedRGB4External(int channel) {
-  return Eigen::Map<const Eigen::ArrayXf>(
-      TokiSlopeCraft::Allowed.rgb_data(channel), colorCount4External());
-}
-
-extern Eigen::Map<const Eigen::Array<uint8_t, Dynamic, 1>>
-AllowedMapList4External() {
-  return Eigen::Map<const Eigen::Array<uint8_t, Dynamic, 1>>(
-      TokiSlopeCraft::Allowed.map_data(), colorCount4External());
-}
+// Eigen::Map<const Eigen::ArrayXf> AllowedRGB4External(int channel) {
+//   return Eigen::Map<const Eigen::ArrayXf>(
+//       TokiSlopeCraft::Allowed.rgb_data(channel), colorCount4External());
+// }
+//
+// extern Eigen::Map<const Eigen::Array<uint8_t, Dynamic, 1>>
+// AllowedMapList4External() {
+//   return Eigen::Map<const Eigen::Array<uint8_t, Dynamic, 1>>(
+//       TokiSlopeCraft::Allowed.map_data(), colorCount4External());
+// }
 
 }  //  end namespace SlopeCraft
 

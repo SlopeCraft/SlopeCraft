@@ -40,11 +40,11 @@ extern int colorCount4External();
 
 extern Eigen::Map<const Eigen::ArrayXf> BasicRGB4External(int channel);
 
-extern Eigen::Map<const Eigen::ArrayXf> AllowedRGB4External(int channel);
+// extern Eigen::Map<const Eigen::ArrayXf> AllowedRGB4External(int channel);
+//
+// extern Eigen::Map<const Eigen::Array<uint8_t, Eigen::Dynamic, 1>>
+// AllowedMapList4External();
 
-extern Eigen::Map<const Eigen::Array<uint8_t, Eigen::Dynamic, 1>>
-AllowedMapList4External();
+}  // namespace SlopeCraft
 
-} // namespace SlopeCraft
-
-#endif // EXTERNAL_CONVERTER_STATIC_INTERFACE_H
+#endif  // EXTERNAL_CONVERTER_STATIC_INTERFACE_H
