@@ -45,7 +45,7 @@ using GrayImage = Eigen::ArrayXX<gray_t>;
 using mapColor_t = uint8_t;
 
 using order_t = uint8_t;
-const order_t OrderMax = 4;
+constexpr order_t OrderMax = 4;
 
 using mutateMap_t = Eigen::Array<order_t, OrderMax, OrderMax - 1>;
 
@@ -64,7 +64,7 @@ const Eigen::Array<int, 5, 5> Gaussian = {{2, 4, 5, 4, 2},
                                           {5, 12, 15, 12, 5},
                                           {4, 9, 12, 9, 4},
                                           {2, 4, 5, 4, 2}};
-const int GauSum = Gaussian.sum();
+// const int GauSum = Gaussian.sum();
 
 inline mutateMap_t makeMutateMap() {
   mutateMap_t res;
@@ -133,6 +133,6 @@ void EImg2GrayImg(const EImage &e, GrayImage *gImg) noexcept {
     }
   }
 }
-} //  namespace GACvter
+}  //  namespace GACvter
 
-#endif // GACVTERDEFINES_H
+#endif  // GACVTERDEFINES_H

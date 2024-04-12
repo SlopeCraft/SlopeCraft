@@ -32,7 +32,8 @@ using namespace GACvter;
 
 namespace GACvter {
 
-mapColor2Gray_LUT_t mapColor2Gray;
+// #error "Fix singleton here"
+// mapColor2Gray_LUT_t mapColor2Gray;
 
 const mutateMap_t mutateMap = GACvter::makeMutateMap();
 
@@ -48,39 +49,31 @@ inline ARGB mapColor2ARGB32(const mapColor_t mC) noexcept {
   return ARGB32(rgb(0), rgb(1), rgb(2), (mC < 4) ? 0 : 255);
 }
 
-} // namespace GACvter
+}  // namespace GACvter
 
 GAConverter::GAConverter() { this->setTournamentSize(3); }
 
-void GACvter::updateMapColor2GrayLUT() {
-  static std::mutex lock;
-
-  if (!lock.try_lock()) { //  there's another thread writting currently. Just
-                          //  wait until it finishes.
-    lock.lock();
-    lock.unlock();
-    return;
-  } else {
-    for (int row = 0; row < 256; row++) {
-      const mapColor_t mC = index2mapColor(row);
-      const float r = SlopeCraft::BasicRGB4External(0)[row];
-      const float g = SlopeCraft::BasicRGB4External(1)[row];
-      const float b = SlopeCraft::BasicRGB4External(2)[row];
-      mapColor2Gray[mC] = GrayMax * RGB2Gray_Gamma(r, g, b);
-    }
-    lock.unlock();
+mapColor2Gray_LUT_t GACvter::updateMapColor2GrayLUT() {
+  mapColor2Gray_LUT_t result{};
+  result.fill(0);
+  for (int row = 0; row < 256; row++) {
+    const mapColor_t mC = index2mapColor(row);
+    const float r = SlopeCraft::BasicRGB4External(0)[row];
+    const float g = SlopeCraft::BasicRGB4External(1)[row];
+    const float b = SlopeCraft::BasicRGB4External(2)[row];
+    result[mC] = GrayMax * RGB2Gray_Gamma(r, g, b);
   }
+  return result;
 }
 
 template <bool strong>
 void privateMutateFun(const Var_t *parent, Var_t *child,
                       const CvterInfo *arg) noexcept {
-
   constexpr float ratio = 0.01;
   constexpr float Threshold = ratio * 2 - 1;
   *child = *parent;
-  if constexpr (strong //&& false
-  ) {                  //  strong mutation
+  if constexpr (strong  //&& false
+  ) {                   //  strong mutation
     static Eigen::ArrayXXf randMat(arg->rawImageCache.rows(),
                                    arg->rawImageCache.cols());
     randMat.setRandom();
@@ -91,7 +84,7 @@ void privateMutateFun(const Var_t *parent, Var_t *child,
             mutateMap(parent->operator()(idx), heu::randIdx(OrderMax - 1));
       }
     }
-  } else { //  weak mutation
+  } else {  //  weak mutation
     const int idx = heu::randIdx(parent->size());
     child->operator()(idx) =
         mutateMap(parent->operator()(idx), heu::randIdx(OrderMax - 1));
@@ -99,10 +92,9 @@ void privateMutateFun(const Var_t *parent, Var_t *child,
 }
 
 void GACvter::iFun(Var_t *v, const CvterInfo *arg) noexcept {
-
   v->setZero(arg->rawImageCache.rows(), arg->rawImageCache.cols());
 
-  if (heu::randD() < 1.0 / 3) { //  generate by random
+  if (heu::randD() < 1.0 / 3) {  //  generate by random
 
     std::unordered_map<ARGB, order_t> iniToolCpy = arg->iniTool;
     for (auto &i : iniToolCpy) {
@@ -113,14 +105,14 @@ void GACvter::iFun(Var_t *v, const CvterInfo *arg) noexcept {
       v->operator()(i) = iniToolCpy[arg->rawImageCache(i)];
     }
 
-  } else { //  generate by seed and mutation
+  } else {  //  generate by seed and mutation
 
-    if (heu::randD() < 0.4) { //  strong mutation
+    if (heu::randD() < 0.4) {  //  strong mutation
 
       privateMutateFun<true>(&arg->seeds[heu::randIdx(arg->seeds.size())], v,
                              arg);
 
-    } else { //  weak mutation
+    } else {  //  weak mutation
 
       privateMutateFun<false>(&arg->seeds[heu::randIdx(arg->seeds.size())], v,
                               arg);
@@ -129,10 +121,9 @@ void GACvter::iFun(Var_t *v, const CvterInfo *arg) noexcept {
 }
 
 void GACvter::fFun(const Var_t *v, const CvterInfo *arg, double *f) noexcept {
-
   GrayImage gray(arg->rawImageCache.rows(), arg->rawImageCache.cols()), edged;
   for (int64_t i = 0; i < arg->rawImageCache.size(); i++) {
-    gray(i) = mapColor2Gray[arg->colorMap(i).mapColor(v->operator()(i))];
+    gray(i) = arg->mapColor2Gray[arg->colorMap(i).mapColor(v->operator()(i))];
   }
 
   applyGaussian(gray, &edged, Gaussian);
@@ -146,7 +137,6 @@ void GACvter::fFun(const Var_t *v, const CvterInfo *arg, double *f) noexcept {
 
 void GACvter::cFun(const Var_t *p1, const Var_t *p2, Var_t *c1, Var_t *c2,
                    const CvterInfo *arg) noexcept {
-
   const uint32_t rows = arg->rawImageCache.rows();
   const uint32_t cols = arg->rawImageCache.cols();
   const uint32_t rS = heu::randD(1, rows - 2);
@@ -174,7 +164,6 @@ void GACvter::cFun(const Var_t *p1, const Var_t *p2, Var_t *c1, Var_t *c2,
 
 void GACvter::mFun(const Var_t *parent, Var_t *child,
                    const CvterInfo *arg) noexcept {
-
   if (arg->strongMutation) {
     privateMutateFun<true>(parent, child, arg);
   } else {
@@ -215,6 +204,8 @@ void GACvter::GAConverter::setRawImage(const EImage &src) noexcept {
   for (int i = 0; i < this->_args.rawImageCache.size(); i++) {
     this->_args.colorMap(i) = colorHash[this->_args.rawImageCache(i)];
   }
+
+  this->_args.mapColor2Gray = updateMapColor2GrayLUT();
 }
 
 void GACvter::GAConverter::setSeeds(

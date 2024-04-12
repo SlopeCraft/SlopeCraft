@@ -35,7 +35,7 @@ void cFun(const Var_t *, const Var_t *, Var_t *, Var_t *,
           const CvterInfo *) noexcept;
 void mFun(const Var_t *, Var_t *, const CvterInfo *) noexcept;
 
-void updateMapColor2GrayLUT();
+[[nodiscard]] mapColor2Gray_LUT_t updateMapColor2GrayLUT();
 
 class GAConverter
     : private heu::SOGA<Var_t, heu::FitnessOption::FITNESS_LESS_BETTER,
@@ -48,7 +48,7 @@ class GAConverter
                 heu::SelectMethod::Tournament, CvterInfo, ::GACvter::iFun,
                 ::GACvter::fFun, ::GACvter::cFun, ::GACvter::mFun>;
 
-public:
+ public:
   GAConverter();
 
   void setUiPack(const uiPack &) noexcept;
@@ -67,8 +67,8 @@ public:
   }
 
   void setRawImage(const EImage &) noexcept;
-  void
-  setSeeds(const std::vector<const Eigen::ArrayXX<mapColor_t> *> &) noexcept;
+  void setSeeds(
+      const std::vector<const Eigen::ArrayXX<mapColor_t> *> &) noexcept;
 
   using Base_t::option;
   using Base_t::setOption;
@@ -77,7 +77,7 @@ public:
 
   void resultImage(EImage *);
 
-private:
+ private:
   friend void ::GACvter::iFun(Var_t *, const CvterInfo *) noexcept;
   friend void ::GACvter::fFun(const Var_t *, const CvterInfo *,
                               double *) noexcept;
@@ -93,7 +93,7 @@ private:
 
   static constexpr std::clock_t reportInterval = 2 * CLOCKS_PER_SEC;
 
-protected:
+ protected:
   template <class this_t = GAConverter>
   inline void __impl_recordFitness() noexcept {
     Base_t::template __impl_recordFitness<this_t>();
@@ -109,6 +109,6 @@ protected:
   }
 };
 
-} // namespace GACvter
+}  // namespace GACvter
 
-#endif // SCL_GACVTER_GACONVERTER_H
+#endif  // SCL_GACVTER_GACONVERTER_H
