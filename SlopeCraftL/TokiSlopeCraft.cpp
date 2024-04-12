@@ -26,32 +26,9 @@ This file is part of SlopeCraft.
 #undef RGB
 #endif
 
-// const Eigen::Array<float, 2, 3> TokiSlopeCraft::DitherMapLR = {
-//     {0.0 / 16.0, 0.0 / 16.0, 7.0 / 16.0}, {3.0 / 16.0, 5.0 / 16.0, 1.0
-//     / 16.0}};
-// const Eigen::Array<float, 2, 3> TokiSlopeCraft::DitherMapRL = {
-//     {7.0 / 16.0, 0.0 / 16.0, 0.0 / 16.0}, {1.0 / 16.0, 5.0 / 16.0, 3.0
-//     / 16.0}};
-
-// const colorset_basic_t TokiSlopeCraft::Basic(SlopeCraft::RGBBasicSource);
-// colorset_allowed_t TokiSlopeCraft::Allowed;
+// std::unordered_set<TokiSlopeCraft *> TokiSlopeCraft::kernel_hash_set;
 //
-// gameVersion TokiSlopeCraft::mcVer{
-//     SCL_gameVersion::MC17};  // 12,13,14,15,16,17,18,19,20
-// mapTypes TokiSlopeCraft::mapType;
-// std::vector<simpleBlock> TokiSlopeCraft::blockPalette(0);
-
-std::unordered_set<TokiSlopeCraft *> TokiSlopeCraft::kernel_hash_set;
-
-std::mutex SCL_internal_lock;
-
-// template <>
-// const colorset_basic_t &libImageCvt::ImageCvter<true>::basic_colorset =
-//     TokiSlopeCraft::Basic;
-//
-// template <>
-// const colorset_allowed_t &libImageCvt::ImageCvter<true>::allowed_colorset =
-//     TokiSlopeCraft::Allowed;
+// std::mutex SCL_internal_lock;
 
 TokiSlopeCraft::TokiSlopeCraft()
     : colorset{},
@@ -80,25 +57,9 @@ TokiSlopeCraft::TokiSlopeCraft()
   Compressor->progressAddPtr = &this->algoProgressAdd;
   Compressor->progressRangeSetPtr = &this->algoProgressRangeSet;
   Compressor->keepAwakePtr = &this->keepAwake;
-
-  ::SCL_internal_lock.lock();
-  TokiSlopeCraft::kernel_hash_set.emplace(this);
-  for (auto kptr : kernel_hash_set) {
-    if (kptr->kernelStep >= step::wait4Image) {
-      this->kernelStep = step::wait4Image;
-      break;
-    }
-  }
-  ::SCL_internal_lock.unlock();
 }
 
-TokiSlopeCraft::~TokiSlopeCraft() {
-  // delete GAConverter;
-
-  ::SCL_internal_lock.lock();
-  TokiSlopeCraft::kernel_hash_set.erase(this);
-  ::SCL_internal_lock.unlock();
-}
+TokiSlopeCraft::~TokiSlopeCraft() {}
 
 /// function ptr to window object
 void TokiSlopeCraft::setWindPtr(void *_w) {
@@ -191,14 +152,6 @@ const AiCvterOpt *TokiSlopeCraft::aiCvterOpt() const { return &AiOpt; }
 bool TokiSlopeCraft::setType(mapTypes type, gameVersion ver,
                              const bool *allowedBaseColor,
                              const AbstractBlock *const *const palettes) {
-  return this->__impl_setType(type, ver, allowedBaseColor, palettes, this);
-}
-
-bool TokiSlopeCraft::__impl_setType(mapTypes type, gameVersion ver,
-                                    const bool allowedBaseColor[64],
-                                    const AbstractBlock *const *const palettes,
-                                    const TokiSlopeCraft *reporter) noexcept {
-  ::SCL_internal_lock.lock();
   /*
   if (kernelStep < colorSetReady)
   {
@@ -245,7 +198,7 @@ bool TokiSlopeCraft::__impl_setType(mapTypes type, gameVersion ver,
 
   // cerr<<__FILE__<<__LINE__<<endl;
 
-  reporter->reportWorkingStatue(reporter->wind, workStatues::collectingColors);
+  this->reportWorkingStatue(this->wind, workStatues::collectingColors);
 
   Eigen::ArrayXi baseColorVer(64);  // 基色对应的版本
   baseColorVer.setConstant((int)SCL_gameVersion::FUTURE);
@@ -315,21 +268,17 @@ bool TokiSlopeCraft::__impl_setType(mapTypes type, gameVersion ver,
       msg += std::to_string(this->colorset.allowed_colorset.Map(idx)) + ", ";
     }
 
-    reporter->reportError(reporter->wind, errorFlag::USEABLE_COLOR_TOO_FEW,
-                          msg.data());
-    ::SCL_internal_lock.unlock();
+    this->reportError(this->wind, errorFlag::USEABLE_COLOR_TOO_FEW, msg.data());
     return false;
   }
 
   // GACvter::updateMapColor2GrayLUT();
 
-  reporter->reportWorkingStatue(reporter->wind, workStatues::none);
-  for (auto kernel_ptr : TokiSlopeCraft::kernel_hash_set) {
-    kernel_ptr->image_cvter.on_color_set_changed();
-    kernel_ptr->kernelStep = SCL_step::wait4Image;
-  }
+  this->reportWorkingStatue(this->wind, workStatues::none);
+  this->image_cvter.on_color_set_changed();
 
-  ::SCL_internal_lock.unlock();
+  this->kernelStep = SCL_step::wait4Image;
+
   return true;
 }
 

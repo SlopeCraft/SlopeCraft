@@ -295,13 +295,6 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   void (*reportError)(void *, errorFlag, const char *);
   void (*reportWorkingStatue)(void *, workStatues);
 
-  //  static gameVersion mcVer;  // 12,13,14,15,16,17
-  //  static mapTypes mapType;
-  //  static std::vector<simpleBlock> blockPalette;
-
- private:
-  static std::unordered_set<TokiSlopeCraft *> kernel_hash_set;
-
  public:
   step kernelStep;
   color_set colorset;
