@@ -21,21 +21,22 @@ This file is part of SlopeCraft.
 */
 
 #include "sortColor.h"
+#include "../../../SlopeCraftL/Colors.h"
 
 using namespace GACvter;
 using namespace SlopeCraft;
 
 sortColor::sortColor() noexcept {}
 
-void sortColor::calculate(ARGB rgb) noexcept {
+void sortColor::calculate(ARGB rgb,
+                          const colorset_allowed_t& allowed) noexcept {
   const float r = getR(rgb) / 255.0f, g = getG(rgb) / 255.0f,
               b = getB(rgb) / 255.0f;
 
-  auto diffR = SlopeCraft::AllowedRGB4External(0) - r;
-  // SlopeCraft::Allowed4External.col(0)-r;
-  // SlopeCraft::Allowed4External.col(0)-r;
-  auto diffG = SlopeCraft::AllowedRGB4External(1) - g;
-  auto diffB = SlopeCraft::AllowedRGB4External(2) - b;
+  //  auto diffR = SlopeCraft::AllowedRGB4External(0) - r;
+  auto diffR = allowed.rgb(0) - r;
+  auto diffG = allowed.rgb(1) - g;
+  auto diffB = allowed.rgb(2) - b;
 
   TempVectorXf diff = diffR.square() + diffG.square() + diffB.square();
 
@@ -43,7 +44,8 @@ void sortColor::calculate(ARGB rgb) noexcept {
     int tempIdx = 0;
     // errors[o]=
     diff.minCoeff(&tempIdx);
-    mapCs[o] = SlopeCraft::AllowedMapList4External()[tempIdx];
+    mapCs[o] = allowed.Map(
+        tempIdx);  // SlopeCraft::AllowedMapList4External()[tempIdx];
     // Converter::mapColorSrc->operator[](tempIdx);
     diff[tempIdx] = heu::internal::pinfF;
   }

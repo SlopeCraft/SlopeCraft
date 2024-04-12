@@ -9,7 +9,7 @@ BaseColorWidget::BaseColorWidget(QWidget* parent, uint8_t _basecolor)
   connect(this->ui->cb_enable, &QCheckBox::toggled, this,
           &BaseColorWidget::changed);
 };
-BaseColorWidget::~BaseColorWidget() { delete this->ui; };
+BaseColorWidget::~BaseColorWidget(){};
 
 void BaseColorWidget::set_color(uint32_t color) noexcept {
   QPalette pl;

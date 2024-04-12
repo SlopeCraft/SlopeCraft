@@ -55,9 +55,9 @@ void PreviewWind::setup_data(const SlopeCraft::Kernel* kernel) noexcept {
   }
   std::vector<const SlopeCraft::AbstractBlock*> blkp_arr;
   {
-    int num = SlopeCraft::SCL_getBlockPalette(nullptr, 0);
+    const size_t num = kernel->getBlockPalette(nullptr, 0);
     blkp_arr.resize(num);
-    SlopeCraft::SCL_getBlockPalette(blkp_arr.data(), blkp_arr.size());
+    kernel->getBlockPalette(blkp_arr.data(), blkp_arr.size());
   }
 
   this->mat_list.resize(blkp_arr.size());

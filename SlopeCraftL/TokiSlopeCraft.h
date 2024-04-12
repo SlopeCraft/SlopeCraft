@@ -52,6 +52,7 @@ This file is part of SlopeCraft.
 #include <MapImageCvter/MapImageCvter.h>
 #include <Schem/Schem.h>
 #include "WriteStringDeliver.h"
+#include "Colorset.h"
 
 #include <cereal/cereal.hpp>
 #include <cereal/archives/binary.hpp>
@@ -85,13 +86,13 @@ class NBTWriter;
 
 class TokiSlopeCraft : public ::SlopeCraft::Kernel {
  public:
-  static const colorset_basic_t Basic;
-  static colorset_allowed_t Allowed;
+  //  static const colorset_basic_t Basic;
+  //  static colorset_allowed_t Allowed;
 
-  static void getColorMapPtrs(const float **const rdata,
-                              const float **const gdata,
-                              const float **const bdata, const uint8_t **,
-                              int *);
+  [[nodiscard]] ColorMapPtrs getAllowedColorMapPtrs() const noexcept;
+
+  //  void getColorMapPtrs(const float **const rdata, const float **const gdata,
+  //                       const float **const bdata, const uint8_t **, int *);
   // full palette
   static const float *getBasicColorMapPtrs();
 
@@ -138,9 +139,9 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
                const AbstractBlock *const *const) override;
 
  private:
-  static bool __impl_setType(mapTypes, gameVersion, const bool[64],
-                             const AbstractBlock *const *const,
-                             const TokiSlopeCraft *reporter) noexcept;
+  bool __impl_setType(mapTypes, gameVersion, const bool[64],
+                      const AbstractBlock *const *const,
+                      const TokiSlopeCraft *reporter) noexcept;
 
  public:
   void getBaseColorInARGB32(unsigned int *const) const override;
@@ -164,14 +165,12 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   int getImageRows() const override;
   int getImageCols() const override;
 
-  bool isVanilla() const override { return is_vanilla_static(); }
-  static inline bool is_vanilla_static() noexcept {
-    return mapType != SCL_mapTypes::FileOnly;
+  bool isVanilla() const override {
+    return this->colorset.map_type != SCL_mapTypes::FileOnly;
   }
 
-  bool isFlat() const override { return is_flat_static(); }
-  static inline bool is_flat_static() noexcept {
-    return mapType == SCL_mapTypes::Flat;
+  bool isFlat() const override {
+    return this->colorset.map_type == SCL_mapTypes::Flat;
   }
 
   // can do in converted:
@@ -296,22 +295,16 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   void (*reportError)(void *, errorFlag, const char *);
   void (*reportWorkingStatue)(void *, workStatues);
 
-  static gameVersion mcVer;  // 12,13,14,15,16,17
-  static mapTypes mapType;
-  static std::vector<simpleBlock> blockPalette;
-
- private:
-  static std::unordered_set<TokiSlopeCraft *> kernel_hash_set;
-
  public:
   step kernelStep;
+  color_set colorset;
   // convertAlgo ConvertAlgo;
 
   libMapImageCvt::MapImageCvter image_cvter;
 
   // std::array<int, 3> size3D; // x,y,z
-  PrimGlassBuilder *glassBuilder;
-  LossyCompressor *Compressor;
+  std::unique_ptr<PrimGlassBuilder> glassBuilder;
+  std::unique_ptr<LossyCompressor> Compressor;
 
   // std::shared_ptr<GACvter::GAConverter> GAConverter{nullptr};
 
@@ -407,8 +400,8 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
 
  private:
   // determined by mcver, map type and allowed colorest
-  static std::vector<uint8_t> type_hash() noexcept;
-  static std::string type_dir_of(std::string_view root_cache_dir) noexcept;
+  std::vector<uint8_t> type_hash() const noexcept;
+  std::string type_dir_of(std::string_view root_cache_dir) const noexcept;
   inline std::string current_type_dir() const noexcept {
     return type_dir_of(this->cache_dir.value());
   }
@@ -464,14 +457,14 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
                                   uint64_t build_task_hash,
                                   build_cache_ir *ir = nullptr) noexcept;
 
-  static const simpleBlock *find_block_for_idx(int idx,
-                                               std::string_view blkid) noexcept;
+  const simpleBlock *find_block_for_idx(int idx,
+                                        std::string_view blkid) const noexcept;
 
   std::array<uint32_t, 256> LUT_mapcolor_to_argb() const noexcept;
 
  public:
-  static int getBlockPalette(const AbstractBlock **blkpp,
-                             size_t capacity) noexcept;
+  size_t getBlockPalette(const AbstractBlock **blkpp,
+                         size_t capacity) const noexcept override;
 };
 
 // bool compressFile(const char *sourcePath, const char *destPath);

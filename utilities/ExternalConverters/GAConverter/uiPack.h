@@ -36,15 +36,17 @@ using uiPack = ::uiPack;
 struct CvterInfo {
   EImage rawImageCache;
   heu::MatrixDynamicSize<sortColor>
-      colorMap; //  the relationship between pixels and sortColor s
+      colorMap;  //  the relationship between pixels and sortColor s
   std::clock_t prevClock;
   bool strongMutation;
   GrayImage edgeFeatureMap;
-  std::vector<Var_t> seeds; //     seeds to initialize population
+  std::vector<Var_t> seeds;  //     seeds to initialize population
   std::unordered_map<ARGB, order_t> iniTool;
   uiPack ui;
+  mapColor2Gray_LUT_t mapColor2Gray{};
+  const colorset_allowed_t* allowed_colorset{nullptr};
 };
 
-} //  namespace GACvter
+}  //  namespace GACvter
 
-#endif // UIPACK_H
+#endif  // UIPACK_H

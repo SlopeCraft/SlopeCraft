@@ -19,7 +19,6 @@ This file is part of SlopeCraft.
     github:https://github.com/SlopeCraft/SlopeCraft
     bilibili:https://space.bilibili.com/351429231
 */
-#include <unsupported/Eigen/CXX11/Tensor>
 #include <fmt/format.h>
 #include "TokiSlopeCraft.h"
 
@@ -59,16 +58,16 @@ std::string TokiSlopeCraft::impl_make_tests(
     return "File name should ends with \".nbt\"";
   }
   libSchem::Schem test;
-  test.set_MC_major_version_number(::TokiSlopeCraft::mcVer);
+  test.set_MC_major_version_number(this->colorset.mc_version);
   test.set_MC_version_number(
-      MCDataVersion::suggested_version(::TokiSlopeCraft::mcVer));
+      MCDataVersion::suggested_version(this->colorset.mc_version));
   // const simpleBlock ** realSrc=(const simpleBlock **)src;
   std::vector<const simpleBlock *> realSrc;
   std::vector<uint8_t> realBaseColor;
   realSrc.clear();
   realBaseColor.clear();
   for (size_t idx = 0; idx < option.block_count; idx++) {
-    if (option.block_ptrs[idx]->getVersion() > (int)mcVer) {
+    if (option.block_ptrs[idx]->getVersion() > (int)this->colorset.mc_version) {
       continue;
     }
     realSrc.emplace_back(
@@ -88,7 +87,7 @@ std::string TokiSlopeCraft::impl_make_tests(
     ids.reserve(realSrc.size() + 1);
     ids.emplace_back("minecraft:air");
     for (auto i : realSrc) {
-      ids.emplace_back(i->idForVersion(TokiSlopeCraft::mcVer));
+      ids.emplace_back(i->idForVersion(this->colorset.mc_version));
     }
 
     test.set_block_id(ids.data(), ids.size());
@@ -175,9 +174,9 @@ std::vector<std::string_view> TokiSlopeCraft::schem_block_id_list()
   temp.reserve(64);
   temp.emplace_back("minecraft:air");
 
-  for (const auto &block : TokiSlopeCraft::blockPalette) {
+  for (const auto &block : this->colorset.palette) {
     std::string_view id_at_curversion =
-        block.idForVersion(TokiSlopeCraft::mcVer);
+        block.idForVersion(this->colorset.mc_version);
     if ("minecraft:air" == id_at_curversion) {
       break;
     } else {
@@ -214,9 +213,9 @@ bool TokiSlopeCraft::build(const build_options &option) noexcept {
     schem.set_block_id(temp);
   }
 
-  schem.set_MC_major_version_number(TokiSlopeCraft::mcVer);
+  schem.set_MC_major_version_number(this->colorset.mc_version);
   schem.set_MC_version_number(MCDataVersion::MCDataVersion_t(
-      TokiSlopeCraft::mcVersion2VersionNumber(TokiSlopeCraft::mcVer)));
+      TokiSlopeCraft::mcVersion2VersionNumber(this->colorset.mc_version)));
 
   // cerr << "ready to build" << endl;
 
@@ -358,19 +357,19 @@ schem.z_range()}); Build.resize(tempSize3D);
   // Base(r+1,c)<->High(r+1,c)<->Build(c+1,High(r+1,c),r+1)
   // 为了区分玻璃与空气，张量中存储的是 Base+1.所以元素为 1 对应着玻璃，0
   // 对应空气
-  int x = 0, y = 0, z = 0;
-  int yLow = 0;
+  // int x = 0, y = 0, z = 0;
+  // int yLow = 0;
 
   // cerr << WaterList.size() << " water columns in map\n";
   for (auto it = WaterList.begin(); it != WaterList.end();
        it++)  // 水柱周围的玻璃
   {
-    x = TokiCol(it->first) + 1;
-    z = TokiRow(it->first);
-    y = waterHigh(it->second);
-    yLow = waterLow(it->second);
+    const int x = TokiCol(it->first) + 1;
+    const int z = TokiRow(it->first);
+    const int y = waterHigh(it->second);
+    const int yLow = waterLow(it->second);
     schem(x, y + 1, z) = 0 + 1;  // 柱顶玻璃
-    for (short yDynamic = yLow; yDynamic <= y; yDynamic++) {
+    for (int yDynamic = yLow; yDynamic <= y; yDynamic++) {
       schem(x - 1, yDynamic, z - 0) = 1;
       schem(x + 1, yDynamic, z + 0) = 1;
       schem(x + 0, yDynamic, z - 1) = 1;
@@ -385,13 +384,14 @@ schem.z_range()}); Build.resize(tempSize3D);
   {
     for (short c = 0; c < sizePic(1); c++) {
       if (Base(r + 1, c) == 12 || Base(r + 1, c) == 0) continue;
-      x = c + 1;
-      y = LowMap(r + 1, c);
-      z = r + 1;
-      if (y >= 1 && blockPalette[Base(r + 1, c)].needGlass)
+      const int x = c + 1;
+      const int y = LowMap(r + 1, c);
+      const int z = r + 1;
+      if (y >= 1 && this->colorset.palette[Base(r + 1, c)].needGlass)
         schem(x, y - 1, z) = 0 + 1;
-      if ((fireProof && blockPalette[Base(r + 1, c)].burnable) ||
-          (endermanProof && blockPalette[Base(r + 1, c)].endermanPickable)) {
+      if ((fireProof && this->colorset.palette[Base(r + 1, c)].burnable) ||
+          (endermanProof &&
+           this->colorset.palette[Base(r + 1, c)].endermanPickable)) {
         if (y >= 1 && schem(x, y - 1, z) == 0) schem(x, y - 1, z) = 0 + 1;
         if (x >= 1 && schem(x - 1, y, z) == 0) schem(x - 1, y, z) = 0 + 1;
         if (z >= 1 && schem(x, y, z - 1) == 0) schem(x, y, z - 1) = 0 + 1;
@@ -411,11 +411,11 @@ schem.z_range()}); Build.resize(tempSize3D);
   progressAdd(wind, sizePic(2));
 
   for (auto it = WaterList.cbegin(); it != WaterList.cend(); ++it) {
-    x = TokiCol(it->first) + 1;
-    z = TokiRow(it->first);
-    y = waterHigh(it->second);
-    yLow = waterLow(it->second);
-    for (short yDynamic = yLow; yDynamic <= y; yDynamic++) {
+    const int x = TokiCol(it->first) + 1;
+    const int z = TokiRow(it->first);
+    const int y = waterHigh(it->second);
+    const int yLow = waterLow(it->second);
+    for (int yDynamic = yLow; yDynamic <= y; yDynamic++) {
       schem(x, yDynamic, z) = 13;
     }
   }
@@ -425,7 +425,7 @@ schem.z_range()}); Build.resize(tempSize3D);
 }
 
 void TokiSlopeCraft::makeBridge() {
-  if (mapType != mapTypes::Slope) return;
+  if (this->colorset.map_type != mapTypes::Slope) return;
   if (this->build_opt.glassMethod != glassBridgeSettings::withBridge) return;
 
   int step = sizePic(2) / schem.y_range();
@@ -596,7 +596,6 @@ int TokiSlopeCraft::getSchemPalette(const char **dest_id,
 }
 
 #include <FlatDiagram.h>
-#include <fmt/format.h>
 
 std::string TokiSlopeCraft::export_flat_diagram(
     std::string_view filename,
@@ -606,7 +605,7 @@ std::string TokiSlopeCraft::export_flat_diagram(
            "structure.";
   }
 
-  if (TokiSlopeCraft::mapType != SCL_mapTypes::Flat) {
+  if (this->colorset.map_type != SCL_mapTypes::Flat) {
     return "Only flat maps can be exported to flat diagram.";
   }
 
@@ -637,7 +636,7 @@ std::string TokiSlopeCraft::export_flat_diagram(
     if (blkp == nullptr) {
       std::string blkid_full;
       blkid_full.reserve(64 * 2048);
-      for (const auto &blk : TokiSlopeCraft::blockPalette) {
+      for (const auto &blk : this->colorset.palette) {
         blkid_full += blk.id;
         blkid_full.push_back('\n');
       }

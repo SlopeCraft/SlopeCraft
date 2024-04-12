@@ -154,6 +154,14 @@ class BlockListInterface {
   virtual bool contains(const AbstractBlock *) const noexcept = 0;
 };
 
+struct ColorMapPtrs {
+  const float *r_data;
+  const float *g_data;
+  const float *b_data;
+  const uint8_t *map_data;
+  int num_colors;
+};
+
 class Kernel {
  public:
   Kernel();
@@ -184,9 +192,12 @@ class Kernel {
 
   virtual const AiCvterOpt *aiCvterOpt() const = 0;
 
+  virtual size_t getBlockPalette(const AbstractBlock **buf,
+                                 size_t buf_capacity) const noexcept = 0;
+
   // can do in nothing:
   /// real size of kernel
-  virtual unsigned long long size() = 0;
+  virtual size_t size() = 0;
   /// revert to a previous step
   virtual void decreaseStep(::SCL_step) = 0;
 
@@ -432,17 +443,17 @@ SCL_EXPORT uint8_t SCL_maxAvailableVersion();
 
 SCL_EXPORT const char *SCL_getSCLVersion();
 
-SCL_EXPORT void SCL_getColorMapPtrs(const float **const rdata,
-                                    const float **const gdata,
-                                    const float **const bdata, const uint8_t **,
-                                    int *);
-// full palette
+// SCL_EXPORT void SCL_getColorMapPtrs(const float **const rdata,
+//                                     const float **const gdata,
+//                                     const float **const bdata, const uint8_t
+//                                     **, int *);
+//  full palette
 SCL_EXPORT const float *SCL_getBasicColorMapPtrs();
 
 SCL_EXPORT SCL_gameVersion SCL_basecolor_version(uint8_t basecolor);
 SCL_EXPORT uint8_t SCL_maxBaseColor();
-SCL_EXPORT int SCL_getBlockPalette(const AbstractBlock **blkpp,
-                                   size_t capacity_in_elements);
+// SCL_EXPORT int SCL_getBlockPalette(const AbstractBlock **blkpp,
+//                                    size_t capacity_in_elements);
 
 // SCL_EXPORT uint64_t SCL_mcVersion2VersionNumber(::SCL_gameVersion);
 

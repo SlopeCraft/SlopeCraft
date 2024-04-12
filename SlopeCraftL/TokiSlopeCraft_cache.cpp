@@ -106,13 +106,13 @@ uint64_t to_short_hash(std::span<const uint8_t> full_hash) noexcept {
   */
 }
 // type hash and dir ------------------------------------
-std::vector<uint8_t> TokiSlopeCraft::type_hash() noexcept {
+std::vector<uint8_t> TokiSlopeCraft::type_hash() const noexcept {
   // Chocobo1::SHA3_512 hash;
   boost::uuids::detail::sha1 hash;
-  SC_HASH_ADD_DATA(hash, TokiSlopeCraft::mapType);
-  SC_HASH_ADD_DATA(hash, TokiSlopeCraft::mcVer);
+  SC_HASH_ADD_DATA(hash, this->colorset.map_type);
+  SC_HASH_ADD_DATA(hash, this->colorset.mc_version);
 
-  TokiSlopeCraft::Allowed.hash_add_data(hash);
+  this->colorset.allowed_colorset.hash_add_data(hash);
 
   boost::uuids::detail::sha1::digest_type digest;
   hash.get_digest(digest);
@@ -122,8 +122,9 @@ std::vector<uint8_t> TokiSlopeCraft::type_hash() noexcept {
   return {dig.begin(), dig.end()};
 }
 
-std::string TokiSlopeCraft::type_dir_of(std::string_view cache_dir) noexcept {
-  return fmt::format("{}/{:x}", cache_dir, to_short_hash(type_hash()));
+std::string TokiSlopeCraft::type_dir_of(
+    std::string_view cache_dir) const noexcept {
+  return fmt::format("{}/{:x}", cache_dir, to_short_hash(this->type_hash()));
 }
 
 std::string TokiSlopeCraft::type_hash_filename() const noexcept {
@@ -209,7 +210,8 @@ bool TokiSlopeCraft::load_convert_cache(SCL_convertAlgo algo,
     return false;
   }
 
-  libMapImageCvt::MapImageCvter temp{Basic, Allowed};
+  libMapImageCvt::MapImageCvter temp{*color_set::basic,
+                                     this->colorset.allowed_colorset};
   const uint64_t expected_hash = this->image_cvter.task_hash(algo, dither);
   const std::string filename = this->convert_cache_filename_of(
       convert_dir(this->current_type_dir(), expected_hash));

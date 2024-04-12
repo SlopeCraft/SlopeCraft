@@ -25,20 +25,20 @@ This file is part of SlopeCraft.
 
 const char *TokiSlopeCraft::getSCLVersion() { return SC_VERSION_STR; }
 
-void TokiSlopeCraft::getColorMapPtrs(const float **const r,
-                                     const float **const g,
-                                     const float **const b,
-                                     const unsigned char **m, int *rows) {
-  if (r != nullptr) *r = TokiSlopeCraft::Allowed.rgb_data(0);
-  if (g != nullptr) *g = TokiSlopeCraft::Allowed.rgb_data(1);
-  if (b != nullptr) *b = TokiSlopeCraft::Allowed.rgb_data(2);
-
-  if (m != nullptr) *m = TokiSlopeCraft::Allowed.map_data();
-  if (rows != nullptr) *rows = TokiSlopeCraft::Allowed.color_count();
-}
+// void TokiSlopeCraft::getColorMapPtrs(const float **const r,
+//                                      const float **const g,
+//                                      const float **const b,
+//                                      const unsigned char **m, int *rows) {
+//   if (r != nullptr) *r = TokiSlopeCraft::Allowed.rgb_data(0);
+//   if (g != nullptr) *g = TokiSlopeCraft::Allowed.rgb_data(1);
+//   if (b != nullptr) *b = TokiSlopeCraft::Allowed.rgb_data(2);
+//
+//   if (m != nullptr) *m = TokiSlopeCraft::Allowed.map_data();
+//   if (rows != nullptr) *rows = TokiSlopeCraft::Allowed.color_count();
+// }
 
 const float *TokiSlopeCraft::getBasicColorMapPtrs() {
-  return TokiSlopeCraft::Basic.RGB_mat().data();
+  return color_set::basic->RGB_mat().data();
 }
 
 uint64_t TokiSlopeCraft::mcVersion2VersionNumber(SCL_gameVersion g) {
@@ -64,13 +64,13 @@ uint64_t TokiSlopeCraft::mcVersion2VersionNumber(SCL_gameVersion g) {
 #include <utilities/Schem/mushroom.h>
 
 const simpleBlock *TokiSlopeCraft::find_block_for_idx(
-    int idx, std::string_view blkid) noexcept {
+    int idx, std::string_view blkid) const noexcept {
   if (idx < 0) {
     return nullptr;
   }
 
-  if (idx < (int)TokiSlopeCraft::blockPalette.size()) {
-    return &TokiSlopeCraft::blockPalette[idx];
+  if (idx < (int)this->colorset.palette.size()) {
+    return &this->colorset.palette[idx];
   }
 
   // the block must be mushroom
@@ -116,10 +116,10 @@ const simpleBlock *TokiSlopeCraft::find_block_for_idx(
   return blkp;
 }
 
-int TokiSlopeCraft::getBlockPalette(const AbstractBlock **blkpp,
-                                    size_t capacity) noexcept {
-  const size_t palette_size = std::min<int>(
-      SCL_maxBaseColor() + 1, TokiSlopeCraft::blockPalette.size());
+size_t TokiSlopeCraft::getBlockPalette(const AbstractBlock **blkpp,
+                                       size_t capacity) const noexcept {
+  const size_t palette_size =
+      std::min<int>(SCL_maxBaseColor() + 1, this->colorset.palette.size());
   if (blkpp == nullptr || capacity <= 0) {
     return palette_size;
   }
@@ -129,7 +129,7 @@ int TokiSlopeCraft::getBlockPalette(const AbstractBlock **blkpp,
       break;
     }
 
-    blkpp[idx] = &TokiSlopeCraft::blockPalette[idx];
+    blkpp[idx] = &this->colorset.palette[idx];
   }
 
   for (size_t idx = palette_size; idx < capacity; idx++) {

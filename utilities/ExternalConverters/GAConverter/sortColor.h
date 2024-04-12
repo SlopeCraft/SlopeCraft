@@ -24,14 +24,15 @@ This file is part of SlopeCraft.
 #define SORTCOLOR_H
 
 #include "GACvterDefines.hpp"
+#include "../../SlopeCraftL/Colors.h"
 
 namespace GACvter {
 
 class sortColor {
-public:
+ public:
   sortColor() noexcept;
 
-  void calculate(ARGB) noexcept;
+  void calculate(ARGB, const colorset_allowed_t& allowed) noexcept;
 
   inline mapColor_t mapColor(order_t o) const noexcept { return mapCs[o]; }
   /*
@@ -40,10 +41,10 @@ public:
   }
   */
 
-private:
+ private:
   std::array<mapColor_t, OrderMax> mapCs;
   // std::array<float,OrderMax> errors;
 };
 
-} // namespace GACvter
-#endif // SORTCOLOR_H
+}  // namespace GACvter
+#endif  // SORTCOLOR_H

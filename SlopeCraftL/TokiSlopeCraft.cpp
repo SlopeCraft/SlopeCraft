@@ -26,47 +26,27 @@ This file is part of SlopeCraft.
 #undef RGB
 #endif
 
-const Eigen::Array<float, 2, 3> TokiSlopeCraft::DitherMapLR = {
-    {0.0 / 16.0, 0.0 / 16.0, 7.0 / 16.0}, {3.0 / 16.0, 5.0 / 16.0, 1.0 / 16.0}};
-const Eigen::Array<float, 2, 3> TokiSlopeCraft::DitherMapRL = {
-    {7.0 / 16.0, 0.0 / 16.0, 0.0 / 16.0}, {1.0 / 16.0, 5.0 / 16.0, 3.0 / 16.0}};
-
-const colorset_basic_t TokiSlopeCraft::Basic(SlopeCraft::RGBBasicSource);
-colorset_allowed_t TokiSlopeCraft::Allowed;
-
-gameVersion TokiSlopeCraft::mcVer{
-    SCL_gameVersion::MC17};  // 12,13,14,15,16,17,18,19,20
-mapTypes TokiSlopeCraft::mapType;
-std::vector<simpleBlock> TokiSlopeCraft::blockPalette(0);
-
-std::unordered_set<TokiSlopeCraft *> TokiSlopeCraft::kernel_hash_set;
-
-std::mutex SCL_internal_lock;
-
-// template <>
-// const colorset_basic_t &libImageCvt::ImageCvter<true>::basic_colorset =
-//     TokiSlopeCraft::Basic;
+// std::unordered_set<TokiSlopeCraft *> TokiSlopeCraft::kernel_hash_set;
 //
-// template <>
-// const colorset_allowed_t &libImageCvt::ImageCvter<true>::allowed_colorset =
-//     TokiSlopeCraft::Allowed;
+// std::mutex SCL_internal_lock;
 
-TokiSlopeCraft::TokiSlopeCraft() : image_cvter{Basic, Allowed} {
+TokiSlopeCraft::TokiSlopeCraft()
+    : colorset{},
+      image_cvter{*color_set::basic, colorset.allowed_colorset},
+      glassBuilder{new PrimGlassBuilder},
+      Compressor{new LossyCompressor} {
   kernelStep = step::nothing;
   this->image_cvter.clear_images();
   this->image_cvter.clear_color_hash();
   // rawImage.setZero(0, 0);
-
-  glassBuilder = new PrimGlassBuilder;
-  Compressor = new LossyCompressor;
   // GAConverter = new GACvter::GAConverter;
-  setProgressRangeSet([](void *, int, int, int) {});
-  setProgressAdd([](void *, int) {});
-  setKeepAwake([](void *) {});
-  setReportError([](void *, errorFlag, const char *) {});
-  setReportWorkingStatue([](void *, workStatues) {});
-  setAlgoProgressAdd([](void *, int) {});
-  setAlgoProgressRangeSet([](void *, int, int, int) {});
+  this->progressRangeSet = [](void *, int, int, int) {};
+  this->progressAdd = [](void *, int) {};
+  this->keepAwake = [](void *) {};
+  this->reportError = [](void *, errorFlag, const char *) {};
+  this->reportWorkingStatue = [](void *, workStatues) {};
+  this->algoProgressAdd = [](void *, int) {};
+  this->algoProgressRangeSet = [](void *, int, int, int) {};
 
   glassBuilder->windPtr = &wind;
   glassBuilder->progressAddPtr = &this->algoProgressAdd;
@@ -77,27 +57,9 @@ TokiSlopeCraft::TokiSlopeCraft() : image_cvter{Basic, Allowed} {
   Compressor->progressAddPtr = &this->algoProgressAdd;
   Compressor->progressRangeSetPtr = &this->algoProgressRangeSet;
   Compressor->keepAwakePtr = &this->keepAwake;
-
-  ::SCL_internal_lock.lock();
-  TokiSlopeCraft::kernel_hash_set.emplace(this);
-  for (auto kptr : kernel_hash_set) {
-    if (kptr->kernelStep >= step::wait4Image) {
-      this->kernelStep = step::wait4Image;
-      break;
-    }
-  }
-  ::SCL_internal_lock.unlock();
 }
 
-TokiSlopeCraft::~TokiSlopeCraft() {
-  delete Compressor;
-  delete glassBuilder;
-  // delete GAConverter;
-
-  ::SCL_internal_lock.lock();
-  TokiSlopeCraft::kernel_hash_set.erase(this);
-  ::SCL_internal_lock.unlock();
-}
+TokiSlopeCraft::~TokiSlopeCraft() {}
 
 /// function ptr to window object
 void TokiSlopeCraft::setWindPtr(void *_w) {
@@ -145,12 +107,19 @@ void TokiSlopeCraft::decreaseStep(step _step) {
   kernelStep = _step;
 }
 
+ColorMapPtrs TokiSlopeCraft::getAllowedColorMapPtrs() const noexcept {
+  const auto &allowed = this->colorset.allowed_colorset;
+  return {allowed.rgb_data(0), allowed.rgb_data(1), allowed.rgb_data(2),
+          allowed.map_data(), allowed.color_count()};
+}
+
 void TokiSlopeCraft::trySkipStep(step s) {
   if (this->kernelStep >= s) {
     return;
   }
 
-  if (Allowed.color_count() != 0 && blockPalette.size() != 0) {
+  if (this->colorset.allowed_colorset.color_count() != 0 &&
+      this->colorset.palette.size() != 0) {
     this->kernelStep = step::wait4Image;
   }
 }
@@ -183,14 +152,6 @@ const AiCvterOpt *TokiSlopeCraft::aiCvterOpt() const { return &AiOpt; }
 bool TokiSlopeCraft::setType(mapTypes type, gameVersion ver,
                              const bool *allowedBaseColor,
                              const AbstractBlock *const *const palettes) {
-  return __impl_setType(type, ver, allowedBaseColor, palettes, this);
-}
-
-bool TokiSlopeCraft::__impl_setType(mapTypes type, gameVersion ver,
-                                    const bool allowedBaseColor[64],
-                                    const AbstractBlock *const *const palettes,
-                                    const TokiSlopeCraft *reporter) noexcept {
-  ::SCL_internal_lock.lock();
   /*
   if (kernelStep < colorSetReady)
   {
@@ -200,43 +161,44 @@ bool TokiSlopeCraft::__impl_setType(mapTypes type, gameVersion ver,
   }
   */
 
-  TokiSlopeCraft::mapType = type;
-  TokiSlopeCraft::mcVer = ver;
+  this->colorset.map_type = type;
+  this->colorset.mc_version = ver;
 
-  Allowed.need_find_side = (TokiSlopeCraft::mapType == mapTypes::Slope);
+  this->colorset.allowed_colorset.need_find_side =
+      (this->colorset.map_type == mapTypes::Slope);
 
-  TokiSlopeCraft::blockPalette.resize(64);
+  this->colorset.palette.resize(64);
 
   // cerr<<__FILE__<<__LINE__<<endl;
   for (short i = 0; i < 64; i++) {
     // cerr<<"Block_"<<i<<endl;
     if (palettes[i] == nullptr) {
-      TokiSlopeCraft::blockPalette[i].clear();
+      this->colorset.palette[i].clear();
       continue;
     }
-    palettes[i]->copyTo(&TokiSlopeCraft::blockPalette[i]);
+    palettes[i]->copyTo(&this->colorset.palette[i]);
 
-    if (TokiSlopeCraft::blockPalette[i].id.find(':') ==
-        TokiSlopeCraft::blockPalette[i].id.npos) {
-      TokiSlopeCraft::blockPalette[i].id =
-          "minecraft:" + TokiSlopeCraft::blockPalette[i].id;
+    if (this->colorset.palette[i].id.find(':') ==
+        this->colorset.palette[i].id.npos) {
+      this->colorset.palette[i].id =
+          "minecraft:" + this->colorset.palette[i].id;
     }
 
-    if (TokiSlopeCraft::blockPalette[i].idOld.empty()) {
-      TokiSlopeCraft::blockPalette[i].idOld = blockPalette[i].id;
+    if (this->colorset.palette[i].idOld.empty()) {
+      this->colorset.palette[i].idOld = this->colorset.palette[i].id;
     }
 
-    if (TokiSlopeCraft::blockPalette[i].idOld.size() > 0 &&
-        (TokiSlopeCraft::blockPalette[i].idOld.find(':') ==
-         TokiSlopeCraft::blockPalette[i].idOld.npos)) {
-      TokiSlopeCraft::blockPalette[i].idOld =
-          "minecraft:" + TokiSlopeCraft::blockPalette[i].idOld;
+    if (this->colorset.palette[i].idOld.size() > 0 &&
+        (this->colorset.palette[i].idOld.find(':') ==
+         this->colorset.palette[i].idOld.npos)) {
+      this->colorset.palette[i].idOld =
+          "minecraft:" + this->colorset.palette[i].idOld;
     }
   }
 
   // cerr<<__FILE__<<__LINE__<<endl;
 
-  reporter->reportWorkingStatue(reporter->wind, workStatues::collectingColors);
+  this->reportWorkingStatue(this->wind, workStatues::collectingColors);
 
   Eigen::ArrayXi baseColorVer(64);  // 基色对应的版本
   baseColorVer.setConstant((int)SCL_gameVersion::FUTURE);
@@ -258,13 +220,12 @@ bool TokiSlopeCraft::__impl_setType(mapTypes type, gameVersion ver,
       MIndex[index] = false;
       continue;
     }
-    if ((int)mcVer <
+    if ((int)this->colorset.mc_version <
         baseColorVer(index2baseColor(index))) {  // 版本低于基色版本
       MIndex[index] = false;
       continue;
     }
-    if (TokiSlopeCraft::blockPalette[index2baseColor(index)]
-            .id.empty()) {  // 空 id
+    if (this->colorset.palette[index2baseColor(index)].id.empty()) {  // 空 id
       MIndex[index] = false;
       continue;
     }
@@ -276,48 +237,48 @@ bool TokiSlopeCraft::__impl_setType(mapTypes type, gameVersion ver,
       MIndex[index] = false;
       continue;
     }*/
-    if (is_vanilla_static() &&
+    if (this->isVanilla() &&
         (index2depth(index) >= 3)) {  // 可实装的地图画不允许第四种阴影
       MIndex[index] = false;
       continue;
     }
     if (index2baseColor(index) == 12) {  // 如果是水且非墙面
-      if (is_flat_static() && index2depth(index) != 2) {  // 平板且水深不是 1 格
+      if (this->isFlat() && index2depth(index) != 2) {  // 平板且水深不是 1 格
         MIndex[index] = false;
         continue;
       }
     } else {
-      if (is_flat_static() && index2depth(index) != 1) {  // 平板且阴影不为 1
+      if (this->isFlat() && index2depth(index) != 1) {  // 平板且阴影不为 1
         MIndex[index] = false;
         continue;
       }
     }
   }
 
-  if (!TokiSlopeCraft::Allowed.apply_allowed(Basic, MIndex)) {
-    std::string msg = "Too few usable color(s) : only " +
-                      std::to_string(Allowed.color_count()) + " colors\n";
+  if (!this->colorset.allowed_colorset.apply_allowed(*color_set::basic,
+                                                     MIndex)) {
+    std::string msg =
+        "Too few usable color(s) : only " +
+        std::to_string(this->colorset.allowed_colorset.color_count()) +
+        " colors\n";
     msg += "Avaliable base color(s) : ";
 
-    for (int idx = 0; idx < Allowed.color_count(); idx++) {
-      msg += std::to_string(Allowed.Map(idx)) + ", ";
+    for (int idx = 0; idx < this->colorset.allowed_colorset.color_count();
+         idx++) {
+      msg += std::to_string(this->colorset.allowed_colorset.Map(idx)) + ", ";
     }
 
-    reporter->reportError(reporter->wind, errorFlag::USEABLE_COLOR_TOO_FEW,
-                          msg.data());
-    ::SCL_internal_lock.unlock();
+    this->reportError(this->wind, errorFlag::USEABLE_COLOR_TOO_FEW, msg.data());
     return false;
   }
 
-  GACvter::updateMapColor2GrayLUT();
+  // GACvter::updateMapColor2GrayLUT();
 
-  reporter->reportWorkingStatue(reporter->wind, workStatues::none);
-  for (auto kernel_ptr : TokiSlopeCraft::kernel_hash_set) {
-    kernel_ptr->image_cvter.on_color_set_changed();
-    kernel_ptr->kernelStep = SCL_step::wait4Image;
-  }
+  this->reportWorkingStatue(this->wind, workStatues::none);
+  this->image_cvter.on_color_set_changed();
 
-  ::SCL_internal_lock.unlock();
+  this->kernelStep = SCL_step::wait4Image;
+
   return true;
 }
 
@@ -328,7 +289,7 @@ uint16_t TokiSlopeCraft::getColorCount() const {
                 "the map type and gameversion");
     return 0;
   }
-  return Allowed.color_count();
+  return this->colorset.allowed_colorset.color_count();
 }
 
 void TokiSlopeCraft::getAvailableColors(ARGB *const ARGBDest,
@@ -338,21 +299,22 @@ void TokiSlopeCraft::getAvailableColors(ARGB *const ARGBDest,
     *num = getColorCount();
   }
 
-  for (int idx = 0; idx < TokiSlopeCraft::Allowed.color_count(); idx++) {
+  for (int idx = 0; idx < this->colorset.allowed_colorset.color_count();
+       idx++) {
     if (mapColorDest != nullptr) {
-      mapColorDest[idx] = Allowed.Map(idx);
+      mapColorDest[idx] = this->colorset.allowed_colorset.Map(idx);
     }
 
     if (ARGBDest != nullptr) {
       ARGB r, g, b, a;
-      if (mapColor2baseColor(Allowed.Map(idx)) != 0)
+      if (mapColor2baseColor(this->colorset.allowed_colorset.Map(idx)) != 0)
         a = 255;
       else
         a = 0;
 
-      r = ARGB(Allowed.RGB(idx, 0) * 255);
-      g = ARGB(Allowed.RGB(idx, 1) * 255);
-      b = ARGB(Allowed.RGB(idx, 2) * 255);
+      r = ARGB(this->colorset.allowed_colorset.RGB(idx, 0) * 255);
+      g = ARGB(this->colorset.allowed_colorset.RGB(idx, 1) * 255);
+      b = ARGB(this->colorset.allowed_colorset.RGB(idx, 2) * 255);
 
       ARGBDest[idx] = (a << 24) | (r << 16) | (g << 8) | (b);
     }
@@ -384,9 +346,9 @@ void TokiSlopeCraft::getBaseColorInARGB32(ARGB *const dest) const {
   if (dest == nullptr) return;
 
   for (uint8_t base = 0; base < 64; base++)
-    dest[base] =
-        ARGB32(255 * Basic.RGB(128 + base, 0), 255 * Basic.RGB(128 + base, 1),
-               255 * Basic.RGB(128 + base, 2), 255);
+    dest[base] = ARGB32(255 * color_set::basic->RGB(128 + base, 0),
+                        255 * color_set::basic->RGB(128 + base, 1),
+                        255 * color_set::basic->RGB(128 + base, 2), 255);
 }
 
 int64_t TokiSlopeCraft::sizePic(short dim) const {
@@ -460,7 +422,8 @@ std::array<uint32_t, 256> TokiSlopeCraft::LUT_mapcolor_to_argb()
   std::array<uint32_t, 256> argbLUT;
   for (int idx = 0; idx < 256; idx++) {
     argbLUT[idx] =
-        RGB2ARGB(Basic.RGB(idx, 0), Basic.RGB(idx, 1), Basic.RGB(idx, 2));
+        RGB2ARGB(color_set::basic->RGB(idx, 0), color_set::basic->RGB(idx, 1),
+                 color_set::basic->RGB(idx, 2));
   }
   return argbLUT;
 }
@@ -536,7 +499,7 @@ int64_t TokiSlopeCraft::getBlockCounts(std::vector<int64_t> *dest) const {
   // map ele_t in schem to index in blockPalette(material index)
   std::vector<int> map_ele_to_material;
   {
-    map_ele_to_material.resize(TokiSlopeCraft::blockPalette.size());
+    map_ele_to_material.resize(this->colorset.palette.size());
     std::fill(map_ele_to_material.begin(), map_ele_to_material.end(), -1);
 
     for (int ele = 1; ele < this->schem.palette_size(); ele++) {
@@ -546,9 +509,9 @@ int64_t TokiSlopeCraft::getBlockCounts(std::vector<int64_t> *dest) const {
           TokiSlopeCraft::find_block_for_idx(ele - 1, blkid);
       assert(sbp != nullptr);
 
-      int64_t idx = sbp - TokiSlopeCraft::blockPalette.data();
+      int64_t idx = sbp - this->colorset.palette.data();
       assert(idx >= 0);
-      assert(idx < (int64_t)TokiSlopeCraft::blockPalette.size());
+      assert(idx < (int64_t)this->colorset.palette.size());
 
       map_ele_to_material[ele] = idx;
     }

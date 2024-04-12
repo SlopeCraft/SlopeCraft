@@ -17,7 +17,7 @@ using select_callback_t = std::function<int(
 class BaseColorWidget : public QGroupBox {
   Q_OBJECT
  private:
-  Ui::BaseColorWidget* ui;
+  std::unique_ptr<Ui::BaseColorWidget> ui;
   const uint8_t basecolor{255};
   std::vector<BlockWidget*> blocks;
 

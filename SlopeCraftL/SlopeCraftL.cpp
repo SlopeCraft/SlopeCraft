@@ -349,12 +349,12 @@ double SCL_EXPORT SCL_getMutationProb(const AiCvterOpt *a) {
   return a->mutationProb;
 }
 
-SCL_EXPORT void SCL_getColorMapPtrs(const float **const rdata,
-                                    const float **const gdata,
-                                    const float **const bdata,
-                                    const uint8_t **mapdata, int *num) {
-  TokiSlopeCraft::getColorMapPtrs(rdata, gdata, bdata, mapdata, num);
-}
+// SCL_EXPORT void SCL_getColorMapPtrs(const float **const rdata,
+//                                     const float **const gdata,
+//                                     const float **const bdata,
+//                                     const uint8_t **mapdata, int *num) {
+//   TokiSlopeCraft::getColorMapPtrs(rdata, gdata, bdata, mapdata, num);
+// }
 
 SCL_EXPORT const float *SCL_getBasicColorMapPtrs() {
   return TokiSlopeCraft::getBasicColorMapPtrs();
@@ -381,8 +381,8 @@ SCL_EXPORT SCL_gameVersion SCL_basecolor_version(uint8_t basecolor) {
 
 SCL_EXPORT uint8_t SCL_maxBaseColor() { return 61; }
 
-SCL_EXPORT int SCL_getBlockPalette(const AbstractBlock **blkpp,
-                                   size_t capacity) {
-  return TokiSlopeCraft::getBlockPalette(blkpp, capacity);
-}
+// SCL_EXPORT int SCL_getBlockPalette(const AbstractBlock **blkpp,
+//                                    size_t capacity) {
+//   return TokiSlopeCraft::getBlockPalette(blkpp, capacity);
+// }
 }

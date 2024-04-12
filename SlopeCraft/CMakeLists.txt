@@ -74,6 +74,7 @@ qt_add_executable(SlopeCraft
     ${SlopeCraft_project_files})
 
 target_compile_features(SlopeCraft PRIVATE cxx_std_23)
+target_precompile_headers(SlopeCraft PRIVATE ${SlopeCraft_headers})
 
 target_link_libraries(SlopeCraft PRIVATE
     Qt6::Core
