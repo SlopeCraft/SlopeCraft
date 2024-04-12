@@ -20,7 +20,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
         ${CMAKE_CURRENT_BINARY_DIR}/others/SlopeCraftL.rc)
 endif ()
 
-set(SlopeCraft_SCL_sources
+set(Slope_SCL_internal_headers
     ${CMAKE_SOURCE_DIR}/utilities/SC_GlobalEnums.h
 
     # AiCvterOpt.h
@@ -35,10 +35,14 @@ set(SlopeCraft_SCL_sources
     lossyCompressor.h
 
     simpleBlock.h
-    SlopeCraftL.h
     SlopeCraftL_global.h
     WriteStringDeliver.h
+)
 
+set(SlopeCraft_SCL_sources
+
+
+    SlopeCraftL.h
     # AiCvterOpt.cpp
     Colors.cpp
     ColorSource.cpp
@@ -55,7 +59,10 @@ set(SlopeCraft_SCL_sources
     simpleBlock.cpp
     SlopeCraftL.cpp
 
+    #${SlopeCraft_SCL_internal_headers}
     ${SlopeCraft_SCL_windows_rc_files}
+    Colorset.cpp
+    Colorset.h
 )
 
 # add this definations to both targets
@@ -64,7 +71,8 @@ add_definitions(-DSLOPECRAFTL_LIBRARY)
 add_library(SlopeCraftL SHARED ${SlopeCraft_SCL_sources})
 
 # add_library(SlopeCraftL_C SHARED ${SlopeCraft_SCL_sources})
-target_compile_features(SlopeCraftL PRIVATE cxx_std_20)
+target_compile_features(SlopeCraftL PRIVATE cxx_std_23)
+target_precompile_headers(SlopeCraftL PRIVATE ${SlopeCraft_SCL_internal_headers})
 target_include_directories(SlopeCraftL INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:include>)
