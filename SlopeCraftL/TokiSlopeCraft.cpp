@@ -51,22 +51,22 @@ std::mutex SCL_internal_lock;
 // const colorset_allowed_t &libImageCvt::ImageCvter<true>::allowed_colorset =
 //     TokiSlopeCraft::Allowed;
 
-TokiSlopeCraft::TokiSlopeCraft() : image_cvter{Basic, Allowed} {
+TokiSlopeCraft::TokiSlopeCraft()
+    : image_cvter{Basic, Allowed},
+      glassBuilder{new PrimGlassBuilder},
+      Compressor{new LossyCompressor} {
   kernelStep = step::nothing;
   this->image_cvter.clear_images();
   this->image_cvter.clear_color_hash();
   // rawImage.setZero(0, 0);
-
-  glassBuilder = new PrimGlassBuilder;
-  Compressor = new LossyCompressor;
   // GAConverter = new GACvter::GAConverter;
-  setProgressRangeSet([](void *, int, int, int) {});
-  setProgressAdd([](void *, int) {});
-  setKeepAwake([](void *) {});
-  setReportError([](void *, errorFlag, const char *) {});
-  setReportWorkingStatue([](void *, workStatues) {});
-  setAlgoProgressAdd([](void *, int) {});
-  setAlgoProgressRangeSet([](void *, int, int, int) {});
+  this->progressRangeSet = [](void *, int, int, int) {};
+  this->progressAdd = [](void *, int) {};
+  this->keepAwake = [](void *) {};
+  this->reportError = [](void *, errorFlag, const char *) {};
+  this->reportWorkingStatue = [](void *, workStatues) {};
+  this->algoProgressAdd = [](void *, int) {};
+  this->algoProgressRangeSet = [](void *, int, int, int) {};
 
   glassBuilder->windPtr = &wind;
   glassBuilder->progressAddPtr = &this->algoProgressAdd;
@@ -90,8 +90,6 @@ TokiSlopeCraft::TokiSlopeCraft() : image_cvter{Basic, Allowed} {
 }
 
 TokiSlopeCraft::~TokiSlopeCraft() {
-  delete Compressor;
-  delete glassBuilder;
   // delete GAConverter;
 
   ::SCL_internal_lock.lock();
@@ -309,7 +307,7 @@ bool TokiSlopeCraft::__impl_setType(mapTypes type, gameVersion ver,
     return false;
   }
 
-  GACvter::updateMapColor2GrayLUT();
+  // GACvter::updateMapColor2GrayLUT();
 
   reporter->reportWorkingStatue(reporter->wind, workStatues::none);
   for (auto kernel_ptr : TokiSlopeCraft::kernel_hash_set) {

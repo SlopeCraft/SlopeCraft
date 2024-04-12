@@ -310,8 +310,8 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   libMapImageCvt::MapImageCvter image_cvter;
 
   // std::array<int, 3> size3D; // x,y,z
-  PrimGlassBuilder *glassBuilder;
-  LossyCompressor *Compressor;
+  std::unique_ptr<PrimGlassBuilder> glassBuilder;
+  std::unique_ptr<LossyCompressor> Compressor;
 
   // std::shared_ptr<GACvter::GAConverter> GAConverter{nullptr};
 
