@@ -124,7 +124,7 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   void setReportError(void (*)(void *, errorFlag, const char *)) override;
   /// a function ptr to report working statue especially when busy
   void setReportWorkingStatue(void (*)(void *, workStatues)) override;
-  unsigned long long size() override { return sizeof(TokiSlopeCraft); }
+  size_t size() override { return sizeof(TokiSlopeCraft); }
   // void destroy() override { delete this; }
   void decreaseStep(step) override;
   bool makeTests(const AbstractBlock **, const unsigned char *, const char *,
