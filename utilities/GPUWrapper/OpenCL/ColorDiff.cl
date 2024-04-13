@@ -20,8 +20,10 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
+// #pragma OPENCL EXTENSION CL_PROGRAM_IL_KHR : enable
+
 #define SC_OCL_SPOT_NAN true
-__constant const float pi_fp32 = M_PI;
+//__constant const float M_PI = M_PI f;
 // #define SC_OCL_SPOT_NAN false
 
 /// Function definations
@@ -76,8 +78,8 @@ float color_diff_RGB_Better(float3 rgb1, float3 rgb2) {
 
   const float sumRGBSquare = dot(rgb1, rgb2);
 
-  const float theta = 2.0f / pi_fp32 *
-                      acos((sumRGBSquare * rsqrt(SqrModSquare + thre)) / 1.01f);
+  const float theta =
+      2.0f / M_PI * acos((sumRGBSquare * rsqrt(SqrModSquare + thre)) / 1.01f);
 
   if (SC_OCL_SPOT_NAN && isnan(theta)) {
     printf("theta is nan. sumRGBSquare = %f, SqrModSquare = %f.\n",
@@ -190,14 +192,14 @@ float color_diff_Lab00(float3 lab1_vec3, float3 lab2_vec3) {
   else
     h1p = atan2(b1, a1p);
 
-  if (h1p < 0) h1p += 2 * pi_fp32;
+  if (h1p < 0) h1p += 2 * M_PI;
 
   if (b2 == 0 && a2p == 0)
     h2p = 0;
   else
     h2p = atan2(b2, a2p);
 
-  if (h2p < 0) h2p += 2 * pi_fp32;
+  if (h2p < 0) h2p += 2 * M_PI;
 
   float dLp = L2 - L1;
   float dCp = C2p - C1p;

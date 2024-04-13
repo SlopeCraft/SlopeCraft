@@ -29,8 +29,8 @@ This file is part of SlopeCraft.
 #include <fmt/format.h>
 
 extern "C" {
-extern const unsigned char ColorManip_cl_rc[];
-extern const unsigned int ColorManip_cl_rc_length;
+extern const unsigned char ColorDiff_cl_spirv[];
+extern const unsigned int ColorDiff_cl_spirv_length;
 }
 
 size_t ocl_warpper::platform_num() noexcept {
@@ -110,6 +110,25 @@ void ocl_warpper::ocl_resource::init_resource() noexcept {
     this->err_msg = "Failed to create context.";
     return;
   }
+  auto extensions = this->device.getInfo<CL_DEVICE_EXTENSIONS>(&error);
+  if (!this->ok()) {
+    return;
+  }
+  if (!(extensions.contains("cl_khr_spir") ||
+        extensions.contains("cl_khr_il_program"))) {
+    this->error = CL_BUILD_ERROR;
+    for (char &ch : extensions) {
+      if (ch == ' ') ch = '\n';
+    }
+    this->err_msg = fmt::format(
+        "This platform doesn't support OpenCL extension cl_khr_spir and "
+        "cl_khr_il_program, SlopeCraft "
+        "will not be able to use this GPU. This device supports following "
+        "extensions: \n{}\n",
+        extensions);
+
+    return;
+  }
 
   this->queue = cl::CommandQueue(this->context, this->device,
                                  cl::QueueProperties::None, &this->error);
@@ -119,26 +138,32 @@ void ocl_warpper::ocl_resource::init_resource() noexcept {
     return;
   }
 
-// Here the code differs according to if there is cl.hpp. API to create
-// cl::Program is different in cl.hpp and opencl.hpp. I don't know why there are
-// 2 differernt opencl C++ bindings.
-#ifndef SLOPECRAFT_NO_CL_HPP
-  // This works with cl.hpp
-  std::pair<const char *, size_t> src;
-  src.first = (const char *)ColorManip_cl_rc;
-  src.second = ColorManip_cl_rc_length;
-  this->program = cl::Program{this->context, {src}, &this->error};
-#else
-  // This is for opencl.hpp
-  std::string source_code{(const char *)ColorManip_cl_rc,
-                          ColorManip_cl_rc_length};
-  source_code.push_back('\0');
-  this->program = cl::Program{
-      this->context, std::vector<std::string>{source_code}, &this->error};
-#endif
+  // Here the code differs according to if there is cl.hpp. API to create
+  // cl::Program is different in cl.hpp and opencl.hpp. I don't know why there
+  // are 2 differernt opencl C++ bindings.
+  // #ifndef SLOPECRAFT_NO_CL_HPP
+  //   // This works with cl.hpp
+  //   std::pair<const char *, size_t> src;
+  //   src.first = (const char *)ColorManip_cl_rc;
+  //   src.second = ColorManip_cl_rc_length;
+  //   this->program = cl::Program{this->context, {src}, &this->error};
+  // #else
+  //    This is for opencl.hpp
+  //     std::string source_code{(const char *)ColorManip_cl_rc,
+  //                             ColorManip_cl_rc_length};
+  //   source_code.push_back('\0');
+  //   this->program = cl::Program{
+  //       this->context, std::vector<std::string>{source_code}, &this->error};
+  // #endif
 
+  // create binaries with embedded spirv binary
+  cl::Program::Binaries spirv_binary{std::vector<uint8_t>{
+      ColorDiff_cl_spirv,
+      ColorDiff_cl_spirv + size_t(ColorDiff_cl_spirv_length)}};
+  this->program = cl::Program{
+      this->context, {this->device}, spirv_binary, nullptr, &this->error};
   if (!this->ok()) {
-    this->err_msg = "Failed to create program with source files.";
+    this->err_msg = "Failed to create program with spirv files.";
     return;
   }
 
@@ -341,7 +366,6 @@ cl::Kernel *ocl_warpper::ocl_resource::kernel_by_algo(
     default:
       return nullptr;
   }
-  return nullptr;
 }
 
 void ocl_warpper::ocl_resource::set_task(
@@ -438,6 +462,7 @@ void ocl_warpper::ocl_resource::set_args(::SCL_convertAlgo algo) noexcept {
   }
 
   cl::Kernel *k = this->kernel_by_algo(algo);
+  assert(k);
 
   // set kernel args
   // cl_mem mem = this->colorset.colorset_float3;
