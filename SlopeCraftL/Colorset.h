@@ -15,6 +15,13 @@
 #include "Colors.h"
 #include "SlopeCraftL.h"
 
+#define mapColor2Index(mapColor) (64 * ((mapColor) % 4) + ((mapColor) / 4))
+#define index2mapColor(index) (4 * ((index) % 64) + ((index) / 64))
+#define mapColor2baseColor(mapColor) ((mapColor) >> 2)
+#define index2baseColor(index) (mapColor2baseColor(index2mapColor(index)))
+#define mapColor2depth(mapColor) ((mapColor) % 4)
+#define index2depth(index) (mapColor2depth(index2mapColor(index)))
+
 struct color_set {
   static const std::unique_ptr<const colorset_basic_t> basic;
 

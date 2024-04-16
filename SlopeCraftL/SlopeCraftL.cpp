@@ -381,6 +381,16 @@ SCL_EXPORT SCL_gameVersion SCL_basecolor_version(uint8_t basecolor) {
 
 SCL_EXPORT uint8_t SCL_maxBaseColor() { return 61; }
 
+#include "color_table.h"
+SCL_EXPORT color_table *SCL_create_color_table(
+    const color_table_create_info &args) {
+  auto opt = color_table_impl::create(args);
+  if (opt) {
+    return new color_table_impl{std::move(opt.value())};
+  }
+  return nullptr;
+}
+
 // SCL_EXPORT int SCL_getBlockPalette(const AbstractBlock **blkpp,
 //                                    size_t capacity) {
 //   return TokiSlopeCraft::getBlockPalette(blkpp, capacity);

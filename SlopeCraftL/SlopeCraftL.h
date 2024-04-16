@@ -56,7 +56,7 @@ using errorFlag = ::SCL_errorFlag;
 namespace SlopeCraft {
 
 struct AiCvterOpt {
-  uint64_t version{SC_VERSION_U64};
+  uint64_t caller_api_version{SC_VERSION_U64};
   size_t popSize{50};
   size_t maxGeneration{200};
   size_t maxFailTimes{50};
@@ -154,7 +154,7 @@ class BlockListInterface {
   virtual bool contains(const AbstractBlock *) const noexcept = 0;
 };
 
-struct ColorMapPtrs {
+struct color_map_ptrs {
   const float *r_data;
   const float *g_data;
   const float *b_data;
@@ -162,6 +162,83 @@ struct ColorMapPtrs {
   int num_colors;
 };
 
+struct const_image_reference {
+  const uint32_t *data{nullptr};
+  size_t rows{0};
+  size_t cols{0};
+};
+
+class converted_image {
+ public:
+  virtual size_t rows() const noexcept = 0;
+  virtual size_t cols() const noexcept = 0;
+  inline size_t height() const noexcept { return this->rows(); }
+  inline size_t width() const noexcept { return this->cols(); }
+  inline size_t size() const noexcept { return this->rows() * this->cols(); }
+
+  inline size_t size_in_bytes() const noexcept {
+    return sizeof(uint32_t) * this->rows() * this->cols();
+  }
+
+  virtual void get_original_image(uint32_t *buffer) const noexcept = 0;
+  //  virtual void get_dithered_image(uint32_t *buffer) const noexcept = 0;
+  virtual void get_converted_image(uint32_t *buffer) const noexcept = 0;
+};
+
+class structure_3D {
+ public:
+  virtual size_t shape_x() const noexcept = 0;
+  virtual size_t shape_y() const noexcept = 0;
+  virtual size_t shape_z() const noexcept = 0;
+  virtual size_t palette_length() const noexcept = 0;
+  virtual void get_palette(const char **buffer_block_id) const noexcept = 0;
+};
+
+struct progress_callbacks {
+  void *widget{nullptr};
+  void (*set_range)(void *, int, int, int){nullptr};
+  void (*add)(void *, int){nullptr};
+};
+
+struct ui_callbacks {
+  void *wind{nullptr};
+  void (*keep_awake)(void *){nullptr};
+  void (*report_error)(void *, errorFlag, const char *){nullptr};
+  void (*report_working_statue)(void *, workStatues){nullptr};
+};
+
+struct convert_option {
+  uint64_t caller_api_version{SC_VERSION_U64};
+  SCL_convertAlgo algo{SCL_convertAlgo::RGB_Better};
+  bool dither{false};
+  AiCvterOpt ai_cvter_opt{};
+  progress_callbacks progress{};
+  ui_callbacks ui{};
+};
+
+class color_table {
+ public:
+  virtual ~color_table() = default;
+  [[nodiscard]] virtual color_map_ptrs colors() const noexcept = 0;
+  [[nodiscard]] virtual ::SCL_mapTypes map_type() const noexcept = 0;
+
+  [[nodiscard]] inline bool is_vanilla() const noexcept {
+    return this->map_type() != SCL_mapTypes::FileOnly;
+  }
+
+  [[nodiscard]] inline bool is_flat() const noexcept {
+    return this->map_type() == SCL_mapTypes::Flat;
+  }
+
+  [[nodiscard]] virtual ::SCL_gameVersion mc_version() const noexcept = 0;
+  [[nodiscard]] virtual size_t num_blocks() const noexcept = 0;
+  virtual void visit_blocks(void (*)(const AbstractBlock *, void *custom_data),
+                            void *custom_data) const = 0;
+
+  [[nodiscard]] virtual converted_image *convert_image(
+      const_image_reference original_img,
+      const convert_option &option) const noexcept = 0;
+};
 class Kernel {
  public:
   Kernel();
@@ -304,7 +381,7 @@ class Kernel {
   virtual void getConvertedImage(int *rows, int *cols, uint32_t *dest,
                                  bool expected_col_major) const = 0;
   struct build_options {
-    uint64_t version{SC_VERSION_U64};
+    uint64_t caller_api_version{SC_VERSION_U64};
     uint16_t maxAllowedHeight{256};
     uint16_t bridgeInterval{3};
     compressSettings compressMethod{::SCL_compressSettings::noCompress};
@@ -338,7 +415,7 @@ class Kernel {
                               size_t dest_capacity) const noexcept = 0;
 
   struct litematic_options {
-    uint64_t version{SC_VERSION_U64};
+    uint64_t caller_api_version{SC_VERSION_U64};
     const char *litename_utf8 = "by SlopeCraft";
     const char *region_name_utf8 = "by SlopeCraft";
   };
@@ -347,7 +424,7 @@ class Kernel {
       const litematic_options &option) const noexcept = 0;
 
   struct vanilla_structure_options {
-    uint64_t version{SC_VERSION_U64};
+    uint64_t caller_api_version{SC_VERSION_U64};
     bool is_air_structure_void{true};
   };
   virtual bool exportAsStructure(
@@ -355,7 +432,7 @@ class Kernel {
       const vanilla_structure_options &option) const noexcept = 0;
 
   struct WE_schem_options {
-    uint64_t version{SC_VERSION_U64};
+    uint64_t caller_api_version{SC_VERSION_U64};
     int offset[3] = {0, 0, 0};
     int we_offset[3] = {0, 0, 0};
     const char *const *required_mods_name_utf8{nullptr};
@@ -366,7 +443,7 @@ class Kernel {
       const WE_schem_options &option) const noexcept = 0;
 
   struct flag_diagram_options {
-    uint64_t version{SC_VERSION_U64};
+    uint64_t caller_api_version{SC_VERSION_U64};
 
     // 0 or negative number means no split lines
     int32_t split_line_row_margin{0};
@@ -381,7 +458,7 @@ class Kernel {
       const flag_diagram_options &option) const noexcept = 0;
 
   struct test_blocklist_options {
-    uint64_t version{SC_VERSION_U64};
+    uint64_t caller_api_version{SC_VERSION_U64};
     const AbstractBlock *const *block_ptrs{nullptr};
     const uint8_t *basecolors{nullptr};
     size_t block_count{0};
@@ -398,14 +475,26 @@ class Kernel {
 extern "C" {
 namespace SlopeCraft {
 
-[[nodiscard]] SCL_EXPORT Kernel *SCL_createKernel();
+[[deprecated]] [[nodiscard]] SCL_EXPORT Kernel *SCL_createKernel();
 SCL_EXPORT void SCL_destroyKernel(Kernel *);
+
+struct color_table_create_info {
+  ::SCL_mapTypes map_type;
+  ::SCL_gameVersion mc_version;
+  bool basecolor_allow_LUT[64];
+  const AbstractBlock *blocks[64];
+  ui_callbacks callbacks;
+};
+
+[[nodiscard]] SCL_EXPORT color_table *SCL_create_color_table(
+    const color_table_create_info &);
+SCL_EXPORT void SCL_destroy_color_table(color_table *);
 
 [[nodiscard]] SCL_EXPORT AbstractBlock *SCL_createBlock();
 SCL_EXPORT void SCL_destroyBlock(AbstractBlock *);
 
 struct BlockListCreateOption {
-  uint64_t version{SC_VERSION_U64};
+  uint64_t caller_api_version{SC_VERSION_U64};
   StringDeliver *warnings{nullptr};
   StringDeliver *error{nullptr};
 };
@@ -439,7 +528,7 @@ SCL_EXPORT void SCL_preprocessImage(
 SCL_EXPORT bool SCL_haveTransparentPixel(const uint32_t *ARGB32,
                                          const uint64_t imageSize);
 
-SCL_EXPORT uint8_t SCL_maxAvailableVersion();
+SCL_EXPORT SCL_gameVersion SCL_maxAvailableVersion();
 
 SCL_EXPORT const char *SCL_getSCLVersion();
 
@@ -450,10 +539,10 @@ SCL_EXPORT const char *SCL_getSCLVersion();
 //  full palette
 SCL_EXPORT const float *SCL_getBasicColorMapPtrs();
 
-SCL_EXPORT SCL_gameVersion SCL_basecolor_version(uint8_t basecolor);
+// SCL_EXPORT SCL_gameVersion SCL_basecolor_version(uint8_t basecolor);
 SCL_EXPORT uint8_t SCL_maxBaseColor();
-// SCL_EXPORT int SCL_getBlockPalette(const AbstractBlock **blkpp,
-//                                    size_t capacity_in_elements);
+//  SCL_EXPORT int SCL_getBlockPalette(const AbstractBlock **blkpp,
+//                                     size_t capacity_in_elements);
 
 // SCL_EXPORT uint64_t SCL_mcVersion2VersionNumber(::SCL_gameVersion);
 

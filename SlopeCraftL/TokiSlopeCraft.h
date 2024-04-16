@@ -69,13 +69,6 @@ namespace SlopeCraft
 using namespace SlopeCraft;
 #include <thread>
 
-#define mapColor2Index(mapColor) (64 * ((mapColor) % 4) + ((mapColor) / 4))
-#define index2mapColor(index) (4 * ((index) % 64) + ((index) / 64))
-#define mapColor2baseColor(mapColor) ((mapColor) >> 2)
-#define index2baseColor(index) (mapColor2baseColor(index2mapColor(index)))
-#define mapColor2depth(mapColor) ((mapColor) % 4)
-#define index2depth(index) (mapColor2depth(index2mapColor(index)))
-
 class PrimGlassBuilder;
 class LossyCompressor;
 
@@ -89,7 +82,7 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   //  static const colorset_basic_t Basic;
   //  static colorset_allowed_t Allowed;
 
-  [[nodiscard]] ColorMapPtrs getAllowedColorMapPtrs() const noexcept;
+  [[nodiscard]] color_map_ptrs getAllowedColorMapPtrs() const noexcept;
 
   //  void getColorMapPtrs(const float **const rdata, const float **const gdata,
   //                       const float **const bdata, const uint8_t **, int *);
@@ -283,7 +276,7 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   //  friend void * allowedRGB();
   //  friend void * allowedMap();
   enum ColorSpace { R = 'R', H = 'H', L = 'L', X = 'X' };
-  static const Eigen::Array<float, 2, 3> DitherMapLR, DitherMapRL;
+  //  static const Eigen::Array<float, 2, 3> DitherMapLR, DitherMapRL;
   static const uint32_t reportRate = 100;
 
   void *wind;

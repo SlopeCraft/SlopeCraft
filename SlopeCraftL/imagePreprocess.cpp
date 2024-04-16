@@ -92,7 +92,9 @@ SCL_EXPORT bool SCL_haveTransparentPixel(const uint32_t *ARGB32,
   return false;
 }
 
-unsigned char SCL_EXPORT SCL_maxAvailableVersion() { return 19; }
+SCL_gameVersion SCL_EXPORT SCL_maxAvailableVersion() {
+  return SCL_gameVersion::MC20;
+}
 
 #ifndef SCL_CAPI
 }  //  namespace SlopeCraft

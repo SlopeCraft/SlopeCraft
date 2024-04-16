@@ -107,7 +107,7 @@ void TokiSlopeCraft::decreaseStep(step _step) {
   kernelStep = _step;
 }
 
-ColorMapPtrs TokiSlopeCraft::getAllowedColorMapPtrs() const noexcept {
+color_map_ptrs TokiSlopeCraft::getAllowedColorMapPtrs() const noexcept {
   const auto &allowed = this->colorset.allowed_colorset;
   return {allowed.rgb_data(0), allowed.rgb_data(1), allowed.rgb_data(2),
           allowed.map_data(), allowed.color_count()};
