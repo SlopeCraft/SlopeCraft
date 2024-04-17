@@ -559,6 +559,9 @@ struct color_table_create_info {
     const color_table_create_info &);
 SCL_EXPORT void SCL_destroy_color_table(color_table *);
 
+SCL_EXPORT void SCL_destroy_converted_image(converted_image *);
+SCL_EXPORT void SCL_destroy_structure_3D(structure_3D *);
+
 [[nodiscard]] SCL_EXPORT AbstractBlock *SCL_createBlock();
 SCL_EXPORT void SCL_destroyBlock(AbstractBlock *);
 
@@ -615,6 +618,22 @@ SCL_EXPORT uint8_t SCL_maxBaseColor();
 //                                     size_t capacity_in_elements);
 
 // SCL_EXPORT uint64_t SCL_mcVersion2VersionNumber(::SCL_gameVersion);
+
+class deleter {
+ public:
+  void operator()(Kernel *k) const noexcept { SCL_destroyKernel(k); }
+  void operator()(AbstractBlock *b) const noexcept { SCL_destroyBlock(b); }
+  void operator()(block_list_interface *b) const noexcept {
+    SCL_destroyBlockList(b);
+  }
+  void operator()(color_table *c) const noexcept { SCL_destroy_color_table(c); }
+  void operator()(converted_image *c) const noexcept {
+    SCL_destroy_converted_image(c);
+  }
+  void operator()(structure_3D *s) const noexcept {
+    SCL_destroy_structure_3D(s);
+  }
+};
 
 }  //  namespace SlopeCraft
 

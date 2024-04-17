@@ -391,6 +391,10 @@ SCL_EXPORT color_table *SCL_create_color_table(
   return nullptr;
 }
 
+SCL_EXPORT void SCL_destroy_color_table(color_table *c) { delete c; }
+
+SCL_EXPORT void SCL_destroy_converted_image(converted_image *c) { delete c; }
+SCL_EXPORT void SCL_destroy_structure_3D(structure_3D *s) { delete s; }
 // SCL_EXPORT int SCL_getBlockPalette(const AbstractBlock **blkpp,
 //                                    size_t capacity) {
 //   return TokiSlopeCraft::getBlockPalette(blkpp, capacity);
