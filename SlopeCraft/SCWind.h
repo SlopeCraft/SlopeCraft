@@ -36,7 +36,7 @@ class SCWind : public QMainWindow {
 
   static const QString& default_wind_title() noexcept;
 
-  static QString workStatus_to_string(::SCL_workStatues) noexcept;
+  static QString workStatus_to_string(::SCL_workStatus) noexcept;
 
   const static QString update_url;
 

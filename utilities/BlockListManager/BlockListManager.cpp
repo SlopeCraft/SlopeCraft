@@ -44,7 +44,7 @@ void BlockListManager::setup_basecolors(
 //   return true;
 // }
 
-std::unique_ptr<SlopeCraft::BlockListInterface, BlockListDeleter>
+std::unique_ptr<SlopeCraft::block_list_interface, BlockListDeleter>
 BlockListManager::impl_addblocklist(const QString &filename) noexcept {
   std::string errmsg;
   errmsg.resize(8192);
@@ -52,9 +52,9 @@ BlockListManager::impl_addblocklist(const QString &filename) noexcept {
   std::string warning;
   warning.resize(8192);
   auto sd_warn = SlopeCraft::StringDeliver::from_string(warning);
-  SlopeCraft::BlockListCreateOption option{SC_VERSION_U64, &sd_warn, &sd_err};
+  SlopeCraft::block_list_create_info option{SC_VERSION_U64, &sd_warn, &sd_err};
 
-  SlopeCraft::BlockListInterface *bli =
+  SlopeCraft::block_list_interface *bli =
       SlopeCraft::SCL_createBlockList(filename.toLocal8Bit().data(), option);
 
   errmsg.resize(sd_err.size);
@@ -87,11 +87,12 @@ BlockListManager::impl_addblocklist(const QString &filename) noexcept {
     this->basecolor_widgets[base_colors[idx]]->add_block(blockps[idx]);
   }
 
-  return std::unique_ptr<SlopeCraft::BlockListInterface, BlockListDeleter>{bli};
+  return std::unique_ptr<SlopeCraft::block_list_interface, BlockListDeleter>{
+      bli};
 }
 
 bool BlockListManager::add_blocklist(QString filename) noexcept {
-  std::unique_ptr<SlopeCraft::BlockListInterface, BlockListDeleter> tmp =
+  std::unique_ptr<SlopeCraft::block_list_interface, BlockListDeleter> tmp =
       this->impl_addblocklist(filename);
 
   if (!tmp) {

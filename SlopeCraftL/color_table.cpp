@@ -3,6 +3,10 @@
 //
 
 #include "color_table.h"
+#include "WaterItem.h"
+#include "HeightLine.h"
+#include "lossyCompressor.h"
+#include "PrimGlassBuilder.h"
 #include <fmt/format.h>
 
 std::optional<color_table_impl> color_table_impl::create(
@@ -13,15 +17,7 @@ std::optional<color_table_impl> color_table_impl::create(
   result.allowed.need_find_side = (args.map_type == mapTypes::Slope);
 
   auto report_err = [&args](errorFlag flag, std::string_view msg) {
-    if (args.callbacks.report_error) {
-      args.callbacks.report_error(args.callbacks.wind, flag, msg.data());
-    }
-  };
-
-  auto report_woring_status = [&args](workStatues ws) {
-    if (args.callbacks.report_working_statue) {
-      args.callbacks.report_working_statue(args.callbacks.wind, ws);
-    }
+    args.ui.report_error(flag, msg.data());
   };
 
   // block palette
@@ -50,7 +46,7 @@ std::optional<color_table_impl> color_table_impl::create(
     }
   }
 
-  report_woring_status(workStatues::collectingColors);
+  args.ui.report_working_status(workStatus::collectingColors);
 
   Eigen::ArrayXi baseColorVer(64);  // 基色对应的版本
   baseColorVer.setConstant((int)SCL_gameVersion::FUTURE);
@@ -120,46 +116,41 @@ std::optional<color_table_impl> color_table_impl::create(
     return std::nullopt;
   }
 
-  report_woring_status(workStatues::none);
+  args.ui.report_working_status(workStatus::none);
 
   return result;
 }
 
-converted_image_impl::converted_image_impl(
-    const colorset_allowed_t &allowed_colorset)
-    : converter{*color_set::basic, allowed_colorset} {}
+structure_3D *color_table_impl::build(
+    const converted_image &cvted, const build_options &option) const noexcept {
+  auto opt = structure_3D_impl::create(
+      *this, dynamic_cast<const converted_image_impl &>(cvted), option);
+  if (opt) {
+    return new structure_3D_impl{std::move(opt.value())};
+  }
+  return nullptr;
+}
+
+std::vector<std::string_view> color_table_impl::block_id_list() const noexcept {
+  std::vector<std::string_view> dest;
+  dest.reserve(this->blocks.size());
+  for (auto &blk : this->blocks) {
+    dest.emplace_back(blk.id);
+  }
+  return dest;
+}
+
+converted_image_impl::converted_image_impl(const color_table_impl &table)
+    : converter{*color_set::basic, table.allowed} {}
 
 converted_image *color_table_impl::convert_image(
     const_image_reference original_img,
     const convert_option &option) const noexcept {
-  converted_image_impl cvted{this->allowed};
+  converted_image_impl cvted{*this};
 
   const auto algo = (option.algo == convertAlgo::gaCvter)
                         ? convertAlgo::RGB_Better
                         : option.algo;
-  //  auto report_err = [&option](errorFlag flag, std::string_view msg) {
-  //    if (option.ui.report_error) {
-  //      option.ui.report_error(option.ui.wind, flag, msg.data());
-  //    }
-  //  };
-
-  auto report_woring_status = [&option](workStatues ws) {
-    if (option.ui.report_working_statue) {
-      option.ui.report_working_statue(option.ui.wind, ws);
-    }
-  };
-
-  auto progress_range = [&option](int min, int max, int val) {
-    if (option.progress.set_range) {
-      option.progress.set_range(option.progress.widget, min, max, val);
-    }
-  };
-
-  //  auto progress_add = [&option](int delta) {
-  //    if (option.progress.add) {
-  //      option.progress.add(option.progress.widget, delta);
-  //    }
-  //  };
   cvted.converter.set_raw_image(original_img.data, original_img.rows,
                                 original_img.cols, false);
   {
@@ -169,13 +160,259 @@ converted_image *color_table_impl::convert_image(
     opt.maxGenerations = option.ai_cvter_opt.maxGeneration;
     opt.maxFailTimes = option.ai_cvter_opt.maxFailTimes;
     opt.populationSize = option.ai_cvter_opt.popSize;
-    // here opt is passed as a const ptr, it won't be changed in this function
-    // call
+
     cvted.converter.convert_image(algo, option.dither, &opt);
   }
 
-  progress_range(0, 4 * cvted.size(), 4 * cvted.size());
-  report_woring_status(workStatues::none);
+  option.progress.set_range(0, 4 * cvted.size(), 4 * cvted.size());
+  option.ui.report_working_status(workStatus::none);
 
   return new converted_image_impl{std::move(cvted)};
+}
+
+std::optional<converted_image_impl::height_maps>
+converted_image_impl::height_info(const build_options &option) const noexcept {
+  //
+  //  std::unordered_map<TokiPos, waterItem> water_list;
+
+  Eigen::ArrayXXi map_color = this->converter.mapcolor_matrix().cast<int>();
+
+  const bool allow_lossless_compress =
+      int(option.compressMethod) & int(SCL_compressSettings::NaturalOnly);
+
+  if (((map_color - 4 * (map_color / 4)) >= 3).any()) {
+    std::string msg =
+        "Fatal error : SlopeCraftL found map color with depth 3 in a "
+        "vanilla map.\n Map contents (map color matrix in col-major) :\n[";
+    for (int c = 0; c < map_color.cols(); c++) {
+      for (int r = 0; r < map_color.rows(); r++) {
+        fmt::format_to(std::back_insert_iterator{msg}, "{},", map_color(r, c));
+      }
+      msg += ";\n";
+    }
+    msg += "];\n";
+    option.ui.report_error(errorFlag::DEPTH_3_IN_VANILLA_MAP, msg.c_str());
+    return std::nullopt;
+  }
+
+  Eigen::ArrayXXi base, high_map, low_map;
+  base.setZero(this->rows(), this->cols());
+  high_map.setZero(this->rows(), this->cols());
+  low_map.setZero(this->rows(), this->cols());
+  std::unordered_map<TokiPos, waterItem> water_list;
+
+  LossyCompressor compressor;
+  for (int64_t c = 0; c < map_color.cols(); c++) {
+    // cerr << "Coloumn " << c << '\n';
+    HeightLine HL;
+    // getTokiColorPtr(c,&src[0]);
+    HL.make(map_color.col(c), allow_lossless_compress);
+
+    if (HL.maxHeight() > option.maxAllowedHeight &&
+        (option.compressMethod == compressSettings::ForcedOnly ||
+         option.compressMethod == compressSettings::Both)) {
+      std::vector<const TokiColor *> ptr(map_color.rows());
+
+      this->converter.col_TokiColor_ptrs(c, ptr.data());
+      // getTokiColorPtr(c, &ptr[0]);
+
+      compressor.setSource(HL.getBase(), &ptr[0]);
+      bool success =
+          compressor.compress(option.maxAllowedHeight, allow_lossless_compress);
+      if (!success) {
+        option.ui.report_error(
+            SCL_errorFlag::LOSSYCOMPRESS_FAILED,
+            fmt::format("Failed to compress the 3D structure at column {}.", c)
+                .data());
+        return std::nullopt;
+      }
+      Eigen::ArrayXi temp;
+      HL.make(&ptr[0], compressor.getResult(), allow_lossless_compress, &temp);
+      map_color.col(c) = temp;
+    }
+    base.col(c) = HL.getBase();
+    high_map.col(c) = HL.getHighLine();
+    low_map.col(c) = HL.getLowLine();
+
+    auto hl_water_list = HL.getWaterMap();
+    water_list.reserve(water_list.size() + hl_water_list.size());
+    for (const auto &[r, water_item] : hl_water_list) {
+      water_list.emplace(TokiRC(r, c), water_item);
+    }
+
+    option.main_progressbar.add(4 * this->size());
+  }
+
+  return height_maps{.map_color = map_color,
+                     .base = base,
+                     .high_map = high_map,
+                     .low_map = low_map,
+                     .water_list = water_list};
+}
+
+std::optional<structure_3D_impl> structure_3D_impl::create(
+    const color_table_impl &table, const converted_image_impl &cvted,
+    const build_options &option) noexcept {
+  if (option.maxAllowedHeight < 14) {
+    option.ui.report_error(
+        errorFlag::MAX_ALLOWED_HEIGHT_LESS_THAN_14,
+        fmt::format("Max allowed height should be >= 14, but found {}",
+                    option.maxAllowedHeight)
+            .c_str());
+    return std::nullopt;
+  }
+  structure_3D_impl ret;
+  // set up basic infos
+  {
+    ret.schem.set_MC_major_version_number(table.mc_version_);
+    ret.schem.set_MC_version_number(
+        MCDataVersion::suggested_version(table.mc_version_));
+    auto id = table.block_id_list();
+    ret.schem.set_block_id(id);
+  }
+
+  build_options fixed_opt = option;
+  if (table.is_flat() || !table.is_vanilla()) {
+    fixed_opt.compressMethod = compressSettings::noCompress;
+    fixed_opt.glassMethod = glassBridgeSettings::noBridge;
+  }
+  option.ui.report_working_status(workStatus::buidingHeighMap);
+  option.main_progressbar.set_range(0, 9 * cvted.size(), 0);
+  {
+    std::unordered_map<TokiPos, waterItem> water_list;
+    option.main_progressbar.add(cvted.size());
+  }
+
+  Eigen::ArrayXi map_color, base_color, high_map, low_map;
+  std::unordered_map<TokiPos, waterItem> water_list;
+  {
+    auto opt = cvted.height_info(fixed_opt);
+    if (!opt) {
+      return std::nullopt;
+    }
+    map_color = std::move(opt.value().map_color);
+    base_color = std::move(opt.value().base);
+    high_map = std::move(opt.value().high_map);
+    low_map = std::move(opt.value().low_map);
+    water_list = std::move(opt.value().water_list);
+  }
+
+  ret.schem.resize(2 + cvted.cols(), high_map.maxCoeff() + 1, 2 + cvted.rows());
+  ret.schem.set_zero();
+  // make 3D
+  {
+    // base_color(r+1,c)<->High(r+1,c)<->Build(c+1,High(r+1,c),r+1)
+    // 为了区分玻璃与空气，张量中存储的是 Base+1.所以元素为 1 对应着玻璃，0
+    // 对应空气
+
+    for (auto it = water_list.begin(); it != water_list.end();
+         it++)  // 水柱周围的玻璃
+    {
+      const int x = TokiCol(it->first) + 1;
+      const int z = TokiRow(it->first);
+      const int y = waterHigh(it->second);
+      const int yLow = waterLow(it->second);
+      ret.schem(x, y + 1, z) = 0 + 1;  // 柱顶玻璃
+      for (int yDynamic = yLow; yDynamic <= y; yDynamic++) {
+        ret.schem(x - 1, yDynamic, z - 0) = 1;
+        ret.schem(x + 1, yDynamic, z + 0) = 1;
+        ret.schem(x + 0, yDynamic, z - 1) = 1;
+        ret.schem(x + 0, yDynamic, z + 1) = 1;
+      }
+      if (yLow >= 1) ret.schem(x, yLow - 1, z) = 1;  // 柱底玻璃
+    }
+
+    option.main_progressbar.add(cvted.size());
+
+    for (uint32_t r = -1; r < cvted.rows(); r++)  // 普通方块
+    {
+      for (uint32_t c = 0; c < cvted.cols(); c++) {
+        if (base_color(r + 1, c) == 12 || base_color(r + 1, c) == 0) continue;
+        const int x = c + 1;
+        const int y = low_map(r + 1, c);
+        const int z = r + 1;
+        if (y >= 1 && table.blocks[base_color(r + 1, c)].needGlass)
+          ret.schem(x, y - 1, z) = 0 + 1;
+        if ((option.fire_proof &&
+             table.blocks[base_color(r + 1, c)].burnable) ||
+            (option.enderman_proof &&
+             table.blocks[base_color(r + 1, c)].endermanPickable)) {
+          if (y >= 1 && ret.schem(x, y - 1, z) == 0)
+            ret.schem(x, y - 1, z) = 0 + 1;
+          if (x >= 1 && ret.schem(x - 1, y, z) == 0)
+            ret.schem(x - 1, y, z) = 0 + 1;
+          if (z >= 1 && ret.schem(x, y, z - 1) == 0)
+            ret.schem(x, y, z - 1) = 0 + 1;
+          if (y + 1 < ret.schem.y_range() && ret.schem(x, y + 1, z) == 0)
+            ret.schem(x, y + 1, z) = 0 + 1;
+          if (x + 1 < ret.schem.x_range() && ret.schem(x + 1, y, z) == 0)
+            ret.schem(x + 1, y, z) = 0 + 1;
+          if (z + 1 < ret.schem.z_range() && ret.schem(x, y, z + 1) == 0)
+            ret.schem(x, y, z + 1) = 0 + 1;
+        }
+
+        ret.schem(x, y, z) = base_color(r + 1, c) + 1;
+      }
+      option.main_progressbar.add(cvted.cols());
+    }
+
+    option.main_progressbar.add(cvted.size());
+
+    for (auto it = water_list.cbegin(); it != water_list.cend(); ++it) {
+      const int x = TokiCol(it->first) + 1;
+      const int z = TokiRow(it->first);
+      const int y = waterHigh(it->second);
+      const int yLow = waterLow(it->second);
+      for (int yDynamic = yLow; yDynamic <= y; yDynamic++) {
+        ret.schem(x, yDynamic, z) = 13;
+      }
+    }
+  }
+  option.main_progressbar.set_range(0, 9 * cvted.size(), 8 * cvted.size());
+  // build bridges
+  if (table.map_type() == mapTypes::Slope &&
+      fixed_opt.glassMethod == glassBridgeSettings::withBridge) {
+    option.ui.report_working_status(workStatus::constructingBridges);
+
+    option.sub_progressbar.set_range(0, 100, 0);
+    const int step = cvted.size() / ret.schem.y_range();
+
+    PrimGlassBuilder glass_builder;
+    option.ui.keep_awake();
+    for (uint32_t y = 0; y < ret.schem.y_range(); y++) {
+      option.sub_progressbar.add(step);
+      if (y % (fixed_opt.bridgeInterval + 1) == 0) {
+        std::array<int, 3> start, extension;  // x,z,y
+        start[0] = 0;
+        start[1] = 0;
+        start[2] = y;
+        extension[0] = ret.schem.x_range();
+        extension[1] = ret.schem.z_range();
+        extension[2] = 1;
+        TokiMap targetMap =
+            ySlice2TokiMap_u16(ret.schem.tensor(), start, extension);
+        glassMap glass;
+        // cerr << "Construct glass bridge at y=" << y << endl;
+        glass = glass_builder.makeBridge(targetMap);
+        for (int r = 0; r < glass.rows(); r++)
+          for (int c = 0; c < glass.cols(); c++)
+            if (ret.schem(r, y, c) == PrimGlassBuilder::air &&
+                glass(r, c) == PrimGlassBuilder::glass)
+              ret.schem(r, y, c) = PrimGlassBuilder::glass;
+      } else {
+        continue;
+      }
+    }
+    option.ui.keep_awake();
+    option.sub_progressbar.set_range(0, 100, 100);
+  }
+
+  if (fixed_opt.connect_mushrooms) {
+    ret.schem.process_mushroom_states();
+  }
+  option.main_progressbar.set_range(0, 9 * cvted.size(), 9 * cvted.size());
+  option.ui.report_working_status(workStatus::none);
+
+  ret.map_color = std::move(map_color);
+  return ret;
 }

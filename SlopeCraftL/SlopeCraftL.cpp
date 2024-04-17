@@ -30,6 +30,7 @@ This file is part of SlopeCraft.
 #include "TokiSlopeCraft.h"
 #include "simpleBlock.h"
 #include "WriteStringDeliver.h"
+#include "color_table.h"
 
 using namespace SlopeCraft;
 
@@ -90,7 +91,7 @@ std::pair<uint8_t, simpleBlock> parse_block(const nlohmann::json &jo) noexcept(
   return {basecolor, ret};
 }
 
-// BlockListInterface *impl_createBlockList(const char *filename,
+// block_list_interface *impl_createBlockList(const char *filename,
 //                                          const blockListOption &option,
 //                                          std::string &errmsg) noexcept {
 //   errmsg.reserve(4096);
@@ -150,7 +151,7 @@ struct zip_deleter {
   }
 };
 
-std::tuple<tl::expected<BlockListInterface *, std::string>, std::string>
+std::tuple<tl::expected<block_list_interface *, std::string>, std::string>
 impl_create_block_list_from_zip(const char *zip_path) noexcept {
   std::string warnings{};
   int error_code = ZIP_ER_OK;
@@ -299,8 +300,8 @@ SCL_EXPORT void SCL_destroyKernel(Kernel *k) {
 SCL_EXPORT AbstractBlock *SCL_createBlock() { return new simpleBlock; }
 SCL_EXPORT void SCL_destroyBlock(AbstractBlock *b) { delete b; }
 
-SCL_EXPORT BlockListInterface *SCL_createBlockList(
-    const char *zip_filename, const BlockListCreateOption &option) {
+SCL_EXPORT block_list_interface *SCL_createBlockList(
+    const char *zip_filename, const block_list_create_info &option) {
   auto [res, warnings] = impl_create_block_list_from_zip(zip_filename);
 
   SlopeCraft::write(*option.warnings, warnings);
@@ -312,7 +313,7 @@ SCL_EXPORT BlockListInterface *SCL_createBlockList(
   return res.value();
 }
 
-SCL_EXPORT void SCL_destroyBlockList(BlockListInterface *) {}
+SCL_EXPORT void SCL_destroyBlockList(block_list_interface *) {}
 
 SCL_EXPORT AiCvterOpt *SCL_createAiCvterOpt() { return new AiCvterOpt; }
 void SCL_EXPORT SCL_destroyAiCvterOpt(AiCvterOpt *a) { delete a; }
@@ -381,7 +382,6 @@ SCL_EXPORT SCL_gameVersion SCL_basecolor_version(uint8_t basecolor) {
 
 SCL_EXPORT uint8_t SCL_maxBaseColor() { return 61; }
 
-#include "color_table.h"
 SCL_EXPORT color_table *SCL_create_color_table(
     const color_table_create_info &args) {
   auto opt = color_table_impl::create(args);

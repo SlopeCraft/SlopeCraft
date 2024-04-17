@@ -373,7 +373,7 @@ bool Schem::export_litematic(std::string_view filename,
 
       // progressRangeSet(wind, 0, 100 + Build.size(), 100);
 
-      // reportWorkingStatue(wind, workStatues::writingBlockPalette);
+      // reportWorkingStatue(wind, workStatus::writingBlockPalette);
       // write block palette
       lite.writeListHead("BlockStatePalette", NBT::Compound,
                          this->palette_size());
@@ -528,7 +528,7 @@ bool Schem::export_structure(std::string_view filename,
   }
 
   /*
-  reportWorkingStatue(wind, workStatues::writingMetaInfo);
+  reportWorkingStatue(wind, workStatus::writingMetaInfo);
   progressRangeSet(wind, 0, 100 + Build.size(), 0);
   */
 
@@ -551,7 +551,7 @@ bool Schem::export_structure(std::string_view filename,
     file.writeInt("This should never be shown", y_range());
     file.writeInt("This should never be shown", z_range());
   }
-  // reportWorkingStatue(wind, workStatues::writingBlockPalette);
+  // reportWorkingStatue(wind, workStatus::writingBlockPalette);
   file.writeListHead("palette", NBT::Compound, palette_size());
   {
     std::string pure_block_id;

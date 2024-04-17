@@ -48,7 +48,7 @@ using compressSettings = ::SCL_compressSettings;
 using convertAlgo = ::SCL_convertAlgo;
 using glassBridgeSettings = ::SCL_glassBridgeSettings;
 using gameVersion = ::SCL_gameVersion;
-using workStatues = ::SCL_workStatues;
+using workStatus = ::SCL_workStatus;
 using errorFlag = ::SCL_errorFlag;
 
 }  // namespace SlopeCraft
@@ -140,18 +140,19 @@ class AbstractBlock {
   virtual const char *idForVersion(SCL_gameVersion ver) const noexcept = 0;
 };
 
-class BlockListInterface {
+class block_list_interface {
  public:
-  BlockListInterface() = default;
-  virtual ~BlockListInterface() = default;
-  virtual size_t size() const noexcept = 0;
-  virtual size_t get_blocks(AbstractBlock **, uint8_t *,
-                            size_t capacity_in_elements) noexcept = 0;
+  block_list_interface() = default;
+  virtual ~block_list_interface() = default;
+  [[nodiscard]] virtual size_t size() const noexcept = 0;
+  [[nodiscard]] virtual size_t get_blocks(
+      AbstractBlock **, uint8_t *, size_t capacity_in_elements) noexcept = 0;
 
-  virtual size_t get_blocks(const AbstractBlock **, uint8_t *,
-                            size_t capacity_in_elements) const noexcept = 0;
+  [[nodiscard]] virtual size_t get_blocks(
+      const AbstractBlock **, uint8_t *,
+      size_t capacity_in_elements) const noexcept = 0;
 
-  virtual bool contains(const AbstractBlock *) const noexcept = 0;
+  [[nodiscard]] virtual bool contains(const AbstractBlock *) const noexcept = 0;
 };
 
 struct color_map_ptrs {
@@ -162,21 +163,92 @@ struct color_map_ptrs {
   int num_colors;
 };
 
+struct progress_callbacks {
+  void *widget{nullptr};
+  void (*cb_set_range)(void *, int, int, int){nullptr};
+  void (*cb_add)(void *, int){nullptr};
+
+  inline void set_range(int min, int max, int val) const {
+    if (this->cb_set_range) {
+      this->cb_set_range(this->widget, min, max, val);
+    }
+  }
+  inline void add(int delta) const {
+    if (this->cb_add) {
+      this->cb_add(this->widget, delta);
+    }
+  }
+};
+
+struct ui_callbacks {
+  void *wind{nullptr};
+  void (*cb_keep_awake)(void *){nullptr};
+  void (*cb_report_error)(void *, errorFlag, const char *){nullptr};
+  void (*cb_report_working_status)(void *, workStatus){nullptr};
+
+  inline void keep_awake() const {
+    if (this->cb_keep_awake) {
+      this->cb_keep_awake(this->wind);
+    }
+  }
+
+  inline void report_error(errorFlag e, const char *msg) const {
+    if (this->cb_report_error) {
+      this->cb_report_error(this->wind, e, msg);
+    }
+  }
+  inline void report_working_status(workStatus ws) const {
+    if (this->cb_report_working_status) {
+      this->cb_report_working_status(this->wind, ws);
+    }
+  }
+};
+
+struct convert_option {
+  uint64_t caller_api_version{SC_VERSION_U64};
+  SCL_convertAlgo algo{SCL_convertAlgo::RGB_Better};
+  bool dither{false};
+  AiCvterOpt ai_cvter_opt{};
+  progress_callbacks progress{};
+  ui_callbacks ui{};
+};
+
+struct build_options {
+  uint64_t caller_api_version{SC_VERSION_U64};
+  uint16_t maxAllowedHeight{256};
+  uint16_t bridgeInterval{3};
+  compressSettings compressMethod{::SCL_compressSettings::noCompress};
+  glassBridgeSettings glassMethod{::SCL_glassBridgeSettings::noBridge};
+  bool fire_proof{false};
+  bool enderman_proof{false};
+
+  // added in v5.1.0
+  bool connect_mushrooms{false};
+
+  ui_callbacks ui;
+  progress_callbacks main_progressbar;
+  progress_callbacks sub_progressbar;
+};
+
 struct const_image_reference {
   const uint32_t *data{nullptr};
   size_t rows{0};
   size_t cols{0};
 };
 
+class structure_3D;
 class converted_image {
  public:
-  virtual size_t rows() const noexcept = 0;
-  virtual size_t cols() const noexcept = 0;
-  inline size_t height() const noexcept { return this->rows(); }
-  inline size_t width() const noexcept { return this->cols(); }
-  inline size_t size() const noexcept { return this->rows() * this->cols(); }
+  virtual ~converted_image() = default;
+  [[nodiscard]] virtual size_t rows() const noexcept = 0;
+  [[nodiscard]] virtual size_t cols() const noexcept = 0;
+  [[nodiscard]] inline size_t height() const noexcept { return this->rows(); }
+  [[nodiscard]] inline size_t width() const noexcept { return this->cols(); }
+  [[nodiscard]] inline size_t size() const noexcept {
+    return this->rows() * this->cols();
+  }
 
-  inline size_t size_in_bytes() const noexcept {
+  [[nodiscard]] inline size_t size_in_bytes() const noexcept {
     return sizeof(uint32_t) * this->rows() * this->cols();
   }
 
@@ -187,33 +259,12 @@ class converted_image {
 
 class structure_3D {
  public:
-  virtual size_t shape_x() const noexcept = 0;
-  virtual size_t shape_y() const noexcept = 0;
-  virtual size_t shape_z() const noexcept = 0;
-  virtual size_t palette_length() const noexcept = 0;
+  virtual ~structure_3D() = default;
+  [[nodiscard]] virtual size_t shape_x() const noexcept = 0;
+  [[nodiscard]] virtual size_t shape_y() const noexcept = 0;
+  [[nodiscard]] virtual size_t shape_z() const noexcept = 0;
+  [[nodiscard]] virtual size_t palette_length() const noexcept = 0;
   virtual void get_palette(const char **buffer_block_id) const noexcept = 0;
-};
-
-struct progress_callbacks {
-  void *widget{nullptr};
-  void (*set_range)(void *, int, int, int){nullptr};
-  void (*add)(void *, int){nullptr};
-};
-
-struct ui_callbacks {
-  void *wind{nullptr};
-  void (*keep_awake)(void *){nullptr};
-  void (*report_error)(void *, errorFlag, const char *){nullptr};
-  void (*report_working_statue)(void *, workStatues){nullptr};
-};
-
-struct convert_option {
-  uint64_t caller_api_version{SC_VERSION_U64};
-  SCL_convertAlgo algo{SCL_convertAlgo::RGB_Better};
-  bool dither{false};
-  AiCvterOpt ai_cvter_opt{};
-  progress_callbacks progress{};
-  ui_callbacks ui{};
 };
 
 class color_table {
@@ -238,7 +289,11 @@ class color_table {
   [[nodiscard]] virtual converted_image *convert_image(
       const_image_reference original_img,
       const convert_option &option) const noexcept = 0;
+
+  [[nodiscard]] virtual structure_3D *build(
+      const converted_image &, const build_options &) const noexcept = 0;
 };
+
 class Kernel {
  public:
   Kernel();
@@ -263,7 +318,7 @@ class Kernel {
   virtual void setReportError(void (*)(void *, ::SCL_errorFlag,
                                        const char *)) = 0;
   /// a function ptr to report working statue especially when busy
-  virtual void setReportWorkingStatue(void (*)(void *, ::SCL_workStatues)) = 0;
+  virtual void setReportWorkingStatue(void (*)(void *, ::SCL_workStatus)) = 0;
 
   virtual void setAiCvterOpt(const AiCvterOpt *) = 0;
 
@@ -483,7 +538,7 @@ struct color_table_create_info {
   ::SCL_gameVersion mc_version;
   bool basecolor_allow_LUT[64];
   const AbstractBlock *blocks[64];
-  ui_callbacks callbacks;
+  ui_callbacks ui;
 };
 
 [[nodiscard]] SCL_EXPORT color_table *SCL_create_color_table(
@@ -493,31 +548,31 @@ SCL_EXPORT void SCL_destroy_color_table(color_table *);
 [[nodiscard]] SCL_EXPORT AbstractBlock *SCL_createBlock();
 SCL_EXPORT void SCL_destroyBlock(AbstractBlock *);
 
-struct BlockListCreateOption {
+struct block_list_create_info {
   uint64_t caller_api_version{SC_VERSION_U64};
   StringDeliver *warnings{nullptr};
   StringDeliver *error{nullptr};
 };
 
-[[nodiscard]] SCL_EXPORT BlockListInterface *SCL_createBlockList(
-    const char *zip_filename, const BlockListCreateOption &option);
+[[nodiscard]] SCL_EXPORT block_list_interface *SCL_createBlockList(
+    const char *zip_filename, const block_list_create_info &option);
 
-SCL_EXPORT void SCL_destroyBlockList(BlockListInterface *);
+SCL_EXPORT void SCL_destroyBlockList(block_list_interface *);
 
-[[deprecated]] [[nodiscard]] SCL_EXPORT AiCvterOpt *SCL_createAiCvterOpt();
-[[deprecated]] SCL_EXPORT void SCL_destroyAiCvterOpt(AiCvterOpt *);
-
-[[deprecated]] SCL_EXPORT void SCL_setPopSize(AiCvterOpt *, uint32_t p);
-[[deprecated]] SCL_EXPORT void SCL_setMaxGeneration(AiCvterOpt *, uint32_t p);
-[[deprecated]] SCL_EXPORT void SCL_setMaxFailTimes(AiCvterOpt *, uint32_t p);
-[[deprecated]] SCL_EXPORT void SCL_setCrossoverProb(AiCvterOpt *, double p);
-[[deprecated]] SCL_EXPORT void SCL_setMutationProb(AiCvterOpt *, double p);
-
-[[deprecated]] SCL_EXPORT uint32_t SCL_getPopSize(const AiCvterOpt *);
-[[deprecated]] SCL_EXPORT uint32_t SCL_getMaxGeneration(const AiCvterOpt *);
-[[deprecated]] SCL_EXPORT uint32_t SCL_getMaxFailTimes(const AiCvterOpt *);
-[[deprecated]] SCL_EXPORT double SCL_getCrossoverProb(const AiCvterOpt *);
-[[deprecated]] SCL_EXPORT double SCL_getMutationProb(const AiCvterOpt *);
+//[[deprecated]] [[nodiscard]] SCL_EXPORT AiCvterOpt *SCL_createAiCvterOpt();
+//[[deprecated]] SCL_EXPORT void SCL_destroyAiCvterOpt(AiCvterOpt *);
+//
+//[[deprecated]] SCL_EXPORT void SCL_setPopSize(AiCvterOpt *, uint32_t p);
+//[[deprecated]] SCL_EXPORT void SCL_setMaxGeneration(AiCvterOpt *, uint32_t p);
+//[[deprecated]] SCL_EXPORT void SCL_setMaxFailTimes(AiCvterOpt *, uint32_t p);
+//[[deprecated]] SCL_EXPORT void SCL_setCrossoverProb(AiCvterOpt *, double p);
+//[[deprecated]] SCL_EXPORT void SCL_setMutationProb(AiCvterOpt *, double p);
+//
+//[[deprecated]] SCL_EXPORT uint32_t SCL_getPopSize(const AiCvterOpt *);
+//[[deprecated]] SCL_EXPORT uint32_t SCL_getMaxGeneration(const AiCvterOpt *);
+//[[deprecated]] SCL_EXPORT uint32_t SCL_getMaxFailTimes(const AiCvterOpt *);
+//[[deprecated]] SCL_EXPORT double SCL_getCrossoverProb(const AiCvterOpt *);
+//[[deprecated]] SCL_EXPORT double SCL_getMutationProb(const AiCvterOpt *);
 
 SCL_EXPORT void SCL_preprocessImage(
     uint32_t *ARGB32ptr, const uint64_t imageSize,
@@ -540,6 +595,7 @@ SCL_EXPORT const char *SCL_getSCLVersion();
 SCL_EXPORT const float *SCL_getBasicColorMapPtrs();
 
 // SCL_EXPORT SCL_gameVersion SCL_basecolor_version(uint8_t basecolor);
+
 SCL_EXPORT uint8_t SCL_maxBaseColor();
 //  SCL_EXPORT int SCL_getBlockPalette(const AbstractBlock **blkpp,
 //                                     size_t capacity_in_elements);

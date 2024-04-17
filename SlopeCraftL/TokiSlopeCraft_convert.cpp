@@ -38,7 +38,7 @@ bool TokiSlopeCraft::convert(convertAlgo algo, bool dither) {
 
   // TokiColor::convertAlgo() = algo;
   progressRangeSet(wind, 0, 100, 100);
-  reportWorkingStatue(wind, workStatues::converting);
+  reportWorkingStatue(wind, workStatus::converting);
 
   {
     heu::GAOption opt;
@@ -90,13 +90,13 @@ bool TokiSlopeCraft::convert(convertAlgo algo, bool dither) {
 
     progressRangeSet(wind, 0, 4 * sizePic(2), 0);
 
-    reportWorkingStatue(wind, workStatues::collectingColors);
+    reportWorkingStatue(wind, workStatus::collectingColors);
     pushToHash();
 
     keepAwake(wind);
     progressRangeSet(wind, 0, 4 * sizePic(2), 1 * sizePic(2));
 
-    reportWorkingStatue(wind, workStatues::converting);
+    reportWorkingStatue(wind, workStatus::converting);
     applyTokiColor();
 
     keepAwake(wind);
@@ -109,7 +109,7 @@ bool TokiSlopeCraft::convert(convertAlgo algo, bool dither) {
     ditheredImage = this->rawImage;
 
     if (dither) {
-      reportWorkingStatue(wind, workStatues::dithering);
+      reportWorkingStatue(wind, workStatus::dithering);
       Dither();
     }
     */
@@ -117,7 +117,7 @@ bool TokiSlopeCraft::convert(convertAlgo algo, bool dither) {
   progressRangeSet(wind, 0, 4 * sizePic(2), 4 * sizePic(2));
   keepAwake(wind);
 
-  reportWorkingStatue(wind, workStatues::none);
+  reportWorkingStatue(wind, workStatus::none);
 
   kernelStep = SCL_step::converted;
   return true;
@@ -158,7 +158,7 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(std::string FolderPath,
   int offset[2] = {0, 0};  // r,c
   int currentIndex = indexStart;
 
-  reportWorkingStatue(wind, workStatues::writingMapDataFiles);
+  reportWorkingStatue(wind, workStatus::writingMapDataFiles);
 
   for (int c = 0; c < cols; c++) {
     for (int r = 0; r < rows; r++) {
@@ -274,7 +274,7 @@ std::vector<std::string> TokiSlopeCraft::exportAsData(std::string FolderPath,
     }
   }
 
-  reportWorkingStatue(wind, workStatues::none);
+  reportWorkingStatue(wind, workStatus::none);
 
   return failed_file_list;
 }

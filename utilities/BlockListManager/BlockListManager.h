@@ -24,7 +24,7 @@ QString serialize_preset(const blockListPreset &preset) noexcept;
 
 class BlockListDeleter {
  public:
-  void operator()(SlopeCraft::BlockListInterface *ptr) noexcept {
+  void operator()(SlopeCraft::block_list_interface *ptr) noexcept {
     SlopeCraft::SCL_destroyBlockList(ptr);
   }
 };
@@ -33,7 +33,8 @@ class BlockListManager : public QWidget {
   Q_OBJECT
  private:
   std::vector<std::unique_ptr<BaseColorWidget>> basecolor_widgets;
-  std::vector<std::unique_ptr<SlopeCraft::BlockListInterface, BlockListDeleter>>
+  std::vector<
+      std::unique_ptr<SlopeCraft::block_list_interface, BlockListDeleter>>
       blockslists;
   std::function<SCL_gameVersion()> callback_get_version{nullptr};
 
@@ -86,7 +87,7 @@ class BlockListManager : public QWidget {
   void changed();
 
  private:
-  std::unique_ptr<SlopeCraft::BlockListInterface, BlockListDeleter>
+  std::unique_ptr<SlopeCraft::block_list_interface, BlockListDeleter>
   impl_addblocklist(const QString &filename) noexcept;
 };
 

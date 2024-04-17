@@ -124,7 +124,7 @@ class simpleBlock : public ::SlopeCraft::AbstractBlock {
   // simpleBlock& operator =(const simpleBlock &);
 };
 
-class BlockList : public ::SlopeCraft::BlockListInterface {
+class BlockList : public ::SlopeCraft::block_list_interface {
  private:
   std::map<std::unique_ptr<simpleBlock>, uint8_t> m_blocks;
 

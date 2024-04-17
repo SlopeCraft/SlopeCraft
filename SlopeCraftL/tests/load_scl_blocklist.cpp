@@ -10,7 +10,7 @@ int main(int argc, char** argv) {
 
   const char* archive_path = argv[1];
   printf("Try parsing %s\n", archive_path);
-  SlopeCraft::BlockListInterface* blocklist{nullptr};
+  SlopeCraft::block_list_interface* blocklist{nullptr};
   {
     std::string errmsg;
     errmsg.resize(8192);
@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
     std::string warnings;
     warnings.resize(8192);
     SlopeCraft::StringDeliver warn_sd{warnings.data(), warnings.size()};
-    SlopeCraft::BlockListCreateOption option{
+    SlopeCraft::block_list_create_info option{
         SC_VERSION_U64,
         &warn_sd,
         &err_sd,

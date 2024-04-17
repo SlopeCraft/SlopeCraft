@@ -73,7 +73,7 @@ SCWind::SCWind(QWidget *parent)
         [](void *_this, ::SCL_errorFlag err, const char *msg) {
           reinterpret_cast<SCWind *>(_this)->report_error(err, msg);
         });
-    this->kernel->setReportWorkingStatue([](void *_this, ::SCL_workStatues ws) {
+    this->kernel->setReportWorkingStatue([](void *_this, ::SCL_workStatus ws) {
       SCWind *const wind = reinterpret_cast<SCWind *>(_this);
 
       const QString status_str = SCWind::workStatus_to_string(ws);
@@ -981,33 +981,33 @@ const QString &SCWind::default_wind_title() noexcept {
   return title;
 }
 
-QString SCWind::workStatus_to_string(::SCL_workStatues status) noexcept {
+QString SCWind::workStatus_to_string(::SCL_workStatus status) noexcept {
   switch (status) {
-    case SlopeCraft::workStatues::none:
+    case SlopeCraft::workStatus::none:
       break;
-    case SlopeCraft::workStatues::buidingHeighMap:
+    case SlopeCraft::workStatus::buidingHeighMap:
       return tr("正在构建高度矩阵");
-    case SlopeCraft::workStatues::building3D:
+    case SlopeCraft::workStatus::building3D:
       return tr("正在构建三维结构");
-    case SlopeCraft::workStatues::collectingColors:
+    case SlopeCraft::workStatus::collectingColors:
       return tr("正在收集整张图片的颜色");
-    case SlopeCraft::workStatues::compressing:
+    case SlopeCraft::workStatus::compressing:
       return tr("正在压缩立体地图画");
-    case SlopeCraft::workStatues::constructingBridges:
+    case SlopeCraft::workStatus::constructingBridges:
       return tr("正在为立体地图画搭桥");
-    case SlopeCraft::workStatues::converting:
+    case SlopeCraft::workStatus::converting:
       return tr("正在匹配颜色");
-    case SlopeCraft::workStatues::dithering:
+    case SlopeCraft::workStatus::dithering:
       return tr("正在使用抖动仿色");
-    case SlopeCraft::workStatues::flippingToWall:
+    case SlopeCraft::workStatus::flippingToWall:
       return tr("正在将平板地图画变为墙面地图画");
-    case SlopeCraft::workStatues::writing3D:
+    case SlopeCraft::workStatus::writing3D:
       return tr("正在写入三维结构");
-    case SlopeCraft::workStatues::writingBlockPalette:
+    case SlopeCraft::workStatus::writingBlockPalette:
       return tr("正在写入方块列表");
-    case SlopeCraft::workStatues::writingMapDataFiles:
+    case SlopeCraft::workStatus::writingMapDataFiles:
       return tr("正在写入地图数据文件");
-    case SlopeCraft::workStatues::writingMetaInfo:
+    case SlopeCraft::workStatus::writingMetaInfo:
       return tr("正在写入基础信息");
   }
 

@@ -143,7 +143,7 @@ std::string TokiSlopeCraft::exportAsLitematic(
                 "structure.");
     return "Too hasty! export litematic after you built!";
   }
-  reportWorkingStatue(wind, workStatues::writingMetaInfo);
+  reportWorkingStatue(wind, workStatus::writingMetaInfo);
   progressRangeSet(wind, 0, 100 + schem.size(), 0);
 
   libSchem::litematic_info info;
@@ -163,7 +163,7 @@ std::string TokiSlopeCraft::exportAsLitematic(
   }
 
   progressRangeSet(wind, 0, 100, 100);
-  reportWorkingStatue(wind, workStatues::none);
+  reportWorkingStatue(wind, workStatus::none);
 
   return "";
 }
@@ -228,7 +228,7 @@ bool TokiSlopeCraft::build(const build_options &option) noexcept {
 
   this->build_opt = option;
 
-  reportWorkingStatue(wind, workStatues::buidingHeighMap);
+  reportWorkingStatue(wind, workStatus::buidingHeighMap);
 
   progressRangeSet(wind, 0, 9 * sizePic(2), 0);
   // cerr << "start makeHeight" << endl;
@@ -241,14 +241,14 @@ bool TokiSlopeCraft::build(const build_options &option) noexcept {
     // cerr << "makeHeight finished" << endl;
     progressRangeSet(wind, 0, 9 * sizePic(2), 5 * sizePic(2));
 
-    reportWorkingStatue(wind, workStatues::building3D);
+    reportWorkingStatue(wind, workStatus::building3D);
     // cerr << "start buildHeight" << endl;
     buildHeight(this->build_opt.fire_proof, this->build_opt.enderman_proof,
                 Base, HighMap, LowMap, WaterList);
     // cerr << "buildHeight finished" << endl;
     progressRangeSet(wind, 0, 9 * sizePic(2), 8 * sizePic(2));
 
-    reportWorkingStatue(wind, workStatues::constructingBridges);
+    reportWorkingStatue(wind, workStatus::constructingBridges);
     // cerr << "start makeBridge" << endl;
     makeBridge();
   }
@@ -259,7 +259,7 @@ bool TokiSlopeCraft::build(const build_options &option) noexcept {
   // cerr << "makeBridge finished" << endl;
   progressRangeSet(wind, 0, 9 * sizePic(2), 9 * sizePic(2));
 
-  reportWorkingStatue(wind, workStatues::none);
+  reportWorkingStatue(wind, workStatus::none);
 
   kernelStep = SCL_step::builded;
 
@@ -476,7 +476,7 @@ std::string TokiSlopeCraft::exportAsStructure(
     return "Too hasty! export structure after you built!";
   }
 
-  reportWorkingStatue(wind, workStatues::writingMetaInfo);
+  reportWorkingStatue(wind, workStatus::writingMetaInfo);
   progressRangeSet(wind, 0, 100 + schem.size(), 0);
 
   errorFlag flag = errorFlag::NO_ERROR_OCCUR;
@@ -490,7 +490,7 @@ std::string TokiSlopeCraft::exportAsStructure(
   }
 
   progressRangeSet(wind, 0, 100, 100);
-  reportWorkingStatue(wind, workStatues::none);
+  reportWorkingStatue(wind, workStatus::none);
 
   return "";
 }

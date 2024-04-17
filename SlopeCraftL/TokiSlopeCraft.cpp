@@ -44,7 +44,7 @@ TokiSlopeCraft::TokiSlopeCraft()
   this->progressAdd = [](void *, int) {};
   this->keepAwake = [](void *) {};
   this->reportError = [](void *, errorFlag, const char *) {};
-  this->reportWorkingStatue = [](void *, workStatues) {};
+  this->reportWorkingStatue = [](void *, workStatus) {};
   this->algoProgressAdd = [](void *, int) {};
   this->algoProgressRangeSet = [](void *, int, int, int) {};
 
@@ -98,7 +98,7 @@ void TokiSlopeCraft::setReportError(void (*re)(void *, errorFlag,
   reportError = re;
 }
 /// a function ptr to report working statue especially when busy
-void TokiSlopeCraft::setReportWorkingStatue(void (*rws)(void *, workStatues)) {
+void TokiSlopeCraft::setReportWorkingStatue(void (*rws)(void *, workStatus)) {
   reportWorkingStatue = rws;
 }
 
@@ -198,7 +198,7 @@ bool TokiSlopeCraft::setType(mapTypes type, gameVersion ver,
 
   // cerr<<__FILE__<<__LINE__<<endl;
 
-  this->reportWorkingStatue(this->wind, workStatues::collectingColors);
+  this->reportWorkingStatue(this->wind, workStatus::collectingColors);
 
   Eigen::ArrayXi baseColorVer(64);  // 基色对应的版本
   baseColorVer.setConstant((int)SCL_gameVersion::FUTURE);
@@ -274,7 +274,7 @@ bool TokiSlopeCraft::setType(mapTypes type, gameVersion ver,
 
   // GACvter::updateMapColor2GrayLUT();
 
-  this->reportWorkingStatue(this->wind, workStatues::none);
+  this->reportWorkingStatue(this->wind, workStatus::none);
   this->image_cvter.on_color_set_changed();
 
   this->kernelStep = SCL_step::wait4Image;

@@ -116,7 +116,7 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   /// a function ptr to report error when something wrong happens
   void setReportError(void (*)(void *, errorFlag, const char *)) override;
   /// a function ptr to report working statue especially when busy
-  void setReportWorkingStatue(void (*)(void *, workStatues)) override;
+  void setReportWorkingStatue(void (*)(void *, workStatus)) override;
   size_t size() override { return sizeof(TokiSlopeCraft); }
   // void destroy() override { delete this; }
   void decreaseStep(step) override;
@@ -286,7 +286,7 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   void (*algoProgressRangeSet)(void *, int, int, int);
   void (*algoProgressAdd)(void *, int);
   void (*reportError)(void *, errorFlag, const char *);
-  void (*reportWorkingStatue)(void *, workStatues);
+  void (*reportWorkingStatue)(void *, workStatus);
 
  public:
   step kernelStep;
