@@ -51,9 +51,6 @@ class edge {
  public:
   edge();
   edge(uint32_t begIdx, uint32_t endIdx);
-  // edge(uint32_t begIdx,uint32_t endIdx);
-  // edge(row_col_pos,row_col_pos);
-  // edge(uint16_t r1,uint16_t c1,uint16_t r2,uint16_t c2);
   uint32_t begIdx;
   uint32_t endIdx;
   int lengthSquare;
@@ -70,7 +67,7 @@ class pairedEdge : public std::pair<row_col_pos, row_col_pos> {
  public:
   pairedEdge();
   pairedEdge(row_col_pos, row_col_pos);
-  pairedEdge(uint16_t r1, uint16_t c1, uint16_t r2, uint16_t c2);
+  pairedEdge(uint32_t r1, uint32_t c1, uint32_t r2, uint32_t c2);
   pairedEdge(const edge &);
   int lengthSquare;
 
@@ -81,7 +78,7 @@ class pairedEdge : public std::pair<row_col_pos, row_col_pos> {
 [[deprecated]] TokiMap ySlice2TokiMap(
     const Eigen::Tensor<uint8_t, 3> &) noexcept;
 [[deprecated]] TokiMap ySlice2TokiMap_u16(
-    const Eigen::Tensor<uint16_t, 3> &) noexcept;
+    const Eigen::Tensor<uint32_t, 3> &) noexcept;
 TokiMap ySlice2TokiMap_u16(const Eigen::Tensor<uint16_t, 3> &xzy,
                            std::span<const int, 3> start_xzy,
                            std::span<const int, 3> extension_xzy) noexcept;

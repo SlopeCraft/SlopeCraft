@@ -51,10 +51,11 @@ row_col_pos edge::beg() const { return vertexes->at(begIdx); }
 
 row_col_pos edge::end() const { return vertexes->at(endIdx); }
 
-pairedEdge::pairedEdge() {
-  first = TokiRC(0, 0);
-  second = TokiRC(0, 0);
-  lengthSquare = 0;
+pairedEdge::pairedEdge()
+    : std::pair<row_col_pos, row_col_pos>{{0, 0}, {0, 0}}, lengthSquare{0} {
+  //  first = TokiRC(0, 0);
+  //  second = TokiRC(0, 0);
+  //  lengthSquare = 0;
 }
 pairedEdge::pairedEdge(row_col_pos A, row_col_pos B) {
   int r1 = A.row, c1 = A.col;
@@ -66,9 +67,9 @@ pairedEdge::pairedEdge(row_col_pos A, row_col_pos B) {
   lengthSquare = (rowSpan * rowSpan + colSpan * colSpan);
 }
 
-pairedEdge::pairedEdge(uint16_t r1, uint16_t c1, uint16_t r2, uint16_t c2) {
-  first = TokiRC(r1, c1);
-  second = TokiRC(r2, c2);
+pairedEdge::pairedEdge(uint32_t r1, uint32_t c1, uint32_t r2, uint32_t c2) {
+  first = row_col_pos{static_cast<int32_t>(r1), static_cast<int32_t>(c1)};
+  second = row_col_pos{static_cast<int32_t>(r2), static_cast<int32_t>(c2)};
   int rowSpan = r1 - r2;
   int colSpan = c1 - c2;
   lengthSquare = (rowSpan * rowSpan + colSpan * colSpan);
@@ -163,15 +164,23 @@ glassMap PrimGlassBuilder::makeBridge(const TokiMap &_targetMap,
   for (int r = 0; r < rowCount; r++)
     for (int c = 0; c < colCount; c++) {
       if (r + 1 < rowCount) {
-        pairedEdge temp = connectSingleMaps(
-            algos[r][c], TokiRC(unitL * r, unitL * c), algos[r + 1][c],
-            TokiRC(unitL * (r + 1), unitL * c));
+        pairedEdge temp =
+            connectSingleMaps(algos[r][c],
+                              row_col_pos{static_cast<int32_t>(unitL * r),
+                                          static_cast<int32_t>(unitL * c)},
+                              algos[r + 1][c],
+                              row_col_pos{static_cast<int32_t>(unitL * (r + 1)),
+                                          static_cast<int32_t>(unitL * c)});
         if (temp.lengthSquare > 2) interRegionEdges.emplace(temp);
       }
       if (c + 1 < colCount) {
         pairedEdge temp = connectSingleMaps(
-            algos[r][c], TokiRC(unitL * r, unitL * c), algos[r][c + 1],
-            TokiRC(unitL * r, unitL * (c + 1)));
+            algos[r][c],
+            row_col_pos{static_cast<int32_t>(unitL * r),
+                        static_cast<int32_t>(unitL * c)},
+            algos[r][c + 1],
+            row_col_pos{static_cast<int32_t>(unitL * r),
+                        static_cast<int32_t>(unitL * (c + 1))});
         if (temp.lengthSquare > 2) interRegionEdges.emplace(temp);
       }
     }
@@ -234,7 +243,7 @@ glassMap PrimGlassBuilder::make4SingleMap(const TokiMap &_targetMap,
             _targetMap(r, c - 1))
           continue;
         else
-          targetPoints.emplace_back(TokiRC(r, c));
+          targetPoints.emplace_back(row_col_pos{r, c});
       }
     }
 
@@ -272,10 +281,10 @@ pairedEdge PrimGlassBuilder::connectSingleMaps(const PrimGlassBuilder *map1,
   if (map1->targetPoints.size() <= 0 || map2->targetPoints.size() <= 0)
     return pairedEdge();
 
-  uint16_t offsetR1 = offset1.row, offsetC1 = offset1.col;
-  uint16_t offsetR2 = offset2.row, offsetC2 = offset2.col;
+  uint32_t offsetR1 = offset1.row, offsetC1 = offset1.col;
+  uint32_t offsetR2 = offset2.row, offsetC2 = offset2.col;
 
-  uint16_t r1, r2, c1, c2;
+  uint32_t r1, r2, c1, c2;
 
   pairedEdge current;
 
@@ -408,8 +417,8 @@ void PrimGlassBuilder::runPrim() {
 EImage TokiMap2EImage(const TokiMap &tm) {
   EImage result(tm.rows(), tm.cols());
   result.setConstant(airColor);
-  for (uint16_t r = 0; r < tm.rows(); r++)
-    for (uint16_t c = 0; c < tm.cols(); c++) {
+  for (uint32_t r = 0; r < tm.rows(); r++)
+    for (uint32_t c = 0; c < tm.cols(); c++) {
       if (tm(r, c) == 1) result(r, c) = glassColor;
       if (tm(r, c) > 1) result(r, c) = targetColor;
     }
@@ -424,9 +433,9 @@ glassMap connectBetweenLayers(const TokiMap &map1, const TokiMap &map2,
   for (int r = 0; r < map1.rows(); r++)
     for (int c = 0; c < map1.cols(); c++) {
       if (map1(r, c) >= PrimGlassBuilder::target)
-        target1.emplace_back(TokiRC(r, c));
+        target1.emplace_back(row_col_pos{r, c});
       if (map2(r, c) >= PrimGlassBuilder::target)
-        target2.emplace_back(TokiRC(r, c));
+        target2.emplace_back(row_col_pos{r, c});
     }
   std::list<pairedEdge> linkEdges;
   linkEdges.clear();
@@ -477,7 +486,7 @@ TokiMap ySlice2TokiMap(const Eigen::Tensor<uint8_t, 3> &raw) noexcept {
   return impl_ySlice2TokiMap(raw);
 }
 
-TokiMap ySlice2TokiMap_u16(const Eigen::Tensor<uint16_t, 3> &raw) noexcept {
+TokiMap ySlice2TokiMap_u16(const Eigen::Tensor<uint32_t, 3> &raw) noexcept {
   return impl_ySlice2TokiMap(raw);
 }
 

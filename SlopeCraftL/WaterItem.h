@@ -42,11 +42,6 @@ struct std::hash<row_col_pos> {
   }
 };
 
-constexpr row_col_pos TokiRC(int row, int col) {
-  return row_col_pos{.row = static_cast<int32_t>(row),
-                     .col = static_cast<int32_t>(col)};
-}
-
 struct water_y_range {
   int high_y;
   int low_y;

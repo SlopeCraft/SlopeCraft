@@ -329,7 +329,7 @@ void TokiSlopeCraft::makeHeight_new(
     auto HLM = &HL.getWaterMap();
 
     for (auto it = HLM->cbegin(); it != HLM->cend(); it++) {
-      WaterList[TokiRC(it->first, c)] = it->second;
+      WaterList[row_col_pos{static_cast<int32_t>(it->first), c}] = it->second;
     }
 
     progressAdd(wind, 4 * sizePic(0));
