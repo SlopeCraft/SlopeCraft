@@ -46,18 +46,13 @@ struct water_y_range {
   int high_y;
   int low_y;
 };
-
-constexpr water_y_range TokiWater(int h, int l) {
-  return water_y_range{.high_y = h, .low_y = l};
-}
-
 [[nodiscard]] inline bool operator==(water_y_range a,
                                      water_y_range b) noexcept {
   return (a.high_y == b.high_y) && (a.low_y == b.low_y);
 }
 
-constexpr water_y_range nullWater =
-    water_y_range{.high_y = INT_MIN, .low_y = INT_MIN};
+// constexpr water_y_range nullWater =
+//     water_y_range{.high_y = INT_MIN, .low_y = INT_MIN};
 constexpr int32_t WATER_COLUMN_SIZE[3] = {11, 6, 1};
 
 #endif  // WATERITEM_H

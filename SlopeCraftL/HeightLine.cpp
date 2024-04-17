@@ -79,6 +79,7 @@ void HeightLine::make(const Eigen::ArrayXi &mapColorCol,
   Eigen::ArrayXi rawShadow = mapColorCol - 4 * (mapColorCol / 4);
 
   if ((rawShadow >= 3).any()) {
+#warning "TODO: Fix this error handling"
     std::cerr << "Fatal Error: depth=3 in vanilla map!" << std::endl;
     std::cerr << "SlopeCraft will crash." << std::endl;
     exit(1);
@@ -100,7 +101,9 @@ void HeightLine::make(const Eigen::ArrayXi &mapColorCol,
     }
     if (base(r + 1) == 12) {
       dealedDepth(r + 1) = 0;
-      waterMap[r + 1] = nullWater;
+      if (waterMap.contains(r + 1)) {
+        waterMap.erase(r + 1);
+      }
     }
   }
   ///////////////////////3
@@ -130,7 +133,8 @@ void HeightLine::make(const Eigen::ArrayXi &mapColorCol,
     LowLine = OC.getLowLine();
   }
   for (auto it = waterMap.begin(); it != waterMap.end(); it++) {
-    waterMap[it->first] = TokiWater(HighLine(it->first), LowLine(it->first));
+    waterMap[it->first] =
+        water_y_range{HighLine(it->first), LowLine(it->first)};
     HighLine(it->first) += 1;
   }
 }
@@ -143,7 +147,7 @@ void HeightLine::updateWaterMap() {
   waterMap.clear();
   for (uint32_t r = 1; r < base.rows(); r++) {
     if (base(r) != 12) continue;
-    waterMap[r] = TokiWater(HighLine(r) - 1, LowLine(r));
+    waterMap[r] = water_y_range{HighLine(r) - 1, LowLine(r)};
   }
 }
 
