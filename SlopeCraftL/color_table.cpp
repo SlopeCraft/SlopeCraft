@@ -173,7 +173,7 @@ converted_image *color_table_impl::convert_image(
 std::optional<converted_image_impl::height_maps>
 converted_image_impl::height_info(const build_options &option) const noexcept {
   //
-  //  std::unordered_map<row_col_pos, water_y_range> water_list;
+  //  std::unordered_map<rc_pos, water_y_range> water_list;
 
   Eigen::ArrayXXi map_color = this->converter.mapcolor_matrix().cast<int>();
 
@@ -199,7 +199,7 @@ converted_image_impl::height_info(const build_options &option) const noexcept {
   base.setZero(this->rows(), this->cols());
   high_map.setZero(this->rows(), this->cols());
   low_map.setZero(this->rows(), this->cols());
-  std::unordered_map<row_col_pos, water_y_range> water_list;
+  std::unordered_map<rc_pos, water_y_range> water_list;
 
   LossyCompressor compressor;
   for (int64_t c = 0; c < map_color.cols(); c++) {
@@ -238,8 +238,7 @@ converted_image_impl::height_info(const build_options &option) const noexcept {
     water_list.reserve(water_list.size() + hl_water_list.size());
     for (const auto &[r, water_item] : hl_water_list) {
       water_list.emplace(
-          row_col_pos{static_cast<int32_t>(r), static_cast<int32_t>(c)},
-          water_item);
+          rc_pos{static_cast<int32_t>(r), static_cast<int32_t>(c)}, water_item);
     }
 
     option.main_progressbar.add(4 * this->size());
@@ -281,12 +280,12 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
   option.ui.report_working_status(workStatus::buidingHeighMap);
   option.main_progressbar.set_range(0, 9 * cvted.size(), 0);
   {
-    std::unordered_map<row_col_pos, water_y_range> water_list;
+    std::unordered_map<rc_pos, water_y_range> water_list;
     option.main_progressbar.add(cvted.size());
   }
 
   Eigen::ArrayXi map_color, base_color, high_map, low_map;
-  std::unordered_map<row_col_pos, water_y_range> water_list;
+  std::unordered_map<rc_pos, water_y_range> water_list;
   {
     auto opt = cvted.height_info(fixed_opt);
     if (!opt) {

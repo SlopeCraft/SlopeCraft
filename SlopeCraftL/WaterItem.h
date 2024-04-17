@@ -26,18 +26,18 @@ This file is part of SlopeCraft.
 #include <cstdint>
 #include <utility>
 
-struct row_col_pos {
+struct rc_pos {
   int32_t row;
   int32_t col;
 
-  [[nodiscard]] inline bool operator==(row_col_pos b) const noexcept {
+  [[nodiscard]] inline bool operator==(rc_pos b) const noexcept {
     return (this->row == b.row) && (this->col == b.col);
   }
 };
 
 template <>
-struct std::hash<row_col_pos> {
-  size_t operator()(row_col_pos pos) const noexcept {
+struct std::hash<rc_pos> {
+  size_t operator()(rc_pos pos) const noexcept {
     return std::hash<uint64_t>{}(reinterpret_cast<const uint64_t&>(pos));
   }
 };

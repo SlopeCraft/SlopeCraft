@@ -233,7 +233,7 @@ bool TokiSlopeCraft::build(const build_options &option) noexcept {
   // cerr << "start makeHeight" << endl;
   {
     Eigen::ArrayXXi Base, HighMap, LowMap;
-    std::unordered_map<row_col_pos, water_y_range> WaterList;
+    std::unordered_map<rc_pos, water_y_range> WaterList;
     progressAdd(wind, sizePic(2));
 
     makeHeight_new(Base, HighMap, LowMap, WaterList);
@@ -267,7 +267,7 @@ bool TokiSlopeCraft::build(const build_options &option) noexcept {
 
 void TokiSlopeCraft::makeHeight_new(
     Eigen::ArrayXXi &Base, Eigen::ArrayXXi &HighMap, Eigen::ArrayXXi &LowMap,
-    std::unordered_map<row_col_pos, water_y_range> &WaterList) {
+    std::unordered_map<rc_pos, water_y_range> &WaterList) {
   Base.setZero(sizePic(0) + 1, sizePic(1));
   HighMap.setZero(sizePic(0) + 1, sizePic(1));
   LowMap.setZero(sizePic(0) + 1, sizePic(1));
@@ -329,7 +329,7 @@ void TokiSlopeCraft::makeHeight_new(
     auto HLM = &HL.getWaterMap();
 
     for (auto it = HLM->cbegin(); it != HLM->cend(); it++) {
-      WaterList[row_col_pos{static_cast<int32_t>(it->first), c}] = it->second;
+      WaterList[rc_pos{static_cast<int32_t>(it->first), c}] = it->second;
     }
 
     progressAdd(wind, 4 * sizePic(0));
@@ -345,7 +345,7 @@ void TokiSlopeCraft::makeHeight_new(
 void TokiSlopeCraft::buildHeight(
     bool fireProof, bool endermanProof, const Eigen::ArrayXXi &Base,
     const Eigen::ArrayXXi &, const Eigen::ArrayXXi &LowMap,
-    const std::unordered_map<row_col_pos, water_y_range> &WaterList) {
+    const std::unordered_map<rc_pos, water_y_range> &WaterList) {
   /*
 {
   std::array<int64_t, 3> tempSize3D({schem.x_range(), schem.y_range(),
