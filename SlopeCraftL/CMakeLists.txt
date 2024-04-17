@@ -27,18 +27,19 @@ set(Slope_SCL_internal_headers
     # AiCvterOpt.h
     Colors.h
     height_line.h
-
     optimize_chain.h
     prim_glass_builder.h
     SCLDefines.h
     TokiSlopeCraft.h
     WaterItem.h
     lossyCompressor.h
-
     mc_block.h
     SlopeCraftL_global.h
     WriteStringDeliver.h
     Colorset.h
+    structure_3D.h
+    color_table.h
+    converted_image.h
 )
 
 set(SlopeCraft_SCL_sources
@@ -61,11 +62,12 @@ set(SlopeCraft_SCL_sources
     mc_block.cpp
     SlopeCraftL.cpp
     Colorset.cpp
+    color_table.cpp
+    structure_3D.cpp
+    converted_image.cpp
 
     #${SlopeCraft_SCL_internal_headers}
     ${SlopeCraft_SCL_windows_rc_files}
-    color_table.cpp
-    color_table.h
 )
 
 # add this definations to both targets

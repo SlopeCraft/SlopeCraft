@@ -233,10 +233,14 @@ struct litematic_options {
   uint64_t caller_api_version{SC_VERSION_U64};
   const char *litename_utf8 = "by SlopeCraft";
   const char *region_name_utf8 = "by SlopeCraft";
+  ui_callbacks ui;
+  progress_callbacks progressbar;
 };
 struct vanilla_structure_options {
   uint64_t caller_api_version{SC_VERSION_U64};
   bool is_air_structure_void{true};
+  ui_callbacks ui;
+  progress_callbacks progressbar;
 };
 struct WE_schem_options {
   uint64_t caller_api_version{SC_VERSION_U64};
@@ -244,6 +248,8 @@ struct WE_schem_options {
   int we_offset[3] = {0, 0, 0};
   const char *const *required_mods_name_utf8{nullptr};
   int num_required_mods{0};
+  ui_callbacks ui;
+  progress_callbacks progressbar;
 };
 
 struct const_image_reference {
@@ -281,6 +287,16 @@ class structure_3D {
   [[nodiscard]] virtual size_t shape_z() const noexcept = 0;
   [[nodiscard]] virtual size_t palette_length() const noexcept = 0;
   virtual void get_palette(const char **buffer_block_id) const noexcept = 0;
+
+  //  virtual bool export_litematica(
+  //      const char *filename, const litematic_options &option) const noexcept
+  //      = 0;
+  //  virtual bool export_vanilla_structure(
+  //      const char *filename,
+  //      const vanilla_structure_options &option) const noexcept = 0;
+  //  virtual bool export_WE_schem(
+  //      const char *filename, const WE_schem_options &option) const noexcept =
+  //      0;
 };
 
 class color_table {
