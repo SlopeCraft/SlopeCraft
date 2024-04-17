@@ -31,7 +31,7 @@ const double initializeNonZeroRatio = 0.05;
 
 constexpr uint16_t popSize = 50;
 uint16_t maxFailTimes = 30;
-uint16_t LossyCompressor::maxGeneration = 600;
+uint16_t lossy_compressor::maxGeneration = 600;
 constexpr double crossoverProb = 0.9;
 constexpr double mutateProb = 0.01;
 constexpr uint32_t reportRate = 50;
@@ -46,7 +46,7 @@ struct args_t : public heu::FixedDiscreteBox<Var_t, 0, 2> {
   const TokiColor **src;
   bool allowNaturalCompress;
   size_t maxHeight;
-  const LossyCompressor *ptr;
+  const lossy_compressor *ptr;
   std::clock_t prevClock;
 };
 
@@ -64,7 +64,7 @@ void iFun(Var_t *v, const args_t *arg) {
 }
 
 void fFun(const Var_t *v, const args_t *arg, double *fitness) {
-  HeightLine HL;
+  height_line HL;
   const TokiColor **src = arg->src;
   const bool allowNaturalCompress = arg->allowNaturalCompress;
   float meanColorDiff = HL.make(src, *v, allowNaturalCompress);
@@ -91,21 +91,21 @@ class solver_t
       if (curClock - prevClock >= CLOCKS_PER_SEC / 2) {
         prevClock = curClock;
         (*(this->_args.ptr->progressRangeSetPtr))(
-            *(this->_args.ptr->windPtr), 0, LossyCompressor::maxGeneration,
+            *(this->_args.ptr->windPtr), 0, lossy_compressor::maxGeneration,
             this->generation());
       }
     }
   }
 };
 
-LossyCompressor::LossyCompressor() : solver{new solver_t{}} {
+lossy_compressor::lossy_compressor() : solver{new solver_t{}} {
   solver->setTournamentSize(3);
 }
 
-LossyCompressor::~LossyCompressor() {}
+lossy_compressor::~lossy_compressor() {}
 
-void LossyCompressor::setSource(const Eigen::ArrayXi &_base,
-                                const TokiColor **src) {
+void lossy_compressor::setSource(const Eigen::ArrayXi &_base,
+                                 const TokiColor **src) {
   source.resize(_base.rows() - 1);
 
   for (uint16_t idx = 0; idx < _base.rows() - 1; idx++) {
@@ -117,8 +117,8 @@ void LossyCompressor::setSource(const Eigen::ArrayXi &_base,
   // std::cerr<<"source set\n";
 }
 
-void LossyCompressor::runGenetic(uint16_t maxHeight,
-                                 bool allowNaturalCompress) {
+void lossy_compressor::runGenetic(uint16_t maxHeight,
+                                  bool allowNaturalCompress) {
   {
     heu::GAOption opt;
     opt.crossoverProb = crossoverProb;
@@ -143,7 +143,7 @@ void LossyCompressor::runGenetic(uint16_t maxHeight,
   solver->run();
 }
 
-bool LossyCompressor::compress(uint16_t maxHeight, bool allowNaturalCompress) {
+bool lossy_compressor::compress(uint16_t maxHeight, bool allowNaturalCompress) {
   (*progressRangeSetPtr)(*windPtr, 0, maxGeneration, 0);
 
   // std::cerr<<"Genetic algorithm started\n";
@@ -162,10 +162,10 @@ bool LossyCompressor::compress(uint16_t maxHeight, bool allowNaturalCompress) {
   return tryTimes < 3;
 }
 
-const Eigen::ArrayX<uint8_t> &LossyCompressor::getResult() const {
+const Eigen::ArrayX<uint8_t> &lossy_compressor::getResult() const {
   return this->solver->result();
 }
 
-double LossyCompressor::resultFitness() const {
+double lossy_compressor::resultFitness() const {
   return this->solver->bestFitness();
 }

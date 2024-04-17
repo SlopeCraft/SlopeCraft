@@ -297,7 +297,7 @@ void TokiSlopeCraft::makeHeight_new(
 
   for (uint16_t c = 0; c < sizePic(1); c++) {
     // cerr << "Coloumn " << c << '\n';
-    HeightLine HL;
+    height_line HL;
     // getTokiColorPtr(c,&src[0]);
     HL.make(this->mapPic.col(c), allowNaturalCompress);
 
@@ -448,9 +448,9 @@ void TokiSlopeCraft::makeBridge() {
       glass = glassBuilder->makeBridge(targetMap);
       for (int r = 0; r < glass.rows(); r++)
         for (int c = 0; c < glass.cols(); c++)
-          if (schem(r, y, c) == PrimGlassBuilder::air &&
-              glass(r, c) == PrimGlassBuilder::glass)
-            schem(r, y, c) = PrimGlassBuilder::glass;
+          if (schem(r, y, c) == prim_glass_builder::air &&
+              glass(r, c) == prim_glass_builder::glass)
+            schem(r, y, c) = prim_glass_builder::glass;
     } else {
       continue;
     }

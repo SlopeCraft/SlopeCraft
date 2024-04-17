@@ -41,7 +41,7 @@ This file is part of SlopeCraft.
 #include "mc_block.h"
 #include <unsupported/Eigen/CXX11/Tensor>
 
-#include "PrimGlassBuilder.h"
+#include "prim_glass_builder.h"
 #include "lossyCompressor.h"
 
 #include <NBTWriter/NBTWriter.h>
@@ -69,8 +69,8 @@ namespace SlopeCraft
 using namespace SlopeCraft;
 #include <thread>
 
-class PrimGlassBuilder;
-class LossyCompressor;
+class prim_glass_builder;
+class lossy_compressor;
 
 namespace NBT {
 template <bool>
@@ -296,8 +296,8 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   libMapImageCvt::MapImageCvter image_cvter;
 
   // std::array<int, 3> size3D; // x,y,z
-  std::unique_ptr<PrimGlassBuilder> glassBuilder;
-  std::unique_ptr<LossyCompressor> Compressor;
+  std::unique_ptr<prim_glass_builder> glassBuilder;
+  std::unique_ptr<lossy_compressor> Compressor;
 
   // std::shared_ptr<GACvter::GAConverter> GAConverter{nullptr};
 

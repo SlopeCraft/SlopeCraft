@@ -33,17 +33,17 @@ This file is part of SlopeCraft.
 #include <memory>
 
 #include "Colors.h"
-#include "HeightLine.h"
+#include "height_line.h"
 #include "SCLDefines.h"
 #include "WaterItem.h"
 
 // Eigen::Array<uint8_t,Eigen::Dynamic,1>
 class solver_t;
 
-class LossyCompressor {
+class lossy_compressor {
  public:
-  LossyCompressor();
-  ~LossyCompressor();
+  lossy_compressor();
+  ~lossy_compressor();
   void setSource(const Eigen::ArrayXi &, const TokiColor *[]);
   bool compress(uint16_t maxHeight, bool allowNaturalCompress = false);
   const Eigen::ArrayX<uint8_t> &getResult() const;

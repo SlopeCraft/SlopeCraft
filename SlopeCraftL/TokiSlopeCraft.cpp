@@ -33,8 +33,8 @@ This file is part of SlopeCraft.
 TokiSlopeCraft::TokiSlopeCraft()
     : colorset{},
       image_cvter{*color_set::basic, colorset.allowed_colorset},
-      glassBuilder{new PrimGlassBuilder},
-      Compressor{new LossyCompressor} {
+      glassBuilder{new prim_glass_builder},
+      Compressor{new lossy_compressor} {
   kernelStep = step::nothing;
   this->image_cvter.clear_images();
   this->image_cvter.clear_color_hash();

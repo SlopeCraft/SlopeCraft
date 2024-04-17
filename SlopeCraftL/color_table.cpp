@@ -4,9 +4,9 @@
 
 #include "color_table.h"
 #include "WaterItem.h"
-#include "HeightLine.h"
+#include "height_line.h"
 #include "lossyCompressor.h"
-#include "PrimGlassBuilder.h"
+#include "prim_glass_builder.h"
 #include <fmt/format.h>
 
 std::optional<color_table_impl> color_table_impl::create(
@@ -201,10 +201,10 @@ converted_image_impl::height_info(const build_options &option) const noexcept {
   low_map.setZero(this->rows(), this->cols());
   std::unordered_map<rc_pos, water_y_range> water_list;
 
-  LossyCompressor compressor;
+  lossy_compressor compressor;
   for (int64_t c = 0; c < map_color.cols(); c++) {
     // cerr << "Coloumn " << c << '\n';
-    HeightLine HL;
+    height_line HL;
     // getTokiColorPtr(c,&src[0]);
     HL.make(map_color.col(c), allow_lossless_compress);
 
@@ -378,8 +378,8 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
     option.sub_progressbar.set_range(0, 100, 0);
     const int step = cvted.size() / ret.schem.y_range();
 
-#warning "todo: Use prograss_callback in PrimGlassBuilder"
-    PrimGlassBuilder glass_builder;
+#warning "todo: Use prograss_callback in prim_glass_builder"
+    prim_glass_builder glass_builder;
     option.ui.keep_awake();
     for (uint32_t y = 0; y < ret.schem.y_range(); y++) {
       option.sub_progressbar.add(step);
@@ -398,9 +398,9 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
         glass = glass_builder.makeBridge(targetMap);
         for (int r = 0; r < glass.rows(); r++)
           for (int c = 0; c < glass.cols(); c++)
-            if (ret.schem(r, y, c) == PrimGlassBuilder::air &&
-                glass(r, c) == PrimGlassBuilder::glass)
-              ret.schem(r, y, c) = PrimGlassBuilder::glass;
+            if (ret.schem(r, y, c) == prim_glass_builder::air &&
+                glass(r, c) == prim_glass_builder::glass)
+              ret.schem(r, y, c) = prim_glass_builder::glass;
       } else {
         continue;
       }

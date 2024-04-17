@@ -47,6 +47,7 @@ typedef Eigen::Array<uint8_t, Eigen::Dynamic, Eigen::Dynamic> TokiMap;
 typedef TokiMap glassMap;
 typedef TokiMap walkableMap;
 
+#warning "TODO: Remove global variables in this part"
 class edge {
  public:
   edge();
@@ -87,9 +88,9 @@ glassMap connectBetweenLayers(const TokiMap &, const TokiMap &,
                               walkableMap *walkable);
 // 返回值是架构在相对较高的一层上的，walkable 是各层俯视图叠加
 
-class PrimGlassBuilder {
+class prim_glass_builder {
  public:
-  PrimGlassBuilder();
+  prim_glass_builder();
 
   template <typename T, size_t S>
   friend class tf::ObjectPool;
@@ -112,12 +113,12 @@ class PrimGlassBuilder {
   void addEdgesToGraph();
   void runPrim();
   glassMap make4SingleMap(const TokiMap &_targetMap, walkableMap *walkable);
-  static pairedEdge connectSingleMaps(const PrimGlassBuilder *map1,
+  static pairedEdge connectSingleMaps(const prim_glass_builder *map1,
                                       rc_pos offset1,
-                                      const PrimGlassBuilder *map2,
+                                      const prim_glass_builder *map2,
                                       rc_pos offset2);
 };
-inline tf::ObjectPool<PrimGlassBuilder> pgb;
+inline tf::ObjectPool<prim_glass_builder> pgb;
 
 EImage TokiMap2EImage(const TokiMap &);
 

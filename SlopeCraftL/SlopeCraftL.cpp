@@ -58,7 +58,7 @@ std::pair<uint8_t, mc_block> parse_block(const nlohmann::json &jo) noexcept(
   mc_block ret;
   const int basecolor = jo.at("baseColor");
   if (basecolor < 0 || basecolor >= 64) {
-    throw std::runtime_error{fmt::format("Invalid base color: {}", basecolor)};
+    throw std::runtime_error{fmt::format("invalid base color: {}", basecolor)};
   }
 
   ret.id = jo.at("id");

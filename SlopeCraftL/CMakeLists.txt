@@ -26,10 +26,10 @@ set(Slope_SCL_internal_headers
 
     # AiCvterOpt.h
     Colors.h
-    HeightLine.h
+    height_line.h
 
-    OptiChain.h
-    PrimGlassBuilder.h
+    optimize_chain.h
+    prim_glass_builder.h
     SCLDefines.h
     TokiSlopeCraft.h
     WaterItem.h
@@ -48,9 +48,9 @@ set(SlopeCraft_SCL_sources
     # AiCvterOpt.cpp
     Colors.cpp
     ColorSource.cpp
-    HeightLine.cpp
-    OptiChain.cpp
-    PrimGlassBuilder.cpp
+    height_line.cpp
+    optimize_chain.cpp
+    prim_glass_builder.cpp
     TokiSlopeCraft.cpp
     TokiSlopeCraft_static_funs.cpp
     TokiSlopeCraft_build.cpp

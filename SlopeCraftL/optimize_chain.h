@@ -34,7 +34,7 @@ This file is part of SlopeCraft.
 
 // using namespace std;
 // using namespace Eigen;
-enum RegionType { idp, Hang, Invalid };
+enum class region_type { independent, hanging };
 
 #ifndef removeQt
 extern ARGB isTColor;
@@ -43,33 +43,34 @@ extern ARGB WaterColor;
 extern ARGB greyColor;
 
 #endif
-class Region {
-public:
-  Region(short = -1, short = -1, RegionType = Invalid);
-  short Beg;
-  short End;
-  RegionType type;
+class region {
+ public:
+  region() = delete;
+  region(int b, int e, region_type t) : begin{b}, end{e}, type{t} {}
+  int begin;
+  int end;
+  region_type type;
   bool isIDP() const;
   bool isHang() const;
   bool isValid() const;
   int size() const;
-  short indexLocal2Global(short) const;
-  short indexGlobal2Local(short) const;
+  int indexLocal2Global(int) const;
+  int indexGlobal2Local(int) const;
   std::string toString() const;
 };
 
-class OptiChain {
-public:
+class optimize_chain {
+ public:
   // Index一律以Height矩阵中的索引为准。Height(r,c+1)<->Base(r,c)
   // 高度矩阵一律不含水柱顶的玻璃方块
-  OptiChain(int Size = -1); // default Random Constructor
-  OptiChain(const Eigen::ArrayXi &base, const Eigen::ArrayXi &High,
-            const Eigen::ArrayXi &Low);
-  ~OptiChain();
+  optimize_chain(int Size = -1);  // default Random Constructor
+  optimize_chain(const Eigen::ArrayXi &base, const Eigen::ArrayXi &High,
+                 const Eigen::ArrayXi &Low);
+  ~optimize_chain();
 
-  void divideAndCompress();
-  const Eigen::ArrayXi &getHighLine();
-  const Eigen::ArrayXi &getLowLine();
+  void divide_and_compress();
+  const Eigen::ArrayXi &high_line();
+  const Eigen::ArrayXi &low_line();
   // ArrayXi toDepth() const;
 
   // static ArrayXXi Base;
@@ -83,27 +84,27 @@ public:
   static bool AllowSinkHang;
 #endif
 
-private:
+ private:
   // int Col;
   Eigen::ArrayXi Base;
   Eigen::ArrayXi HighLine;
   Eigen::ArrayXi LowLine;
-  std::queue<Region> Chain; // 将一整列按水/空气切分为若干个大的孤立区间
-  std::list<Region>
-      SubChain; // 将Chain中每个大的孤立区间切分为若干“最大单孤立区间”和“悬空区间”组成的串
+  std::queue<region> Chain;  // 将一整列按水/空气切分为若干个大的孤立区间
+  std::list<region>
+      SubChain;  // 将Chain中每个大的孤立区间切分为若干“最大单孤立区间”和“悬空区间”组成的串
 
   void divideToChain();
-  void divideToSubChain();
+  void divide_into_subchain();
 
-  bool isAir(int index) const;
-  bool isWater(int index) const;
-  bool isSolidBlock(int index) const;
+  bool is_air(int index) const;
+  bool is_water(int index) const;
+  bool is_solid_block(int index) const;
 
-  void Sink(const Region &);
-  int validHeight(int index) const;
+  void sink(const region &);
+  int valid_height(int index) const;
 
   void dispSubChain() const;
   // private:
-  void divideToSubChain(const Region &);
+  void divide_into_subchain(const region &);
 };
-#endif // OPTICHAIN_H
+#endif  // OPTICHAIN_H

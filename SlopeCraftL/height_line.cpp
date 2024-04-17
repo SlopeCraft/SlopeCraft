@@ -20,18 +20,18 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
-#include "HeightLine.h"
+#include "height_line.h"
 
-const ARGB HeightLine::BlockColor = ARGB32(0, 0, 0);
-const ARGB HeightLine::AirColor = ARGB32(255, 255, 255);
-const ARGB HeightLine::WaterColor = ARGB32(0, 64, 255);
-const ARGB HeightLine::greyColor = ARGB32(192, 192, 192);
+const ARGB height_line::BlockColor = ARGB32(0, 0, 0);
+const ARGB height_line::AirColor = ARGB32(255, 255, 255);
+const ARGB height_line::WaterColor = ARGB32(0, 64, 255);
+const ARGB height_line::greyColor = ARGB32(192, 192, 192);
 
-HeightLine::HeightLine() {}
+height_line::height_line() {}
 
-float HeightLine::make(const TokiColor **src,
-                       const Eigen::Array<uint8_t, Eigen::Dynamic, 1> &g,
-                       bool allowNaturalCompress, Eigen::ArrayXi *dst) {
+float height_line::make(const TokiColor **src,
+                        const Eigen::Array<uint8_t, Eigen::Dynamic, 1> &g,
+                        bool allowNaturalCompress, Eigen::ArrayXi *dst) {
   float sumDiff = 0;
   Eigen::ArrayXi mapColorCol(g.rows());
 
@@ -62,8 +62,8 @@ float HeightLine::make(const TokiColor **src,
   return sumDiff;
 }
 
-void HeightLine::make(const Eigen::ArrayXi &mapColorCol,
-                      bool allowNaturalCompress) {
+void height_line::make(const Eigen::ArrayXi &mapColorCol,
+                       bool allowNaturalCompress) {
   ///////////////////////1
   waterMap.clear();
   const uint32_t picRows = mapColorCol.rows();
@@ -127,10 +127,10 @@ void HeightLine::make(const Eigen::ArrayXi &mapColorCol,
   LowLine -= LowLine.minCoeff();
 
   if (allowNaturalCompress) {
-    OptiChain OC(base, HighLine, LowLine);
-    OC.divideAndCompress();
-    HighLine = OC.getHighLine();
-    LowLine = OC.getLowLine();
+    optimize_chain OC(base, HighLine, LowLine);
+    OC.divide_and_compress();
+    HighLine = OC.high_line();
+    LowLine = OC.low_line();
   }
   for (auto it = waterMap.begin(); it != waterMap.end(); it++) {
     waterMap[it->first] =
@@ -139,11 +139,11 @@ void HeightLine::make(const Eigen::ArrayXi &mapColorCol,
   }
 }
 
-uint32_t HeightLine::maxHeight() const {
+uint32_t height_line::maxHeight() const {
   return HighLine.maxCoeff() - LowLine.minCoeff() + 1;
 }
 
-void HeightLine::updateWaterMap() {
+void height_line::updateWaterMap() {
   waterMap.clear();
   for (uint32_t r = 1; r < base.rows(); r++) {
     if (base(r) != 12) continue;
@@ -151,16 +151,16 @@ void HeightLine::updateWaterMap() {
   }
 }
 
-const Eigen::ArrayXi &HeightLine::getHighLine() const { return HighLine; }
-const Eigen::ArrayXi &HeightLine::getLowLine() const { return LowLine; }
+const Eigen::ArrayXi &height_line::getHighLine() const { return HighLine; }
+const Eigen::ArrayXi &height_line::getLowLine() const { return LowLine; }
 
-const Eigen::ArrayXi &HeightLine::getBase() const { return base; }
+const Eigen::ArrayXi &height_line::getBase() const { return base; }
 
-const std::map<uint32_t, water_y_range> &HeightLine::getWaterMap() const {
+const std::map<uint32_t, water_y_range> &height_line::getWaterMap() const {
   return waterMap;
 }
 
-EImage HeightLine::toImg() const {
+EImage height_line::toImg() const {
   const short rMax = maxHeight() - 1;
   EImage img(maxHeight(), HighLine.size());
   img.setConstant(AirColor);
@@ -272,11 +272,11 @@ Base.setConstant(sizePic(0)+1,sizePic(1),11);
     if(compressMethod==NaturalOnly)
     {
         //执行高度压缩
-        OptiChain::Base=Base;
+        optimize_chain::Base=Base;
         for(int c=0;c<sizePic(1);c++)
         {
-            OptiChain Compressor(HighMap.col(c),LowMap.col(c),c);
-            Compressor.divideAndCompress();
+            optimize_chain Compressor(HighMap.col(c),LowMap.col(c),c);
+            Compressor.divide_and_compress();
             HighMap.col(c)=Compressor.HighLine;
             LowMap.col(c)=Compressor.LowLine;
             emit progressAdd(sizePic(1));

@@ -24,16 +24,16 @@ This file is part of SlopeCraft.
 #define HEIGHTLINE_H
 
 #include "Colors.h"
-#include "OptiChain.h"
+#include "optimize_chain.h"
 #include "SCLDefines.h"
 #include "WaterItem.h"
 #include <iostream>
 #include <map>
 #include <vector>
 
-class HeightLine {
+class height_line {
  public:
-  HeightLine();
+  height_line();
   float make(const TokiColor *[],
              const Eigen::Array<uint8_t, Eigen::Dynamic, 1> &,
              bool allowNaturalCompress, Eigen::ArrayXi *dst = nullptr);

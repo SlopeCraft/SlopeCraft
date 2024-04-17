@@ -22,6 +22,7 @@
 #define mapColor2depth(mapColor) ((mapColor) % 4)
 #define index2depth(index) (mapColor2depth(index2mapColor(index)))
 
+#warning "TODO: Remove this struct"
 struct color_set {
   static const std::unique_ptr<const colorset_basic_t> basic;
 
