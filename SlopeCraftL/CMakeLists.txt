@@ -35,7 +35,7 @@ set(Slope_SCL_internal_headers
     WaterItem.h
     lossyCompressor.h
 
-    simpleBlock.h
+    mc_block.h
     SlopeCraftL_global.h
     WriteStringDeliver.h
     Colorset.h
@@ -58,7 +58,7 @@ set(SlopeCraft_SCL_sources
     TokiSlopeCraft_cache.cpp
     imagePreprocess.cpp
     lossyCompressor.cpp
-    simpleBlock.cpp
+    mc_block.cpp
     SlopeCraftL.cpp
     Colorset.cpp
 
@@ -142,7 +142,7 @@ function(SC_create_SCL_block_list src_dir archive_path)
 
     #    file(GLOB_RECURSE file_list "${src_dir}/*.png")
     #
-    #    file(ARCHIVE_CREATE OUTPUT temp.zip PATHS ${src_dir} "${src_dir}/BlockList.json" FORMAT zip
+    #    file(ARCHIVE_CREATE OUTPUT temp.zip PATHS ${src_dir} "${src_dir}/block_list.json" FORMAT zip
     #        #COMPRESSION Zstd
     #        #COMPRESSION_LEVEL 9
     #    )

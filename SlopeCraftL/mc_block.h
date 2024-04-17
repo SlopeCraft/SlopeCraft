@@ -34,16 +34,16 @@ using namespace SlopeCraft;
 
 typedef std::vector<std::string> stringList;
 
-class simpleBlock : public ::SlopeCraft::AbstractBlock {
+class mc_block : public ::SlopeCraft::AbstractBlock {
  public:
-  simpleBlock();
-  ~simpleBlock(){};
-  std::string id;
-  uint8_t version;
-  std::string idOld;
-  std::string nameZH;
-  std::string nameEN;
-  std::string imageFilename;
+  mc_block();
+  ~mc_block(){};
+  std::string id{};
+  uint8_t version{0};
+  std::string idOld{};
+  std::string nameZH{};
+  std::string nameEN{};
+  std::string imageFilename{};
   Eigen::Array<uint32_t, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> image;
   bool needGlass{false};
   bool doGlow{false};
@@ -104,7 +104,7 @@ class simpleBlock : public ::SlopeCraft::AbstractBlock {
   }
 
   void copyTo(AbstractBlock *dst) const noexcept override {
-    *static_cast<simpleBlock *>(dst) = *this;
+    *static_cast<mc_block *>(dst) = *this;
   }
 
   //  static bool processBlockId(std::string_view id, std::string &netBlockId,
@@ -121,16 +121,16 @@ class simpleBlock : public ::SlopeCraft::AbstractBlock {
     }
     return this->getIdOld();
   };
-  // simpleBlock& operator =(const simpleBlock &);
+  // mc_block& operator =(const mc_block &);
 };
 
-class BlockList : public ::SlopeCraft::block_list_interface {
+class block_list : public ::SlopeCraft::block_list_interface {
  private:
-  std::map<std::unique_ptr<simpleBlock>, uint8_t> m_blocks;
+  std::map<std::unique_ptr<mc_block>, uint8_t> m_blocks;
 
  public:
-  BlockList() = default;
-  ~BlockList();
+  block_list() = default;
+  ~block_list();
 
  public:
   size_t size() const noexcept override { return m_blocks.size(); }
@@ -141,9 +141,9 @@ class BlockList : public ::SlopeCraft::block_list_interface {
                     size_t capacity_in_elements) const noexcept override;
 
   bool contains(const AbstractBlock *cp) const noexcept override {
-    const simpleBlock *ptr = dynamic_cast<const simpleBlock *>(cp);
+    const mc_block *ptr = dynamic_cast<const mc_block *>(cp);
     return this->m_blocks.contains(
-        reinterpret_cast<std::unique_ptr<simpleBlock> &>(ptr));
+        reinterpret_cast<std::unique_ptr<mc_block> &>(ptr));
   }
 
  public:

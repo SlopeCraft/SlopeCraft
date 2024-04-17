@@ -9,7 +9,7 @@
 #include <MapImageCvter/MapImageCvter.h>
 #include "SlopeCraftL.h"
 #include "Colorset.h"
-#include "simpleBlock.h"
+#include "mc_block.h"
 #include "Schem/Schem.h"
 #include "WaterItem.h"
 
@@ -18,7 +18,7 @@ class color_table_impl : public SlopeCraft::color_table {
   colorset_allowed_t allowed;
   SCL_mapTypes map_type_;
   SCL_gameVersion mc_version_;
-  std::array<simpleBlock, 64> blocks;
+  std::array<mc_block, 64> blocks;
 
   color_map_ptrs colors() const noexcept final {
     return color_map_ptrs{.r_data = allowed.rgb_data(0),
@@ -91,7 +91,7 @@ class converted_image_impl : public converted_image {
 class structure_3D_impl : public structure_3D {
  private:
   libSchem::Schem schem;
-  
+
   Eigen::ArrayXXi map_color;  // map color may be modified by lossy
                               // compression,so we store the modified one
 

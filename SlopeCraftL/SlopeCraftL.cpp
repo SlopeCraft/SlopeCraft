@@ -28,13 +28,13 @@ This file is part of SlopeCraft.
 
 #include "SlopeCraftL.h"
 #include "TokiSlopeCraft.h"
-#include "simpleBlock.h"
+#include "mc_block.h"
 #include "WriteStringDeliver.h"
 #include "color_table.h"
 
 using namespace SlopeCraft;
 
-// AbstractBlock *AbstractBlock::create() { return new simpleBlock; }
+// AbstractBlock *AbstractBlock::create() { return new mc_block; }
 
 void AbstractBlock::clear() noexcept {
   setBurnable(false);
@@ -53,9 +53,9 @@ Kernel::Kernel() {}
 
 using namespace SlopeCraft;
 
-std::pair<uint8_t, simpleBlock> parse_block(const nlohmann::json &jo) noexcept(
+std::pair<uint8_t, mc_block> parse_block(const nlohmann::json &jo) noexcept(
     false) {
-  simpleBlock ret;
+  mc_block ret;
   const int basecolor = jo.at("baseColor");
   if (basecolor < 0 || basecolor >= 64) {
     throw std::runtime_error{fmt::format("Invalid base color: {}", basecolor)};
@@ -97,7 +97,7 @@ std::pair<uint8_t, simpleBlock> parse_block(const nlohmann::json &jo) noexcept(
 //   errmsg.reserve(4096);
 //   errmsg.clear();
 //
-//   BlockList *bl = new BlockList;
+//   block_list *bl = new block_list;
 //   using njson = nlohmann::json;
 //   try {
 //     std::ifstream ifs(filename);
@@ -114,7 +114,7 @@ std::pair<uint8_t, simpleBlock> parse_block(const nlohmann::json &jo) noexcept(
 //     for (size_t idx = 0; idx < arr.size(); idx++) {
 //       auto temp = parse_block(arr[idx], option.image_dir);
 //
-//       auto ptr = new simpleBlock;
+//       auto ptr = new mc_block;
 //       *ptr = std::move(temp.second);
 //       bl->blocks().emplace(ptr, temp.first);
 //     }
@@ -217,13 +217,13 @@ impl_create_block_list_from_zip(const char *zip_path) noexcept {
 
   std::vector<uint8_t> buffer;
   {
-    auto err = extract_file("BlockList.json", buffer);
+    auto err = extract_file("block_list.json", buffer);
     if (!err) {
       return {tl::make_unexpected(err.error()), warnings};
     }
   }
 
-  BlockList *bl = new BlockList;
+  block_list *bl = new block_list;
 
   using njson = nlohmann::json;
   try {
@@ -237,7 +237,7 @@ impl_create_block_list_from_zip(const char *zip_path) noexcept {
     // parse blocks
     for (size_t idx = 0; idx < jo.size(); idx++) {
       auto [version, block] = parse_block(jo[idx]);
-      bl->blocks().emplace(std::make_unique<simpleBlock>(block), version);
+      bl->blocks().emplace(std::make_unique<mc_block>(block), version);
     }
 
   } catch (const std::exception &e) {
@@ -297,7 +297,7 @@ SCL_EXPORT void SCL_destroyKernel(Kernel *k) {
   delete static_cast<TokiSlopeCraft *>(k);
 }
 
-SCL_EXPORT AbstractBlock *SCL_createBlock() { return new simpleBlock; }
+SCL_EXPORT AbstractBlock *SCL_createBlock() { return new mc_block; }
 SCL_EXPORT void SCL_destroyBlock(AbstractBlock *b) { delete b; }
 
 SCL_EXPORT block_list_interface *SCL_createBlockList(

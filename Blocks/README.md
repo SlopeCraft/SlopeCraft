@@ -28,7 +28,7 @@
 <br>
 <br>
 
-# BlockList
+# block_list
 
 Everything about blocklist is in this directory.
 

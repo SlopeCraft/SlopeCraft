@@ -505,8 +505,7 @@ int64_t TokiSlopeCraft::getBlockCounts(std::vector<int64_t> *dest) const {
     for (int ele = 1; ele < this->schem.palette_size(); ele++) {
       std::string_view blkid = this->schem.palette()[ele];
 
-      const simpleBlock *sbp =
-          TokiSlopeCraft::find_block_for_idx(ele - 1, blkid);
+      const mc_block *sbp = TokiSlopeCraft::find_block_for_idx(ele - 1, blkid);
       assert(sbp != nullptr);
 
       int64_t idx = sbp - this->colorset.palette.data();

@@ -11,7 +11,7 @@
 #include <MapImageCvter/MapImageCvter.h>
 #include <Schem/Schem.h>
 #include <memory>
-#include "simpleBlock.h"
+#include "mc_block.h"
 #include "Colors.h"
 #include "SlopeCraftL.h"
 
@@ -29,7 +29,7 @@ struct color_set {
 
   SlopeCraft::gameVersion mc_version{SCL_gameVersion::MC17};
   SlopeCraft::mapTypes map_type{SCL_mapTypes::Slope};
-  std::vector<simpleBlock> palette{};
+  std::vector<mc_block> palette{};
 };
 
 #endif  // SLOPECRAFT_COLORSET_H

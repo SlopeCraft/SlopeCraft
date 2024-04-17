@@ -377,6 +377,7 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
     option.sub_progressbar.set_range(0, 100, 0);
     const int step = cvted.size() / ret.schem.y_range();
 
+#warning "todo: Use prograss_callback in PrimGlassBuilder"
     PrimGlassBuilder glass_builder;
     option.ui.keep_awake();
     for (uint32_t y = 0; y < ret.schem.y_range(); y++) {

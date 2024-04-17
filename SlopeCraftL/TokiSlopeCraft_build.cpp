@@ -61,8 +61,8 @@ std::string TokiSlopeCraft::impl_make_tests(
   test.set_MC_major_version_number(this->colorset.mc_version);
   test.set_MC_version_number(
       MCDataVersion::suggested_version(this->colorset.mc_version));
-  // const simpleBlock ** realSrc=(const simpleBlock **)src;
-  std::vector<const simpleBlock *> realSrc;
+  // const mc_block ** realSrc=(const mc_block **)src;
+  std::vector<const mc_block *> realSrc;
   std::vector<uint8_t> realBaseColor;
   realSrc.clear();
   realBaseColor.clear();
@@ -70,8 +70,7 @@ std::string TokiSlopeCraft::impl_make_tests(
     if (option.block_ptrs[idx]->getVersion() > (int)this->colorset.mc_version) {
       continue;
     }
-    realSrc.emplace_back(
-        static_cast<const simpleBlock *>(option.block_ptrs[idx]));
+    realSrc.emplace_back(static_cast<const mc_block *>(option.block_ptrs[idx]));
     realBaseColor.emplace_back(option.basecolors[idx]);
   }
 
@@ -631,8 +630,7 @@ std::string TokiSlopeCraft::export_flat_diagram(
       continue;
     }
     std::string_view id = this->schem.palette()[pblkid];
-    const simpleBlock *blkp =
-        TokiSlopeCraft::find_block_for_idx(pblkid - 1, id);
+    const mc_block *blkp = TokiSlopeCraft::find_block_for_idx(pblkid - 1, id);
     if (blkp == nullptr) {
       std::string blkid_full;
       blkid_full.reserve(64 * 2048);

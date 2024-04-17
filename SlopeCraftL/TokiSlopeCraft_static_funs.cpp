@@ -63,7 +63,7 @@ uint64_t TokiSlopeCraft::mcVersion2VersionNumber(SCL_gameVersion g) {
 #include <ProcessBlockId/process_block_id.h>
 #include <utilities/Schem/mushroom.h>
 
-const simpleBlock *TokiSlopeCraft::find_block_for_idx(
+const mc_block *TokiSlopeCraft::find_block_for_idx(
     int idx, std::string_view blkid) const noexcept {
   if (idx < 0) {
     return nullptr;
@@ -103,7 +103,7 @@ const simpleBlock *TokiSlopeCraft::find_block_for_idx(
       break;
   }
 
-  const simpleBlock *blkp = find_block_for_idx(expected_basecolor, {});
+  const mc_block *blkp = find_block_for_idx(expected_basecolor, {});
 
   if (blkp == nullptr) {
     return nullptr;

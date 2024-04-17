@@ -38,7 +38,7 @@ This file is part of SlopeCraft.
 #include "Colors.h"
 #include "SCLDefines.h"
 #include "WaterItem.h"
-#include "simpleBlock.h"
+#include "mc_block.h"
 #include <unsupported/Eigen/CXX11/Tensor>
 
 #include "PrimGlassBuilder.h"
@@ -450,8 +450,8 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
                                   uint64_t build_task_hash,
                                   build_cache_ir *ir = nullptr) noexcept;
 
-  const simpleBlock *find_block_for_idx(int idx,
-                                        std::string_view blkid) const noexcept;
+  const mc_block *find_block_for_idx(int idx,
+                                     std::string_view blkid) const noexcept;
 
   std::array<uint32_t, 256> LUT_mapcolor_to_argb() const noexcept;
 
