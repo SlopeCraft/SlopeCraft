@@ -269,7 +269,7 @@ Base.setConstant(sizePic(0)+1,sizePic(1),11);
 
     cerr<<"basic sink done"<<endl;
 
-    if(compressMethod==NaturalOnly)
+    if(compress_method==NaturalOnly)
     {
         //执行高度压缩
         optimize_chain::Base=Base;

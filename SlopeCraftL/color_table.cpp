@@ -178,7 +178,7 @@ converted_image_impl::height_info(const build_options &option) const noexcept {
   Eigen::ArrayXXi map_color = this->converter.mapcolor_matrix().cast<int>();
 
   const bool allow_lossless_compress =
-      int(option.compressMethod) & int(SCL_compressSettings::NaturalOnly);
+      int(option.compress_method) & int(SCL_compressSettings::NaturalOnly);
 
   if (((map_color - 4 * (map_color / 4)) >= 3).any()) {
     std::string msg =
@@ -208,17 +208,17 @@ converted_image_impl::height_info(const build_options &option) const noexcept {
     // getTokiColorPtr(c,&src[0]);
     HL.make(map_color.col(c), allow_lossless_compress);
 
-    if (HL.maxHeight() > option.maxAllowedHeight &&
-        (option.compressMethod == compressSettings::ForcedOnly ||
-         option.compressMethod == compressSettings::Both)) {
+    if (HL.maxHeight() > option.max_allowed_height &&
+        (option.compress_method == compressSettings::ForcedOnly ||
+         option.compress_method == compressSettings::Both)) {
       std::vector<const TokiColor *> ptr(map_color.rows());
 
       this->converter.col_TokiColor_ptrs(c, ptr.data());
       // getTokiColorPtr(c, &ptr[0]);
 
       compressor.setSource(HL.getBase(), &ptr[0]);
-      bool success =
-          compressor.compress(option.maxAllowedHeight, allow_lossless_compress);
+      bool success = compressor.compress(option.max_allowed_height,
+                                         allow_lossless_compress);
       if (!success) {
         option.ui.report_error(
             SCL_errorFlag::LOSSYCOMPRESS_FAILED,
@@ -254,11 +254,11 @@ converted_image_impl::height_info(const build_options &option) const noexcept {
 std::optional<structure_3D_impl> structure_3D_impl::create(
     const color_table_impl &table, const converted_image_impl &cvted,
     const build_options &option) noexcept {
-  if (option.maxAllowedHeight < 14) {
+  if (option.max_allowed_height < 14) {
     option.ui.report_error(
         errorFlag::MAX_ALLOWED_HEIGHT_LESS_THAN_14,
         fmt::format("Max allowed height should be >= 14, but found {}",
-                    option.maxAllowedHeight)
+                    option.max_allowed_height)
             .c_str());
     return std::nullopt;
   }
@@ -274,8 +274,8 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
 
   build_options fixed_opt = option;
   if (table.is_flat() || !table.is_vanilla()) {
-    fixed_opt.compressMethod = compressSettings::noCompress;
-    fixed_opt.glassMethod = glassBridgeSettings::noBridge;
+    fixed_opt.compress_method = compressSettings::noCompress;
+    fixed_opt.glass_method = glassBridgeSettings::noBridge;
   }
   option.ui.report_working_status(workStatus::buidingHeighMap);
   option.main_progressbar.set_range(0, 9 * cvted.size(), 0);
@@ -372,7 +372,7 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
   option.main_progressbar.set_range(0, 9 * cvted.size(), 8 * cvted.size());
   // build bridges
   if (table.map_type() == mapTypes::Slope &&
-      fixed_opt.glassMethod == glassBridgeSettings::withBridge) {
+      fixed_opt.glass_method == glassBridgeSettings::withBridge) {
     option.ui.report_working_status(workStatus::constructingBridges);
 
     option.sub_progressbar.set_range(0, 100, 0);
@@ -383,7 +383,7 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
     option.ui.keep_awake();
     for (uint32_t y = 0; y < ret.schem.y_range(); y++) {
       option.sub_progressbar.add(step);
-      if (y % (fixed_opt.bridgeInterval + 1) == 0) {
+      if (y % (fixed_opt.bridge_interval + 1) == 0) {
         std::array<int, 3> start, extension;  // x,z,y
         start[0] = 0;
         start[1] = 0;

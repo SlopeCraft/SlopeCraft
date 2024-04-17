@@ -228,15 +228,15 @@ bool TokiSlopeCraft::load_convert_cache(SCL_convertAlgo algo,
 namespace cereal {
 template <class archive>
 void save(archive &ar, const build_options &opt) noexcept {
-  ar(opt.maxAllowedHeight, opt.bridgeInterval, opt.compressMethod,
-     opt.glassMethod);
+  ar(opt.max_allowed_height, opt.bridge_interval, opt.compress_method,
+     opt.glass_method);
   ar(opt.fire_proof, opt.enderman_proof, opt.connect_mushrooms);
 }
 
 template <class archive>
 void load(archive &ar, build_options &opt) noexcept {
-  ar(opt.maxAllowedHeight, opt.bridgeInterval, opt.compressMethod,
-     opt.glassMethod);
+  ar(opt.max_allowed_height, opt.bridge_interval, opt.compress_method,
+     opt.glass_method);
   ar(opt.fire_proof, opt.enderman_proof, opt.connect_mushrooms);
 }
 }  // namespace cereal
@@ -257,10 +257,10 @@ std::vector<uint8_t> TokiSlopeCraft::build_task_hash_of(
     hash.process_bytes(blkid.data(), blkid.size());
   }
   {
-    SC_HASH_ADD_DATA(hash, opt.maxAllowedHeight);
-    SC_HASH_ADD_DATA(hash, opt.bridgeInterval);
-    SC_HASH_ADD_DATA(hash, opt.compressMethod);
-    SC_HASH_ADD_DATA(hash, opt.glassMethod);
+    SC_HASH_ADD_DATA(hash, opt.max_allowed_height);
+    SC_HASH_ADD_DATA(hash, opt.bridge_interval);
+    SC_HASH_ADD_DATA(hash, opt.compress_method);
+    SC_HASH_ADD_DATA(hash, opt.glass_method);
     SC_HASH_ADD_DATA(hash, opt.fire_proof);
     SC_HASH_ADD_DATA(hash, opt.enderman_proof);
     SC_HASH_ADD_DATA(hash, opt.connect_mushrooms);

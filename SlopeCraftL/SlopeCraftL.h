@@ -215,10 +215,10 @@ struct convert_option {
 
 struct build_options {
   uint64_t caller_api_version{SC_VERSION_U64};
-  uint16_t maxAllowedHeight{256};
-  uint16_t bridgeInterval{3};
-  compressSettings compressMethod{::SCL_compressSettings::noCompress};
-  glassBridgeSettings glassMethod{::SCL_glassBridgeSettings::noBridge};
+  uint16_t max_allowed_height{256};
+  uint16_t bridge_interval{3};
+  compressSettings compress_method{::SCL_compressSettings::noCompress};
+  glassBridgeSettings glass_method{::SCL_glassBridgeSettings::noBridge};
   bool fire_proof{false};
   bool enderman_proof{false};
 
@@ -453,10 +453,10 @@ class Kernel {
                                  bool expected_col_major) const = 0;
   //  struct build_options {
   //    uint64_t caller_api_version{SC_VERSION_U64};
-  //    uint16_t maxAllowedHeight{256};
-  //    uint16_t bridgeInterval{3};
-  //    compressSettings compressMethod{::SCL_compressSettings::noCompress};
-  //    glassBridgeSettings glassMethod{::SCL_glassBridgeSettings::noBridge};
+  //    uint16_t max_allowed_height{256};
+  //    uint16_t bridge_interval{3};
+  //    compressSettings compress_method{::SCL_compressSettings::noCompress};
+  //    glassBridgeSettings glass_method{::SCL_glassBridgeSettings::noBridge};
   //    bool fire_proof{false};
   //    bool enderman_proof{false};
   //
