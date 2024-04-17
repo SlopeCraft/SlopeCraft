@@ -35,30 +35,28 @@ float HeightLine::make(const TokiColor **src,
   float sumDiff = 0;
   Eigen::ArrayXi mapColorCol(g.rows());
 
-  for (uint16_t r = 0; r < g.rows(); r++) {
-
+  for (uint32_t r = 0; r < g.rows(); r++) {
     if (src[r] == nullptr) {
       std::cerr << "Fatal Error! nullptr found in src\n";
       return 0;
     }
     switch (g(r)) {
-    case 0:
-      mapColorCol(r) = src[r]->Result;
-      sumDiff += src[r]->ResultDiff;
-      break;
-    case 1:
-      mapColorCol(r) = src[r]->sideResult[0];
-      sumDiff += src[r]->sideSelectivity[0];
-      break;
-    default:
-      mapColorCol(r) = src[r]->sideResult[1];
-      sumDiff += src[r]->sideSelectivity[1];
-      break;
+      case 0:
+        mapColorCol(r) = src[r]->Result;
+        sumDiff += src[r]->ResultDiff;
+        break;
+      case 1:
+        mapColorCol(r) = src[r]->sideResult[0];
+        sumDiff += src[r]->sideSelectivity[0];
+        break;
+      default:
+        mapColorCol(r) = src[r]->sideResult[1];
+        sumDiff += src[r]->sideSelectivity[1];
+        break;
     }
   }
 
-  if (dst != nullptr)
-    *dst = mapColorCol;
+  if (dst != nullptr) *dst = mapColorCol;
 
   make(mapColorCol, allowNaturalCompress);
   return sumDiff;
@@ -68,7 +66,7 @@ void HeightLine::make(const Eigen::ArrayXi &mapColorCol,
                       bool allowNaturalCompress) {
   ///////////////////////1
   waterMap.clear();
-  const uint16_t picRows = mapColorCol.rows();
+  const uint32_t picRows = mapColorCol.rows();
   base.setConstant(1 + picRows, 11);
   HighLine.setZero(1 + picRows);
   LowLine.setZero(1 + picRows);
@@ -95,7 +93,7 @@ void HeightLine::make(const Eigen::ArrayXi &mapColorCol,
     base(0) = 0;
     dealedDepth(1) = 0;
   }
-  for (uint16_t r = 1; r < picRows; r++) {
+  for (uint32_t r = 1; r < picRows; r++) {
     if (base(r + 1) == 0) {
       dealedDepth(r + 1) = 0;
       continue;
@@ -106,7 +104,7 @@ void HeightLine::make(const Eigen::ArrayXi &mapColorCol,
     }
   }
   ///////////////////////3
-  for (uint16_t r = 0; r < picRows; r++) {
+  for (uint32_t r = 0; r < picRows; r++) {
     // HighMap.row(r+1)=HighMap.row(r)+dealedDepth.row(r+1);
     HighLine(r + 1) = HighLine(r) + dealedDepth(r + 1);
   }
@@ -116,10 +114,10 @@ void HeightLine::make(const Eigen::ArrayXi &mapColorCol,
     /*
     LowMap(TokiRow(it->first),TokiCol(it->first))=
             HighMap(TokiRow(it->first),TokiCol(it->first))
-            -WaterColumnSize[rawShadow(TokiRow(it->first)-1,TokiCol(it->first))]+1;
+            -WATER_COLUMN_SIZE[rawShadow(TokiRow(it->first)-1,TokiCol(it->first))]+1;
 */
     LowLine(it->first) =
-        HighLine(it->first) - WaterColumnSize[rawShadow(it->first - 1)] + 1;
+        HighLine(it->first) - WATER_COLUMN_SIZE[rawShadow(it->first - 1)] + 1;
   }
   /////////////////5
   HighLine -= LowLine.minCoeff();
@@ -137,15 +135,14 @@ void HeightLine::make(const Eigen::ArrayXi &mapColorCol,
   }
 }
 
-uint16_t HeightLine::maxHeight() const {
+uint32_t HeightLine::maxHeight() const {
   return HighLine.maxCoeff() - LowLine.minCoeff() + 1;
 }
 
 void HeightLine::updateWaterMap() {
   waterMap.clear();
-  for (uint16_t r = 1; r < base.rows(); r++) {
-    if (base(r) != 12)
-      continue;
+  for (uint32_t r = 1; r < base.rows(); r++) {
+    if (base(r) != 12) continue;
     waterMap[r] = TokiWater(HighLine(r) - 1, LowLine(r));
   }
 }
@@ -155,7 +152,7 @@ const Eigen::ArrayXi &HeightLine::getLowLine() const { return LowLine; }
 
 const Eigen::ArrayXi &HeightLine::getBase() const { return base; }
 
-const std::map<uint16_t, waterItem> &HeightLine::getWaterMap() const {
+const std::map<uint32_t, water_y_range> &HeightLine::getWaterMap() const {
   return waterMap;
 }
 
@@ -164,7 +161,7 @@ EImage HeightLine::toImg() const {
   EImage img(maxHeight(), HighLine.size());
   img.setConstant(AirColor);
   short y = 0, r = rMax - y;
-  for (uint16_t x = 0; x < HighLine.size(); x++) {
+  for (uint32_t x = 0; x < HighLine.size(); x++) {
     y = HighLine(x);
     r = rMax - y;
     if (base(x)) {
@@ -253,7 +250,7 @@ Base.setConstant(sizePic(0)+1,sizePic(1),11);
     {
         LowMap(TokiRow(it->first),TokiCol(it->first))=
                 HighMap(TokiRow(it->first),TokiCol(it->first))
-                -WaterColumnSize[rawShadow(TokiRow(it->first)-1,TokiCol(it->first))]+1;
+                -WATER_COLUMN_SIZE[rawShadow(TokiRow(it->first)-1,TokiCol(it->first))]+1;
     }
 
     cerr<<"LowMap updated"<<endl;

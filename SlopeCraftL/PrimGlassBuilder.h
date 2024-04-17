@@ -52,29 +52,29 @@ class edge {
   edge();
   edge(uint32_t begIdx, uint32_t endIdx);
   // edge(uint32_t begIdx,uint32_t endIdx);
-  // edge(TokiPos,TokiPos);
+  // edge(row_col_pos,row_col_pos);
   // edge(uint16_t r1,uint16_t c1,uint16_t r2,uint16_t c2);
   uint32_t begIdx;
   uint32_t endIdx;
   int lengthSquare;
 
-  static const std::vector<TokiPos> *vertexes;
+  static const std::vector<row_col_pos> *vertexes;
 
-  TokiPos beg() const;
-  TokiPos end() const;
-  bool connectWith(TokiPos) const;
+  row_col_pos beg() const;
+  row_col_pos end() const;
+  bool connectWith(row_col_pos) const;
   void drawEdge(glassMap &, bool drawHead = false) const;
 };
 
-class pairedEdge : public std::pair<TokiPos, TokiPos> {
+class pairedEdge : public std::pair<row_col_pos, row_col_pos> {
  public:
   pairedEdge();
-  pairedEdge(TokiPos, TokiPos);
+  pairedEdge(row_col_pos, row_col_pos);
   pairedEdge(uint16_t r1, uint16_t c1, uint16_t r2, uint16_t c2);
   pairedEdge(const edge &);
   int lengthSquare;
 
-  bool connectWith(TokiPos) const;
+  bool connectWith(row_col_pos) const;
   void drawEdge(glassMap &, bool drawHead = false) const;
 };
 
@@ -109,16 +109,16 @@ class PrimGlassBuilder {
   void (**keepAwakePtr)(void *);
 
  private:
-  std::vector<TokiPos> targetPoints;
+  std::vector<row_col_pos> targetPoints;
   std::list<edge> edges;
   std::vector<pairedEdge> tree;
   void addEdgesToGraph();
   void runPrim();
   glassMap make4SingleMap(const TokiMap &_targetMap, walkableMap *walkable);
   static pairedEdge connectSingleMaps(const PrimGlassBuilder *map1,
-                                      TokiPos offset1,
+                                      row_col_pos offset1,
                                       const PrimGlassBuilder *map2,
-                                      TokiPos offset2);
+                                      row_col_pos offset2);
 };
 inline tf::ObjectPool<PrimGlassBuilder> pgb;
 

@@ -26,7 +26,7 @@ const ARGB airColor = ARGB32(255, 255, 255);
 const ARGB targetColor = ARGB32(0, 0, 0);
 const ARGB glassColor = ARGB32(192, 192, 192);
 
-const std::vector<TokiPos> *edge::vertexes = nullptr;
+const std::vector<row_col_pos> *edge::vertexes = nullptr;
 
 edge::edge() {
   // beg=TokiRC(0,0);
@@ -39,26 +39,26 @@ edge::edge() {
 edge::edge(uint32_t _begIdx, uint32_t _endIdx) {
   begIdx = _begIdx;
   endIdx = _endIdx;
-  int r1 = TokiRow(beg()), c1 = TokiCol(beg());
-  int r2 = TokiRow(end()), c2 = TokiCol(end());
+  //  const int r1 =beg().row,c1=; TokiRow(beg()), c1 = TokiCol(beg());
+  //  int r2 = TokiRow(end()), c2 = TokiCol(end());
 
-  int rowSpan = r1 - r2;
-  int colSpan = c1 - c2;
+  const int rowSpan = beg().row - end().row;
+  const int colSpan = beg().col - end().col;
   lengthSquare = (rowSpan * rowSpan + colSpan * colSpan);
 }
 
-TokiPos edge::beg() const { return vertexes->at(begIdx); }
+row_col_pos edge::beg() const { return vertexes->at(begIdx); }
 
-TokiPos edge::end() const { return vertexes->at(endIdx); }
+row_col_pos edge::end() const { return vertexes->at(endIdx); }
 
 pairedEdge::pairedEdge() {
   first = TokiRC(0, 0);
   second = TokiRC(0, 0);
   lengthSquare = 0;
 }
-pairedEdge::pairedEdge(TokiPos A, TokiPos B) {
-  int r1 = TokiRow(A), c1 = TokiCol(A);
-  int r2 = TokiRow(B), c2 = TokiCol(B);
+pairedEdge::pairedEdge(row_col_pos A, row_col_pos B) {
+  int r1 = A.row, c1 = A.col;
+  int r2 = B.row, c2 = B.col;
   first = A;
   second = B;
   int rowSpan = r1 - r2;
@@ -80,7 +80,7 @@ pairedEdge::pairedEdge(const edge &src) {
   lengthSquare = src.lengthSquare;
 }
 /*
-bool edge::connectWith(TokiPos P) const {
+bool edge::connectWith(row_col_pos P) const {
     return pairedEdge(*this).connectWith(P);
 }
 
@@ -89,15 +89,15 @@ void edge::drawEdge(glassMap & map, bool drawHead) const {
     return;
 }
 */
-bool pairedEdge::connectWith(TokiPos P) const {
+bool pairedEdge::connectWith(row_col_pos P) const {
   return (first == P) || (second == P);
 }
 
 void pairedEdge::drawEdge(glassMap &map, bool drawHead) const {
   if (lengthSquare <= 2) return;
   float length = sqrt(lengthSquare);
-  Eigen::Vector2f startPoint(TokiRow(first), TokiCol(first));
-  Eigen::Vector2f endPoint(TokiRow(second), TokiCol(second));
+  Eigen::Vector2f startPoint(first.row, first.col);
+  Eigen::Vector2f endPoint(second.row, second.col);
   Eigen::Vector2f step = (endPoint - startPoint) / ceil(2.0 * length);
   Eigen::Vector2f cur;
   int stepCount = ceil(2.0 * length);
@@ -115,9 +115,9 @@ void pairedEdge::drawEdge(glassMap &map, bool drawHead) const {
     if (r >= 0 && r < map.rows() && c >= 0 && c < map.cols())
       map(r, c) = PrimGlassBuilder::glass;
   }
-  map(TokiRow(first), TokiCol(first)) =
+  map(first.row, first.col) =
       (drawHead ? PrimGlassBuilder::target : PrimGlassBuilder::air);
-  map(TokiRow(second), TokiCol(second)) =
+  map(second.row, second.col) =
       (drawHead ? PrimGlassBuilder::target : PrimGlassBuilder::air);
 }
 
@@ -253,27 +253,27 @@ glassMap PrimGlassBuilder::make4SingleMap(const TokiMap &_targetMap,
   for (auto it = tree.cbegin(); it != tree.cend(); it++) it->drawEdge(result);
 
   for (auto it = targetPoints.cbegin(); it != targetPoints.cend(); it++)
-    result(TokiRow(*it), TokiCol(*it)) = 0;
+    result(it->row, it->col) = 0;
 
   if (walkable != nullptr) *walkable = result;
 
   for (auto it = targetPoints.cbegin(); it != targetPoints.cend(); it++) {
-    result(TokiRow(*it), TokiCol(*it)) = 0;
+    result(it->row, it->col) = 0;
     if (walkable != nullptr)
-      walkable->operator()(TokiRow(*it), TokiCol(*it)) = blockType::target;
+      walkable->operator()(it->row, it->col) = blockType::target;
   }
   return result;
 }
 
 pairedEdge PrimGlassBuilder::connectSingleMaps(const PrimGlassBuilder *map1,
-                                               TokiPos offset1,
+                                               row_col_pos offset1,
                                                const PrimGlassBuilder *map2,
-                                               TokiPos offset2) {
+                                               row_col_pos offset2) {
   if (map1->targetPoints.size() <= 0 || map2->targetPoints.size() <= 0)
     return pairedEdge();
 
-  uint16_t offsetR1 = TokiRow(offset1), offsetC1 = TokiCol(offset1);
-  uint16_t offsetR2 = TokiRow(offset2), offsetC2 = TokiCol(offset2);
+  uint16_t offsetR1 = offset1.row, offsetC1 = offset1.col;
+  uint16_t offsetR2 = offset2.row, offsetC2 = offset2.col;
 
   uint16_t r1, r2, c1, c2;
 
@@ -286,10 +286,10 @@ pairedEdge PrimGlassBuilder::connectSingleMaps(const PrimGlassBuilder *map1,
        it++)
     for (auto jt = map2->targetPoints.cbegin(); jt != map2->targetPoints.cend();
          jt++) {
-      r1 = offsetR1 + TokiRow(*it);
-      c1 = offsetC1 + TokiCol(*it);
-      r2 = offsetR2 + TokiRow(*jt);
-      c2 = offsetC2 + TokiCol(*jt);
+      r1 = offsetR1 + it->row;
+      c1 = offsetC1 + it->col;
+      r2 = offsetR2 + jt->row;
+      c2 = offsetC2 + jt->col;
       current = pairedEdge(r1, c1, r2, c2);
       if (current.lengthSquare <= 2) return current;
 
@@ -341,8 +341,8 @@ void PrimGlassBuilder::runPrim() {
         std::cerr << "Error: failed to find valid edge!\n";
         break;
       }
-      // TokiPos z=selectedEdge->beg();
-      // TokiPos w=selectedEdge->end();
+      // row_col_pos z=selectedEdge->beg();
+      // row_col_pos w=selectedEdge->end();
       bool fz = isFound[(selectedEdge)->begIdx];
       bool fw = isFound[(selectedEdge)->endIdx];
 
@@ -364,7 +364,7 @@ void PrimGlassBuilder::runPrim() {
     // 从找到的第一条边开始，寻找长度最小的可行边
     for (auto it = selectedEdge; it != edges.end();) {
       // if(selectedEdge->lengthSquare<=2)break;
-      // TokiPos x=it->beg(),y=it->end();
+      // row_col_pos x=it->beg(),y=it->end();
       bool fx = isFound[(it)->begIdx];
       bool fy = isFound[(it)->endIdx];
       if (fx && fy) {
@@ -386,8 +386,8 @@ void PrimGlassBuilder::runPrim() {
     // 并从集合 unsearched 中删除选中边的两个端点，
     // 向集合 found 中加入选中边的两个端点
     {
-      // TokiPos x=selectedEdge->beg();
-      // TokiPos y=selectedEdge->end();
+      // row_col_pos x=selectedEdge->beg();
+      // row_col_pos y=selectedEdge->end();
       isFound[(selectedEdge)->begIdx] = true;
       isFound[(selectedEdge)->endIdx] = true;
       foundCount++;
@@ -418,7 +418,7 @@ EImage TokiMap2EImage(const TokiMap &tm) {
 
 glassMap connectBetweenLayers(const TokiMap &map1, const TokiMap &map2,
                               walkableMap *walkable) {
-  std::list<TokiPos> target1, target2;
+  std::list<row_col_pos> target1, target2;
   target1.clear();
   target2.clear();
   for (int r = 0; r < map1.rows(); r++)
@@ -450,14 +450,14 @@ glassMap connectBetweenLayers(const TokiMap &map1, const TokiMap &map2,
   if (walkable != nullptr) *walkable = result;
 
   for (auto t = target1.cbegin(); t != target1.cend(); t++) {
-    result(TokiRow(*t), TokiCol(*t)) = PrimGlassBuilder::air;
+    result(t->row, t->col) = PrimGlassBuilder::air;
     if (walkable != nullptr)
-      walkable->operator()(TokiRow(*t), TokiCol(*t)) = PrimGlassBuilder::target;
+      walkable->operator()(t->row, t->col) = PrimGlassBuilder::target;
   }
   for (auto t = target2.cbegin(); t != target2.cend(); t++) {
-    result(TokiRow(*t), TokiCol(*t)) = PrimGlassBuilder::air;
+    result(t->row, t->col) = PrimGlassBuilder::air;
     if (walkable != nullptr)
-      walkable->operator()(TokiRow(*t), TokiCol(*t)) = PrimGlassBuilder::target;
+      walkable->operator()(t->row, t->col) = PrimGlassBuilder::target;
   }
   return result;
 }

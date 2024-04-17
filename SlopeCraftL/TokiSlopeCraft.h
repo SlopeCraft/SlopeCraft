@@ -307,7 +307,7 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   Eigen::ArrayXXi Base;
   Eigen::ArrayXXi HighMap;
   Eigen::ArrayXXi LowMap;
-  std::unordered_map<TokiPos, waterItem> WaterList;
+  std::unordered_map<row_col_pos, water_y_range> WaterList;
   */
 
   build_options build_opt;
@@ -326,14 +326,15 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
 
   // for build
   // void makeHeight_old();//构建 HighMap 和 LowMap
-  void makeHeight_new(Eigen::ArrayXXi &Base, Eigen::ArrayXXi &HighMap,
-                      Eigen::ArrayXXi &LowMap,
-                      std::unordered_map<TokiPos, waterItem> &WaterList);
+  void makeHeight_new(
+      Eigen::ArrayXXi &Base, Eigen::ArrayXXi &HighMap, Eigen::ArrayXXi &LowMap,
+      std::unordered_map<row_col_pos, water_y_range> &WaterList);
   // void makeHeightInLine(const uint16_t c);
-  void buildHeight(
-      bool fireProof, bool endermanProof, const Eigen::ArrayXXi &Base,
-      const Eigen::ArrayXXi &HighMap, const Eigen::ArrayXXi &LowMap,
-      const std::unordered_map<TokiPos, waterItem> &WaterList);  // 构建 Build
+  void buildHeight(bool fireProof, bool endermanProof,
+                   const Eigen::ArrayXXi &Base, const Eigen::ArrayXXi &HighMap,
+                   const Eigen::ArrayXXi &LowMap,
+                   const std::unordered_map<row_col_pos, water_y_range>
+                       &WaterList);  // 构建 Build
   void makeBridge();
   // for Litematic
   /*

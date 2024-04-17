@@ -23,33 +23,46 @@ This file is part of SlopeCraft.
 #ifndef WATERITEM_H
 #define WATERITEM_H
 
-#include <stdint.h>
+#include <cstdint>
+#include <utility>
 
-using TokiPos = uint32_t;
-// typedef unsigned int TokiPos;
-//  typedef unsigned int waterItem;
-using waterItem = uint32_t;
-constexpr TokiPos TokiRC(int row, int col) {  // 前16bit存储row，后16bit存储col
-  /*unsigned int u;
-  *((int16_t*)&u)=row;
-  *(((int16_t*)&u)+1)=col;
-  return u;*/
-  return (row << 16) | (col & 0x0000FFFF);
+struct row_col_pos {
+  int32_t row;
+  int32_t col;
+
+  [[nodiscard]] inline bool operator==(row_col_pos b) const noexcept {
+    return (this->row == b.row) && (this->col == b.col);
+  }
+};
+
+template <>
+struct std::hash<row_col_pos> {
+  size_t operator()(row_col_pos pos) const noexcept {
+    return std::hash<uint64_t>{}(reinterpret_cast<const uint64_t&>(pos));
+  }
+};
+
+constexpr row_col_pos TokiRC(int row, int col) {
+  return row_col_pos{.row = static_cast<int32_t>(row),
+                     .col = static_cast<int32_t>(col)};
 }
 
-constexpr int16_t TokiRow(TokiPos pos) { return pos >> 16; }
-constexpr int16_t TokiCol(TokiPos pos) { return pos & 0x0000FFFF; }
+struct water_y_range {
+  int high_y;
+  int low_y;
+};
 
-constexpr TokiPos nullPos = TokiRC(-1, -1);
-constexpr waterItem nullWater = TokiRC(-32768, -32768);
-constexpr int16_t WaterColumnSize[3] = {11, 6, 1};
+constexpr water_y_range TokiWater(int h, int l) {
+  return water_y_range{.high_y = h, .low_y = l};
+}
 
-constexpr waterItem (*TokiWater)(int, int) = TokiRC;
-constexpr int16_t (*waterHigh)(waterItem) = TokiRow;
-constexpr int16_t (*waterLow)(waterItem) = TokiCol;
-/*
-waterItem TokiWater(int16_t high,int16_t
-low);//前两字节存储high，后两字节存储low int16_t waterHigh(waterItem); int16_t
-waterLow(waterItem);*/
+[[nodiscard]] inline bool operator==(water_y_range a,
+                                     water_y_range b) noexcept {
+  return (a.high_y == b.high_y) && (a.low_y == b.low_y);
+}
+
+constexpr water_y_range nullWater =
+    water_y_range{.high_y = INT_MIN, .low_y = INT_MIN};
+constexpr int32_t WATER_COLUMN_SIZE[3] = {11, 6, 1};
 
 #endif  // WATERITEM_H

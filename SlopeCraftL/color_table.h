@@ -82,7 +82,7 @@ class converted_image_impl : public converted_image {
     Eigen::ArrayXXi base;
     Eigen::ArrayXXi high_map;
     Eigen::ArrayXXi low_map;
-    std::unordered_map<TokiPos, waterItem> water_list;
+    std::unordered_map<row_col_pos, water_y_range> water_list;
   };
   std::optional<height_maps> height_info(
       const build_options &option) const noexcept;

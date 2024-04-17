@@ -233,7 +233,7 @@ bool TokiSlopeCraft::build(const build_options &option) noexcept {
   // cerr << "start makeHeight" << endl;
   {
     Eigen::ArrayXXi Base, HighMap, LowMap;
-    std::unordered_map<TokiPos, waterItem> WaterList;
+    std::unordered_map<row_col_pos, water_y_range> WaterList;
     progressAdd(wind, sizePic(2));
 
     makeHeight_new(Base, HighMap, LowMap, WaterList);
@@ -267,7 +267,7 @@ bool TokiSlopeCraft::build(const build_options &option) noexcept {
 
 void TokiSlopeCraft::makeHeight_new(
     Eigen::ArrayXXi &Base, Eigen::ArrayXXi &HighMap, Eigen::ArrayXXi &LowMap,
-    std::unordered_map<TokiPos, waterItem> &WaterList) {
+    std::unordered_map<row_col_pos, water_y_range> &WaterList) {
   Base.setZero(sizePic(0) + 1, sizePic(1));
   HighMap.setZero(sizePic(0) + 1, sizePic(1));
   LowMap.setZero(sizePic(0) + 1, sizePic(1));
@@ -345,7 +345,7 @@ void TokiSlopeCraft::makeHeight_new(
 void TokiSlopeCraft::buildHeight(
     bool fireProof, bool endermanProof, const Eigen::ArrayXXi &Base,
     const Eigen::ArrayXXi &, const Eigen::ArrayXXi &LowMap,
-    const std::unordered_map<TokiPos, waterItem> &WaterList) {
+    const std::unordered_map<row_col_pos, water_y_range> &WaterList) {
   /*
 {
   std::array<int64_t, 3> tempSize3D({schem.x_range(), schem.y_range(),
@@ -363,10 +363,10 @@ schem.z_range()}); Build.resize(tempSize3D);
   for (auto it = WaterList.begin(); it != WaterList.end();
        it++)  // 水柱周围的玻璃
   {
-    const int x = TokiCol(it->first) + 1;
-    const int z = TokiRow(it->first);
-    const int y = waterHigh(it->second);
-    const int yLow = waterLow(it->second);
+    const int x = it->first.col + 1;
+    const int z = it->first.row;
+    const int y = it->second.high_y;
+    const int yLow = it->second.low_y;
     schem(x, y + 1, z) = 0 + 1;  // 柱顶玻璃
     for (int yDynamic = yLow; yDynamic <= y; yDynamic++) {
       schem(x - 1, yDynamic, z - 0) = 1;
@@ -410,10 +410,10 @@ schem.z_range()}); Build.resize(tempSize3D);
   progressAdd(wind, sizePic(2));
 
   for (auto it = WaterList.cbegin(); it != WaterList.cend(); ++it) {
-    const int x = TokiCol(it->first) + 1;
-    const int z = TokiRow(it->first);
-    const int y = waterHigh(it->second);
-    const int yLow = waterLow(it->second);
+    const int x = it->first.col + 1;
+    const int z = it->first.row;
+    const int y = it->second.high_y;
+    const int yLow = it->second.low_y;
     for (int yDynamic = yLow; yDynamic <= y; yDynamic++) {
       schem(x, yDynamic, z) = 13;
     }
