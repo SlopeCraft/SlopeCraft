@@ -5,6 +5,7 @@
 #ifndef SLOPECRAFT_STRUCTURE_3D_H
 #define SLOPECRAFT_STRUCTURE_3D_H
 
+#include "SlopeCraftL.h"
 #include "converted_image.h"
 #include "Schem/Schem.h"
 #include "WaterItem.h"
@@ -32,6 +33,14 @@ class structure_3D_impl : public structure_3D {
   static std::optional<structure_3D_impl> create(
       const color_table_impl &, const converted_image_impl &cvted,
       const build_options &option) noexcept;
+
+  bool export_litematica(const char *filename,
+                         const litematic_options &option) const noexcept final;
+  bool export_vanilla_structure(
+      const char *filename,
+      const vanilla_structure_options &option) const noexcept final;
+  bool export_WE_schem(const char *filename,
+                       const WE_schem_options &option) const noexcept final;
 };
 
 #endif  // SLOPECRAFT_STRUCTURE_3D_H

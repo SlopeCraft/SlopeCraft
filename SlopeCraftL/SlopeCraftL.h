@@ -288,15 +288,13 @@ class structure_3D {
   [[nodiscard]] virtual size_t palette_length() const noexcept = 0;
   virtual void get_palette(const char **buffer_block_id) const noexcept = 0;
 
-  //  virtual bool export_litematica(
-  //      const char *filename, const litematic_options &option) const noexcept
-  //      = 0;
-  //  virtual bool export_vanilla_structure(
-  //      const char *filename,
-  //      const vanilla_structure_options &option) const noexcept = 0;
-  //  virtual bool export_WE_schem(
-  //      const char *filename, const WE_schem_options &option) const noexcept =
-  //      0;
+  virtual bool export_litematica(
+      const char *filename, const litematic_options &option) const noexcept = 0;
+  virtual bool export_vanilla_structure(
+      const char *filename,
+      const vanilla_structure_options &option) const noexcept = 0;
+  virtual bool export_WE_schem(
+      const char *filename, const WE_schem_options &option) const noexcept = 0;
 };
 
 class color_table {

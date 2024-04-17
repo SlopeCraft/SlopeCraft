@@ -174,3 +174,82 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
   ret.map_color = std::move(map_color);
   return ret;
 }
+
+bool structure_3D_impl::export_litematica(
+    const char *filename,
+    const SlopeCraft::litematic_options &option) const noexcept {
+  option.ui.report_working_status(workStatus::writingMetaInfo);
+  option.progressbar.set_range(0, 100 + this->schem.size(), 0);
+  libSchem::litematic_info info{};
+  info.litename_utf8 = option.litename_utf8;
+  info.regionname_utf8 = option.region_name_utf8;
+
+  {
+    errorFlag flag = errorFlag::NO_ERROR_OCCUR;
+    std::string error_string;
+    const bool ok =
+        this->schem.export_litematic(filename, info, &flag, &error_string);
+
+    if (!ok) {
+      option.ui.report_error(flag, error_string.c_str());
+      return false;
+    }
+  }
+  option.ui.report_working_status(workStatus::none);
+  option.progressbar.set_range(0, 100, 100);
+  return true;
+}
+
+bool structure_3D_impl::export_vanilla_structure(
+    const char *filename,
+    const SlopeCraft::vanilla_structure_options &option) const noexcept {
+  option.ui.report_working_status(workStatus::writingMetaInfo);
+  option.progressbar.set_range(0, 100 + schem.size(), 0);
+
+  errorFlag flag = errorFlag::NO_ERROR_OCCUR;
+  std::string error_string;
+  const bool success = schem.export_structure(
+      filename, option.is_air_structure_void, &flag, &error_string);
+
+  if (!success) {
+    option.ui.report_error(flag, error_string.c_str());
+    return false;
+  }
+
+  option.progressbar.set_range(0, 100, 100);
+  option.ui.report_working_status(workStatus::none);
+  return true;
+}
+
+bool structure_3D_impl::export_WE_schem(
+    const char *filename,
+    const SlopeCraft::WE_schem_options &option) const noexcept {
+  option.progressbar.set_range(0, 100, 0);
+
+  libSchem::WorldEditSchem_info info;
+
+  info.schem_name_utf8 = "GeneratedBySlopeCraftL";
+  memcpy(info.offset.data(), option.offset, sizeof(info.offset));
+  memcpy(info.WE_offset.data(), option.we_offset, sizeof(info.WE_offset));
+
+  info.required_mods_utf8.resize(option.num_required_mods);
+
+  for (int idx = 0; idx < option.num_required_mods; idx++) {
+    info.required_mods_utf8[idx] = option.required_mods_name_utf8[idx];
+  }
+
+  option.progressbar.set_range(0, 100, 5);
+
+  errorFlag flag = errorFlag::NO_ERROR_OCCUR;
+  std::string error_string;
+  const bool success =
+      schem.export_WESchem(filename, info, &flag, &error_string);
+
+  if (!success) {
+    option.ui.report_error(flag, error_string.c_str());
+    return false;
+  }
+
+  option.progressbar.set_range(0, 100, 100);
+  return true;
+}
