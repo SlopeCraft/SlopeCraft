@@ -229,6 +229,22 @@ struct build_options {
   progress_callbacks main_progressbar;
   progress_callbacks sub_progressbar;
 };
+struct litematic_options {
+  uint64_t caller_api_version{SC_VERSION_U64};
+  const char *litename_utf8 = "by SlopeCraft";
+  const char *region_name_utf8 = "by SlopeCraft";
+};
+struct vanilla_structure_options {
+  uint64_t caller_api_version{SC_VERSION_U64};
+  bool is_air_structure_void{true};
+};
+struct WE_schem_options {
+  uint64_t caller_api_version{SC_VERSION_U64};
+  int offset[3] = {0, 0, 0};
+  int we_offset[3] = {0, 0, 0};
+  const char *const *required_mods_name_utf8{nullptr};
+  int num_required_mods{0};
+};
 
 struct const_image_reference {
   const uint32_t *data{nullptr};
@@ -435,18 +451,18 @@ class Kernel {
   // *dest)const
   virtual void getConvertedImage(int *rows, int *cols, uint32_t *dest,
                                  bool expected_col_major) const = 0;
-  struct build_options {
-    uint64_t caller_api_version{SC_VERSION_U64};
-    uint16_t maxAllowedHeight{256};
-    uint16_t bridgeInterval{3};
-    compressSettings compressMethod{::SCL_compressSettings::noCompress};
-    glassBridgeSettings glassMethod{::SCL_glassBridgeSettings::noBridge};
-    bool fire_proof{false};
-    bool enderman_proof{false};
-
-    // added in v5.1.0
-    bool connect_mushrooms{false};
-  };
+  //  struct build_options {
+  //    uint64_t caller_api_version{SC_VERSION_U64};
+  //    uint16_t maxAllowedHeight{256};
+  //    uint16_t bridgeInterval{3};
+  //    compressSettings compressMethod{::SCL_compressSettings::noCompress};
+  //    glassBridgeSettings glassMethod{::SCL_glassBridgeSettings::noBridge};
+  //    bool fire_proof{false};
+  //    bool enderman_proof{false};
+  //
+  //    // added in v5.1.0
+  //    bool connect_mushrooms{false};
+  //  };
   virtual bool build(const build_options &option) noexcept = 0;
 
   virtual void getCompressedImage(int *row, int *cols, uint32_t *dest,
@@ -469,30 +485,14 @@ class Kernel {
   virtual int getSchemPalette(const char **dest_id,
                               size_t dest_capacity) const noexcept = 0;
 
-  struct litematic_options {
-    uint64_t caller_api_version{SC_VERSION_U64};
-    const char *litename_utf8 = "by SlopeCraft";
-    const char *region_name_utf8 = "by SlopeCraft";
-  };
   virtual bool exportAsLitematic(
       const char *filename_local,
       const litematic_options &option) const noexcept = 0;
 
-  struct vanilla_structure_options {
-    uint64_t caller_api_version{SC_VERSION_U64};
-    bool is_air_structure_void{true};
-  };
   virtual bool exportAsStructure(
       const char *filename_local,
       const vanilla_structure_options &option) const noexcept = 0;
 
-  struct WE_schem_options {
-    uint64_t caller_api_version{SC_VERSION_U64};
-    int offset[3] = {0, 0, 0};
-    int we_offset[3] = {0, 0, 0};
-    const char *const *required_mods_name_utf8{nullptr};
-    int num_required_mods{0};
-  };
   virtual bool exportAsWESchem(
       const char *filename_local,
       const WE_schem_options &option) const noexcept = 0;

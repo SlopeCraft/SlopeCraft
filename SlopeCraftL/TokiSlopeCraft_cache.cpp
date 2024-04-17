@@ -227,14 +227,14 @@ bool TokiSlopeCraft::load_convert_cache(SCL_convertAlgo algo,
 // build hash, dir and cache ------------------------------------
 namespace cereal {
 template <class archive>
-void save(archive &ar, const SlopeCraft::Kernel::build_options &opt) noexcept {
+void save(archive &ar, const build_options &opt) noexcept {
   ar(opt.maxAllowedHeight, opt.bridgeInterval, opt.compressMethod,
      opt.glassMethod);
   ar(opt.fire_proof, opt.enderman_proof, opt.connect_mushrooms);
 }
 
 template <class archive>
-void load(archive &ar, SlopeCraft::Kernel::build_options &opt) noexcept {
+void load(archive &ar, build_options &opt) noexcept {
   ar(opt.maxAllowedHeight, opt.bridgeInterval, opt.compressMethod,
      opt.glassMethod);
   ar(opt.fire_proof, opt.enderman_proof, opt.connect_mushrooms);
