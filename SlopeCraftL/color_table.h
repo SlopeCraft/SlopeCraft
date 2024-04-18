@@ -11,7 +11,7 @@
 #include "SlopeCraftL.h"
 #include "SCLDefines.h"
 #include "mc_block.h"
-#include "WriteStringDeliver.h"
+#include "string_deliver.h"
 #include "converted_image.h"
 
 class color_table_impl : public SlopeCraft::color_table {
@@ -69,7 +69,7 @@ class color_table_impl : public SlopeCraft::color_table {
   [[nodiscard]] bool save_convert_cache(
       const_image_reference original_img, const convert_option &option,
       const converted_image &cvted, const char *cache_root_dir,
-      StringDeliver *error) const noexcept final {
+      string_deliver *error) const noexcept final {
     auto err =
         this->save_convert_cache(original_img, option, cvted, cache_root_dir);
     write_to_sd(error, err);
@@ -82,7 +82,7 @@ class color_table_impl : public SlopeCraft::color_table {
 
   [[nodiscard]] converted_image *load_convert_cache(
       const_image_reference original_img, const convert_option &option,
-      const char *cache_root_dir, StringDeliver *error) const noexcept final {
+      const char *cache_root_dir, string_deliver *error) const noexcept final {
     auto res = this->load_convert_cache(original_img, option, cache_root_dir);
     if (!res) {
       write_to_sd(error, res.error());
@@ -108,13 +108,13 @@ class color_table_impl : public SlopeCraft::color_table {
 
   [[nodiscard]] bool save_build_cache(
       const converted_image &, const build_options &, const structure_3D &,
-      const char *cache_root_dir, StringDeliver *error) const noexcept final;
+      const char *cache_root_dir, string_deliver *error) const noexcept final;
   [[nodiscard]] bool has_build_cache(
       const converted_image &, const build_options &,
       const char *cache_root_dir) const noexcept final;
   [[nodiscard]] structure_3D *load_build_cache(
       const converted_image &, const build_options &,
-      const char *cache_root_dir, StringDeliver *error) const noexcept final;
+      const char *cache_root_dir, string_deliver *error) const noexcept final;
 };
 
 //[[nodiscard]] std::string digest_to_string(

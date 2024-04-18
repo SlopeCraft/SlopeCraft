@@ -33,7 +33,7 @@ This file is part of SlopeCraft.
 
 #include "object_pool.hpp"
 #include "SCLDefines.h"
-#include "WaterItem.h"
+#include "water_item.h"
 
 // using namespace Eigen;
 

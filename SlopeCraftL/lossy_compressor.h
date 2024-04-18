@@ -34,7 +34,7 @@ This file is part of SlopeCraft.
 
 #include "height_line.h"
 #include "SCLDefines.h"
-#include "WaterItem.h"
+#include "water_item.h"
 
 // Eigen::Array<uint8_t,Eigen::Dynamic,1>
 class solver_t;

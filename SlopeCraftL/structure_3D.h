@@ -8,7 +8,7 @@
 #include "SlopeCraftL.h"
 #include "converted_image.h"
 #include "Schem/Schem.h"
-#include "WaterItem.h"
+#include "water_item.h"
 
 class structure_3D_impl : public structure_3D {
  private:

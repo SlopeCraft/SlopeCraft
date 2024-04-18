@@ -14,11 +14,11 @@ int main(int argc, char** argv) {
   {
     std::string errmsg;
     errmsg.resize(8192);
-    SlopeCraft::StringDeliver err_sd{errmsg.data(), errmsg.size()};
+    SlopeCraft::string_deliver err_sd{errmsg.data(), errmsg.size()};
 
     std::string warnings;
     warnings.resize(8192);
-    SlopeCraft::StringDeliver warn_sd{warnings.data(), warnings.size()};
+    SlopeCraft::string_deliver warn_sd{warnings.data(), warnings.size()};
     SlopeCraft::block_list_create_info option{
         SC_VERSION_U64,
         &warn_sd,

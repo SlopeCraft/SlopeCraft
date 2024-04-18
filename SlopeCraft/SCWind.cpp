@@ -612,7 +612,7 @@ void SCWind::kernel_convert_image() noexcept {
 void SCWind::kernel_make_cvt_cache() noexcept {
   std::string err;
   err.resize(4096);
-  SlopeCraft::StringDeliver sd{err.data(), err.size()};
+  SlopeCraft::string_deliver sd{err.data(), err.size()};
 
   if (!this->kernel->saveConvertCache(sd)) {
     QString qerr = QString::fromUtf8(sd.data);
@@ -787,7 +787,7 @@ void SCWind::when_export_pool_selectionChanged() noexcept {
 void SCWind::kernel_make_build_cache() noexcept {
   std::string err;
   err.resize(4096);
-  SlopeCraft::StringDeliver sd{err.data(), err.size()};
+  SlopeCraft::string_deliver sd{err.data(), err.size()};
 
   if (!this->kernel->saveBuildCache(sd)) {
     QString qerr = QString::fromUtf8(sd.data);

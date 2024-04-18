@@ -982,7 +982,7 @@ void SCWind::on_ac_test_blocklist_triggered() noexcept {
 
   std::string err;
   err.resize(4096);
-  SlopeCraft::StringDeliver sd{err.data(), err.size()};
+  SlopeCraft::string_deliver sd{err.data(), err.size()};
 
   SlopeCraft::Kernel::test_blocklist_options opt;
   opt.block_count = blks.size();

@@ -25,7 +25,7 @@ This file is part of SlopeCraft.
 #include <cstdint>
 #include <cstddef>
 
-#include "SlopeCraftL_global.h"
+#include "SlopeCraftL_export.h"
 
 #ifdef SLOPECRAFTL_NOT_INSTALLED
 #include <SC_version_buildtime.h>
@@ -70,9 +70,9 @@ struct AiCvterOpt {
   double mutationProb{0.01};
 };
 
-struct StringDeliver {
-  StringDeliver() = default;
-  StringDeliver(char *p, size_t cap) : data(p), capacity(cap) {}
+struct string_deliver {
+  string_deliver() = default;
+  string_deliver(char *p, size_t cap) : data(p), capacity(cap) {}
   char *const data{nullptr};
   const size_t capacity{0};
   size_t size{0};
@@ -83,8 +83,8 @@ struct StringDeliver {
   }
 
   template <class string_t>
-  [[nodiscard]] static StringDeliver from_string(string_t &s) noexcept {
-    return StringDeliver{s.data(), s.size()};
+  [[nodiscard]] static string_deliver from_string(string_t &s) noexcept {
+    return string_deliver{s.data(), s.size()};
   }
 };
 
@@ -332,23 +332,23 @@ class color_table {
   [[nodiscard]] virtual bool save_convert_cache(
       const_image_reference original_img, const convert_option &option,
       const converted_image &, const char *cache_dir,
-      StringDeliver *error) const noexcept = 0;
+      string_deliver *error) const noexcept = 0;
   [[nodiscard]] virtual converted_image *load_convert_cache(
       const_image_reference original_img, const convert_option &option,
-      const char *cache_dir, StringDeliver *error) const noexcept = 0;
+      const char *cache_dir, string_deliver *error) const noexcept = 0;
 
   [[nodiscard]] virtual structure_3D *build(
       const converted_image &, const build_options &) const noexcept = 0;
   // Once you cache a structure_3D, it can be released to save memory
   [[nodiscard]] virtual bool save_build_cache(
       const converted_image &, const build_options &, const structure_3D &,
-      const char *cache_root_dir, StringDeliver *error) const noexcept = 0;
+      const char *cache_root_dir, string_deliver *error) const noexcept = 0;
   [[nodiscard]] virtual bool has_build_cache(
       const converted_image &, const build_options &,
       const char *cache_root_dir) const noexcept = 0;
   [[nodiscard]] virtual structure_3D *load_build_cache(
       const converted_image &, const build_options &,
-      const char *cache_root_dir, StringDeliver *error) const noexcept = 0;
+      const char *cache_root_dir, string_deliver *error) const noexcept = 0;
 };
 
 // class Kernel {
@@ -518,14 +518,14 @@ class color_table {
 //   // requires step >= wait4image
 //   // virtual bool checkColorsetHash() const noexcept = 0;
 //   // requires step >= converted
-//   virtual bool saveConvertCache(StringDeliver &err) const noexcept = 0;
+//   virtual bool saveConvertCache(string_deliver &err) const noexcept = 0;
 //
 //   // requires step >= convertion ready
 //   virtual bool loadConvertCache(SCL_convertAlgo algo, bool dither) noexcept =
 //   0;
 //
 //   // requires step >= built
-//   virtual bool saveBuildCache(StringDeliver &err) const noexcept = 0;
+//   virtual bool saveBuildCache(string_deliver &err) const noexcept = 0;
 //
 //   // requires step >= converted
 //   virtual bool loadBuildCache(const build_options &option) noexcept = 0;
@@ -555,7 +555,7 @@ class color_table {
 //     int32_t split_line_col_margin{0};
 //     int png_compress_level{9};
 //     int png_compress_memory_level{8};
-//     StringDeliver *err{nullptr};
+//     string_deliver *err{nullptr};
 //   };
 //   virtual bool exportAsFlatDiagram(
 //       const char *filename_local,
@@ -566,7 +566,7 @@ class color_table {
 //     const AbstractBlock *const *block_ptrs{nullptr};
 //     const uint8_t *basecolors{nullptr};
 //     size_t block_count{0};
-//     StringDeliver *err{nullptr};
+//     string_deliver *err{nullptr};
 //   };
 //   virtual bool makeTests(
 //       const char *filename,
@@ -597,13 +597,13 @@ SCL_EXPORT void SCL_destroy_color_table(color_table *);
 SCL_EXPORT void SCL_destroy_converted_image(converted_image *);
 SCL_EXPORT void SCL_destroy_structure_3D(structure_3D *);
 
-[[nodiscard]] SCL_EXPORT AbstractBlock *SCL_createBlock();
-SCL_EXPORT void SCL_destroyBlock(AbstractBlock *);
+[[nodiscard]] SCL_EXPORT AbstractBlock *SCL_create_block();
+SCL_EXPORT void SCL_destroy_block(AbstractBlock *);
 
 struct block_list_create_info {
   uint64_t caller_api_version{SC_VERSION_U64};
-  StringDeliver *warnings{nullptr};
-  StringDeliver *error{nullptr};
+  string_deliver *warnings{nullptr};
+  string_deliver *error{nullptr};
 };
 
 [[nodiscard]] SCL_EXPORT block_list_interface *SCL_createBlockList(
@@ -657,7 +657,7 @@ SCL_EXPORT uint8_t SCL_maxBaseColor();
 class deleter {
  public:
   //  void operator()(Kernel *k) const noexcept { SCL_destroyKernel(k); }
-  void operator()(AbstractBlock *b) const noexcept { SCL_destroyBlock(b); }
+  void operator()(AbstractBlock *b) const noexcept { SCL_destroy_block(b); }
   void operator()(block_list_interface *b) const noexcept {
     SCL_destroyBlockList(b);
   }

@@ -12,7 +12,7 @@
 #include "SCLDefines.h"
 #include "mc_block.h"
 #include "Schem/Schem.h"
-#include "WaterItem.h"
+#include "water_item.h"
 
 class color_table_impl;
 

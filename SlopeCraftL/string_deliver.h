@@ -4,7 +4,7 @@
 #include <string_view>
 
 namespace SlopeCraft {
-inline void write_to_sd(StringDeliver* s, std::string_view sv) noexcept {
+inline void write_to_sd(string_deliver* s, std::string_view sv) noexcept {
   if (s == nullptr) {
     return;
   }

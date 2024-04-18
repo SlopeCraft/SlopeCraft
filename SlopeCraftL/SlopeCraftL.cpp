@@ -28,7 +28,7 @@ This file is part of SlopeCraft.
 
 #include "SlopeCraftL.h"
 #include "mc_block.h"
-#include "WriteStringDeliver.h"
+#include "string_deliver.h"
 #include "color_table.h"
 
 using namespace SlopeCraft;

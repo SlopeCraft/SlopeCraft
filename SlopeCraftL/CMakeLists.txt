@@ -30,10 +30,10 @@ set(Slope_SCL_internal_headers
     prim_glass_builder.h
     SCLDefines.h
     #    to_be_removed/TokiSlopeCraft.h
-    WaterItem.h
-    lossyCompressor.h
+    water_item.h
+    lossy_compressor.h
     mc_block.h
-    WriteStringDeliver.h
+    string_deliver.h
     structure_3D.h
     color_table.h
     converted_image.h
@@ -44,7 +44,7 @@ set(SlopeCraft_SCL_sources
 
     SlopeCraftL.h
     # AiCvterOpt.cpp
-    ColorSource.cpp
+    color_source.cpp
     height_line.cpp
     optimize_chain.cpp
     prim_glass_builder.cpp
@@ -53,8 +53,8 @@ set(SlopeCraft_SCL_sources
     #    to_be_removed/TokiSlopeCraft_build.cpp
     #    to_be_removed/TokiSlopeCraft_convert.cpp
     #    to_be_removed/TokiSlopeCraft_cache.cpp
-    imagePreprocess.cpp
-    lossyCompressor.cpp
+    image_preprocess.cpp
+    lossy_compressor.cpp
     mc_block.cpp
     SlopeCraftL.cpp
     color_table.cpp
@@ -71,7 +71,7 @@ add_definitions(-DSLOPECRAFTL_LIBRARY)
 add_library(SlopeCraftL SHARED ${SlopeCraft_SCL_sources})
 
 include(GenerateExportHeader)
-generate_export_header(SlopeCraftL BASE_NAME SCL EXPORT_FILE_NAME SlopeCraftL_global.h)
+generate_export_header(SlopeCraftL BASE_NAME SCL EXPORT_FILE_NAME SlopeCraftL_export.h)
 
 # add_library(SlopeCraftL_C SHARED ${SlopeCraft_SCL_sources})
 target_compile_features(SlopeCraftL PRIVATE cxx_std_23)

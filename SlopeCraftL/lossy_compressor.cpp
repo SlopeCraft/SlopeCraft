@@ -20,7 +20,7 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
-#include "lossyCompressor.h"
+#include "lossy_compressor.h"
 
 #define heu_NO_OUTPUT
 #define heu_USE_THREADS

@@ -6,7 +6,7 @@
 #include <boost/uuid/detail/md5.hpp>
 #include "SCLDefines.h"
 #include "color_table.h"
-#include "WaterItem.h"
+#include "water_item.h"
 #include "structure_3D.h"
 
 std::optional<color_table_impl> color_table_impl::create(
@@ -249,7 +249,7 @@ bool color_table_impl::save_build_cache(const converted_image &cvted,
                                         const build_options &option,
                                         const structure_3D &structure,
                                         const char *cache_root_dir,
-                                        StringDeliver *error) const noexcept {
+                                        string_deliver *error) const noexcept {
   const auto filename =
       this->build_task_cache_filename(cvted, option, cache_root_dir);
   auto err_msg =
@@ -271,7 +271,7 @@ bool color_table_impl::has_build_cache(
 structure_3D *color_table_impl::load_build_cache(
     const SlopeCraft::converted_image &cvted,
     const SlopeCraft::build_options &option, const char *cache_root_dir,
-    SlopeCraft::StringDeliver *error) const noexcept {
+    SlopeCraft::string_deliver *error) const noexcept {
   const auto filename =
       this->build_task_cache_filename(cvted, option, cache_root_dir);
   auto res = structure_3D_impl::load_cache(filename);

@@ -9,7 +9,7 @@
 #include "converted_image.h"
 #include "color_table.h"
 #include "height_line.h"
-#include "lossyCompressor.h"
+#include "lossy_compressor.h"
 
 converted_image_impl::converted_image_impl(const color_table_impl &table)
     : converter{*SlopeCraft::basic_colorset, table.allowed} {}

@@ -48,10 +48,10 @@ std::unique_ptr<SlopeCraft::block_list_interface, BlockListDeleter>
 BlockListManager::impl_addblocklist(const QString &filename) noexcept {
   std::string errmsg;
   errmsg.resize(8192);
-  auto sd_err = SlopeCraft::StringDeliver::from_string(errmsg);
+  auto sd_err = SlopeCraft::string_deliver::from_string(errmsg);
   std::string warning;
   warning.resize(8192);
-  auto sd_warn = SlopeCraft::StringDeliver::from_string(warning);
+  auto sd_warn = SlopeCraft::string_deliver::from_string(warning);
   SlopeCraft::block_list_create_info option{SC_VERSION_U64, &sd_warn, &sd_err};
 
   SlopeCraft::block_list_interface *bli =

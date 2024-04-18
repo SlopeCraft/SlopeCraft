@@ -28,7 +28,7 @@ This file is part of SlopeCraft.
 #include <vector>
 #include "optimize_chain.h"
 #include "SCLDefines.h"
-#include "WaterItem.h"
+#include "water_item.h"
 
 class height_line {
  public:

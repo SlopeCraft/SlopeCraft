@@ -11,7 +11,7 @@
 
 #include "structure_3D.h"
 #include "color_table.h"
-#include "lossyCompressor.h"
+#include "lossy_compressor.h"
 #include "prim_glass_builder.h"
 
 std::optional<structure_3D_impl> structure_3D_impl::create(
