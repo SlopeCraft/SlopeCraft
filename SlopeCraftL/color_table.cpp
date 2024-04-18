@@ -103,7 +103,7 @@ std::optional<color_table_impl> color_table_impl::create(
     }
   }
 
-  if (!result.allowed.apply_allowed(*color_set::basic, m_index)) {
+  if (!result.allowed.apply_allowed(*SlopeCraft::basic_colorset, m_index)) {
     std::string msg = fmt::format(
         "Too few usable color(s) : only {}  colors\nAvaliable base color(s) : ",
         result.allowed.color_count());

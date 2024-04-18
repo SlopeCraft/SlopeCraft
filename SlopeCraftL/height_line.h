@@ -23,13 +23,12 @@ This file is part of SlopeCraft.
 #ifndef HEIGHTLINE_H
 #define HEIGHTLINE_H
 
-#include "Colors.h"
-#include "optimize_chain.h"
-#include "SCLDefines.h"
-#include "WaterItem.h"
 #include <iostream>
 #include <map>
 #include <vector>
+#include "optimize_chain.h"
+#include "SCLDefines.h"
+#include "WaterItem.h"
 
 class height_line {
  public:

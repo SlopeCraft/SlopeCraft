@@ -4,15 +4,15 @@
 
 #ifndef SLOPECRAFT_CONVERTED_IMAGE_H
 #define SLOPECRAFT_CONVERTED_IMAGE_H
-#include "SlopeCraftL.h"
-#include "Colorset.h"
-#include "mc_block.h"
-#include "Schem/Schem.h"
-#include "WaterItem.h"
 #include <Eigen/Dense>
 #include <MapImageCvter/MapImageCvter.h>
 #include <filesystem>
 #include <tl/expected.hpp>
+#include "SlopeCraftL.h"
+#include "SCLDefines.h"
+#include "mc_block.h"
+#include "Schem/Schem.h"
+#include "WaterItem.h"
 
 class color_table_impl;
 

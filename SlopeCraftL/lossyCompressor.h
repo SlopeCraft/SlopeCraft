@@ -32,7 +32,6 @@ This file is part of SlopeCraft.
 #include <vector>
 #include <memory>
 
-#include "Colors.h"
 #include "height_line.h"
 #include "SCLDefines.h"
 #include "WaterItem.h"

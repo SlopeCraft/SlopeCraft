@@ -383,3 +383,10 @@ SCL_EXPORT void SCL_destroy_structure_3D(structure_3D *s) { delete s; }
 //   return TokiSlopeCraft::getBlockPalette(blkpp, capacity);
 // }
 }
+
+#include <ExternalConverters/ExternalConverterStaticInterface.h>
+extern Eigen::Map<const Eigen::ArrayXf> BasicRGB4External(int channel) {
+  return Eigen::Map<const Eigen::ArrayXf>(
+      &SlopeCraft::basic_colorset->RGB_mat()(0, channel),
+      SlopeCraft::basic_colorset->color_count());
+}

@@ -4,6 +4,7 @@
 
 #include <fmt/format.h>
 #include <boost/uuid/detail/md5.hpp>
+#include <utilities/ExternalConverters/GAConverter/GAConverter.h>
 #include "SCLDefines.h"
 #include "converted_image.h"
 #include "color_table.h"
@@ -11,7 +12,7 @@
 #include "lossyCompressor.h"
 
 converted_image_impl::converted_image_impl(const color_table_impl &table)
-    : converter{*color_set::basic, table.allowed} {}
+    : converter{*SlopeCraft::basic_colorset, table.allowed} {}
 
 converted_image *color_table_impl::convert_image(
     const_image_reference original_img,

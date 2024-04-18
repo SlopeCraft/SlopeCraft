@@ -21,7 +21,7 @@ This file is part of SlopeCraft.
 */
 
 #include "sortColor.h"
-#include "../../../SlopeCraftL/Colors.h"
+#include "../../../SlopeCraftL/SCLDefines.h"
 
 using namespace GACvter;
 using namespace SlopeCraft;

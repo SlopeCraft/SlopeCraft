@@ -25,7 +25,6 @@ set(Slope_SCL_internal_headers
     ${CMAKE_SOURCE_DIR}/utilities/SC_GlobalEnums.h
 
     # AiCvterOpt.h
-    Colors.h
     height_line.h
     optimize_chain.h
     prim_glass_builder.h
@@ -36,7 +35,6 @@ set(Slope_SCL_internal_headers
     mc_block.h
     SlopeCraftL_global.h
     WriteStringDeliver.h
-    Colorset.h
     structure_3D.h
     color_table.h
     converted_image.h
@@ -47,7 +45,6 @@ set(SlopeCraft_SCL_sources
 
     SlopeCraftL.h
     # AiCvterOpt.cpp
-    Colors.cpp
     ColorSource.cpp
     height_line.cpp
     optimize_chain.cpp
@@ -61,7 +58,6 @@ set(SlopeCraft_SCL_sources
     lossyCompressor.cpp
     mc_block.cpp
     SlopeCraftL.cpp
-    Colorset.cpp
     color_table.cpp
     structure_3D.cpp
     converted_image.cpp

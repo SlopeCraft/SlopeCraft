@@ -22,12 +22,6 @@ This file is part of SlopeCraft.
 
 #ifndef PRIMGLASSBUILDER_H
 #define PRIMGLASSBUILDER_H
-#include "object_pool.hpp"
-
-#include "SCLDefines.h"
-
-#include "Colors.h"
-#include "WaterItem.h"
 #include <iostream>
 #include <list>
 #include <queue>
@@ -36,6 +30,10 @@ This file is part of SlopeCraft.
 #include <unsupported/Eigen/CXX11/Tensor>
 #include <vector>
 #include <utilities/Schem/Schem.h>
+
+#include "object_pool.hpp"
+#include "SCLDefines.h"
+#include "WaterItem.h"
 
 // using namespace Eigen;
 

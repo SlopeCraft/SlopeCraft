@@ -9,7 +9,7 @@
 #include <filesystem>
 #include <tl/expected.hpp>
 #include "SlopeCraftL.h"
-#include "Colorset.h"
+#include "SCLDefines.h"
 #include "mc_block.h"
 #include "WriteStringDeliver.h"
 #include "converted_image.h"

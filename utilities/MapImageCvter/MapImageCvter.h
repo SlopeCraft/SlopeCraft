@@ -33,7 +33,8 @@ This file is part of SlopeCraft.
 
 namespace GACvter {
 class GAConverter;
-}
+void delete_GA_converter(GAConverter *) noexcept;
+}  // namespace GACvter
 
 namespace heu {
 struct GAOption;
@@ -43,7 +44,10 @@ namespace libMapImageCvt {
 
 class MapImageCvter : public ::libImageCvt::ImageCvter<true> {
  private:
-  std::unique_ptr<GACvter::GAConverter> gacvter;
+  using deleter_t = decltype([](GACvter::GAConverter *g) {
+    GACvter::delete_GA_converter(g);
+  });
+  std::unique_ptr<GACvter::GAConverter, deleter_t> gacvter;
 
  public:
   using Base_t = ::libImageCvt::ImageCvter<true>;
