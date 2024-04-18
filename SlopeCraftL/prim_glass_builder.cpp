@@ -26,37 +26,35 @@ const ARGB airColor = ARGB32(255, 255, 255);
 const ARGB targetColor = ARGB32(0, 0, 0);
 const ARGB glassColor = ARGB32(192, 192, 192);
 
-const std::vector<rc_pos> *edge::vertexes = nullptr;
+// const std::vector<rc_pos> *edge::vertexes = nullptr;
 
-edge::edge() {
-  // beg=TokiRC(0,0);
-  // end=TokiRC(0,0);
-  begIdx = 0;
-  endIdx = 0;
-  lengthSquare = 0;
+// edge::edge() {
+//   // beg=TokiRC(0,0);
+//   // end=TokiRC(0,0);
+//   begIdx = 0;
+//   endIdx = 0;
+//   lengthSquare = 0;
+// }
+
+edge::edge(uint32_t b, uint32_t e, std::span<const rc_pos> v)
+    : begIdx{b}, endIdx{e}, lengthSquare{[b, e, v]() {
+        const auto beg = v[b];
+        const auto end = v[e];
+        const int rowSpan = beg.row - end.row;
+        const int colSpan = beg.col - end.col;
+        return (rowSpan * rowSpan + colSpan * colSpan);
+      }()} {}
+
+rc_pos edge::beg(std::span<const rc_pos> vertices) const {
+  return vertices[begIdx];
 }
 
-edge::edge(uint32_t _begIdx, uint32_t _endIdx) {
-  begIdx = _begIdx;
-  endIdx = _endIdx;
-  //  const int r1 =beg().row,c1=; TokiRow(beg()), c1 = TokiCol(beg());
-  //  int r2 = TokiRow(end()), c2 = TokiCol(end());
-
-  const int rowSpan = beg().row - end().row;
-  const int colSpan = beg().col - end().col;
-  lengthSquare = (rowSpan * rowSpan + colSpan * colSpan);
+rc_pos edge::end(std::span<const rc_pos> vertices) const {
+  return vertices[endIdx];
 }
-
-rc_pos edge::beg() const { return vertexes->at(begIdx); }
-
-rc_pos edge::end() const { return vertexes->at(endIdx); }
 
 pairedEdge::pairedEdge()
-    : std::pair<rc_pos, rc_pos>{{0, 0}, {0, 0}}, lengthSquare{0} {
-  //  first = TokiRC(0, 0);
-  //  second = TokiRC(0, 0);
-  //  lengthSquare = 0;
-}
+    : std::pair<rc_pos, rc_pos>{{0, 0}, {0, 0}}, lengthSquare{0} {}
 pairedEdge::pairedEdge(rc_pos A, rc_pos B) {
   int r1 = A.row, c1 = A.col;
   int r2 = B.row, c2 = B.col;
@@ -75,9 +73,9 @@ pairedEdge::pairedEdge(uint32_t r1, uint32_t c1, uint32_t r2, uint32_t c2) {
   lengthSquare = (rowSpan * rowSpan + colSpan * colSpan);
 }
 
-pairedEdge::pairedEdge(const edge &src) {
-  first = src.beg();
-  second = src.end();
+pairedEdge::pairedEdge(const edge &src, std::span<const rc_pos> v) {
+  first = src.beg(v);
+  second = src.end(v);
   lengthSquare = src.lengthSquare;
 }
 /*
@@ -309,12 +307,12 @@ pairedEdge prim_glass_builder::connectSingleMaps(const prim_glass_builder *map1,
 
 void prim_glass_builder::addEdgesToGraph() {
   edges.clear();
-  edge::vertexes = std::addressof(targetPoints);
+  //  edge::vertexes = std::addressof(targetPoints);
   // int taskCount=(targetPoints.size()*(targetPoints.size()-1))/2;
   // progressRangeSet(*windPtr,0,taskCount,0);
   for (uint32_t i = 0; i < targetPoints.size(); i++) {
     for (uint32_t j = i + 1; j < targetPoints.size(); j++) {
-      edges.emplace_back(edge(i, j));
+      edges.emplace_back(edge(i, j, this->targetPoints));
     }
     // emit keepAwake();
     // emit progressAdd(targetPoints.size()-i);
@@ -404,7 +402,7 @@ void prim_glass_builder::runPrim() {
       // found.emplace(y);
       // unsearched.erase(x);
       // unsearched.erase(y);
-      tree.emplace_back(*selectedEdge);
+      tree.emplace_back(*selectedEdge, this->targetPoints);
     }
     // if(foundCount%reportRate==0) {
     //     //progressRangeSet(*windPtr,0,targetPoints.size(),foundCount);
@@ -482,13 +480,13 @@ TokiMap impl_ySlice2TokiMap(const Eigen::Tensor<ele_t, 3> &raw) noexcept {
   return result;
 }
 
-TokiMap ySlice2TokiMap(const Eigen::Tensor<uint8_t, 3> &raw) noexcept {
-  return impl_ySlice2TokiMap(raw);
-}
-
-TokiMap ySlice2TokiMap_u16(const Eigen::Tensor<uint32_t, 3> &raw) noexcept {
-  return impl_ySlice2TokiMap(raw);
-}
+// TokiMap ySlice2TokiMap(const Eigen::Tensor<uint8_t, 3> &raw) noexcept {
+//   return impl_ySlice2TokiMap(raw);
+// }
+//
+// TokiMap ySlice2TokiMap_u16(const Eigen::Tensor<uint32_t, 3> &raw) noexcept {
+//   return impl_ySlice2TokiMap(raw);
+// }
 
 TokiMap ySlice2TokiMap_u16(const Eigen::Tensor<uint16_t, 3> &xzy,
                            std::span<const int, 3> start_xzy,

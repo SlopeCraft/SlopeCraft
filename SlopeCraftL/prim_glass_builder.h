@@ -45,21 +45,18 @@ typedef Eigen::Array<uint8_t, Eigen::Dynamic, Eigen::Dynamic> TokiMap;
 typedef TokiMap glassMap;
 typedef TokiMap walkableMap;
 
-#warning "TODO: Remove global variables in this part"
 class edge {
  public:
-  edge();
-  edge(uint32_t begIdx, uint32_t endIdx);
-  uint32_t begIdx;
-  uint32_t endIdx;
-  int lengthSquare;
+  explicit edge() = delete;
+  edge(uint32_t begIdx, uint32_t endIdx, std::span<const rc_pos> vertices);
+  const uint32_t begIdx;
+  const uint32_t endIdx;
+  const int lengthSquare;
 
-  static const std::vector<rc_pos> *vertexes;
-
-  rc_pos beg() const;
-  rc_pos end() const;
-  bool connectWith(rc_pos) const;
-  void drawEdge(glassMap &, bool drawHead = false) const;
+  rc_pos beg(std::span<const rc_pos> vertices) const;
+  rc_pos end(std::span<const rc_pos> vertices) const;
+  //  bool connectWith(rc_pos) const;
+  //  void drawEdge(glassMap &, bool drawHead = false) const;
 };
 
 class pairedEdge : public std::pair<rc_pos, rc_pos> {
@@ -67,17 +64,18 @@ class pairedEdge : public std::pair<rc_pos, rc_pos> {
   pairedEdge();
   pairedEdge(rc_pos, rc_pos);
   pairedEdge(uint32_t r1, uint32_t c1, uint32_t r2, uint32_t c2);
-  pairedEdge(const edge &);
+  pairedEdge(const edge &, std::span<const rc_pos> vertices);
+
   int lengthSquare;
 
   bool connectWith(rc_pos) const;
   void drawEdge(glassMap &, bool drawHead = false) const;
 };
 
-[[deprecated]] TokiMap ySlice2TokiMap(
-    const Eigen::Tensor<uint8_t, 3> &) noexcept;
-[[deprecated]] TokiMap ySlice2TokiMap_u16(
-    const Eigen::Tensor<uint32_t, 3> &) noexcept;
+//[[deprecated]] TokiMap ySlice2TokiMap(
+//    const Eigen::Tensor<uint8_t, 3> &) noexcept;
+//[[deprecated]] TokiMap ySlice2TokiMap_u16(
+//    const Eigen::Tensor<uint32_t, 3> &) noexcept;
 TokiMap ySlice2TokiMap_u16(const Eigen::Tensor<uint16_t, 3> &xzy,
                            std::span<const int, 3> start_xzy,
                            std::span<const int, 3> extension_xzy) noexcept;
