@@ -90,8 +90,6 @@ const char *TokiSlopeCraft::cacheDir() const noexcept {
 
 const std::string_view hash_suffix{".sha3_512"};
 
-#define SC_HASH_ADD_DATA(hasher, obj) hasher.process_bytes(&obj, sizeof(obj));
-
 uint64_t to_short_hash(std::span<const uint8_t> full_hash) noexcept {
   assert(full_hash.size() >= 8);
   return *reinterpret_cast<const uint64_t *>(full_hash.data());

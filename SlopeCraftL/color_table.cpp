@@ -3,9 +3,10 @@
 //
 
 #include <fmt/format.h>
+#include <boost/uuid/detail/md5.hpp>
+#include "SCLDefines.h"
 #include "color_table.h"
 #include "WaterItem.h"
-#include "height_line.h"
 #include "structure_3D.h"
 
 std::optional<color_table_impl> color_table_impl::create(
@@ -137,4 +138,80 @@ std::vector<std::string_view> color_table_impl::block_id_list() const noexcept {
     dest.emplace_back(blk.id);
   }
   return dest;
+}
+
+// std::string digest_to_string(std::span<const uint64_t> hash) noexcept {
+//   std::string ret;
+//   ret.reserve(hash.size_bytes() * 2);
+//   for (uint64_t i : hash) {
+//     fmt::format_to(std::back_insert_iterator(ret), "{:x}", i);
+//   }
+//   return ret;
+// }
+
+uint64_t color_table_impl::hash() const noexcept {
+  boost::uuids::detail::md5 hash;
+  SC_HASH_ADD_DATA(hash, this->map_type_)
+  SC_HASH_ADD_DATA(hash, this->mc_version_)
+
+  this->allowed.hash_add_data(hash);
+  decltype(hash)::digest_type digest;
+  hash.get_digest(digest);
+  std::array<uint64_t, 2> result;
+  memcpy(result.data(), digest, sizeof digest);
+  static_assert(sizeof(digest) == sizeof(result));
+  return result[0] ^ result[1];
+}
+
+std::filesystem::path color_table_impl::self_cache_dir(
+    const char *cache_root_dir) const noexcept {
+  return fmt::format("{}/{:x}", cache_root_dir, this->hash());
+}
+
+std::filesystem::path color_table_impl::convert_task_cache_filename(
+    const_image_reference original_img, const convert_option &option,
+    const char *cache_root_dir) const noexcept {
+  auto self_cache_dir = this->self_cache_dir(cache_root_dir);
+  self_cache_dir.append(fmt::format(
+      "{:x}/convert_cache",
+      converted_image_impl::convert_task_hash(original_img, option)));
+  return self_cache_dir;
+}
+
+bool color_table_impl::has_convert_cache(
+    const_image_reference original_img, const convert_option &option,
+    const char *cache_root_dir) const noexcept {
+  auto path =
+      this->convert_task_cache_filename(original_img, option, cache_root_dir);
+  return std::filesystem::is_regular_file(path);
+}
+
+std::string color_table_impl::save_convert_cache(
+    const_image_reference original_img, const convert_option &option,
+    const converted_image &cvted, const char *cache_root_dir) const noexcept {
+  try {
+    auto filename =
+        this->convert_task_cache_filename(original_img, option, cache_root_dir);
+    std::filesystem::create_directories(filename.parent_path());
+
+    auto err =
+        dynamic_cast<const converted_image_impl &>(cvted).save_cache(filename);
+    if (!err.empty()) {
+      return fmt::format("Failed to save cache to file \"{}\": {}",
+                         filename.string(), err);
+    }
+  } catch (const std::exception &e) {
+    return fmt::format("Caught exception: {}", e.what());
+  }
+
+  return {};
+}
+
+[[nodiscard]] tl::expected<converted_image_impl, std::string>
+color_table_impl::load_convert_cache(
+    const_image_reference original_img, const convert_option &option,
+    const char *cache_root_dir) const noexcept {
+  return converted_image_impl::load_cache(
+      *this,
+      this->convert_task_cache_filename(original_img, option, cache_root_dir));
 }

@@ -184,7 +184,9 @@ class MapImageCvter : public ::libImageCvt::ImageCvter<true> {
   bool save_cache(const char *filename) const noexcept;
   bool examine_cache(const char *filename, uint64_t expected_task_hash,
                      MapImageCvter *itermediate = nullptr) const noexcept;
-  bool load_cache(const char *filename, uint64_t expected_task_hash) noexcept;
+  [[nodiscard]] bool load_cache(const char *filename,
+                                uint64_t expected_task_hash) noexcept;
+  bool load_cache(const char *filename) noexcept;
 };
 
 }  // namespace libMapImageCvt

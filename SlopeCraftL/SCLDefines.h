@@ -49,10 +49,12 @@ extern const float RGBBasicSource[256 * 3];
 
 }
 
+#define SC_HASH_ADD_DATA(hasher, obj) hasher.process_bytes(&obj, sizeof(obj));
+
 using ARGB = uint32_t;
 using EImage = Eigen::Array<ARGB, Dynamic, Dynamic>;
 using MapList = Eigen::Array<uint8_t, Dynamic, 1, Eigen::ColMajor, 256>;
 using ColorList = Eigen::Array<float, Dynamic, 3, Eigen::ColMajor, 256>;
 using TempVectorXf = Eigen::Array<float, Dynamic, 1, Eigen::ColMajor, 256>;
 
-#endif // SCLDEFINES_H
+#endif  // SCLDEFINES_H

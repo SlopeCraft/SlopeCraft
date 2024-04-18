@@ -224,7 +224,7 @@ struct build_options {
 
   // added in v5.1.0
   bool connect_mushrooms{false};
-
+  // added in v5.3
   ui_callbacks ui;
   progress_callbacks main_progressbar;
   progress_callbacks sub_progressbar;
@@ -319,6 +319,19 @@ class color_table {
   [[nodiscard]] virtual converted_image *convert_image(
       const_image_reference original_img,
       const convert_option &option) const noexcept = 0;
+
+  [[nodiscard]] virtual bool has_convert_cache(
+      const_image_reference original_img, const convert_option &option,
+      const char *cache_dir) const noexcept = 0;
+
+  [[nodiscard]] virtual bool save_convert_cache(
+      const_image_reference original_img, const convert_option &option,
+      const converted_image &, const char *cache_dir,
+      StringDeliver *error) const noexcept = 0;
+
+  [[nodiscard]] virtual converted_image *load_convert_cache(
+      const_image_reference original_img, const convert_option &option,
+      const char *cache_dir, StringDeliver *error) const noexcept = 0;
 
   [[nodiscard]] virtual structure_3D *build(
       const converted_image &, const build_options &) const noexcept = 0;

@@ -133,3 +133,13 @@ bool libMapImageCvt::MapImageCvter::load_cache(
   assert(this->_raw_image.cols() == this->_dithered_image.cols());
   return true;
 }
+
+bool libMapImageCvt::MapImageCvter::load_cache(const char *filename) noexcept {
+  MapImageCvter temp{this->basic_colorset, this->allowed_colorset};
+
+  this->load_from_itermediate(std::move(temp));
+
+  assert(this->_raw_image.rows() == this->_dithered_image.rows());
+  assert(this->_raw_image.cols() == this->_dithered_image.cols());
+  return true;
+}

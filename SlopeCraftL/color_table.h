@@ -6,9 +6,12 @@
 #define SLOPECRAFT_COLOR_TABLE_H
 
 #include <array>
+#include <filesystem>
+#include <tl/expected.hpp>
 #include "SlopeCraftL.h"
 #include "Colorset.h"
 #include "mc_block.h"
+#include "WriteStringDeliver.h"
 #include "converted_image.h"
 
 class color_table_impl : public SlopeCraft::color_table {
@@ -45,6 +48,57 @@ class color_table_impl : public SlopeCraft::color_table {
       const_image_reference original_img,
       const convert_option &option) const noexcept final;
 
+  [[nodiscard]] uint64_t hash() const noexcept;
+
+  [[nodiscard]] std::filesystem::path self_cache_dir(
+      const char *cache_root_dir) const noexcept;
+
+  [[nodiscard]] std::filesystem::path convert_task_cache_filename(
+      const_image_reference original_img, const convert_option &option,
+      const char *cache_root_dir) const noexcept;
+
+  [[nodiscard]] bool has_convert_cache(
+      const_image_reference original_img, const convert_option &option,
+      const char *cache_root_dir) const noexcept final;
+
+  [[nodiscard]] bool save_convert_cache(
+      const_image_reference original_img, const convert_option &option,
+      const converted_image &cvted, const char *cache_root_dir,
+      StringDeliver *error) const noexcept final {
+    auto err =
+        this->save_convert_cache(original_img, option, cvted, cache_root_dir);
+    if (error) {
+      write(*error, err);
+    }
+    return err.empty();
+  }
+
+  [[nodiscard]] std::string save_convert_cache(
+      const_image_reference original_img, const convert_option &option,
+      const converted_image &, const char *cache_root_dir) const noexcept;
+
+  [[nodiscard]] converted_image *load_convert_cache(
+      const_image_reference original_img, const convert_option &option,
+      const char *cache_root_dir, StringDeliver *error) const noexcept final {
+    auto res = this->load_convert_cache(original_img, option, cache_root_dir);
+    if (!res) {
+      if (error) {
+        write(*error, res.error());
+      }
+      return nullptr;
+    }
+
+    if (error) {
+      write(*error, "");
+    }
+    return new converted_image_impl{std::move(res.value())};
+  }
+
+  [[nodiscard]] tl::expected<converted_image_impl, std::string>
+  load_convert_cache(const_image_reference original_img,
+                     const convert_option &option,
+                     const char *cache_root_dir) const noexcept;
+
   [[nodiscard]] structure_3D *build(const converted_image &,
                                     const build_options &) const noexcept final;
 
@@ -53,5 +107,8 @@ class color_table_impl : public SlopeCraft::color_table {
 
   [[nodiscard]] std::vector<std::string_view> block_id_list() const noexcept;
 };
+
+//[[nodiscard]] std::string digest_to_string(
+//    std::span<const uint64_t> hash) noexcept;
 
 #endif  // SLOPECRAFT_COLOR_TABLE_H

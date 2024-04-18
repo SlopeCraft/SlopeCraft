@@ -11,6 +11,8 @@
 #include "WaterItem.h"
 #include <Eigen/Dense>
 #include <MapImageCvter/MapImageCvter.h>
+#include <filesystem>
+#include <tl/expected.hpp>
 
 class color_table_impl;
 
@@ -44,5 +46,15 @@ class converted_image_impl : public converted_image {
   };
   std::optional<height_maps> height_info(
       const build_options &option) const noexcept;
+
+  [[nodiscard]] static uint64_t convert_task_hash(
+      const_image_reference original_img,
+      const convert_option &option) noexcept;
+
+  std::string save_cache(const std::filesystem::path &file) const noexcept;
+
+  [[nodiscard]] static tl::expected<converted_image_impl, std::string>
+  load_cache(const color_table_impl &table,
+             const std::filesystem::path &file) noexcept;
 };
 #endif  // SLOPECRAFT_CONVERTED_IMAGE_H

@@ -3,6 +3,8 @@
 //
 
 #include <fmt/format.h>
+#include <boost/uuid/detail/md5.hpp>
+#include "SCLDefines.h"
 #include "converted_image.h"
 #include "color_table.h"
 #include "height_line.h"
@@ -117,4 +119,48 @@ converted_image_impl::height_info(const build_options &option) const noexcept {
                      .high_map = high_map,
                      .low_map = low_map,
                      .water_list = water_list};
+}
+
+uint64_t converted_image_impl::convert_task_hash(
+    const_image_reference original_img, const convert_option &option) noexcept {
+  boost::uuids::detail::md5 hash;
+
+  SC_HASH_ADD_DATA(hash, option.algo)
+  SC_HASH_ADD_DATA(hash, option.dither)
+  if (option.algo == SCL_convertAlgo::gaCvter) {
+    SC_HASH_ADD_DATA(hash, option.ai_cvter_opt.popSize)
+    SC_HASH_ADD_DATA(hash, option.ai_cvter_opt.maxGeneration)
+    SC_HASH_ADD_DATA(hash, option.ai_cvter_opt.maxFailTimes)
+    SC_HASH_ADD_DATA(hash, option.ai_cvter_opt.crossoverProb)
+    SC_HASH_ADD_DATA(hash, option.ai_cvter_opt.mutationProb)
+  }
+
+  hash.process_bytes(original_img.data, original_img.rows * original_img.cols);
+
+  decltype(hash)::digest_type dig;
+  hash.get_digest(dig);
+  std::array<uint64_t, 2> temp;
+  memcpy(temp.data(), dig, sizeof(temp));
+  return temp[0] ^ temp[1];
+}
+
+std::string converted_image_impl::save_cache(
+    const std::filesystem::path &file) const noexcept {
+  if (this->converter.save_cache(file.string().c_str())) {
+    return "Failed to open file.";
+  }
+  return {};
+}
+
+tl::expected<converted_image_impl, std::string>
+converted_image_impl::load_cache(const color_table_impl &table,
+                                 const std::filesystem::path &file) noexcept {
+  converted_image_impl ret{table};
+  if (!std::filesystem::is_regular_file(file)) {
+    return tl::make_unexpected("No such file");
+  }
+  if (!ret.converter.load_cache(file.string().c_str())) {
+    return tl::make_unexpected("Failed to load cache, the cache is incorrect");
+  }
+  return ret;
 }
