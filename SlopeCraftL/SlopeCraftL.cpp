@@ -27,7 +27,6 @@ This file is part of SlopeCraft.
 #include <libpng_reader.h>
 
 #include "SlopeCraftL.h"
-#include "TokiSlopeCraft.h"
 #include "mc_block.h"
 #include "WriteStringDeliver.h"
 #include "color_table.h"
@@ -48,8 +47,6 @@ void AbstractBlock::clear() noexcept {
   setNameEN("");
   // setWallUseable(false);
 }
-
-Kernel::Kernel() {}
 
 using namespace SlopeCraft;
 
@@ -291,12 +288,6 @@ impl_create_block_list_from_zip(const char *zip_path) noexcept {
 }
 
 extern "C" {
-
-SCL_EXPORT Kernel *SCL_createKernel() { return new TokiSlopeCraft; }
-SCL_EXPORT void SCL_destroyKernel(Kernel *k) {
-  delete static_cast<TokiSlopeCraft *>(k);
-}
-
 SCL_EXPORT AbstractBlock *SCL_createBlock() { return new mc_block; }
 SCL_EXPORT void SCL_destroyBlock(AbstractBlock *b) { delete b; }
 
@@ -356,14 +347,6 @@ double SCL_EXPORT SCL_getMutationProb(const AiCvterOpt *a) {
 //                                     const uint8_t **mapdata, int *num) {
 //   TokiSlopeCraft::getColorMapPtrs(rdata, gdata, bdata, mapdata, num);
 // }
-
-SCL_EXPORT const float *SCL_getBasicColorMapPtrs() {
-  return TokiSlopeCraft::getBasicColorMapPtrs();
-}
-
-SCL_EXPORT const char *SCL_getSCLVersion() {
-  return TokiSlopeCraft::getSCLVersion();
-}
 
 SCL_EXPORT SCL_gameVersion SCL_basecolor_version(uint8_t basecolor) {
   if (basecolor <= 51) {

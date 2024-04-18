@@ -30,7 +30,7 @@ set(Slope_SCL_internal_headers
     optimize_chain.h
     prim_glass_builder.h
     SCLDefines.h
-    TokiSlopeCraft.h
+    #    to_be_removed/TokiSlopeCraft.h
     WaterItem.h
     lossyCompressor.h
     mc_block.h
@@ -52,11 +52,11 @@ set(SlopeCraft_SCL_sources
     height_line.cpp
     optimize_chain.cpp
     prim_glass_builder.cpp
-    TokiSlopeCraft.cpp
-    TokiSlopeCraft_static_funs.cpp
-    TokiSlopeCraft_build.cpp
-    TokiSlopeCraft_convert.cpp
-    TokiSlopeCraft_cache.cpp
+    #    to_be_removed/TokiSlopeCraft.cpp
+    #    to_be_removed/TokiSlopeCraft_static_funs.cpp
+    #    to_be_removed/TokiSlopeCraft_build.cpp
+    #    to_be_removed/TokiSlopeCraft_convert.cpp
+    #    to_be_removed/TokiSlopeCraft_cache.cpp
     imagePreprocess.cpp
     lossyCompressor.cpp
     mc_block.cpp

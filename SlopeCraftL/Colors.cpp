@@ -21,7 +21,7 @@ This file is part of SlopeCraft.
 */
 
 #include "Colors.h"
-#include "TokiSlopeCraft.h"
+#include "Colorset.h"
 
 #include <ExternalConverters/ExternalConverterStaticInterface.h>
 
