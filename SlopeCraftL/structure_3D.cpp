@@ -40,11 +40,11 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
     fixed_opt.compress_method = compressSettings::noCompress;
     fixed_opt.glass_method = glassBridgeSettings::noBridge;
   }
-  option.ui.report_working_status(workStatus::buidingHeighMap);
-  option.main_progressbar.set_range(0, 9 * cvted.size(), 0);
+  fixed_opt.ui.report_working_status(workStatus::buidingHeighMap);
+  fixed_opt.main_progressbar.set_range(0, 9 * cvted.size(), 0);
   {
     std::unordered_map<rc_pos, water_y_range> water_list;
-    option.main_progressbar.add(cvted.size());
+    fixed_opt.main_progressbar.add(cvted.size());
   }
 
   Eigen::ArrayXi map_color, base_color, high_map, low_map;
@@ -86,7 +86,7 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
       if (yLow >= 1) ret.schem(x, yLow - 1, z) = 1;  // 柱底玻璃
     }
 
-    option.main_progressbar.add(cvted.size());
+    fixed_opt.main_progressbar.add(cvted.size());
 
     for (uint32_t r = -1; r < cvted.rows(); r++)  // 普通方块
     {
@@ -97,9 +97,9 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
         const int z = r + 1;
         if (y >= 1 && table.blocks[base_color(r + 1, c)].needGlass)
           ret.schem(x, y - 1, z) = 0 + 1;
-        if ((option.fire_proof &&
+        if ((fixed_opt.fire_proof &&
              table.blocks[base_color(r + 1, c)].burnable) ||
-            (option.enderman_proof &&
+            (fixed_opt.enderman_proof &&
              table.blocks[base_color(r + 1, c)].endermanPickable)) {
           if (y >= 1 && ret.schem(x, y - 1, z) == 0)
             ret.schem(x, y - 1, z) = 0 + 1;
@@ -117,10 +117,10 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
 
         ret.schem(x, y, z) = base_color(r + 1, c) + 1;
       }
-      option.main_progressbar.add(cvted.cols());
+      fixed_opt.main_progressbar.add(cvted.cols());
     }
 
-    option.main_progressbar.add(cvted.size());
+    fixed_opt.main_progressbar.add(cvted.size());
 
     for (auto it = water_list.cbegin(); it != water_list.cend(); ++it) {
       const int x = it->first.col + 1;
@@ -132,20 +132,21 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
       }
     }
   }
-  option.main_progressbar.set_range(0, 9 * cvted.size(), 8 * cvted.size());
+  fixed_opt.main_progressbar.set_range(0, 9 * cvted.size(), 8 * cvted.size());
   // build bridges
   if (table.map_type() == mapTypes::Slope &&
       fixed_opt.glass_method == glassBridgeSettings::withBridge) {
-    option.ui.report_working_status(workStatus::constructingBridges);
+    fixed_opt.ui.report_working_status(workStatus::constructingBridges);
 
-    option.sub_progressbar.set_range(0, 100, 0);
+    fixed_opt.sub_progressbar.set_range(0, 100, 0);
     const int step = cvted.size() / ret.schem.y_range();
 
-#warning "todo: Use prograss_callback in prim_glass_builder"
     prim_glass_builder glass_builder;
-    option.ui.keep_awake();
+    glass_builder.ui = fixed_opt.ui;
+    glass_builder.progress_bar = fixed_opt.sub_progressbar;
+    fixed_opt.ui.keep_awake();
     for (uint32_t y = 0; y < ret.schem.y_range(); y++) {
-      option.sub_progressbar.add(step);
+      fixed_opt.sub_progressbar.add(step);
       if (y % (fixed_opt.bridge_interval + 1) == 0) {
         std::array<int, 3> start, extension;  // x,z,y
         start[0] = 0;
@@ -168,15 +169,15 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
         continue;
       }
     }
-    option.ui.keep_awake();
-    option.sub_progressbar.set_range(0, 100, 100);
+    fixed_opt.ui.keep_awake();
+    fixed_opt.sub_progressbar.set_range(0, 100, 100);
   }
 
   if (fixed_opt.connect_mushrooms) {
     ret.schem.process_mushroom_states();
   }
-  option.main_progressbar.set_range(0, 9 * cvted.size(), 9 * cvted.size());
-  option.ui.report_working_status(workStatus::none);
+  fixed_opt.main_progressbar.set_range(0, 9 * cvted.size(), 9 * cvted.size());
+  fixed_opt.ui.report_working_status(workStatus::none);
 
   ret.map_color = map_color.cast<uint8_t>();
   return ret;

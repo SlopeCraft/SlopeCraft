@@ -92,10 +92,9 @@ class prim_glass_builder {
   enum blockType { air = 0, glass = 1, target = 127 };
   glassMap makeBridge(const TokiMap &_targetMap,
                       walkableMap *walkable = nullptr);
-  void **windPtr;
-  void (**progressRangeSetPtr)(void *, int, int, int);
-  void (**progressAddPtr)(void *, int);
-  void (**keepAwakePtr)(void *);
+
+  SlopeCraft::ui_callbacks ui;
+  SlopeCraft::progress_callbacks progress_bar;
 
  private:
   std::vector<rc_pos> targetPoints;

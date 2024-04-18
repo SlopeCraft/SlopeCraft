@@ -155,7 +155,7 @@ glassMap prim_glass_builder::makeBridge(const TokiMap &_targetMap,
           targetMaps[r][c],
           (walkable == nullptr) ? nullptr : (&walkableMaps[r][c]));
     }
-    (*progressRangeSetPtr)(*windPtr, 0, rowCount, r);
+    this->progress_bar.set_range(0, rowCount, r);
   }
   // qDebug("每个分区内的搭桥完毕，开始在分区间搭桥");
   std::stack<pairedEdge> interRegionEdges;
@@ -219,7 +219,7 @@ glassMap prim_glass_builder::makeBridge(const TokiMap &_targetMap,
   //  for (int r = 0; r < rowCount; r++)
   //    for (int c = 0; c < colCount; c++) pgb.recycle(algos[r][c]);
 
-  (*progressRangeSetPtr)(*windPtr, 0, 100, 100);
+  this->progress_bar.set_range(0, 100, 100);
   // qDebug()<<"用时"<<std::clock()-lastTime<<"毫秒";
 
   return result;
@@ -479,14 +479,6 @@ TokiMap impl_ySlice2TokiMap(const Eigen::Tensor<ele_t, 3> &raw) noexcept {
     if (raw(i) > 1) result(i) = prim_glass_builder::target;
   return result;
 }
-
-// TokiMap ySlice2TokiMap(const Eigen::Tensor<uint8_t, 3> &raw) noexcept {
-//   return impl_ySlice2TokiMap(raw);
-// }
-//
-// TokiMap ySlice2TokiMap_u16(const Eigen::Tensor<uint32_t, 3> &raw) noexcept {
-//   return impl_ySlice2TokiMap(raw);
-// }
 
 TokiMap ySlice2TokiMap_u16(const Eigen::Tensor<uint16_t, 3> &xzy,
                            std::span<const int, 3> start_xzy,
