@@ -33,9 +33,9 @@ This file is part of SlopeCraft.
 
 using namespace SlopeCraft;
 
-// AbstractBlock *AbstractBlock::create() { return new mc_block; }
+// mc_block_interface *mc_block_interface::create() { return new mc_block; }
 
-void AbstractBlock::clear() noexcept {
+void mc_block_interface::clear() noexcept {
   setBurnable(false);
   setDoGlow(false);
   setEndermanPickable(false);
@@ -288,8 +288,8 @@ impl_create_block_list_from_zip(const char *zip_path) noexcept {
 }
 
 extern "C" {
-SCL_EXPORT AbstractBlock *SCL_createBlock() { return new mc_block; }
-SCL_EXPORT void SCL_destroyBlock(AbstractBlock *b) { delete b; }
+SCL_EXPORT mc_block_interface *SCL_createBlock() { return new mc_block; }
+SCL_EXPORT void SCL_destroyBlock(mc_block_interface *b) { delete b; }
 
 SCL_EXPORT block_list_interface *SCL_createBlockList(
     const char *zip_filename, const block_list_create_info &option) {
@@ -306,38 +306,40 @@ SCL_EXPORT block_list_interface *SCL_createBlockList(
 
 SCL_EXPORT void SCL_destroyBlockList(block_list_interface *) {}
 
-SCL_EXPORT AiCvterOpt *SCL_createAiCvterOpt() { return new AiCvterOpt; }
-void SCL_EXPORT SCL_destroyAiCvterOpt(AiCvterOpt *a) { delete a; }
+SCL_EXPORT GA_converter_option *SCL_createAiCvterOpt() {
+  return new GA_converter_option;
+}
+void SCL_EXPORT SCL_destroyAiCvterOpt(GA_converter_option *a) { delete a; }
 
-void SCL_EXPORT SCL_setPopSize(AiCvterOpt *a, unsigned int p) {
+void SCL_EXPORT SCL_setPopSize(GA_converter_option *a, unsigned int p) {
   a->popSize = p;
 }
-void SCL_EXPORT SCL_setMaxGeneration(AiCvterOpt *a, unsigned int p) {
+void SCL_EXPORT SCL_setMaxGeneration(GA_converter_option *a, unsigned int p) {
   a->maxGeneration = p;
 }
-void SCL_EXPORT SCL_setMaxFailTimes(AiCvterOpt *a, unsigned int p) {
+void SCL_EXPORT SCL_setMaxFailTimes(GA_converter_option *a, unsigned int p) {
   a->maxFailTimes = p;
 }
-void SCL_EXPORT SCL_setCrossoverProb(AiCvterOpt *a, double p) {
+void SCL_EXPORT SCL_setCrossoverProb(GA_converter_option *a, double p) {
   a->crossoverProb = p;
 }
-void SCL_EXPORT SCL_setMutationProb(AiCvterOpt *a, double p) {
+void SCL_EXPORT SCL_setMutationProb(GA_converter_option *a, double p) {
   a->mutationProb = p;
 }
 
-unsigned int SCL_EXPORT SCL_getPopSize(const AiCvterOpt *a) {
+unsigned int SCL_EXPORT SCL_getPopSize(const GA_converter_option *a) {
   return a->popSize;
 }
-unsigned int SCL_EXPORT SCL_getMaxGeneration(const AiCvterOpt *a) {
+unsigned int SCL_EXPORT SCL_getMaxGeneration(const GA_converter_option *a) {
   return a->maxGeneration;
 }
-unsigned int SCL_EXPORT SCL_getMaxFailTimes(const AiCvterOpt *a) {
+unsigned int SCL_EXPORT SCL_getMaxFailTimes(const GA_converter_option *a) {
   return a->maxFailTimes;
 }
-double SCL_EXPORT SCL_getCrossoverProb(const AiCvterOpt *a) {
+double SCL_EXPORT SCL_getCrossoverProb(const GA_converter_option *a) {
   return a->crossoverProb;
 }
-double SCL_EXPORT SCL_getMutationProb(const AiCvterOpt *a) {
+double SCL_EXPORT SCL_getMutationProb(const GA_converter_option *a) {
   return a->mutationProb;
 }
 
@@ -378,7 +380,7 @@ SCL_EXPORT void SCL_destroy_color_table(color_table *c) { delete c; }
 
 SCL_EXPORT void SCL_destroy_converted_image(converted_image *c) { delete c; }
 SCL_EXPORT void SCL_destroy_structure_3D(structure_3D *s) { delete s; }
-// SCL_EXPORT int SCL_getBlockPalette(const AbstractBlock **blkpp,
+// SCL_EXPORT int SCL_getBlockPalette(const mc_block_interface **blkpp,
 //                                    size_t capacity) {
 //   return TokiSlopeCraft::getBlockPalette(blkpp, capacity);
 // }

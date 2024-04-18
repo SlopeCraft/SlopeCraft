@@ -191,7 +191,7 @@ void SCWind::on_pb_save_preset_clicked() noexcept {
 }
 
 inline int impl_select_blk_by_id(
-    const std::vector<const SlopeCraft::AbstractBlock *> &blks,
+    const std::vector<const SlopeCraft::mc_block_interface *> &blks,
     std::string_view keyword) noexcept {
   int result = -1;
   for (int idx = 0; idx < int(blks.size()); idx++) {
@@ -209,44 +209,38 @@ inline int impl_select_blk_by_id(
 
 void SCWind::on_pb_prefer_concrete_clicked() noexcept {
   this->ui->blm->select_block_by_callback(
-      [](const std::vector<const SlopeCraft::AbstractBlock *> &blks) -> int {
-        return impl_select_blk_by_id(blks, "concrete");
-      });
+      [](const std::vector<const SlopeCraft::mc_block_interface *> &blks)
+          -> int { return impl_select_blk_by_id(blks, "concrete"); });
 }
 
 void SCWind::on_pb_prefer_wool_clicked() noexcept {
   this->ui->blm->select_block_by_callback(
-      [](const std::vector<const SlopeCraft::AbstractBlock *> &blks) -> int {
-        return impl_select_blk_by_id(blks, "wool");
-      });
+      [](const std::vector<const SlopeCraft::mc_block_interface *> &blks)
+          -> int { return impl_select_blk_by_id(blks, "wool"); });
 }
 
 void SCWind::on_pb_prefer_glass_clicked() noexcept {
   this->ui->blm->select_block_by_callback(
-      [](const std::vector<const SlopeCraft::AbstractBlock *> &blks) -> int {
-        return impl_select_blk_by_id(blks, "stained_glass");
-      });
+      [](const std::vector<const SlopeCraft::mc_block_interface *> &blks)
+          -> int { return impl_select_blk_by_id(blks, "stained_glass"); });
 }
 
 void SCWind::on_pb_prefer_planks_clicked() noexcept {
   this->ui->blm->select_block_by_callback(
-      [](const std::vector<const SlopeCraft::AbstractBlock *> &blks) -> int {
-        return impl_select_blk_by_id(blks, "planks");
-      });
+      [](const std::vector<const SlopeCraft::mc_block_interface *> &blks)
+          -> int { return impl_select_blk_by_id(blks, "planks"); });
 }
 
 void SCWind::on_pb_prefer_logs_clicked() noexcept {
   this->ui->blm->select_block_by_callback(
-      [](const std::vector<const SlopeCraft::AbstractBlock *> &blks) -> int {
-        return impl_select_blk_by_id(blks, "log");
-      });
+      [](const std::vector<const SlopeCraft::mc_block_interface *> &blks)
+          -> int { return impl_select_blk_by_id(blks, "log"); });
 }
 
 void SCWind::on_pb_prefer_slabs_clicked() noexcept {
   this->ui->blm->select_block_by_callback(
-      [](const std::vector<const SlopeCraft::AbstractBlock *> &blks) -> int {
-        return impl_select_blk_by_id(blks, "_slab");
-      });
+      [](const std::vector<const SlopeCraft::mc_block_interface *> &blks)
+          -> int { return impl_select_blk_by_id(blks, "_slab"); });
 }
 
 void SCWind::on_pb_cvt_current_clicked() noexcept {
@@ -967,7 +961,7 @@ void SCWind::on_ac_test_blocklist_triggered() noexcept {
   }
   prev_dir = QFileInfo{filename}.dir().path();
 
-  std::vector<const SlopeCraft::AbstractBlock *> blks;
+  std::vector<const SlopeCraft::mc_block_interface *> blks;
   std::vector<uint8_t> basecolors;
   for (uint8_t basecolor = 0; basecolor <= SlopeCraft::SCL_maxBaseColor();
        basecolor++) {

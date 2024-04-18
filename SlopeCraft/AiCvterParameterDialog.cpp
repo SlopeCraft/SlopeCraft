@@ -31,7 +31,7 @@ AiCvterParameterDialog::AiCvterParameterDialog(SCWind *parent,
     : QDialog(parent), ui(new Ui::AiCvterParameterDialog), kernel(kernelp) {
   this->ui->setupUi(this);
 
-  SlopeCraft::AiCvterOpt opt = *this->kernel->aiCvterOpt();
+  SlopeCraft::GA_converter_option opt = *this->kernel->aiCvterOpt();
   opt.version = SC_VERSION_U64;
 
   this->ui->sb_pop_size->setValue(opt.popSize);
@@ -43,8 +43,9 @@ AiCvterParameterDialog::AiCvterParameterDialog(SCWind *parent,
 
 AiCvterParameterDialog::~AiCvterParameterDialog() { delete this->ui; }
 
-SlopeCraft::AiCvterOpt AiCvterParameterDialog::current_option() const noexcept {
-  SlopeCraft::AiCvterOpt ret;
+SlopeCraft::GA_converter_option AiCvterParameterDialog::current_option()
+    const noexcept {
+  SlopeCraft::GA_converter_option ret;
   ret.crossoverProb = this->ui->dsb_crossover_prob->value();
   ret.mutationProb = this->ui->dsb_mutate_prob->value();
   ret.maxFailTimes = this->ui->sb_max_early_stop->value();

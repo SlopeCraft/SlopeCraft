@@ -37,10 +37,10 @@ class color_table_impl : public SlopeCraft::color_table {
 
   size_t num_blocks() const noexcept final { return this->blocks.size(); }
 
-  void visit_blocks(void (*fun)(const AbstractBlock *, void *custom_data),
+  void visit_blocks(void (*fun)(const mc_block_interface *, void *custom_data),
                     void *custom_data) const final {
     for (auto &blk : this->blocks) {
-      fun(static_cast<const AbstractBlock *>(&blk), custom_data);
+      fun(static_cast<const mc_block_interface *>(&blk), custom_data);
     }
   }
 

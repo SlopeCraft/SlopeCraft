@@ -34,7 +34,7 @@ using namespace SlopeCraft;
 
 typedef std::vector<std::string> stringList;
 
-class mc_block : public ::SlopeCraft::AbstractBlock {
+class mc_block : public ::SlopeCraft::mc_block_interface {
  public:
   mc_block();
   ~mc_block(){};
@@ -103,7 +103,7 @@ class mc_block : public ::SlopeCraft::AbstractBlock {
     this->imageFilename = _ifn;
   }
 
-  void copyTo(AbstractBlock *dst) const noexcept override {
+  void copyTo(mc_block_interface *dst) const noexcept override {
     *static_cast<mc_block *>(dst) = *this;
   }
 
@@ -134,13 +134,13 @@ class block_list : public ::SlopeCraft::block_list_interface {
 
  public:
   size_t size() const noexcept override { return m_blocks.size(); }
-  size_t get_blocks(AbstractBlock **dst, uint8_t *,
+  size_t get_blocks(mc_block_interface **dst, uint8_t *,
                     size_t capacity_in_elements) noexcept override;
 
-  size_t get_blocks(const AbstractBlock **dst, uint8_t *,
+  size_t get_blocks(const mc_block_interface **dst, uint8_t *,
                     size_t capacity_in_elements) const noexcept override;
 
-  bool contains(const AbstractBlock *cp) const noexcept override {
+  bool contains(const mc_block_interface *cp) const noexcept override {
     const mc_block *ptr = dynamic_cast<const mc_block *>(cp);
     return this->m_blocks.contains(
         reinterpret_cast<std::unique_ptr<mc_block> &>(ptr));

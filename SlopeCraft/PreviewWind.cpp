@@ -53,7 +53,7 @@ void PreviewWind::setup_data(const SlopeCraft::Kernel* kernel) noexcept {
     kernel->getBlockCounts(&total_blks, count_list.data());
     this->set_total_count(total_blks);
   }
-  std::vector<const SlopeCraft::AbstractBlock*> blkp_arr;
+  std::vector<const SlopeCraft::mc_block_interface*> blkp_arr;
   {
     const size_t num = kernel->getBlockPalette(nullptr, 0);
     blkp_arr.resize(num);

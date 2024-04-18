@@ -15,7 +15,7 @@ class PreviewWind;
 }
 
 struct material_item {
-  const SlopeCraft::AbstractBlock* blk{nullptr};
+  const SlopeCraft::mc_block_interface* blk{nullptr};
   int count{0};
 };
 

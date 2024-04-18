@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
         &warn_sd,
         &err_sd,
     };
-    blocklist = SlopeCraft::SCL_createBlockList(archive_path, option);
+    blocklist = SlopeCraft::SCL_create_block_list(archive_path, option);
     errmsg.resize(err_sd.size);
     warnings.resize(warn_sd.size);
 
@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
   }
 
   printf("%s loaded successfully\n", archive_path);
-  SlopeCraft::SCL_destroyBlockList(blocklist);
+  SlopeCraft::SCL_destroy_block_list(blocklist);
 
   return 0;
   // if (archive.getE) return 0;

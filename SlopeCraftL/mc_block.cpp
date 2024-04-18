@@ -35,7 +35,7 @@ mc_block::mc_block() {
   // wallUseable=true;
 }
 
-size_t block_list::get_blocks(AbstractBlock **dst, uint8_t *dst_basecolor,
+size_t block_list::get_blocks(mc_block_interface **dst, uint8_t *dst_basecolor,
                               size_t capacity_in_elements) noexcept {
   if (dst == nullptr || dst_basecolor == nullptr || capacity_in_elements <= 0) {
     return 0;
@@ -53,7 +53,8 @@ size_t block_list::get_blocks(AbstractBlock **dst, uint8_t *dst_basecolor,
   return counter;
 }
 
-size_t block_list::get_blocks(const AbstractBlock **dst, uint8_t *dst_basecolor,
+size_t block_list::get_blocks(const mc_block_interface **dst,
+                              uint8_t *dst_basecolor,
                               size_t capacity_in_elements) const noexcept {
   if (dst == nullptr || dst_basecolor == nullptr || capacity_in_elements <= 0) {
     return 0;

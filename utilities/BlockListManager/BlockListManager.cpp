@@ -55,7 +55,7 @@ BlockListManager::impl_addblocklist(const QString &filename) noexcept {
   SlopeCraft::block_list_create_info option{SC_VERSION_U64, &sd_warn, &sd_err};
 
   SlopeCraft::block_list_interface *bli =
-      SlopeCraft::SCL_createBlockList(filename.toLocal8Bit().data(), option);
+      SlopeCraft::SCL_create_block_list(filename.toLocal8Bit().data(), option);
 
   errmsg.resize(sd_err.size);
   warning.resize(sd_warn.size);
@@ -76,7 +76,7 @@ BlockListManager::impl_addblocklist(const QString &filename) noexcept {
     }
   }
 
-  std::vector<SlopeCraft::AbstractBlock *> blockps;
+  std::vector<SlopeCraft::mc_block_interface *> blockps;
   std::vector<uint8_t> base_colors;
   base_colors.resize(bli->size());
   blockps.resize(bli->size());
@@ -118,7 +118,8 @@ void BlockListManager::when_version_updated() noexcept {
 
 void BlockListManager::get_blocklist(
     std::vector<uint8_t> &enable_list,
-    std::vector<const SlopeCraft::AbstractBlock *> &block_list) const noexcept {
+    std::vector<const SlopeCraft::mc_block_interface *> &block_list)
+    const noexcept {
   enable_list.resize(64);
   block_list.resize(64);
 

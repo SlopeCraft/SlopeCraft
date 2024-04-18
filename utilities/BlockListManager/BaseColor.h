@@ -12,7 +12,7 @@ class BaseColorWidget;
 }
 
 using select_callback_t = std::function<int(
-    const std::vector<const SlopeCraft::AbstractBlock*>& blks)>;
+    const std::vector<const SlopeCraft::mc_block_interface*>& blks)>;
 
 class BaseColorWidget : public QGroupBox {
   Q_OBJECT
@@ -27,7 +27,7 @@ class BaseColorWidget : public QGroupBox {
 
   void set_color(uint32_t argb32) noexcept;
 
-  void add_block(SlopeCraft::AbstractBlock* ab) noexcept;
+  void add_block(SlopeCraft::mc_block_interface* ab) noexcept;
 
   void finish_blocks() noexcept;
 
@@ -39,7 +39,7 @@ class BaseColorWidget : public QGroupBox {
 
   bool is_enabled() const noexcept;
 
-  const SlopeCraft::AbstractBlock* selected_block() const noexcept {
+  const SlopeCraft::mc_block_interface* selected_block() const noexcept {
     return this->blocks[this->selected_idx()]->attachted_block();
   }
 

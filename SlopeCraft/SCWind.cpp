@@ -438,7 +438,7 @@ void SCWind::when_blocklist_changed() noexcept {
 
 void SCWind::kernel_set_type() noexcept {
   std::vector<uint8_t> a;
-  std::vector<const SlopeCraft::AbstractBlock *> b;
+  std::vector<const SlopeCraft::mc_block_interface *> b;
 
   this->ui->blm->get_blocklist(a, b);
 

@@ -24,7 +24,7 @@ endif ()
 set(Slope_SCL_internal_headers
     ${CMAKE_SOURCE_DIR}/utilities/SC_GlobalEnums.h
 
-    # AiCvterOpt.h
+    # GA_converter_option.h
     height_line.h
     optimize_chain.h
     prim_glass_builder.h
@@ -43,7 +43,7 @@ set(SlopeCraft_SCL_sources
 
 
     SlopeCraftL.h
-    # AiCvterOpt.cpp
+    # GA_converter_option.cpp
     color_source.cpp
     height_line.cpp
     optimize_chain.cpp

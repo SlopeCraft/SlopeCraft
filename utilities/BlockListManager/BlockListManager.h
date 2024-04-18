@@ -25,7 +25,7 @@ QString serialize_preset(const blockListPreset &preset) noexcept;
 class BlockListDeleter {
  public:
   void operator()(SlopeCraft::block_list_interface *ptr) noexcept {
-    SlopeCraft::SCL_destroyBlockList(ptr);
+    SlopeCraft::SCL_destroy_block_list(ptr);
   }
 };
 
@@ -72,8 +72,8 @@ class BlockListManager : public QWidget {
   }
 
   void get_blocklist(std::vector<uint8_t> &enable_list,
-                     std::vector<const SlopeCraft::AbstractBlock *> &block_list)
-      const noexcept;
+                     std::vector<const SlopeCraft::mc_block_interface *>
+                         &block_list) const noexcept;
 
   bool loadPreset(const blockListPreset &preset) noexcept;
 

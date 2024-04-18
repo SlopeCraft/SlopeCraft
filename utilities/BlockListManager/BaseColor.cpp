@@ -28,7 +28,7 @@ void BaseColorWidget::set_color(uint32_t color) noexcept {
 constexpr int basecolor_cols = 3;
 static_assert(basecolor_cols >= 1);
 
-void BaseColorWidget::add_block(SlopeCraft::AbstractBlock* ab) noexcept {
+void BaseColorWidget::add_block(SlopeCraft::mc_block_interface* ab) noexcept {
   BlockWidget* bw = new BlockWidget(this, ab);
 
   const int idx = this->blocks.size();
@@ -196,7 +196,7 @@ void BaseColorWidget::set_enabled(bool enabled) noexcept {
 }
 
 void BaseColorWidget::select_by_callback(const select_callback_t& fun) {
-  std::vector<const SlopeCraft::AbstractBlock*> blks;
+  std::vector<const SlopeCraft::mc_block_interface*> blks;
   blks.reserve(this->blocks.size());
   for (auto bw : this->blocks) {
     blks.emplace_back(bw->attachted_block());
