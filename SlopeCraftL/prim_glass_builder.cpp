@@ -127,7 +127,7 @@ glassMap prim_glass_builder::makeBridge(const TokiMap &_targetMap,
   const int rowCount = ceil(double(_targetMap.rows()) / unitL);
   const int colCount = ceil(double(_targetMap.cols()) / unitL);
 
-  std::vector<std::vector<prim_glass_builder *>> algos(rowCount);
+  std::vector<std::vector<prim_glass_builder>> algos(rowCount);
   std::vector<std::vector<glassMap>> glassMaps(rowCount);
   std::vector<std::vector<walkableMap>> walkableMaps(rowCount);
   std::vector<std::vector<TokiMap>> targetMaps(rowCount);
@@ -144,14 +144,14 @@ glassMap prim_glass_builder::makeBridge(const TokiMap &_targetMap,
           std::min(long(unitL), long(_targetMap.rows() - r * unitL)),
           std::min(long(unitL), long(_targetMap.cols() - c * unitL)));
 
-      algos[r][c] = pgb.animate();
+      algos[r][c] = prim_glass_builder{};
     }
   }
   // qDebug("分区分块完毕，开始在每个分区内搭桥");
   for (int r = 0; r < rowCount; r++) {
     for (int c = 0; c < colCount; c++) {
       // qDebug()<<"开始处理第 ["<<r<<","<<c<<"] 块分区";
-      glassMaps[r][c] = algos[r][c]->make4SingleMap(
+      glassMaps[r][c] = algos[r][c].make4SingleMap(
           targetMaps[r][c],
           (walkable == nullptr) ? nullptr : (&walkableMaps[r][c]));
     }
@@ -215,9 +215,9 @@ glassMap prim_glass_builder::makeBridge(const TokiMap &_targetMap,
     if (walkable != nullptr) interRegionEdges.top().drawEdge(*walkable, true);
     interRegionEdges.pop();
   }
-  // qDebug("拼合分区完毕，开始 delete 各个分区的 algo");
-  for (int r = 0; r < rowCount; r++)
-    for (int c = 0; c < colCount; c++) pgb.recycle(algos[r][c]);
+  //  // qDebug("拼合分区完毕，开始 delete 各个分区的 algo");
+  //  for (int r = 0; r < rowCount; r++)
+  //    for (int c = 0; c < colCount; c++) pgb.recycle(algos[r][c]);
 
   (*progressRangeSetPtr)(*windPtr, 0, 100, 100);
   // qDebug()<<"用时"<<std::clock()-lastTime<<"毫秒";
@@ -272,11 +272,11 @@ glassMap prim_glass_builder::make4SingleMap(const TokiMap &_targetMap,
   return result;
 }
 
-pairedEdge prim_glass_builder::connectSingleMaps(const prim_glass_builder *map1,
+pairedEdge prim_glass_builder::connectSingleMaps(const prim_glass_builder &map1,
                                                  rc_pos offset1,
-                                                 const prim_glass_builder *map2,
+                                                 const prim_glass_builder &map2,
                                                  rc_pos offset2) {
-  if (map1->targetPoints.size() <= 0 || map2->targetPoints.size() <= 0)
+  if (map1.targetPoints.size() <= 0 || map2.targetPoints.size() <= 0)
     return pairedEdge();
 
   uint32_t offsetR1 = offset1.row, offsetC1 = offset1.col;
@@ -289,9 +289,9 @@ pairedEdge prim_glass_builder::connectSingleMaps(const prim_glass_builder *map1,
   pairedEdge min;
   min.lengthSquare = 0x7FFFFFFF;
 
-  for (auto it = map1->targetPoints.cbegin(); it != map1->targetPoints.cend();
+  for (auto it = map1.targetPoints.cbegin(); it != map1.targetPoints.cend();
        it++)
-    for (auto jt = map2->targetPoints.cbegin(); jt != map2->targetPoints.cend();
+    for (auto jt = map2.targetPoints.cbegin(); jt != map2.targetPoints.cend();
          jt++) {
       r1 = offsetR1 + it->row;
       c1 = offsetC1 + it->col;

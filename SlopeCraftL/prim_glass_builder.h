@@ -31,7 +31,6 @@ This file is part of SlopeCraft.
 #include <vector>
 #include <utilities/Schem/Schem.h>
 
-#include "object_pool.hpp"
 #include "SCLDefines.h"
 #include "water_item.h"
 
@@ -88,10 +87,6 @@ class prim_glass_builder {
  public:
   prim_glass_builder();
 
-  template <typename T, size_t S>
-  friend class tf::ObjectPool;
-  void *_object_pool_block;
-
   static const uint32_t unitL = 32;
   static const uint32_t reportRate = 50;
   enum blockType { air = 0, glass = 1, target = 127 };
@@ -109,12 +104,11 @@ class prim_glass_builder {
   void addEdgesToGraph();
   void runPrim();
   glassMap make4SingleMap(const TokiMap &_targetMap, walkableMap *walkable);
-  static pairedEdge connectSingleMaps(const prim_glass_builder *map1,
+  static pairedEdge connectSingleMaps(const prim_glass_builder &map1,
                                       rc_pos offset1,
-                                      const prim_glass_builder *map2,
+                                      const prim_glass_builder &map2,
                                       rc_pos offset2);
 };
-inline tf::ObjectPool<prim_glass_builder> pgb;
 
 EImage TokiMap2EImage(const TokiMap &);
 
