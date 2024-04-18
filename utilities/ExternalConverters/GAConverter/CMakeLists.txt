@@ -18,7 +18,7 @@ set(SlopeCraft_GAConverter_sources
 )
 
 add_library(GAConverter STATIC ${SlopeCraft_GAConverter_sources})
-
+target_include_directories(GAConverter PRIVATE "${CMAKE_BINARY_DIR}/SlopeCraftL")
 target_link_libraries(GAConverter PUBLIC ColorManip)
 #target_include_directories(GAConverter PUBLIC
 #    ../../ColorManip
@@ -27,7 +27,7 @@ target_link_libraries(GAConverter PUBLIC ColorManip)
 find_package(Eigen3 REQUIRED)
 target_link_libraries(GAConverter PUBLIC OpenMP::OpenMP_CXX Eigen3::Eigen Heu::Genetic)
 
-target_compile_features(GAConverter PRIVATE cxx_std_20)
+target_compile_features(GAConverter PRIVATE cxx_std_23)
 
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     set_target_properties(GAConverter PROPERTIES POSITION_INDEPENDENT_CODE TRUE)

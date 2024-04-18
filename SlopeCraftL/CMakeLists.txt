@@ -33,7 +33,6 @@ set(Slope_SCL_internal_headers
     WaterItem.h
     lossyCompressor.h
     mc_block.h
-    SlopeCraftL_global.h
     WriteStringDeliver.h
     structure_3D.h
     color_table.h
@@ -71,11 +70,15 @@ add_definitions(-DSLOPECRAFTL_LIBRARY)
 
 add_library(SlopeCraftL SHARED ${SlopeCraft_SCL_sources})
 
+include(GenerateExportHeader)
+generate_export_header(SlopeCraftL BASE_NAME SCL EXPORT_FILE_NAME SlopeCraftL_global.h)
+
 # add_library(SlopeCraftL_C SHARED ${SlopeCraft_SCL_sources})
 target_compile_features(SlopeCraftL PRIVATE cxx_std_23)
 target_precompile_headers(SlopeCraftL PRIVATE ${SlopeCraft_SCL_internal_headers})
-target_include_directories(SlopeCraftL INTERFACE
+target_include_directories(SlopeCraftL PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<INSTALL_INTERFACE:include>)
 target_include_directories(SlopeCraftL PRIVATE
     ${SlopeCraft_Nlohmann_json_include_dir}

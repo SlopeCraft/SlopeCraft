@@ -22,10 +22,16 @@ This file is part of SlopeCraft.
 
 #ifndef KERNEL_H
 #define KERNEL_H
-#include <stddef.h>
-#include <stdint.h>
+#include <cstdint>
+#include <cstddef>
 
 #include "SlopeCraftL_global.h"
+
+#ifdef SLOPECRAFTL_NOT_INSTALLED
+#include <SC_version_buildtime.h>
+#else
+#include "SC_version_buildtime.h"
+#endif  // SLOPECRAFTL_NOT_INSTALLED
 
 // define enumerations first
 #ifdef SCL_FIND_GlobalEnums_BY_PATH
