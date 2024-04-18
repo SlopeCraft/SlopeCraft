@@ -67,9 +67,7 @@ class color_table_impl : public SlopeCraft::color_table {
       StringDeliver *error) const noexcept final {
     auto err =
         this->save_convert_cache(original_img, option, cvted, cache_root_dir);
-    if (error) {
-      write(*error, err);
-    }
+    write_to_sd(error, err);
     return err.empty();
   }
 
@@ -82,15 +80,12 @@ class color_table_impl : public SlopeCraft::color_table {
       const char *cache_root_dir, StringDeliver *error) const noexcept final {
     auto res = this->load_convert_cache(original_img, option, cache_root_dir);
     if (!res) {
-      if (error) {
-        write(*error, res.error());
-      }
+      write_to_sd(error, res.error());
       return nullptr;
     }
 
-    if (error) {
-      write(*error, "");
-    }
+    write_to_sd(error, "");
+
     return new converted_image_impl{std::move(res.value())};
   }
 

@@ -304,9 +304,9 @@ SCL_EXPORT block_list_interface *SCL_createBlockList(
     const char *zip_filename, const block_list_create_info &option) {
   auto [res, warnings] = impl_create_block_list_from_zip(zip_filename);
 
-  SlopeCraft::write(*option.warnings, warnings);
+  SlopeCraft::write_to_sd(option.warnings, warnings);
   if (!res) {
-    SlopeCraft::write(*option.error, res.error());
+    SlopeCraft::write_to_sd(option.error, res.error());
     return nullptr;
   }
 

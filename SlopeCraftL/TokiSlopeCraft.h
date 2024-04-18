@@ -249,7 +249,7 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
       const flag_diagram_options &option) const noexcept override {
     std::string err = this->export_flat_diagram(filename_local, option);
     if (option.err != nullptr) {
-      write(*option.err, err);
+      write_to_sd(option.err, err);
     }
     return err.empty();
   }
@@ -354,7 +354,7 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   bool saveConvertCache(StringDeliver &_err) const noexcept override {
     std::string err;
     this->save_convert_cache(err);
-    write(_err, err);
+    write_to_sd(&_err, err);
     return err.empty();
   }
 
@@ -368,7 +368,7 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
   bool saveBuildCache(StringDeliver &_err) const noexcept override {
     std::string err;
     this->save_build_cache(err);
-    write(_err, err);
+    write_to_sd(&_err, err);
     return err.empty();
   }
 
@@ -380,7 +380,7 @@ class TokiSlopeCraft : public ::SlopeCraft::Kernel {
                  const test_blocklist_options &option) const noexcept override {
     std::string err = this->impl_make_tests(filename, option);
     if (option.err != nullptr) {
-      write(*option.err, err);
+      write_to_sd(option.err, err);
     }
     return err.empty();
   }
