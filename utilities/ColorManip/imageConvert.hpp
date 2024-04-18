@@ -671,7 +671,7 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
   }
 
  public:
-  uint64_t task_hash() const noexcept {
+  [[deprecated]] uint64_t task_hash() const noexcept {
     return this->task_hash(this->algo, this->dither);
   }
 

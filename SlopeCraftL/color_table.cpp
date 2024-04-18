@@ -172,9 +172,9 @@ std::filesystem::path color_table_impl::convert_task_cache_filename(
     const_image_reference original_img, const convert_option &option,
     const char *cache_root_dir) const noexcept {
   auto self_cache_dir = this->self_cache_dir(cache_root_dir);
+  self_cache_dir.append("convert");
   self_cache_dir.append(fmt::format(
-      "{:x}/convert_cache",
-      converted_image_impl::convert_task_hash(original_img, option)));
+      "{:x}", converted_image_impl::convert_task_hash(original_img, option)));
   return self_cache_dir;
 }
 
@@ -214,4 +214,71 @@ color_table_impl::load_convert_cache(
   return converted_image_impl::load_cache(
       *this,
       this->convert_task_cache_filename(original_img, option, cache_root_dir));
+}
+
+std::filesystem::path color_table_impl::build_task_cache_filename(
+    const converted_image &cvted_, const build_options &opt,
+    const char *cache_root_dir) const noexcept {
+  boost::uuids::detail::md5 hash;
+  SC_HASH_ADD_DATA(hash, opt.max_allowed_height)
+  SC_HASH_ADD_DATA(hash, opt.bridge_interval)
+  SC_HASH_ADD_DATA(hash, opt.compress_method)
+  SC_HASH_ADD_DATA(hash, opt.glass_method)
+  SC_HASH_ADD_DATA(hash, opt.fire_proof)
+  SC_HASH_ADD_DATA(hash, opt.enderman_proof)
+  SC_HASH_ADD_DATA(hash, opt.connect_mushrooms)
+
+  auto &cvted = dynamic_cast<const converted_image_impl &>(cvted_);
+  // this can be optimized
+  auto map_mat = cvted.converter.mapcolor_matrix();
+  hash.process_bytes(map_mat.data(), map_mat.size() * sizeof(uint8_t));
+
+  decltype(hash)::digest_type dig;
+  hash.get_digest(dig);
+  std::array<uint64_t, 2> dig_u64{0, 0};
+  memcpy(dig_u64.data(), dig, sizeof(dig));
+  const uint64_t hash_u64 = dig_u64[0] ^ dig_u64[1];
+
+  auto path = this->self_cache_dir(cache_root_dir);
+  path.append("build");
+  path.append(fmt::format("{:x}", hash_u64));
+  return path;
+}
+
+bool color_table_impl::save_build_cache(const converted_image &cvted,
+                                        const build_options &option,
+                                        const structure_3D &structure,
+                                        const char *cache_root_dir,
+                                        StringDeliver *error) const noexcept {
+  const auto filename =
+      this->build_task_cache_filename(cvted, option, cache_root_dir);
+  auto err_msg =
+      dynamic_cast<const structure_3D_impl &>(structure).save_cache(filename);
+  write_to_sd(error, err_msg);
+
+  return err_msg.empty();
+}
+
+bool color_table_impl::has_build_cache(
+    const SlopeCraft::converted_image &cvted,
+    const SlopeCraft::build_options &option,
+    const char *cache_root_dir) const noexcept {
+  const auto filename =
+      this->build_task_cache_filename(cvted, option, cache_root_dir);
+  return std::filesystem::is_regular_file(filename);
+}
+
+structure_3D *color_table_impl::load_build_cache(
+    const SlopeCraft::converted_image &cvted,
+    const SlopeCraft::build_options &option, const char *cache_root_dir,
+    SlopeCraft::StringDeliver *error) const noexcept {
+  const auto filename =
+      this->build_task_cache_filename(cvted, option, cache_root_dir);
+  auto res = structure_3D_impl::load_cache(filename);
+  if (res) {
+    write_to_sd(error, "");
+    return new structure_3D_impl{std::move(res.value())};
+  }
+  write_to_sd(error, res.error());
+  return nullptr;
 }

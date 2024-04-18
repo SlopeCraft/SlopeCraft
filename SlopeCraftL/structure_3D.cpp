@@ -2,6 +2,13 @@
 // Created by joseph on 4/17/24.
 //
 #include <fmt/format.h>
+#include <boost/iostreams/filtering_stream.hpp>
+#include <boost/iostreams/device/file.hpp>
+#include <boost/iostreams/filter/zstd.hpp>
+#include <zstd.h>
+#include <cereal/cereal.hpp>
+#include <cereal/archives/binary.hpp>
+
 #include "structure_3D.h"
 #include "color_table.h"
 #include "lossyCompressor.h"
@@ -171,7 +178,7 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
   option.main_progressbar.set_range(0, 9 * cvted.size(), 9 * cvted.size());
   option.ui.report_working_status(workStatus::none);
 
-  ret.map_color = std::move(map_color);
+  ret.map_color = map_color.cast<uint8_t>();
   return ret;
 }
 
@@ -252,4 +259,75 @@ bool structure_3D_impl::export_WE_schem(
 
   option.progressbar.set_range(0, 100, 100);
   return true;
+}
+
+namespace cereal {
+template <class archive>
+void save(archive &ar, const Eigen::ArrayXX<uint8_t> &mat) {
+  ar(mat.rows(), mat.cols());
+  ar(cereal::binary_data(mat.data(), mat.size()));
+}
+
+template <class archive>
+void load(archive &ar, Eigen::ArrayXX<uint8_t> &mat) {
+  Eigen::Index rows{0}, cols{0};
+  ar(rows, cols);
+  if (rows < 0 || cols < 0) {
+    throw std::runtime_error{
+        fmt::format("Found negative shape when deserializing "
+                    "Eigen::ArrayXX<uint8_t>, {} rows and {} cols",
+                    rows, cols)};
+  }
+  mat.resize(rows, cols);
+  ar(cereal::binary_data(mat.data(), mat.size() * sizeof(uint8_t)));
+}
+}  // namespace cereal
+
+std::string structure_3D_impl::save_cache(
+    const std::filesystem::path &filename) const noexcept {
+  try {
+    std::filesystem::create_directories(filename.parent_path());
+    boost::iostreams::filtering_ostream ofs{};
+    ofs.set_auto_close(true);
+    {
+      boost::iostreams::zstd_params params;
+      // ZSTD_defaultCLevel() doesn't exist below zstd 1.5
+#if ZSTD_VERSION_MINOR >= 5
+      params.level = uint32_t(ZSTD_defaultCLevel());
+#else
+      params.level = uint32_t(ZSTD_CLEVEL_DEFAULT);
+#endif
+      ofs.push(boost::iostreams::zstd_compressor{params});
+      ofs.push(boost::iostreams::file_sink{filename, std::ios::binary});
+    }
+
+    {
+      cereal::BinaryOutputArchive boa{ofs};
+      boa(*this);
+    }
+
+  } catch (const std::exception &e) {
+    return fmt::format("Caught exception: {}", e.what());
+  }
+
+  return {};
+}
+
+tl::expected<structure_3D_impl, std::string> structure_3D_impl::load_cache(
+    const std::filesystem::path &filename) noexcept {
+  structure_3D_impl ret;
+  try {
+    boost::iostreams::filtering_istream ifs;
+    ifs.set_auto_close(true);
+    ifs.push(boost::iostreams::zstd_decompressor{});
+    ifs.push(boost::iostreams::file_source{filename, std::ios::binary});
+    {
+      cereal::BinaryInputArchive bia{ifs};
+      bia(ret);
+    }
+  } catch (const std::exception &e) {
+    return tl::make_unexpected(fmt::format("Caught exception: {}", e.what()));
+  }
+
+  return ret;
 }

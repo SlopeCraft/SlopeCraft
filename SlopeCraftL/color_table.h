@@ -48,6 +48,11 @@ class color_table_impl : public SlopeCraft::color_table {
       const_image_reference original_img,
       const convert_option &option) const noexcept final;
 
+  [[nodiscard]] static std::optional<color_table_impl> create(
+      const color_table_create_info &args) noexcept;
+
+  [[nodiscard]] std::vector<std::string_view> block_id_list() const noexcept;
+
   [[nodiscard]] uint64_t hash() const noexcept;
 
   [[nodiscard]] std::filesystem::path self_cache_dir(
@@ -97,10 +102,19 @@ class color_table_impl : public SlopeCraft::color_table {
   [[nodiscard]] structure_3D *build(const converted_image &,
                                     const build_options &) const noexcept final;
 
-  [[nodiscard]] static std::optional<color_table_impl> create(
-      const color_table_create_info &args) noexcept;
+  [[nodiscard]] std::filesystem::path build_task_cache_filename(
+      const converted_image &, const build_options &,
+      const char *cache_root_dir) const noexcept;
 
-  [[nodiscard]] std::vector<std::string_view> block_id_list() const noexcept;
+  [[nodiscard]] bool save_build_cache(
+      const converted_image &, const build_options &, const structure_3D &,
+      const char *cache_root_dir, StringDeliver *error) const noexcept final;
+  [[nodiscard]] bool has_build_cache(
+      const converted_image &, const build_options &,
+      const char *cache_root_dir) const noexcept final;
+  [[nodiscard]] structure_3D *load_build_cache(
+      const converted_image &, const build_options &,
+      const char *cache_root_dir, StringDeliver *error) const noexcept final;
 };
 
 //[[nodiscard]] std::string digest_to_string(

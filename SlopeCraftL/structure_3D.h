@@ -14,8 +14,9 @@ class structure_3D_impl : public structure_3D {
  private:
   libSchem::Schem schem;
 
-  Eigen::ArrayXXi map_color;  // map color may be modified by lossy
-                              // compression,so we store the modified one
+  Eigen::ArrayXX<uint8_t>
+      map_color;  // map color may be modified by lossy
+                  // compression,so we store the modified one
 
  public:
   size_t shape_x() const noexcept final { return this->schem.x_range(); }
@@ -41,6 +42,24 @@ class structure_3D_impl : public structure_3D {
       const vanilla_structure_options &option) const noexcept final;
   bool export_WE_schem(const char *filename,
                        const WE_schem_options &option) const noexcept final;
+
+  [[nodiscard]] std::string save_cache(
+      const std::filesystem::path &file) const noexcept;
+
+  [[nodiscard]] static tl::expected<structure_3D_impl, std::string> load_cache(
+      const std::filesystem::path &file) noexcept;
+
+  template <class archive>
+  void load(archive &ar) {
+    ar(this->map_color);
+    ar(this->schem);
+  };
+
+  template <class archive>
+  void save(archive &ar) const {
+    ar(this->map_color);
+    ar(this->schem);
+  }
 };
 
 #endif  // SLOPECRAFT_STRUCTURE_3D_H

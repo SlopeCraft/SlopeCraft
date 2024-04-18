@@ -164,3 +164,7 @@ converted_image_impl::load_cache(const color_table_impl &table,
   }
   return ret;
 }
+
+// uint64_t converted_image_impl::hash() const noexcept {
+//   return this->converter.task_hash();
+// }

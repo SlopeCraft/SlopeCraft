@@ -24,6 +24,8 @@ class converted_image_impl : public converted_image {
       Eigen::Array<uint32_t, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
   libMapImageCvt::MapImageCvter converter;
 
+  //  [[nodiscard]] uint64_t hash() const noexcept;
+
   size_t rows() const noexcept final { return this->converter.rows(); }
   size_t cols() const noexcept final { return this->converter.cols(); }
 
