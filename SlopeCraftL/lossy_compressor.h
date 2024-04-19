@@ -43,15 +43,13 @@ class lossy_compressor {
  public:
   lossy_compressor();
   ~lossy_compressor();
-  void setSource(const Eigen::ArrayXi &, const TokiColor *[]);
-  bool compress(uint16_t maxHeight, bool allowNaturalCompress = false);
+  void setSource(const Eigen::ArrayXi &, std::span<const TokiColor *>);
+  bool compress(uint16_t maxHeight, bool allowNaturalCompress);
   const Eigen::ArrayX<uint8_t> &getResult() const;
   double resultFitness() const;
 
-  void **windPtr;
-  void (**progressRangeSetPtr)(void *, int min, int max, int val);
-  void (**progressAddPtr)(void *, int);
-  void (**keepAwakePtr)(void *);
+  SlopeCraft::ui_callbacks ui;
+  SlopeCraft::progress_callbacks progress_bar;
 
  private:
   friend class solver_t;

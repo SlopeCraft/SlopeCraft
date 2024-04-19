@@ -90,9 +90,8 @@ class solver_t
       std::clock_t curClock = std::clock();
       if (curClock - prevClock >= CLOCKS_PER_SEC / 2) {
         prevClock = curClock;
-        (*(this->_args.ptr->progressRangeSetPtr))(
-            *(this->_args.ptr->windPtr), 0, lossy_compressor::maxGeneration,
-            this->generation());
+        this->_args.ptr->progress_bar.set_range(
+            0, lossy_compressor::maxGeneration, this->generation());
       }
     }
   }
@@ -105,7 +104,8 @@ lossy_compressor::lossy_compressor() : solver{new solver_t{}} {
 lossy_compressor::~lossy_compressor() {}
 
 void lossy_compressor::setSource(const Eigen::ArrayXi &_base,
-                                 const TokiColor **src) {
+                                 std::span<const TokiColor *> src) {
+  assert(_base.rows() == static_cast<int64_t>(src.size() + 1));
   source.resize(_base.rows() - 1);
 
   for (uint16_t idx = 0; idx < _base.rows() - 1; idx++) {
@@ -144,7 +144,7 @@ void lossy_compressor::runGenetic(uint16_t maxHeight,
 }
 
 bool lossy_compressor::compress(uint16_t maxHeight, bool allowNaturalCompress) {
-  (*progressRangeSetPtr)(*windPtr, 0, maxGeneration, 0);
+  this->progress_bar.set_range(0, maxGeneration, 0);
 
   // std::cerr<<"Genetic algorithm started\n";
   uint16_t tryTimes = 0;

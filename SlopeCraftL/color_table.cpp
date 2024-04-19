@@ -140,15 +140,6 @@ std::vector<std::string_view> color_table_impl::block_id_list() const noexcept {
   return dest;
 }
 
-// std::string digest_to_string(std::span<const uint64_t> hash) noexcept {
-//   std::string ret;
-//   ret.reserve(hash.size_bytes() * 2);
-//   for (uint64_t i : hash) {
-//     fmt::format_to(std::back_insert_iterator(ret), "{:x}", i);
-//   }
-//   return ret;
-// }
-
 uint64_t color_table_impl::hash() const noexcept {
   boost::uuids::detail::md5 hash;
   SC_HASH_ADD_DATA(hash, this->map_type_)

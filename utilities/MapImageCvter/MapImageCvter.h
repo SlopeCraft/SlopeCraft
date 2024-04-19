@@ -84,22 +84,19 @@ class MapImageCvter : public ::libImageCvt::ImageCvter<true> {
     return result;
   }
 
-  void col_TokiColor_ptrs(int64_t col,
-                          const TokiColor_t **const dest) const noexcept {
-    if (dest == nullptr) {
-      return;
-    }
-
+  void col_TokiColor_ptrs(
+      int64_t col, std::vector<const TokiColor_t *> &dest) const noexcept {
     if (col < 0 || col > this->cols()) {
       return;
     }
-
+    dest.clear();
     for (int64_t r = 0; r < this->rows(); r++) {
       auto it = this->_color_hash.find(
           convert_unit(this->_dithered_image(r, col), this->algo));
-      dest[r] = &it->second;
+      dest.emplace_back(&it->second);
     }
   }
+  
   // temp is a temporary container to pass ownership
   void load_from_itermediate(MapImageCvter &&temp) noexcept {
     this->_raw_image = std::move(temp._raw_image);

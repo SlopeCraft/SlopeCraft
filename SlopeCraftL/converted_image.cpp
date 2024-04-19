@@ -48,6 +48,7 @@ converted_image_impl::height_info(const build_options &option) const noexcept {
 
   Eigen::ArrayXXi map_color = this->converter.mapcolor_matrix().cast<int>();
 
+#warning This may be incorrect
   const bool allow_lossless_compress =
       int(option.compress_method) & int(SCL_compressSettings::NaturalOnly);
 
@@ -73,6 +74,8 @@ converted_image_impl::height_info(const build_options &option) const noexcept {
   std::unordered_map<rc_pos, water_y_range> water_list;
 
   lossy_compressor compressor;
+  compressor.ui = option.ui;
+  compressor.progress_bar = option.sub_progressbar;
   for (int64_t c = 0; c < map_color.cols(); c++) {
     // cerr << "Coloumn " << c << '\n';
     height_line HL;
@@ -84,10 +87,10 @@ converted_image_impl::height_info(const build_options &option) const noexcept {
          option.compress_method == compressSettings::Both)) {
       std::vector<const TokiColor *> ptr(map_color.rows());
 
-      this->converter.col_TokiColor_ptrs(c, ptr.data());
+      this->converter.col_TokiColor_ptrs(c, ptr);
       // getTokiColorPtr(c, &ptr[0]);
 
-      compressor.setSource(HL.getBase(), &ptr[0]);
+      compressor.setSource(HL.getBase(), ptr);
       bool success = compressor.compress(option.max_allowed_height,
                                          allow_lossless_compress);
       if (!success) {
