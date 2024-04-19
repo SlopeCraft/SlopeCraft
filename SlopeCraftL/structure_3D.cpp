@@ -299,7 +299,8 @@ std::string structure_3D_impl::save_cache(
       params.level = uint32_t(ZSTD_CLEVEL_DEFAULT);
 #endif
       ofs.push(boost::iostreams::zstd_compressor{params});
-      ofs.push(boost::iostreams::file_sink{filename, std::ios::binary});
+      ofs.push(
+          boost::iostreams::file_sink{filename.string(), std::ios::binary});
     }
 
     {
@@ -321,7 +322,8 @@ tl::expected<structure_3D_impl, std::string> structure_3D_impl::load_cache(
     boost::iostreams::filtering_istream ifs;
     ifs.set_auto_close(true);
     ifs.push(boost::iostreams::zstd_decompressor{});
-    ifs.push(boost::iostreams::file_source{filename, std::ios::binary});
+    ifs.push(
+        boost::iostreams::file_source{filename.string(), std::ios::binary});
     {
       cereal::BinaryInputArchive bia{ifs};
       bia(ret);

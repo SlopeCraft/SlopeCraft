@@ -24,7 +24,7 @@ This file is part of SlopeCraft.
 namespace SlopeCraft {
 extern const float RGBBasicSource[256 * 3];
 
-const std::unique_ptr<const colorset_basic_t> basic{
+const std::unique_ptr<const colorset_basic_t> basic_colorset{
     new colorset_basic_t{RGBBasicSource}};
 
 const float RGBBasicSource[256 * 3] = {

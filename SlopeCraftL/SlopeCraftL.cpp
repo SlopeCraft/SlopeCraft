@@ -407,8 +407,10 @@ SCL_EXPORT void SCL_get_base_color_ARGB32(uint32_t dest[64]) {
 }
 
 #include <ExternalConverters/ExternalConverterStaticInterface.h>
-extern Eigen::Map<const Eigen::ArrayXf> BasicRGB4External(int channel) {
+namespace SlopeCraft {
+Eigen::Map<const Eigen::ArrayXf> BasicRGB4External(int channel) {
   return Eigen::Map<const Eigen::ArrayXf>(
       &SlopeCraft::basic_colorset->RGB_mat()(0, channel),
       SlopeCraft::basic_colorset->color_count());
 }
+}  // namespace SlopeCraft

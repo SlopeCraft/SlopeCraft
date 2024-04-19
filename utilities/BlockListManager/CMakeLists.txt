@@ -43,7 +43,7 @@ set(BlockListManager_project_sources
 add_library(BlockListManager STATIC ${BlockListManager_project_sources})
 target_link_libraries(BlockListManager PUBLIC Qt6::Widgets SlopeCraftL)
 target_include_directories(BlockListManager INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(BlockListManager PRIVATE ${SlopeCraft_Nlohmann_json_include_dir} ${BOOST_INCLUDE_DIRS})
+target_include_directories(BlockListManager PRIVATE ${SlopeCraft_Nlohmann_json_include_dir} ${Boost_INCLUDE_DIRS})
 target_compile_features(BlockListManager PUBLIC cxx_std_23)
 
 qt_add_lupdate(BlockListManager
