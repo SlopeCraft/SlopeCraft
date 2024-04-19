@@ -26,13 +26,12 @@ This file is part of SlopeCraft.
 #include "SCWind.h"
 
 using namespace SlopeCraft;
-AiCvterParameterDialog::AiCvterParameterDialog(SCWind *parent,
-                                               SlopeCraft::Kernel *kernelp)
-    : QDialog(parent), ui(new Ui::AiCvterParameterDialog), kernel(kernelp) {
+AiCvterParameterDialog::AiCvterParameterDialog(SCWind *parent)
+    : QDialog(parent), ui(new Ui::AiCvterParameterDialog) {
   this->ui->setupUi(this);
 
   SlopeCraft::GA_converter_option opt = *this->kernel->aiCvterOpt();
-  opt.version = SC_VERSION_U64;
+  opt.caller_api_version = SC_VERSION_U64;
 
   this->ui->sb_pop_size->setValue(opt.popSize);
   this->ui->sb_max_gen->setValue(opt.maxGeneration);

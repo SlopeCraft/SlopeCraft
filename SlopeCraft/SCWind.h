@@ -20,6 +20,10 @@ namespace Ui {
 class SCWind;
 }
 
+SlopeCraft::progress_callbacks progress_callback(QProgressBar* bar) noexcept;
+
+SlopeCraft::const_image_reference wrap_image(const QImage& img) noexcept;
+
 class SCWind : public QMainWindow {
   Q_OBJECT
  private:
@@ -99,9 +103,10 @@ class SCWind : public QMainWindow {
  private:
   Ui::SCWind* ui;
 
-  std::map<selection,
-           std::unique_ptr<SlopeCraft::color_table, SlopeCraft::deleter>>
+  std::unordered_map<
+      selection, std::unique_ptr<SlopeCraft::color_table, SlopeCraft::deleter>>
       color_tables;
+  SlopeCraft::GA_converter_option GA_option{};
   //  SlopeCraft::Kernel* kernel;
 
   task_pool_t tasks;
@@ -115,12 +120,13 @@ class SCWind : public QMainWindow {
   std::vector<QTranslator*> translators;
 
   QString prev_load_image_dir{""};
-
   // QString fileonly_export_dir{""};
 
  public:
-  //  const SlopeCraft::Kernel* kernel_ptr() const noexcept { return
-  //  this->kernel; }
+  QString cache_root_dir() const noexcept;
+  SlopeCraft::color_table* current_color_table() noexcept;
+
+  SlopeCraft::ui_callbacks ui_callbacks() const noexcept;
 
   std::array<QRadioButton*, 20 - 12 + 1> version_buttons() noexcept;
   std::array<const QRadioButton*, 20 - 12 + 1> version_buttons() const noexcept;
@@ -148,7 +154,7 @@ class SCWind : public QMainWindow {
   std::optional<int> selected_cvt_task_idx() const noexcept;
 
   std::vector<cvt_task*> selected_export_task_list() const noexcept;
-  std::optional<cvt_task*> selected_export_task() const noexcept;
+  cvt_task* selected_export_task() const noexcept;
 
   SCL_convertAlgo selected_algo() const noexcept;
   bool is_dither_selected() const noexcept;
@@ -186,34 +192,31 @@ class SCWind : public QMainWindow {
 
  private:
   // kernel related functions
-  void kernel_set_type() noexcept;
+  [[deprecated]] void kernel_set_type() noexcept;
 
   void update_button_states() noexcept;
 
-  void kernel_set_image(int idx) noexcept;
-  void kernel_convert_image() noexcept;
+  std::unique_ptr<SlopeCraft::converted_image, SlopeCraft::deleter>
+  convert_image(int idx) noexcept;
 
-  void kernel_make_cvt_cache() noexcept;
+  [[deprecated]] void kernel_set_image(int idx) noexcept;
+  [[deprecated]] void kernel_convert_image() noexcept;
 
-  // bool kernel_check_colorset_hash() noexcept;
+  [[deprecated]] void kernel_make_cvt_cache() noexcept;
 
-  void kernel_build_3d() noexcept;
-  void kernel_make_build_cache() noexcept;
+  [[deprecated]] void kernel_build_3d() noexcept;
+  [[deprecated]] void kernel_make_build_cache() noexcept;
 
-  void refresh_current_cvt_display(std::optional<int> idx,
-                                   bool is_image_coneverted_in_kernel) noexcept;
-  void refresh_current_cvt_display(std::optional<int> idx) noexcept {
-    this->refresh_current_cvt_display(idx, false);
-  }
+  void refresh_current_cvt_display(std::optional<int> idx) noexcept;
   void refresh_current_cvt_display() noexcept {
     this->refresh_current_cvt_display(this->selected_cvt_task_idx());
   }
 
-  QImage get_converted_image_from_kernel() const noexcept;
+  [[deprecated]] QImage get_converted_image_from_kernel() const noexcept;
 
-  void refresh_current_build_display(std::optional<cvt_task*> taskp,
+  void refresh_current_build_display(cvt_task* taskp,
                                      bool is_image_built_in_kernel) noexcept;
-  void refresh_current_build_display(std::optional<cvt_task*> taskp) noexcept {
+  void refresh_current_build_display(cvt_task* taskp) noexcept {
     return this->refresh_current_build_display(taskp, false);
   }
   void refresh_current_build_display() noexcept {

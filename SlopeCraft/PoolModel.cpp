@@ -34,7 +34,7 @@ QVariant PoolModel::data(const QModelIndex& idx, int role) const {
     auto raw_image = QPixmap::fromImage(task.original_image);
     auto img = raw_image.scaledToWidth(this->_listview->size().width());
 
-    if (!task.is_converted) {
+    if (!task.is_converted()) {
       this->draw_icon(img, icon_empty(), 0);
     } else {
       this->draw_icon(img, icon_converted(), 0);
@@ -69,14 +69,15 @@ void PoolModel::draw_icon(QPixmap& image, const QPixmap& icon, int index,
                           QWidget* ptr_to_report_error) noexcept {
   assert(index >= 0);
   if (icon.size() != QSize{32, 32}) [[unlikely]] {
-    QMessageBox::critical(
-        ptr_to_report_error, QObject::tr("绘制图标时发现错误"),
-        tr("被绘制的图标尺寸应当是 32*32，但实际上是%1*%"
-           "2。这属于 SlopeCraft 内部错误，请向开发者反馈。SlopeCraft 必须崩溃。")
-            .arg(icon.size().height())
-            .arg(icon.size().width()));
+    QMessageBox::critical(ptr_to_report_error,
+                          QObject::tr("绘制图标时发现错误"),
+                          tr("被绘制的图标尺寸应当是 32*32，但实际上是%1*%"
+                             "2。这属于 SlopeCraft "
+                             "内部错误，请向开发者反馈。SlopeCraft 必须崩溃。")
+                              .arg(icon.size().height())
+                              .arg(icon.size().width()));
     abort();
-    return;
+    // return;
   }
   {
     const QSize expected_min_size{(index + 1) * 32, 32};
@@ -219,7 +220,7 @@ void map_indices(std::vector<T>& pool, std::vector<int> moved_indices,
   iterator_add(begin_it, begin_idx);
 
   for (auto srcit : src_it_vec) {
-    temp_pool.emplace(begin_it, *srcit);
+    temp_pool.emplace(begin_it, std::move(*srcit));
   }
 
   for (auto srcit : src_it_vec) {
@@ -288,7 +289,7 @@ QVariant ExportPoolModel::data(const QModelIndex& midx, int role) const {
     }
     auto raw_image = QPixmap::fromImage(task.original_image);
     auto img = raw_image.scaledToWidth(this->_listview->size().width());
-    if (!task.is_built) {
+    if (!task.is_built()) {
       this->draw_icon(img, icon_empty(), 0);
     } else {
       this->draw_icon(img, icon_converted(), 0);

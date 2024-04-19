@@ -251,6 +251,28 @@ struct WE_schem_options {
   progress_callbacks progressbar;
 };
 
+struct flag_diagram_options {
+  uint64_t caller_api_version{SC_VERSION_U64};
+
+  // 0 or negative number means no split lines
+  int32_t split_line_row_margin{0};
+  // 0 or negative number means no split lines
+  int32_t split_line_col_margin{0};
+  int png_compress_level{9};
+  int png_compress_memory_level{8};
+
+  ui_callbacks ui{};
+  progress_callbacks progressbar{};
+};
+
+struct test_blocklist_options {
+  uint64_t caller_api_version{SC_VERSION_U64};
+  const mc_block_interface *const *block_ptrs{nullptr};
+  const uint8_t *basecolors{nullptr};
+  size_t block_count{0};
+  string_deliver *err{nullptr};
+};
+
 struct const_image_reference {
   const uint32_t *data{nullptr};
   size_t rows{0};

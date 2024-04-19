@@ -28,15 +28,14 @@ void SCWind::on_pb_add_image_clicked() noexcept {
 
   std::optional<TransparentStrategyWind::strategy> strategy_opt{std::nullopt};
 
-  QString err;
   for (const auto &filename : files) {
-    auto task = cvt_task::load(filename, err);
+    auto task_res = cvt_task::load(filename);
 
-    if (!err.isEmpty()) {
+    if (!task_res) {
       auto ret = QMessageBox::critical(
           this, tr("打开图像失败"),
           tr("无法打开图像 %1。常见原因：图像尺寸太大。\n详细信息： %2")
-              .arg(filename, err),
+              .arg(filename, task_res.error()),
           QMessageBox::StandardButtons{QMessageBox::StandardButton::Close,
                                        QMessageBox::StandardButton::Ignore});
 
@@ -47,6 +46,7 @@ void SCWind::on_pb_add_image_clicked() noexcept {
       }
     }
 
+    auto task = std::move(task_res.value());
     // have transparent pixels
     if (SlopeCraft::SCL_haveTransparentPixel(
             (const uint32_t *)task.original_image.scanLine(0),
@@ -65,7 +65,7 @@ void SCWind::on_pb_add_image_clicked() noexcept {
           st.pure_transparent, st.half_transparent, st.background_color);
     }
 
-    this->tasks.emplace_back(task);
+    this->tasks.emplace_back(std::move(task));
   }
 
   emit this->image_changed();
@@ -103,13 +103,13 @@ void SCWind::on_pb_replace_image_clicked() noexcept {
     return;
   }
   this->prev_load_image_dir = QFileInfo{file}.dir().absolutePath();
-  QString err;
-  auto task = cvt_task::load(file, err);
-  if (!err.isEmpty()) {
+
+  auto task_res = cvt_task::load(file);
+  if (!task_res) {
     auto ret = QMessageBox::critical(
         this, tr("打开图像失败"),
         tr("无法打开图像 %1。常见原因：图像尺寸太大。\n详细信息： %2")
-            .arg(file, err),
+            .arg(file, task_res.error()),
         QMessageBox::StandardButtons{QMessageBox::StandardButton::Close,
                                      QMessageBox::StandardButton::Ignore});
 
@@ -120,7 +120,7 @@ void SCWind::on_pb_replace_image_clicked() noexcept {
     }
   }
   for (const auto &qmi : selected) {
-    this->tasks[qmi.row()] = task;
+    this->tasks[qmi.row()] = std::move(task_res.value());
   }
   this->cvt_pool_model->refresh();
 }
@@ -252,12 +252,16 @@ void SCWind::on_pb_cvt_current_clicked() noexcept {
     return;
   }
 
-  this->kernel_set_image(sel.value());
-  this->kernel_convert_image();
-  this->tasks[sel.value()].set_converted();
+  {
+    auto cvted = this->convert_image(sel.value());
+    if (!cvted) {
+      return;
+    }
+    this->tasks[sel.value()].converted_img = std::move(cvted);
+  }
 
-  this->kernel_make_cvt_cache();
-  this->refresh_current_cvt_display(sel.value(), true);
+  //  this->kernel_make_cvt_cache();
+  this->refresh_current_cvt_display(sel.value());
   this->ui->tw_cvt_image->setCurrentIndex(1);
 
   emit this->image_changed();
@@ -267,7 +271,7 @@ void SCWind::on_pb_cvt_current_clicked() noexcept {
 void SCWind::on_pb_cvt_all_clicked() noexcept {
   for (int idx = 0; idx < (int)this->tasks.size(); idx++) {
     auto &task = this->tasks[idx];
-    if (task.is_converted) {
+    if (task.is_converted()) {
       continue;
     }
 
@@ -365,23 +369,23 @@ void SCWind::on_cb_compress_lossy_toggled(bool checked) noexcept {
 }
 
 void SCWind::on_pb_build3d_clicked() noexcept {
-  auto taskopt = this->selected_export_task();
-  if (!taskopt.has_value()) {
+  auto task_ptr = this->selected_export_task();
+  if (task_ptr == nullptr) {
     QMessageBox::warning(this, tr("未选择图像"),
                          tr("请在左侧任务池选择一个图像"));
     return;
   }
-  assert(taskopt.value() != nullptr);
+  assert(task_ptr != nullptr);
 
-  cvt_task &task = *taskopt.value();
+  cvt_task &task = *task_ptr;
 
-  if (!task.is_converted) [[unlikely]] {
+  if (!task.is_converted()) [[unlikely]] {
     QMessageBox::warning(this, tr("该图像尚未被转化"),
                          tr("必须先转化一个图像，然后再为它构建三维结构"));
     return;
   }
   {
-    const int gidx = taskopt.value() - this->tasks.data();
+    const int gidx = task_ptr - this->tasks.data();
     this->kernel_set_image(gidx);
     if (!this->kernel->loadConvertCache(this->selected_algo(),
                                         this->is_dither_selected())) {
@@ -397,18 +401,18 @@ void SCWind::on_pb_build3d_clicked() noexcept {
 }
 
 void SCWind::on_pb_preview_materials_clicked() noexcept {
-  auto taskopt = this->selected_export_task();
-  if (!taskopt.has_value()) {
+  auto taskp = this->selected_export_task();
+  if (taskp == nullptr) {
     QMessageBox::warning(this, tr("未选择图像"),
                          tr("请在左侧任务池选择一个图像"));
     return;
   }
-  assert(taskopt.value() != nullptr);
+  assert(taskp != nullptr);
 
-  cvt_task &task = *taskopt.value();
+  cvt_task &task = *taskp;
   const ptrdiff_t index = &task - this->tasks.data();
   assert(index >= 0 && index < ptrdiff_t(this->tasks.size()));
-  if (!task.is_converted) [[unlikely]] {
+  if (!task.is_converted()) [[unlikely]] {
     QMessageBox::warning(this, tr("该图像尚未被转化"),
                          tr("必须先转化一个图像，然后再为它构建三维结构"));
     return;
@@ -458,15 +462,14 @@ void SCWind::on_pb_preview_materials_clicked() noexcept {
 }
 
 void SCWind::on_pb_preview_compress_effect_clicked() noexcept {
-  auto sel_opt = this->selected_export_task();
-  if (!sel_opt.has_value()) {
+  auto sel = this->selected_export_task();
+  if (sel == nullptr) {
     QMessageBox::warning(this, tr("未选择图像"),
                          tr("请在左侧任务池选择一个图像"));
     return;
   }
-  const auto sel = sel_opt.value();
   QString errtitle{""}, errmsg{""};
-  if (!sel->is_built) {
+  if (!sel->is_built()) {
     errtitle = tr("尚未构建三维结构");
     errmsg =
         tr("在预览材料表之前，必须先构建三维结构。出现这个警告，可能是因为你"
@@ -517,10 +520,10 @@ void SCWind::on_pb_export_all_clicked() noexcept {
   auto tasks_to_export = this->selected_export_task_list();
 
   const auto export_type = this->selected_export_type();
-  SlopeCraft::Kernel::litematic_options opt_lite;
-  SlopeCraft::Kernel::vanilla_structure_options opt_nbt;
-  SlopeCraft::Kernel::WE_schem_options opt_WE;
-  SlopeCraft::Kernel::flag_diagram_options opt_fd;
+  SlopeCraft::litematic_options opt_lite;
+  SlopeCraft::vanilla_structure_options opt_nbt;
+  SlopeCraft::WE_schem_options opt_WE;
+  SlopeCraft::flag_diagram_options opt_fd;
   {
     QString err;
     auto process_err = [this](const QString &err) {

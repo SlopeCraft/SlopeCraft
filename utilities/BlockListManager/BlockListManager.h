@@ -31,6 +31,7 @@ class BlockListDeleter {
 
 struct selection {
   std::vector<std::string> ids;
+  
   [[nodiscard]] bool operator==(const selection &b) const noexcept {
     if (this->ids.size() != b.ids.size()) {
       return false;
