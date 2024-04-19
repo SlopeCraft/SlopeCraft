@@ -98,7 +98,11 @@ class SCWind : public QMainWindow {
 
  private:
   Ui::SCWind* ui;
-  SlopeCraft::Kernel* kernel;
+
+  std::map<selection,
+           std::unique_ptr<SlopeCraft::color_table, SlopeCraft::deleter>>
+      color_tables;
+  //  SlopeCraft::Kernel* kernel;
 
   task_pool_t tasks;
   CvtPoolModel* cvt_pool_model{nullptr};
@@ -115,7 +119,8 @@ class SCWind : public QMainWindow {
   // QString fileonly_export_dir{""};
 
  public:
-  const SlopeCraft::Kernel* kernel_ptr() const noexcept { return this->kernel; }
+  //  const SlopeCraft::Kernel* kernel_ptr() const noexcept { return
+  //  this->kernel; }
 
   std::array<QRadioButton*, 20 - 12 + 1> version_buttons() noexcept;
   std::array<const QRadioButton*, 20 - 12 + 1> version_buttons() const noexcept;
@@ -161,18 +166,18 @@ class SCWind : public QMainWindow {
   bool is_enderman_proof_selected() const noexcept;
   bool is_connect_mushroom_selected() const noexcept;
 
-  SlopeCraft::Kernel::build_options current_build_option() const noexcept;
+  SlopeCraft::build_options current_build_option() const noexcept;
 
   export_type selected_export_type() const noexcept;
 
-  std::optional<SlopeCraft::Kernel::litematic_options> current_litematic_option(
+  std::optional<SlopeCraft::litematic_options> current_litematic_option(
       QString& err) const noexcept;
-  std::optional<SlopeCraft::Kernel::vanilla_structure_options>
-  current_nbt_option(QString& err) const noexcept;
-  std::optional<SlopeCraft::Kernel::WE_schem_options> current_schem_option(
+  std::optional<SlopeCraft::vanilla_structure_options> current_nbt_option(
       QString& err) const noexcept;
-  std::optional<SlopeCraft::Kernel::flag_diagram_options>
-  current_flatdiagram_option(QString& err) const noexcept;
+  std::optional<SlopeCraft::WE_schem_options> current_schem_option(
+      QString& err) const noexcept;
+  std::optional<SlopeCraft::flag_diagram_options> current_flatdiagram_option(
+      QString& err) const noexcept;
 
   int current_map_begin_seq_number() const noexcept;
 

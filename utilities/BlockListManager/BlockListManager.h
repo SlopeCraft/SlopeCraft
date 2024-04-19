@@ -29,6 +29,26 @@ class BlockListDeleter {
   }
 };
 
+struct selection {
+  std::vector<std::string> ids;
+  [[nodiscard]] bool operator==(const selection &b) const noexcept {
+    if (this->ids.size() != b.ids.size()) {
+      return false;
+    }
+    for (size_t i = 0; i < this->ids.size(); i++) {
+      if (this->ids[i] != b.ids[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+};
+
+template <>
+struct std::hash<selection> {
+  static inline uint64_t operator()(const selection &s) noexcept;
+};
+
 class BlockListManager : public QWidget {
   Q_OBJECT
  private:
@@ -42,7 +62,7 @@ class BlockListManager : public QWidget {
   explicit BlockListManager(QWidget *parent = nullptr);
   ~BlockListManager();
 
-  void setup_basecolors(const SlopeCraft::Kernel *kernel) noexcept;
+  void setup_basecolors() noexcept;
 
   bool add_blocklist(QString filename) noexcept;
 
@@ -82,6 +102,8 @@ class BlockListManager : public QWidget {
   const BaseColorWidget *basecolorwidget_at(size_t basecolor) const noexcept {
     return this->basecolor_widgets[basecolor].get();
   }
+
+  [[nodiscard]] selection current_selection() const noexcept;
 
  signals:
   void changed();

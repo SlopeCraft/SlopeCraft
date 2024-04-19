@@ -71,10 +71,7 @@ class alignas(32) colorset_maptical_basic {
   colorset_maptical_basic() = delete;
   /// Construct from color source
   colorset_maptical_basic(const float *const rgbsrc) {
-    if (rgbsrc == nullptr) {
-      exit(1);
-      return;
-    }
+    assert(rgbsrc);
     memcpy(__rgb.data(), rgbsrc, sizeof(__rgb));
 
     for (int row = 0; row < 256; row++) {

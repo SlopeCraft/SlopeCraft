@@ -380,6 +380,26 @@ SCL_EXPORT void SCL_destroy_color_table(color_table *c) { delete c; }
 
 SCL_EXPORT void SCL_destroy_converted_image(converted_image *c) { delete c; }
 SCL_EXPORT void SCL_destroy_structure_3D(structure_3D *s) { delete s; }
+
+SCL_EXPORT void SCL_get_base_color_ARGB32(uint32_t dest[64]) {
+  for (int bc = 0; bc < 64; bc++) {
+    const int row = bc + 128;
+    const std::array<float, 3> rgb_f32{
+        SlopeCraft::basic_colorset->RGB(row, 0),
+        SlopeCraft::basic_colorset->RGB(row, 1),
+        SlopeCraft::basic_colorset->RGB(row, 2),
+    };
+    std::array<uint8_t, 3> rgb_u8;
+    for (int i = 0; i < 3; ++i) {
+      assert(rgb_f32[i] >= 0);
+      assert(rgb_f32[i] <= 1.0);
+      rgb_u8[i] = rgb_f32[i] * 255;
+    }
+
+    dest[bc] = ARGB32(rgb_u8[0], rgb_u8[1], rgb_u8[2]);
+  }
+}
+
 // SCL_EXPORT int SCL_getBlockPalette(const mc_block_interface **blkpp,
 //                                    size_t capacity) {
 //   return TokiSlopeCraft::getBlockPalette(blkpp, capacity);

@@ -1,7 +1,9 @@
-#include "BlockListManager.h"
+
 #include <string_view>
 #include <QMessageBox>
 #include <QDir>
+#include <boost/uuid/detail/md5.hpp>
+#include "BlockListManager.h"
 
 extern const std::string_view basecolor_names[64];
 
@@ -9,15 +11,14 @@ BlockListManager::BlockListManager(QWidget *parent) : QWidget(parent) {}
 
 BlockListManager::~BlockListManager() {}
 
-void BlockListManager::setup_basecolors(
-    const SlopeCraft::Kernel *kernel) noexcept {
+void BlockListManager::setup_basecolors() noexcept {
   this->basecolor_widgets.clear();
   this->basecolor_widgets.reserve(64);
   const int max_basecolor = SlopeCraft::SCL_maxBaseColor();
 
   uint32_t bc_arr[64];
 
-  kernel->getBaseColorInARGB32(bc_arr);
+  SlopeCraft::SCL_get_base_color_ARGB32(bc_arr);
 
   for (int bc = 0; bc <= max_basecolor; bc++) {
     std::unique_ptr<BaseColorWidget> bcw{new BaseColorWidget(this, bc)};
@@ -29,6 +30,23 @@ void BlockListManager::setup_basecolors(
             [this]() { emit this->changed(); });
     this->basecolor_widgets.push_back(std::move(bcw));
   }
+}
+
+uint64_t std::hash<selection>::operator()(const selection &s) noexcept {
+  boost::uuids::detail::md5 hash;
+  for (auto &id : s.ids) {
+    hash.process_bytes(id.data(), id.size());
+  }
+
+  uint32_t dig[4]{};
+  hash.get_digest(dig);
+  uint64_t fold = 0;
+  for (size_t i = 0; i < 2; i++) {
+    const uint64_t cur =
+        (uint64_t(dig[2 * i]) << 32) | (uint64_t(dig[2 * i + 1]));
+    fold ^= cur;
+  }
+  return fold;
 }
 
 // bool callback_load_image(const char *filename, uint32_t *dst_row_major) {
@@ -193,6 +211,19 @@ blockListPreset BlockListManager::to_preset() const noexcept {
         this->basecolor_widgets[basecolor]->selected_block()->getId());
   }
   return ret;
+}
+
+selection BlockListManager::current_selection() const noexcept {
+  std::vector<std::string> ret;
+  ret.reserve(64);
+  for (auto &bcw : this->basecolor_widgets) {
+    if (bcw->is_enabled()) {
+      ret.emplace_back(bcw->selected_block()->getId());
+    } else {
+      ret.emplace_back("");
+    }
+  }
+  return selection{ret};
 }
 
 const std::string_view basecolor_names[64] = {"00 None",

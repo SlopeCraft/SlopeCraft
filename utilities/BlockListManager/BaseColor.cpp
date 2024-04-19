@@ -8,8 +8,9 @@ BaseColorWidget::BaseColorWidget(QWidget* parent, uint8_t _basecolor)
 
   connect(this->ui->cb_enable, &QCheckBox::toggled, this,
           &BaseColorWidget::changed);
-};
-BaseColorWidget::~BaseColorWidget(){};
+}
+
+BaseColorWidget::~BaseColorWidget() {}
 
 void BaseColorWidget::set_color(uint32_t color) noexcept {
   QPalette pl;
@@ -148,7 +149,6 @@ int BaseColorWidget::selected_idx() const noexcept {
     }
   }
   assert(false);
-  return -1;
 }
 
 int BaseColorWidget::prefered_block_idx(int checked_idx,

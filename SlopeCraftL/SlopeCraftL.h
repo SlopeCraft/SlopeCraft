@@ -397,6 +397,8 @@ SCL_EXPORT const char *SCL_getSCLVersion();
 
 SCL_EXPORT const float *SCL_getBasicColorMapPtrs();
 SCL_EXPORT uint8_t SCL_maxBaseColor();
+SCL_EXPORT SCL_gameVersion SCL_basecolor_version(uint8_t basecolor);
+SCL_EXPORT void SCL_get_base_color_ARGB32(uint32_t dest[64]);
 
 // SCL_EXPORT SCL_gameVersion SCL_basecolor_version(uint8_t basecolor);
 

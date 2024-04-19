@@ -78,14 +78,16 @@ void height_line::make(const Eigen::ArrayXi &mapColorCol,
   base.segment(1, picRows) = mapColorCol / 4;
   Eigen::ArrayXi rawShadow = mapColorCol - 4 * (mapColorCol / 4);
 
-  if ((rawShadow >= 3).any()) {
-#warning "TODO: Fix this error handling"
-    std::cerr << "Fatal Error: depth=3 in vanilla map!" << std::endl;
-    std::cerr << "SlopeCraft will crash." << std::endl;
-    exit(1);
-    // delete &rawShadow;
-    return;
-  }
+  assert(!(rawShadow >= 3).any());
+  //
+  //  if () {
+  // #warning "Fix this error handling"
+  //    std::cerr << "Fatal Error: depth=3 in vanilla map!" << std::endl;
+  //    std::cerr << "SlopeCraft will crash." << std::endl;
+  //    exit(1);
+  //    // delete &rawShadow;
+  //    return;
+  //  }
   Eigen::ArrayXi dealedDepth(picRows + 1);
   dealedDepth.setZero();
   dealedDepth.segment(1, picRows) = rawShadow - 1;
@@ -161,13 +163,13 @@ const std::map<uint32_t, water_y_range> &height_line::getWaterMap() const {
 }
 
 EImage height_line::toImg() const {
-  const short rMax = maxHeight() - 1;
+  const int rMax = maxHeight() - 1;
   EImage img(maxHeight(), HighLine.size());
   img.setConstant(AirColor);
-  short y = 0, r = rMax - y;
+  //  short y = 0, r = rMax - y;
   for (uint32_t x = 0; x < HighLine.size(); x++) {
-    y = HighLine(x);
-    r = rMax - y;
+    const int y = HighLine(x);
+    int r = rMax - y;
     if (base(x)) {
       if (base(x) != 12) {
         img(r, x) = BlockColor;
