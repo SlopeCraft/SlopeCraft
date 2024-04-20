@@ -16,17 +16,17 @@
 
 class color_table_impl : public SlopeCraft::color_table {
  public:
-  colorset_allowed_t allowed;
+  std::shared_ptr<colorset_allowed_t> allowed{new colorset_allowed_t};
   SCL_mapTypes map_type_;
   SCL_gameVersion mc_version_;
   std::array<mc_block, 64> blocks;
 
   color_map_ptrs colors() const noexcept final {
-    return color_map_ptrs{.r_data = allowed.rgb_data(0),
-                          .g_data = allowed.rgb_data(1),
-                          .b_data = allowed.rgb_data(2),
-                          .map_data = allowed.map_data(),
-                          .num_colors = allowed.color_count()};
+    return color_map_ptrs{.r_data = allowed->rgb_data(0),
+                          .g_data = allowed->rgb_data(1),
+                          .b_data = allowed->rgb_data(2),
+                          .map_data = allowed->map_data(),
+                          .num_colors = allowed->color_count()};
   }
 
   SCL_mapTypes map_type() const noexcept final { return this->map_type_; }

@@ -16,7 +16,11 @@ std::optional<color_table_impl> color_table_impl::create(
   color_table_impl result;
   result.mc_version_ = args.mc_version;
   result.map_type_ = args.map_type;
-  result.allowed.need_find_side = (args.map_type == mapTypes::Slope);
+  {
+    colorset_allowed_t a;
+    a.need_find_side = (args.map_type == mapTypes::Slope);
+    result.allowed = std::make_shared<colorset_allowed_t>(std::move(a));
+  }
 
   auto report_err = [&args](errorFlag flag, std::string_view msg) {
     args.ui.report_error(flag, msg.data());
@@ -105,13 +109,13 @@ std::optional<color_table_impl> color_table_impl::create(
     }
   }
 
-  if (!result.allowed.apply_allowed(*SlopeCraft::basic_colorset, m_index)) {
+  if (!result.allowed->apply_allowed(*SlopeCraft::basic_colorset, m_index)) {
     std::string msg = fmt::format(
         "Too few usable color(s) : only {}  colors\nAvaliable base color(s) : ",
-        result.allowed.color_count());
+        result.allowed->color_count());
 
-    for (int idx = 0; idx < result.allowed.color_count(); idx++) {
-      msg += std::to_string(result.allowed.Map(idx)) + ", ";
+    for (int idx = 0; idx < result.allowed->color_count(); idx++) {
+      msg += std::to_string(result.allowed->Map(idx)) + ", ";
     }
 
     report_err(errorFlag::USEABLE_COLOR_TOO_FEW, msg);
@@ -200,7 +204,7 @@ uint64_t color_table_impl::hash() const noexcept {
   SC_HASH_ADD_DATA(hash, this->map_type_)
   SC_HASH_ADD_DATA(hash, this->mc_version_)
 
-  this->allowed.hash_add_data(hash);
+  this->allowed->hash_add_data(hash);
   decltype(hash)::digest_type digest;
   hash.get_digest(digest);
   std::array<uint64_t, 2> result;

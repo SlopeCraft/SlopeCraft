@@ -274,11 +274,7 @@ void SCWind::on_pb_cvt_all_clicked() noexcept {
     if (task.is_converted()) {
       continue;
     }
-
-    this->kernel_set_image(idx);
-    this->kernel_convert_image();
-    this->kernel_make_cvt_cache();
-    task.set_converted();
+    task.converted_img = this->convert_image(idx);
   }
   emit this->image_changed();
 }
@@ -735,7 +731,7 @@ void SCWind::on_pb_export_file_clicked() noexcept {
     auto &task = this->tasks.at(idx);
     this->kernel_set_image(idx);
     bool need_to_convert{true};
-    if (task.is_converted) {
+    if (task.is_converted()) {
       if (this->kernel->loadConvertCache(this->selected_algo(),
                                          this->is_dither_selected())) {
         need_to_convert = false;
@@ -748,9 +744,16 @@ void SCWind::on_pb_export_file_clicked() noexcept {
 
     const int cur_seq_beg =
         map_range_at_index(this->tasks, seq_first, idx).first;
+    const auto dir_name = dir.toLocal8Bit();
 
-    this->kernel->exportAsData(dir.toLocal8Bit().data(), cur_seq_beg, nullptr,
-                               nullptr);
+    const SlopeCraft::map_data_file_options option{
+        .caller_api_version = SC_VERSION_U64,
+        .folder_path = dir_name.data(),
+        .begin_index = cur_seq_beg,
+        .progress = progress_callback(this->ui->pbar_export),
+        .ui = this->ui_callbacks(),
+    };
+    const bool ok = task.converted_img->export_map_data(option);
   }
 }
 
@@ -765,21 +768,16 @@ void SCWind::on_ac_GAcvter_options_triggered() noexcept {
 }
 
 void SCWind::on_ac_cache_dir_open_triggered() noexcept {
-  auto cache_dir = QString::fromLocal8Bit(this->kernel->cacheDir());
+  auto cache_dir = this->cache_root_dir();
   QDesktopServices::openUrl(QUrl::fromLocalFile(cache_dir));
 }
 
 void SCWind::on_ac_clear_cache_triggered() noexcept {
-  const auto cache_dir_name = QString::fromLocal8Bit(this->kernel->cacheDir());
-
+  const QString cache_dir_name = this->cache_root_dir();
   QDir cache_dir{cache_dir_name};
 
   if (!cache_dir.exists()) {
     return;
-  }
-
-  for (auto &task : this->tasks) {
-    task.set_unconverted();
   }
 
   emit this->image_changed();
@@ -891,9 +889,6 @@ void SCWind::on_ac_about_triggered() noexcept {
 }
 
 void SCWind::on_ac_get_current_colorlist_triggered() noexcept {
-  if (this->kernel->queryStep() < SCL_step::wait4Image) {
-    this->kernel_set_type();
-  }
   constexpr int basecolors_per_row = 4;
   constexpr int basecolors_per_col = 16;
 
@@ -981,7 +976,7 @@ void SCWind::on_ac_test_blocklist_triggered() noexcept {
   err.resize(4096);
   SlopeCraft::string_deliver sd{err.data(), err.size()};
 
-  SlopeCraft::Kernel::test_blocklist_options opt;
+  SlopeCraft::test_blocklist_options opt;
   opt.block_count = blks.size();
   opt.block_ptrs = blks.data();
   opt.basecolors = basecolors.data();

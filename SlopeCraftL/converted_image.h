@@ -8,6 +8,7 @@
 #include <MapImageCvter/MapImageCvter.h>
 #include <filesystem>
 #include <tl/expected.hpp>
+#include <memory>
 #include "SlopeCraftL.h"
 #include "SCLDefines.h"
 #include "mc_block.h"
@@ -27,6 +28,7 @@ class converted_image_impl : public converted_image {
 
  private:
   const SCL_gameVersion game_version;
+  const std::shared_ptr<const colorset_allowed_t> colorset;
 
  public:
   //  [[nodiscard]] uint64_t hash() const noexcept;
@@ -66,5 +68,7 @@ class converted_image_impl : public converted_image {
   [[nodiscard]] static tl::expected<converted_image_impl, std::string>
   load_cache(const color_table_impl &table,
              const std::filesystem::path &file) noexcept;
+
+  bool is_converted_from(const color_table &table_) const noexcept final;
 };
 #endif  // SLOPECRAFT_CONVERTED_IMAGE_H

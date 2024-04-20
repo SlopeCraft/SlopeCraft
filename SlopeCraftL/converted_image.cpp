@@ -13,8 +13,9 @@
 #include "NBTWriter/NBTWriter.h"
 
 converted_image_impl::converted_image_impl(const color_table_impl &table)
-    : converter{*SlopeCraft::basic_colorset, table.allowed},
-      game_version{table.mc_version()} {}
+    : converter{*SlopeCraft::basic_colorset, *table.allowed},
+      game_version{table.mc_version()},
+      colorset{table.allowed} {}
 
 converted_image *color_table_impl::convert_image(
     const_image_reference original_img,
@@ -297,6 +298,12 @@ converted_image_impl::load_cache(const color_table_impl &table,
     return tl::make_unexpected("Failed to load cache, the cache is incorrect");
   }
   return ret;
+}
+
+bool converted_image_impl::is_converted_from(
+    const color_table &table_) const noexcept {
+  const auto &table = dynamic_cast<const color_table_impl &>(table_);
+  return (this->colorset.get() == table.allowed.get());
 }
 
 // uint64_t converted_image_impl::hash() const noexcept {

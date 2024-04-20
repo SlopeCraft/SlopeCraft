@@ -362,6 +362,9 @@ class converted_image {
 
   [[nodiscard]] virtual bool export_map_data(
       const map_data_file_options &option) const noexcept = 0;
+
+  [[nodiscard]] virtual bool is_converted_from(
+      const color_table &) const noexcept = 0;
 };
 
 class structure_3D {
