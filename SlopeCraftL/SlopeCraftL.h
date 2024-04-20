@@ -380,6 +380,9 @@ class structure_3D {
       const vanilla_structure_options &option) const noexcept = 0;
   [[nodiscard]] virtual bool export_WE_schem(
       const char *filename, const WE_schem_options &option) const noexcept = 0;
+  [[nodiscard]] virtual bool export_flat_diagram(
+      const char *filename, const color_table &table,
+      const flag_diagram_options &option) const noexcept = 0;
 };
 
 }  // namespace SlopeCraft

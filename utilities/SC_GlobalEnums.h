@@ -161,6 +161,10 @@ enum class SCL_errorFlag : int {
 
   EXPORT_MAP_DATA_FAILURE = 0x0F,
 
+  EXPORT_FLAT_DIAGRAM_ON_WRONG_MAP_TYPE = 0x10,
+
+  EXPORT_FLAT_DIAGRAM_FAILURE = 0x11,
+
 };
 
 enum class SCL_workStatus : int {

@@ -8,6 +8,8 @@
 #include "color_table.h"
 #include "water_item.h"
 #include "structure_3D.h"
+#include "utilities/ProcessBlockId/process_block_id.h"
+#include "utilities/schem/mushroom.h"
 
 std::optional<color_table_impl> color_table_impl::create(
     const color_table_create_info &args) noexcept {
@@ -138,6 +140,59 @@ std::vector<std::string_view> color_table_impl::block_id_list() const noexcept {
     dest.emplace_back(blk.id);
   }
   return dest;
+}
+
+const mc_block *color_table_impl::find_block_for_index(
+    int idx, std::string_view blkid) const noexcept {
+  if (idx < 0) {
+    return nullptr;
+  }
+
+  if (idx < (int)this->blocks.size()) {
+    return &this->blocks[idx];
+  }
+
+  // the block must be mushroom
+  namespace lsi = libSchem::internal;
+  using lsi::mushroom_type;
+
+  blkid::char_range pure_id_range;
+  // invalid block id
+  if (!blkid::process_blk_id(blkid, nullptr, &pure_id_range, nullptr)) {
+    return nullptr;
+  }
+
+  std::string_view pure_id{pure_id_range.begin(), pure_id_range.end()};
+
+  auto mush_type_opt = lsi::pureid_to_type(pure_id);
+  if (!mush_type_opt.has_value()) {
+    return nullptr;
+  }
+
+  uint8_t expected_basecolor = 0;
+  switch (mush_type_opt.value()) {
+    case mushroom_type::red:
+      expected_basecolor = 28;
+      break;
+    case mushroom_type::brown:
+      expected_basecolor = 10;
+      break;
+    case mushroom_type::stem:
+      expected_basecolor = 3;
+      break;
+  }
+
+  const auto *blkp = this->find_block_for_index(expected_basecolor, {});
+
+  if (blkp == nullptr) {
+    return nullptr;
+  }
+
+  if (lsi::pureid_to_type(blkp->id) != mush_type_opt) {
+    return nullptr;
+  }
+
+  return blkp;
 }
 
 uint64_t color_table_impl::hash() const noexcept {
