@@ -13,6 +13,7 @@
 #include "mc_block.h"
 #include "Schem/Schem.h"
 #include "water_item.h"
+#include "string_deliver.h"
 
 class color_table_impl;
 
@@ -24,6 +25,10 @@ class converted_image_impl : public converted_image {
       Eigen::Array<uint32_t, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
   libMapImageCvt::MapImageCvter converter;
 
+ private:
+  const SCL_gameVersion game_version;
+
+ public:
   //  [[nodiscard]] uint64_t hash() const noexcept;
 
   size_t rows() const noexcept final { return this->converter.rows(); }
@@ -38,6 +43,9 @@ class converted_image_impl : public converted_image {
   void get_converted_image(uint32_t *buffer) const noexcept final {
     this->converter.converted_image(buffer, nullptr, nullptr, false);
   }
+
+  bool export_map_data(
+      const map_data_file_options &option) const noexcept final;
 
   struct height_maps {
     Eigen::ArrayXXi map_color;

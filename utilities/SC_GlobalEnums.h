@@ -159,6 +159,8 @@ enum class SCL_errorFlag : int {
   /// is greatly different.
   EXPORT_SCHEM_MC12_NOT_SUPPORTED = 0x0E,
 
+  EXPORT_MAP_DATA_FAILURE = 0x0F,
+
 };
 
 enum class SCL_workStatus : int {

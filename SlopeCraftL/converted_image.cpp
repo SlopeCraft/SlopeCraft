@@ -10,9 +10,11 @@
 #include "color_table.h"
 #include "height_line.h"
 #include "lossy_compressor.h"
+#include "NBTWriter/NBTWriter.h"
 
 converted_image_impl::converted_image_impl(const color_table_impl &table)
-    : converter{*SlopeCraft::basic_colorset, table.allowed} {}
+    : converter{*SlopeCraft::basic_colorset, table.allowed},
+      game_version{table.mc_version()} {}
 
 converted_image *color_table_impl::convert_image(
     const_image_reference original_img,
@@ -39,6 +41,134 @@ converted_image *color_table_impl::convert_image(
   option.ui.report_working_status(workStatus::none);
 
   return new converted_image_impl{std::move(cvted)};
+}
+
+bool converted_image_impl::export_map_data(
+    const SlopeCraft::map_data_file_options &option) const noexcept {
+  const std::filesystem::path dir{option.folder_path};
+  const auto mapPic = this->converter.mapcolor_matrix();
+  const int rows = ceil(mapPic.rows() / 128.0f);
+  const int cols = ceil(mapPic.cols() / 128.0f);
+  option.progress.set_range(0, 128 * rows * cols, 0);
+
+  // int offset[2] = {0, 0};  // r,c
+  int currentIndex = option.begin_index;
+
+  option.ui.report_working_status(workStatus::writingMapDataFiles);
+
+  int fail_count = 0;
+  for (int c = 0; c < cols; c++) {
+    for (int r = 0; r < rows; r++) {
+      const std::array<int, 2> offset = {r * 128, c * 128};
+      std::filesystem::path current_filename = dir;
+      current_filename.append(fmt::format("map_{}.dat", currentIndex));
+
+      NBT::NBTWriter<true> MapFile;
+
+      if (!MapFile.open(current_filename.string().c_str())) {
+        option.ui.report_error(errorFlag::EXPORT_MAP_DATA_FAILURE,
+                               fmt::format("Failed to create nbt file {}",
+                                           current_filename.string())
+                                   .c_str());
+        fail_count += 1;
+        continue;
+      }
+      switch (this->game_version) {
+        case SCL_gameVersion::MC12:
+        case SCL_gameVersion::MC13:
+          break;
+        case SCL_gameVersion::MC14:
+        case SCL_gameVersion::MC15:
+        case SCL_gameVersion::MC16:
+        case SCL_gameVersion::MC17:
+        case SCL_gameVersion::MC18:
+        case SCL_gameVersion::MC19:
+        case SCL_gameVersion::MC20:
+          MapFile.writeInt(
+              "DataVersion",
+              static_cast<int32_t>(
+                  MCDataVersion::suggested_version(this->game_version)));
+          break;
+        default:
+          cerr << "Wrong game version!\n";
+          break;
+      }
+
+      static const std::string ExportedBy = fmt::format(
+          "Exported by SlopeCraft {}, developed by TokiNoBug", SC_VERSION_STR);
+      MapFile.writeString("ExportedBy", ExportedBy.data());
+      MapFile.writeCompound("data");
+      {
+        MapFile.writeByte("scale", 0);
+        MapFile.writeByte("trackingPosition", 0);
+        MapFile.writeByte("unlimitedTracking", 0);
+        MapFile.writeInt("xCenter", 0);
+        MapFile.writeInt("zCenter", 0);
+        switch (this->game_version) {
+          case SCL_gameVersion::MC12:
+            MapFile.writeByte("dimension", 114);
+            MapFile.writeShort("height", 128);
+            MapFile.writeShort("width", 128);
+            break;
+          case SCL_gameVersion::MC13:
+            MapFile.writeListHead("banners", NBT::Compound, 0);
+            MapFile.writeListHead("frames", NBT::Compound, 0);
+            MapFile.writeInt("dimension", 889464);
+            break;
+          case SCL_gameVersion::MC14:
+            MapFile.writeListHead("banners", NBT::Compound, 0);
+            MapFile.writeListHead("frames", NBT::Compound, 0);
+            MapFile.writeInt("dimension", 0);
+            MapFile.writeByte("locked", 1);
+            break;
+          case SCL_gameVersion::MC15:
+            MapFile.writeListHead("banners", NBT::Compound, 0);
+            MapFile.writeListHead("frames", NBT::Compound, 0);
+            MapFile.writeInt("dimension", 0);
+            MapFile.writeByte("locked", 1);
+            break;
+          case SCL_gameVersion::MC16:
+          case SCL_gameVersion::MC17:
+          case SCL_gameVersion::MC18:
+          case SCL_gameVersion::MC19:
+          case SCL_gameVersion::MC20:
+            MapFile.writeListHead("banners", NBT::Compound, 0);
+            MapFile.writeListHead("frames", NBT::Compound, 0);
+            MapFile.writeString("dimension", "minecraft:overworld");
+            MapFile.writeByte("locked", 1);
+            break;
+          default:
+            cerr << "Wrong game version!\n";
+            option.ui.report_error(errorFlag::UNKNOWN_MAJOR_GAME_VERSION,
+                                   "Unknown major game version!");
+            fail_count += 1;
+            continue;
+        }
+
+        MapFile.writeByteArrayHead("colors", 16384);
+        {
+          for (short rr = 0; rr < 128; rr++) {
+            for (short cc = 0; cc < 128; cc++) {
+              uint8_t ColorCur;
+              if (rr + offset[0] < mapPic.rows() &&
+                  cc + offset[1] < mapPic.cols())
+                ColorCur = mapPic(rr + offset[0], cc + offset[1]);
+              else
+                ColorCur = 0;
+              MapFile.writeByte("this should never be seen", ColorCur);
+            }
+            option.progress.add(1);
+          }
+        }
+      }
+      MapFile.endCompound();
+      MapFile.close();
+
+      currentIndex++;
+    }
+  }
+  option.ui.report_working_status(workStatus::none);
+  return (fail_count == 0);
 }
 
 std::optional<converted_image_impl::height_maps>

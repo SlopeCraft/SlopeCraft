@@ -212,6 +212,14 @@ struct convert_option {
   ui_callbacks ui{};
 };
 
+struct map_data_file_options {
+  uint64_t caller_api_version{SC_VERSION_U64};
+  const char *folder_path{""};
+  int begin_index{0};
+  progress_callbacks progress{};
+  ui_callbacks ui{};
+};
+
 struct build_options {
   uint64_t caller_api_version{SC_VERSION_U64};
   uint16_t max_allowed_height{256};
@@ -228,6 +236,7 @@ struct build_options {
   progress_callbacks main_progressbar;
   progress_callbacks sub_progressbar;
 };
+
 struct litematic_options {
   uint64_t caller_api_version{SC_VERSION_U64};
   const char *litename_utf8 = "by SlopeCraft";
@@ -350,6 +359,9 @@ class converted_image {
   virtual void get_original_image(uint32_t *buffer) const noexcept = 0;
   //  virtual void get_dithered_image(uint32_t *buffer) const noexcept = 0;
   virtual void get_converted_image(uint32_t *buffer) const noexcept = 0;
+
+  [[nodiscard]] virtual bool export_map_data(
+      const map_data_file_options &option) const noexcept = 0;
 };
 
 class structure_3D {
@@ -361,12 +373,12 @@ class structure_3D {
   [[nodiscard]] virtual size_t palette_length() const noexcept = 0;
   virtual void get_palette(const char **buffer_block_id) const noexcept = 0;
 
-  virtual bool export_litematica(
+  [[nodiscard]] virtual bool export_litematica(
       const char *filename, const litematic_options &option) const noexcept = 0;
-  virtual bool export_vanilla_structure(
+  [[nodiscard]] virtual bool export_vanilla_structure(
       const char *filename,
       const vanilla_structure_options &option) const noexcept = 0;
-  virtual bool export_WE_schem(
+  [[nodiscard]] virtual bool export_WE_schem(
       const char *filename, const WE_schem_options &option) const noexcept = 0;
 };
 
