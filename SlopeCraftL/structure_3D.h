@@ -14,11 +14,11 @@ class structure_3D_impl : public structure_3D {
  private:
   libSchem::Schem schem;
 
+ public:
   Eigen::ArrayXX<uint8_t>
       map_color;  // map color may be modified by lossy
                   // compression,so we store the modified one
 
- public:
   size_t shape_x() const noexcept final { return this->schem.x_range(); }
   size_t shape_y() const noexcept final { return this->schem.y_range(); }
   size_t shape_z() const noexcept final { return this->schem.z_range(); }

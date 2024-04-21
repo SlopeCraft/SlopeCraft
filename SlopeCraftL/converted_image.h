@@ -45,6 +45,9 @@ class converted_image_impl : public converted_image {
   void get_converted_image(uint32_t *buffer) const noexcept final {
     this->converter.converted_image(buffer, nullptr, nullptr, false);
   }
+  
+  void get_compressed_image(const structure_3D &structure,
+                            uint32_t *buffer) const noexcept final;
 
   bool export_map_data(
       const map_data_file_options &option) const noexcept final;

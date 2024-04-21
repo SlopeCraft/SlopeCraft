@@ -332,3 +332,19 @@ structure_3D *color_table_impl::load_build_cache(
   write_to_sd(error, res.error());
   return nullptr;
 }
+
+std::array<uint32_t, 256> LUT_map_color_to_ARGB() noexcept {
+  const auto &basic = *SlopeCraft::basic_colorset;
+  std::array<uint32_t, 256> ret;
+  ret.fill(0);
+  for (size_t idx = 0; idx < 256; idx++) {
+    const auto map_color = index2mapColor(idx);
+    if (index2baseColor(idx) == 0) {
+      ret[map_color] = 0x00000000;
+      continue;
+    }
+    ret[map_color] =
+        RGB2ARGB(basic.RGB(idx, 0), basic.RGB(idx, 1), basic.RGB(idx, 2));
+  }
+  return ret;
+}

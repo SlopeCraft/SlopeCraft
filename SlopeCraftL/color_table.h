@@ -120,6 +120,8 @@ class color_table_impl : public SlopeCraft::color_table {
       const char *cache_root_dir, string_deliver *error) const noexcept final;
 };
 
+[[nodiscard]] std::array<uint32_t, 256> LUT_map_color_to_ARGB() noexcept;
+
 //[[nodiscard]] std::string digest_to_string(
 //    std::span<const uint64_t> hash) noexcept;
 

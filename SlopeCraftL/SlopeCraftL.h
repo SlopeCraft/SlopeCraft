@@ -360,6 +360,9 @@ class converted_image {
   //  virtual void get_dithered_image(uint32_t *buffer) const noexcept = 0;
   virtual void get_converted_image(uint32_t *buffer) const noexcept = 0;
 
+  virtual void get_compressed_image(const structure_3D &structure,
+                                    uint32_t *buffer) const noexcept = 0;
+
   [[nodiscard]] virtual bool export_map_data(
       const map_data_file_options &option) const noexcept = 0;
 

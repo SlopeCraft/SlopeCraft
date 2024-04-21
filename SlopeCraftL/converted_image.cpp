@@ -11,6 +11,7 @@
 #include "height_line.h"
 #include "lossy_compressor.h"
 #include "NBTWriter/NBTWriter.h"
+#include "structure_3D.h"
 
 converted_image_impl::converted_image_impl(const color_table_impl &table)
     : converter{*SlopeCraft::basic_colorset, *table.allowed},
@@ -42,6 +43,28 @@ converted_image *color_table_impl::convert_image(
   option.ui.report_working_status(workStatus::none);
 
   return new converted_image_impl{std::move(cvted)};
+}
+
+void converted_image_impl::get_compressed_image(
+    const structure_3D &structure_, uint32_t *buffer) const noexcept {
+  const auto &structure = dynamic_cast<const structure_3D_impl &>(structure_);
+  assert(this->rows() == structure.map_color.rows());
+  assert(this->cols() == structure.map_color.cols());
+
+  const auto LUT = LUT_map_color_to_ARGB();
+  Eigen::Map<
+      Eigen::Array<uint32_t, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>
+      dest{buffer, static_cast<int64_t>(this->rows()),
+           static_cast<int64_t>(this->cols())};
+  dest.fill(0);
+  for (size_t r = 0; r < this->rows(); r++) {
+    for (size_t c = 0; c < this->cols(); c++) {
+      const auto map_color = structure.map_color(r, c);
+      assert(map_color >= 0);
+      assert(map_color <= 255);
+      dest(r, c) = LUT[map_color];
+    }
+  }
 }
 
 bool converted_image_impl::export_map_data(
