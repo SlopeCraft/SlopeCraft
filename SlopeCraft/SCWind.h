@@ -106,10 +106,8 @@ class SCWind : public QMainWindow {
   std::unordered_map<
       selection, std::unique_ptr<SlopeCraft::color_table, SlopeCraft::deleter>>
       color_tables;
-  SlopeCraft::GA_converter_option GA_option{};
   //  SlopeCraft::Kernel* kernel;
 
-  task_pool tasks;
   CvtPoolModel* cvt_pool_model{nullptr};
   ExportPoolModel* export_pool_model{nullptr};
   ExportTableModel* export_table_model{nullptr};
@@ -123,7 +121,9 @@ class SCWind : public QMainWindow {
   // QString fileonly_export_dir{""};
 
  public:
-  task_pool& get_tasks() noexcept { return this->tasks; }
+  SlopeCraft::GA_converter_option GA_option{};
+  task_pool tasks;
+  [[deprecated]] task_pool& get_tasks() noexcept { return this->tasks; }
 
   QString cache_root_dir() const noexcept;
   SlopeCraft::color_table* current_color_table() noexcept;
