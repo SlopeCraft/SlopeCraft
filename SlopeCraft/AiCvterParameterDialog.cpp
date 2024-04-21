@@ -26,11 +26,12 @@ This file is part of SlopeCraft.
 #include "SCWind.h"
 
 using namespace SlopeCraft;
-AiCvterParameterDialog::AiCvterParameterDialog(SCWind *parent)
+AiCvterParameterDialog::AiCvterParameterDialog(SCWind* parent)
     : QDialog(parent), ui(new Ui::AiCvterParameterDialog) {
   this->ui->setupUi(this);
 
-  SlopeCraft::GA_converter_option opt = *this->kernel->aiCvterOpt();
+  SlopeCraft::GA_converter_option opt =
+      dynamic_cast<SCWind*>(this->parent())->GA_option;
   opt.caller_api_version = SC_VERSION_U64;
 
   this->ui->sb_pop_size->setValue(opt.popSize);
@@ -44,18 +45,20 @@ AiCvterParameterDialog::~AiCvterParameterDialog() { delete this->ui; }
 
 SlopeCraft::GA_converter_option AiCvterParameterDialog::current_option()
     const noexcept {
-  SlopeCraft::GA_converter_option ret;
-  ret.crossoverProb = this->ui->dsb_crossover_prob->value();
-  ret.mutationProb = this->ui->dsb_mutate_prob->value();
-  ret.maxFailTimes = this->ui->sb_max_early_stop->value();
-  ret.maxGeneration = this->ui->sb_max_gen->value();
-  ret.popSize = this->ui->sb_pop_size->value();
+  SlopeCraft::GA_converter_option ret{
+      .caller_api_version = SC_VERSION_U64,
+      .popSize = static_cast<size_t>(this->ui->sb_pop_size->value()),
+      .maxGeneration = static_cast<size_t>(this->ui->sb_max_gen->value()),
+      .maxFailTimes = static_cast<size_t>(this->ui->sb_max_early_stop->value()),
+      .crossoverProb = this->ui->dsb_crossover_prob->value(),
+      .mutationProb = this->ui->dsb_mutate_prob->value(),
+  };
   return ret;
 }
 
 void AiCvterParameterDialog::on_buttonBox_accepted() noexcept {
   auto opt = this->current_option();
-  this->kernel->setAiCvterOpt(&opt);
+  dynamic_cast<SCWind*>(this->parent())->GA_option = opt;
 }
 
 void AiCvterParameterDialog::on_buttonBox_rejected() noexcept {
