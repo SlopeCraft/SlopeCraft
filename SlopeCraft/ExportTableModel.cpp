@@ -2,7 +2,7 @@
 #include "SCWind.h"
 
 ExportTableModel::ExportTableModel(SCWind* parent)
-    : QAbstractTableModel(parent), pool{parent->get_tasks()} {}
+    : QAbstractTableModel(parent), pool{parent->tasks} {}
 
 ExportTableModel::~ExportTableModel() {}
 
