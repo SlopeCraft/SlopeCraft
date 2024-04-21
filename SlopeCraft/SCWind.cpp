@@ -39,14 +39,14 @@ SCWind::SCWind(QWidget *parent) : QMainWindow(parent), ui(new Ui::SCWind) {
 
   // initialize cvt pool model
   {
-    this->cvt_pool_model = new CvtPoolModel{this, &this->tasks};
+    this->cvt_pool_model = new CvtPoolModel{this};
     this->ui->lview_pool_cvt->setModel(this->cvt_pool_model);
     this->cvt_pool_model->set_listview(this->ui->lview_pool_cvt);
     connect(this->ui->lview_pool_cvt->selectionModel(),
             &QItemSelectionModel::selectionChanged, this,
             &SCWind::when_cvt_pool_selectionChanged);
 
-    this->export_pool_model = new ExportPoolModel{this, &this->tasks};
+    this->export_pool_model = new ExportPoolModel{this};
     this->ui->lview_pool_export->setModel(this->export_pool_model);
     this->export_pool_model->set_listview(this->ui->lview_pool_export);
     connect(this->ui->lview_pool_export->selectionModel(),
@@ -63,7 +63,7 @@ SCWind::SCWind(QWidget *parent) : QMainWindow(parent), ui(new Ui::SCWind) {
     });
   }
   {
-    this->export_table_model = new ExportTableModel{this, &this->tasks};
+    this->export_table_model = new ExportTableModel{this};
     this->ui->tview_export_fileonly->setModel(this->export_table_model);
 
     connect(this, &SCWind::image_changed, this->export_table_model,
@@ -631,6 +631,17 @@ void SCWind::when_export_type_toggled() noexcept {
 //   }
 // }
 
+SlopeCraft::convert_option SCWind::current_convert_option() noexcept {
+  return SlopeCraft::convert_option{
+      .caller_api_version = SC_VERSION_U64,
+      .algo = this->selected_algo(),
+      .dither = this->is_dither_selected(),
+      .ai_cvter_opt = this->GA_option,
+      .progress = progress_callback(this->ui->pbar_cvt),
+      .ui = this->ui_callbacks(),
+  };
+}
+
 std::unique_ptr<SlopeCraft::converted_image, SlopeCraft::deleter>
 SCWind::convert_image(int idx) noexcept {
   assert(idx >= 0);
@@ -645,15 +656,7 @@ SCWind::convert_image(int idx) noexcept {
         .rows = static_cast<size_t>(raw.height()),
         .cols = static_cast<size_t>(raw.width()),
     };
-    SlopeCraft::convert_option opt{
-        .caller_api_version = SC_VERSION_U64,
-        .algo = this->selected_algo(),
-        .dither = this->is_dither_selected(),
-        .ai_cvter_opt = this->GA_option,
-        .progress = progress_callback(this->ui->pbar_cvt),
-        .ui = this->ui_callbacks(),
-    };
-    auto cvted_img = ctable->convert_image(img, opt);
+    auto cvted_img = ctable->convert_image(img, this->current_convert_option());
 
     return std::unique_ptr<SlopeCraft::converted_image, SlopeCraft::deleter>{
         cvted_img};
