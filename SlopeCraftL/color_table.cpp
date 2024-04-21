@@ -333,6 +333,30 @@ structure_3D *color_table_impl::load_build_cache(
   return nullptr;
 }
 
+void color_table_impl::stat_blocks(const structure_3D &s,
+                                   size_t buffer[64]) const noexcept {
+  std::fill(buffer, buffer + 64, 0);
+  const auto &structure = dynamic_cast<const structure_3D_impl &>(s);
+
+  const auto schem_stat = structure.schem.stat_blocks();
+  for (size_t schem_blk_id = 0; schem_blk_id < structure.schem.palette_size();
+       schem_blk_id++) {
+    const auto strid = structure.schem.palette()[schem_blk_id];
+    const auto blkp = this->find_block_for_index(schem_blk_id, strid);
+    if (blkp == nullptr) {
+      std::cerr << fmt::format(
+          "Failed to find \"{}\" in color_table, this type of block will not "
+          "be counted.\n",
+          strid);
+      continue;
+    }
+    const ptrdiff_t index_in_palette = blkp - this->blocks.data();
+    assert(index_in_palette >= 0);
+    assert(index_in_palette < this->blocks.size());
+    buffer[index_in_palette] += schem_stat[schem_blk_id];
+  }
+}
+
 std::array<uint32_t, 256> LUT_map_color_to_ARGB() noexcept {
   const auto &basic = *SlopeCraft::basic_colorset;
   std::array<uint32_t, 256> ret;

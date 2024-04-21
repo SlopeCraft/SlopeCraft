@@ -339,6 +339,9 @@ class color_table {
   [[nodiscard]] virtual structure_3D *load_build_cache(
       const converted_image &, const build_options &,
       const char *cache_root_dir, string_deliver *error) const noexcept = 0;
+
+  virtual void stat_blocks(const structure_3D &,
+                           size_t buffer[64]) const noexcept = 0;
 };
 
 class converted_image {

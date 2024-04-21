@@ -12,9 +12,8 @@
 
 class structure_3D_impl : public structure_3D {
  private:
-  libSchem::Schem schem;
-
  public:
+  libSchem::Schem schem;
   Eigen::ArrayXX<uint8_t>
       map_color;  // map color may be modified by lossy
                   // compression,so we store the modified one

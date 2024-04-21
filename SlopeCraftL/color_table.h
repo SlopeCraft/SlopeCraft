@@ -118,6 +118,9 @@ class color_table_impl : public SlopeCraft::color_table {
   [[nodiscard]] structure_3D *load_build_cache(
       const converted_image &, const build_options &,
       const char *cache_root_dir, string_deliver *error) const noexcept final;
+
+  void stat_blocks(const structure_3D &s,
+                   size_t buffer[64]) const noexcept final;
 };
 
 [[nodiscard]] std::array<uint32_t, 256> LUT_map_color_to_ARGB() noexcept;
