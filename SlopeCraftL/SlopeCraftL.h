@@ -312,6 +312,16 @@ class color_table {
                                      void *custom_data),
                             void *custom_data) const = 0;
 
+  template <class visitor>
+  void visit_blocks(visitor v) const {
+    this->visit_blocks(
+        [](const mc_block_interface *b, void *custom_data) {
+          visitor *fun = reinterpret_cast<visitor *>(custom_data);
+          (*fun)(b);
+        },
+        &v);
+  }
+
   [[nodiscard]] virtual converted_image *convert_image(
       const_image_reference original_img,
       const convert_option &option) const noexcept = 0;

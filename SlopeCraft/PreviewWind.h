@@ -5,6 +5,7 @@
 #include <SlopeCraftL.h>
 #include <vector>
 #include <span>
+#include <memory>
 #include <QAbstractItemModel>
 
 class PreviewWind;
@@ -16,25 +17,26 @@ class PreviewWind;
 
 struct material_item {
   const SlopeCraft::mc_block_interface* blk{nullptr};
-  int count{0};
+  size_t count{0};
 };
 
 class PreviewWind : public QDialog {
   Q_OBJECT
  private:
-  Ui::PreviewWind* ui;
+  std::unique_ptr<Ui::PreviewWind> ui;
   std::vector<material_item> mat_list;
   MaterialModel* mmp{nullptr};
 
-  void set_size(std::span<int, 3> size) & noexcept;
-  void set_total_count(int count) & noexcept;
+  void set_size(std::span<size_t, 3> size) & noexcept;
+  void set_total_count(size_t count) & noexcept;
 
  public:
   explicit PreviewWind(QWidget* parent = nullptr);
   ~PreviewWind();
 
   const auto& material_list() const noexcept { return this->mat_list; }
-  void setup_data(const SlopeCraft::Kernel* kernel) noexcept;
+  void setup_data(const SlopeCraft::color_table&,
+                  const SlopeCraft::structure_3D&) noexcept;
 
   enum class sort_option { no_sort, ascending, descending };
 
