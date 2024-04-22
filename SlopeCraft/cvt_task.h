@@ -5,6 +5,7 @@
 #include <QImage>
 #include <QVariant>
 #include <tl/expected.hpp>
+#include <functional>
 
 struct convert_input {
   const SlopeCraft::color_table* table{nullptr};
@@ -105,6 +106,71 @@ struct convert_result {
     return this->built_structures.contains(opt);
   }
 
+  void cache_all_structures(const SlopeCraft::color_table& table,
+                            const SlopeCraft::converted_image& cvted,
+                            const QString& cache_root_dir) noexcept {
+    this->cache_all_structures(table, cvted, cache_root_dir,
+                               [](auto) { return true; });
+  }
+
+  void cache_all_structures(
+      const SlopeCraft::color_table& table,
+      const SlopeCraft::converted_image& cvted, const QString& cache_root_dir,
+      const std::function<bool(const SlopeCraft::build_options& opt)>&
+          cache_or_not) noexcept {
+    for (auto& pair : this->built_structures) {
+      if (!cache_or_not(pair.first)) {
+        continue;
+      }
+      [[maybe_unused]] const bool ok =
+          table.save_build_cache(cvted, pair.first, *pair.second,
+                                 cache_root_dir.toLocal8Bit().data(), nullptr);
+    }
+  }
+
+  void cache_structure(const SlopeCraft::color_table& table,
+                       const SlopeCraft::converted_image& cvted,
+                       const SlopeCraft::build_options& opt,
+                       const QString& cache_root_dir) noexcept {
+    auto it = this->built_structures.find(opt);
+    if (it == this->built_structures.end()) {
+      return;
+    }
+    if (it->second == nullptr) {
+      return;
+    }
+    const bool ok = table.save_build_cache(
+        cvted, opt, *it->second, cache_root_dir.toLocal8Bit().data(), nullptr);
+    if (ok) {
+      it->second.reset();
+    }
+    return;
+  }
+
+  const SlopeCraft::structure_3D* load_build_cache(
+      const SlopeCraft::color_table& table,
+      const SlopeCraft::converted_image& cvted,
+      const SlopeCraft::build_options& opt,
+      const QString& cache_root_dir) noexcept {
+    auto it = this->built_structures.find(opt);
+    if (it == this->built_structures.end()) {
+      return nullptr;
+    }
+
+    if (it->second != nullptr) {  // the structure exist in memory
+      return it->second.get();
+    }
+
+    // the structure is cached
+    SlopeCraft::structure_3D* p = table.load_build_cache(
+        cvted, opt, cache_root_dir.toLocal8Bit().data(), nullptr);
+    if (p == nullptr) {  // failed to load cache
+      return nullptr;
+    }
+    it->second.reset(p);
+    return it->second.get();
+  }
+
   void set_built(SlopeCraft::build_options opt,
                  std::unique_ptr<SlopeCraft::structure_3D, SlopeCraft::deleter>
                      structure) noexcept {
@@ -167,6 +233,36 @@ struct cvt_task {
     }
     return it->second.is_built_with(build_option);
   }
+
+  //  [[nodiscard]] const SlopeCraft::structure_3D* load_build_cache(
+  //      const SlopeCraft::color_table* table,
+  //      const SlopeCraft::convert_option& cvt_option,
+  //      const SlopeCraft::build_options& build_option,
+  //      const QString& cache_dir) noexcept {
+  //
+  //  }
+
+  void cache_all_structures(const SlopeCraft::color_table& table,
+                            const QString& cache_root_dir) noexcept {
+    this->cache_all_structures(table, cache_root_dir,
+                               [](auto, auto) { return true; });
+  }
+
+  void cache_all_structures(
+      const SlopeCraft::color_table& table, const QString& cache_root_dir,
+      const std::function<bool(const SlopeCraft::convert_option& cvtopt,
+                               const SlopeCraft::build_options& build_opt)>&
+          cache_or_not) noexcept {
+    for (auto& cvt : this->converted_images) {
+      const auto& cvted_img = cvt.second.converted_image;
+      cvt.second.cache_all_structures(
+          table, *cvted_img, cache_root_dir,
+          [cache_or_not, &cvt](const SlopeCraft::build_options& bopt) {
+            return cache_or_not(cvt.first.option, bopt);
+          });
+    }
+  }
+
   static tl::expected<cvt_task, QString> load(QString filename) noexcept;
 };
 
