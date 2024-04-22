@@ -663,6 +663,13 @@ SCWind::convert_image(int idx) noexcept {
   }
 }
 
+std::unique_ptr<SlopeCraft::structure_3D, SlopeCraft::deleter> SCWind::build_3D(
+    const SlopeCraft::converted_image &cvted) noexcept {
+  auto ctable = this->current_color_table();
+  auto str = ctable->build(cvted, this->current_build_option());
+  return std::unique_ptr<SlopeCraft::structure_3D, SlopeCraft::deleter>{str};
+}
+
 void SCWind::kernel_make_cvt_cache() noexcept {
   std::string err;
   err.resize(4096);

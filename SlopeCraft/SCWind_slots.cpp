@@ -257,7 +257,9 @@ void SCWind::on_pb_cvt_current_clicked() noexcept {
     if (!cvted) {
       return;
     }
-    this->tasks[sel.value()].converted_img = std::move(cvted);
+    this->tasks[sel.value()].set_converted(this->current_color_table(),
+                                           this->current_convert_option(),
+                                           std::move(cvted));
   }
 
   //  this->kernel_make_cvt_cache();
@@ -271,10 +273,13 @@ void SCWind::on_pb_cvt_current_clicked() noexcept {
 void SCWind::on_pb_cvt_all_clicked() noexcept {
   for (int idx = 0; idx < (int)this->tasks.size(); idx++) {
     auto &task = this->tasks[idx];
-    if (task.is_converted()) {
+    if (task.is_converted_with(this->current_color_table(),
+                               this->current_convert_option())) {
       continue;
     }
-    task.converted_img = this->convert_image(idx);
+    auto cvted = this->convert_image(idx);
+    task.set_converted(this->current_color_table(),
+                       this->current_convert_option(), std::move(cvted));
   }
   emit this->image_changed();
 }
@@ -375,24 +380,32 @@ void SCWind::on_pb_build3d_clicked() noexcept {
 
   cvt_task &task = *task_ptr;
 
-  if (!task.is_converted()) [[unlikely]] {
+  if (!task.is_converted_with(this->current_color_table(),
+                              this->current_convert_option())) [[unlikely]] {
     QMessageBox::warning(this, tr("该图像尚未被转化"),
                          tr("必须先转化一个图像，然后再为它构建三维结构"));
     return;
   }
-  {
-    const int gidx = task_ptr - this->tasks.data();
-    this->kernel_set_image(gidx);
-    if (!this->kernel->loadConvertCache(this->selected_algo(),
-                                        this->is_dither_selected())) {
-      this->kernel_convert_image();
-    }
+
+  const int gidx = task_ptr - this->tasks.data();
+  auto table = this->current_color_table();
+  const auto cvt_option = this->current_convert_option();
+  if (!task.is_converted_with(table, cvt_option)) {
+    task.set_converted(table, cvt_option, this->convert_image(gidx));
   }
+  auto &cvted =
+      task.converted_images.find(convert_input{table, cvt_option})->second;
+  //    this->kernel_set_image(gidx);
+  //    if (!this->kernel->loadConvertCache(this->selected_algo(),
+  //                                        this->is_dither_selected())) {
+  //      this->kernel_convert_image();
+  //    }
 
-  this->kernel_build_3d();
-  this->kernel_make_build_cache();
-
-  task.set_built();
+  const auto build_option = this->current_build_option();
+  if (!cvted.is_built_with(build_option)) {
+    cvted.set_built(build_option, this->build_3D(*cvted.converted_image));
+  }
+  // load cache if converted
   this->refresh_current_build_display(&task, true);
 }
 
@@ -758,7 +771,7 @@ void SCWind::on_pb_export_file_clicked() noexcept {
 }
 
 void SCWind::on_ac_GAcvter_options_triggered() noexcept {
-  AiCvterParameterDialog *acpd = new AiCvterParameterDialog{this, this->kernel};
+  AiCvterParameterDialog *acpd = new AiCvterParameterDialog{this};
 
   acpd->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
   acpd->setAttribute(Qt::WidgetAttribute::WA_AlwaysStackOnTop, true);

@@ -199,8 +199,12 @@ class SCWind : public QMainWindow {
 
   void update_button_states() noexcept;
 
-  std::unique_ptr<SlopeCraft::converted_image, SlopeCraft::deleter>
+  [[nodiscard]] std::unique_ptr<SlopeCraft::converted_image,
+                                SlopeCraft::deleter>
   convert_image(int idx) noexcept;
+
+  [[nodiscard]] std::unique_ptr<SlopeCraft::structure_3D, SlopeCraft::deleter>
+  build_3D(const SlopeCraft::converted_image&) noexcept;
 
   [[deprecated]] void kernel_set_image(int idx) noexcept;
   [[deprecated]] void kernel_convert_image() noexcept;
