@@ -974,7 +974,7 @@ void SCWind::on_ac_test_blocklist_triggered() noexcept {
 
   std::string err;
   err.resize(4096);
-  SlopeCraft::string_deliver sd{err.data(), err.size()};
+  auto sd = SlopeCraft::string_deliver::from_string(err);
 
   SlopeCraft::test_blocklist_options opt;
   opt.block_count = blks.size();
@@ -982,7 +982,8 @@ void SCWind::on_ac_test_blocklist_triggered() noexcept {
   opt.basecolors = basecolors.data();
   opt.err = &sd;
 
-  if (!this->kernel->makeTests(filename.toLocal8Bit().data(), opt)) {
+  if (!this->current_color_table()->generate_test_schematic(
+          filename.toLocal8Bit().data(), opt)) {
     QString qerr = QString::fromUtf8(err.data());
     QMessageBox::warning(this, tr("输出测试文件失败"),
                          tr("保存测试文件 %1 时出现错误。详细信息：\n%2")

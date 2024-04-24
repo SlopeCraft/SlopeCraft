@@ -357,6 +357,79 @@ void color_table_impl::stat_blocks(const structure_3D &s,
   }
 }
 
+std::string color_table_impl::impl_generate_test_schematic(
+    std::string_view filename,
+    const test_blocklist_options &option) const noexcept {
+  if (!filename.ends_with(".nbt")) {
+    return "File name should ends with \".nbt\"";
+  }
+  libSchem::Schem test;
+  test.set_MC_major_version_number(this->mc_version_);
+  test.set_MC_version_number(
+      MCDataVersion::suggested_version(this->mc_version_));
+  // const simpleBlock ** realSrc=(const simpleBlock **)src;
+  std::vector<const mc_block *> realSrc;
+  std::vector<uint8_t> realBaseColor;
+  realSrc.clear();
+  realBaseColor.clear();
+  for (size_t idx = 0; idx < option.block_count; idx++) {
+    if (option.block_ptrs[idx]->getVersion() > (int)this->mc_version_) {
+      continue;
+    }
+    realSrc.emplace_back(static_cast<const mc_block *>(option.block_ptrs[idx]));
+    realBaseColor.emplace_back(option.basecolors[idx]);
+  }
+
+  std::vector<std::vector<int>> block_counter;
+  block_counter.resize(64);
+
+  for (uint32_t idx = 0; idx < realSrc.size(); idx++) {
+    block_counter[realBaseColor[idx]].push_back(idx);
+  }
+
+  {
+    std::vector<const char *> ids;
+    ids.reserve(realSrc.size() + 1);
+    ids.emplace_back("minecraft:air");
+    for (auto i : realSrc) {
+      ids.emplace_back(i->idForVersion(this->mc_version_));
+    }
+
+    test.set_block_id(ids.data(), ids.size());
+  }
+
+  int xSize = 0;
+  constexpr int zSize = 64, ySize = 2;
+  for (const auto &it : block_counter) {
+    xSize = std::max(size_t(xSize), it.size());
+  }
+  test.resize(xSize + 1, ySize, zSize);
+  test.set_zero();
+
+  for (uint8_t base = 0; base < 64; base++) {
+    for (uint32_t idx = 0; idx < block_counter[base].size(); idx++) {
+      int xPos = idx;
+      int yPos = 0;
+      int zPos = base;
+
+      test(xPos, yPos, zPos) = block_counter[base][idx] + 1;
+    }
+    test(block_counter[base].size(), 1, base) = 1;  // glass block
+  }
+
+  SCL_errorFlag err;
+  std::string detail;
+  const bool success = test.export_structure(filename, true, &err, &detail);
+
+  if (!success) {
+    return fmt::format(
+        "Failed to export structure file {}, error code = {}, detail: {}",
+        filename, int(err), detail);
+  } else {
+    return {};
+  }
+}
+
 std::array<uint32_t, 256> LUT_map_color_to_ARGB() noexcept {
   const auto &basic = *SlopeCraft::basic_colorset;
   std::array<uint32_t, 256> ret;

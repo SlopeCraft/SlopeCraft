@@ -121,6 +121,18 @@ class color_table_impl : public SlopeCraft::color_table {
 
   void stat_blocks(const structure_3D &s,
                    size_t buffer[64]) const noexcept final;
+
+  bool generate_test_schematic(
+      const char *filename,
+      const test_blocklist_options &option) const noexcept final {
+    auto err = this->impl_generate_test_schematic(filename, option);
+    write_to_sd(option.err, err);
+    return err.empty();
+  }
+
+  std::string impl_generate_test_schematic(
+      std::string_view filename,
+      const test_blocklist_options &option) const noexcept;
 };
 
 [[nodiscard]] std::array<uint32_t, 256> LUT_map_color_to_ARGB() noexcept;

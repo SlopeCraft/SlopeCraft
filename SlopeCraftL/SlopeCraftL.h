@@ -352,6 +352,10 @@ class color_table {
 
   virtual void stat_blocks(const structure_3D &,
                            size_t buffer[64]) const noexcept = 0;
+
+  [[nodiscard]] virtual bool generate_test_schematic(
+      const char *filename,
+      const test_blocklist_options &option) const noexcept = 0;
 };
 
 class converted_image {
