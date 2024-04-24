@@ -646,10 +646,14 @@ std::unique_ptr<SlopeCraft::converted_image, SlopeCraft::deleter>
 SCWind::convert_image(int idx) noexcept {
   assert(idx >= 0);
   assert(idx < (int)this->tasks.size());
+  return this->convert_image(this->tasks[idx]);
+}
 
+std::unique_ptr<SlopeCraft::converted_image, SlopeCraft::deleter>
+SCWind::convert_image(const cvt_task &task) noexcept {
   auto ctable = this->current_color_table();
 
-  const QImage &raw = this->tasks[idx].original_image;
+  const QImage &raw = task.original_image;
   {
     SlopeCraft::const_image_reference img{
         .data = (const uint32_t *)raw.scanLine(0),
@@ -663,11 +667,48 @@ SCWind::convert_image(int idx) noexcept {
   }
 }
 
+const SlopeCraft::converted_image &SCWind::convert_if_need(
+    cvt_task &task) noexcept {
+  const auto table = this->current_color_table();
+  const auto opt = this->current_convert_option();
+  if (!task.is_converted_with(table, opt)) {
+    task.set_converted(table, opt, this->convert_image(task));
+  }
+
+  auto &cvted = task.converted_images[{table, opt}].converted_image;
+  assert(cvted != nullptr);
+  return *cvted;
+}
+
 std::unique_ptr<SlopeCraft::structure_3D, SlopeCraft::deleter> SCWind::build_3D(
     const SlopeCraft::converted_image &cvted) noexcept {
   auto ctable = this->current_color_table();
   auto str = ctable->build(cvted, this->current_build_option());
   return std::unique_ptr<SlopeCraft::structure_3D, SlopeCraft::deleter>{str};
+}
+
+std::tuple<const SlopeCraft::converted_image &,
+           const SlopeCraft::structure_3D &>
+SCWind::convert_and_build_if_need(cvt_task &task) noexcept {
+  const auto table = this->current_color_table();
+  const auto &cvted = this->convert_if_need(task);
+
+  assert(task.is_converted_with(table, this->current_convert_option()));
+  auto &cvt_result =
+      task.converted_images.at({table, this->current_convert_option()});
+  const auto build_opt = this->current_build_option();
+
+  if (auto str_3D = cvt_result.load_build_cache(*table, cvted, build_opt,
+                                                this->cache_root_dir())) {
+    // The 3D structure is built, it exists in memory or can be loaded
+    return {cvted, *str_3D};
+  }
+  // Build 3D structure now
+  auto s = this->build_3D(cvted);
+  auto ptr = s.get();
+  assert(ptr != nullptr);
+  cvt_result.set_built(build_opt, std::move(s));
+  return {cvted, *ptr};
 }
 
 void SCWind::kernel_make_cvt_cache() noexcept {

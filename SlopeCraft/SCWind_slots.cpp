@@ -5,6 +5,7 @@
 #include <ranges>
 #include <QApplication>
 #include <QDesktopServices>
+#include <QRgb>
 #include "PreviewWind.h"
 #include "AiCvterParameterDialog.h"
 #include "VersionDialog.h"
@@ -410,48 +411,8 @@ void SCWind::on_pb_build3d_clicked() noexcept {
 }
 
 void SCWind::on_pb_preview_materials_clicked() noexcept {
-  auto taskp = this->selected_export_task();
-  if (taskp == nullptr) {
-    QMessageBox::warning(this, tr("未选择图像"),
-                         tr("请在左侧任务池选择一个图像"));
-    return;
-  }
-  assert(taskp != nullptr);
-
-  cvt_task &task = *taskp;
-  const ptrdiff_t index = &task - this->tasks.data();
-  assert(index >= 0 && index < ptrdiff_t(this->tasks.size()));
-  if (!task.is_converted()) [[unlikely]] {
-    QMessageBox::warning(this, tr("该图像尚未被转化"),
-                         tr("必须先转化一个图像，然后再为它构建三维结构"));
-    return;
-  }
-  QString errtitle;
-  QString errmsg;
-  this->kernel_set_image(index);
-  // try to load cache
-  [this, &errtitle, &errmsg]() {
-    if (this->kernel->queryStep() >= SCL_step::builded) {
-      return;
-    }
-    if (!this->kernel->loadConvertCache(this->selected_algo(),
-                                        this->is_dither_selected())) {
-      errtitle = tr("该图像尚未被转化");
-      errmsg =
-          tr("可能是在转化完成之后又修改了转化算法，因此之前的转化无效。必须重"
-             "新转化该图像。");
-      return;
-    }
-    if (!this->kernel->loadBuildCache(this->current_build_option())) {
-      errtitle = tr("尚未构建三维结构");
-      errmsg = tr(
-          "在预览材料表之前，必须先构建三维结构。出现这个警告，可能是因为你"
-          "在构建三维结构之后，又修改了三维结构的选项，因此之前的结果无效。");
-    }
-  }();
-
-  if (!errtitle.isEmpty()) {
-    QMessageBox::warning(this, errtitle, errmsg);
+  auto [cvted_img, structure_3D] = this->load_selected_3D();
+  if (cvted_img == nullptr || structure_3D == nullptr) {
     return;
   }
 
@@ -467,42 +428,76 @@ void SCWind::on_pb_preview_materials_clicked() noexcept {
 
   pw->show();
 
-  pw->setup_data(this->kernel);
+  pw->setup_data(*this->current_color_table(), *structure_3D);
+}
+
+std::tuple<const SlopeCraft::converted_image *,
+           const SlopeCraft::structure_3D *>
+SCWind::load_selected_3D() noexcept {
+#warning "TODO: Move this function into SCWind.cpp"
+  auto taskp = this->selected_export_task();
+  if (taskp == nullptr) {
+    QMessageBox::warning(this, tr("未选择图像"),
+                         tr("请在左侧任务池选择一个图像"));
+    return {nullptr, nullptr};
+  }
+  assert(taskp != nullptr);
+
+  cvt_task &task = *taskp;
+  const ptrdiff_t index = &task - this->tasks.data();
+  assert(index >= 0 && index < ptrdiff_t(this->tasks.size()));
+  if (!task.is_converted_with(this->current_color_table(),
+                              this->current_convert_option())) {
+    QMessageBox::warning(this, tr("该图像尚未被转化"),
+                         tr("必须先转化一个图像，然后再为它构建三维结构"));
+    return {nullptr, nullptr};
+  }
+  QString errtitle;
+  QString errmsg;
+  // try to load cache
+  auto [cvted_img, structure_3D] =
+      [this, &task, &errtitle,
+       &errmsg]() -> std::pair<const SlopeCraft::converted_image *,
+                               const SlopeCraft::structure_3D *> {
+    auto it = task.converted_images.find(convert_input{
+        this->current_color_table(), this->current_convert_option()});
+    if (it == task.converted_images.end()) {
+      errtitle = tr("该图像尚未被转化");
+      errmsg =
+          tr("可能是在转化完成之后又修改了转化算法，因此之前的转化无效。必须重"
+             "新转化该图像。");
+      return {nullptr, nullptr};
+    }
+    auto str_3D = it->second.load_build_cache(
+        *this->current_color_table(), *it->second.converted_image,
+        this->current_build_option(), this->cache_root_dir());
+
+    if (str_3D == nullptr) {
+      errtitle = tr("尚未构建三维结构");
+      errmsg = tr(
+          "在预览材料表之前，必须先构建三维结构。出现这个警告，可能是因为你"
+          "在构建三维结构之后，又修改了三维结构的选项，因此之前的结果无效。");
+      return {it->second.converted_image.get(), nullptr};
+    }
+    return {it->second.converted_image.get(), str_3D};
+  }();
+
+  if (!errtitle.isEmpty()) {
+    QMessageBox::warning(this, errtitle, errmsg);
+    return {nullptr, nullptr};
+  }
+
+  return {cvted_img, structure_3D};
 }
 
 void SCWind::on_pb_preview_compress_effect_clicked() noexcept {
-  auto sel = this->selected_export_task();
-  if (sel == nullptr) {
-    QMessageBox::warning(this, tr("未选择图像"),
-                         tr("请在左侧任务池选择一个图像"));
-    return;
-  }
-  QString errtitle{""}, errmsg{""};
-  if (!sel->is_built()) {
-    errtitle = tr("尚未构建三维结构");
-    errmsg =
-        tr("在预览材料表之前，必须先构建三维结构。出现这个警告，可能是因为你"
-           "在构建三维结构之后，又修改了三维结构的选项，因此之前的结果无效。");
-  }
-  if (!this->kernel->loadConvertCache(this->selected_algo(),
-                                      this->is_dither_selected())) {
-    errtitle = tr("该图像尚未被转化");
-    errmsg =
-        tr("可能是在转化完成之后又修改了转化算法，因此之前的转化无效。必须重"
-           "新转化该图像。");
-  }
-  if (!this->kernel->loadBuildCache(this->current_build_option())) {
-    errtitle = tr("尚未构建三维结构");
-    errmsg =
-        tr("在预览材料表之前，必须先构建三维结构。出现这个警告，可能是因为你"
-           "在构建三维结构之后，又修改了三维结构的选项，因此之前的结果无效。");
-  }
-  if (!errtitle.isEmpty()) {
-    QMessageBox::warning(this, errtitle, errmsg);
+  auto [cvted_img, structure_3D] = this->load_selected_3D();
+  if (cvted_img == nullptr || structure_3D == nullptr) {
     return;
   }
 
-  CompressEffectViewer *cev = new CompressEffectViewer{this};
+  CompressEffectViewer *cev =
+      new CompressEffectViewer{this, *cvted_img, *structure_3D};
 
   cev->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
   cev->setWindowFlag(Qt::WindowType::Window, true);
@@ -625,30 +620,7 @@ void SCWind::on_pb_export_all_clicked() noexcept {
   }
 
   for (auto taskp : tasks_to_export) {
-    auto set_img_and_convert = [this, taskp]() {
-      this->kernel_set_image(taskp - this->tasks.data());
-      this->kernel_convert_image();
-      taskp->set_converted();
-    };
-
-    // this step make sure the image is converted in kernel
-    if (!taskp->is_converted) {
-      set_img_and_convert();
-    } else {
-      if (!this->kernel->loadConvertCache(this->selected_algo(),
-                                          this->is_dither_selected())) {
-        set_img_and_convert();
-      }
-    }
-
-    if (!taskp->is_built) {
-      this->kernel_build_3d();
-    } else {
-      if (!this->kernel->loadBuildCache(this->current_build_option())) {
-        this->kernel_build_3d();
-      }
-    }
-    taskp->set_built();
+    auto [cvted, str3D] = this->convert_and_build_if_need(*taskp);
 
     const std::string export_name =
         get_export_name(*taskp).toLocal8Bit().data();
@@ -667,23 +639,24 @@ void SCWind::on_pb_export_all_clicked() noexcept {
 
     switch (export_type) {
       case export_type::litematica:
-        if (!this->kernel->exportAsLitematic(export_name.c_str(), opt_lite)) {
+        if (!str3D.export_litematica(export_name.c_str(), opt_lite)) {
           SC_PRIVATE_MARCO_PROCESS_EXPORT_ERROR_on_pb_export_all_clicked;
         }
         break;
 
       case export_type::vanilla_structure:
-        if (!this->kernel->exportAsStructure(export_name.c_str(), opt_nbt)) {
+        if (!str3D.export_vanilla_structure(export_name.c_str(), opt_nbt)) {
           SC_PRIVATE_MARCO_PROCESS_EXPORT_ERROR_on_pb_export_all_clicked;
         }
         break;
       case export_type::WE_schem:
-        if (!this->kernel->exportAsWESchem(export_name.c_str(), opt_WE)) {
+        if (!str3D.export_WE_schem(export_name.c_str(), opt_WE)) {
           SC_PRIVATE_MARCO_PROCESS_EXPORT_ERROR_on_pb_export_all_clicked;
         }
         break;
       case export_type::flat_diagram:
-        if (!this->kernel->exportAsFlatDiagram(export_name.c_str(), opt_fd)) {
+        if (!str3D.export_flat_diagram(export_name.c_str(),
+                                       *this->current_color_table(), opt_fd)) {
           SC_PRIVATE_MARCO_PROCESS_EXPORT_ERROR_on_pb_export_all_clicked;
         }
         break;
@@ -712,7 +685,7 @@ void SCWind::on_pb_export_file_clicked() noexcept {
     to_be_replaced.reserve(4096);
 
     const int seq_last =
-        map_range_at_index(this->tasks, seq_first, this->tasks.size() - 1).last;
+        this->tasks.map_range_of(seq_first, this->tasks.size() - 1).last;
 
     for (int seq = seq_first; seq <= seq_last; seq++) {
       QString filename = map_data_filename(dir, seq);
@@ -740,25 +713,27 @@ void SCWind::on_pb_export_file_clicked() noexcept {
     }
   }
 
+  size_t fail_count = 0;
+  QString fail_tasks = "";
   for (int idx = 0; idx < int(this->tasks.size()); idx++) {
     auto &task = this->tasks.at(idx);
-    this->kernel_set_image(idx);
-    bool need_to_convert{true};
-    if (task.is_converted()) {
-      if (this->kernel->loadConvertCache(this->selected_algo(),
-                                         this->is_dither_selected())) {
-        need_to_convert = false;
-      }
-    }
-
-    if (need_to_convert) {
-      this->kernel_convert_image();
-    }
-
-    const int cur_seq_beg =
-        map_range_at_index(this->tasks, seq_first, idx).first;
+    auto &cvted_img = this->convert_if_need(task);
+    //    this->kernel_set_image(idx);
+    //    bool need_to_convert{true};
+    //    if (task.is_converted()) {
+    //      if (this->kernel->loadConvertCache(this->selected_algo(),
+    //                                         this->is_dither_selected())) {
+    //        need_to_convert = false;
+    //      }
+    //    }
+    //
+    //    if (need_to_convert) {
+    //      this->kernel_convert_image();
+    //    }
+    //
+    const int cur_seq_beg = this->tasks.map_range_of(seq_first, idx).last;
     const auto dir_name = dir.toLocal8Bit();
-
+    //
     const SlopeCraft::map_data_file_options option{
         .caller_api_version = SC_VERSION_U64,
         .folder_path = dir_name.data(),
@@ -766,7 +741,17 @@ void SCWind::on_pb_export_file_clicked() noexcept {
         .progress = progress_callback(this->ui->pbar_export),
         .ui = this->ui_callbacks(),
     };
-    const bool ok = task.converted_img->export_map_data(option);
+    const bool ok = cvted_img.export_map_data(option);
+    if (!ok) {
+      fail_count++;
+      fail_tasks.append(task.filename);
+      fail_tasks.push_back('\n');
+    }
+  }
+
+  if (fail_count > 0) {
+    QMessageBox::warning(this, tr("%1 个图片导出失败").arg(fail_count),
+                         tr("导出失败的图片依次为：\n%1").arg(fail_tasks));
   }
 }
 
@@ -937,10 +922,10 @@ void SCWind::on_ac_get_current_colorlist_triggered() noexcept {
       map(reinterpret_cast<uint32_t *>(img.scanLine(0)), row_pixels,
           col_pixels);
 */
-  uint32_t argb_colors[256];
-  uint8_t map_colors[256];
-  const int available_colors = kernel->getColorCount();
-  kernel->getAvailableColors(argb_colors, map_colors);
+  //  uint32_t argb_colors[256];
+  //  uint8_t map_colors[256];
+  const auto color_ptrs = this->current_color_table()->colors();
+  const int available_colors = color_ptrs.num_colors;
 
   for (int cidx = 0; cidx < available_colors; cidx++) {
     /*
@@ -949,7 +934,13 @@ void SCWind::on_ac_get_current_colorlist_triggered() noexcept {
     const int pixel_row = basecolor / basecolors_per_col;
     const int pixel_col = (basecolor % basecolors_per_col) * 4 + shade;
     */
-    img_data[map_colors[cidx]] = argb_colors[cidx];
+    const uint32_t argb =
+        QColor{static_cast<int>(color_ptrs.r_data[cidx] * 255),
+               static_cast<int>(color_ptrs.g_data[cidx] * 255),
+               static_cast<int>(color_ptrs.b_data[cidx] * 255)}
+            .rgb();
+
+    img_data[color_ptrs.map_data[cidx]] = argb;
     // map(map_colors[cidx]) = argb_colors[cidx];
   }
 
@@ -960,10 +951,6 @@ void SCWind::on_ac_get_current_colorlist_triggered() noexcept {
 }
 
 void SCWind::on_ac_test_blocklist_triggered() noexcept {
-  if (this->kernel->queryStep() < SCL_step::wait4Image) {
-    this->kernel_set_type();
-  }
-
   static QString prev_dir;
   QString filename =
       QFileDialog::getSaveFileName(this, tr("保存测试文件"), prev_dir, "*.nbt");

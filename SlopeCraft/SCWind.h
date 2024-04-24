@@ -1,15 +1,16 @@
 #ifndef SLOPECRAFT_SLOPECRAFT_SCWIND_H
 #define SLOPECRAFT_SLOPECRAFT_SCWIND_H
 
-#include <QMainWindow>
-#include <SlopeCraftL.h>
-#include <memory>
-#include <QRadioButton>
+#include <tuple>
 #include <vector>
-#include <BlockListManager.h>
+#include <memory>
+#include <QMainWindow>
+#include <QRadioButton>
 #include <QProgressBar>
 #include <QTranslator>
 #include <QNetworkAccessManager>
+#include <SlopeCraftL.h>
+#include <BlockListManager.h>
 #include "cvt_task.h"
 #include "PoolModel.h"
 #include "ExportTableModel.h"
@@ -203,8 +204,23 @@ class SCWind : public QMainWindow {
                                 SlopeCraft::deleter>
   convert_image(int idx) noexcept;
 
+  [[nodiscard]] std::unique_ptr<SlopeCraft::converted_image,
+                                SlopeCraft::deleter>
+  convert_image(const cvt_task&) noexcept;
+
+  [[nodiscard]] const SlopeCraft::converted_image& convert_if_need(
+      cvt_task&) noexcept;
+
+  [[nodiscard]] std::tuple<const SlopeCraft::converted_image&,
+                           const SlopeCraft::structure_3D&>
+  convert_and_build_if_need(cvt_task&) noexcept;
+
   [[nodiscard]] std::unique_ptr<SlopeCraft::structure_3D, SlopeCraft::deleter>
   build_3D(const SlopeCraft::converted_image&) noexcept;
+
+  std::tuple<const SlopeCraft::converted_image*,
+             const SlopeCraft::structure_3D*>
+  load_selected_3D() noexcept;
 
   [[deprecated]] void kernel_set_image(int idx) noexcept;
   [[deprecated]] void kernel_convert_image() noexcept;
