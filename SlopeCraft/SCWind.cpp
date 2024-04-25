@@ -37,6 +37,37 @@ SCWind::SCWind(QWidget *parent) : QMainWindow(parent), ui(new Ui::SCWind) {
     }
   }
 
+  // initialize blm
+  {
+    this->ui->blm->setup_basecolors();
+    this->ui->blm->set_version_callback(
+        [this]() { return this->selected_version(); });
+
+    QDir::setCurrent(QCoreApplication::applicationDirPath());
+
+    this->ui->blm->add_blocklist(
+        QStringLiteral("%1/Blocks/FixedBlocks.zip")
+            .arg(QCoreApplication::applicationDirPath()));
+    this->ui->blm->add_blocklist(
+        QStringLiteral("%1/Blocks/CustomBlocks.zip")
+            .arg(QCoreApplication::applicationDirPath()));
+
+    this->ui->blm->finish_blocklist();
+
+    for (auto btnp : this->version_buttons()) {
+      connect(btnp, &QRadioButton::toggled, this,
+              &SCWind::when_version_buttons_toggled);
+    }
+
+    for (auto btnp : this->type_buttons()) {
+      connect(btnp, &QRadioButton::toggled, this,
+              &SCWind::when_type_buttons_toggled);
+    }
+
+    connect(this->ui->blm, &BlockListManager::changed, this,
+            &SCWind::when_blocklist_changed);
+  }
+
   // initialize cvt pool model
   {
     this->cvt_pool_model = new CvtPoolModel{this};
@@ -72,33 +103,6 @@ SCWind::SCWind(QWidget *parent) : QMainWindow(parent), ui(new Ui::SCWind) {
             this->export_table_model, &ExportTableModel::refresh);
     connect(this, &SCWind::image_changed, this->export_table_model,
             &ExportTableModel::refresh);
-  }
-
-  // initialize blm
-  {
-    this->ui->blm->setup_basecolors();
-    this->ui->blm->set_version_callback(
-        [this]() { return this->selected_version(); });
-
-    QDir::setCurrent(QCoreApplication::applicationDirPath());
-
-    this->ui->blm->add_blocklist("./Blocks/FixedBlocks.zip");
-    this->ui->blm->add_blocklist("./Blocks/CustomBlocks.zip");
-
-    this->ui->blm->finish_blocklist();
-
-    for (auto btnp : this->version_buttons()) {
-      connect(btnp, &QRadioButton::toggled, this,
-              &SCWind::when_version_buttons_toggled);
-    }
-
-    for (auto btnp : this->type_buttons()) {
-      connect(btnp, &QRadioButton::toggled, this,
-              &SCWind::when_type_buttons_toggled);
-    }
-
-    connect(this->ui->blm, &BlockListManager::changed, this,
-            &SCWind::when_blocklist_changed);
   }
 
   for (QRadioButton *rbp : this->export_type_buttons()) {
@@ -163,7 +167,7 @@ SlopeCraft::color_table *SCWind::current_color_table() noexcept {
   auto selection = this->ui->blm->current_selection();
   {
     auto find = this->color_tables.find(selection);
-    if (find == this->color_tables.end()) {
+    if (find != this->color_tables.end()) {
       return find->second.get();
     }
   }

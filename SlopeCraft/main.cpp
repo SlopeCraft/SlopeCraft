@@ -1,17 +1,19 @@
+#include <fmt/format.h>
+#include <iostream>
 #include <QApplication>
+#include <QDir>
 #include "SCWind.h"
 #include "VersionDialog.h"
-#include <QDir>
 
 int main(int argc, char** argv) {
   QApplication qapp(argc, argv);
+
+  QDir::setCurrent(QCoreApplication::applicationDirPath());
 
   SCWind wind;
 
   wind.show();
   wind.setWindowTitle(SCWind::default_wind_title());
-
-  QDir::setCurrent(QCoreApplication::applicationDirPath());
 
   bool is_language_ZH = QLocale::system().uiLanguages().contains("zh");
 

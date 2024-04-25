@@ -130,8 +130,8 @@ if (CMAKE_SYSTEM_NAME MATCHES "Windows")
 endif ()
 
 function(SC_create_SCL_block_list src_dir archive_path)
-    if (NOT EXISTS "${src_dir}/BlockList.json")
-        message(FATAL_ERROR "${src_dir}/BlockList.json doesn't exist, block list json is missing")
+    if (NOT EXISTS "${src_dir}/block_list.json")
+        message(FATAL_ERROR "${src_dir}/block_list.json doesn't exist, block list json is missing")
     endif ()
 
     cmake_path(GET archive_path PARENT_PATH archive_dir)
