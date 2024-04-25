@@ -288,10 +288,10 @@ impl_create_block_list_from_zip(const char *zip_path) noexcept {
 }
 
 extern "C" {
-SCL_EXPORT mc_block_interface *SCL_createBlock() { return new mc_block; }
-SCL_EXPORT void SCL_destroyBlock(mc_block_interface *b) { delete b; }
+SCL_EXPORT mc_block_interface *SCL_create_block() { return new mc_block; }
+SCL_EXPORT void SCL_destroy_block(mc_block_interface *b) { delete b; }
 
-SCL_EXPORT block_list_interface *SCL_createBlockList(
+SCL_EXPORT block_list_interface *SCL_create_block_list(
     const char *zip_filename, const block_list_create_info &option) {
   auto [res, warnings] = impl_create_block_list_from_zip(zip_filename);
 
@@ -304,7 +304,9 @@ SCL_EXPORT block_list_interface *SCL_createBlockList(
   return res.value();
 }
 
-SCL_EXPORT void SCL_destroyBlockList(block_list_interface *) {}
+SCL_EXPORT void SCL_destroy_block_list(block_list_interface *bli) {
+  delete bli;
+}
 
 SCL_EXPORT GA_converter_option *SCL_createAiCvterOpt() {
   return new GA_converter_option;
@@ -349,6 +351,8 @@ double SCL_EXPORT SCL_getMutationProb(const GA_converter_option *a) {
 //                                     const uint8_t **mapdata, int *num) {
 //   TokiSlopeCraft::getColorMapPtrs(rdata, gdata, bdata, mapdata, num);
 // }
+
+SCL_EXPORT const char *SCL_getSCLVersion() { return SC_VERSION_STR; }
 
 SCL_EXPORT SCL_gameVersion SCL_basecolor_version(uint8_t basecolor) {
   if (basecolor <= 51) {

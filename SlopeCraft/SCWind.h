@@ -25,6 +25,9 @@ SlopeCraft::progress_callbacks progress_callback(QProgressBar* bar) noexcept;
 
 SlopeCraft::const_image_reference wrap_image(const QImage& img) noexcept;
 
+[[nodiscard]] QImage get_converted_image(
+    const SlopeCraft::converted_image&) noexcept;
+
 class SCWind : public QMainWindow {
   Q_OBJECT
  private:
@@ -222,20 +225,20 @@ class SCWind : public QMainWindow {
              const SlopeCraft::structure_3D*>
   load_selected_3D() noexcept;
 
-  [[deprecated]] void kernel_set_image(int idx) noexcept;
-  [[deprecated]] void kernel_convert_image() noexcept;
+  //  [[deprecated]] void kernel_set_image(int idx) noexcept;
+  //  [[deprecated]] void kernel_convert_image() noexcept;
+  //
+  //  [[deprecated]] void kernel_make_cvt_cache() noexcept;
 
-  [[deprecated]] void kernel_make_cvt_cache() noexcept;
-
-  [[deprecated]] void kernel_build_3d() noexcept;
-  [[deprecated]] void kernel_make_build_cache() noexcept;
+  //  [[deprecated]] void kernel_build_3d() noexcept;
+  //  [[deprecated]] void kernel_make_build_cache() noexcept;
 
   void refresh_current_cvt_display(std::optional<int> idx) noexcept;
   void refresh_current_cvt_display() noexcept {
     this->refresh_current_cvt_display(this->selected_cvt_task_idx());
   }
 
-  [[deprecated]] QImage get_converted_image_from_kernel() const noexcept;
+  //  [[deprecated]] QImage get_converted_image_from_kernel() const noexcept;
 
   void refresh_current_build_display(cvt_task* taskp,
                                      bool is_image_built_in_kernel) noexcept;
@@ -246,7 +249,7 @@ class SCWind : public QMainWindow {
     this->refresh_current_build_display(this->selected_export_task());
   }
 
-  void mark_all_task_unconverted() noexcept;
+  //  void mark_all_task_unconverted() noexcept;
 
   void export_current_cvted_image(int idx, QString filename) noexcept;
 

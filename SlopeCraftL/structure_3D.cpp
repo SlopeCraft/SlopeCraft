@@ -429,3 +429,26 @@ tl::expected<structure_3D_impl, std::string> structure_3D_impl::load_cache(
 
   return ret;
 }
+
+uint64_t structure_3D_impl::block_count() const noexcept {
+  std::vector<uint8_t> LUT_is_air;
+  LUT_is_air.reserve(this->schem.palette_size());
+  for (auto [idx, id] : this->schem.palette() | std::ranges::views::enumerate) {
+    if (id == "air" || id == "minecraft:air") {
+      LUT_is_air[idx] = true;
+    } else {
+      LUT_is_air[idx] = false;
+    }
+  }
+
+  uint64_t counter = 0;
+  for (int64_t i = 0; i < this->schem.size(); i++) {
+    const auto cur_blk_id = this->schem(i);
+    if (cur_blk_id >= LUT_is_air.size()) [[unlikely]] {
+      counter++;
+      continue;
+    }
+    counter += LUT_is_air[cur_blk_id];
+  }
+  return counter;
+}

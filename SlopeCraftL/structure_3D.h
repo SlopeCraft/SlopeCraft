@@ -52,6 +52,8 @@ class structure_3D_impl : public structure_3D {
   [[nodiscard]] static tl::expected<structure_3D_impl, std::string> load_cache(
       const std::filesystem::path &file) noexcept;
 
+  uint64_t block_count() const noexcept final;
+
   template <class archive>
   void load(archive &ar) {
     ar(this->map_color);

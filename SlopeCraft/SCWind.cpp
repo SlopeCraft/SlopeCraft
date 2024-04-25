@@ -281,6 +281,7 @@ SCL_gameVersion SCWind::selected_version() const noexcept {
   }
 
   assert(false);
+  abort();
 
   // return SCL_gameVersion::ANCIENT;
 }
@@ -698,7 +699,7 @@ SCWind::convert_and_build_if_need(cvt_task &task) noexcept {
       task.converted_images.at({table, this->current_convert_option()});
   const auto build_opt = this->current_build_option();
 
-  if (auto str_3D = cvt_result.load_build_cache(*table, cvted, build_opt,
+  if (auto str_3D = cvt_result.load_build_cache(*table, build_opt,
                                                 this->cache_root_dir())) {
     // The 3D structure is built, it exists in memory or can be loaded
     return {cvted, *str_3D};
@@ -711,29 +712,38 @@ SCWind::convert_and_build_if_need(cvt_task &task) noexcept {
   return {cvted, *ptr};
 }
 
-void SCWind::kernel_make_cvt_cache() noexcept {
-  std::string err;
-  err.resize(4096);
-  SlopeCraft::string_deliver sd{err.data(), err.size()};
+// void SCWind::kernel_make_cvt_cache() noexcept {
+//   std::string err;
+//   err.resize(4096);
+//   SlopeCraft::string_deliver sd{err.data(), err.size()};
+//
+//   if (!this->kernel->saveConvertCache(sd)) {
+//     QString qerr = QString::fromUtf8(sd.data);
+//     QMessageBox::warning(this, tr("缓存失败"),
+//                          tr("未能创建缓存文件，错误信息：\n%1").arg(qerr));
+//   }
+// }
 
-  if (!this->kernel->saveConvertCache(sd)) {
-    QString qerr = QString::fromUtf8(sd.data);
-    QMessageBox::warning(this, tr("缓存失败"),
-                         tr("未能创建缓存文件，错误信息：\n%1").arg(qerr));
-  }
-}
+// QImage SCWind::get_converted_image_from_kernel() const noexcept {
+//   assert(this->kernel->queryStep() >= SCL_step::converted);
+//
+//   const int rows = this->kernel->getImageRows();
+//   const int cols = this->kernel->getImageCols();
+//
+//   QImage img{cols, rows, QImage::Format_ARGB32};
+//
+//   this->kernel->getConvertedImage(nullptr, nullptr, (uint32_t
+//   *)img.scanLine(0),
+//                                   false);
+//
+//   return img;
+// }
 
-QImage SCWind::get_converted_image_from_kernel() const noexcept {
-  assert(this->kernel->queryStep() >= SCL_step::converted);
-
-  const int rows = this->kernel->getImageRows();
-  const int cols = this->kernel->getImageCols();
-
-  QImage img{cols, rows, QImage::Format_ARGB32};
-
-  this->kernel->getConvertedImage(nullptr, nullptr, (uint32_t *)img.scanLine(0),
-                                  false);
-
+QImage get_converted_image(const SlopeCraft::converted_image &cvted) noexcept {
+  QImage img{
+      QSize{static_cast<int>(cvted.cols()), static_cast<int>(cvted.rows())},
+      QImage::Format::Format_ARGB32};
+  cvted.get_original_image(reinterpret_cast<uint32_t *>(img.scanLine(0)));
   return img;
 }
 
@@ -752,28 +762,24 @@ void SCWind::refresh_current_cvt_display(
 
   auto &task = this->tasks[selected_idx.value()];
 
-  // if the image is already
-  if (task.converted_img) {
-    QImage img{QSize{static_cast<int>(task.converted_img->cols()),
-                     static_cast<int>(task.converted_img->rows())},
-               QImage::Format::Format_ARGB32};
-    task.converted_img->get_original_image(
-        reinterpret_cast<uint32_t *>(img.scanLine(0)));
+  auto it = task.converted_images.find(
+      {this->current_color_table(), this->current_convert_option()});
+  if (it != task.converted_images.end() &&
+      it->second.converted_image != nullptr) {
     this->ui->lb_cvted_image->setPixmap(
-        QPixmap::fromImage(this->get_converted_image_from_kernel()));
-    return;
+        QPixmap::fromImage(get_converted_image(*it->second.converted_image)));
   }
-#warning "TODO: Load cache here"
+  // #warning "TODO: Load cache here"
 
   this->ui->lb_cvted_image->setPixmap({});
 }
 
-void SCWind::mark_all_task_unconverted() noexcept {
-  for (auto &task : this->tasks) {
-    task.converted_img = nullptr;
-    task.structure = nullptr;
-  }
-}
+// void SCWind::mark_all_task_unconverted() noexcept {
+//   for (auto &task : this->tasks) {
+//     task.converted_img = nullptr;
+//     task.structure = nullptr;
+//   }
+// }
 
 void SCWind::when_algo_btn_clicked() noexcept {
   this->cvt_pool_model->refresh();
@@ -784,31 +790,30 @@ void SCWind::export_current_cvted_image(int idx, QString filename) noexcept {
   assert(idx >= 0);
   assert(idx < (int)this->tasks.size());
 
-  bool have_image_cvted{false};
-
-  this->kernel_set_image(idx);
-  if (!this->kernel->loadConvertCache(this->selected_algo(),
-                                      this->is_dither_selected())) {
+  auto &task = this->tasks[idx];
+  auto cvted = task.get_converted_image(this->current_color_table(),
+                                        this->current_convert_option());
+  if (cvted == nullptr) {
     const auto ret = QMessageBox::warning(
         this, tr("无法保存第%1个转化后图像").arg(idx + 1),
         tr("该图像未被转化，或者转化之后修改了颜色表/转化算法。请重新转化它。"),
         QMessageBox::StandardButtons{QMessageBox::StandardButton::Ok,
                                      QMessageBox::StandardButton::Ignore});
     if (ret == QMessageBox::StandardButton::Ok) {
-      this->kernel_convert_image();
-      this->kernel_make_cvt_cache();
-      this->tasks[idx].set_converted();
-      have_image_cvted = true;
+      auto cvted_uptr = this->convert_image(task);
+      task.set_converted(this->current_color_table(),
+                         this->current_convert_option(), std::move(cvted_uptr));
+      cvted = task.get_converted_image(this->current_color_table(),
+                                       this->current_convert_option());
     } else {
       return;
     }
   }
+  assert(cvted != nullptr);
 
-  if (have_image_cvted) {
-    emit this->image_changed();
-  }
+  auto img = get_converted_image(*cvted);
+  bool ok = img.save(filename);
 
-  bool ok = this->get_converted_image_from_kernel().save(filename);
   if (!ok) {
     QMessageBox::warning(
         this, tr("保存图像失败"),
@@ -818,67 +823,56 @@ void SCWind::export_current_cvted_image(int idx, QString filename) noexcept {
   }
 }
 
-void SCWind::kernel_build_3d() noexcept {
-  if (!this->kernel->build(this->current_build_option())) {
-    QMessageBox::warning(this, tr("构建三维结构失败"),
-                         tr("构建三维结构时，出现错误。可能是因为尝试跳步。"));
-    return;
-  }
-}
+// void SCWind::kernel_build_3d() noexcept {
+//   if (!this->kernel->build(this->current_build_option())) {
+//     QMessageBox::warning(this, tr("构建三维结构失败"),
+//                          tr("构建三维结构时，出现错误。可能是因为尝试跳步。"));
+//     return;
+//   }
+// }
 
 void SCWind::refresh_current_build_display(
-    std::optional<cvt_task *> taskp, bool is_image_built_in_kernel) noexcept {
+    cvt_task *taskp, bool is_image_built_in_kernel) noexcept {
   this->ui->lb_show_3dsize->setText(tr("大小："));
   this->ui->lb_show_block_count->setText(tr("方块数量："));
-  if (!taskp.has_value()) {
+  if (taskp == nullptr) {
     return;
   }
 
-  int x{-1}, y{-1}, z{-1};
-  {
-    if (is_image_built_in_kernel) {
-      // the caller garentee that the image is built in kernel
-    } else {
-      if (taskp.value()->is_built()) {
-        // try to load convert cache
-        if (!this->kernel->loadConvertCache(this->selected_algo(),
-                                            this->is_dither_selected())) {
-          taskp.value()->set_unconverted();
-          return;
-        }
-        // try to load build cache
-        if (!this->kernel->loadBuildCache(this->current_build_option())) {
-          taskp.value()->set_unbuilt();
-          return;
-        }
-      } else {
-        return;
-      }
-    }
+  auto &task = *taskp;
+  const auto cvted_it = task.get_convert_result(this->current_color_table(),
+                                                this->current_convert_option());
+  if (cvted_it != task.converted_images.end()) {
+    return;
   }
-  this->kernel->get3DSize(&x, &y, &z);
-  const int64_t block_count = this->kernel->getBlockCounts();
+  if (auto str_3D = cvted_it->second.load_build_cache(
+          *this->current_color_table(), this->current_build_option(),
+          this->cache_root_dir())) {
+    const auto x = str_3D->shape_x(), y = str_3D->shape_y(),
+               z = str_3D->shape_z();
 
-  this->ui->lb_show_3dsize->setText(
-      tr("大小： %1 × %2 × %3").arg(x).arg(y).arg(z));
-  this->ui->lb_show_block_count->setText(tr("方块数量：%1").arg(block_count));
+    const auto block_count = str_3D->block_count();
+    this->ui->lb_show_3dsize->setText(
+        tr("大小： %1 × %2 × %3").arg(x).arg(y).arg(z));
+    this->ui->lb_show_block_count->setText(tr("方块数量：%1").arg(block_count));
+  }
 }
 
 void SCWind::when_export_pool_selectionChanged() noexcept {
   this->refresh_current_build_display(this->selected_export_task());
 }
 
-void SCWind::kernel_make_build_cache() noexcept {
-  std::string err;
-  err.resize(4096);
-  SlopeCraft::string_deliver sd{err.data(), err.size()};
-
-  if (!this->kernel->saveBuildCache(sd)) {
-    QString qerr = QString::fromUtf8(sd.data);
-    QMessageBox::warning(this, tr("缓存失败"),
-                         tr("未能创建缓存文件，错误信息：\n%1").arg(qerr));
-  }
-}
+// void SCWind::kernel_make_build_cache() noexcept {
+//   std::string err;
+//   err.resize(4096);
+//   SlopeCraft::string_deliver sd{err.data(), err.size()};
+//
+//   if (!this->kernel->saveBuildCache(sd)) {
+//     QString qerr = QString::fromUtf8(sd.data);
+//     QMessageBox::warning(this, tr("缓存失败"),
+//                          tr("未能创建缓存文件，错误信息：\n%1").arg(qerr));
+//   }
+// }
 
 QString extension_of_export_type(SCWind::export_type et) noexcept {
   switch (et) {

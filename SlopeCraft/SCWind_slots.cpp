@@ -468,9 +468,9 @@ SCWind::load_selected_3D() noexcept {
              "新转化该图像。");
       return {nullptr, nullptr};
     }
-    auto str_3D = it->second.load_build_cache(
-        *this->current_color_table(), *it->second.converted_image,
-        this->current_build_option(), this->cache_root_dir());
+    auto str_3D = it->second.load_build_cache(*this->current_color_table(),
+                                              this->current_build_option(),
+                                              this->cache_root_dir());
 
     if (str_3D == nullptr) {
       errtitle = tr("尚未构建三维结构");

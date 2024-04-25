@@ -31,7 +31,7 @@ class BlockListDeleter {
 
 struct selection {
   std::vector<std::string> ids;
-  
+
   [[nodiscard]] bool operator==(const selection &b) const noexcept {
     if (this->ids.size() != b.ids.size()) {
       return false;
@@ -47,7 +47,7 @@ struct selection {
 
 template <>
 struct std::hash<selection> {
-  static inline uint64_t operator()(const selection &s) noexcept;
+  static uint64_t operator()(const selection &s) noexcept;
 };
 
 class BlockListManager : public QWidget {

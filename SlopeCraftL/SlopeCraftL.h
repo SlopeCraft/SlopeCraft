@@ -406,6 +406,8 @@ class structure_3D {
   [[nodiscard]] virtual bool export_flat_diagram(
       const char *filename, const color_table &table,
       const flag_diagram_options &option) const noexcept = 0;
+
+  [[nodiscard]] virtual uint64_t block_count() const noexcept = 0;
 };
 
 }  // namespace SlopeCraft

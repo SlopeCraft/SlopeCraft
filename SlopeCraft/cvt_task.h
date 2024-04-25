@@ -8,6 +8,12 @@
 #include <functional>
 
 struct convert_input {
+  convert_input() = default;
+  convert_input(convert_input&&) = default;
+  convert_input(const SlopeCraft::color_table* t,
+                const SlopeCraft::convert_option& o)
+      : table{t}, option{o} {}
+
   const SlopeCraft::color_table* table{nullptr};
   SlopeCraft::convert_option option;
 };
@@ -129,7 +135,6 @@ struct convert_result {
   }
 
   void cache_structure(const SlopeCraft::color_table& table,
-                       const SlopeCraft::converted_image& cvted,
                        const SlopeCraft::build_options& opt,
                        const QString& cache_root_dir) noexcept {
     auto it = this->built_structures.find(opt);
@@ -139,8 +144,9 @@ struct convert_result {
     if (it->second == nullptr) {
       return;
     }
-    const bool ok = table.save_build_cache(
-        cvted, opt, *it->second, cache_root_dir.toLocal8Bit().data(), nullptr);
+    const bool ok =
+        table.save_build_cache(*this->converted_image, opt, *it->second,
+                               cache_root_dir.toLocal8Bit().data(), nullptr);
     if (ok) {
       it->second.reset();
     }
@@ -149,7 +155,6 @@ struct convert_result {
 
   const SlopeCraft::structure_3D* load_build_cache(
       const SlopeCraft::color_table& table,
-      const SlopeCraft::converted_image& cvted,
       const SlopeCraft::build_options& opt,
       const QString& cache_root_dir) noexcept {
     auto it = this->built_structures.find(opt);
@@ -162,8 +167,9 @@ struct convert_result {
     }
 
     // the structure is cached
-    SlopeCraft::structure_3D* p = table.load_build_cache(
-        cvted, opt, cache_root_dir.toLocal8Bit().data(), nullptr);
+    SlopeCraft::structure_3D* p =
+        table.load_build_cache(*this->converted_image, opt,
+                               cache_root_dir.toLocal8Bit().data(), nullptr);
     if (p == nullptr) {  // failed to load cache
       return nullptr;
     }
@@ -187,11 +193,16 @@ struct convert_result {
 };
 
 struct cvt_task {
+  cvt_task() = default;
+  cvt_task(cvt_task&&) = default;
+
   QString filename{""};
   QImage original_image;
 
   std::unordered_map<convert_input, convert_result, hasher, equal>
       converted_images;
+
+  cvt_task& operator=(cvt_task&&) = default;
 
   //    std::unique_ptr<SlopeCraft::structure_3D, SlopeCraft::deleter>
   //    structure;
@@ -200,6 +211,30 @@ struct cvt_task {
       const SlopeCraft::color_table* table,
       const SlopeCraft::convert_option& option) const noexcept {
     return this->converted_images.contains(convert_input{table, option});
+  }
+
+  [[nodiscard]] std::unordered_map<convert_input, convert_result, hasher,
+                                   equal>::iterator
+  get_convert_result(const SlopeCraft::color_table* table,
+                     const SlopeCraft::convert_option& option) noexcept {
+    return this->converted_images.find({table, option});
+  }
+
+  [[nodiscard]] std::unordered_map<convert_input, convert_result, hasher,
+                                   equal>::const_iterator
+  get_convert_result(const SlopeCraft::color_table* table,
+                     const SlopeCraft::convert_option& option) const noexcept {
+    return this->converted_images.find({table, option});
+  }
+
+  [[nodiscard]] const SlopeCraft::converted_image* get_converted_image(
+      const SlopeCraft::color_table* table,
+      const SlopeCraft::convert_option& option) const noexcept {
+    auto it = this->get_convert_result(table, option);
+    if (it == this->converted_images.cend()) {
+      return nullptr;
+    }
+    return it->second.converted_image.get();
   }
 
   void set_converted(
@@ -211,11 +246,11 @@ struct cvt_task {
     }
     option.ui = {};
     option.progress = {};
-    auto cvt_input = convert_input{table, option};
+    convert_input cvt_input = convert_input{table, option};
     auto it = this->converted_images.find(cvt_input);
     if (it == this->converted_images.end()) {
       this->converted_images.emplace(
-          cvt_input,
+          std::move(cvt_input),
           convert_result{.converted_image = std::move(converted_image),
                          .built_structures = {}});
       return;
