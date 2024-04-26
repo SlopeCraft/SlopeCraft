@@ -49,7 +49,7 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
     fixed_opt.main_progressbar.add(cvted.size());
   }
 
-  Eigen::ArrayXi map_color, base_color, high_map, low_map;
+  Eigen::ArrayXXi map_color, base_color, high_map, low_map;
   std::unordered_map<rc_pos, water_y_range> water_list;
   {
     auto opt = cvted.height_info(fixed_opt);

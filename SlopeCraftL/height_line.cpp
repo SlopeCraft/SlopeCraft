@@ -153,11 +153,6 @@ void height_line::updateWaterMap() {
   }
 }
 
-const Eigen::ArrayXi &height_line::getHighLine() const { return HighLine; }
-const Eigen::ArrayXi &height_line::getLowLine() const { return LowLine; }
-
-const Eigen::ArrayXi &height_line::getBase() const { return base; }
-
 const std::map<uint32_t, water_y_range> &height_line::getWaterMap() const {
   return waterMap;
 }

@@ -39,9 +39,11 @@ class height_line {
   void make(const Eigen::ArrayXi &mapColorCol, bool allowNaturalCompress);
   void updateWaterMap();
   uint32_t maxHeight() const;
-  const Eigen::ArrayXi &getHighLine() const;
-  const Eigen::ArrayXi &getLowLine() const;
-  const Eigen::ArrayXi &getBase() const;
+
+  const Eigen::ArrayXi &getHighLine() const noexcept { return HighLine; }
+  const Eigen::ArrayXi &getLowLine() const noexcept { return LowLine; }
+
+  auto &getBase() const noexcept { return this->base; }
   const std::map<uint32_t, water_y_range> &getWaterMap() const;
   EImage toImg() const;
 
