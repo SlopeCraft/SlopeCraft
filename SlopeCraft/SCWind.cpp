@@ -847,7 +847,7 @@ void SCWind::refresh_current_build_display(
   auto &task = *taskp;
   const auto cvted_it = task.get_convert_result(this->current_color_table(),
                                                 this->current_convert_option());
-  if (cvted_it != task.converted_images.end()) {
+  if (cvted_it == task.converted_images.end()) {
     return;
   }
   if (auto str_3D = cvted_it->second.load_build_cache(
