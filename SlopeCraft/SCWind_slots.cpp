@@ -431,65 +431,6 @@ void SCWind::on_pb_preview_materials_clicked() noexcept {
   pw->setup_data(*this->current_color_table(), *structure_3D);
 }
 
-std::tuple<const SlopeCraft::converted_image *,
-           const SlopeCraft::structure_3D *>
-SCWind::load_selected_3D() noexcept {
-#warning "TODO: Move this function into SCWind.cpp"
-  auto taskp = this->selected_export_task();
-  if (taskp == nullptr) {
-    QMessageBox::warning(this, tr("未选择图像"),
-                         tr("请在左侧任务池选择一个图像"));
-    return {nullptr, nullptr};
-  }
-  assert(taskp != nullptr);
-
-  cvt_task &task = *taskp;
-  const ptrdiff_t index = &task - this->tasks.data();
-  assert(index >= 0 && index < ptrdiff_t(this->tasks.size()));
-  if (!task.is_converted_with(this->current_color_table(),
-                              this->current_convert_option())) {
-    QMessageBox::warning(this, tr("该图像尚未被转化"),
-                         tr("必须先转化一个图像，然后再为它构建三维结构"));
-    return {nullptr, nullptr};
-  }
-  QString errtitle;
-  QString errmsg;
-  // try to load cache
-  auto [cvted_img, structure_3D] =
-      [this, &task, &errtitle,
-       &errmsg]() -> std::pair<const SlopeCraft::converted_image *,
-                               const SlopeCraft::structure_3D *> {
-    auto it = task.converted_images.find(convert_input{
-        this->current_color_table(), this->current_convert_option()});
-    if (it == task.converted_images.end()) {
-      errtitle = tr("该图像尚未被转化");
-      errmsg =
-          tr("可能是在转化完成之后又修改了转化算法，因此之前的转化无效。必须重"
-             "新转化该图像。");
-      return {nullptr, nullptr};
-    }
-    auto str_3D = it->second.load_build_cache(*this->current_color_table(),
-                                              this->current_build_option(),
-                                              this->cache_root_dir());
-
-    if (str_3D == nullptr) {
-      errtitle = tr("尚未构建三维结构");
-      errmsg = tr(
-          "在预览材料表之前，必须先构建三维结构。出现这个警告，可能是因为你"
-          "在构建三维结构之后，又修改了三维结构的选项，因此之前的结果无效。");
-      return {it->second.converted_image.get(), nullptr};
-    }
-    return {it->second.converted_image.get(), str_3D};
-  }();
-
-  if (!errtitle.isEmpty()) {
-    QMessageBox::warning(this, errtitle, errmsg);
-    return {nullptr, nullptr};
-  }
-
-  return {cvted_img, structure_3D};
-}
-
 void SCWind::on_pb_preview_compress_effect_clicked() noexcept {
   auto [cvted_img, structure_3D] = this->load_selected_3D();
   if (cvted_img == nullptr || structure_3D == nullptr) {

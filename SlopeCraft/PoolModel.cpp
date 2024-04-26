@@ -6,7 +6,7 @@
 #include <SCWind.h>
 
 PoolModel::PoolModel(SCWind* scw)
-    : QAbstractListModel(scw), pool{scw->get_tasks()}, scwind{scw} {
+    : QAbstractListModel(scw), pool{scw->tasks}, scwind{scw} {
   assert(scw != nullptr);
 }
 

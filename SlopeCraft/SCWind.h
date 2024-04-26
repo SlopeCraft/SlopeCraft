@@ -127,7 +127,6 @@ class SCWind : public QMainWindow {
  public:
   SlopeCraft::GA_converter_option GA_option{};
   task_pool tasks;
-  [[deprecated]] task_pool& get_tasks() noexcept { return this->tasks; }
 
   QString cache_root_dir() const noexcept;
   SlopeCraft::color_table* current_color_table() noexcept;
@@ -199,7 +198,7 @@ class SCWind : public QMainWindow {
 
  private:
   // kernel related functions
-  [[deprecated]] void kernel_set_type() noexcept;
+  void set_colorset() noexcept;
 
   void update_button_states() noexcept;
 
