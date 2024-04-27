@@ -222,7 +222,7 @@ converted_image_impl::height_info(const build_options &option) const noexcept {
   }
 
   Eigen::ArrayXXi base, high_map, low_map;
-  base.setZero(this->rows(), this->cols());
+  base.setZero(this->rows() + 1, this->cols());
   high_map.setZero(this->rows() + 1, this->cols());
   low_map.setZero(this->rows() + 1, this->cols());
   std::unordered_map<rc_pos, water_y_range> water_list;
@@ -258,7 +258,7 @@ converted_image_impl::height_info(const build_options &option) const noexcept {
       HL.make(&ptr[0], compressor.getResult(), allow_lossless_compress, &temp);
       map_color.col(c) = temp;
     }
-    base.col(c) = HL.getBase().segment(1, base.rows());
+    base.col(c) = HL.getBase();
     high_map.col(c) = HL.getHighLine();
     low_map.col(c) = HL.getLowLine();
 

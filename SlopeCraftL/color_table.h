@@ -51,7 +51,8 @@ class color_table_impl : public SlopeCraft::color_table {
   [[nodiscard]] static std::optional<color_table_impl> create(
       const color_table_create_info &args) noexcept;
 
-  [[nodiscard]] std::vector<std::string_view> block_id_list() const noexcept;
+  [[nodiscard]] std::vector<std::string_view> block_id_list(
+      bool contain_air) const noexcept;
 
   [[nodiscard]] const mc_block *find_block_for_index(
       int index, std::string_view block_id) const noexcept;

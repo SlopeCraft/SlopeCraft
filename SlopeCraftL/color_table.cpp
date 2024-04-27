@@ -137,9 +137,13 @@ structure_3D *color_table_impl::build(
   return nullptr;
 }
 
-std::vector<std::string_view> color_table_impl::block_id_list() const noexcept {
+std::vector<std::string_view> color_table_impl::block_id_list(
+    bool contain_air) const noexcept {
   std::vector<std::string_view> dest;
-  dest.reserve(this->blocks.size());
+  dest.reserve(this->blocks.size() + 1);
+  if (contain_air) {
+    dest.emplace_back("minecraft:air");
+  }
   for (auto &blk : this->blocks) {
     dest.emplace_back(blk.id);
   }
@@ -153,6 +157,7 @@ const mc_block *color_table_impl::find_block_for_index(
   }
 
   if (idx < (int)this->blocks.size()) {
+    // assert(this->blocks[idx].id == blkid);
     return &this->blocks[idx];
   }
 
@@ -341,8 +346,12 @@ void color_table_impl::stat_blocks(const structure_3D &s,
   const auto schem_stat = structure.schem.stat_blocks();
   for (size_t schem_blk_id = 0; schem_blk_id < structure.schem.palette_size();
        schem_blk_id++) {
+    if (schem_blk_id == 0) {  // ignore air
+      continue;
+    }
+    assert(schem_blk_id > 0);
     const auto strid = structure.schem.palette()[schem_blk_id];
-    const auto blkp = this->find_block_for_index(schem_blk_id, strid);
+    const auto blkp = this->find_block_for_index(schem_blk_id - 1, strid);
     if (blkp == nullptr) {
       std::cerr << fmt::format(
           "Failed to find \"{}\" in color_table, this type of block will not "

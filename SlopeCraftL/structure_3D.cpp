@@ -33,7 +33,7 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
     ret.schem.set_MC_major_version_number(table.mc_version_);
     ret.schem.set_MC_version_number(
         MCDataVersion::suggested_version(table.mc_version_));
-    auto id = table.block_id_list();
+    auto id = table.block_id_list(true);
     ret.schem.set_block_id(id);
   }
 
@@ -43,7 +43,7 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
     fixed_opt.glass_method = glassBridgeSettings::noBridge;
   }
   fixed_opt.ui.report_working_status(workStatus::buidingHeighMap);
-  fixed_opt.main_progressbar.set_range(0, 9 * cvted.size(), 0);
+  fixed_opt.main_progressbar.set_range(0, 10 * cvted.size(), 0);
   {
     std::unordered_map<rc_pos, water_y_range> water_list;
     fixed_opt.main_progressbar.add(cvted.size());
@@ -62,6 +62,10 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
     low_map = std::move(opt.value().low_map);
     water_list = std::move(opt.value().water_list);
   }
+  assert((high_map >= low_map).all());
+  assert(low_map.minCoeff() == 0);
+
+  // std::cout << base_color << std::endl;
 
   ret.schem.resize(2 + cvted.cols(), high_map.maxCoeff() + 1, 2 + cvted.rows());
   ret.schem.set_zero();
@@ -71,9 +75,8 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
     // 为了区分玻璃与空气，张量中存储的是 Base+1.所以元素为 1 对应着玻璃，0
     // 对应空气
 
-    for (auto it = water_list.begin(); it != water_list.end();
-         it++)  // 水柱周围的玻璃
-    {
+    // 水柱周围的玻璃
+    for (auto it = water_list.begin(); it != water_list.end(); it++) {
       const int x = it->first.col + 1;
       const int z = it->first.row;
       const int y = it->second.high_y;
@@ -85,24 +88,35 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
         ret.schem(x + 0, yDynamic, z - 1) = 1;
         ret.schem(x + 0, yDynamic, z + 1) = 1;
       }
-      if (yLow >= 1) ret.schem(x, yLow - 1, z) = 1;  // 柱底玻璃
+      if (yLow >= 1) {
+        ret.schem(x, yLow - 1, z) = 1;
+      }  // 柱底玻璃
     }
 
     fixed_opt.main_progressbar.add(cvted.size());
 
-    for (uint32_t r = -1; r < cvted.rows(); r++)  // 普通方块
-    {
-      for (uint32_t c = 0; c < cvted.cols(); c++) {
-        if (base_color(r + 1, c) == 12 || base_color(r + 1, c) == 0) continue;
+    // fmt::println("{} rows, {} cols", cvted.rows(), cvted.cols());
+    //  Common blocks
+    for (int64_t r = -1; r < int64_t(cvted.rows()); r++) {
+      for (int64_t c = 0; c < int64_t(cvted.cols()); c++) {
+        // fmt::println("r = {}, c = {}", r, c);
+        const int cur_base_color = base_color(r + 1, c);
+        if (cur_base_color == 12 || cur_base_color == 0) {
+          // water or air
+          continue;
+        }
         const int x = c + 1;
         const int y = low_map(r + 1, c);
         const int z = r + 1;
-        if (y >= 1 && table.blocks[base_color(r + 1, c)].needGlass)
+        if (y >= 1 && table.blocks[base_color(r + 1, c)].needGlass) {
           ret.schem(x, y - 1, z) = 0 + 1;
-        if ((fixed_opt.fire_proof &&
-             table.blocks[base_color(r + 1, c)].burnable) ||
-            (fixed_opt.enderman_proof &&
-             table.blocks[base_color(r + 1, c)].endermanPickable)) {
+        }
+        const bool fire_proof =
+            fixed_opt.fire_proof && table.blocks[base_color(r + 1, c)].burnable;
+        const bool enderman_proof =
+            fixed_opt.enderman_proof &&
+            table.blocks[base_color(r + 1, c)].endermanPickable;
+        if (fire_proof || enderman_proof) {
           if (y >= 1 && ret.schem(x, y - 1, z) == 0)
             ret.schem(x, y - 1, z) = 0 + 1;
           if (x >= 1 && ret.schem(x - 1, y, z) == 0)
@@ -117,7 +131,7 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
             ret.schem(x, y, z + 1) = 0 + 1;
         }
 
-        ret.schem(x, y, z) = base_color(r + 1, c) + 1;
+        ret.schem(x, y, z) = cur_base_color + 1;
       }
       fixed_opt.main_progressbar.add(cvted.cols());
     }
@@ -435,9 +449,9 @@ uint64_t structure_3D_impl::block_count() const noexcept {
   LUT_is_air.reserve(this->schem.palette_size());
   for (auto [idx, id] : this->schem.palette() | std::ranges::views::enumerate) {
     if (id == "air" || id == "minecraft:air") {
-      LUT_is_air[idx] = true;
+      LUT_is_air.emplace_back(1);
     } else {
-      LUT_is_air[idx] = false;
+      LUT_is_air.emplace_back(0);
     }
   }
 
@@ -448,7 +462,9 @@ uint64_t structure_3D_impl::block_count() const noexcept {
       counter++;
       continue;
     }
-    counter += LUT_is_air[cur_blk_id];
+    if (!LUT_is_air[cur_blk_id]) {
+      counter++;
+    }
   }
   return counter;
 }
