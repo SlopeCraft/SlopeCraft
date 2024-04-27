@@ -905,6 +905,12 @@ std::optional<SlopeCraft::litematic_options> SCWind::current_litematic_option(
 
   litename = this->ui->le_lite_name->text().toUtf8().data();
   region_name = this->ui->le_lite_region_name->text().toUtf8().data();
+  if (litename.empty()) {
+    litename = "UnnamedLitematica";
+  }
+  if (region_name.empty()) {
+    region_name = "UnnamedRegion";
+  }
 
   return SlopeCraft::litematic_options{
       .caller_api_version = SC_VERSION_U64,

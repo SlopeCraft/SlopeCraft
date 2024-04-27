@@ -63,10 +63,12 @@ void PreviewWind::setup_data(
     blkp_arr.emplace_back(b);
   });
 
-  this->mat_list.resize(blkp_arr.size());
+  this->mat_list.reserve(blkp_arr.size());
   for (size_t idx = 0; idx < blkp_arr.size(); idx++) {
-    this->mat_list[idx] =
-        material_item{.blk = blkp_arr[idx], .count = count_list[idx]};
+    if (count_list[idx] > 0) {
+      this->mat_list.emplace_back(
+          material_item{.blk = blkp_arr[idx], .count = count_list[idx]});
+    }
   }
 
   {
