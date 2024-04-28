@@ -14,7 +14,7 @@ FetchContent_Declare(magic_enum
 
     # URL https://github.com/Neargye/magic_enum/releases/download/v0.8.2/magic_enum.hpp
     GIT_REPOSITORY https://github.com/Neargye/magic_enum.git
-    GIT_TAG "v0.8.2"
+    GIT_TAG "v0.9.5"
     OVERRIDE_FIND_PACKAGE
 )
 
