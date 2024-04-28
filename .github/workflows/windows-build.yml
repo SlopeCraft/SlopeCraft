@@ -63,6 +63,19 @@ jobs:
           mkdir bin/Qt6.5.0-msvc-shared
           mkdir 3rdParty
 
+      - name: Install winget
+        if: matrix.gpu_api == 'Vulkan'
+        shell: pwsh
+        run: |
+          $progressPreference = 'silentlyContinue'
+          Write-Information "Downloading WinGet and its dependencies..."
+          Invoke-WebRequest -Uri https://aka.ms/getwinget -OutFile Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle
+          Invoke-WebRequest -Uri https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx -OutFile Microsoft.VCLibs.x64.14.00.Desktop.appx
+          Invoke-WebRequest -Uri https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.8.6/Microsoft.UI.Xaml.2.8.x64.appx -OutFile Microsoft.UI.Xaml.2.8.x64.appx
+          Add-AppxPackage Microsoft.VCLibs.x64.14.00.Desktop.appx
+          Add-AppxPackage Microsoft.UI.Xaml.2.8.x64.appx
+          Add-AppxPackage Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle
+
       - name: Install Vulkan with vcpkg
         if: matrix.gpu_api == 'Vulkan'
         run: winget install KhronosGroup.VulkanSDK
@@ -106,7 +119,7 @@ jobs:
           cd ./build
           cpack -G ZIP -B "$basedir/pack"
           cpack -G 7Z -B "$basedir/pack"
-
+      
       #- name: Upload zip pack
       #  uses: actions/upload-artifact@v3
       #  with:
