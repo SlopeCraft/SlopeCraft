@@ -21,6 +21,7 @@ This file is part of SlopeCraft.
 */
 
 #include "SCLDefines.h"
+
 namespace SlopeCraft {
 extern const float RGBBasicSource[256 * 3];
 

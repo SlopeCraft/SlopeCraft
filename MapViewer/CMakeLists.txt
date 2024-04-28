@@ -21,7 +21,6 @@ set(MapViewer_header_files
 set(MapViewer_source_files
 
     main.cpp
-    ../SlopeCraftL/color_source.cpp
     processMapFiles.cpp
     MapViewerWind.cpp
     resource_manually.cpp
@@ -57,6 +56,7 @@ find_package(Eigen3 REQUIRED)
 
 target_link_libraries(MapViewer
     PRIVATE
+    SlopeCraftL
     ZLIB::ZLIB
     Qt6::Widgets
     OpenMP::OpenMP_CXX

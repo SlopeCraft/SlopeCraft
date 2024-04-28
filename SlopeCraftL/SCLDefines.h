@@ -32,10 +32,10 @@ This file is part of SlopeCraft.
 #define EIGEN_NO_DEBUG
 #include <Eigen/Dense>
 #include <iostream>
-
-#include "SlopeCraftL.h"
 #include <ColorManip/newColorSet.hpp>
 #include <ColorManip/newTokiColor.hpp>
+
+#include "SlopeCraftL.h"
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846

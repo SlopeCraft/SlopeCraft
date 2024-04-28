@@ -416,6 +416,8 @@ class structure_3D {
 extern "C" {
 namespace SlopeCraft {
 
+[[nodiscard]] SCL_EXPORT const float *SCL_get_rgb_basic_colorset_source();
+
 [[nodiscard]] SCL_EXPORT mc_block_interface *SCL_create_block();
 SCL_EXPORT void SCL_destroy_block(mc_block_interface *);
 

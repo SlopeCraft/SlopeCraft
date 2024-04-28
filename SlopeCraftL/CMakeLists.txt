@@ -25,18 +25,18 @@ set(Slope_SCL_internal_headers
     ${CMAKE_SOURCE_DIR}/utilities/SC_GlobalEnums.h
 
     # GA_converter_option.h
-    height_line.h
-    optimize_chain.h
-    prim_glass_builder.h
     SCLDefines.h
-    #    to_be_removed/TokiSlopeCraft.h
     water_item.h
-    lossy_compressor.h
-    mc_block.h
     string_deliver.h
     structure_3D.h
+
     color_table.h
     converted_image.h
+    height_line.h
+    lossy_compressor.h
+    mc_block.h
+    optimize_chain.h
+    prim_glass_builder.h
 )
 
 set(SlopeCraft_SCL_sources
@@ -48,11 +48,6 @@ set(SlopeCraft_SCL_sources
     height_line.cpp
     optimize_chain.cpp
     prim_glass_builder.cpp
-    #    to_be_removed/TokiSlopeCraft.cpp
-    #    to_be_removed/TokiSlopeCraft_static_funs.cpp
-    #    to_be_removed/TokiSlopeCraft_build.cpp
-    #    to_be_removed/TokiSlopeCraft_convert.cpp
-    #    to_be_removed/TokiSlopeCraft_cache.cpp
     image_preprocess.cpp
     lossy_compressor.cpp
     mc_block.cpp

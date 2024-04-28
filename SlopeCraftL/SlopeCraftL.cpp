@@ -288,6 +288,11 @@ impl_create_block_list_from_zip(const char *zip_path) noexcept {
 }
 
 extern "C" {
+
+SCL_EXPORT const float *SCL_get_rgb_basic_colorset_source() {
+  return SlopeCraft::RGBBasicSource;
+}
+
 SCL_EXPORT mc_block_interface *SCL_create_block() { return new mc_block; }
 SCL_EXPORT void SCL_destroy_block(mc_block_interface *b) { delete b; }
 

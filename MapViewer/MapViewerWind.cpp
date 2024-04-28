@@ -20,8 +20,6 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
-#include "MapViewerWind.h"
-
 #include <QFileDialog>
 #include <QFont>
 #include <QMessageBox>
@@ -31,6 +29,9 @@ This file is part of SlopeCraft.
 #include <list>
 #include <mutex>
 
+#include "SlopeCraftL.h"
+
+#include "MapViewerWind.h"
 #include "processMapFiles.h"
 #include "ui_MapViewerWind.h"
 
@@ -52,7 +53,7 @@ std::array<ARGB, 256> make_map_LUT() {
   result.fill(0x7FFF0000);
 
   const Eigen::Map<const Eigen::Array<float, 256, 3>> src(
-      SlopeCraft::RGBBasicSource);
+      SlopeCraft::SCL_get_rgb_basic_colorset_source());
 
   for (int row_idx = 0; row_idx < 256; row_idx++) {
     ARGB a, r, g, b;
@@ -102,7 +103,7 @@ std::array<ARGB, 256> make_inverse_map_LUT(const std::array<ARGB, 256> &src) {
     const ARGB argb = src[idx];
     ARGB r = (argb >> 16) & 0xFF;
     ARGB g = (argb >> 8) & 0xFF;
-    ARGB b = (argb)&0xFF;
+    ARGB b = (argb) & 0xFF;
 
     double x, y, z, _r, _g, _b;
     RGB2XYZ(r / 255.0, g / 255.0, g / 255.0, &x, &y, &z);
