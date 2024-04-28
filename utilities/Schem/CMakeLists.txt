@@ -22,7 +22,7 @@ target_link_libraries(Schem PUBLIC
     cereal::cereal
     fmt::fmt
     magic_enum::magic_enum)
-target_compile_features(Schem PUBLIC cxx_std_20)
+target_compile_features(Schem PUBLIC cxx_std_23)
 target_link_libraries(Schem PUBLIC MCDataVersion ProcessBlockId)
 
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")

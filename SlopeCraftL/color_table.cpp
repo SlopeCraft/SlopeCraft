@@ -9,7 +9,7 @@
 #include "water_item.h"
 #include "structure_3D.h"
 #include "utilities/ProcessBlockId/process_block_id.h"
-#include "utilities/schem/mushroom.h"
+#include "utilities/Schem/mushroom.h"
 
 std::optional<color_table_impl> color_table_impl::create(
     const color_table_create_info &args) noexcept {
