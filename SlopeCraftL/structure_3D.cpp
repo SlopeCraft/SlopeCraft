@@ -1,6 +1,7 @@
 //
 // Created by joseph on 4/17/24.
 //
+#include <ranges>
 #include <fmt/format.h>
 #include <boost/iostreams/filtering_stream.hpp>
 #include <boost/iostreams/device/file.hpp>
