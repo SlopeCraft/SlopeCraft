@@ -10,6 +10,7 @@ set(CMAKE_AUTORCC ON)
 find_package(Qt6 COMPONENTS Widgets LinguistTools Network REQUIRED)
 find_package(magic_enum REQUIRED)
 find_package(fmt REQUIRED)
+find_package(tl-expected REQUIRED)
 
 set(SlopeCraft_rc_files)
 
@@ -83,6 +84,7 @@ target_link_libraries(SlopeCraft PRIVATE
     Qt6::Network
     magic_enum::magic_enum
     fmt::fmt
+    tl::expected
 
     SlopeCraftL
     AdaptiveLabel
