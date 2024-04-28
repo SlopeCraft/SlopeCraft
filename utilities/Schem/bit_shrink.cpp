@@ -115,10 +115,10 @@ void shrink_bits(const uint16_t *const src, const size_t src_count,
   //  }
 
   const size_t total_bits = bits_per_element * src_count;
-  const size_t bytes_required = libSchem::ceil_up_to(total_bits, 8);
+  const size_t bytes_required = libSchem::ceil_up_to(total_bits, 8) / 8;
 
   const size_t uint64_t_required =
-      libSchem::ceil_up_to(bytes_required, sizeof(uint64_t));
+      libSchem::ceil_up_to(bytes_required, sizeof(uint64_t)) / sizeof(uint64_t);
 
   dest->resize(uint64_t_required);
   memset(dest->data(), 0, bytes_required);
