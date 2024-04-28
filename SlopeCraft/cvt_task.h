@@ -19,8 +19,8 @@ struct convert_input {
 };
 
 struct hasher {
-  static uint64_t operator()(
-      const SlopeCraft::GA_converter_option& opt) noexcept {
+  uint64_t operator()(
+      const SlopeCraft::GA_converter_option& opt) const noexcept {
     uint64_t h = 0;
     h ^= std::hash<size_t>()(opt.popSize);
     h ^= std::hash<size_t>()(opt.maxGeneration);
@@ -29,7 +29,7 @@ struct hasher {
     h ^= std::hash<double>()(opt.mutationProb);
     return h;
   }
-  static uint64_t operator()(const SlopeCraft::convert_option& opt) noexcept {
+  uint64_t operator()(const SlopeCraft::convert_option& opt) const noexcept {
     uint64_t h = 0;
     h |= static_cast<uint64_t>(opt.algo);
     h <<= 1;
@@ -37,10 +37,10 @@ struct hasher {
     h ^= hasher{}(opt.ai_cvter_opt);
     return h;
   }
-  static uint64_t operator()(const convert_input& pair) noexcept {
+  uint64_t operator()(const convert_input& pair) const noexcept {
     return hasher{}(pair.option) ^ std::hash<const void*>{}(pair.table);
   }
-  static uint64_t operator()(const SlopeCraft::build_options& opt) noexcept {
+  uint64_t operator()(const SlopeCraft::build_options& opt) const noexcept {
     uint64_t h = 0;
     h ^= static_cast<uint64_t>(opt.max_allowed_height);
     h <<= sizeof(opt.max_allowed_height) * 8;  // 16 bits
@@ -62,8 +62,8 @@ struct hasher {
 };
 
 struct equal {
-  static bool operator()(const SlopeCraft::GA_converter_option& a,
-                         const SlopeCraft::GA_converter_option& b) noexcept {
+  bool operator()(const SlopeCraft::GA_converter_option& a,
+                  const SlopeCraft::GA_converter_option& b) const noexcept {
     if (a.popSize != b.popSize) return false;
     if (a.maxGeneration != b.maxGeneration) return false;
     if (a.maxFailTimes != b.maxFailTimes) return false;
@@ -71,21 +71,21 @@ struct equal {
     if (a.mutationProb != b.mutationProb) return false;
     return true;
   }
-  static bool operator()(const SlopeCraft::convert_option& a,
-                         const SlopeCraft::convert_option& b) noexcept {
+  bool operator()(const SlopeCraft::convert_option& a,
+                  const SlopeCraft::convert_option& b) const noexcept {
     if (a.algo != b.algo) return false;
     if (a.dither != b.dither) return false;
     if (!equal{}(a.ai_cvter_opt, b.ai_cvter_opt)) return false;
     return true;
   }
-  static bool operator()(const convert_input& a,
-                         const convert_input& b) noexcept {
+  bool operator()(const convert_input& a,
+                  const convert_input& b) const noexcept {
     if (a.table != b.table) return false;
     if (!equal{}(a.option, b.option)) return false;
     return true;
   }
-  static bool operator()(const SlopeCraft::build_options& a,
-                         const SlopeCraft::build_options& b) noexcept {
+  bool operator()(const SlopeCraft::build_options& a,
+                  const SlopeCraft::build_options& b) const noexcept {
     if (a.max_allowed_height != b.max_allowed_height) return false;
     if (a.bridge_interval != b.bridge_interval) return false;
     if (a.compress_method != b.compress_method) return false;
