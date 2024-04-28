@@ -1,7 +1,6 @@
 //
 // Created by joseph on 4/17/24.
 //
-#include <ranges>
 #include <fmt/format.h>
 #include <boost/iostreams/filtering_stream.hpp>
 #include <boost/iostreams/device/file.hpp>
@@ -448,7 +447,7 @@ tl::expected<structure_3D_impl, std::string> structure_3D_impl::load_cache(
 uint64_t structure_3D_impl::block_count() const noexcept {
   std::vector<uint8_t> LUT_is_air;
   LUT_is_air.reserve(this->schem.palette_size());
-  for (auto [idx, id] : this->schem.palette() | std::ranges::views::enumerate) {
+  for (auto &id : this->schem.palette()) {
     if (id == "air" || id == "minecraft:air") {
       LUT_is_air.emplace_back(1);
     } else {
