@@ -1,11 +1,11 @@
 #ifndef SLOPECRAFT_SLOPECRAFT_CVT_TASK_H
 #define SLOPECRAFT_SLOPECRAFT_CVT_TASK_H
 
+#include <functional>
 #include <QString>
 #include <QImage>
 #include <QVariant>
 #include <tl/expected.hpp>
-#include <functional>
 
 struct convert_input {
   convert_input() = default;

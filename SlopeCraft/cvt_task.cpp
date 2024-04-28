@@ -1,6 +1,5 @@
 
 #include <QObject>
-#include <ranges>
 #include "cvt_task.h"
 #include "ExportTableModel.h"
 
@@ -35,7 +34,8 @@ const std::vector<std::pair<size_t, cvt_task*>> task_pool::converted_tasks(
     const SlopeCraft::convert_option& cvt_option) noexcept {
   std::vector<std::pair<size_t, cvt_task*>> ret;
   ret.reserve(this->size());
-  for (auto [idx, task] : *this | std::ranges::views::enumerate) {
+  for (size_t idx = 0; idx < this->size(); idx++) {
+    auto& task = this->at(idx);
     if (task.is_converted_with(table, cvt_option)) {
       ret.emplace_back(std::pair<size_t, cvt_task*>{idx, &task});
     }
@@ -45,7 +45,8 @@ const std::vector<std::pair<size_t, cvt_task*>> task_pool::converted_tasks(
 std::optional<std::pair<size_t, cvt_task*>> task_pool::converted_task_at_index(
     const SlopeCraft::color_table* table,
     const SlopeCraft::convert_option& cvt_option, size_t eidx) noexcept {
-  for (auto [idx, task] : *this | std::ranges::views::enumerate) {
+  for (size_t idx = 0; idx < this->size(); idx++) {
+    auto& task = this->at(idx);
     if (task.is_converted_with(table, cvt_option)) {
       if (eidx == 0) {
         return std::pair<size_t, cvt_task*>{idx, &task};
@@ -59,7 +60,8 @@ std::optional<std::pair<size_t, cvt_task*>> task_pool::converted_task_at_index(
 std::optional<size_t> task_pool::export_index_to_global_index(
     const SlopeCraft::color_table* table,
     const SlopeCraft::convert_option& cvt_option, size_t e_idx) const noexcept {
-  for (auto [gidx, task] : *this | std::ranges::views::enumerate) {
+  for (size_t gidx = 0; gidx < this->size(); gidx++) {
+    auto& task = this->at(gidx);
     if (!task.is_converted_with(table, cvt_option)) {
       continue;
     }
