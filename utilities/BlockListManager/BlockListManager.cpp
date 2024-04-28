@@ -32,7 +32,7 @@ void BlockListManager::setup_basecolors() noexcept {
   }
 }
 
-uint64_t std::hash<selection>::operator()(const selection &s) noexcept {
+uint64_t std::hash<selection>::operator()(const selection &s) const noexcept {
   boost::uuids::detail::md5 hash;
   for (auto &id : s.ids) {
     hash.process_bytes(id.data(), id.size());
