@@ -33,7 +33,8 @@ This file is part of SlopeCraft.
 
 namespace GACvter {
 class GAConverter;
-}
+void delete_GA_converter(GAConverter *) noexcept;
+}  // namespace GACvter
 
 namespace heu {
 struct GAOption;
@@ -43,7 +44,10 @@ namespace libMapImageCvt {
 
 class MapImageCvter : public ::libImageCvt::ImageCvter<true> {
  private:
-  std::unique_ptr<GACvter::GAConverter> gacvter;
+  using deleter_t = decltype([](GACvter::GAConverter *g) {
+    GACvter::delete_GA_converter(g);
+  });
+  std::unique_ptr<GACvter::GAConverter, deleter_t> gacvter;
 
  public:
   using Base_t = ::libImageCvt::ImageCvter<true>;
@@ -54,6 +58,7 @@ class MapImageCvter : public ::libImageCvt::ImageCvter<true> {
 
   MapImageCvter(const Base_t::basic_colorset_t &basic,
                 const Base_t::allowed_colorset_t &allowed);
+  MapImageCvter(MapImageCvter &&) = default;
 
   ~MapImageCvter() = default;
 
@@ -79,22 +84,19 @@ class MapImageCvter : public ::libImageCvt::ImageCvter<true> {
     return result;
   }
 
-  void col_TokiColor_ptrs(int64_t col,
-                          const TokiColor_t **const dest) const noexcept {
-    if (dest == nullptr) {
-      return;
-    }
-
+  void col_TokiColor_ptrs(
+      int64_t col, std::vector<const TokiColor_t *> &dest) const noexcept {
     if (col < 0 || col > this->cols()) {
       return;
     }
-
+    dest.clear();
     for (int64_t r = 0; r < this->rows(); r++) {
       auto it = this->_color_hash.find(
           convert_unit(this->_dithered_image(r, col), this->algo));
-      dest[r] = &it->second;
+      dest.emplace_back(&it->second);
     }
   }
+  
   // temp is a temporary container to pass ownership
   void load_from_itermediate(MapImageCvter &&temp) noexcept {
     this->_raw_image = std::move(temp._raw_image);
@@ -183,7 +185,9 @@ class MapImageCvter : public ::libImageCvt::ImageCvter<true> {
   bool save_cache(const char *filename) const noexcept;
   bool examine_cache(const char *filename, uint64_t expected_task_hash,
                      MapImageCvter *itermediate = nullptr) const noexcept;
-  bool load_cache(const char *filename, uint64_t expected_task_hash) noexcept;
+  [[nodiscard]] bool load_cache(const char *filename,
+                                uint64_t expected_task_hash) noexcept;
+  bool load_cache(const char *filename) noexcept;
 };
 
 }  // namespace libMapImageCvt

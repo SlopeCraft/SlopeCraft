@@ -20,9 +20,13 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
-// #include "SCLDefines.h"
+#include "SCLDefines.h"
+
 namespace SlopeCraft {
 extern const float RGBBasicSource[256 * 3];
+
+const std::unique_ptr<const colorset_basic_t> basic_colorset{
+    new colorset_basic_t{RGBBasicSource}};
 
 const float RGBBasicSource[256 * 3] = {
     0 / 255.0f,   90 / 255.0f,  174 / 255.0f, 140 / 255.0f, 180 / 255.0f,
@@ -181,4 +185,4 @@ const float RGBBasicSource[256 * 3] = {
     79 / 255.0f,  0 / 255.0f,   0 / 255.0f,
 
 };
-} // namespace SlopeCraft
+}  // namespace SlopeCraft

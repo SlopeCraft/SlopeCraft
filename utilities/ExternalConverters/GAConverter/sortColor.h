@@ -24,7 +24,7 @@ This file is part of SlopeCraft.
 #define SORTCOLOR_H
 
 #include "GACvterDefines.hpp"
-#include "../../SlopeCraftL/Colors.h"
+#include "../../SlopeCraftL/SCLDefines.h"
 
 namespace GACvter {
 

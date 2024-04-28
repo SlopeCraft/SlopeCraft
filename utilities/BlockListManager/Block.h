@@ -9,10 +9,10 @@
 class BlockWidget : public QRadioButton {
   Q_OBJECT
  private:
-  SlopeCraft::AbstractBlock* const block;
+  SlopeCraft::mc_block_interface* const block;
 
  public:
-  explicit BlockWidget(QWidget* parent, SlopeCraft::AbstractBlock* _blk);
+  explicit BlockWidget(QWidget* parent, SlopeCraft::mc_block_interface* _blk);
   ~BlockWidget() = default;
 
   auto attachted_block() const noexcept { return this->block; }

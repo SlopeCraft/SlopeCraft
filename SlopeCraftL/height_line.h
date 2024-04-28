@@ -23,27 +23,28 @@ This file is part of SlopeCraft.
 #ifndef HEIGHTLINE_H
 #define HEIGHTLINE_H
 
-#include "Colors.h"
-#include "OptiChain.h"
-#include "SCLDefines.h"
-#include "WaterItem.h"
 #include <iostream>
 #include <map>
 #include <vector>
+#include "optimize_chain.h"
+#include "SCLDefines.h"
+#include "water_item.h"
 
-class HeightLine {
-public:
-  HeightLine();
+class height_line {
+ public:
+  height_line();
   float make(const TokiColor *[],
              const Eigen::Array<uint8_t, Eigen::Dynamic, 1> &,
              bool allowNaturalCompress, Eigen::ArrayXi *dst = nullptr);
   void make(const Eigen::ArrayXi &mapColorCol, bool allowNaturalCompress);
   void updateWaterMap();
-  uint16_t maxHeight() const;
-  const Eigen::ArrayXi &getHighLine() const;
-  const Eigen::ArrayXi &getLowLine() const;
-  const Eigen::ArrayXi &getBase() const;
-  const std::map<uint16_t, waterItem> &getWaterMap() const;
+  uint32_t maxHeight() const;
+
+  const Eigen::ArrayXi &getHighLine() const noexcept { return HighLine; }
+  const Eigen::ArrayXi &getLowLine() const noexcept { return LowLine; }
+
+  auto &getBase() const noexcept { return this->base; }
+  const std::map<uint32_t, water_y_range> &getWaterMap() const;
   EImage toImg() const;
 
   static const ARGB BlockColor;
@@ -51,11 +52,11 @@ public:
   static const ARGB WaterColor;
   static const ARGB greyColor;
 
-private:
+ private:
   Eigen::ArrayXi base;
   Eigen::ArrayXi HighLine;
   Eigen::ArrayXi LowLine;
-  std::map<uint16_t, waterItem> waterMap;
+  std::map<uint32_t, water_y_range> waterMap;
 };
 
-#endif // HEIGHTLINE_H
+#endif  // HEIGHTLINE_H

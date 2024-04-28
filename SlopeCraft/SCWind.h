@@ -1,15 +1,16 @@
 #ifndef SLOPECRAFT_SLOPECRAFT_SCWIND_H
 #define SLOPECRAFT_SLOPECRAFT_SCWIND_H
 
-#include <QMainWindow>
-#include <SlopeCraftL.h>
-#include <memory>
-#include <QRadioButton>
+#include <tuple>
 #include <vector>
-#include <BlockListManager.h>
+#include <memory>
+#include <QMainWindow>
+#include <QRadioButton>
 #include <QProgressBar>
 #include <QTranslator>
 #include <QNetworkAccessManager>
+#include <SlopeCraftL.h>
+#include <BlockListManager.h>
 #include "cvt_task.h"
 #include "PoolModel.h"
 #include "ExportTableModel.h"
@@ -19,6 +20,13 @@ class SCWind;
 namespace Ui {
 class SCWind;
 }
+
+SlopeCraft::progress_callbacks progress_callback(QProgressBar* bar) noexcept;
+
+SlopeCraft::const_image_reference wrap_image(const QImage& img) noexcept;
+
+[[nodiscard]] QImage get_converted_image(
+    const SlopeCraft::converted_image&) noexcept;
 
 class SCWind : public QMainWindow {
   Q_OBJECT
@@ -36,7 +44,7 @@ class SCWind : public QMainWindow {
 
   static const QString& default_wind_title() noexcept;
 
-  static QString workStatus_to_string(::SCL_workStatues) noexcept;
+  static QString workStatus_to_string(::SCL_workStatus) noexcept;
 
   const static QString update_url;
 
@@ -98,9 +106,12 @@ class SCWind : public QMainWindow {
 
  private:
   Ui::SCWind* ui;
-  SlopeCraft::Kernel* kernel;
 
-  task_pool_t tasks;
+  std::unordered_map<
+      selection, std::unique_ptr<SlopeCraft::color_table, SlopeCraft::deleter>>
+      color_tables;
+  //  SlopeCraft::Kernel* kernel;
+
   CvtPoolModel* cvt_pool_model{nullptr};
   ExportPoolModel* export_pool_model{nullptr};
   ExportTableModel* export_table_model{nullptr};
@@ -111,11 +122,17 @@ class SCWind : public QMainWindow {
   std::vector<QTranslator*> translators;
 
   QString prev_load_image_dir{""};
-
   // QString fileonly_export_dir{""};
 
  public:
-  const SlopeCraft::Kernel* kernel_ptr() const noexcept { return this->kernel; }
+  SlopeCraft::GA_converter_option GA_option{};
+  task_pool tasks;
+
+  QString cache_root_dir() const noexcept;
+  SlopeCraft::color_table* current_color_table() noexcept;
+  SlopeCraft::convert_option current_convert_option() noexcept;
+
+  SlopeCraft::ui_callbacks ui_callbacks() const noexcept;
 
   std::array<QRadioButton*, 20 - 12 + 1> version_buttons() noexcept;
   std::array<const QRadioButton*, 20 - 12 + 1> version_buttons() const noexcept;
@@ -143,7 +160,7 @@ class SCWind : public QMainWindow {
   std::optional<int> selected_cvt_task_idx() const noexcept;
 
   std::vector<cvt_task*> selected_export_task_list() const noexcept;
-  std::optional<cvt_task*> selected_export_task() const noexcept;
+  cvt_task* selected_export_task() const noexcept;
 
   SCL_convertAlgo selected_algo() const noexcept;
   bool is_dither_selected() const noexcept;
@@ -161,18 +178,18 @@ class SCWind : public QMainWindow {
   bool is_enderman_proof_selected() const noexcept;
   bool is_connect_mushroom_selected() const noexcept;
 
-  SlopeCraft::Kernel::build_options current_build_option() const noexcept;
+  SlopeCraft::build_options current_build_option() const noexcept;
 
   export_type selected_export_type() const noexcept;
 
-  std::optional<SlopeCraft::Kernel::litematic_options> current_litematic_option(
+  std::optional<SlopeCraft::litematic_options> current_litematic_option(
       QString& err) const noexcept;
-  std::optional<SlopeCraft::Kernel::vanilla_structure_options>
-  current_nbt_option(QString& err) const noexcept;
-  std::optional<SlopeCraft::Kernel::WE_schem_options> current_schem_option(
+  std::optional<SlopeCraft::vanilla_structure_options> current_nbt_option(
       QString& err) const noexcept;
-  std::optional<SlopeCraft::Kernel::flag_diagram_options>
-  current_flatdiagram_option(QString& err) const noexcept;
+  std::optional<SlopeCraft::WE_schem_options> current_schem_option(
+      QString& err) const noexcept;
+  std::optional<SlopeCraft::flag_diagram_options> current_flatdiagram_option(
+      QString& err) const noexcept;
 
   int current_map_begin_seq_number() const noexcept;
 
@@ -181,41 +198,57 @@ class SCWind : public QMainWindow {
 
  private:
   // kernel related functions
-  void kernel_set_type() noexcept;
+  void set_colorset() noexcept;
 
   void update_button_states() noexcept;
 
-  void kernel_set_image(int idx) noexcept;
-  void kernel_convert_image() noexcept;
+  [[nodiscard]] std::unique_ptr<SlopeCraft::converted_image,
+                                SlopeCraft::deleter>
+  convert_image(int idx) noexcept;
 
-  void kernel_make_cvt_cache() noexcept;
+  [[nodiscard]] std::unique_ptr<SlopeCraft::converted_image,
+                                SlopeCraft::deleter>
+  convert_image(const cvt_task&) noexcept;
 
-  // bool kernel_check_colorset_hash() noexcept;
+  [[nodiscard]] const SlopeCraft::converted_image& convert_if_need(
+      cvt_task&) noexcept;
 
-  void kernel_build_3d() noexcept;
-  void kernel_make_build_cache() noexcept;
+  [[nodiscard]] std::tuple<const SlopeCraft::converted_image&,
+                           const SlopeCraft::structure_3D&>
+  convert_and_build_if_need(cvt_task&) noexcept;
 
-  void refresh_current_cvt_display(std::optional<int> idx,
-                                   bool is_image_coneverted_in_kernel) noexcept;
-  void refresh_current_cvt_display(std::optional<int> idx) noexcept {
-    this->refresh_current_cvt_display(idx, false);
-  }
+  [[nodiscard]] std::unique_ptr<SlopeCraft::structure_3D, SlopeCraft::deleter>
+  build_3D(const SlopeCraft::converted_image&) noexcept;
+
+  std::tuple<const SlopeCraft::converted_image*,
+             const SlopeCraft::structure_3D*>
+  load_selected_3D() noexcept;
+
+  //  [[deprecated]] void kernel_set_image(int idx) noexcept;
+  //  [[deprecated]] void kernel_convert_image() noexcept;
+  //
+  //  [[deprecated]] void kernel_make_cvt_cache() noexcept;
+
+  //  [[deprecated]] void kernel_build_3d() noexcept;
+  //  [[deprecated]] void kernel_make_build_cache() noexcept;
+
+  void refresh_current_cvt_display(std::optional<int> idx) noexcept;
   void refresh_current_cvt_display() noexcept {
     this->refresh_current_cvt_display(this->selected_cvt_task_idx());
   }
 
-  QImage get_converted_image_from_kernel() const noexcept;
+  //  [[deprecated]] QImage get_converted_image_from_kernel() const noexcept;
 
-  void refresh_current_build_display(std::optional<cvt_task*> taskp,
+  void refresh_current_build_display(cvt_task* taskp,
                                      bool is_image_built_in_kernel) noexcept;
-  void refresh_current_build_display(std::optional<cvt_task*> taskp) noexcept {
+  void refresh_current_build_display(cvt_task* taskp) noexcept {
     return this->refresh_current_build_display(taskp, false);
   }
   void refresh_current_build_display() noexcept {
     this->refresh_current_build_display(this->selected_export_task());
   }
 
-  void mark_all_task_unconverted() noexcept;
+  //  void mark_all_task_unconverted() noexcept;
 
   void export_current_cvted_image(int idx, QString filename) noexcept;
 

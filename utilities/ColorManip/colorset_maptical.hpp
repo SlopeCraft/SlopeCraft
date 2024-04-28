@@ -71,10 +71,7 @@ class alignas(32) colorset_maptical_basic {
   colorset_maptical_basic() = delete;
   /// Construct from color source
   colorset_maptical_basic(const float *const rgbsrc) {
-    if (rgbsrc == nullptr) {
-      exit(1);
-      return;
-    }
+    assert(rgbsrc);
     memcpy(__rgb.data(), rgbsrc, sizeof(__rgb));
 
     for (int row = 0; row < 256; row++) {
@@ -199,11 +196,7 @@ class alignas(32) colorset_maptical_allowed {
   inline const uint8_t *map_data() const noexcept { return __map.data(); }
 
   bool apply_allowed(const colorset_maptical_basic &src,
-                     const bool *const allow_list) noexcept {
-    if (allow_list == nullptr) {
-      return false;
-    }
-
+                     std::span<const bool, 256> allow_list) noexcept {
     const int new_color_count = allow_list_counter(allow_list);
 
     if (new_color_count <= 3) {
@@ -251,7 +244,8 @@ class alignas(32) colorset_maptical_allowed {
   }
 
  private:
-  inline int allow_list_counter(const bool *const allow_list) const noexcept {
+  inline int allow_list_counter(
+      std::span<const bool, 256> allow_list) const noexcept {
     int result = 0;
     for (int idx = 0; idx < 256; idx++) {
       const int base = (idx & 0b111111);

@@ -1,12 +1,14 @@
 #include "PoolModel.h"
 #include <QMimeData>
 #include <list>
-#include <ranges>
 #include <QPainter>
 #include <QMessageBox>
+#include <SCWind.h>
 
-PoolModel::PoolModel(QObject* parent, task_pool_t* poolptr)
-    : QAbstractListModel(parent), pool(poolptr) {}
+PoolModel::PoolModel(SCWind* scw)
+    : QAbstractListModel(scw), pool{scw->tasks}, scwind{scw} {
+  assert(scw != nullptr);
+}
 
 PoolModel::~PoolModel() {}
 
@@ -21,7 +23,7 @@ const QPixmap& PoolModel::icon_converted() noexcept {
 }
 
 QVariant PoolModel::data(const QModelIndex& idx, int role) const {
-  const auto& task = this->pool->at(idx.row());
+  const auto& task = this->pool.at(idx.row());
   if (role == Qt::ItemDataRole::DisplayRole) {
     return task.filename;
   }
@@ -34,7 +36,8 @@ QVariant PoolModel::data(const QModelIndex& idx, int role) const {
     auto raw_image = QPixmap::fromImage(task.original_image);
     auto img = raw_image.scaledToWidth(this->_listview->size().width());
 
-    if (!task.is_converted) {
+    if (!task.is_converted_with(this->scwind->current_color_table(),
+                                this->scwind->current_convert_option())) {
       this->draw_icon(img, icon_empty(), 0);
     } else {
       this->draw_icon(img, icon_converted(), 0);
@@ -69,14 +72,15 @@ void PoolModel::draw_icon(QPixmap& image, const QPixmap& icon, int index,
                           QWidget* ptr_to_report_error) noexcept {
   assert(index >= 0);
   if (icon.size() != QSize{32, 32}) [[unlikely]] {
-    QMessageBox::critical(
-        ptr_to_report_error, QObject::tr("绘制图标时发现错误"),
-        tr("被绘制的图标尺寸应当是 32*32，但实际上是%1*%"
-           "2。这属于 SlopeCraft 内部错误，请向开发者反馈。SlopeCraft 必须崩溃。")
-            .arg(icon.size().height())
-            .arg(icon.size().width()));
+    QMessageBox::critical(ptr_to_report_error,
+                          QObject::tr("绘制图标时发现错误"),
+                          tr("被绘制的图标尺寸应当是 32*32，但实际上是%1*%"
+                             "2。这属于 SlopeCraft "
+                             "内部错误，请向开发者反馈。SlopeCraft 必须崩溃。")
+                              .arg(icon.size().height())
+                              .arg(icon.size().width()));
     abort();
-    return;
+    // return;
   }
   {
     const QSize expected_min_size{(index + 1) * 32, 32};
@@ -96,8 +100,7 @@ void PoolModel::draw_icon(QPixmap& image, const QPixmap& icon, int index,
   painter.end();
 }
 
-CvtPoolModel::CvtPoolModel(QObject* parent, task_pool_t* poolptr)
-    : PoolModel(parent, poolptr) {}
+CvtPoolModel::CvtPoolModel(SCWind* scw) : PoolModel{scw} {}
 
 CvtPoolModel::~CvtPoolModel() {}
 
@@ -219,7 +222,7 @@ void map_indices(std::vector<T>& pool, std::vector<int> moved_indices,
   iterator_add(begin_it, begin_idx);
 
   for (auto srcit : src_it_vec) {
-    temp_pool.emplace(begin_it, *srcit);
+    temp_pool.emplace(begin_it, std::move(*srcit));
   }
 
   for (auto srcit : src_it_vec) {
@@ -258,24 +261,53 @@ bool CvtPoolModel::dropMimeData(const QMimeData* data, Qt::DropAction action,
     if (src_indices.size() <= 0) {
       return true;
     }
-    map_indices(*this->pool, src_indices, begin_row);
+#warning "TODO: Implement reshuffling here"
+    assert(("Reshuffing is not implemented yet", false));
+    //    map_indices(this->pool, src_indices, begin_row);
   }
   this->refresh();
 
   return true;
 }
 
-ExportPoolModel::ExportPoolModel(QObject* parent, task_pool_t* poolptr)
-    : PoolModel(parent, poolptr) {}
+ExportPoolModel::ExportPoolModel(SCWind* scw) : PoolModel(scw) {}
 
 ExportPoolModel::~ExportPoolModel() {}
 
-QVariant ExportPoolModel::data(const QModelIndex& midx, int role) const {
-  const int fidx = this->export_idx_to_full_idx(midx.row());
-  assert(fidx >= 0);
-  assert(fidx < (int)this->pool->size());
+int ExportPoolModel::rowCount(const QModelIndex& midx) const {
+  if (midx.isValid()) {
+    return 0;
+  }
+  return this->pool.converted_count(this->scwind->current_color_table(),
+                                    this->scwind->current_convert_option());
+}
 
-  const auto& task = this->pool->at(fidx);
+std::optional<size_t> ExportPoolModel::export_index_to_global_index(
+    int eidx) const noexcept {
+  if (eidx < 0) {
+    return std::nullopt;
+  }
+  return this->pool.export_index_to_global_index(
+      this->scwind->current_color_table(),
+      this->scwind->current_convert_option(), eidx);
+}
+
+cvt_task* ExportPoolModel::export_idx_to_task_ptr(int eidx) const noexcept {
+  auto global_index = this->export_index_to_global_index(eidx);
+  if (!global_index) {
+    return nullptr;
+  }
+  return &this->pool[global_index.value()];
+}
+
+QVariant ExportPoolModel::data(const QModelIndex& midx, int role) const {
+  const auto taskp = this->export_idx_to_task_ptr(midx.row());
+  assert(taskp);
+  if (taskp == nullptr) {
+    return {};
+  }
+
+  auto& task = *taskp;
 
   if (role == Qt::ItemDataRole::DisplayRole) {
     return task.filename;
@@ -288,7 +320,9 @@ QVariant ExportPoolModel::data(const QModelIndex& midx, int role) const {
     }
     auto raw_image = QPixmap::fromImage(task.original_image);
     auto img = raw_image.scaledToWidth(this->_listview->size().width());
-    if (!task.is_built) {
+    if (!task.is_built_with(this->scwind->current_color_table(),
+                            this->scwind->current_convert_option(),
+                            this->scwind->current_build_option())) {
       this->draw_icon(img, icon_empty(), 0);
     } else {
       this->draw_icon(img, icon_converted(), 0);

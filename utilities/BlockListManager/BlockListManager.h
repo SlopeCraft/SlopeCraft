@@ -24,16 +24,38 @@ QString serialize_preset(const blockListPreset &preset) noexcept;
 
 class BlockListDeleter {
  public:
-  void operator()(SlopeCraft::BlockListInterface *ptr) noexcept {
-    SlopeCraft::SCL_destroyBlockList(ptr);
+  void operator()(SlopeCraft::block_list_interface *ptr) noexcept {
+    SlopeCraft::SCL_destroy_block_list(ptr);
   }
+};
+
+struct selection {
+  std::vector<std::string> ids;
+
+  [[nodiscard]] bool operator==(const selection &b) const noexcept {
+    if (this->ids.size() != b.ids.size()) {
+      return false;
+    }
+    for (size_t i = 0; i < this->ids.size(); i++) {
+      if (this->ids[i] != b.ids[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+};
+
+template <>
+struct std::hash<selection> {
+  static uint64_t operator()(const selection &s) noexcept;
 };
 
 class BlockListManager : public QWidget {
   Q_OBJECT
  private:
   std::vector<std::unique_ptr<BaseColorWidget>> basecolor_widgets;
-  std::vector<std::unique_ptr<SlopeCraft::BlockListInterface, BlockListDeleter>>
+  std::vector<
+      std::unique_ptr<SlopeCraft::block_list_interface, BlockListDeleter>>
       blockslists;
   std::function<SCL_gameVersion()> callback_get_version{nullptr};
 
@@ -41,7 +63,7 @@ class BlockListManager : public QWidget {
   explicit BlockListManager(QWidget *parent = nullptr);
   ~BlockListManager();
 
-  void setup_basecolors(const SlopeCraft::Kernel *kernel) noexcept;
+  void setup_basecolors() noexcept;
 
   bool add_blocklist(QString filename) noexcept;
 
@@ -71,8 +93,8 @@ class BlockListManager : public QWidget {
   }
 
   void get_blocklist(std::vector<uint8_t> &enable_list,
-                     std::vector<const SlopeCraft::AbstractBlock *> &block_list)
-      const noexcept;
+                     std::vector<const SlopeCraft::mc_block_interface *>
+                         &block_list) const noexcept;
 
   bool loadPreset(const blockListPreset &preset) noexcept;
 
@@ -82,11 +104,13 @@ class BlockListManager : public QWidget {
     return this->basecolor_widgets[basecolor].get();
   }
 
+  [[nodiscard]] selection current_selection() const noexcept;
+
  signals:
   void changed();
 
  private:
-  std::unique_ptr<SlopeCraft::BlockListInterface, BlockListDeleter>
+  std::unique_ptr<SlopeCraft::block_list_interface, BlockListDeleter>
   impl_addblocklist(const QString &filename) noexcept;
 };
 

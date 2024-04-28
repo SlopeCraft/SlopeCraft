@@ -12,10 +12,7 @@ const QString SCWind::update_url{
     "https://api.github.com/repos/SlopeCraft/SlopeCraft/releases"};
 
 // #include "PoolWidget.h"
-SCWind::SCWind(QWidget *parent)
-    : QMainWindow(parent),
-      ui(new Ui::SCWind),
-      kernel(SlopeCraft::SCL_createKernel()) {
+SCWind::SCWind(QWidget *parent) : QMainWindow(parent), ui(new Ui::SCWind) {
   this->ui->setupUi(this);
 
   this->connect_slots();
@@ -40,63 +37,47 @@ SCWind::SCWind(QWidget *parent)
     }
   }
 
+  // initialize blm
   {
-    const auto pid = QApplication::applicationPid();
+    this->ui->blm->setup_basecolors();
+    this->ui->blm->set_version_callback(
+        [this]() { return this->selected_version(); });
 
-    const QString sys_cache_dir = QDir::tempPath();
-    const QString cache_dir =
-        QStringLiteral("%1/SlopeCraft/pid=%2").arg(sys_cache_dir).arg(pid);
+    QDir::setCurrent(QCoreApplication::applicationDirPath());
 
-    this->kernel->setCacheDir(cache_dir.toLocal8Bit());
+    this->ui->blm->add_blocklist(
+        QStringLiteral("%1/Blocks/FixedBlocks.zip")
+            .arg(QCoreApplication::applicationDirPath()));
+    this->ui->blm->add_blocklist(
+        QStringLiteral("%1/Blocks/CustomBlocks.zip")
+            .arg(QCoreApplication::applicationDirPath()));
 
-    this->kernel->setWindPtr(this);
-    this->kernel->setProgressRangeSet(
-        [](void *_self, int min, int max, int val) {
-          SCWind *const self = reinterpret_cast<SCWind *>(_self);
-          QProgressBar *const bar = self->current_bar();
-          if (bar == nullptr) return;
+    this->ui->blm->finish_blocklist();
 
-          bar->setMinimum(min);
-          bar->setMaximum(max);
-          bar->setValue(val);
-        });
-    this->kernel->setProgressAdd([](void *_self, int delta) {
-      SCWind *const self = reinterpret_cast<SCWind *>(_self);
-      QProgressBar *const bar = self->current_bar();
-      if (bar == nullptr) return;
+    for (auto btnp : this->version_buttons()) {
+      connect(btnp, &QRadioButton::toggled, this,
+              &SCWind::when_version_buttons_toggled);
+    }
 
-      bar->setValue(bar->value() + delta);
-    });
+    for (auto btnp : this->type_buttons()) {
+      connect(btnp, &QRadioButton::toggled, this,
+              &SCWind::when_type_buttons_toggled);
+    }
 
-    this->kernel->setKeepAwake([](void *) { QApplication::processEvents(); });
-    this->kernel->setReportError(
-        [](void *_this, ::SCL_errorFlag err, const char *msg) {
-          reinterpret_cast<SCWind *>(_this)->report_error(err, msg);
-        });
-    this->kernel->setReportWorkingStatue([](void *_this, ::SCL_workStatues ws) {
-      SCWind *const wind = reinterpret_cast<SCWind *>(_this);
-
-      const QString status_str = SCWind::workStatus_to_string(ws);
-      QString wind_title;
-      if (status_str.isEmpty()) {
-        wind_title = SCWind::default_wind_title();
-      } else {
-        wind_title = QStringLiteral("%1  |  %2")
-                         .arg(SCWind::default_wind_title(), status_str);
-      }
-      wind->setWindowTitle(wind_title);
-    });
+    connect(this->ui->blm, &BlockListManager::changed, this,
+            &SCWind::when_blocklist_changed);
   }
+
   // initialize cvt pool model
   {
-    this->cvt_pool_model = new CvtPoolModel{this, &this->tasks};
+    this->cvt_pool_model = new CvtPoolModel{this};
     this->ui->lview_pool_cvt->setModel(this->cvt_pool_model);
     this->cvt_pool_model->set_listview(this->ui->lview_pool_cvt);
     connect(this->ui->lview_pool_cvt->selectionModel(),
             &QItemSelectionModel::selectionChanged, this,
             &SCWind::when_cvt_pool_selectionChanged);
 
-    this->export_pool_model = new ExportPoolModel{this, &this->tasks};
+    this->export_pool_model = new ExportPoolModel{this};
     this->ui->lview_pool_export->setModel(this->export_pool_model);
     this->export_pool_model->set_listview(this->ui->lview_pool_export);
     connect(this->ui->lview_pool_export->selectionModel(),
@@ -113,7 +94,7 @@ SCWind::SCWind(QWidget *parent)
     });
   }
   {
-    this->export_table_model = new ExportTableModel{this, &this->tasks};
+    this->export_table_model = new ExportTableModel{this};
     this->ui->tview_export_fileonly->setModel(this->export_table_model);
 
     connect(this, &SCWind::image_changed, this->export_table_model,
@@ -122,33 +103,6 @@ SCWind::SCWind(QWidget *parent)
             this->export_table_model, &ExportTableModel::refresh);
     connect(this, &SCWind::image_changed, this->export_table_model,
             &ExportTableModel::refresh);
-  }
-
-  // initialize blm
-  {
-    this->ui->blm->setup_basecolors(this->kernel);
-    this->ui->blm->set_version_callback(
-        [this]() { return this->selected_version(); });
-
-    QDir::setCurrent(QCoreApplication::applicationDirPath());
-
-    this->ui->blm->add_blocklist("./Blocks/FixedBlocks.zip");
-    this->ui->blm->add_blocklist("./Blocks/CustomBlocks.zip");
-
-    this->ui->blm->finish_blocklist();
-
-    for (auto btnp : this->version_buttons()) {
-      connect(btnp, &QRadioButton::toggled, this,
-              &SCWind::when_version_buttons_toggled);
-    }
-
-    for (auto btnp : this->type_buttons()) {
-      connect(btnp, &QRadioButton::toggled, this,
-              &SCWind::when_type_buttons_toggled);
-    }
-
-    connect(this->ui->blm, &BlockListManager::changed, this,
-            &SCWind::when_blocklist_changed);
   }
 
   for (QRadioButton *rbp : this->export_type_buttons()) {
@@ -192,18 +146,101 @@ SCWind::SCWind(QWidget *parent)
 
 SCWind::~SCWind() {
   delete this->ui;
-
   {
-    const char *cd = this->kernel->cacheDir();
-    if (cd != nullptr) {
-      QDir cache_dir{QString::fromLocal8Bit(cd)};
-      if (cache_dir.exists()) {
-        cache_dir.removeRecursively();
-      }
+    QDir cache_dir{this->cache_root_dir()};
+    if (cache_dir.exists()) {
+      cache_dir.removeRecursively();
     }
   }
+}
 
-  SlopeCraft::SCL_destroyKernel(this->kernel);
+QString SCWind::cache_root_dir() const noexcept {
+  const auto pid = QApplication::applicationPid();
+
+  const QString sys_cache_dir = QDir::tempPath();
+  const QString cache_dir =
+      QStringLiteral("%1/SlopeCraft/pid=%2").arg(sys_cache_dir).arg(pid);
+  return cache_dir;
+}
+
+SlopeCraft::color_table *SCWind::current_color_table() noexcept {
+  auto selection = this->ui->blm->current_selection();
+  {
+    auto find = this->color_tables.find(selection);
+    if (find != this->color_tables.end()) {
+      return find->second.get();
+    }
+  }
+  {
+    std::vector<uint8_t> a;
+    std::vector<const SlopeCraft::mc_block_interface *> b;
+
+    this->ui->blm->get_blocklist(a, b);
+    SlopeCraft::color_table_create_info ci;
+    ci.map_type = this->selected_type();
+    ci.mc_version = this->selected_version();
+    for (size_t i = 0; i < 64; i++) {
+      ci.blocks[i] = b[i];
+      ci.basecolor_allow_LUT[i] = a[i];
+    }
+    std::unique_ptr<SlopeCraft::color_table, SlopeCraft::deleter> ptr{
+        SlopeCraft::SCL_create_color_table(ci)};
+    if (ptr == nullptr) {
+      QMessageBox::warning(this, tr("设置方块列表失败"),
+                           tr("您设置的方块列表可能存在错误"));
+      return nullptr;
+    }
+
+    auto it = this->color_tables.emplace(selection, std::move(ptr));
+    return it.first->second.get();
+  }
+}
+
+SlopeCraft::ui_callbacks SCWind::ui_callbacks() const noexcept {
+  return SlopeCraft::ui_callbacks{
+      .wind = const_cast<SCWind *>(this),
+      .cb_keep_awake = [](void *) { QApplication::processEvents(); },
+      .cb_report_error =
+          [](void *wind, SCL_errorFlag ef, const char *msg) {
+            reinterpret_cast<SCWind *>(wind)->report_error(ef, msg);
+          },
+      .cb_report_working_status =
+          [](void *wind, SCL_workStatus ws) {
+            SCWind *self = reinterpret_cast<SCWind *>(wind);
+            const QString status_str = SCWind::workStatus_to_string(ws);
+            QString wind_title;
+            if (status_str.isEmpty()) {
+              wind_title = SCWind::default_wind_title();
+            } else {
+              wind_title = QStringLiteral("%1  |  %2")
+                               .arg(SCWind::default_wind_title(), status_str);
+            }
+            self->setWindowTitle(wind_title);
+          },
+  };
+}
+
+SlopeCraft::progress_callbacks progress_callback(QProgressBar *bar) noexcept {
+  return SlopeCraft::progress_callbacks{
+      .widget = bar,
+      .cb_set_range =
+          [](void *widget, int min, int max, int val) {
+            if (widget == nullptr) {
+              return;
+            }
+            QProgressBar *bar = reinterpret_cast<QProgressBar *>(widget);
+            bar->setMinimum(min);
+            bar->setMaximum(max);
+            bar->setValue(val);
+          },
+      .cb_add =
+          [](void *widget, int delta) {
+            if (widget == nullptr) {
+              return;
+            }
+            QProgressBar *bar = reinterpret_cast<QProgressBar *>(widget);
+            bar->setValue(bar->value() + delta);
+          }};
 }
 
 void SCWind::when_cvt_pool_selectionChanged() noexcept {
@@ -248,8 +285,9 @@ SCL_gameVersion SCWind::selected_version() const noexcept {
   }
 
   assert(false);
+  abort();
 
-  return SCL_gameVersion::ANCIENT;
+  // return SCL_gameVersion::ANCIENT;
 }
 
 SCL_mapTypes SCWind::selected_type() const noexcept {
@@ -266,7 +304,7 @@ SCL_mapTypes SCWind::selected_type() const noexcept {
   }
 
   assert(false);
-  return {};
+  // return {};
 }
 
 std::vector<int> SCWind::selected_indices() const noexcept {
@@ -299,10 +337,10 @@ std::vector<cvt_task *> SCWind::selected_export_task_list() const noexcept {
   }
   return ret;
 }
-std::optional<cvt_task *> SCWind::selected_export_task() const noexcept {
+cvt_task *SCWind::selected_export_task() const noexcept {
   auto selected = this->selected_export_task_list();
   if (selected.empty()) {
-    return std::nullopt;
+    return nullptr;
   }
 
   return selected.front();
@@ -329,7 +367,7 @@ SCL_convertAlgo SCWind::selected_algo() const noexcept {
   }
 
   assert(false);
-  return {};
+  // return {};
 }
 
 bool SCWind::is_dither_selected() const noexcept {
@@ -385,16 +423,18 @@ bool SCWind::is_connect_mushroom_selected() const noexcept {
   return this->ui->cb_connect_mushroom->isChecked();
 }
 
-SlopeCraft::Kernel::build_options SCWind::current_build_option()
-    const noexcept {
-  return SlopeCraft::Kernel::build_options{
-      .maxAllowedHeight = (uint16_t)this->current_max_height(),
-      .bridgeInterval = (uint16_t)this->current_glass_brigde_interval(),
-      .compressMethod = this->current_compress_method(),
-      .glassMethod = this->current_glass_method(),
+SlopeCraft::build_options SCWind::current_build_option() const noexcept {
+  return SlopeCraft::build_options{
+      .max_allowed_height = (uint16_t)this->current_max_height(),
+      .bridge_interval = (uint16_t)this->current_glass_brigde_interval(),
+      .compress_method = this->current_compress_method(),
+      .glass_method = this->current_glass_method(),
       .fire_proof = this->is_fire_proof_selected(),
       .enderman_proof = this->is_enderman_proof_selected(),
-      .connect_mushrooms = this->is_connect_mushroom_selected()};
+      .connect_mushrooms = this->is_connect_mushroom_selected(),
+      .ui = this->ui_callbacks(),
+      .main_progressbar = progress_callback(this->ui->pbar_export),
+      .sub_progressbar = {}};
 }
 
 SCWind::export_type SCWind::selected_export_type() const noexcept {
@@ -407,7 +447,7 @@ SCWind::export_type SCWind::selected_export_type() const noexcept {
     }
   }
   assert(false);
-  return {};
+  // return {};
 }
 
 void SCWind::when_version_buttons_toggled() noexcept {
@@ -431,27 +471,14 @@ void SCWind::when_type_buttons_toggled() noexcept {
 }
 
 void SCWind::when_blocklist_changed() noexcept {
-  this->kernel_set_type();
+  this->set_colorset();
   this->ui->rb_preset_custom->setChecked(true);
   // this->ui->rb_preset_
 }
 
-void SCWind::kernel_set_type() noexcept {
-  std::vector<uint8_t> a;
-  std::vector<const SlopeCraft::AbstractBlock *> b;
-
-  this->ui->blm->get_blocklist(a, b);
-
-  assert(a.size() == b.size());
-  if (!this->kernel->setType(this->selected_type(), this->selected_version(),
-                             reinterpret_cast<const bool *>(a.data()),
-                             b.data())) {
-    QMessageBox::warning(this, tr("设置方块列表失败"),
-                         tr("您设置的方块列表可能存在错误"));
-    return;
-  }
-  int num_colors{0};
-  this->kernel->getAvailableColors(nullptr, nullptr, &num_colors);
+void SCWind::set_colorset() noexcept {
+  auto color_table = this->current_color_table();
+  const int num_colors = color_table->colors().num_colors;
 
   this->ui->lb_avaliable_colors->setText(
       tr("可用颜色数量：%1").arg(num_colors));
@@ -585,59 +612,147 @@ void SCWind::when_export_type_toggled() noexcept {
   this->update_button_states();
 }
 
-void SCWind::kernel_set_image(int idx) noexcept {
+// void SCWind::kernel_set_image(int idx) noexcept {
+//   assert(idx >= 0);
+//   assert(idx < (int)this->tasks.size());
+//
+//   if (this->kernel->queryStep() < SCL_step::wait4Image) {
+//     this->kernel_set_type();
+//   }
+//
+//   const QImage &raw = this->tasks[idx].original_image;
+//   this->kernel->setRawImage((const uint32_t *)raw.scanLine(0), raw.height(),
+//                             raw.width(), false);
+// }
+//
+// void SCWind::kernel_convert_image() noexcept {
+//   assert(this->kernel->queryStep() >= SCL_step::convertionReady);
+//
+//   if (!this->kernel->convert(this->selected_algo(),
+//                              this->is_dither_selected())) {
+//     QMessageBox::warning(this, tr("转化图像失败"), tr(""));
+//
+//     return;
+//   }
+// }
+
+SlopeCraft::convert_option SCWind::current_convert_option() noexcept {
+  return SlopeCraft::convert_option{
+      .caller_api_version = SC_VERSION_U64,
+      .algo = this->selected_algo(),
+      .dither = this->is_dither_selected(),
+      .ai_cvter_opt = this->GA_option,
+      .progress = progress_callback(this->ui->pbar_cvt),
+      .ui = this->ui_callbacks(),
+  };
+}
+
+std::unique_ptr<SlopeCraft::converted_image, SlopeCraft::deleter>
+SCWind::convert_image(int idx) noexcept {
   assert(idx >= 0);
   assert(idx < (int)this->tasks.size());
-
-  if (this->kernel->queryStep() < SCL_step::wait4Image) {
-    this->kernel_set_type();
-  }
-
-  const QImage &raw = this->tasks[idx].original_image;
-  this->kernel->setRawImage((const uint32_t *)raw.scanLine(0), raw.height(),
-                            raw.width(), false);
+  return this->convert_image(this->tasks[idx]);
 }
 
-void SCWind::kernel_convert_image() noexcept {
-  assert(this->kernel->queryStep() >= SCL_step::convertionReady);
+std::unique_ptr<SlopeCraft::converted_image, SlopeCraft::deleter>
+SCWind::convert_image(const cvt_task &task) noexcept {
+  auto ctable = this->current_color_table();
 
-  if (!this->kernel->convert(this->selected_algo(),
-                             this->is_dither_selected())) {
-    QMessageBox::warning(this, tr("转化图像失败"), tr(""));
+  const QImage &raw = task.original_image;
+  {
+    SlopeCraft::const_image_reference img{
+        .data = (const uint32_t *)raw.scanLine(0),
+        .rows = static_cast<size_t>(raw.height()),
+        .cols = static_cast<size_t>(raw.width()),
+    };
+    auto cvted_img = ctable->convert_image(img, this->current_convert_option());
 
-    return;
-  }
-}
-
-void SCWind::kernel_make_cvt_cache() noexcept {
-  std::string err;
-  err.resize(4096);
-  SlopeCraft::StringDeliver sd{err.data(), err.size()};
-
-  if (!this->kernel->saveConvertCache(sd)) {
-    QString qerr = QString::fromUtf8(sd.data);
-    QMessageBox::warning(this, tr("缓存失败"),
-                         tr("未能创建缓存文件，错误信息：\n%1").arg(qerr));
+    return std::unique_ptr<SlopeCraft::converted_image, SlopeCraft::deleter>{
+        cvted_img};
   }
 }
 
-QImage SCWind::get_converted_image_from_kernel() const noexcept {
-  assert(this->kernel->queryStep() >= SCL_step::converted);
+const SlopeCraft::converted_image &SCWind::convert_if_need(
+    cvt_task &task) noexcept {
+  const auto table = this->current_color_table();
+  const auto opt = this->current_convert_option();
+  if (!task.is_converted_with(table, opt)) {
+    task.set_converted(table, opt, this->convert_image(task));
+  }
 
-  const int rows = this->kernel->getImageRows();
-  const int cols = this->kernel->getImageCols();
+  auto &cvted = task.converted_images[{table, opt}].converted_image;
+  assert(cvted != nullptr);
+  return *cvted;
+}
 
-  QImage img{cols, rows, QImage::Format_ARGB32};
+std::unique_ptr<SlopeCraft::structure_3D, SlopeCraft::deleter> SCWind::build_3D(
+    const SlopeCraft::converted_image &cvted) noexcept {
+  auto ctable = this->current_color_table();
+  auto str = ctable->build(cvted, this->current_build_option());
+  return std::unique_ptr<SlopeCraft::structure_3D, SlopeCraft::deleter>{str};
+}
 
-  this->kernel->getConvertedImage(nullptr, nullptr, (uint32_t *)img.scanLine(0),
-                                  false);
+std::tuple<const SlopeCraft::converted_image &,
+           const SlopeCraft::structure_3D &>
+SCWind::convert_and_build_if_need(cvt_task &task) noexcept {
+  const auto table = this->current_color_table();
+  const auto &cvted = this->convert_if_need(task);
 
+  assert(task.is_converted_with(table, this->current_convert_option()));
+  auto &cvt_result =
+      task.converted_images.at({table, this->current_convert_option()});
+  const auto build_opt = this->current_build_option();
+
+  if (auto str_3D = cvt_result.load_build_cache(*table, build_opt,
+                                                this->cache_root_dir())) {
+    // The 3D structure is built, it exists in memory or can be loaded
+    return {cvted, *str_3D};
+  }
+  // Build 3D structure now
+  auto s = this->build_3D(cvted);
+  auto ptr = s.get();
+  assert(ptr != nullptr);
+  cvt_result.set_built(build_opt, std::move(s));
+  return {cvted, *ptr};
+}
+
+// void SCWind::kernel_make_cvt_cache() noexcept {
+//   std::string err;
+//   err.resize(4096);
+//   SlopeCraft::string_deliver sd{err.data(), err.size()};
+//
+//   if (!this->kernel->saveConvertCache(sd)) {
+//     QString qerr = QString::fromUtf8(sd.data);
+//     QMessageBox::warning(this, tr("缓存失败"),
+//                          tr("未能创建缓存文件，错误信息：\n%1").arg(qerr));
+//   }
+// }
+
+// QImage SCWind::get_converted_image_from_kernel() const noexcept {
+//   assert(this->kernel->queryStep() >= SCL_step::converted);
+//
+//   const int rows = this->kernel->getImageRows();
+//   const int cols = this->kernel->getImageCols();
+//
+//   QImage img{cols, rows, QImage::Format_ARGB32};
+//
+//   this->kernel->getConvertedImage(nullptr, nullptr, (uint32_t
+//   *)img.scanLine(0),
+//                                   false);
+//
+//   return img;
+// }
+
+QImage get_converted_image(const SlopeCraft::converted_image &cvted) noexcept {
+  QImage img{
+      QSize{static_cast<int>(cvted.cols()), static_cast<int>(cvted.rows())},
+      QImage::Format::Format_ARGB32};
+  cvted.get_converted_image(reinterpret_cast<uint32_t *>(img.scanLine(0)));
   return img;
 }
 
 void SCWind::refresh_current_cvt_display(
-    std::optional<int> selected_idx,
-    bool is_image_coneverted_in_kernel) noexcept {
+    std::optional<int> selected_idx) noexcept {
   if (!selected_idx.has_value()) {
     this->ui->lb_raw_image->setPixmap({});
     this->ui->lb_cvted_image->setPixmap({});
@@ -649,49 +764,29 @@ void SCWind::refresh_current_cvt_display(
   this->ui->lb_raw_image->setPixmap(
       QPixmap::fromImage(this->tasks[idx].original_image));
 
-  if (is_image_coneverted_in_kernel) {
-    assert(this->kernel->queryStep() >= SCL_step::converted);
+  auto &task = this->tasks[selected_idx.value()];
 
+  auto it = task.converted_images.find(
+      {this->current_color_table(), this->current_convert_option()});
+  if (it != task.converted_images.end() &&
+      it->second.converted_image != nullptr) {
     this->ui->lb_cvted_image->setPixmap(
-        QPixmap::fromImage(this->get_converted_image_from_kernel()));
+        QPixmap::fromImage(get_converted_image(*it->second.converted_image)));
     return;
   }
+  // #warning "TODO: Load cache here"
 
   this->ui->lb_cvted_image->setPixmap({});
-  if (!this->tasks[idx].is_converted) {
-    return;
-  }
-
-  /*
-    if (!kernel_check_colorset_hash()) {
-      this->mark_all_task_unconverted();
-      emit this->image_changed();
-      return;
-    }*/
-
-  this->kernel_set_image(idx);
-
-  if (!this->kernel->loadConvertCache(this->selected_algo(),
-                                      this->is_dither_selected())) {
-    this->tasks[idx].set_unconverted();
-    emit this->image_changed();
-    return;
-  }
-
-  this->ui->lb_cvted_image->setPixmap(
-      QPixmap::fromImage(this->get_converted_image_from_kernel()));
 }
 
-void SCWind::mark_all_task_unconverted() noexcept {
-  for (auto &task : this->tasks) {
-    task.set_unconverted();
-  }
-}
+// void SCWind::mark_all_task_unconverted() noexcept {
+//   for (auto &task : this->tasks) {
+//     task.converted_img = nullptr;
+//     task.structure = nullptr;
+//   }
+// }
 
 void SCWind::when_algo_btn_clicked() noexcept {
-  for (size_t i = 0; i < this->tasks.size(); i++) {
-    this->tasks[i].set_unconverted();
-  }
   this->cvt_pool_model->refresh();
   this->refresh_current_cvt_display(this->selected_cvt_task_idx());
 }
@@ -700,31 +795,30 @@ void SCWind::export_current_cvted_image(int idx, QString filename) noexcept {
   assert(idx >= 0);
   assert(idx < (int)this->tasks.size());
 
-  bool have_image_cvted{false};
-
-  this->kernel_set_image(idx);
-  if (!this->kernel->loadConvertCache(this->selected_algo(),
-                                      this->is_dither_selected())) {
+  auto &task = this->tasks[idx];
+  auto cvted = task.get_converted_image(this->current_color_table(),
+                                        this->current_convert_option());
+  if (cvted == nullptr) {
     const auto ret = QMessageBox::warning(
         this, tr("无法保存第%1个转化后图像").arg(idx + 1),
         tr("该图像未被转化，或者转化之后修改了颜色表/转化算法。请重新转化它。"),
         QMessageBox::StandardButtons{QMessageBox::StandardButton::Ok,
                                      QMessageBox::StandardButton::Ignore});
     if (ret == QMessageBox::StandardButton::Ok) {
-      this->kernel_convert_image();
-      this->kernel_make_cvt_cache();
-      this->tasks[idx].set_converted();
-      have_image_cvted = true;
+      auto cvted_uptr = this->convert_image(task);
+      task.set_converted(this->current_color_table(),
+                         this->current_convert_option(), std::move(cvted_uptr));
+      cvted = task.get_converted_image(this->current_color_table(),
+                                       this->current_convert_option());
     } else {
       return;
     }
   }
+  assert(cvted != nullptr);
 
-  if (have_image_cvted) {
-    emit this->image_changed();
-  }
+  auto img = get_converted_image(*cvted);
+  bool ok = img.save(filename);
 
-  bool ok = this->get_converted_image_from_kernel().save(filename);
   if (!ok) {
     QMessageBox::warning(
         this, tr("保存图像失败"),
@@ -734,67 +828,56 @@ void SCWind::export_current_cvted_image(int idx, QString filename) noexcept {
   }
 }
 
-void SCWind::kernel_build_3d() noexcept {
-  if (!this->kernel->build(this->current_build_option())) {
-    QMessageBox::warning(this, tr("构建三维结构失败"),
-                         tr("构建三维结构时，出现错误。可能是因为尝试跳步。"));
-    return;
-  }
-}
+// void SCWind::kernel_build_3d() noexcept {
+//   if (!this->kernel->build(this->current_build_option())) {
+//     QMessageBox::warning(this, tr("构建三维结构失败"),
+//                          tr("构建三维结构时，出现错误。可能是因为尝试跳步。"));
+//     return;
+//   }
+// }
 
 void SCWind::refresh_current_build_display(
-    std::optional<cvt_task *> taskp, bool is_image_built_in_kernel) noexcept {
+    cvt_task *taskp, bool is_image_built_in_kernel) noexcept {
   this->ui->lb_show_3dsize->setText(tr("大小："));
   this->ui->lb_show_block_count->setText(tr("方块数量："));
-  if (!taskp.has_value()) {
+  if (taskp == nullptr) {
     return;
   }
 
-  int x{-1}, y{-1}, z{-1};
-  {
-    if (is_image_built_in_kernel) {
-      // the caller garentee that the image is built in kernel
-    } else {
-      if (taskp.value()->is_built) {
-        // try to load convert cache
-        if (!this->kernel->loadConvertCache(this->selected_algo(),
-                                            this->is_dither_selected())) {
-          taskp.value()->set_unconverted();
-          return;
-        }
-        // try to load build cache
-        if (!this->kernel->loadBuildCache(this->current_build_option())) {
-          taskp.value()->set_unbuilt();
-          return;
-        }
-      } else {
-        return;
-      }
-    }
+  auto &task = *taskp;
+  const auto cvted_it = task.get_convert_result(this->current_color_table(),
+                                                this->current_convert_option());
+  if (cvted_it == task.converted_images.end()) {
+    return;
   }
-  this->kernel->get3DSize(&x, &y, &z);
-  const int64_t block_count = this->kernel->getBlockCounts();
+  if (auto str_3D = cvted_it->second.load_build_cache(
+          *this->current_color_table(), this->current_build_option(),
+          this->cache_root_dir())) {
+    const auto x = str_3D->shape_x(), y = str_3D->shape_y(),
+               z = str_3D->shape_z();
 
-  this->ui->lb_show_3dsize->setText(
-      tr("大小： %1 × %2 × %3").arg(x).arg(y).arg(z));
-  this->ui->lb_show_block_count->setText(tr("方块数量：%1").arg(block_count));
+    const auto block_count = str_3D->block_count();
+    this->ui->lb_show_3dsize->setText(
+        tr("大小： %1 × %2 × %3").arg(x).arg(y).arg(z));
+    this->ui->lb_show_block_count->setText(tr("方块数量：%1").arg(block_count));
+  }
 }
 
 void SCWind::when_export_pool_selectionChanged() noexcept {
   this->refresh_current_build_display(this->selected_export_task());
 }
 
-void SCWind::kernel_make_build_cache() noexcept {
-  std::string err;
-  err.resize(4096);
-  SlopeCraft::StringDeliver sd{err.data(), err.size()};
-
-  if (!this->kernel->saveBuildCache(sd)) {
-    QString qerr = QString::fromUtf8(sd.data);
-    QMessageBox::warning(this, tr("缓存失败"),
-                         tr("未能创建缓存文件，错误信息：\n%1").arg(qerr));
-  }
-}
+// void SCWind::kernel_make_build_cache() noexcept {
+//   std::string err;
+//   err.resize(4096);
+//   SlopeCraft::string_deliver sd{err.data(), err.size()};
+//
+//   if (!this->kernel->saveBuildCache(sd)) {
+//     QString qerr = QString::fromUtf8(sd.data);
+//     QMessageBox::warning(this, tr("缓存失败"),
+//                          tr("未能创建缓存文件，错误信息：\n%1").arg(qerr));
+//   }
+// }
 
 QString extension_of_export_type(SCWind::export_type et) noexcept {
   switch (et) {
@@ -814,32 +897,43 @@ QString extension_of_export_type(SCWind::export_type et) noexcept {
   return "Invalid_export_type";
 }
 
-std::optional<SlopeCraft::Kernel::litematic_options>
-SCWind::current_litematic_option(QString &err) const noexcept {
+std::optional<SlopeCraft::litematic_options> SCWind::current_litematic_option(
+    QString &err) const noexcept {
   err.clear();
   static std::string litename;
   static std::string region_name;
 
   litename = this->ui->le_lite_name->text().toUtf8().data();
   region_name = this->ui->le_lite_region_name->text().toUtf8().data();
+  if (litename.empty()) {
+    litename = "UnnamedLitematica";
+  }
+  if (region_name.empty()) {
+    region_name = "UnnamedRegion";
+  }
 
-  return SlopeCraft::Kernel::litematic_options{
-      .litename_utf8 = litename.data(), .region_name_utf8 = region_name.data()};
+  return SlopeCraft::litematic_options{
+      .caller_api_version = SC_VERSION_U64,
+      .litename_utf8 = litename.data(),
+      .region_name_utf8 = region_name.data(),
+      .ui = this->ui_callbacks(),
+      .progressbar = progress_callback(this->ui->pbar_export),
+  };
 }
 
-std::optional<SlopeCraft::Kernel::vanilla_structure_options>
-SCWind::current_nbt_option(QString &err) const noexcept {
+std::optional<SlopeCraft::vanilla_structure_options> SCWind::current_nbt_option(
+    QString &err) const noexcept {
   err.clear();
 
-  return SlopeCraft::Kernel::vanilla_structure_options{
+  return SlopeCraft::vanilla_structure_options{
       .is_air_structure_void = this->ui->cb_nbt_air_void->isChecked()};
 }
 
-std::optional<SlopeCraft::Kernel::WE_schem_options>
-SCWind::current_schem_option(QString &err) const noexcept {
+std::optional<SlopeCraft::WE_schem_options> SCWind::current_schem_option(
+    QString &err) const noexcept {
   err.clear();
 
-  SlopeCraft::Kernel::WE_schem_options ret;
+  SlopeCraft::WE_schem_options ret;
 
   {
     const std::array<QLineEdit *, 3> le_offset{this->ui->le_WE_offset_X,
@@ -898,10 +992,13 @@ SCWind::current_schem_option(QString &err) const noexcept {
   ret.num_required_mods = mod_charp.size();
   ret.required_mods_name_utf8 = mod_charp.data();
 
+  ret.ui = this->ui_callbacks();
+  ret.progressbar = progress_callback(this->ui->pbar_export);
+
   return ret;
 }
 
-std::optional<SlopeCraft::Kernel::flag_diagram_options>
+std::optional<SlopeCraft::flag_diagram_options>
 SCWind::current_flatdiagram_option(QString &err) const noexcept {
   err.clear();
 
@@ -923,8 +1020,13 @@ SCWind::current_flatdiagram_option(QString &err) const noexcept {
     col_margin = -1;
   }
 
-  return SlopeCraft::Kernel::flag_diagram_options{
-      .split_line_row_margin = row_margin, .split_line_col_margin = col_margin};
+  return SlopeCraft::flag_diagram_options{
+      .caller_api_version = SC_VERSION_U64,
+      .split_line_row_margin = row_margin,
+      .split_line_col_margin = col_margin,
+      .ui = this->ui_callbacks(),
+      .progressbar = progress_callback(this->ui->pbar_export),
+  };
 }
 
 int SCWind::current_map_begin_seq_number() const noexcept {
@@ -981,35 +1083,93 @@ const QString &SCWind::default_wind_title() noexcept {
   return title;
 }
 
-QString SCWind::workStatus_to_string(::SCL_workStatues status) noexcept {
+QString SCWind::workStatus_to_string(::SCL_workStatus status) noexcept {
   switch (status) {
-    case SlopeCraft::workStatues::none:
+    case SlopeCraft::workStatus::none:
       break;
-    case SlopeCraft::workStatues::buidingHeighMap:
+    case SlopeCraft::workStatus::buidingHeighMap:
       return tr("正在构建高度矩阵");
-    case SlopeCraft::workStatues::building3D:
+    case SlopeCraft::workStatus::building3D:
       return tr("正在构建三维结构");
-    case SlopeCraft::workStatues::collectingColors:
+    case SlopeCraft::workStatus::collectingColors:
       return tr("正在收集整张图片的颜色");
-    case SlopeCraft::workStatues::compressing:
+    case SlopeCraft::workStatus::compressing:
       return tr("正在压缩立体地图画");
-    case SlopeCraft::workStatues::constructingBridges:
+    case SlopeCraft::workStatus::constructingBridges:
       return tr("正在为立体地图画搭桥");
-    case SlopeCraft::workStatues::converting:
+    case SlopeCraft::workStatus::converting:
       return tr("正在匹配颜色");
-    case SlopeCraft::workStatues::dithering:
+    case SlopeCraft::workStatus::dithering:
       return tr("正在使用抖动仿色");
-    case SlopeCraft::workStatues::flippingToWall:
+    case SlopeCraft::workStatus::flippingToWall:
       return tr("正在将平板地图画变为墙面地图画");
-    case SlopeCraft::workStatues::writing3D:
+    case SlopeCraft::workStatus::writing3D:
       return tr("正在写入三维结构");
-    case SlopeCraft::workStatues::writingBlockPalette:
+    case SlopeCraft::workStatus::writingBlockPalette:
       return tr("正在写入方块列表");
-    case SlopeCraft::workStatues::writingMapDataFiles:
+    case SlopeCraft::workStatus::writingMapDataFiles:
       return tr("正在写入地图数据文件");
-    case SlopeCraft::workStatues::writingMetaInfo:
+    case SlopeCraft::workStatus::writingMetaInfo:
       return tr("正在写入基础信息");
   }
 
   return {};
+}
+
+std::tuple<const SlopeCraft::converted_image *,
+           const SlopeCraft::structure_3D *>
+SCWind::load_selected_3D() noexcept {
+  auto taskp = this->selected_export_task();
+  if (taskp == nullptr) {
+    QMessageBox::warning(this, tr("未选择图像"),
+                         tr("请在左侧任务池选择一个图像"));
+    return {nullptr, nullptr};
+  }
+  assert(taskp != nullptr);
+
+  cvt_task &task = *taskp;
+  const ptrdiff_t index = &task - this->tasks.data();
+  assert(index >= 0 && index < ptrdiff_t(this->tasks.size()));
+  if (!task.is_converted_with(this->current_color_table(),
+                              this->current_convert_option())) {
+    QMessageBox::warning(this, tr("该图像尚未被转化"),
+                         tr("必须先转化一个图像，然后再为它构建三维结构"));
+    return {nullptr, nullptr};
+  }
+  QString errtitle;
+  QString errmsg;
+  // try to load cache
+  auto [cvted_img, structure_3D] =
+      [this, &task, &errtitle,
+       &errmsg]() -> std::pair<const SlopeCraft::converted_image *,
+                               const SlopeCraft::structure_3D *> {
+    auto it = task.converted_images.find(convert_input{
+        this->current_color_table(), this->current_convert_option()});
+    if (it == task.converted_images.end()) {
+      errtitle = tr("该图像尚未被转化");
+      errmsg =
+          tr("可能是在转化完成之后又修改了转化算法，因此之前的转化无效。必须重"
+             "新转化该图像。");
+      return {nullptr, nullptr};
+    }
+    auto str_3D = it->second.load_build_cache(*this->current_color_table(),
+                                              this->current_build_option(),
+                                              this->cache_root_dir());
+
+    if (str_3D == nullptr) {
+      errtitle = tr("尚未构建三维结构");
+      errmsg = tr(
+          "在预览材料表之前，必须先构建三维结构。出现这个警告，可能是因为你"
+          "在构建三维结构之后，又修改了三维结构的选项，因此之前的结果无效。");
+      return {it->second.converted_image.get(), nullptr};
+    }
+    return {it->second.converted_image.get(), str_3D};
+  }();
+
+  if (!errtitle.isEmpty()) {
+    QMessageBox::warning(this, errtitle, errmsg);
+    return {nullptr, nullptr};
+  }
+
+  return {cvted_img, structure_3D};
 }

@@ -60,6 +60,16 @@ std::string Schem::check_size(int64_t x, int64_t y, int64_t z) noexcept {
   return {};
 }
 
+void Schem::stat_blocks(std::vector<size_t> &dest) const noexcept {
+  dest.resize(this->palette_size());
+  std::fill(dest.begin(), dest.end(), 0);
+  
+  for (ele_t block_index : *this) {
+    assert(block_index < this->palette_size());
+    dest[block_index] += 1;
+  }
+}
+
 void Schem::set_block_id(const char *const *const block_ids,
                          const int num) noexcept {
   if (num < 0) {
@@ -373,7 +383,7 @@ bool Schem::export_litematic(std::string_view filename,
 
       // progressRangeSet(wind, 0, 100 + Build.size(), 100);
 
-      // reportWorkingStatue(wind, workStatues::writingBlockPalette);
+      // reportWorkingStatue(wind, workStatus::writingBlockPalette);
       // write block palette
       lite.writeListHead("BlockStatePalette", NBT::Compound,
                          this->palette_size());
@@ -528,7 +538,7 @@ bool Schem::export_structure(std::string_view filename,
   }
 
   /*
-  reportWorkingStatue(wind, workStatues::writingMetaInfo);
+  reportWorkingStatue(wind, workStatus::writingMetaInfo);
   progressRangeSet(wind, 0, 100 + Build.size(), 0);
   */
 
@@ -551,7 +561,7 @@ bool Schem::export_structure(std::string_view filename,
     file.writeInt("This should never be shown", y_range());
     file.writeInt("This should never be shown", z_range());
   }
-  // reportWorkingStatue(wind, workStatues::writingBlockPalette);
+  // reportWorkingStatue(wind, workStatus::writingBlockPalette);
   file.writeListHead("palette", NBT::Compound, palette_size());
   {
     std::string pure_block_id;

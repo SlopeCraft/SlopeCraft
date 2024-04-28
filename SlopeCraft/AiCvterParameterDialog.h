@@ -39,10 +39,10 @@ class AiCvterParameterDialog : public QDialog {
   Q_OBJECT
 
  public:
-  explicit AiCvterParameterDialog(SCWind *parent, SlopeCraft::Kernel *kernelp);
+  explicit AiCvterParameterDialog(SCWind *parent);
   ~AiCvterParameterDialog();
 
-  SlopeCraft::AiCvterOpt current_option() const noexcept;
+  SlopeCraft::GA_converter_option current_option() const noexcept;
 
  private slots:
   // void updateMaxFailTimes();
@@ -52,7 +52,6 @@ class AiCvterParameterDialog : public QDialog {
 
  private:
   Ui::AiCvterParameterDialog *ui;
-  SlopeCraft::Kernel *const kernel;
 };
 
 #endif  // AICVTERPARAMETERDIALOG_H

@@ -1,7 +1,9 @@
-#include "BlockListManager.h"
+
 #include <string_view>
 #include <QMessageBox>
 #include <QDir>
+#include <boost/uuid/detail/md5.hpp>
+#include "BlockListManager.h"
 
 extern const std::string_view basecolor_names[64];
 
@@ -9,15 +11,14 @@ BlockListManager::BlockListManager(QWidget *parent) : QWidget(parent) {}
 
 BlockListManager::~BlockListManager() {}
 
-void BlockListManager::setup_basecolors(
-    const SlopeCraft::Kernel *kernel) noexcept {
+void BlockListManager::setup_basecolors() noexcept {
   this->basecolor_widgets.clear();
   this->basecolor_widgets.reserve(64);
   const int max_basecolor = SlopeCraft::SCL_maxBaseColor();
 
   uint32_t bc_arr[64];
 
-  kernel->getBaseColorInARGB32(bc_arr);
+  SlopeCraft::SCL_get_base_color_ARGB32(bc_arr);
 
   for (int bc = 0; bc <= max_basecolor; bc++) {
     std::unique_ptr<BaseColorWidget> bcw{new BaseColorWidget(this, bc)};
@@ -29,6 +30,23 @@ void BlockListManager::setup_basecolors(
             [this]() { emit this->changed(); });
     this->basecolor_widgets.push_back(std::move(bcw));
   }
+}
+
+uint64_t std::hash<selection>::operator()(const selection &s) noexcept {
+  boost::uuids::detail::md5 hash;
+  for (auto &id : s.ids) {
+    hash.process_bytes(id.data(), id.size());
+  }
+
+  uint32_t dig[4]{};
+  hash.get_digest(dig);
+  uint64_t fold = 0;
+  for (size_t i = 0; i < 2; i++) {
+    const uint64_t cur =
+        (uint64_t(dig[2 * i]) << 32) | (uint64_t(dig[2 * i + 1]));
+    fold ^= cur;
+  }
+  return fold;
 }
 
 // bool callback_load_image(const char *filename, uint32_t *dst_row_major) {
@@ -44,18 +62,18 @@ void BlockListManager::setup_basecolors(
 //   return true;
 // }
 
-std::unique_ptr<SlopeCraft::BlockListInterface, BlockListDeleter>
+std::unique_ptr<SlopeCraft::block_list_interface, BlockListDeleter>
 BlockListManager::impl_addblocklist(const QString &filename) noexcept {
   std::string errmsg;
   errmsg.resize(8192);
-  auto sd_err = SlopeCraft::StringDeliver::from_string(errmsg);
+  auto sd_err = SlopeCraft::string_deliver::from_string(errmsg);
   std::string warning;
   warning.resize(8192);
-  auto sd_warn = SlopeCraft::StringDeliver::from_string(warning);
-  SlopeCraft::BlockListCreateOption option{SC_VERSION_U64, &sd_warn, &sd_err};
+  auto sd_warn = SlopeCraft::string_deliver::from_string(warning);
+  SlopeCraft::block_list_create_info option{SC_VERSION_U64, &sd_warn, &sd_err};
 
-  SlopeCraft::BlockListInterface *bli =
-      SlopeCraft::SCL_createBlockList(filename.toLocal8Bit().data(), option);
+  SlopeCraft::block_list_interface *bli =
+      SlopeCraft::SCL_create_block_list(filename.toLocal8Bit().data(), option);
 
   errmsg.resize(sd_err.size);
   warning.resize(sd_warn.size);
@@ -76,7 +94,7 @@ BlockListManager::impl_addblocklist(const QString &filename) noexcept {
     }
   }
 
-  std::vector<SlopeCraft::AbstractBlock *> blockps;
+  std::vector<SlopeCraft::mc_block_interface *> blockps;
   std::vector<uint8_t> base_colors;
   base_colors.resize(bli->size());
   blockps.resize(bli->size());
@@ -87,11 +105,12 @@ BlockListManager::impl_addblocklist(const QString &filename) noexcept {
     this->basecolor_widgets[base_colors[idx]]->add_block(blockps[idx]);
   }
 
-  return std::unique_ptr<SlopeCraft::BlockListInterface, BlockListDeleter>{bli};
+  return std::unique_ptr<SlopeCraft::block_list_interface, BlockListDeleter>{
+      bli};
 }
 
 bool BlockListManager::add_blocklist(QString filename) noexcept {
-  std::unique_ptr<SlopeCraft::BlockListInterface, BlockListDeleter> tmp =
+  std::unique_ptr<SlopeCraft::block_list_interface, BlockListDeleter> tmp =
       this->impl_addblocklist(filename);
 
   if (!tmp) {
@@ -117,7 +136,8 @@ void BlockListManager::when_version_updated() noexcept {
 
 void BlockListManager::get_blocklist(
     std::vector<uint8_t> &enable_list,
-    std::vector<const SlopeCraft::AbstractBlock *> &block_list) const noexcept {
+    std::vector<const SlopeCraft::mc_block_interface *> &block_list)
+    const noexcept {
   enable_list.resize(64);
   block_list.resize(64);
 
@@ -191,6 +211,19 @@ blockListPreset BlockListManager::to_preset() const noexcept {
         this->basecolor_widgets[basecolor]->selected_block()->getId());
   }
   return ret;
+}
+
+selection BlockListManager::current_selection() const noexcept {
+  std::vector<std::string> ret;
+  ret.reserve(64);
+  for (auto &bcw : this->basecolor_widgets) {
+    if (bcw->is_enabled()) {
+      ret.emplace_back(bcw->selected_block()->getId());
+    } else {
+      ret.emplace_back("");
+    }
+  }
+  return selection{ret};
 }
 
 const std::string_view basecolor_names[64] = {"00 None",

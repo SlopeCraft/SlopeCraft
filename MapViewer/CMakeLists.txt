@@ -21,7 +21,6 @@ set(MapViewer_header_files
 set(MapViewer_source_files
 
     main.cpp
-    ../SlopeCraftL/ColorSource.cpp
     processMapFiles.cpp
     MapViewerWind.cpp
     resource_manually.cpp
@@ -29,11 +28,11 @@ set(MapViewer_source_files
 
 set(MapViewer_windows_rc_files)
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     message("Configuring on Windows. Adding rc file to " ${PROJECT_NAME})
     configure_file(others/MapViewer.rc.in others/MapViewer.rc)
     set(MapViewer_windows_rc_files ${CMAKE_CURRENT_BINARY_DIR}/others/MapViewer.rc)
-endif()
+endif ()
 
 set(MapViewer_ts_files
     MapViewer_en_US.ts)
@@ -57,6 +56,7 @@ find_package(Eigen3 REQUIRED)
 
 target_link_libraries(MapViewer
     PRIVATE
+    SlopeCraftL
     ZLIB::ZLIB
     Qt6::Widgets
     OpenMP::OpenMP_CXX

@@ -32,6 +32,7 @@ using namespace GACvter;
 
 namespace GACvter {
 
+void delete_GA_converter(GAConverter *g) noexcept { delete g; }
 // #error "Fix singleton here"
 // mapColor2Gray_LUT_t mapColor2Gray;
 

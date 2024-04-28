@@ -12,7 +12,7 @@ class TransparentStrategyWind;
 class TransparentStrategyWind : public QDialog {
   Q_OBJECT
  private:
-  Ui::TransparentStrategyWind *const ui;
+  std::unique_ptr<Ui::TransparentStrategyWind> ui;
  private slots:
   void on_pb_confirm_clicked() noexcept;
   void on_pb_cancel_clicked() noexcept;

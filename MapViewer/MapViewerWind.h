@@ -24,17 +24,12 @@ This file is part of SlopeCraft.
 #define MAPVIEWERWIND_H
 
 #include <QMainWindow>
-
-#include <QString>
-#include <vector>
-
-#include <Eigen/Dense>
-
-#include <iostream>
-
-#include <memory>
-
 #include <QLabel>
+#include <QString>
+#include <Eigen/Dense>
+#include <vector>
+#include <iostream>
+#include <memory>
 
 using std::cout, std::endl;
 
@@ -44,17 +39,13 @@ class MapViewerWind;
 }
 QT_END_NAMESPACE
 
-namespace SlopeCraft {
-extern const float RGBBasicSource[256 * 3];
-}
-
 using ARGB = uint32_t;
 using u8Array128RowMajor = Eigen::Array<uint8_t, 128, 128, Eigen::RowMajor>;
 using u32Array128RowMajor = Eigen::Array<ARGB, 128, 128, Eigen::RowMajor>;
 
 extern const std::array<ARGB, 256> map_color_to_ARGB;
 
-enum single_map_draw_type { // the value of draw_type is the digits required
+enum single_map_draw_type {  // the value of draw_type is the digits required
   color_only = 0,
   map_color = 3,
   base_color = 2,
@@ -62,7 +53,7 @@ enum single_map_draw_type { // the value of draw_type is the digits required
 };
 
 struct map {
-public:
+ public:
   map() : map_content(new u8Array128RowMajor){};
   ~map() = default;
   map(map &&) = default;
@@ -90,18 +81,18 @@ public:
 class MapViewerWind : public QMainWindow {
   Q_OBJECT
 
-public:
+ public:
   MapViewerWind(QWidget *parent = nullptr);
   ~MapViewerWind();
 
-private:
+ private:
   Ui::MapViewerWind *ui;
 
   std::vector<map> maps;
   std::vector<QLabel *> labels;
 
-private:
-private slots:
+ private:
+ private slots:
   void update_contents();
   void reshape_tables();
   void render_single_image();
@@ -113,4 +104,4 @@ private slots:
   void on_button_save_composed_clicked();
 };
 
-#endif // MAPVIEWERWIND_H
+#endif  // MAPVIEWERWIND_H

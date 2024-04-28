@@ -32,6 +32,8 @@ This file is part of SlopeCraft.
 #define EIGEN_NO_DEBUG
 #include <Eigen/Dense>
 #include <iostream>
+#include <ColorManip/newColorSet.hpp>
+#include <ColorManip/newTokiColor.hpp>
 
 #include "SlopeCraftL.h"
 
@@ -39,15 +41,30 @@ This file is part of SlopeCraft.
 #define M_PI 3.14159265358979323846
 #endif
 
+#define mapColor2Index(mapColor) (64 * ((mapColor) % 4) + ((mapColor) / 4))
+#define index2mapColor(index) (4 * ((index) % 64) + ((index) / 64))
+#define mapColor2baseColor(mapColor) ((mapColor) >> 2)
+#define index2baseColor(index) (mapColor2baseColor(index2mapColor(index)))
+#define mapColor2depth(mapColor) ((mapColor) % 4)
+#define index2depth(index) (mapColor2depth(index2mapColor(index)))
+
 using std::cout, std::cerr, std::endl;
 
 using Eigen::Dynamic;
 
+using colorset_allowed_t = colorset_new<false, true>;
+using colorset_basic_t = colorset_new<true, true>;
+
+using TokiColor = newTokiColor<true, colorset_basic_t, colorset_allowed_t>;
+
 namespace SlopeCraft {
 
 extern const float RGBBasicSource[256 * 3];
+extern const std::unique_ptr<const colorset_basic_t> basic_colorset;
 
-}
+}  // namespace SlopeCraft
+
+#define SC_HASH_ADD_DATA(hasher, obj) hasher.process_bytes(&obj, sizeof(obj));
 
 using ARGB = uint32_t;
 using EImage = Eigen::Array<ARGB, Dynamic, Dynamic>;
@@ -55,4 +72,4 @@ using MapList = Eigen::Array<uint8_t, Dynamic, 1, Eigen::ColMajor, 256>;
 using ColorList = Eigen::Array<float, Dynamic, 3, Eigen::ColMajor, 256>;
 using TempVectorXf = Eigen::Array<float, Dynamic, 1, Eigen::ColMajor, 256>;
 
-#endif // SCLDEFINES_H
+#endif  // SCLDEFINES_H

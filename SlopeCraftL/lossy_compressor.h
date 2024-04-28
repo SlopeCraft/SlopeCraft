@@ -32,27 +32,24 @@ This file is part of SlopeCraft.
 #include <vector>
 #include <memory>
 
-#include "Colors.h"
-#include "HeightLine.h"
+#include "height_line.h"
 #include "SCLDefines.h"
-#include "WaterItem.h"
+#include "water_item.h"
 
 // Eigen::Array<uint8_t,Eigen::Dynamic,1>
 class solver_t;
 
-class LossyCompressor {
+class lossy_compressor {
  public:
-  LossyCompressor();
-  ~LossyCompressor();
-  void setSource(const Eigen::ArrayXi &, const TokiColor *[]);
-  bool compress(uint16_t maxHeight, bool allowNaturalCompress = false);
+  lossy_compressor();
+  ~lossy_compressor();
+  void setSource(const Eigen::ArrayXi &, std::span<const TokiColor *>);
+  bool compress(uint16_t maxHeight, bool allowNaturalCompress);
   const Eigen::ArrayX<uint8_t> &getResult() const;
   double resultFitness() const;
 
-  void **windPtr;
-  void (**progressRangeSetPtr)(void *, int min, int max, int val);
-  void (**progressAddPtr)(void *, int);
-  void (**keepAwakePtr)(void *);
+  SlopeCraft::ui_callbacks ui;
+  SlopeCraft::progress_callbacks progress_bar;
 
  private:
   friend class solver_t;

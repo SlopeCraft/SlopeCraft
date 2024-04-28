@@ -9,7 +9,7 @@ TransparentStrategyWind::TransparentStrategyWind(QWidget* parent)
   this->on_pb_reset_clicked();
 }
 
-TransparentStrategyWind::~TransparentStrategyWind() { delete this->ui; }
+TransparentStrategyWind::~TransparentStrategyWind() {}
 
 SCL_PureTpPixelSt TransparentStrategyWind::pure_strategy() const noexcept {
   if (this->ui->cb_pure_air->isChecked()) {

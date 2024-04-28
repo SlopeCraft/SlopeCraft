@@ -20,111 +20,99 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
-#include "OptiChain.h"
+#include "optimize_chain.h"
 
 #define NInf -100000
 #define MapSize (Base.rows())
-// ArrayXXi OptiChain::Base=MatrixXi::Zero(0,0);
-const Eigen::Array3i OptiChain::Both(-1, 2, -1);
-const Eigen::Array3i OptiChain::Left(-1, 1, 0);
-const Eigen::Array3i OptiChain::Right(0, 1, -1);
-// QLabel* OptiChain::SinkIDP=nullptr;
+// ArrayXXi optimize_chain::Base=MatrixXi::Zero(0,0);
+const Eigen::Array3i optimize_chain::Both(-1, 2, -1);
+const Eigen::Array3i optimize_chain::Left(-1, 1, 0);
+const Eigen::Array3i optimize_chain::Right(0, 1, -1);
+// QLabel* optimize_chain::SinkIDP=nullptr;
 
 #ifdef showImg
-QLabel *OptiChain::SinkAll = nullptr;
-bool OptiChain::AllowSinkHang = false;
+QLabel *optimize_chain::SinkAll = nullptr;
+bool optimize_chain::AllowSinkHang = false;
 #else
 #define AllowSinkHang true
 #endif
-Region::Region(short _Beg, short _End, RegionType _Type) {
-  Beg = _Beg;
-  End = _End;
-  type = _Type;
+
+inline bool region::isHang() const { return (type == region_type::hanging); }
+
+inline bool region::isIDP() const { return (type == region_type::independent); }
+
+inline bool region::isValid() const { return (size() >= 1); }
+
+inline int region::size() const { return (end - begin + 1); }
+
+inline int region::indexLocal2Global(int indexLocal) const {
+  return indexLocal + begin;
 }
 
-inline bool Region::isHang() const { return (type == Hang); }
-
-inline bool Region::isIDP() const { return (type == idp); }
-
-inline bool Region::isValid() const {
-  return (type != Invalid) && (size() >= 1);
+inline int region::indexGlobal2Local(int indexGlobal) const {
+  return indexGlobal - begin;
 }
 
-inline int Region::size() const { return (End - Beg + 1); }
-
-inline short Region::indexLocal2Global(short indexLocal) const {
-  return indexLocal + Beg;
-}
-
-inline short Region::indexGlobal2Local(short indexGlobal) const {
-  return indexGlobal - Beg;
-}
-
-std::string Region::toString() const {
+std::string region::toString() const {
   if (!isValid())
-    return '{' + std::to_string(Beg) + ',' + std::to_string(End) +
-           '}'; // 无效区间用大括号
+    return '{' + std::to_string(begin) + ',' + std::to_string(end) +
+           '}';  // 无效区间用大括号
   if (isHang())
-    return '[' + std::to_string(Beg) + ',' + std::to_string(End) +
-           ']'; // 悬空区间用中括号
+    return '[' + std::to_string(begin) + ',' + std::to_string(end) +
+           ']';  // 悬空区间用中括号
 
-  return '(' + std::to_string(Beg) + ',' + std::to_string(End) +
-         ')'; // 可沉降区间用括号
+  return '(' + std::to_string(begin) + ',' + std::to_string(end) +
+         ')';  // 可沉降区间用括号
 }
 
-OptiChain::OptiChain(int size) {
+optimize_chain::optimize_chain(int size) {
   SubChain.clear();
-  if (size < 0)
-    return;
+  if (size < 0) return;
 }
 
-OptiChain::OptiChain(const Eigen::ArrayXi &base, const Eigen::ArrayXi &High,
-                     const Eigen::ArrayXi &Low) {
+optimize_chain::optimize_chain(const Eigen::ArrayXi &base,
+                               const Eigen::ArrayXi &High,
+                               const Eigen::ArrayXi &Low) {
   Base = base;
   HighLine = High;
   LowLine = Low;
   SubChain.clear();
 }
 /*
-OptiChain::OptiChain(const HeightLine& src) {
+optimize_chain::optimize_chain(const height_line& src) {
     HighLine=src.HighLine;
     LowLine=src.LowLine;
     Base=src.base;
     SubChain.clear();
 }*/
 
-OptiChain::~OptiChain() { return; }
+optimize_chain::~optimize_chain() { return; }
 
-const Eigen::ArrayXi &OptiChain::getHighLine() { return HighLine; }
-const Eigen::ArrayXi &OptiChain::getLowLine() { return LowLine; }
+const Eigen::ArrayXi &optimize_chain::high_line() { return HighLine; }
+const Eigen::ArrayXi &optimize_chain::low_line() { return LowLine; }
 
-int OptiChain::validHeight(int index) const {
-  if (index < 0 || index >= MapSize)
-    return NInf;
-  if (isAir(index))
-    return NInf;
+int optimize_chain::valid_height(int index) const {
+  if (index < 0 || index >= MapSize) return NInf;
+  if (is_air(index)) return NInf;
   return HighLine(index);
 }
 
-inline bool OptiChain::isAir(int index) const {
-  if (index < 0 || index >= MapSize)
-    return true;
+inline bool optimize_chain::is_air(int index) const {
+  if (index < 0 || index >= MapSize) return true;
   return (Base(index) == 0);
 }
 
-inline bool OptiChain::isWater(int index) const {
-  if (index < 0 || index >= MapSize)
-    return false;
+inline bool optimize_chain::is_water(int index) const {
+  if (index < 0 || index >= MapSize) return false;
   return (Base(index) == 12);
 }
 
-inline bool OptiChain::isSolidBlock(int index) const {
-  if (index < 0 || index >= MapSize)
-    return false;
+inline bool optimize_chain::is_solid_block(int index) const {
+  if (index < 0 || index >= MapSize) return false;
   return (Base(index) != 0 && Base(index) != 12);
 }
 
-void OptiChain::dispSubChain() const {
+void optimize_chain::dispSubChain() const {
   std::string out = "";
   for (auto it = SubChain.cbegin(); it != SubChain.cend(); it++) {
     out += it->toString();
@@ -136,7 +124,7 @@ void OptiChain::dispSubChain() const {
 }
 
 /*
-void HeightLine::segment2Brackets(list<Pair>&List,short sBeg,short sEnd)
+void height_line::segment2Brackets(list<Pair>&List,short sBeg,short sEnd)
 {
     if(sEnd<sBeg||sBeg<0)return;
     List.clear();
@@ -148,9 +136,9 @@ void HeightLine::segment2Brackets(list<Pair>&List,short sBeg,short sEnd)
         return;
     }
 
-    queue<Region>Pure;
-    queue<Region> disPure;//极大值区间
-    Region Temp;
+    queue<region>Pure;
+    queue<region> disPure;//极大值区间
+    region Temp;
     bool isReady=false;
     VectorXi VHL=ValidHighLine();
     VectorXi ScanBoth=VHL,ScanLeft=VHL,ScanRight=VHL;
@@ -209,7 +197,7 @@ ScanRight=(ScanRight.array()>=0).select(ScanRight,0);
 #endif
 }
 
-inline void HeightLine::DealRegion(Region PR, list<Pair> &List)
+inline void height_line::DealRegion(region PR, list<Pair> &List)
 {
     if(PR.Begin<0||PR.End<PR.Begin)return;
     List.push_back(Pair('(',PR.Begin));
@@ -217,18 +205,16 @@ inline void HeightLine::DealRegion(Region PR, list<Pair> &List)
 }
 */
 
-void OptiChain::divideAndCompress() {
+void optimize_chain::divide_and_compress() {
   divideToChain();
   while (!Chain.empty()) {
-    divideToSubChain();
+    divide_into_subchain();
 
     for (auto it = SubChain.begin(); it != SubChain.end(); it++)
-      if (it->isIDP())
-        Sink(*it);
+      if (it->isIDP()) sink(*it);
 
     for (auto it = SubChain.begin(); it != SubChain.end(); it++)
-      if (AllowSinkHang && it->isHang())
-        Sink(*it);
+      if (AllowSinkHang && it->isHang()) sink(*it);
   }
 #ifdef showImg
 
@@ -238,54 +224,53 @@ void OptiChain::divideAndCompress() {
 #endif
 }
 
-void OptiChain::divideToChain() {
-  while (!Chain.empty())
-    Chain.pop();
-  Region Temp(0, MapSize - 1, idp);
+void optimize_chain::divideToChain() {
+  while (!Chain.empty()) Chain.pop();
+  region Temp(0, MapSize - 1, region_type::independent);
   for (int i = 1; i < MapSize; i++) {
-    if (isAir(i)) {
-      Temp.End = i - 1;
+    if (is_air(i)) {
+      Temp.end = i - 1;
       Chain.push(Temp);
-      Temp.Beg = i;
+      Temp.begin = i;
     }
-    if (isWater(i)) {
-      Temp.End = i - 1;
+    if (is_water(i)) {
+      Temp.end = i - 1;
       Chain.push(Temp);
-      Temp.Beg = i;
+      Temp.begin = i;
     }
-    if (isSolidBlock(i) && isAir(i)) {
-      Temp.End = i - 1;
+    if (is_solid_block(i) && is_air(i)) {
+      Temp.end = i - 1;
       Chain.push(Temp);
-      Temp.Beg = i;
+      Temp.begin = i;
     }
   }
-  Temp.End = MapSize - 1;
+  Temp.end = MapSize - 1;
   Chain.push(Temp);
 #ifdef sendInfo
-  std::cout << "Divided coloum "
-            << " into " << Chain.size() << "isolated region(s)" << std::endl;
+  std::cout << "Divided coloum " << " into " << Chain.size()
+            << "isolated region(s)" << std::endl;
 #endif
 }
 
-void OptiChain::divideToSubChain() {
+void optimize_chain::divide_into_subchain() {
   if (!Chain.front().isValid()) {
     Chain.pop();
     return;
   }
   SubChain.clear();
 
-  divideToSubChain(Chain.front());
+  divide_into_subchain(Chain.front());
   Chain.pop();
 }
 
-void OptiChain::divideToSubChain(const Region &Cur) {
+void optimize_chain::divide_into_subchain(const region &Cur) {
 #ifdef sendInfo
   std::cout << "ready to analyse" << Cur.toString() << std::endl;
 #endif
   if (Cur.size() <= 3) {
-    SubChain.push_back(Region(Cur.Beg, Cur.End, idp));
+    SubChain.push_back(region(Cur.begin, Cur.end, region_type::independent));
 #ifdef sendInfo
-    std::cout << "Region" << Cur.toString()
+    std::cout << "region" << Cur.toString()
               << " in Chain is too thin, sink directly." << std::endl;
 #endif
     return;
@@ -293,7 +278,7 @@ void OptiChain::divideToSubChain(const Region &Cur) {
 
   Eigen::ArrayXi HL;
   HL.setZero(Cur.size() + 1);
-  HL.segment(0, Cur.size()) = HighLine.segment(Cur.Beg, Cur.size());
+  HL.segment(0, Cur.size()) = HighLine.segment(Cur.begin, Cur.size());
   HL(Cur.size()) = NInf;
 
   Eigen::ArrayXi ScanBoth, ScanLeft, ScanRight;
@@ -301,7 +286,7 @@ void OptiChain::divideToSubChain(const Region &Cur) {
   ScanLeft.setZero(Cur.size());
   ScanRight.setZero(Cur.size());
   // qDebug("开始用三个一维算子扫描HighLine和LowLine");
-  for (int i = 1; i < Cur.size(); i++) // 用三个算子扫描一个大孤立区间
+  for (int i = 1; i < Cur.size(); i++)  // 用三个算子扫描一个大孤立区间
   {
     ScanBoth(i) = (HL.segment(i - 1, 3) * Both).sum() > 0;
     ScanLeft(i) = (HL.segment(i - 1, 3) * Left).sum() > 0;
@@ -317,19 +302,19 @@ void OptiChain::divideToSubChain(const Region &Cur) {
   bool isReady = false;
 
   // 表示已经检测出极大值区间的入口，找到出口就装入一个极大值区间
-  Region Temp(-1, -1, Hang); // 均写入绝对index而非相对index
+  region Temp(-1, -1, region_type::hanging);  // 均写入绝对index而非相对index
   for (int i = 0; i < Cur.size(); i++) {
     if (!isReady && ScanLeft(i)) {
       isReady = true;
-      Temp.Beg = Cur.indexLocal2Global(i);
-      Temp.End = -1;
+      Temp.begin = Cur.indexLocal2Global(i);
+      Temp.end = -1;
     }
     if (isReady && ScanRight(i)) {
       isReady = false;
-      Temp.End = Cur.indexLocal2Global(i);
+      Temp.end = Cur.indexLocal2Global(i);
       SubChain.push_back(Temp);
-      Temp.Beg = -1;
-      Temp.End = -1;
+      Temp.begin = -1;
+      Temp.end = -1;
     }
   }
   // qDebug("已将极大值区间串联成链，即将开始填充孤立区间。此时的SubChain为：");
@@ -337,55 +322,54 @@ void OptiChain::divideToSubChain(const Region &Cur) {
   auto prev = SubChain.begin();
   for (auto it = SubChain.begin(); it != SubChain.end(); prev = it++) {
     if (it == SubChain.begin()) {
-      Temp.Beg = Cur.indexLocal2Global(0);
-      Temp.End = (it->Beg - 1);
-      Temp.type = idp;
-      if (Temp.isValid())
-        SubChain.insert(it, Temp);
+      Temp.begin = Cur.indexLocal2Global(0);
+      Temp.end = (it->begin - 1);
+      Temp.type = region_type::independent;
+      if (Temp.isValid()) SubChain.insert(it, Temp);
     } else {
-      Temp.Beg = (prev->End + 1);
-      Temp.End = (it->Beg - 1);
-      Temp.type = idp;
-      if (Temp.isValid())
-        SubChain.insert(it, Temp);
+      Temp.begin = (prev->end + 1);
+      Temp.end = (it->begin - 1);
+      Temp.type = region_type::independent;
+      if (Temp.isValid()) SubChain.insert(it, Temp);
     }
   }
 
   if (SubChain.size() <= 0) {
     SubChain.push_back(Cur);
-  } else if (SubChain.back().End < Cur.End)
-    SubChain.push_back(Region(SubChain.back().End + 1, Cur.End, idp));
+  } else if (SubChain.back().end < Cur.end)
+    SubChain.push_back(
+        region(SubChain.back().end + 1, Cur.end, region_type::independent));
 
 #ifdef sendInfo
   std::cout << "SubChain constructed" << std::endl;
 #endif
 }
 
-void OptiChain::Sink(const Region &Reg) {
+void optimize_chain::sink(const region &Reg) {
   if (!Reg.isValid()) {
-    std::cout << "Invalid region: " << Reg.toString() << std::endl;
+    std::cout << "invalid region: " << Reg.toString() << std::endl;
     return;
   }
   if (Reg.isIDP()) {
-    HighLine.segment(Reg.Beg, Reg.size()) -=
-        LowLine.segment(Reg.Beg, Reg.size()).minCoeff();
-    LowLine.segment(Reg.Beg, Reg.size()) -=
-        LowLine.segment(Reg.Beg, Reg.size()).minCoeff();
+    HighLine.segment(Reg.begin, Reg.size()) -=
+        LowLine.segment(Reg.begin, Reg.size()).minCoeff();
+    LowLine.segment(Reg.begin, Reg.size()) -=
+        LowLine.segment(Reg.begin, Reg.size()).minCoeff();
     return;
   }
   if (AllowSinkHang && Reg.isHang()) {
     int BegGap;
 
-    BegGap = validHeight(Reg.Beg) - validHeight(Reg.Beg - 1);
+    BegGap = valid_height(Reg.begin) - valid_height(Reg.begin - 1);
 
     int EndGap;
-    if (isSolidBlock(Reg.End + 1))
-      EndGap = validHeight(Reg.End) - validHeight(Reg.End + 1);
+    if (is_solid_block(Reg.end + 1))
+      EndGap = valid_height(Reg.end) - valid_height(Reg.end + 1);
     else
-      EndGap = validHeight(Reg.End) - NInf;
+      EndGap = valid_height(Reg.end) - NInf;
     int offset = std::min(std::max(std::min(BegGap, EndGap) - 1, 0),
-                          LowLine.segment(Reg.Beg, Reg.size()).minCoeff());
-    HighLine.segment(Reg.Beg, Reg.size()) -= offset;
-    LowLine.segment(Reg.Beg, Reg.size()) -= offset;
+                          LowLine.segment(Reg.begin, Reg.size()).minCoeff());
+    HighLine.segment(Reg.begin, Reg.size()) -= offset;
+    LowLine.segment(Reg.begin, Reg.size()) -= offset;
   }
 }

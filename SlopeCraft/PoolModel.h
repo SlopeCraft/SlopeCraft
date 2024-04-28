@@ -7,24 +7,27 @@
 #include <cvt_task.h>
 #include <QImage>
 
+class SCWind;
+
 class PoolModel : public QAbstractListModel {
   Q_OBJECT
  protected:
-  task_pool_t* pool{nullptr};
+  task_pool& pool;
   QListView* _listview{nullptr};
+  SCWind* const scwind;
 
   static const QPixmap& icon_empty() noexcept;
   static const QPixmap& icon_converted() noexcept;
 
  public:
-  explicit PoolModel(QObject* parent = nullptr, task_pool_t* poolptr = nullptr);
+  explicit PoolModel(SCWind* scw);
   ~PoolModel();
 
   int rowCount(const QModelIndex& midx) const override {
     if (midx.isValid()) {
       return 0;
     }
-    return this->pool->size();
+    return this->pool.size();
   }
 
   QModelIndex parent(const QModelIndex&) const override {
@@ -39,9 +42,9 @@ class PoolModel : public QAbstractListModel {
   }
 
  public:
-  task_pool_t* attached_pool() noexcept { return this->pool; }
-  const task_pool_t* attached_pool() const noexcept { return this->pool; }
-  void set_pool(task_pool_t* _pool) noexcept { this->pool = _pool; }
+  task_pool& attached_pool() noexcept { return this->pool; }
+  const task_pool& attached_pool() const noexcept { return this->pool; }
+  //  void set_pool(task_pool_t* _pool) noexcept { this->pool = _pool; }
 
   QListView* attached_listview() noexcept { return this->_listview; }
   const QListView* attached_listview() const noexcept {
@@ -61,8 +64,7 @@ class PoolModel : public QAbstractListModel {
 class CvtPoolModel : public PoolModel {
   Q_OBJECT
  public:
-  explicit CvtPoolModel(QObject* parent = nullptr,
-                        task_pool_t* poolptr = nullptr);
+  explicit CvtPoolModel(SCWind* scw);
   ~CvtPoolModel();
 
   Qt::DropActions supportedDropActions() const override;
@@ -82,32 +84,18 @@ class CvtPoolModel : public PoolModel {
 class ExportPoolModel : public PoolModel {
   Q_OBJECT
  public:
-  explicit ExportPoolModel(QObject* parent = nullptr,
-                           task_pool_t* poolptr = nullptr);
+  explicit ExportPoolModel(SCWind* scw);
   ~ExportPoolModel();
 
-  int rowCount(const QModelIndex& midx) const override {
-    if (midx.isValid()) {
-      return 0;
-    }
-    return converted_task_count(*this->pool);
-  }
+  int rowCount(const QModelIndex& midx) const override;
 
-  std::vector<int> iteration_map() const noexcept {
-    return ::iteration_map(*this->pool);
-  }
+  //  std::vector<int> iteration_map() const noexcept {
+  //    return ::iteration_map(*this->pool);
+  //  }
 
-  int export_idx_to_full_idx(int eidx) const noexcept {
-    return ::map_export_idx_to_full_idx(*this->pool, eidx);
-  }
+  std::optional<size_t> export_index_to_global_index(int eidx) const noexcept;
 
-  cvt_task* export_idx_to_task_ptr(int eidx) const noexcept {
-    const int pidx = this->export_idx_to_full_idx(eidx);
-    if (pidx >= (int)this->pool->size()) {
-      return nullptr;
-    }
-    return &this->pool->at(pidx);
-  }
+  cvt_task* export_idx_to_task_ptr(int eidx) const noexcept;
 
   QVariant data(const QModelIndex& idx, int role) const override;
 };

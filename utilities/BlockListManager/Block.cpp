@@ -1,6 +1,6 @@
 #include "Block.h"
 
-BlockWidget::BlockWidget(QWidget* parent, SlopeCraft::AbstractBlock* _blk)
+BlockWidget::BlockWidget(QWidget* parent, SlopeCraft::mc_block_interface* _blk)
     : QRadioButton(parent), block(_blk) {
   this->setText(this->block->getNameZH());
   QImage img{this->block->imageCols(), this->block->imageRows(),

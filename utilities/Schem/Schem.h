@@ -158,11 +158,18 @@ class Schem {
     }
   }
 
+  void stat_blocks(std::vector<size_t> &dest) const noexcept;
+  [[nodiscard]] std::vector<size_t> stat_blocks() const noexcept {
+    std::vector<size_t> buf;
+    this->stat_blocks(buf);
+    return buf;
+  }
+
   inline int64_t x_range() const noexcept { return xzy.dimension(0); }
   inline int64_t y_range() const noexcept { return xzy.dimension(2); }
   inline int64_t z_range() const noexcept { return xzy.dimension(1); }
 
-  inline int palette_size() const noexcept { return block_id_list.size(); }
+  inline size_t palette_size() const noexcept { return block_id_list.size(); }
 
   inline int64_t size() const noexcept { return xzy.size(); }
 

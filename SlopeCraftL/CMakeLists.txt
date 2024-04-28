@@ -24,43 +24,37 @@ endif ()
 set(Slope_SCL_internal_headers
     ${CMAKE_SOURCE_DIR}/utilities/SC_GlobalEnums.h
 
-    # AiCvterOpt.h
-    Colors.h
-    HeightLine.h
-
-    OptiChain.h
-    PrimGlassBuilder.h
+    # GA_converter_option.h
     SCLDefines.h
-    TokiSlopeCraft.h
-    WaterItem.h
-    lossyCompressor.h
+    water_item.h
+    string_deliver.h
+    structure_3D.h
 
-    simpleBlock.h
-    SlopeCraftL_global.h
-    WriteStringDeliver.h
-    Colorset.h
+    color_table.h
+    converted_image.h
+    height_line.h
+    lossy_compressor.h
+    mc_block.h
+    optimize_chain.h
+    prim_glass_builder.h
 )
 
 set(SlopeCraft_SCL_sources
 
 
     SlopeCraftL.h
-    # AiCvterOpt.cpp
-    Colors.cpp
-    ColorSource.cpp
-    HeightLine.cpp
-    OptiChain.cpp
-    PrimGlassBuilder.cpp
-    TokiSlopeCraft.cpp
-    TokiSlopeCraft_static_funs.cpp
-    TokiSlopeCraft_build.cpp
-    TokiSlopeCraft_convert.cpp
-    TokiSlopeCraft_cache.cpp
-    imagePreprocess.cpp
-    lossyCompressor.cpp
-    simpleBlock.cpp
+    # GA_converter_option.cpp
+    color_source.cpp
+    height_line.cpp
+    optimize_chain.cpp
+    prim_glass_builder.cpp
+    image_preprocess.cpp
+    lossy_compressor.cpp
+    mc_block.cpp
     SlopeCraftL.cpp
-    Colorset.cpp
+    color_table.cpp
+    structure_3D.cpp
+    converted_image.cpp
 
     #${SlopeCraft_SCL_internal_headers}
     ${SlopeCraft_SCL_windows_rc_files}
@@ -71,11 +65,15 @@ add_definitions(-DSLOPECRAFTL_LIBRARY)
 
 add_library(SlopeCraftL SHARED ${SlopeCraft_SCL_sources})
 
+include(GenerateExportHeader)
+generate_export_header(SlopeCraftL BASE_NAME SCL EXPORT_FILE_NAME SlopeCraftL_export.h)
+
 # add_library(SlopeCraftL_C SHARED ${SlopeCraft_SCL_sources})
 target_compile_features(SlopeCraftL PRIVATE cxx_std_23)
 target_precompile_headers(SlopeCraftL PRIVATE ${SlopeCraft_SCL_internal_headers})
-target_include_directories(SlopeCraftL INTERFACE
+target_include_directories(SlopeCraftL PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<INSTALL_INTERFACE:include>)
 target_include_directories(SlopeCraftL PRIVATE
     ${SlopeCraft_Nlohmann_json_include_dir}
@@ -127,8 +125,8 @@ if (CMAKE_SYSTEM_NAME MATCHES "Windows")
 endif ()
 
 function(SC_create_SCL_block_list src_dir archive_path)
-    if (NOT EXISTS "${src_dir}/BlockList.json")
-        message(FATAL_ERROR "${src_dir}/BlockList.json doesn't exist, block list json is missing")
+    if (NOT EXISTS "${src_dir}/block_list.json")
+        message(FATAL_ERROR "${src_dir}/block_list.json doesn't exist, block list json is missing")
     endif ()
 
     cmake_path(GET archive_path PARENT_PATH archive_dir)
@@ -140,7 +138,7 @@ function(SC_create_SCL_block_list src_dir archive_path)
 
     #    file(GLOB_RECURSE file_list "${src_dir}/*.png")
     #
-    #    file(ARCHIVE_CREATE OUTPUT temp.zip PATHS ${src_dir} "${src_dir}/BlockList.json" FORMAT zip
+    #    file(ARCHIVE_CREATE OUTPUT temp.zip PATHS ${src_dir} "${src_dir}/block_list.json" FORMAT zip
     #        #COMPRESSION Zstd
     #        #COMPRESSION_LEVEL 9
     #    )

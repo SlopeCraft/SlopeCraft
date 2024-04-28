@@ -98,6 +98,8 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
   ImageCvter(const basic_colorset_t &basic, const allowed_colorset_t &allowed)
       : basic_colorset{basic}, allowed_colorset{allowed} {}
 
+  ImageCvter(ImageCvter &&) = default;
+
  protected:
   const basic_colorset_t &basic_colorset;
   const allowed_colorset_t &allowed_colorset;
@@ -669,7 +671,7 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
   }
 
  public:
-  uint64_t task_hash() const noexcept {
+  [[deprecated]] uint64_t task_hash() const noexcept {
     return this->task_hash(this->algo, this->dither);
   }
 

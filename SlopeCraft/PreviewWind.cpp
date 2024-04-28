@@ -28,9 +28,9 @@ PreviewWind::PreviewWind(QWidget* parent)
   });
 }
 
-PreviewWind::~PreviewWind() { delete this->ui; }
+PreviewWind::~PreviewWind() {}
 
-void PreviewWind::set_size(std::span<int, 3> size) & noexcept {
+void PreviewWind::set_size(std::span<size_t, 3> size) & noexcept {
   QString size_str =
       tr("大小：%1 × %2 × %3").arg(size[0]).arg(size[1]).arg(size[2]);
 
@@ -40,35 +40,40 @@ void PreviewWind::set_size(std::span<int, 3> size) & noexcept {
       tr("体积：%1").arg(size[0] * size[1] * size[2]));
 }
 
-void PreviewWind::set_total_count(int count) & noexcept {
+void PreviewWind::set_total_count(size_t count) & noexcept {
   this->ui->lb_block_count->setText(tr("方块总数：%1").arg(count));
 }
 
-void PreviewWind::setup_data(const SlopeCraft::Kernel* kernel) noexcept {
-  std::array<int, 64> count_list;
+void PreviewWind::setup_data(
+    const SlopeCraft::color_table& table,
+    const SlopeCraft::structure_3D& structure) noexcept {
+  std::array<size_t, 64> count_list;
   count_list.fill(0);
-
+  table.stat_blocks(structure, count_list.data());
   {
-    int total_blks{0};
-    kernel->getBlockCounts(&total_blks, count_list.data());
-    this->set_total_count(total_blks);
-  }
-  std::vector<const SlopeCraft::AbstractBlock*> blkp_arr;
-  {
-    const size_t num = kernel->getBlockPalette(nullptr, 0);
-    blkp_arr.resize(num);
-    kernel->getBlockPalette(blkp_arr.data(), blkp_arr.size());
+    size_t total_blocks{0};
+    for (auto c : count_list) {
+      total_blocks += c;
+    }
+    this->set_total_count(total_blocks);
   }
 
-  this->mat_list.resize(blkp_arr.size());
+  std::vector<const SlopeCraft::mc_block_interface*> blkp_arr;
+  table.visit_blocks([&blkp_arr](const SlopeCraft::mc_block_interface* b) {
+    blkp_arr.emplace_back(b);
+  });
+
+  this->mat_list.reserve(blkp_arr.size());
   for (size_t idx = 0; idx < blkp_arr.size(); idx++) {
-    this->mat_list[idx] =
-        material_item{.blk = blkp_arr[idx], .count = count_list[idx]};
+    if (count_list[idx] > 0) {
+      this->mat_list.emplace_back(
+          material_item{.blk = blkp_arr[idx], .count = count_list[idx]});
+    }
   }
 
   {
-    std::array<int, 3> sz;
-    kernel->get3DSize(&sz[0], &sz[1], &sz[2]);
+    std::array<size_t, 3> sz{structure.shape_x(), structure.shape_y(),
+                             structure.shape_z()};
     this->set_size(sz);
   }
 

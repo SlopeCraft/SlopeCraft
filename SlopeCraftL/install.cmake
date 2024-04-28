@@ -10,8 +10,8 @@
 set(SlopeCraft_SCL_Cpp_include_files
 
     ${CMAKE_SOURCE_DIR}/utilities/SC_GlobalEnums.h
-    SlopeCraftL.h
-    SlopeCraftL_global.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/SlopeCraftL.h
+    ${CMAKE_CURRENT_BINARY_DIR}/SlopeCraftL_global.h
 )
 install(FILES ${SlopeCraft_SCL_Cpp_include_files}
     DESTINATION include/SlopeCraft)

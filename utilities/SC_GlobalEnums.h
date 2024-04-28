@@ -82,13 +82,13 @@ enum class SCL_colorSpace : char {
 
 enum class SCL_compressSettings : int {
   /// don't compress
-  noCompress = 0,
+  noCompress = 0b00,
   /// compress in lossless only
-  NaturalOnly = 1,
+  NaturalOnly = 0b01,
   /// compress in lossy only
-  ForcedOnly = 2,
+  ForcedOnly = 0b10,
   /// compress with both lossless and lossy
-  Both = 3
+  Both = 0b11
 };
 
 enum class SCL_glassBridgeSettings : int {
@@ -159,9 +159,15 @@ enum class SCL_errorFlag : int {
   /// is greatly different.
   EXPORT_SCHEM_MC12_NOT_SUPPORTED = 0x0E,
 
+  EXPORT_MAP_DATA_FAILURE = 0x0F,
+
+  EXPORT_FLAT_DIAGRAM_ON_WRONG_MAP_TYPE = 0x10,
+
+  EXPORT_FLAT_DIAGRAM_FAILURE = 0x11,
+
 };
 
-enum class SCL_workStatues : int {
+enum class SCL_workStatus : int {
   /// waiting
   none = -1,
 

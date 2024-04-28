@@ -20,45 +20,44 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
-#include "PrimGlassBuilder.h"
+#include "prim_glass_builder.h"
 
 const ARGB airColor = ARGB32(255, 255, 255);
 const ARGB targetColor = ARGB32(0, 0, 0);
 const ARGB glassColor = ARGB32(192, 192, 192);
 
-const std::vector<TokiPos> *edge::vertexes = nullptr;
+// const std::vector<rc_pos> *edge::vertexes = nullptr;
 
-edge::edge() {
-  // beg=TokiRC(0,0);
-  // end=TokiRC(0,0);
-  begIdx = 0;
-  endIdx = 0;
-  lengthSquare = 0;
+// edge::edge() {
+//   // beg=TokiRC(0,0);
+//   // end=TokiRC(0,0);
+//   begIdx = 0;
+//   endIdx = 0;
+//   lengthSquare = 0;
+// }
+
+edge::edge(uint32_t b, uint32_t e, std::span<const rc_pos> v)
+    : begIdx{b}, endIdx{e}, lengthSquare{[b, e, v]() {
+        const auto beg = v[b];
+        const auto end = v[e];
+        const int rowSpan = beg.row - end.row;
+        const int colSpan = beg.col - end.col;
+        return (rowSpan * rowSpan + colSpan * colSpan);
+      }()} {}
+
+rc_pos edge::beg(std::span<const rc_pos> vertices) const {
+  return vertices[begIdx];
 }
 
-edge::edge(uint32_t _begIdx, uint32_t _endIdx) {
-  begIdx = _begIdx;
-  endIdx = _endIdx;
-  int r1 = TokiRow(beg()), c1 = TokiCol(beg());
-  int r2 = TokiRow(end()), c2 = TokiCol(end());
-
-  int rowSpan = r1 - r2;
-  int colSpan = c1 - c2;
-  lengthSquare = (rowSpan * rowSpan + colSpan * colSpan);
+rc_pos edge::end(std::span<const rc_pos> vertices) const {
+  return vertices[endIdx];
 }
 
-TokiPos edge::beg() const { return vertexes->at(begIdx); }
-
-TokiPos edge::end() const { return vertexes->at(endIdx); }
-
-pairedEdge::pairedEdge() {
-  first = TokiRC(0, 0);
-  second = TokiRC(0, 0);
-  lengthSquare = 0;
-}
-pairedEdge::pairedEdge(TokiPos A, TokiPos B) {
-  int r1 = TokiRow(A), c1 = TokiCol(A);
-  int r2 = TokiRow(B), c2 = TokiCol(B);
+pairedEdge::pairedEdge()
+    : std::pair<rc_pos, rc_pos>{{0, 0}, {0, 0}}, lengthSquare{0} {}
+pairedEdge::pairedEdge(rc_pos A, rc_pos B) {
+  int r1 = A.row, c1 = A.col;
+  int r2 = B.row, c2 = B.col;
   first = A;
   second = B;
   int rowSpan = r1 - r2;
@@ -66,21 +65,21 @@ pairedEdge::pairedEdge(TokiPos A, TokiPos B) {
   lengthSquare = (rowSpan * rowSpan + colSpan * colSpan);
 }
 
-pairedEdge::pairedEdge(uint16_t r1, uint16_t c1, uint16_t r2, uint16_t c2) {
-  first = TokiRC(r1, c1);
-  second = TokiRC(r2, c2);
+pairedEdge::pairedEdge(uint32_t r1, uint32_t c1, uint32_t r2, uint32_t c2) {
+  first = rc_pos{static_cast<int32_t>(r1), static_cast<int32_t>(c1)};
+  second = rc_pos{static_cast<int32_t>(r2), static_cast<int32_t>(c2)};
   int rowSpan = r1 - r2;
   int colSpan = c1 - c2;
   lengthSquare = (rowSpan * rowSpan + colSpan * colSpan);
 }
 
-pairedEdge::pairedEdge(const edge &src) {
-  first = src.beg();
-  second = src.end();
+pairedEdge::pairedEdge(const edge &src, std::span<const rc_pos> v) {
+  first = src.beg(v);
+  second = src.end(v);
   lengthSquare = src.lengthSquare;
 }
 /*
-bool edge::connectWith(TokiPos P) const {
+bool edge::connectWith(rc_pos P) const {
     return pairedEdge(*this).connectWith(P);
 }
 
@@ -89,15 +88,15 @@ void edge::drawEdge(glassMap & map, bool drawHead) const {
     return;
 }
 */
-bool pairedEdge::connectWith(TokiPos P) const {
+bool pairedEdge::connectWith(rc_pos P) const {
   return (first == P) || (second == P);
 }
 
 void pairedEdge::drawEdge(glassMap &map, bool drawHead) const {
   if (lengthSquare <= 2) return;
   float length = sqrt(lengthSquare);
-  Eigen::Vector2f startPoint(TokiRow(first), TokiCol(first));
-  Eigen::Vector2f endPoint(TokiRow(second), TokiCol(second));
+  Eigen::Vector2f startPoint(first.row, first.col);
+  Eigen::Vector2f endPoint(second.row, second.col);
   Eigen::Vector2f step = (endPoint - startPoint) / ceil(2.0 * length);
   Eigen::Vector2f cur;
   int stepCount = ceil(2.0 * length);
@@ -107,28 +106,28 @@ void pairedEdge::drawEdge(glassMap &map, bool drawHead) const {
     r = floor(cur(0));
     c = floor(cur(1));
     if (r >= 0 && r < map.rows() && c >= 0 && c < map.cols()) {
-      map(r, c) = PrimGlassBuilder::glass;
+      map(r, c) = prim_glass_builder::glass;
       continue;
     }
     r = ceil(cur(0));
     c = ceil(cur(1));
     if (r >= 0 && r < map.rows() && c >= 0 && c < map.cols())
-      map(r, c) = PrimGlassBuilder::glass;
+      map(r, c) = prim_glass_builder::glass;
   }
-  map(TokiRow(first), TokiCol(first)) =
-      (drawHead ? PrimGlassBuilder::target : PrimGlassBuilder::air);
-  map(TokiRow(second), TokiCol(second)) =
-      (drawHead ? PrimGlassBuilder::target : PrimGlassBuilder::air);
+  map(first.row, first.col) =
+      (drawHead ? prim_glass_builder::target : prim_glass_builder::air);
+  map(second.row, second.col) =
+      (drawHead ? prim_glass_builder::target : prim_glass_builder::air);
 }
 
-PrimGlassBuilder::PrimGlassBuilder() {}
-glassMap PrimGlassBuilder::makeBridge(const TokiMap &_targetMap,
-                                      walkableMap *walkable) {
+prim_glass_builder::prim_glass_builder() {}
+glassMap prim_glass_builder::makeBridge(const TokiMap &_targetMap,
+                                        walkableMap *walkable) {
   // clock_t lastTime=std::clock();
   const int rowCount = ceil(double(_targetMap.rows()) / unitL);
   const int colCount = ceil(double(_targetMap.cols()) / unitL);
 
-  std::vector<std::vector<PrimGlassBuilder *>> algos(rowCount);
+  std::vector<std::vector<prim_glass_builder>> algos(rowCount);
   std::vector<std::vector<glassMap>> glassMaps(rowCount);
   std::vector<std::vector<walkableMap>> walkableMaps(rowCount);
   std::vector<std::vector<TokiMap>> targetMaps(rowCount);
@@ -145,33 +144,41 @@ glassMap PrimGlassBuilder::makeBridge(const TokiMap &_targetMap,
           std::min(long(unitL), long(_targetMap.rows() - r * unitL)),
           std::min(long(unitL), long(_targetMap.cols() - c * unitL)));
 
-      algos[r][c] = pgb.animate();
+      algos[r][c] = prim_glass_builder{};
     }
   }
   // qDebug("分区分块完毕，开始在每个分区内搭桥");
   for (int r = 0; r < rowCount; r++) {
     for (int c = 0; c < colCount; c++) {
       // qDebug()<<"开始处理第 ["<<r<<","<<c<<"] 块分区";
-      glassMaps[r][c] = algos[r][c]->make4SingleMap(
+      glassMaps[r][c] = algos[r][c].make4SingleMap(
           targetMaps[r][c],
           (walkable == nullptr) ? nullptr : (&walkableMaps[r][c]));
     }
-    (*progressRangeSetPtr)(*windPtr, 0, rowCount, r);
+    this->progress_bar.set_range(0, rowCount, r);
   }
   // qDebug("每个分区内的搭桥完毕，开始在分区间搭桥");
   std::stack<pairedEdge> interRegionEdges;
   for (int r = 0; r < rowCount; r++)
     for (int c = 0; c < colCount; c++) {
       if (r + 1 < rowCount) {
-        pairedEdge temp = connectSingleMaps(
-            algos[r][c], TokiRC(unitL * r, unitL * c), algos[r + 1][c],
-            TokiRC(unitL * (r + 1), unitL * c));
+        pairedEdge temp =
+            connectSingleMaps(algos[r][c],
+                              rc_pos{static_cast<int32_t>(unitL * r),
+                                     static_cast<int32_t>(unitL * c)},
+                              algos[r + 1][c],
+                              rc_pos{static_cast<int32_t>(unitL * (r + 1)),
+                                     static_cast<int32_t>(unitL * c)});
         if (temp.lengthSquare > 2) interRegionEdges.emplace(temp);
       }
       if (c + 1 < colCount) {
-        pairedEdge temp = connectSingleMaps(
-            algos[r][c], TokiRC(unitL * r, unitL * c), algos[r][c + 1],
-            TokiRC(unitL * r, unitL * (c + 1)));
+        pairedEdge temp =
+            connectSingleMaps(algos[r][c],
+                              rc_pos{static_cast<int32_t>(unitL * r),
+                                     static_cast<int32_t>(unitL * c)},
+                              algos[r][c + 1],
+                              rc_pos{static_cast<int32_t>(unitL * r),
+                                     static_cast<int32_t>(unitL * (c + 1))});
         if (temp.lengthSquare > 2) interRegionEdges.emplace(temp);
       }
     }
@@ -208,18 +215,18 @@ glassMap PrimGlassBuilder::makeBridge(const TokiMap &_targetMap,
     if (walkable != nullptr) interRegionEdges.top().drawEdge(*walkable, true);
     interRegionEdges.pop();
   }
-  // qDebug("拼合分区完毕，开始 delete 各个分区的 algo");
-  for (int r = 0; r < rowCount; r++)
-    for (int c = 0; c < colCount; c++) pgb.recycle(algos[r][c]);
+  //  // qDebug("拼合分区完毕，开始 delete 各个分区的 algo");
+  //  for (int r = 0; r < rowCount; r++)
+  //    for (int c = 0; c < colCount; c++) pgb.recycle(algos[r][c]);
 
-  (*progressRangeSetPtr)(*windPtr, 0, 100, 100);
+  this->progress_bar.set_range(0, 100, 100);
   // qDebug()<<"用时"<<std::clock()-lastTime<<"毫秒";
 
   return result;
 }
 
-glassMap PrimGlassBuilder::make4SingleMap(const TokiMap &_targetMap,
-                                          walkableMap *walkable) {
+glassMap prim_glass_builder::make4SingleMap(const TokiMap &_targetMap,
+                                            walkableMap *walkable) {
   if (_targetMap.rows() > unitL || _targetMap.cols() > unitL) {
     // qDebug("错误！make4SingleMap 不应当收到超过 unitL*unitL 的图");
     return glassMap(0, 0);
@@ -234,7 +241,7 @@ glassMap PrimGlassBuilder::make4SingleMap(const TokiMap &_targetMap,
             _targetMap(r, c - 1))
           continue;
         else
-          targetPoints.emplace_back(TokiRC(r, c));
+          targetPoints.emplace_back(rc_pos{r, c});
       }
     }
 
@@ -253,43 +260,43 @@ glassMap PrimGlassBuilder::make4SingleMap(const TokiMap &_targetMap,
   for (auto it = tree.cbegin(); it != tree.cend(); it++) it->drawEdge(result);
 
   for (auto it = targetPoints.cbegin(); it != targetPoints.cend(); it++)
-    result(TokiRow(*it), TokiCol(*it)) = 0;
+    result(it->row, it->col) = 0;
 
   if (walkable != nullptr) *walkable = result;
 
   for (auto it = targetPoints.cbegin(); it != targetPoints.cend(); it++) {
-    result(TokiRow(*it), TokiCol(*it)) = 0;
+    result(it->row, it->col) = 0;
     if (walkable != nullptr)
-      walkable->operator()(TokiRow(*it), TokiCol(*it)) = blockType::target;
+      walkable->operator()(it->row, it->col) = blockType::target;
   }
   return result;
 }
 
-pairedEdge PrimGlassBuilder::connectSingleMaps(const PrimGlassBuilder *map1,
-                                               TokiPos offset1,
-                                               const PrimGlassBuilder *map2,
-                                               TokiPos offset2) {
-  if (map1->targetPoints.size() <= 0 || map2->targetPoints.size() <= 0)
+pairedEdge prim_glass_builder::connectSingleMaps(const prim_glass_builder &map1,
+                                                 rc_pos offset1,
+                                                 const prim_glass_builder &map2,
+                                                 rc_pos offset2) {
+  if (map1.targetPoints.size() <= 0 || map2.targetPoints.size() <= 0)
     return pairedEdge();
 
-  uint16_t offsetR1 = TokiRow(offset1), offsetC1 = TokiCol(offset1);
-  uint16_t offsetR2 = TokiRow(offset2), offsetC2 = TokiCol(offset2);
+  uint32_t offsetR1 = offset1.row, offsetC1 = offset1.col;
+  uint32_t offsetR2 = offset2.row, offsetC2 = offset2.col;
 
-  uint16_t r1, r2, c1, c2;
+  uint32_t r1, r2, c1, c2;
 
   pairedEdge current;
 
   pairedEdge min;
   min.lengthSquare = 0x7FFFFFFF;
 
-  for (auto it = map1->targetPoints.cbegin(); it != map1->targetPoints.cend();
+  for (auto it = map1.targetPoints.cbegin(); it != map1.targetPoints.cend();
        it++)
-    for (auto jt = map2->targetPoints.cbegin(); jt != map2->targetPoints.cend();
+    for (auto jt = map2.targetPoints.cbegin(); jt != map2.targetPoints.cend();
          jt++) {
-      r1 = offsetR1 + TokiRow(*it);
-      c1 = offsetC1 + TokiCol(*it);
-      r2 = offsetR2 + TokiRow(*jt);
-      c2 = offsetC2 + TokiCol(*jt);
+      r1 = offsetR1 + it->row;
+      c1 = offsetC1 + it->col;
+      r2 = offsetR2 + jt->row;
+      c2 = offsetC2 + jt->col;
       current = pairedEdge(r1, c1, r2, c2);
       if (current.lengthSquare <= 2) return current;
 
@@ -298,21 +305,21 @@ pairedEdge PrimGlassBuilder::connectSingleMaps(const PrimGlassBuilder *map1,
   return min;
 }
 
-void PrimGlassBuilder::addEdgesToGraph() {
+void prim_glass_builder::addEdgesToGraph() {
   edges.clear();
-  edge::vertexes = std::addressof(targetPoints);
+  //  edge::vertexes = std::addressof(targetPoints);
   // int taskCount=(targetPoints.size()*(targetPoints.size()-1))/2;
   // progressRangeSet(*windPtr,0,taskCount,0);
   for (uint32_t i = 0; i < targetPoints.size(); i++) {
     for (uint32_t j = i + 1; j < targetPoints.size(); j++) {
-      edges.emplace_back(edge(i, j));
+      edges.emplace_back(edge(i, j, this->targetPoints));
     }
     // emit keepAwake();
     // emit progressAdd(targetPoints.size()-i);
   }
   // qDebug("插入了所有的边");
 }
-void PrimGlassBuilder::runPrim() {
+void prim_glass_builder::runPrim() {
   tree.clear();
   tree.reserve(targetPoints.size() - 1);
 
@@ -341,8 +348,8 @@ void PrimGlassBuilder::runPrim() {
         std::cerr << "Error: failed to find valid edge!\n";
         break;
       }
-      // TokiPos z=selectedEdge->beg();
-      // TokiPos w=selectedEdge->end();
+      // rc_pos z=selectedEdge->beg();
+      // rc_pos w=selectedEdge->end();
       bool fz = isFound[(selectedEdge)->begIdx];
       bool fw = isFound[(selectedEdge)->endIdx];
 
@@ -364,7 +371,7 @@ void PrimGlassBuilder::runPrim() {
     // 从找到的第一条边开始，寻找长度最小的可行边
     for (auto it = selectedEdge; it != edges.end();) {
       // if(selectedEdge->lengthSquare<=2)break;
-      // TokiPos x=it->beg(),y=it->end();
+      // rc_pos x=it->beg(),y=it->end();
       bool fx = isFound[(it)->begIdx];
       bool fy = isFound[(it)->endIdx];
       if (fx && fy) {
@@ -386,8 +393,8 @@ void PrimGlassBuilder::runPrim() {
     // 并从集合 unsearched 中删除选中边的两个端点，
     // 向集合 found 中加入选中边的两个端点
     {
-      // TokiPos x=selectedEdge->beg();
-      // TokiPos y=selectedEdge->end();
+      // rc_pos x=selectedEdge->beg();
+      // rc_pos y=selectedEdge->end();
       isFound[(selectedEdge)->begIdx] = true;
       isFound[(selectedEdge)->endIdx] = true;
       foundCount++;
@@ -395,7 +402,7 @@ void PrimGlassBuilder::runPrim() {
       // found.emplace(y);
       // unsearched.erase(x);
       // unsearched.erase(y);
-      tree.emplace_back(*selectedEdge);
+      tree.emplace_back(*selectedEdge, this->targetPoints);
     }
     // if(foundCount%reportRate==0) {
     //     //progressRangeSet(*windPtr,0,targetPoints.size(),foundCount);
@@ -408,8 +415,8 @@ void PrimGlassBuilder::runPrim() {
 EImage TokiMap2EImage(const TokiMap &tm) {
   EImage result(tm.rows(), tm.cols());
   result.setConstant(airColor);
-  for (uint16_t r = 0; r < tm.rows(); r++)
-    for (uint16_t c = 0; c < tm.cols(); c++) {
+  for (uint32_t r = 0; r < tm.rows(); r++)
+    for (uint32_t c = 0; c < tm.cols(); c++) {
       if (tm(r, c) == 1) result(r, c) = glassColor;
       if (tm(r, c) > 1) result(r, c) = targetColor;
     }
@@ -418,15 +425,15 @@ EImage TokiMap2EImage(const TokiMap &tm) {
 
 glassMap connectBetweenLayers(const TokiMap &map1, const TokiMap &map2,
                               walkableMap *walkable) {
-  std::list<TokiPos> target1, target2;
+  std::list<rc_pos> target1, target2;
   target1.clear();
   target2.clear();
   for (int r = 0; r < map1.rows(); r++)
     for (int c = 0; c < map1.cols(); c++) {
-      if (map1(r, c) >= PrimGlassBuilder::target)
-        target1.emplace_back(TokiRC(r, c));
-      if (map2(r, c) >= PrimGlassBuilder::target)
-        target2.emplace_back(TokiRC(r, c));
+      if (map1(r, c) >= prim_glass_builder::target)
+        target1.emplace_back(rc_pos{r, c});
+      if (map2(r, c) >= prim_glass_builder::target)
+        target2.emplace_back(rc_pos{r, c});
     }
   std::list<pairedEdge> linkEdges;
   linkEdges.clear();
@@ -450,14 +457,14 @@ glassMap connectBetweenLayers(const TokiMap &map1, const TokiMap &map2,
   if (walkable != nullptr) *walkable = result;
 
   for (auto t = target1.cbegin(); t != target1.cend(); t++) {
-    result(TokiRow(*t), TokiCol(*t)) = PrimGlassBuilder::air;
+    result(t->row, t->col) = prim_glass_builder::air;
     if (walkable != nullptr)
-      walkable->operator()(TokiRow(*t), TokiCol(*t)) = PrimGlassBuilder::target;
+      walkable->operator()(t->row, t->col) = prim_glass_builder::target;
   }
   for (auto t = target2.cbegin(); t != target2.cend(); t++) {
-    result(TokiRow(*t), TokiCol(*t)) = PrimGlassBuilder::air;
+    result(t->row, t->col) = prim_glass_builder::air;
     if (walkable != nullptr)
-      walkable->operator()(TokiRow(*t), TokiCol(*t)) = PrimGlassBuilder::target;
+      walkable->operator()(t->row, t->col) = prim_glass_builder::target;
   }
   return result;
 }
@@ -469,16 +476,8 @@ TokiMap impl_ySlice2TokiMap(const Eigen::Tensor<ele_t, 3> &raw) noexcept {
   TokiMap result(raw.dimension(0), raw.dimension(1));
   result.setZero();
   for (int i = 0; i < raw.size(); i++)
-    if (raw(i) > 1) result(i) = PrimGlassBuilder::target;
+    if (raw(i) > 1) result(i) = prim_glass_builder::target;
   return result;
-}
-
-TokiMap ySlice2TokiMap(const Eigen::Tensor<uint8_t, 3> &raw) noexcept {
-  return impl_ySlice2TokiMap(raw);
-}
-
-TokiMap ySlice2TokiMap_u16(const Eigen::Tensor<uint16_t, 3> &raw) noexcept {
-  return impl_ySlice2TokiMap(raw);
 }
 
 TokiMap ySlice2TokiMap_u16(const Eigen::Tensor<uint16_t, 3> &xzy,
@@ -493,7 +492,7 @@ TokiMap ySlice2TokiMap_u16(const Eigen::Tensor<uint16_t, 3> &xzy,
   for (int x = 0; x < result.rows(); x++) {
     for (int z = 0; z < result.cols(); z++) {
       if (xzy(x + start_xzy[0], z + start_xzy[1], start_xzy[2]) > 1)
-        result(x, z) = PrimGlassBuilder::target;
+        result(x, z) = prim_glass_builder::target;
     }
   }
   return result;
