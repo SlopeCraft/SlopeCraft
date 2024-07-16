@@ -304,6 +304,7 @@ SCL_mapTypes SCWind::selected_type() const noexcept {
   }
 
   assert(false);
+  return SCL_mapTypes::Slope;
   // return {};
 }
 
@@ -367,6 +368,7 @@ SCL_convertAlgo SCWind::selected_algo() const noexcept {
   }
 
   assert(false);
+  return SCL_convertAlgo::RGB_Better;
   // return {};
 }
 
@@ -447,6 +449,7 @@ SCWind::export_type SCWind::selected_export_type() const noexcept {
     }
   }
   assert(false);
+  return SCWind::export_type::litematica;
   // return {};
 }
 

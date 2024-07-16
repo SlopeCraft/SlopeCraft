@@ -130,12 +130,16 @@ struct convert_result {
           cache_or_not) noexcept {
     size_t num = 0;
     for (auto& pair : this->built_structures) {
+      if (pair.second.get() == nullptr) {  // already cached
+        continue;
+      }
       if (!cache_or_not(pair.first)) {
         continue;
       }
       const bool ok =
           table.save_build_cache(cvted, pair.first, *pair.second,
                                  cache_root_dir.toLocal8Bit().data(), nullptr);
+      pair.second.reset();
       if (ok) {
         num++;
       }
