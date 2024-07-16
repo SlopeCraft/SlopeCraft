@@ -15,6 +15,7 @@ add_subdirectory(VersionDialog)
 add_subdirectory(VCLConfigLoader)
 add_subdirectory(FlatDiagram)
 add_subdirectory(libpngReader)
+add_subdirectory(StatMemory)
 
 function(SC_process_boolean value_name)
     if (${${value_name}})
