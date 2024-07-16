@@ -1173,3 +1173,73 @@ SCWind::load_selected_3D() noexcept {
 
   return {cvted_img, structure_3D};
 }
+
+bool SCWind::should_auto_cache(bool suppress_warnings) noexcept {
+  bool result = false;
+  const auto self_used = get_self_memory_info();
+  QString error_template =
+      tr("这不是严重的问题，你可以直接忽略这个警告，或者把它反馈给开发者，"
+         "不影响正常使用。只是 Slopecraft "
+         "可能占用更多的内存。\n详细信息：\n%1");
+
+  if (not self_used) {
+    if (not suppress_warnings) {
+      QMessageBox::warning(
+          this, tr("获取本进程的内存占用失败"),
+          error_template.arg(QString::fromLocal8Bit(self_used.error().c_str())),
+          QMessageBox::StandardButtons{QMessageBox::StandardButton::Ok});
+    }
+  } else {
+    result = this->mem_policy.should_cache(self_used.value()) or result;
+  }
+
+  const auto system_info = get_system_memory_info();
+  if (not system_info) {
+    if (not suppress_warnings) {
+      QMessageBox::warning(
+          this, tr("获取操作系统内存占用失败"),
+          error_template.arg(QString::fromLocal8Bit(self_used.error().c_str())),
+          QMessageBox::StandardButtons{QMessageBox::StandardButton::Ok});
+    }
+  } else {
+    result = this->mem_policy.should_cache(system_info.value()) or result;
+  }
+  return result;
+}
+
+SCWind::auto_cache_report SCWind::auto_cache_3D() noexcept {
+  //  const auto colortable = this->current_color_table();
+  //  const auto build_opt = this->current_build_option();
+  auto_cache_report report{
+      .structures_cached = 0,
+      .memory_saved = 0,
+  };
+  const auto self_mem_before = get_self_memory_info();
+  const QString cache_root = this->cache_root_dir();
+
+  auto go_through = [this, cache_root]() -> size_t {
+    size_t cached = 0;
+    for (auto &task : this->tasks) {
+      for (auto &[cvt_input, cvted] : task.converted_images) {
+        // if we don't need to cache, return.
+        if (not this->should_auto_cache(true)) {
+          return cached;
+        }
+
+        auto report = cvted.cache_all_structures(
+            *cvt_input.table, *cvted.converted_image, cache_root);
+        cached += report.cache_num;
+      }
+    }
+    return cached;
+  };
+
+  report.structures_cached = go_through();
+  const auto self_mem_current = get_self_memory_info();
+  if (self_mem_before and self_mem_current) {
+    report.memory_saved =
+        self_mem_before.value().used - self_mem_current.value().used;
+  }
+
+  return report;
+}

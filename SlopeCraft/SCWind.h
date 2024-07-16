@@ -14,6 +14,7 @@
 #include "cvt_task.h"
 #include "PoolModel.h"
 #include "ExportTableModel.h"
+#include "MemoryPolicyDialog.h"
 
 class SCWind;
 
@@ -122,6 +123,8 @@ class SCWind : public QMainWindow {
   std::vector<QTranslator*> translators;
 
   QString prev_load_image_dir{""};
+
+  memory_policy mem_policy{};
   // QString fileonly_export_dir{""};
 
  public:
@@ -253,6 +256,14 @@ class SCWind : public QMainWindow {
   void export_current_cvted_image(int idx, QString filename) noexcept;
 
   void report_error(::SCL_errorFlag flag, const char* msg) noexcept;
+
+  [[nodiscard]] bool should_auto_cache(bool suppress_warnings) noexcept;
+
+  struct auto_cache_report {
+    size_t structures_cached;
+    int64_t memory_saved;
+  };
+  auto_cache_report auto_cache_3D() noexcept;
 
  signals:
   void image_changed();

@@ -112,26 +112,35 @@ struct convert_result {
     return this->built_structures.contains(opt);
   }
 
-  void cache_all_structures(const SlopeCraft::color_table& table,
-                            const SlopeCraft::converted_image& cvted,
-                            const QString& cache_root_dir) noexcept {
-    this->cache_all_structures(table, cvted, cache_root_dir,
-                               [](auto) { return true; });
+  struct cache_report {
+    size_t cache_num{0};
+  };
+
+  cache_report cache_all_structures(const SlopeCraft::color_table& table,
+                                    const SlopeCraft::converted_image& cvted,
+                                    const QString& cache_root_dir) noexcept {
+    return this->cache_all_structures(table, cvted, cache_root_dir,
+                                      [](auto) { return true; });
   }
 
-  void cache_all_structures(
+  cache_report cache_all_structures(
       const SlopeCraft::color_table& table,
       const SlopeCraft::converted_image& cvted, const QString& cache_root_dir,
       const std::function<bool(const SlopeCraft::build_options& opt)>&
           cache_or_not) noexcept {
+    size_t num = 0;
     for (auto& pair : this->built_structures) {
       if (!cache_or_not(pair.first)) {
         continue;
       }
-      [[maybe_unused]] const bool ok =
+      const bool ok =
           table.save_build_cache(cvted, pair.first, *pair.second,
                                  cache_root_dir.toLocal8Bit().data(), nullptr);
+      if (ok) {
+        num++;
+      }
     }
+    return cache_report{.cache_num = num};
   }
 
   void cache_structure(const SlopeCraft::color_table& table,

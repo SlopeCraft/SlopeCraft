@@ -12,6 +12,8 @@
 #include "TransparentStrategyWind.h"
 #include "CompressEffectViewer.h"
 
+#include "stat_memory.h"
+
 #ifdef WIN32
 const char *SC_image_filter = "*.png;*.jpg";
 #else
@@ -371,6 +373,11 @@ void SCWind::on_cb_compress_lossy_toggled(bool checked) noexcept {
 }
 
 void SCWind::on_pb_build3d_clicked() noexcept {
+  if (this->should_auto_cache(false)) {
+    [[maybe_unused]] const auto report = this->auto_cache_3D();
+    ;
+  }
+
   auto task_ptr = this->selected_export_task();
   if (task_ptr == nullptr) {
     QMessageBox::warning(this, tr("未选择图像"),
