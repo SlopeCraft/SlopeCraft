@@ -96,15 +96,26 @@ struct equal {
   }
 };
 
+struct structure_with_info {
+  std::unique_ptr<SlopeCraft::structure_3D, SlopeCraft::deleter> handle;
+
+  const std::array<size_t, 3> shape;
+  const uint64_t block_count;
+
+  explicit structure_with_info(
+      std::unique_ptr<SlopeCraft::structure_3D, SlopeCraft::deleter>&& src)
+      : handle{std::move(src)},
+        shape{{handle->shape_x(), handle->shape_y(), handle->shape_z()}},
+        block_count{handle->block_count()} {}
+};
+
 struct convert_result {
   //  convert_result() = delete;
 
   std::unique_ptr<SlopeCraft::converted_image, SlopeCraft::deleter>
       converted_image{nullptr};
-  std::unordered_map<
-      SlopeCraft::build_options,
-      std::unique_ptr<SlopeCraft::structure_3D, SlopeCraft::deleter>, hasher,
-      equal>
+  std::unordered_map<SlopeCraft::build_options, structure_with_info, hasher,
+                     equal>
       built_structures;
 
   [[nodiscard]] bool is_built_with(
@@ -130,16 +141,16 @@ struct convert_result {
           cache_or_not) noexcept {
     size_t num = 0;
     for (auto& pair : this->built_structures) {
-      if (pair.second.get() == nullptr) {  // already cached
+      if (pair.second.handle.get() == nullptr) {  // already cached
         continue;
       }
       if (!cache_or_not(pair.first)) {
         continue;
       }
       const bool ok =
-          table.save_build_cache(cvted, pair.first, *pair.second,
+          table.save_build_cache(cvted, pair.first, *pair.second.handle,
                                  cache_root_dir.toLocal8Bit().data(), nullptr);
-      pair.second.reset();
+      pair.second.handle.reset();
       if (ok) {
         num++;
       }
@@ -154,16 +165,27 @@ struct convert_result {
     if (it == this->built_structures.end()) {
       return;
     }
-    if (it->second == nullptr) {
+    if (it->second.handle == nullptr) {
       return;
     }
     const bool ok =
-        table.save_build_cache(*this->converted_image, opt, *it->second,
+        table.save_build_cache(*this->converted_image, opt, *it->second.handle,
                                cache_root_dir.toLocal8Bit().data(), nullptr);
     if (ok) {
-      it->second.reset();
+      it->second.handle.reset();
     }
     return;
+  }
+
+  const structure_with_info* get_build_cache_with_info_noload(
+      const SlopeCraft::color_table& table,
+      const SlopeCraft::build_options& opt,
+      const QString& cache_root_dir) const noexcept {
+    auto it = this->built_structures.find(opt);
+    if (it == this->built_structures.end()) {
+      return nullptr;
+    }
+    return &it->second;
   }
 
   const SlopeCraft::structure_3D* load_build_cache(
@@ -175,8 +197,8 @@ struct convert_result {
       return nullptr;
     }
 
-    if (it->second != nullptr) {  // the structure exist in memory
-      return it->second.get();
+    if (it->second.handle != nullptr) {  // the structure exist in memory
+      return it->second.handle.get();
     }
 
     // the structure is cached
@@ -186,8 +208,8 @@ struct convert_result {
     if (p == nullptr) {  // failed to load cache
       return nullptr;
     }
-    it->second.reset(p);
-    return it->second.get();
+    it->second.handle.reset(p);
+    return it->second.handle.get();
   }
 
   void set_built(SlopeCraft::build_options opt,
@@ -198,10 +220,11 @@ struct convert_result {
     opt.sub_progressbar = {};
     auto it = this->built_structures.find(opt);
     if (it == built_structures.end()) {
-      this->built_structures.emplace(opt, std::move(structure));
+      this->built_structures.emplace(opt,
+                                     structure_with_info{std::move(structure)});
       return;
     }
-    it->second = std::move(structure);
+    it->second.handle = std::move(structure);
   }
 };
 

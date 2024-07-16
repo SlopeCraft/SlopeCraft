@@ -418,6 +418,10 @@ void SCWind::on_pb_build3d_clicked() noexcept {
 }
 
 void SCWind::on_pb_preview_materials_clicked() noexcept {
+  if (this->should_auto_cache(false)) {
+    this->auto_cache_3D();
+  }
+
   auto [cvted_img, structure_3D] = this->load_selected_3D();
   if (cvted_img == nullptr || structure_3D == nullptr) {
     return;
@@ -439,6 +443,10 @@ void SCWind::on_pb_preview_materials_clicked() noexcept {
 }
 
 void SCWind::on_pb_preview_compress_effect_clicked() noexcept {
+  if (this->should_auto_cache(false)) {
+    this->auto_cache_3D();
+  }
+
   auto [cvted_img, structure_3D] = this->load_selected_3D();
   if (cvted_img == nullptr || structure_3D == nullptr) {
     return;
@@ -568,6 +576,10 @@ void SCWind::on_pb_export_all_clicked() noexcept {
   }
 
   for (auto taskp : tasks_to_export) {
+    if (this->should_auto_cache(false)) {
+      this->auto_cache_3D();
+    }
+
     auto [cvted, str3D] = this->convert_and_build_if_need(*taskp);
 
     const std::string export_name =

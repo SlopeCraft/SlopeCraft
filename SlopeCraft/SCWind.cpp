@@ -853,13 +853,14 @@ void SCWind::refresh_current_build_display(
   if (cvted_it == task.converted_images.end()) {
     return;
   }
-  if (auto str_3D = cvted_it->second.load_build_cache(
+  if (auto str_with_info = cvted_it->second.get_build_cache_with_info_noload(
           *this->current_color_table(), this->current_build_option(),
           this->cache_root_dir())) {
-    const auto x = str_3D->shape_x(), y = str_3D->shape_y(),
-               z = str_3D->shape_z();
+    //    const SlopeCraft::structure_3D *str_3D = str_with_info->handle.get();
+    const auto x = str_with_info->shape[0], y = str_with_info->shape[1],
+               z = str_with_info->shape[2];
 
-    const auto block_count = str_3D->block_count();
+    const auto block_count = str_with_info->block_count;
     this->ui->lb_show_3dsize->setText(
         tr("大小： %1 × %2 × %3").arg(x).arg(y).arg(z));
     this->ui->lb_show_block_count->setText(tr("方块数量：%1").arg(block_count));
