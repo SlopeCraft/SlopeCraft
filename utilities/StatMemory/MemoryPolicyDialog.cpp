@@ -34,7 +34,17 @@ void MemoryPolicyDialog::reset(const memory_policy &value) noexcept {
   this->ui->cb_auto_cache->setCheckState(
       value.auto_cache ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
   this->ui->sb_self_limit->setValue(
-      uint64_t(std::round(value.self_maximum_memory / (1024.0 * 1024 * 1024))));
+      uint64_t(std::ceil(value.self_maximum_memory / (1024.0 * 1024 * 1024))));
 
   this->ui->dsb_system_limit->setValue(value.system_minimum_free);
+}
+
+void MemoryPolicyDialog::on_pb_ok_clicked() noexcept { emit this->accept(); }
+
+void MemoryPolicyDialog::on_pb_cancel_clicked() noexcept {
+  emit this->reject();
+}
+
+void MemoryPolicyDialog::on_pb_reset_clicked() noexcept {
+  this->reset(memory_policy{});
 }

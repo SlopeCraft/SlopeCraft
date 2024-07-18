@@ -12,8 +12,10 @@
 
 struct memory_policy {
   bool auto_cache{true};
-  uint64_t self_maximum_memory = 4 << 30;
-  double system_minimum_free = 0.2;
+  uint64_t self_maximum_memory{4ull << 30};
+  double system_minimum_free{0.2};
+
+  //  memory_policy() = default;
 
   [[nodiscard]] bool should_cache(
       const system_memory_info& smi) const noexcept {
@@ -63,6 +65,11 @@ class MemoryPolicyDialog : public QDialog {
 
   [[nodiscard]] memory_policy current_value() const noexcept;
   void reset(const memory_policy&) noexcept;
+
+ private slots:
+  void on_pb_ok_clicked() noexcept;
+  void on_pb_cancel_clicked() noexcept;
+  void on_pb_reset_clicked() noexcept;
 };
 
 #endif  // SLOPECRAFT_MEMORYPOLICYDIALOG_H
