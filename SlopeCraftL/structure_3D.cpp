@@ -67,8 +67,23 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
 
   // std::cout << base_color << std::endl;
 
-  ret.schem.resize(2 + cvted.cols(), high_map.maxCoeff() + 1, 2 + cvted.rows());
-  ret.schem.set_zero();
+  try {
+    ret.schem.resize(2 + cvted.cols(), high_map.maxCoeff() + 1,
+                     2 + cvted.rows());
+    ret.schem.set_zero();
+  } catch (const std::bad_alloc &e) {
+    const std::array<uint64_t, 3> shape{
+        2 + cvted.cols(), static_cast<uint64_t>(high_map.maxCoeff() + 1),
+        2 + cvted.rows()};
+    const uint64_t bytes_required = shape[0] * shape[1] * shape[2];
+    option.ui.report_error(
+        errorFlag::MEMORY_ALLOCATE_FAILED,
+        fmt::format("Failed to allocate memory for this structure, "
+                    "required {} GiB. The exception says: \"{}\"",
+                    double(bytes_required) / (uint64_t{1} << 30), e.what())
+            .c_str());
+    return std::nullopt;
+  }
   // make 3D
   {
     // base_color(r+1,c)<->High(r+1,c)<->Build(c+1,High(r+1,c),r+1)

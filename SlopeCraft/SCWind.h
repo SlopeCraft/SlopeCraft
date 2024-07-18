@@ -105,6 +105,10 @@ class SCWind : public QMainWindow {
   void on_ac_get_current_colorlist_triggered() noexcept;
   void on_ac_test_blocklist_triggered() noexcept;
 
+  void on_ac_cache_all_3d_triggered() noexcept;
+
+  void on_ac_memory_policy_triggered() noexcept;
+
  private:
   Ui::SCWind* ui;
 
@@ -263,7 +267,7 @@ class SCWind : public QMainWindow {
     size_t structures_cached;
     int64_t memory_saved;
   };
-  auto_cache_report auto_cache_3D() noexcept;
+  auto_cache_report auto_cache_3D(bool cache_all = false) noexcept;
 
  signals:
   void image_changed();

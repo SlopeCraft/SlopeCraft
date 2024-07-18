@@ -40,7 +40,7 @@ litematic_info::litematic_info()
     : time_created(std::time(nullptr) * 1000),
       time_modified(std::time(nullptr) * 1000) {}
 
-void Schem::resize(int64_t x, int64_t y, int64_t z) noexcept {
+void Schem::resize(int64_t x, int64_t y, int64_t z) {
   if (x < 0 || y < 0 || z < 0) {
     return;
   }
@@ -63,7 +63,7 @@ std::string Schem::check_size(int64_t x, int64_t y, int64_t z) noexcept {
 void Schem::stat_blocks(std::vector<size_t> &dest) const noexcept {
   dest.resize(this->palette_size());
   std::fill(dest.begin(), dest.end(), 0);
-  
+
   for (ele_t block_index : *this) {
     assert(block_index < this->palette_size());
     dest[block_index] += 1;

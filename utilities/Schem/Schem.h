@@ -97,7 +97,7 @@ class Schem {
 
   inline const ele_t *data() const noexcept { return xzy.data(); }
 
-  void resize(int64_t x, int64_t y, int64_t z) noexcept;
+  void resize(int64_t x, int64_t y, int64_t z);
 
   inline bool check_version_id() const noexcept {
     return MCDataVersion::is_data_version_suitable(this->MC_major_ver,

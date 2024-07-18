@@ -107,19 +107,19 @@ enum class SCL_mapTypes : int {
   FileOnly = 2
 };
 
-enum class SCL_step : int {
-  /// the instance is created
-  nothing,
-  /// map type is set and waitting for image
-  wait4Image,
-  /// image is ready and ready for converting
-  convertionReady,
-  /// image is converted and ready for building 3D structure, exporting as
-  /// file-only map(s) can be done in this step
-  converted,
-  /// 3D structure is built and ready for exporting 3d structure
-  builded,
-};
+// enum class SCL_step : int {
+//   /// the instance is created
+//   nothing,
+//   /// map type is set and waitting for image
+//   wait4Image,
+//   /// image is ready and ready for converting
+//   convertionReady,
+//   /// image is converted and ready for building 3D structure, exporting as
+//   /// file-only map(s) can be done in this step
+//   converted,
+//   /// 3D structure is built and ready for exporting 3d structure
+//   builded,
+// };
 
 enum class SCL_errorFlag : int {
   /// no error
@@ -164,6 +164,9 @@ enum class SCL_errorFlag : int {
   EXPORT_FLAT_DIAGRAM_ON_WRONG_MAP_TYPE = 0x10,
 
   EXPORT_FLAT_DIAGRAM_FAILURE = 0x11,
+  /// Failed to allocate memory. Upto 5.3, it will only appear when building 3D
+  /// for a huge image
+  MEMORY_ALLOCATE_FAILED = 0x12,
 
 };
 

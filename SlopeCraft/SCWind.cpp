@@ -1211,7 +1211,7 @@ bool SCWind::should_auto_cache(bool suppress_warnings) noexcept {
   return result;
 }
 
-SCWind::auto_cache_report SCWind::auto_cache_3D() noexcept {
+SCWind::auto_cache_report SCWind::auto_cache_3D(bool cache_all) noexcept {
   //  const auto colortable = this->current_color_table();
   //  const auto build_opt = this->current_build_option();
   auto_cache_report report{
@@ -1221,12 +1221,12 @@ SCWind::auto_cache_report SCWind::auto_cache_3D() noexcept {
   const auto self_mem_before = get_self_memory_info();
   const QString cache_root = this->cache_root_dir();
 
-  auto go_through = [this, cache_root]() -> size_t {
+  auto go_through = [this, cache_root, cache_all]() -> size_t {
     size_t cached = 0;
     for (auto &task : this->tasks) {
       for (auto &[cvt_input, cvted] : task.converted_images) {
         // if we don't need to cache, return.
-        if (not this->should_auto_cache(true)) {
+        if ((not cache_all) and (not this->should_auto_cache(true))) {
           return cached;
         }
 
