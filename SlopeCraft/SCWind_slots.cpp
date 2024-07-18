@@ -411,7 +411,10 @@ void SCWind::on_pb_build3d_clicked() noexcept {
 
   const auto build_option = this->current_build_option();
   if (!cvted.is_built_with(build_option)) {
-    cvted.set_built(build_option, this->build_3D(*cvted.converted_image));
+    auto structure = this->build_3D(*cvted.converted_image);
+    if (structure not_eq nullptr) {
+      cvted.set_built(build_option, std::move(structure));
+    }
   }
   // load cache if converted
   this->refresh_current_build_display(&task, true);
@@ -949,5 +952,19 @@ void SCWind::on_ac_test_blocklist_triggered() noexcept {
                          tr("保存测试文件 %1 时出现错误。详细信息：\n%2")
                              .arg(filename)
                              .arg(qerr));
+  }
+}
+
+void SCWind::on_ac_cache_all_3d_triggered() noexcept {
+  this->auto_cache_3D(true);
+}
+
+void SCWind::on_ac_memory_policy_triggered() noexcept {
+  MemoryPolicyDialog diag{this, this->mem_policy};
+  const auto result = diag.exec();
+  
+  if (result) {
+    this->mem_policy = diag.current_value();
+    this->auto_cache_3D();
   }
 }
