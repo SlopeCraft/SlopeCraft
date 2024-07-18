@@ -42,7 +42,7 @@ This file is part of SlopeCraft.
 
 namespace SlopeCraft {
 
-using step = ::SCL_step;
+// using step = ::SCL_step;
 using mapTypes = ::SCL_mapTypes;
 using compressSettings = ::SCL_compressSettings;
 using convertAlgo = ::SCL_convertAlgo;
