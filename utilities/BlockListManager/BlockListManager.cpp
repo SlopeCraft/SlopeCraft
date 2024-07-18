@@ -99,7 +99,9 @@ BlockListManager::impl_addblocklist(const QString &filename) noexcept {
   base_colors.resize(bli->size());
   blockps.resize(bli->size());
 
-  bli->get_blocks(blockps.data(), base_colors.data(), blockps.size());
+  const size_t size_2 =
+      bli->get_blocks(blockps.data(), base_colors.data(), blockps.size());
+  assert(size_2 == base_colors.size() and base_colors.size() == blockps.size());
 
   for (size_t idx = 0; idx < bli->size(); idx++) {
     this->basecolor_widgets[base_colors[idx]]->add_block(blockps[idx]);

@@ -149,6 +149,7 @@ int BaseColorWidget::selected_idx() const noexcept {
     }
   }
   assert(false);
+  return 0;
 }
 
 int BaseColorWidget::prefered_block_idx(int checked_idx,
