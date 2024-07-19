@@ -21,8 +21,18 @@ target_include_directories(StatMemory PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_S
 target_link_libraries(MemoryPolicyDialog PUBLIC StatMemory)
 
 if (${WIN32})
-    target_sources(StatMemory PRIVATE stat_memory_windows.cpp)
+    target_sources(StatMemory PRIVATE stat_memory_src/windows.cpp)
     target_link_libraries(StatMemory PUBLIC psapi.lib)
+    return()
+endif ()
+
+if (${LINUX})
+    target_sources(StatMemory PRIVATE stat_memory_src/linux.cpp)
+    return()
+endif ()
+
+if (${APPLE})
+    target_sources(StatMemory PRIVATE stat_memory_src/macos.cpp)
     return()
 endif ()
 

@@ -1,6 +1,6 @@
 #include "stat_memory.h"
-#include <windows.h>
-#include <psapi.h>
+#include <Windows.h>
+#include <Psapi.h>
 
 #ifdef max
 #undef max
