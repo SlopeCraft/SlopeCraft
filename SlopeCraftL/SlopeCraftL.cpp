@@ -84,6 +84,13 @@ std::pair<uint8_t, mc_block> parse_block(const nlohmann::json &jo) noexcept(
   if (jo.contains("needGlass")) {
     ret.needGlass = jo.at("needGlass");
   }
+  if (jo.contains("stackSize")) {
+    const int val = jo.at("stackSize");
+    if (val <= 0 or val > 64) {
+      throw std::runtime_error{fmt::format("Invalid stack size: {}", val)};
+    }
+    ret.stackSize = val;
+  }
 
   return {basecolor, ret};
 }

@@ -99,6 +99,8 @@ class mc_block_interface {
   /// if this block can be burnt
   virtual bool getBurnable() const noexcept = 0;
 
+  virtual uint8_t getStackSize() const noexcept = 0;
+
   virtual const char *getNameZH() const noexcept = 0;
   virtual const char *getNameEN() const noexcept = 0;
   virtual const char *getImageFilename() const noexcept = 0;
@@ -122,6 +124,8 @@ class mc_block_interface {
   virtual void setEndermanPickable(bool) noexcept = 0;
   /// set if this block can be burnt
   virtual void setBurnable(bool) noexcept = 0;
+
+  virtual void setStackSize(uint8_t) noexcept = 0;
 
   virtual void setNameZH(const char *) noexcept = 0;
   virtual void setNameEN(const char *) noexcept = 0;

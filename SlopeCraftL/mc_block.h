@@ -49,6 +49,7 @@ class mc_block : public ::SlopeCraft::mc_block_interface {
   bool doGlow{false};
   bool endermanPickable{false};
   bool burnable{false};
+  uint8_t stackSize{64};
 
   const char *getId() const noexcept override { return id.data(); };
   uint8_t getVersion() const noexcept override { return version; };
@@ -59,6 +60,7 @@ class mc_block : public ::SlopeCraft::mc_block_interface {
     return endermanPickable;
   };
   bool getBurnable() const noexcept override { return burnable; };
+  uint8_t getStackSize() const noexcept override { return this->stackSize; }
   const char *getNameZH() const noexcept override {
     return this->nameZH.c_str();
   }
@@ -86,6 +88,9 @@ class mc_block : public ::SlopeCraft::mc_block_interface {
     endermanPickable = _enderman;
   };
   void setBurnable(bool _burn) noexcept override { burnable = _burn; };
+  void setStackSize(uint8_t stack_size) noexcept override {
+    this->stackSize = std::max<uint8_t>(stack_size, 1);
+  }
 
   void setNameZH(const char *__nzh) noexcept override { this->nameZH = __nzh; }
   void setNameEN(const char *__nen) noexcept override { this->nameEN = __nen; }

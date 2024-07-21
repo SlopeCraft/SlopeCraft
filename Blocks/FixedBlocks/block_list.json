@@ -394,7 +394,8 @@
     "nameEN": "Water",
     "icon": "water.png",
     "version": 0,
-    "wallUseable": false
+    "wallUseable": false,
+    "stackSize": 1
   },
   {
     "baseColor": 13,
