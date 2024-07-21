@@ -92,6 +92,9 @@ SCWind::SCWind(QWidget *parent) : QMainWindow(parent), ui(new Ui::SCWind) {
       this->ui->lview_pool_cvt->doItemsLayout();
       this->ui->lview_pool_export->doItemsLayout();
     });
+
+    connect(this->ui->tw_cvt_image, &QTabWidget::currentChanged, this,
+            &SCWind::when_cvt_pool_selectionChanged);
   }
   {
     this->export_table_model = new ExportTableModel{this};
@@ -109,7 +112,6 @@ SCWind::SCWind(QWidget *parent) : QMainWindow(parent), ui(new Ui::SCWind) {
     connect(rbp, &QRadioButton::clicked, this,
             &SCWind::when_export_type_toggled);
   }
-
   for (QRadioButton *rbp : this->preset_buttons_no_custom()) {
     connect(rbp, &QRadioButton::clicked, this, &SCWind::when_preset_clicked);
   }
@@ -186,8 +188,8 @@ SlopeCraft::color_table *SCWind::current_color_table() noexcept {
     std::unique_ptr<SlopeCraft::color_table, SlopeCraft::deleter> ptr{
         SlopeCraft::SCL_create_color_table(ci)};
     if (ptr == nullptr) {
-      QMessageBox::warning(this, tr("设置方块列表失败"),
-                           tr("您设置的方块列表可能存在错误"));
+      //      QMessageBox::warning(this, tr("设置方块列表失败"),
+      //                           tr("您设置的方块列表可能存在错误"));
       return nullptr;
     }
 
@@ -481,7 +483,8 @@ void SCWind::when_blocklist_changed() noexcept {
 
 void SCWind::set_colorset() noexcept {
   auto color_table = this->current_color_table();
-  const int num_colors = color_table->colors().num_colors;
+  const int num_colors =
+      (color_table not_eq nullptr) ? color_table->colors().num_colors : 0;
 
   this->ui->lb_avaliable_colors->setText(
       tr("可用颜色数量：%1").arg(num_colors));
@@ -660,6 +663,28 @@ SCWind::convert_image(int idx) noexcept {
 std::unique_ptr<SlopeCraft::converted_image, SlopeCraft::deleter>
 SCWind::convert_image(const cvt_task &task) noexcept {
   auto ctable = this->current_color_table();
+  if (ctable == nullptr) {
+    QMessageBox::critical(
+        this, tr("没有可用颜色"),
+        tr("没有勾选任何颜色，无法转化图像。请至少勾选3~16种颜色。"));
+    return nullptr;
+  }
+
+  const auto num_blocks = ctable->num_blocks();
+  if (num_blocks <= 3) {
+    const auto reply = QMessageBox::warning(
+        this, tr("勾选颜色太少"),
+        tr("仅仅勾选了%"
+           "1种颜色，颜色过少，转化效率可能非常差。您可以点Yes继续"
+           "转化，但非常建议请尽量多勾选一些颜色。")
+            .arg(num_blocks),
+        QMessageBox::StandardButtons{QMessageBox::StandardButton::Yes,
+                                     QMessageBox::StandardButton::No},
+        QMessageBox::StandardButton::No);
+    if (reply not_eq QMessageBox::StandardButton::Yes) {
+      return nullptr;
+    }
+  }
 
   const QImage &raw = task.original_image;
   {
@@ -679,8 +704,10 @@ const SlopeCraft::converted_image &SCWind::convert_if_need(
     cvt_task &task) noexcept {
   const auto table = this->current_color_table();
   const auto opt = this->current_convert_option();
-  if (!task.is_converted_with(table, opt)) {
-    task.set_converted(table, opt, this->convert_image(task));
+  if (not task.is_converted_with(table, opt)) {
+    auto cvted = this->convert_image(task);
+    assert(cvted);
+    task.set_converted(table, opt, std::move(cvted));
   }
 
   auto &cvted = task.converted_images[{table, opt}].converted_image;
@@ -809,6 +836,9 @@ void SCWind::export_current_cvted_image(int idx, QString filename) noexcept {
                                      QMessageBox::StandardButton::Ignore});
     if (ret == QMessageBox::StandardButton::Ok) {
       auto cvted_uptr = this->convert_image(task);
+      if (cvted_uptr == nullptr) {
+        return;
+      }
       task.set_converted(this->current_color_table(),
                          this->current_convert_option(), std::move(cvted_uptr));
       cvted = task.get_converted_image(this->current_color_table(),

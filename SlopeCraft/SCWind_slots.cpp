@@ -246,6 +246,24 @@ void SCWind::on_pb_prefer_slabs_clicked() noexcept {
           -> int { return impl_select_blk_by_id(blks, "_slab"); });
 }
 
+void SCWind::on_pb_select_all_clicked() noexcept {
+  for (size_t bc = 0; bc < this->ui->blm->num_basecolor_widgets(); bc++) {
+    this->ui->blm->basecolorwidget_at(bc)->set_enabled(true);
+  }
+}
+void SCWind::on_pb_deselect_all_clicked() noexcept {
+  for (size_t bc = 1; bc < this->ui->blm->num_basecolor_widgets(); bc++) {
+    this->ui->blm->basecolorwidget_at(bc)->set_enabled(false);
+  }
+}
+void SCWind::on_pb_invselect_clicked() noexcept {
+  for (size_t bc = 1; bc < this->ui->blm->num_basecolor_widgets(); bc++) {
+    BaseColorWidget *bcw = this->ui->blm->basecolorwidget_at(bc);
+    assert(bcw not_eq nullptr);
+    bcw->set_enabled(not bcw->is_enabled());
+  }
+}
+
 void SCWind::on_pb_cvt_current_clicked() noexcept {
   const auto sel = this->selected_cvt_task_idx();
 
@@ -480,6 +498,16 @@ void SCWind::on_pb_preview_compress_effect_clicked() noexcept {
   }
 
 void SCWind::on_pb_export_all_clicked() noexcept {
+  {
+    auto ctable = this->current_color_table();
+    if (ctable == nullptr) {
+      QMessageBox::critical(
+          this, tr("没有可用颜色"),
+          tr("没有勾选任何颜色，无法转化图像。请至少勾选3~16种颜色。"));
+      return;
+    }
+  }
+
   auto tasks_to_export = this->selected_export_task_list();
 
   const auto export_type = this->selected_export_type();

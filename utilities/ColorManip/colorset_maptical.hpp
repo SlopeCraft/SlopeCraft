@@ -125,7 +125,7 @@ class alignas(32) colorset_maptical_allowed {
   std::array<color_col, 3> __xyz;
   Eigen::Array<uint8_t, 256, 1> __map;
   // std::array<uint8_t, 256> __map;
-  int _color_count;
+  int _color_count{0};
 
   std::array<uint8_t, 4> depth_counter;
 
@@ -231,7 +231,7 @@ class alignas(32) colorset_maptical_allowed {
       }
     }
     this->depth_counter.fill(0);
-    for (int idx = 0; idx < this->color_count(); idx++) {
+    for (int idx = 0; idx < new_color_count; idx++) {
       const uint8_t mapcolor = this->Map(idx);
       const uint8_t base = mapcolor >> 2;
       if (base != 0) {

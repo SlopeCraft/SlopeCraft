@@ -31,33 +31,6 @@
            <string>方块列表预设</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_5">
-           <item row="1" column="2">
-            <widget class="QPushButton" name="pb_load_preset">
-             <property name="text">
-              <string>加载预设</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="3">
-            <widget class="QPushButton" name="pb_save_preset">
-             <property name="text">
-              <string>保存当前预设</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <spacer name="horizontalSpacer">
-             <property name="orientation">
-              <enum>Qt::Orientation::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
            <item row="1" column="0">
             <widget class="QLabel" name="lb_avaliable_colors">
              <property name="text">
@@ -65,7 +38,21 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="0" colspan="4">
+           <item row="1" column="2">
+            <widget class="QPushButton" name="pb_save_preset">
+             <property name="text">
+              <string>保存当前预设</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QPushButton" name="pb_load_preset">
+             <property name="text">
+              <string>加载预设</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0" colspan="3">
             <layout class="QHBoxLayout" name="horizontalLayout">
              <property name="topMargin">
               <number>0</number>
@@ -241,7 +228,7 @@
           <item>
            <spacer name="verticalSpacer_5">
             <property name="orientation">
-             <enum>Qt::Orientation::Vertical</enum>
+             <enum>Qt::Vertical</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
@@ -262,13 +249,6 @@
            <widget class="QPushButton" name="pb_prefer_glass">
             <property name="text">
              <string>优先彩色玻璃</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QPushButton" name="pb_prefer_concrete">
-            <property name="text">
-             <string>优先混凝土</string>
             </property>
            </widget>
           </item>
@@ -300,6 +280,34 @@
             </property>
            </widget>
           </item>
+          <item row="0" column="0">
+           <widget class="QPushButton" name="pb_prefer_concrete">
+            <property name="text">
+             <string>优先混凝土</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QPushButton" name="pb_select_all">
+            <property name="text">
+             <string>全选</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QPushButton" name="pb_deselect_all">
+            <property name="text">
+             <string>全不选</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QPushButton" name="pb_invselect">
+            <property name="text">
+             <string>反选</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
         <item row="2" column="2" colspan="2">
@@ -312,8 +320,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>750</width>
-             <height>653</height>
+             <width>627</width>
+             <height>644</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="vlayout_sa_blocklist"/>
@@ -336,16 +344,16 @@
            </size>
           </property>
           <property name="tabPosition">
-           <enum>QTabWidget::TabPosition::North</enum>
+           <enum>QTabWidget::North</enum>
           </property>
           <property name="tabShape">
-           <enum>QTabWidget::TabShape::Rounded</enum>
+           <enum>QTabWidget::Rounded</enum>
           </property>
           <property name="currentIndex">
            <number>0</number>
           </property>
           <property name="elideMode">
-           <enum>Qt::TextElideMode::ElideNone</enum>
+           <enum>Qt::ElideLeft</enum>
           </property>
           <property name="documentMode">
            <bool>false</bool>
@@ -373,10 +381,7 @@
                <bool>true</bool>
               </property>
               <property name="frameShape">
-               <enum>QFrame::Shape::Box</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Shadow::Sunken</enum>
+               <enum>QFrame::NoFrame</enum>
               </property>
               <property name="lineWidth">
                <number>1</number>
@@ -386,9 +391,6 @@
               </property>
               <property name="scaledContents">
                <bool>false</bool>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignmentFlag::AlignCenter</set>
               </property>
              </widget>
             </item>
@@ -411,19 +413,13 @@
                <bool>true</bool>
               </property>
               <property name="frameShape">
-               <enum>QFrame::Shape::Box</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Shadow::Sunken</enum>
+               <enum>QFrame::NoFrame</enum>
               </property>
               <property name="lineWidth">
                <number>1</number>
               </property>
               <property name="text">
                <string/>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignmentFlag::AlignCenter</set>
               </property>
              </widget>
             </item>
@@ -458,7 +454,7 @@
              <bool>false</bool>
             </property>
             <property name="editTriggers">
-             <set>QAbstractItemView::EditTrigger::DoubleClicked|QAbstractItemView::EditTrigger::EditKeyPressed</set>
+             <set>QAbstractItemView::NoEditTriggers</set>
             </property>
             <property name="dragEnabled">
              <bool>true</bool>
@@ -467,34 +463,34 @@
              <bool>false</bool>
             </property>
             <property name="dragDropMode">
-             <enum>QAbstractItemView::DragDropMode::InternalMove</enum>
+             <enum>QAbstractItemView::NoDragDrop</enum>
             </property>
             <property name="defaultDropAction">
-             <enum>Qt::DropAction::CopyAction</enum>
+             <enum>Qt::IgnoreAction</enum>
             </property>
             <property name="selectionMode">
-             <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
+             <enum>QAbstractItemView::ExtendedSelection</enum>
             </property>
             <property name="textElideMode">
-             <enum>Qt::TextElideMode::ElideLeft</enum>
+             <enum>Qt::ElideLeft</enum>
             </property>
             <property name="movement">
-             <enum>QListView::Movement::Snap</enum>
+             <enum>QListView::Static</enum>
             </property>
             <property name="flow">
-             <enum>QListView::Flow::TopToBottom</enum>
+             <enum>QListView::TopToBottom</enum>
             </property>
             <property name="isWrapping" stdset="0">
              <bool>false</bool>
             </property>
             <property name="resizeMode">
-             <enum>QListView::ResizeMode::Fixed</enum>
+             <enum>QListView::Adjust</enum>
             </property>
             <property name="spacing">
              <number>10</number>
             </property>
             <property name="viewMode">
-             <enum>QListView::ViewMode::IconMode</enum>
+             <enum>QListView::IconMode</enum>
             </property>
             <property name="modelColumn">
              <number>0</number>
@@ -504,6 +500,9 @@
             </property>
             <property name="selectionRectVisible">
              <bool>true</bool>
+            </property>
+            <property name="itemAlignment">
+             <set>Qt::AlignHCenter|Qt::AlignTop</set>
             </property>
            </widget>
           </item>
@@ -518,9 +517,6 @@
            <widget class="QLabel" name="label">
             <property name="text">
              <string>项目池</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignCenter</set>
             </property>
            </widget>
           </item>
@@ -643,7 +639,7 @@
         <item row="4" column="2" colspan="2">
          <spacer name="verticalSpacer">
           <property name="orientation">
-           <enum>Qt::Orientation::Vertical</enum>
+           <enum>Qt::Vertical</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
@@ -686,9 +682,6 @@
             <property name="text">
              <string>项目池</string>
             </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignCenter</set>
-            </property>
            </widget>
           </item>
           <item row="1" column="0">
@@ -697,7 +690,7 @@
              <bool>false</bool>
             </property>
             <property name="editTriggers">
-             <set>QAbstractItemView::EditTrigger::DoubleClicked|QAbstractItemView::EditTrigger::EditKeyPressed</set>
+             <set>QAbstractItemView::NoEditTriggers</set>
             </property>
             <property name="dragEnabled">
              <bool>true</bool>
@@ -706,34 +699,37 @@
              <bool>false</bool>
             </property>
             <property name="dragDropMode">
-             <enum>QAbstractItemView::DragDropMode::InternalMove</enum>
+             <enum>QAbstractItemView::NoDragDrop</enum>
             </property>
             <property name="defaultDropAction">
-             <enum>Qt::DropAction::CopyAction</enum>
+             <enum>Qt::IgnoreAction</enum>
             </property>
             <property name="selectionMode">
-             <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
+             <enum>QAbstractItemView::ExtendedSelection</enum>
             </property>
             <property name="textElideMode">
-             <enum>Qt::TextElideMode::ElideLeft</enum>
+             <enum>Qt::ElideLeft</enum>
             </property>
             <property name="movement">
-             <enum>QListView::Movement::Snap</enum>
+             <enum>QListView::Static</enum>
             </property>
             <property name="flow">
-             <enum>QListView::Flow::TopToBottom</enum>
+             <enum>QListView::TopToBottom</enum>
             </property>
             <property name="isWrapping" stdset="0">
              <bool>false</bool>
             </property>
             <property name="resizeMode">
-             <enum>QListView::ResizeMode::Fixed</enum>
+             <enum>QListView::Adjust</enum>
+            </property>
+            <property name="layoutMode">
+             <enum>QListView::SinglePass</enum>
             </property>
             <property name="spacing">
              <number>10</number>
             </property>
             <property name="viewMode">
-             <enum>QListView::ViewMode::IconMode</enum>
+             <enum>QListView::IconMode</enum>
             </property>
             <property name="modelColumn">
              <number>0</number>
@@ -743,6 +739,9 @@
             </property>
             <property name="selectionRectVisible">
              <bool>true</bool>
+            </property>
+            <property name="itemAlignment">
+             <set>Qt::AlignHCenter|Qt::AlignTop</set>
             </property>
            </widget>
           </item>
@@ -968,7 +967,7 @@
                 <item row="2" column="0" colspan="2">
                  <spacer name="verticalSpacer_2">
                   <property name="orientation">
-                   <enum>Qt::Orientation::Vertical</enum>
+                   <enum>Qt::Vertical</enum>
                   </property>
                   <property name="sizeHint" stdset="0">
                    <size>
@@ -998,7 +997,7 @@
                 <item row="1" column="0">
                  <spacer name="verticalSpacer_3">
                   <property name="orientation">
-                   <enum>Qt::Orientation::Vertical</enum>
+                   <enum>Qt::Vertical</enum>
                   </property>
                   <property name="sizeHint" stdset="0">
                    <size>
@@ -1212,7 +1211,7 @@
                 <item row="4" column="0">
                  <spacer name="verticalSpacer_4">
                   <property name="orientation">
-                   <enum>Qt::Orientation::Vertical</enum>
+                   <enum>Qt::Vertical</enum>
                   </property>
                   <property name="sizeHint" stdset="0">
                    <size>
@@ -1269,7 +1268,7 @@
               <item>
                <spacer name="verticalSpacer_6">
                 <property name="orientation">
-                 <enum>Qt::Orientation::Vertical</enum>
+                 <enum>Qt::Vertical</enum>
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
@@ -1328,9 +1327,9 @@
                <number>0</number>
               </property>
               <item>
-               <spacer name="horizontalSpacer_3">
+               <spacer name="horizontalSpacer">
                 <property name="orientation">
-                 <enum>Qt::Orientation::Horizontal</enum>
+                 <enum>Qt::Horizontal</enum>
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
@@ -1377,7 +1376,7 @@
               <item>
                <spacer name="horizontalSpacer_2">
                 <property name="orientation">
-                 <enum>Qt::Orientation::Horizontal</enum>
+                 <enum>Qt::Horizontal</enum>
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
@@ -1406,9 +1405,6 @@
 
 在下面的表格里可以看到每个图像对应的文件名。</string>
               </property>
-              <property name="alignment">
-               <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
-              </property>
               <property name="wordWrap">
                <bool>true</bool>
               </property>
@@ -1430,7 +1426,7 @@
      <x>0</x>
      <y>0</y>
      <width>920</width>
-     <height>33</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">

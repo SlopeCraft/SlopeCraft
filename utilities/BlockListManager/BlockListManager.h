@@ -100,6 +100,15 @@ class BlockListManager : public QWidget {
 
   blockListPreset to_preset() const noexcept;
 
+  size_t num_basecolor_widgets() const noexcept {
+    assert(this->basecolor_widgets.size() < 256);
+    return this->basecolor_widgets.size();
+  }
+
+  BaseColorWidget *basecolorwidget_at(size_t basecolor) noexcept {
+    return this->basecolor_widgets[basecolor].get();
+  }
+
   const BaseColorWidget *basecolorwidget_at(size_t basecolor) const noexcept {
     return this->basecolor_widgets[basecolor].get();
   }
