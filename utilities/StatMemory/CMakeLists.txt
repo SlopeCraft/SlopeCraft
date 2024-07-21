@@ -4,6 +4,30 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
+
+add_library(StatMemory STATIC stat_memory.h)
+find_package(tl-expected REQUIRED)
+find_package(fmt REQUIRED)
+target_link_libraries(StatMemory PUBLIC tl::expected fmt::fmt)
+target_include_directories(StatMemory PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+target_compile_features(StatMemory PUBLIC cxx_std_23)
+# Set source file by system
+if (${WIN32})
+    target_sources(StatMemory PRIVATE stat_memory_src/windows.cpp)
+    target_link_libraries(StatMemory PUBLIC psapi.lib)
+elseif (${LINUX})
+    target_sources(StatMemory PRIVATE stat_memory_src/linux.cpp)
+elseif (${APPLE})
+    target_sources(StatMemory PRIVATE stat_memory_src/macos.cpp)
+elseif ()
+    message(FATAL_ERROR "Unsupported system ${CMAKE_SYSTEM_NAME}, not windows, linux or macos")
+endif ()
+
+add_executable(test_stat_memory others/test_stat_memory.cpp)
+target_link_libraries(test_stat_memory PRIVATE StatMemory)
+add_test(NAME stat_memory
+    COMMAND test_stat_memory)
+
 find_package(Qt6 COMPONENTS Widgets REQUIRED)
 add_library(MemoryPolicyDialog STATIC
     MemoryPolicyDialog.h
@@ -11,29 +35,4 @@ add_library(MemoryPolicyDialog STATIC
     MemoryPolicyDialog.ui
 )
 target_link_libraries(MemoryPolicyDialog PUBLIC Qt6::Widgets)
-
-
-add_library(StatMemory STATIC stat_memory.h)
-find_package(tl-expected REQUIRED)
-target_link_libraries(StatMemory PUBLIC tl::expected)
-target_include_directories(StatMemory PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
-
 target_link_libraries(MemoryPolicyDialog PUBLIC StatMemory)
-
-if (${WIN32})
-    target_sources(StatMemory PRIVATE stat_memory_src/windows.cpp)
-    target_link_libraries(StatMemory PUBLIC psapi.lib)
-    return()
-endif ()
-
-if (${LINUX})
-    target_sources(StatMemory PRIVATE stat_memory_src/linux.cpp)
-    return()
-endif ()
-
-if (${APPLE})
-    target_sources(StatMemory PRIVATE stat_memory_src/macos.cpp)
-    return()
-endif ()
-
-message(FATAL_ERROR "Unsupported system ${CMAKE_SYSTEM_NAME}, not windows, linux or macos")
