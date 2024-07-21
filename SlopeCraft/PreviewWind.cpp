@@ -196,8 +196,7 @@ QVariant MaterialModel::data(const QModelIndex& qmi, int role) const noexcept {
       if (!this->pwind->is_unit_stack()) {
         return QString::number(mat.count);
       }
-
-      const int stack_size = (r == 12) ? 1 : 64;
+      const int stack_size = std::max<uint8_t>(1, mat.blk->getStackSize());
       return format_num(mat.count, stack_size);
     }
   }
