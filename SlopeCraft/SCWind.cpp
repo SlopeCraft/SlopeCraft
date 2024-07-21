@@ -839,8 +839,7 @@ void SCWind::export_current_cvted_image(int idx, QString filename) noexcept {
 //   }
 // }
 
-void SCWind::refresh_current_build_display(
-    cvt_task *taskp, bool is_image_built_in_kernel) noexcept {
+void SCWind::refresh_current_build_display(cvt_task *taskp) noexcept {
   this->ui->lb_show_3dsize->setText(tr("大小："));
   this->ui->lb_show_block_count->setText(tr("方块数量："));
   if (taskp == nullptr) {
@@ -930,7 +929,10 @@ std::optional<SlopeCraft::vanilla_structure_options> SCWind::current_nbt_option(
   err.clear();
 
   return SlopeCraft::vanilla_structure_options{
-      .is_air_structure_void = this->ui->cb_nbt_air_void->isChecked()};
+      .is_air_structure_void = this->ui->cb_nbt_air_void->isChecked(),
+      .ui{},
+      .progressbar{},
+  };
 }
 
 std::optional<SlopeCraft::WE_schem_options> SCWind::current_schem_option(

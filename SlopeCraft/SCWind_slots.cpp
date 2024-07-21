@@ -417,7 +417,7 @@ void SCWind::on_pb_build3d_clicked() noexcept {
     }
   }
   // load cache if converted
-  this->refresh_current_build_display(&task, true);
+  this->refresh_current_build_display(&task);
 }
 
 void SCWind::on_pb_preview_materials_clicked() noexcept {
@@ -962,7 +962,7 @@ void SCWind::on_ac_cache_all_3d_triggered() noexcept {
 void SCWind::on_ac_memory_policy_triggered() noexcept {
   MemoryPolicyDialog diag{this, this->mem_policy};
   const auto result = diag.exec();
-  
+
   if (result) {
     this->mem_policy = diag.current_value();
     this->auto_cache_3D();

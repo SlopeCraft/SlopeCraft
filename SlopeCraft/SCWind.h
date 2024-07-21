@@ -246,11 +246,7 @@ class SCWind : public QMainWindow {
 
   //  [[deprecated]] QImage get_converted_image_from_kernel() const noexcept;
 
-  void refresh_current_build_display(cvt_task* taskp,
-                                     bool is_image_built_in_kernel) noexcept;
-  void refresh_current_build_display(cvt_task* taskp) noexcept {
-    return this->refresh_current_build_display(taskp, false);
-  }
+  void refresh_current_build_display(cvt_task* taskp) noexcept;
   void refresh_current_build_display() noexcept {
     this->refresh_current_build_display(this->selected_export_task());
   }

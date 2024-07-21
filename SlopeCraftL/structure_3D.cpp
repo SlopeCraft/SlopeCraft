@@ -319,7 +319,7 @@ bool structure_3D_impl::export_flat_diagram(
   std::vector<Eigen::Array<uint32_t, 16, 16, Eigen::RowMajor>> img_list_rmj;
   img_list_rmj.reserve(this->schem.palette_size());
 
-  for (int pblkid = 0; pblkid < this->schem.palette_size(); pblkid++) {
+  for (size_t pblkid = 0; pblkid < this->schem.palette_size(); pblkid++) {
     if (pblkid == 0) {
       img_list_rmj.emplace_back();
       img_list_rmj[0].setZero();
@@ -358,7 +358,7 @@ bool structure_3D_impl::export_flat_diagram(
     }
 
     const int ele = this->schem(c, 0, r);
-    assert(ele >= 0 && ele < this->schem.palette_size());
+    assert(ele >= 0 and ele < ptrdiff_t(this->schem.palette_size()));
 
     return libFlatDiagram::block_img_ref_t{img_list_rmj.at(ele).data()};
   };
