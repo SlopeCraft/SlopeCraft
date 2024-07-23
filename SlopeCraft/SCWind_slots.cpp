@@ -155,7 +155,7 @@ void SCWind::on_pb_load_preset_clicked() noexcept {
   blockListPreset preset = load_preset(file, err);
   if (!err.isEmpty()) {
     QMessageBox::warning(this, tr("解析预设文件失败"),
-                         tr("预设文件%1存在错误：%2").arg(file).arg(err));
+                         tr("预设文件%1存在错误：%2").arg(file, err));
     return;
   }
 
@@ -181,10 +181,9 @@ void SCWind::on_pb_save_preset_clicked() noexcept {
     qf.open(QFile::OpenMode{QIODevice::WriteOnly | QIODevice::Text});
 
     if (!qf.isOpen()) {
-      QMessageBox::warning(this, tr("保存预设文件失败"),
-                           tr("无法生成预设文件%1，错误信息：%2")
-                               .arg(file)
-                               .arg(qf.errorString()));
+      QMessageBox::warning(
+          this, tr("保存预设文件失败"),
+          tr("无法生成预设文件%1，错误信息：%2").arg(file, qf.errorString()));
       return;
     }
 
@@ -260,7 +259,7 @@ void SCWind::on_pb_invselect_clicked() noexcept {
   for (size_t bc = 1; bc < this->ui->blm->num_basecolor_widgets(); bc++) {
     BaseColorWidget *bcw = this->ui->blm->basecolorwidget_at(bc);
     assert(bcw not_eq nullptr);
-    bcw->set_enabled(not bcw->is_enabled());
+    bcw->set_enabled(not(bcw->is_enabled()));
   }
 }
 
@@ -339,8 +338,7 @@ void SCWind::on_pb_save_converted_clicked() noexcept {
   for (int idx : selected) {
     auto &task = this->tasks[idx];
     QString filename = QStringLiteral("%1/%2.png")
-                           .arg(out_dir)
-                           .arg(QFileInfo{task.filename}.baseName());
+                           .arg(out_dir, QFileInfo{task.filename}.baseName());
 
     if (QFile{filename}.exists()) {
       if (no_to_all_replace_existing) {
@@ -573,9 +571,8 @@ void SCWind::on_pb_export_all_clicked() noexcept {
 
   auto get_export_name = [dir, this](const cvt_task &t) -> QString {
     return QStringLiteral("%1/%2.%3")
-        .arg(dir)
-        .arg(QFileInfo{t.filename}.baseName())
-        .arg(extension_of_export_type(this->selected_export_type()));
+        .arg(dir, QFileInfo{t.filename}.baseName(),
+             extension_of_export_type(this->selected_export_type()));
   };
 
   // warn if some files will be covered
@@ -622,8 +619,7 @@ void SCWind::on_pb_export_all_clicked() noexcept {
           this, tr("导出失败"),
           tr("导出%1时失败。原图像文件名为%"
              "2\n点击 Ignore 将跳过这个图像，点击 Cancel 将放弃导出任务。")
-              .arg(export_name.data())
-              .arg(taskp->filename),
+              .arg(export_name.data(), taskp->filename),
           QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore,
                                        QMessageBox::StandardButton::Cancel});
     };
@@ -786,7 +782,7 @@ void SCWind::on_ac_clear_cache_triggered() noexcept {
       continue;
     }
 
-    QString filename = QStringLiteral("%1/%2").arg(cache_dir_name).arg(name);
+    QString filename = QStringLiteral("%1/%2").arg(cache_dir_name, name);
 
     while (true) {
       if (remove_cache_fun(filename)) {
@@ -976,10 +972,9 @@ void SCWind::on_ac_test_blocklist_triggered() noexcept {
   if (!this->current_color_table()->generate_test_schematic(
           filename.toLocal8Bit().data(), opt)) {
     QString qerr = QString::fromUtf8(err.data());
-    QMessageBox::warning(this, tr("输出测试文件失败"),
-                         tr("保存测试文件 %1 时出现错误。详细信息：\n%2")
-                             .arg(filename)
-                             .arg(qerr));
+    QMessageBox::warning(
+        this, tr("输出测试文件失败"),
+        tr("保存测试文件 %1 时出现错误。详细信息：\n%2").arg(filename, qerr));
   }
 }
 
