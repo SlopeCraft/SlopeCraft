@@ -197,7 +197,7 @@ const mc_block *color_table_impl::find_block_for_index(
     return nullptr;
   }
 
-  if (lsi::pureid_to_type(blkp->id) != mush_type_opt) {
+  if (lsi::pureid_to_type(pure_id) != mush_type_opt) {
     return nullptr;
   }
 
@@ -350,6 +350,10 @@ void color_table_impl::stat_blocks(const structure_3D &s,
       continue;
     }
     assert(schem_blk_id > 0);
+    if (schem_stat[schem_blk_id] <= 0) {
+      continue;
+    }
+
     const auto strid = structure.schem.palette()[schem_blk_id];
     const auto blkp = this->find_block_for_index(schem_blk_id - 1, strid);
     if (blkp == nullptr) {
