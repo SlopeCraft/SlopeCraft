@@ -27,6 +27,8 @@ class PreviewWind : public QDialog {
   std::vector<material_item> mat_list;
   MaterialModel* mmp{nullptr};
 
+  QString export_mat_list_prev_dir;
+
   void set_size(std::span<size_t, 3> size) & noexcept;
   void set_total_count(size_t count) & noexcept;
 
@@ -42,6 +44,9 @@ class PreviewWind : public QDialog {
 
   bool is_unit_stack() const noexcept;
   sort_option current_sort_option() const noexcept;
+
+ private slots:
+  void on_pb_export_file_clicked() noexcept;
 };
 
 class MaterialModel : public QAbstractTableModel {

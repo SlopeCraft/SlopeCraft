@@ -1,8 +1,10 @@
-#include "PreviewWind.h"
-#include "ui_PreviewWind.h"
 #include <QString>
 #include <QModelIndex>
+#include <QFileDialog>
+#include <QMessageBox>
 #include <algorithm>
+#include "PreviewWind.h"
+#include "ui_PreviewWind.h"
 #include "SCWind.h"
 #include "CopyableTableView.h"
 
@@ -22,10 +24,13 @@ PreviewWind::PreviewWind(QWidget* parent)
           &MaterialModel::refresh);
   this->ui->tv_mat->setModel(this->mmp);
 
-  connect(this->ui->tv_mat, &CopyableTableView::copied, [this]() noexcept {
+  auto on_copied = [this]() noexcept {
     this->setWindowTitle(
         tr("%1 -- 表格内容已复制到剪贴板").arg(tr("查看材料列表")));
-  });
+  };
+  connect(this->ui->tv_mat, &CopyableTableView::copied, on_copied);
+  connect(this->ui->pb_copy_to_clipboard, &QPushButton::clicked,
+          this->ui->tv_mat, &CopyableTableView::copied);
 }
 
 PreviewWind::~PreviewWind() {}
@@ -97,6 +102,35 @@ PreviewWind::sort_option PreviewWind::current_sort_option() const noexcept {
     default:
       return sort_option::no_sort;
   }
+}
+
+void PreviewWind::on_pb_export_file_clicked() noexcept {
+  const QString out_file = QFileDialog::getSaveFileName(
+      this, tr("保存材料表"), this->export_mat_list_prev_dir, "*.csv");
+  if (out_file.isEmpty()) {
+    return;
+  }
+  this->export_mat_list_prev_dir = QFileInfo{out_file}.dir().path();
+
+  QFile ofile{out_file, this};
+  if (not ofile.open(QIODevice::OpenMode::enum_type::WriteOnly)) {
+    QMessageBox::warning(this, tr("保存材料表失败"),
+                         tr("无法打开文件 \"%1\"，详细信息：%2")
+                             .arg(out_file, ofile.errorString()));
+    return;
+  }
+
+  ofile.write("\"Block name\",\"Block id\",\"Count\"\n");
+  const auto current_version =
+      dynamic_cast<SCWind*>(this->parent())->selected_version();
+  for (const auto& mat : this->mat_list) {
+    QString line =
+        QStringLiteral("\"%1\",\"%2\",%3\n")
+            .arg(mat.blk->getNameEN(), mat.blk->idForVersion(current_version))
+            .arg(mat.count);
+    ofile.write(line.toLocal8Bit());
+  }
+  ofile.close();
 }
 
 MaterialModel::MaterialModel(PreviewWind* parent)
