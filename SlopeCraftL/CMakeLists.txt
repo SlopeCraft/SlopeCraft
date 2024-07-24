@@ -5,11 +5,12 @@ find_package(OpenMP REQUIRED)
 find_package(fmt REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(Heu REQUIRED)
-find_package(Boost COMPONENTS iostreams REQUIRED)
+find_package(Boost COMPONENTS iostreams multi_array REQUIRED)
 find_package(libzip REQUIRED)
 find_package(tl-expected REQUIRED)
 find_package(PNG REQUIRED)
 find_package(cereal REQUIRED)
+find_package(libnbt++ REQUIRED)
 #find_package(zstd REQUIRED)
 
 set(SlopeCraft_SCL_windows_rc_files)
@@ -96,9 +97,11 @@ set(SlopeCraft_SCL_link_libs
     Eigen3::Eigen
     Heu::Genetic
     Boost::iostreams
+    Boost::multi_array
     libzip::zip
     tl::expected
     cereal::cereal
+    nbt++
     ${SC_zstd_target_name})
 
 # link to dependents
