@@ -36,6 +36,9 @@ class converted_image_impl : public converted_image {
   size_t rows() const noexcept final { return this->converter.rows(); }
   size_t cols() const noexcept final { return this->converter.cols(); }
 
+  int map_rows() const noexcept { return ceil(this->rows() / 128.0f); }
+  int map_cols() const noexcept { return ceil(this->cols() / 128.0f); }
+
   void get_original_image(uint32_t *buffer) const noexcept final {
     Eigen::Map<eimg_row_major> buf{buffer, static_cast<int64_t>(this->rows()),
                                    static_cast<int64_t>(this->cols())};
@@ -73,5 +76,8 @@ class converted_image_impl : public converted_image {
              const std::filesystem::path &file) noexcept;
 
   bool is_converted_from(const color_table &table_) const noexcept final;
+
+  bool get_map_command(
+      const map_data_file_give_command_options &option) const final;
 };
 #endif  // SLOPECRAFT_CONVERTED_IMAGE_H

@@ -24,6 +24,7 @@ This file is part of SlopeCraft.
 #define KERNEL_H
 #include <cstdint>
 #include <cstddef>
+#include <cstring>
 
 #include "SlopeCraftL_export.h"
 
@@ -76,6 +77,34 @@ struct string_deliver {
   template <class string_t>
   [[nodiscard]] static string_deliver from_string(string_t &s) noexcept {
     return string_deliver{s.data(), s.size()};
+  }
+};
+/// Struct to wrap anything like ostream, safe to use in ABI
+struct ostream_wrapper {
+  void *handle{nullptr};
+
+  using write_fun = void (*)(const void *data, size_t len_bytes, void *handle);
+  write_fun callback_write_data{nullptr};
+
+  inline void write(const void *data, size_t len_bytes) {
+    this->callback_write_data(data, len_bytes, this->handle);
+  }
+  inline void write(const char *str) {
+    this->write(reinterpret_cast<const void *>(str), strlen(str));
+  }
+
+  template <class ostream_t>
+  [[nodiscard]] inline static ostream_wrapper wrap_std_ostream(
+      ostream_t &os) noexcept {
+    return ostream_wrapper{
+        .handle = reinterpret_cast<void *>(&os),
+        .callback_write_data = [](const void *data, size_t len_bytes,
+                                  void *h) -> size_t {
+          ostream_t &os = *reinterpret_cast<ostream_t *>(h);
+          os.write(reinterpret_cast<const char *>(data), len_bytes);
+          return len_bytes;
+        },
+    };
   }
 };
 
@@ -222,6 +251,16 @@ struct map_data_file_options {
   int begin_index{0};
   progress_callbacks progress{};
   ui_callbacks ui{};
+};
+
+struct map_data_file_give_command_options {
+  uint64_t caller_api_version{SC_VERSION_U64};
+  ostream_wrapper *destination{};
+  int begin_index{0};
+  uint8_t stack_count{1};  /// <- Stack count of filed_map
+  bool set_name_as_index{true};
+  bool after_1_12{false};
+  bool after_1_20_5{false};
 };
 
 struct build_options {
@@ -389,6 +428,9 @@ class converted_image {
 
   [[nodiscard]] virtual bool is_converted_from(
       const color_table &) const noexcept = 0;
+
+  [[nodiscard]] virtual bool get_map_command(
+      const map_data_file_give_command_options &option) const = 0;
 };
 
 class structure_3D {
@@ -489,7 +531,6 @@ class deleter {
     SCL_destroy_structure_3D(s);
   }
 };
-
 }  //  namespace SlopeCraft
 
 }  //  extern "C"

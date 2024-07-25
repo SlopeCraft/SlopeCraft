@@ -90,6 +90,7 @@ set(SlopeCraft_SCL_link_libs
     MapImageCvter
     FlatDiagram
     libpng_reader
+    sNBT-formatter
 
     ZLIB::ZLIB
     OpenMP::OpenMP_CXX
