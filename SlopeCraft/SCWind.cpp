@@ -445,9 +445,14 @@ SCWind::export_type SCWind::selected_export_type() const noexcept {
   auto btns = this->export_type_buttons();
   static_assert(btns.size() == 5);
 
+  constexpr std::array<export_type, 5> export_type_list{
+      export_type::litematica, export_type::vanilla_structure,
+      export_type::WE_schem,   export_type::flat_diagram,
+      export_type::data_file,
+  };
   for (int i = 0; i < 5; i++) {
     if (btns[i]->isChecked()) {
-      return SCWind::export_type{i};
+      return export_type_list[i];
     }
   }
   assert(false);
@@ -893,6 +898,31 @@ void SCWind::refresh_current_build_display(cvt_task *taskp) noexcept {
     this->ui->lb_show_3dsize->setText(
         tr("大小： %1 × %2 × %3").arg(x).arg(y).arg(z));
     this->ui->lb_show_block_count->setText(tr("方块数量：%1").arg(block_count));
+  }
+
+  if (this->selected_export_type() == SCWind::export_type::data_file) {
+    QString command;
+    SlopeCraft::ostream_wrapper os{
+        .handle = &command,
+        .callback_write_data =
+            [](const void *data, size_t len, void *handle) {
+              QString *buf = reinterpret_cast<QString *>(handle);
+              QLatin1StringView qlsv{reinterpret_cast<const char *>(data),
+                                     static_cast<qsizetype>(len)};
+              buf->append(qlsv);
+            },
+    };
+
+    SlopeCraft::map_data_file_give_command_options opt{};
+    opt.destination = &os;
+    opt.begin_index = this->ui->sb_file_start_idx->value();
+    opt.after_1_12 = (this->selected_version() > SCL_gameVersion::MC12);
+    opt.after_1_20_5 = false;
+    const bool ok = cvted_it->second.converted_image->get_map_command(opt);
+    if (!ok) {
+      command = tr("生成命令失败：\n%1").arg(command);
+    }
+    this->ui->pte_command->setPlainText(command);
   }
 }
 

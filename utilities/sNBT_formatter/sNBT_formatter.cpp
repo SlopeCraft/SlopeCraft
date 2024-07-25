@@ -65,7 +65,11 @@ void sNBT::sNBT_format_visitor::visit(const nbt::tag_long_array &la) {
 }
 
 void sNBT::sNBT_format_visitor::visit(const nbt::tag_string &s) {
-  os << '"' << s.get() << '"';
+  if (s.get().find('\"') not_eq s.get().npos) {
+    os << '\'' << s.get() << '\'';
+  } else {
+    os << '"' << s.get() << '"';
+  }
 }  // TODO: escape special characters
 
 void sNBT::sNBT_format_visitor::visit(const nbt::tag_list &l) {
@@ -87,7 +91,8 @@ void sNBT::sNBT_format_visitor::visit(const nbt::tag_compound &c) {
   this->os << "{";
   size_t idx = 0;
   for (auto &[key, val] : c) {
-    this->os << '\"' << key << "\":";
+    this->os << key << ':';
+    //    this->os << '\"' << key << "\":";
     val.get().accept(*this);
     if (idx < c.size() - 1) {
       this->os << ',';
