@@ -1,6 +1,6 @@
 find_package(Boost
     COMPONENTS iostreams
-    multi_array
+    OPTIONAL_COMPONENTS multi_array
 )
 
 if (NOT TARGET Boost::iostreams)
