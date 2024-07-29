@@ -1,4 +1,7 @@
 cmake_minimum_required(VERSION 3.29)
+
+find_package(zlib REQUIRED)
+
 set(NBT_BUILD_SHARED OFF CACHE BOOL "")
 set(NBT_BUILD_TESTS OFF CACHE BOOL "")
 FetchContent_Declare(libnbt++
@@ -10,5 +13,4 @@ message(STATUS "Cloning libnbt++...")
 FetchContent_MakeAvailable(libnbt++)
 find_package(libnbt++ REQUIRED)
 
-find_package(zlib REQUIRED)
 target_link_libraries(nbt++ ZLIB::ZLIB)
