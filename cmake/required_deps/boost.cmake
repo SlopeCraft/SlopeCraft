@@ -1,9 +1,10 @@
-if (NOT ${APPLE})
+if (${WIN32})
     find_package(Boost
-        COMPONENTS iostreams multi_array
+        COMPONENTS iostreams
+        OPTIONAL_COMPONENTS multi_array
     )
 else ()
-    message(STATUS "Finding boost without multi_array to avoid a fucking stupid error in BoostConfig.cmake only happened in macos")
+    message(STATUS "Finding boost without multi_array to avoid a fucking stupid error in BoostConfig.cmake")
     find_package(Boost
         COMPONENTS iostreams
     )
