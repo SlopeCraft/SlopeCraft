@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.29)
 
-find_package(zlib REQUIRED)
+find_package(ZLIB REQUIRED)
 
 set(NBT_BUILD_SHARED OFF CACHE BOOL "")
 set(NBT_BUILD_TESTS OFF CACHE BOOL "")
