@@ -204,9 +204,10 @@ converted_image_impl::height_info(const build_options &option) const noexcept {
 
   Eigen::ArrayXXi map_color = this->converter.mapcolor_matrix().cast<int>();
 
-#warning This may be incorrect
   const bool allow_lossless_compress =
-      int(option.compress_method) & int(SCL_compressSettings::NaturalOnly);
+      int(option.compress_method) bitand int(SCL_compressSettings::NaturalOnly);
+  const bool allow_lossy_compress =
+      int(option.compress_method) bitand int(compressSettings::ForcedOnly);
 
   if (((map_color - 4 * (map_color / 4)) >= 3).any()) {
     std::string msg =
@@ -238,9 +239,7 @@ converted_image_impl::height_info(const build_options &option) const noexcept {
     // getTokiColorPtr(c,&src[0]);
     HL.make(map_color.col(c), allow_lossless_compress);
 
-    if (HL.maxHeight() > option.max_allowed_height &&
-        (option.compress_method == compressSettings::ForcedOnly ||
-         option.compress_method == compressSettings::Both)) {
+    if ((HL.maxHeight() > option.max_allowed_height) and allow_lossy_compress) {
       std::vector<const TokiColor *> ptr(map_color.rows());
 
       this->converter.col_TokiColor_ptrs(c, ptr);
@@ -249,15 +248,18 @@ converted_image_impl::height_info(const build_options &option) const noexcept {
       compressor.setSource(HL.getBase(), ptr);
       bool success = compressor.compress(option.max_allowed_height,
                                          allow_lossless_compress);
+      Eigen::ArrayXi temp;
+      HL.make(&ptr[0], compressor.getResult(), allow_lossless_compress, &temp);
       if (!success) {
         option.ui.report_error(
             SCL_errorFlag::LOSSYCOMPRESS_FAILED,
-            fmt::format("Failed to compress the 3D structure at column {}.", c)
+            fmt::format("Failed to compress the 3D structure at column {}. You "
+                        "have required that max height <= {}, but SlopeCraft "
+                        "is only able to this column to max height = {}.",
+                        c, option.max_allowed_height, HL.maxHeight())
                 .data());
         return std::nullopt;
       }
-      Eigen::ArrayXi temp;
-      HL.make(&ptr[0], compressor.getResult(), allow_lossless_compress, &temp);
       map_color.col(c) = temp;
     }
     base.col(c) = HL.getBase();

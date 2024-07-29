@@ -389,19 +389,14 @@ int SCWind::current_max_height() const noexcept {
 }
 
 SCL_compressSettings SCWind::current_compress_method() const noexcept {
+  auto result = static_cast<int>(SCL_compressSettings::noCompress);
   if (this->is_lossless_compression_selected()) {
-    if (this->is_lossy_compression_selected()) {
-      return SCL_compressSettings::Both;
-    } else {
-      return SCL_compressSettings::NaturalOnly;
-    }
-  } else {
-    if (this->is_lossless_compression_selected()) {
-      return SCL_compressSettings::ForcedOnly;
-    } else {
-      return SCL_compressSettings::noCompress;
-    }
+    result = result bitor int(SCL_compressSettings::NaturalOnly);
   }
+  if (this->is_lossy_compression_selected()) {
+    result = result bitor int(SCL_compressSettings::ForcedOnly);
+  }
+  return static_cast<SCL_compressSettings>(result);
 }
 
 bool SCWind::is_glass_bridge_selected() const noexcept {
@@ -723,7 +718,8 @@ const SlopeCraft::converted_image &SCWind::convert_if_need(
 std::unique_ptr<SlopeCraft::structure_3D, SlopeCraft::deleter> SCWind::build_3D(
     const SlopeCraft::converted_image &cvted) noexcept {
   auto ctable = this->current_color_table();
-  auto str = ctable->build(cvted, this->current_build_option());
+  const auto opt = this->current_build_option();
+  auto str = ctable->build(cvted, opt);
   return std::unique_ptr<SlopeCraft::structure_3D, SlopeCraft::deleter>{str};
 }
 
@@ -848,11 +844,13 @@ void SCWind::export_current_cvted_image(int idx, QString filename) noexcept {
                          this->current_convert_option(), std::move(cvted_uptr));
       cvted = task.get_converted_image(this->current_color_table(),
                                        this->current_convert_option());
+      if (cvted == nullptr) {
+        return;
+      }
     } else {
       return;
     }
   }
-  assert(cvted != nullptr);
 
   auto img = get_converted_image(*cvted);
   bool ok = img.save(filename);
