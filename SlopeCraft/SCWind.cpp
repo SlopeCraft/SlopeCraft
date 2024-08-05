@@ -618,30 +618,6 @@ void SCWind::when_export_type_toggled() noexcept {
   this->update_button_states();
 }
 
-// void SCWind::kernel_set_image(int idx) noexcept {
-//   assert(idx >= 0);
-//   assert(idx < (int)this->tasks.size());
-//
-//   if (this->kernel->queryStep() < SCL_step::wait4Image) {
-//     this->kernel_set_type();
-//   }
-//
-//   const QImage &raw = this->tasks[idx].original_image;
-//   this->kernel->setRawImage((const uint32_t *)raw.scanLine(0), raw.height(),
-//                             raw.width(), false);
-// }
-//
-// void SCWind::kernel_convert_image() noexcept {
-//   assert(this->kernel->queryStep() >= SCL_step::convertionReady);
-//
-//   if (!this->kernel->convert(this->selected_algo(),
-//                              this->is_dither_selected())) {
-//     QMessageBox::warning(this, tr("转化图像失败"), tr(""));
-//
-//     return;
-//   }
-// }
-
 SlopeCraft::convert_option SCWind::current_convert_option() noexcept {
   return SlopeCraft::convert_option{
       .caller_api_version = SC_VERSION_U64,
@@ -905,17 +881,26 @@ void SCWind::refresh_current_build_display(cvt_task *taskp) noexcept {
         .callback_write_data =
             [](const void *data, size_t len, void *handle) {
               QString *buf = reinterpret_cast<QString *>(handle);
-              QUtf8StringView qlsv{reinterpret_cast<const char *>(data),
-                                   static_cast<qsizetype>(len)};
-              buf->append(qlsv);
+              QString temp =
+                  QString::fromUtf8(reinterpret_cast<const char *>(data),
+                                    static_cast<qsizetype>(len));
+              buf->append(temp);
             },
     };
+    bool after_1_20_5 = false;
+    if (this->selected_version() < SCL_gameVersion::MC20) {
+      after_1_20_5 = true;
+    } else if (this->selected_version() > SCL_gameVersion::MC20) {
+      after_1_20_5 = true;
+    } else {
+      after_1_20_5 = this->ui->cb_mc_version_geq_1_20_5->isChecked();
+    }
 
     SlopeCraft::map_data_file_give_command_options opt{};
     opt.destination = &os;
     opt.begin_index = this->ui->sb_file_start_idx->value();
     opt.after_1_12 = (this->selected_version() > SCL_gameVersion::MC12);
-    opt.after_1_20_5 = false;
+    opt.after_1_20_5 = after_1_20_5;
     const bool ok = cvted_it->second.converted_image->get_map_command(opt);
     if (!ok) {
       command = tr("生成命令失败：\n%1").arg(command);
@@ -927,18 +912,6 @@ void SCWind::refresh_current_build_display(cvt_task *taskp) noexcept {
 void SCWind::when_export_pool_selectionChanged() noexcept {
   this->refresh_current_build_display(this->selected_export_task());
 }
-
-// void SCWind::kernel_make_build_cache() noexcept {
-//   std::string err;
-//   err.resize(4096);
-//   SlopeCraft::string_deliver sd{err.data(), err.size()};
-//
-//   if (!this->kernel->saveBuildCache(sd)) {
-//     QString qerr = QString::fromUtf8(sd.data);
-//     QMessageBox::warning(this, tr("缓存失败"),
-//                          tr("未能创建缓存文件，错误信息：\n%1").arg(qerr));
-//   }
-// }
 
 QString extension_of_export_type(SCWind::export_type et) noexcept {
   switch (et) {

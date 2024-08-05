@@ -718,7 +718,7 @@ void SCWind::on_pb_export_file_clicked() noexcept {
     //      this->kernel_convert_image();
     //    }
     //
-    const int cur_seq_beg = this->tasks.map_range_of(seq_first, idx).last;
+    const int cur_seq_beg = this->tasks.map_range_of(seq_first, idx).first;
     const auto dir_name = dir.toLocal8Bit();
     //
     const SlopeCraft::map_data_file_options option{

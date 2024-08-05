@@ -1327,6 +1327,13 @@
                <number>0</number>
               </property>
               <item>
+               <widget class="QCheckBox" name="cb_mc_version_geq_1_20_5">
+                <property name="text">
+                 <string>MC版本≥1.20.5+</string>
+                </property>
+               </widget>
+              </item>
+              <item>
                <spacer name="horizontalSpacer">
                 <property name="orientation">
                  <enum>Qt::Orientation::Horizontal</enum>
