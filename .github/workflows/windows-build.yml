@@ -7,7 +7,7 @@ on:
       - dev
 
 jobs:
-  clang:
+  msvc:
     runs-on: windows-latest
     strategy:
       matrix:
