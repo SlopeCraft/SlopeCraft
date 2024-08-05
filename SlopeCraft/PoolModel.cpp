@@ -261,7 +261,7 @@ bool CvtPoolModel::dropMimeData(const QMimeData* data, Qt::DropAction action,
     if (src_indices.size() <= 0) {
       return true;
     }
-#warning "TODO: Implement reshuffling here"
+#pragma warning "TODO: Implement reshuffling here"
     assert(("Reshuffing is not implemented yet", false));
     //    map_indices(this->pool, src_indices, begin_row);
   }

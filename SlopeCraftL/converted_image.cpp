@@ -398,7 +398,7 @@ nbt::tag_compound merge_with_chest(
       } else {
         chest_item.emplace<nbt::tag_int>("count", 1);
       }
-#warning "This should be corrected for 1.20.5+"
+#pragma warning "This should be corrected for 1.20.5+"
       nbt::tag_compound blk_entity_tag;
       blk_entity_tag.emplace<nbt::tag_list>("Items", std::move(item_list));
       get_or_setup_field(chest_item, "tag")
