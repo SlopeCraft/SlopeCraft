@@ -385,9 +385,16 @@ nbt::tag_compound merge_with_chest(
             continue;
           }
           const int8_t slot = chest_index_to_slot(r_offset, c_offset);
-          // set slot
-          cur_item.emplace<nbt::tag_byte>("Slot", slot);
-          item_list.emplace_back<nbt::tag_compound>(std::move(cur_item));
+          if (not option.after_1_20_5) {
+            // set slot
+            cur_item.emplace<nbt::tag_byte>("Slot", slot);
+            item_list.emplace_back<nbt::tag_compound>(std::move(cur_item));
+          } else {
+            nbt::tag_compound item;
+            item.emplace<nbt::tag_compound>("item", std::move(cur_item));
+            item.emplace<nbt::tag_byte>("slot", slot);
+            item_list.emplace_back<nbt::tag_compound>(std::move(item));
+          }
         }
       }
 
@@ -398,12 +405,17 @@ nbt::tag_compound merge_with_chest(
       } else {
         chest_item.emplace<nbt::tag_int>("count", 1);
       }
-#pragma warning "This should be corrected for 1.20.5+"
-      nbt::tag_compound blk_entity_tag;
-      blk_entity_tag.emplace<nbt::tag_list>("Items", std::move(item_list));
-      get_or_setup_field(chest_item, "tag")
-          .emplace<nbt::tag_compound>("BlockEntityTag",
-                                      std::move(blk_entity_tag));
+      if (not option.after_1_20_5) {
+        nbt::tag_compound blk_entity_tag;
+        blk_entity_tag.emplace<nbt::tag_list>("Items", std::move(item_list));
+        get_or_setup_field(chest_item, "tag")
+            .emplace<nbt::tag_compound>("BlockEntityTag",
+                                        std::move(blk_entity_tag));
+      } else {
+        get_or_setup_field(chest_item, "components")
+            .emplace<nbt::tag_list>("minecraft:container",
+                                    std::move(item_list));
+      }
 
       merged_chests[merged_row][merged_col] = std::move(chest_item);
     }
@@ -466,8 +478,8 @@ bool converted_image_impl::get_map_command(
       return result;
     }
     result.emplace<nbt::tag_int>("count", option.stack_count);
-    tag.emplace<nbt::tag_int>("minecraft:map_id", index);
-    tag.emplace<nbt::tag_string>("minecraft:custom_name",
+    tag.emplace<nbt::tag_int>("map_id", index);
+    tag.emplace<nbt::tag_string>("custom_name",
                                  nbt::tag_string{std::move(name)});
     result.emplace<nbt::tag_compound>("components", std::move(tag));
     return result;
@@ -499,7 +511,19 @@ bool converted_image_impl::get_map_command(
   std::ostringstream oss;
   {
     sNBT::sNBT_format_visitor formatter{oss};
-    chest_all_in_one.at("tag").as<nbt::tag_compound>().accept(formatter);
+    if (not option.after_1_20_5) {
+      chest_all_in_one.at("tag").as<nbt::tag_compound>().accept(formatter);
+    } else {
+      const nbt::tag_compound &components =
+          chest_all_in_one.at("components").as<nbt::tag_compound>();
+      oss << '[';
+      for (auto &[key, val] : components) {
+        oss << key << '=';
+        val.get().accept(formatter);
+        oss << ',';
+      }
+      oss << ']';
+    }
   }
   std::string_view snbt = oss.view();
   option.destination->write(snbt.data(), snbt.size());

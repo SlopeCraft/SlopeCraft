@@ -91,7 +91,11 @@ void sNBT::sNBT_format_visitor::visit(const nbt::tag_compound &c) {
   this->os << "{";
   size_t idx = 0;
   for (auto &[key, val] : c) {
-    this->os << key << ':';
+    if (key.contains(':')) {
+      this->os << '\"' << key << '\"' << ':';
+    } else {
+      this->os << key << ':';
+    }
     //    this->os << '\"' << key << "\":";
     val.get().accept(*this);
     if (idx < c.size() - 1) {
