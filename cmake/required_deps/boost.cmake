@@ -1,14 +1,14 @@
-#if (${WIN32})
-#    find_package(Boost
-#        COMPONENTS iostreams
-#        OPTIONAL_COMPONENTS multi_array
-#    )
-#else ()
-message(STATUS "Finding boost without multi_array to avoid a fucking stupid error in BoostConfig.cmake")
-find_package(Boost
-    COMPONENTS iostreams
-)
-#endif ()
+if (${WIN32})
+    find_package(Boost
+        COMPONENTS iostreams
+        OPTIONAL_COMPONENTS multi_array
+    )
+else ()
+    message(STATUS "Finding boost without multi_array to avoid a fucking stupid error in BoostConfig.cmake")
+    find_package(Boost
+        COMPONENTS iostreams
+    )
+endif ()
 
 if (NOT TARGET Boost::iostreams)
     message(FATAL_ERROR "Failed to find Boost::iostreams, install boost first")
