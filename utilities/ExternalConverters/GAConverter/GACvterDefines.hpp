@@ -27,6 +27,7 @@ This file is part of SlopeCraft.
 #define _USE_MATH_DEFINES
 #endif
 
+#include <complex>
 #include <Eigen/Dense>
 #include <HeuristicFlow/Genetic>
 #include <HeuristicFlow/Global>
