@@ -905,8 +905,8 @@ void SCWind::refresh_current_build_display(cvt_task *taskp) noexcept {
         .callback_write_data =
             [](const void *data, size_t len, void *handle) {
               QString *buf = reinterpret_cast<QString *>(handle);
-              QLatin1StringView qlsv{reinterpret_cast<const char *>(data),
-                                     static_cast<qsizetype>(len)};
+              QUtf8StringView qlsv{reinterpret_cast<const char *>(data),
+                                   static_cast<qsizetype>(len)};
               buf->append(qlsv);
             },
     };
