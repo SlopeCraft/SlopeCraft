@@ -87,7 +87,7 @@ if (CMAKE_SYSTEM_NAME MATCHES "Windows")
     DLLD_add_deploy(SlopeCraft
         BUILD_MODE
         INSTALL_MODE INSTALL_DESTINATION .
-        IGNORE SlopeCraftL.dll)
+        OPTIONAL_DLLS "imageformats/*.dll")
 
     # Install all block list archives
     install(FILES ${SlopeCraft_block_list_archives}
