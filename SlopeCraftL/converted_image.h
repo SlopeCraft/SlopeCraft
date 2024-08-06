@@ -9,6 +9,7 @@
 #include <filesystem>
 #include <tl/expected.hpp>
 #include <memory>
+
 #include "SlopeCraftL.h"
 #include "SCLDefines.h"
 #include "mc_block.h"
@@ -79,5 +80,21 @@ class converted_image_impl : public converted_image {
 
   bool get_map_command(
       const map_data_file_give_command_options &option) const final;
+
+  [[nodiscard]] libSchem::Schem assembled_maps(
+      const assembled_maps_options &) const noexcept;
+
+  bool export_assembled_maps_litematic(
+      const char *filename, const assembled_maps_options &,
+      const litematic_options &) const noexcept final;
+  virtual bool export_assembled_maps_vanilla_structure(
+      const char *filename, const assembled_maps_options &,
+      const vanilla_structure_options &) const noexcept final;
 };
+
+[[nodiscard]] Eigen::Matrix<int, 3, 2> transform_mat_of(
+    SCL_map_facing) noexcept;
+
+[[nodiscard]] uint8_t rotation_of(SCL_map_facing) noexcept;
+
 #endif  // SLOPECRAFT_CONVERTED_IMAGE_H

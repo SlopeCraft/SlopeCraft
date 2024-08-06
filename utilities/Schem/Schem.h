@@ -232,6 +232,9 @@ class Schem {
 
   void process_mushroom_states_fast() noexcept;
 
+  auto &entity_list() noexcept { return this->entities; }
+  auto &entity_list() const noexcept { return this->entities; }
+
  public:
   static void update_error_dest(
       const tl::expected<void, std::pair<SCL_errorFlag, std::string>> &result,

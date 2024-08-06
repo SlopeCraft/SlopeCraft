@@ -44,6 +44,10 @@ class filled_map : public item {
   /// The map number
   int map_id{0};
 
+  std::string_view id() const noexcept override {
+    return "minecraft:filled_map";
+  }
+
  protected:
   tl::expected<size_t, std::string> dump_tags(
       NBT::NBTWriter<true>&,

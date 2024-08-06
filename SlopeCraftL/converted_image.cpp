@@ -532,6 +532,191 @@ bool converted_image_impl::get_map_command(
   return true;
 }
 
-// uint64_t converted_image_impl::hash() const noexcept {
-//   return this->converter.task_hash();
-// }
+Eigen::Matrix<int, 3, 2> transform_mat_of(SCL_map_facing facing) noexcept {
+  switch (facing) {
+    case SCL_map_facing::wall_west:
+      return Eigen::Matrix<int, 3, 2>{{0, 0},   //
+                                      {0, -1},  // c y-
+                                      {1, 0}};  // r z+
+    case SCL_map_facing::wall_north:
+      return Eigen::Matrix<int, 3, 2>{{-1, 0},  // r x-
+                                      {0, -1},  // c y-
+                                      {0, 0}};  //
+    case SCL_map_facing::wall_east:
+      return Eigen::Matrix<int, 3, 2>{{0, 0},    //
+                                      {0, -1},   // c y-
+                                      {-1, 0}};  // r z-
+    case SCL_map_facing::wall_south:
+      return Eigen::Matrix<int, 3, 2>{{-1, 0},  // r x-
+                                      {0, -1},  // c y-
+                                      {0, 0}};  //
+    case SCL_map_facing::top_south:
+      return Eigen::Matrix<int, 3, 2>{{-1, 0},   // r x-
+                                      {0, 0},    //
+                                      {0, -1}};  // c z-
+    case SCL_map_facing::top_north:
+      return Eigen::Matrix<int, 3, 2>{{1, 0},   // r x+
+                                      {0, 0},   //
+                                      {0, 1}};  // c z+
+    case SCL_map_facing::top_east:
+      return Eigen::Matrix<int, 3, 2>{{0, -1},  // c x-
+                                      {0, 0},   //
+                                      {1, 0}};  // r z+
+    case SCL_map_facing::top_west:
+      return Eigen::Matrix<int, 3, 2>{{0, 1},    // c x+
+                                      {0, 0},    //
+                                      {-1, 0}};  // r z-
+    case SCL_map_facing::bottom_north:
+      return Eigen::Matrix<int, 3, 2>{{-1, 0},  // r x-
+                                      {0, 0},   //
+                                      {0, 1}};  // c z+
+    case SCL_map_facing::bottom_south:
+      return Eigen::Matrix<int, 3, 2>{{1, 0},   // r x+
+                                      {0, 0},   //
+                                      {0, 1}};  // c z+
+    case SCL_map_facing::bottom_east:
+      return Eigen::Matrix<int, 3, 2>{{0, -1},   // c x-
+                                      {0, 0},    //
+                                      {-1, 0}};  // r z-
+    case SCL_map_facing::bottom_west:
+      return Eigen::Matrix<int, 3, 2>{{0, 1},   // c x+
+                                      {0, 0},   //
+                                      {1, 0}};  // r z+
+  }
+  std::unreachable();
+}
+
+uint8_t rotation_of(SCL_map_facing facing) noexcept {
+  switch (facing) {
+    case SCL_map_facing::top_south:
+    case SCL_map_facing::bottom_north:
+      return 4;
+    case SCL_map_facing::top_north:
+    case SCL_map_facing::bottom_south:
+      return 0;
+    case SCL_map_facing::top_east:
+    case SCL_map_facing::bottom_east:
+      return 2;
+    case SCL_map_facing::top_west:
+    case SCL_map_facing::bottom_west:
+      return 6;
+    default:
+      return 0;
+  }
+}
+
+libSchem::Schem converted_image_impl::assembled_maps(
+    const assembled_maps_options &option) const noexcept {
+  const auto transform_mat = transform_mat_of(option.map_facing);
+  const auto transform_mat_abs = transform_mat.array().abs().matrix();
+  const Eigen::Vector3i offset =
+      (transform_mat_abs - transform_mat) *
+      Eigen::Vector2i{{int(this->map_rows()), int(this->map_cols())}};
+  // Shape of schematic
+  const Eigen::Vector3i shape = [this, transform_mat_abs]() {
+    Eigen::Vector3i s =
+        transform_mat_abs *
+        Eigen::Vector2i{{int(this->map_rows()), int(this->map_cols())}};
+    s = s.array().max(1).matrix();
+    return s;
+  }();
+
+  libSchem::Schem schem;
+  {
+    std::string_view id_list[1]{std::string_view{"minecraft:air"}};
+    schem.set_block_id(id_list);
+    schem.resize(shape[0], shape[1], shape[2]);
+    schem.fill(0);
+  }
+
+  const libSchem::item_frame_variant variant = [&option, this]() {
+    if (this->game_version < SCL_gameVersion::MC17) {
+      return libSchem::item_frame_variant::common;
+    }
+    if (option.frame_variant == SCL_item_frame_variant::common) {
+      return libSchem::item_frame_variant::common;
+    } else {
+      return libSchem::item_frame_variant::glowing;
+    }
+  }();
+
+  for (int r = 0; r < this->map_rows(); r++) {
+    for (int c = 0; c < this->map_cols(); c++) {
+      const int map_index = option.begin_index + c + r * this->map_cols();
+      const Eigen::Vector3i position =
+          transform_mat * Eigen::Vector2i{{r, c}} + offset;
+      // Check map position
+      for (int dim = 0; dim < 3; dim++) {
+        assert(position[dim] >= 0);
+        assert(position[dim] < shape[dim]);
+      }
+      auto map_entity = std::make_unique<libSchem::item_frame>();
+      map_entity->tile_position_ = {position[0], position[1], position[2]};
+      map_entity->variant_ = variant;
+      map_entity->invisible_ = option.invisible_frame;
+      map_entity->fixed_ = option.fixed_frame;
+      map_entity->direction_ =
+          [](SCL_map_facing f) -> libSchem::hangable_facing_direction {
+        switch (f) {
+          case SCL_map_facing::wall_south:
+            return libSchem::hangable_facing_direction::south;
+          case SCL_map_facing::wall_east:
+            return libSchem::hangable_facing_direction::east;
+          case SCL_map_facing::wall_north:
+            return libSchem::hangable_facing_direction::north;
+          case SCL_map_facing::wall_west:
+            return libSchem::hangable_facing_direction::west;
+          case SCL_map_facing::top_north:
+          case SCL_map_facing::top_south:
+          case SCL_map_facing::top_east:
+          case SCL_map_facing::top_west:
+            return libSchem::hangable_facing_direction::top;
+          case SCL_map_facing::bottom_north:
+          case SCL_map_facing::bottom_south:
+          case SCL_map_facing::bottom_east:
+          case SCL_map_facing::bottom_west:
+            return libSchem::hangable_facing_direction::bottom;
+        }
+        return {};
+      }(option.map_facing);
+      map_entity->item_rotation = rotation_of(option.map_facing);
+      {
+        auto map_item = std::make_unique<libSchem::filled_map>();
+        map_item->map_id = map_index;
+        map_entity->item = std::move(map_item);
+      }
+
+      schem.entity_list().emplace_back(std::move(map_entity));
+    }
+  }
+
+  return schem;
+}
+
+bool converted_image_impl::export_assembled_maps_litematic(
+    const char *filename, const SlopeCraft::assembled_maps_options &map_opt,
+    const SlopeCraft::litematic_options &export_opt) const noexcept {
+  auto schem = this->assembled_maps(map_opt);
+  libSchem::litematic_info info{};
+  info.litename_utf8 = export_opt.litename_utf8;
+  info.regionname_utf8 = export_opt.region_name_utf8;
+
+  auto err = schem.export_litematic(filename, info);
+  if (not err) {
+    export_opt.ui.report_error(err.error().first, err.error().second.c_str());
+    return false;
+  }
+  return true;
+}
+
+bool converted_image_impl::export_assembled_maps_vanilla_structure(
+    const char *filename, const SlopeCraft::assembled_maps_options &map_opt,
+    const SlopeCraft::vanilla_structure_options &export_opt) const noexcept {
+  auto schem = this->assembled_maps(map_opt);
+  auto err = schem.export_structure(filename, export_opt.is_air_structure_void);
+  if (not err) {
+    export_opt.ui.report_error(err.error().first, err.error().second.c_str());
+    return false;
+  }
+  return true;
+}

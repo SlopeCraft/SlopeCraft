@@ -75,6 +75,7 @@ class hangable : public entity {
       case hfd::bottom:
         return {0, -90};
     }
+    return {0, 0};
   }
 
   tl::expected<size_t, std::string> dump(
@@ -111,6 +112,7 @@ class item_frame : public hangable {
       case item_frame_variant::glowing:
         return "glow_item_frame";
     }
+    return {};
   }
 
   tl::expected<size_t, std::string> dump(
