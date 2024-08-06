@@ -66,7 +66,7 @@ MCDataVersion::MCDataVersion_t MCDataVersion::max_supported_version(
     case SCL_gameVersion::MC19:
       return MCDataVersion_t::Java_1_19_3;
     case SCL_gameVersion::MC20:
-      return MCDataVersion_t::Java_1_20_1;
+      return MCDataVersion_t::Java_1_20_5;
     default:
       abort();
       return {};
