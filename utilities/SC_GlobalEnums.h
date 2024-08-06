@@ -213,4 +213,19 @@ enum class SCL_HalfTpPixelSt : char {
 
 enum class SCL_language : int { Chinese = 0, English = 1 };
 
+enum class SCL_map_facing : int {
+  wall_north,
+  wall_south,
+  wall_east,
+  wall_west,
+  top_north,
+  top_south,
+  top_east,
+  top_west,
+  bottom_north,
+  bottom_south,
+  bottom_east,
+  bottom_west,
+};
+
 #endif
