@@ -1347,9 +1347,23 @@
                </spacer>
               </item>
               <item>
+               <widget class="QPushButton" name="pb_export_data_command">
+                <property name="text">
+                 <string>导出命令</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pb_export_data_vanilla_structure">
+                <property name="text">
+                 <string>导出地图画结构</string>
+                </property>
+               </widget>
+              </item>
+              <item>
                <widget class="QPushButton" name="pb_export_file">
                 <property name="text">
-                 <string>导出</string>
+                 <string>导出地图文件</string>
                 </property>
                </widget>
               </item>

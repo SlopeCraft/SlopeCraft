@@ -95,8 +95,11 @@ class SCWind : public QMainWindow {
   void on_pb_preview_materials_clicked() noexcept;
   void on_pb_preview_compress_effect_clicked() noexcept;
   void on_pb_export_all_clicked() noexcept;
-
+  // exports for data file
   void on_pb_export_file_clicked() noexcept;
+  void on_pb_export_data_command() noexcept;
+  void on_pb_export_data_vanilla_structure() noexcept;
+  void when_data_file_command_changed() noexcept;
 
  private slots:
   void on_ac_GAcvter_options_triggered() noexcept;
@@ -268,6 +271,9 @@ class SCWind : public QMainWindow {
     int64_t memory_saved;
   };
   auto_cache_report auto_cache_3D(bool cache_all = false) noexcept;
+
+  [[nodiscard]] tl::expected<QString, QString> get_command(
+      const SlopeCraft::converted_image&) const noexcept;
 
  signals:
   void image_changed();

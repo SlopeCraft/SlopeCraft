@@ -991,3 +991,37 @@ void SCWind::on_ac_memory_policy_triggered() noexcept {
     this->auto_cache_3D();
   }
 }
+
+void SCWind::on_pb_export_data_command() noexcept {}
+void SCWind::on_pb_export_data_vanilla_structure() noexcept {}
+
+void SCWind::when_data_file_command_changed() noexcept {
+  const auto export_tasks = this->selected_export_task_list();
+  if (export_tasks.empty()) {
+    this->ui->pte_command->clear();
+    return;
+  }
+  if (export_tasks.size() >= 2) {
+    this->ui->pte_command->setPlainText(
+        tr("同时选中多个图片时，不显示 /give "
+           "命令。如果想预览导出的命令，请只选择一个图片。"));
+    return;
+  }
+  const auto task = export_tasks.front();
+  if (task == nullptr) {
+    this->ui->pte_command->clear();
+    return;
+  }
+  auto it = task->converted_images.find(
+      {this->current_color_table(), this->current_convert_option()});
+  if (it == task->converted_images.end() or
+      it->second.converted_image == nullptr) {
+    this->ui->pte_command->clear();
+    return;
+  }
+  const SlopeCraft::converted_image &cvted = *it->second.converted_image;
+
+  auto command_res = this->get_command(cvted);
+  this->ui->pte_command->setPlainText(command_res ? command_res.value()
+                                                  : command_res.error());
+}

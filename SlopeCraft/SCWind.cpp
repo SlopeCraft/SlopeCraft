@@ -106,6 +106,14 @@ SCWind::SCWind(QWidget *parent) : QMainWindow(parent), ui(new Ui::SCWind) {
             this->export_table_model, &ExportTableModel::refresh);
     connect(this, &SCWind::image_changed, this->export_table_model,
             &ExportTableModel::refresh);
+
+    connect(this->ui->lview_pool_export->selectionModel(),
+            &QItemSelectionModel::selectionChanged, this,
+            &SCWind::when_data_file_command_changed);
+    connect(this->ui->sb_file_start_idx, &QSpinBox::valueChanged, this,
+            &SCWind::when_data_file_command_changed);
+    connect(this->ui->cb_mc_version_geq_1_20_5, &QCheckBox::clicked, this,
+            &SCWind::when_data_file_command_changed);
   }
 
   for (QRadioButton *rbp : this->export_type_buttons()) {
@@ -458,6 +466,16 @@ SCWind::export_type SCWind::selected_export_type() const noexcept {
 void SCWind::when_version_buttons_toggled() noexcept {
   this->ui->blm->when_version_updated();
   this->when_blocklist_changed();
+
+  // When mc version is not 1.20, it must be greater or less than 1.20.5, this
+  // checkbox is useless and can be fixed
+  const bool fix_geq_btn =
+      (this->selected_version() not_eq SCL_gameVersion::MC20);
+  if (this->selected_version() not_eq SCL_gameVersion::MC20) {
+    this->ui->cb_mc_version_geq_1_20_5->setChecked(this->selected_version() >
+                                                   SCL_gameVersion::MC20);
+  }
+  this->ui->cb_mc_version_geq_1_20_5->setDisabled(fix_geq_btn);
 }
 
 void SCWind::when_type_buttons_toggled() noexcept {
@@ -874,39 +892,44 @@ void SCWind::refresh_current_build_display(cvt_task *taskp) noexcept {
     this->ui->lb_show_block_count->setText(tr("方块数量：%1").arg(block_count));
   }
 
-  if (this->selected_export_type() == SCWind::export_type::data_file) {
-    QString command;
-    SlopeCraft::ostream_wrapper os{
-        .handle = &command,
-        .callback_write_data =
-            [](const void *data, size_t len, void *handle) {
-              QString *buf = reinterpret_cast<QString *>(handle);
-              QString temp =
-                  QString::fromUtf8(reinterpret_cast<const char *>(data),
-                                    static_cast<qsizetype>(len));
-              buf->append(temp);
-            },
-    };
-    bool after_1_20_5 = false;
-    if (this->selected_version() < SCL_gameVersion::MC20) {
-      after_1_20_5 = true;
-    } else if (this->selected_version() > SCL_gameVersion::MC20) {
-      after_1_20_5 = true;
-    } else {
-      after_1_20_5 = this->ui->cb_mc_version_geq_1_20_5->isChecked();
-    }
+  //  if (this->selected_export_type() == SCWind::export_type::data_file) {
+  //    this->when_data_file_command_changed();
+  //  }
+}
 
-    SlopeCraft::map_data_file_give_command_options opt{};
-    opt.destination = &os;
-    opt.begin_index = this->ui->sb_file_start_idx->value();
-    opt.after_1_12 = (this->selected_version() > SCL_gameVersion::MC12);
-    opt.after_1_20_5 = after_1_20_5;
-    const bool ok = cvted_it->second.converted_image->get_map_command(opt);
-    if (!ok) {
-      command = tr("生成命令失败：\n%1").arg(command);
-    }
-    this->ui->pte_command->setPlainText(command);
+tl::expected<QString, QString> SCWind::get_command(
+    const SlopeCraft::converted_image &cvted) const noexcept {
+  QString command;
+  SlopeCraft::ostream_wrapper os{
+      .handle = &command,
+      .callback_write_data =
+          [](const void *data, size_t len, void *handle) {
+            QString *buf = reinterpret_cast<QString *>(handle);
+            QString temp =
+                QString::fromUtf8(reinterpret_cast<const char *>(data),
+                                  static_cast<qsizetype>(len));
+            buf->append(temp);
+          },
+  };
+  bool after_1_20_5 = false;
+  if (this->selected_version() < SCL_gameVersion::MC20) {
+    after_1_20_5 = true;
+  } else if (this->selected_version() > SCL_gameVersion::MC20) {
+    after_1_20_5 = true;
+  } else {
+    after_1_20_5 = this->ui->cb_mc_version_geq_1_20_5->isChecked();
   }
+
+  SlopeCraft::map_data_file_give_command_options opt{};
+  opt.destination = &os;
+  opt.begin_index = this->ui->sb_file_start_idx->value();
+  opt.after_1_12 = (this->selected_version() > SCL_gameVersion::MC12);
+  opt.after_1_20_5 = after_1_20_5;
+  const bool ok = cvted.get_map_command(opt);
+  if (!ok) {
+    return tl::make_unexpected(tr("生成命令失败：\n%1").arg(command));
+  }
+  return command;
 }
 
 void SCWind::when_export_pool_selectionChanged() noexcept {
