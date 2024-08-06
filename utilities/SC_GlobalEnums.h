@@ -168,6 +168,7 @@ enum class SCL_errorFlag : int {
   /// for a huge image
   MEMORY_ALLOCATE_FAILED = 0x12,
 
+  EXPORT_SCHEM_HAS_INVALID_ENTITY = 0x13,
 };
 
 enum class SCL_workStatus : int {

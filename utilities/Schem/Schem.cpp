@@ -289,50 +289,32 @@ void Schem::process_mushroom_states() noexcept {
   }
   return;
 }
-
-bool Schem::export_litematic(std::string_view filename,
-                             const litematic_info &info,
-                             SCL_errorFlag *const error_flag,
-                             std::string *const error_str) const noexcept {
+tl::expected<void, std::pair<SCL_errorFlag, std::string>>
+Schem::export_litematic(std::string_view filename,
+                        const litematic_info &info) const noexcept {
   if (std::filesystem::path(filename).extension() != ".litematic") {
     // wrong extension
-
-    if (error_flag != nullptr) {
-      *error_flag = SCL_errorFlag::EXPORT_SCHEM_WRONG_EXTENSION;
-    }
-    if (error_str != nullptr) {
-      *error_str = "The filename externsion must be \".litematic\".";
-    }
-    return false;
+    return tl::make_unexpected(
+        std::make_pair(SCL_errorFlag::EXPORT_SCHEM_WRONG_EXTENSION,
+                       "The filename externsion must be \".litematic\"."));
   }
   // check for invalid blocks
   {
     std::array<int64_t, 3> pos;
     if (this->have_invalid_block(&pos[0], &pos[1], &pos[2])) {
-      if (error_flag != nullptr) {
-        *error_flag = SCL_errorFlag::EXPORT_SCHEM_HAS_INVALID_BLOCKS;
-      }
-      if (error_str != nullptr) {
-        *error_str = "The first invalid block is at x=";
-        *error_str += std::to_string(pos[0]) + ", y=";
-        *error_str += std::to_string(pos[1]) + ", z=";
-        *error_str += std::to_string(pos[2]);
-      }
-      return false;
+      return tl::make_unexpected(std::make_pair(
+          SCL_errorFlag::EXPORT_SCHEM_HAS_INVALID_BLOCKS,
+          fmt::format("The first invalid block is at x={}, y={}, z={}", pos[0],
+                      pos[1], pos[2])));
     }
   }
 
   NBT::NBTWriter<true> lite;
 
   if (!lite.open(filename.data())) {
-    if (error_flag != nullptr) {
-      *error_flag = SCL_errorFlag::EXPORT_SCHEM_FAILED_TO_CREATE_FILE;
-    }
-    if (error_str != nullptr) {
-      *error_str = "Failed to open file : ";
-      *error_str += filename;
-    }
-    return false;
+    return tl::make_unexpected(
+        std::make_pair(SCL_errorFlag::EXPORT_SCHEM_FAILED_TO_CREATE_FILE,
+                       fmt::format("Failed to open file: {}", filename)));
   }
 
   lite.writeCompound("Metadata");
@@ -432,6 +414,23 @@ bool Schem::export_litematic(std::string_view filename,
         }
       }
       // progressAdd(wind, size3D[0]);
+
+      if (not this->entities.empty()) {
+        lite.writeListHead("Entities", NBT::tagType::Compound,
+                           this->entities.size());
+        for (auto &entity : this->entities) {
+          assert(entity);
+          lite.writeCompound();
+          auto res = entity->dump(lite, this->MC_data_ver);
+          if (not res) {
+            lite.endCompound();
+            return tl::make_unexpected(
+                std::make_pair(SCL_errorFlag::EXPORT_SCHEM_HAS_INVALID_ENTITY,
+                               std::move(res.error())));
+          }
+          lite.endCompound();
+        }
+      }
     }
     lite.endCompound();  // end current region
   }
@@ -454,28 +453,16 @@ bool Schem::export_litematic(std::string_view filename,
       lite.writeInt("Version", 5);
       break;
     default:
-      std::cerr << "Wrong game version!" << std::endl;
       lite.close();
-      if (error_flag != nullptr) {
-        *error_flag = SCL_errorFlag::UNKNOWN_MAJOR_GAME_VERSION;
-      }
-      if (error_str != nullptr) {
-        *error_str =
-            "Unknown major game version! Only 1.12 to 1.19 is "
-            "supported, but given value " +
-            std::to_string((int)this->MC_major_ver);
-      }
-      return false;
+      return tl::make_unexpected(std::make_pair(
+          SCL_errorFlag::UNKNOWN_MAJOR_GAME_VERSION,
+          fmt::format("Unknown major game version! Only 1.12 to 1.19 is "
+                      "supported, but given value {}",
+                      int(this->MC_major_ver))));
   }
   lite.close();
 
-  if (error_flag != nullptr) {
-    *error_flag = SCL_errorFlag::NO_ERROR_OCCUR;
-  }
-  if (error_str != nullptr) {
-    *error_str = "";
-  }
-  return true;
+  return {};
 }
 
 bool Schem::export_structure(std::string_view filename,

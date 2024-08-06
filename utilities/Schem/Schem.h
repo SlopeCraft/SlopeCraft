@@ -38,6 +38,7 @@ This file is part of SlopeCraft.
 #include <concepts>
 
 #include "SC_GlobalEnums.h"
+#include "entity.h"
 
 namespace libSchem {
 // template <int64_t max_block_count = 256>
@@ -81,8 +82,12 @@ class Schem {
   ::SCL_gameVersion MC_major_ver;
   MCDataVersion::MCDataVersion_t MC_data_ver;
 
+  std::vector<std::unique_ptr<entity>> entities;
+
  public:
   Schem() { xzy.resize(0, 0, 0); }
+  Schem(const Schem &) = delete;
+  Schem(Schem &&) = default;
   Schem(int64_t x, int64_t y, int64_t z) {
     xzy.resize(x, y, z);
     xzy.setZero();
@@ -228,10 +233,37 @@ class Schem {
   void process_mushroom_states_fast() noexcept;
 
  public:
-  bool export_litematic(std::string_view filename,
-                        const litematic_info &info = litematic_info(),
-                        SCL_errorFlag *const error_flag = nullptr,
-                        std::string *const error_str = nullptr) const noexcept;
+  static void update_error_dest(
+      const tl::expected<void, std::pair<SCL_errorFlag, std::string>> &result,
+      SCL_errorFlag *const error_flag, std::string *const error_str) noexcept {
+    if (result) {
+      if (error_flag not_eq nullptr) {
+        *error_flag = SCL_errorFlag::NO_ERROR_OCCUR;
+      }
+      if (error_str not_eq nullptr) {
+        error_str->clear();
+      }
+    } else {
+      auto &err = result.error();
+      if (error_flag not_eq nullptr) {
+        *error_flag = err.first;
+      }
+      if (error_str not_eq nullptr) {
+        *error_str = err.second;
+      }
+    }
+  }
+  tl::expected<void, std::pair<SCL_errorFlag, std::string>> export_litematic(
+      std::string_view filename, const litematic_info &info) const noexcept;
+
+  [[deprecated]] bool export_litematic(
+      std::string_view filename, const litematic_info &info,
+      SCL_errorFlag *const error_flag,
+      std::string *const error_str) const noexcept {
+    auto res = this->export_litematic(filename, info);
+    update_error_dest(res, error_flag, error_str);
+    return res.has_value();
+  }
 
   bool export_structure(std::string_view filename,
                         const bool is_air_structure_void = true,
