@@ -256,6 +256,14 @@ class Schem {
   tl::expected<void, std::pair<SCL_errorFlag, std::string>> export_litematic(
       std::string_view filename, const litematic_info &info) const noexcept;
 
+  tl::expected<void, std::pair<SCL_errorFlag, std::string>> export_structure(
+      std::string_view filename,
+      const bool is_air_structure_void) const noexcept;
+
+  tl::expected<void, std::pair<SCL_errorFlag, std::string>> export_WESchem(
+      std::string_view filename,
+      const WorldEditSchem_info &info) const noexcept;
+
   [[deprecated]] bool export_litematic(
       std::string_view filename, const litematic_info &info,
       SCL_errorFlag *const error_flag,
@@ -265,18 +273,29 @@ class Schem {
     return res.has_value();
   }
 
-  bool export_structure(std::string_view filename,
-                        const bool is_air_structure_void = true,
-                        SCL_errorFlag *const error_flag = nullptr,
-                        std::string *const error_str = nullptr) const noexcept;
+  [[deprecated]] bool export_structure(
+      std::string_view filename, const bool is_air_structure_void,
+      SCL_errorFlag *const error_flag,
+      std::string *const error_str) const noexcept {
+    auto res = this->export_structure(filename, is_air_structure_void);
+    update_error_dest(res, error_flag, error_str);
+    return res.has_value();
+  }
 
-  bool export_WESchem(std::string_view filename,
-                      const WorldEditSchem_info &info = WorldEditSchem_info(),
-                      SCL_errorFlag *const error_flag = nullptr,
-                      std::string *const error_str = nullptr) const noexcept;
+  [[deprecated]] bool export_WESchem(
+      std::string_view filename, const WorldEditSchem_info &info,
+      SCL_errorFlag *const error_flag,
+      std::string *const error_str) const noexcept {
+    auto res = this->export_WESchem(filename, info);
+    update_error_dest(res, error_flag, error_str);
+    return res.has_value();
+  }
 
  private:
   friend class cereal::access;
+
+  tl::expected<void, std::pair<SCL_errorFlag, std::string>> pre_check(
+      std::string_view filename, std::string_view extension) const noexcept;
 
   template <class archive>
   void save(archive &ar) const {
