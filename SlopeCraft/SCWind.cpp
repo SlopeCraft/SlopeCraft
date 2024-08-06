@@ -898,7 +898,7 @@ void SCWind::refresh_current_build_display(cvt_task *taskp) noexcept {
 }
 
 tl::expected<QString, QString> SCWind::get_command(
-    const SlopeCraft::converted_image &cvted) const noexcept {
+    const SlopeCraft::converted_image &cvted, int begin_idx) const noexcept {
   QString command;
   SlopeCraft::ostream_wrapper os{
       .handle = &command,
@@ -922,7 +922,7 @@ tl::expected<QString, QString> SCWind::get_command(
 
   SlopeCraft::map_data_file_give_command_options opt{};
   opt.destination = &os;
-  opt.begin_index = this->ui->sb_file_start_idx->value();
+  opt.begin_index = begin_idx;
   opt.after_1_12 = (this->selected_version() > SCL_gameVersion::MC12);
   opt.after_1_20_5 = after_1_20_5;
   const bool ok = cvted.get_map_command(opt);

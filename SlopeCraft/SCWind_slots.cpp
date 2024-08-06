@@ -662,7 +662,6 @@ void SCWind::on_pb_export_file_clicked() noexcept {
   if (dir.isEmpty()) {
     return;
   }
-
   prev_dir = dir;
 
   const int seq_first = this->current_map_begin_seq_number();
@@ -992,9 +991,6 @@ void SCWind::on_ac_memory_policy_triggered() noexcept {
   }
 }
 
-void SCWind::on_pb_export_data_command() noexcept {}
-void SCWind::on_pb_export_data_vanilla_structure() noexcept {}
-
 void SCWind::when_data_file_command_changed() noexcept {
   const auto export_tasks = this->selected_export_task_list();
   if (export_tasks.empty()) {
@@ -1012,6 +1008,9 @@ void SCWind::when_data_file_command_changed() noexcept {
     this->ui->pte_command->clear();
     return;
   }
+  const ptrdiff_t global_index = task - this->tasks.data();
+  assert(global_index >= 0 and global_index < this->tasks.size());
+
   auto it = task->converted_images.find(
       {this->current_color_table(), this->current_convert_option()});
   if (it == task->converted_images.end() or
@@ -1020,8 +1019,68 @@ void SCWind::when_data_file_command_changed() noexcept {
     return;
   }
   const SlopeCraft::converted_image &cvted = *it->second.converted_image;
+  const auto range = this->tasks.map_range_of(
+      this->ui->sb_file_start_idx->value(), global_index);
 
-  auto command_res = this->get_command(cvted);
+  auto command_res = this->get_command(cvted, range.first);
   this->ui->pte_command->setPlainText(command_res ? command_res.value()
                                                   : command_res.error());
 }
+
+void SCWind::on_pb_export_data_command_clicked() noexcept {
+  static QString prev_dir{""};
+  const QString dir =
+      QFileDialog::getExistingDirectory(this, tr("设置导出位置"), prev_dir);
+
+  if (dir.isEmpty()) {
+    return;
+  }
+  prev_dir = dir;
+  const auto converted_tasks = this->tasks.converted_tasks(
+      this->current_color_table(), this->current_convert_option());
+  const int begin_idx = this->ui->sb_file_start_idx->value();
+  int fail_count = 0;
+  QString fail_messages;
+  for (const auto [g_idx, task] : converted_tasks) {
+    assert(task != nullptr);
+    assert(g_idx < this->tasks.size());
+
+    const auto map_range = this->tasks.map_range_of(begin_idx, g_idx);
+    const auto command_res = this->get_command(
+        *(task->converted_images
+              .at({this->current_color_table(), this->current_convert_option()})
+              .converted_image),
+        map_range.first);
+    const QString ofilename =
+        QStringLiteral("%1/%2.txt")
+            .arg(dir, QFileInfo{task->filename}.baseName());
+    if (not command_res) {
+      fail_count++;
+      fail_messages.append(
+          tr("无法为 %1 生成命令：%2\n").arg(ofilename, command_res.error()));
+      continue;
+    }
+    QFile ofile{ofilename, this};
+    if (not ofile.open(QIODevice::OpenModeFlag::Text bitor
+                       QIODevice::OpenModeFlag::Truncate bitor
+                       QIODevice::OpenModeFlag::WriteOnly)) {
+      fail_count++;
+      fail_messages.append(
+          tr("无法创建/打开文件 %1：%2\n").arg(ofilename, ofile.errorString()));
+      continue;
+    }
+    ofile.write(command_res.value().toLocal8Bit());
+    if (ofile.error()) {
+      fail_count++;
+      fail_messages.append(
+          tr("无法写入文件 %1：%2\n").arg(ofilename, ofile.errorString()));
+      continue;
+    }
+    ofile.close();
+  }
+  if (fail_count > 0) {
+    QMessageBox::critical(this, tr("%1 个文件保存失败").arg(fail_count),
+                          fail_messages);
+  }
+}
+void SCWind::on_pb_export_data_vanilla_structure_clicked() noexcept {}

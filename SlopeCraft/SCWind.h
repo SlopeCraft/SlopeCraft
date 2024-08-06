@@ -97,8 +97,8 @@ class SCWind : public QMainWindow {
   void on_pb_export_all_clicked() noexcept;
   // exports for data file
   void on_pb_export_file_clicked() noexcept;
-  void on_pb_export_data_command() noexcept;
-  void on_pb_export_data_vanilla_structure() noexcept;
+  void on_pb_export_data_command_clicked() noexcept;
+  void on_pb_export_data_vanilla_structure_clicked() noexcept;
   void when_data_file_command_changed() noexcept;
 
  private slots:
@@ -273,7 +273,7 @@ class SCWind : public QMainWindow {
   auto_cache_report auto_cache_3D(bool cache_all = false) noexcept;
 
   [[nodiscard]] tl::expected<QString, QString> get_command(
-      const SlopeCraft::converted_image&) const noexcept;
+      const SlopeCraft::converted_image&, int begin_idx) const noexcept;
 
  signals:
   void image_changed();
