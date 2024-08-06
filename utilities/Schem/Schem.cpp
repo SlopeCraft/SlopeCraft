@@ -598,7 +598,39 @@ Schem::export_structure(std::string_view filename,
         }
       }
     }
-    // finish writting the whole 3D array
+    // finish writing the whole 3D array
+
+    if (not this->entities.size()) {
+      // write entities
+      file.writeListHead("entities", NBT::tagType::Compound,
+                         this->entities.size());
+      for (auto &entity : this->entities) {
+        file.writeCompound();
+        {
+          file.writeListHead("pos", NBT::tagType::Double, 3);
+          for (double pos : entity->position()) {
+            file.writeDouble("", pos);
+          }
+          file.writeListHead("blockPos", NBT::tagType::Int, 3);
+          for (double pos : entity->position()) {
+            file.writeInt("", std::floor(pos));
+          }
+          file.writeCompound("nbt");
+          {
+            auto res = entity->dump(file, this->MC_data_ver);
+            if (not res) {
+              file.endCompound();
+              return tl::make_unexpected(
+                  std::make_pair(SCL_errorFlag::EXPORT_SCHEM_HAS_INVALID_ENTITY,
+                                 std::move(res.error())));
+            }
+          }
+          file.endCompound();
+        }
+        file.endCompound();
+      }
+      // finish writing entities
+    }
 
     switch (this->MC_major_ver) {
       case ::SCL_gameVersion::MC12:
