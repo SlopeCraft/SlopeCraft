@@ -8,7 +8,12 @@ add_library(Schem
     bit_shrink.h
     bit_shrink.cpp
     mushroom.h
-    mushroom.cpp)
+    mushroom.cpp
+    entity.h
+    entity.cpp
+    item.cpp
+    item.h
+)
 find_package(Eigen3 REQUIRED)
 
 find_package(cereal REQUIRED)
@@ -21,7 +26,9 @@ target_link_libraries(Schem PUBLIC
     Eigen3::Eigen
     cereal::cereal
     fmt::fmt
-    magic_enum::magic_enum)
+    magic_enum::magic_enum
+    NBTWriter
+)
 target_compile_features(Schem PUBLIC cxx_std_23)
 target_link_libraries(Schem PUBLIC MCDataVersion ProcessBlockId)
 
