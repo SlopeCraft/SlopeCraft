@@ -13,6 +13,7 @@ if (NOT ${fmt_FOUND})
         GIT_REPOSITORY https://github.com/fmtlib/fmt.git
         GIT_TAG "10.1.1"
         OVERRIDE_FIND_PACKAGE
+        EXCLUDE_FROM_ALL
 
         # QUIET false
         # FETCHCONTENT_BASE_DIR ${CMAKE_BINARY_DIR}/3rdParty

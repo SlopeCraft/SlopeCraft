@@ -11,7 +11,9 @@ include(FetchContent)
 FetchContent_Declare(Eigen3
     GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
     GIT_TAG 3.4.0
-    OVERRIDE_FIND_PACKAGE)
+    OVERRIDE_FIND_PACKAGE
+    EXCLUDE_FROM_ALL
+)
 
 FetchContent_MakeAvailable(Eigen3)
 
