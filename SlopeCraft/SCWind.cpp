@@ -1303,3 +1303,16 @@ SCWind::auto_cache_report SCWind::auto_cache_3D(bool cache_all) noexcept {
 
   return report;
 }
+
+SlopeCraft::assembled_maps_options SCWind::current_assembled_maps_option()
+    const noexcept {
+  SlopeCraft::assembled_maps_options option;
+  option.frame_variant = this->ui->cb_glowing_item_frame->isChecked()
+                             ? SCL_item_frame_variant::glowing
+                             : SCL_item_frame_variant::common;
+  option.after_1_20_5 = this->ui->cb_mc_version_geq_1_20_5->isChecked();
+  option.fixed_frame = this->ui->cb_fixed_frame->isChecked();
+  option.invisible_frame = this->ui->cb_invisible_frame->isChecked();
+
+  return option;
+}

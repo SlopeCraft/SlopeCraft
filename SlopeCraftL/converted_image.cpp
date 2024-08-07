@@ -610,7 +610,7 @@ libSchem::Schem converted_image_impl::assembled_maps(
   const auto transform_mat = transform_mat_of(option.map_facing);
   const auto transform_mat_abs = transform_mat.array().abs().matrix();
   const Eigen::Vector3i offset =
-      (transform_mat_abs - transform_mat) *
+      (transform_mat_abs - transform_mat) / 2 *
       Eigen::Vector2i{{int(this->map_rows()), int(this->map_cols())}};
   // Shape of schematic
   const Eigen::Vector3i shape = [this, transform_mat_abs]() {
@@ -621,12 +621,25 @@ libSchem::Schem converted_image_impl::assembled_maps(
     return s;
   }();
 
+  const MCDataVersion::MCDataVersion_t data_version = [option]() {
+    if (option.mc_version == SCL_gameVersion::MC20) {
+      if (option.after_1_20_5) {
+        return MCDataVersion::MCDataVersion_t::Java_1_20_4;
+      }
+      return MCDataVersion::MCDataVersion_t::Java_1_20_5;
+    } else {
+      return MCDataVersion::suggested_version(option.mc_version);
+    }
+  }();
+
   libSchem::Schem schem;
   {
     std::string_view id_list[1]{std::string_view{"minecraft:air"}};
     schem.set_block_id(id_list);
     schem.resize(shape[0], shape[1], shape[2]);
     schem.fill(0);
+    schem.set_MC_major_version_number(option.mc_version);
+    schem.set_MC_version_number(data_version);
   }
 
   const libSchem::item_frame_variant variant = [&option, this]() {

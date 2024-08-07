@@ -41,6 +41,11 @@ This file is part of SlopeCraft.
 #include "SC_GlobalEnums.h"
 #endif
 
+enum class SCL_item_frame_variant : uint16_t {
+  common = 0,
+  glowing = 1,
+};
+
 namespace SlopeCraft {
 
 // using step = ::SCL_step;
@@ -263,14 +268,11 @@ struct map_data_file_give_command_options {
   bool after_1_20_5{false};
 };
 
-enum class SCL_item_frame_variant : uint16_t {
-  common = 0,
-  glowing = 1,
-};
 struct assembled_maps_options {
   uint64_t caller_api_version{SC_VERSION_U64};
   SCL_item_frame_variant frame_variant{SCL_item_frame_variant::common};
   SCL_map_facing map_facing{SCL_map_facing::wall_north};
+  SCL_gameVersion mc_version{SCL_gameVersion::MC19};
   bool after_1_20_5{false};
   bool fixed_frame{true};
   bool invisible_frame{true};
