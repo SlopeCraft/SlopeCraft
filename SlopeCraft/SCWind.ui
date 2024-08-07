@@ -1436,6 +1436,9 @@
                 <property name="text">
                  <string>展示框不可破坏</string>
                 </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
                </widget>
               </item>
               <item row="1" column="3">
@@ -1517,7 +1520,7 @@
               <item row="1" column="2">
                <widget class="QComboBox" name="cb_export_assembled_format">
                 <property name="currentText">
-                 <string>导出Litematica</string>
+                 <string/>
                 </property>
                 <property name="placeholderText">
                  <string>导出组装地图画的格式</string>
