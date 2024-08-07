@@ -407,10 +407,8 @@ Schem::export_litematic(std::string_view filename,
         }
       }
 
-      lite.writeListHead("Entities", NBT::Compound, 0);
       lite.writeListHead("PendingBlockTicks", NBT::Compound, 0);
       lite.writeListHead("PendingFluidTiccks", NBT::Compound, 0);
-      lite.writeListHead("TileEntities", NBT::Compound, 0);
 
       // write 3D
       std::vector<uint64_t> shrinked;
@@ -426,21 +424,19 @@ Schem::export_litematic(std::string_view filename,
       }
       // progressAdd(wind, size3D[0]);
 
-      if (not this->entities.empty()) {
-        lite.writeListHead("Entities", NBT::tagType::Compound,
-                           this->entities.size());
-        for (auto &entity : this->entities) {
-          assert(entity);
-          lite.writeCompound();
-          auto res = entity->dump(lite, this->MC_data_ver);
-          if (not res) {
-            lite.endCompound();
-            return tl::make_unexpected(
-                std::make_pair(SCL_errorFlag::EXPORT_SCHEM_HAS_INVALID_ENTITY,
-                               std::move(res.error())));
-          }
+      lite.writeListHead("Entities", NBT::tagType::Compound,
+                         this->entities.size());
+      for (auto &entity : this->entities) {
+        assert(entity);
+        lite.writeCompound();
+        auto res = entity->dump(lite, this->MC_data_ver);
+        if (not res) {
           lite.endCompound();
+          return tl::make_unexpected(
+              std::make_pair(SCL_errorFlag::EXPORT_SCHEM_HAS_INVALID_ENTITY,
+                             std::move(res.error())));
         }
+        lite.endCompound();
       }
     }
     lite.endCompound();  // end current region
@@ -519,7 +515,6 @@ Schem::export_structure(std::string_view filename,
                        fmt::format("Failed to open file {}", filename)));
   }
 
-  file.writeListHead("entities", NBT::Byte, 0);
   file.writeListHead("size", NBT::Int, 3);
   {
     file.writeInt("This should never be shown", x_range());
@@ -600,37 +595,39 @@ Schem::export_structure(std::string_view filename,
     }
     // finish writing the whole 3D array
 
-    if (not this->entities.size()) {
-      // write entities
-      file.writeListHead("entities", NBT::tagType::Compound,
-                         this->entities.size());
-      for (auto &entity : this->entities) {
-        file.writeCompound();
+    // write entities
+    file.writeListHead("entities", NBT::tagType::Compound,
+                       this->entities.size());
+    for (auto &entity : this->entities) {
+      file.writeCompound();
+      {
+        file.writeListHead("pos", NBT::tagType::Double, 3);
+        for (double pos : entity->position()) {
+          file.writeDouble("", pos);
+        }
+        assert(file.isInCompound());
+        file.writeListHead("blockPos", NBT::tagType::Int, 3);
+        for (double pos : entity->position()) {
+          file.writeInt("", std::floor(pos));
+        }
+        assert(file.isInCompound());
+        file.writeCompound("nbt");
         {
-          file.writeListHead("pos", NBT::tagType::Double, 3);
-          for (double pos : entity->position()) {
-            file.writeDouble("", pos);
+          auto res = entity->dump(file, this->MC_data_ver);
+          if (not res) {
+            file.endCompound();
+            file.close_file();
+            return tl::make_unexpected(
+                std::make_pair(SCL_errorFlag::EXPORT_SCHEM_HAS_INVALID_ENTITY,
+                               std::move(res.error())));
           }
-          file.writeListHead("blockPos", NBT::tagType::Int, 3);
-          for (double pos : entity->position()) {
-            file.writeInt("", std::floor(pos));
-          }
-          file.writeCompound("nbt");
-          {
-            auto res = entity->dump(file, this->MC_data_ver);
-            if (not res) {
-              file.endCompound();
-              return tl::make_unexpected(
-                  std::make_pair(SCL_errorFlag::EXPORT_SCHEM_HAS_INVALID_ENTITY,
-                                 std::move(res.error())));
-            }
-          }
-          file.endCompound();
         }
         file.endCompound();
       }
-      // finish writing entities
+      file.endCompound();
     }
+    // finish writing entities
+    assert(file.isInCompound());
 
     switch (this->MC_major_ver) {
       case ::SCL_gameVersion::MC12:
