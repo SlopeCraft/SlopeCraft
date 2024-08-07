@@ -6,6 +6,9 @@
 #include <QApplication>
 #include <QDesktopServices>
 #include <QRgb>
+
+#include <magic_enum.hpp>
+
 #include "PreviewWind.h"
 #include "AiCvterParameterDialog.h"
 #include "VersionDialog.h"
@@ -1052,7 +1055,7 @@ void SCWind::on_pb_export_data_command_clicked() noexcept {
               .converted_image),
         map_range.first);
     const QString ofilename =
-        QStringLiteral("%1/%2.txt")
+        QStringLiteral("%1/command_%2txt")
             .arg(dir, QFileInfo{task->filename}.baseName());
     if (not command_res) {
       fail_count++;
@@ -1083,4 +1086,84 @@ void SCWind::on_pb_export_data_command_clicked() noexcept {
                           fail_messages);
   }
 }
-void SCWind::on_pb_export_data_vanilla_structure_clicked() noexcept {}
+void SCWind::on_pb_export_data_vanilla_structure_clicked() noexcept {
+  static QString prev_dir{""};
+  const QString dir =
+      QFileDialog::getExistingDirectory(this, tr("设置导出位置"), prev_dir);
+
+  if (dir.isEmpty()) {
+    return;
+  }
+  prev_dir = dir;
+
+  const bool export_as_lite =
+      this->ui->cb_export_assembled_format->currentIndex() <= 0;
+  const auto converted_tasks = this->tasks.converted_tasks(
+      this->current_color_table(), this->current_convert_option());
+  const int begin_idx = this->ui->sb_file_start_idx->value();
+
+  int fail_count = 0;
+  QString fail_messages;
+  auto lite_option = this->current_litematic_option(fail_messages).value();
+  auto nbt_option = this->current_nbt_option(fail_messages).value();
+
+  this->ui->pbar_export->setValue(0);
+  this->ui->pbar_export->setMinimum(0);
+  this->ui->pbar_export->setMaximum(converted_tasks.size());
+
+  for (const auto [g_idx, task] : converted_tasks) {
+    assert(task not_eq nullptr);
+    assert(g_idx < this->tasks.size());
+
+    const auto map_range = this->tasks.map_range_of(begin_idx, g_idx);
+    auto option = this->current_assembled_maps_option();
+    option.begin_index = map_range.first;
+
+    const QString ofilename =
+        QStringLiteral("%1/maps_%2.%3")
+            .arg(dir, QFileInfo{task->filename}.baseName(),
+                 export_as_lite ? "litematic" : "nbt");
+
+    const auto &cvted =
+        (task->converted_images
+             .at({this->current_color_table(), this->current_convert_option()})
+             .converted_image);
+
+    QString err_temp = tr("SlopeCraftL 未提供详细报错信息。");
+    auto report_err_cb = [&err_temp](SCL_errorFlag e, const char *msg) {
+      err_temp =
+          tr("错误码：%1，详情：%2").arg(magic_enum::enum_name(e).data(), msg);
+    };
+    // Set up ui callbacks;
+    {
+      SlopeCraft::ui_callbacks ui{};
+      ui.wind = reinterpret_cast<void *>(&report_err_cb);
+      using cb_type = decltype(report_err_cb);
+      ui.cb_report_error = [](void *lambda, SCL_errorFlag e, const char *msg) {
+        (reinterpret_cast<cb_type *>(lambda))->operator()(e, msg);
+      };
+      lite_option.ui = ui;
+      nbt_option.ui = ui;
+    }
+
+    bool ok;
+    if (export_as_lite) {
+      ok = cvted->export_assembled_maps_litematic(
+          ofilename.toLocal8Bit().data(), option, lite_option);
+    } else {
+      ok = cvted->export_assembled_maps_vanilla_structure(
+          ofilename.toLocal8Bit().data(), option, nbt_option);
+    }
+    if (not ok) {
+      fail_count++;
+      fail_messages.append(tr("%1 生成失败，%2\n").arg(ofilename, err_temp));
+    }
+
+    this->ui->pbar_export->setValue(this->ui->pbar_export->value() + 1);
+  }
+  if (fail_count > 0) {
+    QMessageBox::critical(this, tr("%1 个文件保存失败").arg(fail_count),
+                          fail_messages);
+  }
+  this->ui->pbar_export->setValue(converted_tasks.size());
+}

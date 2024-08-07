@@ -150,6 +150,17 @@ SCWind::SCWind(QWidget *parent) : QMainWindow(parent), ui(new Ui::SCWind) {
       abort();
     }
   }
+  // initialize combobox for map facing
+  {
+    const std::array<QString, 3> key1{tr("墙面"), tr("顶面"), tr("底面")};
+    const std::array<QString, 4> key2{tr("北"), tr("南"), tr("东"), tr("西")};
+    for (auto facing : magic_enum::enum_values<SCL_map_facing>()) {
+      const int idx = static_cast<int>(facing);
+      const QString text = tr("%1向%2").arg(key1[idx / 4], key2[idx % 4]);
+      this->ui->cb_map_direction->addItem(text, QVariant::fromValue(facing));
+    }
+    this->ui->cb_map_direction->setCurrentIndex(0);
+  }
 
   this->when_preset_clicked();
 }
@@ -293,11 +304,7 @@ SCL_gameVersion SCWind::selected_version() const noexcept {
       return SCL_gameVersion(idx + 12);
     }
   }
-
-  assert(false);
-  abort();
-
-  // return SCL_gameVersion::ANCIENT;
+  return SCL_gameVersion::ANCIENT;
 }
 
 SCL_mapTypes SCWind::selected_type() const noexcept {
@@ -1267,7 +1274,8 @@ bool SCWind::should_auto_cache(bool suppress_warnings) noexcept {
   return result;
 }
 
-SCWind::auto_cache_report SCWind::auto_cache_3D(bool cache_all) noexcept {
+SCWind::auto_cache_report SCWind::auto_cache_3D(
+    [[maybe_unused]] bool cache_all) noexcept {
   //  const auto colortable = this->current_color_table();
   //  const auto build_opt = this->current_build_option();
   auto_cache_report report{
@@ -1307,12 +1315,15 @@ SCWind::auto_cache_report SCWind::auto_cache_3D(bool cache_all) noexcept {
 SlopeCraft::assembled_maps_options SCWind::current_assembled_maps_option()
     const noexcept {
   SlopeCraft::assembled_maps_options option;
+  option.mc_version = this->selected_version();
   option.frame_variant = this->ui->cb_glowing_item_frame->isChecked()
                              ? SCL_item_frame_variant::glowing
                              : SCL_item_frame_variant::common;
   option.after_1_20_5 = this->ui->cb_mc_version_geq_1_20_5->isChecked();
   option.fixed_frame = this->ui->cb_fixed_frame->isChecked();
   option.invisible_frame = this->ui->cb_invisible_frame->isChecked();
+  option.map_facing =
+      this->ui->cb_map_direction->currentData().value<SCL_map_facing>();
 
   return option;
 }

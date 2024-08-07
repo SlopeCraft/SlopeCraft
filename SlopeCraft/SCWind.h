@@ -207,6 +207,9 @@ class SCWind : public QMainWindow {
 
   int current_map_begin_seq_number() const noexcept;
 
+  SlopeCraft::assembled_maps_options current_assembled_maps_option()
+      const noexcept;
+
   inline auto lang() const noexcept { return this->language; }
   void set_lang(::SCL_language lang) noexcept;
 
