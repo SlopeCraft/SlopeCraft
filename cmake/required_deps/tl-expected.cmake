@@ -1,4 +1,4 @@
- find_package(tl-expected QUIET)
+ find_package(tl-expected 1.1.0 QUIET)
  if (NOT tl-expected_FOUND)
      include(FetchContent)
      message(STATUS "Downloading tl-expected...")
