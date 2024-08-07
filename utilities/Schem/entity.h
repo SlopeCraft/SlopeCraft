@@ -101,7 +101,7 @@ class item_frame : public hangable {
   int8_t item_rotation{0};
   float item_drop_chance{1};
 
-  std::unique_ptr<item> item{nullptr};
+  std::unique_ptr<item> item_{nullptr};
 
   item_frame_variant variant_{item_frame_variant::common};
 

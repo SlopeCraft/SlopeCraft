@@ -74,9 +74,9 @@ tl::expected<size_t, std::string> libSchem::item_frame::dump(
   }
   bytes += destination.writeByte("ItemRotation", this->item_rotation);
 
-  if (this->item not_eq nullptr) {
+  if (this->item_ not_eq nullptr) {
     bytes += destination.writeCompound("Item");
-    auto res_item = this->item->dump(destination, data_version);
+    auto res_item = this->item_->dump(destination, data_version);
     if (not res_item) {
       return tl::make_unexpected(
           fmt::format("Failed to dump item fields: {}", res_item.error()));

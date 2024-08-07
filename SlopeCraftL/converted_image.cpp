@@ -696,7 +696,7 @@ libSchem::Schem converted_image_impl::assembled_maps(
       {
         auto map_item = std::make_unique<libSchem::filled_map>();
         map_item->map_id = map_index;
-        map_entity->item = std::move(map_item);
+        map_entity->item_ = std::move(map_item);
       }
 
       schem.entity_list().emplace_back(std::move(map_entity));
