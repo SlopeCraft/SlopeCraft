@@ -156,7 +156,7 @@ SCWind::SCWind(QWidget *parent) : QMainWindow(parent), ui(new Ui::SCWind) {
     const std::array<QString, 4> key2{tr("北"), tr("南"), tr("东"), tr("西")};
     for (auto facing : magic_enum::enum_values<SCL_map_facing>()) {
       const int idx = static_cast<int>(facing);
-      const QString text = tr("%1向%2").arg(key1[idx / 4], key2[idx % 4]);
+      const QString text = tr("%1，向%2").arg(key1[idx / 4], key2[idx % 4]);
       this->ui->cb_map_direction->addItem(text, QVariant::fromValue(facing));
     }
     this->ui->cb_map_direction->setCurrentIndex(0);
