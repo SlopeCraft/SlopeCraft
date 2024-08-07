@@ -1321,53 +1321,37 @@
           </widget>
           <widget class="QWidget" name="page_export_data">
            <layout class="QGridLayout" name="gridLayout_23">
-            <item row="4" column="0" colspan="3">
-             <layout class="QHBoxLayout" name="horizontalLayout_3">
-              <property name="topMargin">
-               <number>0</number>
+            <item row="2" column="0" colspan="3">
+             <widget class="QTableView" name="tview_export_fileonly">
+              <property name="alternatingRowColors">
+               <bool>true</bool>
               </property>
-              <item>
-               <widget class="QCheckBox" name="cb_mc_version_geq_1_20_5">
-                <property name="text">
-                 <string>MC版本≥1.20.5+</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer">
-                <property name="orientation">
-                 <enum>Qt::Orientation::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QPushButton" name="pb_export_data_command">
-                <property name="text">
-                 <string>导出命令</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="pb_export_data_vanilla_structure">
-                <property name="text">
-                 <string>导出地图画结构</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="pb_export_file">
-                <property name="text">
-                 <string>导出地图文件</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
+              <attribute name="horizontalHeaderStretchLastSection">
+               <bool>true</bool>
+              </attribute>
+             </widget>
+            </item>
+            <item row="3" column="0" colspan="3">
+             <widget class="QPlainTextEdit" name="pte_command">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="documentTitle">
+               <string/>
+              </property>
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+              <property name="plainText">
+               <string/>
+              </property>
+              <property name="placeholderText">
+               <string>批量获得地图物品的指令</string>
+              </property>
+             </widget>
             </item>
             <item row="0" column="0">
              <widget class="QLabel" name="label_3">
@@ -1384,21 +1368,13 @@
               <property name="text">
                <string>💡tips:  设置地图画起始序号后，点击“导出”，选择输出地图数据文件的位置，就完成导出任务了。
 
-在下面的表格里可以看到每个图像对应的文件名。</string>
+在下面的表格里可以看到每个图像对应的文件名。
+
+图像数据存储在地图数据文件中，必须先为存档导入地图数据文件，地图画结构才能生效。</string>
               </property>
               <property name="wordWrap">
                <bool>true</bool>
               </property>
-             </widget>
-            </item>
-            <item row="2" column="0" colspan="3">
-             <widget class="QTableView" name="tview_export_fileonly">
-              <property name="alternatingRowColors">
-               <bool>true</bool>
-              </property>
-              <attribute name="horizontalHeaderStretchLastSection">
-               <bool>true</bool>
-              </attribute>
              </widget>
             </item>
             <item row="1" column="0" colspan="3">
@@ -1437,27 +1413,128 @@
               </item>
              </layout>
             </item>
-            <item row="3" column="0" colspan="3">
-             <widget class="QPlainTextEdit" name="pte_command">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
+            <item row="4" column="0" colspan="3">
+             <layout class="QGridLayout" name="gridLayout_26">
+              <property name="topMargin">
+               <number>20</number>
               </property>
-              <property name="documentTitle">
-               <string/>
-              </property>
-              <property name="readOnly">
-               <bool>true</bool>
-              </property>
-              <property name="plainText">
-               <string/>
-              </property>
-              <property name="placeholderText">
-               <string>批量获得地图物品的指令</string>
-              </property>
-             </widget>
+              <item row="1" column="4">
+               <widget class="QPushButton" name="pb_export_data_command">
+                <property name="whatsThis">
+                 <string>导出批量获得地图物品的命令（txt）</string>
+                </property>
+                <property name="text">
+                 <string>导出命令</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QCheckBox" name="cb_fixed_frame">
+                <property name="whatsThis">
+                 <string>生存模式不可破坏展示框；移除它依附的方块，展示框也不会消失。</string>
+                </property>
+                <property name="text">
+                 <string>展示框不可破坏</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="3">
+               <spacer name="horizontalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Orientation::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="0" column="0">
+               <widget class="QCheckBox" name="cb_mc_version_geq_1_20_5">
+                <property name="whatsThis">
+                 <string>1.20.5后，物品格式发生重大改变</string>
+                </property>
+                <property name="text">
+                 <string>MC版本≥1.20.5+</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2">
+               <widget class="QCheckBox" name="cb_glowing_item_frame">
+                <property name="whatsThis">
+                 <string>采用荧光物品显示框</string>
+                </property>
+                <property name="text">
+                 <string>荧光物品显示框</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="5">
+               <widget class="QPushButton" name="pb_export_data_vanilla_structure">
+                <property name="whatsThis">
+                 <string>导出包含物品展示框的投影/结构方块文件</string>
+                </property>
+                <property name="text">
+                 <string>导出组装的地图画</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="6">
+               <widget class="QPushButton" name="pb_export_file">
+                <property name="whatsThis">
+                 <string>导出map_i.dat的地图数据文件</string>
+                </property>
+                <property name="text">
+                 <string>导出地图文件</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QCheckBox" name="cb_invisible_frame">
+                <property name="whatsThis">
+                 <string>展示框背景将不可见</string>
+                </property>
+                <property name="text">
+                 <string>展示框透明</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QComboBox" name="cb_map_direction">
+                <property name="whatsThis">
+                 <string>地图画可依附于方块的侧面、顶面和底面</string>
+                </property>
+                <property name="maxVisibleItems">
+                 <number>13</number>
+                </property>
+                <property name="placeholderText">
+                 <string>地图画方向</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QComboBox" name="cb_export_assembled_format">
+                <property name="currentText">
+                 <string>导出Litematica</string>
+                </property>
+                <property name="placeholderText">
+                 <string>导出组装地图画的格式</string>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>导出Litematica</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>导出结构方块文件</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+             </layout>
             </item>
            </layout>
           </widget>
