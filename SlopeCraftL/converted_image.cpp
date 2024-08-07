@@ -536,52 +536,52 @@ Eigen::Matrix<int, 3, 2> transform_mat_of(SCL_map_facing facing) noexcept {
   switch (facing) {
     case SCL_map_facing::wall_west:
       return Eigen::Matrix<int, 3, 2>{{0, 0},   //
-                                      {0, -1},  // c y-
-                                      {1, 0}};  // r z+
+                                      {-1, 0},  // r y-
+                                      {0, 1}};  // c z+
     case SCL_map_facing::wall_north:
-      return Eigen::Matrix<int, 3, 2>{{-1, 0},  // r x-
-                                      {0, -1},  // c y-
+      return Eigen::Matrix<int, 3, 2>{{0, -1},  // c x-
+                                      {-1, 0},  // r y-
                                       {0, 0}};  //
     case SCL_map_facing::wall_east:
       return Eigen::Matrix<int, 3, 2>{{0, 0},    //
-                                      {0, -1},   // c y-
-                                      {-1, 0}};  // r z-
+                                      {-1, 0},   // r y-
+                                      {0, -1}};  // c z-
     case SCL_map_facing::wall_south:
-      return Eigen::Matrix<int, 3, 2>{{-1, 0},  // r x-
-                                      {0, -1},  // c y-
+      return Eigen::Matrix<int, 3, 2>{{0, 1},   // c x+
+                                      {-1, 0},  // r y-
                                       {0, 0}};  //
     case SCL_map_facing::top_south:
-      return Eigen::Matrix<int, 3, 2>{{-1, 0},   // r x-
-                                      {0, 0},    //
-                                      {0, -1}};  // c z-
-    case SCL_map_facing::top_north:
-      return Eigen::Matrix<int, 3, 2>{{1, 0},   // r x+
-                                      {0, 0},   //
-                                      {0, 1}};  // c z+
-    case SCL_map_facing::top_east:
-      return Eigen::Matrix<int, 3, 2>{{0, -1},  // c x-
-                                      {0, 0},   //
-                                      {1, 0}};  // r z+
-    case SCL_map_facing::top_west:
-      return Eigen::Matrix<int, 3, 2>{{0, 1},    // c x+
-                                      {0, 0},    //
-                                      {-1, 0}};  // r z-
-    case SCL_map_facing::bottom_north:
-      return Eigen::Matrix<int, 3, 2>{{-1, 0},  // r x-
-                                      {0, 0},   //
-                                      {0, 1}};  // c z+
-    case SCL_map_facing::bottom_south:
-      return Eigen::Matrix<int, 3, 2>{{1, 0},   // r x+
-                                      {0, 0},   //
-                                      {0, 1}};  // c z+
-    case SCL_map_facing::bottom_east:
       return Eigen::Matrix<int, 3, 2>{{0, -1},   // c x-
                                       {0, 0},    //
                                       {-1, 0}};  // r z-
-    case SCL_map_facing::bottom_west:
+    case SCL_map_facing::top_north:
       return Eigen::Matrix<int, 3, 2>{{0, 1},   // c x+
                                       {0, 0},   //
                                       {1, 0}};  // r z+
+    case SCL_map_facing::top_east:
+      return Eigen::Matrix<int, 3, 2>{{-1, 0},  // r x-
+                                      {0, 0},   //
+                                      {0, 1}};  // c z+
+    case SCL_map_facing::top_west:
+      return Eigen::Matrix<int, 3, 2>{{1, 0},    // r x+
+                                      {0, 0},    //
+                                      {0, -1}};  // c z-
+    case SCL_map_facing::bottom_north:
+      return Eigen::Matrix<int, 3, 2>{{0, -1},  // c x-
+                                      {0, 0},   //
+                                      {1, 0}};  // r z+
+    case SCL_map_facing::bottom_south:
+      return Eigen::Matrix<int, 3, 2>{{0, 1},    // c x+
+                                      {0, 0},    //
+                                      {-1, 0}};  // r z-
+    case SCL_map_facing::bottom_east:
+      return Eigen::Matrix<int, 3, 2>{{-1, 0},   // r x-
+                                      {0, 0},    //
+                                      {0, -1}};  // c z-
+    case SCL_map_facing::bottom_west:
+      return Eigen::Matrix<int, 3, 2>{{1, 0},   // r x+
+                                      {0, 0},   //
+                                      {0, 1}};  // c z+
   }
   std::unreachable();
 }
@@ -590,16 +590,16 @@ uint8_t rotation_of(SCL_map_facing facing) noexcept {
   switch (facing) {
     case SCL_map_facing::top_south:
     case SCL_map_facing::bottom_north:
-      return 4;
+      return 2;
     case SCL_map_facing::top_north:
     case SCL_map_facing::bottom_south:
       return 0;
     case SCL_map_facing::top_east:
     case SCL_map_facing::bottom_east:
-      return 2;
+      return 1;
     case SCL_map_facing::top_west:
     case SCL_map_facing::bottom_west:
-      return 6;
+      return 3;
     default:
       return 0;
   }
@@ -611,7 +611,7 @@ libSchem::Schem converted_image_impl::assembled_maps(
   const auto transform_mat_abs = transform_mat.array().abs().matrix();
   const Eigen::Vector3i offset =
       (transform_mat_abs - transform_mat) / 2 *
-      Eigen::Vector2i{{int(this->map_rows()), int(this->map_cols())}};
+      Eigen::Vector2i{{int(this->map_rows() - 1), int(this->map_cols() - 1)}};
   // Shape of schematic
   const Eigen::Vector3i shape = [this, transform_mat_abs]() {
     Eigen::Vector3i s =
@@ -623,7 +623,7 @@ libSchem::Schem converted_image_impl::assembled_maps(
 
   const MCDataVersion::MCDataVersion_t data_version = [option]() {
     if (option.mc_version == SCL_gameVersion::MC20) {
-      if (option.after_1_20_5) {
+      if (not option.after_1_20_5) {
         return MCDataVersion::MCDataVersion_t::Java_1_20_4;
       }
       return MCDataVersion::MCDataVersion_t::Java_1_20_5;
@@ -655,7 +655,7 @@ libSchem::Schem converted_image_impl::assembled_maps(
 
   for (int r = 0; r < this->map_rows(); r++) {
     for (int c = 0; c < this->map_cols(); c++) {
-      const int map_index = option.begin_index + c + r * this->map_cols();
+      const int map_index = option.begin_index + r + c * this->map_rows();
       const Eigen::Vector3i position =
           transform_mat * Eigen::Vector2i{{r, c}} + offset;
       // Check map position
