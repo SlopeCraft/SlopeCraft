@@ -38,8 +38,8 @@ VersionDialog::~VersionDialog() { delete this->ui; }
 
 void VersionDialog::setup_text(QString title, QString content,
                                QString markdown_content,
-                               QString url_download) noexcept {
-  this->url_download = url_download;
+                               QString url_download_) noexcept {
+  this->url_download = url_download_;
   this->setWindowTitle(title);
   this->ui->label->setText(content);
   this->ui->tb->setMarkdown(markdown_content);
@@ -71,11 +71,11 @@ uint64_t version_string_to_u64(const char *str) noexcept {
 
 #include <json.hpp>
 
-version_info extract_latest_version(
-    std::string_view json_all_releaese) noexcept(false) {
+version_info extract_latest_version(std::string_view json_all_release) noexcept(
+    false) {
   using njson = nlohmann::json;
 
-  njson jo = njson::parse(json_all_releaese);
+  njson jo = njson::parse(json_all_release);
 
   version_info ret;
 
@@ -90,7 +90,7 @@ version_info extract_latest_version(
 
     const uint64_t ver = version_string_to_u64(tag.data());
 
-    if ((ver >> 48) != SC_VERSION_MAJOR_U16) {
+    if ((ver >> 48) not_eq SC_VERSION_MAJOR_U16) {
       continue;
     }
 
@@ -109,7 +109,6 @@ version_info extract_latest_version(
   if (latest.empty()) {
     throw std::runtime_error(
         "Failed to find any release that matches current major version.");
-    return {};
   }
 
   ret.tag_name = QString::fromStdString(latest.at("tag_name"));
@@ -128,11 +127,10 @@ void version_dialog_private_fun_when_network_finished(
     QWidget *window, QNetworkReply *reply, bool is_manually,
     QString software_name) noexcept;
 
-void VersionDialog::start_network_request(QWidget *window,
-                                          QString software_name,
-                                          const QUrl &url,
-                                          QNetworkAccessManager &manager,
-                                          bool is_manually) noexcept {
+void VersionDialog::start_network_request(
+    [[maybe_unused]] QWidget *window, QString software_name, const QUrl &url,
+    QNetworkAccessManager &manager,
+    [[maybe_unused]] bool is_manually) noexcept {
   QNetworkRequest request(url);
 
   QNetworkReply *reply = manager.get(request);
@@ -166,7 +164,7 @@ void version_dialog_private_fun_when_network_finished(
     QString data_dir = home_path + "/" + data_dir_name;
     QString log_file = data_dir.append("/UpdateCheckFailure.log");
     {
-      if (!QDir(data_dir).exists()) {
+      if (not QDir(data_dir).exists()) {
         QDir{home_path}.mkpath(data_dir_name);
       }
 
@@ -175,17 +173,16 @@ void version_dialog_private_fun_when_network_finished(
       log.write(content_qba);
       log.close();
     }
-
-    QMessageBox::warning(
-        window, QWidget::tr("获取最新版本失败"),
-        QWidget::tr("解析 \"%1\" "
-                    "返回的结果时出现错误：\n\n%"
-                    "2\n\n这不是一个致命错误，不影响软件使用。\n解析失败的信"
-                    "息已经存储在日志文件中 (%3)。")
-            .arg(reply->url().toString())
-            .arg(e.what())
-            .arg(log_file),
-        QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore});
+    if (is_manually) {
+      QMessageBox::warning(
+          window, QWidget::tr("获取最新版本失败"),
+          QWidget::tr("解析 \"%1\" "
+                      "返回的结果时出现错误：\n\n%"
+                      "2\n\n这不是一个致命错误，不影响软件使用。\n解析失败的信"
+                      "息已经存储在日志文件中 (%3)。")
+              .arg(reply->url().toString(), e.what(), log_file),
+          QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore});
+    }
     reply->deleteLater();
     return;
   }
@@ -212,8 +209,7 @@ void version_dialog_private_fun_when_network_finished(
       QMessageBox::information(
           window, QWidget::tr("检查更新成功"),
           QWidget::tr("您使用的版本 (%1) 比已发布的 (%2) 更新，可能是测试版。")
-              .arg(SC_VERSION_STR)
-              .arg(tag_name));
+              .arg(SC_VERSION_STR, tag_name));
     }
     return;
   }
@@ -224,11 +220,10 @@ void version_dialog_private_fun_when_network_finished(
     vd->setAttribute(Qt::WidgetAttribute::WA_AlwaysStackOnTop, true);
     vd->setWindowFlag(Qt::WindowType::Window, true);
 
-    vd->setup_text(QWidget::tr("%1 已更新").arg(software_name),
-                   QWidget::tr("最新版本为%1，当前版本为%2")
-                       .arg(tag_name)
-                       .arg(SC_VERSION_STR),
-                   info.body, info.html_url);
+    vd->setup_text(
+        QWidget::tr("%1 已更新").arg(software_name),
+        QWidget::tr("最新版本为%1，当前版本为%2").arg(tag_name, SC_VERSION_STR),
+        info.body, info.html_url);
 
     vd->show();
     return;

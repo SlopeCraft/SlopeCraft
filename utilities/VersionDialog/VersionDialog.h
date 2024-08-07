@@ -63,7 +63,7 @@ struct version_info {
   uint64_t version_u64;
 };
 
-version_info extract_latest_version(
-    std::string_view json_all_releaese) noexcept(false);
+version_info extract_latest_version(std::string_view json_all_release) noexcept(
+    false);
 
 #endif  // SLOPECRAFT_VISUALCRAFT_VERSION_DIALOG_H
