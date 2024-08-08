@@ -1,9 +1,11 @@
 #include "PoolModel.h"
 #include <QMimeData>
 #include <list>
+#include <stack>
 #include <QPainter>
 #include <QMessageBox>
 #include <SCWind.h>
+#include <ranges>
 
 PoolModel::PoolModel(SCWind* scw)
     : QAbstractListModel(scw), pool{scw->tasks}, scwind{scw} {
@@ -238,7 +240,7 @@ void map_indices(std::vector<T>& pool, std::vector<int> moved_indices,
 bool CvtPoolModel::dropMimeData(const QMimeData* data, Qt::DropAction action,
                                 int row, int column,
                                 const QModelIndex& parent) {
-  if (!this->canDropMimeData(data, action, row, column, parent)) {
+  if (not this->canDropMimeData(data, action, row, column, parent)) {
     return false;
   }
 
@@ -261,9 +263,28 @@ bool CvtPoolModel::dropMimeData(const QMimeData* data, Qt::DropAction action,
     if (src_indices.size() <= 0) {
       return true;
     }
+
 #pragma warning "TODO: Implement reshuffling here"
-    assert(("Reshuffing is not implemented yet", false));
-    //    map_indices(this->pool, src_indices, begin_row);
+    // Move all moved tasks into moved_tasks
+    std::stack<cvt_task> moved_tasks;
+    const auto invalid_name = QStringLiteral("__ ## invalid __ file &* marker");
+    for (int src_idx : src_indices | std::views::reverse) {
+      cvt_task temp;
+      temp.filename = invalid_name;
+      std::swap(temp, this->pool[src_idx]);
+      moved_tasks.emplace(std::move(temp));
+      this->pool.erase(this->pool.begin() + src_idx);
+    }
+    assert(moved_tasks.size() == src_indices.size());
+    const int insert_dest = begin_row - moved_tasks.size();
+    assert(insert_dest <= this->pool.size());
+    auto it_dest = this->pool.begin() + insert_dest;
+    while (not moved_tasks.empty()) {
+      cvt_task temp;
+      std::swap(temp, moved_tasks.top());
+      moved_tasks.pop();
+      it_dest = this->pool.insert(it_dest, std::move(temp));
+    }
   }
   this->refresh();
 

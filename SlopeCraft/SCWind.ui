@@ -463,7 +463,7 @@
              <bool>false</bool>
             </property>
             <property name="dragDropMode">
-             <enum>QAbstractItemView::DragDropMode::NoDragDrop</enum>
+             <enum>QAbstractItemView::DragDropMode::InternalMove</enum>
             </property>
             <property name="defaultDropAction">
              <enum>Qt::DropAction::IgnoreAction</enum>
@@ -475,7 +475,7 @@
              <enum>Qt::TextElideMode::ElideLeft</enum>
             </property>
             <property name="movement">
-             <enum>QListView::Movement::Static</enum>
+             <enum>QListView::Movement::Snap</enum>
             </property>
             <property name="flow">
              <enum>QListView::Flow::TopToBottom</enum>
