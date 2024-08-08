@@ -87,8 +87,16 @@ void SCWind::on_pb_remove_image_clicked() noexcept {
     return;
   }
 
-  for (const auto &qmi : selected) {
-    const int idx = qmi.row();
+  std::vector<int> row;
+  {
+    row.reserve(selected.size());
+    for (const auto &qmi : selected) {
+      row.emplace_back(qmi.row());
+    }
+    std::sort(row.begin(), row.end(), [](int a, int b) { return a > b; });
+  }
+
+  for (const int idx : row) {
     this->tasks.erase(this->tasks.begin() + idx);
   }
 
