@@ -25,16 +25,16 @@ class SCWind;
 struct colortable_settings {
   colortable_settings() = delete;
   colortable_settings(const selection& s, SCL_mapTypes t)
-      : selection{s}, map_type{t} {}
+      : selection_{s}, map_type{t} {}
 
   colortable_settings(selection&& s, SCL_mapTypes t)
-      : selection{std::move(s)}, map_type{t} {}
+      : selection_{std::move(s)}, map_type{t} {}
 
-  selection selection;
+  selection selection_;
   SCL_mapTypes map_type;
 
   [[nodiscard]] bool operator==(const colortable_settings& b) const noexcept {
-    if (this->selection not_eq b.selection) {
+    if (this->selection_ not_eq b.selection_) {
       return false;
     }
     if (this->map_type not_eq b.map_type) {
@@ -47,7 +47,8 @@ struct colortable_settings {
 template <>
 struct std::hash<colortable_settings> {
   uint64_t operator()(const colortable_settings& s) const noexcept {
-    return std::hash<selection>{}(s.selection) xor static_cast<int>(s.map_type);
+    return std::hash<selection>{}(s.selection_) xor
+           static_cast<int>(s.map_type);
   }
 };
 
