@@ -121,7 +121,8 @@ bool BlockListManager::add_blocklist(QString filename) noexcept {
       continue;
     }
 
-    this->blockslists.emplace_back(std::move(tmp));
+    this->blockslists.emplace_back(QFileInfo{filename}.fileName(),
+                                   std::move(tmp));
     return true;
   }
 

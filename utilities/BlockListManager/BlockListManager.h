@@ -55,7 +55,8 @@ class BlockListManager : public QWidget {
  private:
   std::vector<std::unique_ptr<BaseColorWidget>> basecolor_widgets;
   std::vector<
-      std::unique_ptr<SlopeCraft::block_list_interface, BlockListDeleter>>
+      std::pair<QString, std::unique_ptr<SlopeCraft::block_list_interface,
+                                         BlockListDeleter>>>
       blockslists;
   std::function<SCL_gameVersion()> callback_get_version{nullptr};
 
@@ -114,6 +115,17 @@ class BlockListManager : public QWidget {
   }
 
   [[nodiscard]] selection current_selection() const noexcept;
+
+  [[nodiscard]] std::vector<
+      std::pair<QString, const SlopeCraft::block_list_interface *>>
+  get_block_lists() const noexcept {
+    std::vector<std::pair<QString, const SlopeCraft::block_list_interface *>>
+        ret;
+    for (auto &[name, list] : this->blockslists) {
+      ret.emplace_back(name, list.get());
+    }
+    return ret;
+  }
 
  signals:
   void changed();
