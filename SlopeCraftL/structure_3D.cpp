@@ -346,7 +346,7 @@ bool structure_3D_impl::export_flat_diagram(
       return false;
     }
 
-    img_list_rmj.emplace_back(blkp->image.transpose());
+    img_list_rmj.emplace_back(blkp->image);
   }
 
   auto block_at_callback = [this, &img_list_rmj](

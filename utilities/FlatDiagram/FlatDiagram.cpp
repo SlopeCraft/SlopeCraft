@@ -69,7 +69,7 @@ std::string libFlatDiagram::export_flat_diagram(
     std::string_view png_filename, const fd_option &opt,
     const get_blk_image_callback_t &blk_image_at,
     std::span<std::pair<std::string, std::string>> texts) noexcept {
-  const int64_t rows_capacity_by_blocks = 64;
+  const int64_t rows_capacity_by_blocks = 16;
 
   EImgRowMajor_t buffer(rows_capacity_by_blocks * 16, opt.cols * 16);
 
@@ -123,32 +123,30 @@ std::string libFlatDiagram::export_flat_diagram(
     png_set_text(png, png_info, png_txts.data(), png_txts.size());
   }
 
-  for (int64_t ridx = opt.row_start; ridx < opt.row_end;
-       ridx += rows_capacity_by_blocks) {
-    const int64_t rows_this_time =
-        std::min(opt.row_end - ridx, rows_capacity_by_blocks);
-    memset(buffer.data(), 0xFF, buffer.size() * sizeof(uint32_t));
+  try {
+    for (int64_t ridx = opt.row_start; ridx < opt.row_end;
+         ridx += rows_capacity_by_blocks) {
+      const int64_t rows_this_time =
+          std::min(opt.row_end - ridx, rows_capacity_by_blocks);
+      buffer.fill(0xFFFFFFFF);
 
-    fd_option opt_temp = opt;
-    opt_temp.row_start = ridx;
-    opt_temp.row_end = ridx + rows_this_time;
+      fd_option opt_temp = opt;
+      opt_temp.row_start = ridx;
+      opt_temp.row_end = ridx + rows_this_time;
 
-    draw_flat_diagram_to_memory({buffer.data(), buffer.rows(), buffer.cols()},
-                                opt_temp, blk_image_at);
+      draw_flat_diagram_to_memory({buffer.data(), buffer.rows(), buffer.cols()},
+                                  opt_temp, blk_image_at);
 
-    ARGB_to_AGBR(buffer.data(), rows_this_time * 16 * opt.cols * 16);
+      ARGB_to_AGBR(buffer.data(), rows_this_time * 16 * opt.cols * 16);
 
-    for (int64_t pix_r = 0; pix_r < rows_this_time * 16; pix_r++) {
-      // The row pointer should only be converted to const uint8_t*, but there
-      // is a terrible bug on libpng from brew makes this code fail to compile:
-      // binary interface function png_write_row is trampered to
-      // `void png_write_row(png_structrp png_ptr, png_bytep row)`.
-      // This bug doesn't exist in windows and linux, but only with libpng
-      // installed with homebrew.
-      png_write_row(png, reinterpret_cast<const uint8_t *>(&buffer(pix_r, 0)));
-      // This is terrible because a const pointer have to be converted to
-      // non-constant
+      for (int64_t pix_r = 0; pix_r < rows_this_time * 16; pix_r++) {
+        png_write_row(png,
+                      reinterpret_cast<const uint8_t *>(&buffer(pix_r, 0)));
+      }
     }
+  } catch (const std::exception &e) {
+    return fmt::format("Exception occurred while writing flat diagram: {}",
+                       e.what());
   }
 
   png_write_end(png, png_info);
