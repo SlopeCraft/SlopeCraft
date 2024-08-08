@@ -89,7 +89,7 @@ BlockListManager::impl_addblocklist(const QString &filename) noexcept {
       return {nullptr};
     } else {
       QMessageBox::warning(dynamic_cast<QWidget *>(this->parent()),
-                           tr("解析方块列表失败"),
+                           tr("解析方块列表成功，但出现警告"),
                            QString::fromUtf8(warning.data()));
     }
   }
@@ -112,16 +112,20 @@ BlockListManager::impl_addblocklist(const QString &filename) noexcept {
 }
 
 bool BlockListManager::add_blocklist(QString filename) noexcept {
-  std::unique_ptr<SlopeCraft::block_list_interface, BlockListDeleter> tmp =
-      this->impl_addblocklist(filename);
+  // Test for multiple encodings
+  for (auto &encoding : {filename.toLocal8Bit(), filename.toUtf8()}) {
+    std::unique_ptr<SlopeCraft::block_list_interface, BlockListDeleter> tmp =
+        this->impl_addblocklist(encoding.data());
 
-  if (!tmp) {
-    return false;
+    if (not tmp) {
+      continue;
+    }
+
+    this->blockslists.emplace_back(std::move(tmp));
+    return true;
   }
 
-  this->blockslists.emplace_back(std::move(tmp));
-
-  return true;
+  return false;
 }
 
 void BlockListManager::finish_blocklist() noexcept {

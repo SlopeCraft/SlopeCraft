@@ -43,15 +43,46 @@ SCWind::SCWind(QWidget *parent) : QMainWindow(parent), ui(new Ui::SCWind) {
         [this]() { return this->selected_version(); });
 
     QDir::setCurrent(QCoreApplication::applicationDirPath());
-
-    this->ui->blm->add_blocklist(
-        QStringLiteral("%1/Blocks/FixedBlocks.zip")
-            .arg(QCoreApplication::applicationDirPath()));
-    this->ui->blm->add_blocklist(
-        QStringLiteral("%1/Blocks/CustomBlocks.zip")
-            .arg(QCoreApplication::applicationDirPath()));
-
+    const QString blocks_dir_path =
+        QStringLiteral("%1/Blocks").arg(QCoreApplication::applicationDirPath());
+    const QDir blocks_dir{blocks_dir_path};
+    if (not blocks_dir.exists()) {
+      QMessageBox::critical(
+          this, tr("无法加载方块列表"),
+          tr("存储方块列表的文件夹 \"%1\" 不存在，或不是文件夹。")
+                  .arg(blocks_dir_path) +
+              tr("SlopeCraft 必须退出。"));
+      exit(1);
+    }
+    if (not this->ui->blm->add_blocklist(
+            QStringLiteral("%1/%2").arg(blocks_dir_path, "FixedBlocks.zip"))) {
+      QMessageBox::critical(
+          this, tr("无法加载方块列表"),
+          tr("无法加载 FixedBlocks.zip ，SlopeCraft 缺乏最基础的方块列表。") +
+              tr("SlopeCraft 必须退出。"));
+      exit(1);
+    }
+    QString fail_list;
+    int fail_counter = 0;
+    for (auto file :
+         blocks_dir.entryInfoList({"*.zip"}, QDir::Filters{QDir::Filter::Files},
+                                  QDir::SortFlags{QDir::SortFlag::Name})) {
+      if (not this->ui->blm->add_blocklist(file.absoluteFilePath())) {
+        fail_counter++;
+        fail_list.append(file.absoluteFilePath());
+        fail_list.append('\n');
+      }
+    }
     this->ui->blm->finish_blocklist();
+    if (fail_counter > 0) {
+      QMessageBox::warning(
+          this, tr("部分方块列表加载失败"),
+          tr("以下 %1 "
+             "个方块列表文件无法被加载：\n%"
+             "2\n由于它们不是必需，你可以忽略此错误并继续使用。")
+              .arg(fail_counter)
+              .arg(fail_list));
+    }
 
     for (auto btnp : this->version_buttons()) {
       connect(btnp, &QRadioButton::toggled, this,
