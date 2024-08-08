@@ -674,71 +674,121 @@ tl::expected<void, std::pair<SCL_errorFlag, std::string>> Schem::export_WESchem(
 
   NBT::NBTWriter<true> file;
 
-  if (!file.open(filename.data())) {
+  if (not file.open(filename.data())) {
     return tl::make_unexpected(
         std::make_pair(SCL_errorFlag::EXPORT_SCHEM_FAILED_TO_CREATE_FILE,
                        fmt::format("Failed to open file {}", filename)));
   }
 
-  // write metadata
-  file.writeCompound("Metadata");
-  {
-    file.writeInt("WEOffsetX", info.WE_offset[0]);
-    file.writeInt("WEOffsetY", info.WE_offset[1]);
-    file.writeInt("WEOffsetZ", info.WE_offset[2]);
-    file.writeString("Name", info.schem_name_utf8.data());
-    file.writeString("Author", info.author_utf8.data());
-    file.writeLong("Date", info.date);
-
-    file.writeListHead("RequiredMods", NBT::String,
-                       info.required_mods_utf8.size());
+  auto write_version = [&]() {  // data version
+    file.writeInt("DataVersion", (int)this->MC_data_ver);
+  };
+  auto write_palette = [&]() {
+    file.writeCompound("Palette");
     {
-      for (const auto &str : info.required_mods_utf8) {
-        file.writeString("", str.data());
+      for (int idx = 0; idx < int(block_id_list.size()); idx++) {
+        file.writeInt(block_id_list[idx].c_str(), idx);
       }
-    }
-    // finish list
-  }  // finish compound
-  file.endCompound();
-
-  file.writeCompound("Palette");
-  {
-    for (int idx = 0; idx < int(block_id_list.size()); idx++) {
-      file.writeInt(block_id_list[idx].c_str(), idx);
-    }
-  }  // finished palette
-  file.endCompound();
-
-  file.writeListHead("BlockEntities", NBT::Compound, 0);
-
-  file.writeInt("DataVersion", (int)this->MC_data_ver);
-
-  file.writeShort("Width", x_range());
-  file.writeShort("Height", y_range());
-  file.writeShort("Length", z_range());
-
-  file.writeInt("Version", 2);
-
-  file.writeInt("PaletteMax", block_id_list.size());
+    }  // finished palette
+    file.endCompound();
+  };
+  auto write_offset = [&]() {
+    file.writeIntArrayHead("Offset", 3);
+    {
+      file.writeInt("", info.offset[0]);
+      file.writeInt("", info.offset[1]);
+      file.writeInt("", info.offset[2]);
+    }  // end array
+  };
+  auto write_shape = [&]() {
+    file.writeShort("Width", x_range());
+    file.writeShort("Height", y_range());
+    file.writeShort("Length", z_range());
+  };
 
   std::vector<uint8_t> blockdata;
   ::shrink_bytes_weSchem(xzy.data(), xzy.size(), block_id_list.size(),
                          &blockdata);
+  auto write_blocks = [&](const char *key) {
+    file.writeByteArrayHead(key, blockdata.size());
+    {
+      const int8_t *data = reinterpret_cast<int8_t *>(blockdata.data());
+      for (int64_t idx = 0; idx < int64_t(blockdata.size()); idx++) {
+        file.writeByte("", data[idx]);
+      }
+    }  // end array
+  };
 
-  file.writeByteArrayHead("BlockData", blockdata.size());
-  {
-    const int8_t *data = reinterpret_cast<int8_t *>(blockdata.data());
-    for (int64_t idx = 0; idx < int64_t(blockdata.size()); idx++) {
-      file.writeByte("", data[idx]);
+  if (this->MC_major_ver <= SCL_gameVersion::MC19) {
+    // write metadata
+    file.writeCompound("Metadata");
+    {
+      file.writeInt("WEOffsetX", info.WE_offset[0]);
+      file.writeInt("WEOffsetY", info.WE_offset[1]);
+      file.writeInt("WEOffsetZ", info.WE_offset[2]);
+      file.writeString("Name", info.schem_name_utf8.data());
+      file.writeString("Author", info.author_utf8.data());
+      file.writeLong("Date", info.date);
+
+      file.writeListHead("RequiredMods", NBT::String,
+                         info.required_mods_utf8.size());
+      {
+        for (const auto &str : info.required_mods_utf8) {
+          file.writeString("", str.data());
+        }
+      }
+      // finish list
+    }  // finish compound
+    file.endCompound();
+
+    file.writeInt("Version", 2);  // schematic format version
+    write_version();
+
+    write_palette();
+    file.writeInt("PaletteMax", block_id_list.size());
+
+    file.writeListHead("BlockEntities", NBT::Compound, 0);
+
+    write_shape();
+    write_offset();
+    write_blocks("BlockData");
+  } else {  // 1.20+
+    file.writeCompound("Schematic");
+    {
+      file.writeCompound("Metadata");
+      {
+        file.writeLong("Date", info.date);
+
+        file.writeCompound("WorldEdit");
+        {
+          file.writeString("Version", "unknown");
+          file.writeString("EditingPlatform", "enginehub:fabric");
+          file.writeIntArrayHead("Origin", 3);
+          {
+            for (int i = 0; i < 3; i++) {
+              file.writeInt("", 0);
+            }
+          }
+        }
+        file.endCompound();
+      }
+      file.endCompound();  // finish metadata
+
+      file.writeInt("Version", 3);  // schematic format version
+      write_version();
+      write_shape();
+      write_offset();
+
+      file.writeCompound("Blocks");
+      {
+        write_palette();
+        write_blocks("Data");
+        file.writeListHead("BlockEntities", NBT::tagType::Compound, 0);
+      }
+      file.endCompound();  // finish Blocks
     }
-  }  // end array
-
-  file.writeIntArrayHead("Offset", 3);
-  {
-    file.writeInt("x", info.offset[0]);
-    file.writeInt("y", info.offset[1]);
-    file.writeInt("z", info.offset[2]);
-  }  // end array
+    file.endCompound();
+  }
 
   file.close();
   return {};
