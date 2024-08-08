@@ -1582,6 +1582,7 @@
     <addaction name="ac_test_blocklist"/>
     <addaction name="ac_get_current_colorlist"/>
     <addaction name="ac_memory_policy"/>
+    <addaction name="ac_blocklist"/>
    </widget>
    <widget class="QMenu" name="menu_3">
     <property name="title">
@@ -1718,6 +1719,11 @@
   <action name="ac_cache_all_3d">
    <property name="text">
     <string>缓存全部三维结构</string>
+   </property>
+  </action>
+  <action name="ac_blocklist">
+   <property name="text">
+    <string>查看方块列表</string>
    </property>
   </action>
  </widget>

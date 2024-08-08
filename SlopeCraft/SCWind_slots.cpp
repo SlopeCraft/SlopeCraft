@@ -14,7 +14,7 @@
 #include "VersionDialog.h"
 #include "TransparentStrategyWind.h"
 #include "CompressEffectViewer.h"
-
+#include "BlockListDialog.h"
 #include "stat_memory.h"
 
 #ifdef WIN32
@@ -1173,4 +1173,9 @@ void SCWind::on_pb_export_data_vanilla_structure_clicked() noexcept {
                           fail_messages);
   }
   this->ui->pbar_export->setValue(converted_tasks.size());
+}
+
+void SCWind::on_ac_blocklist_triggered() noexcept {
+  auto dialog = new BlockListDialog{this, this->ui->blm};
+  dialog->exec();
 }

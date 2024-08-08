@@ -146,6 +146,8 @@ class SCWind : public QMainWindow {
 
   void on_ac_memory_policy_triggered() noexcept;
 
+  void on_ac_blocklist_triggered() noexcept;
+
  private:
   Ui::SCWind* ui;
 
