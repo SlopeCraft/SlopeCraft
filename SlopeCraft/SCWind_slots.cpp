@@ -358,7 +358,7 @@ void SCWind::on_pb_save_converted_clicked() noexcept {
                                        QMessageBox::StandardButton::No,
                                        QMessageBox::StandardButton::YesToAll,
                                        QMessageBox::StandardButton::NoToAll});
-      bool replace{false};
+      bool replace;
       switch (ret) {
         case QMessageBox::StandardButton::Yes:
           replace = true;
@@ -651,7 +651,6 @@ void SCWind::on_pb_export_all_clicked() noexcept {
         }
         break;
       default:
-        assert(false);
         return;
     }
   }
