@@ -6,18 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>687</width>
+    <width>820</width>
     <height>481</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>加载/删除方块列表</string>
+   <string>方块列表</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="2">
-    <widget class="QTableView" name="tv_blocks"/>
-   </item>
-   <item row="0" column="1">
+  <property name="sizeGripEnabled">
+   <bool>false</bool>
+  </property>
+  <property name="modal">
+   <bool>false</bool>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_2" columnstretch="1,1,2">
+   <item row="0" column="0" rowspan="2">
     <widget class="QListView" name="lv_block_lists">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -27,29 +30,111 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="1" colspan="2">
+   <item row="0" column="1">
+    <widget class="QListView" name="lv_blocks">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="lb_image">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Shape::StyledPanel</enum>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="le_id">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+       <property name="placeholderText">
+        <string>方块 id</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="le_id_old">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+       <property name="placeholderText">
+        <string>1.12 id</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="le_name_cn">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+       <property name="placeholderText">
+        <string>中文名</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="le_name_en">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+       <property name="placeholderText">
+        <string>英文名</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QTableView" name="tv_block_props">
+       <attribute name="horizontalHeaderStretchLastSection">
+        <bool>true</bool>
+       </attribute>
+       <attribute name="verticalHeaderStretchLastSection">
+        <bool>false</bool>
+       </attribute>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="2" column="0" colspan="3">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <property name="topMargin">
       <number>0</number>
      </property>
      <item>
-      <widget class="QToolButton" name="toolButton">
+      <widget class="QLabel" name="label">
        <property name="text">
-        <string>+</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QToolButton" name="toolButton_2">
-       <property name="text">
-        <string>-</string>
+        <string>若想增加/修改方块列表，增加/删除 blocks 文件夹中的 zip 文件，然后重新启动 SlopeCraft</string>
        </property>
       </widget>
      </item>
      <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -60,16 +145,9 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="pb_ok">
        <property name="text">
         <string>确定</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_2">
-       <property name="text">
-        <string>取消</string>
        </property>
       </widget>
      </item>
