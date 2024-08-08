@@ -67,6 +67,9 @@ SCWind::SCWind(QWidget *parent) : QMainWindow(parent), ui(new Ui::SCWind) {
     for (auto file :
          blocks_dir.entryInfoList({"*.zip"}, QDir::Filters{QDir::Filter::Files},
                                   QDir::SortFlags{QDir::SortFlag::Name})) {
+      if (file.fileName() == "FixedBlocks.zip") {
+        continue;
+      }
       if (not this->ui->blm->add_blocklist(file.absoluteFilePath())) {
         fail_counter++;
         fail_list.append(file.absoluteFilePath());
