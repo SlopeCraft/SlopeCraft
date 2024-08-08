@@ -264,13 +264,10 @@ bool CvtPoolModel::dropMimeData(const QMimeData* data, Qt::DropAction action,
     }
     std::sort(src_indices.begin(), src_indices.end(), std::greater<int>{});
 
-#pragma warning "TODO: Implement reshuffling here"
     // Move all moved tasks into moved_tasks
     std::stack<cvt_task> moved_tasks;
-    const auto invalid_name = QStringLiteral("__ ## invalid __ file &* marker");
     for (int src_idx : src_indices) {
       cvt_task temp;
-      temp.filename = invalid_name;
       std::swap(temp, this->pool[src_idx]);
       moved_tasks.emplace(std::move(temp));
       this->pool.erase(this->pool.begin() + src_idx);
