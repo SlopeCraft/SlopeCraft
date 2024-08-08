@@ -36,3 +36,17 @@ add_library(MemoryPolicyDialog STATIC
 )
 target_link_libraries(MemoryPolicyDialog PUBLIC Qt6::Widgets)
 target_link_libraries(MemoryPolicyDialog PUBLIC StatMemory)
+
+qt_add_lupdate(MemoryPolicyDialog
+    TS_FILES others/MemoryPolicyDialog_en_US.ts
+    OPTIONS ${SC_lupdate_flags}
+)
+qt_add_lrelease(MemoryPolicyDialog
+    TS_FILES others/MemoryPolicyDialog_en_US.ts
+    QM_FILES_OUTPUT_VARIABLE MemoryPolicyDialog_qm_files
+)
+qt_add_resources(MemoryPolicyDialog "MPD_translations"
+    PREFIX "/i18n"
+    BASE ${CMAKE_CURRENT_BINARY_DIR}
+    FILES ${MemoryPolicyDialog_qm_files}
+)

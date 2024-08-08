@@ -20,7 +20,7 @@ SCWind::SCWind(QWidget *parent) : QMainWindow(parent), ui(new Ui::SCWind) {
     // create translators
     const char *const translator_filenames[] = {
         ":/i18n/SlopeCraft_en_US.qm", ":/i18n/BlockListManager_en_US.qm",
-        ":/i18n/VersionDialog_en_US.qm"};
+        ":/i18n/VersionDialog_en_US.qm", ":/i18n/MemoryPolicyDialog_en_US.qm"};
     /*this->translators.reserve(sizeof(translator_filenames) /
                               sizeof(const char *));
                               */
