@@ -463,7 +463,7 @@
              <bool>false</bool>
             </property>
             <property name="dragDropMode">
-             <enum>QAbstractItemView::DragDropMode::InternalMove</enum>
+             <enum>QAbstractItemView::DragDropMode::DragDrop</enum>
             </property>
             <property name="defaultDropAction">
              <enum>Qt::DropAction::IgnoreAction</enum>

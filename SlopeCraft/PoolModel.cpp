@@ -162,30 +162,29 @@ QMimeData* CvtPoolModel::mimeData(const QModelIndexList& indexes) const {
 
 bool CvtPoolModel::canDropMimeData(const QMimeData* data, Qt::DropAction, int,
                                    int col, const QModelIndex& parent) const {
-  if (parent.isValid()) {
-    return false;
-  }
+  //  if (parent.isValid()) {
+  //    return false;
+  //  }
 
-  if (col > 0) {
-    return false;
-  }
+  //  if (col > 0) {
+  //    return false;
+  //  }
 
-  if (!data->hasFormat(mime_data_type)) {
+  if (data->hasFormat(mime_data_type)) {
+    const int bytes = data->data(mime_data_type).size();
+
+    if (bytes % sizeof(int) not_eq 0) {
+      return false;
+    }
     return true;
   }
-
-  const int bytes = data->data(mime_data_type).size();
-
-  if (bytes % sizeof(int) != 0) {
-    return false;
-  }
-
-  // disable moving multiple items, because the behavior is incorrect
-  if (bytes / sizeof(int) == 1) {
-    return true;
-  }
-
   return false;
+  //  // disable moving multiple items, because the behavior is incorrect
+  //  if (bytes / sizeof(int) == 1) {
+  //    return true;
+  //  }
+  //
+  //  return false;
 }
 
 template <typename it_t>
@@ -263,12 +262,13 @@ bool CvtPoolModel::dropMimeData(const QMimeData* data, Qt::DropAction action,
     if (src_indices.size() <= 0) {
       return true;
     }
+    std::sort(src_indices.begin(), src_indices.end(), std::greater<int>{});
 
 #pragma warning "TODO: Implement reshuffling here"
     // Move all moved tasks into moved_tasks
     std::stack<cvt_task> moved_tasks;
     const auto invalid_name = QStringLiteral("__ ## invalid __ file &* marker");
-    for (int src_idx : src_indices | std::views::reverse) {
+    for (int src_idx : src_indices) {
       cvt_task temp;
       temp.filename = invalid_name;
       std::swap(temp, this->pool[src_idx]);
