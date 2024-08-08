@@ -22,6 +22,35 @@ namespace Ui {
 class SCWind;
 }
 
+struct colortable_settings {
+  colortable_settings() = delete;
+  colortable_settings(const selection& s, SCL_mapTypes t)
+      : selection{s}, map_type{t} {}
+
+  colortable_settings(selection&& s, SCL_mapTypes t)
+      : selection{std::move(s)}, map_type{t} {}
+
+  selection selection;
+  SCL_mapTypes map_type;
+
+  [[nodiscard]] bool operator==(const colortable_settings& b) const noexcept {
+    if (this->selection not_eq b.selection) {
+      return false;
+    }
+    if (this->map_type not_eq b.map_type) {
+      return false;
+    }
+    return true;
+  }
+};
+
+template <>
+struct std::hash<colortable_settings> {
+  uint64_t operator()(const colortable_settings& s) const noexcept {
+    return std::hash<selection>{}(s.selection) xor static_cast<int>(s.map_type);
+  }
+};
+
 SlopeCraft::progress_callbacks progress_callback(QProgressBar* bar) noexcept;
 
 SlopeCraft::const_image_reference wrap_image(const QImage& img) noexcept;
@@ -80,8 +109,8 @@ class SCWind : public QMainWindow {
 
   void when_cvt_pool_selectionChanged() noexcept;
   void when_export_pool_selectionChanged() noexcept;
-  void when_version_buttons_toggled() noexcept;
-  void when_type_buttons_toggled() noexcept;
+  void when_version_buttons_toggled(bool) noexcept;
+  void when_type_buttons_toggled(bool) noexcept;
   void when_blocklist_changed() noexcept;
   void when_preset_clicked() noexcept;
   void when_export_type_toggled() noexcept;
@@ -120,7 +149,8 @@ class SCWind : public QMainWindow {
   Ui::SCWind* ui;
 
   std::unordered_map<
-      selection, std::unique_ptr<SlopeCraft::color_table, SlopeCraft::deleter>>
+      colortable_settings,
+      std::unique_ptr<SlopeCraft::color_table, SlopeCraft::deleter>>
       color_tables;
   //  SlopeCraft::Kernel* kernel;
 

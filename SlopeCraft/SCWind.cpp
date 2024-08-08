@@ -2,7 +2,6 @@
 #include "ui_SCWind.h"
 #include <QFileDialog>
 #include <QMessageBox>
-#include <ranges>
 #include <QApplication>
 #include <QTableWidget>
 #include <magic_enum.hpp>
@@ -185,10 +184,11 @@ QString SCWind::cache_root_dir() const noexcept {
 }
 
 SlopeCraft::color_table *SCWind::current_color_table() noexcept {
-  auto selection = this->ui->blm->current_selection();
+  auto settings = colortable_settings{this->ui->blm->current_selection(),
+                                      this->selected_type()};
   {
-    auto find = this->color_tables.find(selection);
-    if (find != this->color_tables.end()) {
+    auto find = this->color_tables.find(settings);
+    if (find not_eq this->color_tables.end()) {
       return find->second.get();
     }
   }
@@ -212,7 +212,7 @@ SlopeCraft::color_table *SCWind::current_color_table() noexcept {
       return nullptr;
     }
 
-    auto it = this->color_tables.emplace(selection, std::move(ptr));
+    auto it = this->color_tables.emplace(settings, std::move(ptr));
     return it.first->second.get();
   }
 }
@@ -319,8 +319,6 @@ SCL_mapTypes SCWind::selected_type() const noexcept {
   if (this->ui->rb_type_fileonly->isChecked()) {
     return SCL_mapTypes::FileOnly;
   }
-
-  assert(false);
   return SCL_mapTypes::Slope;
   // return {};
 }
@@ -383,8 +381,6 @@ SCL_convertAlgo SCWind::selected_algo() const noexcept {
   if (this->ui->rb_algo_GACvter->isChecked()) {
     return SCL_convertAlgo::gaCvter;
   }
-
-  assert(false);
   return SCL_convertAlgo::RGB_Better;
   // return {};
 }
@@ -465,12 +461,15 @@ SCWind::export_type SCWind::selected_export_type() const noexcept {
       return export_type_list[i];
     }
   }
-  assert(false);
+
   return SCWind::export_type::litematica;
   // return {};
 }
 
-void SCWind::when_version_buttons_toggled() noexcept {
+void SCWind::when_version_buttons_toggled(bool checked) noexcept {
+  if (not checked) {
+    return;
+  }
   this->ui->blm->when_version_updated();
   this->when_blocklist_changed();
 
@@ -485,7 +484,10 @@ void SCWind::when_version_buttons_toggled() noexcept {
   this->ui->cb_mc_version_geq_1_20_5->setDisabled(fix_geq_btn);
 }
 
-void SCWind::when_type_buttons_toggled() noexcept {
+void SCWind::when_type_buttons_toggled(bool checked) noexcept {
+  if (not checked) {
+    return;
+  }
   this->when_blocklist_changed();
   this->update_button_states();
   {
@@ -918,7 +920,7 @@ tl::expected<QString, QString> SCWind::get_command(
             buf->append(temp);
           },
   };
-  bool after_1_20_5 = false;
+  bool after_1_20_5;
   if (this->selected_version() < SCL_gameVersion::MC20) {
     after_1_20_5 = true;
   } else if (this->selected_version() > SCL_gameVersion::MC20) {
@@ -957,7 +959,6 @@ QString extension_of_export_type(SCWind::export_type et) noexcept {
       return "dat";
   }
 
-  assert(false);
   return "Invalid_export_type";
 }
 
