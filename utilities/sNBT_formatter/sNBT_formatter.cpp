@@ -93,7 +93,7 @@ void sNBT::sNBT_format_visitor::visit(const nbt::tag_compound &c) {
   for (const auto &pair : c) {
     const auto &key = pair.first;
     const auto &val = pair.second;
-    if (key.contains(':')) {
+    if (key.find(':') not_eq key.npos) {
       this->os << '\"' << key << '\"' << ':';
     } else {
       this->os << key << ':';
