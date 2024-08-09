@@ -23,7 +23,6 @@ This file is part of SlopeCraft.
 #include "TokiVC.h"
 
 #include "VCL_internal.h"
-#include <mutex>
 #include <set>
 #include <shared_mutex>
 #include <unordered_map>
@@ -137,13 +136,14 @@ bool add_color_non_transparent(
     const std::vector<VCL_block *> &bs_nontransparent,
     mutlihash_color_blocks &map_color_blocks) noexcept {
   for (VCL_block *blkp : bs_nontransparent) {
-    bool ok = true;
-    auto ret = compute_mean_color(blkp->project_image_on_exposed_face, &ok);
-    if (!ok) {
+    auto ret = compute_mean_color(blkp->project_image_on_exposed_face);
+    if (not ret) {
       return false;
     }
+    auto mean_color = ret.value();
 
-    map_color_blocks.emplace(ARGB32(ret[0], ret[1], ret[2]), blkp);
+    map_color_blocks.emplace(
+        ARGB32(mean_color[0], mean_color[1], mean_color[2]), blkp);
 
     // temp_rgb_rowmajor.emplace_back(ret);
     // LUT_bcitb.emplace_back(blkp);
@@ -209,19 +209,18 @@ bool add_color_trans_to_trans_recurs(
       min_alpha = std::min(min_alpha, getA(front(i)));
     }
 
-    // if multiple transparent block composed a non transparent image, then the
+    // if multiple transparent block composed a non-transparent image, then the
     // recursion terminate.
     if (min_alpha >= 255) {
-      bool ok = true;
-      std::array<uint8_t, 3> mean = compute_mean_color(front, &ok);
+      auto mean_opt = compute_mean_color(front);
 
-      if (!ok) {
+      if (not mean_opt) {
         VCL_report(VCL_report_type_t::error,
                    "Function add_color_trans_to_trans_recurs failed to "
                    "compute mean color.\n");
         return false;
       }
-
+      auto &mean = mean_opt.value();
       map_color_blocks.emplace(ARGB32(mean[0], mean[1], mean[2]),
                                accumulate_blocks);
       // LUT_bcitb.emplace_back(accumulate_blocks);

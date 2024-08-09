@@ -99,49 +99,48 @@ bool parse_png(
   if (bit_depth > 8) {
     png_set_strip_16(png);
   }
-  if (bit_depth < 8)
-    png_set_expand(png);
+  if (bit_depth < 8) png_set_expand(png);
 
   switch (color_type) {
-  case PNG_COLOR_TYPE_GRAY: // fixed
-    png_set_gray_to_rgb(png);
-    add_alpha = true;
-    // cout << "PNG_COLOR_TYPE_GRAY";
-    break;
-  case PNG_COLOR_TYPE_PALETTE: // fixed
+    case PNG_COLOR_TYPE_GRAY:  // fixed
+      png_set_gray_to_rgb(png);
+      add_alpha = true;
+      // cout << "PNG_COLOR_TYPE_GRAY";
+      break;
+    case PNG_COLOR_TYPE_PALETTE:  // fixed
 
-    png_set_palette_to_rgb(png);
-    png_set_bgr(png);
-    {
-      int num_trans = 0;
-      png_get_tRNS(png, info, NULL, &num_trans, NULL);
-      if (num_trans <= 0) {
-        add_alpha = true;
+      png_set_palette_to_rgb(png);
+      png_set_bgr(png);
+      {
+        int num_trans = 0;
+        png_get_tRNS(png, info, NULL, &num_trans, NULL);
+        if (num_trans <= 0) {
+          add_alpha = true;
+        }
+        // cout << "num_trans = " << num_trans << endl;
       }
-      // cout << "num_trans = " << num_trans << endl;
-    }
 
-    // cout << "PNG_COLOR_TYPE_PALETTE";
-    break;
-  case PNG_COLOR_TYPE_RGB: // fixed
-    png_set_bgr(png);
-    add_alpha = true;
-    // cout << "PNG_COLOR_TYPE_RGB";
-    break;
-  case PNG_COLOR_TYPE_RGB_ALPHA: // fixed
-    png_set_bgr(png);
-    // cout << "PNG_COLOR_TYPE_RGB_ALPHA";
-    break;
-  case PNG_COLOR_TYPE_GRAY_ALPHA: // fixed
-    png_set_gray_to_rgb(png);
-    // png_set_swap_alpha(png);
-    // cout << "PNG_COLOR_TYPE_GRAY_ALPHA";
-    break;
-  default:
-    png_destroy_read_struct(&png, &info, &info_end);
-    std::string msg = fmt::format("Unknown color type {}", color_type);
-    ::VCL_report(VCL_report_type_t::error, msg.c_str());
-    return false;
+      // cout << "PNG_COLOR_TYPE_PALETTE";
+      break;
+    case PNG_COLOR_TYPE_RGB:  // fixed
+      png_set_bgr(png);
+      add_alpha = true;
+      // cout << "PNG_COLOR_TYPE_RGB";
+      break;
+    case PNG_COLOR_TYPE_RGB_ALPHA:  // fixed
+      png_set_bgr(png);
+      // cout << "PNG_COLOR_TYPE_RGB_ALPHA";
+      break;
+    case PNG_COLOR_TYPE_GRAY_ALPHA:  // fixed
+      png_set_gray_to_rgb(png);
+      // png_set_swap_alpha(png);
+      // cout << "PNG_COLOR_TYPE_GRAY_ALPHA";
+      break;
+    default:
+      png_destroy_read_struct(&png, &info, &info_end);
+      std::string msg = fmt::format("Unknown color type {}", color_type);
+      ::VCL_report(VCL_report_type_t::error, msg.c_str());
+      return false;
   }
   // cout << ")\n";
   // #warning here
@@ -157,7 +156,7 @@ bool parse_png(
 
   png_read_image(png, row_ptrs.data());
 
-  if (add_alpha) { // add alpha manually
+  if (add_alpha) {  // add alpha manually
     for (int r = 0; r < int(height); r++) {
       uint8_t *const data = reinterpret_cast<uint8_t *>(&(*img)(r, 0));
       for (int pixel_idx = img->cols() - 1; pixel_idx > 0; pixel_idx--) {
@@ -185,8 +184,7 @@ resize_image_nearest(const Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic,
                      int rows, int cols) noexcept {
   Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> result(0,
                                                                              0);
-  if (rows <= 0 || cols <= 0 || src.size() <= 0)
-    return result;
+  if (rows <= 0 || cols <= 0 || src.size() <= 0) return result;
   result.resize(rows, cols);
   result.setZero();
 
@@ -211,8 +209,7 @@ resize_image_nearest(
     int rows, int cols) noexcept {
   Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> result(0,
                                                                              0);
-  if (rows <= 0 || cols <= 0 || src_block.size() <= 0)
-    return result;
+  if (rows <= 0 || cols <= 0 || src_block.size() <= 0) return result;
   result.resize(rows, cols);
   result.setZero();
 
@@ -253,7 +250,6 @@ bool resource_pack::add_colormaps(const zipped_folder &rpr) noexcept {
 
 bool resource_pack::add_textures(const zipped_folder &rpr,
                                  const bool conflict_conver_old) noexcept {
-
   const zipped_folder *const assets = rpr.subfolder("assets");
   if (assets == nullptr) {
     ::VCL_report(VCL_report_type_t::error,
@@ -312,8 +308,7 @@ bool resource_pack::add_textures_direct(
   std::array<char, buffer_size> buffer;
 
   for (const auto &file : pngs) {
-    if (!file.first.ends_with(".png"))
-      continue;
+    if (!file.first.ends_with(".png")) continue;
 
     const bool is_dynamic = pngs.contains(file.first + ".mcmeta");
 
@@ -350,10 +345,10 @@ bool resource_pack::add_textures_direct(
     const bool success =
         parse_png(file.second.data(), file.second.file_size(), &img);
     if (!success || img.size() <= 0) {
-      std::string msg =
-          fmt::format("Failed to parse png file {} in {}. Png parsing will "
-                      "continue but this warning may cause further errors.",
-                      file.first, buffer.data());
+      std::string msg = fmt::format(
+          "Failed to parse png file {} in {}. Png parsing will "
+          "continue but this warning may cause further errors.",
+          file.first, buffer.data());
       ::VCL_report(VCL_report_type_t::warning, msg.c_str());
       continue;
     }
@@ -433,10 +428,10 @@ bool resource_pack::add_colormap(const zipped_folder &resourece_pack_root,
   }
 
   if (ptr == nullptr || !ptr->files.contains(filename.data())) {
-    std::string msg =
-        fmt::format("Failed to find \"assets/minecraft/textures/colormap/{}\". "
-                    "File doesn\'t exist.",
-                    filename);
+    std::string msg = fmt::format(
+        "Failed to find \"assets/minecraft/textures/colormap/{}\". "
+        "File doesn\'t exist.",
+        filename);
     VCL_report(VCL_report_type_t::error, msg.c_str());
     return false;
   }
@@ -455,10 +450,10 @@ bool resource_pack::add_colormap(const zipped_folder &resourece_pack_root,
   }
 
   if (img.rows() != 256 || img.cols() != 256) {
-    std::string msg =
-        fmt::format("Failed to parse assets/minecraft/textures/colormap/{}. "
-                    "The rows({}) and cols({}) mismatch with (256,256).",
-                    filename, img.rows(), img.cols());
+    std::string msg = fmt::format(
+        "Failed to parse assets/minecraft/textures/colormap/{}. "
+        "The rows({}) and cols({}) mismatch with (256,256).",
+        filename, img.rows(), img.cols());
     VCL_report(VCL_report_type_t::error, msg.c_str());
     return false;
   }
@@ -488,15 +483,10 @@ resource_pack::find_texture(std::string_view path,
   return nullptr;
 }
 
-std::array<uint8_t, 3>
-compute_mean_color(const block_model::EImgRowMajor_t &img,
-                   bool *const ok) noexcept {
+std::optional<std::array<uint8_t, 3>> compute_mean_color(
+    const block_model::EImgRowMajor_t &img) noexcept {
   if (img.size() <= 0) {
-    if (ok != nullptr) {
-      *ok = false;
-    }
-
-    return {0, 0, 0};
+    return std::nullopt;
   }
 
   std::array<uint64_t, 3> val{0, 0, 0};
@@ -515,11 +505,6 @@ compute_mean_color(const block_model::EImgRowMajor_t &img,
     val[i] /= img.size();
     ret[i] = val[i] & 0xFF;
   }
-
-  if (ok != nullptr) {
-    *ok = true;
-  }
-
   return ret;
 }
 
@@ -544,19 +529,16 @@ bool compose_image_background_half_transparent(
   return true;
 }
 
-std::array<uint8_t, 3>
-compose_image_and_mean(const block_model::EImgRowMajor_t &front,
-                       const block_model::EImgRowMajor_t &back,
-                       bool *const ok) noexcept {
+std::array<uint8_t, 3> compose_image_and_mean(
+    const block_model::EImgRowMajor_t &front,
+    const block_model::EImgRowMajor_t &back, bool *const ok) noexcept {
   if (front.rows() != back.rows() || front.cols() != back.cols()) {
-    if (ok != nullptr)
-      *ok = false;
+    if (ok != nullptr) *ok = false;
     return {};
   }
 
   if (front.size() <= 0) {
-    if (ok != nullptr)
-      *ok = false;
+    if (ok != nullptr) *ok = false;
     return {};
   }
 

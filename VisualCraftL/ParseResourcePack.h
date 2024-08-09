@@ -427,8 +427,8 @@ class model {
 
 }  // namespace block_model
 
-std::array<uint8_t, 3> compute_mean_color(
-    const block_model::EImgRowMajor_t &img, bool *const ok = nullptr) noexcept;
+std::optional<std::array<uint8_t, 3>> compute_mean_color(
+    const block_model::EImgRowMajor_t &img) noexcept;
 
 bool compose_image_background_half_transparent(
     block_model::EImgRowMajor_t &frontend_and_dest,
@@ -558,8 +558,8 @@ bool parse_block_state(
 
 }  // namespace resource_json
 
-block_model::face_idx string_to_face_idx(std::string_view str,
-                                         bool *const _ok) noexcept;
+std::optional<block_model::face_idx> string_to_face_idx(
+    std::string_view str) noexcept;
 const char *face_idx_to_string(block_model::face_idx) noexcept;
 
 struct model_with_rotation {
@@ -614,14 +614,14 @@ class VCL_resource_pack {
   bool add_textures(const zipped_folder &resourece_pack_root,
                     const bool on_conflict_replace_old = true) noexcept;
 
-  bool add_block_models(const zipped_folder &resourece_pack_root,
+  bool add_block_models(const zipped_folder &resource_pack_root,
                         const bool on_conflict_replace_old = true) noexcept;
 
   bool add_block_states(const zipped_folder &resourece_pack_root,
                         const bool on_conflict_replace_old = true) noexcept;
 
-  const Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
-      *find_texture(std::string_view path, bool override_only) const noexcept;
+  const Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> *
+  find_texture(std::string_view path, bool override_only) const noexcept;
 
   bool override_required_textures(VCL_biome_t biome,
                                   bool replace_transparent_with_black,

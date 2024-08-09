@@ -163,8 +163,6 @@ bool resource_json::multipart_pair::match(const state_list &sl) const noexcept {
   } else {
     return counter >= when_or.components.size();
   }
-
-  return false;
 }
 
 model_pass_t block_states_variant::block_model_name(
@@ -471,7 +469,6 @@ std::vector<model_store_t> parse_multipart_apply(const njson &apply) noexcept(
     return ret;
   }
   throw std::runtime_error("Invalid value for \"apply\" in a multipart.");
-  return {};
 }
 
 std::variant<criteria, criteria_list_or_and, criteria_all_pass>
@@ -638,43 +635,31 @@ struct block_model_json_temp {
   bool is_inherited{false};
 };
 
-block_model::face_idx string_to_face_idx(std::string_view str,
-                                         bool *const _ok) noexcept {
-  block_model::face_idx res = block_model::face_idx::face_down;
-  bool ok = false;
+std::optional<block_model::face_idx> string_to_face_idx(
+    std::string_view str) noexcept {
   if (str == "up") {
-    res = block_model::face_idx::face_up;
-    ok = true;
+    return block_model::face_idx::face_up;
   }
   if (str == "down") {
-    res = block_model::face_idx::face_down;
-    ok = true;
+    return block_model::face_idx::face_down;
   }
   if (str == "bottom") {
-    res = block_model::face_idx::face_down;
-    ok = true;
+    return block_model::face_idx::face_down;
   }
   if (str == "north") {
-    res = block_model::face_idx::face_north;
-    ok = true;
+    return block_model::face_idx::face_north;
   }
   if (str == "south") {
-    res = block_model::face_idx::face_south;
-    ok = true;
+    return block_model::face_idx::face_south;
   }
   if (str == "east") {
-    res = block_model::face_idx::face_east;
-    ok = true;
+    return block_model::face_idx::face_east;
   }
   if (str == "west") {
-    res = block_model::face_idx::face_west;
-    ok = true;
+    return block_model::face_idx::face_west;
   }
 
-  if (_ok != nullptr) {
-    *_ok = ok;
-  }
-  return res;
+  return std::nullopt;
 }
 
 const char *face_idx_to_string(block_model::face_idx f) noexcept {
@@ -809,9 +794,8 @@ bool parse_single_model_json(const char *const json_beg,
           face_json_temp f;
           block_model::face_idx fidx;
           {
-            bool _ok;
-            fidx = string_to_face_idx(temp.key(), &_ok);
-            if (!_ok) {
+            auto fidx_opt = string_to_face_idx(temp.key());
+            if (not fidx_opt) {
               std::string msg = fmt::format(
                   "Error while parsing block model json : invalid key {} "
                   "doesn't refer to any face.",
@@ -819,6 +803,7 @@ bool parse_single_model_json(const char *const json_beg,
               ::VCL_report(VCL_report_type_t::error, msg.c_str());
               return false;
             }
+            fidx = fidx_opt.value();
           }
 
           const njson &curface = temp.value();
@@ -847,18 +832,15 @@ bool parse_single_model_json(const char *const json_beg,
             }
 
             if (!cullface_temp.empty()) {
-              bool ok;
-              const block_model::face_idx cullface_fidx =
-                  string_to_face_idx(cullface_temp, &ok);
+              auto cullface_fidx = string_to_face_idx(cullface_temp);
 
-              if (!ok) {
+              if (not cullface_fidx) {
                 std::string msg = fmt::format("Invalid value for cullface : {}",
                                               cullface_temp);
                 ::VCL_report(VCL_report_type_t::error, msg.c_str());
                 return false;
               }
-
-              f.cullface_face = cullface_fidx;
+              f.cullface_face = cullface_fidx.value();
               f.have_cullface = true;
             }
           }
@@ -1046,12 +1028,12 @@ bool inherit_recrusively(std::string_view childname,
 }
 
 bool resource_pack::add_block_models(
-    const zipped_folder &resourece_pack_root,
+    const zipped_folder &resource_pack_root,
     const bool on_conflict_replace_old) noexcept {
-  const std::unordered_map<std::string, zipped_file> *files = nullptr;
+  const std::unordered_map<std::string, zipped_file> *files;
   // find assets/minecraft/models/block
   {
-    const zipped_folder *temp = resourece_pack_root.subfolder("assets");
+    const zipped_folder *temp = resource_pack_root.subfolder("assets");
     if (temp == nullptr) return false;
     temp = temp->subfolder("minecraft");
     if (temp == nullptr) return false;

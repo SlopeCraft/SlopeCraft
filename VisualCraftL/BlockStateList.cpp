@@ -192,13 +192,13 @@ std::optional<VCL_block> parse_block(const nlohmann::json &jo) {
         }
         bool _ok = true;
 
-        const VCL_face_t f =
-            string_to_face_idx(ja.at(i).get<nlohmann::json::string_t>(), &_ok);
-        if (!_ok) {
+        const std::optional<VCL_face_t> f =
+            string_to_face_idx(ja.at(i).get<nlohmann::json::string_t>());
+        if (not f) {
           return std::nullopt;
         }
 
-        ret.set_face_avaliablity(f, true);
+        ret.set_face_avaliablity(f.value(), true);
       }
     } else {
       return std::nullopt;

@@ -677,13 +677,13 @@ VCL_EXPORT_FUN size_t VCL_get_blocks_from_block_state_list_match_const(
   size_t write_counter = 0;
 
   const bool can_write =
-      (array_of_const_VCL_block != nullptr) && (array_capcity > 0);
+      (array_of_const_VCL_block not_eq nullptr) and (array_capcity > 0);
 
   for (const auto &pair : bsl->block_states()) {
     if (pair.second.match(version, f)) {
       available_block_counter++;
 
-      if (can_write && (write_counter < array_capcity)) {
+      if (can_write and (write_counter < array_capcity)) {
         array_of_const_VCL_block[write_counter] = &pair.second;
         write_counter++;
       }
@@ -712,7 +712,11 @@ VCL_EXPORT_FUN const char *VCL_face_t_to_str(VCL_face_t f) {
 }
 
 VCL_EXPORT_FUN VCL_face_t VCL_str_to_face_t(const char *str, bool *ok) {
-  return string_to_face_idx(str, ok);
+  auto res = string_to_face_idx(str);
+  if (ok not_eq nullptr) {
+    *ok = res.has_value();
+  }
+  return res.value_or(VCL_face_t::face_up);
 }
 
 VCL_EXPORT_FUN bool VCL_get_block_attribute(const VCL_block *b,
@@ -858,7 +862,7 @@ VCL_EXPORT_FUN bool VCL_compute_projection_image(const VCL_model *md,
     return false;
   }
 
-  auto img = mdptr->projection_image(face);
+  [[maybe_unused]] auto img = mdptr->projection_image(face);
 
   Eigen::Map<block_model::EImgRowMajor_t> map(img_buffer_argb32, 16, 16);
 
