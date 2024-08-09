@@ -23,3 +23,6 @@ find_package(libnbt++ REQUIRED)
 
 target_link_libraries(nbt++ ZLIB::ZLIB)
 target_compile_features(nbt++ PUBLIC cxx_std_20)
+if (${MSVC})
+    target_compile_options(nbt++ PRIVATE /std:c++20)
+endif ()
