@@ -2,6 +2,14 @@ cmake_minimum_required(VERSION 3.29)
 
 find_package(ZLIB REQUIRED)
 
+find_package(libnbt++)
+
+if (libnbt++_FOUND)
+    message(STATUS "Found installed libnbt++")
+    return()
+endif ()
+
+message(STATUS "Failed to find libnbt++, cloning...")
 set(NBT_BUILD_SHARED OFF CACHE BOOL "")
 set(NBT_BUILD_TESTS OFF CACHE BOOL "")
 FetchContent_Declare(libnbt++

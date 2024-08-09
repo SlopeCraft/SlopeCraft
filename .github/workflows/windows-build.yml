@@ -94,13 +94,27 @@ jobs:
           tree /f bin/Qt6.5.0-msvc-shared
           # Qt installation dir: bin/Qt6.5.0-msvc-shared
 
+      - name: Install libnbt++
+        shell: cmd
+        run: |
+          cd 3rdParty
+          git clone https://github.com/PrismLauncher/libnbtplusplus
+          cd libnbtplusplus
+          git checkout 23b955121b8217c1c348a9ed2483167a6f3ff4ad
+          mkdir build ../libnbt++
+          "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" & cmake -S . -B ./build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=cl -DCMAKE_CXX_COMPILER:FILEPATH=cl -DCMAKE_PREFIX_PATH:PATH="C:/vcpkg/installed/x64-windows" -DCMAKE_INSTALL_PREFIX:PATH=../libnbt++ -DCMAKE_BUILD_TYPE="${{ matrix.build_type }}" -DNBT_BUILD_SHARED=OFF -DNBT_USE_ZLIB=OFF -DNBT_BUILD_TESTS=OFF
+          cmake --build ./build --parallel
+          cmake --install ./build
+          cd ..
+          tree /f libnbt++
+
       - name: CMake configure
         shell: cmd
         run: |
           mkdir build
           mkdir install
           set PATH=C:\Program Files\VulkanSDK\1.3.250.1\Bin;C:\Program Files\PowerShell\7;C:\vcpkg;C:\Program Files (x86)\NSIS\;C:\Program Files\dotnet;C:\Program Files (x86)\GitHub CLI;C:\Program Files\Git\bin;C:\Program Files\OpenSSL\bin;C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin;C:\Program Files\Microsoft\jdk-11.0.16.101-hotspot\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\dotnet\;C:\Program Files\PowerShell\7\;C:\Program Files\Microsoft\Web Platform Installer\;C:\Program Files\CMake\bin;C:\Program Files\Microsoft SDKs\Service Fabric\Tools\ServiceFabricLocalClusterManager;C:\Program Files\Git\cmd;C:\Program Files\GitHub CLI\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\LLVM\bin;C:\Users\runneradmin\.dotnet\tools;C:\Users\runneradmin\.cargo\bin;C:\Users\runneradmin\AppData\Local\Microsoft\WindowsApps
-          "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" & cmake -S . -B ./build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=cl -DCMAKE_CXX_COMPILER:FILEPATH=cl -DCMAKE_PREFIX_PATH:PATH="D:/a/SlopeCraft/SlopeCraft/bin/Qt6.5.0-msvc-shared;C:/vcpkg/installed/x64-windows/;C:/Program Files/VulkanSDK/1.3.250.1" -DCMAKE_INSTALL_PREFIX:PATH=D:/a/SlopeCraft/SlopeCraft/install -DCMAKE_BUILD_TYPE="${{ matrix.build_type }}" -DSlopeCraft_GPU_API:STRING="${{ matrix.gpu_api }}" -DSlopeCraft_vectorize:BOOL="${{ matrix.vectorize }}" -DSlopeCraft_windeployqt_flags_install:STRING=-release;--no-translations
+          "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" & cmake -S . -B ./build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=cl -DCMAKE_CXX_COMPILER:FILEPATH=cl -DCMAKE_PREFIX_PATH:PATH="D:/a/SlopeCraft/SlopeCraft/bin/Qt6.5.0-msvc-shared;C:/vcpkg/installed/x64-windows/;D:/a/SlopeCraft/SlopeCraft/3rdParty/libnbt++;C:/Program Files/VulkanSDK/1.3.250.1" -DCMAKE_INSTALL_PREFIX:PATH=D:/a/SlopeCraft/SlopeCraft/install -DCMAKE_BUILD_TYPE="${{ matrix.build_type }}" -DSlopeCraft_GPU_API:STRING="${{ matrix.gpu_api }}" -DSlopeCraft_vectorize:BOOL="${{ matrix.vectorize }}" -DSlopeCraft_windeployqt_flags_install:STRING=-release;--no-translations
         # -DCMAKE_C_COMPILER:FILEPATH=clang-cl -DCMAKE_CXX_COMPILER:FILEPATH=clang-cl -DCMAKE_RC_COMPILER:FILEPATH=llvm-rc
       - name: CMake build
         shell: cmd
