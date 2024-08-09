@@ -443,14 +443,14 @@
     "class": "crafted",
     "nameEN": "Bee hive(north)",
     "nameZH": "蜂箱（向北）",
-    "version": 14,
+    "version": 15,
     "burnable": true
   },
   "minecraft:beehive[facing=east,honey_level=0]": {
     "class": "crafted",
     "nameEN": "Bee hive(east)",
     "nameZH": "蜂箱（向东）",
-    "version": 14,
+    "version": 15,
     "burnable": true,
     "faces": [
       "east",
@@ -461,7 +461,7 @@
     "class": "crafted",
     "nameEN": "Bee hive(south)",
     "nameZH": "蜂箱（向南）",
-    "version": 14,
+    "version": 15,
     "burnable": true,
     "faces": [
       "south"
@@ -471,7 +471,7 @@
     "class": "crafted",
     "nameEN": "Bee hive(west)",
     "nameZH": "蜂箱（向西）",
-    "version": 14,
+    "version": 15,
     "burnable": true,
     "faces": [
       "west"
@@ -1192,7 +1192,7 @@
     "class": "natural",
     "nameEN": "Bee nest(north)",
     "nameZH": "蜂巢（向北）",
-    "version": 14,
+    "version": 15,
     "burnable": true,
     "reproducible": false
   },
@@ -1200,7 +1200,7 @@
     "class": "natural",
     "nameEN": "Bee nest(east)",
     "nameZH": "蜂巢（向东）",
-    "version": 14,
+    "version": 15,
     "burnable": true,
     "faces": [
       "east",
@@ -1212,7 +1212,7 @@
     "class": "natural",
     "nameEN": "Bee nest(south)",
     "nameZH": "蜂巢（向南）",
-    "version": 14,
+    "version": 15,
     "burnable": true,
     "faces": [
       "south"
@@ -1223,7 +1223,7 @@
     "class": "natural",
     "nameEN": "Bee nest(west)",
     "nameZH": "蜂巢（向西）",
-    "version": 14,
+    "version": 15,
     "burnable": true,
     "faces": [
       "west"
