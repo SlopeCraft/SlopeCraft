@@ -94,7 +94,7 @@ jobs:
           tree /f bin/Qt6.5.0-msvc-shared
           # Qt installation dir: bin/Qt6.5.0-msvc-shared
 
-      - name: Install libnbt++
+      - name: Configure libnbt++
         shell: cmd
         run: |
           cd 3rdParty
@@ -103,6 +103,12 @@ jobs:
           git checkout 23b955121b8217c1c348a9ed2483167a6f3ff4ad
           mkdir build ../libnbt++
           "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" & cmake -S . -B ./build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=cl -DCMAKE_CXX_COMPILER:FILEPATH=cl -DCMAKE_PREFIX_PATH:PATH="C:/vcpkg/installed/x64-windows" -DCMAKE_INSTALL_PREFIX:PATH=../libnbt++ -DCMAKE_BUILD_TYPE="${{ matrix.build_type }}" -DNBT_BUILD_SHARED=OFF -DNBT_USE_ZLIB=OFF -DNBT_BUILD_TESTS=OFF
+
+
+      - name: Build and install libnbt++
+        shell: cmd
+        run: |
+          cd 3rdParty/libnbtplusplus
           cmake --build ./build --parallel
           cmake --install ./build
           cd ..
