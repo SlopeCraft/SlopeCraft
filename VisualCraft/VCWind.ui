@@ -3,14 +3,14 @@
  <class>VCWind</class>
  <widget class="QMainWindow" name="VCWind">
   <property name="windowModality">
-   <enum>Qt::NonModal</enum>
+   <enum>Qt::WindowModality::NonModal</enum>
   </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>1057</width>
-    <height>479</height>
+    <height>490</height>
    </rect>
   </property>
   <property name="font">
@@ -29,7 +29,7 @@
        <number>0</number>
       </property>
       <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTop|Qt::AlignmentFlag::AlignTrailing</set>
       </property>
      </widget>
     </item>
@@ -43,16 +43,16 @@
          </font>
         </property>
         <property name="tabPosition">
-         <enum>QTabWidget::North</enum>
+         <enum>QTabWidget::TabPosition::North</enum>
         </property>
         <property name="tabShape">
-         <enum>QTabWidget::Rounded</enum>
+         <enum>QTabWidget::TabShape::Rounded</enum>
         </property>
         <property name="currentIndex">
          <number>0</number>
         </property>
         <property name="elideMode">
-         <enum>Qt::ElideNone</enum>
+         <enum>Qt::TextElideMode::ElideNone</enum>
         </property>
         <widget class="QWidget" name="tab_resource">
          <attribute name="title">
@@ -62,7 +62,7 @@
           <item row="3" column="0">
            <spacer name="verticalSpacer_5">
             <property name="orientation">
-             <enum>Qt::Vertical</enum>
+             <enum>Qt::Orientation::Vertical</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
@@ -112,7 +112,7 @@
                 <string notr="true">1.19</string>
                </property>
                <property name="checked">
-                <bool>true</bool>
+                <bool>false</bool>
                </property>
               </widget>
              </item>
@@ -141,6 +141,16 @@
               <widget class="QRadioButton" name="rdb_version_20">
                <property name="text">
                 <string notr="true">1.20</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="1">
+              <widget class="QRadioButton" name="rdb_version_21">
+               <property name="text">
+                <string notr="true">1.21</string>
                </property>
               </widget>
              </item>
@@ -195,10 +205,10 @@
                 <bool>true</bool>
                </property>
                <property name="dragDropMode">
-                <enum>QAbstractItemView::InternalMove</enum>
+                <enum>QAbstractItemView::DragDropMode::InternalMove</enum>
                </property>
                <property name="selectionMode">
-                <enum>QAbstractItemView::ExtendedSelection</enum>
+                <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
                </property>
                <property name="iconSize">
                 <size>
@@ -207,13 +217,13 @@
                 </size>
                </property>
                <property name="movement">
-                <enum>QListView::Snap</enum>
+                <enum>QListView::Movement::Snap</enum>
                </property>
                <property name="layoutMode">
-                <enum>QListView::Batched</enum>
+                <enum>QListView::LayoutMode::Batched</enum>
                </property>
                <property name="viewMode">
-                <enum>QListView::ListMode</enum>
+                <enum>QListView::ViewMode::ListMode</enum>
                </property>
                <property name="wordWrap">
                 <bool>true</bool>
@@ -252,19 +262,19 @@
              <item row="0" column="0" colspan="2">
               <widget class="QListWidget" name="lw_bsl">
                <property name="dragDropMode">
-                <enum>QAbstractItemView::InternalMove</enum>
+                <enum>QAbstractItemView::DragDropMode::InternalMove</enum>
                </property>
                <property name="selectionMode">
-                <enum>QAbstractItemView::ExtendedSelection</enum>
+                <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
                </property>
                <property name="movement">
-                <enum>QListView::Snap</enum>
+                <enum>QListView::Movement::Snap</enum>
                </property>
                <property name="layoutMode">
-                <enum>QListView::Batched</enum>
+                <enum>QListView::LayoutMode::Batched</enum>
                </property>
                <property name="viewMode">
-                <enum>QListView::ListMode</enum>
+                <enum>QListView::ViewMode::ListMode</enum>
                </property>
                <property name="wordWrap">
                 <bool>true</bool>
@@ -307,7 +317,7 @@
              <item row="3" column="0">
               <spacer name="verticalSpacer_3">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -381,7 +391,7 @@
              <item row="7" column="0">
               <spacer name="verticalSpacer_4">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -447,8 +457,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>98</width>
-                  <height>28</height>
+                  <width>885</width>
+                  <height>305</height>
                  </rect>
                 </property>
                 <layout class="QGridLayout" name="gl_sa_blocks"/>
@@ -468,7 +478,7 @@
           <item row="0" column="8" rowspan="5">
            <widget class="Line" name="line">
             <property name="orientation">
-             <enum>Qt::Vertical</enum>
+             <enum>Qt::Orientation::Vertical</enum>
             </property>
            </widget>
           </item>
@@ -481,7 +491,7 @@
              </sizepolicy>
             </property>
             <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
+             <enum>QFrame::Shape::StyledPanel</enum>
             </property>
             <property name="text">
              <string/>
@@ -588,13 +598,13 @@
              <bool>true</bool>
             </property>
             <property name="dragDropMode">
-             <enum>QAbstractItemView::DropOnly</enum>
+             <enum>QAbstractItemView::DragDropMode::DropOnly</enum>
             </property>
             <property name="selectionMode">
-             <enum>QAbstractItemView::ExtendedSelection</enum>
+             <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
             </property>
             <property name="movement">
-             <enum>QListView::Static</enum>
+             <enum>QListView::Movement::Static</enum>
             </property>
             <property name="isWrapping" stdset="0">
              <bool>false</bool>
@@ -613,7 +623,7 @@
              </sizepolicy>
             </property>
             <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
+             <enum>QFrame::Shape::StyledPanel</enum>
             </property>
             <property name="text">
              <string/>
@@ -663,7 +673,7 @@
               <item row="1" column="3">
                <spacer name="horizontalSpacer">
                 <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
+                 <enum>Qt::Orientation::Horizontal</enum>
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
@@ -839,7 +849,7 @@
                  <item row="1" column="0">
                   <spacer name="verticalSpacer_6">
                    <property name="orientation">
-                    <enum>Qt::Vertical</enum>
+                    <enum>Qt::Orientation::Vertical</enum>
                    </property>
                    <property name="sizeHint" stdset="0">
                     <size>
@@ -1011,7 +1021,7 @@
                  <item row="6" column="0">
                   <spacer name="verticalSpacer_2">
                    <property name="orientation">
-                    <enum>Qt::Vertical</enum>
+                    <enum>Qt::Orientation::Vertical</enum>
                    </property>
                    <property name="sizeHint" stdset="0">
                     <size>
@@ -1102,10 +1112,10 @@
              <item row="0" column="2">
               <widget class="QTreeWidget" name="tw_gpu">
                <property name="selectionMode">
-                <enum>QAbstractItemView::SingleSelection</enum>
+                <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
                </property>
                <property name="selectionBehavior">
-                <enum>QAbstractItemView::SelectItems</enum>
+                <enum>QAbstractItemView::SelectionBehavior::SelectItems</enum>
                </property>
                <property name="rootIsDecorated">
                 <bool>true</bool>
@@ -1132,7 +1142,7 @@
              <item row="2" column="0">
               <spacer name="verticalSpacer">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -1191,7 +1201,7 @@
      <x>0</x>
      <y>0</y>
      <width>1057</width>
-     <height>22</height>
+     <height>33</height>
     </rect>
    </property>
    <property name="font">

@@ -139,6 +139,9 @@ SCL_gameVersion VCWind::current_selected_version() const noexcept {
   if (ui->rdb_version_20->isChecked()) {
     return SCL_gameVersion::MC20;
   }
+  if (ui->rdb_version_21->isChecked()) {
+    return SCL_gameVersion::MC21;
+  }
   abort();
 }
 
