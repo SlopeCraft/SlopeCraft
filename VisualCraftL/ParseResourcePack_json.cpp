@@ -1152,7 +1152,14 @@ bool resource_pack::add_block_models(
         ele.faces[faceidx].uv_end[0] = tface.uv[2];
         ele.faces[faceidx].uv_end[1] = tface.uv[3];
 
+        // try to find the image in texture/block
         auto imgptr = this->find_texture(tface.texture, false);
+        if (imgptr == nullptr) {  // try to resolve the name of this texture
+          auto it = tmodel.second.textures.find(tface.texture);
+          if (it not_eq tmodel.second.textures.end()) {
+            imgptr = this->find_texture(it->second, false);
+          }
+        }
 
         if (imgptr == nullptr) {
           if (tface.texture.starts_with('#') && tmodel.second.is_inherited) {
@@ -1161,7 +1168,7 @@ bool resource_pack::add_block_models(
             continue;
           }
           std::string msg = fmt::format(
-              "Undefined reference to texture {}, required by "
+              "Undefined reference to texture \"{}\", required by "
               "model {} but no such image.\nThe textures are : \n",
               tface.texture, tmodel.first);
           for (const auto &pair : tmodel.second.textures) {
