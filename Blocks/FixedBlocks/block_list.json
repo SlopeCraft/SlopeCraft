@@ -538,6 +538,22 @@
     "version": 17
   },
   {
+    "baseColor": 15,
+    "id": "minecraft:waxed_copper_bulb",
+    "nameZH": "涂蜡铜灯",
+    "nameEN": "Waxed copper bulb",
+    "icon": "copper_bulb.png",
+    "version": 21
+  },
+  {
+    "baseColor": 15,
+    "id": "minecraft:waxed_copper_gate",
+    "nameZH": "涂蜡铜格栅",
+    "nameEN": "Waxed copper gate",
+    "icon": "copper_gate.png",
+    "version": 21
+  },
+  {
     "baseColor": 16,
     "id": "minecraft:magenta_concrete",
     "nameZH": "品红色混凝土",
@@ -1363,6 +1379,22 @@
     "version": 19
   },
   {
+    "baseColor": 44,
+    "id": "minecraft:waxed_exposed_copper_bulb",
+    "nameZH": "斑驳的涂蜡铜灯",
+    "nameEN": "Waxed exposed copper bulb",
+    "icon": "exposed_copper_bulb.png",
+    "version": 21
+  },
+  {
+    "baseColor": 44,
+    "id": "minecraft:waxed_exposed_copper_gate",
+    "nameZH": "斑驳的涂蜡铜格栅",
+    "nameEN": "Waxed exposed copper gate",
+    "icon": "exposed_copper_gate.png",
+    "version": 21
+  },
+  {
     "baseColor": 45,
     "id": "minecraft:cyan_terracotta",
     "nameZH": "青色陶瓦",
@@ -1501,7 +1533,7 @@
     "baseColor": 55,
     "id": "minecraft:waxed_oxidized_copper",
     "nameZH": "氧化的涂蜡铜块",
-    "nameEN": "Waxed oxided copper",
+    "nameEN": "Waxed oxidized copper",
     "icon": "waxed_oxidized_copper.png",
     "version": 17
   },
@@ -1509,9 +1541,25 @@
     "baseColor": 55,
     "id": "minecraft:waxed_oxidized_cut_copper",
     "nameZH": "氧化的涂蜡切制铜块",
-    "nameEN": "Waxed oxided cut copper",
+    "nameEN": "Waxed oxidized cut copper",
     "icon": "waxed_oxidized_cut_copper.png",
     "version": 17
+  },
+  {
+    "baseColor": 55,
+    "id": "minecraft:waxed_oxidized_copper_bulb",
+    "nameZH": "氧化的涂蜡铜灯",
+    "nameEN": "Waxed oxidized copper bulb",
+    "icon": "oxidized_copper_bulb.png",
+    "version": 21
+  },
+  {
+    "baseColor": 55,
+    "id": "minecraft:waxed_oxidized_copper_gate",
+    "nameZH": "氧化的涂蜡铜格栅",
+    "nameEN": "Waxed oxidized copper gate",
+    "icon": "oxidized_copper_gate.png",
+    "version": 21
   },
   {
     "baseColor": 56,
@@ -1546,6 +1594,22 @@
     "nameEN": "Waxed weathered cut copper",
     "icon": "waxed_weathered_cut_copper.png",
     "version": 17
+  },
+  {
+    "baseColor": 56,
+    "id": "minecraft:waxed_weathered_copper_bulb",
+    "nameZH": "锈蚀的涂蜡铜灯",
+    "nameEN": "Waxed weathered copper bulb",
+    "icon": "weathered_copper_bulb.png",
+    "version": 21
+  },
+  {
+    "baseColor": 56,
+    "id": "minecraft:waxed_weathered_copper_gate",
+    "nameZH": "锈蚀的涂蜡铜格栅",
+    "nameEN": "Waxed weathered copper gate",
+    "icon": "weathered_copper_gate.png",
+    "version": 21
   },
   {
     "baseColor": 57,
