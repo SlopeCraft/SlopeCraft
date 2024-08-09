@@ -78,7 +78,7 @@ BlockListManager::impl_addblocklist(const QString &filename) noexcept {
   errmsg.resize(sd_err.size);
   warning.resize(sd_warn.size);
 
-  if (!errmsg.empty()) {
+  if (not errmsg.empty()) {
     errmsg.append(QStringLiteral("\npwd: %1")
                       .arg(QFileInfo{"."}.absolutePath())
                       .toLocal8Bit());

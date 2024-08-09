@@ -120,10 +120,55 @@
              <string>游戏版本</string>
             </property>
             <layout class="QGridLayout" name="gridLayout_3">
+             <item row="2" column="0">
+              <widget class="QRadioButton" name="rb_ver13">
+               <property name="text">
+                <string notr="true">1.13</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="0">
+              <widget class="QRadioButton" name="rb_ver18">
+               <property name="text">
+                <string notr="true">1.18</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="0">
+              <widget class="QRadioButton" name="rb_ver17">
+               <property name="text">
+                <string notr="true">1.17</string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="0">
+              <widget class="QRadioButton" name="rb_ver19">
+               <property name="text">
+                <string notr="true">1.19</string>
+               </property>
+               <property name="checked">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0">
+              <widget class="QRadioButton" name="rb_ver15">
+               <property name="text">
+                <string notr="true">1.15</string>
+               </property>
+              </widget>
+             </item>
              <item row="0" column="0">
               <widget class="QRadioButton" name="rb_ver12">
                <property name="text">
                 <string notr="true">1.12</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="0">
+              <widget class="QRadioButton" name="rb_ver16">
+               <property name="text">
+                <string notr="true">1.16</string>
                </property>
               </widget>
              </item>
@@ -135,26 +180,8 @@
                <property name="text">
                 <string notr="true">1.20</string>
                </property>
-              </widget>
-             </item>
-             <item row="6" column="0">
-              <widget class="QRadioButton" name="rb_ver17">
-               <property name="text">
-                <string notr="true">1.17</string>
-               </property>
-              </widget>
-             </item>
-             <item row="7" column="0">
-              <widget class="QRadioButton" name="rb_ver18">
-               <property name="text">
-                <string notr="true">1.18</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="0">
-              <widget class="QRadioButton" name="rb_ver15">
-               <property name="text">
-                <string notr="true">1.15</string>
+               <property name="checked">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -165,27 +192,10 @@
                </property>
               </widget>
              </item>
-             <item row="5" column="0">
-              <widget class="QRadioButton" name="rb_ver16">
+             <item row="10" column="0">
+              <widget class="QRadioButton" name="rb_ver21">
                <property name="text">
-                <string notr="true">1.16</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
-              <widget class="QRadioButton" name="rb_ver13">
-               <property name="text">
-                <string notr="true">1.13</string>
-               </property>
-              </widget>
-             </item>
-             <item row="8" column="0">
-              <widget class="QRadioButton" name="rb_ver19">
-               <property name="text">
-                <string notr="true">1.19</string>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
+                <string notr="true">1.21</string>
                </property>
               </widget>
              </item>

@@ -181,8 +181,8 @@ class SCWind : public QMainWindow {
 
   SlopeCraft::ui_callbacks ui_callbacks() const noexcept;
 
-  std::array<QRadioButton*, 20 - 12 + 1> version_buttons() noexcept;
-  std::array<const QRadioButton*, 20 - 12 + 1> version_buttons() const noexcept;
+  std::array<QRadioButton*, 21 - 12 + 1> version_buttons() noexcept;
+  std::array<const QRadioButton*, 21 - 12 + 1> version_buttons() const noexcept;
 
   std::array<QRadioButton*, 3> type_buttons() noexcept;
   std::array<const QRadioButton*, 3> type_buttons() const noexcept;

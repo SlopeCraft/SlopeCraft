@@ -110,6 +110,7 @@ bool converted_image_impl::export_map_data(
         case SCL_gameVersion::MC18:
         case SCL_gameVersion::MC19:
         case SCL_gameVersion::MC20:
+        case SCL_gameVersion::MC21:
           MapFile.writeInt(
               "DataVersion",
               static_cast<int32_t>(
@@ -158,6 +159,7 @@ bool converted_image_impl::export_map_data(
           case SCL_gameVersion::MC18:
           case SCL_gameVersion::MC19:
           case SCL_gameVersion::MC20:
+          case SCL_gameVersion::MC21:
             MapFile.writeListHead("banners", NBT::Compound, 0);
             MapFile.writeListHead("frames", NBT::Compound, 0);
             MapFile.writeString("dimension", "minecraft:overworld");

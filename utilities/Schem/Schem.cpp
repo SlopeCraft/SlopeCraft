@@ -456,6 +456,7 @@ Schem::export_litematic(std::string_view filename,
     case ::SCL_gameVersion::MC18:
     case ::SCL_gameVersion::MC19:
     case ::SCL_gameVersion::MC20:
+    case ::SCL_gameVersion::MC21:
       lite.writeInt("MinecraftDataVersion", (int)this->MC_version_number());
       lite.writeInt("Version", 5);
       break;
@@ -639,6 +640,7 @@ Schem::export_structure(std::string_view filename,
       case ::SCL_gameVersion::MC18:
       case ::SCL_gameVersion::MC19:
       case ::SCL_gameVersion::MC20:
+      case ::SCL_gameVersion::MC21:
         file.writeInt("MinecraftDataVersion", (int)this->MC_data_ver);
         break;
       default:
@@ -646,7 +648,7 @@ Schem::export_structure(std::string_view filename,
         file.close();
         return tl::make_unexpected(std::make_pair(
             SCL_errorFlag::UNKNOWN_MAJOR_GAME_VERSION,
-            fmt::format("Unknown major game version! Only 1.12 to 1.19 is "
+            fmt::format("Unknown major game version! Only 1.12 to 1.21 is "
                         "supported, but given value {}",
                         (int)this->MC_major_ver)));
     }

@@ -308,14 +308,15 @@ void SCWind::when_cvt_pool_selectionChanged() noexcept {
   {                                                                 \
     this->ui->rb_ver12, this->ui->rb_ver13, this->ui->rb_ver14,     \
         this->ui->rb_ver15, this->ui->rb_ver16, this->ui->rb_ver17, \
-        this->ui->rb_ver18, this->ui->rb_ver19, this->ui->rb_ver20  \
+        this->ui->rb_ver18, this->ui->rb_ver19, this->ui->rb_ver20, \
+        this->ui->rb_ver21                                          \
   }
 
-std::array<QRadioButton *, 20 - 12 + 1> SCWind::version_buttons() noexcept {
+std::array<QRadioButton *, 21 - 12 + 1> SCWind::version_buttons() noexcept {
   return SC_SLOPECRAFT_PRIVATEMACRO_VERSION_BUTTON_LIST;
 }
 
-std::array<const QRadioButton *, 20 - 12 + 1> SCWind::version_buttons()
+std::array<const QRadioButton *, 21 - 12 + 1> SCWind::version_buttons()
     const noexcept {
   return SC_SLOPECRAFT_PRIVATEMACRO_VERSION_BUTTON_LIST;
 }
@@ -842,7 +843,6 @@ void SCWind::refresh_current_cvt_display(
         QPixmap::fromImage(get_converted_image(*it->second.converted_image)));
     return;
   }
-  // #warning "TODO: Load cache here"
 
   this->ui->lb_cvted_image->setPixmap({});
 }
@@ -955,9 +955,7 @@ tl::expected<QString, QString> SCWind::get_command(
           },
   };
   bool after_1_20_5;
-  if (this->selected_version() < SCL_gameVersion::MC20) {
-    after_1_20_5 = true;
-  } else if (this->selected_version() > SCL_gameVersion::MC20) {
+  if (this->selected_version() not_eq SCL_gameVersion::MC20) {
     after_1_20_5 = true;
   } else {
     after_1_20_5 = this->ui->cb_mc_version_geq_1_20_5->isChecked();

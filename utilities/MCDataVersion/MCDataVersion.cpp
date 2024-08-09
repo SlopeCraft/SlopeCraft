@@ -49,6 +49,7 @@ const char *MCDataVersion::data_version_to_string(
 MCDataVersion::MCDataVersion_t MCDataVersion::max_supported_version(
     SCL_gameVersion v) noexcept {
   switch (v) {
+    case SCL_gameVersion::ANCIENT:
     case SCL_gameVersion::MC12:
       return MCDataVersion_t::Java_1_12_2;
     case SCL_gameVersion::MC13:
@@ -67,15 +68,17 @@ MCDataVersion::MCDataVersion_t MCDataVersion::max_supported_version(
       return MCDataVersion_t::Java_1_19_3;
     case SCL_gameVersion::MC20:
       return MCDataVersion_t::Java_1_20_5;
-    default:
-      abort();
-      return {};
+    case SCL_gameVersion::MC21:
+    case SCL_gameVersion::FUTURE:
+      return MCDataVersion_t::Java_1_21;
   }
+  abort();
 }
 
 MCDataVersion::MCDataVersion_t MCDataVersion::min_supported_version(
     SCL_gameVersion v) noexcept {
   switch (v) {
+    case SCL_gameVersion::ANCIENT:
     case SCL_gameVersion::MC12:
       return MCDataVersion_t::Java_1_12;
     case SCL_gameVersion::MC13:
@@ -94,10 +97,11 @@ MCDataVersion::MCDataVersion_t MCDataVersion::min_supported_version(
       return MCDataVersion_t::Java_1_19;
     case SCL_gameVersion::MC20:
       return MCDataVersion_t::Java_1_20;
-    default:
-      abort();
-      return {};
+    case SCL_gameVersion::MC21:
+    case SCL_gameVersion::FUTURE:
+      return MCDataVersion_t::Java_1_21;
   }
+  abort();
 }
 
 MCDataVersion::MCDataVersion_t MCDataVersion::suggested_version(
