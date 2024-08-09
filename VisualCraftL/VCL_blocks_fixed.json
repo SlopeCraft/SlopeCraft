@@ -477,6 +477,119 @@
       "west"
     ]
   },
+  "minecraft:crafter[crafting=false,triggered=false,orientation=up_north]": {
+    "class": "crafted",
+    "nameEN": "Crafter(up north)",
+    "nameZH": "合成器（正面向上，顶面向北）",
+    "version": 21,
+    "faces": [
+      "up",
+      "down",
+      "north",
+      "south"
+    ]
+  },
+  "minecraft:crafter[crafting=false,triggered=false,orientation=up_west]": {
+    "class": "crafted",
+    "nameEN": "Crafter(up west)",
+    "nameZH": "合成器（正面向上，顶面向西）",
+    "version": 21,
+    "faces": [
+      "north",
+      "south",
+      "east",
+      "west"
+    ]
+  },
+  "minecraft:crafter[crafting=false,triggered=false,orientation=up_south]": {
+    "class": "crafted",
+    "nameEN": "Crafter(up south)",
+    "nameZH": "合成器（正面向上，顶面向南）",
+    "version": 21,
+    "faces": [
+      "north",
+      "south"
+    ]
+  },
+  "minecraft:crafter[crafting=false,triggered=false,orientation=up_east]": {
+    "class": "crafted",
+    "nameEN": "Crafter(up east)",
+    "nameZH": "合成器（正面向上，顶面向东）",
+    "version": 21,
+    "faces": [
+    ]
+  },
+  "minecraft:crafter[crafting=false,triggered=false,orientation=south_up]": {
+    "class": "crafted",
+    "nameEN": "Crafter(south up)",
+    "nameZH": "合成器（正面向南，顶面向上）",
+    "version": 21,
+    "faces": [
+      "up",
+      "down",
+      "north"
+    ]
+  },
+  "minecraft:crafter[crafting=false,triggered=false,orientation=east_up]": {
+    "class": "crafted",
+    "nameEN": "Crafter(east up)",
+    "nameZH": "合成器（正面向东，顶面向上）",
+    "version": 21,
+    "faces": [
+      "east",
+      "west"
+    ]
+  },
+  "minecraft:crafter[crafting=false,triggered=false,orientation=north_up]": {
+    "class": "crafted",
+    "nameEN": "Crafter(north up)",
+    "nameZH": "合成器（正面向北，顶面向上）",
+    "version": 21,
+    "faces": [
+      "south"
+    ]
+  },
+  "minecraft:crafter[crafting=false,triggered=false,orientation=west_up]": {
+    "class": "crafted",
+    "nameEN": "Crafter(west up)",
+    "nameZH": "合成器（正面向西，顶面向上）",
+    "version": 21,
+    "faces": []
+  },
+  "minecraft:crafter[crafting=false,triggered=false,orientation=down_south]": {
+    "class": "crafted",
+    "nameEN": "Crafter(down south)",
+    "nameZH": "合成器（正面向下，顶面向南）",
+    "version": 21,
+    "faces": [
+      "up",
+      "down"
+    ]
+  },
+  "minecraft:crafter[crafting=false,triggered=false,orientation=down_east]": {
+    "class": "crafted",
+    "nameEN": "Crafter(down east)",
+    "nameZH": "合成器（正面向下，顶面向东）",
+    "version": 21,
+    "faces": [
+      "east",
+      "west"
+    ]
+  },
+  "minecraft:crafter[crafting=false,triggered=false,orientation=down_north]": {
+    "class": "crafted",
+    "nameEN": "Crafter(down north)",
+    "nameZH": "合成器（正面向下，顶面向北）",
+    "version": 21,
+    "faces": []
+  },
+  "minecraft:crafter[crafting=false,triggered=false,orientation=down_west]": {
+    "class": "crafted",
+    "nameEN": "Crafter(down west)",
+    "nameZH": "合成器（正面向下，顶面向西）",
+    "version": 21,
+    "faces": []
+  },
   "minecraft:coarse_dirt": {
     "class": "desert",
     "endermanPickable": true,
