@@ -547,10 +547,10 @@
   },
   {
     "baseColor": 15,
-    "id": "minecraft:waxed_copper_gate",
+    "id": "minecraft:waxed_copper_grate",
     "nameZH": "涂蜡铜格栅",
-    "nameEN": "Waxed copper gate",
-    "icon": "copper_gate.png",
+    "nameEN": "Waxed copper grate",
+    "icon": "copper_grate.png",
     "version": 21
   },
   {
@@ -1388,10 +1388,10 @@
   },
   {
     "baseColor": 44,
-    "id": "minecraft:waxed_exposed_copper_gate",
+    "id": "minecraft:waxed_exposed_copper_grate",
     "nameZH": "斑驳的涂蜡铜格栅",
-    "nameEN": "Waxed exposed copper gate",
-    "icon": "exposed_copper_gate.png",
+    "nameEN": "Waxed exposed copper grate",
+    "icon": "exposed_copper_grate.png",
     "version": 21
   },
   {
@@ -1555,10 +1555,10 @@
   },
   {
     "baseColor": 55,
-    "id": "minecraft:waxed_oxidized_copper_gate",
+    "id": "minecraft:waxed_oxidized_copper_grate",
     "nameZH": "氧化的涂蜡铜格栅",
-    "nameEN": "Waxed oxidized copper gate",
-    "icon": "oxidized_copper_gate.png",
+    "nameEN": "Waxed oxidized copper grate",
+    "icon": "oxidized_copper_grate.png",
     "version": 21
   },
   {
@@ -1605,10 +1605,10 @@
   },
   {
     "baseColor": 56,
-    "id": "minecraft:waxed_weathered_copper_gate",
+    "id": "minecraft:waxed_weathered_copper_grate",
     "nameZH": "锈蚀的涂蜡铜格栅",
-    "nameEN": "Waxed weathered copper gate",
-    "icon": "weathered_copper_gate.png",
+    "nameEN": "Waxed weathered copper grate",
+    "icon": "weathered_copper_grate.png",
     "version": 21
   },
   {
