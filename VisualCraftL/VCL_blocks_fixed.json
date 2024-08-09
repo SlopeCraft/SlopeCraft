@@ -257,6 +257,226 @@
     "version": "all",
     "burnable": true
   },
+  "minecraft:cartography_table": {
+    "class": "crafted",
+    "nameEN": "Cartography table",
+    "nameZH": "制图台",
+    "version": 14,
+    "burnable": true
+  },
+  "minecraft:fletching_table": {
+    "class": "crafted",
+    "nameEN": "Fletching table",
+    "nameZH": "制箭台",
+    "version": 14,
+    "burnable": true
+  },
+  "minecraft:smithing_table": {
+    "class": "crafted",
+    "nameEN": "Smithing table",
+    "nameZH": "锻造台",
+    "version": 14,
+    "burnable": true
+  },
+  "minecraft:lodestone": {
+    "class": "crafted",
+    "nameEN": "Lodestone",
+    "nameZH": "磁石",
+    "version": 16,
+    "rare": true
+  },
+  "minecraft:composter[level=0]": {
+    "class": "crafted",
+    "nameEN": "Composter",
+    "nameZH": "堆肥桶",
+    "version": 14,
+    "burnable": true
+  },
+  "minecraft:note_block[note=0,powered=false]": {
+    "class": "crafted",
+    "nameEN": "Note block",
+    "nameZH": "音符盒",
+    "version": 14,
+    "burnable": true
+  },
+  "minecraft:loom[facing=north]": {
+    "class": "crafted",
+    "nameEN": "Loom(north)",
+    "nameZH": "织布机（向北）",
+    "version": 14,
+    "burnable": true
+  },
+  "minecraft:loom[facing=east]": {
+    "class": "crafted",
+    "nameEN": "Loom(east)",
+    "nameZH": "织布机（向东）",
+    "version": 14,
+    "burnable": true,
+    "faces": [
+      "east",
+      "north"
+    ]
+  },
+  "minecraft:loom[facing=south]": {
+    "class": "crafted",
+    "nameEN": "Loom(south)",
+    "nameZH": "织布机（向南）",
+    "version": 14,
+    "burnable": true,
+    "faces": [
+      "south"
+    ]
+  },
+  "minecraft:loom[facing=west]": {
+    "class": "crafted",
+    "nameEN": "Loom(west)",
+    "nameZH": "织布机（向西）",
+    "version": 14,
+    "burnable": true,
+    "faces": [
+      "west"
+    ]
+  },
+  "minecraft:smoker[facing=north,lit=false]": {
+    "class": "crafted",
+    "nameEN": "Smoker(north)",
+    "nameZH": "烟熏炉（向北）",
+    "version": 14
+  },
+  "minecraft:smoker[facing=east,lit=false]": {
+    "class": "crafted",
+    "nameEN": "Smoker(east)",
+    "nameZH": "烟熏炉（向东）",
+    "version": 14,
+    "faces": [
+      "east",
+      "north"
+    ]
+  },
+  "minecraft:smoker[facing=south,lit=false]": {
+    "class": "crafted",
+    "nameEN": "Smoker(south)",
+    "nameZH": "烟熏炉（向南）",
+    "version": 14,
+    "faces": [
+      "south"
+    ]
+  },
+  "minecraft:smoker[facing=west,lit=false]": {
+    "class": "crafted",
+    "nameEN": "Smoker(west)",
+    "nameZH": "烟熏炉（向西）",
+    "version": 14,
+    "faces": [
+      "west"
+    ]
+  },
+  "minecraft:furnace[facing=north,lit=false]": {
+    "class": "crafted",
+    "nameEN": "Furnace(north)",
+    "nameZH": "熔炉（向北）",
+    "version": "all"
+  },
+  "minecraft:furnace[facing=east,lit=false]": {
+    "class": "crafted",
+    "nameEN": "Furnace(east)",
+    "nameZH": "熔炉（向东）",
+    "version": "all",
+    "faces": [
+      "east",
+      "north"
+    ]
+  },
+  "minecraft:furnace[facing=south,lit=false]": {
+    "class": "crafted",
+    "nameEN": "Furnace(south)",
+    "nameZH": "熔炉（向南）",
+    "version": "all",
+    "faces": [
+      "south"
+    ]
+  },
+  "minecraft:furnace[facing=west,lit=false]": {
+    "class": "crafted",
+    "nameEN": "Furnace(west)",
+    "nameZH": "熔炉（向西）",
+    "version": "all",
+    "faces": [
+      "west"
+    ]
+  },
+  "minecraft:blast_furnace[facing=north,lit=false]": {
+    "class": "crafted",
+    "nameEN": "Blast furnace(north)",
+    "nameZH": "高炉（向北）",
+    "version": 14
+  },
+  "minecraft:blast_furnace[facing=east,lit=false]": {
+    "class": "crafted",
+    "nameEN": "Blast furnace(east)",
+    "nameZH": "高炉（向东）",
+    "version": 14,
+    "faces": [
+      "east",
+      "north"
+    ]
+  },
+  "minecraft:blast_furnace[facing=south,lit=false]": {
+    "class": "crafted",
+    "nameEN": "Blast furnace(south)",
+    "nameZH": "高炉（向南）",
+    "version": 14,
+    "faces": [
+      "south"
+    ]
+  },
+  "minecraft:blast_furnace[facing=west,lit=false]": {
+    "class": "crafted",
+    "nameEN": "Blast furnace(west)",
+    "nameZH": "高炉（向西）",
+    "version": 14,
+    "faces": [
+      "west"
+    ]
+  },
+  "minecraft:beehive[facing=north,honey_level=0]": {
+    "class": "crafted",
+    "nameEN": "Bee hive(north)",
+    "nameZH": "蜂箱（向北）",
+    "version": 14,
+    "burnable": true
+  },
+  "minecraft:beehive[facing=east,honey_level=0]": {
+    "class": "crafted",
+    "nameEN": "Bee hive(east)",
+    "nameZH": "蜂箱（向东）",
+    "version": 14,
+    "burnable": true,
+    "faces": [
+      "east",
+      "north"
+    ]
+  },
+  "minecraft:beehive[facing=south,honey_level=0]": {
+    "class": "crafted",
+    "nameEN": "Bee hive(south)",
+    "nameZH": "蜂箱（向南）",
+    "version": 14,
+    "burnable": true,
+    "faces": [
+      "south"
+    ]
+  },
+  "minecraft:beehive[facing=west,honey_level=0]": {
+    "class": "crafted",
+    "nameEN": "Bee hive(west)",
+    "nameZH": "蜂箱（向西）",
+    "version": 14,
+    "burnable": true,
+    "faces": [
+      "west"
+    ]
+  },
   "minecraft:coarse_dirt": {
     "class": "desert",
     "endermanPickable": true,
@@ -854,6 +1074,48 @@
     "nameZH": "绿色蛙鸣灯",
     "version": 19,
     "rare": true
+  },
+  "minecraft:bee_nest[facing=north,honey_level=0]": {
+    "class": "natural",
+    "nameEN": "Bee nest(north)",
+    "nameZH": "蜂巢（向北）",
+    "version": 14,
+    "burnable": true,
+    "reproducible": false
+  },
+  "minecraft:bee_nest[facing=east,honey_level=0]": {
+    "class": "natural",
+    "nameEN": "Bee nest(east)",
+    "nameZH": "蜂巢（向东）",
+    "version": 14,
+    "burnable": true,
+    "faces": [
+      "east",
+      "north"
+    ],
+    "reproducible": false
+  },
+  "minecraft:bee_nest[facing=south,honey_level=0]": {
+    "class": "natural",
+    "nameEN": "Bee nest(south)",
+    "nameZH": "蜂巢（向南）",
+    "version": 14,
+    "burnable": true,
+    "faces": [
+      "south"
+    ],
+    "reproducible": false
+  },
+  "minecraft:bee_nest[facing=west,honey_level=0]": {
+    "class": "natural",
+    "nameEN": "Bee nest(west)",
+    "nameZH": "蜂巢（向西）",
+    "version": 14,
+    "burnable": true,
+    "faces": [
+      "west"
+    ],
+    "reproducible": false
   },
   "minecraft:crimson_nylium": {
     "class": "nether",
