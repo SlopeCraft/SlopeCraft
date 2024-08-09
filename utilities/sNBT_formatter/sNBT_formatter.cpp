@@ -90,7 +90,9 @@ void sNBT::sNBT_format_visitor::visit(const nbt::tag_compound &c) {
   }
   this->os << "{";
   size_t idx = 0;
-  for (auto &[key, val] : c) {
+  for (const auto &pair : c) {
+    const auto &key = pair.first;
+    const auto &val = pair.second;
     if (key.contains(':')) {
       this->os << '\"' << key << '\"' << ':';
     } else {
