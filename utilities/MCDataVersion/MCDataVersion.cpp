@@ -67,10 +67,10 @@ MCDataVersion::MCDataVersion_t MCDataVersion::max_supported_version(
     case SCL_gameVersion::MC19:
       return MCDataVersion_t::Java_1_19_3;
     case SCL_gameVersion::MC20:
-      return MCDataVersion_t::Java_1_20_5;
+      return MCDataVersion_t::Java_1_20_6;
     case SCL_gameVersion::MC21:
     case SCL_gameVersion::FUTURE:
-      return MCDataVersion_t::Java_1_21;
+      return MCDataVersion_t::Java_1_21_1;
   }
   abort();
 }
