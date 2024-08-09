@@ -34,7 +34,11 @@
     ],
     [
       20,
-      "./Blocks_VCL/Vanilla_1_20_4.zip"
+      "./Blocks_VCL/Vanilla_1_20_6.zip"
+    ],
+    [
+      21,
+      "./Blocks_VCL/Vanilla_1_21_1.zip"
     ]
   ],
   "default_block_state_list": [

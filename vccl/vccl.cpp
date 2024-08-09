@@ -62,7 +62,7 @@ int main(int argc, char **argv) {
   int __version;
   app.add_option("--mcver", __version, "MC version")
       ->default_val(19)
-      ->check(CLI::Range(12, 20, "Avaliable versions"));
+      ->check(CLI::Range(12, 21, "Avaliable versions"));
 
   app.add_option("--layers,--layer", input.layers, "Max layers")
       ->default_val(1)
@@ -90,7 +90,7 @@ int main(int argc, char **argv) {
                "conversion")
       ->default_val(false);
   app.add_flag("--show-num-color,--snc", input.show_color_num,
-               "Show the number of colos")
+               "Show the number of colors")
       ->default_val(false);
 
   //  images
