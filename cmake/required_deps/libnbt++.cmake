@@ -22,4 +22,4 @@ FetchContent_MakeAvailable(libnbt++)
 find_package(libnbt++ REQUIRED)
 
 target_link_libraries(nbt++ ZLIB::ZLIB)
-target_compile_features(nbt++ PUBLIC cxx_std_23)
+target_compile_features(nbt++ PUBLIC cxx_std_20)
