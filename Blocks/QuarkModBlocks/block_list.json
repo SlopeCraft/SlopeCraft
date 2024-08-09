@@ -1,0 +1,313 @@
+[
+  {
+    "baseColor": 5,
+    "id": "quark:shale",
+    "nameZH": "页岩",
+    "nameEN": "Shale",
+    "icon": "shale.png"
+  },
+  {
+    "baseColor": 6,
+    "id": "quark:iron_plate",
+    "nameZH": "铁板块",
+    "nameEN": "Iron plate",
+    "icon": "iron_plate.png"
+  },
+  {
+    "baseColor": 7,
+    "id": "quark:ancient_leaves[persistent=true]",
+    "nameZH": "Ashen 树叶",
+    "nameEN": "Ashen leaves",
+    "burnable": true,
+    "icon": "ancient_leaves.png"
+  },
+  {
+    "baseColor": 11,
+    "id": "quark:limestone",
+    "nameZH": "石灰石",
+    "nameEN": "Lime stone",
+    "icon": "limestone.png"
+  },
+  {
+    "baseColor": 13,
+    "id": "quark:stick_block",
+    "nameZH": "木棍堆",
+    "nameEN": "Stick block",
+    "icon": "stick_block_top.png"
+  },
+  {
+    "baseColor": 15,
+    "id": "quark:shingles_slab[type=bottom]",
+    "nameZH": "陶瓦砖瓦台阶",
+    "nameEN": "Shingles slab",
+    "icon": "shingles_slab.png"
+  },
+  {
+    "baseColor": 15,
+    "id": "quark:raw_copper_bricks_slab",
+    "nameZH": "生铜块台阶",
+    "nameEN": "Raw copper bricks slab",
+    "icon": "raw_copper_bricks.png"
+  },
+  {
+    "baseColor": 16,
+    "id": "quark:duskbound_block",
+    "nameZH": "黯缚块",
+    "nameEN": "Dusk bound block",
+    "icon": "duskbound_block.png"
+  },
+  {
+    "baseColor": 17,
+    "id": "quark:permafrost",
+    "nameZH": "永冻石",
+    "nameEN": "Perma frost",
+    "icon": "permafrost.png"
+  },
+  {
+    "baseColor": 17,
+    "id": "quark:blue_blossom_leaves[persistent=true]",
+    "nameZH": "雪霜花树叶",
+    "nameEN": "Blue blossom leaves",
+    "burnable": true,
+    "icon": "blue_blossom_leaves.png"
+  },
+  {
+    "baseColor": 18,
+    "id": "quark:blaze_lantern",
+    "nameZH": "烈焰灯",
+    "nameEN": "Blaze lantern",
+    "isGlowing": true,
+    "icon": "blaze_lantern.png"
+  },
+  {
+    "baseColor": 18,
+    "id": "quark:yellow_blossom_leaves[persistent=true]",
+    "nameZH": "阳光花树叶",
+    "nameEN": "Yellow blossom leaves",
+    "burnable": true,
+    "icon": "yellow_blossom_leaves.png"
+  },
+  {
+    "baseColor": 19,
+    "id": "quark:midori_block",
+    "nameZH": "绿块",
+    "nameEN": "Midori block",
+    "icon": "midori_block.png"
+  },
+  {
+    "baseColor": 19,
+    "id": "quark:azalea_planks",
+    "nameZH": "杜鹃木板",
+    "nameEN": "Azalea planks",
+    "burnable": true,
+    "icon": "azalea_planks.png"
+  },
+  {
+    "baseColor": 19,
+    "id": "quark:azalea_planks_slab",
+    "nameZH": "杜鹃木台阶",
+    "nameEN": "Azalea plank slab",
+    "burnable": true,
+    "icon": "azalea_planks_slab.png"
+  },
+  {
+    "baseColor": 19,
+    "id": "quark:sugar_cane_block",
+    "nameZH": "甘蔗捆",
+    "nameEN": "Sugar cane block",
+    "icon": "sugar_cane_block.png"
+  },
+  {
+    "baseColor": 20,
+    "id": "quark:lavender_blossom_leaves[persistent=true]",
+    "nameZH": "幽静花树叶",
+    "nameEN": "Lavender blossom leaves",
+    "burnable": true,
+    "icon": "lavender_blossom_leaves.png"
+  },
+  {
+    "baseColor": 24,
+    "id": "quark:myalite",
+    "nameZH": "幻境石",
+    "nameEN": "Myalite",
+    "icon": "myalite.png"
+  },
+  {
+    "baseColor": 24,
+    "id": "quark:chorus_fruit_block",
+    "nameZH": "紫颂果块",
+    "nameEN": "Chorus fruit block",
+    "icon": "chorus_fruit_block.png"
+  },
+  {
+    "baseColor": 27,
+    "id": "quark:cactus_block",
+    "nameZH": "仙人掌块",
+    "nameEN": "Cactus block",
+    "icon": "cactus_block.png"
+  },
+  {
+    "baseColor": 28,
+    "id": "quark:blossom_planks",
+    "nameZH": "花木板",
+    "nameEN": "Blossom planks",
+    "burnable": true,
+    "icon": "blossom_planks.png"
+  },
+  {
+    "baseColor": 28,
+    "id": "quark:blossom_planks_slab",
+    "nameZH": "花木台阶",
+    "nameEN": "Blossom plank slab",
+    "burnable": true,
+    "icon": "blossom_planks_slab.png"
+  },
+  {
+    "baseColor": 28,
+    "id": "quark:red_blossom_leaves[persistent=true]",
+    "nameZH": "火热花树叶",
+    "nameEN": "Red blossom leaves",
+    "burnable": true,
+    "icon": "red_blossom_leaves.png"
+  },
+  {
+    "baseColor": 30,
+    "id": "quark:raw_gold_bricks_slab",
+    "nameZH": "生金块台阶",
+    "nameEN": "Raw gold bricks slab",
+    "icon": "raw_gold_bricks_slab.png"
+  },
+  {
+    "baseColor": 36,
+    "id": "quark:ancient_planks",
+    "nameZH": "Ashen 木板",
+    "nameEN": "Ashen planks",
+    "burnable": true,
+    "icon": "ancient_planks.png"
+  },
+  {
+    "baseColor": 36,
+    "id": "quark:ancient_planks_slab[type=bottom]",
+    "nameZH": "Ashen 木台阶",
+    "nameEN": "Ashen plank slab",
+    "burnable": true,
+    "icon": "ancient_planks_slab.png"
+  },
+  {
+    "baseColor": 36,
+    "id": "quark:white_shingles_slab[type=bottom]",
+    "nameZH": "白色陶瓦砖瓦台阶",
+    "nameEN": "White shingles slab",
+    "icon": "white_shingles_slab.png"
+  },
+  {
+    "baseColor": 37,
+    "id": "quark:orange_shingles_slab[type=bottom]",
+    "nameZH": "橙色陶瓦砖瓦台阶",
+    "nameEN": "Orange shingles slab",
+    "icon": "orange_shingles_slab.png"
+  },
+  {
+    "baseColor": 37,
+    "id": "quark:orange_blossom_leaves[persistent=true]",
+    "nameZH": "温暖花树叶",
+    "nameEN": "Orange blossom leaves",
+    "burnable": true
+  },
+  {
+    "baseColor": 38,
+    "id": "quark:magenta_shingles_slab[type=bottom]",
+    "nameZH": "品红色陶瓦砖瓦台阶",
+    "nameEN": "Magenta shingles slab",
+    "icon": "magenta_shingles_slab.png"
+  },
+  {
+    "baseColor": 39,
+    "id": "quark:light_blue_shingles_slab[type=bottom]",
+    "nameZH": "浅蓝色陶瓦砖瓦台阶",
+    "nameEN": "Light blue shingles slab",
+    "icon": "light_blue_shingles_slab.png"
+  },
+  {
+    "baseColor": 40,
+    "id": "quark:yellow_shingles_slab[type=bottom]",
+    "nameZH": "黄色陶瓦砖瓦台阶",
+    "nameEN": "Yellow shingles slab",
+    "icon": "yellow_shingles_slab.png"
+  },
+  {
+    "baseColor": 41,
+    "id": "quark:pink_shingles_slab[type=bottom]",
+    "nameZH": "粉色陶瓦砖瓦台阶",
+    "nameEN": "Pink shingles slab",
+    "icon": "pink_shingles_slab.png"
+  },
+  {
+    "baseColor": 42,
+    "id": "quark:lime_shingles_slab[type=bottom]",
+    "nameZH": "黄绿色陶瓦砖瓦台阶",
+    "nameEN": "Lime shingles slab",
+    "icon": "lime_shingles_slab.png"
+  },
+  {
+    "baseColor": 45,
+    "id": "quark:cyan_shingles_slab[type=bottom]",
+    "nameZH": "青色陶瓦砖瓦台阶",
+    "nameEN": "Cyan shingles slab",
+    "icon": "cyan_shingles_slab.png"
+  },
+  {
+    "baseColor": 46,
+    "id": "quark:purple_shingles_slab[type=bottom]",
+    "nameZH": "紫色陶瓦砖瓦台阶",
+    "nameEN": "Purple shingles slab",
+    "icon": "purple_shingles_slab.png"
+  },
+  {
+    "baseColor": 47,
+    "id": "quark:blue_shingles_slab[type=bottom]",
+    "nameZH": "蓝色陶瓦砖瓦台阶",
+    "nameEN": "Blue shingles slab",
+    "icon": "blue_shingles_slab.png"
+  },
+  {
+    "baseColor": 49,
+    "id": "quark:Green_shingles_slab[type=bottom]",
+    "nameZH": "绿色陶瓦砖瓦台阶",
+    "nameEN": "Green shingles slab",
+    "icon": "green_shingles_slab.png"
+  },
+  {
+    "baseColor": 48,
+    "id": "quark:brown_shingles_slab[type=bottom]",
+    "nameZH": "棕色陶瓦砖瓦台阶",
+    "nameEN": "Brown shingles slab",
+    "icon": "brown_shingles_slab.png"
+  },
+  {
+    "baseColor": 50,
+    "id": "quark:jasper",
+    "nameZH": "碧玉石",
+    "nameEN": "Jasper"
+  },
+  {
+    "baseColor": 50,
+    "id": "quark:red_shingles_slab[type=bottom]",
+    "nameZH": "红色陶瓦砖瓦台阶",
+    "nameEN": "Red shingles slab",
+    "icon": "red_shingles_slab.png"
+  },
+  {
+    "baseColor": 51,
+    "id": "quark:black_shingles_slab[type=bottom]",
+    "nameZH": "黑色陶瓦砖瓦台阶",
+    "nameEN": "Black shingles slab",
+    "icon": "black_shingles_slab.png"
+  },
+  {
+    "baseColor": 60,
+    "id": "quark:raw_iron_bricks_slab",
+    "nameZH": "生铁块台阶",
+    "nameEN": "Raw iron bricks slab"
+  }
+]
