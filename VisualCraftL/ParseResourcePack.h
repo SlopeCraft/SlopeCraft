@@ -23,13 +23,14 @@ This file is part of SlopeCraft.
 #ifndef SLOPECRAFT_VISUALCRAFTL_PARSERESOURCEPACK_H
 #define SLOPECRAFT_VISUALCRAFTL_PARSERESOURCEPACK_H
 
-#include <ColorManip/ColorManip.h>
-
-#include <Eigen/Dense>
 #include <string>
 #include <unordered_map>
 #include <utility>
 #include <variant>
+#include <optional>
+
+#include <ColorManip/ColorManip.h>
+#include <Eigen/Dense>
 
 #include "Resource_tree.h"
 #include "VisualCraftL.h"
