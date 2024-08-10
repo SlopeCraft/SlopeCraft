@@ -308,16 +308,18 @@ void BlockListDialog::update_info(
 }
 
 void BlockListDialog::on_pb_add_block_list_clicked() noexcept {
-  const auto files = QFileDialog::getOpenFileNames(this, tr("选择方块列表"),
-                                                   this->prev_dir, "*.zip");
+  const auto files = QFileDialog::getOpenFileNames(
+      this, tr("选择方块列表"),
+      QStringLiteral("%1/Blocks").arg(QCoreApplication::applicationDirPath()),
+      "*.zip");
   if (files.empty()) {
     return;
   }
-  this->prev_dir = QFileInfo{files.first()}.absoluteDir().path();
 
   for (auto &file : files) {
     this->block_list_manager->add_blocklist(file);
   }
+  this->block_list_manager->finish_blocklist();
   this->block_list_provider->dataChanged({}, {});
 }
 

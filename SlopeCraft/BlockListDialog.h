@@ -32,7 +32,6 @@ class BlockListDialog : public QDialog {
   BLD_block_list_provider* block_list_provider{nullptr};
   BLD_block_provider* block_provider{nullptr};
   BLD_block_info_provider* block_info_provider{nullptr};
-  QString prev_dir;
 
   BlockListManager* const block_list_manager;
 
