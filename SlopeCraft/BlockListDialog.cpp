@@ -178,9 +178,9 @@ BlockListDialog::BlockListDialog(SCWind *parent, BlockListManager *blm)
             std::pair<QString, const SlopeCraft::block_list_interface *>> {
       return blm->get_block_lists();
     };
-    this->block_list_provider =
-        new BLD_block_list_provider{this, get_block_lists};
-    this->ui->lv_block_lists->setModel(this->block_list_provider);
+    this->block_list_provider.reset(
+        new BLD_block_list_provider{this, get_block_lists});
+    this->ui->lv_block_lists->setModel(this->block_list_provider.get());
   }
   {
     auto get_selected_block_list =
@@ -198,9 +198,9 @@ BlockListDialog::BlockListDialog(SCWind *parent, BlockListManager *blm)
       return available_lists[idx].second;
     };
     auto get_lang = [parent]() -> SCL_language { return parent->lang(); };
-    this->block_provider =
-        new BLD_block_provider{this, get_selected_block_list, get_lang};
-    this->ui->lv_blocks->setModel(this->block_provider);
+    this->block_provider.reset(
+        new BLD_block_provider{this, get_selected_block_list, get_lang});
+    this->ui->lv_blocks->setModel(this->block_provider.get());
   }
   {
     auto get_selected_block =
@@ -216,9 +216,9 @@ BlockListDialog::BlockListDialog(SCWind *parent, BlockListManager *blm)
       }
       return available_blocks[idx];
     };
-    this->block_info_provider =
-        new BLD_block_info_provider{this, get_selected_block};
-    this->ui->tv_block_props->setModel(this->block_info_provider);
+    this->block_info_provider.reset(
+        new BLD_block_info_provider{this, get_selected_block});
+    this->ui->tv_block_props->setModel(this->block_info_provider.get());
   }
 
   connect(this->ui->lv_block_lists->selectionModel(),

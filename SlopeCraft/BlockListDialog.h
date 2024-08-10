@@ -90,9 +90,9 @@ class BlockListDialog : public QDialog {
   Q_OBJECT
  private:
   std::unique_ptr<Ui::BlockListDialog> ui;
-  BLD_block_list_provider* block_list_provider{nullptr};
-  BLD_block_provider* block_provider{nullptr};
-  BLD_block_info_provider* block_info_provider{nullptr};
+  std::unique_ptr<BLD_block_list_provider> block_list_provider{nullptr};
+  std::unique_ptr<BLD_block_provider> block_provider{nullptr};
+  std::unique_ptr<BLD_block_info_provider> block_info_provider{nullptr};
 
   BlockListManager* const block_list_manager;
 
