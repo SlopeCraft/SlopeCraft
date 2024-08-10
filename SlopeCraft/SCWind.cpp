@@ -195,6 +195,9 @@ SCWind::SCWind(QWidget *parent) : QMainWindow(parent), ui(new Ui::SCWind) {
   }
 
   this->when_preset_clicked();
+
+  connect(this->ui->pb_manage_block_list, &QPushButton::clicked, this,
+          &SCWind::on_ac_blocklist_triggered);
 }
 
 SCWind::~SCWind() {
