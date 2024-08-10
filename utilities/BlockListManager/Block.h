@@ -15,7 +15,7 @@ class BlockWidget : public QRadioButton {
   explicit BlockWidget(QWidget* parent, SlopeCraft::mc_block_interface* _blk);
   ~BlockWidget() = default;
 
-  auto attachted_block() const noexcept { return this->block; }
+  auto attached_block() const noexcept { return this->block; }
 
   void update_lang(SCL_language lang) noexcept;
 };

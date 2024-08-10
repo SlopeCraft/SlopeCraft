@@ -30,6 +30,7 @@ constexpr int basecolor_cols = 3;
 static_assert(basecolor_cols >= 1);
 
 void BaseColorWidget::add_block(SlopeCraft::mc_block_interface* ab) noexcept {
+  this->place_holders.clear();
   BlockWidget* bw = new BlockWidget(this, ab);
 
   const int idx = this->blocks.size();
@@ -47,27 +48,67 @@ void BaseColorWidget::add_block(SlopeCraft::mc_block_interface* ab) noexcept {
 
 void BaseColorWidget::add_placeholders() noexcept {
   if (this->blocks.size() <= 0) {
+    this->place_holders.clear();
     return;
   }
 
   if (this->blocks.size() < basecolor_cols) {
+    this->place_holders.clear();
     for (int i = this->blocks.size(); i < basecolor_cols; i++) {
-      QLabel* lb = new QLabel("", this);
+      auto lb = new QLabel("", this);
       // lb->setFrameShape(QLabel::Shape::Box);
       dynamic_cast<QGridLayout*>(this->ui->layout_blocks)->addWidget(lb, 0, i);
+      this->place_holders.emplace_back(lb);
     }
     return;
   }
 
   if (this->blocks.size() % basecolor_cols == 0) {
-    return;
+    this->place_holders.clear();
   }
-  /*
-  const int max_row = this->blocks.size() / basecolor_cols;
+}
 
-  dynamic_cast<QGridLayout*>(this->ui->layout_blocks)
-      ->addWidget(new QLabel("", this), max_row, basecolor_cols - 1);
-      */
+void BaseColorWidget::re_arrange_blocks() noexcept {
+  this->place_holders.clear();
+  auto layout = dynamic_cast<QGridLayout*>(this->ui->layout_blocks);
+  for (auto& bw : this->blocks) {
+    assert(layout->indexOf(bw) >= 0);
+    layout->removeWidget(bw);
+  }
+
+  constexpr int cols = basecolor_cols;
+  for (size_t idx = 0; idx < this->blocks.size(); idx++) {
+    const int col = idx % cols;
+    const int row = idx / cols;
+    layout->addWidget(this->blocks[idx], row, col);
+  }
+  this->finish_blocks();
+}
+
+tl::expected<size_t, QString> BaseColorWidget::remove_blocks(
+    const std::function<bool(const SlopeCraft::mc_block_interface*)>&
+        remove_this_block) noexcept {
+  size_t remove_counter = 0;
+  for (auto it = this->blocks.begin(); it not_eq this->blocks.end();) {
+    const bool remove_current = remove_this_block((*it)->attached_block());
+    if (not remove_current) {
+      ++it;
+      continue;
+    }
+    if (this->blocks.size() <= 1) {
+      return tl::make_unexpected(
+          tr("无法删除方块 %1，基色 %2 只拥有 "
+             "%3个方块，若继续删除，则该基色将没有方块，SlopeCraft 可能崩溃。")
+              .arg((*it)->text())
+              .arg(int(this->basecolor), this->blocks.size()));
+    }
+
+    (*it)->deleteLater();
+    it = this->blocks.erase(it);
+    remove_counter++;
+  }
+  this->re_arrange_blocks();
+  return remove_counter;
 }
 
 constexpr inline bool should_be_disabled(
@@ -95,8 +136,7 @@ void BaseColorWidget::finish_blocks() noexcept {
 
   for (int idx = 0; idx < (int)this->blocks.size(); idx++) {
     this->blocks[idx]->setDisabled(should_be_disabled(
-        idx,
-        (SCL_gameVersion)this->blocks[idx]->attachted_block()->getVersion(),
+        idx, (SCL_gameVersion)this->blocks[idx]->attached_block()->getVersion(),
         this->blocks.size(), v));
   }
 }
@@ -129,8 +169,7 @@ void BaseColorWidget::when_version_updated(SCL_gameVersion v) noexcept {
 
   for (int idx = 0; idx < int(this->blocks.size()); idx++) {
     this->blocks[idx]->setDisabled(should_be_disabled(
-        idx,
-        (SCL_gameVersion)this->blocks[idx]->attachted_block()->getVersion(),
+        idx, (SCL_gameVersion)this->blocks[idx]->attached_block()->getVersion(),
         this->blocks.size(), v));
   }
   if (this->basecolor == 0) {  // basecolor 0 (air) must be selected
@@ -164,7 +203,7 @@ int BaseColorWidget::prefered_block_idx(int checked_idx,
     score = 0;
 
     const SCL_gameVersion blk_ver =
-        (SCL_gameVersion)this->blocks[idx]->attachted_block()->getVersion();
+        (SCL_gameVersion)this->blocks[idx]->attached_block()->getVersion();
 
     if (blk_ver <= ver) {
       score = 100;
@@ -200,7 +239,7 @@ void BaseColorWidget::select_by_callback(const select_callback_t& fun) {
   std::vector<const SlopeCraft::mc_block_interface*> blks;
   blks.reserve(this->blocks.size());
   for (auto bw : this->blocks) {
-    blks.emplace_back(bw->attachted_block());
+    blks.emplace_back(bw->attached_block());
   }
 
   const int output = fun(blks);

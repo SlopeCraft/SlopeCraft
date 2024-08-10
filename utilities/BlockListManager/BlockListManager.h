@@ -1,11 +1,13 @@
 #ifndef SLOPECRAFT_UTILITIES_BLOCKLISTMANAGER_BLOCKLISTMANAGER_H
 #define SLOPECRAFT_UTILITIES_BLOCKLISTMANAGER_BLOCKLISTMANAGER_H
 
+#include <memory>
+#include <tl/expected.hpp>
+
 #include <QWidget>
 #include <SlopeCraftL.h>
 #include <QVBoxLayout>
 #include "BaseColor.h"
-#include <memory>
 
 struct basecolorOption {
   uint8_t baseColor{0xFF};
@@ -67,6 +69,9 @@ class BlockListManager : public QWidget {
   void setup_basecolors() noexcept;
 
   bool add_blocklist(QString filename) noexcept;
+
+  tl::expected<size_t, QString> remove_blocklist(
+      QString blocklist_name) noexcept;
 
   void finish_blocklist() noexcept;
 

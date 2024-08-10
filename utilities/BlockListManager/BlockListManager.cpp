@@ -135,6 +135,45 @@ void BlockListManager::finish_blocklist() noexcept {
   }
 }
 
+tl::expected<size_t, QString> BlockListManager::remove_blocklist(
+    QString blocklist_name) noexcept {
+  const SlopeCraft::block_list_interface *bl = nullptr;
+  auto it_removed = this->blockslists.end();
+  {
+    QString loaded_names;
+    for (auto it = this->blockslists.begin(); it not_eq this->blockslists.end();
+         ++it) {
+      auto &name = it->first;
+      loaded_names.append(name);
+      loaded_names.push_back(",");
+      if (name == blocklist_name) {
+        bl = it->second.get();
+        it_removed = it;
+        break;
+      }
+    }
+    if (bl == nullptr) {
+      return tl::make_unexpected(
+          tr("无法删除方块列表 \"%1\"，没有加载同名的方块列表。已加载：%2")
+              .arg(blocklist_name, loaded_names));
+    }
+  }
+  size_t removed_counter = 0;
+  for (auto &bcw : this->basecolor_widgets) {
+    auto res = bcw->remove_blocks(
+        [bl](const SlopeCraft::mc_block_interface *blk) -> bool {
+          return bl->contains(blk);
+        });
+    if (not res) {
+      return tl::make_unexpected(std::move(res.error()));
+    }
+    removed_counter += res.value();
+  }
+  this->blockslists.erase(it_removed);
+
+  return removed_counter;
+}
+
 void BlockListManager::when_version_updated() noexcept {
   for (auto &bcw : this->basecolor_widgets) {
     bcw->when_version_updated(this->callback_get_version());
@@ -177,7 +216,7 @@ bool BlockListManager::loadPreset(const blockListPreset &preset) noexcept {
     auto &bws = bcw->block_widgets();
     int matched_idx = -1;
     for (int idx = 0; idx < (int)bws.size(); idx++) {
-      if (QString::fromLatin1(bws[idx]->attachted_block()->getId()) ==
+      if (QString::fromLatin1(bws[idx]->attached_block()->getId()) ==
           preset.values[bc].second) {
         matched_idx = idx;
         break;
