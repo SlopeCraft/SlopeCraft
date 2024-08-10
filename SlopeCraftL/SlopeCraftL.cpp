@@ -155,6 +155,45 @@ struct zip_deleter {
   }
 };
 
+struct block_list_metainfo {
+  std::string prefix_ZH;
+  std::string prefix_EN;
+  std::vector<std::string> required_mods;
+};
+
+tl::expected<block_list_metainfo, std::string> parse_meta_info(
+    std::function<tl::expected<void, std::string>(const char *filename,
+                                                  std::vector<uint8_t> &dest)>
+        extract_file,
+    std::vector<uint8_t> &buffer) noexcept {
+  using njson = nlohmann::json;
+  // parse meta data
+  auto res = extract_file("metainfo.json", buffer);
+  if (res) {
+    block_list_metainfo ret;
+    try {
+      njson jo = njson::parse(buffer, nullptr, true, true);
+      auto &prefix = jo.at("name prefix");
+      ret.prefix_ZH = prefix.at("ZH");
+      ret.prefix_EN = prefix.at("EN");
+      auto &mods = jo.at("required mods");
+      ret.required_mods.reserve(mods.size());
+      for (size_t i = 0; i < mods.size(); i++) {
+        std::string mod_name = mods[i];
+        ret.required_mods.emplace_back(std::move(mod_name));
+      }
+
+    } catch (const std::exception &e) {
+      return tl::make_unexpected(
+          fmt::format("Failed to parse \"metainfo.json\": {}", e.what()));
+    }
+
+    return ret;
+  }
+  return tl::make_unexpected(
+      fmt::format("Failed to extract \"metainfo.json\": {}", res.error()));
+}
+
 std::tuple<tl::expected<block_list_interface *, std::string>, std::string>
 impl_create_block_list_from_zip(const char *zip_path) noexcept {
   std::string warnings{};
@@ -220,19 +259,37 @@ impl_create_block_list_from_zip(const char *zip_path) noexcept {
   };
 
   std::vector<uint8_t> buffer;
+
+  block_list *bl = new block_list;
+
+  using njson = nlohmann::json;
+  block_list_metainfo meta_info;
+  {
+    const char metainfo_name[] = "metainfo.json";
+    const int64_t index =
+        zip_name_locate(archive.get(), metainfo_name, ZIP_FL_UNCHANGED);
+    if (index >= 0) {
+      // metainfo.json exists in the archive
+      auto mi_res = parse_meta_info(extract_file, buffer);
+      if (not mi_res) {
+        fmt::format_to(
+            std::back_inserter(warnings),
+            "metainfo.json exist in the archive, but failed to parse it: {}\n",
+            mi_res.error());
+      }
+      meta_info = std::move(mi_res).value_or(block_list_metainfo{});
+    }
+  }
+  // parse json array of blocks
   {
     auto err = extract_file("block_list.json", buffer);
     if (!err) {
       return {tl::make_unexpected(err.error()), warnings};
     }
   }
-
-  block_list *bl = new block_list;
-
-  using njson = nlohmann::json;
   try {
     njson jo = njson::parse(buffer, nullptr, true, true);
-    if (!jo.is_array()) {
+    if (not jo.is_array()) {
       return {tl::make_unexpected(
                   fmt::format("Json should contain an array directly")),
               warnings};
@@ -240,8 +297,18 @@ impl_create_block_list_from_zip(const char *zip_path) noexcept {
 
     // parse blocks
     for (size_t idx = 0; idx < jo.size(); idx++) {
-      auto [version, block] = parse_block(jo[idx]);
-      bl->blocks().emplace(std::make_unique<mc_block>(block), version);
+      try {
+        auto [version, block] = parse_block(jo[idx]);
+
+        block.nameZH = meta_info.prefix_ZH + block.nameZH;
+        block.nameEN = meta_info.prefix_EN + block.nameEN;
+
+        bl->blocks().emplace(std::make_unique<mc_block>(block), version);
+      } catch (const std::exception &e) {
+        return {tl::make_unexpected(fmt::format(
+                    "Failed to parse block at index {}:\n{}", idx, e.what())),
+                warnings};
+      }
     }
 
   } catch (const std::exception &e) {
@@ -255,7 +322,7 @@ impl_create_block_list_from_zip(const char *zip_path) noexcept {
   for (auto &pair : bl->blocks()) {
     {
       auto err = extract_file(pair.first->imageFilename.c_str(), buffer);
-      if (!err) {
+      if (not err) {
         warnings +=
             fmt::format("{}, required by {}", err.error(), pair.first->id);
         continue;
