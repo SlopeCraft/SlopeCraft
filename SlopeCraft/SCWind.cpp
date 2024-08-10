@@ -43,8 +43,7 @@ SCWind::SCWind(QWidget *parent) : QMainWindow(parent), ui(new Ui::SCWind) {
         [this]() { return this->selected_version(); });
 
     QDir::setCurrent(QCoreApplication::applicationDirPath());
-    const QString blocks_dir_path =
-        QStringLiteral("%1/Blocks").arg(QCoreApplication::applicationDirPath());
+    const QString blocks_dir_path = QStringLiteral("./Blocks");
     const QDir blocks_dir{blocks_dir_path};
     if (not blocks_dir.exists()) {
       QMessageBox::critical(

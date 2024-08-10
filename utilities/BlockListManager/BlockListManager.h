@@ -137,7 +137,7 @@ class BlockListManager : public QWidget {
 
  private:
   std::unique_ptr<SlopeCraft::block_list_interface, BlockListDeleter>
-  impl_addblocklist(const QString &filename) noexcept;
+  impl_addblocklist(const char *filename) noexcept;
 };
 
 #endif  // SLOPECRAFT_UTILITIES_BLOCKLISTMANAGER_BLOCKLISTMANAGER_H
