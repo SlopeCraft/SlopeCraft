@@ -1,14 +1,3 @@
-
-#file(GLOB SlopeCraft_install_jsons
-#    "${CMAKE_SOURCE_DIR}/Blocks/*.json"
-#    "${CMAKE_SOURCE_DIR}/Blocks/*.md")
-#
-#file(GLOB SlopeCraft_install_png_fixedblocks
-#    "${CMAKE_SOURCE_DIR}/Blocks/FixedBlocks/*.png")
-#
-#file(GLOB SlopeCraft_install_png_customblocks
-#    "${CMAKE_SOURCE_DIR}/Blocks/CustomBlocks/*.png")
-
 file(GLOB SlopeCraft_block_list_archives
     "${CMAKE_BINARY_DIR}/SCL_block_lists/*.zip")
 
@@ -44,7 +33,7 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     # Install all block list archives
     install(FILES ${SlopeCraft_install_presets}
         DESTINATION SlopeCraft.app/Contents/MacOS/Blocks)
-    file(COPY ${SlopeCraft_install_png_customblocks}
+    file(COPY ${SlopeCraft_block_list_archives}
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/SlopeCraft.app/Contents/MacOS/Blocks/)
 
     # Install presets
