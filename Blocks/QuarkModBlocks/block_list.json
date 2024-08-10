@@ -50,7 +50,7 @@
   },
   {
     "baseColor": 15,
-    "id": "quark:raw_copper_bricks_slab",
+    "id": "quark:raw_copper_bricks_slab[type=bottom]",
     "nameZH": "生铜块台阶",
     "nameEN": "Raw copper bricks slab",
     "icon": "raw_copper_bricks.png",
@@ -118,7 +118,7 @@
   },
   {
     "baseColor": 19,
-    "id": "quark:azalea_planks_slab",
+    "id": "quark:azalea_planks_slab[type=bottom]",
     "nameZH": "杜鹃木台阶",
     "nameEN": "Azalea plank slab",
     "burnable": true,
@@ -177,7 +177,7 @@
   },
   {
     "baseColor": 28,
-    "id": "quark:blossom_planks_slab",
+    "id": "quark:blossom_planks_slab[type=bottom]",
     "nameZH": "花木台阶",
     "nameEN": "Trumpet plank slab",
     "burnable": true,
@@ -195,7 +195,7 @@
   },
   {
     "baseColor": 30,
-    "id": "quark:raw_gold_bricks_slab",
+    "id": "quark:raw_gold_bricks_slab[type=bottom]",
     "nameZH": "生金块台阶",
     "nameEN": "Raw gold bricks slab",
     "icon": "raw_gold_bricks_slab.png",
@@ -350,7 +350,7 @@
   },
   {
     "baseColor": 60,
-    "id": "quark:raw_iron_bricks_slab",
+    "id": "quark:raw_iron_bricks_slab[type=bottom]",
     "nameZH": "生铁块台阶",
     "nameEN": "Raw iron bricks slab",
     "icon": "raw_iron_bricks_slab.png",
