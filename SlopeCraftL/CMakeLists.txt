@@ -155,9 +155,15 @@ function(SC_create_SCL_block_list src_dir archive_path)
 
 endfunction()
 
-SC_create_SCL_block_list(${CMAKE_SOURCE_DIR}/Blocks/FixedBlocks "${CMAKE_BINARY_DIR}/SCL_block_lists/FixedBlocks.zip")
-SC_create_SCL_block_list(${CMAKE_SOURCE_DIR}/Blocks/CustomBlocks "${CMAKE_BINARY_DIR}/SCL_block_lists/CustomBlocks.zip")
-
+file(GLOB block_list_folders "${CMAKE_SOURCE_DIR}/Blocks/*")
+foreach (dir ${block_list_folders})
+    if (NOT IS_DIRECTORY ${dir})
+        continue()
+    endif ()
+    cmake_path(GET dir FILENAME block_list_name)
+    message(STATUS "Processing block list: ${dir}, block list name: \"${block_list_name}\"")
+    SC_create_SCL_block_list(${dir} "${CMAKE_BINARY_DIR}/SCL_block_lists/${block_list_name}.zip")
+endforeach ()
 
 add_executable(test_scl_load_blocklist tests/load_scl_blocklist.cpp)
 target_link_libraries(test_scl_load_blocklist PRIVATE SlopeCraftL)

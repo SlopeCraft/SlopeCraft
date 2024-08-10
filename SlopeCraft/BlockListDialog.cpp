@@ -2,215 +2,174 @@
 // Created by Joseph on 2024/4/9.
 //
 
+#include <QListView>
+#include <QFileDialog>
+#include <QMessageBox>
 #include "BlockListDialog.h"
 #include "ui_BlockListDialog.h"
-#include <QListView>
 #include "SCWind.h"
 
-class BLD_block_list_provider : public QAbstractListModel {
- public:
-  const std::function<std::vector<
-      std::pair<QString, const SlopeCraft::block_list_interface *>>()>
-      available_block_lists;
-
- public:
-  explicit BLD_block_list_provider(
-      QWidget *parent,
-      std::function<std::vector<
-          std::pair<QString, const SlopeCraft::block_list_interface *>>()>
-          cb)
-      : QAbstractListModel{parent}, available_block_lists{std::move(cb)} {}
-  BLD_block_list_provider(const BLD_block_list_provider &) = delete;
-
-  int rowCount(const QModelIndex &parent = QModelIndex()) const final {
-    if (parent.isValid()) {
-      return 0;
-    }
-    return this->available_block_lists().size();
+int BLD_block_list_provider::rowCount(const QModelIndex &parent) const {
+  if (parent.isValid()) {
+    return 0;
   }
+  return this->available_block_lists().size();
+}
 
-  QVariant data(const QModelIndex &index,
-                int role = Qt::DisplayRole) const final {
-    if (not index.isValid()) {
-      return {};
-    }
-    if (role not_eq Qt::ItemDataRole::DisplayRole) {
-      return {};
-    }
-    const auto block_lists = this->available_block_lists();
-    const int idx = index.row();
-
-    if (idx >= block_lists.size() or idx < 0) {
-      return {};
-    }
-    if (block_lists[idx].second == nullptr) {
-      return tr("SlopeCraft 内部错误，方块列表的列表中出现 nullptr");
-    }
-    return block_lists[idx].first;
-  }
-};
-
-class BLD_block_provider : public QAbstractListModel {
- private:
-  const std::function<const SlopeCraft::block_list_interface *()>
-      available_block_list;
-  const std::function<SCL_language()> current_lang;
-
- public:
-  explicit BLD_block_provider(
-      QWidget *parent,
-      std::function<const SlopeCraft::block_list_interface *()> &&cb,
-      std::function<SCL_language()> &&lang_cb)
-      : QAbstractListModel{parent},
-        available_block_list{std::move(cb)},
-        current_lang{std::move(lang_cb)} {}
-
-  std::vector<const SlopeCraft::mc_block_interface *> available_blocks()
-      const noexcept {
-    auto bl = this->available_block_list();
-    if (bl == nullptr) {
-      return {};
-    }
-    const size_t num = bl->size();
-    std::vector<const SlopeCraft::mc_block_interface *> ret;
-    ret.resize(num);
-    [[maybe_unused]] const size_t num_ =
-        bl->get_blocks(ret.data(), nullptr, ret.size());
-    assert(num == num_);
-    return ret;
-  }
-
-  int rowCount(const QModelIndex &parent = QModelIndex()) const final {
-    if (parent.isValid()) {
-      return 0;
-    }
-    auto bl = this->available_block_list();
-    if (bl == nullptr) {
-      return 0;
-    }
-    return bl->size();
-  }
-  QVariant data(const QModelIndex &index,
-                int role = Qt::DisplayRole) const final {
-    if (not index.isValid()) {
-      return {};
-    }
-    if (role not_eq Qt::ItemDataRole::DisplayRole) {
-      return {};
-    }
-    const auto blocks = this->available_blocks();
-    const int idx = index.row();
-
-    if (idx >= blocks.size() or idx < 0) {
-      return {};
-    }
-    if (blocks[idx] == nullptr) {
-      return tr("SlopeCraft 内部错误，方块列表中出现 nullptr");
-    }
-    if (this->current_lang() == SCL_language::Chinese) {
-      return QString::fromUtf8(blocks[idx]->getNameZH());
-    }
-    return QString::fromUtf8(blocks[idx]->getNameEN());
-  }
-};
-
-class BLD_block_info_provider : public QAbstractTableModel {
- public:
-  const std::function<const SlopeCraft::mc_block_interface *()> selected_block;
-
- public:
-  explicit BLD_block_info_provider(
-      QWidget *parent,
-      std::function<const SlopeCraft::mc_block_interface *()> &&cb)
-      : QAbstractTableModel{parent}, selected_block{std::move(cb)} {}
-
-  int rowCount(const QModelIndex &qmi) const final {
-    if (qmi.isValid()) {
-      return 0;
-    }
-    return 6;
-  }
-  int columnCount(const QModelIndex &qmi) const final {
-    if (qmi.isValid()) {
-      return 0;
-    }
-    return 2;
-  }
-
-  static QString key_name(int index) noexcept {
-    const std::array<QString, 6> keys{tr("最低版本"), tr("依附方块"),
-                                      tr("发光"),     tr("末影人可搬走"),
-                                      tr("可燃"),     tr("一组数量")};
-    if (index < 0 or index >= keys.size()) {
-      return {};
-    }
-    return keys[index];
-  }
-  /*
-   * 0 -> version
-   * 1 -> need glass
-   * 2 -> do glow
-   * 3 -> enderman pickable
-   * 4 -> burnable
-   * 5 -> stack size
-   * */
-  static QVariant value_of_attribute(const SlopeCraft::mc_block_interface &blk,
-                                     int index) noexcept {
-    auto bool_to_str = [](bool val) {
-      if (val)
-        return "Yes";
-      else
-        return "No";
-    };
-    switch (index) {
-      case 0: {  // version
-        const auto ver = blk.getVersion();
-        if (ver < uint8_t(SCL_gameVersion::MC12)) {
-          return tr("远古版本");
-        }
-        if (ver > (uint8_t)SlopeCraft::SCL_maxAvailableVersion()) {
-          return tr("未来版本");
-        }
-        return QStringLiteral("1.%1").arg(int(ver));
-      }
-      case 1:  // need glass
-        return bool_to_str(blk.getNeedGlass());
-      case 2:
-        return bool_to_str(blk.getDoGlow());
-      case 3:
-        return bool_to_str(blk.getEndermanPickable());
-      case 4:
-        return bool_to_str(blk.getBurnable());
-      case 5:
-        return blk.getStackSize();
-    }
+QVariant BLD_block_list_provider::data(const QModelIndex &index,
+                                       int role) const {
+  if (not index.isValid()) {
     return {};
   }
-
-  QVariant data(const QModelIndex &qmi, int role) const noexcept final {
-    if (not qmi.isValid()) {
-      return {};
-    }
-    if (role not_eq Qt::ItemDataRole::DisplayRole) {
-      return {};
-    }
-    const auto current_block = this->selected_block();
-    switch (qmi.column()) {
-      case 0:
-        return key_name(qmi.row());
-      case 1: {
-        if (current_block == nullptr) {
-          return {};
-        }
-        return value_of_attribute(*current_block, qmi.row());
-      }
-    }
+  if (role not_eq Qt::ItemDataRole::DisplayRole) {
     return {};
   }
-};
+  const auto block_lists = this->available_block_lists();
+  const int idx = index.row();
+
+  if (idx >= block_lists.size() or idx < 0) {
+    return {};
+  }
+  if (block_lists[idx].second == nullptr) {
+    return tr("SlopeCraft 内部错误，方块列表的列表中出现 nullptr");
+  }
+  return block_lists[idx].first;
+}
+
+std::vector<const SlopeCraft::mc_block_interface *>
+BLD_block_provider::available_blocks() const noexcept {
+  auto bl = this->available_block_list();
+  if (bl == nullptr) {
+    return {};
+  }
+  const size_t num = bl->size();
+  std::vector<const SlopeCraft::mc_block_interface *> ret;
+  ret.resize(num);
+  [[maybe_unused]] const size_t num_ =
+      bl->get_blocks(ret.data(), nullptr, ret.size());
+  assert(num == num_);
+  return ret;
+}
+
+int BLD_block_provider::rowCount(const QModelIndex &parent) const {
+  if (parent.isValid()) {
+    return 0;
+  }
+  auto bl = this->available_block_list();
+  if (bl == nullptr) {
+    return 0;
+  }
+  return bl->size();
+}
+QVariant BLD_block_provider::data(const QModelIndex &index, int role) const {
+  if (not index.isValid()) {
+    return {};
+  }
+  if (role not_eq Qt::ItemDataRole::DisplayRole) {
+    return {};
+  }
+  const auto blocks = this->available_blocks();
+  const int idx = index.row();
+
+  if (idx >= blocks.size() or idx < 0) {
+    return {};
+  }
+  if (blocks[idx] == nullptr) {
+    return tr("SlopeCraft 内部错误，方块列表中出现 nullptr");
+  }
+  if (this->current_lang() == SCL_language::Chinese) {
+    return QString::fromUtf8(blocks[idx]->getNameZH());
+  }
+  return QString::fromUtf8(blocks[idx]->getNameEN());
+}
+
+int BLD_block_info_provider::rowCount(const QModelIndex &qmi) const {
+  if (qmi.isValid()) {
+    return 0;
+  }
+  return 6;
+}
+int BLD_block_info_provider::columnCount(const QModelIndex &qmi) const {
+  if (qmi.isValid()) {
+    return 0;
+  }
+  return 2;
+}
+
+QString BLD_block_info_provider::key_name(int index) noexcept {
+  const std::array<QString, 6> keys{tr("最低版本"), tr("依附方块"),
+                                    tr("发光"),     tr("末影人可搬走"),
+                                    tr("可燃"),     tr("一组数量")};
+  if (index < 0 or index >= keys.size()) {
+    return {};
+  }
+  return keys[index];
+}
+/*
+ * 0 -> version
+ * 1 -> need glass
+ * 2 -> do glow
+ * 3 -> enderman pickable
+ * 4 -> burnable
+ * 5 -> stack size
+ * */
+QVariant BLD_block_info_provider::value_of_attribute(
+    const SlopeCraft::mc_block_interface &blk, int index) noexcept {
+  auto bool_to_str = [](bool val) {
+    if (val)
+      return "Yes";
+    else
+      return "No";
+  };
+  switch (index) {
+    case 0: {  // version
+      const auto ver = blk.getVersion();
+      if (ver < uint8_t(SCL_gameVersion::MC12)) {
+        return tr("远古版本");
+      }
+      if (ver > (uint8_t)SlopeCraft::SCL_maxAvailableVersion()) {
+        return tr("未来版本");
+      }
+      return QStringLiteral("1.%1").arg(int(ver));
+    }
+    case 1:  // need glass
+      return bool_to_str(blk.getNeedGlass());
+    case 2:
+      return bool_to_str(blk.getDoGlow());
+    case 3:
+      return bool_to_str(blk.getEndermanPickable());
+    case 4:
+      return bool_to_str(blk.getBurnable());
+    case 5:
+      return blk.getStackSize();
+  }
+  return {};
+}
+
+QVariant BLD_block_info_provider::data(const QModelIndex &qmi,
+                                       int role) const noexcept {
+  if (not qmi.isValid()) {
+    return {};
+  }
+  if (role not_eq Qt::ItemDataRole::DisplayRole) {
+    return {};
+  }
+  const auto current_block = this->selected_block();
+  switch (qmi.column()) {
+    case 0:
+      return key_name(qmi.row());
+    case 1: {
+      if (current_block == nullptr) {
+        return {};
+      }
+      return value_of_attribute(*current_block, qmi.row());
+    }
+  }
+  return {};
+}
 
 BlockListDialog::BlockListDialog(SCWind *parent, BlockListManager *blm)
-    : QDialog{parent}, ui{new Ui::BlockListDialog} {
+    : QDialog{parent}, ui{new Ui::BlockListDialog}, block_list_manager{blm} {
   this->ui->setupUi(this);
 
   {
@@ -219,9 +178,9 @@ BlockListDialog::BlockListDialog(SCWind *parent, BlockListManager *blm)
             std::pair<QString, const SlopeCraft::block_list_interface *>> {
       return blm->get_block_lists();
     };
-    this->block_list_provider =
-        new BLD_block_list_provider{this, get_block_lists};
-    this->ui->lv_block_lists->setModel(this->block_list_provider);
+    this->block_list_provider.reset(
+        new BLD_block_list_provider{this, get_block_lists});
+    this->ui->lv_block_lists->setModel(this->block_list_provider.get());
   }
   {
     auto get_selected_block_list =
@@ -239,9 +198,9 @@ BlockListDialog::BlockListDialog(SCWind *parent, BlockListManager *blm)
       return available_lists[idx].second;
     };
     auto get_lang = [parent]() -> SCL_language { return parent->lang(); };
-    this->block_provider =
-        new BLD_block_provider{this, get_selected_block_list, get_lang};
-    this->ui->lv_blocks->setModel(this->block_provider);
+    this->block_provider.reset(
+        new BLD_block_provider{this, get_selected_block_list, get_lang});
+    this->ui->lv_blocks->setModel(this->block_provider.get());
   }
   {
     auto get_selected_block =
@@ -257,9 +216,9 @@ BlockListDialog::BlockListDialog(SCWind *parent, BlockListManager *blm)
       }
       return available_blocks[idx];
     };
-    this->block_info_provider =
-        new BLD_block_info_provider{this, get_selected_block};
-    this->ui->tv_block_props->setModel(this->block_info_provider);
+    this->block_info_provider.reset(
+        new BLD_block_info_provider{this, get_selected_block});
+    this->ui->tv_block_props->setModel(this->block_info_provider.get());
   }
 
   connect(this->ui->lv_block_lists->selectionModel(),
@@ -303,4 +262,61 @@ void BlockListDialog::update_info(
   this->ui->le_id_old->setText(blk->getIdOld());
   this->ui->le_name_cn->setText(QString::fromUtf8(blk->getNameZH()));
   this->ui->le_name_en->setText(QString::fromUtf8(blk->getNameEN()));
+}
+
+void BlockListDialog::on_pb_add_block_list_clicked() noexcept {
+  const auto files = QFileDialog::getOpenFileNames(
+      this, tr("选择方块列表"),
+      QStringLiteral("%1/Blocks").arg(QCoreApplication::applicationDirPath()),
+      "*.zip");
+  if (files.empty()) {
+    return;
+  }
+
+  for (auto &file : files) {
+    this->block_list_manager->add_blocklist(file);
+  }
+  this->block_list_manager->finish_blocklist();
+  this->block_list_provider->dataChanged({}, {});
+}
+
+void BlockListDialog::on_pb_remove_block_list_clicked() noexcept {
+  const auto selected_indices =
+      this->ui->lv_block_lists->selectionModel()->selectedIndexes();
+  if (selected_indices.empty()) {
+    return;
+  }
+  std::vector<QString> names;
+  for (auto &qmi : selected_indices) {
+    if (not qmi.isValid()) {
+      continue;
+    }
+    names.emplace_back(
+        this->block_list_provider->available_block_lists()[qmi.row()].first);
+  }
+
+  int num_lists = 0;
+  size_t remove_counter = 0;
+  for (auto &name : names) {
+    if (name == "FixedBlocks.zip") {
+      QMessageBox::warning(this, tr("不能删除基础方块列表"),
+                           tr("FixedBlocks.zip 是基础方块列表，不允许移除。"));
+      continue;
+    }
+    auto res = this->block_list_manager->remove_blocklist(name);
+    if (not res) {
+      QMessageBox::warning(this, tr("删除方块列表 %1 失败").arg(name),
+                           res.error());
+    } else {
+      remove_counter += res.value();
+      num_lists++;
+    }
+  }
+  if (num_lists > 0) {
+    QMessageBox::information(this, tr("删除方块列表成功"),
+                             tr("删除了 %1 个方块列表，移除了 %2 个方块")
+                                 .arg(num_lists)
+                                 .arg(remove_counter));
+  }
+  this->block_list_provider->dataChanged({}, {});
 }

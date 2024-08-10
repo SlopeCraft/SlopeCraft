@@ -62,17 +62,16 @@ SCWind::SCWind(QWidget *parent) : QMainWindow(parent), ui(new Ui::SCWind) {
               tr("SlopeCraft 必须退出。"));
       exit(1);
     }
+    QString default_loaded[] = {"CustomBlocks.zip"};
     QString fail_list;
     int fail_counter = 0;
-    for (auto file :
-         blocks_dir.entryInfoList({"*.zip"}, QDir::Filters{QDir::Filter::Files},
-                                  QDir::SortFlags{QDir::SortFlag::Name})) {
-      if (file.fileName() == "FixedBlocks.zip") {
-        continue;
-      }
-      if (not this->ui->blm->add_blocklist(file.absoluteFilePath())) {
+    for (auto file : default_loaded) {
+      assert(file not_eq "FixedBlocks.zip");
+      const QString abs_name =
+          QStringLiteral("%1/%2").arg(blocks_dir_path, file);
+      if (not this->ui->blm->add_blocklist(abs_name)) {
         fail_counter++;
-        fail_list.append(file.absoluteFilePath());
+        fail_list.append(abs_name);
         fail_list.append('\n');
       }
     }
@@ -196,6 +195,9 @@ SCWind::SCWind(QWidget *parent) : QMainWindow(parent), ui(new Ui::SCWind) {
   }
 
   this->when_preset_clicked();
+
+  connect(this->ui->pb_manage_block_list, &QPushButton::clicked, this,
+          &SCWind::on_ac_blocklist_triggered);
 }
 
 SCWind::~SCWind() {
