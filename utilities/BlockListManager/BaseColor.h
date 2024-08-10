@@ -4,6 +4,9 @@
 #include <QGroupBox>
 #include <Block.h>
 #include <functional>
+#include <QLabel>
+
+#include <tl/expected.hpp>
 
 class BaseColorWidget;
 
@@ -20,6 +23,7 @@ class BaseColorWidget : public QGroupBox {
   std::unique_ptr<Ui::BaseColorWidget> ui;
   const uint8_t basecolor{255};
   std::vector<BlockWidget*> blocks;
+  std::vector<std::unique_ptr<QLabel>> place_holders;
 
  public:
   explicit BaseColorWidget(QWidget* parent, uint8_t _basecolor);
@@ -28,6 +32,11 @@ class BaseColorWidget : public QGroupBox {
   void set_color(uint32_t argb32) noexcept;
 
   void add_block(SlopeCraft::mc_block_interface* ab) noexcept;
+
+  // return the num of removed blocks
+  tl::expected<size_t, QString> remove_blocks(
+      const std::function<bool(const SlopeCraft::mc_block_interface*)>&
+          remove_this_block) noexcept;
 
   void finish_blocks() noexcept;
 
@@ -40,7 +49,7 @@ class BaseColorWidget : public QGroupBox {
   bool is_enabled() const noexcept;
 
   const SlopeCraft::mc_block_interface* selected_block() const noexcept {
-    return this->blocks[this->selected_idx()]->attachted_block();
+    return this->blocks[this->selected_idx()]->attached_block();
   }
 
   void update_lang(SCL_language lang) noexcept;
@@ -58,6 +67,8 @@ class BaseColorWidget : public QGroupBox {
 
  private:
   void add_placeholders() noexcept;
+
+  void re_arrange_blocks() noexcept;
 
   void select_block_direct(int idx) noexcept;
 

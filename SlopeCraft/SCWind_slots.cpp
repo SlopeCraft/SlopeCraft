@@ -961,7 +961,7 @@ void SCWind::on_ac_test_blocklist_triggered() noexcept {
        basecolor++) {
     const auto bcwp = this->ui->blm->basecolorwidget_at(basecolor);
     for (const auto &bwp : bcwp->block_widgets()) {
-      blks.emplace_back(bwp->attachted_block());
+      blks.emplace_back(bwp->attached_block());
       basecolors.emplace_back(basecolor);
     }
   }

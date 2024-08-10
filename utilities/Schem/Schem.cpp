@@ -383,7 +383,6 @@ Schem::export_litematic(std::string_view filename,
       {
         std::string pure_block_id;
         pure_block_id.reserve(1024);
-        memset(pure_block_id.data(), 0, pure_block_id.capacity());
         std::vector<std::pair<std::string, std::string>> properties;
         properties.reserve(64);
 
@@ -408,7 +407,7 @@ Schem::export_litematic(std::string_view filename,
       }
 
       lite.writeListHead("PendingBlockTicks", NBT::Compound, 0);
-      lite.writeListHead("PendingFluidTiccks", NBT::Compound, 0);
+      lite.writeListHead("PendingFluidTicks", NBT::Compound, 0);
 
       // write 3D
       std::vector<uint64_t> shrinked;

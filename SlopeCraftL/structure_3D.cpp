@@ -224,13 +224,10 @@ bool structure_3D_impl::export_litematica(
   info.regionname_utf8 = option.region_name_utf8;
 
   {
-    errorFlag flag = errorFlag::NO_ERROR_OCCUR;
-    std::string error_string;
-    const bool ok =
-        this->schem.export_litematic(filename, info, &flag, &error_string);
+    auto res = this->schem.export_litematic(filename, info);
 
-    if (!ok) {
-      option.ui.report_error(flag, error_string.c_str());
+    if (not res) {
+      option.ui.report_error(res.error().first, res.error().second.c_str());
       return false;
     }
   }
@@ -245,13 +242,9 @@ bool structure_3D_impl::export_vanilla_structure(
   option.ui.report_working_status(workStatus::writingMetaInfo);
   option.progressbar.set_range(0, 100 + schem.size(), 0);
 
-  errorFlag flag = errorFlag::NO_ERROR_OCCUR;
-  std::string error_string;
-  const bool success = schem.export_structure(
-      filename, option.is_air_structure_void, &flag, &error_string);
-
-  if (!success) {
-    option.ui.report_error(flag, error_string.c_str());
+  auto res = schem.export_structure(filename, option.is_air_structure_void);
+  if (not res) {
+    option.ui.report_error(res.error().first, res.error().second.c_str());
     return false;
   }
 
@@ -279,13 +272,9 @@ bool structure_3D_impl::export_WE_schem(
 
   option.progressbar.set_range(0, 100, 5);
 
-  errorFlag flag = errorFlag::NO_ERROR_OCCUR;
-  std::string error_string;
-  const bool success =
-      schem.export_WESchem(filename, info, &flag, &error_string);
-
-  if (!success) {
-    option.ui.report_error(flag, error_string.c_str());
+  auto res = schem.export_WESchem(filename, info);
+  if (not res) {
+    option.ui.report_error(res.error().first, res.error().second.c_str());
     return false;
   }
 
