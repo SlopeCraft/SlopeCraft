@@ -2,9 +2,11 @@
 // Created by Joseph on 2024/4/9.
 //
 
+#include <QListView>
+#include <QFileDialog>
+#include <QMessageBox>
 #include "BlockListDialog.h"
 #include "ui_BlockListDialog.h"
-#include <QListView>
 #include "SCWind.h"
 
 class BLD_block_list_provider : public QAbstractListModel {
@@ -210,7 +212,7 @@ class BLD_block_info_provider : public QAbstractTableModel {
 };
 
 BlockListDialog::BlockListDialog(SCWind *parent, BlockListManager *blm)
-    : QDialog{parent}, ui{new Ui::BlockListDialog} {
+    : QDialog{parent}, ui{new Ui::BlockListDialog}, block_list_manager{blm} {
   this->ui->setupUi(this);
 
   {
@@ -303,4 +305,56 @@ void BlockListDialog::update_info(
   this->ui->le_id_old->setText(blk->getIdOld());
   this->ui->le_name_cn->setText(QString::fromUtf8(blk->getNameZH()));
   this->ui->le_name_en->setText(QString::fromUtf8(blk->getNameEN()));
+}
+
+void BlockListDialog::on_pb_add_block_list_clicked() noexcept {
+  const auto files = QFileDialog::getOpenFileNames(this, tr("选择方块列表"),
+                                                   this->prev_dir, "*.zip");
+  if (files.empty()) {
+    return;
+  }
+  this->prev_dir = QFileInfo{files.first()}.absoluteDir().path();
+
+  for (auto &file : files) {
+    this->block_list_manager->add_blocklist(file);
+  }
+  this->block_list_provider->dataChanged({}, {});
+}
+
+void BlockListDialog::on_pb_remove_block_list_clicked() noexcept {
+  const auto selected_indices =
+      this->ui->lv_block_lists->selectionModel()->selectedIndexes();
+  std::vector<QString> names;
+  for (auto &qmi : selected_indices) {
+    if (not qmi.isValid()) {
+      continue;
+    }
+    names.emplace_back(
+        this->block_list_provider->available_block_lists()[qmi.row()].first);
+  }
+
+  int num_lists = 0;
+  size_t remove_counter = 0;
+  for (auto &name : names) {
+    if (name == "FixedBlocks.zip") {
+      QMessageBox::warning(this, tr("不能删除基础方块列表"),
+                           tr("FixedBlocks.zip 是基础方块列表，不允许移除。"));
+      continue;
+    }
+    auto res = this->block_list_manager->remove_blocklist(name);
+    if (not res) {
+      QMessageBox::warning(this, tr("删除方块列表 %1 失败").arg(name),
+                           res.error());
+    } else {
+      remove_counter += res.value();
+      num_lists++;
+    }
+  }
+  if (num_lists > 0) {
+    QMessageBox::information(this, tr("删除方块列表成功"),
+                             tr("删除了 %1 个方块列表，移除了 %2 个方块")
+                                 .arg(num_lists)
+                                 .arg(remove_counter));
+  }
+  this->block_list_provider->dataChanged({}, {});
 }

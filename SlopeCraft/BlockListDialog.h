@@ -32,12 +32,19 @@ class BlockListDialog : public QDialog {
   BLD_block_list_provider* block_list_provider{nullptr};
   BLD_block_provider* block_provider{nullptr};
   BLD_block_info_provider* block_info_provider{nullptr};
+  QString prev_dir;
+
+  BlockListManager* const block_list_manager;
 
   void update_info(const SlopeCraft::mc_block_interface*) noexcept;
 
  public:
   explicit BlockListDialog(SCWind* parent, BlockListManager* blm);
   ~BlockListDialog();
+
+ private slots:
+  void on_pb_add_block_list_clicked() noexcept;
+  void on_pb_remove_block_list_clicked() noexcept;
 };
 
 #endif  // SLOPECRAFT_BLOCKLISTDIALOG_H

@@ -112,6 +112,16 @@ BlockListManager::impl_addblocklist(const QString &filename) noexcept {
 }
 
 bool BlockListManager::add_blocklist(QString filename) noexcept {
+  const QString name = QFileInfo{filename}.fileName();
+  for (auto &[bl_name, _] : this->blockslists) {
+    if (bl_name == name) {
+      QMessageBox::warning(
+          this, tr("无法加载方块列表"),
+          tr("名为 %1 的方块列表已经加载，不允许加载同名的方块列表。")
+              .arg(bl_name));
+      return false;
+    }
+  }
   // Test for multiple encodings
   for (auto &encoding : {filename.toLocal8Bit(), filename.toUtf8()}) {
     std::unique_ptr<SlopeCraft::block_list_interface, BlockListDeleter> tmp =
@@ -121,8 +131,7 @@ bool BlockListManager::add_blocklist(QString filename) noexcept {
       continue;
     }
 
-    this->blockslists.emplace_back(QFileInfo{filename}.fileName(),
-                                   std::move(tmp));
+    this->blockslists.emplace_back(name, std::move(tmp));
     return true;
   }
 
