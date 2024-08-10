@@ -20,9 +20,70 @@ namespace Ui {
 class BlockListDialog;
 }
 
-class BLD_block_list_provider;
-class BLD_block_provider;
-class BLD_block_info_provider;
+class BLD_block_list_provider : public QAbstractListModel {
+  Q_OBJECT
+ public:
+  const std::function<std::vector<
+      std::pair<QString, const SlopeCraft::block_list_interface*>>()>
+      available_block_lists;
+
+ public:
+  explicit BLD_block_list_provider(
+      QWidget* parent,
+      std::function<std::vector<
+          std::pair<QString, const SlopeCraft::block_list_interface*>>()>
+          cb)
+      : QAbstractListModel{parent}, available_block_lists{std::move(cb)} {}
+  BLD_block_list_provider(const BLD_block_list_provider&) = delete;
+
+  int rowCount(const QModelIndex& parent = QModelIndex()) const final;
+
+  QVariant data(const QModelIndex& index,
+                int role = Qt::DisplayRole) const final;
+};
+class BLD_block_provider : public QAbstractListModel {
+  Q_OBJECT
+ private:
+  const std::function<const SlopeCraft::block_list_interface*()>
+      available_block_list;
+  const std::function<SCL_language()> current_lang;
+
+ public:
+  explicit BLD_block_provider(
+      QWidget* parent,
+      std::function<const SlopeCraft::block_list_interface*()>&& cb,
+      std::function<SCL_language()>&& lang_cb)
+      : QAbstractListModel{parent},
+        available_block_list{std::move(cb)},
+        current_lang{std::move(lang_cb)} {}
+
+  std::vector<const SlopeCraft::mc_block_interface*> available_blocks()
+      const noexcept;
+  int rowCount(const QModelIndex& parent = QModelIndex()) const;
+  QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+};
+
+class BLD_block_info_provider : public QAbstractTableModel {
+  Q_OBJECT
+ public:
+  const std::function<const SlopeCraft::mc_block_interface*()> selected_block;
+
+ public:
+  explicit BLD_block_info_provider(
+      QWidget* parent,
+      std::function<const SlopeCraft::mc_block_interface*()>&& cb)
+      : QAbstractTableModel{parent}, selected_block{std::move(cb)} {}
+
+  int rowCount(const QModelIndex& qmi) const final;
+
+  int columnCount(const QModelIndex& qmi) const final;
+
+  static QString key_name(int index) noexcept;
+  static QVariant value_of_attribute(const SlopeCraft::mc_block_interface& blk,
+                                     int index) noexcept;
+
+  QVariant data(const QModelIndex& qmi, int role) const noexcept final;
+};
 
 class SCWind;
 class BlockListDialog : public QDialog {
