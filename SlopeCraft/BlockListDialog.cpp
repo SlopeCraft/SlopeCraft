@@ -326,6 +326,9 @@ void BlockListDialog::on_pb_add_block_list_clicked() noexcept {
 void BlockListDialog::on_pb_remove_block_list_clicked() noexcept {
   const auto selected_indices =
       this->ui->lv_block_lists->selectionModel()->selectedIndexes();
+  if (selected_indices.empty()) {
+    return;
+  }
   std::vector<QString> names;
   for (auto &qmi : selected_indices) {
     if (not qmi.isValid()) {
