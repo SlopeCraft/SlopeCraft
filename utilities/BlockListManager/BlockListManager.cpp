@@ -63,7 +63,7 @@ uint64_t std::hash<selection>::operator()(const selection &s) const noexcept {
 // }
 
 std::unique_ptr<SlopeCraft::block_list_interface, BlockListDeleter>
-BlockListManager::impl_addblocklist(const char *filename) noexcept {
+BlockListManager::impl_addblocklist(const QByteArray &file_content) noexcept {
   std::string errmsg;
   errmsg.resize(8192);
   auto sd_err = SlopeCraft::string_deliver::from_string(errmsg);
@@ -73,7 +73,8 @@ BlockListManager::impl_addblocklist(const char *filename) noexcept {
   SlopeCraft::block_list_create_info option{SC_VERSION_U64, &sd_warn, &sd_err};
 
   SlopeCraft::block_list_interface *bli =
-      SlopeCraft::SCL_create_block_list(filename, option);
+      SlopeCraft::SCL_create_block_list_from_buffer(
+          file_content.data(), file_content.size(), option);
 
   errmsg.resize(sd_err.size);
   warning.resize(sd_warn.size);
@@ -122,20 +123,30 @@ bool BlockListManager::add_blocklist(QString filename) noexcept {
       return false;
     }
   }
-  // Test for multiple encodings
-  for (auto &encoding : {filename.toLocal8Bit(), filename.toUtf8()}) {
-    std::unique_ptr<SlopeCraft::block_list_interface, BlockListDeleter> tmp =
-        this->impl_addblocklist(encoding.data());
 
-    if (not tmp) {
-      continue;
+  QByteArray buffer;
+  {
+    QFile file{filename};
+    if (not file.open(QFile::OpenModeFlag::ReadOnly |
+                      QFile::OpenModeFlag::ExistingOnly)) {
+      QMessageBox::warning(
+          this, tr("无法加载方块列表"),
+          tr("无法打开文件 \"%1\"：%2").arg(filename, file.errorString()));
+      return false;
     }
-
-    this->blockslists.emplace_back(name, std::move(tmp));
-    return true;
+    buffer = file.readAll();
   }
 
-  return false;
+  // Test for multiple encodings
+  std::unique_ptr<SlopeCraft::block_list_interface, BlockListDeleter> tmp =
+      this->impl_addblocklist(buffer);
+
+  if (not tmp) {
+    return false;
+  }
+
+  this->blockslists.emplace_back(name, std::move(tmp));
+  return true;
 }
 
 void BlockListManager::finish_blocklist() noexcept {
