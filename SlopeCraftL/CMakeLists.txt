@@ -59,6 +59,8 @@ set(SlopeCraft_SCL_sources
 
     #${SlopeCraft_SCL_internal_headers}
     ${SlopeCraft_SCL_windows_rc_files}
+    block_list.cpp
+    blocklist.h
 )
 
 # add this definations to both targets

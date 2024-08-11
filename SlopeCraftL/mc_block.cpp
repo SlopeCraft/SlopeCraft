@@ -21,6 +21,7 @@ This file is part of SlopeCraft.
 */
 
 #include "mc_block.h"
+#include "blocklist.h"
 
 mc_block::mc_block() {
   //  id = "";
@@ -33,6 +34,19 @@ mc_block::mc_block() {
 
   image.resize(16, 16);
   // wallUseable=true;
+}
+
+void mc_block_interface::clear() noexcept {
+  setBurnable(false);
+  setDoGlow(false);
+  setEndermanPickable(false);
+  setId("minecraft:air");
+  setIdOld("");
+  setNeedGlass(false);
+  setVersion(0);
+  setNameZH("");
+  setNameEN("");
+  // setWallUseable(false);
 }
 
 size_t block_list::get_blocks(mc_block_interface **dst, uint8_t *dst_basecolor,

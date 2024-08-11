@@ -513,6 +513,9 @@ struct block_list_create_info {
 
 [[nodiscard]] SCL_EXPORT block_list_interface *SCL_create_block_list(
     const char *zip_filename, const block_list_create_info &option);
+[[nodiscard]] SCL_EXPORT block_list_interface *
+SCL_create_block_list_from_buffer(const void *buffer, size_t buffer_bytes,
+                                  const block_list_create_info &option);
 SCL_EXPORT void SCL_destroy_block_list(block_list_interface *);
 
 SCL_EXPORT void SCL_preprocessImage(

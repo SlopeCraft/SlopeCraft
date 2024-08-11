@@ -129,33 +129,4 @@ class mc_block : public ::SlopeCraft::mc_block_interface {
   // mc_block& operator =(const mc_block &);
 };
 
-class block_list : public ::SlopeCraft::block_list_interface {
- private:
-  std::map<std::unique_ptr<mc_block>, uint8_t> m_blocks;
-
- public:
-  block_list() = default;
-  ~block_list();
-
- public:
-  size_t size() const noexcept override { return m_blocks.size(); }
-  size_t get_blocks(mc_block_interface **dst, uint8_t *,
-                    size_t capacity_in_elements) noexcept override;
-
-  size_t get_blocks(const mc_block_interface **dst, uint8_t *,
-                    size_t capacity_in_elements) const noexcept override;
-
-  bool contains(const mc_block_interface *cp) const noexcept override {
-    const mc_block *ptr = dynamic_cast<const mc_block *>(cp);
-    return this->m_blocks.contains(
-        reinterpret_cast<std::unique_ptr<mc_block> &>(ptr));
-  }
-
- public:
-  const auto &blocks() const noexcept { return this->m_blocks; }
-  auto &blocks() noexcept { return this->m_blocks; }
-
-  void clear() noexcept;
-};
-
 #endif  // SIMPLEBLOCK_H
