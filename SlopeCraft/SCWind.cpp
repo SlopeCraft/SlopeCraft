@@ -374,8 +374,18 @@ std::optional<int> SCWind::selected_cvt_task_idx() const noexcept {
   if (sel.size() <= 0) {
     return std::nullopt;
   }
+  auto front = sel.front();
+  if (not front.isValid()) {
+    return std::nullopt;
+  }
 
-  return sel.front().row();
+  const int idx = front.row();
+  if (idx < 0 or idx >= this->tasks.size()) {
+    // In some corner cases this is true
+    // Return nullopt so that we don't return a invalid index
+    return std::nullopt;
+  }
+  return idx;
 }
 
 std::vector<cvt_task *> SCWind::selected_export_task_list() const noexcept {
