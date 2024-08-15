@@ -370,107 +370,21 @@
        <attribute name="title">
         <string>导入图像并转化</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_6" columnstretch="1,10,0,0">
-        <item row="0" column="1" rowspan="5">
-         <widget class="QTabWidget" name="tw_cvt_image">
-          <property name="minimumSize">
-           <size>
-            <width>500</width>
-            <height>400</height>
-           </size>
+       <layout class="QGridLayout" name="gridLayout_6" columnstretch="1,0,0,0">
+        <item row="2" column="2" colspan="2">
+         <widget class="QPushButton" name="pb_cvt_all">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
           </property>
-          <property name="tabPosition">
-           <enum>QTabWidget::TabPosition::North</enum>
-          </property>
-          <property name="tabShape">
-           <enum>QTabWidget::TabShape::Rounded</enum>
-          </property>
-          <property name="currentIndex">
-           <number>0</number>
-          </property>
-          <property name="elideMode">
-           <enum>Qt::TextElideMode::ElideLeft</enum>
-          </property>
-          <property name="documentMode">
-           <bool>false</bool>
-          </property>
-          <property name="tabsClosable">
-           <bool>false</bool>
-          </property>
-          <property name="tabBarAutoHide">
-           <bool>false</bool>
-          </property>
-          <widget class="QWidget" name="tab_4">
-           <attribute name="title">
-            <string>原图</string>
-           </attribute>
-           <layout class="QGridLayout" name="gridLayout_7">
-            <item row="0" column="0">
-             <widget class="AdaptiveLabel" name="lb_raw_image">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="autoFillBackground">
-               <bool>true</bool>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::Shape::NoFrame</enum>
-              </property>
-              <property name="lineWidth">
-               <number>1</number>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="scaledContents">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="tab_5">
-           <attribute name="title">
-            <string>转化后</string>
-           </attribute>
-           <layout class="QGridLayout" name="gridLayout_8">
-            <item row="0" column="0">
-             <widget class="AdaptiveLabel" name="lb_cvted_image">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="autoFillBackground">
-               <bool>true</bool>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::Shape::NoFrame</enum>
-              </property>
-              <property name="lineWidth">
-               <number>1</number>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </widget>
-        </item>
-        <item row="5" column="1" colspan="3">
-         <widget class="QProgressBar" name="pbar_cvt">
-          <property name="value">
-           <number>0</number>
+          <property name="text">
+           <string>全部转化</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="0" rowspan="6">
+        <item row="0" column="0" rowspan="7">
          <layout class="QGridLayout" name="gridLayout_11">
           <property name="leftMargin">
            <number>0</number>
@@ -585,6 +499,32 @@
           </item>
          </layout>
         </item>
+        <item row="5" column="2" colspan="2">
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="3" column="2" colspan="2">
+         <widget class="QPushButton" name="pb_save_converted">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>保存转化后图像</string>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="2" colspan="2">
          <widget class="QGroupBox" name="groupBox_4">
           <property name="title">
@@ -659,43 +599,113 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="2" colspan="2">
-         <widget class="QPushButton" name="pb_save_converted">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
+        <item row="4" column="2" colspan="2">
+         <widget class="QLabel" name="lb_map_shape">
           <property name="text">
-           <string>保存转化后图像</string>
+           <string/>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
           </property>
          </widget>
         </item>
-        <item row="4" column="2" colspan="2">
-         <spacer name="verticalSpacer">
-          <property name="orientation">
-           <enum>Qt::Orientation::Vertical</enum>
+        <item row="6" column="1" colspan="3">
+         <widget class="QProgressBar" name="pbar_cvt">
+          <property name="value">
+           <number>0</number>
           </property>
-          <property name="sizeHint" stdset="0">
+         </widget>
+        </item>
+        <item row="0" column="1" rowspan="6">
+         <widget class="QTabWidget" name="tw_cvt_image">
+          <property name="minimumSize">
            <size>
-            <width>20</width>
-            <height>40</height>
+            <width>500</width>
+            <height>400</height>
            </size>
           </property>
-         </spacer>
-        </item>
-        <item row="2" column="2" colspan="2">
-         <widget class="QPushButton" name="pb_cvt_all">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+          <property name="tabPosition">
+           <enum>QTabWidget::TabPosition::North</enum>
           </property>
-          <property name="text">
-           <string>全部转化</string>
+          <property name="tabShape">
+           <enum>QTabWidget::TabShape::Rounded</enum>
           </property>
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <property name="elideMode">
+           <enum>Qt::TextElideMode::ElideLeft</enum>
+          </property>
+          <property name="documentMode">
+           <bool>false</bool>
+          </property>
+          <property name="tabsClosable">
+           <bool>false</bool>
+          </property>
+          <property name="tabBarAutoHide">
+           <bool>false</bool>
+          </property>
+          <widget class="QWidget" name="tab_4">
+           <attribute name="title">
+            <string>原图</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_7">
+            <item row="0" column="0">
+             <widget class="AdaptiveLabel" name="lb_raw_image">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::Shape::NoFrame</enum>
+              </property>
+              <property name="lineWidth">
+               <number>1</number>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="scaledContents">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab_5">
+           <attribute name="title">
+            <string>转化后</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_8">
+            <item row="0" column="0">
+             <widget class="AdaptiveLabel" name="lb_cvted_image">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::Shape::NoFrame</enum>
+              </property>
+              <property name="lineWidth">
+               <number>1</number>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
          </widget>
         </item>
        </layout>

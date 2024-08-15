@@ -833,9 +833,10 @@ QImage get_converted_image(const SlopeCraft::converted_image &cvted) noexcept {
 
 void SCWind::refresh_current_cvt_display(
     std::optional<int> selected_idx) noexcept {
-  if (!selected_idx.has_value()) {
+  if (not selected_idx.has_value()) {
     this->ui->lb_raw_image->setPixmap({});
     this->ui->lb_cvted_image->setPixmap({});
+    this->ui->lb_map_shape->setText("");
     return;
   }
 
@@ -843,6 +844,13 @@ void SCWind::refresh_current_cvt_display(
 
   this->ui->lb_raw_image->setPixmap(
       QPixmap::fromImage(this->tasks[idx].original_image));
+  {
+    auto shape = this->tasks[idx].original_image.size();
+    const int map_rows = std::ceil(shape.height() / 128.0f);
+    const int map_cols = std::ceil(shape.width() / 128.0f);
+    this->ui->lb_map_shape->setText(
+        tr("%1行，%2列").arg(map_rows).arg(map_cols));
+  }
 
   auto &task = this->tasks[selected_idx.value()];
 
