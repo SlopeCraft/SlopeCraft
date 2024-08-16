@@ -2,6 +2,7 @@ EXPORTS
 VCL_create_kernel
 VCL_destroy_kernel
 VCL_create_resource_pack
+VCL_create_resource_pack_from_buffers
 VCL_destroy_resource_pack
 VCL_create_block_state_list
 VCL_destroy_block_state_list

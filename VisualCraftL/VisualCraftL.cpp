@@ -44,35 +44,8 @@ VCL_EXPORT_FUN void VCL_destroy_kernel(VCL_Kernel *const ptr) {
   }
 }
 
-VCL_EXPORT_FUN VCL_resource_pack *VCL_create_resource_pack(
-    const int zip_file_count, const char *const *const zip_file_names) {
-  if (zip_file_count <= 0) {
-    return nullptr;
-  }
-
-  bool ok = true;
-  zipped_folder zf = zipped_folder::from_zip(zip_file_names[0], &ok);
-
-  if (!ok) {
-    std::string msg = fmt::format("Failed to parse {}\n", zip_file_names[0]);
-
-    VCL_report(VCL_report_type_t::error, msg.c_str(), true);
-    return nullptr;
-  }
-
-  for (int zfidx = 1; zfidx < zip_file_count; zfidx++) {
-    zipped_folder z = zipped_folder::from_zip(zip_file_names[zfidx], &ok);
-
-    if (!ok) {
-      std::string msg =
-          fmt::format("Failed to parse {}\n", zip_file_names[zfidx]);
-      VCL_report(VCL_report_type_t::error, msg.c_str(), true);
-      return nullptr;
-    }
-
-    zf.merge_from_base(std::move(z));
-  }
-
+VCL_resource_pack *zip_folder_to_resource_pack(
+    const zipped_folder &zf) noexcept {
   VCL_resource_pack *const rp = new VCL_resource_pack;
 
   if (!rp->add_colormaps(zf)) {
@@ -115,6 +88,82 @@ VCL_EXPORT_FUN VCL_resource_pack *VCL_create_resource_pack(
   VCL_report(VCL_report_type_t::warning, nullptr, true);
 
   return rp;
+}
+
+VCL_EXPORT_FUN VCL_resource_pack *VCL_create_resource_pack(
+    const int zip_file_count, const char *const *const zip_file_names) {
+  if (zip_file_count <= 0) {
+    return nullptr;
+  }
+  auto parse_zip = [](const char *filename) noexcept {
+    std::optional<zipped_folder> zf_opt = zipped_folder::from_zip(filename);
+
+    if (not zf_opt) {
+      std::string msg = fmt::format("Failed to parse {}\n", filename);
+      VCL_report(VCL_report_type_t::error, msg.c_str(), true);
+    }
+    return zf_opt;
+  };
+
+  zipped_folder zf;
+  {
+    std::optional<zipped_folder> zf_opt = parse_zip(zip_file_names[0]);
+
+    if (not zf_opt) {
+      return nullptr;
+    }
+    zf = std::move(zf_opt.value());
+  }
+
+  for (int zfidx = 1; zfidx < zip_file_count; zfidx++) {
+    std::optional<zipped_folder> zf_opt = parse_zip(zip_file_names[0]);
+    if (not zf_opt) {
+      return nullptr;
+    }
+
+    zf.merge_from_base(std::move(zf_opt.value()));
+  }
+
+  return zip_folder_to_resource_pack(zf);
+}
+
+[[nodiscard]] VCL_EXPORT_FUN VCL_resource_pack *
+VCL_create_resource_pack_from_buffers(const size_t zip_count,
+                                      const VCL_read_only_buffer *file_contents,
+                                      const char *const *const zip_file_names) {
+  if (zip_count <= 0) {
+    return nullptr;
+  }
+  zipped_folder zf;
+  {
+    auto zf_opt = zipped_folder::from_zip(
+        zip_file_names[0],
+        {reinterpret_cast<const uint8_t *>(file_contents[0].data),
+         file_contents[0].size});
+    if (not zf_opt) {
+      VCL_report(VCL_report_type_t::error,
+                 fmt::format("Failed to parse {}\n", zip_file_names[0]).c_str(),
+                 true);
+      return nullptr;
+    }
+    zf = std::move(zf_opt.value());
+  }
+  for (size_t idx = 1; idx < zip_count; idx++) {
+    auto zf_opt = zipped_folder::from_zip(
+        zip_file_names[idx],
+        {reinterpret_cast<const uint8_t *>(file_contents[idx].data),
+         file_contents[idx].size});
+    if (not zf_opt) {
+      VCL_report(
+          VCL_report_type_t::error,
+          fmt::format("Failed to parse {}\n", zip_file_names[idx]).c_str(),
+          true);
+      return nullptr;
+    }
+    zf.merge_from_base(std::move(zf_opt.value()));
+  }
+
+  return zip_folder_to_resource_pack(zf);
 }
 
 VCL_EXPORT_FUN void VCL_destroy_resource_pack(VCL_resource_pack *const ptr) {

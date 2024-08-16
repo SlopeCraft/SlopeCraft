@@ -183,6 +183,11 @@ struct VCL_string_deliver {
   size_t capacity{0};
 };
 
+struct VCL_read_only_buffer {
+  const void *data{nullptr};
+  size_t size{0};
+};
+
 class VCL_Kernel;
 class VCL_resource_pack;
 class VCL_block_state_list;
@@ -297,7 +302,12 @@ VCL_EXPORT_FUN void VCL_destroy_kernel(VCL_Kernel *const ptr);
 // create and destroy resource pack
 [[nodiscard]] VCL_EXPORT_FUN VCL_resource_pack *VCL_create_resource_pack(
     const int zip_file_count, const char *const *const zip_file_names);
-VCL_EXPORT_FUN void VCL_destroy_resource_pack(VCL_resource_pack *const ptr);
+[[nodiscard]] VCL_EXPORT_FUN VCL_resource_pack *
+VCL_create_resource_pack_from_buffers(const size_t zip_count,
+                                      const VCL_read_only_buffer *file_contents,
+                                      const char *const *const zip_file_names);
+VCL_EXPORT_FUN
+void VCL_destroy_resource_pack(VCL_resource_pack *const ptr);
 
 // create and destroy block state list
 [[nodiscard]] VCL_EXPORT_FUN VCL_block_state_list *VCL_create_block_state_list(
