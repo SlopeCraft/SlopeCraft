@@ -242,12 +242,33 @@ VCL_resource_pack *VCWind::create_resource_pack(
   rpfiles_qba.reserve(opt.zips.size());
   std::vector<const char *> rpfiles_charp;
   rpfiles_charp.reserve(opt.zips.size());
+
+  std::vector<QByteArray> rp_contents;
+  std::vector<VCL_read_only_buffer> rp_buffer_references;
+
   for (auto &qstr : opt.zips) {
     rpfiles_qba.emplace_back(qstr.toUtf8());
     rpfiles_charp.emplace_back(rpfiles_qba.back().data());
+    QFile file{qstr};
+    if (not file.open(QIODevice::OpenModeFlag::ReadOnly |
+                      QIODevice::OpenModeFlag::ExistingOnly)) {
+      QMessageBox::critical(nullptr, tr("无法读取文件 %1").arg(qstr),
+                            file.errorString());
+      return nullptr;
+    }
+    rp_contents.emplace_back(file.readAll());
+    const auto &content = rp_contents.back();
+    rp_buffer_references.emplace_back(content.data(), content.size());
+    file.close();
   }
+  assert(rpfiles_qba.size() == rpfiles_charp.size());
+  assert(rpfiles_charp.size() == rp_contents.size());
+  assert(rp_contents.size() == rp_buffer_references.size());
 
-  return VCL_create_resource_pack(rpfiles_charp.size(), rpfiles_charp.data());
+  return VCL_create_resource_pack_from_buffers(
+      rp_contents.size(), rp_buffer_references.data(), rpfiles_charp.data());
+  // return VCL_create_resource_pack(rpfiles_charp.size(),
+  // rpfiles_charp.data());
 }
 
 // utilitiy functions
