@@ -176,7 +176,7 @@
     "nameEN": "Iron pressure plate",
     "icon": "heavy_weighted_pressure_plate.png",
     "version": 0,
-    "needGlass": true,
+    "needStone": true,
     "wallUseable": false
   },
   {
@@ -1205,7 +1205,7 @@
     "nameEN": "Gold pressure plate",
     "icon": "light_weighted_pressure_plate.png",
     "version": 0,
-    "needGlass": true
+    "needStone": true
   },
   {
     "baseColor": 30,
