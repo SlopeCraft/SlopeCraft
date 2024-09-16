@@ -36,6 +36,8 @@ class entity {
   virtual tl::expected<size_t, std::string> dump(
       NBT::NBTWriter<true>& destination,
       MCDataVersion::MCDataVersion_t data_version) const noexcept;
+
+  virtual std::unique_ptr<entity> clone() const noexcept = 0;
 };
 
 enum class hangable_facing_direction : int8_t {
@@ -106,6 +108,16 @@ class item_frame : public hangable {
 
   item_frame_variant variant_{item_frame_variant::common};
 
+  explicit item_frame() = default;
+
+  explicit item_frame(const item_frame& src)
+      : fixed_{src.fixed_},
+        invisible_{src.invisible_},
+        item_rotation{src.item_rotation},
+        item_drop_chance{src.item_drop_chance},
+        variant_{src.variant_},
+        item_{src.item_->clone()} {}
+
   std::string_view id() const noexcept override {
     switch (this->variant_) {
       case item_frame_variant::common:
@@ -119,6 +131,10 @@ class item_frame : public hangable {
   tl::expected<size_t, std::string> dump(
       NBT::NBTWriter<true>& destination,
       MCDataVersion::MCDataVersion_t data_version) const noexcept override;
+
+  std::unique_ptr<entity> clone() const noexcept override {
+    return std::make_unique<item_frame>(*this);
+  }
 };
 }  // namespace libSchem
 

@@ -20,6 +20,8 @@ find_package(cereal REQUIRED)
 find_package(fmt REQUIRED)
 find_package(magic_enum REQUIRED)
 
+find_package(Boost)
+
 # target_compile_options(Schem BEFORE PUBLIC -std=c++17)
 target_link_libraries(Schem PUBLIC
     NBTWriter
@@ -29,6 +31,9 @@ target_link_libraries(Schem PUBLIC
     magic_enum::magic_enum
     NBTWriter
 )
+if (TARGET Boost::multi_array)
+    target_link_libraries(Schem PUBLIC Boost::multi_array)
+endif ()
 target_compile_features(Schem PUBLIC cxx_std_23)
 target_link_libraries(Schem PUBLIC MCDataVersion ProcessBlockId)
 
