@@ -97,13 +97,15 @@ target_include_directories(VisualCraftL_static PUBLIC
 set(VCL_link_libs
 
     ColorManip
+    version_set
     libzip::zip
     ZLIB::ZLIB
     PNG::PNG
     ${VCL_libzip_additions}
     Schem
     fmt::fmt
-    ProcessBlockId)
+    ProcessBlockId
+)
 
 target_link_libraries(VisualCraftL PRIVATE $<BUILD_INTERFACE:${VCL_link_libs}>)
 target_link_libraries(VisualCraftL_static PUBLIC ${VCL_link_libs})

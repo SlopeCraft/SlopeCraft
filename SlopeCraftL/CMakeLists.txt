@@ -93,6 +93,7 @@ set(SlopeCraft_SCL_link_libs
     FlatDiagram
     libpng_reader
     sNBT-formatter
+    version_set
 
     ZLIB::ZLIB
     OpenMP::OpenMP_CXX

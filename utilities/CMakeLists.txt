@@ -1,6 +1,7 @@
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 add_subdirectory(MCDataVersion)
+add_subdirectory(version_set)
 add_subdirectory(GPUWrapper)
 add_subdirectory(ColorManip)
 add_subdirectory(ProcessBlockId)
