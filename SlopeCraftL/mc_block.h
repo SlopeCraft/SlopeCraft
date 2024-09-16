@@ -23,14 +23,16 @@ This file is part of SlopeCraft.
 #ifndef SIMPLEBLOCK_H
 #define SIMPLEBLOCK_H
 
-#include "SCLDefines.h"
-using namespace SlopeCraft;
 #include <iostream>
 #include <string>
 #include <vector>
 #include <utility>
 #include <map>
 #include <memory>
+
+#include "SCLDefines.h"
+using namespace SlopeCraft;
+#include <version_set.hpp>
 
 typedef std::vector<std::string> stringList;
 
@@ -39,12 +41,13 @@ class mc_block : public ::SlopeCraft::mc_block_interface {
   mc_block();
   ~mc_block(){};
   std::string id{};
-  uint8_t version{0};
   std::string idOld{};
   std::string nameZH{};
   std::string nameEN{};
   std::string imageFilename{};
   Eigen::Array<uint32_t, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> image;
+  version_set needStone{0};
+  uint8_t version{0};
   bool needGlass{false};
   bool doGlow{false};
   bool endermanPickable{false};
@@ -76,6 +79,9 @@ class mc_block : public ::SlopeCraft::mc_block_interface {
     memcpy(dest_row_major, this->image.data(),
            this->image.size() * sizeof(uint32_t));
   }
+  bool getNeedStone(SCL_gameVersion v) const noexcept override {
+    return this->needStone[v];
+  }
 
   void setId(const char *_id) noexcept override { id = _id; };
   void setVersion(unsigned char _ver) noexcept override { version = _ver; };
@@ -91,9 +97,12 @@ class mc_block : public ::SlopeCraft::mc_block_interface {
   void setStackSize(uint8_t stack_size) noexcept override {
     this->stackSize = std::max<uint8_t>(stack_size, 1);
   }
+  void setNeedStone(SCL_gameVersion v, bool ns) noexcept override {
+    this->needStone[v] = ns;
+  }
 
-  void setNameZH(const char *__nzh) noexcept override { this->nameZH = __nzh; }
-  void setNameEN(const char *__nen) noexcept override { this->nameEN = __nen; }
+  void setNameZH(const char *nzh) noexcept override { this->nameZH = nzh; }
+  void setNameEN(const char *nzh) noexcept override { this->nameEN = nzh; }
   void setImage(const uint32_t *src, bool is_row_major) noexcept override {
     if (is_row_major) {
       Eigen::Map<const Eigen::ArrayXX<uint32_t>> map(src, 16, 16);

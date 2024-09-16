@@ -46,6 +46,10 @@ void mc_block_interface::clear() noexcept {
   setVersion(0);
   setNameZH("");
   setNameEN("");
+  for (auto ver = static_cast<uint8_t>(SCL_gameVersion::MC12);
+       ver <= static_cast<uint8_t>(SCL_maxAvailableVersion()); ver++) {
+    this->setNeedStone(static_cast<SCL_gameVersion>(ver), false);
+  }
   // setWallUseable(false);
 }
 

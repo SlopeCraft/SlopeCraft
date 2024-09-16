@@ -10,6 +10,7 @@
 #include <string>
 #include <string_view>
 #include <array>
+#include <memory>
 
 #include <MCDataVersion.h>
 #include <tl/expected.hpp>
