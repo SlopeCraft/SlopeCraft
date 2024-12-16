@@ -14,6 +14,7 @@
 #include <MCDataVersion.h>
 #include <tl/expected.hpp>
 #include "item.h"
+#include <memory>
 
 namespace NBT {
 template <bool is_nbt_compressed>

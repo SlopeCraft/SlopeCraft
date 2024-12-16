@@ -32,20 +32,23 @@ void BlockListManager::setup_basecolors() noexcept {
   }
 }
 
+
 uint64_t std::hash<selection>::operator()(const selection &s) const noexcept {
   boost::uuids::detail::md5 hash;
   for (auto &id : s.ids) {
     hash.process_bytes(id.data(), id.size());
   }
 
-  uint32_t dig[4]{};
+  unsigned char dig[16] = {};  // 修改为 unsigned char 类型，大小为 16
   hash.get_digest(dig);
+  
   uint64_t fold = 0;
   for (size_t i = 0; i < 2; i++) {
     const uint64_t cur =
         (uint64_t(dig[2 * i]) << 32) | (uint64_t(dig[2 * i + 1]));
     fold ^= cur;
   }
+  
   return fold;
 }
 
