@@ -5,7 +5,8 @@ set(SlopeCraft_version 5.3.0)
 
 # set basic project attributes ------------------------------------------------
 project(SlopeCraft VERSION ${SlopeCraft_version} LANGUAGES C CXX)
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN TRUE)
 
