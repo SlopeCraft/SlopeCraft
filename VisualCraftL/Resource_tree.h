@@ -27,17 +27,20 @@ This file is part of SlopeCraft.
 #include <string_view>
 #include <unordered_map>
 #include <vector>
-
-#include <stdint.h>
+#include <optional>
+#include <span>
+#include <cstdint>
+// forward declaration for zip and zip_t defined in zip.h
+struct zip;
 
 class zipped_file;
 class zipped_folder;
 
 class zipped_file {
-private:
+ private:
   std::vector<uint8_t> __data;
 
-public:
+ public:
   friend class zipped_folder;
   inline int64_t file_size() const noexcept { return __data.size(); }
 
@@ -49,7 +52,7 @@ public:
 };
 
 class zipped_folder {
-public:
+ public:
   std::unordered_map<std::string, zipped_folder> subfolders;
   std::unordered_map<std::string, zipped_file> files;
 
@@ -70,8 +73,8 @@ public:
     }
   }
 
-  inline const zipped_folder *
-  subfolder(std::string_view fdname) const noexcept {
+  inline const zipped_folder *subfolder(
+      std::string_view fdname) const noexcept {
     auto it = subfolders.find(std::string(fdname));
     if (it == subfolders.end()) {
       return nullptr;
@@ -86,8 +89,15 @@ public:
 
   void merge_from_base(zipped_folder &&source_base) noexcept;
 
-  static zipped_folder from_zip(std::string_view zipname,
-                                bool *const ok = nullptr) noexcept;
+  static std::optional<zipped_folder> from_zip(std::string_view zipname,
+                                               zip *archive) noexcept;
+
+  static std::optional<zipped_folder> from_zip(
+      std::string_view zipname) noexcept;
+
+  static std::optional<zipped_folder> from_zip(
+      std::string_view zipname,
+      const std::span<const uint8_t> zip_content) noexcept;
 };
 
-#endif // SLOPECRAFT_VISUALCRAFTL_RESOURCE_TREE_H
+#endif  // SLOPECRAFT_VISUALCRAFTL_RESOURCE_TREE_H

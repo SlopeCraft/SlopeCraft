@@ -145,7 +145,7 @@ std::vector<std::string_view> color_table_impl::block_id_list(
     dest.emplace_back("minecraft:air");
   }
   for (auto &blk : this->blocks) {
-    dest.emplace_back(blk.id);
+    dest.emplace_back(blk.idForVersion(this->mc_version_));
   }
   return dest;
 }

@@ -123,8 +123,14 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
         const int x = c + 1;
         const int y = low_map(r + 1, c);
         const int z = r + 1;
-        if (y >= 1 && table.blocks[base_color(r + 1, c)].needGlass) {
-          ret.schem(x, y - 1, z) = 0 + 1;
+        if (y >= 1) {
+          auto &blk = table.blocks[base_color(r + 1, c)];
+          if (blk.needGlass) {
+            ret.schem(x, y - 1, z) = 0 + 1;
+          }
+          if (blk.needStone[table.mc_version_]) {
+            ret.schem(x, y - 1, z) = 11 + 1;
+          }
         }
         const bool fire_proof =
             fixed_opt.fire_proof && table.blocks[base_color(r + 1, c)].burnable;

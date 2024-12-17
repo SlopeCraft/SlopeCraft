@@ -173,6 +173,9 @@ class mc_block_interface {
   virtual void clear() noexcept;
 
   virtual const char *idForVersion(SCL_gameVersion ver) const noexcept = 0;
+
+  virtual bool getNeedStone(SCL_gameVersion v) const noexcept = 0;
+  virtual void setNeedStone(SCL_gameVersion v, bool) noexcept = 0;
 };
 
 class block_list_interface {

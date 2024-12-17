@@ -27,6 +27,7 @@ This file is part of SlopeCraft.
 #include <string>
 #include <string_view>
 #include <type_traits>
+#include <Eigen/Dense>
 #include <unsupported/Eigen/CXX11/Tensor>
 #include <vector>
 #include <span>
@@ -36,6 +37,8 @@ This file is part of SlopeCraft.
 #include <cereal/types/vector.hpp>
 #include <exception>
 #include <concepts>
+
+#include <boost/multi_array.hpp>
 
 #include "SC_GlobalEnums.h"
 #include "entity.h"
@@ -86,11 +89,27 @@ class Schem {
 
  public:
   Schem() { xzy.resize(0, 0, 0); }
-  Schem(const Schem &) = delete;
+  Schem(const Schem &src) noexcept
+      : block_id_list{src.block_id_list},
+        MC_major_ver{src.MC_major_ver},
+        MC_data_ver{src.MC_data_ver},
+        xzy{src.xzy} {
+    this->entities.reserve(src.entities.size());
+    for (auto &entity : src.entities) {
+      this->entities.emplace_back(entity->clone());
+    }
+  }
   Schem(Schem &&) = default;
   Schem(int64_t x, int64_t y, int64_t z) {
     xzy.resize(x, y, z);
     xzy.setZero();
+  }
+
+  Schem &operator=(Schem &&src) = default;
+  Schem &operator=(const Schem &src) noexcept {
+    Schem temp{src};
+    std::swap(*this, temp);
+    return *this;
   }
 
   std::string check_size() const noexcept;
@@ -234,6 +253,23 @@ class Schem {
 
   auto &entity_list() noexcept { return this->entities; }
   auto &entity_list() const noexcept { return this->entities; }
+
+  template <class T>
+  struct schem_slice {
+    Eigen::Array<int64_t, 3, 1> offset;
+    T content;
+  };
+
+  [[nodiscard]] tl::expected<boost::multi_array<schem_slice<Schem>, 3>,
+                             std::string>
+  split_by_block_size(std::span<const uint64_t> x_block_length,
+                      std::span<const uint64_t> y_block_length,
+                      std::span<const uint64_t> z_block_length) const noexcept;
+
+ protected:
+  [[nodiscard]] Schem slice_no_check(
+      std::span<const std::pair<int64_t, int64_t>, 3> xyz_index_range)
+      const noexcept;
 
  public:
   static void update_error_dest(

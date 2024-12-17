@@ -9,6 +9,7 @@
 #include <cstddef>
 #include <string_view>
 #include <string>
+#include <memory>
 
 #include <tl/expected.hpp>
 #include <MCDataVersion.h>
@@ -30,6 +31,8 @@ class item {
       NBT::NBTWriter<true>&,
       MCDataVersion::MCDataVersion_t data_version) const noexcept;
 
+  [[nodiscard]] virtual std::unique_ptr<item> clone() const noexcept = 0;
+
  protected:
   virtual tl::expected<size_t, std::string> dump_basic_fields(
       NBT::NBTWriter<true>&,
@@ -46,6 +49,9 @@ class filled_map : public item {
 
   std::string_view id() const noexcept override {
     return "minecraft:filled_map";
+  }
+  std::unique_ptr<item> clone() const noexcept override {
+    return std::make_unique<filled_map>(*this);
   }
 
  protected:

@@ -20,14 +20,16 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
-#include "Schem.h"
-
+#include <Eigen/Dense>
+#include <Eigen/StdVector>
 #include <memory.h>
-
+#include <ranges>
 #include <ctime>
 #include <filesystem>
 #include <iostream>
 #include <fmt/format.h>
+
+#include "Schem.h"
 
 #include "../NBTWriter/NBTWriter.h"
 #include "bit_shrink.h"
@@ -138,7 +140,105 @@ bool Schem::have_invalid_block(
   return false;
 }
 
-enum class __mushroom_type : uint8_t {
+Schem Schem::slice_no_check(std::span<const std::pair<int64_t, int64_t>, 3>
+                                xyz_index_range) const noexcept {
+  Schem ret;
+  ret.block_id_list = this->block_id_list;
+  ret.MC_major_ver = this->MC_major_ver;
+  ret.MC_data_ver = this->MC_data_ver;
+
+  ret.entities.reserve(this->entities.size());
+  Eigen::Array3d pos_min, pos_max;
+  for (size_t dim = 0; dim < 3; dim++) {
+    pos_min[dim] = xyz_index_range[dim].first;
+    pos_max[dim] = xyz_index_range[dim].second;
+  }
+  {
+    Eigen::array<int64_t, 3> start, extent;
+    start[0] = xyz_index_range[0].first;
+    start[1] = xyz_index_range[2].first;
+    start[2] = xyz_index_range[1].first;
+    extent[0] = xyz_index_range[0].second - xyz_index_range[0].first;
+    extent[1] = xyz_index_range[2].second - xyz_index_range[2].first;
+    extent[2] = xyz_index_range[1].second - xyz_index_range[1].first;
+    ret.xzy = this->xzy.slice(start, extent);
+  }
+
+  for (auto &entity : this->entities) {
+    const auto pos_std = entity->position();
+    const Eigen::Array3d pos{pos_std[0], pos_std[1], pos_std[2]};
+    if ((pos >= pos_min and pos < pos_max).all()) {
+      ret.entities.emplace_back(entity->clone());
+    }
+  }
+
+  return ret;
+}
+
+tl::expected<boost::multi_array<Schem::schem_slice<Schem>, 3>, std::string>
+Schem::split_by_block_size(
+    std::span<const uint64_t> x_block_length,
+    std::span<const uint64_t> y_block_length,
+    std::span<const uint64_t> z_block_length) const noexcept {
+  // check input block length and compute index ranges
+  std::array<std::vector<std::pair<int64_t, int64_t>>, 3> xyz_block_index_pairs;
+  {
+    std::array<const std::span<const uint64_t>, 3> xyz_block_len{
+        x_block_length, y_block_length, z_block_length};
+    std::array<uint64_t, 3> block_len_sum{0, 0, 0};
+    std::array<int64_t, 3> shape{this->x_range(), this->y_range(),
+                                 this->z_range()};
+    for (size_t dim = 0; dim < 3; dim++) {
+      int64_t cur_block_start_index = 0;
+      for (auto [blk_idx, block_len] :
+           xyz_block_len[dim] | std::views::enumerate) {
+        if (block_len <= 0) {
+          return tl::make_unexpected(fmt::format(
+              "Found non-positive block length in dim = {}, block index = {}",
+              dim, blk_idx));
+        }
+        block_len_sum[dim] += block_len;
+        const int64_t cur_block_end_index =
+            static_cast<int64_t>(block_len_sum[dim]);
+        assert(cur_block_end_index > cur_block_start_index);
+        xyz_block_index_pairs[dim].emplace_back(cur_block_start_index,
+                                                cur_block_end_index);
+        cur_block_start_index = cur_block_end_index;
+      }
+      if (block_len_sum[dim] not_eq shape[dim]) {
+        return tl::make_unexpected(fmt::format(
+            "The sum of block length of dim {} is {}, which is not identical "
+            "to shape on this dim({}), ",
+            dim, block_len_sum[dim], shape[dim]));
+      }
+    }
+  }
+
+  boost::multi_array<Schem::schem_slice<Schem>, 3> ret{
+      boost::extents[xyz_block_index_pairs[0].size()]
+                    [xyz_block_index_pairs[1].size()]
+                    [xyz_block_index_pairs[2].size()]};
+
+  for (auto [x_idx, x_range] :
+       xyz_block_index_pairs[0] | std::views::enumerate) {
+    for (auto [y_idx, y_range] :
+         xyz_block_index_pairs[1] | std::views::enumerate) {
+      for (auto [z_idx, z_range] :
+           xyz_block_index_pairs[2] | std::views::enumerate) {
+        const Eigen::Array<int64_t, 3, 1> offset{x_range.first, y_range.first,
+                                                 z_range.first};
+        auto &dest = ret[x_idx][y_idx][z_idx];
+        dest.offset = offset;
+        dest.content =
+            this->slice_no_check(std::array<std::pair<int64_t, int64_t>, 3>{
+                x_range, y_range, z_range});
+      }
+    }
+  }
+  return ret;
+}
+
+enum class mushroom_type : uint8_t {
   not_mushroom = 0,
   red_mushroom = 1,
   brown_mushroom = 2,
@@ -192,7 +292,7 @@ void Schem::process_mushroom_states() noexcept {
       u6_to_ele_stem[u6] = this->block_id_list.size() - 1;
     }
   }
-  std::vector<__mushroom_type> is_mushroom_LUT;
+  std::vector<mushroom_type> is_mushroom_LUT;
   is_mushroom_LUT.resize(this->block_id_list.size());
 
   for (int blockidx = 0; blockidx < int(this->block_id_list.size());
@@ -200,18 +300,18 @@ void Schem::process_mushroom_states() noexcept {
     const auto &block_id = this->block_id_list[blockidx];
     const auto pure_id = ::to_pure_block_id(block_id);
     if (pure_id == id_red) {
-      is_mushroom_LUT[blockidx] = __mushroom_type::red_mushroom;
+      is_mushroom_LUT[blockidx] = mushroom_type::red_mushroom;
       continue;
     }
     if (pure_id == id_brown) {
-      is_mushroom_LUT[blockidx] = __mushroom_type::brown_mushroom;
+      is_mushroom_LUT[blockidx] = mushroom_type::brown_mushroom;
       continue;
     }
     if (pure_id == id_stem) {
-      is_mushroom_LUT[blockidx] = __mushroom_type::mushroom_stem;
+      is_mushroom_LUT[blockidx] = mushroom_type::mushroom_stem;
       continue;
     }
-    is_mushroom_LUT[blockidx] = __mushroom_type::not_mushroom;
+    is_mushroom_LUT[blockidx] = mushroom_type::not_mushroom;
   }
 
   // fix the correct state
@@ -219,9 +319,9 @@ void Schem::process_mushroom_states() noexcept {
     for (int64_t z = 0; z < z_range(); z++) {
       for (int64_t x = 0; x < x_range(); x++) {
         // if current block is not mushroom, continue
-        const __mushroom_type current_mushroom_type =
+        const mushroom_type current_mushroom_type =
             is_mushroom_LUT[this->operator()(x, y, z)];
-        if (current_mushroom_type == __mushroom_type::not_mushroom) {
+        if (current_mushroom_type == mushroom_type::not_mushroom) {
           continue;
         }
 
@@ -229,42 +329,42 @@ void Schem::process_mushroom_states() noexcept {
         // match the correct side
         if (x + 1 < x_range()) {
           const ele_t ele_of_side = this->operator()(x + 1, y, z);
-          if (is_mushroom_LUT[ele_of_side] != __mushroom_type::not_mushroom) {
+          if (is_mushroom_LUT[ele_of_side] != mushroom_type::not_mushroom) {
             side.east() = false;
           }
         }
 
         if (x - 1 >= 0) {
           const ele_t ele_of_side = this->operator()(x - 1, y, z);
-          if (is_mushroom_LUT[ele_of_side] != __mushroom_type::not_mushroom) {
+          if (is_mushroom_LUT[ele_of_side] != mushroom_type::not_mushroom) {
             side.west() = false;
           }
         }
 
         if (y + 1 < y_range()) {
           const ele_t ele_of_side = this->operator()(x, y + 1, z);
-          if (is_mushroom_LUT[ele_of_side] != __mushroom_type::not_mushroom) {
+          if (is_mushroom_LUT[ele_of_side] != mushroom_type::not_mushroom) {
             side.up() = false;
           }
         }
 
         if (y - 1 >= 0) {
           const ele_t ele_of_side = this->operator()(x, y - 1, z);
-          if (is_mushroom_LUT[ele_of_side] != __mushroom_type::not_mushroom) {
+          if (is_mushroom_LUT[ele_of_side] != mushroom_type::not_mushroom) {
             side.down() = false;
           }
         }
 
         if (z + 1 < z_range()) {
           const ele_t ele_of_side = this->operator()(x, y, z + 1);
-          if (is_mushroom_LUT[ele_of_side] != __mushroom_type::not_mushroom) {
+          if (is_mushroom_LUT[ele_of_side] != mushroom_type::not_mushroom) {
             side.south() = false;
           }
         }
 
         if (z - 1 >= 0) {
           const ele_t ele_of_side = this->operator()(x, y, z - 1);
-          if (is_mushroom_LUT[ele_of_side] != __mushroom_type::not_mushroom) {
+          if (is_mushroom_LUT[ele_of_side] != mushroom_type::not_mushroom) {
             side.north() = false;
           }
         }
@@ -272,10 +372,10 @@ void Schem::process_mushroom_states() noexcept {
         // write in the correct value of ele_t
         ele_t corrected_ele = invalid_ele_t;
         switch (current_mushroom_type) {
-          case __mushroom_type::brown_mushroom:
+          case mushroom_type::brown_mushroom:
             corrected_ele = u6_to_ele_brown[side.u6()];
             break;
-          case __mushroom_type::red_mushroom:
+          case mushroom_type::red_mushroom:
             corrected_ele = u6_to_ele_red[side.u6()];
             break;
           default:

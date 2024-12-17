@@ -78,6 +78,31 @@ std::pair<uint8_t, mc_block> parse_block(const nlohmann::json &jo) noexcept(
     }
     ret.stackSize = val;
   }
+  if (jo.contains("needStone")) {
+    auto &need_stone = jo.at("needStone");
+    if (need_stone.is_boolean()) {
+      ret.needStone = version_set::all();
+    } else if (need_stone.is_array()) {
+      for (auto ver : need_stone) {
+        if (not ver.is_number_integer()) {
+          throw std::runtime_error{
+              fmt::format("needStone must be boolean or array of versions, but "
+                          "found non-integer element in array")};
+        }
+        const int ver_int = ver;
+        if (ver_int < static_cast<int>(SCL_gameVersion::MC12) or
+            ver_int > static_cast<int>(SCL_maxAvailableVersion())) {
+          throw std::runtime_error{fmt::format(
+              "Found invalid version {} in version list of needStone",
+              ver_int)};
+        }
+        ret.needStone[static_cast<SCL_gameVersion>(ver_int)] = true;
+      }
+    } else {
+      throw std::runtime_error{
+          fmt::format("needStone must be boolean or array of versions")};
+    }
+  }
 
   return {basecolor, ret};
 }

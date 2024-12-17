@@ -1,11 +1,12 @@
 #ifndef SLOPECRAFT_UTILITIES_PROCESS_BLOCK_ID_PROCESS_BLOCK_ID_H
 #define SLOPECRAFT_UTILITIES_PROCESS_BLOCK_ID_PROCESS_BLOCK_ID_H
 
+#include <string>
 #include <string_view>
 #include <utility>
 #include <ranges>
 #include <vector>
-#include <stdint.h>
+#include <cstdint>
 
 namespace blkid {
 
