@@ -39,7 +39,7 @@ uint64_t std::hash<selection>::operator()(const selection &s) const noexcept {
   }
 
   uint32_t dig[4]{};
-  hash.get_digest(dig);
+  hash.get_digest(reinterpret_cast<decltype(hash)::digest_type &>(dig));
   uint64_t fold = 0;
   for (size_t i = 0; i < 2; i++) {
     const uint64_t cur =

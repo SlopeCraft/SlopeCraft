@@ -11,6 +11,8 @@
 
 #include <ranges>
 
+#include <unistd.h>
+
 tl::expected<std::map<std::string, int64_t>, std::string> parse_linux_file(
     const char* filename,
     const std::function<bool(std::string_view)>& skip_this_line = {}) noexcept {
