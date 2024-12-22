@@ -3,7 +3,7 @@ include(FetchContent)
 
 FetchContent_Declare(Heu
     GIT_REPOSITORY https://github.com/SlopeCraft/HeuristicFlow.git
-    GIT_TAG v1.6.4.1
+    GIT_TAG v1.6.4.3
     OVERRIDE_FIND_PACKAGE
     EXCLUDE_FROM_ALL
 )
