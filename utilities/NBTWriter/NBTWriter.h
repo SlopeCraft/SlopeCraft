@@ -31,7 +31,7 @@ This file is part of SlopeCraft.
 #include <string.h>
 #include <type_traits>
 #include <vector>
-
+#include <string_view>
 #include <stdlib.h>
 
 // #include <iostream>
@@ -44,15 +44,15 @@ namespace NBT {
 
 namespace internal {
 class NBTWriterBase_nocompress {
-protected:
+ protected:
   uint64_t bytesWritten{0};
 
   int write_data(const void *data, const size_t bytes) noexcept;
 
-private:
+ private:
   FILE *file{NULL};
 
-public:
+ public:
   /**
    * \brief open a file
    * \param newFileName the file to be opened
@@ -81,15 +81,15 @@ public:
 };
 
 class NBTWriterBase_gzip {
-protected:
+ protected:
   uint64_t bytesWritten{0};
 
   int write_data(const void *data, const size_t bytes) noexcept;
 
-private:
+ private:
   gzFile_s *file{NULL};
 
-public:
+ public:
   /**
    * \brief open a file
    * \param newFileName the file to be opened
@@ -117,7 +117,7 @@ public:
   inline const gzFile_s *file_ptr() const noexcept { return file; }
 };
 
-} // namespace internal
+}  // namespace internal
 
 constexpr char idEnd = 0;
 constexpr char idByte = 1;
@@ -154,8 +154,8 @@ enum tagType : char {
  * \param t To be converted
  * \return Converted
  */
-template <typename T> inline T convertLEBE(T t) {
-
+template <typename T>
+inline T convertLEBE(T t) {
   uint8_t *ptr = reinterpret_cast<uint8_t *>(&t);
 
   for (int idx = 0; idx * 2 + 1 <= int(sizeof(T)); idx++) {
@@ -173,7 +173,7 @@ class NBTWriter
     : public std::conditional_t<is_nbt_compressed,
                                 typename internal::NBTWriterBase_gzip,
                                 internal::NBTWriterBase_nocompress> {
-public:
+ public:
   struct task_t {
     task_t() : currentTagType(tagType::End), taskSize(0) {}
     task_t(const tagType type, int size)
@@ -183,10 +183,10 @@ public:
     int taskSize;
   };
 
-private:
+ private:
   std::stack<task_t> tasks;
 
-public:
+ public:
   /**
    * \brief Default constructor
    */
@@ -212,13 +212,11 @@ public:
    * \return If closing succeeds
    */
   bool close() {
-
     if (!this->is_open()) {
       return false;
     }
 
-    if (!tasks.empty())
-      emergencyFill();
+    if (!tasks.empty()) emergencyFill();
 
     constexpr char fileTail[1] = {idEnd};
 
@@ -234,7 +232,6 @@ public:
    * file can be loaded at least. \return Bytes written
    */
   int emergencyFill() {
-
     if (tasks.empty()) {
       return 0;
     }
@@ -242,7 +239,6 @@ public:
     int bytes = 0;
 
     while (!tasks.empty()) {
-
       if (isInCompound()) {
         bytes += endCompound();
         continue;
@@ -251,70 +247,70 @@ public:
       // cout<<"tasks.size() = "<<tasks.size()<<endl;
 
       switch (currentType()) {
-      case End:
+        case End:
 
-        exit(114514);
+          exit(114514);
 
-        continue;
-      case Byte:
+          continue;
+        case Byte:
 
-        bytes += writeByte("autoByte", 114);
+          bytes += writeByte("autoByte", 114);
 
-        continue;
-      case Short:
+          continue;
+        case Short:
 
-        bytes += writeShort("autoShort", 514);
+          bytes += writeShort("autoShort", 514);
 
-        continue;
-      case Int:
+          continue;
+        case Int:
 
-        bytes += writeInt("autoInt", 114514);
+          bytes += writeInt("autoInt", 114514);
 
-        continue;
-      case Long:
+          continue;
+        case Long:
 
-        bytes += writeLong("autoLong", 1919810);
+          bytes += writeLong("autoLong", 1919810);
 
-        continue;
-      case Float:
+          continue;
+        case Float:
 
-        bytes += writeFloat("autoFloat", 114.514);
+          bytes += writeFloat("autoFloat", 114.514);
 
-        continue;
-      case Double:
+          continue;
+        case Double:
 
-        bytes += writeDouble("autoDouble", 1919810.114514);
+          bytes += writeDouble("autoDouble", 1919810.114514);
 
-        continue;
-      case String:
+          continue;
+        case String:
 
-        bytes += writeString("autoString", "FuckYou!");
+          bytes += writeString("autoString", "FuckYou!");
 
-        continue;
-      case List:
+          continue;
+        case List:
 
-        bytes += writeListHead("autoList", Int, 1);
+          bytes += writeListHead("autoList", Int, 1);
 
-        continue;
-      case Compound:
+          continue;
+        case Compound:
 
-        bytes += writeCompound("autoCompound");
+          bytes += writeCompound("autoCompound");
 
-        continue;
-      case ByteArray:
-        bytes += writeByteArrayHead("autoByteArray", 1);
+          continue;
+        case ByteArray:
+          bytes += writeByteArrayHead("autoByteArray", 1);
 
-        continue;
-      case IntArray:
+          continue;
+        case IntArray:
 
-        bytes += writeIntArrayHead("autoIntArray", 1);
+          bytes += writeIntArrayHead("autoIntArray", 1);
 
-        continue;
-      case LongArray:
+          continue;
+        case LongArray:
 
-        bytes += writeLongArrayHead("autoLongArray", 1);
+          bytes += writeLongArrayHead("autoLongArray", 1);
 
-        continue;
+          continue;
       }
     }
 
@@ -325,8 +321,8 @@ public:
     return bytes;
   }
 
-private:
-public:
+ private:
+ public:
   /**
    * \brief Whether the NBTWriter is finishing a compound tag
    * \return Whether the NBTWriter is finishing a compound tag
@@ -354,9 +350,8 @@ public:
     return tasks.top().taskSize <= 0;
   }
 
-private:
+ private:
   inline void onElementWritten() {
-
     if (!isInListOrArray()) {
       return;
     }
@@ -369,7 +364,6 @@ private:
   }
 
   inline void tryEndList() {
-
     if (!isInListOrArray()) {
       return;
     }
@@ -394,7 +388,7 @@ private:
     return 1;
   }
 
-public:
+ public:
   /**
    * \brief writeSingleTag Write a byte, short, int, long, float or double tag
    *
@@ -406,7 +400,7 @@ public:
    * \return Bytes written.
    */
   template <typename T, bool convertToBE = true>
-  int writeSingleTag(const tagType type, const char *Name, T value) {
+  int writeSingleTag(const tagType type, std::string_view Name, T value) {
     static_assert(std::is_trivial_v<T>);
 
     if (!this->is_open()) {
@@ -418,21 +412,22 @@ public:
     }
 
     int bytes = 0;
-    const uint16_t realNameL = strlen(Name);
+    if (Name.size() >= UINT16_MAX) {
+      return 0;
+    }
+    const uint16_t realNameL = Name.size();
     const uint16_t flippedNameL = convertLEBE(realNameL);
 
     if (isInCompound()) {
-
       bytes += this->write_data(&type, sizeof(char));
 
       bytes += this->write_data(&flippedNameL, sizeof(flippedNameL));
 
-      bytes += this->write_data(Name, realNameL);
+      bytes += this->write_data(Name.data(), realNameL);
 
       bytes += this->write_data(&value, sizeof(T));
 
     } else {
-
       if (!typeMatch(type)) {
         return 0;
       }
@@ -451,7 +446,7 @@ public:
    * \param value Value of tag
    * \return Bytes written
    */
-  inline int writeByte(const char *Name, int8_t value) {
+  inline int writeByte(std::string_view Name, int8_t value) {
     return writeSingleTag(tagType::Byte, Name, value);
   }
 
@@ -461,7 +456,7 @@ public:
    * \param value Value of tag
    * \return Bytes written
    */
-  inline int writeShort(const char *Name, int16_t value) {
+  inline int writeShort(std::string_view Name, int16_t value) {
     return writeSingleTag(tagType::Short, Name, value);
   }
 
@@ -471,7 +466,7 @@ public:
    * \param value Value of tag
    * \return Bytes written
    */
-  inline int writeInt(const char *Name, int32_t value) {
+  inline int writeInt(std::string_view Name, int32_t value) {
     return writeSingleTag(tagType::Int, Name, value);
   }
 
@@ -481,7 +476,7 @@ public:
    * \param value Value of tag
    * \return Bytes written
    */
-  inline int writeLong(const char *Name, int64_t value) {
+  inline int writeLong(std::string_view Name, int64_t value) {
     return writeSingleTag(tagType::Long, Name, value);
   }
 
@@ -491,7 +486,7 @@ public:
    * \param value Value of tag
    * \return Bytes written
    */
-  inline int writeFloat(const char *Name, float value) {
+  inline int writeFloat(std::string_view Name, float value) {
     return writeSingleTag(tagType::Float, Name, value);
   }
 
@@ -501,7 +496,7 @@ public:
    * \param value Value of tag
    * \return Bytes written
    */
-  inline int writeDouble(const char *Name, double value) {
+  inline int writeDouble(std::string_view Name, double value) {
     return writeSingleTag(tagType::Double, Name, value);
   }
 
@@ -510,18 +505,17 @@ public:
    * \param Name Name of tag
    * \return Bytes written
    */
-  int writeCompound(const char *Name = "") {
-    if (!this->is_open())
-      return 0;
+  int writeCompound(std::string_view Name = "") {
+    if (!this->is_open()) return 0;
 
     int bytes = 0;
-    const int16_t realNameL = ::strlen(Name);
+    const int16_t realNameL = Name.size();
     const int16_t flippedNameL = convertLEBE(realNameL);
 
     if (isInCompound()) {
       bytes += this->write_data(&idCompound, sizeof(char));
       bytes += this->write_data(&flippedNameL, sizeof(int16_t));
-      bytes += this->write_data(Name, realNameL);
+      bytes += this->write_data(Name.data(), realNameL);
 
       tasks.emplace(task_t(End, 0));
       return bytes;
@@ -541,8 +535,7 @@ public:
    * \return Bytes written
    */
   int endCompound() {
-    if (!this->is_open())
-      return 0;
+    if (!this->is_open()) return 0;
 
     if (!isInCompound()) {
       return 0;
@@ -568,7 +561,8 @@ public:
    * \param listSize Size of list
    * \return Bytes written
    */
-  int writeListHead(const char *Name, tagType elementType, const int listSize) {
+  int writeListHead(std::string_view Name, tagType elementType,
+                    const int listSize) {
     if (!this->is_open()) {
       return 0;
     }
@@ -578,14 +572,14 @@ public:
     }
 
     int bytes = 0;
-    const int16_t realNameL = ::strlen(Name);
+    const int16_t realNameL = Name.size();
     const int16_t flippedNameL = convertLEBE(realNameL);
     const int32_t flippedListSize = convertLEBE<int32_t>(listSize);
 
     if (isInCompound()) {
       bytes += this->write_data(&idList, sizeof(char));
       bytes += this->write_data(&flippedNameL, sizeof(int16_t));
-      bytes += this->write_data(Name, realNameL);
+      bytes += this->write_data(Name.data(), realNameL);
       bytes += this->write_data(&elementType, sizeof(char));
       bytes += this->write_data(&flippedListSize, sizeof(int32_t));
 
@@ -612,10 +606,9 @@ public:
     return 0;
   }
 
-private:
+ private:
   template <tagType elementType>
-  int writeArrayHead(const char *Name, const int32_t arraySize) {
-
+  int writeArrayHead(std::string_view Name, const int32_t arraySize) {
     if (!this->is_open()) {
       return 0;
     }
@@ -629,24 +622,22 @@ private:
             : ((elementType == Int) ? (IntArray) : (LongArray));
 
     int bytes = 0;
-    const int16_t realNameL = ::strlen(Name);
+    const int16_t realNameL = Name.size();
     const int16_t flippedNameL = convertLEBE(realNameL);
     const int32_t flippedArraySize = convertLEBE<int32_t>(arraySize);
 
     if (isInCompound()) {
-
       bytes += this->write_data(&arrayId, sizeof(char));
 
       bytes += this->write_data(&flippedNameL, sizeof(int16_t));
 
-      bytes += this->write_data(Name, realNameL);
+      bytes += this->write_data(Name.data(), realNameL);
 
       bytes += this->write_data(&flippedArraySize, sizeof(int32_t));
 
       tasks.emplace(task_t(elementType, arraySize));
 
       if (arraySize == 0) {
-
         onElementWritten();
       }
 
@@ -654,13 +645,11 @@ private:
     }
 
     if (isInListOrArray() && typeMatch(arrayId)) {
-
       bytes += this->write_data(&flippedArraySize, sizeof(int32_t));
 
       tasks.emplace(task_t(elementType, arraySize));
 
       if (arraySize == 0) {
-
         onElementWritten();
       }
 
@@ -670,14 +659,14 @@ private:
     return 0;
   }
 
-public:
+ public:
   /**
    * \brief Start to write a byte array
    * \param Name Name of the array
    * \param arraySize Elements of the array
    * \return Bytes written
    */
-  inline int writeByteArrayHead(const char *Name, const int arraySize) {
+  inline int writeByteArrayHead(std::string_view Name, const int arraySize) {
     return writeArrayHead<tagType::Byte>(Name, arraySize);
   }
 
@@ -687,7 +676,7 @@ public:
    * \param arraySize Elements of the array
    * \return Bytes written
    */
-  inline int writeIntArrayHead(const char *Name, const int arraySize) {
+  inline int writeIntArrayHead(std::string_view Name, const int arraySize) {
     return writeArrayHead<tagType::Int>(Name, arraySize);
   }
 
@@ -697,7 +686,7 @@ public:
    * \param arraySize Elements of the array
    * \return Bytes written
    */
-  inline int writeLongArrayHead(const char *Name, const int arraySize) {
+  inline int writeLongArrayHead(std::string_view Name, const int arraySize) {
     return writeArrayHead<tagType::Long>(Name, arraySize);
   }
 
@@ -707,14 +696,14 @@ public:
    * \param value Value of a string
    * \return Bytes written
    */
-  int writeString(const char *Name, const char *value) {
+  int writeString(std::string_view Name, const char *value) {
     if (!this->is_open()) {
       return 0;
     }
 
     int bytes = 0;
 
-    const int16_t realNameL = ::strlen(Name);
+    const int16_t realNameL = Name.size();
     const int16_t flippedNameL = convertLEBE(realNameL);
 
     const int16_t realValueL = ::strlen(value);
@@ -723,7 +712,7 @@ public:
     if (isInCompound()) {
       bytes += this->write_data(&idString, sizeof(char));
       bytes += this->write_data(&flippedNameL, sizeof(int16_t));
-      bytes += this->write_data(Name, realNameL);
+      bytes += this->write_data(Name.data(), realNameL);
 
       bytes += this->write_data(&flippedValueL, sizeof(int16_t));
       bytes += this->write_data(value, realValueL);
@@ -732,7 +721,6 @@ public:
     }
 
     if (isInListOrArray() && typeMatch(String)) {
-
       bytes += this->write_data(&flippedValueL, sizeof(int16_t));
       bytes += this->write_data(value, realValueL);
 
@@ -757,6 +745,6 @@ public:
   inline size_t byteCount() const { return this->bytesWritten; }
 };
 
-}; // namespace NBT
+};  // namespace NBT
 
-#endif //  SCL_NBTWRITER_H
+#endif  //  SCL_NBTWRITER_H

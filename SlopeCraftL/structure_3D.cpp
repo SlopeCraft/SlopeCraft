@@ -213,6 +213,16 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
   if (fixed_opt.connect_mushrooms) {
     ret.schem.process_mushroom_states();
   }
+
+  {
+    const auto shrink_result = ret.schem.remove_unused_ids();
+    if (not shrink_result) {
+      fixed_opt.ui.report_error(SCL_errorFlag::EXPORT_SCHEM_HAS_INVALID_BLOCKS,
+                                shrink_result.error().c_str());
+      return std::nullopt;
+    }
+  }
+
   fixed_opt.main_progressbar.set_range(0, 9 * cvted.size(), 9 * cvted.size());
   fixed_opt.ui.report_working_status(workStatus::none);
 

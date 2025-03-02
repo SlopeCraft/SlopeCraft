@@ -38,8 +38,8 @@ const std::vector<std::string> trash_id = generate_trash();
 int main() {
   libSchem::Schem schem;
 
-  schem.set_MC_major_version_number(SCL_gameVersion::MC18);
-  schem.set_MC_version_number(MCDataVersion::MCDataVersion_t::Java_1_18_2);
+  schem.set_MC_major_version_number(SCL_gameVersion::MC21);
+  schem.set_MC_version_number(MCDataVersion::MCDataVersion_t::Java_1_21_1);
 
   schem.resize(12, 9, 12);
 
@@ -96,22 +96,19 @@ int main() {
   // SCL_errorFlag flag;
   std::string error_str;
   if (!schem.export_litematic("test12.litematic", info, nullptr, &error_str)) {
-    cout << "Failed to export file "
-         << "test12.litematic" << endl;
+    cout << "Failed to export file " << "test12.litematic" << endl;
     cout << "Error info = " << error_str << endl;
     return 1;
   }
 
   if (!schem.export_structure("test12.nbt", true, nullptr, &error_str)) {
-    cout << "Failed to export file "
-         << "test12.nbt" << endl;
+    cout << "Failed to export file " << "test12.nbt" << endl;
     cout << "Error info = " << error_str << endl;
     return 1;
   }
 
   if (!schem.export_WESchem("test12.schem", weinfo, nullptr, &error_str)) {
-    cout << "Failed to export file "
-         << "test12.schem" << endl;
+    cout << "Failed to export file " << "test12.schem" << endl;
     cout << "Error info = " << error_str << endl;
     return 1;
   }

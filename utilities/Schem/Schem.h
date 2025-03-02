@@ -101,7 +101,7 @@ class Schem {
   }
   Schem(Schem &&) = default;
   Schem(int64_t x, int64_t y, int64_t z) {
-    xzy.resize(x, y, z);
+    xzy.resize(x, z, y);
     xzy.setZero();
   }
 
@@ -265,6 +265,14 @@ class Schem {
   split_by_block_size(std::span<const uint64_t> x_block_length,
                       std::span<const uint64_t> y_block_length,
                       std::span<const uint64_t> z_block_length) const noexcept;
+
+  struct remove_unused_id_result {
+    size_t id_count_before;
+    size_t id_count_after;
+  };
+
+  [[nodiscard]] tl::expected<remove_unused_id_result, std::string>
+  remove_unused_ids() noexcept;
 
  protected:
   [[nodiscard]] Schem slice_no_check(
