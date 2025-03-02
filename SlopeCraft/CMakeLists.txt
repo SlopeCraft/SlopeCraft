@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.20)
 project(SlopeCraft_NewGUI VERSION ${SlopeCraft_version} LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
