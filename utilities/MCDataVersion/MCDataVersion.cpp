@@ -41,7 +41,7 @@ MCDataVersion::MCDataVersion_t MCDataVersion::string_to_data_version(
 }
 const char *MCDataVersion::data_version_to_string(
     MCDataVersion::MCDataVersion_t v) noexcept {
-  const auto mcdv = magic_enum::enum_name(v);
+  std::string_view mcdv = magic_enum::enum_name(v);
 
   return mcdv.data();
 }
