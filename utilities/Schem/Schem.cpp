@@ -28,6 +28,7 @@ This file is part of SlopeCraft.
 #include <filesystem>
 #include <iostream>
 #include <fmt/format.h>
+#include <set>
 
 #include "Schem.h"
 
@@ -414,6 +415,7 @@ tl::expected<void, std::pair<SCL_errorFlag, std::string>> Schem::pre_check(
 tl::expected<void, std::pair<SCL_errorFlag, std::string>>
 Schem::export_litematic(std::string_view filename,
                         const litematic_info &info) const noexcept {
+  //
   {
     auto res = this->pre_check(filename, ".litematic");
     if (not res) {
@@ -575,6 +577,7 @@ Schem::export_litematic(std::string_view filename,
 tl::expected<void, std::pair<SCL_errorFlag, std::string>>
 Schem::export_structure(std::string_view filename,
                         const bool is_air_structure_void) const noexcept {
+  //
   {
     auto res = this->pre_check(filename, ".nbt");
     if (not res) {
@@ -759,6 +762,7 @@ Schem::export_structure(std::string_view filename,
 
 tl::expected<void, std::pair<SCL_errorFlag, std::string>> Schem::export_WESchem(
     std::string_view filename, const WorldEditSchem_info &info) const noexcept {
+  //
   {
     auto res = this->pre_check(filename, ".schem");
     if (not res) {
@@ -787,10 +791,13 @@ tl::expected<void, std::pair<SCL_errorFlag, std::string>> Schem::export_WESchem(
   auto write_palette = [&]() {
     file.writeCompound("Palette");
     {
-      for (int idx = 0; idx < int(block_id_list.size()); idx++) {
-        file.writeInt(block_id_list[idx].c_str(), idx);
+      for (int idx = 0; idx < static_cast<int>(block_id_list.size()); idx++) {
+        //        continue;
+        [[maybe_unused]] const auto ret =
+            file.writeInt(block_id_list[idx], idx);
+        assert(ret > 0);
       }
-    }  // finished palette
+    }  // finish palette
     file.endCompound();
   };
   auto write_offset = [&]() {
@@ -808,16 +815,17 @@ tl::expected<void, std::pair<SCL_errorFlag, std::string>> Schem::export_WESchem(
   };
 
   std::vector<uint8_t> blockdata;
-  ::shrink_bytes_weSchem(xzy.data(), xzy.size(), block_id_list.size(),
-                         &blockdata);
+  ::shrink_bytes_weSchem(
+      {this->xzy.data(), static_cast<size_t>(this->xzy.size())},
+      block_id_list.size(), &blockdata);
   auto write_blocks = [&](const char *key) {
-    file.writeByteArrayHead(key, blockdata.size());
-    {
-      const int8_t *data = reinterpret_cast<int8_t *>(blockdata.data());
-      for (int64_t idx = 0; idx < int64_t(blockdata.size()); idx++) {
-        file.writeByte("", data[idx]);
-      }
-    }  // end array
+    std::span<const int8_t> data{reinterpret_cast<int8_t *>(blockdata.data()),
+                                 blockdata.size() * sizeof(uint8_t)};
+    file.writeByteArrayHead(key, data.size());
+    for (int8_t d : data) {
+      file.writeByte("", d);
+    }
+    // end array
   };
 
   if (this->MC_major_ver <= SCL_gameVersion::MC19) {
@@ -853,7 +861,8 @@ tl::expected<void, std::pair<SCL_errorFlag, std::string>> Schem::export_WESchem(
     write_shape();
     write_offset();
     write_blocks("BlockData");
-  } else {  // 1.20+
+  } else {
+    // 1.20+
     file.writeCompound("Schematic");
     {
       file.writeCompound("Metadata");
@@ -882,9 +891,9 @@ tl::expected<void, std::pair<SCL_errorFlag, std::string>> Schem::export_WESchem(
 
       file.writeCompound("Blocks");
       {
+        file.writeListHead("BlockEntities", NBT::tagType::Compound, 0);
         write_palette();
         write_blocks("Data");
-        file.writeListHead("BlockEntities", NBT::tagType::Compound, 0);
       }
       file.endCompound();  // finish Blocks
     }
@@ -893,4 +902,61 @@ tl::expected<void, std::pair<SCL_errorFlag, std::string>> Schem::export_WESchem(
 
   file.close();
   return {};
+}
+
+tl::expected<libSchem::Schem::remove_unused_id_result, std::string>
+libSchem::Schem::remove_unused_ids() noexcept {
+  remove_unused_id_result stat;
+  stat.id_count_before = this->palette_size();
+  std::vector<bool> id_used;
+  id_used.resize(this->palette_size(), false);
+  for (const ele_t blkid : *this) {
+    if (blkid >= this->palette_size()) [[unlikely]] {
+      return tl::make_unexpected(
+          fmt::format("The scheme required block with id = {}, but the block "
+                      "palette has only {} blocks",
+                      blkid, this->palette_size()));
+    }
+    id_used[blkid] = true;
+  }
+
+  std::vector<ele_t> id_map_old_to_new;
+  {
+    ele_t next_id = 0;
+    for (size_t id = 0; id < id_used.size(); id++) {
+      if (id_used[id]) {
+        id_map_old_to_new.emplace_back(next_id++);
+      } else {
+        id_map_old_to_new.emplace_back(invalid_ele_t);
+      }
+    }
+  }
+  if (id_map_old_to_new.empty()) {
+    id_map_old_to_new.emplace_back(0);
+  }
+  // update block id list, remove unused block from palette
+  {
+    ele_t idx = 0;
+    for (auto it = this->block_id_list.begin();
+         it not_eq this->block_id_list.end();) {
+      if (id_used[idx]) {
+        idx++;
+        ++it;
+        continue;
+      }
+      it = this->block_id_list.erase(it);
+      idx++;
+    }
+  }
+  //  assert(this->block_id_list.size()==id_map_old_to_new.size());
+  // update 3d matrix xzy
+
+  for (ele_t &blkid : *this) {
+    assert(id_used[blkid]);
+    const auto new_id = id_map_old_to_new[blkid];
+    blkid = new_id;
+    assert(new_id < this->block_id_list.size());
+  }
+  stat.id_count_after = this->block_id_list.size();
+  return stat;
 }

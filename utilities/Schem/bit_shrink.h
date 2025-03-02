@@ -24,6 +24,7 @@ This file is part of SlopeCraft.
 #define SCHEM_BITSHRINK_H
 
 #include <stdint.h>
+#include <span>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -54,8 +55,7 @@ bool process_block_id(
     const std::string_view id, std::string *const pure_id,
     std::vector<std::pair<std::string, std::string>> *const traits);
 
-void shrink_bytes_weSchem(const uint16_t *src, const size_t src_count,
-                          const int palette_max,
+void shrink_bytes_weSchem(std::span<const uint16_t> src, const int palette_max,
                           std::vector<uint8_t> *const dest) noexcept;
 
 class __mushroom_sides {
