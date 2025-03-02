@@ -23,10 +23,15 @@ if (NOT ZSTD_FOUND)
     endif ()
     set_target_properties(zstd_manually_imported PROPERTIES
         IMPORTED_LOCATION ${zstd_lib_loc})
-
-    cmake_path(GET zstd_lib_loc PARENT_PATH zstd_install_dir)
-    cmake_path(GET zstd_install_dir PARENT_PATH zstd_install_dir)
-    target_include_directories(zstd_manually_imported INTERFACE "${zstd_install_dir}/include")
+    find_file(zstd_header_loc NAMES zstd.h
+        HINTS "/usr/lib/include/zstd.h")
+    if (zstd_header_loc)
+        cmake_path(GET zstd_include_dir PARENT_PATH zstd_header_loc)
+        target_include_directories(zstd_manually_imported INTERFACE ${zstd_include_dir})
+    endif ()
+    #    cmake_path(GET zstd_lib_loc PARENT_PATH zstd_install_dir)
+    #    cmake_path(GET zstd_install_dir PARENT_PATH zstd_install_dir)
+    #    target_include_directories(zstd_manually_imported INTERFACE "${zstd_install_dir}/include")
 endif ()
 
 set(SC_zstd_target_name "")
