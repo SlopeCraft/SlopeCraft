@@ -25,7 +25,10 @@
     "nameEN": "Slime block",
     "icon": "slime_block.png",
     "version": 0,
-    "idOld": "minecraft:slime"
+    "idOld": "minecraft:slime",
+    "needStone": [
+      12
+    ]
   },
   {
     "baseColor": 2,
@@ -167,7 +170,10 @@
     "nameEN": "brewing stand",
     "icon": "brewing_stand.png",
     "version": 0,
-    "wallUseable": false
+    "wallUseable": false,
+    "needStone": [
+      12
+    ]
   },
   {
     "baseColor": 6,
