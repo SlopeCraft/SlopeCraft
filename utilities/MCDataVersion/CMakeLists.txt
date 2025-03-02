@@ -5,7 +5,7 @@ add_library(MCDataVersion STATIC
     MCDataVersion.cpp
 )
 
-find_package(magic_enum REQUIRED)
+find_package(magic_enum REQUIRED CONFIG)
 
 target_link_libraries(MCDataVersion PUBLIC magic_enum::magic_enum)
 target_compile_features(MCDataVersion PRIVATE cxx_std_20)

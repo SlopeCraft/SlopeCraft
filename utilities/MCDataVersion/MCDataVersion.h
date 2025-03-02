@@ -25,7 +25,7 @@ This file is part of SlopeCraft.
 
 #include <SC_GlobalEnums.h>
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace MCDataVersion {
 
