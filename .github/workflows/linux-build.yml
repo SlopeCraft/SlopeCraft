@@ -100,18 +100,20 @@ jobs:
           cd ..
 
       - name: Upload deb pack
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-linux-gcc-deb
           path: pack/SlopeCraft*.deb
           if-no-files-found: error
+          compression-level: 0
 
       - name: Upload tar.xz pack
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-linux-gcc-tar-xz
           path: pack/SlopeCraft*.tar.xz
           if-no-files-found: error
+          compression-level: 0
 
       - name: Run CTest
         if: (matrix.build_type == 'Release')&&(matrix.gpu_api == 'None')

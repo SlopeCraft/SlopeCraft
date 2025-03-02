@@ -89,10 +89,12 @@ jobs:
       - name: Get short SHA
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-macos-m2-clang
           path: build/SlopeCraft*.zip
+          if-no-files-found: error
+          compression-level: 0
   #  nothing:
   #    runs-on: macos-latest
   #    steps:

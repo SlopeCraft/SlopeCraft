@@ -148,11 +148,12 @@ jobs:
       #    if-no-files-found: error
 
       - name: Upload 7z pack
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-vec=${{ matrix.vectorize }}-windows-clang-7z
           path: pack/SlopeCraft*.7z
           if-no-files-found: error
+          compression-level: 0
 
   gcc:
     runs-on: windows-latest
@@ -300,8 +301,9 @@ jobs:
       #    if-no-files-found: error
 
       - name: Upload 7z pack
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-vec=${{ matrix.vectorize }}-windows-gcc-7z
           path: pack/SlopeCraft*.7z
           if-no-files-found: error
+          compression-level: 0
