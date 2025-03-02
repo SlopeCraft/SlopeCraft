@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.29)
 
 find_package(ZLIB REQUIRED)
 
-find_package(libnbt++)
+find_package(libnbt++ QUIET)
 
 if (libnbt++_FOUND)
     message(STATUS "Found installed libnbt++")
