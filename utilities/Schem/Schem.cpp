@@ -47,12 +47,11 @@ void Schem::resize(int64_t x, int64_t y, int64_t z) {
   if (x < 0 || y < 0 || z < 0) {
     return;
   }
+#ifdef __APPLE__
   this->xzy.resize({x, z, y});
-  // #ifdef __APPLE__
-  //   this->xzy.resize({x, z, y});
-  // #else
-  //   this->xzy.resize(x, z, y);
-  // #endif
+#else
+  this->xzy.resize(x, z, y);
+#endif
 }
 
 std::string Schem::check_size() const noexcept {
