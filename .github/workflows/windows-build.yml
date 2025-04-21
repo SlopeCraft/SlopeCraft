@@ -38,11 +38,12 @@ jobs:
           mkdir 3rdParty
 
       - name: Download and extract llvm 20.1.3
-        shell: pwsh
+        shell: cmd
         run: |
           cd bin
-          wget "https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.3/LLVM-20.1.3-win64.exe"
-          7z x ./LLVM-20.1.3-win64.exe -ollvm '-xr!$PLUGINSDIR'
+          curl -JL -o .\LLVM-20.1.3-win64.exe "https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.3/LLVM-20.1.3-win64.exe"
+          7z x .\LLVM-20.1.3-win64.exe -ollvm '-xr!$PLUGINSDIR'
+          .\llvm\bin\clang-cl --version
 
       - name: Install ninja
         shell: cmd
