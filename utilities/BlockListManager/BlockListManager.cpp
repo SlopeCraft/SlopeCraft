@@ -63,7 +63,7 @@ uint64_t std::hash<selection>::operator()(const selection &s) const noexcept {
 // }
 
 std::unique_ptr<SlopeCraft::block_list_interface, BlockListDeleter>
-BlockListManager::impl_addblocklist(const char *filename) noexcept {
+BlockListManager::impl_addblocklist(const QByteArray &file_content) noexcept {
   std::string errmsg;
   errmsg.resize(8192);
   auto sd_err = SlopeCraft::string_deliver::from_string(errmsg);
@@ -73,7 +73,8 @@ BlockListManager::impl_addblocklist(const char *filename) noexcept {
   SlopeCraft::block_list_create_info option{SC_VERSION_U64, &sd_warn, &sd_err};
 
   SlopeCraft::block_list_interface *bli =
-      SlopeCraft::SCL_create_block_list(filename, option);
+      SlopeCraft::SCL_create_block_list_from_buffer(
+          file_content.data(), file_content.size(), option);
 
   errmsg.resize(sd_err.size);
   warning.resize(sd_warn.size);
