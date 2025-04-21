@@ -1182,7 +1182,7 @@ VCL_EXPORT_FUN VCL_biome_info VCL_get_biome_info(VCL_biome_t biome) {
   return VCL_biome_info{NAN, NAN};
 }
 
-#include <magic_enum.hpp>
+#include <magic_enum/magic_enum.hpp>
 
 const char *VCL_biome_name_ZH(VCL_biome_t b) noexcept {
   switch (b) {

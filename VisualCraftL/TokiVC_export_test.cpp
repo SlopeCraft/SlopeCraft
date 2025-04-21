@@ -20,11 +20,11 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
+#include <map>
+#include <magic_enum/magic_enum.hpp>
 #include "TokiVC.h"
 #include "VCL_internal.h"
 #include "VisualCraftL.h"
-#include <magic_enum.hpp>
-#include <map>
 
 const VCL_block *find_first_mark_block(
     const std::unordered_map<const VCL_block *, uint16_t>
