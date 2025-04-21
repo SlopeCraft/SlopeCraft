@@ -103,12 +103,12 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
  protected:
   const basic_colorset_t &basic_colorset;
   const allowed_colorset_t &allowed_colorset;
-  Eigen::ArrayXX<ARGB> _raw_image;
+  Eigen::ArrayXX<ARGB> raw_image_;
   ::SCL_convertAlgo algo;
   bool dither{false};
-  std::unordered_map<convert_unit, TokiColor_t, ::hash_cvt_unit> _color_hash;
+  std::unordered_map<convert_unit, TokiColor_t, ::hash_cvt_unit> color_hash_;
 
-  Eigen::ArrayXX<ARGB> _dithered_image;
+  Eigen::ArrayXX<ARGB> dithered_image_;
   // Eigen::ArrayXX<colorid_t> colorid_matrix;
 
  public:
@@ -116,27 +116,27 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
   // SCL_convertAlgo convert_algo{SCL_convertAlgo::RGB_Better};
 
   inline void clear_images() noexcept {
-    this->_raw_image.resize(0, 0);
-    this->_dithered_image.resize(0, 0);
+    this->raw_image_.resize(0, 0);
+    this->dithered_image_.resize(0, 0);
   }
 
   /// When the colorset is changed, the hash must be cleared.
   inline void on_color_set_changed() noexcept { this->clear_color_hash(); }
 
   /// Call this function when the color set is changed.
-  inline void clear_color_hash() noexcept { this->_color_hash.clear(); }
+  inline void clear_color_hash() noexcept { this->color_hash_.clear(); }
 
   inline ::SCL_convertAlgo convert_algo() const noexcept { return this->algo; }
 
   inline bool is_dither() const noexcept { return this->dither; }
 
-  inline int64_t rows() const noexcept { return _raw_image.rows(); }
-  inline int64_t cols() const noexcept { return _raw_image.cols(); }
-  inline int64_t size() const noexcept { return _raw_image.size(); }
+  inline int64_t rows() const noexcept { return raw_image_.rows(); }
+  inline int64_t cols() const noexcept { return raw_image_.cols(); }
+  inline int64_t size() const noexcept { return raw_image_.size(); }
 
-  inline const auto &raw_image() const noexcept { return _raw_image; }
+  inline const auto &raw_image() const noexcept { return raw_image_; }
 
-  inline const auto &color_hash() const noexcept { return _color_hash; }
+  inline const auto &color_hash() const noexcept { return color_hash_; }
 
   void set_raw_image(const ARGB *const data, const int64_t _rows,
                      const int64_t _cols,
@@ -151,24 +151,24 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
     if (is_col_major) {
       Eigen::Map<const Eigen::Array<ARGB, Dynamic, Dynamic, Eigen::ColMajor>>
           map(data, _rows, _cols);
-      this->_raw_image = map;
+      this->raw_image_ = map;
     } else {
       Eigen::Map<const Eigen::Array<ARGB, Dynamic, Dynamic, Eigen::RowMajor>>
           map(data, _rows, _cols);
-      this->_raw_image = map;
+      this->raw_image_ = map;
     }
   }
 
-  bool convert_image(::SCL_convertAlgo __algo, bool _dither,
+  bool convert_image(::SCL_convertAlgo algo_, bool dither_,
                      bool try_gpu = false) noexcept {
-    if (__algo == ::SCL_convertAlgo::gaCvter) {
-      __algo = ::SCL_convertAlgo::RGB_Better;
+    if (algo_ == ::SCL_convertAlgo::gaCvter) {
+      algo_ = ::SCL_convertAlgo::RGB_Better;
     }
-    this->dither = _dither;
+    this->dither = dither_;
 
     ui.rangeSet(0, 100, 0);
 
-    this->algo = __algo;
+    this->algo = algo_;
     this->add_colors_to_hash();
     ui.rangeSet(0, 100, 25);
     if (!this->match_all_TokiColors(try_gpu)) {
@@ -179,22 +179,22 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
     if (this->dither) {
       switch (this->algo) {
         case ::SCL_convertAlgo::RGB:
-          this->template __impl_dither<::SCL_convertAlgo::RGB>();
+          this->template impl_dither__<::SCL_convertAlgo::RGB>();
           break;
         case ::SCL_convertAlgo::RGB_Better:
-          this->template __impl_dither<::SCL_convertAlgo::RGB_Better>();
+          this->template impl_dither__<::SCL_convertAlgo::RGB_Better>();
           break;
         case ::SCL_convertAlgo::HSV:
-          this->template __impl_dither<::SCL_convertAlgo::HSV>();
+          this->template impl_dither__<::SCL_convertAlgo::HSV>();
           break;
         case ::SCL_convertAlgo::Lab94:
-          this->template __impl_dither<::SCL_convertAlgo::Lab94>();
+          this->template impl_dither__<::SCL_convertAlgo::Lab94>();
           break;
         case ::SCL_convertAlgo::Lab00:
-          this->template __impl_dither<::SCL_convertAlgo::Lab00>();
+          this->template impl_dither__<::SCL_convertAlgo::Lab00>();
           break;
         case ::SCL_convertAlgo::XYZ:
-          this->template __impl_dither<::SCL_convertAlgo::XYZ>();
+          this->template impl_dither__<::SCL_convertAlgo::XYZ>();
           break;
 
         default:
@@ -202,7 +202,7 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
           return false;
       }
     } else {
-      this->_dithered_image = this->_raw_image;
+      this->dithered_image_ = this->raw_image_;
     }
 
     //    for (int64_t idx = 0; idx < this->_dithered_image.size(); idx++) {
@@ -226,11 +226,11 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
     result.setZero(this->rows(), this->cols());
 
     for (int64_t idx = 0; idx < this->size(); idx++) {
-      const auto current_color = this->_dithered_image(idx);
+      const auto current_color = this->dithered_image_(idx);
 
-      auto it = this->_color_hash.find(convert_unit(current_color, this->algo));
+      auto it = this->color_hash_.find(convert_unit(current_color, this->algo));
 
-      if (it == this->_color_hash.end()) {
+      if (it == this->color_hash_.end()) {
         if (getA(current_color) <= 0) {
           result(idx) = 0;
           continue;
@@ -252,10 +252,10 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
     // sizeof(uint16_t));
 
     for (int64_t idx = 0; idx < this->size(); idx++) {
-      auto it = this->_color_hash.find(
-          convert_unit(this->_dithered_image(idx), this->algo));
+      auto it = this->color_hash_.find(
+          convert_unit(this->dithered_image_(idx), this->algo));
 
-      if (it == this->_color_hash.end()) {
+      if (it == this->color_hash_.end()) {
         abort();
       }
 
@@ -267,9 +267,9 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
     assert(r >= 0 && r < this->rows());
     assert(c >= 0 && c < this->cols());
 
-    const auto current_color = this->_dithered_image(r, c);
-    auto it = this->_color_hash.find(convert_unit{current_color, this->algo});
-    if (it == this->_color_hash.end()) {
+    const auto current_color = this->dithered_image_(r, c);
+    auto it = this->color_hash_.find(convert_unit{current_color, this->algo});
+    if (it == this->color_hash_.end()) {
       if (getA(current_color) > 0) {
         abort();
       }
@@ -300,9 +300,10 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
         for (int64_t c = 0; c < cols(); c++) {
           const int64_t idx =
               (is_dest_col_major) ? (c * rows() + r) : (r * cols() + c);
-          const ARGB argb = this->_dithered_image(r, c);
-          auto it = this->_color_hash.find(convert_unit(argb, this->algo));
-          if (it == this->_color_hash.end()) {
+          const ARGB argb = this->dithered_image_(r, c);
+          auto it = this->color_hash_.find(convert_unit(argb, this->algo));
+          if (it == this->color_hash_.end()) {
+#warning "Issue #130 crashed here"
             abort();
             return;
           }
@@ -326,13 +327,13 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
   void add_colors_to_hash() noexcept {
     // this->_color_hash.clear();
 
-    for (int64_t idx = 0; idx < this->_raw_image.size(); idx++) {
-      const ARGB argb = this->_raw_image(idx);
+    for (int64_t idx = 0; idx < this->raw_image_.size(); idx++) {
+      const ARGB argb = this->raw_image_(idx);
       convert_unit cu(argb, this->algo);
-      auto it = _color_hash.find(cu);
+      auto it = color_hash_.find(cu);
 
       // this key isn't inserted
-      if (it == _color_hash.end()) this->_color_hash.emplace(cu, TokiColor_t());
+      if (it == color_hash_.end()) this->color_hash_.emplace(cu, TokiColor_t());
     }
   }
 
@@ -359,10 +360,10 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
     // const int threadCount = omp_get_num_threads();
 
     std::vector<std::pair<const convert_unit, TokiColor_t> *> tasks;
-    tasks.reserve(_color_hash.size());
+    tasks.reserve(color_hash_.size());
     tasks.clear();
 
-    for (auto &pair : _color_hash) {
+    for (auto &pair : color_hash_) {
       if (!pair.second.is_result_computed()) tasks.emplace_back(&pair);
     }
     const size_t taskCount = tasks.size();
@@ -391,8 +392,8 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
 #pragma omp parallel for
     for (int64_t c = 0; c < this->cols(); c++) {
       for (int64_t r = 0; r < this->rows(); r++) {
-        auto it = this->_color_hash.find(this->_raw_image(r, c));
-        if (it == this->_color_hash.end()) {
+        auto it = this->color_hash_.find(this->raw_image_(r, c));
+        if (it == this->color_hash_.end()) {
           abort();
         }
 
@@ -417,10 +418,10 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
     }
 
     std::vector<std::pair<const convert_unit, TokiColor_t> *> tasks;
-    tasks.reserve(_color_hash.size());
+    tasks.reserve(color_hash_.size());
     tasks.clear();
 
-    for (auto &pair : this->_color_hash) {
+    for (auto &pair : this->color_hash_) {
       if (!pair.second.is_result_computed()) {
         if ((pair.first._ARGB & 0xFF'00'00'00) == 0) {
           pair.second.compute(pair.first, this->allowed_colorset);
@@ -555,20 +556,20 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
   }
 
   template <SCL_convertAlgo cvt_algo>
-  void __impl_dither() noexcept {
+  void impl_dither__() noexcept {
     std::array<Eigen::ArrayXXf, 3> dither_c3;
     for (auto &i : dither_c3) {
       i.setZero(this->rows() + 2, this->cols() + 2);
     }
 
     // dest.setZero(this->rows(), this->cols());
-    this->_dithered_image.setZero(this->rows(), this->cols());
+    this->dithered_image_.setZero(this->rows(), this->cols());
 
     for (int64_t r = 0; r < this->rows(); r++) {
       for (int64_t c = 0; c < this->cols(); c++) {
-        auto it = this->_color_hash.find(
-            convert_unit(this->_raw_image(r, c), this->algo));
-        if (it == this->_color_hash.end()) {
+        auto it = this->color_hash_.find(
+            convert_unit(this->raw_image_(r, c), this->algo));
+        if (it == this->color_hash_.end()) {
           // unreachable
           abort();
           return;
@@ -584,7 +585,7 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
     for (int64_t row = 0; row < this->rows(); row++) {
       if (is_dir_LR)
         for (int64_t col = 0; col < this->cols(); col++) {
-          if (::getA(this->_raw_image(row, col)) <= 0) {
+          if (::getA(this->raw_image_(row, col)) <= 0) {
             continue;
           }
 
@@ -592,13 +593,13 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
               dither_c3[0](row + 1, col + 1), dither_c3[1](row + 1, col + 1),
               dither_c3[2](row + 1, col + 1));
           // ditheredImage(r, c) = Current;
-          this->_dithered_image(row, col) = current_argb;
+          this->dithered_image_(row, col) = current_argb;
           auto it_to_old_color =
-              this->_color_hash.find(convert_unit(current_argb, this->algo));
+              this->color_hash_.find(convert_unit(current_argb, this->algo));
           // if this color isn't matched, match it.
-          if (it_to_old_color == this->_color_hash.end()) {
+          if (it_to_old_color == this->color_hash_.end()) {
             convert_unit cu(current_argb, this->algo);
-            auto ret = this->_color_hash.emplace(cu, TokiColor_t());
+            auto ret = this->color_hash_.emplace(cu, TokiColor_t());
             it_to_old_color = ret.first;
             it_to_old_color->second.compute(cu, this->allowed_colorset);
             // inserted_count++;
@@ -625,19 +626,19 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
         }
       else
         for (int64_t col = this->cols() - 1; col >= 0; col--) {
-          if (::getA(this->_raw_image(row, col)) <= 0) {
+          if (::getA(this->raw_image_(row, col)) <= 0) {
             continue;
           }
 
           const ARGB current_argb = ColorCvt<cvt_algo>(
               dither_c3[0](row + 1, col + 1), dither_c3[1](row + 1, col + 1),
               dither_c3[2](row + 1, col + 1));
-          this->_dithered_image(row, col) = current_argb;
+          this->dithered_image_(row, col) = current_argb;
           convert_unit cu(current_argb, this->algo);
-          auto it_to_old_color = this->_color_hash.find(cu);
+          auto it_to_old_color = this->color_hash_.find(cu);
           // if this color isn't matched, match it.
-          if (it_to_old_color == this->_color_hash.end()) {
-            auto ret = this->_color_hash.emplace(cu, TokiColor_t());
+          if (it_to_old_color == this->color_hash_.end()) {
+            auto ret = this->color_hash_.emplace(cu, TokiColor_t());
             it_to_old_color = ret.first;
             it_to_old_color->second.compute(cu, this->allowed_colorset);
             // inserted_count++;
@@ -676,7 +677,7 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
   }
 
   uint64_t task_hash(SCL_convertAlgo a, bool d) const noexcept {
-    const auto &img = this->_raw_image;
+    const auto &img = this->raw_image_;
     return std::hash<std::string_view>()(
 
                std::string_view{(const char *)img.data(),
