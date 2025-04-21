@@ -26,7 +26,7 @@ This file is part of SlopeCraft.
 #include "vccl_internal.h"
 #include <QCoreApplication>
 #include <VCLConfigLoader.h>
-#include <magic_enum.hpp>
+#include <magic_enum/magic_enum.hpp>
 
 #include <SC_version_buildtime.h>
 #include <fmt/format.h>
