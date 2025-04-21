@@ -66,13 +66,13 @@ void libMapImageCvt::MapImageCvter::convert_image(
 
   gacvter->run();
 
-  Eigen::ArrayXX<ARGB> raw_image_cache = this->_raw_image;
+  Eigen::ArrayXX<ARGB> raw_image_cache = this->raw_image_;
 
-  gacvter->resultImage(&this->_raw_image);
+  gacvter->resultImage(&this->raw_image_);
 
   Base_t::convert_image(::SCL_convertAlgo::RGB_Better, dither);
 
-  this->_raw_image = raw_image_cache;
+  this->raw_image_ = raw_image_cache;
 }
 
 bool libMapImageCvt::MapImageCvter::save_cache(
@@ -129,8 +129,8 @@ bool libMapImageCvt::MapImageCvter::load_cache(
 
   this->load_from_itermediate(std::move(temp));
 
-  assert(this->_raw_image.rows() == this->_dithered_image.rows());
-  assert(this->_raw_image.cols() == this->_dithered_image.cols());
+  assert(this->raw_image_.rows() == this->dithered_image_.rows());
+  assert(this->raw_image_.cols() == this->dithered_image_.cols());
   return true;
 }
 
@@ -139,7 +139,7 @@ bool libMapImageCvt::MapImageCvter::load_cache(const char *filename) noexcept {
 
   this->load_from_itermediate(std::move(temp));
 
-  assert(this->_raw_image.rows() == this->_dithered_image.rows());
-  assert(this->_raw_image.cols() == this->_dithered_image.cols());
+  assert(this->raw_image_.rows() == this->dithered_image_.rows());
+  assert(this->raw_image_.cols() == this->dithered_image_.cols());
   return true;
 }

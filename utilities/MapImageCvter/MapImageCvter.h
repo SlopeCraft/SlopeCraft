@@ -91,25 +91,25 @@ class MapImageCvter : public ::libImageCvt::ImageCvter<true> {
     }
     dest.clear();
     for (int64_t r = 0; r < this->rows(); r++) {
-      auto it = this->_color_hash.find(
-          convert_unit(this->_dithered_image(r, col), this->algo));
+      auto it = this->color_hash_.find(
+          convert_unit(this->dithered_image_(r, col), this->algo));
       dest.emplace_back(&it->second);
     }
   }
-  
+
   // temp is a temporary container to pass ownership
   void load_from_itermediate(MapImageCvter &&temp) noexcept {
-    this->_raw_image = std::move(temp._raw_image);
+    this->raw_image_ = std::move(temp.raw_image_);
     this->algo = temp.algo;
-    this->_dithered_image = std::move(temp._dithered_image);
+    this->dithered_image_ = std::move(temp.dithered_image_);
 
-    assert(this->_raw_image.rows() == this->_dithered_image.rows());
-    assert(this->_raw_image.cols() == this->_dithered_image.cols());
-    if (this->_color_hash.empty()) {
-      this->_color_hash = std::move(temp._color_hash);
+    assert(this->raw_image_.rows() == this->dithered_image_.rows());
+    assert(this->raw_image_.cols() == this->dithered_image_.cols());
+    if (this->color_hash_.empty()) {
+      this->color_hash_ = std::move(temp.color_hash_);
     } else {
-      temp._color_hash.merge(this->_color_hash);
-      this->_color_hash = std::move(temp._color_hash);
+      temp.color_hash_.merge(this->color_hash_);
+      this->color_hash_ = std::move(temp.color_hash_);
     }
   }
 
@@ -117,20 +117,20 @@ class MapImageCvter : public ::libImageCvt::ImageCvter<true> {
   friend class cereal::access;
   template <class archive>
   void save(archive &ar) const {
-    assert(this->_raw_image.rows() == this->_dithered_image.rows());
-    assert(this->_raw_image.cols() == this->_dithered_image.cols());
-    ar(this->_raw_image);
+    assert(this->raw_image_.rows() == this->dithered_image_.rows());
+    assert(this->raw_image_.cols() == this->dithered_image_.cols());
+    ar(this->raw_image_);
     ar(this->algo);
     ar(this->dither);
     // ar(this->_color_hash);
-    ar(this->_dithered_image);
+    ar(this->dithered_image_);
     // save required colorset
     {
       std::unordered_set<uint32_t> colors_dithered_img;
-      colors_dithered_img.reserve(this->_dithered_image.size());
-      for (int64_t i = 0; i < this->_dithered_image.size(); i++) {
-        colors_dithered_img.emplace(this->_dithered_image(i));
-        colors_dithered_img.emplace(this->_raw_image(i));
+      colors_dithered_img.reserve(this->dithered_image_.size());
+      for (int64_t i = 0; i < this->dithered_image_.size(); i++) {
+        colors_dithered_img.emplace(this->dithered_image_(i));
+        colors_dithered_img.emplace(this->raw_image_(i));
       }
 
       const size_t size_colorset = colors_dithered_img.size();
@@ -150,14 +150,14 @@ class MapImageCvter : public ::libImageCvt::ImageCvter<true> {
 
   template <class archive>
   void load(archive &ar) {
-    ar(this->_raw_image);
+    ar(this->raw_image_);
     ar(this->algo);
     ar(this->dither);
     // ar(this->_color_hash);
-    ar(this->_dithered_image);
+    ar(this->dithered_image_);
 
-    assert(this->_raw_image.rows() == this->_dithered_image.rows());
-    assert(this->_raw_image.cols() == this->_dithered_image.cols());
+    assert(this->raw_image_.rows() == this->dithered_image_.rows());
+    assert(this->raw_image_.cols() == this->dithered_image_.cols());
 
     {
       size_t size_colorset{0};
@@ -167,13 +167,13 @@ class MapImageCvter : public ::libImageCvt::ImageCvter<true> {
         TokiColor_t val;
         ar(key, val);
 
-        this->_color_hash.emplace(key, val);
+        this->color_hash_.emplace(key, val);
       }
 
-      for (int64_t i = 0; i < this->_dithered_image.size(); i++) {
-        auto it = this->_color_hash.find(
-            convert_unit{this->_dithered_image(i), this->convert_algo()});
-        if (it == this->_color_hash.end()) {
+      for (int64_t i = 0; i < this->dithered_image_.size(); i++) {
+        auto it = this->color_hash_.find(
+            convert_unit{this->dithered_image_(i), this->convert_algo()});
+        if (it == this->color_hash_.end()) {
           throw std::runtime_error{
               "One or more colors not found in cached colorhash"};
         }
