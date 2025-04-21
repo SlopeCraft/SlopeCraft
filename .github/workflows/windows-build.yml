@@ -37,14 +37,6 @@ jobs:
           mkdir bin/Qt6.5.0-msvc-shared
           mkdir 3rdParty
 
-      - name: Download and extract llvm 20.1.3
-        shell: cmd
-        run: |
-          cd bin
-          curl -JL -o .\LLVM-20.1.3-win64.exe "https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.3/LLVM-20.1.3-win64.exe"
-          7z x .\LLVM-20.1.3-win64.exe -ollvm "-xr!$PLUGINSDIR"
-          .\llvm\bin\clang-cl --version
-
       - name: Install ninja
         shell: cmd
         run: |
@@ -102,7 +94,7 @@ jobs:
           curl -JL -o bin/Qt6.5.0-msvc-shared.7z "https://github.com/SlopeCraft/QtBinaries/releases/download/qt6.5.0-x86_64-msvc-windows/Qt6.5.0-msvc-shared.7z"
           7z x -o"bin/Qt6.5.0-msvc-shared" bin/Qt6.5.0-msvc-shared.7z
           exit
-          tree /f bin/Qt6.5.0-msvc-shared
+          tree /f bin
           # Qt installation dir: bin/Qt6.5.0-msvc-shared
 
       #      - name: Configure libnbt++
@@ -125,6 +117,14 @@ jobs:
       #          cd ..
       #          tree /f libnbt++
 
+      - name: Download and extract llvm 20.1.3
+        shell: cmd
+        run: |
+          cd bin
+          curl -JL -o .\LLVM-20.1.3-win64.exe "https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.3/LLVM-20.1.3-win64.exe"
+          7z x .\LLVM-20.1.3-win64.exe -ollvm "-xr!$PLUGINSDIR"
+          .\llvm\bin\clang-cl --version
+          
       - name: CMake configure
         shell: cmd
         run: |
