@@ -30,13 +30,6 @@ jobs:
           echo "env:BUILD_TYPE = $env:BUILD_TYPE"
           echo "env:GPU_API = $env:GPU_API"
 
-      - name: make dirs
-        run: |
-          mkdir bin
-          mkdir bin/llvm
-          mkdir bin/Qt6.5.0-msvc-shared
-          mkdir 3rdParty
-
       - name: Install ninja
         shell: cmd
         run: |
@@ -57,6 +50,13 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: make dirs
+        run: |
+          mkdir bin
+          mkdir bin/llvm
+          mkdir bin/Qt6.5.0-msvc-shared
+          mkdir 3rdParty
 
       - name: Get short SHA
         run: |
