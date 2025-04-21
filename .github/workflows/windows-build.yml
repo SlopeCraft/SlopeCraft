@@ -91,8 +91,9 @@ jobs:
       - name: Download Qt6.5.0-msvc-shared and extract
         shell: cmd
         run: |
-          curl -JL -o bin/Qt6.5.0-msvc-shared.7z "https://github.com/SlopeCraft/QtBinaries/releases/download/qt6.5.0-x86_64-msvc-windows/Qt6.5.0-msvc-shared.7z"
-          7z x -o"bin/Qt6.5.0-msvc-shared" bin/Qt6.5.0-msvc-shared.7z
+          cd bin
+          curl -JL -o .\Qt6.5.0-msvc-shared.7z "https://github.com/SlopeCraft/QtBinaries/releases/download/qt6.5.0-x86_64-msvc-windows/Qt6.5.0-msvc-shared.7z"
+          7z x -oQt6.5.0-msvc-shared .\Qt6.5.0-msvc-shared.7z
 
       #      - name: Configure libnbt++
       #        shell: cmd
