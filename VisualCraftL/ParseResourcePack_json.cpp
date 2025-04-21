@@ -195,7 +195,6 @@ void block_states_variant::sort() noexcept {
 std::vector<model_pass_t> block_state_multipart::block_model_names(
     const state_list &sl) const noexcept {
   std::vector<model_pass_t> res;
-
   for (const multipart_pair &pair : this->pairs) {
     if (pair.match(sl)) {
       for (const auto &ms : pair.apply_blockmodel) {
