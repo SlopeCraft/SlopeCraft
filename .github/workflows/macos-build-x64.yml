@@ -12,7 +12,9 @@ jobs:
     strategy:
       matrix:
         build_type: [ Debug, Release ]
-        gpu_api: [ None, Vulkan ]
+        gpu_api: [ None,
+          #                   Vulkan
+        ]
         vectorize: [ ON, OFF ]
     env:
       BUILD_TYPE: ${{ matrix.build_type }}
