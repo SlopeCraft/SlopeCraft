@@ -155,7 +155,7 @@ Schem Schem::slice_no_check(std::span<const std::pair<int64_t, int64_t>, 3>
     pos_max[dim] = xyz_index_range[dim].second;
   }
   {
-    Eigen::array<int64_t, 3> start, extent;
+    Eigen::array<Eigen::Index, 3> start, extent;
     start[0] = xyz_index_range[0].first;
     start[1] = xyz_index_range[2].first;
     start[2] = xyz_index_range[1].first;
