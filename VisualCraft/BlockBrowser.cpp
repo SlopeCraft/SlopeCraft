@@ -27,7 +27,7 @@ This file is part of SlopeCraft.
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QTableWidgetItem>
-#include <magic_enum.hpp>
+#include <magic_enum/magic_enum.hpp>
 
 BlockBrowser::BlockBrowser(QWidget *parent)
     : QWidget(parent), ui(new Ui::BlockBrowser) {
