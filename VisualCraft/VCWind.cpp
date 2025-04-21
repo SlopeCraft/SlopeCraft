@@ -27,7 +27,7 @@ This file is part of SlopeCraft.
 #include <QListWidgetItem>
 #include <QMessageBox>
 #include <iostream>
-#include <magic_enum.hpp>
+#include <magic_enum/magic_enum.hpp>
 #include <QByteArrayView>
 #include "VC_block_class.h"
 #include "ui_VCWind.h"

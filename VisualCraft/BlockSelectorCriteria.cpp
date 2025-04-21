@@ -22,7 +22,7 @@ This file is part of SlopeCraft.
 
 #include "BlockSelector.h"
 #include "ui_BlockSelectorCriteria.h"
-#include <magic_enum.hpp>
+#include <magic_enum/magic_enum.hpp>
 
 BlockSelectorCriteria::BlockSelectorCriteria(QWidget *parent)
     : QWidget(parent), ui(new Ui::BlockSelectorCriteria) {

@@ -26,7 +26,7 @@ This file is part of SlopeCraft.
 #include <QPainter>
 #include <QPalette>
 #include <VisualCraftL.h>
-#include <magic_enum.hpp>
+#include <magic_enum/magic_enum.hpp>
 
 BiomeBrowser::BiomeBrowser(QWidget *parent)
     : QWidget(parent), ui(new Ui::BiomeBrowser) {
