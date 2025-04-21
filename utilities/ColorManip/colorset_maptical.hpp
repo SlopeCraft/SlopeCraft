@@ -61,10 +61,10 @@ class newtokicolor_base_maptical {
 
 class alignas(32) colorset_maptical_basic {
  private:
-  Eigen::Array<float, 256, 3> __rgb;
-  Eigen::Array<float, 256, 3> __hsv;
-  Eigen::Array<float, 256, 3> __lab;
-  Eigen::Array<float, 256, 3> __xyz;
+  Eigen::Array<float, 256, 3> rgb_table;
+  Eigen::Array<float, 256, 3> hsv_table;
+  Eigen::Array<float, 256, 3> lab_table;
+  Eigen::Array<float, 256, 3> xyz_table;
 
  public:
   /// The default constructor is deleted
@@ -72,32 +72,33 @@ class alignas(32) colorset_maptical_basic {
   /// Construct from color source
   colorset_maptical_basic(const float *const rgbsrc) {
     assert(rgbsrc);
-    memcpy(__rgb.data(), rgbsrc, sizeof(__rgb));
+    memcpy(rgb_table.data(), rgbsrc, sizeof(rgb_table));
 
     for (int row = 0; row < 256; row++) {
-      const float r = __rgb(row, 0), g = __rgb(row, 1), b = __rgb(row, 2);
-      RGB2HSV(r, g, b, __hsv(row, 0), __hsv(row, 1), __hsv(row, 2));
-      RGB2XYZ(r, g, b, __xyz(row, 0), __xyz(row, 1), __xyz(row, 2));
-      XYZ2Lab(XYZ(row, 0), XYZ(row, 1), XYZ(row, 2), __lab(row, 0),
-              __lab(row, 1), __lab(row, 2));
+      const float r = rgb_table(row, 0), g = rgb_table(row, 1),
+                  b = rgb_table(row, 2);
+      RGB2HSV(r, g, b, hsv_table(row, 0), hsv_table(row, 1), hsv_table(row, 2));
+      RGB2XYZ(r, g, b, xyz_table(row, 0), xyz_table(row, 1), xyz_table(row, 2));
+      XYZ2Lab(XYZ(row, 0), XYZ(row, 1), XYZ(row, 2), lab_table(row, 0),
+              lab_table(row, 1), lab_table(row, 2));
     }
   }
   /// get the color count
   inline constexpr int color_count() const noexcept { return 256; }
 
-  inline const auto &RGB_mat() const noexcept { return __rgb; }
+  inline const auto &RGB_mat() const noexcept { return rgb_table; }
 
   inline float RGB(const int r, const int c) const noexcept {
-    return __rgb(r, c);
+    return rgb_table(r, c);
   }
   inline float HSV(const int r, const int c) const noexcept {
-    return __hsv(r, c);
+    return hsv_table(r, c);
   }
   inline float Lab(const int r, const int c) const noexcept {
-    return __lab(r, c);
+    return lab_table(r, c);
   }
   inline float XYZ(const int r, const int c) const noexcept {
-    return __xyz(r, c);
+    return xyz_table(r, c);
   }
 
   static inline uint8_t Map(const int r) noexcept {
@@ -119,13 +120,13 @@ class alignas(32) colorset_maptical_allowed {
   static constexpr uint8_t invalid_color_id = 0;
 
  private:
-  std::array<color_col, 3> __rgb;
-  std::array<color_col, 3> __hsv;
-  std::array<color_col, 3> __lab;
-  std::array<color_col, 3> __xyz;
-  Eigen::Array<uint8_t, 256, 1> __map;
+  std::array<color_col, 3> rgb_table;
+  std::array<color_col, 3> hsv_table;
+  std::array<color_col, 3> lab_table;
+  std::array<color_col, 3> xyz_table;
+  Eigen::Array<uint8_t, 256, 1> map_table;
   // std::array<uint8_t, 256> __map;
-  int _color_count{0};
+  int color_count_{0};
 
   std::array<uint8_t, 4> depth_counter;
 
@@ -135,65 +136,65 @@ class alignas(32) colorset_maptical_allowed {
     return this->depth_counter;
   }
 
-  inline int color_count() const noexcept { return _color_count; }
+  inline int color_count() const noexcept { return color_count_; }
 
   inline float RGB(int r, int c) const noexcept {
     assert(r < color_count());
-    return __rgb[c](r);
+    return rgb_table[c](r);
   }
   inline float HSV(int r, int c) const noexcept {
     assert(r < color_count());
-    return __hsv[c](r);
+    return hsv_table[c](r);
   }
   inline float Lab(int r, int c) const noexcept {
     assert(r < color_count());
-    return __lab[c](r);
+    return lab_table[c](r);
   }
   inline float XYZ(int r, int c) const noexcept {
     assert(r < color_count());
-    return __xyz[c](r);
+    return xyz_table[c](r);
   }
 
   inline uint8_t Map(int r) const noexcept {
     assert(r < color_count());
-    return __map[r];
+    return map_table[r];
   }
 
   inline auto rgb(int channel) const noexcept {
-    return __rgb[channel].head(_color_count);
+    return rgb_table[channel].head(color_count_);
   }
 
   inline auto hsv(int channel) const noexcept {
-    return __hsv[channel].head(_color_count);
+    return hsv_table[channel].head(color_count_);
   }
 
   inline auto lab(int channel) const noexcept {
-    return __lab[channel].head(_color_count);
+    return lab_table[channel].head(color_count_);
   }
 
   inline auto xyz(int channel) const noexcept {
-    return __xyz[channel].head(_color_count);
+    return xyz_table[channel].head(color_count_);
   }
 
-  inline auto map() const noexcept { return __map.head(_color_count); }
+  inline auto map() const noexcept { return map_table.head(color_count_); }
 
   inline const float *rgb_data(int channel) const noexcept {
-    return __rgb[channel].data();
+    return rgb_table[channel].data();
   }
 
   inline const float *hsv_data(int channel) const noexcept {
-    return __hsv[channel].data();
+    return hsv_table[channel].data();
   }
 
   inline const float *lab_data(int channel) const noexcept {
-    return __lab[channel].data();
+    return lab_table[channel].data();
   }
 
   inline const float *xyz_data(int channel) const noexcept {
-    return __xyz[channel].data();
+    return xyz_table[channel].data();
   }
 
-  inline const uint8_t *map_data() const noexcept { return __map.data(); }
+  inline const uint8_t *map_data() const noexcept { return map_table.data(); }
 
   bool apply_allowed(const colorset_maptical_basic &src,
                      std::span<const bool, 256> allow_list) noexcept {
@@ -204,14 +205,14 @@ class alignas(32) colorset_maptical_allowed {
     }
 
     for (int c = 0; c < 3; c++) {
-      __rgb[c].setZero();
-      __hsv[c].setZero();
-      __lab[c].setZero();
-      __xyz[c].setZero();
+      rgb_table[c].setZero();
+      hsv_table[c].setZero();
+      lab_table[c].setZero();
+      xyz_table[c].setZero();
     }
-    __map.setZero();
+    map_table.setZero();
 
-    _color_count = new_color_count;
+    color_count_ = new_color_count;
 
     for (int writeidx = 0, readidx = 0; readidx < 256; readidx++) {
       const int base = (readidx & 0b111111);
@@ -221,12 +222,12 @@ class alignas(32) colorset_maptical_allowed {
 
       if (allow_list[readidx]) {
         for (int c = 0; c < 3; c++) {
-          __rgb[c](writeidx) = src.RGB(readidx, c);
-          __hsv[c](writeidx) = src.HSV(readidx, c);
-          __lab[c](writeidx) = src.Lab(readidx, c);
-          __xyz[c](writeidx) = src.XYZ(readidx, c);
+          rgb_table[c](writeidx) = src.RGB(readidx, c);
+          hsv_table[c](writeidx) = src.HSV(readidx, c);
+          lab_table[c](writeidx) = src.Lab(readidx, c);
+          xyz_table[c](writeidx) = src.XYZ(readidx, c);
         }
-        __map[writeidx] = src.Map(readidx);
+        map_table[writeidx] = src.Map(readidx);
         writeidx++;
       }
     }
