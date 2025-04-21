@@ -27,7 +27,7 @@ This file is part of SlopeCraft.
 
 #include "ParseResourcePack.h"
 #include "VCL_internal.h"
-#include <magic_enum.hpp>
+#include <magic_enum/magic_enum.hpp>
 
 VCL_block::VCL_block() { this->initialize_attributes(); }
 
