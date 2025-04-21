@@ -191,8 +191,8 @@ Schem::split_by_block_size(
                                  this->z_range()};
     for (size_t dim = 0; dim < 3; dim++) {
       int64_t cur_block_start_index = 0;
-      for (auto [blk_idx, block_len] :
-           xyz_block_len[dim] | std::views::enumerate) {
+      for (size_t blk_idx = 0; blk_idx < xyz_block_len[dim].size(); blk_idx++) {
+        const auto block_len = xyz_block_len[dim][blk_idx];
         if (block_len <= 0) {
           return tl::make_unexpected(fmt::format(
               "Found non-positive block length in dim = {}, block index = {}",
@@ -220,12 +220,12 @@ Schem::split_by_block_size(
                     [xyz_block_index_pairs[1].size()]
                     [xyz_block_index_pairs[2].size()]};
 
-  for (auto [x_idx, x_range] :
-       xyz_block_index_pairs[0] | std::views::enumerate) {
-    for (auto [y_idx, y_range] :
-         xyz_block_index_pairs[1] | std::views::enumerate) {
-      for (auto [z_idx, z_range] :
-           xyz_block_index_pairs[2] | std::views::enumerate) {
+  for (size_t x_idx = 0; x_idx < xyz_block_index_pairs[0].size(); x_idx++) {
+    const auto x_range = xyz_block_index_pairs[0][x_idx];
+    for (size_t y_idx = 0; y_idx < xyz_block_index_pairs[1].size(); y_idx++) {
+      const auto y_range = xyz_block_index_pairs[1][y_idx];
+      for (size_t z_idx = 0; z_idx < xyz_block_index_pairs[2].size(); z_idx++) {
+        const auto z_range = xyz_block_index_pairs[2][z_idx];
         const Eigen::Array<int64_t, 3, 1> offset{x_range.first, y_range.first,
                                                  z_range.first};
         auto &dest = ret[x_idx][y_idx][z_idx];
