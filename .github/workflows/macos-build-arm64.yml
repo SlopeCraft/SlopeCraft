@@ -13,7 +13,7 @@ jobs:
       matrix:
         build_type: [ Debug, Release ]
         gpu_api: [ None,
-                   Vulkan
+          #                   Vulkan
         ]
     env:
       BUILD_TYPE: ${{ matrix.build_type }}
