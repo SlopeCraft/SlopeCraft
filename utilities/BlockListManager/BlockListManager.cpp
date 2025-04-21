@@ -124,17 +124,35 @@ bool BlockListManager::add_blocklist(QString filename) noexcept {
     }
   }
   // Test for multiple encodings
-  for (auto &encoding : {filename.toLocal8Bit(), filename.toUtf8()}) {
-    std::unique_ptr<SlopeCraft::block_list_interface, BlockListDeleter> tmp =
-        this->impl_addblocklist(encoding.data());
 
-    if (not tmp) {
-      continue;
-    }
-
-    this->blockslists.emplace_back(name, std::move(tmp));
-    return true;
+  QFile archive{filename};
+  if (not archive.open(QIODevice::OpenModeFlag::ExistingOnly |
+                       QIODevice::OpenModeFlag::ReadOnly)) {
+    QMessageBox::warning(this, tr("无法加载方块列表"),
+                         tr("无法读取文件 %1 ，它可能被误删。").arg(filename));
+    return false;
   }
+  auto file_content = archive.readAll();
+  std::unique_ptr<SlopeCraft::block_list_interface, BlockListDeleter> tmp =
+      this->impl_addblocklist(file_content);
+  if (not tmp) {
+    return false;
+  }
+  this->blockslists.emplace_back(name, std::move(tmp));
+  return true;
+
+  //  for (auto &encoding : {filename.toLocal8Bit(), filename.toUtf8()}) {
+  //    std::unique_ptr<SlopeCraft::block_list_interface, BlockListDeleter> tmp
+  //    =
+  //        this->impl_addblocklist(encoding.data());
+  //
+  //    if (not tmp) {
+  //      continue;
+  //    }
+  //
+  //    this->blockslists.emplace_back(name, std::move(tmp));
+  //    return true;
+  //  }
 
   return false;
 }

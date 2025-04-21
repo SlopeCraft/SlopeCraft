@@ -329,8 +329,9 @@ block_list_create_result create_block_list_from_buffer(
       zip_open_from_source(source, ZIP_RDONLY | ZIP_CHECKCONS, &err)};
   if (archive == nullptr) {
     zip_source_free(source);
-    return {tl::make_unexpected(fmt::format("Failed to open zip: {}",
-                                            zip_error_strerror(&err))),
+    return {tl::make_unexpected(
+                fmt::format("Failed to open zip, zip_err = {}, sys_err = {}",
+                            err.zip_err, err.sys_err)),
             {}};
   }
 
