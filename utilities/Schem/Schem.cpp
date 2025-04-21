@@ -20,10 +20,10 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
+#include <ranges>
 #include <Eigen/Dense>
 #include <Eigen/StdVector>
 #include <memory.h>
-#include <ranges>
 #include <ctime>
 #include <filesystem>
 #include <iostream>

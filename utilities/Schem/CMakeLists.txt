@@ -14,6 +14,8 @@ add_library(Schem
     item.cpp
     item.h
 )
+target_compile_features(Schem PUBLIC cxx_std_23)
+
 find_package(Eigen3 REQUIRED)
 
 find_package(cereal REQUIRED)
@@ -34,7 +36,6 @@ target_link_libraries(Schem PUBLIC
 if (TARGET Boost::multi_array)
     target_link_libraries(Schem PUBLIC Boost::multi_array)
 endif ()
-target_compile_features(Schem PUBLIC cxx_std_23)
 target_link_libraries(Schem PUBLIC MCDataVersion ProcessBlockId)
 
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")
