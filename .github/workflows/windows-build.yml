@@ -28,6 +28,13 @@ jobs:
         run: |
           echo "env:BUILD_TYPE = $env:BUILD_TYPE"
           echo "env:GPU_API = $env:GPU_API"
+          
+      - name: make dirs
+        run: |
+          mkdir bin
+          mkdir bin/llvm
+          mkdir bin/Qt6.5.0-msvc-shared
+          mkdir 3rdParty
 
       - name: Download and extract llvm 20.1.3
         shell: pwsh
@@ -64,12 +71,6 @@ jobs:
           echo "short_sha = $short_sha"
           echo "SHORT_SHA=$short_sha" >> $env:GITHUB_ENV
 
-      - name: make dirs
-        run: |
-          mkdir bin
-          mkdir bin/llvm
-          mkdir bin/Qt6.5.0-msvc-shared
-          mkdir 3rdParty
 
       - name: Install winget
         if: matrix.gpu_api == 'Vulkan'
