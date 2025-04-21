@@ -26,7 +26,7 @@ if (NOT ZSTD_FOUND)
     find_file(zstd_header_loc NAMES zstd.h
         HINTS "/usr/lib/include/zstd.h")
     if (zstd_header_loc)
-        cmake_path(GET zstd_include_dir PARENT_PATH zstd_header_loc)
+        cmake_path(GET zstd_header_loc PARENT_PATH zstd_include_dir)
         target_include_directories(zstd_manually_imported INTERFACE ${zstd_include_dir})
     endif ()
     #    cmake_path(GET zstd_lib_loc PARENT_PATH zstd_install_dir)
