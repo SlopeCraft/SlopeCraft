@@ -176,6 +176,14 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
     }
     ui.rangeSet(0, 100, 50);
 
+    // handle possible full-transparent pixel
+    {
+      convert_unit cu{ARGB32(0, 0, 0, 0), this->algo};
+      TokiColor_t tk;
+      tk.compute(cu, this->allowed_colorset);
+      this->color_hash_.emplace(cu, tk);
+    }
+
     if (this->dither) {
       switch (this->algo) {
         case ::SCL_convertAlgo::RGB:
@@ -271,6 +279,7 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
     auto it = this->color_hash_.find(convert_unit{current_color, this->algo});
     if (it == this->color_hash_.end()) {
       if (getA(current_color) > 0) {
+        // logical impossible
         abort();
       }
       return 0;
@@ -300,12 +309,15 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
         for (int64_t c = 0; c < cols(); c++) {
           const int64_t idx =
               (is_dest_col_major) ? (c * rows() + r) : (r * cols() + c);
-          const ARGB argb = this->dithered_image_(r, c);
-          auto it = this->color_hash_.find(convert_unit(argb, this->algo));
+          ARGB argb = this->dithered_image_(r, c);
+          // process full-transparent image
+          if (::getA(argb) <= 0) {
+            argb = ARGB32(0, 0, 0, 0);
+          }
+          auto it = this->color_hash_.find(convert_unit{argb, this->algo});
           if (it == this->color_hash_.end()) {
-#warning "Issue #130 crashed here"
+            // logical impossible
             abort();
-            return;
           }
 
           const auto color_id = it->second.color_id();
@@ -552,7 +564,6 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
     }
     // unreachable
     abort();
-    return 0;
   }
 
   template <SCL_convertAlgo cvt_algo>
@@ -572,7 +583,6 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
         if (it == this->color_hash_.end()) {
           // unreachable
           abort();
-          return;
         }
         for (int ch = 0; ch < 3; ch++) {
           dither_c3[ch](r + 1, c + 1) = it->first.to_c3()[ch];
@@ -580,12 +590,24 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
       }
     }
 
+    //    auto handle_full_transparent_pixel = [this](ARGB color) {
+    //      convert_unit cu{color, this->algo};
+    //      if (this->color_hash_.contains(cu)) {
+    //        return;
+    //      }
+    //      TokiColor_t tk;
+    //      tk.compute(cu, this->allowed_colorset);
+    //      this->color_hash_.emplace(cu, tk);
+    //    };
+
     // int64_t inserted_count = 0;
     bool is_dir_LR = true;
     for (int64_t row = 0; row < this->rows(); row++) {
       if (is_dir_LR)
         for (int64_t col = 0; col < this->cols(); col++) {
           if (::getA(this->raw_image_(row, col)) <= 0) {
+            // found full-transparent pixel
+            // handle_full_transparent_pixel(this->raw_image_(row, col));
             continue;
           }
 
@@ -627,6 +649,7 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
       else
         for (int64_t col = this->cols() - 1; col >= 0; col--) {
           if (::getA(this->raw_image_(row, col)) <= 0) {
+            // handle_full_transparent_pixel(this->raw_image_(row, col));
             continue;
           }
 

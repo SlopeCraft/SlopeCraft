@@ -128,13 +128,13 @@ class newTokiColor
   }
 
   template <typename = void>
-  void set_gpu_result(uint16_t __result_color_id,
-                      float __result_diff) noexcept {
+  void set_gpu_result(uint16_t result_color_id__,
+                      float result_diff__) noexcept {
     static_assert(!is_not_optical,
                   "set_gpu_result is only avaliable for VisualCraftL.");
 
-    this->ResultDiff = __result_diff;
-    this->result_color_id = __result_color_id;
+    this->ResultDiff = result_diff__;
+    this->result_color_id = result_color_id__;
   }
 
   auto compute(convert_unit cu, const allowed_t &allowed) noexcept {
