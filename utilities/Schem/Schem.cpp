@@ -162,7 +162,9 @@ Schem Schem::slice_no_check(std::span<const std::pair<int64_t, int64_t>, 3>
     extent[0] = xyz_index_range[0].second - xyz_index_range[0].first;
     extent[1] = xyz_index_range[2].second - xyz_index_range[2].first;
     extent[2] = xyz_index_range[1].second - xyz_index_range[1].first;
-    ret.xzy = this->xzy.slice(start, extent);
+    // avoid Tensor::resize which is problematic on mac
+    decltype(ret.xzy) temp{this->xzy.slice(start, extent)};
+    ret.xzy = std::move(temp);
   }
 
   for (auto &entity : this->entities) {

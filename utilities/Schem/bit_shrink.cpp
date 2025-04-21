@@ -156,19 +156,10 @@ bool process_block_id(
 
 void shrink_bytes_weSchem(std::span<const uint16_t> src, const int palette_max,
                           std::vector<uint8_t> *const dest) noexcept {
-  //  if (palette_max <= 128) {
-  //    dest->resize(src.size());
-  //    for (size_t idx = 0; idx < src.size(); idx++) {
-  //      dest->at(idx) = src[idx] & 0xFF;
-  //    }
-  //    return;
-  //}
-
   dest->reserve(src.size() * 2);
   dest->clear();
 
-  for (size_t idx = 0; idx < src.size(); idx++) {
-    uint16_t temp = src[idx];
+  for (const uint16_t temp : src) {
     if (temp < 128) {
       dest->emplace_back(temp);
     } else {
