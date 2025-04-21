@@ -14,7 +14,7 @@ add_library(Schem
     item.cpp
     item.h
 )
-target_compile_features(Schem PUBLIC cxx_std_17)
+target_compile_features(Schem PUBLIC cxx_std_14)
 
 find_package(Eigen3 REQUIRED)
 
