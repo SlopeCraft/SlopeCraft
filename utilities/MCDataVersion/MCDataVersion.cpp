@@ -22,7 +22,7 @@ This file is part of SlopeCraft.
 
 #include "MCDataVersion.h"
 
-#include <magic_enum.hpp>
+#include <magic_enum/magic_enum.hpp>
 
 MCDataVersion::MCDataVersion_t MCDataVersion::string_to_data_version(
     const char *str, bool *ok) noexcept {

@@ -8,7 +8,7 @@
 #include <zstd.h>
 #include <cereal/cereal.hpp>
 #include <cereal/archives/binary.hpp>
-#include <magic_enum.hpp>
+#include <magic_enum/magic_enum.hpp>
 
 #include "structure_3D.h"
 #include "color_table.h"

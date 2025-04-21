@@ -1,7 +1,7 @@
 #include "mushroom.h"
 #include <fmt/format.h>
 #include <process_block_id.h>
-#include <magic_enum.hpp>
+#include <magic_enum/magic_enum.hpp>
 #include <unordered_map>
 namespace lsi = libSchem::internal;
 

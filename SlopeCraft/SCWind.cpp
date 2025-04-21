@@ -4,7 +4,7 @@
 #include <QMessageBox>
 #include <QApplication>
 #include <QTableWidget>
-#include <magic_enum.hpp>
+#include <magic_enum/magic_enum.hpp>
 #include <QDesktopServices>
 
 const QString SCWind::update_url{
