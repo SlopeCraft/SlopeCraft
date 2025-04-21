@@ -30,32 +30,48 @@ This file is part of SlopeCraft.
 
 class alignas(32) colorset_optical_base {
  protected:
-  std::array<Eigen::ArrayXf, 3> __rgb;
-  std::array<Eigen::ArrayXf, 3> __hsv;
-  std::array<Eigen::ArrayXf, 3> __lab;
-  std::array<Eigen::ArrayXf, 3> __xyz;
+  std::array<Eigen::ArrayXf, 3> rgb_table;
+  std::array<Eigen::ArrayXf, 3> hsv_table;
+  std::array<Eigen::ArrayXf, 3> lab_table;
+  std::array<Eigen::ArrayXf, 3> xyz_table;
 
  private:
-  int _color_count;
+  int color_count_;
 
  public:
-  inline int color_count() const noexcept { return _color_count; }
+  inline int color_count() const noexcept { return color_count_; }
 
-  inline float RGB(int r, int c) const noexcept { return __rgb[c](r); }
-  inline auto rgb(int c) const noexcept { return __rgb[c].head(_color_count); }
-  inline const float *rgb_data(int c) const noexcept { return __rgb[c].data(); }
+  inline float RGB(int r, int c) const noexcept { return rgb_table[c](r); }
+  inline auto rgb(int c) const noexcept {
+    return rgb_table[c].head(color_count_);
+  }
+  inline const float *rgb_data(int c) const noexcept {
+    return rgb_table[c].data();
+  }
 
-  inline float HSV(int r, int c) const noexcept { return __hsv[c](r); }
-  inline auto hsv(int c) const noexcept { return __hsv[c].head(_color_count); }
-  inline const float *hsv_data(int c) const noexcept { return __hsv[c].data(); }
+  inline float HSV(int r, int c) const noexcept { return hsv_table[c](r); }
+  inline auto hsv(int c) const noexcept {
+    return hsv_table[c].head(color_count_);
+  }
+  inline const float *hsv_data(int c) const noexcept {
+    return hsv_table[c].data();
+  }
 
-  inline float Lab(int r, int c) const noexcept { return __lab[c](r); }
-  inline auto lab(int c) const noexcept { return __lab[c].head(_color_count); }
-  inline const float *lab_data(int c) const noexcept { return __lab[c].data(); }
+  inline float Lab(int r, int c) const noexcept { return lab_table[c](r); }
+  inline auto lab(int c) const noexcept {
+    return lab_table[c].head(color_count_);
+  }
+  inline const float *lab_data(int c) const noexcept {
+    return lab_table[c].data();
+  }
 
-  inline float XYZ(int r, int c) const noexcept { return __xyz[c](r); }
-  inline auto xyz(int c) const noexcept { return __xyz[c].head(_color_count); }
-  inline const float *xyz_data(int c) const noexcept { return __xyz[c].data(); }
+  inline float XYZ(int r, int c) const noexcept { return xyz_table[c](r); }
+  inline auto xyz(int c) const noexcept {
+    return xyz_table[c].head(color_count_);
+  }
+  inline const float *xyz_data(int c) const noexcept {
+    return xyz_table[c].data();
+  }
 
  protected:
   void resize(int new_color_count) noexcept {
@@ -64,13 +80,13 @@ class alignas(32) colorset_optical_base {
     }
 
     for (int c = 0; c < 3; c++) {
-      __rgb[c].setZero(new_color_count);
-      __hsv[c].setZero(new_color_count);
-      __lab[c].setZero(new_color_count);
-      __xyz[c].setZero(new_color_count);
+      rgb_table[c].setZero(new_color_count);
+      hsv_table[c].setZero(new_color_count);
+      lab_table[c].setZero(new_color_count);
+      xyz_table[c].setZero(new_color_count);
     }
 
-    this->_color_count = new_color_count;
+    this->color_count_ = new_color_count;
   }
 };
 
@@ -103,22 +119,23 @@ class colorset_optical_basic : public colorset_optical_base {
           rbgsrc_colmajor, new_color_count, 3);
 
       for (int c = 0; c < 3; c++) {
-        memcpy(this->__rgb[c].data(), rbgsrc_colmajor + (new_color_count * c),
+        memcpy(this->rgb_table[c].data(),
+               rbgsrc_colmajor + (new_color_count * c),
                sizeof(float) * new_color_count);
         //= rgbsrcmap.col(c);
       }
     }
 
     for (int coloridx = 0; coloridx < new_color_count; coloridx++) {
-      RGB2HSV(this->__rgb[0](coloridx), this->__rgb[1](coloridx),
-              this->__rgb[2](coloridx), this->__hsv[0](coloridx),
-              this->__hsv[1](coloridx), this->__hsv[2](coloridx));
-      RGB2XYZ(this->__rgb[0](coloridx), this->__rgb[1](coloridx),
-              this->__rgb[2](coloridx), this->__xyz[0](coloridx),
-              this->__xyz[1](coloridx), this->__xyz[2](coloridx));
-      XYZ2Lab(this->__xyz[0](coloridx), this->__xyz[1](coloridx),
-              this->__xyz[2](coloridx), this->__lab[0](coloridx),
-              this->__lab[1](coloridx), this->__lab[2](coloridx));
+      RGB2HSV(this->rgb_table[0](coloridx), this->rgb_table[1](coloridx),
+              this->rgb_table[2](coloridx), this->hsv_table[0](coloridx),
+              this->hsv_table[1](coloridx), this->hsv_table[2](coloridx));
+      RGB2XYZ(this->rgb_table[0](coloridx), this->rgb_table[1](coloridx),
+              this->rgb_table[2](coloridx), this->xyz_table[0](coloridx),
+              this->xyz_table[1](coloridx), this->xyz_table[2](coloridx));
+      XYZ2Lab(this->xyz_table[0](coloridx), this->xyz_table[1](coloridx),
+              this->xyz_table[2](coloridx), this->lab_table[0](coloridx),
+              this->lab_table[1](coloridx), this->lab_table[2](coloridx));
     }
 
     return true;
@@ -143,12 +160,12 @@ class colorset_optical_allowed : public colorset_optical_base {
   static constexpr uint16_t invalid_color_id = 0xFFFF;
 
  private:
-  Eigen::Array<uint16_t, Eigen::Dynamic, 1> __color_id;
+  Eigen::Array<uint16_t, Eigen::Dynamic, 1> color_id_;
 
   void resize(int new_color_count) {
     colorset_optical_base::resize(new_color_count);
-    __color_id.resize(new_color_count);
-    __color_id.fill(invalid_color_id);
+    color_id_.resize(new_color_count);
+    color_id_.fill(invalid_color_id);
   }
 
  public:
@@ -179,12 +196,12 @@ class colorset_optical_allowed : public colorset_optical_base {
       }
 
       for (int c = 0; c < 3; c++) {
-        this->__rgb[c][writeidx] = src.RGB(readidx, c);
-        this->__hsv[c][writeidx] = src.HSV(readidx, c);
-        this->__lab[c][writeidx] = src.Lab(readidx, c);
-        this->__xyz[c][writeidx] = src.XYZ(readidx, c);
+        this->rgb_table[c][writeidx] = src.RGB(readidx, c);
+        this->hsv_table[c][writeidx] = src.HSV(readidx, c);
+        this->lab_table[c][writeidx] = src.Lab(readidx, c);
+        this->xyz_table[c][writeidx] = src.XYZ(readidx, c);
       }
-      __color_id[writeidx] = src.color_id(readidx);
+      color_id_[writeidx] = src.color_id(readidx);
 
       writeidx++;
     }
@@ -193,8 +210,8 @@ class colorset_optical_allowed : public colorset_optical_base {
   }
 
   inline uint16_t color_id(uint16_t idx) const noexcept {
-    assert(idx < __color_id.size());
-    return __color_id[idx];
+    assert(idx < color_id_.size());
+    return color_id_[idx];
   }
 };
 

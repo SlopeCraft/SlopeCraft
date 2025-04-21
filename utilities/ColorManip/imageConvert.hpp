@@ -138,10 +138,10 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
 
   inline const auto &color_hash() const noexcept { return color_hash_; }
 
-  void set_raw_image(const ARGB *const data, const int64_t _rows,
-                     const int64_t _cols,
+  void set_raw_image(const ARGB *const data, const int64_t n_rows,
+                     const int64_t n_cols,
                      const bool is_col_major = true) noexcept {
-    if (_rows <= 0 || _cols <= 0) {
+    if (n_rows <= 0 || n_cols <= 0) {
       return;
     }
     if (data == nullptr) {
@@ -150,13 +150,19 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
 
     if (is_col_major) {
       Eigen::Map<const Eigen::Array<ARGB, Dynamic, Dynamic, Eigen::ColMajor>>
-          map(data, _rows, _cols);
+          map(data, n_rows, n_cols);
       this->raw_image_ = map;
     } else {
       Eigen::Map<const Eigen::Array<ARGB, Dynamic, Dynamic, Eigen::RowMajor>>
-          map(data, _rows, _cols);
+          map(data, n_rows, n_cols);
       this->raw_image_ = map;
     }
+    // filter full-transparent colors
+    //    for (ARGB &color : this->raw_image_.) {
+    //      if (getA(color) <= 0) {
+    //        color = ARGB32(0, 0, 0, 0);
+    //      }
+    //    }
   }
 
   bool convert_image(::SCL_convertAlgo algo_, bool dither_,
@@ -435,7 +441,7 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
 
     for (auto &pair : this->color_hash_) {
       if (!pair.second.is_result_computed()) {
-        if ((pair.first._ARGB & 0xFF'00'00'00) == 0) {
+        if ((pair.first.ARGB_ & 0xFF'00'00'00) == 0) {
           pair.second.compute(pair.first, this->allowed_colorset);
         } else {
           tasks.emplace_back(&pair);

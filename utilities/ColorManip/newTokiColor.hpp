@@ -43,17 +43,17 @@ inline constexpr float threshold = 1e-10f;
 }  // namespace
 struct convert_unit {
   convert_unit() = default;
-  explicit convert_unit(ARGB _a, ::SCL_convertAlgo _c) : _ARGB(_a), algo(_c) {}
-  ARGB _ARGB;
+  explicit convert_unit(ARGB a_, ::SCL_convertAlgo c_) : ARGB_(a_), algo(c_) {}
+  ARGB ARGB_;
   ::SCL_convertAlgo algo;
 
   inline bool operator==(const convert_unit another) const noexcept {
-    return (_ARGB == another._ARGB) && (algo == another.algo);
+    return (ARGB_ == another.ARGB_) && (algo == another.algo);
   }
 
   inline Eigen::Array3f to_c3() const noexcept {
     Eigen::Array3f c3;
-    const ::ARGB rawColor = this->_ARGB;
+    const ::ARGB rawColor = this->ARGB_;
     switch (this->algo) {
       case ::SCL_convertAlgo::RGB:
       case ::SCL_convertAlgo::RGB_Better:
@@ -84,18 +84,18 @@ struct convert_unit {
 
   template <class archive>
   void save(archive &ar) const {
-    ar(this->_ARGB, this->algo);
+    ar(this->ARGB_, this->algo);
   }
   template <class archive>
   void load(archive &ar) {
-    ar(this->_ARGB, this->algo);
+    ar(this->ARGB_, this->algo);
   }
 };
 
 struct hash_cvt_unit {
  public:
   inline size_t operator()(const convert_unit cu) const noexcept {
-    return std::hash<uint32_t>()(cu._ARGB) ^
+    return std::hash<uint32_t>()(cu.ARGB_) ^
            std::hash<uint8_t>()(uint8_t(cu.algo));
   }
 };
@@ -138,7 +138,7 @@ class newTokiColor
   }
 
   auto compute(convert_unit cu, const allowed_t &allowed) noexcept {
-    if (getA(cu._ARGB) == 0) {
+    if (getA(cu.ARGB_) == 0) {
       if constexpr (is_not_optical) {
         this->Result = 0;
         return this->Result;
@@ -175,7 +175,6 @@ class newTokiColor
 
       default:
         abort();
-        return result_t(0);
     }
   }
 
