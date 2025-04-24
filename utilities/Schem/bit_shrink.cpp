@@ -101,13 +101,15 @@ void bit_shrink_inverse_skip(void *const dest, const int64_t head_skip_bits,
 void shrink_bits(const uint16_t *const src, const size_t src_count,
                  const int block_types,
                  std::vector<uint64_t> *const dest) noexcept {
-  if (src == nullptr || dest == nullptr || src_count <= 0 || block_types <= 1) {
+  if (src == nullptr || dest == nullptr || src_count <= 0) {
     return;
   }
 
-  const int bits_per_element = std::ceil(std::log2(block_types));
+  const int bits_per_element =
+      std::max<int>(std::ceil(std::log2(std::max(block_types, 1))), 2);
 
   //::std::cout << "bits_per_element = " << bits_per_element << ::std::endl;
+  assert(bits_per_element >= 2);
   assert(bits_per_element <= 16);
   //  if (bits_per_element > 16) {
   //    exit(1);
@@ -124,9 +126,9 @@ void shrink_bits(const uint16_t *const src, const size_t src_count,
   memset(dest->data(), 0, bytes_required);
 
   const size_t head_skip_bits = bytes_required * 8 - total_bits;
-  //::std::cout << "total_bits = " << total_bits << '\n';
-  //::std::cout << "bytes_required = " << bytes_required << '\n';
-  //::std::cout << "head_skip_bits = " << head_skip_bits << '\n';
+  //  ::std::cout << "total_bits = " << total_bits << '\n';
+  //  ::std::cout << "bytes_required = " << bytes_required << '\n';
+  //  ::std::cout << "head_skip_bits = " << head_skip_bits << '\n';
 
   bit_shrink_inverse_skip(dest->data(), head_skip_bits, src, src_count,
                           bits_per_element);

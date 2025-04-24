@@ -51,11 +51,10 @@ int main() {
   }
 
   ids[0] = "minecraft:air";
-  ids.reserve(trash_id.size() + 1);
-
-  while (ids.size() < 254) {
-    ids.emplace_back(trash_id[ids.size() - 1].data());
-  }
+  //  ids.reserve(trash_id.size() + 1);
+  //  while (ids.size() < 254) {
+  //    ids.emplace_back(trash_id[ids.size() - 1].data());
+  //  }
   /*
   for (const auto &id : trash_id) {
     ids.emplace_back(id.data());
