@@ -19,6 +19,6 @@ FetchContent_Declare(magic_enum
     EXCLUDE_FROM_ALL
 )
 
-message(STATUS "Downaloding magic_enum......")
+message(STATUS "Downloading magic_enum......")
 
 FetchContent_MakeAvailable(magic_enum)
