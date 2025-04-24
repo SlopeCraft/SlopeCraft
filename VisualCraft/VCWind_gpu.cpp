@@ -39,10 +39,10 @@ QString get_cpu_name(bool &error) noexcept {
 #elif defined(__linux__)
   const char *command = "sh -c \"cat /proc/cpuinfo | grep name\"";
 #elif defined(__APPLE__)
-  const char * command="sysctl machdep.cpu.brand_string";
+  const char *command = "sysctl machdep.cpu.brand_string";
 #else
 #warning Unknown OS
-  const char * command=nullptr;
+  const char *command = nullptr;
   return {};
 #endif
 
@@ -92,19 +92,19 @@ QString get_cpu_name(bool &error) noexcept {
 
 #elif defined(__APPLE__)
   output.remove('\n');
-  auto split_out=output.split(':');
-  if (split_out.size()<2) {
+  auto split_out = output.split(':');
+  if (split_out.size() < 2) {
     return {};
   }
-  if (split_out[0]!="machdep.cpu.brand_string") {
+  if (split_out[0] != "machdep.cpu.brand_string") {
     return {};
   }
-  auto cpu_name=split_out[1];
+  auto cpu_name = split_out[1];
   cpu_name.remove('\t');
-  while(cpu_name.front()==' ') {
+  while (cpu_name.front() == ' ') {
     cpu_name.removeFirst();
   }
-  while(cpu_name.back()==' ') {
+  while (cpu_name.back() == ' ') {
     cpu_name.removeLast();
   }
 #else
@@ -229,17 +229,20 @@ void VCWind::on_combobox_select_device_currentIndexChanged(int idx) noexcept {
 
   const QString err = this->update_gpu_device(current_choice);
 
-  if (!err.isEmpty()) {
-    auto ret = QMessageBox::critical(
-        this, VCWind::tr("设置计算设备失败"),
-        tr("%1\n\n这不是一个致命错误，您可以选择其他的显卡，或者只使用 CPU "
-           "计算。点击 Ignore 将忽略这个错误，点击 Close 将关闭 VisualCraft")
-            .arg(err),
-        QMessageBox::StandardButtons{QMessageBox::StandardButton::Close,
-                                     QMessageBox::StandardButton::Ignore});
-    if (ret == QMessageBox::StandardButton::Close) {
-      exit(1);
-    }
+  if (err.isEmpty()) {
+    return;
+  }
+  QMessageBox msg_box{this};
+  msg_box.setStandardButtons(QMessageBox::StandardButtons{
+      QMessageBox::StandardButton::Close, QMessageBox::StandardButton::Ignore});
+  msg_box.setWindowTitle(VCWind::tr("设置计算设备失败"));
+  msg_box.setText(
+      tr("这不是一个致命错误，您可以选择其他的显卡，或者只使用 CPU "
+         "计算。点击 Ignore 将忽略这个错误，点击 Close 将关闭 VisualCraft"));
+  msg_box.setDetailedText(err);
+  auto ret = msg_box.exec();
+  if (ret == QMessageBox::StandardButton::Close) {
+    exit(1);
   }
 }
 
