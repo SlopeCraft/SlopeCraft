@@ -287,6 +287,17 @@
   },
   {
     "baseColor": 8,
+    "id": "minecraft:white_carpet",
+    "nameZH": "白色地毯",
+    "nameEN": "White carpet",
+    "icon": "white_wool.png",
+    "version": 0,
+    "idOld": "minecraft:carpet[color=white]",
+    "burnable": true,
+    "needStone": true
+  },
+  {
+    "baseColor": 8,
     "id": "minecraft:white_stained_glass",
     "nameZH": "白色染色玻璃",
     "nameEN": "White glass",
@@ -461,6 +472,17 @@
   },
   {
     "baseColor": 15,
+    "id": "minecraft:orange_carpet",
+    "nameZH": "橙色地毯",
+    "nameEN": "Orange carpet",
+    "icon": "orange_wool.png",
+    "version": 0,
+    "idOld": "minecraft:carpet[color=orange]",
+    "burnable": true,
+    "needStone": true
+  },
+  {
+    "baseColor": 15,
     "id": "minecraft:orange_stained_glass",
     "nameZH": "橙色染色玻璃",
     "nameEN": "Orange glass",
@@ -585,6 +607,17 @@
   },
   {
     "baseColor": 16,
+    "id": "minecraft:magenta_carpet",
+    "nameZH": "品红色地毯",
+    "nameEN": "Magenta carpet",
+    "icon": "magenta_wool.png",
+    "version": 0,
+    "idOld": "minecraft:carpet[color=magenta]",
+    "burnable": true,
+    "needStone": true
+  },
+  {
+    "baseColor": 16,
     "id": "minecraft:magenta_stained_glass",
     "nameZH": "品红色染色玻璃",
     "nameEN": "Magenta glass",
@@ -653,6 +686,17 @@
   },
   {
     "baseColor": 18,
+    "id": "minecraft:yellow_carpet",
+    "nameZH": "黄色地毯",
+    "nameEN": "Yellow carpet",
+    "icon": "yellow_wool.png",
+    "version": 0,
+    "idOld": "minecraft:carpet[color=yellow]",
+    "burnable": true,
+    "needStone": true
+  },
+  {
+    "baseColor": 18,
     "id": "minecraft:yellow_stained_glass",
     "nameZH": "黄色染色玻璃",
     "nameEN": "yellow glass",
@@ -691,6 +735,17 @@
   },
   {
     "baseColor": 19,
+    "id": "minecraft:lime_carpet",
+    "nameZH": "黄绿色地毯",
+    "nameEN": "Lime carpet",
+    "icon": "lime_wool.png",
+    "version": 0,
+    "idOld": "minecraft:carpet[color=lime]",
+    "burnable": true,
+    "needStone": true
+  },
+  {
+    "baseColor": 19,
     "id": "minecraft:lime_stained_glass",
     "nameZH": "黄绿色染色玻璃",
     "nameEN": "Lime glass",
@@ -718,6 +773,17 @@
     "icon": "pink_wool.png",
     "version": 0,
     "idOld": "minecraft:wool[color=pink]"
+  },
+  {
+    "baseColor": 20,
+    "id": "minecraft:pink_carpet",
+    "nameZH": "粉色地毯",
+    "nameEN": "Pink carpet",
+    "icon": "pink_wool.png",
+    "version": 0,
+    "idOld": "minecraft:carpet[color=pink]",
+    "burnable": true,
+    "needStone": true
   },
   {
     "baseColor": 20,
@@ -761,6 +827,17 @@
   },
   {
     "baseColor": 21,
+    "id": "minecraft:gray_carpet",
+    "nameZH": "灰色地毯",
+    "nameEN": "Gray carpet",
+    "icon": "gray_wool.png",
+    "version": 0,
+    "idOld": "minecraft:carpet[color=gray]",
+    "burnable": true,
+    "needStone": true
+  },
+  {
+    "baseColor": 21,
     "id": "minecraft:gray_stained_glass",
     "nameZH": "灰色染色玻璃",
     "nameEN": "Gray glass",
@@ -800,6 +877,17 @@
   },
   {
     "baseColor": 22,
+    "id": "minecraft:light_gray_carpet",
+    "nameZH": "浅灰色地毯",
+    "nameEN": "Light gray carpet",
+    "icon": "light_gray_wool.png",
+    "version": 0,
+    "idOld": "minecraft:carpet[color=light_gray]",
+    "burnable": true,
+    "needStone": true
+  },
+  {
+    "baseColor": 22,
     "id": "minecraft:light_gray_stained_glass",
     "nameZH": "淡灰色染色玻璃",
     "nameEN": "Light gray glass",
@@ -828,6 +916,17 @@
     "version": 0,
     "idOld": "minecraft:wool[color=cyan]",
     "burnable": true
+  },
+  {
+    "baseColor": 23,
+    "id": "minecraft:cyan_carpet",
+    "nameZH": "青色地毯",
+    "nameEN": "Cyan carpet",
+    "icon": "cyan_wool.png",
+    "version": 0,
+    "idOld": "minecraft:carpet[color=cyan]",
+    "burnable": true,
+    "needStone": true
   },
   {
     "baseColor": 23,
@@ -879,6 +978,17 @@
   },
   {
     "baseColor": 24,
+    "id": "minecraft:purple_carpet",
+    "nameZH": "紫色地毯",
+    "nameEN": "Purple carpet",
+    "icon": "purple_wool.png",
+    "version": 0,
+    "idOld": "minecraft:carpet[color=purple]",
+    "burnable": true,
+    "needStone": true
+  },
+  {
+    "baseColor": 24,
     "id": "minecraft:purple_stained_glass",
     "nameZH": "紫色染色玻璃",
     "nameEN": "Purple glass",
@@ -918,6 +1028,17 @@
   },
   {
     "baseColor": 25,
+    "id": "minecraft:blue_carpet",
+    "nameZH": "蓝色地毯",
+    "nameEN": "Blue carpet",
+    "icon": "blue_wool.png",
+    "version": 0,
+    "idOld": "minecraft:carpet[color=blue]",
+    "burnable": true,
+    "needStone": true
+  },
+  {
+    "baseColor": 25,
     "id": "minecraft:blue_stained_glass",
     "nameZH": "蓝色染色玻璃",
     "nameEN": "Blue glass",
@@ -946,6 +1067,17 @@
     "version": 0,
     "idOld": "minecraft:wool[color=brown]",
     "burnable": true
+  },
+  {
+    "baseColor": 26,
+    "id": "minecraft:brown_carpet",
+    "nameZH": "棕色地毯",
+    "nameEN": "Brown carpet",
+    "icon": "brown_wool.png",
+    "version": 0,
+    "idOld": "minecraft:carpet[color=brown]",
+    "burnable": true,
+    "needStone": true
   },
   {
     "baseColor": 26,
@@ -1006,6 +1138,17 @@
   },
   {
     "baseColor": 27,
+    "id": "minecraft:green_carpet",
+    "nameZH": "绿色地毯",
+    "nameEN": "Green carpet",
+    "icon": "green_wool.png",
+    "version": 0,
+    "idOld": "minecraft:carpet[color=green]",
+    "burnable": true,
+    "needStone": true
+  },
+  {
+    "baseColor": 27,
     "id": "minecraft:green_stained_glass",
     "nameZH": "绿色染色玻璃",
     "nameEN": "Green glass",
@@ -1042,6 +1185,17 @@
     "version": 0,
     "idOld": "minecraft:wool[color=red]",
     "burnable": true
+  },
+  {
+    "baseColor": 28,
+    "id": "minecraft:red_carpet",
+    "nameZH": "红色地毯",
+    "nameEN": "Red carpet",
+    "icon": "red_wool.png",
+    "version": 0,
+    "idOld": "minecraft:carpet[color=red]",
+    "burnable": true,
+    "needStone": true
   },
   {
     "baseColor": 28,
@@ -1118,6 +1272,17 @@
     "version": 0,
     "idOld": "minecraft:wool[color=black]",
     "burnable": true
+  },
+  {
+    "baseColor": 29,
+    "id": "minecraft:black_carpet",
+    "nameZH": "黑色地毯",
+    "nameEN": "Black carpet",
+    "icon": "black_wool.png",
+    "version": 0,
+    "idOld": "minecraft:carpet[color=black]",
+    "burnable": true,
+    "needStone": true
   },
   {
     "baseColor": 29,
