@@ -268,6 +268,15 @@
     "idOld": "minecraft:leaves2[variant=dark_oak,check_decay=false,decayable=false]"
   },
   {
+    "baseColor": 7,
+    "id": "minecraft:bamboo_block[axis=x]",
+    "nameZH": "竹块（侧面）",
+    "nameEN": "Bamboo block(axis=x)",
+    "icon": "bamboo_block.png",
+    "version": 20,
+    "burnable": true
+  },
+  {
     "baseColor": 8,
     "id": "minecraft:white_concrete",
     "nameZH": "白色混凝土",
@@ -1966,15 +1975,6 @@
     "nameZH": "竹板",
     "nameEN": "Bamboo planks",
     "icon": "bamboo_planks.png",
-    "version": 20,
-    "burnable": true
-  },
-  {
-    "baseColor": 18,
-    "id": "minecraft:bamboo_block[axis=x]",
-    "nameZH": "竹块（侧面）",
-    "nameEN": "Bamboo block(axis=x)",
-    "icon": "bamboo_block.png",
     "version": 20,
     "burnable": true
   },
