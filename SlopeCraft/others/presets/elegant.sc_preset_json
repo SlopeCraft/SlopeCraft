@@ -306,7 +306,7 @@
   },
   {
     "baseColor": 61,
-    "blockId": "minecraft:glow_lichen[down=true,east=false,north=false,south=false,up=false,waterlogged=false]",
+    "blockId": "minecraft:verdant_froglight[axis=y]",
     "enabled": true
   }
 ]

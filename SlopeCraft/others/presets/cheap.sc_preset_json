@@ -11,7 +11,7 @@
   },
   {
     "baseColor": 2,
-    "blockId": "minecraft:end_stone",
+    "blockId": "minecraft:birch_planks",
     "enabled": true
   },
   {
@@ -76,77 +76,77 @@
   },
   {
     "baseColor": 15,
-    "blockId": "minecraft:orange_concrete",
+    "blockId": "minecraft:orange_carpet",
     "enabled": true
   },
   {
     "baseColor": 16,
-    "blockId": "minecraft:magenta_concrete",
+    "blockId": "minecraft:magenta_carpet",
     "enabled": true
   },
   {
     "baseColor": 17,
-    "blockId": "minecraft:light_blue_concrete",
+    "blockId": "minecraft:light_blue_carpet",
     "enabled": true
   },
   {
     "baseColor": 18,
-    "blockId": "minecraft:yellow_concrete",
+    "blockId": "minecraft:yellow_carpet",
     "enabled": true
   },
   {
     "baseColor": 19,
-    "blockId": "minecraft:lime_concrete",
+    "blockId": "minecraft:lime_carpet",
     "enabled": true
   },
   {
     "baseColor": 20,
-    "blockId": "minecraft:pink_concrete",
+    "blockId": "minecraft:pink_carpet",
     "enabled": true
   },
   {
     "baseColor": 21,
-    "blockId": "minecraft:gray_concrete",
+    "blockId": "minecraft:gray_carpet",
     "enabled": true
   },
   {
     "baseColor": 22,
-    "blockId": "minecraft:light_gray_concrete",
+    "blockId": "minecraft:light_gray_carpet",
     "enabled": true
   },
   {
     "baseColor": 23,
-    "blockId": "minecraft:cyan_concrete",
+    "blockId": "minecraft:cyan_carpet",
     "enabled": true
   },
   {
     "baseColor": 24,
-    "blockId": "minecraft:purple_concrete",
+    "blockId": "minecraft:purple_carpet",
     "enabled": true
   },
   {
     "baseColor": 25,
-    "blockId": "minecraft:blue_concrete",
+    "blockId": "minecraft:blue_carpet",
     "enabled": true
   },
   {
     "baseColor": 26,
-    "blockId": "minecraft:brown_concrete",
+    "blockId": "minecraft:brown_carpet",
     "enabled": true
   },
   {
     "baseColor": 27,
-    "blockId": "minecraft:green_concrete",
+    "blockId": "minecraft:green_carpet",
     "enabled": true
   },
   {
     "baseColor": 28,
-    "blockId": "minecraft:red_concrete",
+    "blockId": "minecraft:red_carpet",
     "enabled": true
   },
   {
     "baseColor": 29,
-    "blockId": "minecraft:black_concrete",
+    "blockId": "minecraft:black_carpet",
     "enabled": true
   },
   {
