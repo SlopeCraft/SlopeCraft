@@ -281,24 +281,24 @@
           <property name="rightMargin">
            <number>0</number>
           </property>
-          <item row="2" column="0">
-           <widget class="QPushButton" name="pb_prefer_glass">
-            <property name="text">
-             <string>优先彩色玻璃</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QPushButton" name="pb_prefer_wool">
-            <property name="text">
-             <string>优先羊毛</string>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="1">
            <widget class="QPushButton" name="pb_prefer_planks">
             <property name="text">
              <string>优先木板</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QPushButton" name="pb_select_all">
+            <property name="text">
+             <string>全选</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QPushButton" name="pb_prefer_glass">
+            <property name="text">
+             <string>优先彩色玻璃</string>
             </property>
            </widget>
           </item>
@@ -309,13 +309,6 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
-           <widget class="QPushButton" name="pb_prefer_slabs">
-            <property name="text">
-             <string>优先台阶</string>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="0">
            <widget class="QPushButton" name="pb_prefer_concrete">
             <property name="text">
@@ -323,24 +316,45 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="2">
-           <widget class="QPushButton" name="pb_select_all">
+          <item row="2" column="3">
+           <widget class="QPushButton" name="pb_invselect">
             <property name="text">
-             <string>全选</string>
+             <string>反选</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="2">
+          <item row="2" column="1">
+           <widget class="QPushButton" name="pb_prefer_slabs">
+            <property name="text">
+             <string>优先台阶</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QPushButton" name="pb_prefer_wool">
+            <property name="text">
+             <string>优先羊毛</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
            <widget class="QPushButton" name="pb_deselect_all">
             <property name="text">
              <string>全不选</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="2">
-           <widget class="QPushButton" name="pb_invselect">
+          <item row="3" column="0">
+           <widget class="QPushButton" name="pb_prefer_carpets">
             <property name="text">
-             <string>反选</string>
+             <string>优先地毯</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QPushButton" name="pb_prefer_pressure_plates">
+            <property name="text">
+             <string>优先压力板</string>
             </property>
            </widget>
           </item>
@@ -357,7 +371,7 @@
              <x>0</x>
              <y>0</y>
              <width>750</width>
-             <height>653</height>
+             <height>624</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="vlayout_sa_blocklist"/>

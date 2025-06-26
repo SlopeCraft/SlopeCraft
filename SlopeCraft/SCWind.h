@@ -103,6 +103,8 @@ class SCWind : public QMainWindow {
   void on_pb_prefer_planks_clicked() noexcept;
   void on_pb_prefer_logs_clicked() noexcept;
   void on_pb_prefer_slabs_clicked() noexcept;
+  void on_pb_prefer_carpets_clicked() noexcept;
+  void on_pb_prefer_pressure_plates_clicked() noexcept;
 
   void on_pb_select_all_clicked() noexcept;
   void on_pb_deselect_all_clicked() noexcept;

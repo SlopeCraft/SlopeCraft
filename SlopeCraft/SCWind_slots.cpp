@@ -256,6 +256,18 @@ void SCWind::on_pb_prefer_slabs_clicked() noexcept {
           -> int { return impl_select_blk_by_id(blks, "_slab"); });
 }
 
+void SCWind::on_pb_prefer_carpets_clicked() noexcept {
+  this->ui->blm->select_block_by_callback(
+      [](const std::vector<const SlopeCraft::mc_block_interface *> &blks)
+          -> int { return impl_select_blk_by_id(blks, "_carpet"); });
+}
+
+void SCWind::on_pb_prefer_pressure_plates_clicked() noexcept {
+  this->ui->blm->select_block_by_callback(
+      [](const std::vector<const SlopeCraft::mc_block_interface *> &blks)
+          -> int { return impl_select_blk_by_id(blks, "_pressure_plate"); });
+}
+
 void SCWind::on_pb_select_all_clicked() noexcept {
   for (size_t bc = 0; bc < this->ui->blm->num_basecolor_widgets(); bc++) {
     this->ui->blm->basecolorwidget_at(bc)->set_enabled(true);
