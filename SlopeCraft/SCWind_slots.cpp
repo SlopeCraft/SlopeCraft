@@ -371,13 +371,14 @@ void SCWind::on_pb_save_converted_clicked() noexcept {
         goto save_image;
       }
 
-      auto ret = QMessageBox::warning(
+      const auto ret = QMessageBox::warning(
           this, tr("将要覆盖已存在的图像"),
           tr("%1将被覆盖，确认覆盖吗？").arg(filename),
           QMessageBox::StandardButtons{QMessageBox::StandardButton::Yes,
                                        QMessageBox::StandardButton::No,
                                        QMessageBox::StandardButton::YesToAll,
                                        QMessageBox::StandardButton::NoToAll});
+
       bool replace;
       switch (ret) {
         case QMessageBox::StandardButton::Yes:
@@ -396,7 +397,7 @@ void SCWind::on_pb_save_converted_clicked() noexcept {
           break;
       }
 
-      if (!replace) {
+      if (not replace) {
         continue;
       }
     }
@@ -707,13 +708,17 @@ void SCWind::on_pb_export_file_clicked() noexcept {
     }
 
     if (exisiting_num > 0) {
-      const auto ret = QMessageBox::warning(
-          this, tr("%1 个文件将被替换").arg(exisiting_num),
-          tr("以下文件将被替换：\n%1\n点击 Yes "
-             "将替换它们，点击 No 将取消这次导出。")
-              .arg(to_be_replaced),
-          QMessageBox::StandardButtons{QMessageBox::StandardButton::Yes,
-                                       QMessageBox::StandardButton::No});
+      QMessageBox msg_box{this};
+      {
+        msg_box.setStandardButtons(QMessageBox::StandardButtons{
+            QMessageBox::StandardButton::Yes, QMessageBox::StandardButton::No});
+        msg_box.setWindowTitle(tr("%1 个文件将被替换").arg(exisiting_num));
+        msg_box.setText(
+            tr("以下文件将被替换：\n点击 Yes "
+               "将替换它们，点击 No 将取消这次导出。"));
+        msg_box.setDetailedText(to_be_replaced);
+      }
+      const auto ret = msg_box.exec();
 
       if (ret != QMessageBox::StandardButton::Yes) {
         return;
