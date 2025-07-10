@@ -344,29 +344,38 @@ void color_table_impl::stat_blocks(const structure_3D &s,
   const auto &structure = dynamic_cast<const structure_3D_impl &>(s);
 
   const auto schem_stat = structure.schem.stat_blocks();
-  for (size_t schem_blk_id = 0; schem_blk_id < structure.schem.palette_size();
-       schem_blk_id++) {
-    if (schem_blk_id == 0) {  // ignore air
-      continue;
-    }
-    assert(schem_blk_id > 0);
-    if (schem_stat[schem_blk_id] <= 0) {
+  assert(schem_stat.size() == structure.palette_length());
+  assert(schem_stat.size() == structure.schem.palette().size());
+  for (size_t idx_table = 0; idx_table < this->blocks.size(); idx_table++) {
+    const auto &blk_info = this->blocks[idx_table];
+    size_t count = 0;
+    blkid::char_range pure_id;
+    const bool ok = blkid::process_blk_id(
+        blk_info.idForVersion(this->mc_version()), nullptr, &pure_id, nullptr);
+    assert(ok);
+    if (not ok) {
       continue;
     }
 
-    const auto strid = structure.schem.palette()[schem_blk_id];
-    const auto blkp = this->find_block_for_index(schem_blk_id - 1, strid);
-    if (blkp == nullptr) {
-      std::cerr << fmt::format(
-          "Failed to find \"{}\" in color_table, this type of block will not "
-          "be counted.\n",
-          strid);
-      continue;
+    for (size_t idx_schem = 0; idx_schem < structure.schem.palette_size();
+         idx_schem++) {
+      auto &schem_blkid = structure.schem.palette()[idx_schem];
+      if (schem_blkid == "minecraft:air") {
+        continue;
+      }
+      assert(not schem_blkid.empty());
+      blkid::char_range pure_id_schem;
+      const bool ok_schem =
+          blkid::process_blk_id(schem_blkid, nullptr, &pure_id_schem, nullptr);
+      assert(ok_schem);
+      if (not ok_schem) {
+        continue;
+      }
+      if (std::string_view{pure_id} == std::string_view{pure_id_schem}) {
+        count += schem_stat[idx_schem];
+      }
     }
-    const ptrdiff_t index_in_palette = blkp - this->blocks.data();
-    assert(index_in_palette >= 0);
-    assert(index_in_palette < this->blocks.size());
-    buffer[index_in_palette] += schem_stat[schem_blk_id];
+    buffer[idx_table] = count;
   }
 }
 
@@ -374,7 +383,7 @@ std::string color_table_impl::impl_generate_test_schematic(
     std::string_view filename,
     const test_blocklist_options &option) const noexcept {
   if (!filename.ends_with(".nbt")) {
-    return "File name should ends with \".nbt\"";
+    return "File name should end with \".nbt\"";
   }
   libSchem::Schem test;
   test.set_MC_major_version_number(this->mc_version_);
@@ -430,14 +439,16 @@ std::string color_table_impl::impl_generate_test_schematic(
     test(block_counter[base].size(), 1, base) = 1;  // glass block
   }
 
-  SCL_errorFlag err;
-  std::string detail;
-  const bool success = test.export_structure(filename, true, &err, &detail);
+  //  SCL_errorFlag err;
+  //  std::string detail;
+  auto ok = test.export_structure(filename, true);
+  //  const bool success = test.export_structure(filename, true, &err, &detail);
 
-  if (!success) {
+  if (not ok) {
+    auto &err = ok.error();
     return fmt::format(
         "Failed to export structure file {}, error code = {}, detail: {}",
-        filename, int(err), detail);
+        filename, int(err.first), err.second);
   } else {
     return {};
   }
