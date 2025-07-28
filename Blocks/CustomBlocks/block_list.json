@@ -425,7 +425,8 @@
     "nameZH": "苔藓块",
     "nameEN": "Moss block",
     "icon": "moss_block.png",
-    "version": 17
+    "version": 17,
+    "endermanPickable": true
   },
   {
     "baseColor": 29,

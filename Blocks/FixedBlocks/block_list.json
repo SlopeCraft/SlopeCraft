@@ -1648,7 +1648,8 @@
     "nameZH": "泥巴",
     "nameEN": "Mud",
     "icon": "mud.png",
-    "version": 19
+    "version": 19,
+    "endermanPickable": true
   },
   {
     "baseColor": 46,
