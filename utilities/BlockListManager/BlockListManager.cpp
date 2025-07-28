@@ -79,7 +79,7 @@ BlockListManager::impl_addblocklist(const QByteArray &file_content) noexcept {
   errmsg.resize(sd_err.size);
   warning.resize(sd_warn.size);
 
-  if (not errmsg.empty()) {
+  if ((not errmsg.empty()) or (not warning.empty())) {
     errmsg.append(QStringLiteral("\npwd: %1")
                       .arg(QFileInfo{"."}.absolutePath())
                       .toLocal8Bit());
@@ -140,21 +140,6 @@ bool BlockListManager::add_blocklist(QString filename) noexcept {
   }
   this->blockslists.emplace_back(name, std::move(tmp));
   return true;
-
-  //  for (auto &encoding : {filename.toLocal8Bit(), filename.toUtf8()}) {
-  //    std::unique_ptr<SlopeCraft::block_list_interface, BlockListDeleter> tmp
-  //    =
-  //        this->impl_addblocklist(encoding.data());
-  //
-  //    if (not tmp) {
-  //      continue;
-  //    }
-  //
-  //    this->blockslists.emplace_back(name, std::move(tmp));
-  //    return true;
-  //  }
-
-  return false;
 }
 
 void BlockListManager::finish_blocklist() noexcept {

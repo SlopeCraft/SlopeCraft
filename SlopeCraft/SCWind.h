@@ -86,6 +86,7 @@ class SCWind : public QMainWindow {
     flat_diagram,
     data_file
   };
+
  private slots:
   void on_pb_add_image_clicked() noexcept;
   void on_pb_remove_image_clicked() noexcept;
