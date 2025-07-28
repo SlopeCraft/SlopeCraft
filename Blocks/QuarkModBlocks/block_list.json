@@ -269,7 +269,7 @@
     "version": 14
   },
   {
-    "baseColor": 41,
+    "baseColor": 42,
     "id": "quark:pink_shingles_slab[type=bottom]",
     "nameZH": "粉色陶瓦砖瓦台阶",
     "nameEN": "Pink shingles slab",
@@ -277,7 +277,7 @@
     "version": 14
   },
   {
-    "baseColor": 42,
+    "baseColor": 41,
     "id": "quark:lime_shingles_slab[type=bottom]",
     "nameZH": "黄绿色陶瓦砖瓦台阶",
     "nameEN": "Lime shingles slab",
