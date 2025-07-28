@@ -214,6 +214,14 @@
     "wallUseable": false
   },
   {
+    "baseColor": 6,
+    "id": "minecraft:pale_oak_leaves[distance=7,persistent=true]",
+    "nameZH": "苍白橡树树叶",
+    "nameEN": "Pale oak leaves",
+    "icon": "pale_oak_leaves.png",
+    "version": 21
+  },
+  {
     "baseColor": 7,
     "id": "minecraft:oak_leaves[distance=7,persistent=true]",
     "nameZH": "橡树树叶",
@@ -460,6 +468,24 @@
     "nameEN": "Target",
     "icon": "target.png",
     "version": 16
+  },
+  {
+    "baseColor": 14,
+    "id": "minecraft:pale_oak_planks",
+    "nameZH": "苍白橡木木板",
+    "nameEN": "pale oak plank",
+    "icon": "pale_oak_planks.png",
+    "version": 21,
+    "burnable": true
+  },
+  {
+    "baseColor": 14,
+    "id": "minecraft:pale_oak_slab[type=top,waterlogged=false]",
+    "nameZH": "苍白橡木台阶",
+    "nameEN": "Pale oak slab",
+    "icon": "pale_oak_slab.png",
+    "version": 21,
+    "burnable": true
   },
   {
     "baseColor": 15,
@@ -917,6 +943,14 @@
     "idOld": "minecraft:carpet[color=light_gray]",
     "burnable": true,
     "needStone": true
+  },
+  {
+    "baseColor": 22,
+    "id": "minecraft:pale_moss_block",
+    "nameZH": "苍白苔藓块",
+    "nameEN": "Pale moss block",
+    "icon": "pale_moss_block.png",
+    "version": 21
   },
   {
     "baseColor": 23,
@@ -1529,6 +1563,30 @@
     "icon": "orange_terracotta.png",
     "version": 0,
     "idOld": "minecraft:stained_hardened_clay[color=orange]"
+  },
+  {
+    "baseColor": 37,
+    "id": "minecraft:redstone_lamp",
+    "nameZH": "红石灯",
+    "nameEN": "Redstone lamp",
+    "icon": "redstone_lamp.png",
+    "version": 21
+  },
+  {
+    "baseColor": 37,
+    "id": "minecraft:resin_block",
+    "nameZH": "树脂块",
+    "nameEN": "Resin block",
+    "icon": "block_of_resin.png",
+    "version": 21
+  },
+  {
+    "baseColor": 37,
+    "id": "minecraft:resin_bricks",
+    "nameZH": "树脂砖",
+    "nameEN": "Resin brick",
+    "icon": "resin_bricks.png",
+    "version": 21
   },
   {
     "baseColor": 38,
