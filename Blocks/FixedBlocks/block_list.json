@@ -950,7 +950,8 @@
     "nameZH": "苍白苔藓块",
     "nameEN": "Pale moss block",
     "icon": "pale_moss_block.png",
-    "version": 21
+    "version": 21,
+    "endermanPickable": true
   },
   {
     "baseColor": 23,
