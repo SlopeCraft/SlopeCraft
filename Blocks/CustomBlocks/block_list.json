@@ -9,7 +9,7 @@
     // id 是这种方块的 id，也是必填项，最好附带完整的方块状态，必须加 minecraft:前缀",
     "id": "minecraft:waxed_cut_copper_slab[type=top,waterlogged=false]",
     // nameZH 是方块中文名称，必填",
-    "nameZH": "涂蜡切制铜台阶",
+    "nameZH": "涂蜡的切制铜台阶",
     // nameEN 是方块英文名称，必填",
     "nameEN": "Waxed cut copper slab",
     // icon 是方块对应图片的文件名，它应当放在 CustomBlocks 文件夹下。必填",
@@ -67,7 +67,7 @@
   {
     "baseColor": 11,
     "id": "minecraft:smooth_stone_slab[type=top,waterlogged=false]",
-    "nameZH": "平滑石台阶",
+    "nameZH": "平滑石头台阶",
     "nameEN": "Smooth stone slab",
     "icon": "smooth_stone_slab.png",
     "version": 0,
