@@ -337,7 +337,7 @@
   {
     "baseColor": 9,
     "id": "minecraft:clay",
-    "nameZH": "黏土块",
+    "nameZH": "黏土",
     "nameEN": "Clay block",
     "icon": "clay.png",
     "version": 0,
@@ -593,7 +593,7 @@
   {
     "baseColor": 15,
     "id": "minecraft:waxed_copper_block",
-    "nameZH": "涂蜡铜块",
+    "nameZH": "涂蜡的铜块",
     "nameEN": "Waxed copper",
     "icon": "waxed_copper_block.png",
     "version": 17
@@ -601,7 +601,7 @@
   {
     "baseColor": 15,
     "id": "minecraft:waxed_cut_copper",
-    "nameZH": "涂蜡切制铜块",
+    "nameZH": "涂蜡的切制铜块",
     "nameEN": "Waxed cut copper",
     "icon": "waxed_cut_copper.png",
     "version": 17
@@ -609,7 +609,7 @@
   {
     "baseColor": 15,
     "id": "minecraft:waxed_copper_bulb",
-    "nameZH": "涂蜡铜灯",
+    "nameZH": "涂蜡的铜灯",
     "nameEN": "Waxed copper bulb",
     "icon": "copper_bulb.png",
     "version": 21
@@ -617,7 +617,7 @@
   {
     "baseColor": 15,
     "id": "minecraft:waxed_copper_grate",
-    "nameZH": "涂蜡铜格栅",
+    "nameZH": "涂蜡的铜格栅",
     "nameEN": "Waxed copper grate",
     "icon": "copper_grate.png",
     "version": 21
@@ -936,7 +936,7 @@
   {
     "baseColor": 22,
     "id": "minecraft:light_gray_carpet",
-    "nameZH": "浅灰色地毯",
+    "nameZH": "淡灰色地毯",
     "nameEN": "Light gray carpet",
     "icon": "light_gray_wool.png",
     "version": 0,
@@ -950,7 +950,8 @@
     "nameZH": "苍白苔藓块",
     "nameEN": "Pale moss block",
     "icon": "pale_moss_block.png",
-    "version": 21
+    "version": 21,
+    "endermanPickable": true
   },
   {
     "baseColor": 23,
@@ -1654,7 +1655,7 @@
   {
     "baseColor": 44,
     "id": "minecraft:waxed_exposed_copper",
-    "nameZH": "斑驳的涂蜡铜块",
+    "nameZH": "涂蜡的斑驳铜块",
     "nameEN": "Waxed exposed copper",
     "icon": "waxed_exposed_copper.png",
     "version": 17
@@ -1662,7 +1663,7 @@
   {
     "baseColor": 44,
     "id": "minecraft:waxed_exposed_cut_copper",
-    "nameZH": "斑驳的涂蜡切制铜块",
+    "nameZH": "涂蜡的斑驳切制铜块",
     "nameEN": "Waxed exposed cut copper",
     "icon": "waxed_exposed_cut_copper.png",
     "version": 17
@@ -1678,7 +1679,7 @@
   {
     "baseColor": 44,
     "id": "minecraft:waxed_exposed_copper_bulb",
-    "nameZH": "斑驳的涂蜡铜灯",
+    "nameZH": "涂蜡的斑驳铜灯",
     "nameEN": "Waxed exposed copper bulb",
     "icon": "exposed_copper_bulb.png",
     "version": 21
@@ -1686,7 +1687,7 @@
   {
     "baseColor": 44,
     "id": "minecraft:waxed_exposed_copper_grate",
-    "nameZH": "斑驳的涂蜡铜格栅",
+    "nameZH": "涂蜡的斑驳铜格栅",
     "nameEN": "Waxed exposed copper grate",
     "icon": "exposed_copper_grate.png",
     "version": 21
@@ -1830,7 +1831,7 @@
   {
     "baseColor": 55,
     "id": "minecraft:waxed_oxidized_copper",
-    "nameZH": "氧化的涂蜡铜块",
+    "nameZH": "涂蜡的氧化铜块",
     "nameEN": "Waxed oxidized copper",
     "icon": "waxed_oxidized_copper.png",
     "version": 17
@@ -1838,7 +1839,7 @@
   {
     "baseColor": 55,
     "id": "minecraft:waxed_oxidized_cut_copper",
-    "nameZH": "氧化的涂蜡切制铜块",
+    "nameZH": "涂蜡的氧化切制铜块",
     "nameEN": "Waxed oxidized cut copper",
     "icon": "waxed_oxidized_cut_copper.png",
     "version": 17
@@ -1846,7 +1847,7 @@
   {
     "baseColor": 55,
     "id": "minecraft:waxed_oxidized_copper_bulb",
-    "nameZH": "氧化的涂蜡铜灯",
+    "nameZH": "涂蜡的氧化铜灯",
     "nameEN": "Waxed oxidized copper bulb",
     "icon": "oxidized_copper_bulb.png",
     "version": 21
@@ -1854,7 +1855,7 @@
   {
     "baseColor": 55,
     "id": "minecraft:waxed_oxidized_copper_grate",
-    "nameZH": "氧化的涂蜡铜格栅",
+    "nameZH": "涂蜡的氧化铜格栅",
     "nameEN": "Waxed oxidized copper grate",
     "icon": "oxidized_copper_grate.png",
     "version": 21
@@ -1880,7 +1881,7 @@
   {
     "baseColor": 56,
     "id": "minecraft:waxed_weathered_copper",
-    "nameZH": "锈蚀的涂蜡铜块",
+    "nameZH": "涂蜡的锈蚀铜块",
     "nameEN": "Waxed weathered copper",
     "icon": "waxed_weathered_copper.png",
     "version": 17
@@ -1888,7 +1889,7 @@
   {
     "baseColor": 56,
     "id": "minecraft:waxed_weathered_cut_copper",
-    "nameZH": "锈蚀的涂蜡切制铜块",
+    "nameZH": "涂蜡的锈蚀切制铜块",
     "nameEN": "Waxed weathered cut copper",
     "icon": "waxed_weathered_cut_copper.png",
     "version": 17
@@ -1896,7 +1897,7 @@
   {
     "baseColor": 56,
     "id": "minecraft:waxed_weathered_copper_bulb",
-    "nameZH": "锈蚀的涂蜡铜灯",
+    "nameZH": "涂蜡的锈蚀铜灯",
     "nameEN": "Waxed weathered copper bulb",
     "icon": "weathered_copper_bulb.png",
     "version": 21
@@ -1904,7 +1905,7 @@
   {
     "baseColor": 56,
     "id": "minecraft:waxed_weathered_copper_grate",
-    "nameZH": "锈蚀的涂蜡铜格栅",
+    "nameZH": "涂蜡的锈蚀铜格栅",
     "nameEN": "Waxed weathered copper grate",
     "icon": "weathered_copper_grate.png",
     "version": 21
@@ -2015,7 +2016,7 @@
   {
     "baseColor": 43,
     "id": "minecraft:cherry_wood",
-    "nameZH": "樱花木头",
+    "nameZH": "樱花原木",
     "nameEN": "Cherry wood",
     "icon": "cherry_log.png",
     "version": 20,
@@ -2033,7 +2034,7 @@
   {
     "baseColor": 42,
     "id": "minecraft:stripped_cherry_wood[axis=y]",
-    "nameZH": "去皮樱花木头",
+    "nameZH": "去皮樱花原木",
     "nameEN": "Stripped cherry wood",
     "icon": "stripped_cherry_log.png",
     "version": 20,
