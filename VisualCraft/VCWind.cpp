@@ -698,7 +698,7 @@ void VCWind::on_tb_remove_images_clicked() noexcept {
 void VCWind::setup_image(const QImage &img) noexcept {
   this->setup_allowed_colorset();
   bool ok = this->kernel->set_image(
-      img.height(), img.width(),
+      img.width(), img.height(),
       reinterpret_cast<const uint32_t *>(img.scanLine(0)), true);
   if (!ok) {
     const auto ret = QMessageBox::critical(
@@ -761,7 +761,7 @@ void VCWind::show_image(decltype(image_cache)::iterator it) noexcept {
     return;
   }
 
-  QImage img(cols, rows, QImage::Format_ARGB32);
+  QImage img(rows, cols, QImage::Format_ARGB32);
   memset(img.scanLine(0), 0xFF, img.sizeInBytes());
 
   this->kernel->converted_image(reinterpret_cast<uint32_t *>(img.scanLine(0)),
