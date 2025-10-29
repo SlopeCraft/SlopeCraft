@@ -36,7 +36,7 @@ jobs:
         run: |
           brew install llvm
       - name: Check clang
-        run: /usr/local/opt/llvm/bin/clang --version
+        run: /usr/local/opt/llvm/bin/clang -v
       - name: echo matrix variables (build_type = ${{ matrix.build_type }})
         run: |
           echo $BUILD_TYPE

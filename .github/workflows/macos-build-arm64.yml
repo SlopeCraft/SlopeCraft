@@ -39,6 +39,9 @@ jobs:
         run: |
           brew install llvm boost ninja libpng xsimd p7zip libzip zstd xz eigen boost tl-expected magic_enum fmt sevenzip
 
+      - name: Check clang
+        run: /opt/homebrew/opt/llvm/bin/clang -v
+
       #https://github.com/SlopeCraft/QtBinaries/releases/download/qt6.6.0-arm64-apple-darwin/qt6.6.0-static-arm64-apple-darwin.tar.xz
       - name: Install qt6.6.0-static
         run: |
