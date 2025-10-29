@@ -714,9 +714,22 @@ void SCWind::on_pb_export_file_clicked() noexcept {
             QMessageBox::StandardButton::Yes, QMessageBox::StandardButton::No});
         msg_box.setWindowTitle(tr("%1 个文件将被替换").arg(exisiting_num));
         msg_box.setText(
-            tr("以下文件将被替换：\n点击 Yes "
-               "将替换它们，点击 No 将取消这次导出。"));
+            tr("%1 个文件将被替换。点击 Show Details 可以查看它们。\n点击 Yes "
+               "将替换它们，点击 No 将取消这次导出。")
+                .arg(exisiting_num));
         msg_box.setDetailedText(to_be_replaced);
+        // Click the button "Show Detail". If not found, let it go
+        for (QAbstractButton *abtn : msg_box.buttons()) {
+          QPushButton *btn = dynamic_cast<QPushButton *>(abtn);
+          if (not btn) [[unlikely]] {
+            continue;
+          }
+          const auto str = btn->text().toLower();
+          if (str.contains("detail")) {
+            emit btn->click();
+            break;
+          }
+        }
       }
       const auto ret = msg_box.exec();
 
