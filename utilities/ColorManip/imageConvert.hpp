@@ -311,10 +311,14 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
     }
 
     if (data_dest != nullptr) {
+      Eigen::Map<
+          Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>
+          dest{data_dest, rows(), cols()};
       for (int64_t r = 0; r < rows(); r++) {
         for (int64_t c = 0; c < cols(); c++) {
-          const int64_t idx =
-              (is_dest_col_major) ? (c * rows() + r) : (r * cols() + c);
+          //          const int64_t idx =
+          //              (is_dest_col_major) ? (r * cols() + c) : (c * rows() +
+          //              r);
           ARGB argb = this->dithered_image_(r, c);
           // process full-transparent image
           if (::getA(argb) <= 0) {
@@ -329,14 +333,19 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
           const auto color_id = it->second.color_id();
           const auto color_index =
               basic_colorset.colorindex_of_colorid(color_id);
+          ARGB color;
           if (color_index != allowed_colorset_t::invalid_color_id) {
-            data_dest[idx] = RGB2ARGB(basic_colorset.RGB(color_index, 0),
-                                      basic_colorset.RGB(color_index, 1),
-                                      basic_colorset.RGB(color_index, 2));
+            color = RGB2ARGB(basic_colorset.RGB(color_index, 0),
+                             basic_colorset.RGB(color_index, 1),
+                             basic_colorset.RGB(color_index, 2));
           } else {
-            data_dest[idx] = 0x00'00'00'00;
+            color = 0x00'00'00'00;
           }
+          dest(r, c) = color;
         }
+      }
+      if (is_dest_col_major) {
+        dest.transposeInPlace();
       }
     }
   }

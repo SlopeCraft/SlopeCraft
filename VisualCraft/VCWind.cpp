@@ -750,14 +750,16 @@ void VCWind::show_image(decltype(image_cache)::iterator it) noexcept {
   const bool ok = this->kernel->convert(this->current_selected_algo(),
                                         this->ui->cb_algo_dither->isChecked());
   if (!ok) {
-    assert(false);
+    it->second.second = QImage{};
+    this->ui->lable_converted->setPixmap(QPixmap{});
     return;
   }
 
-  int64_t rows, cols;
+  int64_t rows = 0, cols = 0;
   this->kernel->converted_image(nullptr, &rows, &cols, true);
   if (rows <= 0 || cols <= 0) {
-    assert(false);
+    it->second.second = QImage{};
+    this->ui->lable_converted->setPixmap(QPixmap{});
     return;
   }
 

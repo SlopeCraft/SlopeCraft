@@ -397,7 +397,7 @@ void VCWind::on_pb_execute_clicked() noexcept {
         ->setText(
             QStringLiteral("%i %").arg(100.0f * task_finished / task_num));
 
-    QImage new_img(it->second.first.height(), it->second.first.width(),
+    QImage new_img(it->second.first.width(), it->second.first.height(),
                    QImage::Format_ARGB32);
     this->kernel->converted_image((uint32_t *)new_img.scanLine(0), nullptr,
                                   nullptr, true);

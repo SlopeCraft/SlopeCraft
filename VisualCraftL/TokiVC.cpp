@@ -710,7 +710,7 @@ void TokiVC::converted_image(uint32_t *dest, int64_t *rows, int64_t *cols,
 
   // constexpr size_t sz = sizeof(decltype(this->img_cvter)::TokiColor_t);
 
-  this->img_cvter.converted_image(dest, rows, cols, !write_dest_row_major);
+  this->img_cvter.converted_image(dest, rows, cols, not write_dest_row_major);
 }
 
 bool TokiVC::set_gpu_resource(const VCL_GPU_Platform *p,
