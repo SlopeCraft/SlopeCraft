@@ -868,14 +868,6 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
         <translation>This is not a fatal error, you can use other GPUs or your CPU instead. Click Ignore will ignore this error, or click Close to close VisualCraft</translation>
     </message>
     <message>
-        <source>%1
-
-这不是一个致命错误，您可以选择其他的显卡，或者只使用 CPU 计算。点击 Ignore 将忽略这个错误，点击 Close 将关闭 VisualCraft</source>
-        <translation type="vanished">%1
-
-This is not a fatal error, you can use other GPUs or your CPU instead. Click Ignore will ignore this error, or click Close to close VisualCraft</translation>
-    </message>
-    <message>
         <location filename="../VCWind_gpu.cpp" line="264"/>
         <source>创建 GPU 平台失败，平台序号为%1，设备序号为%2</source>
         <translation>Failed to create GPU platform, Platform index = %1, device index = %2</translation>

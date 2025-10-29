@@ -43,24 +43,24 @@
         <translation>Unable to read zip archive &quot;%1&quot;, it might be deleted accidentally.</translation>
     </message>
     <message>
-        <location filename="../BlockListManager.cpp" line="185"/>
+        <location filename="../BlockListManager.cpp" line="170"/>
         <source>无法删除方块列表 &quot;%1&quot;，没有加载同名的方块列表。已加载：%2</source>
         <translation>Failed to load block list \&quot;%1\&quot;, no block list for such name. Loaded: %2</translation>
     </message>
     <message>
-        <location filename="../BlockListManager.cpp" line="232"/>
-        <location filename="../BlockListManager.cpp" line="256"/>
+        <location filename="../BlockListManager.cpp" line="217"/>
+        <location filename="../BlockListManager.cpp" line="241"/>
         <source>加载预设错误</source>
         <translation>Failed to load preset</translation>
     </message>
     <message>
-        <location filename="../BlockListManager.cpp" line="233"/>
+        <location filename="../BlockListManager.cpp" line="218"/>
         <source>预设文件包含的基色数量 (%1) 与实际情况 (%2) 不符</source>
         <translation>There &apos;re %1 basecolors in the preset file, while actually there are
                 %2 basecolors</translation>
     </message>
     <message>
-        <location filename="../BlockListManager.cpp" line="257"/>
+        <location filename="../BlockListManager.cpp" line="242"/>
         <source>预设中为基色%1指定的方块 id 是&quot;%2&quot;，没有找到这个方块 id</source>
         <translation>Block &quot;%2&quot; is assigned to base color %1, but failed to find a
                 block with such id</translation>

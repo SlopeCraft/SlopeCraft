@@ -918,7 +918,7 @@ Map data are stored in map data files, assembled maps can take effect only after
     </message>
     <message>
         <location filename="../SCWind.ui" line="1714"/>
-        <location filename="../SCWind_slots.cpp" line="899"/>
+        <location filename="../SCWind_slots.cpp" line="912"/>
         <source>关于 SlopeCraft</source>
         <translation>About SlopeCraft</translation>
     </message>
@@ -1223,8 +1223,8 @@ Click Ignore to skip this image, and Cancel to cancel.</translation>
     </message>
     <message>
         <location filename="../SCWind_slots.cpp" line="683"/>
-        <location filename="../SCWind_slots.cpp" line="1060"/>
-        <location filename="../SCWind_slots.cpp" line="1116"/>
+        <location filename="../SCWind_slots.cpp" line="1073"/>
+        <location filename="../SCWind_slots.cpp" line="1129"/>
         <source>设置导出位置</source>
         <translation>Set export directory</translation>
     </message>
@@ -1234,123 +1234,115 @@ Click Ignore to skip this image, and Cancel to cancel.</translation>
         <translation>%1 files will be replaced</translation>
     </message>
     <message>
-        <source>以下文件将被替换：
-%1
-点击 Yes 将替换它们，点击 No 将取消这次导出。</source>
-        <translation type="vanished">These files will be replaced:
-%1
-Click Yes to replace them, or No to cancel.</translation>
-    </message>
-    <message>
         <location filename="../SCWind_slots.cpp" line="717"/>
-        <source>以下文件将被替换：
+        <source>%1 个文件将被替换。点击 Show Details 可以查看它们。
 点击 Yes 将替换它们，点击 No 将取消这次导出。</source>
-        <translation>Following files will be replaced.
-Click Yes to replace them, or No to cancel.</translation>
+        <translation>%1 file(s) will be replaced. Click &quot;Show Details&quot; to view them.
+Click Yes to replace, and No to cancel.</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="766"/>
+        <location filename="../SCWind_slots.cpp" line="779"/>
         <source>%1 个图片导出失败</source>
         <translation>Failed to export %1 image(s)</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="767"/>
+        <location filename="../SCWind_slots.cpp" line="780"/>
         <source>导出失败的图片依次为：
 %1</source>
         <translation>Following image(s) failed to export:
 %1</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="819"/>
+        <location filename="../SCWind_slots.cpp" line="832"/>
         <source>删除缓存失败</source>
         <translation>Failed to clean cache</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="820"/>
+        <location filename="../SCWind_slots.cpp" line="833"/>
         <source>无法删除文件或文件夹&quot;%1&quot;。
 点击 Ignore 以跳过，点击 Retry 以重试，点击 Cancel 以取消这次操作</source>
         <translation>Failed to remove file or directory named &quot;%1&quot;.
 Click Ignore to skip, Retry to retry and Cancel to cancel</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="878"/>
+        <location filename="../SCWind_slots.cpp" line="891"/>
         <source>SlopeCraft 是一款由 ToKiNoBug 开发的立体地图画生成器，主要用于在 Minecraft 中制造可以生存实装的立体地图画（但同样支持传统的平板地图画）。</source>
         <translation>SlopeCraft is a Minecraft 3D pixel map arts generator developed by ToKiNoBug, mainly used to generate 3D pixel map arts that can be implemented in vanilla Minecraft survival mode (but also supports traditional flat pixel map arts).</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="883"/>
+        <location filename="../SCWind_slots.cpp" line="896"/>
         <source>本软件的开发持续集成与 macOS 软件适配由 iXOR Technology (Cubik65536 以及贡献者) 提供</source>
         <translation>The continuous integration solution and macOS version maintenance of this software is provided by iXOR Technology (Cubik65536 and contributors)</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="886"/>
+        <location filename="../SCWind_slots.cpp" line="899"/>
         <source>感谢 AbrasiveBoar902 为本软件的设计和优化贡献的力量</source>
         <translation>Thanks to AbrasiveBoar902 for his contribution to the design and optimization of this software</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="888"/>
+        <location filename="../SCWind_slots.cpp" line="901"/>
         <source>感谢 67au 为本软件的 macOS 与 Linux 适配做出的贡献</source>
         <translation>Thanks to 67au for his contribution during the development of macOS and Linux version of this software</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="891"/>
+        <location filename="../SCWind_slots.cpp" line="904"/>
         <source>SlopeCraft 在开发时使用了 Qt，zlib 和 eigen 等开源库，对上述库的开发者表示感谢。</source>
         <translation>Open source libraries such as Qt, zlib and eigen are used during the development of SlopeCraft, thanks to the developers of these libraries.</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="894"/>
+        <location filename="../SCWind_slots.cpp" line="907"/>
         <source>本软件遵循 GPL-3.0 及以后版本 (GPL-3.0 or later) 协议开放源码。</source>
         <translation>This program is released under license GPL-3.0 or later.</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="897"/>
+        <location filename="../SCWind_slots.cpp" line="910"/>
         <source>Copyright © 2021-2023 SlopeCraft 开发者 (TokiNoBug, AbrasiveBoar, iXOR Technology, Mifan-T, 以及贡献者). 版权所有</source>
         <translation>Copyright © 2021-2023 SlopeCraft Developers (TokiNoBug, AbrasiveBoar, iXOR Technology, Mifan-T, and contributors). All rights reserved.</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="1029"/>
+        <location filename="../SCWind_slots.cpp" line="1042"/>
         <source>同时选中多个图片时，不显示 /give 命令。如果想预览导出的命令，请只选择一个图片。</source>
         <translation>Can&apos;t show /give command when you selecte multiple images. To view the command, select one image only.</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="1087"/>
+        <location filename="../SCWind_slots.cpp" line="1100"/>
         <source>无法为 %1 生成命令：%2
 </source>
         <translation>Failed to generate command for %1: %2
 </translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="1096"/>
+        <location filename="../SCWind_slots.cpp" line="1109"/>
         <source>无法创建/打开文件 %1：%2
 </source>
         <translation>Failed to create/open file %1: %2
 </translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="1103"/>
+        <location filename="../SCWind_slots.cpp" line="1116"/>
         <source>无法写入文件 %1：%2
 </source>
         <translation>Failed to write file %1: %2
 </translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="1109"/>
-        <location filename="../SCWind_slots.cpp" line="1189"/>
+        <location filename="../SCWind_slots.cpp" line="1122"/>
+        <location filename="../SCWind_slots.cpp" line="1202"/>
         <source>%1 个文件保存失败</source>
         <translation>Failed to save %1 file(s)</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="1156"/>
+        <location filename="../SCWind_slots.cpp" line="1169"/>
         <source>SlopeCraftL 未提供详细报错信息。</source>
         <translation>SlopeCraftL doesn&apos;t give further details.</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="1159"/>
+        <location filename="../SCWind_slots.cpp" line="1172"/>
         <source>错误码：%1，详情：%2</source>
         <translation>Error code: %1, details: %2</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="1183"/>
+        <location filename="../SCWind_slots.cpp" line="1196"/>
         <source>%1 生成失败，%2
 </source>
         <translation>Failed to generate %1, %2
@@ -1546,38 +1538,38 @@ Details:
         <translation>Failed to query system memory usage</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="914"/>
+        <location filename="../SCWind_slots.cpp" line="927"/>
         <source>保存颜色表</source>
         <translation>Save palette</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="925"/>
-        <location filename="../SCWind_slots.cpp" line="961"/>
+        <location filename="../SCWind_slots.cpp" line="938"/>
+        <location filename="../SCWind_slots.cpp" line="974"/>
         <source>保存颜色表失败</source>
         <translation>Failed to save colormap image</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="925"/>
+        <location filename="../SCWind_slots.cpp" line="938"/>
         <source>分配内存失败</source>
         <translation>Failed to allocate memory for image</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="962"/>
+        <location filename="../SCWind_slots.cpp" line="975"/>
         <source>无法生成文件 %1</source>
         <translation>Failed to generate %1</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="969"/>
+        <location filename="../SCWind_slots.cpp" line="982"/>
         <source>保存测试文件</source>
         <translation>Save testing file</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="1002"/>
+        <location filename="../SCWind_slots.cpp" line="1015"/>
         <source>输出测试文件失败</source>
         <translation>Failed to save testing file</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="1003"/>
+        <location filename="../SCWind_slots.cpp" line="1016"/>
         <source>保存测试文件 %1 时出现错误。详细信息：
 %2</source>
         <translation>An error occured when saving test file %1. Details:
