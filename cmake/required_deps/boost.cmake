@@ -2,6 +2,7 @@ if (${WIN32})
     find_package(Boost
         COMPONENTS iostreams
         OPTIONAL_COMPONENTS multi_array
+        CONFIG
     )
 else ()
     message(STATUS "Finding boost without multi_array to avoid a fucking stupid error in BoostConfig.cmake")
