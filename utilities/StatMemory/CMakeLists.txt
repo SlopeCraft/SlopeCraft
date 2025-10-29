@@ -19,7 +19,7 @@ elseif (${LINUX})
     target_sources(StatMemory PRIVATE stat_memory_src/linux.cpp)
 elseif (${APPLE})
     target_sources(StatMemory PRIVATE stat_memory_src/macos.cpp)
-elseif ()
+else ()
     message(FATAL_ERROR "Unsupported system ${CMAKE_SYSTEM_NAME}, not windows, linux or macos")
 endif ()
 

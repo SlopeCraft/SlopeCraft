@@ -22,7 +22,7 @@ find_package(cereal REQUIRED)
 find_package(fmt REQUIRED)
 find_package(magic_enum REQUIRED)
 
-find_package(Boost)
+find_package(Boost CONFIG)
 
 # target_compile_options(Schem BEFORE PUBLIC -std=c++17)
 target_link_libraries(Schem PUBLIC

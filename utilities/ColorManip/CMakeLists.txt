@@ -5,7 +5,7 @@ find_package(Eigen3 REQUIRED)
 find_package(Heu REQUIRED)
 find_package(cereal REQUIRED)
 find_package(xsimd REQUIRED)
-find_package(Boost REQUIRED)
+find_package(Boost CONFIG REQUIRED)
 
 add_library(ColorManip
 
