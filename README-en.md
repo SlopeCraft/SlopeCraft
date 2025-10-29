@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-    <img src="https://img.shields.io/badge/Minecraft-1.12~1.20-green?style=for-the-badge" />
+    <img src="https://img.shields.io/badge/Minecraft-1.12~1.21-green?style=for-the-badge" />
     <a href="LICENSE">
         <img src="https://img.shields.io/badge/License-GPL--3.0-important?style=for-the-badge" />
     </a>
@@ -16,8 +16,8 @@
         <img src="https://img.shields.io/github/v/release/SlopeCraft/SlopeCraft?style=for-the-badge" />
     </a>
     <br />
-    <img src="https://img.shields.io/badge/C%2B%2B-20-blue?style=for-the-badge" />
-    <img src="https://img.shields.io/badge/Qt-v6.4.0-brightgreen?style=for-the-badge" />
+    <img src="https://img.shields.io/badge/C%2B%2B-23-blue?style=for-the-badge" />
+    <img src="https://img.shields.io/badge/Qt-v6.5-brightgreen?style=for-the-badge" />
     <img src="https://img.shields.io/badge/Eigen-v3.4.0-yellowgreen?style=for-the-badge" />
 </p>
 
