@@ -37,7 +37,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          brew install llvm boost ninja libpng xsimd p7zip libzip zstd xz eigen boost tl-expected magic_enum fmt sevenzip
+          brew install boost ninja libpng xsimd p7zip libzip zstd xz eigen boost tl-expected magic_enum fmt sevenzip
+        #llvm
 
       #https://github.com/SlopeCraft/QtBinaries/releases/download/qt6.6.0-arm64-apple-darwin/qt6.6.0-static-arm64-apple-darwin.tar.xz
       - name: Install qt6.6.0-static
@@ -58,7 +59,7 @@ jobs:
           glslc --version
 
       - name: Configure CMake
-        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=/opt/homebrew/opt/llvm/bin/clang -DCMAKE_CXX_COMPILER=/opt/homebrew/opt/llvm/bin/clang++ "-DCMAKE_PREFIX_PATH=$HOME/Downloads/qt6.6.0-arm64-apple-darwin;/opt/homebrew" -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0 -DKOMPUTE_OPT_DISABLE_VULKAN_VERSION_CHECK=ON
+        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ "-DCMAKE_PREFIX_PATH=$HOME/Downloads/qt6.6.0-arm64-apple-darwin;/opt/homebrew" -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0 -DKOMPUTE_OPT_DISABLE_VULKAN_VERSION_CHECK=ON
       - name: Build
         run: |
           cd build
