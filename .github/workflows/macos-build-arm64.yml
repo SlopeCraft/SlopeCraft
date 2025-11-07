@@ -37,7 +37,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          brew install llvm boost ninja libpng xsimd p7zip libzip zstd xz eigen boost tl-expected magic_enum fmt sevenzip
+          brew install llvm lld boost ninja libpng xsimd p7zip libzip zstd xz eigen boost tl-expected magic_enum fmt sevenzip
 
       - name: Check clang
         run: /opt/homebrew/opt/llvm/bin/clang -v
@@ -65,6 +65,8 @@ jobs:
       - name: Build
         run: |
           cd build
+          export LDFLAGS="-L/opt/homebrew/opt/llvm/lib"
+          export CPPFLAGS="-I/opt/homebrew/opt/llvm/include"
           cmake --build . --parallel
       #      - name: CPack
       #        run: |

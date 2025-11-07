@@ -34,7 +34,7 @@ jobs:
       #          brew upgrade
       - name: Install LLVM clang
         run: |
-          brew install llvm
+          brew install llvm lld
       - name: Check clang
         run: /usr/local/opt/llvm/bin/clang -v
       - name: echo matrix variables (build_type = ${{ matrix.build_type }})
@@ -80,6 +80,8 @@ jobs:
       - name: Build
         run: |
           cd build
+          export LDFLAGS="-L/usr/local/opt/llvm/lib"
+          export CPPFLAGS="-I/usr/local/opt/llvm/include"
           cmake --build . --parallel
       #      - name: CPack
       #        run: |
