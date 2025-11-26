@@ -1,4 +1,4 @@
-#include <fmt/format.h>
+#include <format>
 #include <iostream>
 #include <QApplication>
 #include <QDir>

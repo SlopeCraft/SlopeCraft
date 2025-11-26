@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 project(VisualCraftL VERSION ${SlopeCraft_version} LANGUAGES C CXX)
 
-set(CMAKE_CXX_STANDARD 20)
-
 set(VCL_enable_internal_test OFF)
 
 include(config_versions.cmake)
@@ -77,7 +75,6 @@ add_library(VisualCraftL_static STATIC
 
 find_package(ZLIB 1.2.11 REQUIRED)
 find_package(libzip 1.7.0 REQUIRED)
-find_package(fmt 10.0.0 REQUIRED)
 
 set(VCL_include_dirs
     ${SlopeCraft_Nlohmann_json_include_dir}
@@ -103,7 +100,6 @@ set(VCL_link_libs
     PNG::PNG
     ${VCL_libzip_additions}
     Schem
-    fmt::fmt
     ProcessBlockId
 )
 
@@ -111,11 +107,11 @@ target_link_libraries(VisualCraftL PRIVATE $<BUILD_INTERFACE:${VCL_link_libs}>)
 target_link_libraries(VisualCraftL_static PUBLIC ${VCL_link_libs})
 
 # message(STATUS "ret = " ${ret})
-target_compile_definitions(VisualCraftL PRIVATE "-DVISUALCRAFTL_BUILD")
-target_compile_definitions(VisualCraftL_static PRIVATE "-DVISUALCRAFTL_BUILD")
+target_compile_definitions(VisualCraftL PRIVATE VISUALCRAFTL_BUILD)
+target_compile_definitions(VisualCraftL_static PRIVATE VISUALCRAFTL_BUILD)
 
-target_compile_features(VisualCraftL PRIVATE cxx_std_20)
-target_compile_features(VisualCraftL_static PUBLIC cxx_std_20)
+target_compile_features(VisualCraftL PRIVATE cxx_std_23)
+target_compile_features(VisualCraftL_static PUBLIC cxx_std_23)
 
 target_compile_options(VisualCraftL PRIVATE ${SlopeCraft_vectorize_flags})
 target_compile_options(VisualCraftL_static PRIVATE ${SlopeCraft_vectorize_flags})

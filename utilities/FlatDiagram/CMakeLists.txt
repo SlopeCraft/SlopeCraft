@@ -13,5 +13,5 @@ target_link_libraries(FlatDiagram
     ColorManip
     PNG::PNG
     Eigen3::Eigen
-    fmt::fmt)
-target_compile_features(FlatDiagram PUBLIC cxx_std_20)
+)
+target_compile_features(FlatDiagram PUBLIC cxx_std_23)

@@ -21,7 +21,7 @@ General Public License for more details.
    bilibili:https://space.bilibili.com/351429231
 */
 
-#include <fmt/format.h>
+#include <format>
 #include <json.hpp>
 #include <tl/expected.hpp>
 #include <zip.h>
@@ -42,7 +42,7 @@ std::pair<uint8_t, mc_block> parse_block(const nlohmann::json &jo) noexcept(
   mc_block ret;
   const int basecolor = jo.at("baseColor");
   if (basecolor < 0 || basecolor >= 64) {
-    throw std::runtime_error{fmt::format("invalid base color: {}", basecolor)};
+    throw std::runtime_error{std::format("invalid base color: {}", basecolor)};
   }
 
   ret.id = jo.at("id");
@@ -74,7 +74,7 @@ std::pair<uint8_t, mc_block> parse_block(const nlohmann::json &jo) noexcept(
   if (jo.contains("stackSize")) {
     const int val = jo.at("stackSize");
     if (val <= 0 or val > 64) {
-      throw std::runtime_error{fmt::format("Invalid stack size: {}", val)};
+      throw std::runtime_error{std::format("Invalid stack size: {}", val)};
     }
     ret.stackSize = val;
   }
@@ -86,13 +86,13 @@ std::pair<uint8_t, mc_block> parse_block(const nlohmann::json &jo) noexcept(
       for (auto ver : need_stone) {
         if (not ver.is_number_integer()) {
           throw std::runtime_error{
-              fmt::format("needStone must be boolean or array of versions, but "
+              std::format("needStone must be boolean or array of versions, but "
                           "found non-integer element in array")};
         }
         const int ver_int = ver;
         if (ver_int < static_cast<int>(SCL_gameVersion::MC12) or
             ver_int > static_cast<int>(SCL_maxAvailableVersion())) {
-          throw std::runtime_error{fmt::format(
+          throw std::runtime_error{std::format(
               "Found invalid version {} in version list of needStone",
               ver_int)};
         }
@@ -100,7 +100,7 @@ std::pair<uint8_t, mc_block> parse_block(const nlohmann::json &jo) noexcept(
       }
     } else {
       throw std::runtime_error{
-          fmt::format("needStone must be boolean or array of versions")};
+          std::format("needStone must be boolean or array of versions")};
     }
   }
 
@@ -140,13 +140,13 @@ tl::expected<block_list_metainfo, std::string> parse_meta_info(
 
     } catch (const std::exception &e) {
       return tl::make_unexpected(
-          fmt::format("Failed to parse \"metainfo.json\": {}", e.what()));
+          std::format("Failed to parse \"metainfo.json\": {}", e.what()));
     }
 
     return ret;
   }
   return tl::make_unexpected(
-      fmt::format("Failed to extract \"metainfo.json\": {}", res.error()));
+      std::format("Failed to extract \"metainfo.json\": {}", res.error()));
 }
 
 block_list_create_result parse_block_list(zip_t *archive) noexcept {
@@ -163,7 +163,7 @@ block_list_create_result parse_block_list(zip_t *archive) noexcept {
         zip_name_locate(archive, filename, ZIP_FL_UNCHANGED);
     if (index_i < 0) {
       return tl::make_unexpected(
-          fmt::format("File \"{}\" doesn't exist in archive", filename));
+          std::format("File \"{}\" doesn't exist in archive", filename));
     }
     const uint64_t index = uint64_t(index_i);
 
@@ -171,7 +171,7 @@ block_list_create_result parse_block_list(zip_t *archive) noexcept {
     error_code = zip_stat_index(archive, index, ZIP_FL_UNCHANGED, &stat);
     if (error_code != ZIP_ER_OK) {
       return tl::make_unexpected(
-          fmt::format("Failed to get size of file \"{}\"  in archive: \"{}\", "
+          std::format("Failed to get size of file \"{}\"  in archive: \"{}\", "
                       "error code = {}",
                       filename, zip_strerror(archive), error_code));
     }
@@ -182,14 +182,14 @@ block_list_create_result parse_block_list(zip_t *archive) noexcept {
     auto file = zip_fopen(archive, filename, ZIP_FL_UNCHANGED);
     if (file == nullptr) {
       return tl::make_unexpected(
-          fmt::format("Failed to extract \"{}\" from archive  : \"{}\" ",
+          std::format("Failed to extract \"{}\" from archive  : \"{}\" ",
                       filename, zip_strerror(archive)));
     }
 
     const int64_t read_bytes = zip_fread(file, dest.data(), dest.size());
     if (read_bytes != int64_t(file_size)) {
       return tl::make_unexpected(
-          fmt::format("Failed to extract \"{}\" from archive, expected "
+          std::format("Failed to extract \"{}\" from archive, expected "
                       "{} bytes, but extracted {} bytes : \"{}\" ",
                       filename, file_size, read_bytes, zip_strerror(archive)));
     }
@@ -210,7 +210,7 @@ block_list_create_result parse_block_list(zip_t *archive) noexcept {
       // metainfo.json exists in the archive
       auto mi_res = parse_meta_info(extract_file, buffer);
       if (not mi_res) {
-        fmt::format_to(std::back_inserter(warnings),
+        std::format_to(std::back_inserter(warnings),
                        "metainfo.json exist in the archive, but failed to "
                        "parse it: {}\n",
                        mi_res.error());
@@ -229,7 +229,7 @@ block_list_create_result parse_block_list(zip_t *archive) noexcept {
     njson jo = njson::parse(buffer, nullptr, true, true);
     if (not jo.is_array()) {
       return {tl::make_unexpected(
-                  fmt::format("Json should contain an array directly")),
+                  std::format("Json should contain an array directly")),
               warnings};
     }
 
@@ -243,7 +243,7 @@ block_list_create_result parse_block_list(zip_t *archive) noexcept {
 
         bl.blocks().emplace(std::make_unique<mc_block>(block), version);
       } catch (const std::exception &e) {
-        return {tl::make_unexpected(fmt::format(
+        return {tl::make_unexpected(std::format(
                     "Failed to parse block at index {}:\n{}", idx, e.what())),
                 warnings};
       }
@@ -251,7 +251,7 @@ block_list_create_result parse_block_list(zip_t *archive) noexcept {
 
   } catch (const std::exception &e) {
     return {tl::make_unexpected(
-                fmt::format("nlohmann json exception : {}", e.what())),
+                std::format("nlohmann json exception : {}", e.what())),
             warnings};
   }
   // load images
@@ -261,7 +261,7 @@ block_list_create_result parse_block_list(zip_t *archive) noexcept {
       auto err = extract_file(pair.first->imageFilename.c_str(), buffer);
       if (not err) {
         warnings +=
-            fmt::format("{}, required by {}", err.error(), pair.first->id);
+            std::format("{}, required by {}", err.error(), pair.first->id);
         continue;
       }
     }
@@ -272,7 +272,7 @@ block_list_create_result parse_block_list(zip_t *archive) noexcept {
       warnings += warns;
 
       if (!result) {
-        fmt::format_to(std::back_insert_iterator{warnings},
+        std::format_to(std::back_insert_iterator{warnings},
                        "Failed to load image \"{}\" because \"{}\"\n",
                        pair.first->getImageFilename(), result.error());
         //        for (uint8_t byte : buffer) {
@@ -283,7 +283,7 @@ block_list_create_result parse_block_list(zip_t *archive) noexcept {
       }
       auto image_size = result.value();
       if (image_size.rows != 16 || image_size.cols != 16) {
-        fmt::format_to(std::back_insert_iterator{warnings},
+        std::format_to(std::back_insert_iterator{warnings},
                        "{} has invalid shape, expected 16x16, but found {} "
                        "rows x {} cols.\n",
                        pair.first->getImageFilename(), image_size.rows,
@@ -305,7 +305,7 @@ block_list_create_result create_block_list_from_file(
   std::unique_ptr<zip_t, zip_deleter> archive{
       zip_open(zip_path, ZIP_RDONLY | ZIP_CHECKCONS, &error_code)};
   if (error_code not_eq ZIP_ER_OK or archive == nullptr) {
-    auto ret = tl::make_unexpected(fmt::format(
+    auto ret = tl::make_unexpected(std::format(
         "Failed to open archive \"{}\" : \"{}\" libzip error code = {}",
         zip_path, zip_strerror(archive.get()), error_code));
     return {ret, warnings};
@@ -320,7 +320,7 @@ block_list_create_result create_block_list_from_buffer(
   zip_source_t *const source =
       zip_source_buffer_create(buffer.data(), buffer.size_bytes(), 0, &err);
   if (source == nullptr) {
-    return {tl::make_unexpected(fmt::format("Failed to create zip_source_t: {}",
+    return {tl::make_unexpected(std::format("Failed to create zip_source_t: {}",
                                             zip_error_strerror(&err))),
             {}};
   }
@@ -330,7 +330,7 @@ block_list_create_result create_block_list_from_buffer(
   if (archive == nullptr) {
     zip_source_free(source);
     return {tl::make_unexpected(
-                fmt::format("Failed to open zip, zip_err = {}, sys_err = {}",
+                std::format("Failed to open zip, zip_err = {}, sys_err = {}",
                             err.zip_err, err.sys_err)),
             {}};
   }

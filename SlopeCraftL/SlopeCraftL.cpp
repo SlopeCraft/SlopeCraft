@@ -20,7 +20,7 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
-#include <fmt/format.h>
+#include <format>
 #include <json.hpp>
 #include <tl/expected.hpp>
 #include <zip.h>

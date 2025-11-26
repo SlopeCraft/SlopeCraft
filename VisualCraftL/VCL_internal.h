@@ -24,8 +24,7 @@ This file is part of SlopeCraft.
 #define SLOPECRAFT_VISUALCRAFTL_VCL_INTERNAL_H
 
 #include "VisualCraftL.h"
-#include <fmt/format.h>
-// #include <format>
+#include <format>
 
 void VCL_report(VCL_report_type_t, const char *, bool flush = false) noexcept;
 

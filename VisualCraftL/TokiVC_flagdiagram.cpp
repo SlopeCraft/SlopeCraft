@@ -186,7 +186,7 @@ bool TokiVC::export_flag_diagram(const char *png_filename,
 
   if (fp == nullptr) {
     std::string msg =
-        fmt::format("fopen failed to create png file {}.", png_filename);
+        std::format("fopen failed to create png file {}.", png_filename);
     VCL_report(VCL_report_type_t::error, msg.c_str());
     return false;
   }
@@ -195,7 +195,7 @@ bool TokiVC::export_flag_diagram(const char *png_filename,
       png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
   if (png == nullptr) {
     fclose(fp);
-    std::string msg = fmt::format(
+    std::string msg = std::format(
         "fopen failed to create png struct for png file {}.", png_filename);
     VCL_report(VCL_report_type_t::error, msg.c_str());
     return false;
@@ -206,7 +206,7 @@ bool TokiVC::export_flag_diagram(const char *png_filename,
     png_destroy_write_struct(&png, &png_info);
     fclose(fp);
     std::string msg =
-        fmt::format("fopen failed to create png info struct for png file {}.",
+        std::format("fopen failed to create png info struct for png file {}.",
                     png_filename);
     VCL_report(VCL_report_type_t::error, msg.c_str());
     return false;

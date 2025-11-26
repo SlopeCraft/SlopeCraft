@@ -231,7 +231,7 @@ bool VCL_block_state_list::add(std::string_view filename) noexcept {
     ifs.close();
   } catch (std::exception &e) {
     std::string msg =
-        fmt::format("Failed to parse {}, detail : {}", filename, e.what());
+        std::format("Failed to parse {}, detail : {}", filename, e.what());
     ::VCL_report(VCL_report_type_t::error, msg.c_str());
     return false;
   }
@@ -240,7 +240,7 @@ bool VCL_block_state_list::add(std::string_view filename) noexcept {
     auto vb = parse_block(pair.value());
 
     if (not vb) {
-      std::string msg = fmt::format(
+      std::string msg = std::format(
           "Failed to parse {},  : invalid value for block state {} : {}",
           filename, pair.key().c_str(), to_string(pair.value()));
       ::VCL_report(VCL_report_type_t::error, msg.c_str());

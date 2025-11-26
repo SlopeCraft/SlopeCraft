@@ -1,7 +1,7 @@
 //
 // Created by joseph on 4/17/24.
 //
-#include <fmt/format.h>
+#include <format>
 #include <boost/iostreams/filtering_stream.hpp>
 #include <boost/iostreams/device/file.hpp>
 #include <boost/iostreams/filter/zstd.hpp>
@@ -22,7 +22,7 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
   if (option.max_allowed_height < 14) {
     option.ui.report_error(
         errorFlag::MAX_ALLOWED_HEIGHT_LESS_THAN_14,
-        fmt::format("Max allowed height should be >= 14, but found {}",
+        std::format("Max allowed height should be >= 14, but found {}",
                     option.max_allowed_height)
             .c_str());
     return std::nullopt;
@@ -78,7 +78,7 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
     const uint64_t bytes_required = shape[0] * shape[1] * shape[2];
     option.ui.report_error(
         errorFlag::MEMORY_ALLOCATE_FAILED,
-        fmt::format("Failed to allocate memory for this structure, "
+        std::format("Failed to allocate memory for this structure, "
                     "required {} GiB. The exception says: \"{}\"",
                     double(bytes_required) / (uint64_t{1} << 30), e.what())
             .c_str());
@@ -110,11 +110,11 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
 
     fixed_opt.main_progressbar.add(cvted.size());
 
-    // fmt::println("{} rows, {} cols", cvted.rows(), cvted.cols());
+    // std::println("{} rows, {} cols", cvted.rows(), cvted.cols());
     //  Common blocks
     for (int64_t r = -1; r < int64_t(cvted.rows()); r++) {
       for (int64_t c = 0; c < int64_t(cvted.cols()); c++) {
-        // fmt::println("r = {}, c = {}", r, c);
+        // std::println("r = {}, c = {}", r, c);
         const int cur_base_color = base_color(r + 1, c);
         if (cur_base_color == 12 || cur_base_color == 0) {
           // water or air
@@ -305,7 +305,7 @@ bool structure_3D_impl::export_flat_diagram(
   if (table.map_type() != SCL_mapTypes::Flat) {
     option.ui.report_error(
         SCL_errorFlag::EXPORT_FLAT_DIAGRAM_ON_WRONG_MAP_TYPE,
-        fmt::format(
+        std::format(
             "We can only export flat diagram for flat maps, but found {}",
             magic_enum::enum_name(table.map_type()))
             .c_str());
@@ -341,7 +341,7 @@ bool structure_3D_impl::export_flat_diagram(
       }
       option.ui.report_error(
           errorFlag::EXPORT_FLAT_DIAGRAM_FAILURE,
-          fmt::format("SlopeCraftL internal error. Failed to find block image "
+          std::format("SlopeCraftL internal error. Failed to find block image "
                       "for \"{}\". "
                       "In the 3d structure, the corresponding block idx is "
                       "{}.\nThe whole "
@@ -404,7 +404,7 @@ void load(archive &ar, Eigen::ArrayXX<uint8_t> &mat) {
   ar(rows, cols);
   if (rows < 0 || cols < 0) {
     throw std::runtime_error{
-        fmt::format("Found negative shape when deserializing "
+        std::format("Found negative shape when deserializing "
                     "Eigen::ArrayXX<uint8_t>, {} rows and {} cols",
                     rows, cols)};
   }
@@ -438,7 +438,7 @@ std::string structure_3D_impl::save_cache(
     }
 
   } catch (const std::exception &e) {
-    return fmt::format("Caught exception: {}", e.what());
+    return std::format("Caught exception: {}", e.what());
   }
 
   return {};
@@ -458,7 +458,7 @@ tl::expected<structure_3D_impl, std::string> structure_3D_impl::load_cache(
       bia(ret);
     }
   } catch (const std::exception &e) {
-    return tl::make_unexpected(fmt::format("Caught exception: {}", e.what()));
+    return tl::make_unexpected(std::format("Caught exception: {}", e.what()));
   }
 
   return ret;
