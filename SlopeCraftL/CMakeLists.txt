@@ -2,7 +2,6 @@ project(SlopeCraft_SlopeCraftL VERSION ${SlopeCraft_version} LANGUAGES CXX)
 
 find_package(ZLIB 1.2.11 REQUIRED)
 find_package(OpenMP REQUIRED)
-find_package(fmt REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(Heu REQUIRED)
 find_package(Boost COMPONENTS iostreams OPTIONAL_COMPONENTS multi_array CONFIG REQUIRED)
@@ -63,16 +62,20 @@ set(SlopeCraft_SCL_sources
     blocklist.h
 )
 
-# add this definations to both targets
-add_definitions(-DSLOPECRAFTL_LIBRARY)
-
-add_library(SlopeCraftL SHARED ${SlopeCraft_SCL_sources})
+add_library(SlopeCraftL SHARED
+    ${SlopeCraft_SCL_sources}
+    ${Slope_SCL_internal_headers}
+)
 
 include(GenerateExportHeader)
 generate_export_header(SlopeCraftL BASE_NAME SCL EXPORT_FILE_NAME SlopeCraftL_export.h)
 
 # add_library(SlopeCraftL_C SHARED ${SlopeCraft_SCL_sources})
 target_compile_features(SlopeCraftL PRIVATE cxx_std_23)
+target_compile_definitions(SlopeCraftL PRIVATE
+    SLOPECRAFTL_LIBRARY
+)
+target_compile_options(SlopeCraftL PRIVATE ${SlopeCraft_vectorize_flags})
 target_precompile_headers(SlopeCraftL PRIVATE ${SlopeCraft_SCL_internal_headers})
 target_include_directories(SlopeCraftL PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
@@ -97,7 +100,6 @@ set(SlopeCraft_SCL_link_libs
 
     ZLIB::ZLIB
     OpenMP::OpenMP_CXX
-    fmt::fmt
     Eigen3::Eigen
     Heu::Genetic
     Boost::iostreams
@@ -110,8 +112,6 @@ set(SlopeCraft_SCL_link_libs
 
 # link to dependents
 target_link_libraries(SlopeCraftL PRIVATE $<BUILD_INTERFACE:${SlopeCraft_SCL_link_libs}>)
-
-target_compile_options(SlopeCraftL PRIVATE ${SlopeCraft_vectorize_flags})
 
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     target_compile_options(SlopeCraftL PRIVATE "-fvisibility=hidden" "-fPIC")

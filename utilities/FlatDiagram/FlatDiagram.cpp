@@ -4,7 +4,7 @@
 #include <vector>
 #include <stdio.h>
 
-#include <fmt/format.h>
+#include <format>
 
 void libFlatDiagram::reverse_color(uint32_t *ptr, size_t num_pixels) noexcept {
   // this can be vertorized by compiler optimization
@@ -76,14 +76,14 @@ std::string libFlatDiagram::export_flat_diagram(
   FILE *fp = fopen(png_filename.data(), "wb");
 
   if (fp == nullptr) {
-    return fmt::format("fopen failed to create png file {}.", png_filename);
+    return std::format("fopen failed to create png file {}.", png_filename);
   }
 
   png_struct *png =
       png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
   if (png == nullptr) {
     fclose(fp);
-    return fmt::format("fopen failed to create png struct for png file {}.",
+    return std::format("fopen failed to create png struct for png file {}.",
                        png_filename);
   }
 
@@ -91,7 +91,7 @@ std::string libFlatDiagram::export_flat_diagram(
   if (png_info == nullptr) {
     png_destroy_write_struct(&png, &png_info);
     fclose(fp);
-    return fmt::format(
+    return std::format(
         "fopen failed to create png info struct for png file {}.",
         png_filename);
   }
@@ -145,7 +145,7 @@ std::string libFlatDiagram::export_flat_diagram(
       }
     }
   } catch (const std::exception &e) {
-    return fmt::format("Exception occurred while writing flat diagram: {}",
+    return std::format("Exception occurred while writing flat diagram: {}",
                        e.what());
   }
 

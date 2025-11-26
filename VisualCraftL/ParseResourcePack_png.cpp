@@ -138,7 +138,7 @@ bool parse_png(
       break;
     default:
       png_destroy_read_struct(&png, &info, &info_end);
-      std::string msg = fmt::format("Unknown color type {}", color_type);
+      std::string msg = std::format("Unknown color type {}", color_type);
       ::VCL_report(VCL_report_type_t::error, msg.c_str());
       return false;
   }
@@ -345,7 +345,7 @@ bool resource_pack::add_textures_direct(
     const bool success =
         parse_png(file.second.data(), file.second.file_size(), &img);
     if (!success || img.size() <= 0) {
-      std::string msg = fmt::format(
+      std::string msg = std::format(
           "Failed to parse png file {} in {}. Png parsing will "
           "continue but this warning may cause further errors.",
           file.first, buffer.data());
@@ -355,7 +355,7 @@ bool resource_pack::add_textures_direct(
 
     if (is_dynamic) {
       if (img.rows() % img.cols() != 0) {
-        std::string msg = fmt::format(
+        std::string msg = std::format(
             "Failed to process dynamic png file {} in {}. Image "
             "has {} rows and {} cols, which is not of integer ratio. Png "
             "parsing will continue but this warning may cause further "
@@ -382,7 +382,7 @@ process_dynamic_texture(const Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic,
 
   if (src.rows() % cols != 0) {
     std::string msg =
-        fmt::format("Error : rows({}) and cols({}) are not of interger ratio.",
+        std::format("Error : rows({}) and cols({}) are not of interger ratio.",
                     src.rows(), src.cols());
     ::VCL_report(VCL_report_type_t::error, msg.c_str());
     return res;
@@ -428,7 +428,7 @@ bool resource_pack::add_colormap(const zipped_folder &resourece_pack_root,
   }
 
   if (ptr == nullptr || !ptr->files.contains(filename.data())) {
-    std::string msg = fmt::format(
+    std::string msg = std::format(
         "Failed to find \"assets/minecraft/textures/colormap/{}\". "
         "File doesn\'t exist.",
         filename);
@@ -441,7 +441,7 @@ bool resource_pack::add_colormap(const zipped_folder &resourece_pack_root,
   const bool success = parse_png(png.data(), png.file_size(), &img);
 
   if (!success) {
-    std::string msg = fmt::format(
+    std::string msg = std::format(
         "Failed to parse \"assets/minecraft/textures/colormap/{}\". "
         "Not a valid png file.",
         filename);
@@ -450,7 +450,7 @@ bool resource_pack::add_colormap(const zipped_folder &resourece_pack_root,
   }
 
   if (img.rows() != 256 || img.cols() != 256) {
-    std::string msg = fmt::format(
+    std::string msg = std::format(
         "Failed to parse assets/minecraft/textures/colormap/{}. "
         "The rows({}) and cols({}) mismatch with (256,256).",
         filename, img.rows(), img.cols());

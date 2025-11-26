@@ -1,5 +1,3 @@
-include(${CMAKE_CURRENT_LIST_DIR}/../required_deps/fmtlib.cmake)
-
 find_package(Vulkan REQUIRED)
 
 set(KOMPUTE_OPT_USE_BUILT_IN_FMT OFF)

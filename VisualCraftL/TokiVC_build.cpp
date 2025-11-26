@@ -106,7 +106,7 @@ bool TokiVC::build() noexcept {
         for (size_t di = 0; di < 3; di++) {
           if (coord[di] < 0 || coord[di] >= range[di]) {
             std::string msg =
-                fmt::format("coordinate out of range : {}, {}, {}.\n", coord[0],
+                std::format("coordinate out of range : {}, {}, {}.\n", coord[0],
                             coord[1], coord[2]);
             VCL_report(VCL_report_type_t::error, msg.c_str());
           }
@@ -116,7 +116,7 @@ bool TokiVC::build() noexcept {
 
         auto it = TokiVC::blocks_allowed.find(blkp);
         if (it == TokiVC::blocks_allowed.end()) {
-          std::string msg = fmt::format(
+          std::string msg = std::format(
               "Failed to find VCL_block at address {} named {} in "
               "allowed blocks. This is an internal error.",
               (const void *)blkp, blkp->full_id_ptr()->c_str());
@@ -170,7 +170,7 @@ bool TokiVC::export_litematic(const char *localEncoding_filename,
                                                &flag, &detail);
 
   if (!ok) {
-    std::string err = fmt::format(
+    std::string err = std::format(
         "VisualCraftL failed to export a litematic. Error "
         "number(SCSL_errorFlag) = {}, detail : {}",
         int(flag), detail);
@@ -196,7 +196,7 @@ bool TokiVC::export_structure(const char *localEncoding_TargetName,
       localEncoding_TargetName, is_air_structure_void, &flag, &detail);
 
   if (!ok) {
-    std::string err = fmt::format(
+    std::string err = std::format(
         "VisualCraftL failed to export a structure. Error "
         "number(SCSL_errorFlag) = {}, detail : {}",
         int(flag), detail);
@@ -237,7 +237,7 @@ bool TokiVC::export_WESchem(const char *localEncoding_fileName,
   const bool ok =
       this->schem.export_WESchem(localEncoding_fileName, info, &flag, &detail);
   if (!ok) {
-    std::string err = fmt::format(
+    std::string err = std::format(
         "VisualCraftL failed to export a WorldEdit schem. Error "
         "number(SCSL_errorFlag) = {}, detail : {}",
         int(flag), detail);

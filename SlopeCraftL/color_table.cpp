@@ -2,7 +2,7 @@
 // Created by joseph on 4/15/24.
 //
 
-#include <fmt/format.h>
+#include <format>
 #include <boost/uuid/detail/md5.hpp>
 #include "SCLDefines.h"
 #include "color_table.h"
@@ -110,7 +110,7 @@ std::optional<color_table_impl> color_table_impl::create(
   }
 
   if (!result.allowed->apply_allowed(*SlopeCraft::basic_colorset, m_index)) {
-    std::string msg = fmt::format(
+    std::string msg = std::format(
         "Too few usable color(s) : only {}  colors\nAvaliable base color(s) : ",
         result.allowed->color_count());
 
@@ -220,7 +220,7 @@ uint64_t color_table_impl::hash() const noexcept {
 
 std::filesystem::path color_table_impl::self_cache_dir(
     const char *cache_root_dir) const noexcept {
-  return fmt::format("{}/{:x}", cache_root_dir, this->hash());
+  return std::format("{}/{:x}", cache_root_dir, this->hash());
 }
 
 std::filesystem::path color_table_impl::convert_task_cache_filename(
@@ -228,7 +228,7 @@ std::filesystem::path color_table_impl::convert_task_cache_filename(
     const char *cache_root_dir) const noexcept {
   auto self_cache_dir = this->self_cache_dir(cache_root_dir);
   self_cache_dir.append("convert");
-  self_cache_dir.append(fmt::format(
+  self_cache_dir.append(std::format(
       "{:x}", converted_image_impl::convert_task_hash(original_img, option)));
   return self_cache_dir;
 }
@@ -252,11 +252,11 @@ std::string color_table_impl::save_convert_cache(
     auto err =
         dynamic_cast<const converted_image_impl &>(cvted).save_cache(filename);
     if (!err.empty()) {
-      return fmt::format("Failed to save cache to file \"{}\": {}",
+      return std::format("Failed to save cache to file \"{}\": {}",
                          filename.string(), err);
     }
   } catch (const std::exception &e) {
-    return fmt::format("Caught exception: {}", e.what());
+    return std::format("Caught exception: {}", e.what());
   }
 
   return {};
@@ -296,7 +296,7 @@ std::filesystem::path color_table_impl::build_task_cache_filename(
 
   auto path = this->self_cache_dir(cache_root_dir);
   path.append("build");
-  path.append(fmt::format("{:x}", hash_u64));
+  path.append(std::format("{:x}", hash_u64));
   return path;
 }
 
@@ -446,7 +446,7 @@ std::string color_table_impl::impl_generate_test_schematic(
 
   if (not ok) {
     auto &err = ok.error();
-    return fmt::format(
+    return std::format(
         "Failed to export structure file {}, error code = {}, detail: {}",
         filename, int(err.first), err.second);
   } else {

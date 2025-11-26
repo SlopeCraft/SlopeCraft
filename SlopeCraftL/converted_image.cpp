@@ -2,7 +2,7 @@
 // Created by joseph on 4/17/24.
 //
 
-#include <fmt/format.h>
+#include <format>
 #include <boost/uuid/detail/md5.hpp>
 #include <utilities/ExternalConverters/GAConverter/GAConverter.h>
 #include "SCLDefines.h"
@@ -87,13 +87,13 @@ bool converted_image_impl::export_map_data(
     for (int r = 0; r < rows; r++) {
       const std::array<int, 2> offset = {r * 128, c * 128};
       std::filesystem::path current_filename = dir;
-      current_filename.append(fmt::format("map_{}.dat", currentIndex));
+      current_filename.append(std::format("map_{}.dat", currentIndex));
 
       NBT::NBTWriter<true> MapFile;
 
       if (!MapFile.open(current_filename.string().c_str())) {
         option.ui.report_error(errorFlag::EXPORT_MAP_DATA_FAILURE,
-                               fmt::format("Failed to create nbt file {}",
+                               std::format("Failed to create nbt file {}",
                                            current_filename.string())
                                    .c_str());
         fail_count += 1;
@@ -121,7 +121,7 @@ bool converted_image_impl::export_map_data(
           break;
       }
 
-      static const std::string ExportedBy = fmt::format(
+      static const std::string ExportedBy = std::format(
           "Exported by SlopeCraft {}, developed by TokiNoBug", SC_VERSION_STR);
       MapFile.writeString("ExportedBy", ExportedBy.data());
       MapFile.writeCompound("data");
@@ -217,7 +217,7 @@ converted_image_impl::height_info(const build_options &option) const noexcept {
         "vanilla map.\n Map contents (map color matrix in col-major) :\n[";
     for (int c = 0; c < map_color.cols(); c++) {
       for (int r = 0; r < map_color.rows(); r++) {
-        fmt::format_to(std::back_insert_iterator{msg}, "{},", map_color(r, c));
+        std::format_to(std::back_insert_iterator{msg}, "{},", map_color(r, c));
       }
       msg += ";\n";
     }
@@ -255,7 +255,7 @@ converted_image_impl::height_info(const build_options &option) const noexcept {
       if (!success) {
         option.ui.report_error(
             SCL_errorFlag::LOSSYCOMPRESS_FAILED,
-            fmt::format("Failed to compress the 3D structure at column {}. You "
+            std::format("Failed to compress the 3D structure at column {}. You "
                         "have required that max height <= {}, but SlopeCraft "
                         "is only able to this column to max height = {}.",
                         c, option.max_allowed_height, HL.maxHeight())
@@ -440,7 +440,7 @@ bool converted_image_impl::get_map_command(
   const int map_cols = this->map_cols();
   if (map_rows <= 0 or map_cols <= 0) {
     std::string err_msg =
-        fmt::format("Invalid map size: {} rows, {} cols", map_rows, map_cols);
+        std::format("Invalid map size: {} rows, {} cols", map_rows, map_cols);
     option.destination->write(err_msg.c_str(), err_msg.size());
     return false;
   }
@@ -454,7 +454,7 @@ bool converted_image_impl::get_map_command(
 
     std::string name;
     if (option.set_name_as_index)
-      name = fmt::format("{{\"text\":\"[{},{}]\"}}", r, c);
+      name = std::format("{{\"text\":\"[{},{}]\"}}", r, c);
 
     nbt::tag_compound result;
     nbt::tag_compound tag;
@@ -506,7 +506,7 @@ bool converted_image_impl::get_map_command(
 
   const std::string item_id =
       chest_all_in_one.at("id").as<nbt::tag_string>().get();
-  option.destination->write(fmt::format("/give @p {}", item_id).c_str());
+  option.destination->write(std::format("/give @p {}", item_id).c_str());
   erase_if("Count");
   erase_if("count");
   erase_if("id");

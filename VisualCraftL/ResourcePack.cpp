@@ -74,7 +74,7 @@ bool VCL_resource_pack::filter_model_textures(
           face.texture = it->second;
         } else {
           if (is_missing_error) {
-            std::string msg = fmt::format(
+            std::string msg = std::format(
                 "Failed to filter image pointer {}. Missing in the "
                 "filter and is_missing_error is set to true.",
                 (const void *)face.texture);
@@ -213,7 +213,7 @@ VCL_resource_pack::find_model(const std::string &block_state_str,
                               buffer_t &buffer) const noexcept {
   if (!resource_json::process_full_id(block_state_str, nullptr, &buffer.pure_id,
                                       &buffer.state_list)) {
-    std::string msg = fmt::format(
+    std::string msg = std::format(
         "invalid full block id that can not be parsed to a list "
         "of block states : \"{}\"",
         block_state_str.c_str());
@@ -227,7 +227,7 @@ VCL_resource_pack::find_model(const std::string &block_state_str,
     std::string msg = "statelist = [";
 
     for (const auto &i : buffer.state_list) {
-      std::string temp = fmt::format("{}={},", i.key.c_str(), i.value.c_str());
+      std::string temp = std::format("{}={},", i.key.c_str(), i.value.c_str());
       msg.append(temp);
     }
     msg.append("]\n");
@@ -245,7 +245,7 @@ VCL_resource_pack::find_model(const std::string &block_state_str,
     if (buffer.pure_id == "air") {
       return block_model::model{};
     }
-    std::string msg = fmt::format(
+    std::string msg = std::format(
         "Undefined reference to block state whose pure block id "
         "is : \"{}\"  and full block id is : \"{}\"\n",
         buffer.pure_id, block_state_str);
@@ -261,7 +261,7 @@ VCL_resource_pack::find_model(const std::string &block_state_str,
     // face_exposed = block_model::invrotate(face_exposed, model.x, model.y);
 
     if (model.model_name == nullptr) {
-      std::string msg = fmt::format(
+      std::string msg = std::format(
           "No block model for full id : \"{}\", this is usually "
           "because block states mismatch.",
           block_state_str);
@@ -284,7 +284,7 @@ VCL_resource_pack::find_model(const std::string &block_state_str,
     }
 
     if (it_model == this->block_models.end()) {
-      std::string msg = fmt::format(
+      std::string msg = std::format(
           "Failed to find block model for full id : \"{}\". Detail : "
           "undefined reference to model named \"{}\".\n",
           block_state_str.c_str(), model.model_name);
@@ -302,20 +302,20 @@ VCL_resource_pack::find_model(const std::string &block_state_str,
   for (const auto &md : models) {
     if constexpr (false) {
       std::string msg =
-          fmt::format("x_rot = {}, y_rot = {}", int(md.x), int(md.y));
+          std::format("x_rot = {}, y_rot = {}", int(md.x), int(md.y));
       VCL_report(VCL_report_type_t::information, msg.c_str());
     }
 
     if (md.model_name == nullptr) {
       std::string msg =
-          fmt::format("File = {}, line = {}\n", __FILE__, __LINE__);
+          std::format("File = {}, line = {}\n", __FILE__, __LINE__);
       VCL_report(VCL_report_type_t::error, msg.c_str());
       return model_with_rotation{nullptr};
     }
   }
 
   if (models.size() <= 0) {
-    std::string msg = fmt::format("File = {}, line = {}\n", __FILE__, __LINE__);
+    std::string msg = std::format("File = {}, line = {}\n", __FILE__, __LINE__);
     VCL_report(VCL_report_type_t::error, msg.c_str());
     return model_with_rotation{nullptr};
   }
@@ -338,7 +338,7 @@ VCL_resource_pack::find_model(const std::string &block_state_str,
       it_model = this->block_models.find("block/" + buffer.pure_id);
     }
     if (it_model == this->block_models.end()) {
-      std::string msg = fmt::format(
+      std::string msg = std::format(
           "Failed to find block model for full id : \"{}\". Detail : "
           "undefined reference to model named \"{}\".\n",
           block_state_str.c_str(), models[mdidx].model_name);
@@ -347,7 +347,7 @@ VCL_resource_pack::find_model(const std::string &block_state_str,
     }
     if constexpr (false) {
       std::string msg =
-          fmt::format("merging back model : {}", models[mdidx].model_name);
+          std::format("merging back model : {}", models[mdidx].model_name);
       VCL_report(VCL_report_type_t::information, msg.c_str());
     }
 
@@ -367,7 +367,7 @@ bool VCL_resource_pack::compute_projection(
   if (ret.index() == 0) {
     auto model = std::get<0>(ret);
     if (model.model_ptr == nullptr) {
-      std::string msg = fmt::format(
+      std::string msg = std::format(
           "failed to find a block model for full id :\"{}\", "
           "function find_model returned nullptr\n",
           block_state_str.c_str());
@@ -395,7 +395,7 @@ bool VCL_resource_pack::override_texture(
 
   auto it = this->textures_original.find(path_in_original.data());
   if (it == this->textures_original.end()) {
-    std::string msg = fmt::format(
+    std::string msg = std::format(
         "Failed to override texture \"{0}\" with given color {1:#x}, the "
         "original texture \"{0}\" doesn't exist.",
         path_in_original, standard_color);
@@ -406,7 +406,7 @@ bool VCL_resource_pack::override_texture(
   const auto &img_original = it->second;
 
   if (img_original.rows() != 16 || img_original.cols() != 16) {
-    std::string msg = fmt::format(
+    std::string msg = std::format(
         "Failed to override texture \"{0}\" with given "
         "color {1:#x}, the image size of "
         "original texture \"{0}\" is {2} * {3} instead of 16 * 16",
@@ -558,7 +558,7 @@ bool VCL_resource_pack::update_block_model_textures() noexcept {
   for (auto &pair : this->textures_override) {
     auto it = this->textures_original.find(pair.first);
     if (it == this->textures_original.end()) {
-      std::string msg = fmt::format(
+      std::string msg = std::format(
           "Internal logical error when invoking function "
           "\"VCL_resource_pack::update_block_model_textures\" : "
           "texture \"{}\" is overrided, but failed to find the "
@@ -601,7 +601,7 @@ bool VCL_resource_pack::override_required_textures(
     }
 
     if (is_grass == is_foliage) {
-      std::string msg = fmt::format(
+      std::string msg = std::format(
           "Failed to override texture for block {} "
           "because it is both grass and foliage.",
           blk.full_id_ptr()->c_str());
@@ -611,7 +611,7 @@ bool VCL_resource_pack::override_required_textures(
     auto model = this->find_model(*blk.full_id_ptr(), buffer);
 
     if (model.index() == 0 && std::get<0>(model).model_ptr == nullptr) {
-      std::string msg = fmt::format(
+      std::string msg = std::format(
           "Failed to override texture for block {} because model is not found.",
           blk.full_id_ptr()->c_str());
       VCL_report(VCL_report_type_t::error, msg.c_str());
@@ -654,7 +654,7 @@ bool VCL_resource_pack::override_required_textures(
     }
 
     if (pair.second.name == nullptr) {
-      std::string msg = fmt::format(
+      std::string msg = std::format(
           "Failed to override texture at address {}, because this "
           "image cannot be found in this->textures_original.",
           (const void *)(pair.first));
@@ -663,7 +663,7 @@ bool VCL_resource_pack::override_required_textures(
     }
 
     if (pair.second.is_foliage && pair.second.is_grass) {
-      std::string msg = fmt::format(
+      std::string msg = std::format(
           "Texture \"{}\" will is used both as grass and as foliage.",
           pair.second.name);
       VCL_report(VCL_report_type_t::warning, msg.c_str());
@@ -677,7 +677,7 @@ bool VCL_resource_pack::override_required_textures(
                                                 replace_transparent_with_black);
     if (!success) {
       std::string msg =
-          fmt::format("Failed to override texture named {}", pair.second.name);
+          std::format("Failed to override texture named {}", pair.second.name);
       VCL_report(VCL_report_type_t::error, msg.c_str());
       return false;
     }

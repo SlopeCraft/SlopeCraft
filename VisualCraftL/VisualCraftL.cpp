@@ -99,7 +99,7 @@ VCL_EXPORT_FUN VCL_resource_pack *VCL_create_resource_pack(
     std::optional<zipped_folder> zf_opt = zipped_folder::from_zip(filename);
 
     if (not zf_opt) {
-      std::string msg = fmt::format("Failed to parse {}\n", filename);
+      std::string msg = std::format("Failed to parse {}\n", filename);
       VCL_report(VCL_report_type_t::error, msg.c_str(), true);
     }
     return zf_opt;
@@ -142,7 +142,7 @@ VCL_create_resource_pack_from_buffers(const size_t zip_count,
          file_contents[0].size});
     if (not zf_opt) {
       VCL_report(VCL_report_type_t::error,
-                 fmt::format("Failed to parse {}\n", zip_file_names[0]).c_str(),
+                 std::format("Failed to parse {}\n", zip_file_names[0]).c_str(),
                  true);
       return nullptr;
     }
@@ -156,7 +156,7 @@ VCL_create_resource_pack_from_buffers(const size_t zip_count,
     if (not zf_opt) {
       VCL_report(
           VCL_report_type_t::error,
-          fmt::format("Failed to parse {}\n", zip_file_names[idx]).c_str(),
+          std::format("Failed to parse {}\n", zip_file_names[idx]).c_str(),
           true);
       return nullptr;
     }
@@ -943,14 +943,14 @@ VCL_EXPORT_FUN void VCL_display_model(const VCL_model *md) {
   msg.append("elements :[\n");
   for (const auto &ele : mdp->elements) {
     msg.append("  {\n");
-    msg.append(fmt::format("    from : [{}, {}, {}]\n", ele._from[0],
+    msg.append(std::format("    from : [{}, {}, {}]\n", ele._from[0],
                            ele._from[1], ele._from[2]));
-    msg.append(fmt::format("    to : [{}, {}, {}]\n", ele._to[0], ele._to[1],
+    msg.append(std::format("    to : [{}, {}, {}]\n", ele._to[0], ele._to[1],
                            ele._to[2]));
     msg.append("  faces : [\n");
     for (const block_model::face_t &face : ele.faces) {
       msg.append("    {");
-      msg.append(fmt::format(
+      msg.append(std::format(
           "uv_start=[{},{}],uv_end=[{},{}],rot={},is_hidden={},texture={}",
           face.uv_start[0], face.uv_start[1], face.uv_end[0], face.uv_end[1],
           int(face.rot) * 10, face.is_hidden, (const void *)face.texture));
@@ -1508,7 +1508,7 @@ VCL_EXPORT VCL_preset *VCL_load_preset(const char *filename,
     block_ids = std::move(nj.at("block_ids"));
     block_classes = std::move(nj.at("block_classes"));
   } catch (std::exception &e) {
-    auto err = fmt::format("Exception occurred when parsing {}, detail: {}",
+    auto err = std::format("Exception occurred when parsing {}, detail: {}",
                            filename, e.what());
     write_to_string_deliver(err, error);
     return nullptr;
@@ -1523,7 +1523,7 @@ VCL_EXPORT VCL_preset *VCL_load_preset(const char *filename,
   for (auto &pair : block_classes.items()) {
     auto cls = magic_enum::enum_cast<VCL_block_class_t>(pair.key());
     if (!cls.has_value()) {
-      auto err = fmt::format(
+      auto err = std::format(
           "Invalid block class \"{}\" can not be converted to "
           "VCL_block_class_t",
           pair.key());
@@ -1554,7 +1554,7 @@ VCL_EXPORT bool VCL_save_preset(const VCL_preset *p, const char *filename,
 
   std::ofstream ofs{filename};
   if (!ofs) {
-    write_to_string_deliver(fmt::format("Failed to open/create {}", filename),
+    write_to_string_deliver(std::format("Failed to open/create {}", filename),
                             error);
     return false;
   }

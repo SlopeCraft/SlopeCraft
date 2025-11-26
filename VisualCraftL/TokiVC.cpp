@@ -101,7 +101,7 @@ bool add_projection_image_for_bsl(const std::vector<VCL_block *> &bs_list,
                                   resource_pack::buffer_t &buff) noexcept {
   for (VCL_block *blkp : bs_list) {
     if (blkp->full_id_ptr() == nullptr) {
-      std::string msg = fmt::format(
+      std::string msg = std::format(
           "\nError : a VCL_block do not have full_id. The block names are : "
           "{}, {}\n",
           blkp->name_ZH, blkp->name_EN);
@@ -111,7 +111,7 @@ bool add_projection_image_for_bsl(const std::vector<VCL_block *> &bs_list,
 
     //    {
     //      std::string msg =
-    //          fmt::format("Computing projection image for full id \"{}\"\n",
+    //          std::format("Computing projection image for full id \"{}\"\n",
     //                      blkp->full_id_ptr()->c_str());
     //      VCL_report(VCL_report_type_t::information, msg.c_str());
     //    }
@@ -120,7 +120,7 @@ bool add_projection_image_for_bsl(const std::vector<VCL_block *> &bs_list,
 
     if (!TokiVC::pack.compute_projection(*blkp->full_id_ptr(),
                                          TokiVC::exposed_face, img, buff)) {
-      std::string msg = fmt::format("failed to compute projection for {}.\n",
+      std::string msg = std::format("failed to compute projection for {}.\n",
                                     blkp->full_id_ptr()->c_str());
       VCL_report(VCL_report_type_t::error, msg.c_str());
       return false;
@@ -192,7 +192,7 @@ bool add_color_trans_to_trans_recurs(
     mutlihash_color_blocks &map_color_blocks) noexcept {
   if (allowed_depth <= 0) {
     std::string msg =
-        fmt::format("Invalid value for allowed_depth : {}\n", allowed_depth);
+        std::format("Invalid value for allowed_depth : {}\n", allowed_depth);
     VCL_report(VCL_report_type_t::error, msg.c_str());
     return false;
   }
@@ -385,7 +385,7 @@ bool TokiVC::set_resource_no_lock() noexcept {
     case SCL_gameVersion::ANCIENT:
     case SCL_gameVersion::FUTURE: {
       std::string msg =
-          fmt::format("Invalid MC version : {}\n", int(TokiVC::version));
+          std::format("Invalid MC version : {}\n", int(TokiVC::version));
       VCL_report(VCL_report_type_t::error, msg.c_str());
       return false;
     }
@@ -452,7 +452,7 @@ bool TokiVC::set_resource_no_lock() noexcept {
     }
 
     //    {
-    //      std::string msg = fmt::format("Size of map_color_blocks = {}\n",
+    //      std::string msg = std::format("Size of map_color_blocks = {}\n",
     //                                    map_color_blocks.size());
     //      VCL_report(VCL_report_type_t::information, msg.c_str());
     //    }
@@ -467,7 +467,7 @@ bool TokiVC::set_resource_no_lock() noexcept {
     }
 
     //    {
-    //      std::string msg = fmt::format("Size of map_color_blocks = {}\n",
+    //      std::string msg = std::format("Size of map_color_blocks = {}\n",
     //                                    map_color_blocks.size());
     //      VCL_report(VCL_report_type_t::information, msg.c_str());
     //    }
@@ -479,7 +479,7 @@ bool TokiVC::set_resource_no_lock() noexcept {
         map_color_blocks, colors_temp, TokiVC::LUT_basic_color_idx_to_blocks);
 
     if (colors_temp.size() != TokiVC::LUT_basic_color_idx_to_blocks.size()) {
-      std::string msg = fmt::format(
+      std::string msg = std::format(
           "\nImpossible error : "
           "colors_temp.size() (aka {}) "
           "!=TokiVC::LUT_basic_color_idx_to_blocks.size() (aka {})\n",
@@ -489,7 +489,7 @@ bool TokiVC::set_resource_no_lock() noexcept {
     }
 
     if (colors_temp.size() >= UINT16_MAX - 1) {
-      std::string msg = fmt::format(
+      std::string msg = std::format(
           "\nError : too much colors. Num of colors should not exceed {}, "
           "but it is {} now.\n",
           UINT16_MAX - 1, colors_temp.size());
@@ -579,7 +579,7 @@ bool TokiVC::set_allowed_no_lock(
 
     if (counter_air != 1) {
       std::string msg =
-          fmt::format("Types of air block is {}, but expected 1.", counter_air);
+          std::format("Types of air block is {}, but expected 1.", counter_air);
       VCL_report(VCL_report_type_t::error, msg.c_str());
       return false;
     }
@@ -590,7 +590,7 @@ bool TokiVC::set_allowed_no_lock(
   std::fill(allowed_list.begin(), allowed_list.end(), 0);
 
   //  {
-  //    std::string msg = fmt::format("TokiVC::colorset_basic.color_count() =
+  //    std::string msg = std::format("TokiVC::colorset_basic.color_count() =
   //                                  {}
   //                                      .",
   //                                  TokiVC::colorset_basic.color_count());
@@ -690,7 +690,7 @@ bool TokiVC::convert(::SCL_convertAlgo algo, bool dither) noexcept {
   }
   if (!this->img_cvter.convert_image(algo, dither, this->imgcvter_prefer_gpu)) {
     std::string msg =
-        fmt::format("Failed to convert. detail : {}, error code = {}",
+        std::format("Failed to convert. detail : {}, error code = {}",
                     this->img_cvter.gpu_resource()->error_detail_v(),
                     this->img_cvter.gpu_resource()->error_code_v());
     VCL_report(VCL_report_type_t::error, msg.c_str());
@@ -725,7 +725,7 @@ bool TokiVC::set_gpu_resource(const VCL_GPU_Platform *p,
   std::pair<int, std::string> err;
   auto gi = gpu_wrapper::gpu_interface::create(platp, devp, err);
   if (gi == nullptr || !gi->ok_v()) {
-    err.second = fmt::format("{}, error code = {}", err.second, err.first);
+    err.second = std::format("{}, error code = {}", err.second, err.first);
     write_to_string_deliver(err.second, option.error_message);
     return false;
   } else {

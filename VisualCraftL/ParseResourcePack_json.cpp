@@ -238,7 +238,7 @@ bool resource_json::parse_block_state(
       obj.contains("multipart") && obj.at("multipart").is_array();
 
   if (has_variant == has_multipart) {
-    std::string msg = fmt::format(
+    std::string msg = std::format(
         "Function parse_block_state failed to parse json : "
         "has_variant = {}, has_multipart = {}.",
         has_variant, has_multipart);
@@ -288,7 +288,7 @@ bool parse_block_state_list(std::string_view str, state_list *const sl,
 
   if (!blkid::process_state_list({str.data(), str.data() + str.size()},
                                  &buffer.attributes, nullptr)) {
-    std::string msg = fmt::format(
+    std::string msg = std::format(
         " Function parse_block_state_list failed to parse block state "
         "list : {}",
         str);
@@ -326,7 +326,7 @@ model_store_t json_to_model(const njson &obj) noexcept {
 
     if (!block_model::is_0_90_180_270(val)) {
       std::string msg;
-      msg = fmt::format(
+      msg = std::format(
           "Invalid x rotation value : {}. Invalid values : 0, 90, 180, 270.",
           val);
       VCL_report(VCL_report_type_t::error, msg.c_str());
@@ -340,7 +340,7 @@ model_store_t json_to_model(const njson &obj) noexcept {
     const int val = obj.at("y");
     if (!block_model::is_0_90_180_270(val)) {
       std::string msg;
-      msg = fmt::format(
+      msg = std::format(
           "Invalid y rotation value : {}. Invalid values : 0, 90, 180, 270.",
           val);
       VCL_report(VCL_report_type_t::error, msg.c_str());
@@ -365,7 +365,7 @@ bool parse_block_state_variant(const njson::object_t &obj,
 
   for (auto pair : variants.items()) {
     if (!pair.value().is_structured()) {
-      std::string msg = fmt::format(
+      std::string msg = std::format(
           "Function parse_block_state_variant failed to parse json : "
           "value for key \"{}\" is not an object or array.",
           pair.key());
@@ -375,7 +375,7 @@ bool parse_block_state_variant(const njson::object_t &obj,
     }
 
     if (pair.value().is_array() && pair.value().size() <= 0) {
-      std::string msg = fmt::format(
+      std::string msg = std::format(
           "Function parse_block_state_variant failed to parse json : "
           "value for key \"{}\" is an empty array.",
           pair.key().data());
@@ -387,7 +387,7 @@ bool parse_block_state_variant(const njson::object_t &obj,
         (pair.value().is_object()) ? (pair.value()) : (pair.value().at(0));
 
     if ((!obj.contains("model")) || (!obj.at("model").is_string())) {
-      std::string msg = fmt::format(
+      std::string msg = std::format(
           "Function parse_block_state_variant failed to parse json : no "
           "valid value for key \"model\"");
 
@@ -401,7 +401,7 @@ bool parse_block_state_variant(const njson::object_t &obj,
 
     if (!parse_block_state_list(pair.key(), &p.first, buffer)) {
       std::string msg =
-          fmt::format("Failed to parse block state list : {}", pair.key());
+          std::format("Failed to parse block state list : {}", pair.key());
       ::VCL_report(VCL_report_type_t::error, msg.c_str());
       return false;
     }
@@ -545,7 +545,7 @@ bool parse_block_state_multipart(const njson::object_t &obj,
   const njson &multiparts = obj.at("multipart");
 
   if (!multiparts.is_array()) {
-    std::string msg = fmt::format("Fatal error : multipart must be an array.");
+    std::string msg = std::format("Fatal error : multipart must be an array.");
 
     ::VCL_report(VCL_report_type_t::error, msg.c_str());
     return false;
@@ -563,7 +563,7 @@ bool parse_block_state_multipart(const njson::object_t &obj,
       const njson &apply = part.at("apply");
       mpp.apply_blockmodel = parse_multipart_apply(apply);
     } catch (const std::exception &err) {
-      std::string msg = fmt::format(
+      std::string msg = std::format(
           "An error occurred when parsing the value of apply. Details : {}",
           err.what());
       ::VCL_report(VCL_report_type_t::error, msg.c_str());
@@ -583,7 +583,7 @@ bool parse_block_state_multipart(const njson::object_t &obj,
       mpp.criteria_variant = parse_multipart_when(when);
 
     } catch (const std::exception &err) {
-      std::string msg = fmt::format(
+      std::string msg = std::format(
           "\nFatal error : failed to parse \"when\" for a multipart blockstate "
           "file. Details : {}\n",
           err.what());
@@ -796,7 +796,7 @@ bool parse_single_model_json(const char *const json_beg,
           {
             auto fidx_opt = string_to_face_idx(temp.key());
             if (not fidx_opt) {
-              std::string msg = fmt::format(
+              std::string msg = std::format(
                   "Error while parsing block model json : invalid key {} "
                   "doesn't refer to any face.",
                   temp.key());
@@ -835,7 +835,7 @@ bool parse_single_model_json(const char *const json_beg,
               auto cullface_fidx = string_to_face_idx(cullface_temp);
 
               if (not cullface_fidx) {
-                std::string msg = fmt::format("Invalid value for cullface : {}",
+                std::string msg = std::format("Invalid value for cullface : {}",
                                               cullface_temp);
                 ::VCL_report(VCL_report_type_t::error, msg.c_str());
                 return false;
@@ -993,7 +993,7 @@ bool inherit_recrusively(std::string_view childname,
   auto it = temp_models.find(child.parent);
 
   if (it == temp_models.end()) {
-    std::string msg = fmt::format(
+    std::string msg = std::format(
         "Failed to inherit. Undefined reference to model {}, "
         "required by {}.",
         child.parent.data(), childname.data());
@@ -1018,7 +1018,7 @@ bool inherit_recrusively(std::string_view childname,
   // dereference_texture_name(child.textures);
 
   if (!success) {
-    std::string msg = fmt::format("Failed to inherit. Child : {}, parent : {}.",
+    std::string msg = std::format("Failed to inherit. Child : {}, parent : {}.",
                                   childname.data(), child.parent.data());
     ::VCL_report(VCL_report_type_t::error, msg.c_str());
     return false;
@@ -1071,7 +1071,7 @@ bool resource_pack::add_block_models(
         (const char *)file.second.data() + file.second.file_size(), &bmjt);
 
     if (!ok) {
-      std::string msg = fmt::format(
+      std::string msg = std::format(
           "Failed to parse assets/minecraft/models/block/{}.", file.first);
       ::VCL_report(VCL_report_type_t::error, msg.c_str());
       return false;
@@ -1095,7 +1095,7 @@ bool resource_pack::add_block_models(
     const bool ok = inherit_recrusively(model.first, model.second, temp_models);
     if (!ok) {
       model.second.parent = "INVALID";
-      std::string msg = fmt::format(
+      std::string msg = std::format(
           "Failed to inherit model {}. This model will be "
           "skipped, but it may cause further errors.",
           model.first);
@@ -1167,14 +1167,14 @@ bool resource_pack::add_block_models(
             skip_this_model = true;
             continue;
           }
-          std::string msg = fmt::format(
+          std::string msg = std::format(
               "Undefined reference to texture \"{}\", required by "
               "model {} but no such image.\nThe textures are : \n",
               tface.texture, tmodel.first);
           for (const auto &pair : tmodel.second.textures) {
             msg.push_back('{');
             std::string temp =
-                fmt::format("{}, {}\n", pair.first.data(), pair.second.data());
+                std::format("{}, {}\n", pair.first.data(), pair.second.data());
             msg.append(temp);
             msg.push_back('}');
           }
@@ -1199,7 +1199,7 @@ bool resource_pack::add_block_models(
     for (const auto &ele : pair.second.elements) {
       for (const auto &face : ele.faces) {
         if (!face.is_hidden && face.texture == nullptr) {
-          std::string msg = fmt::format(
+          std::string msg = std::format(
               "Found an error while examining all block models : "
               "face.texture==nullptr in model {}",
               pair.first);
@@ -1250,7 +1250,7 @@ bool resource_pack::add_block_states(
         &is_dest_variant);
 
     if (!success) {
-      std::string msg = fmt::format(
+      std::string msg = std::format(
           "Failed to parse block state json file "
           "assets/minecraft/blockstates/{}. This will be "
           "skipped but may cause further errors.\n",

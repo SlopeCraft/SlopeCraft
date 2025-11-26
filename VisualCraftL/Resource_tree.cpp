@@ -88,7 +88,7 @@ std::optional<zipped_folder> zipped_folder::from_zip(std::string_view zipname,
     destfile->__data.resize(stat.size);
     zip_file_t *const zfile = zip_fopen_index(zip, entry_idx, ZIP_FL_UNCHANGED);
     if (zfile == NULL) {
-      std::string msg = fmt::format(
+      std::string msg = std::format(
           "Failed to open file in zip. index : {}, file name : {}\n", entry_idx,
           ::zip_get_name(zip, entry_idx, ZIP_FL_ENC_GUESS));
       ::VCL_report(VCL_report_type_t::error, msg.c_str());
@@ -109,7 +109,7 @@ std::optional<zipped_folder> zipped_folder::from_zip(
       zip_content.data(), zip_content.size_bytes(), 0, &err);
   if (source == nullptr) {
     ::VCL_report(VCL_report_type_t::error,
-                 fmt::format("{} may be a broken zip: {}", zipname,
+                 std::format("{} may be a broken zip: {}", zipname,
                              zip_error_strerror(&err))
                      .c_str());
     return std::nullopt;
@@ -118,7 +118,7 @@ std::optional<zipped_folder> zipped_folder::from_zip(
   zip_t *archive = zip_open_from_source(source, ZIP_RDONLY, &err);
   if (archive == nullptr) {
     ::VCL_report(VCL_report_type_t::error,
-                 fmt::format("{} may be a broken zip: {}", zipname,
+                 std::format("{} may be a broken zip: {}", zipname,
                              zip_error_strerror(&err))
                      .c_str());
     zip_source_free(source);
@@ -135,20 +135,20 @@ std::optional<zipped_folder> zipped_folder::from_zip(
     std::filesystem::path path = (const char8_t *)(zipname).data();
     if (zipname.empty()) {
       std::string msg =
-          fmt::format("The filename \"{}\" of zip is empty.", zipname);
+          std::format("The filename \"{}\" of zip is empty.", zipname);
       ::VCL_report(VCL_report_type_t::error, msg.c_str());
       return std::nullopt;
     }
 
     if (!std::filesystem::is_regular_file(path)) {
-      std::string msg = fmt::format(
+      std::string msg = std::format(
           "The filename \"{}\" does not refer to a regular file.", zipname);
       ::VCL_report(VCL_report_type_t::error, msg.c_str());
       return std::nullopt;
     }
 
     if (path.extension() != ".zip") {
-      std::string msg = fmt::format(
+      std::string msg = std::format(
           "The filename \"{}\" extension name is not .zip", zipname);
       ::VCL_report(VCL_report_type_t::error, msg.c_str());
       return std::nullopt;
@@ -158,7 +158,7 @@ std::optional<zipped_folder> zipped_folder::from_zip(
   zip_t *const zip = zip_open(zipname.data(), ZIP_RDONLY, &errorcode);
 
   if (zip == NULL) {
-    std::string msg = fmt::format(
+    std::string msg = std::format(
         "Failed to open zip file : {}, error code = {}", zipname, errorcode);
     ::VCL_report(VCL_report_type_t::error, msg.c_str());
     return std::nullopt;
