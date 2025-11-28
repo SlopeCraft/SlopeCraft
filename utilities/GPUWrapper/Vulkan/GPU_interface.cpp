@@ -1,14 +1,15 @@
 
-#include <fmt/format.h>
-#include <vulkan/vulkan.hpp>
-#include <kompute/Kompute.hpp>
+#include <format>
+#include <print>
 #include <utility>
 #include <vector>
 #include <span>
 #include <mutex>
 #include <optional>
-#include <Eigen/Dense>
 #include <queue>
+#include <vulkan/vulkan.hpp>
+#include <kompute/Kompute.hpp>
+#include <Eigen/Dense>
 #include <tl/expected.hpp>
 #include "GPUWrapper/GPU_interface.h"
 
@@ -88,7 +89,7 @@ create_vk_instance() noexcept {
     return instance;
 
   } catch (const std::exception& e) {
-    fmt::print("Failed to create vulkan instance, exception details: {}",
+    std::print("Failed to create vulkan instance, exception details: {}",
                e.what());
     return nullptr;
   }
@@ -202,7 +203,7 @@ device_wrapper* device_wrapper::create(gpu_wrapper::platform_wrapper* pw,
   try {
     devices = plat.instance->enumeratePhysicalDevices();
   } catch (const std::exception& e) {
-    fmt::println("Failed to enumerate physical devices, detail: {}", e.what());
+    std::println("Failed to enumerate physical devices, detail: {}", e.what());
     set_error_code(ec, error_code::create_physical_device_failure);
     return nullptr;
   }
@@ -259,7 +260,7 @@ device_wrapper* device_wrapper::create(gpu_wrapper::platform_wrapper* pw,
         result->device =
             std::make_shared<vk::Device>(phy_device.createDevice(dci));
       } catch (const std::exception& e) {
-        fmt::println("Failed to create logical device, details: {}", e.what());
+        std::println("Failed to create logical device, details: {}", e.what());
         set_error_code(ec, error_code::create_logical_device_failure);
         delete result;
         return nullptr;
@@ -269,11 +270,11 @@ device_wrapper* device_wrapper::create(gpu_wrapper::platform_wrapper* pw,
     set_error_code(ec, error_code::ok);
     return result;
   } catch (const std::exception& e) {
-    fmt::println("Failed to create logical device because {}", e.what());
+    std::println("Failed to create logical device because {}", e.what());
     set_error_code(ec, error_code::create_logical_device_failure);
     return nullptr;
   } catch (...) {
-    fmt::println("Failed to create logical device because unknown exception.");
+    std::println("Failed to create logical device because unknown exception.");
     set_error_code(ec, error_code::create_logical_device_failure);
     return nullptr;
   }
@@ -375,7 +376,7 @@ class gpu_impl : public gpu_interface {
     } catch (const std::exception& e) {
       this->error.code = error_code::manager_set_colorset_failure;
       this->error.message =
-          fmt::format("Failed to set colorset, detail: {}", e.what());
+          std::format("Failed to set colorset, detail: {}", e.what());
     }
   }
 
@@ -391,7 +392,7 @@ class gpu_impl : public gpu_interface {
     } catch (const std::exception& e) {
       this->error.code = error_code::manager_set_tasks_failure;
       this->error.message =
-          fmt::format("Failed to set tasks, detail: {}", e.what());
+          std::format("Failed to set tasks, detail: {}", e.what());
     }
   }
 
@@ -401,15 +402,15 @@ class gpu_impl : public gpu_interface {
     } catch (const std::exception& e) {
       this->error.code = error_code::manager_wait_failure;
       this->error.message =
-          fmt::format("Failed to wait for results, detail: {}", e.what());
+          std::format("Failed to wait for results, detail: {}", e.what());
     }
-    //    fmt::println("Computation result: [");
+    //    std::println("Computation result: [");
     //    for (uint32_t i = 0; i < this->task_count; i++) {
-    //      fmt::println("\t[task {}, result idx = {}, result diff = {}]", i,
+    //      std::println("\t[task {}, result idx = {}, result diff = {}]", i,
     //                   this->result_idx->data()[i],
     //                   this->result_diff->data()[i]);
     //    }
-    //    fmt::println("]");
+    //    std::println("]");
   }
 
   void execute_v(::SCL_convertAlgo algo, bool wait) noexcept final {
@@ -440,7 +441,7 @@ class gpu_impl : public gpu_interface {
     } catch (const std::exception& e) {
       this->error.code = error_code::manager_execute_failure;
       this->error.message =
-          fmt::format("Failed to execute computation, detail: {}", e.what());
+          std::format("Failed to execute computation, detail: {}", e.what());
     }
   }
 

@@ -25,7 +25,8 @@ target_link_libraries(GPUInterface
     PUBLIC
     OpenCL::OpenCL
     ColorManip_cl_rc
-    Eigen3::Eigen)
+    Eigen3::Eigen
+)
 
 message(STATUS "OpenCL_INCLUDE_DIR = ${OpenCL_INCLUDE_DIR}")
 message(STATUS "OpenCL_INCLUDE_DIRS = ${OpenCL_INCLUDE_DIRS}")

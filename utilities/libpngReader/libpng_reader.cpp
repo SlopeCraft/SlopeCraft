@@ -4,7 +4,7 @@
 
 #include "libpng_reader.h"
 #include <png.h>
-#include <fmt/format.h>
+#include <format>
 
 struct read_buffer_wrapper {
   const void *data;
@@ -32,7 +32,7 @@ parse_png_into_argb32(std::span<const uint8_t> encoded,
   std::string warnings{};
   if (encoded.size() < 8) {
     return {
-        tl::make_unexpected(fmt::format(
+        tl::make_unexpected(std::format(
             "File is too small ({} bytes) to be possible PNG", encoded.size())),
         warnings};
   }
@@ -129,7 +129,7 @@ parse_png_into_argb32(std::span<const uint8_t> encoded,
       default:
         png_destroy_read_struct(&png, &info, &info_end);
         return {tl::make_unexpected(
-                    fmt::format("Unknown color type {}", color_type)),
+                    std::format("Unknown color type {}", color_type)),
                 warnings};
     }
     // cout << ")\n";

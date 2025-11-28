@@ -1,7 +1,6 @@
 project(ColorManip VERSION ${SlopeCraft_version} LANGUAGES C CXX)
 
 find_package(Eigen3 REQUIRED)
-find_package(fmt REQUIRED)
 
 add_library(FlatDiagram STATIC
     FlatDiagram.h

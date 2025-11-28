@@ -7,8 +7,7 @@ set(CMAKE_AUTORCC ON)
 
 add_library(StatMemory STATIC stat_memory.h)
 find_package(tl-expected REQUIRED)
-find_package(fmt REQUIRED)
-target_link_libraries(StatMemory PUBLIC tl::expected fmt::fmt)
+target_link_libraries(StatMemory PUBLIC tl::expected)
 target_include_directories(StatMemory PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 target_compile_features(StatMemory PUBLIC cxx_std_23)
 # Set source file by system

@@ -29,7 +29,7 @@ This file is part of SlopeCraft.
 #include <magic_enum/magic_enum.hpp>
 
 #include <SC_version_buildtime.h>
-#include <fmt/format.h>
+#include <formath>
 
 using std::cout, std::endl;
 
@@ -181,11 +181,11 @@ int main(int argc, char **argv) {
   CLI11_PARSE(app, argc, argv);
 
   if (show_config) {
-    fmt::println("Version : {}", SC_VERSION_STR);
-    fmt::println("Build type : {}", CMAKE_BUILD_TYPE);
-    fmt::println("GPU API : {}", SC_GPU_API);
-    fmt::println("Vectorize : {}", SC_VECTORIZE);
-    fmt::println("Gprof : {}", SC_GPROF);
+    std::println("Version : {}", SC_VERSION_STR);
+    std::println("Build type : {}", CMAKE_BUILD_TYPE);
+    std::println("GPU API : {}", SC_GPU_API);
+    std::println("Vectorize : {}", SC_VECTORIZE);
+    std::println("Gprof : {}", SC_GPROF);
     return 0;
   }
 

@@ -13,8 +13,9 @@ target_link_libraries(GPUInterface PUBLIC
     Vulkan::Vulkan
     kompute::kompute
     Eigen3::Eigen
-    tl::expected)
-target_compile_features(GPUInterface PRIVATE cxx_std_20)
+    tl::expected
+)
+target_compile_features(GPUInterface PRIVATE cxx_std_23)
 
 get_target_property(glslc_exe Vulkan::glslc LOCATION)
 message(STATUS "glslc found at ${glslc_exe}")

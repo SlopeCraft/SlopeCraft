@@ -19,7 +19,6 @@ target_compile_features(Schem PUBLIC cxx_std_14)
 find_package(Eigen3 REQUIRED)
 
 find_package(cereal REQUIRED)
-find_package(fmt REQUIRED)
 find_package(magic_enum REQUIRED)
 
 find_package(Boost CONFIG)
@@ -29,7 +28,6 @@ target_link_libraries(Schem PUBLIC
     NBTWriter
     Eigen3::Eigen
     cereal::cereal
-    fmt::fmt
     magic_enum::magic_enum
     NBTWriter
 )

@@ -22,11 +22,11 @@ This file is part of SlopeCraft.
 
 #include "OCLWrapper.h"
 #include "../GPU_interface.h"
+#include <cstdlib>
+#include <format>
 
 #include <Eigen/Dense>
-#include <stdlib.h>
 #include <utilities/SC_GlobalEnums.h>
-#include <fmt/format.h>
 
 extern "C" {
 extern const unsigned char ColorManip_cl_rc[];
@@ -152,9 +152,9 @@ void ocl_warpper::ocl_resource::init_resource() noexcept {
         this->device, &ec_get_build_log);
     if (ec_get_build_log == CL_SUCCESS) {
       this->err_msg =
-          fmt::format("Failed to build program. Build log:\n{}", build_log);
+          std::format("Failed to build program. Build log:\n{}", build_log);
     } else {
-      this->err_msg = fmt::format(
+      this->err_msg = std::format(
           "Failed to build program, and then failed to retrieve build log with "
           "error code {}",
           ec_get_build_log);
@@ -341,7 +341,7 @@ cl::Kernel *ocl_warpper::ocl_resource::kernel_by_algo(
     default:
       return nullptr;
   }
-  return nullptr;
+  //  return nullptr;
 }
 
 void ocl_warpper::ocl_resource::set_task(

@@ -6,7 +6,7 @@
 #include <cstdlib>
 #include <cstdint>
 #include <array>
-#include <fmt/format.h>
+#include <format>
 #include <functional>
 
 #include <ranges>
@@ -23,7 +23,7 @@ tl::expected<std::map<std::string, int64_t>, std::string> parse_linux_file(
     FILE* fd = fopen(filename, "r");
     if (fd == nullptr) {
       return tl::make_unexpected(
-          fmt::format("Failed to read \"{}\", fopen returned NULL", filename));
+          std::format("Failed to read \"{}\", fopen returned NULL", filename));
     }
     std::array<char, 4096> buf;
     while (true) {
@@ -50,7 +50,7 @@ tl::expected<std::map<std::string, int64_t>, std::string> parse_linux_file(
     if (idx_of_colon == line_sv.npos) {  // Failed to parse this line, skip it.
       continue;
       //      return tl::make_unexpected(
-      //          fmt::format("Failed to parse \"{}\" from {}", line_sv,
+      //          std::format("Failed to parse \"{}\" from {}", line_sv,
       //          filename));
     }
 
@@ -130,7 +130,7 @@ get_system_memory_info() noexcept {
 [[nodiscard]] tl::expected<self_memory_usage, std::string>
 get_self_memory_info() noexcept {
   const int64_t pid = getpid();
-  const std::string file = fmt::format("/proc/{}/status", pid);
+  const std::string file = std::format("/proc/{}/status", pid);
   auto fields = parse_linux_file(file.c_str(), [](std::string_view line) {
     return not line.starts_with("VmSize");
   });
@@ -143,12 +143,12 @@ get_self_memory_info() noexcept {
   if (it not_eq val.end()) {
     const int64_t used_memory = it->second;
     if (used_memory < 0) {
-      return tl::make_unexpected(fmt::format(
+      return tl::make_unexpected(std::format(
           "VmSize from {} is negative(the value is {})", file, used_memory));
     }
     return self_memory_usage{uint64_t(used_memory)};
   }
 
   return tl::make_unexpected(
-      fmt::format("Failed to parse field VmSize from {}", file));
+      std::format("Failed to parse field VmSize from {}", file));
 }

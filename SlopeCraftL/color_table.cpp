@@ -167,14 +167,14 @@ const mc_block *color_table_impl::find_block_for_index(
 
   blkid::char_range pure_id_range;
   // invalid block id
-  if (!blkid::process_blk_id(blkid, nullptr, &pure_id_range, nullptr)) {
+  if (not blkid::process_blk_id(blkid, nullptr, &pure_id_range, nullptr)) {
     return nullptr;
   }
 
   std::string_view pure_id{pure_id_range.begin(), pure_id_range.end()};
 
   auto mush_type_opt = lsi::pureid_to_type(pure_id);
-  if (!mush_type_opt.has_value()) {
+  if (not mush_type_opt.has_value()) {
     return nullptr;
   }
 

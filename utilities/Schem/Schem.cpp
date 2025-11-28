@@ -27,7 +27,7 @@ This file is part of SlopeCraft.
 #include <ctime>
 #include <filesystem>
 #include <iostream>
-#include <fmt/format.h>
+#include <format>
 #include <set>
 
 #include "Schem.h"
@@ -56,7 +56,7 @@ std::string Schem::check_size() const noexcept {
 
 std::string Schem::check_size(int64_t x, int64_t y, int64_t z) noexcept {
   if (x < 0 || y < 0 || z < 0) {
-    return fmt::format(
+    return std::format(
         "Size in one or more dimensions is negative. x= {}, y= {}, z= {}", x, y,
         z);
   }
@@ -196,7 +196,7 @@ Schem::split_by_block_size(
       for (size_t blk_idx = 0; blk_idx < xyz_block_len[dim].size(); blk_idx++) {
         const auto block_len = xyz_block_len[dim][blk_idx];
         if (block_len <= 0) {
-          return tl::make_unexpected(fmt::format(
+          return tl::make_unexpected(std::format(
               "Found non-positive block length in dim = {}, block index = {}",
               dim, blk_idx));
         }
@@ -209,7 +209,7 @@ Schem::split_by_block_size(
         cur_block_start_index = cur_block_end_index;
       }
       if (block_len_sum[dim] not_eq shape[dim]) {
-        return tl::make_unexpected(fmt::format(
+        return tl::make_unexpected(std::format(
             "The sum of block length of dim {} is {}, which is not identical "
             "to shape on this dim({}), ",
             dim, block_len_sum[dim], shape[dim]));
@@ -399,7 +399,7 @@ tl::expected<void, std::pair<SCL_errorFlag, std::string>> Schem::pre_check(
     // wrong extension
     return tl::make_unexpected(std::make_pair(
         SCL_errorFlag::EXPORT_SCHEM_WRONG_EXTENSION,
-        fmt::format("The filename extension must be \"{}\".", extension)));
+        std::format("The filename extension must be \"{}\".", extension)));
   }
   // check for invalid blocks
   {
@@ -407,7 +407,7 @@ tl::expected<void, std::pair<SCL_errorFlag, std::string>> Schem::pre_check(
     if (this->have_invalid_block(&pos[0], &pos[1], &pos[2])) {
       return tl::make_unexpected(std::make_pair(
           SCL_errorFlag::EXPORT_SCHEM_HAS_INVALID_BLOCKS,
-          fmt::format("The first invalid block is at x={}, y={}, z={}", pos[0],
+          std::format("The first invalid block is at x={}, y={}, z={}", pos[0],
                       pos[1], pos[2])));
     }
   }
@@ -429,7 +429,7 @@ Schem::export_litematic(std::string_view filename,
   if (!lite.open(filename.data())) {
     return tl::make_unexpected(
         std::make_pair(SCL_errorFlag::EXPORT_SCHEM_FAILED_TO_CREATE_FILE,
-                       fmt::format("Failed to open file: {}", filename)));
+                       std::format("Failed to open file: {}", filename)));
   }
 
   lite.writeCompound("Metadata");
@@ -567,7 +567,7 @@ Schem::export_litematic(std::string_view filename,
       lite.close();
       return tl::make_unexpected(std::make_pair(
           SCL_errorFlag::UNKNOWN_MAJOR_GAME_VERSION,
-          fmt::format("Unknown major game version! Only 1.12 to 1.19 is "
+          std::format("Unknown major game version! Only 1.12 to 1.19 is "
                       "supported, but given value {}",
                       int(this->MC_major_ver))));
   }
@@ -617,7 +617,7 @@ Schem::export_structure(std::string_view filename,
   if (!file.open(filename.data())) {
     return tl::make_unexpected(
         std::make_pair(SCL_errorFlag::EXPORT_SCHEM_FAILED_TO_CREATE_FILE,
-                       fmt::format("Failed to open file {}", filename)));
+                       std::format("Failed to open file {}", filename)));
   }
 
   file.writeListHead("size", NBT::Int, 3);
@@ -752,7 +752,7 @@ Schem::export_structure(std::string_view filename,
         file.close();
         return tl::make_unexpected(std::make_pair(
             SCL_errorFlag::UNKNOWN_MAJOR_GAME_VERSION,
-            fmt::format("Unknown major game version! Only 1.12 to 1.21 is "
+            std::format("Unknown major game version! Only 1.12 to 1.21 is "
                         "supported, but given value {}",
                         (int)this->MC_major_ver)));
     }
@@ -784,7 +784,7 @@ tl::expected<void, std::pair<SCL_errorFlag, std::string>> Schem::export_WESchem(
   if (not file.open(filename.data())) {
     return tl::make_unexpected(
         std::make_pair(SCL_errorFlag::EXPORT_SCHEM_FAILED_TO_CREATE_FILE,
-                       fmt::format("Failed to open file {}", filename)));
+                       std::format("Failed to open file {}", filename)));
   }
 
   auto write_version = [&]() {  // data version
@@ -915,7 +915,7 @@ libSchem::Schem::remove_unused_ids() noexcept {
   for (const ele_t blkid : *this) {
     if (blkid >= this->palette_size()) [[unlikely]] {
       return tl::make_unexpected(
-          fmt::format("The scheme required block with id = {}, but the block "
+          std::format("The scheme required block with id = {}, but the block "
                       "palette has only {} blocks",
                       blkid, this->palette_size()));
     }

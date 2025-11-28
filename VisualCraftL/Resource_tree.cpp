@@ -22,10 +22,10 @@ This file is part of SlopeCraft.
 
 #include "Resource_tree.h"
 
-#include <zip.h>
-#include <fmt/format.h>
+#include <format>
 #include <filesystem>
 #include <cassert>
+#include <zip.h>
 
 #include "VCL_internal.h"
 

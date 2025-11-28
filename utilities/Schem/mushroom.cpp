@@ -1,5 +1,5 @@
 #include "mushroom.h"
-#include <fmt/format.h>
+#include <format>
 #include <process_block_id.h>
 #include <magic_enum/magic_enum.hpp>
 #include <unordered_map>
@@ -35,7 +35,7 @@ lsi::mushroom_state::mushroom_state(std::array<bool, 6> _stoma)
     : m_is_stoma{_stoma} {}
 
 std::string lsi::mushroom_state::to_block_state_list() const noexcept {
-  return fmt::format("up={},down={},north={},south={},east={},west={}",
+  return std::format("up={},down={},north={},south={},east={},west={}",
                      m_is_stoma[0], m_is_stoma[1], m_is_stoma[2], m_is_stoma[3],
                      m_is_stoma[4], m_is_stoma[5]);
 }
@@ -126,7 +126,7 @@ std::string_view lsi::mushroom_block::pureid() const noexcept {
 
 std::string lsi::mushroom_block::id(bool with_namespacename) const noexcept {
   std::string_view nsn = (with_namespacename ? "minecraft::" : "");
-  return fmt::format("{}{}[{}]", nsn, this->pureid(),
+  return std::format("{}{}[{}]", nsn, this->pureid(),
                      m_state.to_block_state_list());
 }
 

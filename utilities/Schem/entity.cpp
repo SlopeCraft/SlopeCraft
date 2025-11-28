@@ -3,7 +3,7 @@
 //
 
 #include <NBTWriter/NBTWriter.h>
-#include <fmt/format.h>
+#include <format>
 
 #include "entity.h"
 
@@ -69,7 +69,7 @@ tl::expected<size_t, std::string> libSchem::item_frame::dump(
   bytes += destination.writeFloat("ItemDropChance", this->item_drop_chance);
   if (this->item_rotation < 0 or this->item_rotation > 7) {
     return tl::make_unexpected(
-        fmt::format("Invalid item rotation {}, expected in range [0,7]",
+        std::format("Invalid item rotation {}, expected in range [0,7]",
                     int(this->item_rotation)));
   }
   bytes += destination.writeByte("ItemRotation", this->item_rotation);
@@ -79,7 +79,7 @@ tl::expected<size_t, std::string> libSchem::item_frame::dump(
     auto res_item = this->item_->dump(destination, data_version);
     if (not res_item) {
       return tl::make_unexpected(
-          fmt::format("Failed to dump item fields: {}", res_item.error()));
+          std::format("Failed to dump item fields: {}", res_item.error()));
     }
     bytes += res_item.value();
     bytes += destination.endCompound();

@@ -30,7 +30,7 @@ This file is part of SlopeCraft.
 
 #include "../GPU_interface.h"
 #include <array>
-#include <assert.h>
+#include <cassert>
 #include <string>
 #include <utilities/SC_GlobalEnums.h>
 
