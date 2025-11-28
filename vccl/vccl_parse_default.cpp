@@ -20,13 +20,13 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
-#include "vccl_internal.h"
-#include <QImage>
-#include <QImageReader>
 #include <filesystem>
-#include <formath>
+#include <format>
 #include <fstream>
 #include <omp.h>
+#include <QImage>
+#include <QImageReader>
+#include "vccl_internal.h"
 
 void cb_progress_range_set(void *, int, int, int) {}
 void cb_progress_add(void *, int) {}

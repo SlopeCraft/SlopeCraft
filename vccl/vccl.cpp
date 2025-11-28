@@ -29,7 +29,7 @@ This file is part of SlopeCraft.
 #include <magic_enum/magic_enum.hpp>
 
 #include <SC_version_buildtime.h>
-#include <formath>
+#include <format>
 
 using std::cout, std::endl;
 
