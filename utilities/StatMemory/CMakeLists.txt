@@ -22,10 +22,12 @@ else ()
     message(FATAL_ERROR "Unsupported system ${CMAKE_SYSTEM_NAME}, not windows, linux or macos")
 endif ()
 
-add_executable(test_stat_memory others/test_stat_memory.cpp)
-target_link_libraries(test_stat_memory PRIVATE StatMemory)
-add_test(NAME stat_memory
-    COMMAND test_stat_memory)
+if (NOT ${MINGW})
+    add_executable(test_stat_memory others/test_stat_memory.cpp)
+    target_link_libraries(test_stat_memory PRIVATE StatMemory)
+    add_test(NAME stat_memory
+        COMMAND test_stat_memory)
+endif ()
 
 find_package(Qt6 COMPONENTS Widgets REQUIRED)
 add_library(MemoryPolicyDialog STATIC
