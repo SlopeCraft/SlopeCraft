@@ -400,11 +400,11 @@ void VCWind::on_pb_execute_clicked() noexcept {
     QImage new_img(it->second.first.width(), it->second.first.height(),
                    QImage::Format_ARGB32);
     this->kernel->converted_image((uint32_t *)new_img.scanLine(0), nullptr,
-                                  nullptr, true);
+                                  nullptr, false);
     it->second.second = new_img;
 
-    if (!converted_image_dest_path.isEmpty()) {
-      if (!this->export_converted(converted_image_dest_path, new_img)) {
+    if (not converted_image_dest_path.isEmpty()) {
+      if (not this->export_converted(converted_image_dest_path, new_img)) {
         continue;
       }
     }
@@ -413,8 +413,8 @@ void VCWind::on_pb_execute_clicked() noexcept {
         ->setText(
             QStringLiteral("%1 %").arg(100.0f * task_finished / task_num));
 
-    if (!diagram_dest.isEmpty()) {
-      if (!this->export_flatdiagram(diagram_dest)) {
+    if (not diagram_dest.isEmpty()) {
+      if (not this->export_flatdiagram(diagram_dest)) {
         continue;
       }
       task_finished++;
