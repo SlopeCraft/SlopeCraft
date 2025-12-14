@@ -250,10 +250,10 @@ class VCL_Kernel {
     int png_compress_memory_level{8};
   };
 
-  virtual void flag_diagram(uint32_t *image_u8c3_rowmajor,
-                            const flag_diagram_option &, int layer_idx,
-                            int64_t *rows_required_dest,
-                            int64_t *cols_required_dest) const noexcept = 0;
+  //  virtual void flag_diagram(uint32_t *image_u8c3_rowmajor,
+  //                            const flag_diagram_option &, int layer_idx,
+  //                            int64_t *rows_required_dest,
+  //                            int64_t *cols_required_dest) const noexcept = 0;
   virtual bool export_flag_diagram(const char *png_filename,
                                    const flag_diagram_option &,
                                    int layer_idx) const noexcept = 0;

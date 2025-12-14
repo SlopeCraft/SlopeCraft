@@ -101,6 +101,7 @@ set(VCL_link_libs
     ${VCL_libzip_additions}
     Schem
     ProcessBlockId
+    FlatDiagram
 )
 
 target_link_libraries(VisualCraftL PRIVATE $<BUILD_INTERFACE:${VCL_link_libs}>)

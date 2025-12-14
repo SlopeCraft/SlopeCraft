@@ -105,9 +105,10 @@ class TokiVC : public VCL_Kernel {
   void converted_image(uint32_t *dest, int64_t *rows, int64_t *cols,
                        bool write_dest_row_major) const noexcept override;
 
-  void flag_diagram(uint32_t *image_u8c3_rowmajor, const flag_diagram_option &,
-                    int layer_idx, int64_t *rows_required_dest,
-                    int64_t *cols_required_dest) const noexcept override;
+  //  void flag_diagram(uint32_t *image_u8c3_rowmajor, const flag_diagram_option
+  //  &,
+  //                    int layer_idx, int64_t *rows_required_dest,
+  //                    int64_t *cols_required_dest) const noexcept override;
   bool export_flag_diagram(const char *png_filename,
                            const flag_diagram_option &,
                            int layer_idx) const noexcept override;

@@ -278,7 +278,7 @@ bool VCWind::export_converted(const QString &converted_image_dest_path,
 
 bool VCWind::export_flatdiagram(const QString &diagram_dest) noexcept {
   const QStringList qsl = diagram_dest.split(';');
-  if (qsl.size() != VCL_get_max_block_layers()) {
+  if (qsl.size() not_eq VCL_get_max_block_layers()) {
     const auto ret = QMessageBox::critical(
         this, VCWind::tr("平面示意图输入错误"),
         VCWind::tr("应输入%1个以\";\"分隔的文件名，但实际上输入了%"
