@@ -202,7 +202,7 @@ jobs:
           echo "short_sha = $short_sha"
           echo "SHORT_SHA=$short_sha" >> $env:GITHUB_ENV
 
-      - name: Filter perl-related pathes from env:path, and append directory of gcc13 to path
+      - name: Filter perl-related pathes from env:path, and append directory of gcc15 to path
         run: |
           $basedir=(pwd).path.replace("\\","/")
           $exclude_key_words="perl","Strawberry"
@@ -227,8 +227,8 @@ jobs:
       - name: Download mingw64 and extract
         run: |
           cmd
-          curl -JL -o bin/gcc13.7z "https://github.com/niXman/mingw-builds-binaries/releases/download/13.2.0-rt_v11-rev1/x86_64-13.2.0-release-posix-seh-ucrt-rt_v11-rev1.7z"
-          7z x -obin bin/gcc13.7z
+          curl -JL -o bin/gcc15.7z "https://github.com/niXman/mingw-builds-binaries/releases/download/15.2.0-rt_v13-rev0/x86_64-15.2.0-release-posix-seh-ucrt-rt_v13-rev0.7z"
+          7z x -obin bin/gcc15.7z
           exit
         # gcc installation dir: bin/mingw64
         # gcc.exe: bin/mingw64/bin/gcc.exe
