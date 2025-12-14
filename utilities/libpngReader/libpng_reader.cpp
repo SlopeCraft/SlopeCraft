@@ -5,6 +5,7 @@
 #include "libpng_reader.h"
 #include <png.h>
 #include <format>
+#include <cstdlib>
 
 struct read_buffer_wrapper {
   const void *data;
