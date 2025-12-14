@@ -324,14 +324,28 @@ bool structure_3D_impl::export_flat_diagram(
   std::vector<Eigen::Array<uint32_t, 16, 16, Eigen::RowMajor>> img_list_rmj;
   img_list_rmj.reserve(this->schem.palette_size());
 
+  color_table_searching_index block_indexer;
+  {
+    auto indexer_opt =
+        dynamic_cast<const color_table_impl &>(table_).build_indexer();
+    if (not indexer_opt) {
+      option.ui.report_error(
+          errorFlag::EXPORT_FLAT_DIAGRAM_FAILURE,
+          std::format("SlopeCraftL internal error. {}", indexer_opt.error())
+              .c_str());
+      return false;
+    }
+    block_indexer = std::move(indexer_opt.value());
+  }
   for (size_t pblkid = 0; pblkid < this->schem.palette_size(); pblkid++) {
-    if (pblkid == 0) {
+    if (pblkid == 0) {  // air
       img_list_rmj.emplace_back();
       img_list_rmj[0].setZero();
       continue;
     }
     std::string_view id = this->schem.palette()[pblkid];
-    const mc_block *blkp = table.find_block_for_index(pblkid - 1, id);
+    const mc_block *blkp = block_indexer.find(id);
+    //    const mc_block *blkp = table.find_block_for_index(pblkid - 1, id);
     if (blkp == nullptr) {
       std::string blkid_full;
       blkid_full.reserve(64 * 2048);
@@ -357,8 +371,8 @@ bool structure_3D_impl::export_flat_diagram(
   auto block_at_callback = [this, &img_list_rmj](
                                int64_t r,
                                int64_t c) -> libFlatDiagram::block_img_ref_t {
-    if (r < 0 || c < 0 || r >= this->schem.z_range() ||
-        c >= this->schem.x_range()) {
+    if (r < 0 or c < 0 or r >= this->schem.z_range() or
+        c >= this->schem.x_range()) {  // out of range
       return libFlatDiagram::block_img_ref_t{img_list_rmj.at(0).data()};
     }
 

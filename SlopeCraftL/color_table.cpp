@@ -151,57 +151,67 @@ std::vector<std::string_view> color_table_impl::block_id_list(
 }
 
 const mc_block *color_table_impl::find_block_for_index(
-    int idx, std::string_view blkid) const noexcept {
-  if (idx < 0) {
+    std::string_view blkid) const noexcept {
+  if (blkid.empty()) {
     return nullptr;
   }
-
-  if (idx < (int)this->blocks.size()) {
-    // assert(this->blocks[idx].id == blkid);
-    return &this->blocks[idx];
-  }
-
-  // the block must be mushroom
-  namespace lsi = libSchem::internal;
-  using lsi::mushroom_type;
-
   blkid::char_range pure_id_range;
   // invalid block id
   if (not blkid::process_blk_id(blkid, nullptr, &pure_id_range, nullptr)) {
     return nullptr;
   }
+  std::string_view pure_id{pure_id_range};
 
-  std::string_view pure_id{pure_id_range.begin(), pure_id_range.end()};
-
-  auto mush_type_opt = lsi::pureid_to_type(pure_id);
-  if (not mush_type_opt.has_value()) {
-    return nullptr;
-  }
-
-  uint8_t expected_basecolor = 0;
-  switch (mush_type_opt.value()) {
-    case mushroom_type::red:
-      expected_basecolor = 28;
-      break;
-    case mushroom_type::brown:
-      expected_basecolor = 10;
-      break;
-    case mushroom_type::stem:
-      expected_basecolor = 3;
-      break;
-  }
-
-  const auto *blkp = this->find_block_for_index(expected_basecolor, {});
-
-  if (blkp == nullptr) {
-    return nullptr;
-  }
-
-  if (lsi::pureid_to_type(pure_id) != mush_type_opt) {
-    return nullptr;
-  }
-
-  return blkp;
+  //  if (idx < 0) {
+  //    return nullptr;
+  //  }
+  //
+  //  if (idx < (int)this->blocks.size()) {
+  //    // assert(this->blocks[idx].id == blkid);
+  //    return &this->blocks[idx];
+  //  }
+  //
+  //  // the block must be mushroom
+  //  namespace lsi = libSchem::internal;
+  //  using lsi::mushroom_type;
+  //
+  //  blkid::char_range pure_id_range;
+  //  // invalid block id
+  //  if (not blkid::process_blk_id(blkid, nullptr, &pure_id_range, nullptr)) {
+  //    return nullptr;
+  //  }
+  //
+  //  std::string_view pure_id{pure_id_range.begin(), pure_id_range.end()};
+  //
+  //  auto mush_type_opt = lsi::pureid_to_type(pure_id);
+  //  if (not mush_type_opt.has_value()) {
+  //    return nullptr;
+  //  }
+  //
+  //  uint8_t expected_basecolor = 0;
+  //  switch (mush_type_opt.value()) {
+  //    case mushroom_type::red:
+  //      expected_basecolor = 28;
+  //      break;
+  //    case mushroom_type::brown:
+  //      expected_basecolor = 10;
+  //      break;
+  //    case mushroom_type::stem:
+  //      expected_basecolor = 3;
+  //      break;
+  //  }
+  //
+  //  const auto *blkp = this->find_block_for_index(expected_basecolor, {});
+  //
+  //  if (blkp == nullptr) {
+  //    return nullptr;
+  //  }
+  //
+  //  if (lsi::pureid_to_type(pure_id) != mush_type_opt) {
+  //    return nullptr;
+  //  }
+  //
+  //  return blkp;
 }
 
 uint64_t color_table_impl::hash() const noexcept {
@@ -452,6 +462,39 @@ std::string color_table_impl::impl_generate_test_schematic(
   } else {
     return {};
   }
+}
+
+std::expected<color_table_searching_index, std::string>
+color_table_impl::build_indexer() const noexcept {
+  color_table_searching_index indexer;
+  for (const auto &blk : this->blocks) {
+    auto info_opt = blk.detail_info(this->mc_version());
+    if (not info_opt) {
+      return std::unexpected{std::format("Found invalid block id: \"{}\"",
+                                         blk.idForVersion(this->mc_version()))};
+    }
+    indexer.block_LUT.emplace(info_opt.value(), &blk);
+  }
+
+  return indexer;
+}
+
+const mc_block *color_table_searching_index::find(
+    std::string_view id) const noexcept {
+  using namespace blkid;
+  char_range namespace_, pure_id;
+  if (not process_blk_id(id, &namespace_, &pure_id, nullptr)) {
+    return nullptr;
+  }
+  const block_detail_info detail{
+      .id_namespace{namespace_},
+      .pure_id{pure_id},
+  };
+  auto it = this->block_LUT.find(detail);
+  if (it == this->block_LUT.end()) {
+    return nullptr;
+  }
+  return it->second;
 }
 
 std::array<uint32_t, 256> LUT_map_color_to_ARGB() noexcept {

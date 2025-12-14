@@ -24,17 +24,39 @@ This file is part of SlopeCraft.
 #define SIMPLEBLOCK_H
 
 #include <iostream>
+#include <optional>
 #include <string>
 #include <vector>
 #include <utility>
 #include <map>
 #include <memory>
 
+#include <version_set.hpp>
 #include "SCLDefines.h"
 using namespace SlopeCraft;
-#include <version_set.hpp>
 
 typedef std::vector<std::string> stringList;
+
+struct block_detail_info {
+  std::string_view id_namespace;
+  std::string_view pure_id;
+
+  [[nodiscard]] inline bool operator==(
+      const block_detail_info &b) const noexcept {
+    return (this->id_namespace == b.id_namespace) and
+           (this->pure_id == b.pure_id);
+  }
+};
+
+template <>
+struct std::hash<block_detail_info> {
+  [[nodiscard]] static inline size_t operator()(
+      const block_detail_info &info) noexcept {
+    size_t hash = std::hash<std::string_view>{}(info.id_namespace);
+    hash ^= std::hash<std::string_view>{}(info.pure_id);
+    return hash;
+  }
+};
 
 class mc_block : public ::SlopeCraft::mc_block_interface {
  public:
@@ -53,6 +75,9 @@ class mc_block : public ::SlopeCraft::mc_block_interface {
   bool endermanPickable{false};
   bool burnable{false};
   uint8_t stackSize{64};
+
+  [[nodiscard]] std::optional<block_detail_info> detail_info(
+      SCL_gameVersion current_version) const;
 
   const char *getId() const noexcept override { return id.data(); };
   uint8_t getVersion() const noexcept override { return version; };

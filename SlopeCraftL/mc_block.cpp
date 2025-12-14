@@ -23,6 +23,8 @@ This file is part of SlopeCraft.
 #include "mc_block.h"
 #include "blocklist.h"
 
+#include "process_block_id.h"
+
 mc_block::mc_block() {
   //  id = "";
   //  version = 0;
@@ -34,6 +36,19 @@ mc_block::mc_block() {
 
   image.resize(16, 16);
   // wallUseable=true;
+}
+
+std::optional<block_detail_info> mc_block::detail_info(
+    SCL_gameVersion current_version) const {
+  using namespace blkid;
+  char_range namespace_name;
+  char_range pure_id;
+  const bool ok = blkid::process_blk_id(this->idForVersion(current_version),
+                                        &namespace_name, &pure_id, nullptr);
+  if (not ok) {
+    return std::nullopt;
+  }
+  return block_detail_info{.id_namespace{namespace_name}, .pure_id{pure_id}};
 }
 
 void mc_block_interface::clear() noexcept {

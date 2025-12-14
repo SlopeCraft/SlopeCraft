@@ -7,12 +7,19 @@
 
 #include <array>
 #include <filesystem>
-#include <tl/expected.hpp>
+#include <expected>
+#include <unordered_map>
 #include "SlopeCraftL.h"
 #include "SCLDefines.h"
 #include "mc_block.h"
 #include "string_deliver.h"
 #include "converted_image.h"
+
+struct color_table_searching_index {
+  std::unordered_map<block_detail_info, const mc_block *> block_LUT;
+
+  [[nodiscard]] const mc_block *find(std::string_view id) const noexcept;
+};
 
 class color_table_impl : public SlopeCraft::color_table {
  public:
@@ -55,7 +62,7 @@ class color_table_impl : public SlopeCraft::color_table {
       bool contain_air) const noexcept;
 
   [[nodiscard]] const mc_block *find_block_for_index(
-      int index, std::string_view block_id) const noexcept;
+      std::string_view block_id) const noexcept;
 
   [[nodiscard]] uint64_t hash() const noexcept;
 
@@ -134,6 +141,9 @@ class color_table_impl : public SlopeCraft::color_table {
   std::string impl_generate_test_schematic(
       std::string_view filename,
       const test_blocklist_options &option) const noexcept;
+
+  [[nodiscard]] std::expected<color_table_searching_index, std::string>
+  build_indexer() const noexcept;
 };
 
 [[nodiscard]] std::array<uint32_t, 256> LUT_map_color_to_ARGB() noexcept;
