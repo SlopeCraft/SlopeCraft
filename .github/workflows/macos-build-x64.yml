@@ -36,7 +36,7 @@ jobs:
         run: |
           brew install llvm lld
       - name: Check clang
-        run: /usr/local/opt/llvm/bin/clang -v
+        run: /opt/homebrew/opt/llvm/bin/clang -v
       - name: echo matrix variables (build_type = ${{ matrix.build_type }})
         run: |
           echo $BUILD_TYPE
@@ -76,7 +76,7 @@ jobs:
       - name: Check PATH
         run: echo $PATH
       - name: Configure CMake
-        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=/usr/local/opt/llvm/bin/clang -DCMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++ -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -DSlopeCraft_vectorize=$VECTORIZE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH="$HOME/Downloads/Qt6.6.0-appleclang-static-x86_64;/System/Volumes/Data/usr/local/Cellar;/opt/homebrew" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DSlopeCraft_macdeployqt_flags_install="-no-plugins" -DKOMPUTE_OPT_DISABLE_VULKAN_VERSION_CHECK=ON
+        run: cmake -S . -B ./build -G "Ninja" -DCMAKE_C_COMPILER=/opt/homebrew/opt/llvm/bin/clang -DCMAKE_CXX_COMPILER=/opt/homebrew/opt/llvm/bin/clang++ -DCMAKE_INSTALL_PREFIX=./build/install -DSlopeCraft_GPU_API=$GPU_API -DSlopeCraft_vectorize=$VECTORIZE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH="$HOME/Downloads/Qt6.6.0-appleclang-static-x86_64;/System/Volumes/Data/usr/local/Cellar;/opt/homebrew" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DSlopeCraft_macdeployqt_flags_install="-no-plugins" -DKOMPUTE_OPT_DISABLE_VULKAN_VERSION_CHECK=ON
       - name: Build
         run: |
           cd build
