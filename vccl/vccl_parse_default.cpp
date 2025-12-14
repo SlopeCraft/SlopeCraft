@@ -23,6 +23,7 @@ This file is part of SlopeCraft.
 #include <filesystem>
 #include <format>
 #include <fstream>
+#include <print>
 #include <omp.h>
 #include <QImage>
 #include <QImageReader>

@@ -30,6 +30,7 @@ This file is part of SlopeCraft.
 
 #include <SC_version_buildtime.h>
 #include <format>
+#include <print>
 
 using std::cout, std::endl;
 
