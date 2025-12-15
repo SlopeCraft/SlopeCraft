@@ -24,5 +24,7 @@ find_package(libnbt++ REQUIRED)
 target_link_libraries(nbt++ ZLIB::ZLIB)
 target_compile_features(nbt++ PUBLIC cxx_std_20)
 if (${LINUX})
-    set_target_properties(nbt++ POSITION_INDEPENDENT_CODE ON)
+    set_target_properties(nbt++ PROPERTIES
+        POSITION_INDEPENDENT_CODE ON
+    )
 endif ()
