@@ -55,6 +55,10 @@ if (${WIN32})
     add_dependencies(SC_create_all_symlinks SC_create_symlink_VCCL)
 endif ()
 
+if (${MINGW})
+    # Link this to fix std::print under mingw (gcc>=14)
+    target_link_libraries(vccl PRIVATE stdc++exp)
+endif ()
 include(install.cmake)
 
 include(add_test_vccl.cmake)

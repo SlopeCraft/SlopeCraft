@@ -22,11 +22,14 @@ else ()
     message(FATAL_ERROR "Unsupported system ${CMAKE_SYSTEM_NAME}, not windows, linux or macos")
 endif ()
 
-if (NOT ${MINGW})
-    add_executable(test_stat_memory others/test_stat_memory.cpp)
-    target_link_libraries(test_stat_memory PRIVATE StatMemory)
-    add_test(NAME stat_memory
-        COMMAND test_stat_memory)
+add_executable(test_stat_memory others/test_stat_memory.cpp)
+target_link_libraries(test_stat_memory PRIVATE StatMemory)
+add_test(NAME stat_memory
+    COMMAND test_stat_memory)
+
+if (${MINGW})
+    # Link this to fix std::print under mingw (gcc>=14)
+    target_link_libraries(test_stat_memory PRIVATE stdc++exp)
 endif ()
 
 find_package(Qt6 COMPONENTS Widgets REQUIRED)

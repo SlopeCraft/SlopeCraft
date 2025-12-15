@@ -100,7 +100,7 @@ BlockListManager::impl_addblocklist(const QByteArray &file_content) noexcept {
   base_colors.resize(bli->size());
   blockps.resize(bli->size());
 
-  const size_t size_2 =
+  const size_t size_2 [[maybe_unused]] =
       bli->get_blocks(blockps.data(), base_colors.data(), blockps.size());
   assert(size_2 == base_colors.size() and base_colors.size() == blockps.size());
 
