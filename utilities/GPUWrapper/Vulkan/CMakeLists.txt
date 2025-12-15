@@ -31,10 +31,6 @@ execute_process(COMMAND ${glslc_exe} -fshader-stage=compute compute.glsl -o ${sh
 add_resource_config_time(VkComputeShaderSPIRV_rc ${shader_filename})
 target_link_libraries(GPUInterface PRIVATE VkComputeShaderSPIRV_rc)
 
-if (CMAKE_SYSTEM_NAME MATCHES "Linux")
-    set_target_properties(GPUInterface PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
-endif ()
-
 set(shader_test_filename "${CMAKE_CURRENT_BINARY_DIR}/compute_test.spv")
 add_custom_target(GPUInterface_shader_test ALL
     COMMAND ${glslc_exe} -fshader-stage=compute compute.glsl -o ${shader_test_filename}

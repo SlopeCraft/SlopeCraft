@@ -1,5 +1,9 @@
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+if (${LINUX})
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+endif ()
+
 add_subdirectory(MCDataVersion)
 add_subdirectory(version_set)
 add_subdirectory(GPUWrapper)

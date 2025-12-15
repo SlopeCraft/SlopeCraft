@@ -44,9 +44,6 @@ target_link_libraries(ColorManip PUBLIC
 # target_compile_options(ColorManip BEFORE PUBLIC "-std=c++17")
 target_compile_options(ColorManip PRIVATE ${SlopeCraft_vectorize_flags})
 
-if (CMAKE_SYSTEM_NAME MATCHES "Linux")
-    set_target_properties(ColorManip PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
-endif ()
 
 # ColorManip links to GPUInterface
 target_link_libraries(ColorManip PUBLIC GPUInterface)

@@ -35,7 +35,3 @@ if (TARGET Boost::multi_array)
     target_link_libraries(Schem PUBLIC Boost::multi_array)
 endif ()
 target_link_libraries(Schem PUBLIC MCDataVersion ProcessBlockId)
-
-if (CMAKE_SYSTEM_NAME MATCHES "Linux")
-    set_target_properties(Schem PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
-endif ()
