@@ -941,13 +941,38 @@
     "version": 19,
     "is_foliage": true
   },
+  // Cherry, azalea(and flowering), pale leaves don't use coloring mechanism, so is_foliage is set to false
   "minecraft:cherry_leaves[distance=7,persistent=true]": {
     "burnable": true,
     "class": "leaves",
     "nameEN": "Cherry leaves",
     "nameZH": "樱花树叶",
     "version": 20,
-    "is_foliage": true
+    "is_foliage": false
+  },
+  "minecraft:azalea_leaves[distance=7,persistent=true]": {
+    "burnable": true,
+    "class": "leaves",
+    "nameEN": "Azalea leaves",
+    "nameZH": "杜鹃树叶",
+    "version": 17,
+    "is_foliage": false
+  },
+  "minecraft:flowering_azalea_leaves[distance=7,persistent=true]": {
+    "burnable": true,
+    "class": "leaves",
+    "nameEN": "Flowering azalea leaves",
+    "nameZH": "盛开杜鹃树叶",
+    "version": 17,
+    "is_foliage": false
+  },
+  "minecraft:pale_oak_leaves[distance=7,persistent=true]": {
+    "burnable": true,
+    "class": "leaves",
+    "nameEN": "Pale oak leaves",
+    "nameZH": "苍白树叶",
+    "version": 21,
+    "is_foliage": false
   },
   "minecraft:blue_ice": {
     "class": "natural",
@@ -1230,6 +1255,42 @@
     ],
     "reproducible": false
   },
+  "minecraft:resin_block": {
+    "class": "natural",
+    "nameEN": "Resin block",
+    "nameZH": "树脂块",
+    "version": 21
+  },
+  "minecraft:resin_bricks": {
+    "class": "natural",
+    "nameEN": "Resin bricks",
+    "nameZH": "树脂砖块",
+    "version": 21
+  },
+  "minecraft:chiseled_resin_bricks": {
+    "class": "natural",
+    "nameEN": "Chiseled resin bricks",
+    "nameZH": "雕纹树脂砖块",
+    "version": 21
+  },
+  "minecraft:pale_moss_block": {
+    "class": "natural",
+    "nameEN": "Pale Moss Block",
+    "nameZH": "苍白苔藓块",
+    "version": 21,
+    "burnable": true
+  },
+  // Currently VCl is not able to process these carpet files. Comment them out
+  //  "minecraft:pale_moss_carpet": {
+  //    "class": "natural",
+  //    "nameEN": "Pale moss carpet",
+  //    "nameZH": "苍白苔藓地毯",
+  //    "version": 21,
+  //    "burnable": true,
+  //    "faces": [
+  //      "up"
+  //    ]
+  //  },
   "minecraft:crimson_nylium": {
     "class": "nether",
     "endermanPickable": true,
@@ -1885,6 +1946,13 @@
     "nameZH": "扭曲木板",
     "version": 16
   },
+  "minecraft:pale_oak_planks": {
+    "burnable": true,
+    "class": "planks",
+    "nameEN": "Pale oak plank",
+    "nameZH": "苍白木板",
+    "version": 21
+  },
   "minecraft:honey_block": {
     "class": "redstone",
     "nameEN": "Honey block",
@@ -2387,6 +2455,12 @@
     "class": "stone",
     "nameEN": "Chiseled tuff bricks",
     "nameZH": "雕纹凝灰岩砖",
+    "version": 21
+  },
+  "minecraft:polished_tuff": {
+    "class": "stone",
+    "nameEN": "Polished tuff",
+    "nameZH": "磨制凝灰岩",
     "version": 21
   },
   "minecraft:calcite": {
@@ -4228,12 +4302,67 @@
       "south"
     ],
     "burnable": true
+  },
+  "minecraft:pale_oak_wood[axis=y]": {
+    "class": "wood",
+    "nameEN": "Pale oak log (Y axis)",
+    "nameZH": "苍白原木 (Y 轴)",
+    "version": 21,
+    "burnable": true
+  },
+  "minecraft:pale_oak_wood[axis=x]": {
+    "class": "wood",
+    "nameEN": "Pale oak log (X axis)",
+    "nameZH": "苍白原木 (X 轴)",
+    "version": 21,
+    "faces": [
+      "east",
+      "west",
+      "up",
+      "down"
+    ],
+    "burnable": true
+  },
+  "minecraft:pale_oak_wood[axis=z]": {
+    "class": "wood",
+    "nameEN": "Pale oak log (Z axis)",
+    "nameZH": "苍白原木 (Z 轴)",
+    "version": 21,
+    "faces": [
+      "north",
+      "south"
+    ],
+    "burnable": true
+  },
+  "minecraft:stripped_pale_oak_wood[axis=y]": {
+    "class": "wood",
+    "nameEN": "Pale oak log (Y axis)",
+    "nameZH": "去皮苍白原木 (Y 轴)",
+    "version": 21,
+    "burnable": true
+  },
+  "minecraft:stripped_pale_oak_wood[axis=x]": {
+    "class": "wood",
+    "nameEN": "Pale oak log (X axis)",
+    "nameZH": "去皮苍白原木 (X 轴)",
+    "version": 21,
+    "faces": [
+      "east",
+      "west",
+      "up",
+      "down"
+    ],
+    "burnable": true
+  },
+  "minecraft:stripped_pale_oak_wood[axis=z]": {
+    "class": "wood",
+    "nameEN": "Pale oak log (Z axis)",
+    "nameZH": "去皮苍白原木 (Z 轴)",
+    "version": 21,
+    "faces": [
+      "north",
+      "south"
+    ],
+    "burnable": true
   }
-  /*,
-    "minecraft:beacon": {
-        "nameEN": "Beacon",
-        "nameZH": "信标",
-        "class": "others",
-        "version": "all"
-    }*/
 }

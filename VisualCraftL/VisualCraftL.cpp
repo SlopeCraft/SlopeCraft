@@ -1178,6 +1178,8 @@ VCL_EXPORT_FUN VCL_biome_info VCL_get_biome_info(VCL_biome_t biome) {
       return VCL_biome_info{0.5, 0.5};
     case VCL_biome_t::cherry_grove:
       return VCL_biome_info{0.5, 0.8};
+    case VCL_biome_t::pale_garden:
+      return VCL_biome_info{0.7, 0.8};
   }
   return VCL_biome_info{NAN, NAN};
 }
@@ -1314,8 +1316,10 @@ const char *VCL_biome_name_ZH(VCL_biome_t b) noexcept {
       return "末地荒地";
     case VCL_biome_t::cherry_grove:
       return "樱花树林";
+    case VCL_biome_t::pale_garden:
+      return "苍白花园";
   }
-  return "Unamed";
+  return "未命名";
 }
 
 const char *VCL_biome_name_EN(VCL_biome_t b) noexcept {
@@ -1448,9 +1452,11 @@ const char *VCL_biome_name_EN(VCL_biome_t b) noexcept {
       return "End Barrens";
     case VCL_biome_t::cherry_grove:
       return "Cherry Grove";
+    case VCL_biome_t::pale_garden:
+      return "Pale garden";
   }
 
-  return "Unamed";
+  return "Unnamed";
 }
 
 VCL_EXPORT_FUN const char *VCL_biome_name(VCL_biome_t biome, uint8_t is_ZH) {

@@ -163,7 +163,8 @@ enum class VCL_biome_t : uint16_t {
   end_midlands = 60,
   small_end_islands = 61,
   end_barrens = 62,
-  cherry_grove = 63
+  cherry_grove = 63,
+  pale_garden = 64,
 };
 
 /**

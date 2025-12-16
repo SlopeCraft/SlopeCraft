@@ -545,6 +545,9 @@ uint32_t VCL_resource_pack::standard_color(
   if (biome == VCL_biome_t::cherry_grove) {
     return 0xFF'90'81'4d;
   }
+  if (biome == VCL_biome_t::pale_garden) {
+    return 0xFF'87'8d'76;
+  }
 
   return default_result;
 }
