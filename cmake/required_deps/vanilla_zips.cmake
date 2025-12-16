@@ -8,7 +8,7 @@ set(VCL_zip_names
     "Vanilla_1_18_2.zip"
     "Vanilla_1_19_3.zip"
     "Vanilla_1_20_6.zip"
-    "Vanilla_1_21_5.zip"
+    "Vanilla_1_21_11.zip"
 )
 #https://github.com/SlopeCraft/VisualCraft-binaries/releases/download/resource-packs/Vanilla_1_20_1.zip
 set(VCL_url_prefix "https://github.com/SlopeCraft/VisualCraft-binaries/releases/download/resource-packs/")
