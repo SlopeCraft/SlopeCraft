@@ -457,7 +457,7 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>885</width>
+                  <width>881</width>
                   <height>305</height>
                  </rect>
                 </property>
@@ -497,16 +497,6 @@
              <string/>
             </property>
             <property name="scaledContents">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QCheckBox" name="cb_show_raw_size">
-            <property name="text">
-             <string>显示原始尺寸</string>
-            </property>
-            <property name="checked">
              <bool>false</bool>
             </property>
            </widget>
@@ -629,7 +619,7 @@
              <string/>
             </property>
             <property name="scaledContents">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
            </widget>
           </item>

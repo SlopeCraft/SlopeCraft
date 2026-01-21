@@ -736,10 +736,21 @@ SCL_convertAlgo VCWind::current_selected_algo() const noexcept {
 }
 
 void VCWind::show_image(decltype(image_cache)::iterator it) noexcept {
-  this->ui->label_raw_image->setPixmap(QPixmap::fromImage(it->second.first));
+  const int margin_pixels = 8;
+  const auto margin = QMargins{0, 0, margin_pixels, margin_pixels};
+  this->ui->label_raw_image->setPixmap(
+      QPixmap::fromImage(it->second.first)
+          .scaled(this->ui->label_raw_image->size().shrunkBy(margin),
+                  Qt::KeepAspectRatio, Qt::FastTransformation));
 
   if (!it->second.second.isNull()) {
-    this->ui->lable_converted->setPixmap(QPixmap::fromImage(it->second.second));
+    auto raw_pixmap = QPixmap::fromImage(it->second.second);
+    const auto size = this->ui->lable_converted->size().shrunkBy(margin);
+    qDebug() << "size = " << size;
+    //    for (int i = 0; i < 1; i++) {
+    this->ui->lable_converted->setPixmap(
+        raw_pixmap.scaled(size, Qt::KeepAspectRatio, Qt::FastTransformation));
+    //    }
     return;
   }
 
@@ -806,13 +817,6 @@ void VCWind::clear_convert_cache() noexcept {
 
     assert(pair.second.second.isNull());
   }
-}
-
-void VCWind::on_cb_show_raw_size_stateChanged(int state) noexcept {
-  bool autoscale = (state == 0);
-
-  this->ui->label_raw_image->setScaledContents(autoscale);
-  this->ui->lable_converted->setScaledContents(autoscale);
 }
 
 void VCWind::on_cb_show_raw_stateChanged(int state) noexcept {

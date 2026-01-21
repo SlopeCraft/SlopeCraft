@@ -285,7 +285,6 @@ class VCWind : public QMainWindow {
   void on_tb_remove_images_clicked() noexcept;
 
   // auto connected
-  void on_cb_show_raw_size_stateChanged(int state) noexcept;
   void on_cb_show_raw_stateChanged(int state) noexcept;
   void on_cb_show_converted_stateChanged(int state) noexcept;
   void on_lw_image_files_itemClicked(QListWidgetItem *item) noexcept;
