@@ -20,12 +20,14 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
-#include <QApplication>
+#include <cstdint>
+#include <iostream>
 #include <QDir>
 #include <QFile>
+#include <QApplication>
 #include <QMessageBox>
 #include <QTranslator>
-#include <iostream>
+#include <QImageReader>
 #include "CallbackFunctions.h"
 #include "VCWind.h"
 
@@ -39,6 +41,7 @@ bool parse_config_json(QString &err) noexcept;
 int main(int argc, char **argv) {
   QApplication qapp(argc, argv);
   QDir::setCurrent(QCoreApplication::applicationDirPath());
+  QImageReader::setAllocationLimit(INT32_MAX);
 
   ::is_language_ZH = QLocale::system().uiLanguages().contains("zh");
 

@@ -1,6 +1,9 @@
 #include <format>
-#include <iostream>
+#include <cstddef>
+#include <cstdlib>
+#include <string_view>
 #include <QApplication>
+#include <QImageReader>
 #include <QDir>
 #include "SCWind.h"
 #include "VersionDialog.h"
@@ -9,6 +12,7 @@ int main(int argc, char** argv) {
   QApplication qapp(argc, argv);
 
   QDir::setCurrent(QCoreApplication::applicationDirPath());
+  QImageReader::setAllocationLimit(INT32_MAX);
 
   SCWind wind;
 

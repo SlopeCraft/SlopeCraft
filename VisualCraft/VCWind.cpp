@@ -650,8 +650,7 @@ void VCWind::on_tb_add_images_clicked() noexcept {
       const auto ret = QMessageBox::warning(
           this, VCWind::tr("读取图片失败"),
           VCWind::tr("无法读取图片%"
-                     "1。图片可能是不支持的格式，或者已经损坏"
-                     "。图像过大也可能导致此错误。")
+                     "1。图片可能是不支持的格式，或者已经损坏。")
               .arg(filename),
           QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore,
                                        QMessageBox::StandardButton::Close},

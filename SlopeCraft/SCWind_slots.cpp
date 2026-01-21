@@ -40,7 +40,7 @@ void SCWind::on_pb_add_image_clicked() noexcept {
     if (!task_res) {
       auto ret = QMessageBox::critical(
           this, tr("打开图像失败"),
-          tr("无法打开图像 %1。常见原因：图像尺寸太大。\n详细信息： %2")
+          tr("无法打开图像 %1。\n详细信息： %2")
               .arg(filename, task_res.error()),
           QMessageBox::StandardButtons{QMessageBox::StandardButton::Close,
                                        QMessageBox::StandardButton::Ignore});

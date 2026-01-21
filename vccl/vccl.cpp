@@ -20,17 +20,18 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
+#include <format>
+#include <print>
+#include <cstdint>
 #include <CLI11.hpp>
 #include <thread>
 
-#include "vccl_internal.h"
 #include <QCoreApplication>
+#include <QImageReader>
+#include "vccl_internal.h"
 #include <VCLConfigLoader.h>
 #include <magic_enum/magic_enum.hpp>
-
 #include <SC_version_buildtime.h>
-#include <format>
-#include <print>
 
 using std::cout, std::endl;
 
@@ -236,6 +237,7 @@ int main(int argc, char **argv) {
   }
 
   QCoreApplication qapp(argc, argv);
+  QImageReader::setAllocationLimit(INT32_MAX);
   if (input.list_supported_formats) {
     list_supported_formats();
     qapp.quit();
