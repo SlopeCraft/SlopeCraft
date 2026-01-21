@@ -689,22 +689,22 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
         <translation>Biomes</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="83"/>
+        <location filename="../main.cpp" line="86"/>
         <source>VisualCraftL 动态库版本不匹配</source>
         <translation>The version of VisualCraftL shared lib mismatch</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="84"/>
+        <location filename="../main.cpp" line="87"/>
         <source>界面程序编译时使用的 VisualCraftL 版本为%1，而 VisualCraftL 动态库的版本为%2。通常这是因为动态库版本过低。</source>
         <translation>The version of VisualCraftL at compile-time is %1, while that at runtime is %2. Usually it is because the version of VisualCraftL shared lib is too old.</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="96"/>
+        <location filename="../main.cpp" line="99"/>
         <source>加载配置文件失败。</source>
         <translation>Failed to load configuration file.</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="128"/>
+        <location filename="../main.cpp" line="131"/>
         <source>无法加载配置文件&quot;./vc-config.json&quot;。
 %1</source>
         <translation>Failed to load configuration file &quot;./vc-config.json&apos;. 
@@ -788,16 +788,16 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
     </message>
     <message>
         <location filename="../VCWind.cpp" line="652"/>
-        <source>无法读取图片%1。图片可能是不支持的格式，或者已经损坏。图像过大也可能导致此错误。</source>
-        <translation>Failed to load image %1 . The image may be of unsupported format, or has been screwed up. A tooooo large image may also cause this error.</translation>
+        <source>无法读取图片%1。图片可能是不支持的格式，或者已经损坏。</source>
+        <translation>Failed to read image %1 . Unsupported format or broken image.</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="705"/>
+        <location filename="../VCWind.cpp" line="704"/>
         <source>设置图片失败</source>
         <translation>Failed to set image</translation>
     </message>
     <message>
-        <location filename="../VCWind.cpp" line="706"/>
+        <location filename="../VCWind.cpp" line="705"/>
         <source>这个错误不应该发生的，可能是你点儿背。</source>
         <translation>This error is considered to be impossible.</translation>
     </message>

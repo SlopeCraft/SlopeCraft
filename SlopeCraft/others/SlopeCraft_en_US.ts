@@ -1060,7 +1060,6 @@ Click Ok to ignore, and click Close to exit SlopeCraft.</translation>
         <translation>Failed to open image</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="43"/>
         <location filename="../SCWind_slots.cpp" line="125"/>
         <source>无法打开图像 %1。常见原因：图像尺寸太大。
 详细信息： %2</source>
@@ -1071,6 +1070,13 @@ Detailed information: %2</translation>
         <location filename="../SCWind_slots.cpp" line="109"/>
         <source>请选择将被替换的图像</source>
         <translation>Please images to be replaced</translation>
+    </message>
+    <message>
+        <location filename="../SCWind_slots.cpp" line="43"/>
+        <source>无法打开图像 %1。
+详细信息： %2</source>
+        <translation>Failed to open image %1 .
+Details: %2</translation>
     </message>
     <message>
         <location filename="../SCWind_slots.cpp" line="110"/>
