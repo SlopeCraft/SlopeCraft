@@ -2,10 +2,12 @@
 // Created by Joseph on 2024/4/8.
 //
 
-#include "libpng_reader.h"
-#include <png.h>
 #include <format>
 #include <cstring>
+#include <cassert>
+#include <png.h>
+
+#include "libpng_reader.h"
 
 struct read_buffer_wrapper {
   const void *data;
@@ -27,13 +29,27 @@ void png_callback_read_data_from_memory(png_struct *png, png_byte *data,
   ioptr->offset += read_length;
 }
 
-std::tuple<tl::expected<image_info, std::string>, std::string>
+std::tuple<std::expected<image_info, std::string>, std::string>
 parse_png_into_argb32(std::span<const uint8_t> encoded,
                       std::vector<uint32_t> &pixels) noexcept {
+  std::function<uint32_t *(const image_info &)> allocator =
+      [&pixels](const image_info &info) {
+        pixels.resize(static_cast<size_t>(info.rows) *
+                      static_cast<size_t>(info.cols));
+        return pixels.data();
+      };
+
+  return parse_png_into_argb32_flex(encoded, allocator);
+}
+
+std::tuple<std::expected<image_info, std::string>, std::string>
+parse_png_into_argb32_flex(
+    std::span<const uint8_t> encoded,
+    const std::function<uint32_t *(const image_info &)> allocator) noexcept {
   std::string warnings{};
   if (encoded.size() < 8) {
     return {
-        tl::make_unexpected(std::format(
+        std::unexpected(std::format(
             "File is too small ({} bytes) to be possible PNG", encoded.size())),
         warnings};
   }
@@ -41,27 +57,25 @@ parse_png_into_argb32(std::span<const uint8_t> encoded,
     png_struct *png =
         png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
     if (png == NULL) {
-      return {tl::make_unexpected("Failed to create png read struct."),
-              warnings};
+      return {std::unexpected("Failed to create png read struct."), warnings};
     }
 
     png_info *info = png_create_info_struct(png);
     if (info == NULL) {
       png_destroy_read_struct(&png, &info, NULL);
-      return {tl::make_unexpected("Failed to create png info struct."),
-              warnings};
+      return {std::unexpected("Failed to create png info struct."), warnings};
     }
 
     png_info *info_end = png_create_info_struct(png);
     if (info_end == NULL) {
       png_destroy_read_struct(&png, &info, &info_end);
-      return {tl::make_unexpected("Failed to create png info_end struct."),
+      return {std::unexpected("Failed to create png info_end struct."),
               warnings};
     }
     {
       const auto compare_result = png_sig_cmp(encoded.data(), 0, 8);
       if (compare_result not_eq 0) {
-        return {tl::make_unexpected("Not a png file."), warnings};
+        return {std::unexpected("Not a png file."), warnings};
       }
     }
 
@@ -129,20 +143,23 @@ parse_png_into_argb32(std::span<const uint8_t> encoded,
         break;
       default:
         png_destroy_read_struct(&png, &info, &info_end);
-        return {tl::make_unexpected(
-                    std::format("Unknown color type {}", color_type)),
-                warnings};
+        return {
+            std::unexpected(std::format("Unknown color type {}", color_type)),
+            warnings};
     }
     // cout << ")\n";
     // #warning here
 
-    pixels.resize(height * width);
+    const auto img_info = image_info{height, width};
+    uint32_t *const pixels_data = allocator(img_info);
+    assert(pixels_data not_eq nullptr);
+    //    pixels.resize(height * width);
     // img->resize(height, width);
 
     std::vector<uint8_t *> row_ptrs;
     row_ptrs.resize(height);
     for (int r = 0; r < int(height); r++) {
-      row_ptrs[r] = reinterpret_cast<uint8_t *>(pixels.data() + r * width);
+      row_ptrs[r] = reinterpret_cast<uint8_t *>(pixels_data + r * width);
     }
 
     png_read_image(png, row_ptrs.data());
@@ -166,8 +183,8 @@ parse_png_into_argb32(std::span<const uint8_t> encoded,
     // png_destroy_info_struct(png, &info);
     png_destroy_read_struct(&png, &info, &info_end);
 
-    return {image_info{height, width}, warnings};
+    return {img_info, warnings};
   } catch (const std::exception &e) {
-    return {tl::make_unexpected(e.what()), warnings};
+    return {std::unexpected(e.what()), warnings};
   }
 }
