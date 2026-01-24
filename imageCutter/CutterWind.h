@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2023  TokiNoBug
+ Copyright © 2021-2026  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -35,16 +35,16 @@ QT_END_NAMESPACE
 class CutterWind : public QMainWindow {
   Q_OBJECT
 
-public:
+ public:
   CutterWind(QWidget *parent = nullptr);
   ~CutterWind();
-private slots:
+ private slots:
   void loadImg();
   void saveImg();
 
   void cutImg();
 
-private:
+ private:
   void updateImg() const;
   void resizeImg();
   QImage img;
@@ -52,4 +52,4 @@ private:
   QString rawFileSuffix;
   Ui::CutterWind *ui;
 };
-#endif // CUTTERWIND_H
+#endif  // CUTTERWIND_H

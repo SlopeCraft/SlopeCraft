@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2023  TokiNoBug
+ Copyright © 2021-2026  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -52,8 +52,7 @@ CutterWind::~CutterWind() { delete ui; }
 void CutterWind::loadImg() {
   QString path = QFileDialog::getOpenFileName(
       this, tr("选择图片"), "", tr("图片(*.png *.bmp *.jpg *.tif)"));
-  if (path.isEmpty())
-    return;
+  if (path.isEmpty()) return;
 
   img.load(path);
   img = img.convertToFormat(QImage::Format_ARGB32);
@@ -87,14 +86,12 @@ void CutterWind::updateImg() const {
 void CutterWind::saveImg() {
   QString name = QFileDialog::getSaveFileName(
       this, tr("保存图片"), "", tr("图片(*.png *.bmp *.jpg *.tif)"));
-  if (name.isEmpty())
-    return;
+  if (name.isEmpty()) return;
 
   img.save(name);
 }
 
 void CutterWind::resizeImg() {
-
   Qt::AspectRatioMode arm =
       Qt::AspectRatioMode(ui->boxAspectRatioMode->currentData().toInt());
   Qt::TransformationMode tm =
@@ -112,8 +109,7 @@ void CutterWind::cutImg() {
   QString dir =
       QFileDialog::getExistingDirectory(this, tr("选择输出文件夹"), "");
 
-  if (dir.isEmpty())
-    return;
+  if (dir.isEmpty()) return;
 
   dir = dir.replace("\\\\", "/");
   dir = dir.replace('\\', '/');
@@ -133,8 +129,7 @@ void CutterWind::cutImg() {
       for (int rOffset = 0; rOffset < 128; rOffset++) {
         const int imgR = rOffset + 128 * mapR;
         const uint32_t *src = nullptr;
-        if (imgR < imgRN)
-          src = (const uint32_t *)img.constScanLine(imgR);
+        if (imgR < imgRN) src = (const uint32_t *)img.constScanLine(imgR);
 
         uint32_t *dst = (uint32_t *)part.scanLine(rOffset);
 

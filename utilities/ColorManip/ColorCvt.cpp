@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2023  TokiNoBug
+ Copyright © 2021-2026  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -30,7 +30,7 @@ This file is part of SlopeCraft.
 
 static constexpr float threshold = 1e-10f;
 
-#define deg2rad(deg) ((deg)*M_PI / 180.0)
+#define deg2rad(deg) ((deg) * M_PI / 180.0)
 
 ARGB ComposeColor(const ARGB top, const ARGB back) noexcept {
   int red = (getR(top) * getA(top) + getR(back) * (255 - getA(top))) / 255;
@@ -47,11 +47,9 @@ ARGB ComposeColor_background_half_transparent(const ARGB top,
   if (alpha_back <= 0) {
     return top;
   }
-  if (alpha_top <= 0)
-    return back;
+  if (alpha_top <= 0) return back;
 
-  if (alpha_top >= 255)
-    return top;
+  if (alpha_top >= 255) return top;
 
   // int result_alpha = alpha_top + alpha_back - alpha_back * alpha_top /
   // 255;
@@ -227,10 +225,8 @@ void Lab2XYZ(float L, float a, float b, float &X, float &Y, float &Z) noexcept {
 }
 
 inline float squeeze01(float t) noexcept {
-  if (t < 0.0)
-    return 0.0f;
-  if (t > 1.0)
-    return 1.0f;
+  if (t < 0.0) return 0.0f;
+  if (t > 1.0) return 1.0f;
   return t;
 }
 

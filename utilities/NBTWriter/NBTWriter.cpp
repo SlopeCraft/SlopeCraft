@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2023  TokiNoBug
+ Copyright © 2021-2026  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -24,11 +24,9 @@ This file is part of SlopeCraft.
 #include <stdio.h>
 #include <zlib.h>
 
-
 using namespace NBT::internal;
 
 bool NBTWriterBase_nocompress::open(const char *newFileName) noexcept {
-
   if (file != nullptr) {
     return false;
   }
@@ -54,7 +52,6 @@ bool NBTWriterBase_nocompress::open(const char *newFileName) noexcept {
 }
 
 bool NBTWriterBase_gzip::open(const char *newFileName) noexcept {
-
   if (this->file != nullptr) {
     return false;
   }

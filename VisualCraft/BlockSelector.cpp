@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2023  TokiNoBug
+ Copyright © 2021-2026  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -89,9 +89,8 @@ void BlockSelector::when_criteria_changed() noexcept {
       BlockSelector::tr("匹配到%1个方块").arg(count));
 }
 
-std::function<bool(const VCL_block *)>
-BlockSelector::match_functor() const noexcept {
-
+std::function<bool(const VCL_block *)> BlockSelector::match_functor()
+    const noexcept {
   bs_criteria cr;
 
   for (auto bsc : this->criterias) {

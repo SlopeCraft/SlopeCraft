@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2023  TokiNoBug
+ Copyright © 2021-2026  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -22,8 +22,8 @@ This file is part of SlopeCraft.
 
 #include "ColorManip.h"
 #include <cmath>
-#define deg2rad(deg) ((deg)*M_PI / 180.0)
-#define rad2deg(rad) ((rad)*180.0 / M_PI)
+#define deg2rad(deg) ((deg) * M_PI / 180.0)
+#define rad2deg(rad) ((rad) * 180.0 / M_PI)
 const float kL = 1.0;
 const float kC = 1.0;
 const float kH = 1.0;
@@ -47,15 +47,13 @@ float Lab00_diff(float L1, float a1, float b1, float L2, float a2,
     h1p = 0;
   else
     h1p = std::atan2(b1, a1p);
-  if (h1p < 0)
-    h1p += 2 * M_PI;
+  if (h1p < 0) h1p += 2 * M_PI;
 
   if (b2 == 0 && a2p == 0)
     h2p = 0;
   else
     h2p = std::atan2(b2, a2p);
-  if (h2p < 0)
-    h2p += 2 * M_PI;
+  if (h2p < 0) h2p += 2 * M_PI;
 
   float dLp = L2 - L1;
   float dCp = C2p - C1p;

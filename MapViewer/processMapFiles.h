@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2023  TokiNoBug
+ Copyright © 2021-2026  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -38,4 +38,4 @@ bool process_map_file(
     Eigen::Array<uint8_t, 128, 128, Eigen::RowMajor> *const dest,
     std::string *const error_info);
 
-#endif // PROCESSMAPFILES_H
+#endif  // PROCESSMAPFILES_H

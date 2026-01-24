@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2023  TokiNoBug
+ Copyright © 2021-2026  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -34,14 +34,14 @@ class ColorBrowser;
 
 class ColorBrowser : public QWidget {
   Q_OBJECT
-private:
+ private:
   Ui::ColorBrowser *ui;
   // private_class_setup_chart *thread{nullptr};
 
   void setup_table(const uint16_t *const color_id_list,
                    const size_t color_count) noexcept;
 
-public:
+ public:
   explicit ColorBrowser(QWidget *parent);
   ~ColorBrowser();
 
@@ -51,4 +51,4 @@ public:
   // void setup_table_threaded() noexcept;
 };
 
-#endif // SLOPECRAFT_VISUALCRAFT_COLORBROWSER_H
+#endif  // SLOPECRAFT_VISUALCRAFT_COLORBROWSER_H

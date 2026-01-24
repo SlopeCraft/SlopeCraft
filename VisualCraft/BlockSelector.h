@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2023  TokiNoBug
+ Copyright © 2021-2026  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -33,10 +33,10 @@ class BlockSelectorCriteria;
 namespace Ui {
 class BlockSelector;
 class BlockSelectorCriteria;
-} // namespace Ui
+}  // namespace Ui
 
 class bs_criteria {
-public:
+ public:
   struct alignas(4) statement {
     bool logic_is_and{true};
     VCL_block_attribute_t key;
@@ -50,21 +50,21 @@ public:
 
 class BlockSelector : public QWidget {
   Q_OBJECT
-private:
+ private:
   Ui::BlockSelector *ui;
 
   std::vector<BlockSelectorCriteria *> criterias;
 
-public:
+ public:
   BlockSelector(QWidget *parent);
   ~BlockSelector();
 
-private:
+ private:
   void update_criteria_roles() noexcept;
 
   std::function<bool(const VCL_block *)> match_functor() const noexcept;
 
-private slots:
+ private slots:
   void emplace_back() noexcept;
 
   void remove_one(BlockSelectorCriteria *) noexcept;
@@ -77,16 +77,16 @@ private slots:
 
 class BlockSelectorCriteria : public QWidget {
   Q_OBJECT
-private:
+ private:
   Ui::BlockSelectorCriteria *ui;
 
-signals:
+ signals:
   void options_changed();
 
   void append();
   void remove(BlockSelectorCriteria *);
 
-public:
+ public:
   BlockSelectorCriteria(QWidget *parent);
   ~BlockSelectorCriteria();
 
@@ -94,10 +94,10 @@ public:
 
   void update_criteria(bs_criteria &cr) const noexcept;
 
-private slots:
+ private slots:
   // auto connected
   void on_tb_append_clicked() noexcept;
   void on_tb_remove_clicked() noexcept;
 };
 
-#endif // SLOPECRAFT_VISUALCRAFT_BLOCKSELECTOR_H
+#endif  // SLOPECRAFT_VISUALCRAFT_BLOCKSELECTOR_H

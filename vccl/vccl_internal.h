@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2023  TokiNoBug
+ Copyright © 2021-2026  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -31,7 +31,6 @@ This file is part of SlopeCraft.
 #include <vector>
 
 struct inputs {
-
   // resource
   std::vector<std::string> zips;
   std::vector<std::string> jsons;
@@ -98,4 +97,4 @@ int list_gpu();
 
 void list_supported_formats() noexcept;
 
-#endif // #ifndef SLOPECRAFT_VCCL_INTERNAL_H
+#endif  // #ifndef SLOPECRAFT_VCCL_INTERNAL_H
