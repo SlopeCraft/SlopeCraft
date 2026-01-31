@@ -1302,8 +1302,8 @@ Click Ignore to skip, Retry to retry and Cancel to cancel</translation>
     </message>
     <message>
         <location filename="../SCWind_slots.cpp" line="910"/>
-        <source>Copyright © 2021-2023 SlopeCraft 开发者 (TokiNoBug, AbrasiveBoar, iXOR Technology, Mifan-T, 以及贡献者). 版权所有</source>
-        <translation>Copyright © 2021-2023 SlopeCraft Developers (TokiNoBug, AbrasiveBoar, iXOR Technology, Mifan-T, and contributors). All rights reserved.</translation>
+        <source>Copyright © 2021-2026 SlopeCraft 开发者 (TokiNoBug, AbrasiveBoar, iXOR Technology, Mifan-T, 以及贡献者). 版权所有</source>
+        <translation>Copyright © 2021-2026 SlopeCraft Developers (TokiNoBug, AbrasiveBoar, iXOR Technology, Mifan-T, and contributors). All rights reserved.</translation>
     </message>
     <message>
         <location filename="../SCWind_slots.cpp" line="1042"/>

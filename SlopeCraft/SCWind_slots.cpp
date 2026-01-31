@@ -907,7 +907,7 @@ void SCWind::on_ac_about_triggered() noexcept {
   info += tr("本软件遵循 GPL-3.0 及以后版本 (GPL-3.0 or later) 协议开放源码。");
   info += "\n\n";
   info +=
-      tr("Copyright © 2021-2023 SlopeCraft 开发者 (TokiNoBug, AbrasiveBoar, "
+      tr("Copyright © 2021-2026 SlopeCraft 开发者 (TokiNoBug, AbrasiveBoar, "
          "iXOR Technology, Mifan-T, 以及贡献者). 版权所有");
   QMessageBox::information(this, tr("关于 SlopeCraft"), info);
 }

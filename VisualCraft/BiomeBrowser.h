@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2023  TokiNoBug
+ Copyright © 2021-2026  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -30,17 +30,17 @@ class BiomeBrowser;
 
 class BiomeBrowser : public QWidget {
   Q_OBJECT
-private:
+ private:
   Ui::BiomeBrowser *ui;
 
-public:
+ public:
   BiomeBrowser(QWidget *parent);
   ~BiomeBrowser();
 
-private:
+ private:
   VCL_biome_t biome_selected() const noexcept;
   bool is_grass_selected() const noexcept;
-private slots:
+ private slots:
   void when_biome_changed() noexcept;
   void refresh_colormap() noexcept;
 };

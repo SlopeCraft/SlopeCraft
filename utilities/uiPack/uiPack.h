@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2023  TokiNoBug
+ Copyright © 2021-2026  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -24,20 +24,18 @@ This file is part of SlopeCraft.
 #define SCL_UIPACK_UIPACK_H
 
 struct uiPack {
-public:
+ public:
   void *_uiPtr{nullptr};
   void (*progressRangeSet)(void *, int, int, int){nullptr};
   void (*progressAdd)(void *, int){nullptr};
 
-public:
+ public:
   inline void rangeSet(int a, int b, int c) const noexcept {
-    if (progressRangeSet != nullptr)
-      progressRangeSet(_uiPtr, a, b, c);
+    if (progressRangeSet != nullptr) progressRangeSet(_uiPtr, a, b, c);
   }
   inline void add(int d) const noexcept {
-    if (progressAdd != nullptr)
-      progressAdd(_uiPtr, d);
+    if (progressAdd != nullptr) progressAdd(_uiPtr, d);
   }
 };
 
-#endif // SCL_UIPACK_UIPACK_H
+#endif  // SCL_UIPACK_UIPACK_H

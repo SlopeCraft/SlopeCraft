@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2023  TokiNoBug
+ Copyright © 2021-2026  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -82,17 +82,17 @@ int main(int argc, char **argv) {
     }
 
     switch (block_class) {
-    case VCL_block_class_t::concrete:
-    // case VCL_block_class_t::concrete_powder:
-    case VCL_block_class_t::glazed_terracotta:
-    case VCL_block_class_t::wool:
-    case VCL_block_class_t::shulker_box:
-    case VCL_block_class_t::terracotta:
-      it.value()["background"] = true;
-      break;
+      case VCL_block_class_t::concrete:
+      // case VCL_block_class_t::concrete_powder:
+      case VCL_block_class_t::glazed_terracotta:
+      case VCL_block_class_t::wool:
+      case VCL_block_class_t::shulker_box:
+      case VCL_block_class_t::terracotta:
+        it.value()["background"] = true;
+        break;
 
-    default:
-      break;
+      default:
+        break;
     }
   }
 

@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2023  TokiNoBug
+ Copyright © 2021-2026  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -41,4 +41,4 @@ inline void SC_aligned_free(void *ptr) noexcept {
 #endif
 }
 
-#endif // SLOPECRAFT_UTITILITIES_ALIGNED_ALLOC_HPP
+#endif  // SLOPECRAFT_UTITILITIES_ALIGNED_ALLOC_HPP

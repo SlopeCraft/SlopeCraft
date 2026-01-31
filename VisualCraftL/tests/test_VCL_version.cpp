@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2023  TokiNoBug
+ Copyright © 2021-2026  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -26,7 +26,6 @@ This file is part of SlopeCraft.
 #include <string_view>
 
 int main() {
-
   std::string_view ver_str_1 = VCL_version_string();
 
   std::string ver_str_2;

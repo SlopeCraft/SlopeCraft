@@ -1,5 +1,5 @@
 /*
- Copyright © 2021-2023  TokiNoBug
+ Copyright © 2021-2026  TokiNoBug
 This file is part of SlopeCraft.
 
     SlopeCraft is free software: you can redistribute it and/or modify
@@ -29,7 +29,6 @@ using std::cout, std::endl;
 using njson = nlohmann::json;
 
 njson &get_scl_block_list(njson &scl) noexcept {
-
   if (scl.contains("FixedBlocks") && scl.at("FixedBlocks").is_array()) {
     return scl.at("FixedBlocks");
   }
@@ -39,14 +38,12 @@ njson &get_scl_block_list(njson &scl) noexcept {
 
 void try_copy_trait(std::string_view trait_name, const njson &obj_scl,
                     njson &obj_vcl) {
-
   if (obj_scl.contains(trait_name)) {
     obj_vcl.emplace(trait_name, obj_scl.at(trait_name));
   }
 }
 
 int main(int argc, char **argv) {
-
   if (argc != 3) {
     cout << "Usage : SCL_json_cvt [SCL json file] [VCL json file]" << endl;
     return 1;
