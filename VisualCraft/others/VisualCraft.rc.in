@@ -22,30 +22,40 @@ This file is part of SlopeCraft.
 
 #include <windows.h>
 
-IDI_ICON1 ICON "@CMAKE_CURRENT_SOURCE_DIR@/others/VisualCraft.ico"
+IDI_ICON1	ICON	"@CMAKE_CURRENT_SOURCE_DIR@/others/VisualCraft.ico"
 
-    VS_VERSION_INFO VERSIONINFO FILEVERSION @PROJECT_VERSION_MAJOR @,
-    @PROJECT_VERSION_MINOR @, @PROJECT_VERSION_PATCH @,
-    0 PRODUCTVERSION @PROJECT_VERSION_MAJOR @, @PROJECT_VERSION_MINOR @,
-    @PROJECT_VERSION_PATCH @,
-    0 FILEFLAGSMASK 0x3fL
+VS_VERSION_INFO VERSIONINFO
+	FILEVERSION @PROJECT_VERSION_MAJOR@,@PROJECT_VERSION_MINOR@,@PROJECT_VERSION_PATCH@,0
+	PRODUCTVERSION @PROJECT_VERSION_MAJOR@,@PROJECT_VERSION_MINOR@,@PROJECT_VERSION_PATCH@,0
+	FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
-    FILEFLAGS VS_FF_DEBUG
+	FILEFLAGS VS_FF_DEBUG
 #else
-    FILEFLAGS 0x0L
+	FILEFLAGS 0x0L
 #endif
-        FILEOS VOS_NT_WINDOWS32 FILETYPE VFT_DLL FILESUBTYPE VFT2_UNKNOWN
-            BEGIN BLOCK "StringFileInfo" BEGIN BLOCK "000404b0" BEGIN VALUE
-                        "CompanyName",
-    "\0" VALUE "FileDescription",
-    "Minecraft Pixel Art Tool\0" VALUE "FileVersion",
-    "@PROJECT_VERSION@.0\0" VALUE "LegalCopyright",
-    "Copyright TokiNoBug 2021-2023\0" VALUE "OriginalFilename",
-    "VisualCraft.exe\0" VALUE "ProductName",
-    "VisualCraft\0" VALUE "ProductVersion",
-    "@PROJECT_VERSION@.0\0" VALUE "InternalName",
-    "VisualCraft\0" VALUE "Comments",
-    "Main program of VisualCraft\0" VALUE "LegalTrademarks",
-    "Published under GPLv3 license\0" END END BLOCK "VarFileInfo" BEGIN VALUE
-    "Translation",
-    0x0004, 1200 END END
+	FILEOS VOS_NT_WINDOWS32
+	FILETYPE VFT_DLL
+	FILESUBTYPE VFT2_UNKNOWN
+	BEGIN
+		BLOCK "StringFileInfo"
+		BEGIN
+			BLOCK "000404b0"
+			BEGIN
+				VALUE "CompanyName", "\0"
+				VALUE "FileDescription", "Minecraft Pixel Art Tool\0"
+				VALUE "FileVersion", "@PROJECT_VERSION@.0\0"
+				VALUE "LegalCopyright", "Copyright TokiNoBug 2021-2026\0"
+				VALUE "OriginalFilename", "VisualCraft.exe\0"
+				VALUE "ProductName", "VisualCraft\0"
+				VALUE "ProductVersion", "@PROJECT_VERSION@.0\0"
+				VALUE "InternalName", "VisualCraft\0"
+				VALUE "Comments", "Main program of VisualCraft\0"
+				VALUE "LegalTrademarks", "Published under GPLv3 license\0"
+			END
+		END
+		BLOCK "VarFileInfo"
+		BEGIN
+			VALUE "Translation", 0x0004, 1200
+		END
+	END
+

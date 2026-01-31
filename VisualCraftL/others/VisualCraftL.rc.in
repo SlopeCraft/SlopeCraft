@@ -22,28 +22,39 @@ This file is part of SlopeCraft.
 
 #include <windows.h>
 
-VS_VERSION_INFO VERSIONINFO FILEVERSION @VisualCraftL_VERSION_MAJOR @,
-    @VisualCraftL_VERSION_MINOR @, @VisualCraftL_VERSION_PATCH @,
-    0 PRODUCTVERSION @VisualCraftL_VERSION_MAJOR @,
-    @VisualCraftL_VERSION_MINOR @, @VisualCraftL_VERSION_PATCH @,
-    0 FILEFLAGSMASK 0x3fL
+VS_VERSION_INFO VERSIONINFO
+	FILEVERSION @VisualCraftL_VERSION_MAJOR@,@VisualCraftL_VERSION_MINOR@,@VisualCraftL_VERSION_PATCH@,0
+	PRODUCTVERSION @VisualCraftL_VERSION_MAJOR@,@VisualCraftL_VERSION_MINOR@,@VisualCraftL_VERSION_PATCH@,0
+	FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
-    FILEFLAGS VS_FF_DEBUG
+	FILEFLAGS VS_FF_DEBUG
 #else
-    FILEFLAGS 0x0L
+	FILEFLAGS 0x0L
 #endif
-        FILEOS VOS_NT_WINDOWS32 FILETYPE VFT_DLL FILESUBTYPE VFT2_UNKNOWN
-            BEGIN BLOCK "StringFileInfo" BEGIN BLOCK "000404b0" BEGIN VALUE
-                        "CompanyName",
-    "\0" VALUE "FileDescription", "VisualCraft Library\0" VALUE "FileVersion",
-    "@VisualCraftL_VERSION@.0\0" VALUE "LegalCopyright",
-    "TokiNoBug\0" VALUE "OriginalFilename",
-    "VisualCraftL.dll\0" VALUE "ProductName",
-    "VisualCraftL\0" VALUE "ProductVersion",
-    "@VisualCraftL_VERSION@.0\0" VALUE "InternalName",
-    "VisualCraftL\0" VALUE "Comments", "\0" VALUE "LegalTrademarks",
-    "Published under GPLv3\0" END END BLOCK "VarFileInfo" BEGIN VALUE
-    "Translation",
-    0x0004,
-    1200 END END
-    /* End of Version info */
+	FILEOS VOS_NT_WINDOWS32
+	FILETYPE VFT_DLL
+	FILESUBTYPE VFT2_UNKNOWN
+	BEGIN
+		BLOCK "StringFileInfo"
+		BEGIN
+			BLOCK "000404b0"
+			BEGIN
+				VALUE "CompanyName", "\0"
+				VALUE "FileDescription", "VisualCraft Library\0"
+				VALUE "FileVersion", "@VisualCraftL_VERSION@.0\0"
+                                VALUE "LegalCopyright", "Copyright TokiNoBug 2021-2026\0"
+				VALUE "OriginalFilename", "VisualCraftL.dll\0"
+				VALUE "ProductName", "VisualCraftL\0"
+				VALUE "ProductVersion", "@VisualCraftL_VERSION@.0\0"
+				VALUE "InternalName", "VisualCraftL\0"
+				VALUE "Comments", "\0"
+				VALUE "LegalTrademarks", "Published under GPLv3\0"
+			END
+		END
+		BLOCK "VarFileInfo"
+		BEGIN
+			VALUE "Translation", 0x0004, 1200
+		END
+	END
+/* End of Version info */
+
