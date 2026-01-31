@@ -10,7 +10,7 @@
     </message>
     <message>
         <location filename="CutterWind.ui" line="37"/>
-        <location filename="CutterWind.cpp" line="84"/>
+        <location filename="CutterWind.cpp" line="83"/>
         <source>列</source>
         <translation> cols</translation>
     </message>
@@ -21,7 +21,7 @@
     </message>
     <message>
         <location filename="CutterWind.ui" line="78"/>
-        <location filename="CutterWind.cpp" line="82"/>
+        <location filename="CutterWind.cpp" line="81"/>
         <source>图片尺寸（方块）：</source>
         <translation>Image size (blocks) : </translation>
     </message>
@@ -62,7 +62,7 @@
     </message>
     <message>
         <location filename="CutterWind.ui" line="223"/>
-        <location filename="CutterWind.cpp" line="89"/>
+        <location filename="CutterWind.cpp" line="88"/>
         <source>保存图片</source>
         <translation>Save image</translation>
     </message>
@@ -97,28 +97,28 @@
         <translation>Select image</translation>
     </message>
     <message>
-        <location filename="CutterWind.cpp" line="61"/>
+        <location filename="CutterWind.cpp" line="60"/>
         <source>打开图片失败</source>
         <translation>Failed to load image</translation>
     </message>
     <message>
-        <location filename="CutterWind.cpp" line="62"/>
+        <location filename="CutterWind.cpp" line="61"/>
         <source>图片格式损坏，或者图片过于巨大。</source>
         <translation>The image might be damaged, or it&apos;s too huge.</translation>
     </message>
     <message>
-        <location filename="CutterWind.cpp" line="83"/>
+        <location filename="CutterWind.cpp" line="82"/>
         <source>行 , </source>
         <translation> rows, </translation>
     </message>
     <message>
-        <location filename="CutterWind.cpp" line="113"/>
+        <location filename="CutterWind.cpp" line="110"/>
         <source>选择输出文件夹</source>
         <translation>Select output directory</translation>
     </message>
     <message>
         <location filename="CutterWind.cpp" line="54"/>
-        <location filename="CutterWind.cpp" line="89"/>
+        <location filename="CutterWind.cpp" line="88"/>
         <source>图片(*.png *.bmp *.jpg *.tif)</source>
         <translation type="unfinished"></translation>
     </message>

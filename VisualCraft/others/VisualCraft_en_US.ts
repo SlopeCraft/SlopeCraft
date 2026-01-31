@@ -379,312 +379,307 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
         <translation>Select images</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="507"/>
-        <source>显示原始尺寸</source>
-        <translation>Original size</translation>
-    </message>
-    <message>
-        <location filename="../VCWind.ui" line="531"/>
+        <location filename="../VCWind.ui" line="521"/>
         <source>调色算法</source>
         <translation>Convertion algorithm</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="537"/>
+        <location filename="../VCWind.ui" line="527"/>
         <source>抖动</source>
         <translation>Dithering</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="639"/>
+        <location filename="../VCWind.ui" line="629"/>
         <source>显示原图</source>
         <translation>Display original</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="649"/>
+        <location filename="../VCWind.ui" line="639"/>
         <source>显示转化后图像</source>
         <translation>Display converted</translation>
     </message>
     <message>
+        <location filename="../VCWind.ui" line="650"/>
         <location filename="../VCWind.ui" line="660"/>
-        <location filename="../VCWind.ui" line="670"/>
         <source>导出</source>
         <translation>Export</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="699"/>
+        <location filename="../VCWind.ui" line="689"/>
         <source>图像</source>
         <translation>Image</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="704"/>
+        <location filename="../VCWind.ui" line="694"/>
         <source>大小（行，列）</source>
         <translation>Size (rows, cols)</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="709"/>
+        <location filename="../VCWind.ui" line="699"/>
         <source>生成litematica</source>
         <translation>Litematica file</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="714"/>
+        <location filename="../VCWind.ui" line="704"/>
         <source>生成结构方块文件</source>
         <translation>Structure file</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="719"/>
+        <location filename="../VCWind.ui" line="709"/>
         <source>生成WE原理图</source>
         <translation>WE schem file</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="724"/>
+        <location filename="../VCWind.ui" line="714"/>
         <source>生成转化后图像</source>
         <translation>Converted image</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="729"/>
+        <location filename="../VCWind.ui" line="719"/>
         <source>生成平面示意图</source>
         <translation>Flat diagram</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="734"/>
+        <location filename="../VCWind.ui" line="724"/>
         <source>进度</source>
         <translation>Progress</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="745"/>
+        <location filename="../VCWind.ui" line="735"/>
         <source>导出类型</source>
         <translation>Export type</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="752"/>
+        <location filename="../VCWind.ui" line="742"/>
         <source>litematic投影</source>
         <translation>Litematica</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="757"/>
+        <location filename="../VCWind.ui" line="747"/>
         <source>原版结构方块文件</source>
         <translation>Vanilla structure</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="762"/>
+        <location filename="../VCWind.ui" line="752"/>
         <source>WorldEdit原理图</source>
         <translation>WorldEdit schematic</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="767"/>
+        <location filename="../VCWind.ui" line="757"/>
         <source>转化后图像</source>
         <translation>Converted image</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="772"/>
+        <location filename="../VCWind.ui" line="762"/>
         <source>平面示意图</source>
         <translation>Flat diagram</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="780"/>
+        <location filename="../VCWind.ui" line="770"/>
         <source>开始执行</source>
         <translation>Start</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="787"/>
+        <location filename="../VCWind.ui" line="777"/>
         <source>设置导出位置</source>
         <translation>Set export directory</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="983"/>
+        <location filename="../VCWind.ui" line="973"/>
         <source>平面示意图(*.png)</source>
         <translation>Flat diagram(*.png)</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="989"/>
+        <location filename="../VCWind.ui" line="979"/>
         <source>png压缩级别：</source>
         <translation>png compress level: </translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1005"/>
-        <location filename="../VCWind.ui" line="1037"/>
+        <location filename="../VCWind.ui" line="995"/>
+        <location filename="../VCWind.ui" line="1027"/>
         <source> 方块</source>
         <translation> blocks</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1008"/>
-        <location filename="../VCWind.ui" line="1040"/>
+        <location filename="../VCWind.ui" line="998"/>
+        <location filename="../VCWind.ui" line="1030"/>
         <source>间距：</source>
         <translation>margin: </translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1056"/>
+        <location filename="../VCWind.ui" line="1046"/>
         <source>垂直分隔线</source>
         <translation>Vertical split line</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1066"/>
+        <location filename="../VCWind.ui" line="1056"/>
         <source>水平分隔线</source>
         <translation>Horizontal split line</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1076"/>
+        <location filename="../VCWind.ui" line="1066"/>
         <source>png压缩内存级别：</source>
         <translation>png compress memory level: </translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1242"/>
+        <location filename="../VCWind.ui" line="1232"/>
         <source>联系开发者</source>
         <translation>Contact developer</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1298"/>
+        <location filename="../VCWind.ui" line="1288"/>
         <source>关于VisualCraft</source>
         <translation>About VisualCraft</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1303"/>
+        <location filename="../VCWind.ui" line="1293"/>
         <source>反馈bug</source>
         <translation>Report bugs</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1308"/>
-        <location filename="../VCWind.ui" line="1329"/>
+        <location filename="../VCWind.ui" line="1298"/>
+        <location filename="../VCWind.ui" line="1319"/>
         <source>Github仓库</source>
         <translation>Github repository</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1313"/>
+        <location filename="../VCWind.ui" line="1303"/>
         <source>bilibili</source>
         <translatorcomment>?</translatorcomment>
         <translation>bilibili</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1337"/>
+        <location filename="../VCWind.ui" line="1327"/>
         <source>生成测试投影</source>
         <translation>Generate testing litematic</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1345"/>
+        <location filename="../VCWind.ui" line="1335"/>
         <source>查看所有颜色</source>
         <translation>Browse all colors</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1353"/>
+        <location filename="../VCWind.ui" line="1343"/>
         <source>查看可用颜色</source>
         <translation>Browse avaliable colors</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1358"/>
+        <location filename="../VCWind.ui" line="1348"/>
         <source>检查更新</source>
         <translation>Check updates</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1363"/>
+        <location filename="../VCWind.ui" line="1353"/>
         <source>刷新警告信息</source>
         <translation>Flush warnings</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1368"/>
+        <location filename="../VCWind.ui" line="1358"/>
         <source>使用教程</source>
         <translation>Tutorial</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="836"/>
+        <location filename="../VCWind.ui" line="826"/>
         <source>原版结构方块文件(*.nbt)</source>
         <translation>Vanilla structure(*.nbt)</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="842"/>
+        <location filename="../VCWind.ui" line="832"/>
         <source>用结构空位表示空气</source>
         <translation>Use structure void as air</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="801"/>
+        <location filename="../VCWind.ui" line="791"/>
         <source>Litematica投影(*.litematic)</source>
         <translation>Litematica file (*.litematic)</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="795"/>
+        <location filename="../VCWind.ui" line="785"/>
         <source>导出选项</source>
         <translation>Export options</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="813"/>
+        <location filename="../VCWind.ui" line="803"/>
         <source>区域名称</source>
         <translation>Region name</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="826"/>
+        <location filename="../VCWind.ui" line="816"/>
         <source>投影名称（非文件名）</source>
         <translation>Schematic name(not file name)</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="868"/>
+        <location filename="../VCWind.ui" line="858"/>
         <source>WorldEdit原理图(*.schem) (仅1.13+)</source>
         <translation>WorldEdit schematic(*schem) (1.13+ only)</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="887"/>
+        <location filename="../VCWind.ui" line="877"/>
         <source>名称（非文件名）</source>
         <translation>Name (not file name)</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="973"/>
+        <location filename="../VCWind.ui" line="963"/>
         <source>需要的mod名（一行一个，默认为空）</source>
         <translation>Required mods (one mod in one line)</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1100"/>
+        <location filename="../VCWind.ui" line="1090"/>
         <source>显卡设置</source>
         <translation>GPU settings</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1139"/>
+        <location filename="../VCWind.ui" line="1129"/>
         <source>计算设置</source>
         <translation>Computation settings</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1164"/>
+        <location filename="../VCWind.ui" line="1154"/>
         <source>CPU线程数：</source>
         <translation>CPU threads: </translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1180"/>
+        <location filename="../VCWind.ui" line="1170"/>
         <source>选择计算设备</source>
         <translation>Select compute device</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1214"/>
+        <location filename="../VCWind.ui" line="1204"/>
         <source>测试</source>
         <translation>Test</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1222"/>
+        <location filename="../VCWind.ui" line="1212"/>
         <source>查看</source>
         <translation>Browse</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1231"/>
+        <location filename="../VCWind.ui" line="1221"/>
         <source>资源</source>
         <translation>Resources</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1238"/>
+        <location filename="../VCWind.ui" line="1228"/>
         <source>关于</source>
         <translation>About</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1275"/>
+        <location filename="../VCWind.ui" line="1265"/>
         <source>方块</source>
         <translation>Blocks</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1280"/>
+        <location filename="../VCWind.ui" line="1270"/>
         <source>加载资源</source>
         <translation>Load resources</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1285"/>
+        <location filename="../VCWind.ui" line="1275"/>
         <source>设置可用的方块</source>
         <translation>Set avaliable blocks</translation>
     </message>
     <message>
-        <location filename="../VCWind.ui" line="1293"/>
+        <location filename="../VCWind.ui" line="1283"/>
         <source>生物群系</source>
         <translation>Biomes</translation>
     </message>
