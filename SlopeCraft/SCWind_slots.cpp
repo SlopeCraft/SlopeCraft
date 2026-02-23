@@ -38,18 +38,13 @@ void SCWind::on_pb_add_image_clicked() noexcept {
     auto task_res = cvt_task::load(filename);
 
     if (!task_res) {
-      auto ret = QMessageBox::critical(
+      auto ret [[maybe_unused]] = QMessageBox::critical(
           this, tr("打开图像失败"),
           tr("无法打开图像 %1。\n详细信息： %2")
               .arg(filename, task_res.error()),
-          QMessageBox::StandardButtons{QMessageBox::StandardButton::Close,
-                                       QMessageBox::StandardButton::Ignore});
+          QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore});
 
-      if (ret == QMessageBox::Ignore) {
-        continue;
-      } else {
-        abort();
-      }
+      continue;
     }
 
     auto task = std::move(task_res.value());
@@ -120,18 +115,14 @@ void SCWind::on_pb_replace_image_clicked() noexcept {
 
   auto task_res = cvt_task::load(file);
   if (!task_res) {
-    auto ret = QMessageBox::critical(
+    auto ret[[maybe_unused]] = QMessageBox::critical(
         this, tr("打开图像失败"),
         tr("无法打开图像 %1。常见原因：图像尺寸太大。\n详细信息： %2")
             .arg(file, task_res.error()),
         QMessageBox::StandardButtons{QMessageBox::StandardButton::Close,
                                      QMessageBox::StandardButton::Ignore});
 
-    if (ret == QMessageBox::Ignore) {
-      return;
-    } else {
-      abort();
-    }
+    return;
   }
   for (const auto &qmi : selected) {
     this->tasks[qmi.row()] = std::move(task_res.value());

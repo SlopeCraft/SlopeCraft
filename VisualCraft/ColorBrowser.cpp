@@ -131,7 +131,7 @@ void ColorBrowser::setup_table(const uint16_t *const color_id_list,
         color_id_list[idx], pair.first.data(), &pair.second);
 
     if (num <= 0) {
-      const auto ret = QMessageBox::warning(
+      const auto ret[[maybe_unused]] = QMessageBox::warning(
           this, ColorBrowser::tr("获取颜色表失败"),
           ColorBrowser::tr(
               "在尝试获取第%1个颜色(color_id = "
@@ -140,18 +140,12 @@ void ColorBrowser::setup_table(const uint16_t *const color_id_list,
               .arg(idx)
               .arg(color_id_list[idx])
               .arg(num),
-          QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore,
-                                       QMessageBox::StandardButton::Close},
+          QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore},
           QMessageBox::StandardButton::Ignore);
 
-      if (ret == QMessageBox::StandardButton::Close) {
-        abort();
-        return;
-      } else {
         // ignore the error
         pair.first.resize(0);
         continue;
-      }
     }
 
     pair.first.resize(num);
@@ -169,18 +163,12 @@ void ColorBrowser::setup_table(const uint16_t *const color_id_list,
     VCL_model *const model =
         VCL_get_block_model(pair.first, VCL_get_resource_pack());
     if (model == nullptr) {
-      const auto ret = QMessageBox::warning(
+      const auto ret[[maybe_unused]] = QMessageBox::warning(
           this, ColorBrowser::tr("计算投影图像失败"),
           ColorBrowser::tr("在尝试获取方块 \"%1\" 的方块模型时出现错误。")
               .arg(QString::fromUtf8(VCL_get_block_id(pair.first))),
-          QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore,
-                                       QMessageBox::StandardButton::Close},
+          QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore},
           QMessageBox::StandardButton::Ignore);
-
-      if (ret == QMessageBox::StandardButton::Close) {
-        abort();
-        return;
-      }
 
       pair.second = std::move(proj);
       continue;
@@ -196,14 +184,8 @@ void ColorBrowser::setup_table(const uint16_t *const color_id_list,
           ColorBrowser::tr(
               "成功获取到方块 \"%1\" 的方块模型，但计算投影图像失败。")
               .arg(QString::fromUtf8(VCL_get_block_id(pair.first))),
-          QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore,
-                                       QMessageBox::StandardButton::Close},
+          QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore},
           QMessageBox::StandardButton::Ignore);
-
-      if (ret == QMessageBox::StandardButton::Close) {
-        abort();
-        return;
-      }
 
       pair.second = std::move(proj);
       VCL_destroy_block_model(model);

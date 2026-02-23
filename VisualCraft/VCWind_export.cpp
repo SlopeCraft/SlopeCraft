@@ -176,15 +176,11 @@ bool VCWind::export_lite(const QString &lite_dest,
         VCWind::tr("VisualCraftL 不能为图像\"%1\"生成投影文件\"%2\"。")
             .arg(image_filename)
             .arg(lite_dest),
-        QMessageBox::StandardButtons{QMessageBox::StandardButton::Close,
-                                     QMessageBox::StandardButton::Ignore},
-        QMessageBox::StandardButton::Close);
-    if (ret == QMessageBox::StandardButton::Ignore) {
-      return false;
-    } else {
-      abort();
-      return false;
-    }
+        QMessageBox::StandardButtons{
+            QMessageBox::StandardButton::Ignore
+        },
+        QMessageBox::StandardButton::Ignore);
+    return false;
   }
   return true;
 }
@@ -200,15 +196,11 @@ bool VCWind::export_structure(const QString &nbt_dest,
         VCWind::tr("VisualCraftL 不能为图像\"%1\"生成结构方块文件\"%2\"。")
             .arg(image_filename)
             .arg(nbt_dest),
-        QMessageBox::StandardButtons{QMessageBox::StandardButton::Close,
-                                     QMessageBox::StandardButton::Ignore},
-        QMessageBox::StandardButton::Close);
-    if (ret == QMessageBox::StandardButton::Ignore) {
-      return false;
-    } else {
-      abort();
-      return false;
-    }
+        QMessageBox::StandardButtons{
+            QMessageBox::StandardButton::Ignore
+        },
+        QMessageBox::StandardButton::Ignore);
+    return false;
   }
   return true;
 }
@@ -237,21 +229,17 @@ bool VCWind::export_schem(const QString &schem_dest,
       this->ui->pte_weschem_name->toPlainText().toUtf8().data(),
       mods_charp.data(), mods_charp.size());
   if (!success) {
-    const auto ret = QMessageBox::critical(
-        this, VCWind::tr("导出 World Edit 原理图失败"),
-        VCWind::tr(
-            "VisualCraftL 不能为图像\"%1\"生成 World Edit 原理图\"%2\"。")
-            .arg(image_filename)
-            .arg(schem_dest),
-        QMessageBox::StandardButtons{QMessageBox::StandardButton::Close,
-                                     QMessageBox::StandardButton::Ignore},
-        QMessageBox::StandardButton::Close);
-    if (ret == QMessageBox::StandardButton::Ignore) {
+      const auto ret[[maybe_unused]] = QMessageBox::critical(
+          this, VCWind::tr("导出 World Edit 原理图失败"),
+          VCWind::tr(
+              "VisualCraftL 不能为图像\"%1\"生成 World Edit 原理图\"%2\"。")
+          .arg(image_filename)
+          .arg(schem_dest),
+          QMessageBox::StandardButtons{
+              QMessageBox::StandardButton::Ignore
+          },
+          QMessageBox::StandardButton::Ignore);
       return false;
-    } else {
-      abort();
-      return false;
-    }
   }
   return true;
 }
@@ -260,18 +248,12 @@ bool VCWind::export_converted(const QString &converted_image_dest_path,
                               const QImage &new_img) noexcept {
   bool success = new_img.save(converted_image_dest_path);
   if (!success) {
-    const auto ret = QMessageBox::critical(
-        this, VCWind::tr("保存转化后图像失败"),
-        VCWind::tr("QImage 未能生成\"%1\"。").arg(converted_image_dest_path),
-        QMessageBox::StandardButtons{QMessageBox::StandardButton::Close,
-                                     QMessageBox::StandardButton::Ignore},
-        QMessageBox::StandardButton::Close);
-    if (ret == QMessageBox::StandardButton::Ignore) {
+      const auto ret [[maybe_unused]] = QMessageBox::critical(
+          this, VCWind::tr("保存转化后图像失败"),
+          VCWind::tr("QImage 未能生成\"%1\"。").arg(converted_image_dest_path),
+          QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore},
+          QMessageBox::StandardButton::Ignore);
       return false;
-    } else {
-      abort();
-      return false;
-    }
   }
   return true;
 }
@@ -279,20 +261,15 @@ bool VCWind::export_converted(const QString &converted_image_dest_path,
 bool VCWind::export_flatdiagram(const QString &diagram_dest) noexcept {
   const QStringList qsl = diagram_dest.split(';');
   if (qsl.size() not_eq VCL_get_max_block_layers()) {
-    const auto ret = QMessageBox::critical(
-        this, VCWind::tr("平面示意图输入错误"),
-        VCWind::tr("应输入%1个以\";\"分隔的文件名，但实际上输入了%"
-                   "2 个。\n您输入的%2个文件名是：\n%3")
-            .arg(VCL_get_max_block_layers())
-            .arg(qsl.size())
-            .arg(diagram_dest),
-        QMessageBox::StandardButtons{QMessageBox::StandardButton::Close,
-                                     QMessageBox::StandardButton::Ignore});
-    if (ret == QMessageBox::StandardButton::Ignore) {
+      const auto ret [[maybe_unused]] = QMessageBox::critical(
+          this, VCWind::tr("平面示意图输入错误"),
+          VCWind::tr("应输入%1个以\";\"分隔的文件名，但实际上输入了%"
+              "2 个。\n您输入的%2个文件名是：\n%3")
+          .arg(VCL_get_max_block_layers())
+          .arg(qsl.size())
+          .arg(diagram_dest),
+          QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore});
       return false;
-    }
-    abort();
-    return false;
   }
 
   VCL_Kernel::flag_diagram_option option;
@@ -320,19 +297,14 @@ bool VCWind::export_flatdiagram(const QString &diagram_dest) noexcept {
         qsl[l].toLocal8Bit().data(), option, l);
 
     if (!ok) {
-      const auto ret = QMessageBox::critical(
-          this, VCWind::tr("导出平面示意图失败"),
-          VCWind::tr("尝试为原图生成第%1个平面示意图（%2）时出现了错误。")
-              .arg(l)
-              .arg(qsl[l]),
-          QMessageBox::StandardButtons{QMessageBox::StandardButton::Close,
-                                       QMessageBox::StandardButton::Ignore});
+        const auto ret [[maybe_unused]] = QMessageBox::critical(
+            this, VCWind::tr("导出平面示意图失败"),
+            VCWind::tr("尝试为原图生成第%1个平面示意图（%2）时出现了错误。")
+            .arg(l)
+            .arg(qsl[l]),
+            QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore});
 
-      if (ret == QMessageBox::StandardButton::Ignore) {
         return false;
-      }
-      abort();
-      return true;
     }
   }
 
@@ -431,19 +403,13 @@ void VCWind::on_pb_execute_clicked() noexcept {
 
     success = this->kernel->build();
     if (!success) {
-      const auto ret = QMessageBox::critical(
-          this, VCWind::tr("构建三维结构失败"),
+        const auto ret[[maybe_unused]] = QMessageBox::critical(
+            this, VCWind::tr("构建三维结构失败"),
           VCWind::tr("VisualCraftL 不能为图像\"%1\"构建三维结构。")
               .arg(image_filename),
-          QMessageBox::StandardButtons{QMessageBox::StandardButton::Close,
-                                       QMessageBox::StandardButton::Ignore},
-          QMessageBox::StandardButton::Close);
-      if (ret == QMessageBox::StandardButton::Ignore) {
+            QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore},
+            QMessageBox::StandardButton::Ignore);
         continue;
-      } else {
-        abort();
-        return;
-      }
     }
     task_finished++;
     this->ui->tw_build->item(r, VCWind::export_col_progress)
