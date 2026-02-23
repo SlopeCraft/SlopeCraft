@@ -384,7 +384,7 @@
        <attribute name="title">
         <string>导入图像并转化</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_6" columnstretch="1,0,0,0">
+       <layout class="QGridLayout" name="gridLayout_6" columnstretch="0,1,0,0">
         <item row="2" column="2" colspan="2">
          <widget class="QPushButton" name="pb_cvt_all">
           <property name="sizePolicy">
@@ -472,6 +472,12 @@
           </item>
           <item row="1" column="1">
            <widget class="QPushButton" name="pb_remove_image">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
              <string>删除</string>
             </property>
@@ -486,6 +492,12 @@
           </item>
           <item row="1" column="0">
            <widget class="QPushButton" name="pb_add_image">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
              <string>添加</string>
             </property>
@@ -495,6 +507,12 @@
            <widget class="QCheckBox" name="cb_lv_cvt_icon_mode">
             <property name="enabled">
              <bool>true</bool>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
             <property name="text">
              <string>显示缩略图</string>
@@ -506,6 +524,12 @@
           </item>
           <item row="2" column="0">
            <widget class="QPushButton" name="pb_replace_image">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
              <string>替换</string>
             </property>
