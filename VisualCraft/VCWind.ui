@@ -474,7 +474,7 @@
          <attribute name="title">
           <string>选择图片</string>
          </attribute>
-         <layout class="QGridLayout" name="gridLayout_6" columnstretch="0,0,0,0,0,0,0,0,0,0">
+         <layout class="QGridLayout" name="gridLayout_6" rowstretch="0,0,0,0,0" columnstretch="0,0,0,0,1,0,0,0,0,1">
           <item row="0" column="8" rowspan="5">
            <widget class="Line" name="line">
             <property name="orientation">
@@ -486,8 +486,8 @@
            <widget class="QLabel" name="lable_converted">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
+              <horstretch>1</horstretch>
+              <verstretch>1</verstretch>
              </sizepolicy>
             </property>
             <property name="frameShape">
@@ -523,6 +523,12 @@
             <layout class="QGridLayout" name="gridLayout_12">
              <item row="6" column="0">
               <widget class="QCheckBox" name="cb_algo_dither">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="text">
                 <string>抖动</string>
                </property>
@@ -530,6 +536,12 @@
              </item>
              <item row="2" column="0">
               <widget class="QRadioButton" name="rb_algo_HSV">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="text">
                 <string notr="true">HSV</string>
                </property>
@@ -537,6 +549,12 @@
              </item>
              <item row="0" column="0">
               <widget class="QRadioButton" name="rb_algo_RGB">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="text">
                 <string notr="true">RGB</string>
                </property>
@@ -547,6 +565,12 @@
              </item>
              <item row="4" column="0">
               <widget class="QRadioButton" name="rb_algo_Lab00">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="text">
                 <string notr="true">Lab00(CIEDE00)</string>
                </property>
@@ -554,6 +578,12 @@
              </item>
              <item row="0" column="1">
               <widget class="QRadioButton" name="rb_algo_RGB_Better">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="text">
                 <string notr="true">RGB+</string>
                </property>
@@ -561,6 +591,12 @@
              </item>
              <item row="2" column="1">
               <widget class="QRadioButton" name="rb_algo_Lab94">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="text">
                 <string notr="true">Lab94(CIEDE94)</string>
                </property>
@@ -568,6 +604,12 @@
              </item>
              <item row="4" column="1">
               <widget class="QRadioButton" name="rb_algo_XYZ">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="text">
                 <string notr="true">XYZ</string>
                </property>
@@ -579,9 +621,9 @@
           <item row="3" column="0" rowspan="2" colspan="3">
            <widget class="QListWidget" name="lw_image_files">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+             <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
               <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
+              <verstretch>1</verstretch>
              </sizepolicy>
             </property>
             <property name="dragEnabled">
@@ -608,8 +650,8 @@
            <widget class="QLabel" name="label_raw_image">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
+              <horstretch>1</horstretch>
+              <verstretch>1</verstretch>
              </sizepolicy>
             </property>
             <property name="frameShape">

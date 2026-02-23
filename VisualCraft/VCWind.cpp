@@ -780,7 +780,8 @@ void VCWind::show_image(decltype(image_cache)::iterator it) noexcept {
                                 nullptr, nullptr, false);
 
   it->second.second = img;
-  this->ui->lable_converted->setPixmap(QPixmap::fromImage(img));
+  const auto size = this->ui->lable_converted->size().shrunkBy(margin);
+  this->ui->lable_converted->setPixmap(QPixmap::fromImage(img).scaled(size, Qt::KeepAspectRatio, Qt::FastTransformation));
 }
 
 void VCWind::on_lw_image_files_itemClicked(QListWidgetItem *item) noexcept {
