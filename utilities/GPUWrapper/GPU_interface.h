@@ -28,6 +28,7 @@ This file is part of SlopeCraft.
 #include <string>
 #include <cstdint>
 #include <cstddef>
+#include <memory>
 
 namespace gpu_wrapper {
 
@@ -108,6 +109,18 @@ class gpu_interface {
 
   virtual size_t local_work_group_size_v() const noexcept = 0;
 };
+
+struct deleter {
+  static void operator()(platform_wrapper *ptr) {
+    platform_wrapper::destroy(ptr);
+  }
+  static void operator()(device_wrapper *ptr) { device_wrapper::destroy(ptr); }
+  static void operator()(gpu_interface *ptr) { gpu_interface::destroy(ptr); }
+};
+
+using unique_platform = std::unique_ptr<platform_wrapper, deleter>;
+using unique_device = std::unique_ptr<device_wrapper, deleter>;
+using unique_gpu_interface = std::unique_ptr<gpu_interface, deleter>;
 
 }  // namespace gpu_wrapper
 

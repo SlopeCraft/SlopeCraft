@@ -1,8 +1,9 @@
 #include <format>
 #include <vector>
 #include <optional>
-#include <Eigen/Dense>
+#include <variant>
 #include <map>
+#include <Eigen/Dense>
 
 #include "GPUWrapper/GPU_interface.h"
 
@@ -22,21 +23,6 @@ void write_error_code(int *errorcode_nullable, int error) noexcept {
 void write_error_code(int *errorcode_nullable, std::error_code error) noexcept {
   write_error_code(errorcode_nullable, error.value());
 }
-
-struct uuid_compare {
-  static bool operator()(const std::array<uint64_t, 2> &a,
-                         const std::array<uint64_t, 2> &b) {
-    if (a[0] == b[0]) {
-      return a[1] < b[1];
-    }
-    return a[0] < b[0];
-  }
-  // static uint64_t operator()(const std::array<uint64_t, 2> &a) {
-  //   uint64_t hash = a[0];
-  //   hash ^= a[1];
-  //   return hash;
-  // }
-};
 
 namespace gpu_wrapper {
 const char *api_name() noexcept { return "Vulkan"; }
@@ -71,7 +57,9 @@ class platform_impl : public platform_wrapper {
     return ret;
   }
 
-  size_t num_devices_v() const noexcept { return physical_devices().size(); }
+  size_t num_devices_v() const noexcept final {
+    return physical_devices().size();
+  }
 };
 
 platform_wrapper *platform_wrapper::create(size_t idx [[maybe_unused]],
@@ -113,7 +101,7 @@ class device_impl : public device_wrapper {
   vk::UniqueDescriptorPool descriptor_pool;
   vk::UniquePipelineCache pipeline_cache;
 
-  const char *name_v() const noexcept { return name.c_str(); }
+  const char *name_v() const noexcept final { return name.c_str(); }
 };
 
 uint32_t select_queue_family_index(const vk::PhysicalDevice &pd) {
@@ -209,17 +197,6 @@ device_wrapper *device_wrapper::create(platform_wrapper *pw, size_t idx,
     device_ptr->command_pool = std::move(cmd_pool);
     device_ptr->descriptor_pool = std::move(descriptor_pool);
     device_ptr->pipeline_cache = std::move(pipeline_cache);
-    /*
-    *
-  std::string name;
-  vk::PhysicalDevice physical_device;
-  vk::UniqueDevice device;
-  vma::UniqueAllocator allocator;
-  vk::Queue queue;
-  vk::UniqueCommandPool command_pool;
-  vk::UniqueDescriptorPool descriptor_pool;
-  vk::UniquePipelineCache pipeline_cache;
-     *     */
 
     write_error_code(errorcode, vk::Result::eSuccess);
     return device_ptr;
@@ -230,49 +207,154 @@ device_wrapper *device_wrapper::create(platform_wrapper *pw, size_t idx,
   }
 }
 
+struct buffer_with_alloc {
+  vma::UniqueBuffer buffer;
+  vma::UniqueAllocation alloc;
+  vma::AllocationInfo allocation_info;
+};
+buffer_with_alloc allocate(vma::Allocator allocator, vk::BufferCreateInfo bci,
+                           vma::AllocationCreateInfo aci, size_t bytes) {
+  bci.size = bytes;
+  vma::AllocationInfo allocation_info;
+  auto [alloc, buffer] =
+      allocator.createBufferUnique(bci, aci, allocation_info);
+  buffer_with_alloc ret;
+  ret.buffer = std::move(buffer);
+  ret.alloc = std::move(alloc);
+  ret.allocation_info = allocation_info;
+  return ret;
+}
+
+bool support_mapping_device_memory(vma::Allocator allocator) {
+  auto mem_type_props = allocator.getMemoryProperties();
+  const auto expected_flags = vk::MemoryPropertyFlagBits::eHostVisible |
+                              vk::MemoryPropertyFlagBits::eHostCoherent |
+                              vk::MemoryPropertyFlagBits::eDeviceLocal;
+  for (const auto &prop : mem_type_props->memoryTypes) {
+    if (prop.propertyFlags & expected_flags) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/// Get template of buffer create info and allocation create info
+std::pair<vk::BufferCreateInfo, vma::AllocationCreateInfo> get_alloc_template(
+    bool is_device_buffer, bool require_staging) {
+  if (not is_device_buffer) {  // host staging buffer
+    return {vk::BufferCreateInfo{{},
+                                 0,
+                                 vk::BufferUsageFlagBits::eTransferSrc |
+                                     vk::BufferUsageFlagBits::eTransferDst |
+                                     vk::BufferUsageFlagBits::eStorageBuffer,
+                                 vk::SharingMode::eExclusive,
+                                 vk::QueueFamilyIgnored},
+            vma::AllocationCreateInfo{
+                vma::AllocationCreateFlagBits::eHostAccessRandom,
+                vma::MemoryUsage::eAutoPreferHost,
+                vk::MemoryPropertyFlagBits::eHostVisible |
+                    vk::MemoryPropertyFlagBits::eHostCoherent,
+                {}}};
+  }
+
+  if (require_staging) {  // device local buffer, not mappable
+    return {vk::BufferCreateInfo{{},
+                                 0,
+                                 vk::BufferUsageFlagBits::eTransferSrc |
+                                     vk::BufferUsageFlagBits::eTransferDst |
+                                     vk::BufferUsageFlagBits::eStorageBuffer,
+                                 vk::SharingMode::eExclusive,
+                                 vk::QueueFamilyIgnored},
+            vma::AllocationCreateInfo{
+                vma::AllocationCreateFlagBits::eHostAccessRandom |
+                    vma::AllocationCreateFlagBits::eMapped,
+                vma::MemoryUsage::eGpuOnly,
+                vk::MemoryPropertyFlagBits::eDeviceLocal,
+                {}}};
+  }
+  // device local buffer, mappable
+  return {vk::BufferCreateInfo{{},
+                               0,
+                               vk::BufferUsageFlagBits::eTransferSrc |
+                                   vk::BufferUsageFlagBits::eTransferDst |
+                                   vk::BufferUsageFlagBits::eStorageBuffer,
+                               vk::SharingMode::eExclusive,
+                               vk::QueueFamilyIgnored},
+          vma::AllocationCreateInfo{
+              vma::AllocationCreateFlagBits::eHostAccessSequentialWrite,
+              vma::MemoryUsage::eAutoPreferDevice,
+              vk::MemoryPropertyFlagBits::eDeviceLocal |
+                  vk::MemoryPropertyFlagBits::eHostVisible |
+                  vk::MemoryPropertyFlagBits::eHostCoherent,
+              {}}};
+}
+
+struct required_buffers {
+  buffer_with_alloc colorset;
+  buffer_with_alloc task;
+  buffer_with_alloc result_index;
+  buffer_with_alloc result_diff;
+};
+
+struct cpu_results {
+  std::vector<uint16_t> result_index;
+  std::vector<float> result_diff;
+};
+
 class gpu_interface_impl : public gpu_interface {
  public:
   vk::Device device;
-  std::error_code error_code{int(vk::Result::eSuccess), std::system_category()};
+  vma::Allocator allocator;
+  std::error_code error_code{static_cast<int>(vk::Result::eSuccess),
+                             std::system_category()};
 
-  const char *api_v() const noexcept { return "Vulkan"; }
+  required_buffers device_buf;
+  std::variant<required_buffers, cpu_results> host_buf;
 
-  int error_code_v() const noexcept { return error_code_v(); }
-  bool ok_v() const noexcept {
-    return error_code.value() == int(vk::Result::eSuccess);
+  const char *api_v() const noexcept final { return "Vulkan"; }
+
+  int error_code_v() const noexcept final { return error_code_v(); }
+  bool ok_v() const noexcept final {
+    return error_code.value() == static_cast<int>(vk::Result::eSuccess);
   }
-  std::string error_detail_v() const noexcept { return error_code.message(); }
+  std::string error_detail_v() const noexcept final {
+    return error_code.message();
+  }
 
-  void set_colorset_v(size_t color_num,
-                      const std::array<const float *, 3> &color_ptrs) noexcept {
+  void set_colorset_v(
+      size_t color_num,
+      const std::array<const float *, 3> &color_ptrs) noexcept final {
     abort();
-  };
-  ;
+  }
 
-  void set_task_v(size_t task_num, const std::array<float, 3> *data) noexcept {
+  void set_task_v(size_t task_num,
+                  const std::array<float, 3> *data) noexcept final {
     abort();
-  };
-  ;
+  }
+  void execute_v(::SCL_convertAlgo algo, bool wait) noexcept final { abort(); }
+  void wait_v() noexcept final { abort(); }
+  size_t task_count_v() const noexcept final { abort(); }
 
-  void execute_v(::SCL_convertAlgo algo, bool wait) noexcept { abort(); };
-  ;
+  std::string device_vendor_v() const noexcept final { abort(); }
 
-  void wait_v() noexcept { abort(); };
-  ;
+  const uint16_t *result_idx_v() const noexcept final {
+    if (auto host_buf = std::get_if<required_buffers>(&this->host_buf)) {
+      return static_cast<const uint16_t *>(
+          host_buf->result_index.allocation_info.pMappedData);
+    }
+    return std::get<cpu_results>(this->host_buf).result_index.data();
+  }
+  const float *result_diff_v() const noexcept final {
+    if (auto host_buf = std::get_if<required_buffers>(&this->host_buf)) {
+      return static_cast<const float *>(
+          host_buf->result_diff.allocation_info.pMappedData);
+    }
+    return std::get<cpu_results>(this->host_buf).result_diff.data();
+  }
+  size_t local_work_group_size_v() const noexcept final { return 64; }
 
-  size_t task_count_v() const noexcept { abort(); };
-  ;
-
-  std::string device_vendor_v() const noexcept { abort(); };
-  ;
-
-  const uint16_t *result_idx_v() const noexcept { abort(); };
-  ;
-
-  const float *result_diff_v() const noexcept { abort(); };
-  ;
-
-  size_t local_work_group_size_v() const noexcept { abort(); };
+  void adjust_buffer_for_colorset(size_t color_num);
+  void adjust_buffer_for_task(size_t task_num);
 };
 
 void gpu_interface::destroy(gpu_interface *gi) noexcept { delete gi; }
@@ -282,10 +364,36 @@ gpu_interface *gpu_interface::create(
     std::pair<int, std::string> &err) noexcept {
   try {
     auto device = dynamic_cast<device_impl *>(dw);
+    auto mem_props = device->allocator->getMemoryProperties();
 
-    gpu_interface_impl *ret = new gpu_interface_impl{};
+    auto ret = new gpu_interface_impl{};
     ret->device = device->device.get();
-    err.first = int(vk::Result::eSuccess);
+    ret->allocator = device->allocator.get();
+
+    const bool need_staging_buffer =
+        not support_mapping_device_memory(ret->allocator);
+    // Allocate device buffers
+    {
+      auto [bci, aci] = get_alloc_template(true, need_staging_buffer);
+      ret->device_buf.colorset = allocate(ret->allocator, bci, aci, 4);
+      ret->device_buf.task = allocate(ret->allocator, bci, aci, 4);
+      ret->device_buf.result_diff = allocate(ret->allocator, bci, aci, 4);
+      ret->device_buf.result_index = allocate(ret->allocator, bci, aci, 4);
+    }
+    if (need_staging_buffer) {
+      auto [bci, aci] = get_alloc_template(false, need_staging_buffer);
+      required_buffers bufs;
+      bufs.colorset = allocate(ret->allocator, bci, aci, 4);
+      bufs.task = allocate(ret->allocator, bci, aci, 4);
+      bufs.result_diff = allocate(ret->allocator, bci, aci, 4);
+      bufs.result_index = allocate(ret->allocator, bci, aci, 4);
+      ret->host_buf = std::move(bufs);
+    } else {
+      cpu_results results;
+      ret->host_buf = std::move(results);
+    }
+
+    err.first = static_cast<int>(vk::Result::eSuccess);
     err.second = "";
     return ret;
   } catch (vk::SystemError &e) {
@@ -295,4 +403,71 @@ gpu_interface *gpu_interface::create(
   }
 }
 
+void gpu_interface_impl::adjust_buffer_for_colorset(size_t color_num) {
+  const uint32_t required_size = color_num * sizeof(float) * 3;
+  const uint32_t device_capacity =
+      this->device_buf.colorset.allocation_info.size;
+  const bool need_staging_buffer =
+      std::get_if<required_buffers>(&this->host_buf);
+  if (device_capacity < required_size) {
+    auto [bci, aci] = get_alloc_template(true, need_staging_buffer);
+    this->device_buf.colorset =
+        allocate(this->allocator, bci, aci, required_size);
+  }
+  if (need_staging_buffer) {
+    required_buffers &bufs = std::get<required_buffers>(this->host_buf);
+    const uint32_t host_capacity = bufs.colorset.allocation_info.size;
+    if (host_capacity < device_capacity) {
+      auto [bci, aci] = get_alloc_template(false, need_staging_buffer);
+      bufs.colorset = allocate(this->allocator, bci, aci, device_capacity);
+    }
+  } else {
+    // do nothing
+  }
+}
+
+void gpu_interface_impl::adjust_buffer_for_task(size_t task_num) {
+  const bool need_staging_buffer =
+      std::get_if<required_buffers>(&this->host_buf);
+  // device
+  {
+    auto [bci, aci] = get_alloc_template(true, need_staging_buffer);
+    if (this->device_buf.task.allocation_info.size <
+        task_num * sizeof(float[3])) {
+      this->device_buf.task =
+          allocate(this->allocator, bci, aci, task_num * sizeof(float[3]));
+    }
+    if (this->device_buf.result_diff.allocation_info.size <
+        task_num * sizeof(float)) {
+      this->device_buf.result_diff =
+          allocate(this->allocator, bci, aci, task_num * sizeof(float));
+    }
+    if (this->device_buf.result_index.allocation_info.size <
+        task_num * sizeof(uint16_t)) {
+      this->device_buf.result_index =
+          allocate(this->allocator, bci, aci, task_num * sizeof(uint16_t));
+    }
+  }
+  // host
+  if (need_staging_buffer) {
+    auto [bci, aci] = get_alloc_template(false, need_staging_buffer);
+    auto &bufs = std::get<required_buffers>(this->host_buf);
+    if (bufs.task.allocation_info.size < task_num * sizeof(float[3])) {
+      bufs.task =
+          allocate(this->allocator, bci, aci, task_num * sizeof(float[3]));
+    }
+    if (bufs.result_diff.allocation_info.size < task_num * sizeof(float)) {
+      bufs.result_diff =
+          allocate(this->allocator, bci, aci, task_num * sizeof(float));
+    }
+    if (bufs.result_index.allocation_info.size < task_num * sizeof(uint16_t)) {
+      bufs.result_index =
+          allocate(this->allocator, bci, aci, task_num * sizeof(uint16_t));
+    }
+  } else {
+    auto &bufs = std::get<cpu_results>(this->host_buf);
+    bufs.result_diff.resize(task_num);
+    bufs.result_index.resize(task_num);
+  }
+}
 }  // namespace gpu_wrapper
