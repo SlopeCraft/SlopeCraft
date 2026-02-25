@@ -303,19 +303,33 @@ struct cpu_results {
   std::vector<float> result_diff;
 };
 
+struct color_diff_push_const {
+  alignas(uint32_t) uint32_t task_num;
+  alignas(uint32_t) uint32_t colorset_size;
+  alignas(uint32_t) uint32_t algo;
+};
+
 class gpu_interface_impl : public gpu_interface {
  public:
+  // references
   vk::Device device;
+  vk::DescriptorPool descriptor_pool;
   vma::Allocator allocator;
+  // error code
   std::error_code error_code{static_cast<int>(vk::Result::eSuccess),
                              std::system_category()};
-
+  // buffers
   required_buffers device_buf;
   std::variant<required_buffers, cpu_results> host_buf;
   // Pipeline items
   vk::UniquePipeline pipeline;
   vk::UniquePipelineLayout pipeline_layout;
   vk::UniqueDescriptorSetLayout descriptor_set_layout;
+  // Descriptor set
+  vk::UniqueDescriptorSet descriptor_set;
+  // command buffer and fence
+  vk::UniqueFence fence;
+  vk::UniqueCommandBuffer cmd_buffer;
 
   const char *api_v() const noexcept final { return "Vulkan"; }
 
@@ -361,15 +375,11 @@ class gpu_interface_impl : public gpu_interface {
 
   void adjust_buffer_for_colorset(size_t color_num);
   void adjust_buffer_for_task(size_t task_num);
+  void update_descriptor_set();
 };
 
 void gpu_interface::destroy(gpu_interface *gi) noexcept { delete gi; }
 
-struct color_diff_push_const {
-  alignas(uint32_t) uint32_t task_num;
-  alignas(uint32_t) uint32_t colorset_size;
-  alignas(uint32_t) uint32_t algo;
-};
 
 gpu_interface *gpu_interface::create(
     platform_wrapper *pw [[maybe_unused]], device_wrapper *dw,
@@ -380,7 +390,15 @@ gpu_interface *gpu_interface::create(
 
     auto ret = new gpu_interface_impl{};
     ret->device = device->device.get();
+    ret->descriptor_pool = device->descriptor_pool.get();
     ret->allocator = device->allocator.get();
+    {
+      vk::CommandBufferAllocateInfo ai{device->command_pool.get(),
+                                       vk::CommandBufferLevel::ePrimary, 1};
+      ret->cmd_buffer =
+          std::move(device->device->allocateCommandBuffersUnique(ai)[0]);
+    }
+    ret->fence = device->device->createFenceUnique(vk::FenceCreateFlags());
 
     const bool need_staging_buffer =
         not support_mapping_device_memory(ret->allocator);
@@ -448,6 +466,7 @@ gpu_interface *gpu_interface::create(
       ret->pipeline_layout = std::move(pipeline_layout);
       ret->pipeline = std::move(pipeline_res.value);
     }
+    ret->update_descriptor_set();
 
     err.first = static_cast<int>(vk::Result::eSuccess);
     err.second = "";
@@ -469,6 +488,7 @@ void gpu_interface_impl::adjust_buffer_for_colorset(size_t color_num) {
     auto [bci, aci] = get_alloc_template(true, need_staging_buffer);
     this->device_buf.colorset =
         allocate(this->allocator, bci, aci, required_size);
+    this->update_descriptor_set();
   }
   if (need_staging_buffer) {
     required_buffers &bufs = std::get<required_buffers>(this->host_buf);
@@ -488,21 +508,26 @@ void gpu_interface_impl::adjust_buffer_for_task(size_t task_num) {
   // device
   {
     auto [bci, aci] = get_alloc_template(true, need_staging_buffer);
+    bool buffer_updated = false;
     if (this->device_buf.task.allocation_info.size <
         task_num * sizeof(float[3])) {
       this->device_buf.task =
           allocate(this->allocator, bci, aci, task_num * sizeof(float[3]));
+      buffer_updated = true;
     }
     if (this->device_buf.result_diff.allocation_info.size <
         task_num * sizeof(float)) {
       this->device_buf.result_diff =
           allocate(this->allocator, bci, aci, task_num * sizeof(float));
+      buffer_updated = true;
     }
     if (this->device_buf.result_index.allocation_info.size <
         task_num * sizeof(uint16_t)) {
       this->device_buf.result_index =
           allocate(this->allocator, bci, aci, task_num * sizeof(uint16_t));
+      buffer_updated = true;
     }
+    if (buffer_updated) this->update_descriptor_set();
   }
   // host
   if (need_staging_buffer) {
@@ -526,4 +551,27 @@ void gpu_interface_impl::adjust_buffer_for_task(size_t task_num) {
     bufs.result_index.resize(task_num);
   }
 }
+
+void gpu_interface_impl::update_descriptor_set() {
+  this->descriptor_set = std::move(
+      device.allocateDescriptorSetsUnique(vk::DescriptorSetAllocateInfo{
+          descriptor_pool, descriptor_set_layout.get()})[0]);
+  std::vector<vk::DescriptorBufferInfo> dbi;
+  dbi.emplace_back(this->device_buf.colorset.buffer.get(), 0, vk::WholeSize);
+  dbi.emplace_back(this->device_buf.task.buffer.get(), 0, vk::WholeSize);
+  dbi.emplace_back(this->device_buf.result_diff.buffer.get(), 0, vk::WholeSize);
+  dbi.emplace_back(this->device_buf.result_index.buffer.get(), 0,
+                   vk::WholeSize);
+  std::vector<vk::WriteDescriptorSet> wds;
+  for (uint32_t i = 0; i < dbi.size(); i++) {
+    wds.emplace_back(vk::WriteDescriptorSet{descriptor_set.get(),
+                                            i,
+                                            0,
+                                            vk::DescriptorType::eStorageBuffer,
+                                            {},
+                                            dbi[i]});
+  }
+  device.updateDescriptorSets(wds, {});
+}
+
 }  // namespace gpu_wrapper
