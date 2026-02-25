@@ -57,24 +57,28 @@ int list_gpu() {
   const size_t plat_num = VCL_platform_num();
   cout << plat_num << " platforms found on this computer : \n";
   for (size_t pid = 0; pid < plat_num; pid++) {
-    VCL_GPU_Platform *plat = VCL_get_platform(pid);
-    if (plat == nullptr) {
+    std::unique_ptr<VCL_GPU_Platform, VCL_deleter> platform{
+        VCL_get_platform(pid)};
+    if (platform == nullptr) {
       cout << "Failed to get platform " << pid << '\n';
       continue;
     }
-    cout << "Platform " << pid << " : " << VCL_get_platform_name(plat) << '\n';
+    cout << "Platform " << pid << " : " << VCL_get_platform_name(platform.get())
+         << '\n';
 
-    const size_t dev_num = VCL_get_device_num(plat);
+    const size_t dev_num = VCL_get_device_num(platform.get());
     for (size_t did = 0; did < dev_num; did++) {
-      VCL_GPU_Device *dp = VCL_get_device(plat, did);
+      std::unique_ptr<VCL_GPU_Device, VCL_deleter> dp{
+          VCL_get_device(platform.get(), did)};
+      // VCL_GPU_Device *dp = ;
       if (dp == nullptr) {
         cout << "Failed to get device " << did << '\n';
         continue;
       }
-      cout << "    Device " << did << " : " << VCL_get_device_name(dp) << '\n';
-      VCL_release_device(dp);
+      cout << "    Device " << did << " : " << VCL_get_device_name(dp.get())
+           << '\n';
+      // VCL_release_device(dp);
     }
-    VCL_release_platform(plat);
   }
   return 0;
 }
@@ -172,6 +176,8 @@ int run(const inputs &input) noexcept {
   }
 
   VCL_Kernel *kernel = VCL_create_kernel();
+  std::unique_ptr<VCL_GPU_Platform, VCL_deleter> platform;
+  std::unique_ptr<VCL_GPU_Device, VCL_deleter> device;
   if (kernel == nullptr) {
     cout << "Failed to create kernel." << endl;
     return __LINE__;
@@ -183,25 +189,22 @@ int run(const inputs &input) noexcept {
   if (input.prefer_gpu) {
     bool ok;
     while (true) {
-      auto plat = VCL_get_platform(input.platform_idx);
-      if (plat == nullptr) {
+      platform.reset(VCL_get_platform(input.platform_idx));
+      if (platform == nullptr) {
+        ok = false;
+        break;
+      }
+      device.reset(VCL_get_device(platform.get(), input.device_idx));
+
+      if (device == nullptr) {
+        platform.reset();
+
         ok = false;
         break;
       }
 
-      auto dev = VCL_get_device(plat, input.device_idx);
+      ok = kernel->set_gpu_resource(platform.get(), device.get());
 
-      if (dev == nullptr) {
-        VCL_release_platform(plat);
-        ok = false;
-        break;
-      }
-
-      ok = kernel->set_gpu_resource(plat, dev);
-
-      kernel->release_gpu_resource();
-      VCL_release_device(dev);
-      VCL_release_platform(plat);
       break;
     }
     if (!ok || !kernel->have_gpu_resource()) {
