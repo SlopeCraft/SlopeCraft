@@ -466,28 +466,22 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
 
     const uint64_t taskCount = tasks.size();
 
-    const uint64_t gpu_task_count =
-        taskCount - taskCount % this->gpu->local_work_group_size_v();
-    const uint64_t cpu_task_count = taskCount - gpu_task_count;
-
-    if (gpu_task_count > 0) {
-      std::vector<std::array<float, 3>> task_colors(gpu_task_count);
-      for (size_t tid = 0; tid < gpu_task_count; tid++) {
-        if (tasks[tid]->first.algo != algo) {
-          return false;
-        }
-
-        const Eigen::Array3f c3_eig = tasks[tid]->first.to_c3();
-        for (size_t channel = 0; channel < 3; channel++) {
-          task_colors[tid][channel] = c3_eig[channel];
-        }
-      }
-
-      //  set task
-      this->gpu->set_task_v(task_colors.size(), task_colors.data());
-      if (!this->gpu->ok_v()) {
+    std::vector<std::array<float, 3>> task_colors(tasks.size());
+    for (size_t tid = 0; tid < tasks.size(); tid++) {
+      if (tasks[tid]->first.algo != algo) {
         return false;
       }
+
+      const Eigen::Array3f c3_eig = tasks[tid]->first.to_c3();
+      for (size_t channel = 0; channel < 3; channel++) {
+        task_colors[tid][channel] = c3_eig[channel];
+      }
+    }
+
+    //  set task
+    this->gpu->set_task_v(task_colors.size(), task_colors.data());
+    if (!this->gpu->ok_v()) {
+      return false;
     }
 
     // set colorset to device
@@ -520,34 +514,19 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
         abort();
     }
 
-    if (gpu_task_count > 0) {
       // set colorset for ocl
       this->gpu->set_colorset_v(this->allowed_colorset.color_count(),
                                 colorset_ptrs);
       if (!this->gpu->ok_v()) {
         return false;
       }
-
-      this->gpu->execute_v(algo, false);
+      // dispatch and wait for finished
+      this->gpu->execute_v(algo, true);
       if (!this->gpu->ok_v()) {
         return false;
       }
-    }
-    // compute rest tasks on cpu
-    for (uint64_t ctid = 0; ctid < cpu_task_count; ctid++) {
-      const uint64_t tid = gpu_task_count + ctid;
-      tasks[tid]->second.compute(tasks[tid]->first, this->allowed_colorset);
-    }
 
-    if (gpu_task_count > 0) {
-      this->gpu->wait_v();
-      if (!this->gpu->ok_v()) {
-        return false;
-      }
-    }
-
-    if (gpu_task_count > 0)
-      for (size_t tid = 0; tid < gpu_task_count; tid++) {
+      for (size_t tid = 0; tid < taskCount; tid++) {
         TokiColor_t &tc = tasks[tid]->second;
 
         const uint16_t tempidx = this->gpu->result_idx_v()[tid];
