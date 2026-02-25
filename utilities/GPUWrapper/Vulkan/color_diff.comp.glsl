@@ -7,12 +7,6 @@
 #define NAN float(0.0f / 0.0f)
 #define pi_fp32 float(radians(180))
 
-//struct task_info {
-//    uint task_num;
-//    uint colorset_size;
-//    //uint16_t algo;
-//};
-
 const uint ALGO_RGB = 114;
 const uint ALGO_RGB_BETTER = 82;
 const uint ALGO_HSV = 72;
@@ -24,21 +18,22 @@ const bool SC_OCL_SPOT_NAN = true;
 
 layout (local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
 
-layout (std140, binding = 0) readonly buffer bufOpt {
+layout (push_constant, std430) uniform constants {
     uint task_num;
     uint colorset_size;
     uint algo;
 } option;
-layout (binding = 1) readonly buffer bufCC {
+
+layout (std430, binding = 0) readonly buffer bufCC {
     float colorset_colors[];
 };
-layout (binding = 2) readonly buffer bufUC {
+layout (std430, binding = 1) readonly buffer bufUC {
     float unconverted_colors[];
 };
-layout (binding = 3) writeonly buffer bufRDD {
+layout (std430, binding = 2) writeonly buffer bufRDD {
     float result_diff_dst[];
 };
-layout (binding = 4) writeonly buffer bufRID {
+layout (std430, binding = 3) writeonly buffer bufRID {
     uint16_t result_idx_dst[];
 };
 
