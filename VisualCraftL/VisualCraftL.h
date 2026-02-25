@@ -534,4 +534,24 @@ VCL_EXPORT size_t VCL_preset_get_classes(const VCL_preset *p,
 VCL_EXPORT void VCL_preset_clear(VCL_preset *);
 }
 
+struct VCL_deleter {
+  static inline void operator()(VCL_preset *ptr) { VCL_destroy_preset(ptr); }
+  static inline void operator()(VCL_Kernel *ptr) { VCL_destroy_kernel(ptr); }
+  static inline void operator()(VCL_resource_pack *ptr) {
+    VCL_destroy_resource_pack(ptr);
+  }
+  static inline void operator()(VCL_model *ptr) {
+    VCL_destroy_block_model(ptr);
+  }
+  static inline void operator()(VCL_block_state_list *ptr) {
+    VCL_destroy_block_state_list(ptr);
+  };
+  static inline void operator()(VCL_GPU_Platform *ptr) {
+    VCL_release_platform(ptr);
+  }
+  static inline void operator()(VCL_GPU_Device *ptr) {
+    VCL_release_device(ptr);
+  }
+};
+
 #endif  // SLOPECRAFT_VISUALCRAFT_VISUALCRAFT_H
