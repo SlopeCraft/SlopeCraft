@@ -199,6 +199,7 @@ int run(const inputs &input) noexcept {
 
       ok = kernel->set_gpu_resource(plat, dev);
 
+      kernel->release_gpu_resource();
       VCL_release_device(dev);
       VCL_release_platform(plat);
       break;

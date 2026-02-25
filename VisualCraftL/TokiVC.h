@@ -64,6 +64,8 @@ class TokiVC : public VCL_Kernel {
     return this->set_gpu_resource(p, d, {});
   }
 
+  void release_gpu_resource() noexcept override;
+
   bool set_gpu_resource(const VCL_GPU_Platform *p, const VCL_GPU_Device *d,
                         const gpu_options &option) noexcept override;
 

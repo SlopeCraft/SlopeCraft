@@ -211,6 +211,7 @@ class VCL_Kernel {
 
   virtual bool set_gpu_resource(const VCL_GPU_Platform *,
                                 const VCL_GPU_Device *) noexcept = 0;
+  virtual void release_gpu_resource() noexcept = 0;
 
   virtual bool prefer_gpu() const noexcept = 0;
   virtual void set_prefer_gpu(bool try_gpu) noexcept = 0;

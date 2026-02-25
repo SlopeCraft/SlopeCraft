@@ -78,6 +78,7 @@ TokiVC::~TokiVC() {
   }
 
   TokiVC_internal::global_lock.unlock();
+  TokiVC::release_gpu_resource();
 }
 
 void TokiVC::show_gpu_name() const noexcept {
@@ -716,9 +717,7 @@ void TokiVC::converted_image(uint32_t *dest, int64_t *rows, int64_t *cols,
 bool TokiVC::set_gpu_resource(const VCL_GPU_Platform *p,
                               const VCL_GPU_Device *d,
                               const gpu_options &option) noexcept {
-  if (this->img_cvter.have_gpu_resource()) {
-    gpu_wrapper::gpu_interface::destroy(this->img_cvter.gpu_resource());
-  }
+  this->release_gpu_resource();
   auto platp = static_cast<gpu_wrapper::platform_wrapper *>(p->pw);
   auto devp = static_cast<gpu_wrapper::device_wrapper *>(d->dw);
 
@@ -734,4 +733,11 @@ bool TokiVC::set_gpu_resource(const VCL_GPU_Platform *p,
 
   this->img_cvter.set_gpu_resource(gi);
   return this->img_cvter.gpu_resource()->ok_v();
+}
+
+void TokiVC::release_gpu_resource() noexcept {
+  if (this->img_cvter.have_gpu_resource()) {
+    gpu_wrapper::gpu_interface::destroy(this->img_cvter.gpu_resource());
+    this->img_cvter.set_gpu_resource(nullptr);
+  }
 }
