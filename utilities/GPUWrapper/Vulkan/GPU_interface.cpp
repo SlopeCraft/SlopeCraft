@@ -14,6 +14,8 @@
 #include <vk_mem_alloc.h>
 #include <vk_mem_alloc.hpp>
 
+#include "shader_spv.h"
+
 void write_error_code(int *errorcode_nullable, int error) noexcept {
   if (errorcode_nullable) {
     *errorcode_nullable = error;
@@ -310,6 +312,10 @@ class gpu_interface_impl : public gpu_interface {
 
   required_buffers device_buf;
   std::variant<required_buffers, cpu_results> host_buf;
+  // Pipeline items
+  vk::UniquePipeline pipeline;
+  vk::UniquePipelineLayout pipeline_layout;
+  vk::UniqueDescriptorSetLayout descriptor_set_layout;
 
   const char *api_v() const noexcept final { return "Vulkan"; }
 
@@ -359,6 +365,12 @@ class gpu_interface_impl : public gpu_interface {
 
 void gpu_interface::destroy(gpu_interface *gi) noexcept { delete gi; }
 
+struct color_diff_push_const {
+  alignas(uint32_t) uint32_t task_num;
+  alignas(uint32_t) uint32_t colorset_size;
+  alignas(uint32_t) uint32_t algo;
+};
+
 gpu_interface *gpu_interface::create(
     platform_wrapper *pw [[maybe_unused]], device_wrapper *dw,
     std::pair<int, std::string> &err) noexcept {
@@ -391,6 +403,50 @@ gpu_interface *gpu_interface::create(
     } else {
       cpu_results results;
       ret->host_buf = std::move(results);
+    }
+    // create pipeline
+    {
+      vk::UniqueShaderModule shader_module = [&]() {
+        assert(compute_shader_spv_len % sizeof(uint32_t) == 0);
+        std::span<const uint32_t> spirv{
+            reinterpret_cast<const uint32_t *>(compute_shader_spv),
+            compute_shader_spv_len / sizeof(uint32_t)};
+        return ret->device.createShaderModuleUnique(
+            vk::ShaderModuleCreateInfo{{}, spirv});
+      }();
+      vk::PipelineShaderStageCreateInfo shader_stage_ci{
+          {},
+          vk::ShaderStageFlagBits::eCompute,
+          shader_module.get(),
+          "main",
+      };
+      std::array<vk::DescriptorSetLayoutBinding, 4> layout_bindings;
+      for (uint32_t i = 0; i < 4; ++i) {
+        layout_bindings[i].binding = i;
+        layout_bindings[i].descriptorType = vk::DescriptorType::eStorageBuffer;
+        layout_bindings[i].descriptorCount = 1;
+        layout_bindings[i].pImmutableSamplers = nullptr;
+        layout_bindings[i].stageFlags = vk::ShaderStageFlagBits::eCompute;
+      }
+      vk::UniqueDescriptorSetLayout descriptor_set_layout =
+          ret->device.createDescriptorSetLayoutUnique(
+              vk::DescriptorSetLayoutCreateInfo{{}, layout_bindings});
+      vk::PushConstantRange push_constant_range{
+          vk::ShaderStageFlagBits::eCompute,
+          0,
+          sizeof(color_diff_push_const),
+      };
+      vk::UniquePipelineLayout pipeline_layout =
+          ret->device.createPipelineLayoutUnique(vk::PipelineLayoutCreateInfo{
+              {}, descriptor_set_layout.get(), push_constant_range});
+      vk::ComputePipelineCreateInfo ci{
+          {}, shader_stage_ci, pipeline_layout.get()};
+      auto pipeline_res = ret->device.createComputePipelineUnique(
+          device->pipeline_cache.get(), ci);
+
+      ret->descriptor_set_layout = std::move(descriptor_set_layout);
+      ret->pipeline_layout = std::move(pipeline_layout);
+      ret->pipeline = std::move(pipeline_res.value);
     }
 
     err.first = static_cast<int>(vk::Result::eSuccess);
