@@ -26,8 +26,6 @@ This file is part of SlopeCraft.
 #include <map>
 #include <algorithm>
 
-#include <Eigen/Dense>
-
 #include "GPUWrapper/GPU_interface.h"
 
 #define VULKAN_HPP_TYPESAFE_CONVERSION 1
@@ -614,6 +612,12 @@ class gpu_interface_impl final : public gpu_interface {
 };
 
 void gpu_interface::destroy(gpu_interface *gi) noexcept { delete gi; }
+
+gpu_interface *gpu_interface::create(platform_wrapper *pw [[maybe_unused]],
+                                     device_wrapper *dw) noexcept {
+  std::pair<int, std::string> err;
+  return create(pw, dw, err);
+}
 
 gpu_interface *gpu_interface::create(
     platform_wrapper *pw [[maybe_unused]], device_wrapper *dw,
