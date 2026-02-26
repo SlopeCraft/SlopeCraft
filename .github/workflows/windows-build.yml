@@ -42,6 +42,7 @@ jobs:
         run: |
           cd /d C:\vcpkg
           git pull
+          git checkout e5a1490e1409d175932ef6014519e9ae149ddb7c
 
       - name: Install deps with vcpkg
         shell: powershell
@@ -251,6 +252,7 @@ jobs:
           echo "env:path = $env:path"
           cd C:/vcpkg
           git pull
+          git checkout e5a1490e1409d175932ef6014519e9ae149ddb7c
           vcpkg install --triplet=x64-mingw-dynamic zlib bzip2 zstd liblzma libpng libzip eigen3 xsimd boost-iostreams boost-uuid boost-multi-array tl-expected magic-enum fmt cereal
 
 
