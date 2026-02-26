@@ -47,10 +47,10 @@ layout (push_constant, std430) uniform constants {
 } option;
 
 layout (std430, binding = 0) readonly buffer bufCC {
-    vec3 colorset_colors[];
+    float colorset_colors[];
 };
 layout (std430, binding = 1) readonly buffer bufUC {
-    vec3 unconverted_colors[];
+    float unconverted_colors[];
 };
 layout (std430, binding = 2) writeonly buffer bufRDD {
     float result_diff_dst[];
@@ -94,13 +94,18 @@ void main() {
 
 
 void compute(const uint global_idx) {
-    const vec3 unconverted = unconverted_colors[global_idx];
+    const vec3 unconverted = { unconverted_colors[global_idx * 3 + 0],
+    unconverted_colors[global_idx * 3 + 1],
+    unconverted_colors[global_idx * 3 + 2] };
+
 
     uint result_idx = 65535 - 1;
     float result_diff = 1e30 / 2;
 
     for (uint idx = 0; idx < option.colorset_size; idx++) {
-        const vec3 color_ava = colorset_colors[idx];
+        const vec3 color_ava = { colorset_colors[idx * 3 + 0],
+        colorset_colors[idx * 3 + 1],
+        colorset_colors[idx * 3 + 2] };
 //        if (true && have_nan(color_ava)) {
 //            debugPrintfEXT(
 //            "Nan spotted at color_ava. color_ava = {%f,%f,%f}, get_global_id = %u.n",
