@@ -31,6 +31,7 @@ This file is part of SlopeCraft.
 #include "GPUWrapper/GPU_interface.h"
 
 #include <vulkan/vulkan.hpp>
+#include <vulkan/vulkan_funcs.hpp>
 
 #define VMA_VULKAN_VERSION 1003000  // Vulkan 1.3
 #define VMA_IMPLEMENTATION
