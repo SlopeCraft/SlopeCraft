@@ -77,8 +77,10 @@ platform_wrapper *platform_wrapper::create(size_t idx [[maybe_unused]],
 #endif
   extensions.emplace_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
 
-  vk::InstanceCreateInfo ici{{}, &app_info, layers, extensions, {}};
   try {
+    std::array features = {vk::ValidationFeatureEnableEXT::eDebugPrintf};
+    vk::InstanceCreateInfo ici{{}, &app_info, layers, extensions, {}};
+
     platform_impl *impl = new platform_impl();
     impl->instance = vk::createInstanceUnique(ici);
     write_error_code(errorcode, vk::Result::eSuccess);
@@ -222,6 +224,7 @@ struct buffer_with_alloc {
   vma::UniqueBuffer buffer;
   vma::UniqueAllocation alloc;
   vma::AllocationInfo allocation_info;
+  size_t size_in_bytes;
 };
 buffer_with_alloc allocate(vma::Allocator allocator, vk::BufferCreateInfo bci,
                            vma::AllocationCreateInfo aci, size_t bytes) {
@@ -232,6 +235,7 @@ buffer_with_alloc allocate(vma::Allocator allocator, vk::BufferCreateInfo bci,
   buffer_with_alloc ret;
   ret.buffer = std::move(buffer);
   ret.alloc = std::move(alloc);
+  ret.size_in_bytes = bytes;
   ret.allocation_info = allocation_info;
   return ret;
 }
@@ -392,6 +396,7 @@ class gpu_interface_impl : public gpu_interface {
       memcpy(dest, data, task_num * sizeof(float[3]));
     };
     try {
+      adjust_buffer_for_task(task_num);
       if (auto buf = std::get_if<required_buffers>(&this->host_buf)) {
         write(static_cast<float *>(buf->task.allocation_info.pMappedData));
       } else {
@@ -616,7 +621,7 @@ gpu_interface *gpu_interface::create(
           "main",
       };
       std::array<vk::DescriptorSetLayoutBinding, 4> layout_bindings;
-      for (uint32_t i = 0; i < 4; ++i) {
+      for (uint32_t i = 0; i < layout_bindings.size(); ++i) {
         layout_bindings[i].binding = i;
         layout_bindings[i].descriptorType = vk::DescriptorType::eStorageBuffer;
         layout_bindings[i].descriptorCount = 1;
@@ -657,8 +662,7 @@ gpu_interface *gpu_interface::create(
 
 void gpu_interface_impl::adjust_buffer_for_colorset(size_t color_num) {
   const uint32_t required_size = color_num * sizeof(float) * 3;
-  const uint32_t device_capacity =
-      this->device_buf.colorset.allocation_info.size;
+  const uint32_t device_capacity = this->device_buf.colorset.size_in_bytes;
   const bool need_staging_buffer =
       std::get_if<required_buffers>(&this->host_buf);
   if (device_capacity < required_size) {
@@ -669,7 +673,7 @@ void gpu_interface_impl::adjust_buffer_for_colorset(size_t color_num) {
   }
   if (need_staging_buffer) {
     required_buffers &bufs = std::get<required_buffers>(this->host_buf);
-    const uint32_t host_capacity = bufs.colorset.allocation_info.size;
+    const uint32_t host_capacity = bufs.colorset.size_in_bytes;
     if (host_capacity < device_capacity) {
       auto [bci, aci] = get_alloc_template(false, need_staging_buffer);
       bufs.colorset = allocate(this->allocator, bci, aci, device_capacity);
@@ -686,19 +690,17 @@ void gpu_interface_impl::adjust_buffer_for_task(size_t task_num) {
   {
     auto [bci, aci] = get_alloc_template(true, need_staging_buffer);
     bool buffer_updated = false;
-    if (this->device_buf.task.allocation_info.size <
-        task_num * sizeof(float[3])) {
+    if (this->device_buf.task.size_in_bytes < task_num * sizeof(float[3])) {
       this->device_buf.task =
           allocate(this->allocator, bci, aci, task_num * sizeof(float[3]));
       buffer_updated = true;
     }
-    if (this->device_buf.result_diff.allocation_info.size <
-        task_num * sizeof(float)) {
+    if (this->device_buf.result_diff.size_in_bytes < task_num * sizeof(float)) {
       this->device_buf.result_diff =
           allocate(this->allocator, bci, aci, task_num * sizeof(float));
       buffer_updated = true;
     }
-    if (this->device_buf.result_index.allocation_info.size <
+    if (this->device_buf.result_index.size_in_bytes <
         task_num * sizeof(uint16_t)) {
       this->device_buf.result_index =
           allocate(this->allocator, bci, aci, task_num * sizeof(uint16_t));
@@ -710,22 +712,23 @@ void gpu_interface_impl::adjust_buffer_for_task(size_t task_num) {
   if (need_staging_buffer) {
     auto [bci, aci] = get_alloc_template(false, need_staging_buffer);
     auto &bufs = std::get<required_buffers>(this->host_buf);
-    if (bufs.task.allocation_info.size < task_num * sizeof(float[3])) {
+    if (bufs.task.size_in_bytes < task_num * sizeof(float[3])) {
       bufs.task =
           allocate(this->allocator, bci, aci, task_num * sizeof(float[3]));
     }
-    if (bufs.result_diff.allocation_info.size < task_num * sizeof(float)) {
+    if (bufs.result_diff.size_in_bytes < task_num * sizeof(float)) {
       bufs.result_diff =
           allocate(this->allocator, bci, aci, task_num * sizeof(float));
     }
-    if (bufs.result_index.allocation_info.size < task_num * sizeof(uint16_t)) {
+    if (bufs.result_index.size_in_bytes < task_num * sizeof(uint16_t)) {
       bufs.result_index =
           allocate(this->allocator, bci, aci, task_num * sizeof(uint16_t));
     }
   } else {
     auto &bufs = std::get<cpu_results>(this->host_buf);
-    bufs.result_diff.resize(task_num);
-    bufs.result_index.resize(task_num);
+    bufs.result_diff.resize(task_num,
+                            std::numeric_limits<float>::signaling_NaN());
+    bufs.result_index.resize(task_num, std::numeric_limits<uint16_t>::max());
   }
 }
 
