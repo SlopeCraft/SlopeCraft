@@ -7,7 +7,7 @@ on:
       - dev
 
 jobs:
-  gcc:
+  clang:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -35,7 +35,7 @@ jobs:
 
       - name: Install dependencies
         run:
-          sudo apt install gcc-14 g++-14 zstd libzstd-dev xz-utils bzip2 libzip-dev zipcmp ziptool zipmerge libpng-dev libeigen3-dev libboost-all-dev libboost-tools-dev libboost-doc libexpected-dev p7zip-full
+          sudo apt install clang-20 clang++-20 libomp-20-dev zstd libzstd-dev xz-utils bzip2 libzip-dev zipcmp ziptool zipmerge libpng-dev libeigen3-dev libboost-all-dev libboost-tools-dev libboost-doc libexpected-dev p7zip-full
 
       - name: Install xsimd
         run: |
@@ -81,7 +81,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: CMake configure
-        run: cmake -S . -B ./build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/gcc-14 -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/g++-14 -DCMAKE_INSTALL_PREFIX:PATH=./install -DSlopeCraft_GPU_API:STRING=$GPU_API -DCMAKE_BUILD_TYPE:STRING=$BUILD_TYPE -DKOMPUTE_OPT_DISABLE_VULKAN_VERSION_CHECK=ON
+        run: cmake -S . -B ./build -G Ninja -DCMAKE_C_COMPILER:FILEPATH=clang-20 -DCMAKE_CXX_COMPILER:FILEPATH=clang++-20 -DCMAKE_INSTALL_PREFIX:PATH=./install -DSlopeCraft_GPU_API:STRING=$GPU_API -DCMAKE_BUILD_TYPE:STRING=$BUILD_TYPE
 
       - name: CMake build
         run: cmake --build ./build --parallel
@@ -102,7 +102,7 @@ jobs:
       - name: Upload deb pack
         uses: actions/upload-artifact@v4
         with:
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-linux-gcc-deb
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-linux-clang-deb
           path: pack/SlopeCraft*.deb
           if-no-files-found: error
           compression-level: 0
@@ -110,7 +110,7 @@ jobs:
       - name: Upload tar.xz pack
         uses: actions/upload-artifact@v4
         with:
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-linux-gcc-tar-xz
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-linux-clang-tar-xz
           path: pack/SlopeCraft*.tar.xz
           if-no-files-found: error
           compression-level: 0
