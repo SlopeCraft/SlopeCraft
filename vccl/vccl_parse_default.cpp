@@ -317,8 +317,8 @@ int run(const inputs &input) noexcept {
 
       memset(img.scanLine(0), 0, img.height() * img.width() * sizeof(uint32_t));
 
-      kernel->converted_image((uint32_t *)img.scanLine(0), nullptr, nullptr,
-                              true);
+      kernel->converted_image(reinterpret_cast<uint32_t *>(img.scanLine(0)),
+                              nullptr, nullptr, false);
 
       const bool ok = img.save(QString::fromLocal8Bit(dst_name_str.c_str()));
 
