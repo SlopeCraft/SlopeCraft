@@ -10,8 +10,8 @@
 #include <string_view>
 #include <string>
 #include <memory>
+#include <expected>
 
-#include <tl/expected.hpp>
 #include <MCDataVersion.h>
 
 namespace NBT {
@@ -27,17 +27,17 @@ class item {
   virtual std::string_view id() const noexcept = 0;
 
   int8_t count_{1};
-  virtual tl::expected<size_t, std::string> dump(
+  virtual std::expected<size_t, std::string> dump(
       NBT::NBTWriter<true>&,
       MCDataVersion::MCDataVersion_t data_version) const noexcept;
 
   [[nodiscard]] virtual std::unique_ptr<item> clone() const noexcept = 0;
 
  protected:
-  virtual tl::expected<size_t, std::string> dump_basic_fields(
+  virtual std::expected<size_t, std::string> dump_basic_fields(
       NBT::NBTWriter<true>&,
       MCDataVersion::MCDataVersion_t data_version) const noexcept;
-  virtual tl::expected<size_t, std::string> dump_tags(
+  virtual std::expected<size_t, std::string> dump_tags(
       NBT::NBTWriter<true>&,
       MCDataVersion::MCDataVersion_t data_version) const noexcept;
 };
@@ -55,7 +55,7 @@ class filled_map : public item {
   }
 
  protected:
-  tl::expected<size_t, std::string> dump_tags(
+  std::expected<size_t, std::string> dump_tags(
       NBT::NBTWriter<true>&,
       MCDataVersion::MCDataVersion_t data_version) const noexcept override;
 };

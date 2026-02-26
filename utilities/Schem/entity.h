@@ -34,7 +34,7 @@ class entity {
   /// west = [90,0], north(again) = [180,0].
   [[nodiscard]] virtual std::array<float, 2> rotation() const noexcept = 0;
 
-  virtual tl::expected<size_t, std::string> dump(
+  virtual std::expected<size_t, std::string> dump(
       NBT::NBTWriter<true>& destination,
       MCDataVersion::MCDataVersion_t data_version) const noexcept;
 
@@ -82,7 +82,7 @@ class hangable : public entity {
     return {0, 0};
   }
 
-  tl::expected<size_t, std::string> dump(
+  std::expected<size_t, std::string> dump(
       NBT::NBTWriter<true>& destination,
       MCDataVersion::MCDataVersion_t data_version) const noexcept override;
 };
@@ -129,7 +129,7 @@ class item_frame : public hangable {
     return {};
   }
 
-  tl::expected<size_t, std::string> dump(
+  std::expected<size_t, std::string> dump(
       NBT::NBTWriter<true>& destination,
       MCDataVersion::MCDataVersion_t data_version) const noexcept override;
 

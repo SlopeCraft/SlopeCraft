@@ -7,11 +7,11 @@
 
 #include "entity.h"
 
-tl::expected<size_t, std::string> libSchem::entity::dump(
+std::expected<size_t, std::string> libSchem::entity::dump(
     NBT::NBTWriter<true> &destination,
     MCDataVersion::MCDataVersion_t data_version) const noexcept {
   if (not destination.isInCompound()) {
-    return tl::make_unexpected(
+    return std::unexpected(
         "You should write entities fields into a compound, but the NBTWriter "
         "is not writing a compound.");
   }
@@ -38,7 +38,7 @@ tl::expected<size_t, std::string> libSchem::entity::dump(
   return bytes;
 }
 
-tl::expected<size_t, std::string> libSchem::hangable::dump(
+std::expected<size_t, std::string> libSchem::hangable::dump(
     NBT::NBTWriter<true> &destination,
     MCDataVersion::MCDataVersion_t data_version) const noexcept {
   auto res = entity::dump(destination, data_version);
@@ -56,7 +56,7 @@ tl::expected<size_t, std::string> libSchem::hangable::dump(
   return bytes;
 }
 
-tl::expected<size_t, std::string> libSchem::item_frame::dump(
+std::expected<size_t, std::string> libSchem::item_frame::dump(
     NBT::NBTWriter<true> &destination,
     MCDataVersion::MCDataVersion_t data_version) const noexcept {
   auto res = hangable::dump(destination, data_version);
@@ -68,7 +68,7 @@ tl::expected<size_t, std::string> libSchem::item_frame::dump(
   bytes += destination.writeByte("Invisible", this->invisible_);
   bytes += destination.writeFloat("ItemDropChance", this->item_drop_chance);
   if (this->item_rotation < 0 or this->item_rotation > 7) {
-    return tl::make_unexpected(
+    return std::unexpected(
         std::format("Invalid item rotation {}, expected in range [0,7]",
                     int(this->item_rotation)));
   }
@@ -78,7 +78,7 @@ tl::expected<size_t, std::string> libSchem::item_frame::dump(
     bytes += destination.writeCompound("Item");
     auto res_item = this->item_->dump(destination, data_version);
     if (not res_item) {
-      return tl::make_unexpected(
+      return std::unexpected(
           std::format("Failed to dump item fields: {}", res_item.error()));
     }
     bytes += res_item.value();

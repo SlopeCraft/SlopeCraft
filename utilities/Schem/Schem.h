@@ -31,6 +31,7 @@ This file is part of SlopeCraft.
 #include <limits>
 #include <exception>
 #include <concepts>
+#include <expected>
 
 #include <Eigen/Dense>
 #include <unsupported/Eigen/CXX11/Tensor>
@@ -260,8 +261,8 @@ class Schem {
     T content;
   };
 
-  [[nodiscard]] tl::expected<boost::multi_array<schem_slice<Schem>, 3>,
-                             std::string>
+  [[nodiscard]] std::expected<boost::multi_array<schem_slice<Schem>, 3>,
+                              std::string>
   split_by_block_size(std::span<const uint64_t> x_block_length,
                       std::span<const uint64_t> y_block_length,
                       std::span<const uint64_t> z_block_length) const noexcept;
@@ -271,7 +272,7 @@ class Schem {
     size_t id_count_after;
   };
 
-  [[nodiscard]] tl::expected<remove_unused_id_result, std::string>
+  [[nodiscard]] std::expected<remove_unused_id_result, std::string>
   remove_unused_ids() noexcept;
 
  protected:
@@ -281,7 +282,7 @@ class Schem {
 
  public:
   static void update_error_dest(
-      const tl::expected<void, std::pair<SCL_errorFlag, std::string>> &result,
+      const std::expected<void, std::pair<SCL_errorFlag, std::string>> &result,
       SCL_errorFlag *const error_flag, std::string *const error_str) noexcept {
     if (result) {
       if (error_flag not_eq nullptr) {
@@ -300,14 +301,14 @@ class Schem {
       }
     }
   }
-  tl::expected<void, std::pair<SCL_errorFlag, std::string>> export_litematic(
+  std::expected<void, std::pair<SCL_errorFlag, std::string>> export_litematic(
       std::string_view filename, const litematic_info &info) const noexcept;
 
-  tl::expected<void, std::pair<SCL_errorFlag, std::string>> export_structure(
+  std::expected<void, std::pair<SCL_errorFlag, std::string>> export_structure(
       std::string_view filename,
       const bool is_air_structure_void) const noexcept;
 
-  tl::expected<void, std::pair<SCL_errorFlag, std::string>> export_WESchem(
+  std::expected<void, std::pair<SCL_errorFlag, std::string>> export_WESchem(
       std::string_view filename,
       const WorldEditSchem_info &info) const noexcept;
 
@@ -341,7 +342,7 @@ class Schem {
  private:
   friend class cereal::access;
 
-  tl::expected<void, std::pair<SCL_errorFlag, std::string>> pre_check(
+  std::expected<void, std::pair<SCL_errorFlag, std::string>> pre_check(
       std::string_view filename, std::string_view extension) const noexcept;
 
   template <class archive>

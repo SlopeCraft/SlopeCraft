@@ -5,7 +5,7 @@
 #include "item.h"
 #include <NBTWriter/NBTWriter.h>
 
-tl::expected<size_t, std::string> libSchem::item::dump(
+std::expected<size_t, std::string> libSchem::item::dump(
     NBT::NBTWriter<true> &dest,
     MCDataVersion::MCDataVersion_t data_version) const noexcept {
   auto res = this->dump_basic_fields(dest, data_version);
@@ -32,13 +32,13 @@ tl::expected<size_t, std::string> libSchem::item::dump(
   return bytes;
 }
 
-tl::expected<size_t, std::string> libSchem::item::dump_basic_fields(
+std::expected<size_t, std::string> libSchem::item::dump_basic_fields(
     NBT::NBTWriter<true> &dest,
     MCDataVersion::MCDataVersion_t data_version) const noexcept {
   if (not dest.isInCompound()) {
-    return tl::make_unexpected(
+    return std::unexpected{
         "You should dump item fields into a compound, but the NBT write is not "
-        "writing a compound.");
+        "writing a compound."};
   }
 
   size_t bytes = 0;
@@ -51,16 +51,16 @@ tl::expected<size_t, std::string> libSchem::item::dump_basic_fields(
   return bytes;
 }
 
-tl::expected<size_t, std::string> libSchem::item::dump_tags(
+std::expected<size_t, std::string> libSchem::item::dump_tags(
     NBT::NBTWriter<true> &dest,
     MCDataVersion::MCDataVersion_t data_version) const noexcept {
   if (not dest.isInCompound()) {
-    return tl::make_unexpected("You should dump item tags into a compound.");
+    return std::unexpected("You should dump item tags into a compound.");
   }
   return 0;
 }
 
-tl::expected<size_t, std::string> libSchem::filled_map::dump_tags(
+std::expected<size_t, std::string> libSchem::filled_map::dump_tags(
     NBT::NBTWriter<true> &dest,
     MCDataVersion::MCDataVersion_t data_version) const noexcept {
   auto res = item::dump_tags(dest, data_version);

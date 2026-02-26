@@ -1,6 +1,5 @@
 project(Schem VERSION ${SlopeCraft_version} LANGUAGES CXX)
 
-# set(CMAKE_CXX_STANDARD 20)
 add_library(Schem
 
     Schem.h
@@ -14,7 +13,7 @@ add_library(Schem
     item.cpp
     item.h
 )
-target_compile_features(Schem PUBLIC cxx_std_14)
+target_compile_features(Schem PUBLIC cxx_std_23)
 
 find_package(Eigen3 REQUIRED)
 
@@ -29,7 +28,6 @@ target_link_libraries(Schem PUBLIC
     Eigen3::Eigen
     cereal::cereal
     magic_enum::magic_enum
-    NBTWriter
 )
 if (TARGET Boost::multi_array)
     target_link_libraries(Schem PUBLIC Boost::multi_array)

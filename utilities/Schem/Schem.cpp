@@ -178,7 +178,7 @@ Schem Schem::slice_no_check(std::span<const std::pair<int64_t, int64_t>, 3>
   return ret;
 }
 
-tl::expected<boost::multi_array<Schem::schem_slice<Schem>, 3>, std::string>
+std::expected<boost::multi_array<Schem::schem_slice<Schem>, 3>, std::string>
 Schem::split_by_block_size(
     std::span<const uint64_t> x_block_length,
     std::span<const uint64_t> y_block_length,
@@ -196,7 +196,7 @@ Schem::split_by_block_size(
       for (size_t blk_idx = 0; blk_idx < xyz_block_len[dim].size(); blk_idx++) {
         const auto block_len = xyz_block_len[dim][blk_idx];
         if (block_len <= 0) {
-          return tl::make_unexpected(std::format(
+          return std::unexpected(std::format(
               "Found non-positive block length in dim = {}, block index = {}",
               dim, blk_idx));
         }
@@ -209,7 +209,7 @@ Schem::split_by_block_size(
         cur_block_start_index = cur_block_end_index;
       }
       if (block_len_sum[dim] not_eq shape[dim]) {
-        return tl::make_unexpected(std::format(
+        return std::unexpected(std::format(
             "The sum of block length of dim {} is {}, which is not identical "
             "to shape on this dim({}), ",
             dim, block_len_sum[dim], shape[dim]));
@@ -393,11 +393,11 @@ void Schem::process_mushroom_states() noexcept {
   return;
 }
 
-tl::expected<void, std::pair<SCL_errorFlag, std::string>> Schem::pre_check(
+std::expected<void, std::pair<SCL_errorFlag, std::string>> Schem::pre_check(
     std::string_view filename, std::string_view extension) const noexcept {
   if (std::filesystem::path(filename).extension() != extension) {
     // wrong extension
-    return tl::make_unexpected(std::make_pair(
+    return std::unexpected(std::make_pair(
         SCL_errorFlag::EXPORT_SCHEM_WRONG_EXTENSION,
         std::format("The filename extension must be \"{}\".", extension)));
   }
@@ -405,7 +405,7 @@ tl::expected<void, std::pair<SCL_errorFlag, std::string>> Schem::pre_check(
   {
     std::array<int64_t, 3> pos;
     if (this->have_invalid_block(&pos[0], &pos[1], &pos[2])) {
-      return tl::make_unexpected(std::make_pair(
+      return std::unexpected(std::make_pair(
           SCL_errorFlag::EXPORT_SCHEM_HAS_INVALID_BLOCKS,
           std::format("The first invalid block is at x={}, y={}, z={}", pos[0],
                       pos[1], pos[2])));
@@ -414,7 +414,7 @@ tl::expected<void, std::pair<SCL_errorFlag, std::string>> Schem::pre_check(
   return {};
 }
 
-tl::expected<void, std::pair<SCL_errorFlag, std::string>>
+std::expected<void, std::pair<SCL_errorFlag, std::string>>
 Schem::export_litematic(std::string_view filename,
                         const litematic_info &info) const noexcept {
   //
@@ -427,7 +427,7 @@ Schem::export_litematic(std::string_view filename,
   NBT::NBTWriter<true> lite;
 
   if (!lite.open(filename.data())) {
-    return tl::make_unexpected(
+    return std::unexpected(
         std::make_pair(SCL_errorFlag::EXPORT_SCHEM_FAILED_TO_CREATE_FILE,
                        std::format("Failed to open file: {}", filename)));
   }
@@ -535,7 +535,7 @@ Schem::export_litematic(std::string_view filename,
         auto res = entity->dump(lite, this->MC_data_ver);
         if (not res) {
           lite.endCompound();
-          return tl::make_unexpected(
+          return std::unexpected(
               std::make_pair(SCL_errorFlag::EXPORT_SCHEM_HAS_INVALID_ENTITY,
                              std::move(res.error())));
         }
@@ -565,7 +565,7 @@ Schem::export_litematic(std::string_view filename,
       break;
     default:
       lite.close();
-      return tl::make_unexpected(std::make_pair(
+      return std::unexpected(std::make_pair(
           SCL_errorFlag::UNKNOWN_MAJOR_GAME_VERSION,
           std::format("Unknown major game version! Only 1.12 to 1.19 is "
                       "supported, but given value {}",
@@ -576,7 +576,7 @@ Schem::export_litematic(std::string_view filename,
   return {};
 }
 
-tl::expected<void, std::pair<SCL_errorFlag, std::string>>
+std::expected<void, std::pair<SCL_errorFlag, std::string>>
 Schem::export_structure(std::string_view filename,
                         const bool is_air_structure_void) const noexcept {
   //
@@ -602,7 +602,7 @@ Schem::export_structure(std::string_view filename,
                  "minecraft:air in your block palette."
               << std::endl;
 
-    return tl::make_unexpected(std::make_pair(
+    return std::unexpected(std::make_pair(
         SCL_errorFlag::EXPORT_SCHEM_STRUCTURE_REQUIRES_AIR,
         "You assigned is_air_structure_void=false, but there is no "
         "minecraft:air in your block palette."));
@@ -615,7 +615,7 @@ Schem::export_structure(std::string_view filename,
 
   NBT::NBTWriter<true> file;
   if (!file.open(filename.data())) {
-    return tl::make_unexpected(
+    return std::unexpected(
         std::make_pair(SCL_errorFlag::EXPORT_SCHEM_FAILED_TO_CREATE_FILE,
                        std::format("Failed to open file {}", filename)));
   }
@@ -722,7 +722,7 @@ Schem::export_structure(std::string_view filename,
           if (not res) {
             file.endCompound();
             file.close_file();
-            return tl::make_unexpected(
+            return std::unexpected(
                 std::make_pair(SCL_errorFlag::EXPORT_SCHEM_HAS_INVALID_ENTITY,
                                std::move(res.error())));
           }
@@ -750,7 +750,7 @@ Schem::export_structure(std::string_view filename,
       default:
         std::cerr << "Wrong game version!" << std::endl;
         file.close();
-        return tl::make_unexpected(std::make_pair(
+        return std::unexpected(std::make_pair(
             SCL_errorFlag::UNKNOWN_MAJOR_GAME_VERSION,
             std::format("Unknown major game version! Only 1.12 to 1.21 is "
                         "supported, but given value {}",
@@ -762,8 +762,9 @@ Schem::export_structure(std::string_view filename,
   return {};
 }
 
-tl::expected<void, std::pair<SCL_errorFlag, std::string>> Schem::export_WESchem(
-    std::string_view filename, const WorldEditSchem_info &info) const noexcept {
+std::expected<void, std::pair<SCL_errorFlag, std::string>>
+Schem::export_WESchem(std::string_view filename,
+                      const WorldEditSchem_info &info) const noexcept {
   //
   {
     auto res = this->pre_check(filename, ".schem");
@@ -773,7 +774,7 @@ tl::expected<void, std::pair<SCL_errorFlag, std::string>> Schem::export_WESchem(
   }
 
   if (this->MC_major_ver <= SCL_gameVersion::MC12) {
-    return tl::make_unexpected(std::make_pair(
+    return std::unexpected(std::make_pair(
         ::SCL_errorFlag::EXPORT_SCHEM_MC12_NOT_SUPPORTED,
         "Exporting a schematic as 1.12 WorldEdit .schematic format "
         "is not supported. Try other tools."));
@@ -782,7 +783,7 @@ tl::expected<void, std::pair<SCL_errorFlag, std::string>> Schem::export_WESchem(
   NBT::NBTWriter<true> file;
 
   if (not file.open(filename.data())) {
-    return tl::make_unexpected(
+    return std::unexpected(
         std::make_pair(SCL_errorFlag::EXPORT_SCHEM_FAILED_TO_CREATE_FILE,
                        std::format("Failed to open file {}", filename)));
   }
@@ -906,7 +907,7 @@ tl::expected<void, std::pair<SCL_errorFlag, std::string>> Schem::export_WESchem(
   return {};
 }
 
-tl::expected<libSchem::Schem::remove_unused_id_result, std::string>
+std::expected<libSchem::Schem::remove_unused_id_result, std::string>
 libSchem::Schem::remove_unused_ids() noexcept {
   remove_unused_id_result stat;
   stat.id_count_before = this->palette_size();
@@ -914,7 +915,7 @@ libSchem::Schem::remove_unused_ids() noexcept {
   id_used.resize(this->palette_size(), false);
   for (const ele_t blkid : *this) {
     if (blkid >= this->palette_size()) [[unlikely]] {
-      return tl::make_unexpected(
+      return std::unexpected(
           std::format("The scheme required block with id = {}, but the block "
                       "palette has only {} blocks",
                       blkid, this->palette_size()));
