@@ -32,7 +32,7 @@ This file is part of SlopeCraft.
 
 #include <vulkan/vulkan.hpp>
 
-#define VMA_VULKAN_VERSION 1003000  // Vulkan 1.1
+#define VMA_VULKAN_VERSION 1003000  // Vulkan 1.3
 #define VMA_IMPLEMENTATION
 #include <vk_mem_alloc.h>
 #include <vk_mem_alloc.hpp>
@@ -88,11 +88,11 @@ bool compare_device(const vk::PhysicalDevice &a, const vk::PhysicalDevice &b) {
   return device_score(a) > device_score(b);
 }
 
-class platform_impl : public platform_wrapper {
+class platform_impl final : public platform_wrapper {
  public:
   vk::UniqueInstance instance;
 
-  const char *name_v() const noexcept final { return "Vulkan"; }
+  const char *name_v() const noexcept { return "Vulkan"; }
   std::vector<vk::PhysicalDevice> physical_devices() const {
     auto devices_raw_list = instance->enumeratePhysicalDevices();
 
@@ -118,9 +118,7 @@ class platform_impl : public platform_wrapper {
     return ret;
   }
 
-  size_t num_devices_v() const noexcept final {
-    return physical_devices().size();
-  }
+  size_t num_devices_v() const noexcept { return physical_devices().size(); }
 };
 
 platform_wrapper *platform_wrapper::create(size_t idx [[maybe_unused]],
@@ -134,10 +132,10 @@ platform_wrapper *platform_wrapper::create(size_t idx [[maybe_unused]],
 #else
   layers.emplace_back("VK_LAYER_KHRONOS_validation");
 #endif
-  extensions.emplace_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
+  // extensions.emplace_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
 
   try {
-    std::array features = {vk::ValidationFeatureEnableEXT::eDebugPrintf};
+    // std::array features = {vk::ValidationFeatureEnableEXT::eDebugPrintf};
     vk::InstanceCreateInfo ici{{}, &app_info, layers, extensions, {}};
 
     platform_impl *impl = new platform_impl();
@@ -153,7 +151,7 @@ void platform_wrapper::destroy(gpu_wrapper::platform_wrapper *p) noexcept {
   delete p;
 }
 
-class device_impl : public device_wrapper {
+class device_impl final : public device_wrapper {
  public:
   std::string name;
   vk::PhysicalDevice physical_device;
@@ -164,7 +162,7 @@ class device_impl : public device_wrapper {
   vk::UniqueDescriptorPool descriptor_pool;
   vk::UniquePipelineCache pipeline_cache;
 
-  const char *name_v() const noexcept final { return name.c_str(); }
+  const char *name_v() const noexcept { return name.c_str(); }
 };
 
 uint32_t select_queue_family_index(const vk::PhysicalDevice &pd) {
@@ -214,7 +212,7 @@ device_wrapper *device_wrapper::create(platform_wrapper *pw, size_t idx,
         {}, selected_queue_family_index, queue_priorities};
 
     std::vector<const char *> device_extensions{
-        "VK_KHR_synchronization2",
+        // "VK_KHR_synchronization2",
         "VK_KHR_maintenance4",
     };
 
@@ -384,9 +382,9 @@ struct color_diff_push_const {
   alignas(uint32_t) uint32_t algo;
 };
 
-class gpu_interface_impl : public gpu_interface {
+class gpu_interface_impl final : public gpu_interface {
  public:
-  ~gpu_interface_impl() final = default;
+  ~gpu_interface_impl() = default;
   // references
   vk::PhysicalDevice physical_device;
   vk::Device device;
@@ -412,19 +410,17 @@ class gpu_interface_impl : public gpu_interface {
   uint32_t colorset_size_ = 0;
   uint32_t task_count_ = 0;
 
-  const char *api_v() const noexcept final { return "Vulkan"; }
+  const char *api_v() const noexcept { return "Vulkan"; }
 
-  int error_code_v() const noexcept final { return error_code_.value(); }
-  bool ok_v() const noexcept final {
+  int error_code_v() const noexcept { return error_code_.value(); }
+  bool ok_v() const noexcept {
     return error_code_.value() == static_cast<int>(vk::Result::eSuccess);
   }
-  std::string error_detail_v() const noexcept final {
-    return error_code_.message();
-  }
+  std::string error_detail_v() const noexcept { return error_code_.message(); }
 
   void set_colorset_v(
       size_t color_num,
-      const std::array<const float *, 3> &color_ptrs) noexcept final {
+                      const std::array<const float *, 3> &color_ptrs) noexcept {
     auto write = [&](float *const dest) {
       for (size_t i = 0; i < color_num; i++) {
         dest[3 * i + 0] = color_ptrs[0][i];
@@ -449,8 +445,7 @@ class gpu_interface_impl : public gpu_interface {
     this->colorset_size_ = color_num;
   }
 
-  void set_task_v(size_t task_num,
-                  const std::array<float, 3> *data) noexcept final {
+  void set_task_v(size_t task_num, const std::array<float, 3> *data) noexcept {
     auto write = [&](float *const dest) {
       memcpy(dest, data, task_num * sizeof(float[3]));
     };
@@ -469,7 +464,7 @@ class gpu_interface_impl : public gpu_interface {
     }
     this->task_count_ = task_num;
   }
-  void execute_v(::SCL_convertAlgo algo, bool wait) noexcept final {
+  void execute_v(::SCL_convertAlgo algo, bool wait) noexcept {
     try {
       this->cmd_buffer->begin(vk::CommandBufferBeginInfo{
           vk::CommandBufferUsageFlagBits::eOneTimeSubmit});
@@ -561,7 +556,7 @@ class gpu_interface_impl : public gpu_interface {
     }
   }
 
-  void wait_v() noexcept final {
+  void wait_v() noexcept {
     auto result = this->device.waitForFences(fence.get(), true, UINT64_MAX);
     if (result not_eq vk::Result::eSuccess) {
       this->error_code_ =
@@ -585,21 +580,21 @@ class gpu_interface_impl : public gpu_interface {
     }
   }
 
-  size_t task_count_v() const noexcept final { return this->task_count_; }
+  size_t task_count_v() const noexcept { return this->task_count_; }
 
-  std::string device_vendor_v() const noexcept final {
+  std::string device_vendor_v() const noexcept {
     auto vendor_name = this->physical_device.getProperties().vendorID;
     return std::to_string(vendor_name);
   }
 
-  const uint16_t *result_idx_v() const noexcept final {
+  const uint16_t *result_idx_v() const noexcept {
     if (auto host_buf = std::get_if<required_buffers>(&this->host_buf)) {
       return static_cast<const uint16_t *>(
           host_buf->result_index.allocation_info.pMappedData);
     }
     return std::get<cpu_results>(this->host_buf).result_index.data();
   }
-  const float *result_diff_v() const noexcept final {
+  const float *result_diff_v() const noexcept {
     const float *data = nullptr;
     if (auto host_buf = std::get_if<required_buffers>(&this->host_buf)) {
       data = static_cast<const float *>(
@@ -610,7 +605,7 @@ class gpu_interface_impl : public gpu_interface {
     assert(data);
     return data;
   }
-  size_t local_work_group_size_v() const noexcept final { return 64; }
+  size_t local_work_group_size_v() const noexcept { return 64; }
 
   void adjust_buffer_for_colorset(size_t color_num);
   void adjust_buffer_for_task(size_t task_num);
