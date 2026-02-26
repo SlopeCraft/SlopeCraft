@@ -3,6 +3,8 @@
 #include <optional>
 #include <variant>
 #include <map>
+#include <algorithm>
+
 #include <Eigen/Dense>
 
 #include "GPUWrapper/GPU_interface.h"
@@ -31,6 +33,40 @@ const char *api_name() noexcept { return "Vulkan"; }
 
 size_t platform_num() noexcept { return 1; }
 
+float device_score(const vk::PhysicalDevice &dev) {
+  const auto prop = dev.getProperties();
+  const auto mem_props = dev.getMemoryProperties();
+  constexpr float big = 1e5;
+  float score = 0;
+  switch (prop.deviceType) {
+    case vk::PhysicalDeviceType::eDiscreteGpu:
+      score += 2 * big;
+      break;
+    case vk::PhysicalDeviceType::eIntegratedGpu:
+      score += 1 * big;
+      break;
+    default:
+      break;
+  }
+  size_t total_device_memory_size = 0;
+  for (const auto &heap_info : mem_props.memoryHeaps) {
+    if (heap_info.flags & vk::MemoryHeapFlagBits::eDeviceLocal) {
+      total_device_memory_size += heap_info.size;
+    }
+  }
+
+  const float memory_score =
+      1 - std::exp(-static_cast<float>(total_device_memory_size) / 1e10f);
+  assert(memory_score >= 0);
+  assert(memory_score <= 1);
+  score += big * memory_score;
+  return score;
+}
+
+bool compare_device(const vk::PhysicalDevice &a, const vk::PhysicalDevice &b) {
+  return device_score(a) > device_score(b);
+}
+
 class platform_impl : public platform_wrapper {
  public:
   vk::UniqueInstance instance;
@@ -55,6 +91,8 @@ class platform_impl : public platform_wrapper {
     for (auto &[_, info] : device_set) {
       ret.emplace_back(info);
     }
+
+    std::sort(ret.begin(), ret.end(), compare_device);
 
     return ret;
   }
