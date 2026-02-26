@@ -22,6 +22,7 @@ This file is part of SlopeCraft.
 
 #ifndef SLOPECRAFT_SHADER_SPV_H
 #define SLOPECRAFT_SHADER_SPV_H
+#include <stddef.h>
 #include <stdint.h>
 #ifdef __cplusplus
 extern "C" {

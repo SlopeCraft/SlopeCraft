@@ -64,14 +64,14 @@ jobs:
         if: matrix.gpu_api == 'Vulkan'
         run: |
           sudo apt install vulkan-tools libvulkan1 libvulkan-dev glslang-tools libvulkan-memory-allocator-dev vulkan-validationlayers
-          cd ..
-          wget https://sdk.lunarg.com/sdk/download/1.3.275.0/linux/vulkansdk-linux-x86_64-1.3.275.0.tar.xz
-          tar xf vulkansdk-linux-x86_64-1.3.275.0.tar.xz
-          ls -l
-          sudo cp -r ./1.3.275.0/x86_64/* /usr          
-          whereis glslc 
-          glslc --version
-          whereis vulkaninfo
+        #          cd ..
+        #          wget https://sdk.lunarg.com/sdk/download/1.3.275.0/linux/vulkansdk-linux-x86_64-1.3.275.0.tar.xz
+        #          tar xf vulkansdk-linux-x86_64-1.3.275.0.tar.xz
+        #          ls -l
+        #          sudo cp -r ./1.3.275.0/x86_64/* /usr
+        #          whereis glslc
+        #          glslc --version
+        #          whereis vulkaninfo
 
         #
         #vulkan-sdk
