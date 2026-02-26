@@ -128,7 +128,7 @@ platform_wrapper *platform_wrapper::create(size_t idx [[maybe_unused]],
                                            [[maybe_unused]]) noexcept {
   vk::ApplicationInfo app_info{"VisualCraftL", VK_MAKE_VERSION(5, 0, 0),
                                "NoEngine", VK_MAKE_VERSION(1, 0, 0),
-                               VK_API_VERSION_1_1};
+                               VK_API_VERSION_1_3};
   std::vector<const char *> layers, extensions;
 #ifdef NDEBUG
 #else
@@ -324,7 +324,8 @@ std::pair<vk::BufferCreateInfo, vma::AllocationCreateInfo> get_alloc_template(
                                  vk::SharingMode::eExclusive,
                                  vk::QueueFamilyIgnored},
             vma::AllocationCreateInfo{
-                vma::AllocationCreateFlagBits::eHostAccessRandom,
+                vma::AllocationCreateFlagBits::eHostAccessRandom |
+                    vma::AllocationCreateFlagBits::eMapped,
                 vma::MemoryUsage::eAutoPreferHost,
                 vk::MemoryPropertyFlagBits::eHostVisible |
                     vk::MemoryPropertyFlagBits::eHostCoherent,
@@ -339,12 +340,10 @@ std::pair<vk::BufferCreateInfo, vma::AllocationCreateInfo> get_alloc_template(
                                      vk::BufferUsageFlagBits::eStorageBuffer,
                                  vk::SharingMode::eExclusive,
                                  vk::QueueFamilyIgnored},
-            vma::AllocationCreateInfo{
-                vma::AllocationCreateFlagBits::eHostAccessRandom |
-                    vma::AllocationCreateFlagBits::eMapped,
-                vma::MemoryUsage::eGpuOnly,
-                vk::MemoryPropertyFlagBits::eDeviceLocal,
-                {}}};
+            vma::AllocationCreateInfo{{},
+                                      vma::MemoryUsage::eGpuOnly,
+                                      vk::MemoryPropertyFlagBits::eDeviceLocal,
+                                      {}}};
   }
   // device local buffer, mappable
   return {vk::BufferCreateInfo{{},
@@ -456,7 +455,7 @@ class gpu_interface_impl : public gpu_interface {
       memcpy(dest, data, task_num * sizeof(float[3]));
     };
     try {
-      adjust_buffer_for_task(task_num);
+      this->adjust_buffer_for_task(task_num);
       if (auto buf = std::get_if<required_buffers>(&this->host_buf)) {
         write(static_cast<float *>(buf->task.allocation_info.pMappedData));
       } else {
@@ -641,8 +640,9 @@ gpu_interface *gpu_interface::create(
     }
     ret->fence = device->device->createFenceUnique(vk::FenceCreateFlags());
 
-    const bool need_staging_buffer =
-        not support_mapping_device_memory(ret->allocator);
+    const bool need_staging_buffer{true};
+    // const bool need_staging_buffer =
+    //     not support_mapping_device_memory(ret->allocator);
     // Allocate device buffers
     {
       auto [bci, aci] = get_alloc_template(true, need_staging_buffer);
@@ -733,9 +733,11 @@ void gpu_interface_impl::adjust_buffer_for_colorset(size_t color_num) {
   if (need_staging_buffer) {
     required_buffers &bufs = std::get<required_buffers>(this->host_buf);
     const uint32_t host_capacity = bufs.colorset.size_in_bytes;
-    if (host_capacity < device_capacity) {
+    if (host_capacity < required_size) {
       auto [bci, aci] = get_alloc_template(false, need_staging_buffer);
-      bufs.colorset = allocate(this->allocator, bci, aci, device_capacity);
+      bufs.colorset = allocate(this->allocator, bci, aci, required_size);
+      assert(bufs.colorset.allocation_info.pMappedData);
+      assert(bufs.colorset.size_in_bytes >= required_size);
     }
   } else {
     // do nothing
