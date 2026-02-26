@@ -79,7 +79,7 @@ class VCWind : public QMainWindow {
  private:
   // for all pages
   Ui::VCWind *ui;
-  VCL_Kernel *const kernel{nullptr};
+  std::unique_ptr<VCL_Kernel, VCL_deleter> kernel{nullptr};
 
   std::unique_ptr<VCL_GPU_Platform, VCL_deleter> selected_gpu_platform{nullptr};
   std::unique_ptr<VCL_GPU_Device, VCL_deleter> selected_gpu_device{nullptr};

@@ -39,7 +39,7 @@ uint8_t is_language_ZH = true;
 VCL_config VCWind::config;
 
 VCWind::VCWind(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::VCWind), kernel(VCL_create_kernel()) {
+    : QMainWindow{parent}, ui{new Ui::VCWind}, kernel{VCL_create_kernel()} {
   ui->setupUi(this);
 
   kernel->set_ui(this, callback_progress_range_set,
@@ -76,8 +76,8 @@ VCWind::~VCWind() {
   this->kernel->release_gpu_resource();
   this->selected_gpu_device.reset();
   this->selected_gpu_platform.reset();
+  this->kernel.reset();
 
-  VCL_destroy_kernel(this->kernel);
   delete this->ui;
 }
 
