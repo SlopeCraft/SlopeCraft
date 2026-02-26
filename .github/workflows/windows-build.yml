@@ -57,24 +57,6 @@ jobs:
         if: matrix.gpu_api == 'Vulkan'
         run: vcpkg install --triplet=x64-windows glslang[tools] vulkan-hpp vulkan-memory-allocator vulkan-loader
 
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: make dirs
-        run: |
-          mkdir bin
-          mkdir bin/llvm
-          mkdir bin/Qt6.5.0-msvc-shared
-          mkdir 3rdParty
-
-      - name: Get short SHA
-        run: |
-          echo "GITHUB_SHA = $env:GITHUB_SHA"
-          $short_sha=$env:GITHUB_SHA.substring(0,7)
-          echo "short_sha = $short_sha"
-          echo "SHORT_SHA=$short_sha" >> $env:GITHUB_ENV
-
-
       #      - name: Install winget
       #        if: matrix.gpu_api == 'Vulkan'
       #        shell: pwsh
@@ -96,6 +78,25 @@ jobs:
       #      #          7z x -o"C:\Program Files\VulkanSDK" bin/VulkanSDK.7z
       #      #          exit
       #      #          tree /f "C:\Program Files\VulkanSDK"
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: make dirs
+        run: |
+          mkdir bin
+          mkdir bin/llvm
+          mkdir bin/Qt6.5.0-msvc-shared
+          mkdir 3rdParty
+
+      - name: Get short SHA
+        run: |
+          echo "GITHUB_SHA = $env:GITHUB_SHA"
+          $short_sha=$env:GITHUB_SHA.substring(0,7)
+          echo "short_sha = $short_sha"
+          echo "SHORT_SHA=$short_sha" >> $env:GITHUB_ENV
+
+
 
       - name: Download Qt6.5.0-msvc-shared and extract
         shell: cmd

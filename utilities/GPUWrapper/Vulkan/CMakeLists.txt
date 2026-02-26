@@ -1,11 +1,7 @@
-find_package(Vulkan
-    COMPONENTS glslangValidator
-    REQUIRED)
-get_target_property(glslangValidator_exe Vulkan::glslangValidator LOCATION)
-message(STATUS "glslangValidator found at ${glslangValidator_exe}")
-find_package(Eigen3 REQUIRED)
-find_package(VulkanMemoryAllocator CONFIG REQUIRED)
 
+find_package(Eigen3 REQUIRED)
+include(${CMAKE_SOURCE_DIR}/cmake/optional_deps/vulkan.cmake)
+find_package(VulkanMemoryAllocator CONFIG REQUIRED)
 include(${CMAKE_SOURCE_DIR}/cmake/optional_deps/vma-hpp.cmake)
 find_package(VulkanMemoryAllocator-Hpp CONFIG REQUIRED)
 
