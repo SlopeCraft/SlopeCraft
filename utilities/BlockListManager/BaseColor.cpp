@@ -85,7 +85,7 @@ void BaseColorWidget::re_arrange_blocks() noexcept {
   this->finish_blocks();
 }
 
-tl::expected<size_t, QString> BaseColorWidget::remove_blocks(
+std::expected<size_t, QString> BaseColorWidget::remove_blocks(
     const std::function<bool(const SlopeCraft::mc_block_interface*)>&
         remove_this_block) noexcept {
   size_t remove_counter = 0;
@@ -96,7 +96,7 @@ tl::expected<size_t, QString> BaseColorWidget::remove_blocks(
       continue;
     }
     if (this->blocks.size() <= 1) {
-      return tl::make_unexpected(
+      return std::unexpected(
           tr("无法删除方块 %1，基色 %2 只拥有 "
              "%3个方块，若继续删除，则该基色将没有方块，SlopeCraft 可能崩溃。")
               .arg((*it)->text())

@@ -6,7 +6,7 @@
 #include <functional>
 #include <QLabel>
 
-#include <tl/expected.hpp>
+#include <expected>
 
 class BaseColorWidget;
 
@@ -34,7 +34,7 @@ class BaseColorWidget : public QGroupBox {
   void add_block(SlopeCraft::mc_block_interface* ab) noexcept;
 
   // return the num of removed blocks
-  tl::expected<size_t, QString> remove_blocks(
+  std::expected<size_t, QString> remove_blocks(
       const std::function<bool(const SlopeCraft::mc_block_interface*)>&
           remove_this_block) noexcept;
 

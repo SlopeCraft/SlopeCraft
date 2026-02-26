@@ -148,7 +148,7 @@ void BlockListManager::finish_blocklist() noexcept {
   }
 }
 
-tl::expected<size_t, QString> BlockListManager::remove_blocklist(
+std::expected<size_t, QString> BlockListManager::remove_blocklist(
     QString blocklist_name) noexcept {
   const SlopeCraft::block_list_interface *bl = nullptr;
   auto it_removed = this->blockslists.end();
@@ -166,7 +166,7 @@ tl::expected<size_t, QString> BlockListManager::remove_blocklist(
       }
     }
     if (bl == nullptr) {
-      return tl::make_unexpected(
+      return std::unexpected(
           tr("无法删除方块列表 \"%1\"，没有加载同名的方块列表。已加载：%2")
               .arg(blocklist_name, loaded_names));
     }
@@ -178,7 +178,7 @@ tl::expected<size_t, QString> BlockListManager::remove_blocklist(
           return bl->contains(blk);
         });
     if (not res) {
-      return tl::make_unexpected(std::move(res.error()));
+      return std::unexpected(std::move(res.error()));
     }
     removed_counter += res.value();
   }

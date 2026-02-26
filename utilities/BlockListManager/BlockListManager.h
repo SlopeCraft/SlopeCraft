@@ -2,7 +2,7 @@
 #define SLOPECRAFT_UTILITIES_BLOCKLISTMANAGER_BLOCKLISTMANAGER_H
 
 #include <memory>
-#include <tl/expected.hpp>
+#include <expected>
 
 #include <QWidget>
 #include <SlopeCraftL.h>
@@ -70,7 +70,7 @@ class BlockListManager : public QWidget {
 
   bool add_blocklist(QString filename) noexcept;
 
-  tl::expected<size_t, QString> remove_blocklist(
+  std::expected<size_t, QString> remove_blocklist(
       QString blocklist_name) noexcept;
 
   void finish_blocklist() noexcept;
