@@ -22,12 +22,12 @@ enable_testing()
 
 # configure options -----------------------------------------------------------
 if (${APPLE})
-    set(SlopeCraft_GPU_API "None" CACHE STRING "API used to compute. Valid values : OpenCL, None. Metal may be supported.")
+    set(SlopeCraft_GPU_API "None" CACHE STRING "API used to compute. Valid values : Vulkan None.")
     option(SlopeCraft_vectorize "Compile with vectorization" OFF)
     message(STATUS "GPU boosting and vectorization have been disabled on mac by default")
 
 else ()
-    set(SlopeCraft_GPU_API "OpenCL" CACHE STRING "API used to compute. Valid values : OpenCL, None. Metal may be supported.")
+    set(SlopeCraft_GPU_API "None" CACHE STRING "API used to compute. Valid values : Vulkan None.")
     option(SlopeCraft_vectorize "Compile with vectorization" ON)
 endif ()
 
