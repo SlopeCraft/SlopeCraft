@@ -722,22 +722,19 @@ bool TokiVC::set_gpu_resource(const VCL_GPU_Platform *p,
   auto devp = static_cast<gpu_wrapper::device_wrapper *>(d->dw);
 
   std::pair<int, std::string> err;
-  auto gi = gpu_wrapper::gpu_interface::create(platp, devp, err);
-  if (gi == nullptr || !gi->ok_v()) {
+  gpu_wrapper::unique_gpu_interface gi{
+      gpu_wrapper::gpu_interface::create(platp, devp, err)};
+  if (gi == nullptr or not gi->ok_v()) {
     err.second = std::format("{}, error code = {}", err.second, err.first);
     write_to_string_deliver(err.second, option.error_message);
     return false;
-  } else {
-    write_to_string_deliver("", option.error_message);
   }
+  write_to_string_deliver("", option.error_message);
 
-  this->img_cvter.set_gpu_resource(gi);
+  this->img_cvter.set_gpu_resource(std::move(gi));
   return this->img_cvter.gpu_resource()->ok_v();
 }
 
 void TokiVC::release_gpu_resource() noexcept {
-  if (this->img_cvter.have_gpu_resource()) {
-    gpu_wrapper::gpu_interface::destroy(this->img_cvter.gpu_resource());
-    this->img_cvter.set_gpu_resource(nullptr);
-  }
+  this->img_cvter.release_gpu_resource();
 }

@@ -387,6 +387,7 @@ struct color_diff_push_const {
 
 class gpu_interface_impl : public gpu_interface {
  public:
+  ~gpu_interface_impl() final = default;
   // references
   vk::PhysicalDevice physical_device;
   vk::Device device;
@@ -618,7 +619,6 @@ class gpu_interface_impl : public gpu_interface {
 };
 
 void gpu_interface::destroy(gpu_interface *gi) noexcept { delete gi; }
-
 
 gpu_interface *gpu_interface::create(
     platform_wrapper *pw [[maybe_unused]], device_wrapper *dw,

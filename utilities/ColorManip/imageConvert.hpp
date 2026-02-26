@@ -64,20 +64,22 @@ struct GPU_wrapper_wrapper {
 template <>
 struct GPU_wrapper_wrapper<false> {
  protected:
-  gpu_wrapper::gpu_interface *gpu{nullptr};
+  gpu_wrapper::unique_gpu_interface gpu{nullptr};
 
  public:
   bool have_gpu_resource() const noexcept { return this->gpu != nullptr; }
 
-  void set_gpu_resource(gpu_wrapper::gpu_interface *gi) noexcept {
-    this->gpu = gi;
+  void set_gpu_resource(gpu_wrapper::unique_gpu_interface &&gi) noexcept {
+    this->gpu = std::move(gi);
   }
 
+  void release_gpu_resource() noexcept { this->gpu.reset(); }
+
   inline gpu_wrapper::gpu_interface *gpu_resource() noexcept {
-    return this->gpu;
+    return this->gpu.get();
   }
   inline const gpu_wrapper::gpu_interface *gpu_resource() const noexcept {
-    return this->gpu;
+    return this->gpu.get();
   }
 };
 

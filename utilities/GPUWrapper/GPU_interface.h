@@ -118,8 +118,8 @@ struct deleter {
   static void operator()(gpu_interface *ptr) { gpu_interface::destroy(ptr); }
 };
 
-using unique_platform = std::unique_ptr<platform_wrapper, deleter>;
-using unique_device = std::unique_ptr<device_wrapper, deleter>;
+// using unique_platform = std::unique_ptr<platform_wrapper, deleter>;
+// using unique_device = std::unique_ptr<device_wrapper, deleter>;
 using unique_gpu_interface = std::unique_ptr<gpu_interface, deleter>;
 
 }  // namespace gpu_wrapper

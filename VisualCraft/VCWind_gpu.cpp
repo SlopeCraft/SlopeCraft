@@ -145,14 +145,15 @@ void VCWind::refresh_gpu_info() noexcept {
   int errcode = 0;
 
   for (size_t pid = 0; pid < num_plats; pid++) {
-    VCL_GPU_Platform *plat = VCL_get_platform(pid, &errcode);
+    std::unique_ptr<VCL_GPU_Platform, VCL_deleter> plat{
+        VCL_get_platform(pid, &errcode)};
     QString platname{};
     if (plat == nullptr) {
-      platname =
-          VCWind::tr("无法获取 platform 信息。请检查驱动。OpenCL 错误码：%1.")
-              .arg(errcode);
+      platname = tr("无法获取 platform 信息。请检查驱动。%1 错误码：%2.")
+                     .arg(VCL_get_GPU_api_name())
+                     .arg(errcode);
     } else {
-      platname = QString::fromLocal8Bit(VCL_get_platform_name(plat));
+      platname = QString::fromLocal8Bit(VCL_get_platform_name(plat.get()));
     }
 
     QTreeWidgetItem *twi = new QTreeWidgetItem;
@@ -165,16 +166,17 @@ void VCWind::refresh_gpu_info() noexcept {
       twi->setFlags(Qt::ItemFlag::NoItemFlags);
       continue;
     }
-    size_t num_devs = VCL_get_device_num(plat);
+    size_t num_devs = VCL_get_device_num(plat.get());
 
     for (size_t did = 0; did < num_devs; did++) {
-      VCL_GPU_Device *dev = VCL_get_device(plat, did, &errcode);
+      std::unique_ptr<VCL_GPU_Device, VCL_deleter> dev{
+          VCL_get_device(plat.get(), did, &errcode)};
       QString devicename{};
       if (dev == nullptr) {
         devicename = VCWind::tr("无法获取 device 信息。请检查驱动。错误码：%1")
                          .arg(errcode);
       } else {
-        devicename = QString::fromLocal8Bit(VCL_get_device_name(dev));
+        devicename = QString::fromLocal8Bit(VCL_get_device_name(dev.get()));
       }
 
       QTreeWidgetItem *twi_device = new QTreeWidgetItem;
@@ -185,11 +187,8 @@ void VCWind::refresh_gpu_info() noexcept {
       this->ui->combobox_select_device->addItem(
           QStringLiteral("%1 / %2").arg(platname, devicename),
           QPoint(pid, did));
-
-      VCL_release_device(dev);
     }
     twi->setExpanded(true);
-    VCL_release_platform(plat);
   }
 }
 
@@ -257,16 +256,21 @@ QString VCWind::update_gpu_device(QPoint current_choice) noexcept {
   }
 
   this->kernel->set_prefer_gpu(true);
+  // release gpu resources before switching platform/device
+  {
+    this->kernel->release_gpu_resource();
+    this->selected_gpu_device.reset();
+  }
 
-  VCL_GPU_Platform *plat = VCL_get_platform(current_choice.x());
-  if (plat == nullptr) {
+  this->selected_gpu_platform.reset(VCL_get_platform(current_choice.x()));
+  if (this->selected_gpu_platform == nullptr) {
     return VCWind::tr("创建 GPU 平台失败，平台序号为%1，设备序号为%2")
         .arg(current_choice.x())
         .arg(current_choice.y());
   }
-
-  VCL_GPU_Device *dev = VCL_get_device(plat, current_choice.y());
-  if (dev == nullptr) {
+  this->selected_gpu_device.reset(
+      VCL_get_device(this->selected_gpu_platform.get(), current_choice.y()));
+  if (this->selected_gpu_device == nullptr) {
     return VCWind::tr("创建 GPU 设备失败，平台序号为%1，设备序号为%2")
         .arg(current_choice.x())
         .arg(current_choice.y());
@@ -278,7 +282,9 @@ QString VCWind::update_gpu_device(QPoint current_choice) noexcept {
     VCL_string_deliver s{
         .data = error_msg.data(), .size = 0, .capacity = error_msg.size()};
     gpu_options.error_message = &s;
-    if (!this->kernel->set_gpu_resource(plat, dev, gpu_options)) {
+    if (!this->kernel->set_gpu_resource(this->selected_gpu_platform.get(),
+                                        this->selected_gpu_device.get(),
+                                        gpu_options)) {
       error_msg.resize(s.size);
       return VCWind::tr(
                  "设置 GPU "
@@ -288,9 +294,5 @@ QString VCWind::update_gpu_device(QPoint current_choice) noexcept {
           .arg(error_msg.data());
     }
   }
-
-  VCL_release_device(dev);
-  VCL_release_platform(plat);
-
   return {};
 }

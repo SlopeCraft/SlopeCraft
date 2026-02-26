@@ -72,7 +72,14 @@ VCWind::VCWind(QWidget *parent)
   this->setup_ui_select_biome();
 }
 
-VCWind::~VCWind() { delete this->ui; }
+VCWind::~VCWind() {
+  this->kernel->release_gpu_resource();
+  this->selected_gpu_device.reset();
+  this->selected_gpu_platform.reset();
+
+  VCL_destroy_kernel(this->kernel);
+  delete this->ui;
+}
 
 void VCWind::callback_progress_range_set(void *__w, int min, int max,
                                          int val) noexcept {

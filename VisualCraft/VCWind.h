@@ -23,12 +23,14 @@ This file is part of SlopeCraft.
 #ifndef SLOPECRAFT_VISUALCRAFT_VCWIND_H
 #define SLOPECRAFT_VISUALCRAFT_VCWIND_H
 
+#include <memory>
+#include <functional>
+#include <map>
+
 #include <QMainWindow>
 #include <QNetworkAccessManager>
 #include <VCLConfigLoader.h>
 #include <VisualCraftL.h>
-#include <functional>
-#include <map>
 
 extern uint8_t is_language_ZH;
 extern QNetworkAccessManager *global_manager;
@@ -78,6 +80,9 @@ class VCWind : public QMainWindow {
   // for all pages
   Ui::VCWind *ui;
   VCL_Kernel *const kernel{nullptr};
+
+  std::unique_ptr<VCL_GPU_Platform, VCL_deleter> selected_gpu_platform{nullptr};
+  std::unique_ptr<VCL_GPU_Device, VCL_deleter> selected_gpu_device{nullptr};
 
   // for page 0
   // VCL_resource_pack *rp{nullptr};
