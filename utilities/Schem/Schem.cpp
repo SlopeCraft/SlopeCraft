@@ -444,9 +444,9 @@ Schem::export_litematic(std::string_view filename,
 
     lite.writeString("Author", info.author_utf8.data());
 
-    lite.writeString("Description", info.destricption_utf8.data());
+    lite.writeString("Description", info.description_utf8.data());
 
-    lite.writeString("Name", info.litename_utf8.data());
+    lite.writeString("Name", info.lite_name_utf8.data());
 
     lite.writeInt("RegionCount", 1);
     lite.writeLong("TimeCreated", info.time_created);
@@ -460,7 +460,7 @@ Schem::export_litematic(std::string_view filename,
 
   lite.writeCompound("Regions");
   {
-    lite.writeCompound(info.regionname_utf8.data());
+    lite.writeCompound(info.region_name_utf8.data());
     {
       lite.writeCompound("Position");
       {

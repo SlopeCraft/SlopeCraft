@@ -713,8 +713,8 @@ bool converted_image_impl::export_assembled_maps_litematic(
     const SlopeCraft::litematic_options &export_opt) const noexcept {
   auto schem = this->assembled_maps(map_opt);
   libSchem::litematic_info info{};
-  info.litename_utf8 = export_opt.litename_utf8;
-  info.regionname_utf8 = export_opt.region_name_utf8;
+  info.lite_name_utf8 = export_opt.litename_utf8;
+  info.region_name_utf8 = export_opt.region_name_utf8;
 
   auto err = schem.export_litematic(filename, info);
   if (not err) {

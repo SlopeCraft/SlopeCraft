@@ -236,8 +236,8 @@ bool structure_3D_impl::export_litematica(
   option.ui.report_working_status(workStatus::writingMetaInfo);
   option.progressbar.set_range(0, 100 + this->schem.size(), 0);
   libSchem::litematic_info info{};
-  info.litename_utf8 = option.litename_utf8;
-  info.regionname_utf8 = option.region_name_utf8;
+  info.lite_name_utf8 = option.litename_utf8;
+  info.region_name_utf8 = option.region_name_utf8;
 
   {
     auto res = this->schem.export_litematic(filename, info);
