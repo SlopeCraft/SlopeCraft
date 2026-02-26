@@ -35,7 +35,7 @@ jobs:
 
       - name: Install dependencies
         run:
-          sudo apt install clang-20 libomp-20-dev zstd libzstd-dev xz-utils bzip2 libzip-dev zipcmp ziptool zipmerge libpng-dev libeigen3-dev libboost-all-dev libboost-tools-dev libboost-doc libexpected-dev p7zip-full
+          sudo apt install clang-20 libomp-20-dev zstd libzstd-dev xz-utils bzip2 libzip-dev zipcmp ziptool zipmerge libpng-dev libeigen3-dev libexpected-dev p7zip-full libboost-all-dev libboost-tools-dev libboost-doc
 
       - name: Install xsimd
         run: |
