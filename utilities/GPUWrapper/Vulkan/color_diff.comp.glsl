@@ -1,8 +1,30 @@
-#version 450
-//#extension GL_EXT_shader_8bit_storage: enable
-#extension GL_EXT_shader_16bit_storage: enable
+/*
+ Copyright © 2021-2026  TokiNoBug
+This file is part of SlopeCraft.
 
+    SlopeCraft is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    SlopeCraft is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
+
+    Contact with me:
+    github:https://github.com/SlopeCraft/SlopeCraft
+    bilibili:https://space.bilibili.com/351429231
+*/
+
+#version 450
+#extension GL_EXT_shader_16bit_storage: enable
+//#extension GL_EXT_shader_8bit_storage: enable
 //#extension GL_EXT_debug_printf: enable
+
 
 #define NAN float(0.0f / 0.0f)
 #define pi_fp32 float(radians(180))
@@ -25,10 +47,10 @@ layout (push_constant, std430) uniform constants {
 } option;
 
 layout (std430, binding = 0) readonly buffer bufCC {
-    float colorset_colors[];
+    vec3 colorset_colors[];
 };
 layout (std430, binding = 1) readonly buffer bufUC {
-    float unconverted_colors[];
+    vec3 unconverted_colors[];
 };
 layout (std430, binding = 2) writeonly buffer bufRDD {
     float result_diff_dst[];
@@ -72,18 +94,13 @@ void main() {
 
 
 void compute(const uint global_idx) {
-    const vec3 unconverted = { unconverted_colors[global_idx * 3 + 0],
-    unconverted_colors[global_idx * 3 + 1],
-    unconverted_colors[global_idx * 3 + 2] };
-
+    const vec3 unconverted = unconverted_colors[global_idx];
 
     uint result_idx = 65535 - 1;
     float result_diff = 1e30 / 2;
 
     for (uint idx = 0; idx < option.colorset_size; idx++) {
-        const vec3 color_ava = { colorset_colors[idx * 3 + 0],
-        colorset_colors[idx * 3 + 1],
-        colorset_colors[idx * 3 + 2] };
+        const vec3 color_ava = colorset_colors[idx];
 //        if (true && have_nan(color_ava)) {
 //            debugPrintfEXT(
 //            "Nan spotted at color_ava. color_ava = {%f,%f,%f}, get_global_id = %u.n",
