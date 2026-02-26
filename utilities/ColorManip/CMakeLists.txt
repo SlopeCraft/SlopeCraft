@@ -49,9 +49,7 @@ target_compile_options(ColorManip PRIVATE ${SlopeCraft_vectorize_flags})
 target_link_libraries(ColorManip PUBLIC GPUInterface)
 target_include_directories(ColorManip INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
-find_package(OpenCL 3.0)
-
-if (${OpenCL_FOUND})
+if (NOT ${SlopeCraft_GPU_API} STREQUAL "None")
     add_executable(test_init_program tests/test_init_program.cpp)
     target_link_libraries(test_init_program PRIVATE OpenMP::OpenMP_CXX ColorManip)
 

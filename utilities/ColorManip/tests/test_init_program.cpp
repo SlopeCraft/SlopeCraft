@@ -1,6 +1,6 @@
-#include <GPU_interface.h>
 #include <iostream>
 #include <random>
+#include <GPU_interface.h>
 
 #include <omp.h>
 
@@ -13,15 +13,13 @@ std::uniform_real_distribution<float> rand_f32(0, 1);
 // std::uniform_int_distribution<uint32_t> rand_u32(0, UINT32_MAX);
 
 int main(int, char **) {
-  auto plat = gpu_wrapper::platform_wrapper::create(0);
+  std::unique_ptr<gpu_wrapper::platform_wrapper> plat{
+      gpu_wrapper::platform_wrapper::create(0)};
+  std::unique_ptr<gpu_wrapper::device_wrapper> dev{
+      gpu_wrapper::device_wrapper::create(plat.get(), 0)};
 
-  auto dev = gpu_wrapper::device_wrapper::create(plat, 0);
-
-  gpu_wrapper::gpu_interface *const gi =
-      gpu_wrapper::gpu_interface::create(plat, dev);
-
-  gpu_wrapper::device_wrapper::destroy(dev);
-  gpu_wrapper::platform_wrapper::destroy(plat);
+  gpu_wrapper::unique_gpu_interface gi{
+      gpu_wrapper::gpu_interface::create(plat.get(), dev.get())};
 
   if (!gi->ok_v()) {
     cout << gi->error_code_v() << " : " << gi->error_detail_v() << endl;
@@ -104,7 +102,6 @@ int main(int, char **) {
     cout << "Success" << endl;
   }
 
-  gpu_wrapper::gpu_interface::destroy(gi);
 
   return 0;
 }
