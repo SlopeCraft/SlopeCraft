@@ -171,9 +171,8 @@ void VCWind::refresh_gpu_info() noexcept {
       VCL_GPU_Device *dev = VCL_get_device(plat, did, &errcode);
       QString devicename{};
       if (dev == nullptr) {
-        devicename =
-            VCWind::tr("无法获取 device 信息。请检查驱动。OpenCL 错误码：%1")
-                .arg(errcode);
+        devicename = VCWind::tr("无法获取 device 信息。请检查驱动。错误码：%1")
+                         .arg(errcode);
       } else {
         devicename = QString::fromLocal8Bit(VCL_get_device_name(dev));
       }
