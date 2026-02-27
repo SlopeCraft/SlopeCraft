@@ -35,3 +35,9 @@ set_source_files_properties(shader_spv.c PROPERTIES
 add_dependencies(GPUInterface ColorDiff_spirv)
 target_compile_definitions(GPUInterface PRIVATE SHADER_FILE="${shader_file}")
 
+set(gnu_like_compilers GNU Clang)
+if (${CMAKE_CXX_COMPILER_ID} IN_LIST gnu_like_compilers)
+    target_compile_options(GPUInterface PRIVATE
+        -Wnullability-completeness
+    )
+endif ()
