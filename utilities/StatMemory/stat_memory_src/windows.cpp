@@ -8,7 +8,7 @@
 
 #include <cmath>
 
-tl::expected<system_memory_info, std::string>
+std::expected<system_memory_info, std::string>
 get_system_memory_info() noexcept {
   MEMORYSTATUS ms;
   GlobalMemoryStatus(&ms);
@@ -19,11 +19,11 @@ get_system_memory_info() noexcept {
   };
 }
 
-[[nodiscard]] tl::expected<self_memory_usage, std::string>
+[[nodiscard]] std::expected<self_memory_usage, std::string>
 get_self_memory_info() noexcept {
   HANDLE handle = GetCurrentProcess();
   if (handle == nullptr) {
-    return tl::make_unexpected(
+    return std::unexpected(
         "win32 api failed, GetCurrentProcess returned nullptr instead of a "
         "handle to current process.");
   }

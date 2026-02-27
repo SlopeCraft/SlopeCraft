@@ -7,7 +7,7 @@
 
 #include <cstdint>
 #include <string>
-#include <tl/expected.hpp>
+#include <expected>
 
 // All units in byte
 struct system_memory_info {
@@ -15,7 +15,7 @@ struct system_memory_info {
   uint64_t free;
 };
 
-[[nodiscard]] tl::expected<system_memory_info, std::string>
+[[nodiscard]] std::expected<system_memory_info, std::string>
 get_system_memory_info() noexcept;
 
 // All units in byte
@@ -23,7 +23,7 @@ struct self_memory_usage {
   uint64_t used;
 };
 
-[[nodiscard]] tl::expected<self_memory_usage, std::string>
+[[nodiscard]] std::expected<self_memory_usage, std::string>
 get_self_memory_info() noexcept;
 
 #endif  // SLOPECRAFT_STAT_MEMORY_H

@@ -14,7 +14,7 @@
 
 #include <unistd.h>
 
-tl::expected<std::map<std::string, int64_t>, std::string> parse_linux_file(
+std::expected<std::map<std::string, int64_t>, std::string> parse_linux_file(
     const char* filename,
     const std::function<bool(std::string_view)>& skip_this_line = {}) noexcept {
   std::map<std::string, int64_t> fields;
@@ -22,7 +22,7 @@ tl::expected<std::map<std::string, int64_t>, std::string> parse_linux_file(
   {
     FILE* fd = fopen(filename, "r");
     if (fd == nullptr) {
-      return tl::make_unexpected(
+      return std::unexpected(
           std::format("Failed to read \"{}\", fopen returned NULL", filename));
     }
     std::array<char, 4096> buf;
@@ -49,7 +49,7 @@ tl::expected<std::map<std::string, int64_t>, std::string> parse_linux_file(
     const size_t idx_of_colon = line_sv.find_first_of(':');
     if (idx_of_colon == line_sv.npos) {  // Failed to parse this line, skip it.
       continue;
-      //      return tl::make_unexpected(
+      //      return std::unexpected(
       //          std::format("Failed to parse \"{}\" from {}", line_sv,
       //          filename));
     }
@@ -98,7 +98,7 @@ tl::expected<std::map<std::string, int64_t>, std::string> parse_linux_file(
   return fields;
 }
 
-tl::expected<system_memory_info, std::string>
+std::expected<system_memory_info, std::string>
 get_system_memory_info() noexcept {
   auto fileds = parse_linux_file("/proc/meminfo", [](std::string_view line) {
     if (line.starts_with("MemTotal")) return false;
@@ -106,7 +106,7 @@ get_system_memory_info() noexcept {
     return true;
   });
   if (not fileds) {
-    return tl::make_unexpected(std::move(fileds).error());
+    return std::unexpected(std::move(fileds).error());
   }
   auto& value = fileds.value();
   system_memory_info ret;
@@ -114,20 +114,20 @@ get_system_memory_info() noexcept {
   if (it != value.end()) {
     ret.total = it->second;
   } else {
-    return tl::make_unexpected(
+    return std::unexpected(
         "Failed to parse field \"MemTotal\" from /proc/meminfo");
   }
   it = value.find("MemFree");
   if (it not_eq value.end()) {
     ret.free = it->second;
   } else {
-    return tl::make_unexpected(
+    return std::unexpected(
         "Failed to parse field \"MemFree\" from /proc/meminfo");
   }
   return ret;
 }
 
-[[nodiscard]] tl::expected<self_memory_usage, std::string>
+[[nodiscard]] std::expected<self_memory_usage, std::string>
 get_self_memory_info() noexcept {
   const int64_t pid = getpid();
   const std::string file = std::format("/proc/{}/status", pid);
@@ -135,7 +135,7 @@ get_self_memory_info() noexcept {
     return not line.starts_with("VmSize");
   });
   if (not fields) {
-    return tl::make_unexpected(std::move(fields.error()));
+    return std::unexpected(std::move(fields.error()));
   }
 
   auto& val = fields.value();
@@ -143,12 +143,12 @@ get_self_memory_info() noexcept {
   if (it not_eq val.end()) {
     const int64_t used_memory = it->second;
     if (used_memory < 0) {
-      return tl::make_unexpected(std::format(
+      return std::unexpected(std::format(
           "VmSize from {} is negative(the value is {})", file, used_memory));
     }
     return self_memory_usage{uint64_t(used_memory)};
   }
 
-  return tl::make_unexpected(
+  return std::unexpected(
       std::format("Failed to parse field VmSize from {}", file));
 }
