@@ -112,6 +112,7 @@ add_compile_definitions(SLOPECRAFTL_NOT_INSTALLED)
 add_compile_definitions(VISUALCRAFTL_NOT_INSTALLED)
 
 # Add compile options for different compilers
+set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
 if (${MSVC})
     add_compile_options("/Zc:__cplusplus")
     add_compile_options("/wd4819")
@@ -119,7 +120,6 @@ if (${MSVC})
     add_compile_options("/EHsc")
 else ()
     add_compile_options(-Wall -Wreturn-type -Wsign-compare -Wextra)
-    add_link_options(-flto)
 endif ()
 
 # Add global include dirs ----------------------------------------------------
