@@ -21,7 +21,7 @@ This file is part of SlopeCraft.
 */
 #include <format>
 #include <vector>
-#include <optional>
+#include <cmath>
 #include <variant>
 #include <map>
 #include <algorithm>
@@ -33,7 +33,7 @@ This file is part of SlopeCraft.
 
 #define VMA_VULKAN_VERSION 1003000  // Vulkan 1.3
 #define VMA_IMPLEMENTATION
-#include <vk_mem_alloc.h>
+// #include <vk_mem_alloc.h>
 #include <vk_mem_alloc.hpp>
 
 #include "shader_spv.h"
