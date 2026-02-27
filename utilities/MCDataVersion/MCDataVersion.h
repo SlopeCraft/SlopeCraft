@@ -30,6 +30,17 @@ This file is part of SlopeCraft.
 namespace MCDataVersion {
 
 enum class MCDataVersion_t : int {
+  Java_26_1__snapshot10 = 4778,
+  Java_26_1__snapshot9 = 4777,
+  Java_26_1__snapshot8 = 4776,
+  Java_26_1__snapshot7 = 4775,
+  Java_26_1__snapshot6 = 4774,
+  Java_26_1__snapshot5 = 4770,
+  Java_26_1__snapshot4 = 4768,
+  Java_26_1__snapshot3 = 4767,
+  Java_26_1__snapshot2 = 4765,
+  Java_26_1__snapshot1 = 4764,
+
   Java_1_21_11 = 4671,
   Java_1_21_11__rc3 = 4670,
   Java_1_21_11__rc2 = 4669,
