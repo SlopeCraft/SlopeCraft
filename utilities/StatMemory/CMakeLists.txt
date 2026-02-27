@@ -4,9 +4,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-
 add_library(StatMemory STATIC stat_memory.h)
-find_package(tl-expected REQUIRED)
 target_include_directories(StatMemory PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 target_compile_features(StatMemory PUBLIC cxx_std_23)
 # Set source file by system

@@ -37,7 +37,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          brew install llvm lld boost ninja libpng xsimd p7zip libzip zstd xz eigen boost tl-expected magic_enum fmt sevenzip
+          brew install llvm lld boost ninja libpng xsimd p7zip libzip zstd xz eigen boost magic_enum sevenzip
 
       - name: Check clang
         run: /opt/homebrew/opt/llvm/bin/clang -v
