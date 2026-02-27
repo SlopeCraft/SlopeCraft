@@ -7,8 +7,13 @@ find_package(VulkanMemoryAllocator-Hpp CONFIG REQUIRED)
 
 target_sources(GPUInterface PRIVATE
     GPU_interface.cpp
+    shader_spv.h
+    shader_spv.c
 )
 target_compile_features(GPUInterface PRIVATE cxx_std_23)
+set_target_properties(GPUInterface PROPERTIES
+    C_STANDARD 23
+)
 target_link_libraries(GPUInterface PUBLIC
     Vulkan::Vulkan
     GPUOpen::VulkanMemoryAllocator
@@ -24,16 +29,9 @@ add_custom_target(ColorDiff_spirv
     SOURCES color_diff.comp.glsl
     DEPENDS color_diff.comp.glsl
 )
-
-add_library(shader_spv_embed STATIC
-    shader_spv.h
-    shader_spv.c
-)
-target_compile_features(shader_spv_embed PRIVATE c_std_23)
 set_source_files_properties(shader_spv.c PROPERTIES
     OBJECT_DEPENDS ${shader_file}
 )
-add_dependencies(shader_spv_embed ColorDiff_spirv)
-target_compile_definitions(shader_spv_embed PRIVATE SHADER_FILE="${shader_file}")
-target_link_libraries(GPUInterface PUBLIC shader_spv_embed)
+add_dependencies(GPUInterface ColorDiff_spirv)
+target_compile_definitions(GPUInterface PRIVATE SHADER_FILE="${shader_file}")
 
