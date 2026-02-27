@@ -49,7 +49,7 @@ class structure_3D_impl : public structure_3D {
   [[nodiscard]] std::string save_cache(
       const std::filesystem::path &file) const noexcept;
 
-  [[nodiscard]] static tl::expected<structure_3D_impl, std::string> load_cache(
+  [[nodiscard]] static std::expected<structure_3D_impl, std::string> load_cache(
       const std::filesystem::path &file) noexcept;
 
   uint64_t block_count() const noexcept final;

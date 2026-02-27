@@ -311,7 +311,7 @@ class SCWind : public QMainWindow {
   };
   auto_cache_report auto_cache_3D(bool cache_all = false) noexcept;
 
-  [[nodiscard]] tl::expected<QString, QString> get_command(
+  [[nodiscard]] std::expected<QString, QString> get_command(
       const SlopeCraft::converted_image&, int begin_idx) const noexcept;
 
  signals:

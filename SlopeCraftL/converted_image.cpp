@@ -316,15 +316,15 @@ std::string converted_image_impl::save_cache(
   return {};
 }
 
-tl::expected<converted_image_impl, std::string>
+std::expected<converted_image_impl, std::string>
 converted_image_impl::load_cache(const color_table_impl &table,
                                  const std::filesystem::path &file) noexcept {
   converted_image_impl ret{table};
   if (!std::filesystem::is_regular_file(file)) {
-    return tl::make_unexpected("No such file");
+    return std::unexpected("No such file");
   }
   if (!ret.converter.load_cache(file.string().c_str())) {
-    return tl::make_unexpected("Failed to load cache, the cache is incorrect");
+    return std::unexpected("Failed to load cache, the cache is incorrect");
   }
   return ret;
 }

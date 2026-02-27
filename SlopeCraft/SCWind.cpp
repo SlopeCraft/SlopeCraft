@@ -305,13 +305,11 @@ void SCWind::when_cvt_pool_selectionChanged() noexcept {
   this->refresh_current_cvt_display(selected_idx);
 }
 
-#define SC_SLOPECRAFT_PRIVATEMACRO_VERSION_BUTTON_LIST              \
-  {                                                                 \
-    this->ui->rb_ver12, this->ui->rb_ver13, this->ui->rb_ver14,     \
-        this->ui->rb_ver15, this->ui->rb_ver16, this->ui->rb_ver17, \
-        this->ui->rb_ver18, this->ui->rb_ver19, this->ui->rb_ver20, \
-        this->ui->rb_ver21                                          \
-  }
+#define SC_SLOPECRAFT_PRIVATEMACRO_VERSION_BUTTON_LIST         \
+  {this->ui->rb_ver12, this->ui->rb_ver13, this->ui->rb_ver14, \
+   this->ui->rb_ver15, this->ui->rb_ver16, this->ui->rb_ver17, \
+   this->ui->rb_ver18, this->ui->rb_ver19, this->ui->rb_ver20, \
+   this->ui->rb_ver21}
 
 std::array<QRadioButton *, 21 - 12 + 1> SCWind::version_buttons() noexcept {
   return SC_SLOPECRAFT_PRIVATEMACRO_VERSION_BUTTON_LIST;
@@ -323,7 +321,7 @@ std::array<const QRadioButton *, 21 - 12 + 1> SCWind::version_buttons()
 }
 
 #define SC_SLOPECRAFT_PRIVATEMACRO_TYPE_BUTTON_LIST \
-  { this->ui->rb_type_3d, this->ui->rb_type_flat, this->ui->rb_type_fileonly }
+  {this->ui->rb_type_3d, this->ui->rb_type_flat, this->ui->rb_type_fileonly}
 
 std::array<QRadioButton *, 3> SCWind::type_buttons() noexcept {
   return SC_SLOPECRAFT_PRIVATEMACRO_TYPE_BUTTON_LIST;
@@ -563,11 +561,9 @@ void SCWind::set_colorset() noexcept {
       tr("可用颜色数量：%1").arg(num_colors));
 }
 
-#define SC_SLOPECRAFT_PREIVATEMACRO_EXPORT_TYPE_BUTTONS                        \
-  {                                                                            \
-    this->ui->rb_export_lite, this->ui->rb_export_nbt, this->ui->rb_export_WE, \
-        this->ui->rb_export_flat_diagram, this->ui->rb_export_fileonly         \
-  }
+#define SC_SLOPECRAFT_PREIVATEMACRO_EXPORT_TYPE_BUTTONS                       \
+  {this->ui->rb_export_lite, this->ui->rb_export_nbt, this->ui->rb_export_WE, \
+   this->ui->rb_export_flat_diagram, this->ui->rb_export_fileonly}
 
 std::array<QRadioButton *, 5> SCWind::export_type_buttons() noexcept {
   return SC_SLOPECRAFT_PREIVATEMACRO_EXPORT_TYPE_BUTTONS;
@@ -596,12 +592,10 @@ std::array<QRadioButton *, 4> SCWind::preset_buttons_no_custom() noexcept {
           this->ui->rb_preset_elegant, this->ui->rb_preset_shiny};
 }
 
-#define SC_SLOPECRAFT_PRIVATEMARCO_ALGO_BUTTONS           \
-  {                                                       \
-    this->ui->rb_algo_RGB, this->ui->rb_algo_RGB_plus,    \
-        this->ui->rb_algo_Lab94, this->ui->rb_algo_Lab00, \
-        this->ui->rb_algo_XYZ, this->ui->rb_algo_GACvter  \
-  }
+#define SC_SLOPECRAFT_PRIVATEMARCO_ALGO_BUTTONS         \
+  {this->ui->rb_algo_RGB,   this->ui->rb_algo_RGB_plus, \
+   this->ui->rb_algo_Lab94, this->ui->rb_algo_Lab00,    \
+   this->ui->rb_algo_XYZ,   this->ui->rb_algo_GACvter}
 
 std::array<const QRadioButton *, 6> SCWind::algo_buttons() const noexcept {
   return SC_SLOPECRAFT_PRIVATEMARCO_ALGO_BUTTONS;
@@ -959,7 +953,7 @@ void SCWind::refresh_current_build_display(cvt_task *taskp) noexcept {
   //  }
 }
 
-tl::expected<QString, QString> SCWind::get_command(
+std::expected<QString, QString> SCWind::get_command(
     const SlopeCraft::converted_image &cvted, int begin_idx) const noexcept {
   QString command;
   SlopeCraft::ostream_wrapper os{
@@ -987,7 +981,7 @@ tl::expected<QString, QString> SCWind::get_command(
   opt.after_1_20_5 = after_1_20_5;
   const bool ok = cvted.get_map_command(opt);
   if (!ok) {
-    return tl::make_unexpected(tr("生成命令失败：\n%1").arg(command));
+    return std::unexpected(tr("生成命令失败：\n%1").arg(command));
   }
   return command;
 }

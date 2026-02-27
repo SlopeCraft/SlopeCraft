@@ -272,7 +272,7 @@ std::string color_table_impl::save_convert_cache(
   return {};
 }
 
-[[nodiscard]] tl::expected<converted_image_impl, std::string>
+[[nodiscard]] std::expected<converted_image_impl, std::string>
 color_table_impl::load_convert_cache(
     const_image_reference original_img, const convert_option &option,
     const char *cache_root_dir) const noexcept {

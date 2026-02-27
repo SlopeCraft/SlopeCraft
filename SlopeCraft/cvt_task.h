@@ -5,7 +5,7 @@
 #include <QString>
 #include <QImage>
 #include <QVariant>
-#include <tl/expected.hpp>
+#include <expected>
 
 struct convert_input {
   convert_input() = default;
@@ -334,7 +334,7 @@ struct cvt_task {
     }
   }
 
-  static tl::expected<cvt_task, QString> load(QString filename) noexcept;
+  static std::expected<cvt_task, QString> load(QString filename) noexcept;
 };
 
 // Q_DECLARE_METATYPE(cvt_task)

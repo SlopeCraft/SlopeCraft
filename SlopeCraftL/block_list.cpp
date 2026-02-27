@@ -23,7 +23,7 @@ General Public License for more details.
 
 #include <format>
 #include <json.hpp>
-#include <tl/expected.hpp>
+#include <expected>
 #include <zip.h>
 #include <libpng_reader.h>
 
@@ -116,9 +116,9 @@ struct zip_deleter {
   }
 };
 
-tl::expected<block_list_metainfo, std::string> parse_meta_info(
-    std::function<tl::expected<void, std::string>(const char *filename,
-                                                  std::vector<uint8_t> &dest)>
+std::expected<block_list_metainfo, std::string> parse_meta_info(
+    std::function<std::expected<void, std::string>(const char *filename,
+                                                   std::vector<uint8_t> &dest)>
         extract_file,
     std::vector<uint8_t> &buffer) noexcept {
   using njson = nlohmann::json;
@@ -139,13 +139,13 @@ tl::expected<block_list_metainfo, std::string> parse_meta_info(
       }
 
     } catch (const std::exception &e) {
-      return tl::make_unexpected(
+      return std::unexpected(
           std::format("Failed to parse \"metainfo.json\": {}", e.what()));
     }
 
     return ret;
   }
-  return tl::make_unexpected(
+  return std::unexpected(
       std::format("Failed to extract \"metainfo.json\": {}", res.error()));
 }
 
@@ -154,15 +154,16 @@ block_list_create_result parse_block_list(zip_t *archive) noexcept {
   assert(archive not_eq nullptr);
 
   auto extract_file =
-      [archive](const char *filename,
-                std::vector<uint8_t> &dest) -> tl::expected<void, std::string> {
+      [archive](
+          const char *filename,
+          std::vector<uint8_t> &dest) -> std::expected<void, std::string> {
     dest.clear();
 
     int error_code = ZIP_ER_OK;
     const int64_t index_i =
         zip_name_locate(archive, filename, ZIP_FL_UNCHANGED);
     if (index_i < 0) {
-      return tl::make_unexpected(
+      return std::unexpected(
           std::format("File \"{}\" doesn't exist in archive", filename));
     }
     const uint64_t index = uint64_t(index_i);
@@ -170,7 +171,7 @@ block_list_create_result parse_block_list(zip_t *archive) noexcept {
     zip_stat_t stat;
     error_code = zip_stat_index(archive, index, ZIP_FL_UNCHANGED, &stat);
     if (error_code != ZIP_ER_OK) {
-      return tl::make_unexpected(
+      return std::unexpected(
           std::format("Failed to get size of file \"{}\"  in archive: \"{}\", "
                       "error code = {}",
                       filename, zip_strerror(archive), error_code));
@@ -181,14 +182,14 @@ block_list_create_result parse_block_list(zip_t *archive) noexcept {
 
     auto file = zip_fopen(archive, filename, ZIP_FL_UNCHANGED);
     if (file == nullptr) {
-      return tl::make_unexpected(
+      return std::unexpected(
           std::format("Failed to extract \"{}\" from archive  : \"{}\" ",
                       filename, zip_strerror(archive)));
     }
 
     const int64_t read_bytes = zip_fread(file, dest.data(), dest.size());
     if (read_bytes != int64_t(file_size)) {
-      return tl::make_unexpected(
+      return std::unexpected(
           std::format("Failed to extract \"{}\" from archive, expected "
                       "{} bytes, but extracted {} bytes : \"{}\" ",
                       filename, file_size, read_bytes, zip_strerror(archive)));
@@ -222,15 +223,15 @@ block_list_create_result parse_block_list(zip_t *archive) noexcept {
   {
     auto err = extract_file("block_list.json", buffer);
     if (!err) {
-      return {tl::make_unexpected(err.error()), warnings};
+      return {std::unexpected(err.error()), warnings};
     }
   }
   try {
     njson jo = njson::parse(buffer, nullptr, true, true);
     if (not jo.is_array()) {
-      return {tl::make_unexpected(
-                  std::format("Json should contain an array directly")),
-              warnings};
+      return {
+          std::unexpected(std::format("Json should contain an array directly")),
+          warnings};
     }
 
     // parse blocks
@@ -243,16 +244,16 @@ block_list_create_result parse_block_list(zip_t *archive) noexcept {
 
         bl.blocks().emplace(std::make_unique<mc_block>(block), version);
       } catch (const std::exception &e) {
-        return {tl::make_unexpected(std::format(
+        return {std::unexpected(std::format(
                     "Failed to parse block at index {}:\n{}", idx, e.what())),
                 warnings};
       }
     }
 
   } catch (const std::exception &e) {
-    return {tl::make_unexpected(
-                std::format("nlohmann json exception : {}", e.what())),
-            warnings};
+    return {
+        std::unexpected(std::format("nlohmann json exception : {}", e.what())),
+        warnings};
   }
   // load images
   std::vector<uint32_t> buf_pixel;
@@ -305,7 +306,7 @@ block_list_create_result create_block_list_from_file(
   std::unique_ptr<zip_t, zip_deleter> archive{
       zip_open(zip_path, ZIP_RDONLY | ZIP_CHECKCONS, &error_code)};
   if (error_code not_eq ZIP_ER_OK or archive == nullptr) {
-    auto ret = tl::make_unexpected(std::format(
+    auto ret = std::unexpected(std::format(
         "Failed to open archive \"{}\" : \"{}\" libzip error code = {}",
         zip_path, zip_strerror(archive.get()), error_code));
     return {ret, warnings};
@@ -320,8 +321,8 @@ block_list_create_result create_block_list_from_buffer(
   zip_source_t *const source =
       zip_source_buffer_create(buffer.data(), buffer.size_bytes(), 0, &err);
   if (source == nullptr) {
-    return {tl::make_unexpected(std::format("Failed to create zip_source_t: {}",
-                                            zip_error_strerror(&err))),
+    return {std::unexpected(std::format("Failed to create zip_source_t: {}",
+                                        zip_error_strerror(&err))),
             {}};
   }
 
@@ -329,7 +330,7 @@ block_list_create_result create_block_list_from_buffer(
       zip_open_from_source(source, ZIP_RDONLY | ZIP_CHECKCONS, &err)};
   if (archive == nullptr) {
     zip_source_free(source);
-    return {tl::make_unexpected(
+    return {std::unexpected(
                 std::format("Failed to open zip, zip_err = {}, sys_err = {}",
                             err.zip_err, err.sys_err)),
             {}};

@@ -3,14 +3,14 @@
 #include "cvt_task.h"
 #include "ExportTableModel.h"
 
-tl::expected<cvt_task, QString> cvt_task::load(QString filename) noexcept {
+std::expected<cvt_task, QString> cvt_task::load(QString filename) noexcept {
   cvt_task ret;
 
   ret.filename = filename;
 
   QImage temp;
   if (!temp.load(filename)) {
-    return tl::make_unexpected(QObject::tr("加载图片 %1 失败。").arg(filename));
+    return std::unexpected(QObject::tr("加载图片 %1 失败。").arg(filename));
   }
 
   ret.original_image = temp.convertToFormat(QImage::Format_ARGB32);

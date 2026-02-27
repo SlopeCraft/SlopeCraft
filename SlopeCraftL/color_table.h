@@ -105,7 +105,7 @@ class color_table_impl : public SlopeCraft::color_table {
     return new converted_image_impl{std::move(res.value())};
   }
 
-  [[nodiscard]] tl::expected<converted_image_impl, std::string>
+  [[nodiscard]] std::expected<converted_image_impl, std::string>
   load_convert_cache(const_image_reference original_img,
                      const convert_option &option,
                      const char *cache_root_dir) const noexcept;

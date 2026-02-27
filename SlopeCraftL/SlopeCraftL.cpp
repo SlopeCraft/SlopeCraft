@@ -22,7 +22,7 @@ This file is part of SlopeCraft.
 
 #include <format>
 #include <json.hpp>
-#include <tl/expected.hpp>
+#include <expected>
 #include <zip.h>
 #include <libpng_reader.h>
 

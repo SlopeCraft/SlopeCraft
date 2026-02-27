@@ -6,7 +6,7 @@
 #define SLOPECRAFT_BLOCKLIST_H
 
 #include <span>
-#include <tl/expected.hpp>
+#include <expected>
 
 #include "mc_block.h"
 
@@ -47,7 +47,7 @@ class block_list : public ::SlopeCraft::block_list_interface {
 };
 
 struct block_list_create_result {
-  tl::expected<block_list, std::string> result;
+  std::expected<block_list, std::string> result;
   std::string warnings;
 };
 

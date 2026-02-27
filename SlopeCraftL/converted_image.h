@@ -7,7 +7,7 @@
 #include <Eigen/Dense>
 #include <MapImageCvter/MapImageCvter.h>
 #include <filesystem>
-#include <tl/expected.hpp>
+#include <expected>
 #include <memory>
 
 #include "SlopeCraftL.h"
@@ -72,7 +72,7 @@ class converted_image_impl : public converted_image {
 
   std::string save_cache(const std::filesystem::path &file) const noexcept;
 
-  [[nodiscard]] static tl::expected<converted_image_impl, std::string>
+  [[nodiscard]] static std::expected<converted_image_impl, std::string>
   load_cache(const color_table_impl &table,
              const std::filesystem::path &file) noexcept;
 

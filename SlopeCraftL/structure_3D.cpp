@@ -458,7 +458,7 @@ std::string structure_3D_impl::save_cache(
   return {};
 }
 
-tl::expected<structure_3D_impl, std::string> structure_3D_impl::load_cache(
+std::expected<structure_3D_impl, std::string> structure_3D_impl::load_cache(
     const std::filesystem::path &filename) noexcept {
   structure_3D_impl ret;
   try {
@@ -472,7 +472,7 @@ tl::expected<structure_3D_impl, std::string> structure_3D_impl::load_cache(
       bia(ret);
     }
   } catch (const std::exception &e) {
-    return tl::make_unexpected(std::format("Caught exception: {}", e.what()));
+    return std::unexpected(std::format("Caught exception: {}", e.what()));
   }
 
   return ret;

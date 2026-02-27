@@ -6,7 +6,6 @@ find_package(Eigen3 REQUIRED)
 find_package(Heu REQUIRED)
 find_package(Boost COMPONENTS iostreams OPTIONAL_COMPONENTS multi_array CONFIG REQUIRED)
 find_package(libzip REQUIRED)
-find_package(tl-expected REQUIRED)
 find_package(PNG REQUIRED)
 find_package(cereal REQUIRED)
 find_package(libnbt++ REQUIRED)
@@ -105,7 +104,6 @@ set(SlopeCraft_SCL_link_libs
     Boost::iostreams
     Boost::multi_array
     libzip::zip
-    tl::expected
     cereal::cereal
     nbt++
     ${SC_zstd_target_name})
