@@ -118,19 +118,18 @@ QVariant BLD_block_info_provider::value_of_attribute(
   auto bool_to_str = [](bool val) {
     if (val)
       return "Yes";
-    else
-      return "No";
+    return "No";
   };
   switch (index) {
     case 0: {  // version
       const auto ver = blk.getVersion();
-      if (ver < uint8_t(SCL_gameVersion::MC12)) {
+      if (ver < static_cast<uint8_t>(SCL_gameVersion::MIN_VALID)) {
         return tr("远古版本");
       }
-      if (ver > (uint8_t)SlopeCraft::SCL_maxAvailableVersion()) {
+      if (ver > static_cast<uint8_t>(SCL_gameVersion::MAX_VALID)) {
         return tr("未来版本");
       }
-      return QStringLiteral("1.%1").arg(int(ver));
+      return QStringLiteral("1.%1").arg(static_cast<int>(ver));
     }
     case 1:  // need glass
       return bool_to_str(blk.getNeedGlass());

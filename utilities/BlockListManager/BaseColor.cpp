@@ -136,7 +136,9 @@ void BaseColorWidget::finish_blocks() noexcept {
 
   for (int idx = 0; idx < (int)this->blocks.size(); idx++) {
     this->blocks[idx]->setDisabled(should_be_disabled(
-        idx, (SCL_gameVersion)this->blocks[idx]->attached_block()->getVersion(),
+        idx,
+        static_cast<SCL_gameVersion>(
+            this->blocks[idx]->attached_block()->getVersion()),
         this->blocks.size(), v));
   }
 }
@@ -169,7 +171,9 @@ void BaseColorWidget::when_version_updated(SCL_gameVersion v) noexcept {
 
   for (int idx = 0; idx < int(this->blocks.size()); idx++) {
     this->blocks[idx]->setDisabled(should_be_disabled(
-        idx, (SCL_gameVersion)this->blocks[idx]->attached_block()->getVersion(),
+        idx,
+        static_cast<SCL_gameVersion>(
+            this->blocks[idx]->attached_block()->getVersion()),
         this->blocks.size(), v));
   }
   if (this->basecolor == 0) {  // basecolor 0 (air) must be selected
@@ -202,8 +206,8 @@ int BaseColorWidget::prefered_block_idx(int checked_idx,
     int& score = scores[idx];
     score = 0;
 
-    const SCL_gameVersion blk_ver =
-        (SCL_gameVersion)this->blocks[idx]->attached_block()->getVersion();
+    const SCL_gameVersion blk_ver = static_cast<SCL_gameVersion>(
+        this->blocks[idx]->attached_block()->getVersion());
 
     if (blk_ver <= ver) {
       score = 100;

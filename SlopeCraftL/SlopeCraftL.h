@@ -530,7 +530,7 @@ SCL_EXPORT void SCL_preprocessImage(
 SCL_EXPORT bool SCL_haveTransparentPixel(const uint32_t *ARGB32,
                                          const uint64_t imageSize);
 
-SCL_EXPORT SCL_gameVersion SCL_maxAvailableVersion();
+[[deprecated]] SCL_EXPORT SCL_gameVersion SCL_maxAvailableVersion();
 
 SCL_EXPORT const char *SCL_getSCLVersion();
 

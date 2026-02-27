@@ -28,6 +28,8 @@ This file is part of SlopeCraft.
 #include <sstream>
 #include <span>
 
+#include <magic_enum/magic_enum.hpp>
+
 #include "BlockStateList.h"
 #include "ParseResourcePack.h"
 #include "Resource_tree.h"
@@ -342,10 +344,11 @@ void VCL_display_block_state_list(const VCL_block_state_list *bsl) {
        << (const char *)(pair.second.is_transparent() ? "true" : "false");
     ss << ", supported versions = [";
 
-    for (SCL_gameVersion v = SCL_gameVersion::MC12; v <= max_version;
-         v = SCL_gameVersion(int(v) + 1)) {
+    for (SCL_gameVersion v : magic_enum::enum_values<SCL_gameVersion>()) {
+      if (v > SCL_gameVersion::MAX_VALID or v < SCL_gameVersion::MIN_VALID)
+        continue;
       if (pair.second.version_info.match(v)) {
-        ss << int(v) << ',';
+        ss << static_cast<int>(v) << ',';
       }
     }
 

@@ -149,6 +149,10 @@ SCL_EXPORT SCL_gameVersion SCL_basecolor_version(uint8_t basecolor) {
 
 SCL_EXPORT uint8_t SCL_maxBaseColor() { return 61; }
 
+SCL_EXPORT SCL_gameVersion SCL_maxAvailableVersion() {
+  return SCL_gameVersion::MAX_VALID;
+}
+
 SCL_EXPORT color_table *SCL_create_color_table(
     const color_table_create_info &args) {
   auto opt = color_table_impl::create(args);

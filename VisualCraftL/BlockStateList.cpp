@@ -57,8 +57,9 @@ version_set parse_version_set(const nlohmann::json &jo,
   if (jo.is_number_unsigned()) {
     version_set ret;
 
-    for (SCL_gameVersion v = SCL_gameVersion(int(jo)); v <= max_version;
-         v = SCL_gameVersion(int(v) + 1)) {
+    for (SCL_gameVersion v : magic_enum::enum_values<SCL_gameVersion>()) {
+      if (v > SCL_gameVersion::MAX_VALID or v < SCL_gameVersion::MIN_VALID)
+        continue;
       ret[v] = true;
     }
 
@@ -78,9 +79,10 @@ version_set parse_version_set(const nlohmann::json &jo,
         break;
       }
 
-      SCL_gameVersion v = SCL_gameVersion(int(val));
+      const SCL_gameVersion v =
+          static_cast<SCL_gameVersion>(static_cast<int>(val));
 
-      if (v > max_version) {
+      if (v > SCL_gameVersion::MAX_VALID) {
         break;
       }
 
@@ -152,8 +154,8 @@ std::optional<VCL_block> parse_block(const nlohmann::json &jo) {
       int val = jaa[0];
       std::string idr = jaa[1];
       ret.id_replace_list.emplace_back(
-          std::make_pair<SCL_gameVersion, std::string>(SCL_gameVersion(val),
-                                                       std::move(idr)));
+          std::make_pair<SCL_gameVersion, std::string>(
+              static_cast<SCL_gameVersion>(val), std::move(idr)));
     }
   }
 

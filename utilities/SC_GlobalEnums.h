@@ -55,10 +55,11 @@ enum class SCL_gameVersion : int {
   /// 1.21
   MC21 = 21,
   /// future version
-  FUTURE = 255
-};
+  FUTURE = 255,
 
-constexpr SCL_gameVersion max_version = SCL_gameVersion::MC21;
+  MIN_VALID = MC12,
+  MAX_VALID = MC21,
+};
 
 /// color difference formula used to match colors
 enum class SCL_convertAlgo : char {
