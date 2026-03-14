@@ -24,6 +24,7 @@ This file is part of SlopeCraft.
 #include <ranges>
 #include <string>
 #include <unordered_map>
+#include <set>
 
 #include <process_block_id.h>
 #include "ParseResourcePack.h"
@@ -233,9 +234,9 @@ bool resource_json::parse_block_state(
   }
 
   const bool has_variant =
-      obj.contains("variants") && obj.at("variants").is_object();
+      obj.contains("variants") and obj.at("variants").is_object();
   const bool has_multipart =
-      obj.contains("multipart") && obj.at("multipart").is_array();
+      obj.contains("multipart") and obj.at("multipart").is_array();
 
   if (has_variant == has_multipart) {
     std::string msg = std::format(
@@ -475,6 +476,24 @@ std::variant<criteria, criteria_list_or_and, criteria_all_pass>
 parse_multipart_when(const njson &when) noexcept(false) {
   const bool is_or = when.contains("OR");
   const bool is_and = when.contains("AND");
+
+  auto parse_cr = [](auto it) -> criteria {
+    criteria cr;
+
+    if (it.value().is_boolean()) {
+      cr.key = it.key();
+      cr.values.emplace_back((it.value()) ? ("true") : ("false"));
+      return cr;
+    }
+    if (it.value().is_number_integer()) {
+      cr.key = it.key();
+      cr.values.emplace_back(std::to_string(it.value().get<int64_t>()));
+      return cr;
+    }
+    parse_single_criteria_split(it.key(), it.value().get<std::string>(), &cr);
+    return cr;
+  };
+
   if (is_or || is_and) {
     const njson &list_or_and = (is_or) ? (when.at("OR")) : (when.at("AND"));
     criteria_list_or_and when_or_and;
@@ -487,15 +506,7 @@ parse_multipart_when(const njson &when) noexcept(false) {
 
       for (auto it = list_or_and[idx].begin(); it != list_or_and[idx].end();
            ++it) {
-        criteria cr;
-        if (it.value().is_boolean()) {
-          cr.key = it.key();
-          cr.values.emplace_back((it.value()) ? ("true") : ("false"));
-
-        } else {
-          parse_single_criteria_split(it.key(), it.value().get<std::string>(),
-                                      &cr);
-        }
+        criteria cr = parse_cr(it);
         // const std::string &v_str = ;
         and_list.emplace_back(std::move(cr));
       }
@@ -511,12 +522,7 @@ parse_multipart_when(const njson &when) noexcept(false) {
 
     auto it = when.begin();
 
-    if (it.value().is_boolean()) {
-      cr.key = it.key();
-      cr.values.emplace_back((it.value()) ? ("true") : ("false"));
-    } else {
-      parse_single_criteria_split(it.key(), it.value().get<std::string>(), &cr);
-    }
+    cr = parse_cr(it);
 
     return cr;
   }
@@ -525,12 +531,7 @@ parse_multipart_when(const njson &when) noexcept(false) {
   for (auto it = when.begin(); it != when.end(); ++it) {
     criteria cr;
 
-    if (it.value().is_boolean()) {
-      cr.key = it.key();
-      cr.values.emplace_back((it.value()) ? ("true") : ("false"));
-    } else {
-      parse_single_criteria_split(it.key(), it.value().get<std::string>(), &cr);
-    }
+    cr = parse_cr(it);
     and_list.emplace_back(std::move(cr));
   }
 
@@ -587,6 +588,7 @@ bool parse_block_state_multipart(const njson::object_t &obj,
           "\nFatal error : failed to parse \"when\" for a multipart blockstate "
           "file. Details : {}\n",
           err.what());
+      ::VCL_report(VCL_report_type_t::error, msg.c_str());
       return false;
     }
 
@@ -1162,7 +1164,9 @@ bool resource_pack::add_block_models(
         }
 
         if (imgptr == nullptr) {
-          if (tface.texture.starts_with('#') && tmodel.second.is_inherited) {
+          if (tface.texture.starts_with('#')
+              // && tmodel.second.is_inherited
+          ) {
             // This model is considered to be abstract
             skip_this_model = true;
             continue;
@@ -1235,10 +1239,16 @@ bool resource_pack::add_block_states(
 
   this->block_states.reserve(this->block_states.size() + files->size());
 
+  const std::set<std::string> skip_files{"redstone_wire.json"};
+
   for (const auto &file : *files) {
     if (this->block_states.contains(file.first) && !on_conflict_replace_old) {
       continue;
     }
+    if (skip_files.contains(file.first)) {
+      continue;
+    }
+
     std::variant<resource_json::block_states_variant,
                  resource_json::block_state_multipart>
         bs;
