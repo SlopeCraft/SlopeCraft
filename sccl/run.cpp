@@ -271,7 +271,6 @@ void run(const inputs& task, bool build_dir_mode) {
   }();
 
   std::vector<std::unique_ptr<converted_image, deleter>> converted_images;
-  // for (const auto& [idx, img_path] : task.images | std::views::enumerate) {
   for (size_t idx = 0; idx < task.images.size(); idx++) {
     auto& img_path = task.images[idx];
     QImage img;
@@ -327,9 +326,6 @@ void run(const inputs& task, bool build_dir_mode) {
     int map_idx_counter =
         task.map_data_files_option.value_or(export_map_data_files_option{})
             .begin_index;
-    // for (const auto& [idx, pair] :
-    //      std::views::zip(task.images, converted_images) |
-    //          std::views::enumerate)
     for (size_t idx = 0; idx < task.images.size(); idx++) {
       const auto& raw_img_path = task.images[idx];
       const auto& converted_img = converted_images[idx];
@@ -410,9 +406,6 @@ void run(const inputs& task, bool build_dir_mode) {
       return;
     }
     size_t task_counter = 1;
-    // for (const auto& [idx, pair] :
-    //      std::views::zip(task.images, converted_images) |
-    //          std::views::enumerate)
     for (size_t idx = 0; idx < task.images.size(); idx++) {
       const auto& raw_img_path = task.images[idx];
       const auto& converted_img = converted_images[idx];

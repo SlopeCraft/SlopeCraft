@@ -271,7 +271,8 @@ void BlockBrowser::on_combobox_select_blk_all_currentIndexChanged(
   this->ui->tb_blockid_all->setText(VCL_get_block_id(blk));
   static const auto valid_versions = MCDataVersion::valid_major_versions();
 
-  for (auto [r, v] : valid_versions | std::views::enumerate) {
+  for (size_t r = 0; r < valid_versions.size(); r++) {
+    const auto v = valid_versions[r];
     //    const int r = v - 12;
     QTableWidgetItem* qtwi = this->ui->tw_version->item(r, 1);
     assert(qtwi != nullptr);
