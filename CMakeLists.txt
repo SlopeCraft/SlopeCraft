@@ -125,6 +125,22 @@ else ()
     add_compile_options(-Wall -Wreturn-type -Wsign-compare -Wextra)
 endif ()
 
+# Set resource location for differnet platform
+# SC_RESOURCE_DIR is the directory holding SlopeCraft's runtime resources,
+# relative to the working directory of the executable (which the apps set to
+# QCoreApplication::applicationDirPath()).
+if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    set(SlopeCraft_resource_dir ".")
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    # resources of a bundle live in SlopeCraft.app/Contents/Resources
+    set(SlopeCraft_resource_dir "../Resources")
+else ()
+    include(GNUInstallDirs)
+    # executables go to ${CMAKE_INSTALL_BINDIR}, resources to
+    # ${CMAKE_INSTALL_DATAROOTDIR}/SlopeCraft
+    set(SlopeCraft_resource_dir "../${CMAKE_INSTALL_DATAROOTDIR}/SlopeCraft")
+endif ()
+
 # Add global include dirs ----------------------------------------------------
 include_directories(${CMAKE_BINARY_DIR}/utilities)
 

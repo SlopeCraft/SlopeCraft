@@ -15,6 +15,7 @@ find_package(magic_enum REQUIRED)
 find_package(OpenMP REQUIRED)
 
 target_compile_features(sccl PRIVATE cxx_std_23)
+target_compile_definitions(sccl PRIVATE SC_RESOURCE_DIR="${SlopeCraft_resource_dir}")
 target_link_libraries(sccl PRIVATE
     SlopeCraftL
     Qt6::Core
@@ -30,12 +31,10 @@ target_include_directories(sccl PRIVATE
 )
 set_target_properties(sccl PROPERTIES
     VERSION ${PROJECT_VERSION}
-
-    # MACOSX_BUNDLE_ICON_FILE imageCutterIconNew.icns
     MACOSX_BUNDLE_GUI_IDENTIFIER "com.github.ToKiNoBug.SlopeCraft"
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE TRUE
+    MACOSX_BUNDLE FALSE
 )
 
 if (${WIN32})

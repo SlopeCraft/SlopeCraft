@@ -126,11 +126,8 @@ void canonicalize(inputs& task, bool build_dir_mode) {
 
 std::filesystem::path get_SCL_blocks_dir(bool build_dir_mode) {
   const std::filesystem::path SC_default_blocks_dir =
-#ifdef __linux__
-      "../share/SlopeCraft/Blocks_SCL";
-#else
-      "./Blocks_SCL";
-#endif
+      SC_RESOURCE_DIR "/Blocks_SCL";
+
   const std::filesystem::path dir = std::filesystem::canonical(
       std::filesystem::path{
         QCoreApplication::applicationDirPath().toStdString()} /

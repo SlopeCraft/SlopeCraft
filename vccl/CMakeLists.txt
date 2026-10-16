@@ -32,6 +32,7 @@ target_link_libraries(vccl PRIVATE
     VCLConfigLoader
     MCDataVersion
 )
+target_compile_definitions(vccl PRIVATE SC_RESOURCE_DIR="${SlopeCraft_resource_dir}")
 target_include_directories(vccl PRIVATE
     ${cli11_include_dir}
     ${SlopeCraft_Nlohmann_json_include_dir}
@@ -39,12 +40,10 @@ target_include_directories(vccl PRIVATE
 
 set_target_properties(vccl PROPERTIES
     VERSION ${PROJECT_VERSION}
-
-    # MACOSX_BUNDLE_ICON_FILE imageCutterIconNew.icns
     MACOSX_BUNDLE_GUI_IDENTIFIER "com.github.ToKiNoBug.SlopeCraft"
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE TRUE
+    MACOSX_BUNDLE FALSE
 )
 
 if (${WIN32})

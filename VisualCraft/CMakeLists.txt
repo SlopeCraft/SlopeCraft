@@ -95,6 +95,7 @@ target_link_libraries(VisualCraft PRIVATE
     MCDataVersion
 )
 
+target_compile_definitions(VisualCraft PRIVATE SC_RESOURCE_DIR="${SlopeCraft_resource_dir}")
 target_include_directories(VisualCraft PRIVATE ${SlopeCraft_Nlohmann_json_include_dir})
 
 set_target_properties(VisualCraft PROPERTIES

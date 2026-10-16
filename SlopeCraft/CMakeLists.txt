@@ -73,7 +73,7 @@ set(SlopeCraft_project_files
 add_executable(SlopeCraft
     ${SlopeCraft_project_files}
 )
-
+target_compile_definitions(SlopeCraft PRIVATE SC_RESOURCE_DIR="${SlopeCraft_resource_dir}")
 target_compile_features(SlopeCraft PRIVATE cxx_std_23)
 target_precompile_headers(SlopeCraft PRIVATE ${SlopeCraft_headers})
 

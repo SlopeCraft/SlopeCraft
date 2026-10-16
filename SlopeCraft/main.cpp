@@ -28,11 +28,7 @@ int main(int argc, char** argv) {
 
   const auto config = [&]() {
     const QString SC_default_blocks_dir =
-#ifdef __linux__
-        QStringLiteral("../share/SlopeCraft/Blocks_SCL");
-#else
-        QStringLiteral("./Blocks_SCL");
-#endif
+        QStringLiteral(SC_RESOURCE_DIR "/Blocks_SCL");
     app_config cfg;
     if (parser.isSet("build-dir-mode")) {
       cfg.blocks_dir_path = "../SCL_block_lists";

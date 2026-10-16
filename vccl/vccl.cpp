@@ -43,20 +43,18 @@ using std::cout, std::endl;
 
 bool validate_input(const inputs& input) noexcept;
 
-std::pair<std::filesystem::path, std::filesystem::path> get_VCL_config_path(bool build_dir_mode) {
+std::pair<std::filesystem::path, std::filesystem::path> get_VCL_config_path(
+    bool build_dir_mode) {
   constexpr char install_config_filename[] =
-#ifdef __linux__
-    "../share/SlopeCraft/vccl-config.json";
-#else
-  "./vccl-config.json";
-#endif
+      SC_RESOURCE_DIR "/vccl-config.json";
 
-  const QString app_location_dir = QDir{QCoreApplication::applicationDirPath()}.absolutePath();
+  const QString app_location_dir =
+      QDir{QCoreApplication::applicationDirPath()}.absolutePath();
 
   const auto dir = std::filesystem::path{app_location_dir.toLocal8Bit().data()};
 
-  const auto ret = canonical(dir /
-    (build_dir_mode ? "./vccl-config-build.json" : install_config_filename));
+  const auto ret = canonical(dir / (build_dir_mode ? "./vccl-config-build.json"
+                                                   : install_config_filename));
   return {dir, ret};
 }
 
@@ -77,41 +75,40 @@ int main(int argc, char** argv) {
   bool show_config{false};
   app.add_flag("--show-config,--sc", show_config,
                "Show buildtime configuration and exit.")
-     ->default_val(false);
+      ->default_val(false);
 
   // resource
   app.add_option("--resource-pack,--rp", input.zips, "Resource packs")
-     ->check(CLI::ExistingFile);
+      ->check(CLI::ExistingFile);
   app.add_option("--block-state-list,--bsl", input.jsons,
                  "Block state list json files")
-     ->check(CLI::ExistingFile);
+      ->check(CLI::ExistingFile);
 
   // colors
   std::string version_string{"MC19"};
   //  std::string version_string;
   app.add_option("--mcver", version_string, "MC version")
-     ->default_val("MC19")
-     ->check(CLI::Validator{
-       [](std::string& v_str) -> std::string {
-         const auto v_opt = magic_enum::enum_cast<SCL_gameVersion>(v_str);
-         std::string valid_versions{"["};
-         for (auto v : MCDataVersion::valid_major_versions()) {
-           std::format_to(std::back_inserter(valid_versions), "{}, ",
-                          magic_enum::enum_name(v));
-         }
-         valid_versions.pop_back();
-         valid_versions += "]";
-         if (not v_opt) {
-           return "Invalid version. Valid versions: " + valid_versions;
-         }
-         const auto v = v_opt.value();
-         if (v < SCL_gameVersion::MIN_VALID or v > SCL_gameVersion::MAX_VALID)
-           return "Invalid version. Valid versions: " + valid_versions;
+      ->default_val("MC19")
+      ->check(CLI::Validator{
+        [](std::string& v_str) -> std::string {
+          const auto v_opt = magic_enum::enum_cast<SCL_gameVersion>(v_str);
+          std::string valid_versions{"["};
+          for (auto v : MCDataVersion::valid_major_versions()) {
+            std::format_to(std::back_inserter(valid_versions), "{}, ",
+                           magic_enum::enum_name(v));
+          }
+          valid_versions.pop_back();
+          valid_versions += "]";
+          if (not v_opt) {
+            return "Invalid version. Valid versions: " + valid_versions;
+          }
+          const auto v = v_opt.value();
+          if (v < SCL_gameVersion::MIN_VALID or v > SCL_gameVersion::MAX_VALID)
+            return "Invalid version. Valid versions: " + valid_versions;
 
-         return "";
-       },
-       "Check if valid major MC version", "Major version validator"
-     });
+          return "";
+        },
+        "Check if valid major MC version", "Major version validator"});
 
   bool build_dir_mode{false};
   app.add_flag("--build-dir-mode", build_dir_mode,
@@ -119,118 +116,118 @@ int main(int argc, char** argv) {
                "development");
 
   app.add_option("--layers,--layer", input.layers, "Max layers")
-     ->default_val(1)
-     ->check(CLI::Range(1, 3, "Avaliable depth"));
+      ->default_val(1)
+      ->check(CLI::Range(1, 3, "Avaliable depth"));
   std::string __face;
   app.add_option("--face", __face, "Facing direction")
-     ->default_val("up")
-     ->check(CLI::IsMember({"up", "down", "north", "south", "east", "west"}));
+      ->default_val("up")
+      ->check(CLI::IsMember({"up", "down", "north", "south", "east", "west"}));
   std::string algo;
   app.add_option("--algo", algo, "Algorithm for conversion")
-     ->default_val("RGB")
-     ->check(
-       CLI::IsMember({"RGB", "RGB_Better", "HSV", "Lab94", "Lab00", "XYZ"}))
-     ->expected(1);
+      ->default_val("RGB")
+      ->check(
+          CLI::IsMember({"RGB", "RGB_Better", "HSV", "Lab94", "Lab00", "XYZ"}))
+      ->expected(1);
   std::string biome;
   app.add_option("--biome", biome, "The biome where a pixel art is placed.")
-     ->default_val("the_void")
-     ->check(CLI::IsMember(magic_enum::enum_names<VCL_biome_t>()))
-     ->expected(1);
+      ->default_val("the_void")
+      ->check(CLI::IsMember(magic_enum::enum_names<VCL_biome_t>()))
+      ->expected(1);
   app.add_flag("--leaves-transparent,--ltp", input.leaves_transparent)
-     ->default_val(false);
+      ->default_val(false);
 
   app.add_flag("--dither", input.dither,
                "Use Floyd-Steinberg dithering to improve the result of image "
                "conversion")
-     ->default_val(false);
+      ->default_val(false);
   app.add_flag("--show-num-color,--snc", input.show_color_num,
                "Show the number of colors")
-     ->default_val(false);
+      ->default_val(false);
 
   //  images
   app.add_option("--src-img,--simg,--img", input.images, "Images to convert")
-     ->check(CLI::ExistingFile);
+      ->check(CLI::ExistingFile);
 
   // exports
   app.add_option("--prefix", input.prefix, "Filename prefix of generate output")
-     ->default_val("./");
+      ->default_val("./");
   app.add_flag("--out-image,--oimg", input.make_converted_image,
                "Generate converted image")
-     ->default_val(false);
+      ->default_val(false);
   app.add_flag("--out-flag-diagram,--ofd", input.make_flat_diagram,
                "Generated flat diagram")
-     ->default_val(false);
+      ->default_val(false);
   app.add_option("--flat-diagram-splitline-margin-row,--fdslmr,--fdsmr",
                  input.flat_diagram_splitline_margin_row,
                  "Row margin of split line in flat diagram. Non positive "
                  "values indicates that no splitline is drawn.")
-     ->default_val(16);
+      ->default_val(16);
   app.add_option("--flat-diagram-splitline-margin-col,--fdslmc,--fdsmc",
                  input.flat_diagram_splitline_margin_col,
                  "Col margin of split line in flat diagram. Non negative "
                  "values indicates that no splitline is drawn.")
-     ->default_val(16);
+      ->default_val(16);
 
   app.add_flag("--litematic,--lite", input.make_litematic,
                "Export .litematic files for litematica mod")
-     ->default_val(false);
+      ->default_val(false);
   app.add_flag("--schematic,--schem", input.make_schematic,
                "Export .schem for World Edit mod")
-     ->default_val(false);
+      ->default_val(false);
   app.add_flag("--structure,--nbt", input.make_structure,
                "Export .nbt file for vanilla strcuture block")
-     ->default_val(false);
+      ->default_val(false);
   app.add_flag("--nbt-air-void,--nav", input.structure_is_air_void,
                "Represent air as structure void in vanilla structure")
-     ->default_val(true);
+      ->default_val(true);
 
   // compute
   app.add_flag("--benchmark", input.benchmark, "Display the performance data")
-     ->default_val(false);
+      ->default_val(false);
 
   app.add_option("--threads,-j", input.num_threads,
                  "CPU threads used to convert images")
-     ->check(CLI::PositiveNumber)
-     ->default_val(std::thread::hardware_concurrency());
+      ->check(CLI::PositiveNumber)
+      ->default_val(std::thread::hardware_concurrency());
 
   // gpu
   app.add_flag("--gpu", input.prefer_gpu, "Use gpu as much as possible")
-     ->default_val(is_gpu_accessible);
+      ->default_val(is_gpu_accessible);
 
   app.add_option("--platform", input.platform_idx, "The number of GPU platform")
-     ->default_val(0)
-     ->check(CLI::NonNegativeNumber);
+      ->default_val(0)
+      ->check(CLI::NonNegativeNumber);
   app.add_option("--device", input.device_idx,
                  "The number of GPU device on assigned platform")
-     ->default_val(0)
-     ->check(CLI::NonNegativeNumber);
+      ->default_val(0)
+      ->check(CLI::NonNegativeNumber);
   app.add_flag("--show-gpu", input.show_gpu)->default_val(false);
   app.add_flag("--list-gpu", input.list_gpu,
                "List all avaliable GPU platforms and devices and exit")
-     ->default_val(false);
+      ->default_val(false);
 
   // others
   app.add_flag("--disable-config", input.disable_config,
                "Disable default option provided by vccl-config.json")
-     ->default_val(false);
+      ->default_val(false);
   app.add_flag("--list-image-formats,--list-formats,--lif",
                input.list_supported_formats,
                "List all supported image formats and exit")
-     ->default_val(false);
+      ->default_val(false);
   app.add_flag("--list-blockstates,--list-blockstate,--lbs",
                input.list_blockstates,
                "List all blocks jsons in the resource pack.")
-     ->default_val(false);
+      ->default_val(false);
   app.add_flag("--list-models,--list-model,--lmd", input.list_models,
                "List all block models in the resource pack.")
-     ->default_val(false);
+      ->default_val(false);
   app.add_flag("--list-textures,--list-texture", input.list_textures,
                "List all textures in the resource pack.")
-     ->default_val(false);
+      ->default_val(false);
   app.add_flag("--export-test-litematic,--export-test-lite,--etl",
                input.export_test_lite,
                "Export a testing lite that contains all avaliable blocks.")
-     ->default_val(false);
+      ->default_val(false);
 
   CLI11_PARSE(app, argc, argv);
 
@@ -248,7 +245,7 @@ int main(int argc, char** argv) {
   }
 
   input.version = magic_enum::enum_cast<SCL_gameVersion>(version_string)
-    .value_or(SCL_gameVersion::MC19);
+                      .value_or(SCL_gameVersion::MC19);
 
   bool ok = true;
 
@@ -272,7 +269,8 @@ int main(int argc, char** argv) {
   }
   if (!input.disable_config) {
     VCL_config cfg;
-    const auto [app_location_dir,config_filename] = get_VCL_config_path(build_dir_mode);
+    const auto [app_location_dir, config_filename] =
+        get_VCL_config_path(build_dir_mode);
     std::cout << "config filename: " << config_filename << endl;
     if (not load_config(config_filename.string(), cfg)) {
       cout << "Failed to load config" << endl;
