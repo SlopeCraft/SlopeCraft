@@ -116,6 +116,19 @@ jobs:
       - name: CMake install
         run: cmake --install "$(pwd)/build"
 
+      - name: Show dynamic linking
+        run: |
+          for exe in \
+          install/SlopeCraft.app/Contents/MacOS/SlopeCraft \
+          install/SlopeCraft.app/Contents/MacOS/sccl \
+          install/VisualCraft.app/Contents/MacOS/VisualCraft \
+          install/VisualCraft.app/Contents/MacOS/vccl \
+          install/MapViewer.app/Contents/MacOS/MapViewer \
+          install/imageCutter.app/Contents/MacOS/imageCutter; do
+            echo "==================== $exe"
+            otool -L "$exe"
+          done
+
       - name: Make tar.xz packs with CPack
         run: |
           cd build
