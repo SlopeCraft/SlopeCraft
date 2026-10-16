@@ -10,17 +10,14 @@ gpu_wrapper::platform_wrapper* gpu_wrapper::platform_wrapper::create(
   return nullptr;
 }
 
-void gpu_wrapper::platform_wrapper::destroy(
-    gpu_wrapper::platform_wrapper*) noexcept {
-  return;
-}
+void gpu_wrapper::platform_wrapper::destroy(platform_wrapper*) noexcept {}
 
 gpu_wrapper::device_wrapper* gpu_wrapper::device_wrapper::create(
     platform_wrapper*, size_t, int*) noexcept {
   return nullptr;
 }
 
-void gpu_wrapper::device_wrapper::destroy(device_wrapper*) noexcept { return; }
+void gpu_wrapper::device_wrapper::destroy(device_wrapper*) noexcept {}
 
 gpu_wrapper::gpu_interface* gpu_wrapper::gpu_interface::create(
     platform_wrapper*, device_wrapper*) noexcept {
@@ -28,11 +25,11 @@ gpu_wrapper::gpu_interface* gpu_wrapper::gpu_interface::create(
 }
 
 gpu_wrapper::gpu_interface* gpu_wrapper::gpu_interface::create(
-    gpu_wrapper::platform_wrapper* pw, gpu_wrapper::device_wrapper* dw,
+    platform_wrapper*, device_wrapper*,
     std::pair<int, std::string>& err) noexcept {
   err.first = INT_MAX;
   err.second = "VisualCraft is built without any GPU api.";
   return nullptr;
 }
 
-void gpu_wrapper::gpu_interface::destroy(gpu_interface*) noexcept { return; }
+void gpu_wrapper::gpu_interface::destroy(gpu_interface*) noexcept {}

@@ -531,8 +531,7 @@ bool converted_image_impl::get_map_command(
     return false;
   }
 
-  auto item_of_location = [map_rows, map_cols, option](
-                              int r, int c) -> nbt::tag_compound {
+  auto item_of_location = [&](int r, int c) -> nbt::tag_compound {
     assert(r >= 0 and r < map_rows);
     assert(c >= 0 and c < map_cols);
     // Maps are placed in col-major

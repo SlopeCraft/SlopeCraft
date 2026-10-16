@@ -1221,7 +1221,7 @@ SCWind::load_selected_3D() noexcept {
   assert(taskp != nullptr);
 
   cvt_task& task = *taskp;
-  const ptrdiff_t index = &task - this->tasks.data();
+  const ptrdiff_t index [[maybe_unused]] = &task - this->tasks.data();
   assert(index >= 0 && index < ptrdiff_t(this->tasks.size()));
   if (!task.is_converted_with(this->current_color_table(),
                               this->current_convert_option())) {
