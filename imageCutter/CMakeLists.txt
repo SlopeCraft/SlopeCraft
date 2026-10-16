@@ -20,11 +20,11 @@ set(imageCutter_source_files
 
 set(imageCutter_windows_rc_files)
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     message("Configuring on Windows. Adding rc file to " ${PROJECT_NAME})
     configure_file(others/imageCutter.rc.in others/imageCutter.rc)
     set(imageCutter_windows_rc_files ${CMAKE_CURRENT_BINARY_DIR}/others/imageCutter.rc)
-endif()
+endif ()
 
 set(imageCutter_ts_files
     imageCutter_en_US.ts)
@@ -73,5 +73,3 @@ set_target_properties(imageCutter PROPERTIES
 )
 
 qt_finalize_executable(imageCutter)
-
-include(install.cmake)

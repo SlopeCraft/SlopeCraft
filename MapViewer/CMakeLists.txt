@@ -89,5 +89,3 @@ qt_add_resources(MapViewer "translations"
 )
 
 qt_finalize_executable(MapViewer)
-
-include(install.cmake)

@@ -36,8 +36,3 @@ SC_process_boolean(SlopeCraft_gprof)
 
 configure_file(SC_version_buildtime.h.in
     SC_version_buildtime.h)
-
-include(install.cmake)
-
-# add_subdirectory(libAbstractGUI)
-# add_subdirectory(libSCGUI)

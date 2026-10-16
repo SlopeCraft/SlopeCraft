@@ -1,13 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 project(vccl VERSION ${SlopeCraft_version} LANGUAGES CXX)
 
-set(vccl_win_sources)
-
-if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    configure_file(others/vccl.rc.in others/vccl.rc)
-    set(vccl_win_sources ${CMAKE_CURRENT_BINARY_DIR}/others/vccl.rc)
-endif ()
-
 configure_file(vccl-config-build.json.in vccl-config-build.json)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -24,8 +17,11 @@ add_executable(vccl
     vccl.cpp
     vccl_internal.h
     vccl_parse_default.cpp
-    ${vccl_win_sources}
 )
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    configure_file(others/vccl.rc.in ${CMAKE_CURRENT_BINARY_DIR}/others/vccl.rc)
+    target_sources(vccl PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/others/vccl.rc)
+endif ()
 
 target_link_libraries(vccl PRIVATE
     VisualCraftL
@@ -64,13 +60,5 @@ if (${MINGW})
     # Link this to fix std::print under mingw (gcc>=14)
     target_link_libraries(vccl PRIVATE stdc++exp)
 endif ()
-
-if (${LINUX})
-    set(VCL_ZIPS_PREFIX "../share/SlopeCraft/Blocks_VCL")
-else ()
-    set(VCL_ZIPS_PREFIX "./Blocks_VCL")
-endif ()
-
-include(install.cmake)
 
 include(add_test_vccl.cmake)

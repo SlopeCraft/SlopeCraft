@@ -157,7 +157,3 @@ set_target_properties(VisualCraftL PROPERTIES
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
 )
-
-include(install.cmake)
-
-# include(add_test_executables.cmake)

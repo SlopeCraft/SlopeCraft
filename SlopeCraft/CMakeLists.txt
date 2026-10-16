@@ -134,5 +134,3 @@ if (${WIN32})
         COMMENT "Create symlink to SlopeCraftL.dll for SlopeCraft.exe")
     add_dependencies(SC_create_all_symlinks SC_create_symlink_SC)
 endif ()
-
-include(install.cmake)

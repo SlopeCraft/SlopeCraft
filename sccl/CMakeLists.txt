@@ -52,5 +52,3 @@ if (${WIN32})
     )
     add_dependencies(SC_create_all_symlinks SC_create_symlink_SCCL)
 endif ()
-
-include(install.cmake)

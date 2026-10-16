@@ -134,11 +134,3 @@ if (${WIN32})
         COMMENT "Create symlink to VisualCraftL.dll for VisualCraft.exe")
     add_dependencies(SC_create_all_symlinks SC_create_symlink_VC)
 endif ()
-
-if (${LINUX})
-    set(VCL_ZIPS_PREFIX "../share/SlopeCraft/Blocks_VCL")
-else ()
-    set(VCL_ZIPS_PREFIX "./Blocks_VCL")
-endif ()
-
-include(install.cmake)

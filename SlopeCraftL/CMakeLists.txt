@@ -190,5 +190,3 @@ if (${WIN32})
     DLLD_add_deploy(SlopeCraftL BUILD_MODE)
     DLLD_add_deploy(test_scl_load_blocklist BUILD_MODE VERBOSE)
 endif ()
-
-include(install.cmake)
