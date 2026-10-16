@@ -9,8 +9,8 @@ on:
 
 jobs:
   clang:
-    # macos-15-intel is the Intel (x64) macOS 15 image.
-    runs-on: macos-15-intel
+    # macos-26-intel is the Intel (x64) macOS 26 image.
+    runs-on: macos-26-intel
     strategy:
       fail-fast: false
       matrix:
@@ -19,6 +19,11 @@ jobs:
       BUILD_TYPE: ${{ matrix.build_type }}
       # Vulkan is temporarily disabled on macOS.
       GPU_API: None
+      # Minimum macOS version the produced bundles must keep running on. The SDK of
+      # the image is much newer (macOS 26.x); pinning this keeps the output loadable
+      # on older systems instead of requiring macOS 26. Note this can hide newer
+      # libc++/API features behind availability guards.
+      MACOSX_DEPLOYMENT_TARGET: "15.0"
       HOMEBREW_NO_AUTO_UPDATE: 1
       HOMEBREW_NO_INSTALL_CLEANUP: 1
       HOMEBREW_NO_ENV_HINTS: 1
@@ -28,15 +33,15 @@ jobs:
           echo "BUILD_TYPE = $BUILD_TYPE"
           echo "GPU_API = $GPU_API"
           echo "runner arch = $(uname -m)"
+          echo "deployment target = $MACOSX_DEPLOYMENT_TARGET"
           brew config
 
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # GCC/clang formulae dropped their Intel bottles a while ago, so nothing here
-      # should be a compiler. The image ships Homebrew's llvm@18 (see the runner
-      # readme) and the rest of the deps still have x86_64 bottles.
-      # libomp: Apple's clang ships an OpenMP runtime, Homebrew's clang does not.
+      # Note: no compiler formula here. clang/clang++ come from the image's own
+      # toolchain, and gcc/clang Homebrew formulae have no Intel bottles left anyway.
+      # libomp: Apple clang's OpenMP runtime is separate from Homebrew's.
       - name: Install dependencies with Homebrew
         run: |
           brew install ninja libzip libpng zstd xz bzip2 boost cereal magic_enum xsimd eigen sevenzip libomp
@@ -53,8 +58,7 @@ jobs:
       - name: Show toolchain versions
         run: |
           echo "--- clang ---"
-          "$(brew --prefix llvm@18)/bin/clang++" --version || true
-          clang++ --version
+          /usr/bin/clang++ --version
           echo "--- cmake / ninja ---"
           cmake --version
           ninja --version
@@ -64,38 +68,53 @@ jobs:
           echo "--- qt ---"
           brew --prefix qt
           "$(brew --prefix qt)/bin/qmake6" -query QT_VERSION
+          echo "--- sdk ---"
+          xcrun --sdk macosx --show-sdk-path
 
       - name: Make directories
         run: mkdir -p build install pack
 
-      # LLVM clang from Homebrew, not Apple clang: Apple's toolchain lags behind on
-      # C++23 support, and this project needs cxx_std_23.
-      # Homebrew lives in /usr/local on x64 macOS.
+      # Apple clang from the image's Xcode/CommandLineTools, deliberately NOT
+      # Homebrew's llvm@18: llvm@18 ships libc++ 18, which lacks C++23 library
+      # features this project uses (e.g. std::views::enumerate, libc++ 19+).
+      # /usr/bin/clang++ follows the selected developer dir, so no Xcode version is
+      # hard-coded here.
       #
       # libomp is keg-only, so its prefix has to be on CMAKE_PREFIX_PATH.
       #
-      # CMAKE_OSX_SYSROOT must be given explicitly on CMake >= 4.0: it now defaults to
-      # empty (deferring the SDK choice to the compiler), which makes CMake treat the
-      # SDK's usr/include as an implicit *system* include dir. With Homebrew's libc++
-      # that shadows <stdint.h>, and every libc++ header then dies with
-      # "__uint32_t unknown type name" / "didn't find libc++'s <stdint.h> header".
+      # CMAKE_OSX_SYSROOT is spelled out because CMake >= 4.0 defaults it to empty,
+      # which has been observed to pull the SDK's usr/include in as an implicit
+      # system include dir and break libc++ headers.
+      #
+      # NOTE: every argument line below must end in a bare "\" -- a trailing space
+      # after the backslash silently breaks the continuation, drops the following
+      # arguments (e.g. CMAKE_BUILD_TYPE), and the failure then shows up far away,
+      # in cpack/make-packs.cmake.
       - name: CMake configure
         run: |
           LIBOMP_PREFIX="$(brew --prefix libomp)"
-          cmake -S . -B ./build -G Ninja \
-          -DCMAKE_C_COMPILER:FILEPATH="$(brew --prefix llvm@18)/bin/clang" \
-          -DCMAKE_CXX_COMPILER:FILEPATH="$(brew --prefix llvm@18)/bin/clang++" \
-          -DCMAKE_PREFIX_PATH:PATH="$LIBOMP_PREFIX;/usr/local" \
+          cmake -S . -B "$(pwd)/build" -G Ninja \
+          -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/clang \
+          -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/clang++ \
+          -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING="$MACOSX_DEPLOYMENT_TARGET" \
           -DCMAKE_OSX_SYSROOT:PATH="$(xcrun --sdk macosx --show-sdk-path)" \
+          -DCMAKE_PREFIX_PATH:PATH="$LIBOMP_PREFIX;/usr/local" \
           -DCMAKE_INSTALL_PREFIX:PATH="$(pwd)/install" \
           -DCMAKE_BUILD_TYPE:STRING="$BUILD_TYPE" \
           -DSlopeCraft_GPU_API:STRING="None"
+      # If FindOpenMP still fails with Apple clang, libomp is simply not on the
+      # driver's default search paths -- uncomment these:
+      #            -DOpenMP_C_FLAGS:STRING="-Xpreprocessor -fopenmp -I$LIBOMP_PREFIX/include" \
+      #            -DOpenMP_CXX_FLAGS:STRING="-Xpreprocessor -fopenmp -I$LIBOMP_PREFIX/include" \
+      #            -DOpenMP_C_LIB_NAMES:STRING=omp \
+      #            -DOpenMP_CXX_LIB_NAMES:STRING=omp \
+      #            -DOpenMP_omp_LIBRARY:FILEPATH="$LIBOMP_PREFIX/lib/libomp.dylib" \
 
       - name: CMake build
-        run: cmake --build ./build --parallel "$(sysctl -n hw.ncpu)"
+        run: cmake --build "$(pwd)/build" --parallel "$(sysctl -n hw.ncpu)"
 
       - name: CMake install
-        run: cmake --install ./build
+        run: cmake --install "$(pwd)/build"
 
       - name: Make tar.xz packs with CPack
         run: |

@@ -271,7 +271,9 @@ void run(const inputs& task, bool build_dir_mode) {
   }();
 
   std::vector<std::unique_ptr<converted_image, deleter>> converted_images;
-  for (const auto& [idx, img_path] : task.images | std::views::enumerate) {
+  // for (const auto& [idx, img_path] : task.images | std::views::enumerate) {
+  for (size_t idx = 0; idx < task.images.size(); idx++) {
+    auto& img_path = task.images[idx];
     QImage img;
     if (not img.load(QString::fromStdString(img_path.string()))) {
       throw std::runtime_error{
@@ -325,10 +327,12 @@ void run(const inputs& task, bool build_dir_mode) {
     int map_idx_counter =
         task.map_data_files_option.value_or(export_map_data_files_option{})
             .begin_index;
-    for (const auto& [idx, pair] :
-         std::views::zip(task.images, converted_images) |
-             std::views::enumerate) {
-      const auto& [raw_img_path, converted_img] = pair;
+    // for (const auto& [idx, pair] :
+    //      std::views::zip(task.images, converted_images) |
+    //          std::views::enumerate)
+    for (size_t idx = 0; idx < task.images.size(); idx++) {
+      const auto& raw_img_path = task.images[idx];
+      const auto& converted_img = converted_images[idx];
       if (task.converted_image_option) {
         QImage img{QSize{static_cast<int>(converted_img->cols()),
                          static_cast<int>(converted_img->rows())},
@@ -406,10 +410,13 @@ void run(const inputs& task, bool build_dir_mode) {
       return;
     }
     size_t task_counter = 1;
-    for (const auto& [idx, pair] :
-         std::views::zip(task.images, converted_images) |
-             std::views::enumerate) {
-      auto& [raw_img_path, converted_img] = pair;
+    // for (const auto& [idx, pair] :
+    //      std::views::zip(task.images, converted_images) |
+    //          std::views::enumerate)
+    for (size_t idx = 0; idx < task.images.size(); idx++) {
+      const auto& raw_img_path = task.images[idx];
+      const auto& converted_img = converted_images[idx];
+      // auto& [raw_img_path, converted_img] = pair;
       build_options build_opt{};
       build_opt.max_allowed_height = task.max_allowed_height;
       build_opt.bridge_interval = task.glass_bridge_interval;
