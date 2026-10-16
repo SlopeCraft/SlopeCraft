@@ -37,17 +37,11 @@ jobs:
       # On Apple Silicon every dependency below has an arm64 bottle, so nothing
       # here has to be built from source -- unlike the Intel job, where some of
       # these formulae have lost their x86_64 bottles.
-      # libomp: Apple's clang ships an OpenMP runtime, Homebrew's clang does not.
+      # libomp: the compiler below is Apple clang, whose OpenMP support lives in
+      # Homebrew's keg-only libomp -- Apple ships no OpenMP runtime.
       - name: Install dependencies with Homebrew
         run: |
           brew install ninja libzip libpng zstd xz bzip2 boost cereal magic_enum xsimd eigen sevenzip libomp
-
-      # Homebrew's default "llvm" formula, whatever version that currently is --
-      # no pinning. `brew install` is a no-op when the image already ships it and
-      # a normal (bottled) install otherwise, so the "$(brew --prefix llvm)" paths
-      # below are always valid.
-      - name: Install LLVM clang with Homebrew
-        run: brew install llvm
 
       # Qt is the one big dependency: if Homebrew ever stops offering an arm64
       # bottle for it, "brew install qt" would silently start compiling Qt from
@@ -59,10 +53,9 @@ jobs:
 
       - name: Show toolchain versions
         run: |
-          echo "--- clang ---"
-          "$(brew --prefix llvm)/bin/clang++" --version
-          echo "--- libc++ header directories (diagnostic) ---"
-          ls -l "/opt/homebrew/opt/llvm/include/c++/v1/string.h" || true
+          echo "--- clang (Apple, from the Xcode that ships with the image) ---"
+          clang++ --version
+          echo "--- libc++ (diagnostic) ---"
           ls -l "$(xcrun --show-sdk-path)/usr/include/c++/v1/string.h" || true
           echo "--- cmake / ninja ---"
           cmake --version
@@ -77,34 +70,41 @@ jobs:
       - name: Make directories
         run: mkdir -p build install pack
 
-      # LLVM clang from Homebrew, not Apple clang: Apple's toolchain lags behind on
-      # C++23 support, and this project needs cxx_std_23.
-      # Homebrew lives in /opt/homebrew on arm64 macOS.
+      # Apple clang, not Homebrew clang. The compiler, libc++ and the C library
+      # have to come from one vendor: Homebrew's clang brings libc++ 23, whose
+      # <cstring>/<cstdio>/... wrappers cannot find the C headers they forward to
+      # ("<cstring> tried including <string.h> but didn't find libc++'s <string.h>
+      # header"), and pointing those wrappers at the SDK's C headers only trades
+      # that failure for a worse one, because Apple's libc++ headers reject a
+      # foreign clang (their <cmath> collides with the isinf macro from the SDK's
+      # <math.h>). Apple's own toolchain has neither problem, and the image already
+      # ships it -- Xcode 26.6, whose libc++ carries the C++23 library this project
+      # uses (std::print, std::println, std::expected, std::format).
       #
-      # libc++: Homebrew's clang ships its own libc++ headers, and in LLVM 23 those
-      # <cstring>/<cstdio>/... wrappers no longer find the C headers they forward to
-      # (they are not in /opt/homebrew/opt/llvm/include/c++/v1 -- measuring it with
-      # -isystem changed nothing), so every wrapper dies with:
-      #   "error: <cstring> tried including <string.h> but didn't find libc++'s
-      #    <string.h> header."
-      # The macOS SDK carries a complete, self-consistent libc++ of its own, and it
-      # is the one Apple clang uses. Point the compiler at it and keep Homebrew's out
-      # of the C++ search path, so headers and the linked libc++ are the same
-      # library. The SDK path is asked of xcrun rather than hardcoded, so it does not
-      # depend on the installed Xcode version.
+      # -nostdinc++ plus the SDK's C++ directory spells out that the C++ standard
+      # library is Apple's, so a stray Homebrew -isystem cannot silently bring
+      # another libc++ back in. The SDK path is asked of xcrun rather than
+      # hardcoded, so nothing depends on the installed Xcode version.
+      #
+      # OpenMP is unaffected: CMake's FindOpenMP drives Apple clang's own
+      # -fopenmp support, which uses the libomp keg installed above.
       - name: CMake configure
         run: |
-          LLVM_PREFIX="$(brew --prefix llvm)"
           SDK_CXX_INCLUDE="$(xcrun --show-sdk-path)/usr/include/c++/v1"
           test -f "$SDK_CXX_INCLUDE/string.h"
           LIBCXX_FLAGS="-nostdinc++ -isystem $SDK_CXX_INCLUDE"
-          # One-shot check that this clang plus that libc++ actually compile the
-          # headers this project uses, before a long build gets a chance to fail.
-          printf '%s\n' '#include <cstring>' '#include <vector>' 'int main() { return 0; }' > /tmp/libcxx_probe.cpp
-          "$LLVM_PREFIX/bin/clang++" $LIBCXX_FLAGS -std=c++23 -fsyntax-only /tmp/libcxx_probe.cpp
+          # One-shot check of the two things that would waste a long build: the
+          # headers this project includes, and the C++23 library it relies on.
+          printf '%s\n' \
+            '#include <cstring>' \
+            '#include <format>' \
+            '#include <print>' \
+            '#include <expected>' \
+            'int main() { std::println("{}", 1); return 0; }' > /tmp/toolchain_probe.cpp
+          clang++ $LIBCXX_FLAGS -std=c++23 -fsyntax-only /tmp/toolchain_probe.cpp
           cmake -S . -B ./build -G Ninja \
-          -DCMAKE_C_COMPILER:FILEPATH="$LLVM_PREFIX/bin/clang" \
-          -DCMAKE_CXX_COMPILER:FILEPATH="$LLVM_PREFIX/bin/clang++" \
+          -DCMAKE_C_COMPILER:FILEPATH="$(xcrun --find clang)" \
+          -DCMAKE_CXX_COMPILER:FILEPATH="$(xcrun --find clang++)" \
           -DCMAKE_C_FLAGS:STRING="$LIBCXX_FLAGS" \
           -DCMAKE_CXX_FLAGS:STRING="$LIBCXX_FLAGS" \
           -DCMAKE_PREFIX_PATH:PATH="$(brew --prefix)" \
