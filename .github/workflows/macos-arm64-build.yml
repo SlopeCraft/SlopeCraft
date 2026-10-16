@@ -61,10 +61,9 @@ jobs:
         run: |
           echo "--- clang ---"
           "$(brew --prefix llvm)/bin/clang++" --version
-          echo "--- libc++ (diagnostic, temporary) ---"
-          ls -l "$(brew --prefix llvm)/include/c++/v1/string.h" \
-                "$(brew --prefix llvm)/include/c++/v1/cstring" || true
-          ls -d "$(brew --prefix llvm)"/include/c++/v1/*/ 2>/dev/null | head -n 30 || true
+          echo "--- libc++ header directories (diagnostic) ---"
+          ls -l "/opt/homebrew/opt/llvm/include/c++/v1/string.h" || true
+          ls -l "$(xcrun --show-sdk-path)/usr/include/c++/v1/string.h" || true
           echo "--- cmake / ninja ---"
           cmake --version
           ninja --version
@@ -82,35 +81,27 @@ jobs:
       # C++23 support, and this project needs cxx_std_23.
       # Homebrew lives in /opt/homebrew on arm64 macOS.
       #
-      # libc++: Homebrew's clang ships its own libc++ headers, whose <cstring>,
-      # <cstdio>, ... wrappers include libc++'s own <string.h>, <stdio.h>, ...
-      # CMake only puts the macOS SDK's /usr/include on the search path, so without
-      # the flags below those are the headers that get picked first and every
-      # libc++ wrapper fails with:
+      # libc++: Homebrew's clang ships its own libc++ headers, and in LLVM 23 those
+      # <cstring>/<cstdio>/... wrappers no longer find the C headers they forward to
+      # (they are not in /opt/homebrew/opt/llvm/include/c++/v1 -- measuring it with
+      # -isystem changed nothing), so every wrapper dies with:
       #   "error: <cstring> tried including <string.h> but didn't find libc++'s
       #    <string.h> header."
-      # Naming the compiler's own C++ header directory puts the C++ standard
-      # library headers ahead of the C ones, which is exactly what that error asks
-      # for. Apple clang needs none of this: its libc++ lives next to the C headers
-      # inside the SDK.
-      #
-      # Two forms are tried because the layout is the one thing that moves between
-      # LLVM releases. If the first one turns out not to help, the fix is to find
-      # libc++'s real header directory -- `"$(brew --prefix llvm)/bin/clang++" -E -v
-      # -x c++ /dev/null` prints the search list, and the "--- libc++ ---" line of
-      # the "Show toolchain versions" step reports what was found -- and pass that
-      # directory here instead, again as -isystem and again before any -I.
+      # The macOS SDK carries a complete, self-consistent libc++ of its own, and it
+      # is the one Apple clang uses. Point the compiler at it and keep Homebrew's out
+      # of the C++ search path, so headers and the linked libc++ are the same
+      # library. The SDK path is asked of xcrun rather than hardcoded, so it does not
+      # depend on the installed Xcode version.
       - name: CMake configure
         run: |
           LLVM_PREFIX="$(brew --prefix llvm)"
-          LIBOMP_PREFIX="$(brew --prefix libomp)"
-          LIBCXX_INCLUDE="$LLVM_PREFIX/include/c++/v1"
-          if [ -d "$LIBCXX_INCLUDE" ]; then
-            LIBCXX_FLAGS="-isystem $LIBCXX_INCLUDE"
-          else
-            echo "no C++ headers at $LIBCXX_INCLUDE, leaving the search path alone"
-            LIBCXX_FLAGS=""
-          fi
+          SDK_CXX_INCLUDE="$(xcrun --show-sdk-path)/usr/include/c++/v1"
+          test -f "$SDK_CXX_INCLUDE/string.h"
+          LIBCXX_FLAGS="-nostdinc++ -isystem $SDK_CXX_INCLUDE"
+          # One-shot check that this clang plus that libc++ actually compile the
+          # headers this project uses, before a long build gets a chance to fail.
+          printf '%s\n' '#include <cstring>' '#include <vector>' 'int main() { return 0; }' > /tmp/libcxx_probe.cpp
+          "$LLVM_PREFIX/bin/clang++" $LIBCXX_FLAGS -std=c++23 -fsyntax-only /tmp/libcxx_probe.cpp
           cmake -S . -B ./build -G Ninja \
           -DCMAKE_C_COMPILER:FILEPATH="$LLVM_PREFIX/bin/clang" \
           -DCMAKE_CXX_COMPILER:FILEPATH="$LLVM_PREFIX/bin/clang++" \
