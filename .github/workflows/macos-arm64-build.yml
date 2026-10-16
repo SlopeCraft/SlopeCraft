@@ -132,7 +132,7 @@ jobs:
           -DSlopeCraft_GPU_API:STRING="None"
 
       - name: CMake build
-        run: cmake --build ./build --parallel "$(sysctl -n hw.ncpu)"
+        run: cmake --build ./build --parallel
 
       - name: CMake install
         run: cmake --install ./build

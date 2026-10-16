@@ -111,7 +111,7 @@ jobs:
       #            -DOpenMP_omp_LIBRARY:FILEPATH="$LIBOMP_PREFIX/lib/libomp.dylib" \
 
       - name: CMake build
-        run: cmake --build "$(pwd)/build" --parallel "$(sysctl -n hw.ncpu)"
+        run: cmake --build "$(pwd)/build" --parallel
 
       - name: CMake install
         run: cmake --install "$(pwd)/build"
