@@ -53,7 +53,7 @@ jobs:
 
       - name: Install Vulkan with vcpkg
         if: matrix.gpu_api == 'Vulkan'
-        run: vcpkg install --triplet=x64-windows glslang[tools] vulkan-hpp vulkan-memory-allocator vulkan-loader
+        run: vcpkg install --triplet=x64-windows glslang[tools] vulkan-headers vulkan-memory-allocator vulkan-loader
 
       #      - name: Install winget
       #        if: matrix.gpu_api == 'Vulkan'
