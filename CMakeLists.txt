@@ -11,8 +11,9 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN TRUE)
 
 if (${LINUX})
-    message(STATUS "setting runpath for linux")
-    set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
+    include(GNUInstallDirs)
+    message(STATUS "setting rpath for linux")
+    set(CMAKE_INSTALL_RPATH "$ORIGIN/../${CMAKE_INSTALL_LIBDIR}")
 
     # set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
     # set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
