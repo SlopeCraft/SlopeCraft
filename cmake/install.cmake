@@ -10,9 +10,9 @@ set(SlopeCraft_readme_and_license_files
 file(GLOB SlopeCraft_install_presets
     "${PROJECT_SOURCE_DIR}/SlopeCraft/others/presets/*.sc_preset_json")
 # Actually these calls are only helpful for develop. just keep them here
-file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/SCL_block_lists)
+file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/SCL_block_lists)
 file(COPY ${SlopeCraft_install_presets}
-    DESTINATION ${CMAKE_BINARY_DIR}/SCL_block_lists/Presets)
+    DESTINATION ${PROJECT_BINARY_DIR}/SCL_block_lists/Presets)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     include(${CMAKE_CURRENT_LIST_DIR}/install_rules/windows.cmake)
@@ -37,15 +37,15 @@ install(FILES ${SlopeCraft_cpp_include_files}
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/SlopeCraft
 )
 
-include(${CMAKE_SOURCE_DIR}/cmake/add_compiler_path_to_prefix.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/add_compiler_path_to_prefix.cmake)
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
-    ${CMAKE_BINARY_DIR}/SlopeCraftConfigVersion.cmake
+    ${PROJECT_BINARY_DIR}/SlopeCraftConfigVersion.cmake
     VERSION ${PROJECT_VERSION}
     COMPATIBILITY AnyNewerVersion
 )
-install(FILES ${CMAKE_BINARY_DIR}/SlopeCraftConfigVersion.cmake
+install(FILES ${PROJECT_BINARY_DIR}/SlopeCraftConfigVersion.cmake
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/SlopeCraft
 )
 
@@ -54,12 +54,3 @@ install(EXPORT SlopeCraftTargets
     NAMESPACE SlopeCraft::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/SlopeCraft
 )
-
-if (${APPLE})
-    install(FILES ${SlopeCraft_readme_and_license_files}
-        DESTINATION .
-    )
-    return()
-endif ()
-
-#message(WARNING "No rule to install readme and license files. Unknown system name.")
