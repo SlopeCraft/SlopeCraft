@@ -1,0 +1,125 @@
+name: macOS (Apple Silicon) Build
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - dev
+      - macOS-CI
+
+jobs:
+  clang:
+    # macos-26 is the newest GitHub-hosted image that runs natively on Apple
+    # Silicon (arm64); "macos-26-intel" is the separate x64 label.
+    runs-on: macos-26
+    strategy:
+      fail-fast: false
+      matrix:
+        build_type: [ Debug, Release ]
+    env:
+      BUILD_TYPE: ${{ matrix.build_type }}
+      # Vulkan is temporarily disabled on macOS.
+      GPU_API: None
+      HOMEBREW_NO_AUTO_UPDATE: 1
+      HOMEBREW_NO_INSTALL_CLEANUP: 1
+      HOMEBREW_NO_ENV_HINTS: 1
+    steps:
+      - name: echo matrix variables (build_type = ${{ matrix.build_type }})
+        run: |
+          echo "BUILD_TYPE = $BUILD_TYPE"
+          echo "GPU_API = $GPU_API"
+          echo "runner arch = $(uname -m)"
+          brew config
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # On Apple Silicon every dependency below has an arm64 bottle, so nothing
+      # here has to be built from source -- unlike the Intel job, where some of
+      # these formulae have lost their x86_64 bottles.
+      # libomp: Apple's clang ships an OpenMP runtime, Homebrew's clang does not.
+      - name: Install dependencies with Homebrew
+        run: |
+          brew install ninja libzip libpng zstd xz bzip2 boost cereal magic_enum xsimd eigen sevenzip libomp
+
+      # Homebrew's default "llvm" formula, whatever version that currently is --
+      # no pinning. `brew install` is a no-op when the image already ships it and
+      # a normal (bottled) install otherwise, so the "$(brew --prefix llvm)" paths
+      # below are always valid.
+      - name: Install LLVM clang with Homebrew
+        run: brew install llvm
+
+      # Qt is the one big dependency: if Homebrew ever stops offering an arm64
+      # bottle for it, "brew install qt" would silently start compiling Qt from
+      # source (hours). In that case, unpack a prebuilt arm64 Qt instead -- the
+      # Qt company's official arm64 macOS package -- and put its prefix into
+      # CMAKE_PREFIX_PATH below. Keep an eye on the log of this step.
+      - name: Install Qt6 with Homebrew
+        run: brew install qt
+
+      - name: Show toolchain versions
+        run: |
+          echo "--- clang ---"
+          "$(brew --prefix llvm)/bin/clang++" --version
+          echo "--- cmake / ninja ---"
+          cmake --version
+          ninja --version
+          echo "--- openmp ---"
+          brew --prefix libomp
+          ls "$(brew --prefix libomp)/include/omp.h" "$(brew --prefix libomp)/lib/libomp.dylib"
+          echo "--- qt ---"
+          brew --prefix qt
+          "$(brew --prefix qt)/bin/qmake6" -query QT_VERSION
+
+      - name: Make directories
+        run: mkdir -p build install pack
+
+      # LLVM clang from Homebrew, not Apple clang: Apple's toolchain lags behind on
+      # C++23 support, and this project needs cxx_std_23.
+      # Homebrew lives in /opt/homebrew on arm64 macOS.
+      #
+      # libomp is keg-only: nothing about it is on the default search paths, and
+      # Homebrew's clang has no OpenMP runtime of its own. Both flags are needed:
+      #  - the prefix on CMAKE_PREFIX_PATH lets CMake's FindOpenMP locate omp.h and
+      #    libomp.dylib from the compiler's own "-fopenmp" probe;
+      #  - OpenMP_{C,CXX}_FLAGS makes every consumer actually compile/link against
+      #    that keg; without them clang's include of <omp.h> would still not resolve.
+      - name: CMake configure
+        run: |
+          cmake -S . -B ./build -G Ninja \
+          -DCMAKE_C_COMPILER:FILEPATH="$(brew --prefix llvm)/bin/clang" \
+          -DCMAKE_CXX_COMPILER:FILEPATH="$(brew --prefix llvm)/bin/clang++" \
+          -DCMAKE_PREFIX_PATH:PATH="$(brew --prefix)" \
+          -DCMAKE_INSTALL_PREFIX:PATH="$(pwd)/install" \
+          -DCMAKE_BUILD_TYPE:STRING="$BUILD_TYPE" \
+          -DSlopeCraft_GPU_API:STRING="None"
+      # LIBOMP_PREFIX="$(brew --prefix libomp)"
+      # -DCMAKE_PREFIX_PATH:PATH="$LIBOMP_PREFIX;$(brew --prefix)" \
+      #            -DOpenMP_C_FLAGS:STRING="-Xpreprocessor -fopenmp -I$LIBOMP_PREFIX/include" \
+      #            -DOpenMP_CXX_FLAGS:STRING="-Xpreprocessor -fopenmp -I$LIBOMP_PREFIX/include" \
+      #            -DOpenMP_C_LIB_NAMES:STRING=omp \
+      #            -DOpenMP_CXX_LIB_NAMES:STRING=omp \
+      #            -DOpenMP_omp_LIBRARY:FILEPATH="$LIBOMP_PREFIX/lib/libomp.dylib" \
+
+      - name: CMake build
+        run: cmake --build ./build --parallel "$(sysctl -n hw.ncpu)"
+
+      - name: CMake install
+        run: cmake --install ./build
+
+      - name: Make tar.xz packs with CPack
+        run: |
+          cd build
+          cpack -G TXZ -B ../pack
+          cd ..
+
+      - name: Get short SHA
+        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> "$GITHUB_ENV"
+
+      - name: Upload tar.xz pack
+        uses: actions/upload-artifact@v4
+        with:
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-None-macos-arm64-clang-tar-xz
+          path: pack/SlopeCraft*.tar.xz
+          if-no-files-found: error
+          compression-level: 0

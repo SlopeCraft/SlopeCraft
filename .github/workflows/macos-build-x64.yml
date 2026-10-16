@@ -72,27 +72,25 @@ jobs:
       # C++23 support, and this project needs cxx_std_23.
       # Homebrew lives in /usr/local on x64 macOS.
       #
-      # libomp is keg-only: nothing about it is on the default search paths, and
-      # Homebrew's clang has no OpenMP runtime of its own. Both flags are needed:
-      #  - the prefix on CMAKE_PREFIX_PATH lets CMake's FindOpenMP locate omp.h and
-      #    libomp.dylib from the compiler's own "-fopenmp" probe;
-      #  - OpenMP_{C,CXX}_FLAGS makes every consumer actually compile/link against
-      #    that keg; without them clang's include of <omp.h> would still not resolve.
+      # libomp is keg-only, so its prefix has to be on CMAKE_PREFIX_PATH.
+      #
+      # CMAKE_OSX_SYSROOT must be given explicitly on CMake >= 4.0: it now defaults to
+      # empty (deferring the SDK choice to the compiler), which makes CMake treat the
+      # SDK's usr/include as an implicit *system* include dir. With Homebrew's libc++
+      # that shadows <stdint.h>, and every libc++ header then dies with
+      # "__uint32_t unknown type name" / "didn't find libc++'s <stdint.h> header".
       - name: CMake configure
         run: |
-          LIBOMP_PREFIX="$(brew --prefix libomp)"
           cmake -S . -B ./build -G Ninja \
             -DCMAKE_C_COMPILER:FILEPATH="$(brew --prefix llvm@18)/bin/clang" \
             -DCMAKE_CXX_COMPILER:FILEPATH="$(brew --prefix llvm@18)/bin/clang++" \
-            -DCMAKE_PREFIX_PATH:PATH="$LIBOMP_PREFIX;/usr/local" \
+            -DCMAKE_OSX_SYSROOT:PATH="$(xcrun --sdk macosx --show-sdk-path)" \ 
+            -DCMAKE_PREFIX_PATH:PATH=/usr/local \
             -DCMAKE_INSTALL_PREFIX:PATH="$(pwd)/install" \
             -DCMAKE_BUILD_TYPE:STRING="$BUILD_TYPE" \
             -DSlopeCraft_GPU_API:STRING="None"
-      #            -DOpenMP_C_FLAGS:STRING="-Xpreprocessor -fopenmp -I$LIBOMP_PREFIX/include" \
-      #            -DOpenMP_CXX_FLAGS:STRING="-Xpreprocessor -fopenmp -I$LIBOMP_PREFIX/include" \
-      #            -DOpenMP_C_LIB_NAMES:STRING=omp \
-      #            -DOpenMP_CXX_LIB_NAMES:STRING=omp \
-      #            -DOpenMP_omp_LIBRARY:FILEPATH="$LIBOMP_PREFIX/lib/libomp.dylib" \
+
+      #          LIBOMP_PREFIX="$(brew --prefix libomp)"
 
       - name: CMake build
         run: cmake --build ./build --parallel "$(sysctl -n hw.ncpu)"
