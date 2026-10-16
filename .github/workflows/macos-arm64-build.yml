@@ -86,15 +86,25 @@ jobs:
       # another libc++ back in. The SDK path is asked of xcrun rather than
       # hardcoded, so nothing depends on the installed Xcode version.
       #
-      # OpenMP is unaffected: CMake's FindOpenMP drives Apple clang's own
-      # -fopenmp support, which uses the libomp keg installed above.
+      # OpenMP: Apple ships no OpenMP runtime, so the libomp keg installed above
+      # provides it -- and that keg is keg-only, which is why FindOpenMP has to be
+      # handed the paths instead of being left to guess. CMAKE_PREFIX_PATH does not
+      # help here: it serves find_package's package search, not the compiler's
+      # header search, so without these variables the probe compiles a file that
+      # includes <omp.h>, cannot find it, and reports
+      #   "Could NOT find OpenMP_C (missing: OpenMP_C_FLAGS OpenMP_C_LIB_NAMES)".
+      # -Xpreprocessor is needed because Apple clang does not accept plain -fopenmp
+      # as a driver flag of its own.
       - name: CMake configure
         run: |
           SDK_CXX_INCLUDE="$(xcrun --show-sdk-path)/usr/include/c++/v1"
           test -f "$SDK_CXX_INCLUDE/string.h"
           LIBCXX_FLAGS="-nostdinc++ -isystem $SDK_CXX_INCLUDE"
-          # One-shot check of the two things that would waste a long build: the
-          # headers this project includes, and the C++23 library it relies on.
+          LIBOMP_PREFIX="$(brew --prefix libomp)"
+          OPENMP_FLAGS="-Xpreprocessor -fopenmp -I${LIBOMP_PREFIX}/include"
+          OPENMP_LINK_FLAGS="-L${LIBOMP_PREFIX}/lib -lomp"
+          # One-shot checks of what would waste a long build: the C++23 library this
+          # project is written against, and the OpenMP keg CMake is about to search.
           printf '%s\n' \
             '#include <cstring>' \
             '#include <format>' \
@@ -102,11 +112,20 @@ jobs:
             '#include <expected>' \
             'int main() { std::println("{}", 1); return 0; }' > /tmp/toolchain_probe.cpp
           clang++ $LIBCXX_FLAGS -std=c++23 -fsyntax-only /tmp/toolchain_probe.cpp
+          printf '%s\n' '#include <omp.h>' 'int main() { return omp_get_max_threads(); }' > /tmp/openmp_probe.c
+          clang $OPENMP_FLAGS -fsyntax-only /tmp/openmp_probe.c
           cmake -S . -B ./build -G Ninja \
           -DCMAKE_C_COMPILER:FILEPATH="$(xcrun --find clang)" \
           -DCMAKE_CXX_COMPILER:FILEPATH="$(xcrun --find clang++)" \
           -DCMAKE_C_FLAGS:STRING="$LIBCXX_FLAGS" \
           -DCMAKE_CXX_FLAGS:STRING="$LIBCXX_FLAGS" \
+          -DOpenMP_C_FLAGS:STRING="$OPENMP_FLAGS" \
+          -DOpenMP_CXX_FLAGS:STRING="$OPENMP_FLAGS" \
+          -DOpenMP_C_LIB_NAMES:STRING=omp \
+          -DOpenMP_CXX_LIB_NAMES:STRING=omp \
+          -DOpenMP_omp_LIBRARY:FILEPATH="$LIBOMP_PREFIX/lib/libomp.dylib" \
+          -DOpenMP_C_LIBRARIES:STRING="$OPENMP_LINK_FLAGS" \
+          -DOpenMP_CXX_LIBRARIES:STRING="$OPENMP_LINK_FLAGS" \
           -DCMAKE_PREFIX_PATH:PATH="$(brew --prefix)" \
           -DCMAKE_INSTALL_PREFIX:PATH="$(pwd)/install" \
           -DCMAKE_BUILD_TYPE:STRING="$BUILD_TYPE" \
