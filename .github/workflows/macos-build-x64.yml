@@ -1,0 +1,100 @@
+name: macOS (x64) Build
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  clang:
+    # macos-15-intel is the Intel (x64) macOS 15 image.
+    runs-on: macos-15-intel
+    strategy:
+      fail-fast: false
+      matrix:
+        build_type: [ Debug, Release ]
+    env:
+      BUILD_TYPE: ${{ matrix.build_type }}
+      # Vulkan is temporarily disabled on macOS.
+      GPU_API: None
+      HOMEBREW_NO_AUTO_UPDATE: 1
+      HOMEBREW_NO_INSTALL_CLEANUP: 1
+      HOMEBREW_NO_ENV_HINTS: 1
+    steps:
+      - name: echo matrix variables (build_type = ${{ matrix.build_type }})
+        run: |
+          echo "BUILD_TYPE = $BUILD_TYPE"
+          echo "GPU_API = $GPU_API"
+          echo "runner arch = $(uname -m)"
+          brew config
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # GCC/clang formulae dropped their Intel bottles a while ago, so nothing here
+      # should be a compiler. The image ships Homebrew's llvm@18 (see the runner
+      # readme) and the rest of the deps still have x86_64 bottles.
+      - name: Install dependencies with Homebrew
+        run: |
+          brew install ninja libzip libpng zstd xz bzip2 boost cereal magic_enum xsimd eigen sevenzip
+
+      # Qt is the one big dependency: if Homebrew ever stops offering an x86_64
+      # bottle for it, "brew install qt" would silently start compiling Qt from
+      # source (hours). In that case, unpack a prebuilt x64 Qt instead -- either
+      # the "QtBinaries" release used by the other workflows, or the Qt company's
+      # official x64 macOS package -- and put its prefix into CMAKE_PREFIX_PATH
+      # below. Keep an eye on the log of this step.
+      - name: Install Qt6 with Homebrew
+        run: brew install qt
+
+      - name: Show toolchain versions
+        run: |
+          echo "--- clang ---"
+          "$(brew --prefix llvm@18)/bin/clang++" --version || true
+          clang++ --version
+          echo "--- cmake / ninja ---"
+          cmake --version
+          ninja --version
+          echo "--- qt ---"
+          brew --prefix qt
+          "$(brew --prefix qt)/bin/qmake6" -query QT_VERSION
+
+      - name: Make directories
+        run: mkdir -p build install pack
+
+      # LLVM clang from Homebrew, not Apple clang: Apple's toolchain lags behind on
+      # C++23 support, and this project needs cxx_std_23.
+      # Homebrew lives in /usr/local on x64 macOS.
+      - name: CMake configure
+        run: |
+          cmake -S . -B ./build -G Ninja \
+            -DCMAKE_C_COMPILER:FILEPATH="$(brew --prefix llvm@18)/bin/clang" \
+            -DCMAKE_CXX_COMPILER:FILEPATH="$(brew --prefix llvm@18)/bin/clang++" \
+            -DCMAKE_PREFIX_PATH:PATH="/usr/local" \
+            -DCMAKE_INSTALL_PREFIX:PATH="$(pwd)/install" \
+            -DCMAKE_BUILD_TYPE:STRING="$BUILD_TYPE" \
+            -DSlopeCraft_GPU_API:STRING="None"
+
+      - name: CMake build
+        run: cmake --build ./build --parallel "$(sysctl -n hw.ncpu)"
+
+      - name: CMake install
+        run: cmake --install ./build
+
+      - name: Make tar.xz packs with CPack
+        run: |
+          cd build
+          cpack -G TXZ -B ../pack
+          cd ..
+
+      - name: Get short SHA
+        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> "$GITHUB_ENV"
+
+      - name: Upload tar.xz pack
+        uses: actions/upload-artifact@v4
+        with:
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-None-macos-x64-clang-tar-xz
+          path: pack/SlopeCraft*.tar.xz
+          if-no-files-found: error
+          compression-level: 0
