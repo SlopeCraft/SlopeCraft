@@ -81,16 +81,16 @@ jobs:
       # "__uint32_t unknown type name" / "didn't find libc++'s <stdint.h> header".
       - name: CMake configure
         run: |
+          LIBOMP_PREFIX="$(brew --prefix libomp)"
           cmake -S . -B ./build -G Ninja \
             -DCMAKE_C_COMPILER:FILEPATH="$(brew --prefix llvm@18)/bin/clang" \
             -DCMAKE_CXX_COMPILER:FILEPATH="$(brew --prefix llvm@18)/bin/clang++" \
             -DCMAKE_OSX_SYSROOT:PATH="$(xcrun --sdk macosx --show-sdk-path)" \ 
-            -DCMAKE_PREFIX_PATH:PATH=/usr/local \
+            -DCMAKE_PREFIX_PATH:PATH="$LIBOMP_PREFIX;/usr/local" \
             -DCMAKE_INSTALL_PREFIX:PATH="$(pwd)/install" \
             -DCMAKE_BUILD_TYPE:STRING="$BUILD_TYPE" \
             -DSlopeCraft_GPU_API:STRING="None"
 
-      #          LIBOMP_PREFIX="$(brew --prefix libomp)"
 
       - name: CMake build
         run: cmake --build ./build --parallel "$(sysctl -n hw.ncpu)"

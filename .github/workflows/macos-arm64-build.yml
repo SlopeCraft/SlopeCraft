@@ -61,6 +61,10 @@ jobs:
         run: |
           echo "--- clang ---"
           "$(brew --prefix llvm)/bin/clang++" --version
+          echo "--- libc++ (diagnostic, temporary) ---"
+          ls -l "$(brew --prefix llvm)/include/c++/v1/string.h" \
+                "$(brew --prefix llvm)/include/c++/v1/cstring" || true
+          ls -d "$(brew --prefix llvm)"/include/c++/v1/*/ 2>/dev/null | head -n 30 || true
           echo "--- cmake / ninja ---"
           cmake --version
           ninja --version
@@ -78,28 +82,44 @@ jobs:
       # C++23 support, and this project needs cxx_std_23.
       # Homebrew lives in /opt/homebrew on arm64 macOS.
       #
-      # libomp is keg-only: nothing about it is on the default search paths, and
-      # Homebrew's clang has no OpenMP runtime of its own. Both flags are needed:
-      #  - the prefix on CMAKE_PREFIX_PATH lets CMake's FindOpenMP locate omp.h and
-      #    libomp.dylib from the compiler's own "-fopenmp" probe;
-      #  - OpenMP_{C,CXX}_FLAGS makes every consumer actually compile/link against
-      #    that keg; without them clang's include of <omp.h> would still not resolve.
+      # libc++: Homebrew's clang ships its own libc++ headers, whose <cstring>,
+      # <cstdio>, ... wrappers include libc++'s own <string.h>, <stdio.h>, ...
+      # CMake only puts the macOS SDK's /usr/include on the search path, so without
+      # the flags below those are the headers that get picked first and every
+      # libc++ wrapper fails with:
+      #   "error: <cstring> tried including <string.h> but didn't find libc++'s
+      #    <string.h> header."
+      # Naming the compiler's own C++ header directory puts the C++ standard
+      # library headers ahead of the C ones, which is exactly what that error asks
+      # for. Apple clang needs none of this: its libc++ lives next to the C headers
+      # inside the SDK.
+      #
+      # Two forms are tried because the layout is the one thing that moves between
+      # LLVM releases. If the first one turns out not to help, the fix is to find
+      # libc++'s real header directory -- `"$(brew --prefix llvm)/bin/clang++" -E -v
+      # -x c++ /dev/null` prints the search list, and the "--- libc++ ---" line of
+      # the "Show toolchain versions" step reports what was found -- and pass that
+      # directory here instead, again as -isystem and again before any -I.
       - name: CMake configure
         run: |
+          LLVM_PREFIX="$(brew --prefix llvm)"
+          LIBOMP_PREFIX="$(brew --prefix libomp)"
+          LIBCXX_INCLUDE="$LLVM_PREFIX/include/c++/v1"
+          if [ -d "$LIBCXX_INCLUDE" ]; then
+            LIBCXX_FLAGS="-isystem $LIBCXX_INCLUDE"
+          else
+            echo "no C++ headers at $LIBCXX_INCLUDE, leaving the search path alone"
+            LIBCXX_FLAGS=""
+          fi
           cmake -S . -B ./build -G Ninja \
-          -DCMAKE_C_COMPILER:FILEPATH="$(brew --prefix llvm)/bin/clang" \
-          -DCMAKE_CXX_COMPILER:FILEPATH="$(brew --prefix llvm)/bin/clang++" \
+          -DCMAKE_C_COMPILER:FILEPATH="$LLVM_PREFIX/bin/clang" \
+          -DCMAKE_CXX_COMPILER:FILEPATH="$LLVM_PREFIX/bin/clang++" \
+          -DCMAKE_C_FLAGS:STRING="$LIBCXX_FLAGS" \
+          -DCMAKE_CXX_FLAGS:STRING="$LIBCXX_FLAGS" \
           -DCMAKE_PREFIX_PATH:PATH="$(brew --prefix)" \
           -DCMAKE_INSTALL_PREFIX:PATH="$(pwd)/install" \
           -DCMAKE_BUILD_TYPE:STRING="$BUILD_TYPE" \
           -DSlopeCraft_GPU_API:STRING="None"
-      # LIBOMP_PREFIX="$(brew --prefix libomp)"
-      # -DCMAKE_PREFIX_PATH:PATH="$LIBOMP_PREFIX;$(brew --prefix)" \
-      #            -DOpenMP_C_FLAGS:STRING="-Xpreprocessor -fopenmp -I$LIBOMP_PREFIX/include" \
-      #            -DOpenMP_CXX_FLAGS:STRING="-Xpreprocessor -fopenmp -I$LIBOMP_PREFIX/include" \
-      #            -DOpenMP_C_LIB_NAMES:STRING=omp \
-      #            -DOpenMP_CXX_LIB_NAMES:STRING=omp \
-      #            -DOpenMP_omp_LIBRARY:FILEPATH="$LIBOMP_PREFIX/lib/libomp.dylib" \
 
       - name: CMake build
         run: cmake --build ./build --parallel "$(sysctl -n hw.ncpu)"
