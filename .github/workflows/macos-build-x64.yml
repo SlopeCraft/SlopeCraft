@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - dev
+      - macOS-CI
 
 jobs:
   clang:
@@ -35,9 +36,10 @@ jobs:
       # GCC/clang formulae dropped their Intel bottles a while ago, so nothing here
       # should be a compiler. The image ships Homebrew's llvm@18 (see the runner
       # readme) and the rest of the deps still have x86_64 bottles.
+      # libomp: Apple's clang ships an OpenMP runtime, Homebrew's clang does not.
       - name: Install dependencies with Homebrew
         run: |
-          brew install ninja libzip libpng zstd xz bzip2 boost cereal magic_enum xsimd eigen sevenzip
+          brew install ninja libzip libpng zstd xz bzip2 boost cereal magic_enum xsimd eigen sevenzip libomp
 
       # Qt is the one big dependency: if Homebrew ever stops offering an x86_64
       # bottle for it, "brew install qt" would silently start compiling Qt from
@@ -56,6 +58,9 @@ jobs:
           echo "--- cmake / ninja ---"
           cmake --version
           ninja --version
+          echo "--- openmp ---"
+          brew --prefix libomp
+          ls "$(brew --prefix libomp)/include/omp.h" "$(brew --prefix libomp)/lib/libomp.dylib"
           echo "--- qt ---"
           brew --prefix qt
           "$(brew --prefix qt)/bin/qmake6" -query QT_VERSION
@@ -66,15 +71,28 @@ jobs:
       # LLVM clang from Homebrew, not Apple clang: Apple's toolchain lags behind on
       # C++23 support, and this project needs cxx_std_23.
       # Homebrew lives in /usr/local on x64 macOS.
+      #
+      # libomp is keg-only: nothing about it is on the default search paths, and
+      # Homebrew's clang has no OpenMP runtime of its own. Both flags are needed:
+      #  - the prefix on CMAKE_PREFIX_PATH lets CMake's FindOpenMP locate omp.h and
+      #    libomp.dylib from the compiler's own "-fopenmp" probe;
+      #  - OpenMP_{C,CXX}_FLAGS makes every consumer actually compile/link against
+      #    that keg; without them clang's include of <omp.h> would still not resolve.
       - name: CMake configure
         run: |
+          LIBOMP_PREFIX="$(brew --prefix libomp)"
           cmake -S . -B ./build -G Ninja \
             -DCMAKE_C_COMPILER:FILEPATH="$(brew --prefix llvm@18)/bin/clang" \
             -DCMAKE_CXX_COMPILER:FILEPATH="$(brew --prefix llvm@18)/bin/clang++" \
-            -DCMAKE_PREFIX_PATH:PATH="/usr/local" \
+            -DCMAKE_PREFIX_PATH:PATH="$LIBOMP_PREFIX;/usr/local" \
             -DCMAKE_INSTALL_PREFIX:PATH="$(pwd)/install" \
             -DCMAKE_BUILD_TYPE:STRING="$BUILD_TYPE" \
             -DSlopeCraft_GPU_API:STRING="None"
+      #            -DOpenMP_C_FLAGS:STRING="-Xpreprocessor -fopenmp -I$LIBOMP_PREFIX/include" \
+      #            -DOpenMP_CXX_FLAGS:STRING="-Xpreprocessor -fopenmp -I$LIBOMP_PREFIX/include" \
+      #            -DOpenMP_C_LIB_NAMES:STRING=omp \
+      #            -DOpenMP_CXX_LIB_NAMES:STRING=omp \
+      #            -DOpenMP_omp_LIBRARY:FILEPATH="$LIBOMP_PREFIX/lib/libomp.dylib" \
 
       - name: CMake build
         run: cmake --build ./build --parallel "$(sysctl -n hw.ncpu)"
