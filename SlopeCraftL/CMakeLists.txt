@@ -87,7 +87,6 @@ target_include_directories(SlopeCraftL PRIVATE
 )
 
 set(SlopeCraft_SCL_link_libs
-    GAConverter
     ColorManip
     NBTWriter
     Schem

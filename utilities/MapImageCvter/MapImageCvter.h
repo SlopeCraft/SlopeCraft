@@ -31,11 +31,6 @@ This file is part of SlopeCraft.
 #include <memory>
 #include <exception>
 
-namespace GACvter {
-class GAConverter;
-void delete_GA_converter(GAConverter*) noexcept;
-}  // namespace GACvter
-
 namespace heu {
 struct GAOption;
 }
@@ -43,12 +38,6 @@ struct GAOption;
 namespace libMapImageCvt {
 
 class MapImageCvter : public ::libImageCvt::ImageCvter<true> {
- private:
-  using deleter_t = decltype([](GACvter::GAConverter* g) {
-    GACvter::delete_GA_converter(g);
-  });
-  std::unique_ptr<GACvter::GAConverter, deleter_t> gacvter;
-
  public:
   using Base_t = ::libImageCvt::ImageCvter<true>;
 
@@ -63,20 +52,20 @@ class MapImageCvter : public ::libImageCvt::ImageCvter<true> {
   ~MapImageCvter() = default;
 
   // override
-  void convert_image(const ::SCL_convertAlgo algo, bool dither,
-                     const heu::GAOption* const opt) noexcept;
+  // void convert_image(const ::SCL_convertAlgo algo, bool dither,
+  //                    const heu::GAOption* const opt) noexcept;
 
-  inline Eigen::ArrayXX<uint8_t> mapcolor_matrix() const noexcept {
+  [[nodiscard]] inline Eigen::ArrayXX<uint8_t> mapcolor_matrix() const noexcept {
     static_assert(
         std::is_same_v<uint8_t, typename ImageCvter<true>::colorid_t>);
     return this->color_id();
   }
 
-  inline Eigen::ArrayXX<uint8_t> basecolor_matrix() const noexcept {
+  [[nodiscard]] inline Eigen::ArrayXX<uint8_t> basecolor_matrix() const noexcept {
     return this->color_id() / 4;
   }
 
-  inline Eigen::ArrayXX<uint8_t> shade_matrix() const noexcept {
+  [[nodiscard]] inline Eigen::ArrayXX<uint8_t> shade_matrix() const noexcept {
     Eigen::ArrayXX<uint8_t> result = this->color_id();
     for (int64_t idx = 0; idx < result.size(); idx++) {
       result(idx) &= 0b11;

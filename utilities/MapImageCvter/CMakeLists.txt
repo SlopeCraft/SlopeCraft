@@ -15,7 +15,6 @@ target_include_directories(MapImageCvter PUBLIC
 
 target_link_libraries(MapImageCvter PUBLIC
     ColorManip
-    GAConverter
     OpenMP::OpenMP_CXX
     cereal::cereal)
 

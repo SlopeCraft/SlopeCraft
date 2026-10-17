@@ -4,7 +4,6 @@
 
 #include <format>
 #include <boost/uuid/detail/md5.hpp>
-#include <utilities/ExternalConverters/GAConverter/GAConverter.h>
 #include "SCLDefines.h"
 #include "SCL_translator.h"
 #include "converted_image.h"
@@ -29,16 +28,7 @@ converted_image* color_table_impl::convert_image(
                         : option.algo;
   cvted.converter.set_raw_image(original_img.data, original_img.rows,
                                 original_img.cols, false);
-  {
-    heu::GAOption opt;
-    opt.crossoverProb = option.ai_cvter_opt.crossoverProb;
-    opt.mutateProb = option.ai_cvter_opt.mutationProb;
-    opt.maxGenerations = option.ai_cvter_opt.maxGeneration;
-    opt.maxFailTimes = option.ai_cvter_opt.maxFailTimes;
-    opt.populationSize = option.ai_cvter_opt.popSize;
-
-    cvted.converter.convert_image(algo, option.dither, &opt);
-  }
+  cvted.converter.convert_image(algo, option.dither, false);
 
   option.progress.set_range(0, 4 * cvted.size(), 4 * cvted.size());
   option.ui.report_working_status(workStatus::none);

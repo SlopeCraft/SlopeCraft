@@ -197,7 +197,6 @@ SCL_EXPORT void SCL_get_map_count(size_t image_rows, size_t image_cols,
 }
 }
 
-#include <ExternalConverters/ExternalConverterStaticInterface.h>
 namespace SlopeCraft {
 Eigen::Map<const Eigen::ArrayXf> BasicRGB4External(int channel) {
   return Eigen::Map<const Eigen::ArrayXf>(
