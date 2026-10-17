@@ -145,7 +145,7 @@ jobs:
         run: |
           mkdir -p pack
           cd install
-          7z a -t7z -m0=lzma2 -mx=9 -ms=on -md=256m -mqs=on -mmt=on \
+          7z a -t7z -m0=lzma2 -mx=9 -ms=on -md=256m -mqs=on -mmt=on -snl \
             "../pack/SlopeCraft-${{ steps.project.outputs.version }}-macOS-Intel.7z" ./*
 
       - name: Get short SHA
