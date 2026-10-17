@@ -20,6 +20,7 @@ jobs:
       BUILD_TYPE: ${{ matrix.build_type }}
       # Vulkan is temporarily disabled on macOS.
       GPU_API: None
+      MACOSX_DEPLOYMENT_TARGET: "13.0"
       HOMEBREW_NO_AUTO_UPDATE: 1
       HOMEBREW_NO_INSTALL_CLEANUP: 1
       HOMEBREW_NO_ENV_HINTS: 1
@@ -66,6 +67,12 @@ jobs:
           echo "--- qt ---"
           brew --prefix qt
           "$(brew --prefix qt)/bin/qmake6" -query QT_VERSION
+          echo "--- qt deployment target (this is the real floor for the bundles) ---"
+          for fw in Core Gui Widgets Network; do
+            otool -l "$(brew --prefix qt)/lib/Qt${fw}.framework/Versions/A/Qt${fw}" 2>/dev/null \
+              | grep -A3 "LC_BUILD_VERSION" | grep -E "minos|sdk" \
+              | sed "s/^/Qt${fw}: /" || echo "Qt${fw}: no LC_BUILD_VERSION"
+          done
 
       - name: Make directories
         run: mkdir -p build install pack
@@ -95,8 +102,22 @@ jobs:
       #   "Could NOT find OpenMP_C (missing: OpenMP_C_FLAGS OpenMP_C_LIB_NAMES)".
       # -Xpreprocessor is needed because Apple clang does not accept plain -fopenmp
       # as a driver flag of its own.
+      #
+      # Deployment target: macOS 13.0, the lowest this can honestly be. Qt 6.11 --
+      # the Homebrew build these bundles will carry -- targets macOS 13 and states
+      # in its own documentation that lowering the deployment target below Qt's
+      # default "will likely lead to crashes at runtime" on the systems it was
+      # lowered for. A lower number here would only silence the compiler, not make
+      # the result run there, so the number is Qt's floor rather than a wish.
+      # (cmake/tool_chain_files/x86_64-mac-to-arm64-mac.cmake in this repo uses 12,
+      # which predates Qt 6.11 and is below what the shipped Qt supports.)
+      #
+      # It is applied through CMAKE_OSX_DEPLOYMENT_TARGET, which makes CMake add
+      # -mmacosx-version-min to every compile and link itself; the two probes below
+      # pass the same flag explicitly so they are judged on the same terms.
       - name: CMake configure
         run: |
+          DEPLOYMENT_FLAGS="-mmacosx-version-min=$MACOSX_DEPLOYMENT_TARGET"
           SDK_CXX_INCLUDE="$(xcrun --show-sdk-path)/usr/include/c++/v1"
           test -f "$SDK_CXX_INCLUDE/string.h"
           LIBCXX_FLAGS="-nostdinc++ -isystem $SDK_CXX_INCLUDE"
@@ -105,20 +126,24 @@ jobs:
           OPENMP_LINK_FLAGS="-L${LIBOMP_PREFIX}/lib -lomp"
           # One-shot checks of what would waste a long build: the C++23 library this
           # project is written against, and the OpenMP keg CMake is about to search.
+          # Both are checked at the deployment target below, so a C++23 header that
+          # needs a newer macOS fails here instead of deep inside the build.
           printf '%s\n' \
             '#include <cstring>' \
             '#include <format>' \
             '#include <print>' \
             '#include <expected>' \
             'int main() { std::println("{}", 1); return 0; }' > /tmp/toolchain_probe.cpp
-          clang++ $LIBCXX_FLAGS -std=c++23 -fsyntax-only /tmp/toolchain_probe.cpp
+          clang++ $LIBCXX_FLAGS $DEPLOYMENT_FLAGS -std=c++23 -fsyntax-only /tmp/toolchain_probe.cpp
           printf '%s\n' '#include <omp.h>' 'int main() { return omp_get_max_threads(); }' > /tmp/openmp_probe.c
-          clang $OPENMP_FLAGS -fsyntax-only /tmp/openmp_probe.c
+          clang $OPENMP_FLAGS $DEPLOYMENT_FLAGS -fsyntax-only /tmp/openmp_probe.c
           cmake -S . -B ./build -G Ninja \
           -DCMAKE_C_COMPILER:FILEPATH="$(xcrun --find clang)" \
           -DCMAKE_CXX_COMPILER:FILEPATH="$(xcrun --find clang++)" \
           -DCMAKE_C_FLAGS:STRING="$LIBCXX_FLAGS" \
           -DCMAKE_CXX_FLAGS:STRING="$LIBCXX_FLAGS" \
+          -DCMAKE_OSX_ARCHITECTURES:STRING=arm64 \
+          -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING="$MACOSX_DEPLOYMENT_TARGET" \
           -DOpenMP_C_FLAGS:STRING="$OPENMP_FLAGS" \
           -DOpenMP_CXX_FLAGS:STRING="$OPENMP_FLAGS" \
           -DOpenMP_C_LIB_NAMES:STRING=omp \
@@ -138,6 +163,7 @@ jobs:
         run: cmake --install ./build
 
       - name: Show dynamic linking
+        continue-on-error: true
         run: |
           for exe in \
           install/SlopeCraft.app/Contents/MacOS/SlopeCraft \
@@ -147,6 +173,8 @@ jobs:
           install/MapViewer.app/Contents/MacOS/MapViewer \
           install/imageCutter.app/Contents/MacOS/imageCutter; do
             echo "==================== $exe"
+            echo "--- minimum macOS required by this binary (LC_BUILD_VERSION) ---"
+            otool -l "$exe" 2>/dev/null | grep -A3 "LC_BUILD_VERSION" | grep -E "platform|minos|sdk" || true
             otool -L "$exe"
           done
 
