@@ -21,14 +21,10 @@ qt6_generate_deploy_app_script(
     DEPLOY_TOOL_OPTIONS ${SlopeCraft_macdeployqt_flags_install}
 )
 install(SCRIPT ${imageCutter_deploy_script})
-#QD_add_deployqt(imageCutter
-#    INSTALL_MODE INSTALL_DESTINATION .
-#    FLAGS ${SlopeCraft_macdeployqt_flags_install}
-#)
-#DylibD_add_deploy(imageCutter
-#    INSTALL_DESTINATION .
-#    RPATH_POLICY REPLACE
-#)
+DylibD_add_deploy(imageCutter
+    INSTALL_DESTINATION .
+    RPATH_POLICY REPLACE
+)
 RCS_add_codesign(imageCutter
     INSTALL_DESTINATION .
 )
@@ -39,6 +35,11 @@ install(TARGETS MapViewer
     RUNTIME DESTINATION .
     BUNDLE DESTINATION .
 )
+install(TARGETS SlopeCraftL
+    # MapViewer also links to SCL, but doesn't export. Secondary dev will use another SCL copy in SlopeCraft.app
+    RUNTIME DESTINATION MapViewer.app/Contents/Frameworks
+    LIBRARY DESTINATION MapViewer.app/Contents/Frameworks
+)
 file(GLOB MapViewer_Icon ${PROJECT_SOURCE_DIR}/MapViewer/others/MapViewer.icns)
 install(FILES ${MapViewer_Icon}
     DESTINATION MapViewer.app/Contents/Resources
@@ -47,16 +48,15 @@ qt6_generate_deploy_app_script(
     TARGET MapViewer
     OUTPUT_SCRIPT MapViewer_deploy_script
     NO_UNSUPPORTED_PLATFORM_ERROR
-    DEPLOY_TOOL_OPTIONS ${SlopeCraft_macdeployqt_flags_install}
+    DEPLOY_TOOL_OPTIONS
+    "-executable=MapViewer.app/Contents/Frameworks/$<TARGET_FILE_NAME:SlopeCraftL>"
+    ${SlopeCraft_macdeployqt_flags_install}
 )
 install(SCRIPT ${MapViewer_deploy_script})
-#QD_add_deployqt(MapViewer
-#    INSTALL_MODE INSTALL_DESTINATION .
-#    FLAGS ${SlopeCraft_macdeployqt_flags_install}
-#)
-#DylibD_add_deploy(MapViewer
-#    INSTALL_DESTINATION .
-#    RPATH_POLICY REPLACE)
+DylibD_add_deploy(MapViewer
+    INSTALL_DESTINATION .
+    RPATH_POLICY REPLACE
+)
 RCS_add_codesign(MapViewer
     INSTALL_DESTINATION .
 )
@@ -104,9 +104,10 @@ install(SCRIPT ${SlopeCraft_deploy_script})
 #    INSTALL_MODE INSTALL_DESTINATION .
 #    FLAGS ${SlopeCraft_macdeployqt_flags_install}
 #)
-#DylibD_add_deploy(SlopeCraft
-#    INSTALL_DESTINATION .
-#    RPATH_POLICY REPLACE)
+DylibD_add_deploy(SlopeCraft
+    INSTALL_DESTINATION .
+    RPATH_POLICY REPLACE
+)
 RCS_add_codesign(SlopeCraft
     INSTALL_DESTINATION .
 )
@@ -154,10 +155,10 @@ qt6_generate_deploy_app_script(
     ${SlopeCraft_macdeployqt_flags_install}
 )
 install(SCRIPT ${VisualCraft_deploy_script})
-#QD_add_deployqt(VisualCraft
-#    INSTALL_MODE INSTALL_DESTINATION .
-#    FLAGS ${SlopeCraft_macdeployqt_flags_install}
-#)
+DylibD_add_deploy(VisualCraft
+    INSTALL_DESTINATION .
+    RPATH_POLICY REPLACE
+)
 RCS_add_codesign(VisualCraft
     INSTALL_DESTINATION .
 )
