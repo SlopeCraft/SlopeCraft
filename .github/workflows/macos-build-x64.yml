@@ -129,19 +129,19 @@ jobs:
             otool -L "$exe"
           done
 
-      - name: Make tar.xz packs with CPack
+      - name: Make 7z packs with CPack
         run: |
           cd build
-          cpack -G TXZ -B ../pack
+          cpack -G 7Z -B ../pack
           cd ..
 
       - name: Get short SHA
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> "$GITHUB_ENV"
 
-      - name: Upload tar.xz pack
+      - name: Upload 7z pack
         uses: actions/upload-artifact@v5
         with:
-          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-None-macos-x64-clang-tar-xz
-          path: pack/SlopeCraft*.tar.xz
+          name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-None-macos-x64-clang-7z
+          path: pack/SlopeCraft*.7z
           if-no-files-found: error
           compression-level: 0
