@@ -88,9 +88,10 @@ install(FILES ${SlopeCraft_block_list_archives}
 install(FILES ${SlopeCraft_install_presets}
     DESTINATION SlopeCraft.app/Contents/Resources/Blocks_SCL/Presets
 )
-qt6_generate_deploy_script(
+qt6_generate_deploy_app_script(
     TARGET sccl
     OUTPUT_SCRIPT sccl_deploy_script
+    DEPLOY_TOOL_OPTIONS ${SlopeCraft_macdeployqt_flags_install}
 )
 qt6_generate_deploy_app_script(
     TARGET SlopeCraft
@@ -143,9 +144,10 @@ configure_file(${PROJECT_SOURCE_DIR}/vccl/vccl-config-install.json.in ${vccl_con
 install(FILES ${vc_config_file_location} ${vccl_config_file_location}
     DESTINATION VisualCraft.app/Contents/Resources
 )
-qt6_generate_deploy_script(
+qt6_generate_deploy_app_script(
     TARGET vccl
     OUTPUT_SCRIPT vccl_deploy_script
+    DEPLOY_TOOL_OPTIONS ${SlopeCraft_macdeployqt_flags_install}
 )
 qt6_generate_deploy_app_script(
     TARGET VisualCraft
