@@ -193,7 +193,7 @@ jobs:
       # Because Qt binaries are deployed 4 times
       - name: Make 7z pack
         run: |
-          mkdir pack
+          mkdir -p pack
           cd install
           7z a -t7z -m0=lzma2 -mx=9 -ms=on -md=256m -mqs=on -mmt=on \
             "../pack/SlopeCraft-${{ steps.project.outputs.version }}-macOS-Silicon.7z" ./*
