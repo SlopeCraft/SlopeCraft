@@ -64,7 +64,6 @@ target_link_libraries(MapViewer
 target_compile_features(MapViewer PRIVATE cxx_std_23)
 
 set_target_properties(MapViewer PROPERTIES
-    VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_ICON_FILE MapViewer.icns
     MACOSX_BUNDLE_GUI_IDENTIFIER "com.github.ToKiNoBug.SlopeCraft"
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}

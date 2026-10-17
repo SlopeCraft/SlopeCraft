@@ -99,8 +99,6 @@ target_compile_definitions(VisualCraft PRIVATE SC_RESOURCE_DIR="${SlopeCraft_res
 target_include_directories(VisualCraft PRIVATE ${SlopeCraft_Nlohmann_json_include_dir})
 
 set_target_properties(VisualCraft PROPERTIES
-    VERSION ${PROJECT_VERSION}
-
     MACOSX_BUNDLE_ICON_FILE VisualCraft.icns
     MACOSX_BUNDLE_GUI_IDENTIFIER "com.github.ToKiNoBug.SlopeCraft"
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}

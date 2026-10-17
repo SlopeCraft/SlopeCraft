@@ -38,14 +38,6 @@ target_include_directories(vccl PRIVATE
     ${SlopeCraft_Nlohmann_json_include_dir}
 )
 
-set_target_properties(vccl PROPERTIES
-    VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_GUI_IDENTIFIER "com.github.ToKiNoBug.SlopeCraft"
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE FALSE
-)
-
 if (${WIN32})
     add_custom_target(SC_create_symlink_VCCL
         COMMAND mklink VisualCraftL.dll "..\\VisualCraftL\\VisualCraftL.dll"

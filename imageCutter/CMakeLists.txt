@@ -63,7 +63,6 @@ target_link_libraries(imageCutter
     Qt6::Widgets)
 
 set_target_properties(imageCutter PROPERTIES
-    VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_ICON_FILE imageCutterIconNew.icns
     MACOSX_BUNDLE_GUI_IDENTIFIER "com.github.ToKiNoBug.SlopeCraft"
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}

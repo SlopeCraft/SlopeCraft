@@ -94,7 +94,6 @@ target_link_libraries(SlopeCraft PRIVATE
 target_include_directories(SlopeCraft PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 set_target_properties(SlopeCraft PROPERTIES
-    VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_ICON_FILE SlopeCraft.icns
     MACOSX_BUNDLE_GUI_IDENTIFIER "com.github.ToKiNoBug.SlopeCraft"
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
