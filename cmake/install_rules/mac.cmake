@@ -14,10 +14,16 @@ file(GLOB imageCutter_Icon
 install(FILES ${imageCutter_Icon}
     DESTINATION imageCutter.app/Contents/Resources
 )
-QD_add_deployqt(imageCutter
-    INSTALL_MODE INSTALL_DESTINATION .
-    FLAGS ${SlopeCraft_macdeployqt_flags_install}
+qt6_generate_deploy_app_script(
+    TARGET imageCutter
+    OUTPUT_SCRIPT imageCutter_deploy_script
+    DEPLOY_TOOL_OPTIONS ${SlopeCraft_macdeployqt_flags_install}
 )
+install(SCRIPT ${imageCutter_deploy_script})
+#QD_add_deployqt(imageCutter
+#    INSTALL_MODE INSTALL_DESTINATION .
+#    FLAGS ${SlopeCraft_macdeployqt_flags_install}
+#)
 #DylibD_add_deploy(imageCutter
 #    INSTALL_DESTINATION .
 #    RPATH_POLICY REPLACE
@@ -36,10 +42,16 @@ file(GLOB MapViewer_Icon ${PROJECT_SOURCE_DIR}/MapViewer/others/MapViewer.icns)
 install(FILES ${MapViewer_Icon}
     DESTINATION MapViewer.app/Contents/Resources
 )
-QD_add_deployqt(MapViewer
-    INSTALL_MODE INSTALL_DESTINATION .
-    FLAGS ${SlopeCraft_macdeployqt_flags_install}
+qt6_generate_deploy_app_script(
+    TARGET MapViewer
+    OUTPUT_SCRIPT MapViewer_deploy_script
+    DEPLOY_TOOL_OPTIONS ${SlopeCraft_macdeployqt_flags_install}
 )
+install(SCRIPT ${MapViewer_deploy_script})
+#QD_add_deployqt(MapViewer
+#    INSTALL_MODE INSTALL_DESTINATION .
+#    FLAGS ${SlopeCraft_macdeployqt_flags_install}
+#)
 #DylibD_add_deploy(MapViewer
 #    INSTALL_DESTINATION .
 #    RPATH_POLICY REPLACE)
@@ -63,10 +75,6 @@ install(TARGETS SlopeCraftL
     RUNTIME DESTINATION SlopeCraft.app/Contents/Frameworks
     LIBRARY DESTINATION SlopeCraft.app/Contents/Frameworks
 )
-QD_add_deployqt(SlopeCraft
-    INSTALL_MODE INSTALL_DESTINATION .
-    FLAGS ${SlopeCraft_macdeployqt_flags_install}
-)
 set(SlopeCraft_Icon ${PROJECT_SOURCE_DIR}/SlopeCraft/others/SlopeCraftIconNew.icns)
 install(FILES ${SlopeCraft_Icon}
     DESTINATION SlopeCraft.app/Contents/Resources
@@ -80,6 +88,22 @@ install(FILES ${SlopeCraft_block_list_archives}
 install(FILES ${SlopeCraft_install_presets}
     DESTINATION SlopeCraft.app/Contents/Resources/Blocks_SCL/Presets
 )
+qt6_generate_deploy_script(
+    TARGET sccl
+    OUTPUT_SCRIPT sccl_deploy_script
+    DEPLOY_TOOL_OPTIONS ${SlopeCraft_macdeployqt_flags_install}
+)
+qt6_generate_deploy_app_script(
+    TARGET SlopeCraft
+    OUTPUT_SCRIPT SlopeCraft_deploy_script
+    DEPLOY_TOOL_OPTIONS ${SlopeCraft_macdeployqt_flags_install}
+)
+install(SCRIPT ${sccl_deploy_script})
+install(SCRIPT ${SlopeCraft_deploy_script})
+#QD_add_deployqt(SlopeCraft
+#    INSTALL_MODE INSTALL_DESTINATION .
+#    FLAGS ${SlopeCraft_macdeployqt_flags_install}
+#)
 #DylibD_add_deploy(SlopeCraft
 #    INSTALL_DESTINATION .
 #    RPATH_POLICY REPLACE)
@@ -120,10 +144,22 @@ configure_file(${PROJECT_SOURCE_DIR}/vccl/vccl-config-install.json.in ${vccl_con
 install(FILES ${vc_config_file_location} ${vccl_config_file_location}
     DESTINATION VisualCraft.app/Contents/Resources
 )
-QD_add_deployqt(VisualCraft
-    INSTALL_MODE INSTALL_DESTINATION .
-    FLAGS ${SlopeCraft_macdeployqt_flags_install}
+qt6_generate_deploy_script(
+    TARGET vccl
+    OUTPUT_SCRIPT vccl_deploy_script
+    DEPLOY_TOOL_OPTIONS ${SlopeCraft_macdeployqt_flags_install}
 )
+qt6_generate_deploy_app_script(
+    TARGET VisualCraft
+    OUTPUT_SCRIPT VisualCraft_deploy_script
+    DEPLOY_TOOL_OPTIONS ${SlopeCraft_macdeployqt_flags_install}
+)
+install(SCRIPT ${vccl_deploy_script})
+install(SCRIPT ${VisualCraft_deploy_script})
+#QD_add_deployqt(VisualCraft
+#    INSTALL_MODE INSTALL_DESTINATION .
+#    FLAGS ${SlopeCraft_macdeployqt_flags_install}
+#)
 RCS_add_codesign(VisualCraft
     INSTALL_DESTINATION .
 )
