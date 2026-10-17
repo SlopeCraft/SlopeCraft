@@ -19,6 +19,11 @@ if (${LINUX})
     # set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 endif ()
 
+if (${APPLE})
+    # In macos bundle, SCL and VCL are referenced as @rpath form. But hopes @loader_path to keep bundle redistributable
+    set(CMAKE_INSTALL_RPATH "@loader_path/../Frameworks")
+endif ()
+
 enable_testing()
 
 # configure options -----------------------------------------------------------
