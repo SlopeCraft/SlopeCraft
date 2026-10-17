@@ -51,7 +51,6 @@ SCL_convertAlgo str_to_algo(std::string_view str, bool& ok) noexcept {
   VCCL_PRIVATE_MACRO_MAKE_CASE(Lab94);
   VCCL_PRIVATE_MACRO_MAKE_CASE(Lab00);
   VCCL_PRIVATE_MACRO_MAKE_CASE(XYZ);
-  VCCL_PRIVATE_MACRO_MAKE_CASE(gaCvter);
 
   return {};
 }

@@ -57,15 +57,6 @@ using gameVersion = ::SCL_gameVersion;
 using workStatus = ::SCL_workStatus;
 using errorFlag = ::SCL_errorFlag;
 
-struct GA_converter_option {
-  uint64_t caller_api_version{SC_VERSION_U64};
-  size_t popSize{50};
-  size_t maxGeneration{200};
-  size_t maxFailTimes{50};
-  double crossoverProb{0.8};
-  double mutationProb{0.01};
-};
-
 /// struct to deliver string via ABI
 struct string_deliver {
   string_deliver() = default;
@@ -247,7 +238,6 @@ struct convert_option {
   uint64_t caller_api_version{SC_VERSION_U64};
   SCL_convertAlgo algo{SCL_convertAlgo::RGB_Better};
   bool dither{false};
-  GA_converter_option ai_cvter_opt{};
   progress_callbacks progress{};
   ui_callbacks ui{};
 };

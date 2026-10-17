@@ -90,50 +90,6 @@ SCL_EXPORT void SCL_destroy_block_list(block_list_interface* bli) {
   delete bli;
 }
 
-SCL_EXPORT GA_converter_option* SCL_createAiCvterOpt() {
-  return new GA_converter_option;
-}
-void SCL_EXPORT SCL_destroyAiCvterOpt(GA_converter_option* a) { delete a; }
-
-void SCL_EXPORT SCL_setPopSize(GA_converter_option* a, unsigned int p) {
-  a->popSize = p;
-}
-void SCL_EXPORT SCL_setMaxGeneration(GA_converter_option* a, unsigned int p) {
-  a->maxGeneration = p;
-}
-void SCL_EXPORT SCL_setMaxFailTimes(GA_converter_option* a, unsigned int p) {
-  a->maxFailTimes = p;
-}
-void SCL_EXPORT SCL_setCrossoverProb(GA_converter_option* a, double p) {
-  a->crossoverProb = p;
-}
-void SCL_EXPORT SCL_setMutationProb(GA_converter_option* a, double p) {
-  a->mutationProb = p;
-}
-
-unsigned int SCL_EXPORT SCL_getPopSize(const GA_converter_option* a) {
-  return a->popSize;
-}
-unsigned int SCL_EXPORT SCL_getMaxGeneration(const GA_converter_option* a) {
-  return a->maxGeneration;
-}
-unsigned int SCL_EXPORT SCL_getMaxFailTimes(const GA_converter_option* a) {
-  return a->maxFailTimes;
-}
-double SCL_EXPORT SCL_getCrossoverProb(const GA_converter_option* a) {
-  return a->crossoverProb;
-}
-double SCL_EXPORT SCL_getMutationProb(const GA_converter_option* a) {
-  return a->mutationProb;
-}
-
-// SCL_EXPORT void SCL_getColorMapPtrs(const float **const rdata,
-//                                     const float **const gdata,
-//                                     const float **const bdata,
-//                                     const uint8_t **mapdata, int *num) {
-//   TokiSlopeCraft::getColorMapPtrs(rdata, gdata, bdata, mapdata, num);
-// }
-
 SCL_EXPORT const char* SCL_getSCLVersion() { return SC_VERSION_STR; }
 
 SCL_EXPORT SCL_gameVersion SCL_basecolor_version(uint8_t basecolor) {

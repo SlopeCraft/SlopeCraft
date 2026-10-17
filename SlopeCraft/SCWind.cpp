@@ -426,9 +426,6 @@ SCL_convertAlgo SCWind::selected_algo() const noexcept {
   if (this->ui->rb_algo_XYZ->isChecked()) {
     return SCL_convertAlgo::XYZ;
   }
-  if (this->ui->rb_algo_GACvter->isChecked()) {
-    return SCL_convertAlgo::gaCvter;
-  }
   return SCL_convertAlgo::RGB_Better;
   // return {};
 }
@@ -620,7 +617,7 @@ std::array<QRadioButton*, 4> SCWind::preset_buttons_no_custom() noexcept {
 #define SC_SLOPECRAFT_PRIVATEMARCO_ALGO_BUTTONS         \
   {this->ui->rb_algo_RGB,   this->ui->rb_algo_RGB_plus, \
    this->ui->rb_algo_Lab94, this->ui->rb_algo_Lab00,    \
-   this->ui->rb_algo_XYZ,   this->ui->rb_algo_GACvter}
+   this->ui->rb_algo_XYZ}
 
 std::array<const QRadioButton*, 6> SCWind::algo_buttons() const noexcept {
   return SC_SLOPECRAFT_PRIVATEMARCO_ALGO_BUTTONS;
@@ -715,7 +712,6 @@ SlopeCraft::convert_option SCWind::current_convert_option() noexcept {
     .caller_api_version = SC_VERSION_U64,
     .algo = this->selected_algo(),
     .dither = this->is_dither_selected(),
-    .ai_cvter_opt = this->GA_option,
     .progress = progress_callback(this->ui->pbar_cvt),
     .ui = this->ui_callbacks(),
   };

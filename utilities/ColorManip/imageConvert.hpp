@@ -169,9 +169,6 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
 
   bool convert_image(::SCL_convertAlgo algo_, bool dither_,
                      bool try_gpu = false) noexcept {
-    if (algo_ == ::SCL_convertAlgo::gaCvter) {
-      algo_ = ::SCL_convertAlgo::RGB_Better;
-    }
     this->dither = dither_;
 
     ui.rangeSet(0, 100, 0);
@@ -548,7 +545,6 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
     switch (algo) {
       case ::SCL_convertAlgo::RGB:
       case ::SCL_convertAlgo::RGB_Better:
-      case ::SCL_convertAlgo::gaCvter:
         return RGB2ARGB(c0, c1, c2);
       case ::SCL_convertAlgo::HSV:
         return HSV2ARGB(c0, c1, c2);

@@ -385,7 +385,7 @@
              <x>0</x>
              <y>0</y>
              <width>740</width>
-             <height>614</height>
+             <height>613</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="vlayout_sa_blocklist"/>
@@ -583,17 +583,17 @@
            <string>转化算法</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_9">
-           <item row="6" column="0">
-            <widget class="QCheckBox" name="cb_algo_dither">
+           <item row="4" column="0">
+            <widget class="QRadioButton" name="rb_algo_XYZ">
              <property name="text">
-              <string>抖动</string>
+              <string notr="true">XYZ</string>
              </property>
             </widget>
            </item>
-           <item row="3" column="0">
-            <widget class="QRadioButton" name="rb_algo_Lab00">
+           <item row="5" column="0">
+            <widget class="QCheckBox" name="cb_algo_dither">
              <property name="text">
-              <string notr="true">Lab00</string>
+              <string>抖动</string>
              </property>
             </widget>
            </item>
@@ -601,6 +601,13 @@
             <widget class="QRadioButton" name="rb_algo_Lab94">
              <property name="text">
               <string notr="true">Lab94</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QRadioButton" name="rb_algo_RGB">
+             <property name="text">
+              <string notr="true">RGB</string>
              </property>
             </widget>
            </item>
@@ -614,24 +621,10 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="0">
-            <widget class="QRadioButton" name="rb_algo_RGB">
+           <item row="3" column="0">
+            <widget class="QRadioButton" name="rb_algo_Lab00">
              <property name="text">
-              <string notr="true">RGB</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="0">
-            <widget class="QRadioButton" name="rb_algo_XYZ">
-             <property name="text">
-              <string notr="true">XYZ</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0">
-            <widget class="QRadioButton" name="rb_algo_GACvter">
-             <property name="text">
-              <string notr="true">GACvter</string>
+              <string notr="true">Lab00</string>
              </property>
             </widget>
            </item>
@@ -1709,7 +1702,6 @@
      <addaction name="ac_clear_cache"/>
      <addaction name="ac_cache_all_3d"/>
     </widget>
-    <addaction name="ac_GAcvter_options"/>
     <addaction name="menucache"/>
     <addaction name="ac_test_blocklist"/>
     <addaction name="ac_get_current_colorlist"/>

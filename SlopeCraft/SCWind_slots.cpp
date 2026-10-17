@@ -10,7 +10,6 @@
 #include <magic_enum/magic_enum.hpp>
 
 #include "PreviewWind.h"
-#include "AiCvterParameterDialog.h"
 #include "VersionDialog.h"
 #include "TransparentStrategyWind.h"
 #include "CompressEffectViewer.h"
@@ -770,16 +769,6 @@ void SCWind::on_pb_export_file_clicked() noexcept {
     QMessageBox::warning(this, tr("%1 个图片导出失败").arg(fail_count),
                          tr("导出失败的图片依次为：\n%1").arg(fail_tasks));
   }
-}
-
-void SCWind::on_ac_GAcvter_options_triggered() noexcept {
-  AiCvterParameterDialog* acpd = new AiCvterParameterDialog{this};
-
-  acpd->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
-  acpd->setAttribute(Qt::WidgetAttribute::WA_AlwaysStackOnTop, true);
-  acpd->setWindowFlag(Qt::WindowType::Window, true);
-  // bb->setAttribute(Qt::WidgetAttribute::WA_NativeWindow, true);
-  acpd->show();
 }
 
 void SCWind::on_ac_cache_dir_open_triggered() noexcept {

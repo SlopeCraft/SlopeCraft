@@ -746,8 +746,6 @@ enum class SCL_convertAlgo : char {
   Lab00 = 'L',
   /// naive XYZ formula
   XYZ = 'X',
-  /// Genetic Algorithm
-  gaCvter [[deprecated("GACvter is completely failure. A unet converter will replace it")]] = 'A',
 };
 
 enum class SCL_compressSettings : int {

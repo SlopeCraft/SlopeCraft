@@ -67,7 +67,6 @@ class colorset_new : public std::conditional_t<
   inline float color_value(const SCL_convertAlgo algo, const int r,
                            const int c) const noexcept {
     switch (algo) {
-      case SCL_convertAlgo::gaCvter:
       case SCL_convertAlgo::RGB:
       case SCL_convertAlgo::RGB_Better:
         return this->RGB(r, c);

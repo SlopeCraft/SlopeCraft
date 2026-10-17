@@ -57,7 +57,6 @@ struct convert_unit {
     switch (this->algo) {
       case ::SCL_convertAlgo::RGB:
       case ::SCL_convertAlgo::RGB_Better:
-      case ::SCL_convertAlgo::gaCvter:
         c3[0] = std::max(getR(rawColor) / 255.0f, threshold);
         c3[1] = std::max(getG(rawColor) / 255.0f, threshold);
         c3[2] = std::max(getB(rawColor) / 255.0f, threshold);

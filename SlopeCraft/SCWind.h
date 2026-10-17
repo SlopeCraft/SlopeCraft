@@ -140,8 +140,6 @@ class SCWind : public QMainWindow {
   void when_data_file_command_changed() noexcept;
 
  private slots:
-  void on_ac_GAcvter_options_triggered() noexcept;
-
   void on_ac_cache_dir_open_triggered() noexcept;
   void on_ac_clear_cache_triggered() noexcept;
 
@@ -183,7 +181,6 @@ class SCWind : public QMainWindow {
   // QString fileonly_export_dir{""};
 
  public:
-  SlopeCraft::GA_converter_option GA_option{};
   task_pool tasks;
 
   QString cache_root_dir() const noexcept;

@@ -24,7 +24,6 @@ set(SlopeCraft_headers
     AdaptiveListView.h
     PreviewWind.h
     ExportTableModel.h
-    AiCvterParameterDialog.h
     CopyableTableView.h
     TransparentStrategyWind.h
     CompressEffectViewer.h
@@ -39,7 +38,6 @@ set(SlopeCraft_sources
     AdaptiveListView.cpp
     PreviewWind.cpp
     ExportTableModel.cpp
-    AiCvterParameterDialog.cpp
     CopyableTableView.cpp
     TransparentStrategyWind.cpp
     CompressEffectViewer.cpp
@@ -52,7 +50,6 @@ set(SlopeCraft_sources
 set(SlopeCraft_uis
     SCWind.ui
     PreviewWind.ui
-    AiCvterParameterDialog.ui
     TransparentStrategyWind.ui
     CompressEffectViewer.ui
     BlockListDialog.ui

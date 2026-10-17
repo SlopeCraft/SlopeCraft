@@ -23,12 +23,10 @@ converted_image* color_table_impl::convert_image(
     const convert_option& option) const noexcept {
   converted_image_impl cvted{*this};
 
-  const auto algo = (option.algo == convertAlgo::gaCvter)
-                        ? convertAlgo::RGB_Better
-                        : option.algo;
+  const auto algo = option.algo;
   cvted.converter.set_raw_image(original_img.data, original_img.rows,
                                 original_img.cols, false);
-  cvted.converter.convert_image(algo, option.dither, false);
+  cvted.converter.convert_image(algo, option.dither);
 
   option.progress.set_range(0, 4 * cvted.size(), 4 * cvted.size());
   option.ui.report_working_status(workStatus::none);
@@ -352,13 +350,6 @@ uint64_t converted_image_impl::convert_task_hash(
 
   SC_HASH_ADD_DATA(hash, option.algo)
   SC_HASH_ADD_DATA(hash, option.dither)
-  if (option.algo == SCL_convertAlgo::gaCvter) {
-    SC_HASH_ADD_DATA(hash, option.ai_cvter_opt.popSize)
-    SC_HASH_ADD_DATA(hash, option.ai_cvter_opt.maxGeneration)
-    SC_HASH_ADD_DATA(hash, option.ai_cvter_opt.maxFailTimes)
-    SC_HASH_ADD_DATA(hash, option.ai_cvter_opt.crossoverProb)
-    SC_HASH_ADD_DATA(hash, option.ai_cvter_opt.mutationProb)
-  }
 
   hash.process_bytes(original_img.data, original_img.rows * original_img.cols);
 

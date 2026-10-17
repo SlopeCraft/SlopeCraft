@@ -52,8 +52,9 @@ class MapImageCvter : public ::libImageCvt::ImageCvter<true> {
   ~MapImageCvter() = default;
 
   // override
-  // void convert_image(const ::SCL_convertAlgo algo, bool dither,
-  //                    const heu::GAOption* const opt) noexcept;
+  void convert_image(const ::SCL_convertAlgo algo, bool dither) noexcept {
+    Base_t::convert_image(algo,dither,false);
+  }
 
   [[nodiscard]] inline Eigen::ArrayXX<uint8_t> mapcolor_matrix() const noexcept {
     static_assert(

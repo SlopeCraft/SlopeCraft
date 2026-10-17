@@ -20,22 +20,11 @@ struct convert_input {
 
 struct hasher {
   inline uint64_t operator()(
-      const SlopeCraft::GA_converter_option& opt) const noexcept {
-    uint64_t h = 0;
-    h ^= std::hash<size_t>()(opt.popSize);
-    h ^= std::hash<size_t>()(opt.maxGeneration);
-    h ^= std::hash<size_t>()(opt.maxFailTimes);
-    h ^= std::hash<double>()(opt.crossoverProb);
-    h ^= std::hash<double>()(opt.mutationProb);
-    return h;
-  }
-  inline uint64_t operator()(
       const SlopeCraft::convert_option& opt) const noexcept {
     uint64_t h = 0;
     h |= static_cast<uint64_t>(opt.algo);
     h <<= 1;
     h |= static_cast<uint64_t>(opt.dither);
-    h ^= hasher{}(opt.ai_cvter_opt);
     return h;
   }
   inline uint64_t operator()(const convert_input& pair) const noexcept {
@@ -65,21 +54,10 @@ struct hasher {
 };
 
 struct equal {
-  inline bool operator()(
-      const SlopeCraft::GA_converter_option& a,
-      const SlopeCraft::GA_converter_option& b) const noexcept {
-    if (a.popSize != b.popSize) return false;
-    if (a.maxGeneration != b.maxGeneration) return false;
-    if (a.maxFailTimes != b.maxFailTimes) return false;
-    if (a.crossoverProb != b.crossoverProb) return false;
-    if (a.mutationProb != b.mutationProb) return false;
-    return true;
-  }
   inline bool operator()(const SlopeCraft::convert_option& a,
                          const SlopeCraft::convert_option& b) const noexcept {
     if (a.algo != b.algo) return false;
     if (a.dither != b.dither) return false;
-    if (!equal{}(a.ai_cvter_opt, b.ai_cvter_opt)) return false;
     return true;
   }
   inline bool operator()(const convert_input& a,
