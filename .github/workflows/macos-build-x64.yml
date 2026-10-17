@@ -37,7 +37,7 @@ jobs:
           brew config
 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # Note: no compiler formula here. clang/clang++ come from the image's own
       # toolchain, and gcc/clang Homebrew formulae have no Intel bottles left anyway.
@@ -139,7 +139,7 @@ jobs:
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> "$GITHUB_ENV"
 
       - name: Upload tar.xz pack
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-None-macos-x64-clang-tar-xz
           path: pack/SlopeCraft*.tar.xz

@@ -77,7 +77,7 @@ jobs:
       #      #          tree /f "C:\Program Files\VulkanSDK"
 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: make dirs
         run: |
@@ -145,7 +145,7 @@ jobs:
       #    if-no-files-found: error
 
       - name: Upload 7z pack
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-vec=${{ matrix.vectorize }}-windows-clang-7z
           path: pack/SlopeCraft*.7z

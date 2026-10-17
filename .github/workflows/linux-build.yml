@@ -69,9 +69,9 @@ jobs:
           wget https://sdk.lunarg.com/sdk/download/1.4.350.1/linux/vulkansdk-linux-x86_64-1.4.350.1.tar.xz
           tar xf vulkansdk-linux-x86_64-1.4.350.1.tar.xz
           sudo mv ~/Downloads/1.4.350.1 /opt/vulkan-sdk
-      
+
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: CMake configure
         run: cmake -S . -B ./build -G Ninja -DCMAKE_PREFIX_PATH:FILEPATH=/opt/vulkan-sdk/x86_64  -DCMAKE_C_COMPILER:FILEPATH=clang-20 -DCMAKE_CXX_COMPILER:FILEPATH=clang++-20 -DCMAKE_INSTALL_PREFIX:PATH=./install -DSlopeCraft_GPU_API:STRING=$GPU_API -DCMAKE_BUILD_TYPE:STRING=$BUILD_TYPE
@@ -93,7 +93,7 @@ jobs:
           cd ..
 
       - name: Upload deb pack
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-linux-clang-deb
           path: pack/SlopeCraft*.deb
@@ -101,7 +101,7 @@ jobs:
           compression-level: 0
 
       - name: Upload tar.xz pack
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: SlopeCraft-dev-${{ env.SHORT_SHA }}-${{ matrix.build_type }}-${{ matrix.gpu_api }}-linux-clang-tar-xz
           path: pack/SlopeCraft*.tar.xz
