@@ -91,7 +91,6 @@ install(FILES ${SlopeCraft_install_presets}
 qt6_generate_deploy_script(
     TARGET sccl
     OUTPUT_SCRIPT sccl_deploy_script
-    DEPLOY_TOOL_OPTIONS ${SlopeCraft_macdeployqt_flags_install}
 )
 qt6_generate_deploy_app_script(
     TARGET SlopeCraft
@@ -147,7 +146,6 @@ install(FILES ${vc_config_file_location} ${vccl_config_file_location}
 qt6_generate_deploy_script(
     TARGET vccl
     OUTPUT_SCRIPT vccl_deploy_script
-    DEPLOY_TOOL_OPTIONS ${SlopeCraft_macdeployqt_flags_install}
 )
 qt6_generate_deploy_app_script(
     TARGET VisualCraft
