@@ -128,12 +128,25 @@ jobs:
             echo "==================== $exe"
             otool -L "$exe"
           done
-
-      - name: Make 7z packs with CPack
+      # project(SlopeCraft VERSION ${SlopeCraft_version}) makes CMake record the version
+      # in the cache, so this reads the same number the build used -- no parsing of
+      # CMakeLists.txt, and no hard-coded version to forget.
+      - name: Get project version from CMake cache
+        id: project
         run: |
-          cd build
-          cpack -G 7Z -B ../pack
-          cd ..
+          VERSION="$(sed -n 's/^CMAKE_PROJECT_VERSION:STATIC=//p' build/CMakeCache.txt)"
+          echo "project version = $VERSION"
+          test -n "$VERSION" || { echo "failed to read CMAKE_PROJECT_VERSION" >&2; exit 1; }
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      # Using large-enough window and sorting by type, greatly reduces archive size (~100M -> ~37MB)
+      # Because Qt binaries are deployed 4 times
+      - name: Make 7z pack
+        run: |
+          mkdir pack
+          cd install
+          7z a -t7z -m0=lzma2 -mx=9 -ms=on -md=256m -mqs=on -mmt=on \
+            "../pack/SlopeCraft-${{ steps.project.outputs.version }}-macOS-Intel.7z" ./*
 
       - name: Get short SHA
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> "$GITHUB_ENV"
