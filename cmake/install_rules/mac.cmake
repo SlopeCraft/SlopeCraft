@@ -94,7 +94,10 @@ qt6_generate_deploy_app_script(
     TARGET SlopeCraft
     OUTPUT_SCRIPT SlopeCraft_deploy_script
     NO_UNSUPPORTED_PLATFORM_ERROR
-    DEPLOY_TOOL_OPTIONS "-executable=SlopeCraft.app/Contents/MacOS/sccl" ${SlopeCraft_macdeployqt_flags_install}
+    DEPLOY_TOOL_OPTIONS
+    "-executable=SlopeCraft.app/Contents/MacOS/sccl"
+    "-executable=SlopeCraft.app/Contents/Frameworks/$<TARGET_FILE_NAME:SlopeCraftL>"
+    ${SlopeCraft_macdeployqt_flags_install}
 )
 install(SCRIPT ${SlopeCraft_deploy_script})
 #QD_add_deployqt(SlopeCraft
@@ -145,7 +148,10 @@ qt6_generate_deploy_app_script(
     TARGET VisualCraft
     OUTPUT_SCRIPT VisualCraft_deploy_script
     NO_UNSUPPORTED_PLATFORM_ERROR
-    DEPLOY_TOOL_OPTIONS "-executable=VisualCraft.app/Contents/MacOS/vccl" ${SlopeCraft_macdeployqt_flags_install}
+    DEPLOY_TOOL_OPTIONS
+    "-executable=VisualCraft.app/Contents/MacOS/vccl"
+    "-executable=VisualCraft.app/Contents/Frameworks/$<TARGET_FILE_NAME:VisualCraftL>"
+    ${SlopeCraft_macdeployqt_flags_install}
 )
 install(SCRIPT ${VisualCraft_deploy_script})
 #QD_add_deployqt(VisualCraft
