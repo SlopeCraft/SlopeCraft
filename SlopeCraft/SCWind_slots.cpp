@@ -1,3 +1,5 @@
+#include <string_view>
+
 #include "SCWind.h"
 #include "ui_SCWind.h"
 #include <QFileDialog>
@@ -21,6 +23,8 @@ const char* SC_image_filter = "*.png;*.jpg";
 #else
 const char* SC_image_filter = "*.png;;*.jpg";
 #endif
+
+using namespace std::string_view_literals;
 
 void SCWind::on_pb_add_image_clicked() noexcept {
   auto files = QFileDialog::getOpenFileNames(
@@ -193,19 +197,23 @@ void SCWind::on_pb_save_preset_clicked() noexcept {
 
 inline int impl_select_blk_by_id(
     const std::vector<const SlopeCraft::mc_block_interface*>& blks,
-    std::string_view keyword) noexcept {
-  int result = -1;
+    std::string_view keyword,
+    std::initializer_list<std::string_view> extra_kw = {}) noexcept {
   for (int idx = 0; idx < int(blks.size()); idx++) {
     std::string_view id{blks[idx]->getId()};
     const auto find = id.find(keyword);
 
     if (find != std::string_view::npos) {
-      result = idx;
-      break;
+      return idx;
+    }
+    for (auto kw : extra_kw) {
+      if (id.find(kw) != std::string_view::npos) {
+        return idx;
+      }
     }
   }
 
-  return result;
+  return -1;
 }
 
 void SCWind::on_pb_prefer_concrete_clicked() noexcept {
@@ -235,7 +243,7 @@ void SCWind::on_pb_prefer_planks_clicked() noexcept {
 void SCWind::on_pb_prefer_logs_clicked() noexcept {
   this->ui->blm->select_block_by_callback(
       [](const std::vector<const SlopeCraft::mc_block_interface*>& blks)
-          -> int { return impl_select_blk_by_id(blks, "log"); });
+          -> int { return impl_select_blk_by_id(blks, "wood"); });
 }
 
 void SCWind::on_pb_prefer_slabs_clicked() noexcept {
