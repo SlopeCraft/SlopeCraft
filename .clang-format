@@ -1,5 +1,5 @@
-Language:	Cpp
-BasedOnStyle:	Google
-SortIncludes:	false
+Language: Cpp
+BasedOnStyle: Google
+SortIncludes: Never
 IndentWidth: 2
 BracedInitializerIndentWidth: 2

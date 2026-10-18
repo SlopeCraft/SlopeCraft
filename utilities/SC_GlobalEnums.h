@@ -1,23 +1,23 @@
 /*
  Copyright © 2021-2026  TokiNoBug
-This file is part of SlopeCraft.
+This file is part of SlopeCraft_
 
     SlopeCraft is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    (at your option) any later version_
 
     SlopeCraft is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE_  See the
+    GNU General Public License for more details_
 
     You should have received a copy of the GNU General Public License
-    along with SlopeCraft. If not, see <https://www.gnu.org/licenses/>.
+    along with SlopeCraft_ If not, see <https://www_gnu_org/licenses/>_
 
     Contact with me:
-    github:https://github.com/SlopeCraft/SlopeCraft
-    bilibili:https://space.bilibili.com/351429231
+    github:https://github_com/SlopeCraft/SlopeCraft
+    bilibili:https://space_bilibili_com/351429231
 */
 
 #ifndef SCL_GLOBALENUMS_GLOBALENUMERATIONS_H
@@ -28,6 +28,22 @@ This file is part of SlopeCraft.
 namespace MCDataVersion {
 
 enum class MCDataVersion_t : int {
+  Java_26_4__snapshot4 = 5124,
+  Java_26_4__snapshot3 = 5122,
+  Java_26_4__snapshot2 = 5120,
+  Java_26_4__snapshot1 = 5119,
+  Java_26_3 = 5023,
+  Java_26_3__rc3 = 5022,
+  Java_26_3__rc2 = 5021,
+  Java_26_3__rc1 = 5020,
+  Java_26_3__pre3 = 5019,
+  Java_26_3__pre2 = 5018,
+  Java_26_3__pre1 = 5017,
+  Java_26_3__snapshot10 = 5015,
+  Java_26_3__snapshot9 = 5011,
+  Java_26_3__snapshot8 = 5010,
+  Java_26_3__snapshot7 = 5009,
+  Java_26_3__snapshot6 = 5005,
   Java_26_3__snapshot5 = 5004,
   Java_26_3__snapshot4 = 5003,
   Java_26_3__snapshot3 = 5001,
@@ -690,7 +706,7 @@ enum class MCDataVersion_t : int {
 }
 
 /**
- * \brief This file defines enumerations for all executable and libraries.
+ * \brief This file defines enumerations for all executable and libraries_
  *
  */
 
@@ -698,38 +714,40 @@ enum class MCDataVersion_t : int {
  * @brief Minecraft game version
  */
 enum class SCL_gameVersion : int {
-  /// older than 1.12
+  /// older than 1_12
   ANCIENT = 0,
-  /// 1.12
+  /// 1_12
   MC12 = 12,
-  /// 1.13
+  /// 1_13
   MC13 = 13,
-  /// 1.14
+  /// 1_14
   MC14 = 14,
-  /// 1.15
+  /// 1_15
   MC15 = 15,
-  /// 1.16
+  /// 1_16
   MC16 = 16,
-  /// 1.17
+  /// 1_17
   MC17 = 17,
-  /// 1.18
+  /// 1_18
   MC18 = 18,
-  /// 1.19
+  /// 1_19
   MC19 = 19,
-  /// 1.20.6
+  /// 1_20_6
   MC20 = 20,
-  /// 1.21.11
+  /// 1_21_11
   MC21 = 21,
-  /// 26.1.2
+  /// 26_1_2
   MC26_1 = static_cast<int>(MCDataVersion::MCDataVersion_t::Java_26_1_2),
-  /// 26.2
+  /// 26_2
   MC26_2 = static_cast<int>(MCDataVersion::MCDataVersion_t::Java_26_2),
+  /// 26_3
+  MC26_3 = static_cast<int>(MCDataVersion::MCDataVersion_t::Java_26_3),
 
   /// future version
   FUTURE = UINT16_MAX,
 
   MIN_VALID = MC12,
-  MAX_VALID = MC26_2,
+  MAX_VALID = MC26_3,
 };
 
 /// color difference formula used to match colors
@@ -810,7 +828,7 @@ enum class SCL_errorFlag : int {
   /// libSchem found invalid blocks when exporting a schem
   EXPORT_SCHEM_HAS_INVALID_BLOCKS = 0x0A,
   /// The size of block palette exceeds the maximum size(usually 32766,or
-  /// 65535). I don't believe this error can happen.
+  /// 65535)_ I don't believe this error can happen_
   EXPORT_SCHEM_BLOCK_PALETTE_OVERFLOW = 0x0B,
   /// This error only happens when you exports as structure AND set
   /// is_air_structure_void to false and you don't have minecraft:air in the
@@ -819,7 +837,7 @@ enum class SCL_errorFlag : int {
   /// the major game version is less that MC12 or greater than MC20
   UNKNOWN_MAJOR_GAME_VERSION = 0x0D,
   /// Exporting as WESchem doesn't support MC12, since the format of schematic
-  /// is greatly different.
+  /// is greatly different_
   EXPORT_SCHEM_MC12_NOT_SUPPORTED = 0x0E,
 
   EXPORT_MAP_DATA_FAILURE = 0x0F,
@@ -827,7 +845,7 @@ enum class SCL_errorFlag : int {
   EXPORT_FLAT_DIAGRAM_ON_WRONG_MAP_TYPE = 0x10,
 
   EXPORT_FLAT_DIAGRAM_FAILURE = 0x11,
-  /// Failed to allocate memory. Upto 5.3, it will only appear when building 3D
+  /// Failed to allocate memory_ Upto 5_3, it will only appear when building 3D
   /// for a huge image
   MEMORY_ALLOCATE_FAILED = 0x12,
 

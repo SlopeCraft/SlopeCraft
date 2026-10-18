@@ -310,8 +310,9 @@ void SCWind::when_cvt_pool_selectionChanged() noexcept {
         {this->ui->rb_ver19, SCL_gameVersion::MC19},       \
         {this->ui->rb_ver20, SCL_gameVersion::MC20},       \
         {this->ui->rb_ver21, SCL_gameVersion::MC21},       \
-        {this->ui->rb_ver26_1, SCL_gameVersion::MC26_1}, { \
-      this->ui->rb_ver26_2, SCL_gameVersion::MC26_2        \
+        {this->ui->rb_ver26_1, SCL_gameVersion::MC26_1},   \
+        {this->ui->rb_ver26_2, SCL_gameVersion::MC26_2}, { \
+      this->ui->rb_ver26_3, SCL_gameVersion::MC26_3        \
     }                                                      \
   }
 
@@ -614,10 +615,9 @@ std::array<QRadioButton*, 4> SCWind::preset_buttons_no_custom() noexcept {
           this->ui->rb_preset_elegant, this->ui->rb_preset_shiny};
 }
 
-#define SC_SLOPECRAFT_PRIVATEMARCO_ALGO_BUTTONS         \
-  {this->ui->rb_algo_RGB,   this->ui->rb_algo_RGB_plus, \
-   this->ui->rb_algo_Lab94, this->ui->rb_algo_Lab00,    \
-   this->ui->rb_algo_XYZ}
+#define SC_SLOPECRAFT_PRIVATEMARCO_ALGO_BUTTONS                                \
+  {this->ui->rb_algo_RGB, this->ui->rb_algo_RGB_plus, this->ui->rb_algo_Lab94, \
+   this->ui->rb_algo_Lab00, this->ui->rb_algo_XYZ}
 
 std::array<const QRadioButton*, 6> SCWind::algo_buttons() const noexcept {
   return SC_SLOPECRAFT_PRIVATEMARCO_ALGO_BUTTONS;
