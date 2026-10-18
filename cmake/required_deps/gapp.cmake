@@ -1,6 +1,19 @@
 find_package(gapp 1.0.1 CONFIG)
 
 if (${gapp_FOUND})
+    # Usually if gapp is found externally, gapp.hpp is located at <gapp/gapp.hpp>.
+    # But fetched version should include <gapp.hpp>. To fix this fucking stupid error, we always include <gapp.h>
+    find_file(gapp_header_loc
+        NAMES gapp.hpp
+        HINTS ${gapp_DIR}/../../include/gapp
+    )
+    if (NOT gapp_header_loc)
+        message(WARNING "Package gapp is found, but failed to find gapp.hpp. May encounter build error.")
+        return()
+    endif ()
+    cmake_path(GET gapp_header_loc PARENT_PATH gapp_header_dir)
+    target_include_directories(gapp::gapp INTERFACE ${gapp_header_dir})
+
     return()
 endif ()
 
