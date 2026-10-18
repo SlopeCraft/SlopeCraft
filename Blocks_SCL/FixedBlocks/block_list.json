@@ -606,6 +606,15 @@
     "version": "MC21"
   },
   {
+    "baseColor": 15,
+    "id": "minecraft:orange_poplar_leaves[persistent=true]",
+    "nameZH": "橙色杨树树叶",
+    "nameEN": "Orange poplar leaves",
+    "icon": "orange_poplar_leaves.png",
+    "version": "MC26_3",
+    "burnable": true
+  },
+  {
     "baseColor": 16,
     "id": "minecraft:magenta_concrete",
     "nameZH": "品红色混凝土",
@@ -775,6 +784,15 @@
     "nameEN": "Chiseled sulfur",
     "icon": "chiseled_sulfur.png",
     "version": "MC26_2"
+  },
+  {
+    "baseColor": 18,
+    "id": "minecraft:yellow_poplar_leaves[persistent=true]",
+    "nameZH": "黄色杨树树叶",
+    "nameEN": "Yellow poplar leaves",
+    "icon": "yellow_poplar_leaves.png",
+    "version": "MC26_3",
+    "burnable": true
   },
   {
     "baseColor": 19,
@@ -967,6 +985,15 @@
     "icon": "pale_moss_block.png",
     "version": "MC21",
     "endermanPickable": true
+  },
+  {
+    "baseColor": 22,
+    "id": "minecraft:poplar_planks",
+    "nameZH": "杨木木板",
+    "nameEN": "Poplar planks",
+    "icon": "poplar_planks.png",
+    "version": "MC26_3",
+    "burnable": true
   },
   {
     "baseColor": 23,
@@ -1349,6 +1376,15 @@
     "version": "MC26_2"
   },
   {
+    "baseColor": 28,
+    "id": "minecraft:red_poplar_leaves[persistent=true]",
+    "nameZH": "红色杨树树叶",
+    "nameEN": "Red poplar leaves",
+    "icon": "red_poplar_leaves.png",
+    "version": "MC26_3",
+    "burnable": true
+  },
+  {
     "baseColor": 29,
     "id": "minecraft:black_concrete",
     "nameZH": "黑色混凝土",
@@ -1550,6 +1586,15 @@
     "icon": "campfire.png",
     "version": "MC14",
     "isGlowing": true
+  },
+  {
+    "baseColor": 34,
+    "id": "minecraft:poplar_wood",
+    "nameZH": "杨木",
+    "nameEN": "Poplar wood",
+    "icon": "poplar_log.png",
+    "version": "MC26_3",
+    "burnable": true
   },
   {
     "baseColor": 35,
