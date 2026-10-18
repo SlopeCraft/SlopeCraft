@@ -24,15 +24,15 @@ This file is part of SlopeCraft.
 
 #include "lossy_compressor.h"
 
-#include <gapp/gapp.hpp>
-#include <gapp/encoding/integer.hpp>
+#include <gapp.hpp>
+#include <encoding/integer.hpp>
 
 
 // using gene_type = Eigen::ArrayX<uint8_t>;
 using gene_type = gapp::IntegerGene;
 
 
-class fitness: public gapp::FitnessFunctionBase<gene_type> {
+class fitness : public gapp::FitnessFunctionBase<gene_type> {
 private:
   std::span<const TokiColor*const> source;
   const std::function<bool(uint8_t)>& need_support_from_base_color;
@@ -43,72 +43,73 @@ public:
 
   using base_t = gapp::FitnessFunctionBase<gene_type>;
 
-  fitness(std::span<const TokiColor*const> src,const std::function<bool(uint8_t)>& nsfbc):
-    base_t{src.size()},source{src},need_support_from_base_color{nsfbc} {
+  fitness(std::span<const TokiColor*const> src, const std::function<bool(uint8_t)>& nsfbc) :
+    base_t{src.size()}, source{src}, need_support_from_base_color{nsfbc} {
   }
+
 private:
   gapp::FitnessVector invoke(const gapp::Candidate<gene_type>& sol) const override {
     Eigen::ArrayX<uint8_t> v{sol.size()};
     for (size_t i = 0; i < sol.size(); i++) {
       assert(sol[i]>=0);
       assert(sol[i]<=2);
-      v[i]=static_cast<uint8_t>(sol[i]);
+      v[i] = static_cast<uint8_t>(sol[i]);
     }
 
     height_line HL;
-    const float color_diff_sum = HL.make(source.data(),v,allow_natural_compress,need_support_from_base_color);
-    const float mean_color_diff = color_diff_sum/static_cast<float>(v.size());
+    const float color_diff_sum = HL.make(source.data(), v, allow_natural_compress, need_support_from_base_color);
+    const float mean_color_diff = color_diff_sum / static_cast<float>(v.size());
 
-    if (HL.maxHeight()>max_height) {
-      return gapp::FitnessVector{static_cast<double>(max_height)-static_cast<double>(HL.maxHeight()) -1.0};
+    if (HL.maxHeight() > max_height) {
+      return gapp::FitnessVector{static_cast<double>(max_height) - static_cast<double>(HL.maxHeight()) - 1.0};
     }
-    return gapp::FitnessVector{100.0/(1e-4f + mean_color_diff)};
+    return gapp::FitnessVector{100.0 / (1e-4f + mean_color_diff)};
   }
 };
 
-lossy_compress_result lossy_compress(const lossy_compress_input&input){
-  const auto &opt=input.genetic_options;
+lossy_compress_result lossy_compress(const lossy_compress_input& input) {
+  const auto& opt = input.genetic_options;
   auto solver = gapp::IntegerGA{opt.population_size};
-  solver.algorithm(gapp::algorithm::SingleObjective{gapp::selection::Tournament{3},gapp::replacement::KeepBest{}});
+  solver.algorithm(gapp::algorithm::SingleObjective{gapp::selection::Tournament{3}, gapp::replacement::KeepBest{}});
   solver.max_gen(opt.max_generation);
   solver.crossover_method(gapp::crossover::integer::Uniform{opt.crossover_probability});
   solver.mutation_method(gapp::mutation::integer::Uniform{opt.mutate_probability});
-  solver.stop_condition(gapp::stopping::FitnessBestStall{opt.early_stop_patience,0.0});
+  solver.stop_condition(gapp::stopping::FitnessBestStall{opt.early_stop_patience, 0.0});
 
-  auto fitness_fun = fitness{input.source,input.need_support_from_base_color};
-  fitness_fun.max_height=input.max_height;
-  fitness_fun.allow_natural_compress=input.allow_natural_compress;
+  auto fitness_fun = fitness{input.source, input.need_support_from_base_color};
+  fitness_fun.max_height = input.max_height;
+  fitness_fun.allow_natural_compress = input.allow_natural_compress;
   const auto bound = [&]() {
     std::vector<gapp::Bounds<int64_t>> ret;
-    ret.resize(input.source.size(),{0,2});
+    ret.resize(input.source.size(), {0, 2});
     return ret;
   }();
   auto make_init_pop = [&]() {
     gapp::Population<gapp::IntegerGene> pop;
     pop.reserve(opt.population_size);
     std::mt19937 mt{42};
-    std::uniform_real_distribution<float> rand{0,1};
-    std::uniform_int_distribution<int> rand_int{1,2};
-    for (size_t pop_i=0;pop_i<opt.population_size;pop_i++) {
+    std::uniform_real_distribution<float> rand{0, 1};
+    std::uniform_int_distribution<int> rand_int{1, 2};
+    for (size_t pop_i = 0; pop_i < opt.population_size; pop_i++) {
       gapp::Chromosome<int64_t> vec;
       vec.reserve(input.source.size());
-      for (size_t blk_i=0;blk_i<input.source.size();blk_i++) {
-        int64_t val=0;
-        if (rand(mt)<opt.initialize_non_zero_ratio) {
-          val=rand_int(mt);
+      for (size_t blk_i = 0; blk_i < input.source.size(); blk_i++) {
+        int64_t val = 0;
+        if (rand(mt) < opt.initialize_non_zero_ratio) {
+          val = rand_int(mt);
         }
         assert(0<=val and val<=2);
         vec.emplace_back(val);
       }
-      pop.emplace_back(vec,gapp::BoundsView{bound});
+      pop.emplace_back(vec, gapp::BoundsView{bound});
     }
     return pop;
   };
-  const auto solutions= solver.solve(fitness_fun,bound,opt.max_generation,make_init_pop());
+  const auto solutions = solver.solve(fitness_fun, bound, opt.max_generation, make_init_pop());
   assert(solutions.size()>0);
-  auto & final = solutions[0];
+  auto& final = solutions[0];
   assert(final.fitness.size()==1);
-  Eigen::Map<const Eigen::ArrayX<int64_t>> gene{final.data(),static_cast<Eigen::Index>(final.size())};
+  Eigen::Map<const Eigen::ArrayX<int64_t>> gene{final.data(), static_cast<Eigen::Index>(final.size())};
 
   return lossy_compress_result{
     .gene = gene.cast<uint8_t>(),

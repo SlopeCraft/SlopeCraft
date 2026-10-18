@@ -60,7 +60,7 @@ jobs:
           git clone https://github.com/KRM7/gapp.git
           cd gapp
           git checkout v1.0.1
-          cmake -S . -B build-gapp -G Ninja -DCMAKE_BUILD_TYPE:STRING=$BUILD_TYPE -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=OFF
+          cmake -S . -B build-gapp -G Ninja -DCMAKE_BUILD_TYPE:STRING=$BUILD_TYPE -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON
           cmake --build build-gapp --parallel
           sudo cmake --install build-gapp
           cd ..
