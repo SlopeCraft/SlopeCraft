@@ -26,7 +26,7 @@ This file is part of SlopeCraft.
 // height_line::height_line() {}
 
 float height_line::make(
-    const TokiColor** src, const Eigen::Array<uint8_t, Eigen::Dynamic, 1>& g,
+    const TokiColor*const* src, const Eigen::ArrayX<uint8_t>& g,
     bool allowNaturalCompress,
     const std::function<bool(uint8_t)>& need_support_from_base_color,
     Eigen::ArrayXi* dst) {

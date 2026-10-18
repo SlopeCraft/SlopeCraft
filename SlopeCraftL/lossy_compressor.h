@@ -36,30 +36,60 @@ This file is part of SlopeCraft.
 #include "SCLDefines.h"
 #include "water_item.h"
 
-class solver_t;
+struct GA_options {
+  double initialize_non_zero_ratio{0.05};
+  size_t max_generation{200};
+  size_t population_size{50};
+  /// just like maxFailTimes
+  size_t early_stop_patience{30};
+  double crossover_probability{0.9};
+  double mutate_probability{0.01};
+};
 
-class lossy_compressor {
- public:
-  lossy_compressor();
-  ~lossy_compressor();
-  void setSource(const Eigen::ArrayXi&, std::span<const TokiColor*>,
-                 std::function<bool(uint8_t)> need_support_from_base_color);
-  bool compress(uint16_t maxHeight, bool allowNaturalCompress);
-  const Eigen::ArrayX<uint8_t>& getResult() const;
-  double resultFitness() const;
-
-  SlopeCraft::ui_callbacks ui;
-  SlopeCraft::progress_callbacks progress_bar;
-
- private:
-  friend class solver_t;
-  std::unique_ptr<solver_t> solver;
+struct lossy_compress_input {
   std::vector<const TokiColor*> source;
   std::function<bool(uint8_t)> need_support_from_base_color;
 
-  static uint16_t maxGeneration;
+  uint16_t max_height;
+  bool allow_natural_compress;
+  // genetic options
+  GA_options genetic_options;
+  // ui pointers
+  SlopeCraft::ui_callbacks ui;
+  SlopeCraft::progress_callbacks progress_bar;
 
-  void runGenetic(uint16_t maxHeight, bool allowNaturalCompress);
 };
+
+struct lossy_compress_result {
+  // 0,1,2
+  Eigen::ArrayX<uint8_t> gene;
+  double fitness;
+};
+
+[[nodiscard]] lossy_compress_result lossy_compress(const lossy_compress_input&);
+
+class solver_t;
+
+// class lossy_compressor {
+//  public:
+//   lossy_compressor();
+//   ~lossy_compressor();
+//   void setSource(const Eigen::ArrayXi&, std::span<const TokiColor*>,
+//                  std::function<bool(uint8_t)> need_support_from_base_color);
+//   bool compress(uint16_t maxHeight, bool allowNaturalCompress);
+//   const Eigen::ArrayX<uint8_t>& getResult() const;
+//   double resultFitness() const;
+//
+//
+//  private:
+//   friend class solver_t;
+//   std::unique_ptr<solver_t> solver;
+//   std::vector<const TokiColor*> source;
+//   std::function<bool(uint8_t)> need_support_from_base_color;
+//
+//   static const uint16_t maxGeneration;
+//
+//   void runGenetic(uint16_t maxHeight, bool allowNaturalCompress);
+// };
 
 #endif  // LOSSYCOMPRESSOR_H

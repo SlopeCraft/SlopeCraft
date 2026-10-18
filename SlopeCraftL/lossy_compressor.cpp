@@ -20,157 +20,98 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
+#include <random>
+
 #include "lossy_compressor.h"
 
-#define heu_NO_OUTPUT
-#define heu_USE_THREADS
+#include <gapp/gapp.hpp>
+#include <gapp/encoding/integer.hpp>
 
-#include <HeuristicFlow/Genetic>
 
-constexpr double initializeNonZeroRatio = 0.05;
+// using gene_type = Eigen::ArrayX<uint8_t>;
+using gene_type = gapp::IntegerGene;
 
-constexpr uint16_t popSize = 50;
-uint16_t maxFailTimes = 30;
-uint16_t lossy_compressor::maxGeneration = 600;
-constexpr double crossoverProb = 0.9;
-constexpr double mutateProb = 0.01;
-constexpr uint32_t reportRate = 50;
 
-using Var_t = Eigen::ArrayX<uint8_t>;
+class fitness: public gapp::FitnessFunctionBase<gene_type> {
+private:
+  std::span<const TokiColor*const> source;
+  const std::function<bool(uint8_t)>& need_support_from_base_color;
 
-/*
-template <typename Scalar_t, ContainerOption DVO = ContainerOption::Std, bool
-isFixedRange = false, Scalar_t MinCT = 0, Scalar_t MaxCT = 1>
-*/
-struct args_t : public heu::FixedDiscreteBox<Var_t, 0, 2> {
-  const TokiColor** src;
-  bool allowNaturalCompress;
-  size_t maxHeight;
-  const lossy_compressor* ptr;
-  std::function<bool(uint8_t)>* need_support_from_base_color{nullptr};
-  std::clock_t prevClock;
+public:
+  bool allow_natural_compress{false};
+  size_t max_height{0};
+
+  using base_t = gapp::FitnessFunctionBase<gene_type>;
+
+  fitness(std::span<const TokiColor*const> src,const std::function<bool(uint8_t)>& nsfbc):
+    base_t{src.size()},source{src},need_support_from_base_color{nsfbc} {
+  }
+private:
+  gapp::FitnessVector invoke(const gapp::Candidate<gene_type>& sol) const override {
+    Eigen::ArrayX<uint8_t> v{sol.size()};
+    for (size_t i = 0; i < sol.size(); i++) {
+      assert(sol[i]>=0);
+      assert(sol[i]<=2);
+      v[i]=static_cast<uint8_t>(sol[i]);
+    }
+
+    height_line HL;
+    const float color_diff_sum = HL.make(source.data(),v,allow_natural_compress,need_support_from_base_color);
+    const float mean_color_diff = color_diff_sum/static_cast<float>(v.size());
+
+    if (HL.maxHeight()>max_height) {
+      return gapp::FitnessVector{static_cast<double>(max_height)-static_cast<double>(HL.maxHeight()) -1.0};
+    }
+    return gapp::FitnessVector{100.0/(1e-4f + mean_color_diff)};
+  }
 };
 
-using boxVar_t = typename args_t::Var_t;
+lossy_compress_result lossy_compress(const lossy_compress_input&input){
+  const auto &opt=input.genetic_options;
+  auto solver = gapp::IntegerGA{opt.population_size};
+  solver.algorithm(gapp::algorithm::SingleObjective{gapp::selection::Tournament{3},gapp::replacement::KeepBest{}});
+  solver.max_gen(opt.max_generation);
+  solver.crossover_method(gapp::crossover::integer::Uniform{opt.crossover_probability});
+  solver.mutation_method(gapp::mutation::integer::Uniform{opt.mutate_probability});
+  solver.stop_condition(gapp::stopping::FitnessBestStall{opt.early_stop_patience,0.0});
 
-static_assert(std::is_same<boxVar_t, Var_t>::value, "is not same");
-
-void iFun(Var_t* v, const args_t* arg) {
-  v->setZero(arg->dimensions());
-  for (auto& i : *v) {
-    if (heu::randD() <= initializeNonZeroRatio) {
-      i = 1 + std::rand() % 2;
-    }
-  }
-}
-
-void fFun(const Var_t* v, const args_t* arg, double* fitness) {
-  height_line HL;
-  const TokiColor** src = arg->src;
-  const bool allowNaturalCompress = arg->allowNaturalCompress;
-  float meanColorDiff = HL.make(src, *v, allowNaturalCompress,
-                                *arg->need_support_from_base_color);
-  meanColorDiff /= v->size();
-
-  if (HL.maxHeight() > arg->maxHeight) {
-    *fitness = double(arg->maxHeight) - double(HL.maxHeight()) - 1.0;
-  } else {
-    *fitness = 100.0 / (1e-4f + meanColorDiff);
-  }
-}
-
-class solver_t
-    : public heu::SOGA<
-          Eigen::ArrayX<uint8_t>, heu::FitnessOption::FITNESS_GREATER_BETTER,
-          heu::RecordOption::DONT_RECORD_FITNESS, heu::SelectMethod::Tournament,
-          args_t, iFun, fFun, heu::GADefaults<Var_t, args_t>::cFunSwapXs,
-          heu::GADefaults<Var_t, args_t>::mFun> {
- public:
-  void customOptAfterEachGeneration() {
-    if (this->generation() % reportRate == 0) {
-      std::clock_t& prevClock = this->_args.prevClock;
-      std::clock_t curClock = std::clock();
-      if (curClock - prevClock >= CLOCKS_PER_SEC / 2) {
-        prevClock = curClock;
-        this->_args.ptr->progress_bar.set_range(
-            0, lossy_compressor::maxGeneration, this->generation());
+  auto fitness_fun = fitness{input.source,input.need_support_from_base_color};
+  fitness_fun.max_height=input.max_height;
+  fitness_fun.allow_natural_compress=input.allow_natural_compress;
+  const auto bound = [&]() {
+    std::vector<gapp::Bounds<int64_t>> ret;
+    ret.resize(input.source.size(),{0,2});
+    return ret;
+  }();
+  auto make_init_pop = [&]() {
+    gapp::Population<gapp::IntegerGene> pop;
+    pop.reserve(opt.population_size);
+    std::mt19937 mt{42};
+    std::uniform_real_distribution<float> rand{0,1};
+    std::uniform_int_distribution<int> rand_int{1,2};
+    for (size_t pop_i=0;pop_i<opt.population_size;pop_i++) {
+      gapp::Chromosome<int64_t> vec;
+      vec.reserve(input.source.size());
+      for (size_t blk_i=0;blk_i<input.source.size();blk_i++) {
+        int64_t val=0;
+        if (rand(mt)<opt.initialize_non_zero_ratio) {
+          val=rand_int(mt);
+        }
+        assert(0<=val and val<=2);
+        vec.emplace_back(val);
       }
+      pop.emplace_back(vec,gapp::BoundsView{bound});
     }
-  }
-};
+    return pop;
+  };
+  const auto solutions= solver.solve(fitness_fun,bound,opt.max_generation,make_init_pop());
+  assert(solutions.size()>0);
+  auto & final = solutions[0];
+  assert(final.fitness.size()==1);
+  Eigen::Map<const Eigen::ArrayX<int64_t>> gene{final.data(),static_cast<Eigen::Index>(final.size())};
 
-lossy_compressor::lossy_compressor() : solver{new solver_t{}} {
-  solver->setTournamentSize(3);
-}
-
-lossy_compressor::~lossy_compressor() {}
-
-void lossy_compressor::setSource(const Eigen::ArrayXi& _base,
-                                 std::span<const TokiColor*> src,
-                                 std::function<bool(uint8_t)> nsfbc) {
-  this->need_support_from_base_color = std::move(nsfbc);
-  assert(_base.rows() == static_cast<int64_t>(src.size() + 1));
-  source.resize(_base.rows() - 1);
-
-  for (uint16_t idx = 0; idx < _base.rows() - 1; idx++) {
-    // std::cout<<"check row"<<idx<<"->"<<uint16_t(src[idx]->Result)<<std::endl;
-    source[idx] = src[idx];
-  }
-  source.shrink_to_fit();
-
-  // std::cerr<<"source set\n";
-}
-
-void lossy_compressor::runGenetic(uint16_t maxHeight,
-                                  bool allowNaturalCompress) {
-  {
-    heu::GAOption opt;
-    opt.crossoverProb = crossoverProb;
-    opt.maxFailTimes = maxFailTimes;
-    opt.maxGenerations = maxGeneration;
-    opt.mutateProb = mutateProb;
-    opt.populationSize = popSize;
-    solver->setOption(opt);
-  }
-  {
-    solver_t::ArgsType args;
-    args.setDimensions(source.size());
-    args.src = source.data();
-    args.allowNaturalCompress = allowNaturalCompress;
-    args.need_support_from_base_color = &need_support_from_base_color;
-    args.maxHeight = maxHeight;
-    args.ptr = this;
-    args.prevClock = std::clock();
-    solver->setArgs(args);
-  }
-  solver->initializePop();
-
-  solver->run();
-}
-
-bool lossy_compressor::compress(uint16_t maxHeight, bool allowNaturalCompress) {
-  this->progress_bar.set_range(0, maxGeneration, 0);
-
-  // std::cerr<<"Genetic algorithm started\n";
-  uint16_t tryTimes = 0;
-  maxFailTimes = 30;
-  maxGeneration = 200;
-  while (tryTimes < 3) {
-    this->runGenetic(maxHeight, allowNaturalCompress);
-    if (this->resultFitness() <= 0) {
-      tryTimes++;
-      maxFailTimes = -1;
-      maxGeneration *= 2;
-    } else
-      break;
-  }
-  return tryTimes < 3;
-}
-
-const Eigen::ArrayX<uint8_t>& lossy_compressor::getResult() const {
-  return this->solver->result();
-}
-
-double lossy_compressor::resultFitness() const {
-  return this->solver->bestFitness();
+  return lossy_compress_result{
+    .gene = gene.cast<uint8_t>(),
+    .fitness = final.fitness[0],
+  };
 }

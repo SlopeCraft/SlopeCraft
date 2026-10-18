@@ -2,7 +2,6 @@ project(ColorManip VERSION ${SlopeCraft_version} LANGUAGES C CXX)
 
 find_package(OpenMP REQUIRED)
 find_package(Eigen3 REQUIRED)
-find_package(Heu REQUIRED)
 find_package(cereal REQUIRED)
 find_package(xsimd REQUIRED)
 find_package(Boost CONFIG REQUIRED)
@@ -31,9 +30,6 @@ target_include_directories(ColorManip PUBLIC
     ${SlopeCraft_Chocobo1_Hash_include_dir})
 target_include_directories(ColorManip PRIVATE
     ${Boost_INCLUDE_DIRS})
-
-target_link_libraries(ColorManip PRIVATE
-    Heu::Genetic)
 
 target_link_libraries(ColorManip PUBLIC
     OpenMP::OpenMP_CXX

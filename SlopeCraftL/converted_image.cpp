@@ -253,8 +253,8 @@ converted_image_impl::height_info(const color_table_impl& table,
     return std::nullopt;
   }
 
-  const auto need_glass_from_base_color = [&](uint8_t base_color) {
-    assert(base_color < SCL_maxBaseColor());
+  const auto need_support_from_base_color = [&](uint8_t base_color) {
+    assert(base_color <= SCL_maxBaseColor());
     if (base_color >= 64) {
       return false;
     }
@@ -276,26 +276,31 @@ converted_image_impl::height_info(const color_table_impl& table,
   low_map.setZero(this->rows() + 1, this->cols());
   std::unordered_map<rc_pos, water_y_range> water_list;
 
-  lossy_compressor compressor;
-  compressor.ui = option.ui;
-  compressor.progress_bar = option.sub_progressbar;
   for (int64_t c = 0; c < map_color.cols(); c++) {
     height_line HL;
     HL.make(map_color.col(c), allow_lossless_compress,
-            need_glass_from_base_color);
+            need_support_from_base_color);
 
     if ((HL.maxHeight() > option.max_allowed_height) and allow_lossy_compress) {
       std::vector<const TokiColor*> ptr(map_color.rows());
 
       this->converter.col_TokiColor_ptrs(c, ptr);
 
-      compressor.setSource(HL.getBase(), ptr, need_glass_from_base_color);
-      bool success = compressor.compress(option.max_allowed_height,
-                                         allow_lossless_compress);
+      auto input = lossy_compress_input{
+        .source = ptr,
+        .need_support_from_base_color = need_support_from_base_color,
+        .max_height = option.max_allowed_height,
+        .allow_natural_compress = allow_lossless_compress,
+        .genetic_options{},
+        .ui=option.ui,
+        .progress_bar = option.sub_progressbar,
+      };
+      const auto result = lossy_compress(input);
+
       Eigen::ArrayXi temp;
-      HL.make(&ptr[0], compressor.getResult(), allow_lossless_compress,
-              need_glass_from_base_color, &temp);
-      if (!success) {
+      HL.make(&ptr[0], result.gene, allow_lossless_compress,
+              need_support_from_base_color, &temp);
+      if (HL.maxHeight()>option.max_allowed_height) {
         option.ui.report_error(
             SCL_errorFlag::LOSSYCOMPRESS_FAILED,
             SCLTranslator::tr(
@@ -326,7 +331,7 @@ converted_image_impl::height_info(const color_table_impl& table,
   // const bool contains_blocks_that_needs_support = [&] -> bool {
   //   for (Eigen::Index r = 0; r < map_color.rows(); r++) {
   //     for (Eigen::Index c = 0; c < map_color.cols(); c++) {
-  //       if (need_glass_from_base_color(mapColor2baseColor(map_color(r, c))))
+  //       if (need_support_from_base_color(mapColor2baseColor(map_color(r, c))))
   //       {
   //         return true;
   //       }

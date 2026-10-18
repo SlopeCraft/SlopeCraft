@@ -36,7 +36,7 @@ This file is part of SlopeCraft.
 class height_line {
  public:
   height_line() = default;
-  float make(const TokiColor*[],
+  float make(const TokiColor*const[],
              const Eigen::Array<uint8_t, Eigen::Dynamic, 1>&,
              bool allowNaturalCompress,
              const std::function<bool(uint8_t)>& need_support_from_base_color,
