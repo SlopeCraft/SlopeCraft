@@ -6,6 +6,8 @@ if (${gapp_FOUND})
     find_file(gapp_header_loc
         NAMES gapp.hpp
         HINTS ${gapp_DIR}/../../include/gapp
+        /usr/include/gapp
+        /usr/local/include/gapp
     )
     if (NOT gapp_header_loc)
         message(WARNING "Package gapp is found, but failed to find gapp.hpp. May encounter build error.")
