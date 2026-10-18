@@ -12,10 +12,10 @@ find_package(libzip REQUIRED)
 find_package(PNG REQUIRED)
 find_package(cereal REQUIRED)
 find_package(libnbt++ REQUIRED)
+find_package(gapp 1.0.1 REQUIRED)
 find_package(Qt6 COMPONENTS LinguistTools REQUIRED)
 
 set(SlopeCraft_SCL_windows_rc_files)
-
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     message(STATUS "Configuring on Windows. Adding rc file to " ${PROJECT_NAME})
     configure_file(others/SlopeCraftL.rc.in others/SlopeCraftL.rc)

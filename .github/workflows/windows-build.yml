@@ -44,7 +44,7 @@ jobs:
       - name: Install deps with vcpkg
         shell: powershell
         run: |
-          vcpkg install --triplet=x64-windows boost-iostreams boost-uuid boost-multi-array zlib libpng bzip2 zstd liblzma libzip eigen3 xsimd  cereal magic-enum
+          vcpkg install --triplet=x64-windows boost-iostreams boost-uuid boost-multi-array zlib libpng bzip2 zstd liblzma libzip eigen3 xsimd  cereal magic-enum gapp
 
       - name: Install OpenCL with vcpkg
         if: matrix.gpu_api == 'OpenCL'
