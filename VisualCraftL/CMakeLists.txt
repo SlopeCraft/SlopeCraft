@@ -75,6 +75,7 @@ add_library(VisualCraftL_static STATIC
 
 find_package(ZLIB 1.2.11 REQUIRED)
 find_package(libzip 1.7.0 REQUIRED)
+find_package(mc_schem 1.3.0 CONFIG REQUIRED)
 
 set(VCL_include_dirs
     ${SlopeCraft_Nlohmann_json_include_dir}
@@ -99,7 +100,8 @@ set(VCL_link_libs
     ZLIB::ZLIB
     PNG::PNG
     ${VCL_libzip_additions}
-    Schem
+    mc_schem::mc_schem
+    #    Schem
     ProcessBlockId
     FlatDiagram
 )

@@ -23,18 +23,20 @@ This file is part of SlopeCraft.
 #ifndef SLOPECRAFT_VISUALCRAFTL_TOKIVC_H
 #define SLOPECRAFT_VISUALCRAFTL_TOKIVC_H
 
+#include <shared_mutex>
+#include <unordered_map>
+#include <variant>
+
 #include "BlockStateList.h"
 #include "ParseResourcePack.h"
 #include "VisualCraftL.h"
 
 #include "DirectionHandler.hpp"
-#include <shared_mutex>
-#include <unordered_map>
 #include <utilities/ColorManip/colorset_optical.hpp>
 #include <utilities/ColorManip/imageConvert.hpp>
-#include <utilities/Schem/Schem.h>
 #include <utilities/uiPack/uiPack.h>
-#include <variant>
+
+#include <mc_schem.hpp>
 
 class VCL_GPU_Platform {
  public:
@@ -167,13 +169,16 @@ class TokiVC : public VCL_Kernel {
   bool imgcvter_prefer_gpu{false};
 
   libImageCvt::ImageCvter<false> img_cvter;
-  libSchem::Schem schem;
 
-  void fill_schem_blocklist_no_lock() noexcept;
+  mc_schem::unique_schematic schem{nullptr};
+
+  void initialize_schematic_with_palette_no_lock(std::array<int, 3> shape_xyz);
 
   void draw_flag_diagram_to_memory(uint32_t* image_u8c3_rowmajor,
                                    const flag_diagram_option&,
                                    int layer_idx) const noexcept;
+
+  static std::vector<mc_schem::unique_block> palette_for_mc_schem();
 };
 
 namespace TokiVC_internal {

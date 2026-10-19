@@ -1,0 +1,1 @@
+find_package(mc_schem 1.3.0 CONFIG REQUIRED)
