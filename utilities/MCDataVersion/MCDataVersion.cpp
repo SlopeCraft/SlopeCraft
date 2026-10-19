@@ -26,7 +26,7 @@ This file is part of SlopeCraft.
 #include <magic_enum/magic_enum.hpp>
 
 MCDataVersion::MCDataVersion_t MCDataVersion::string_to_data_version(
-  const char* str, bool* ok) noexcept {
+    const char* str, bool* ok) noexcept {
   const auto mcdv = magic_enum::enum_cast<MCDataVersion::MCDataVersion_t>(str);
 
   if (mcdv.has_value()) {
@@ -42,80 +42,84 @@ MCDataVersion::MCDataVersion_t MCDataVersion::string_to_data_version(
 }
 
 std::string MCDataVersion::data_version_to_string(
-  MCDataVersion::MCDataVersion_t v) noexcept {
+    MCDataVersion::MCDataVersion_t v) noexcept {
   std::string_view mcdv = magic_enum::enum_name(v);
 
   return std::string{mcdv};
 }
 
 MCDataVersion::MCDataVersion_t MCDataVersion::max_supported_version(
-  SCL_gameVersion v) noexcept {
+    SCL_gameVersion v) noexcept {
   switch (v) {
-  case SCL_gameVersion::ANCIENT:
-  case SCL_gameVersion::MC12:
-    return MCDataVersion_t::Java_1_12_2;
-  case SCL_gameVersion::MC13:
-    return MCDataVersion_t::Java_1_13_2;
-  case SCL_gameVersion::MC14:
-    return MCDataVersion_t::Java_1_14_4;
-  case SCL_gameVersion::MC15:
-    return MCDataVersion_t::Java_1_15_2;
-  case SCL_gameVersion::MC16:
-    return MCDataVersion_t::Java_1_16_5;
-  case SCL_gameVersion::MC17:
-    return MCDataVersion_t::Java_1_17_1;
-  case SCL_gameVersion::MC18:
-    return MCDataVersion_t::Java_1_18_2;
-  case SCL_gameVersion::MC19:
-    return MCDataVersion_t::Java_1_19_3;
-  case SCL_gameVersion::MC20:
-    return MCDataVersion_t::Java_1_20_6;
-  case SCL_gameVersion::MC21:
-    return MCDataVersion_t::Java_1_21_1;
-  case SCL_gameVersion::MC26_1:
-    return MCDataVersion_t::Java_26_1_2;
-  case SCL_gameVersion::MC26_2:
-  case SCL_gameVersion::FUTURE:
-    return MCDataVersion_t::Java_26_2;
+    case SCL_gameVersion::ANCIENT:
+    case SCL_gameVersion::MC12:
+      return MCDataVersion_t::Java_1_12_2;
+    case SCL_gameVersion::MC13:
+      return MCDataVersion_t::Java_1_13_2;
+    case SCL_gameVersion::MC14:
+      return MCDataVersion_t::Java_1_14_4;
+    case SCL_gameVersion::MC15:
+      return MCDataVersion_t::Java_1_15_2;
+    case SCL_gameVersion::MC16:
+      return MCDataVersion_t::Java_1_16_5;
+    case SCL_gameVersion::MC17:
+      return MCDataVersion_t::Java_1_17_1;
+    case SCL_gameVersion::MC18:
+      return MCDataVersion_t::Java_1_18_2;
+    case SCL_gameVersion::MC19:
+      return MCDataVersion_t::Java_1_19_3;
+    case SCL_gameVersion::MC20:
+      return MCDataVersion_t::Java_1_20_6;
+    case SCL_gameVersion::MC21:
+      return MCDataVersion_t::Java_1_21_1;
+    case SCL_gameVersion::MC26_1:
+      return MCDataVersion_t::Java_26_1_2;
+    case SCL_gameVersion::MC26_2:
+      return MCDataVersion_t::Java_26_2;
+    case SCL_gameVersion::MC26_3:
+    case SCL_gameVersion::FUTURE:
+      return MCDataVersion_t::Java_26_3;
   }
   abort();
 }
 
 MCDataVersion::MCDataVersion_t MCDataVersion::min_supported_version(
-  SCL_gameVersion v) noexcept {
+    SCL_gameVersion v) noexcept {
   switch (v) {
-  case SCL_gameVersion::ANCIENT:
-  case SCL_gameVersion::MC12:
-    return MCDataVersion_t::Java_1_12;
-  case SCL_gameVersion::MC13:
-    return MCDataVersion_t::Java_1_13;
-  case SCL_gameVersion::MC14:
-    return MCDataVersion_t::Java_1_14;
-  case SCL_gameVersion::MC15:
-    return MCDataVersion_t::Java_1_15;
-  case SCL_gameVersion::MC16:
-    return MCDataVersion_t::Java_1_16;
-  case SCL_gameVersion::MC17:
-    return MCDataVersion_t::Java_1_17;
-  case SCL_gameVersion::MC18:
-    return MCDataVersion_t::Java_1_18;
-  case SCL_gameVersion::MC19:
-    return MCDataVersion_t::Java_1_19;
-  case SCL_gameVersion::MC20:
-    return MCDataVersion_t::Java_1_20;
-  case SCL_gameVersion::MC21:
-    return MCDataVersion_t::Java_1_21;
-  case SCL_gameVersion::MC26_1:
-    return MCDataVersion_t::Java_26_1;
-  case SCL_gameVersion::MC26_2:
-  case SCL_gameVersion::FUTURE:
-    return MCDataVersion_t::Java_26_2;
+    case SCL_gameVersion::ANCIENT:
+    case SCL_gameVersion::MC12:
+      return MCDataVersion_t::Java_1_12;
+    case SCL_gameVersion::MC13:
+      return MCDataVersion_t::Java_1_13;
+    case SCL_gameVersion::MC14:
+      return MCDataVersion_t::Java_1_14;
+    case SCL_gameVersion::MC15:
+      return MCDataVersion_t::Java_1_15;
+    case SCL_gameVersion::MC16:
+      return MCDataVersion_t::Java_1_16;
+    case SCL_gameVersion::MC17:
+      return MCDataVersion_t::Java_1_17;
+    case SCL_gameVersion::MC18:
+      return MCDataVersion_t::Java_1_18;
+    case SCL_gameVersion::MC19:
+      return MCDataVersion_t::Java_1_19;
+    case SCL_gameVersion::MC20:
+      return MCDataVersion_t::Java_1_20;
+    case SCL_gameVersion::MC21:
+      return MCDataVersion_t::Java_1_21;
+    case SCL_gameVersion::MC26_1:
+      return MCDataVersion_t::Java_26_1;
+    case SCL_gameVersion::MC26_2:
+      return MCDataVersion_t::Java_26_2;
+    case SCL_gameVersion::MC26_3:
+    case SCL_gameVersion::FUTURE:
+      return MCDataVersion_t::Java_26_3;
   }
   abort();
 }
 
 MCDataVersion::MCDataVersion_t MCDataVersion::suggested_version(
-  SCL_gameVersion v) noexcept {
+    SCL_gameVersion v) noexcept {
   return max_supported_version(v);
 }
 
@@ -133,33 +137,35 @@ std::vector<SCL_gameVersion> MCDataVersion::valid_major_versions() noexcept {
 
 std::string MCDataVersion::major_version_to_string(SCL_gameVersion v) noexcept {
   switch (v) {
-  case SCL_gameVersion::ANCIENT:
-    return "ANCIENT";
-  case SCL_gameVersion::MC12:
-    return "1.12";
-  case SCL_gameVersion::MC13:
-    return "1.13";
-  case SCL_gameVersion::MC14:
-    return "1.14";
-  case SCL_gameVersion::MC15:
-    return "1.15";
-  case SCL_gameVersion::MC16:
-    return "1.16";
-  case SCL_gameVersion::MC17:
-    return "1.17";
-  case SCL_gameVersion::MC18:
-    return "1.18";
-  case SCL_gameVersion::MC19:
-    return "1.19";
-  case SCL_gameVersion::MC20:
-    return "1.20";
-  case SCL_gameVersion::MC21:
-    return "1.21";
-  case SCL_gameVersion::MC26_1:
-    return "26.1";
-  case SCL_gameVersion::MC26_2:
-    return "26.2";
-  case SCL_gameVersion::FUTURE:
-    return "FUTURE";
+    case SCL_gameVersion::ANCIENT:
+      return "ANCIENT";
+    case SCL_gameVersion::MC12:
+      return "1.12";
+    case SCL_gameVersion::MC13:
+      return "1.13";
+    case SCL_gameVersion::MC14:
+      return "1.14";
+    case SCL_gameVersion::MC15:
+      return "1.15";
+    case SCL_gameVersion::MC16:
+      return "1.16";
+    case SCL_gameVersion::MC17:
+      return "1.17";
+    case SCL_gameVersion::MC18:
+      return "1.18";
+    case SCL_gameVersion::MC19:
+      return "1.19";
+    case SCL_gameVersion::MC20:
+      return "1.20";
+    case SCL_gameVersion::MC21:
+      return "1.21";
+    case SCL_gameVersion::MC26_1:
+      return "26.1";
+    case SCL_gameVersion::MC26_2:
+      return "26.2";
+    case SCL_gameVersion::MC26_3:
+      return "26.3";
+    case SCL_gameVersion::FUTURE:
+      return "FUTURE";
   }
 }
