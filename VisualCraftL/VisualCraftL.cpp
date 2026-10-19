@@ -1058,137 +1058,142 @@ static_assert(std::is_trivially_copyable_v<VCL_biome_t> &&
 VCL_EXPORT_FUN VCL_biome_info VCL_get_biome_info(VCL_biome_t biome) {
   switch (biome) {
     case VCL_biome_t::the_void:
-      return VCL_biome_info{0.5, 0.5};
+      return {0.5, 0.5};
     case VCL_biome_t::plains:
-      return VCL_biome_info{0.8, 0.4};
+      return {0.8, 0.4};
     case VCL_biome_t::sunflower_plains:
-      return VCL_biome_info{0.8, 0.4};
+      return {0.8, 0.4};
     case VCL_biome_t::snowy_plains:
-      return VCL_biome_info{0, 0.5};
+      return {0, 0.5};
     case VCL_biome_t::ice_spikes:
-      return VCL_biome_info{0, 0.5};
+      return {0, 0.5};
     case VCL_biome_t::desert:
-      return VCL_biome_info{2, 0};
+      return {2, 0};
     case VCL_biome_t::swamp:
-      return VCL_biome_info{0.8, 0.9};
+      return {0.8, 0.9};
     case VCL_biome_t::mangrove_swamp:
-      return VCL_biome_info{0.8, 0.9};
+      return {0.8, 0.9};
     case VCL_biome_t::forest:
-      return VCL_biome_info{0.7, 0.4};
+      return {0.7, 0.8};
     case VCL_biome_t::flower_forest:
-      return VCL_biome_info{0.7, 0.8};
+      return {0.7, 0.8};
     case VCL_biome_t::birch_forest:
-      return VCL_biome_info{0.6, 0.6};
+      return {0.6, 0.6};
     case VCL_biome_t::dark_forest:
-      return VCL_biome_info{0.7, 0.8};
+      return {0.7, 0.8};
     case VCL_biome_t::old_growth_birch_forest:
-      return VCL_biome_info{0.6, 0.6};
+      return {0.6, 0.6};
     case VCL_biome_t::old_growth_pine_taiga:
-      return VCL_biome_info{0.3, 0.8};
+      return {0.3, 0.8};
     case VCL_biome_t::old_growth_spruce_taiga:
-      return VCL_biome_info{0.25, 0.8};
+      return {0.25, 0.8};
     case VCL_biome_t::taiga:
-      return VCL_biome_info{0.25, 0.8};
+      return {0.25, 0.8};
     case VCL_biome_t::snowy_taiga:
-      return VCL_biome_info{-0.5, 0.4};
+      return {-0.5, 0.4};
     case VCL_biome_t::savanna:
-      return VCL_biome_info{2, 0};
+      return {2, 0};
     case VCL_biome_t::savanna_plateau:
-      return VCL_biome_info{2, 0};
+      return {2, 0};
     case VCL_biome_t::windswept_hills:
-      return VCL_biome_info{0.2, 0.3};
+      return {0.2, 0.3};
     case VCL_biome_t::windswept_gravelly_hills:
-      return VCL_biome_info{0.2, 0.3};
+      return {0.2, 0.3};
     case VCL_biome_t::windswept_forest:
-      return VCL_biome_info{0.2, 0.3};
+      return {0.2, 0.3};
     case VCL_biome_t::windswept_savanna:
-      return VCL_biome_info{2, 0};
+      return {2, 0};
     case VCL_biome_t::jungle:
-      return VCL_biome_info{0.95, 0.9};
+      return {0.95, 0.9};
     case VCL_biome_t::sparse_jungle:
-      return VCL_biome_info{0.95, 0.8};
+      return {0.95, 0.8};
     case VCL_biome_t::bamboo_jungle:
-      return VCL_biome_info{0.95, 0.9};
+      return {0.95, 0.9};
     case VCL_biome_t::badlands:
-      return VCL_biome_info{2, 0};
+      return {2, 0};
     case VCL_biome_t::eroded_badlands:
-      return VCL_biome_info{2, 0};
+      return {2, 0};
     case VCL_biome_t::wooded_badlands:
-      return VCL_biome_info{2, 0};
+      return {2, 0};
     case VCL_biome_t::meadow:
-      return VCL_biome_info{0.5, 0.8};
+      return {0.5, 0.8};
     case VCL_biome_t::grove:
-      return VCL_biome_info{-0.2, 0.8};
+      return {-0.2, 0.8};
     case VCL_biome_t::snowy_slopes:
-      return VCL_biome_info{-0.3, 0.9};
+      return {-0.3, 0.9};
     case VCL_biome_t::frozen_peaks:
-      return VCL_biome_info{-0.7, 0.9};
+      return {-0.7, 0.9};
     case VCL_biome_t::jagged_peaks:
-      return VCL_biome_info{-0.7, 0.9};
+      return {-0.7, 0.9};
     case VCL_biome_t::stony_peaks:
-      return VCL_biome_info{1, 0.3};
+      return {1, 0.3};
     case VCL_biome_t::river:
-      return VCL_biome_info{0.5, 0.5};
+      return {0.5, 0.5};
     case VCL_biome_t::frozen_river:
-      return VCL_biome_info{0, 0.5};
+      return {0, 0.5};
     case VCL_biome_t::beach:
-      return VCL_biome_info{0.8, 0.4};
+      return {0.8, 0.4};
     case VCL_biome_t::snowy_beach:
-      return VCL_biome_info{0.05, 0.3};
+      return {0.05, 0.3};
     case VCL_biome_t::stony_shore:
-      return VCL_biome_info{0.2, 0.3};
+      return {0.2, 0.3};
     case VCL_biome_t::warm_ocean:
-      return VCL_biome_info{0.5, 0.5};
+      return {0.5, 0.5};
     case VCL_biome_t::lukewarm_ocean:
-      return VCL_biome_info{0.5, 0.5};
+      return {0.5, 0.5};
     case VCL_biome_t::deep_lukewarm_ocean:
-      return VCL_biome_info{0.5, 0.5};
+      return {0.5, 0.5};
     case VCL_biome_t::ocean:
-      return VCL_biome_info{0.5, 0.5};
+      return {0.5, 0.5};
     case VCL_biome_t::deep_ocean:
-      return VCL_biome_info{0.5, 0.5};
+      return {0.5, 0.5};
     case VCL_biome_t::cold_ocean:
-      return VCL_biome_info{0.5, 0.5};
+      return {0.5, 0.5};
     case VCL_biome_t::deep_cold_ocean:
-      return VCL_biome_info{0.5, 0.5};
+      return {0.5, 0.5};
     case VCL_biome_t::frozen_ocean:
-      return VCL_biome_info{0, 0.5};
+      return {0, 0.5};
     case VCL_biome_t::deep_frozen_ocean:
-      return VCL_biome_info{0.5, 0.5};
+      return {0.5, 0.5};
     case VCL_biome_t::mushroom_fields:
-      return VCL_biome_info{0.9, 1};
+      return {0.9, 1};
     case VCL_biome_t::dripstone_caves:
-      return VCL_biome_info{0.8, 0.4};
+      return {0.8, 0.4};
     case VCL_biome_t::lush_caves:
-      return VCL_biome_info{0.5, 0.5};
+      return {0.5, 0.5};
     case VCL_biome_t::deep_dark:
-      return VCL_biome_info{0.8, 0.4};
+      return {0.8, 0.4};
     case VCL_biome_t::nether_wastes:
-      return VCL_biome_info{2, 0};
+      return {2, 0};
     case VCL_biome_t::warped_forest:
-      return VCL_biome_info{2, 0};
+      return {2, 0};
     case VCL_biome_t::crimson_forest:
-      return VCL_biome_info{2, 0};
+      return {2, 0};
     case VCL_biome_t::soul_sand_valley:
-      return VCL_biome_info{2, 0};
+      return {2, 0};
     case VCL_biome_t::basalt_deltas:
-      return VCL_biome_info{2, 0};
+      return {2, 0};
     case VCL_biome_t::the_end:
-      return VCL_biome_info{0.5, 0.5};
+      return {0.5, 0.5};
     case VCL_biome_t::end_highlands:
-      return VCL_biome_info{0.5, 0.5};
+      return {0.5, 0.5};
     case VCL_biome_t::end_midlands:
-      return VCL_biome_info{0.5, 0.5};
+      return {0.5, 0.5};
     case VCL_biome_t::small_end_islands:
-      return VCL_biome_info{0.5, 0.5};
+      return {0.5, 0.5};
     case VCL_biome_t::end_barrens:
-      return VCL_biome_info{0.5, 0.5};
+      return {0.5, 0.5};
     case VCL_biome_t::cherry_grove:
-      return VCL_biome_info{0.5, 0.8};
+      return {0.5, 0.8};
     case VCL_biome_t::pale_garden:
-      return VCL_biome_info{0.7, 0.8};
+      return {0.7, 0.8};
+    case VCL_biome_t::sulfur_caves:
+      return {0.8, 0.4};
+    case VCL_biome_t::dappled_forest:
+      return {0.6, 0.6};
   }
-  return VCL_biome_info{NAN, NAN};
+  return VCL_biome_info{std::numeric_limits<float>::signaling_NaN(),
+                        std::numeric_limits<float>::signaling_NaN()};
 }
 
 #include <magic_enum/magic_enum.hpp>
@@ -1325,6 +1330,10 @@ const char* VCL_biome_name_ZH(VCL_biome_t b) noexcept {
       return "樱花树林";
     case VCL_biome_t::pale_garden:
       return "苍白花园";
+    case VCL_biome_t::sulfur_caves:
+      return "硫黄洞穴";
+    case VCL_biome_t::dappled_forest:
+      return "斑驳森林";
   }
   return "未命名";
 }
@@ -1460,9 +1469,12 @@ const char* VCL_biome_name_EN(VCL_biome_t b) noexcept {
     case VCL_biome_t::cherry_grove:
       return "Cherry Grove";
     case VCL_biome_t::pale_garden:
-      return "Pale garden";
+      return "Pale Garden";
+    case VCL_biome_t::sulfur_caves:
+      return "Sulfur Caves";
+    case VCL_biome_t::dappled_forest:
+      return "Dapple Forest";
   }
-
   return "Unnamed";
 }
 

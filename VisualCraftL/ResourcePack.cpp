@@ -451,7 +451,7 @@ bool VCL_resource_pack::override_texture(
 
     const float V_T = float(max_RGB + min_RGB) / 2 / 255;
 
-    const float slope = 0.8291f * V_T - 0.0050f;
+    const float slope = V_T;  // 0.8291f * V_T - 0.0050f;
 
     std::array<float, 3> rgb_dst{};
 
@@ -467,20 +467,15 @@ bool VCL_resource_pack::override_texture(
 
 std::array<int, 2> VCL_resource_pack::locate_color_rc(
     VCL_biome_info info) const noexcept {
-  assert(info.downfall == info.downfall);
-  assert(info.temperature == info.temperature);
+  assert(std::isfinite(info.downfall));
+  assert(std::isfinite(info.temperature));
   const float t_adj = std::clamp(info.temperature, 0.0f, 1.0f);
   const float w_adj = std::clamp(info.downfall, 0.0f, 1.0f) * t_adj;
 
-  int x = 255 * t_adj;
-  x = std::clamp(x, 0, 255);
-
-  int y = 255 * w_adj;
-  y = std::clamp(y, 0, x);
-  // y = std::clamp(y, 0, x);
-
-  const int r = 255 - y;
-  const int c = 255 - x;
+  const int c =
+      std::clamp(static_cast<int>(std::floor(255.0f * (1.0f - t_adj))), 0, 255);
+  const int r =
+      std::clamp(static_cast<int>(std::floor(255.0f * (1.0f - w_adj))), 0, 255);
   return {r, c};
 }
 
@@ -544,10 +539,19 @@ uint32_t VCL_resource_pack::standard_color(
   }
 
   if (biome == VCL_biome_t::cherry_grove) {
-    return 0xFF'90'81'4d;
+    return 0xFF'B6'DB'61;
   }
   if (biome == VCL_biome_t::pale_garden) {
-    return 0xFF'87'8d'76;
+    if (is_foliage) {
+      return 0xFF'87'8d'76;
+    }
+    return 0xFF'77'82'72;  // grass
+  }
+  if (biome == VCL_biome_t::dappled_forest) {
+    if (is_foliage) {
+      return 0xFF'E6'8E'30;
+    }
+    return 0xFF'DF'68'27;  // grass
   }
 
   return default_result;
@@ -609,6 +613,7 @@ bool VCL_resource_pack::override_required_textures(
           "Failed to override texture for block {} "
           "because it is both grass and foliage.",
           blk.full_id_ptr()->c_str());
+      VCL_report(VCL_report_type_t::error, msg.c_str());
       return false;
     }
 
@@ -661,7 +666,7 @@ bool VCL_resource_pack::override_required_textures(
       std::string msg = std::format(
           "Failed to override texture at address {}, because this "
           "image cannot be found in this->textures_original.",
-          (const void*)(pair.first));
+          static_cast<const void*>(pair.first));
       VCL_report(VCL_report_type_t::error, msg.c_str());
       return false;
     }
