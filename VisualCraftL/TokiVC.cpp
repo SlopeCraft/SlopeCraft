@@ -401,9 +401,20 @@ bool TokiVC::set_resource_no_lock() noexcept {
     TokiVC::bsl.available_block_states(TokiVC::version, TokiVC::exposed_face,
                                        &blks);
 
+    const auto transparent_option = [&]() {
+      if (is_render_quality_fast) {
+        // actually >=1.21.11. This is not very accurate, TODO: improve this
+        // later
+        if (version >= SCL_gameVersion::MC26_1) {
+          return VCL_transparent_texture_option::replace_with_adaptive;
+        }
+        return VCL_transparent_texture_option::replace_with_black;
+      }
+      return VCL_transparent_texture_option::keep;
+    }();
+
     const bool ok = TokiVC::pack.override_required_textures(
-        TokiVC::biome, TokiVC::is_render_quality_fast, blks.data(),
-        blks.size());
+        TokiVC::biome, transparent_option, blks.data(), blks.size());
     if (!ok) {
       VCL_report(VCL_report_type_t::error, "Failed to override textures.");
       return false;

@@ -389,7 +389,7 @@ bool VCL_resource_pack::compute_projection(
 
 bool VCL_resource_pack::override_texture(
     std::string_view path_in_original, uint32_t standard_color,
-    bool replace_transparent_with_black) noexcept {
+    VCL_transparent_texture_option transparent_option) noexcept {
   if (this->textures_override.contains(path_in_original.data())) {
     return true;
   }
@@ -418,6 +418,29 @@ bool VCL_resource_pack::override_texture(
   }
 
   standard_color |= 0xFF'00'00'00;
+  // fill color for transparent pixels.
+  const ARGB replace_for_transparent = [&]() {
+    if (transparent_option not_eq
+        VCL_transparent_texture_option::replace_with_adaptive) {
+      return 0xFF'00'00'00;
+    }
+    // adaptive rule. Find color with minimal luminance, times 0.75.
+    float min_luminance = std::numeric_limits<float>::max();
+    ARGB color_of_min_lum = 0xFF'00'00'00;
+    for (Eigen::Index idx = 0; idx < img_original.size(); idx++) {
+      const auto color = img_original(idx);
+      if (getA(color == 0)) continue;
+      const float luminance =
+          0.2126f * getR(color) + 0.7152f * getG(color) + 0.0722f * getB(color);
+      if (luminance < min_luminance) {
+        min_luminance = luminance;
+        color_of_min_lum = color;
+      }
+    }
+    return RGB2ARGB(getR(color_of_min_lum) / 255.0f * 0.75f,
+                    getG(color_of_min_lum) / 255.0f * 0.75f,
+                    getB(color_of_min_lum) / 255.0f * 0.75f);
+  }();
 
   Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> img(16,
                                                                           16);
@@ -430,10 +453,10 @@ bool VCL_resource_pack::override_texture(
   for (int idx = 0; idx < 16 * 16; idx++) {
     const uint32_t ARGB_orignal = img_original(idx);
     if (getA(ARGB_orignal) == 0) {
-      if (replace_transparent_with_black) {
-        img(idx) = 0xFF'00'00'00;
-      } else {
+      if (transparent_option == VCL_transparent_texture_option::keep) {
         img(idx) = ARGB_orignal;
+      } else {
+        img(idx) = replace_for_transparent;
       }
       continue;
     }
@@ -583,7 +606,7 @@ bool VCL_resource_pack::update_block_model_textures() noexcept {
 }
 
 bool VCL_resource_pack::override_required_textures(
-    VCL_biome_t biome, bool replace_transparent_with_black,
+    VCL_biome_t biome, VCL_transparent_texture_option transparent_option,
     const VCL_block* const* const blkpp, size_t num_blkp) noexcept {
   struct texture_info {
     const char* name{nullptr};
@@ -683,7 +706,7 @@ bool VCL_resource_pack::override_required_textures(
     const uint32_t color_grass = this->standard_color(biome, pair.second.name);
 
     const bool success = this->override_texture(pair.second.name, color_grass,
-                                                replace_transparent_with_black);
+                                                transparent_option);
     if (!success) {
       std::string msg =
           std::format("Failed to override texture named {}", pair.second.name);

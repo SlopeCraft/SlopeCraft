@@ -572,6 +572,16 @@ class VCL_model {
  public:
   std::variant<model_with_rotation, block_model::model> value;
 };
+/// This option tells VCL_resource_pack::override_texture how to handle
+/// transparent pixels in leaves.
+enum class VCL_transparent_texture_option {
+  /// In fast mode(<1.12.11-pre1), replace with black
+  replace_with_black,
+  /// In fancy mode. Keep transparency. Leaves are considered to be transparent
+  keep,
+  /// In fast mode(>=1.12.11-pre1), replace with black
+  replace_with_adaptive,
+};
 
 class VCL_resource_pack;
 using resource_pack = VCL_resource_pack;
@@ -623,14 +633,13 @@ class VCL_resource_pack {
   const Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>*
   find_texture(std::string_view path, bool override_only) const noexcept;
 
-  bool override_required_textures(VCL_biome_t biome,
-                                  bool replace_transparent_with_black,
-                                  const VCL_block* const* const blkpp,
-                                  size_t num_blkp) noexcept;
+  bool override_required_textures(
+      VCL_biome_t biome, VCL_transparent_texture_option transparent_option,
+      const VCL_block* const* const blkpp, size_t num_blkp) noexcept;
 
-  bool override_texture(std::string_view path_in_original,
-                        uint32_t standard_color,
-                        bool replace_transparent_with_black) noexcept;
+  bool override_texture(
+      std::string_view path_in_original, uint32_t standard_color,
+      VCL_transparent_texture_option transparent_option) noexcept;
 
   std::array<int, 2> locate_color_rc(VCL_biome_info) const noexcept;
 
