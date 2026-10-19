@@ -429,7 +429,7 @@ bool VCL_resource_pack::override_texture(
     ARGB color_of_min_lum = 0xFF'00'00'00;
     for (Eigen::Index idx = 0; idx < img_original.size(); idx++) {
       const auto color = img_original(idx);
-      if (getA(color == 0)) continue;
+      if (getA(color) == 0) continue;
       const float luminance =
           0.2126f * getR(color) + 0.7152f * getG(color) + 0.0722f * getB(color);
       if (luminance < min_luminance) {
@@ -511,9 +511,8 @@ uint32_t VCL_resource_pack::standard_color(VCL_biome_info info,
 
   if (is_foliage) {
     return this->colormap_foliage(r, c);
-  } else {
-    return this->colormap_grass(r, c);
   }
+  return this->colormap_grass(r, c);
 }
 
 uint32_t VCL_resource_pack::standard_color(

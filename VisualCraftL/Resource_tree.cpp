@@ -85,7 +85,7 @@ std::optional<zipped_folder> zipped_folder::from_zip(std::string_view zipname[[m
     zip_stat_t stat;
     zip_stat_index(zip, entry_idx, ZIP_FL_UNCHANGED, &stat);
 
-    destfile->__data.resize(stat.size);
+    destfile->data_.resize(stat.size);
     zip_file_t* const zfile = zip_fopen_index(zip, entry_idx, ZIP_FL_UNCHANGED);
     if (zfile == NULL) {
       std::string msg = std::format(
@@ -95,7 +95,7 @@ std::optional<zipped_folder> zipped_folder::from_zip(std::string_view zipname[[m
       continue;
     }
 
-    zip_fread(zfile, destfile->__data.data(), stat.size);
+    zip_fread(zfile, destfile->data_.data(), stat.size);
   }
 
   return result;

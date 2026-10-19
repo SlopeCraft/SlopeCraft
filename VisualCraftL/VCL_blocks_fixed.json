@@ -948,7 +948,7 @@
     "nameEN": "Cherry leaves",
     "nameZH": "樱花树叶",
     "version": "MC20",
-    "is_foliage": false
+    "is_foliage": true
   },
   "minecraft:azalea_leaves[distance=7,persistent=true]": {
     "burnable": true,
@@ -956,7 +956,7 @@
     "nameEN": "Azalea leaves",
     "nameZH": "杜鹃树叶",
     "version": "MC17",
-    "is_foliage": false
+    "is_foliage": true
   },
   "minecraft:flowering_azalea_leaves[distance=7,persistent=true]": {
     "burnable": true,
@@ -964,7 +964,7 @@
     "nameEN": "Flowering azalea leaves",
     "nameZH": "盛开杜鹃树叶",
     "version": "MC17",
-    "is_foliage": false
+    "is_foliage": true
   },
   "minecraft:pale_oak_leaves[distance=7,persistent=true]": {
     "burnable": true,
@@ -972,7 +972,7 @@
     "nameEN": "Pale oak leaves",
     "nameZH": "苍白树叶",
     "version": "MC21",
-    "is_foliage": false
+    "is_foliage": true
   },
   "minecraft:red_poplar_leaves[distance=7,persistent=true]": {
     "burnable": true,
@@ -980,7 +980,7 @@
     "nameEN": "Red poplar leaves",
     "nameZH": "红色杨树树叶",
     "version": "MC26_3",
-    "is_foliage": false
+    "is_foliage": true
   },
   "minecraft:orange_poplar_leaves[distance=7,persistent=true]": {
     "burnable": true,
@@ -988,7 +988,7 @@
     "nameEN": "Orange poplar leaves",
     "nameZH": "橙色杨树树叶",
     "version": "MC26_3",
-    "is_foliage": false
+    "is_foliage": true
   },
   "minecraft:yellow_poplar_leaves[distance=7,persistent=true]": {
     "burnable": true,
@@ -996,7 +996,7 @@
     "nameEN": "Yellow poplar leaves",
     "nameZH": "黄色杨树树叶",
     "version": "MC26_3",
-    "is_foliage": false
+    "is_foliage": true
   },
   "minecraft:blue_ice": {
     "class": "natural",

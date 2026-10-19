@@ -38,17 +38,17 @@ class zipped_folder;
 
 class zipped_file {
  private:
-  std::vector<uint8_t> __data;
+  std::vector<uint8_t> data_;
 
  public:
   friend class zipped_folder;
-  inline int64_t file_size() const noexcept { return __data.size(); }
+  [[nodiscard]] int64_t file_size() const noexcept { return data_.size(); }
 
-  inline uint8_t* data() noexcept { return __data.data(); }
+  [[nodiscard]] uint8_t* data() noexcept { return data_.data(); }
 
-  inline const uint8_t* data() const noexcept { return __data.data(); }
+  [[nodiscard]] const uint8_t* data() const noexcept { return data_.data(); }
 
-  inline void append_0_for_c_str() noexcept { this->__data.push_back(0); }
+  void append_0_for_c_str() noexcept { this->data_.push_back(0); }
 };
 
 class zipped_folder {
@@ -56,7 +56,7 @@ class zipped_folder {
   std::unordered_map<std::string, zipped_folder> subfolders;
   std::unordered_map<std::string, zipped_file> files;
 
-  inline zipped_folder* folder_at(const char* const str) noexcept {
+  [[nodiscard]] zipped_folder* folder_at(const char* const str) noexcept {
     auto it = subfolders.find(str);
     if (it != subfolders.end()) {
       return &it->second;
@@ -64,7 +64,7 @@ class zipped_folder {
     return nullptr;
   }
 
-  inline zipped_folder* subfolder(std::string_view fdname) noexcept {
+  [[nodiscard]] zipped_folder* subfolder(std::string_view fdname) noexcept {
     auto it = subfolders.find(std::string(fdname));
     if (it == subfolders.end()) {
       return nullptr;
@@ -73,7 +73,7 @@ class zipped_folder {
     }
   }
 
-  inline const zipped_folder* subfolder(
+  [[nodiscard]] const zipped_folder* subfolder(
       std::string_view fdname) const noexcept {
     auto it = subfolders.find(std::string(fdname));
     if (it == subfolders.end()) {
