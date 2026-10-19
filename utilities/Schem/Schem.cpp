@@ -37,13 +37,11 @@ This file is part of SlopeCraft.
 
 using namespace libSchem;
 
-WorldEditSchem_info::WorldEditSchem_info() : date(std::time(nullptr) * 1000) {
-}
+WorldEditSchem_info::WorldEditSchem_info() : date(std::time(nullptr) * 1000) {}
 
 litematic_info::litematic_info()
-  : time_created(std::time(nullptr) * 1000),
-    time_modified(std::time(nullptr) * 1000) {
-}
+    : time_created(std::time(nullptr) * 1000),
+      time_modified(std::time(nullptr) * 1000) {}
 
 void Schem::resize(int64_t x, int64_t y, int64_t z) {
   if (x < 0 || y < 0 || z < 0) {
@@ -59,8 +57,8 @@ std::string Schem::check_size() const noexcept {
 std::string Schem::check_size(int64_t x, int64_t y, int64_t z) noexcept {
   if (x < 0 || y < 0 || z < 0) {
     return std::format(
-      "Size in one or more dimensions is negative. x= {}, y= {}, z= {}", x, y,
-      z);
+        "Size in one or more dimensions is negative. x= {}, y= {}, z= {}", x, y,
+        z);
   }
   return {};
 }
@@ -107,7 +105,7 @@ int64_t Schem::non_zero_count() const noexcept {
 }
 
 bool Schem::have_invalid_block(
-  int64_t* first_invalid_block_idx) const noexcept {
+    int64_t* first_invalid_block_idx) const noexcept {
   for (int64_t idx = 0; idx < xzy.size(); idx++) {
     if (xzy(idx) >= block_id_list.size()) {
       if (first_invalid_block_idx != nullptr) {
@@ -120,8 +118,8 @@ bool Schem::have_invalid_block(
 }
 
 bool Schem::have_invalid_block(
-  int64_t* first_invalid_block_x_pos, int64_t* first_invalid_block_y_pos,
-  int64_t* first_invalid_block_z_pos) const noexcept {
+    int64_t* first_invalid_block_x_pos, int64_t* first_invalid_block_y_pos,
+    int64_t* first_invalid_block_z_pos) const noexcept {
   for (int64_t y = 0; y < y_range(); y++) {
     for (int64_t z = 0; z < z_range(); z++) {
       for (int64_t x = 0; x < x_range(); x++) {
@@ -144,7 +142,7 @@ bool Schem::have_invalid_block(
 }
 
 Schem Schem::slice_no_check(std::span<const std::pair<int64_t, int64_t>, 3>
-  xyz_index_range) const noexcept {
+                                xyz_index_range) const noexcept {
   Schem ret;
   ret.block_id_list = this->block_id_list;
   ret.MC_major_ver = this->MC_major_ver;
@@ -182,32 +180,29 @@ Schem Schem::slice_no_check(std::span<const std::pair<int64_t, int64_t>, 3>
 
 std::expected<boost::multi_array<Schem::schem_slice<Schem>, 3>, std::string>
 Schem::split_by_block_size(
-  std::span<const uint64_t> x_block_length,
-  std::span<const uint64_t> y_block_length,
-  std::span<const uint64_t> z_block_length) const noexcept {
+    std::span<const uint64_t> x_block_length,
+    std::span<const uint64_t> y_block_length,
+    std::span<const uint64_t> z_block_length) const noexcept {
   // check input block length and compute index ranges
   std::array<std::vector<std::pair<int64_t, int64_t>>, 3> xyz_block_index_pairs;
   {
     std::array<const std::span<const uint64_t>, 3> xyz_block_len{
-      x_block_length, y_block_length, z_block_length
-    };
+      x_block_length, y_block_length, z_block_length};
     std::array<uint64_t, 3> block_len_sum{0, 0, 0};
-    std::array<int64_t, 3> shape{
-      this->x_range(), this->y_range(),
-      this->z_range()
-    };
+    std::array<int64_t, 3> shape{this->x_range(), this->y_range(),
+                                 this->z_range()};
     for (size_t dim = 0; dim < 3; dim++) {
       int64_t cur_block_start_index = 0;
       for (size_t blk_idx = 0; blk_idx < xyz_block_len[dim].size(); blk_idx++) {
         const auto block_len = xyz_block_len[dim][blk_idx];
         if (block_len <= 0) {
           return std::unexpected(std::format(
-            "Found non-positive block length in dim = {}, block index = {}",
-            dim, blk_idx));
+              "Found non-positive block length in dim = {}, block index = {}",
+              dim, blk_idx));
         }
         block_len_sum[dim] += block_len;
         const auto cur_block_end_index =
-          static_cast<int64_t>(block_len_sum[dim]);
+            static_cast<int64_t>(block_len_sum[dim]);
         assert(cur_block_end_index > cur_block_start_index);
         xyz_block_index_pairs[dim].emplace_back(cur_block_start_index,
                                                 cur_block_end_index);
@@ -215,18 +210,17 @@ Schem::split_by_block_size(
       }
       if (static_cast<int64_t>(block_len_sum[dim]) not_eq shape[dim]) {
         return std::unexpected(std::format(
-          "The sum of block length of dim {} is {}, which is not identical "
-          "to shape on this dim({}), ",
-          dim, block_len_sum[dim], shape[dim]));
+            "The sum of block length of dim {} is {}, which is not identical "
+            "to shape on this dim({}), ",
+            dim, block_len_sum[dim], shape[dim]));
       }
     }
   }
 
   boost::multi_array<Schem::schem_slice<Schem>, 3> ret{
     boost::extents[xyz_block_index_pairs[0].size()]
-    [xyz_block_index_pairs[1].size()]
-    [xyz_block_index_pairs[2].size()]
-  };
+                  [xyz_block_index_pairs[1].size()]
+                  [xyz_block_index_pairs[2].size()]};
 
   for (size_t x_idx = 0; x_idx < xyz_block_index_pairs[0].size(); x_idx++) {
     const auto x_range = xyz_block_index_pairs[0][x_idx];
@@ -234,16 +228,13 @@ Schem::split_by_block_size(
       const auto y_range = xyz_block_index_pairs[1][y_idx];
       for (size_t z_idx = 0; z_idx < xyz_block_index_pairs[2].size(); z_idx++) {
         const auto z_range = xyz_block_index_pairs[2][z_idx];
-        const Eigen::Array<int64_t, 3, 1> offset{
-          x_range.first, y_range.first,
-          z_range.first
-        };
+        const Eigen::Array<int64_t, 3, 1> offset{x_range.first, y_range.first,
+                                                 z_range.first};
         auto& dest = ret[x_idx][y_idx][z_idx];
         dest.offset = offset;
         dest.content =
-          this->slice_no_check(std::array<std::pair<int64_t, int64_t>, 3>{
-            x_range, y_range, z_range
-          });
+            this->slice_no_check(std::array<std::pair<int64_t, int64_t>, 3>{
+              x_range, y_range, z_range});
       }
     }
   }
@@ -275,19 +266,16 @@ void Schem::process_mushroom_states() noexcept {
     const auto& block_id = this->block_id_list[idx];
     const auto pure_id = ::to_pure_block_id(block_id);
     if (pure_id == id_red || pure_id == id_brown || pure_id == id_stem) {
-    }
-    else {
+    } else {
       continue;
     }
 
     const mushroom_sides side = mushroom_sides::from_block_id(block_id);
     if (pure_id == id_red) {
       u6_to_ele_red[side.u6()] = idx;
-    }
-    else if (pure_id == id_brown) {
+    } else if (pure_id == id_brown) {
       u6_to_ele_brown[side.u6()] = idx;
-    }
-    else {
+    } else {
       u6_to_ele_stem[side.u6()] = idx;
     }
   }
@@ -335,7 +323,7 @@ void Schem::process_mushroom_states() noexcept {
       for (int64_t x = 0; x < x_range(); x++) {
         // if current block is not mushroom, continue
         const mushroom_type current_mushroom_type =
-          is_mushroom_LUT[this->operator()(x, y, z)];
+            is_mushroom_LUT[this->operator()(x, y, z)];
         if (current_mushroom_type == mushroom_type::not_mushroom) {
           continue;
         }
@@ -387,15 +375,15 @@ void Schem::process_mushroom_states() noexcept {
         // write in the correct value of ele_t
         ele_t corrected_ele = invalid_ele_t;
         switch (current_mushroom_type) {
-        case mushroom_type::brown_mushroom:
-          corrected_ele = u6_to_ele_brown[side.u6()];
-          break;
-        case mushroom_type::red_mushroom:
-          corrected_ele = u6_to_ele_red[side.u6()];
-          break;
-        default:
-          corrected_ele = u6_to_ele_stem[side.u6()];
-          break;
+          case mushroom_type::brown_mushroom:
+            corrected_ele = u6_to_ele_brown[side.u6()];
+            break;
+          case mushroom_type::red_mushroom:
+            corrected_ele = u6_to_ele_red[side.u6()];
+            break;
+          default:
+            corrected_ele = u6_to_ele_stem[side.u6()];
+            break;
         }
 
         this->operator()(x, y, z) = corrected_ele;
@@ -406,21 +394,21 @@ void Schem::process_mushroom_states() noexcept {
 }
 
 std::expected<void, std::pair<SCL_errorFlag, std::string>> Schem::pre_check(
-  std::string_view filename, std::string_view extension) const noexcept {
+    std::string_view filename, std::string_view extension) const noexcept {
   if (std::filesystem::path(filename).extension() != extension) {
     // wrong extension
     return std::unexpected(std::make_pair(
-      SCL_errorFlag::EXPORT_SCHEM_WRONG_EXTENSION,
-      std::format("The filename extension must be \"{}\".", extension)));
+        SCL_errorFlag::EXPORT_SCHEM_WRONG_EXTENSION,
+        std::format("The filename extension must be \"{}\".", extension)));
   }
   // check for invalid blocks
   {
     std::array<int64_t, 3> pos;
     if (this->have_invalid_block(&pos[0], &pos[1], &pos[2])) {
       return std::unexpected(std::make_pair(
-        SCL_errorFlag::EXPORT_SCHEM_HAS_INVALID_BLOCKS,
-        std::format("The first invalid block is at x={}, y={}, z={}", pos[0],
-                    pos[1], pos[2])));
+          SCL_errorFlag::EXPORT_SCHEM_HAS_INVALID_BLOCKS,
+          std::format("The first invalid block is at x={}, y={}, z={}", pos[0],
+                      pos[1], pos[2])));
     }
   }
   return {};
@@ -440,8 +428,8 @@ Schem::export_litematic(std::string_view filename,
 
   if (!lite.open(filename.data())) {
     return std::unexpected(
-      std::make_pair(SCL_errorFlag::EXPORT_SCHEM_FAILED_TO_CREATE_FILE,
-                     std::format("Failed to open file: {}", filename)));
+        std::make_pair(SCL_errorFlag::EXPORT_SCHEM_FAILED_TO_CREATE_FILE,
+                       std::format("Failed to open file: {}", filename)));
   }
 
   lite.writeCompound("Metadata");
@@ -534,7 +522,7 @@ Schem::export_litematic(std::string_view filename,
       {
         for (int64_t idx = 0; idx < int64_t(shrinked.size()); idx++) {
           lite.writeSingleTag<int64_t, true>(
-            NBT::Long, "id", reinterpret_cast<int64_t&>(shrinked[idx]));
+              NBT::Long, "id", reinterpret_cast<int64_t&>(shrinked[idx]));
         }
       }
       // progressAdd(wind, size3D[0]);
@@ -548,42 +536,43 @@ Schem::export_litematic(std::string_view filename,
         if (not res) {
           lite.endCompound();
           return std::unexpected(
-            std::make_pair(SCL_errorFlag::EXPORT_SCHEM_HAS_INVALID_ENTITY,
-                           std::move(res.error())));
+              std::make_pair(SCL_errorFlag::EXPORT_SCHEM_HAS_INVALID_ENTITY,
+                             std::move(res.error())));
         }
         lite.endCompound();
       }
     }
-    lite.endCompound(); // end current region
+    lite.endCompound();  // end current region
   }
-  lite.endCompound(); // end all regions
+  lite.endCompound();  // end all regions
 
   switch (this->MC_major_ver) {
-  case ::SCL_gameVersion::MC12:
-    lite.writeInt("MinecraftDataVersion", (int)this->MC_version_number());
-    lite.writeInt("Version", 4);
-    break;
-  case ::SCL_gameVersion::MC13:
-  case ::SCL_gameVersion::MC14:
-  case ::SCL_gameVersion::MC15:
-  case ::SCL_gameVersion::MC16:
-  case ::SCL_gameVersion::MC17:
-  case ::SCL_gameVersion::MC18:
-  case ::SCL_gameVersion::MC19:
-  case ::SCL_gameVersion::MC20:
-  case ::SCL_gameVersion::MC21:
-  case ::SCL_gameVersion::MC26_1:
-  case ::SCL_gameVersion::MC26_2:
-    lite.writeInt("MinecraftDataVersion", (int)this->MC_version_number());
-    lite.writeInt("Version", 5);
-    break;
-  default:
-    lite.close();
-    return std::unexpected(std::make_pair(
-      SCL_errorFlag::UNKNOWN_MAJOR_GAME_VERSION,
-      std::format("Unknown major game version! Only 1.12 to 1.19 is "
-                  "supported, but given value {}",
-                  int(this->MC_major_ver))));
+    case ::SCL_gameVersion::MC12:
+      lite.writeInt("MinecraftDataVersion", (int)this->MC_version_number());
+      lite.writeInt("Version", 4);
+      break;
+    case ::SCL_gameVersion::MC13:
+    case ::SCL_gameVersion::MC14:
+    case ::SCL_gameVersion::MC15:
+    case ::SCL_gameVersion::MC16:
+    case ::SCL_gameVersion::MC17:
+    case ::SCL_gameVersion::MC18:
+    case ::SCL_gameVersion::MC19:
+    case ::SCL_gameVersion::MC20:
+    case ::SCL_gameVersion::MC21:
+    case ::SCL_gameVersion::MC26_1:
+    case ::SCL_gameVersion::MC26_2:
+    case ::SCL_gameVersion::MC26_3:
+      lite.writeInt("MinecraftDataVersion", (int)this->MC_version_number());
+      lite.writeInt("Version", 5);
+      break;
+    default:
+      lite.close();
+      return std::unexpected(std::make_pair(
+          SCL_errorFlag::UNKNOWN_MAJOR_GAME_VERSION,
+          std::format("Unknown major game version! Only 1.12 to 1.19 is "
+                      "supported, but given value {}",
+                      int(this->MC_major_ver))));
   }
   lite.close();
 
@@ -605,21 +594,21 @@ Schem::export_structure(std::string_view filename,
   for (number_of_air = 0; number_of_air < this->block_id_list.size();
        number_of_air++) {
     if (0 ==
-      std::strcmp("minecraft:air", block_id_list[number_of_air].c_str())) {
+        std::strcmp("minecraft:air", block_id_list[number_of_air].c_str())) {
       break;
     }
   }
 
   if ((!is_air_structure_void) &&
-    (number_of_air >= this->block_id_list.size())) {
+      (number_of_air >= this->block_id_list.size())) {
     std::cerr << "You assigned is_air_structure_void=false, but there is no "
-      "minecraft:air in your block palette."
-      << std::endl;
+                 "minecraft:air in your block palette."
+              << std::endl;
 
     return std::unexpected(std::make_pair(
-      SCL_errorFlag::EXPORT_SCHEM_STRUCTURE_REQUIRES_AIR,
-      "You assigned is_air_structure_void=false, but there is no "
-      "minecraft:air in your block palette."));
+        SCL_errorFlag::EXPORT_SCHEM_STRUCTURE_REQUIRES_AIR,
+        "You assigned is_air_structure_void=false, but there is no "
+        "minecraft:air in your block palette."));
   }
 
   /*
@@ -630,8 +619,8 @@ Schem::export_structure(std::string_view filename,
   NBT::NBTWriter<true> file;
   if (!file.open(filename.data())) {
     return std::unexpected(
-      std::make_pair(SCL_errorFlag::EXPORT_SCHEM_FAILED_TO_CREATE_FILE,
-                     std::format("Failed to open file {}", filename)));
+        std::make_pair(SCL_errorFlag::EXPORT_SCHEM_FAILED_TO_CREATE_FILE,
+                       std::format("Failed to open file {}", filename)));
   }
 
   file.writeListHead("size", NBT::Int, 3);
@@ -676,8 +665,7 @@ Schem::export_structure(std::string_view filename,
       if (!is_air_structure_void) {
         blocks_to_write++;
       }
-    }
-    else {
+    } else {
       blocks_to_write++;
     }
   }
@@ -692,8 +680,7 @@ Schem::export_structure(std::string_view filename,
             if (!is_air_structure_void) {
               should_write = true;
             }
-          }
-          else {
+          } else {
             should_write = true;
           }
 
@@ -739,8 +726,8 @@ Schem::export_structure(std::string_view filename,
             file.endCompound();
             file.close_file();
             return std::unexpected(
-              std::make_pair(SCL_errorFlag::EXPORT_SCHEM_HAS_INVALID_ENTITY,
-                             std::move(res.error())));
+                std::make_pair(SCL_errorFlag::EXPORT_SCHEM_HAS_INVALID_ENTITY,
+                               std::move(res.error())));
           }
         }
         file.endCompound();
@@ -751,28 +738,29 @@ Schem::export_structure(std::string_view filename,
     assert(file.isInCompound());
 
     switch (this->MC_major_ver) {
-    case ::SCL_gameVersion::MC12:
-    case ::SCL_gameVersion::MC13:
-    case ::SCL_gameVersion::MC14:
-    case ::SCL_gameVersion::MC15:
-    case ::SCL_gameVersion::MC16:
-    case ::SCL_gameVersion::MC17:
-    case ::SCL_gameVersion::MC18:
-    case ::SCL_gameVersion::MC19:
-    case ::SCL_gameVersion::MC20:
-    case ::SCL_gameVersion::MC21:
-    case ::SCL_gameVersion::MC26_1:
-    case ::SCL_gameVersion::MC26_2:
-      file.writeInt("MinecraftDataVersion", (int)this->MC_data_ver);
-      break;
-    default:
-      std::cerr << "Wrong game version!" << std::endl;
-      file.close();
-      return std::unexpected(std::make_pair(
-        SCL_errorFlag::UNKNOWN_MAJOR_GAME_VERSION,
-        std::format("Unknown major game version! Only 1.12 to 1.21 is "
-                    "supported, but given value {}",
-                    (int)this->MC_major_ver)));
+      case ::SCL_gameVersion::MC12:
+      case ::SCL_gameVersion::MC13:
+      case ::SCL_gameVersion::MC14:
+      case ::SCL_gameVersion::MC15:
+      case ::SCL_gameVersion::MC16:
+      case ::SCL_gameVersion::MC17:
+      case ::SCL_gameVersion::MC18:
+      case ::SCL_gameVersion::MC19:
+      case ::SCL_gameVersion::MC20:
+      case ::SCL_gameVersion::MC21:
+      case ::SCL_gameVersion::MC26_1:
+      case ::SCL_gameVersion::MC26_2:
+      case ::SCL_gameVersion::MC26_3:
+        file.writeInt("MinecraftDataVersion", (int)this->MC_data_ver);
+        break;
+      default:
+        std::cerr << "Wrong game version!" << std::endl;
+        file.close();
+        return std::unexpected(std::make_pair(
+            SCL_errorFlag::UNKNOWN_MAJOR_GAME_VERSION,
+            std::format("Unknown major game version! Only 1.12 to 26.3 is "
+                        "supported, but given value {}",
+                        (int)this->MC_major_ver)));
     }
   }
   file.close();
@@ -793,17 +781,17 @@ Schem::export_WESchem(std::string_view filename,
 
   if (this->MC_major_ver <= SCL_gameVersion::MC12) {
     return std::unexpected(std::make_pair(
-      ::SCL_errorFlag::EXPORT_SCHEM_MC12_NOT_SUPPORTED,
-      "Exporting a schematic as 1.12 WorldEdit .schematic format "
-      "is not supported. Try other tools."));
+        ::SCL_errorFlag::EXPORT_SCHEM_MC12_NOT_SUPPORTED,
+        "Exporting a schematic as 1.12 WorldEdit .schematic format "
+        "is not supported. Try other tools."));
   }
 
   NBT::NBTWriter<true> file;
 
   if (not file.open(filename.data())) {
     return std::unexpected(
-      std::make_pair(SCL_errorFlag::EXPORT_SCHEM_FAILED_TO_CREATE_FILE,
-                     std::format("Failed to open file {}", filename)));
+        std::make_pair(SCL_errorFlag::EXPORT_SCHEM_FAILED_TO_CREATE_FILE,
+                       std::format("Failed to open file {}", filename)));
   }
 
   auto write_version = [&]() {
@@ -816,10 +804,10 @@ Schem::export_WESchem(std::string_view filename,
       for (int idx = 0; idx < static_cast<int>(block_id_list.size()); idx++) {
         //        continue;
         [[maybe_unused]] const auto ret =
-          file.writeInt(block_id_list[idx], idx);
+            file.writeInt(block_id_list[idx], idx);
         assert(ret > 0);
       }
-    } // finish palette
+    }  // finish palette
     file.endCompound();
   };
   auto write_offset = [&]() {
@@ -828,7 +816,7 @@ Schem::export_WESchem(std::string_view filename,
       file.writeInt("", info.offset[0]);
       file.writeInt("", info.offset[1]);
       file.writeInt("", info.offset[2]);
-    } // end array
+    }  // end array
   };
   auto write_shape = [&]() {
     file.writeShort("Width", x_range());
@@ -838,13 +826,11 @@ Schem::export_WESchem(std::string_view filename,
 
   std::vector<uint8_t> blockdata;
   ::shrink_bytes_weSchem(
-    {this->xzy.data(), static_cast<size_t>(this->xzy.size())},
-    block_id_list.size(), &blockdata);
+      {this->xzy.data(), static_cast<size_t>(this->xzy.size())},
+      block_id_list.size(), &blockdata);
   auto write_blocks = [&](const char* key) {
-    std::span<const int8_t> data{
-      reinterpret_cast<int8_t*>(blockdata.data()),
-      blockdata.size() * sizeof(uint8_t)
-    };
+    std::span<const int8_t> data{reinterpret_cast<int8_t*>(blockdata.data()),
+                                 blockdata.size() * sizeof(uint8_t)};
     file.writeByteArrayHead(key, data.size());
     for (int8_t d : data) {
       file.writeByte("", d);
@@ -871,10 +857,10 @@ Schem::export_WESchem(std::string_view filename,
         }
       }
       // finish list
-    } // finish compound
+    }  // finish compound
     file.endCompound();
 
-    file.writeInt("Version", 2); // schematic format version
+    file.writeInt("Version", 2);  // schematic format version
     write_version();
 
     write_palette();
@@ -885,8 +871,7 @@ Schem::export_WESchem(std::string_view filename,
     write_shape();
     write_offset();
     write_blocks("BlockData");
-  }
-  else {
+  } else {
     // 1.20+
     file.writeCompound("Schematic");
     {
@@ -907,9 +892,9 @@ Schem::export_WESchem(std::string_view filename,
         }
         file.endCompound();
       }
-      file.endCompound(); // finish metadata
+      file.endCompound();  // finish metadata
 
-      file.writeInt("Version", 3); // schematic format version
+      file.writeInt("Version", 3);  // schematic format version
       write_version();
       write_shape();
       write_offset();
@@ -920,7 +905,7 @@ Schem::export_WESchem(std::string_view filename,
         write_palette();
         write_blocks("Data");
       }
-      file.endCompound(); // finish Blocks
+      file.endCompound();  // finish Blocks
     }
     file.endCompound();
   }
@@ -938,9 +923,9 @@ libSchem::Schem::remove_unused_ids() noexcept {
   for (const ele_t blkid : *this) {
     if (blkid >= this->palette_size()) [[unlikely]] {
       return std::unexpected(
-        std::format("The scheme required block with id = {}, but the block "
-                    "palette has only {} blocks",
-                    blkid, this->palette_size()));
+          std::format("The scheme required block with id = {}, but the block "
+                      "palette has only {} blocks",
+                      blkid, this->palette_size()));
     }
     id_used[blkid] = true;
   }
@@ -951,8 +936,7 @@ libSchem::Schem::remove_unused_ids() noexcept {
     for (size_t id = 0; id < id_used.size(); id++) {
       if (id_used[id]) {
         id_map_old_to_new.emplace_back(next_id++);
-      }
-      else {
+      } else {
         id_map_old_to_new.emplace_back(invalid_ele_t);
       }
     }
