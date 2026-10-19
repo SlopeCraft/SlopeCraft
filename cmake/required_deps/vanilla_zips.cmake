@@ -11,6 +11,7 @@ set(VCL_zip_names
     "Vanilla_1_21_11.zip"
     "Vanilla_26_1_2.zip"
     "Vanilla_26_2.zip"
+    "Vanilla_26_3.zip"
 )
 set(VCL_zip_hashes
     SHA256=357ab131461581927caf47093d56d75d115c7426ad4466e5e448c40f5620fb42 # Vanilla_1_12_2.zip
@@ -25,6 +26,7 @@ set(VCL_zip_hashes
     SHA256=f2039093f08e53d2bc6f3a1770ae6966a5ab3618e899dd0bdc7b69816ced71d2 # Vanilla_1_21_11.zip
     SHA256=3a80b38f00461f4b9f546c3f702fee72b09c674a0bfc477e2c627576161ca2d8 # Vanilla_26_1_2.zip
     SHA256=6acaba4c13199f9d32d21d5a82e09909a9adf3755cc1bd03d310d75c67fe30ca # Vanilla_26_2.zip
+    SHA256=b0d46fa98b75d104e53db979b9f31922fab34bd3c106d78ed4389ca6f604a9f4 # Vanilla_26_3.zip
 )
 set(VCL_version_names
     12
@@ -39,6 +41,7 @@ set(VCL_version_names
     21
     26_1
     26_2
+    26_3
 )
 
 list(LENGTH VCL_zip_names vcl_zip_num)

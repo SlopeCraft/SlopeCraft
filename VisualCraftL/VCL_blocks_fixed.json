@@ -941,7 +941,7 @@
     "version": "MC19",
     "is_foliage": true
   },
-  // Cherry, azalea(and flowering), pale leaves don't use coloring mechanism, so is_foliage is set to false
+  // Cherry, azalea(and flowering), pale leaves, poplar leaves don't use coloring mechanism, so is_foliage is set to false
   "minecraft:cherry_leaves[distance=7,persistent=true]": {
     "burnable": true,
     "class": "leaves",
@@ -972,6 +972,30 @@
     "nameEN": "Pale oak leaves",
     "nameZH": "苍白树叶",
     "version": "MC21",
+    "is_foliage": false
+  },
+  "minecraft:red_poplar_leaves[distance=7,persistent=true]": {
+    "burnable": true,
+    "class": "leaves",
+    "nameEN": "Red poplar leaves",
+    "nameZH": "红色杨树树叶",
+    "version": "MC26_3",
+    "is_foliage": false
+  },
+  "minecraft:orange_poplar_leaves[distance=7,persistent=true]": {
+    "burnable": true,
+    "class": "leaves",
+    "nameEN": "Orange poplar leaves",
+    "nameZH": "橙色杨树树叶",
+    "version": "MC26_3",
+    "is_foliage": false
+  },
+  "minecraft:yellow_poplar_leaves[distance=7,persistent=true]": {
+    "burnable": true,
+    "class": "leaves",
+    "nameEN": "Yellow poplar leaves",
+    "nameZH": "黄色杨树树叶",
+    "version": "MC26_3",
     "is_foliage": false
   },
   "minecraft:blue_ice": {
@@ -1955,6 +1979,13 @@
     "nameEN": "Pale oak plank",
     "nameZH": "苍白木板",
     "version": "MC21"
+  },
+  "minecraft:poplar_planks": {
+    "burnable": true,
+    "class": "planks",
+    "nameEN": "Poplar plank",
+    "nameZH": "杨木木板",
+    "version": "MC26_3"
   },
   "minecraft:honey_block": {
     "class": "redstone",
@@ -4470,6 +4501,68 @@
     "nameEN": "Pale oak log (Z axis)",
     "nameZH": "去皮苍白原木 (Z 轴)",
     "version": "MC21",
+    "faces": [
+      "north",
+      "south"
+    ],
+    "burnable": true
+  },
+  "minecraft:poplar_wood[axis=y]": {
+    "class": "wood",
+    "nameEN": "Poplar log (Y axis)",
+    "nameZH": "杨木原木 (Y 轴)",
+    "version": "MC26_3",
+    "burnable": true
+  },
+  "minecraft:poplar_wood[axis=x]": {
+    "class": "wood",
+    "nameEN": "Poplar log (X axis)",
+    "nameZH": "杨木原木 (X 轴)",
+    "version": "MC26_3",
+    "faces": [
+      "east",
+      "west",
+      "up",
+      "down"
+    ],
+    "burnable": true
+  },
+  "minecraft:poplar_wood[axis=z]": {
+    "class": "wood",
+    "nameEN": "Poplar log (Z axis)",
+    "nameZH": "杨木原木 (Z 轴)",
+    "version": "MC26_3",
+    "faces": [
+      "north",
+      "south"
+    ],
+    "burnable": true
+  },
+  "minecraft:stripped_poplar_wood[axis=y]": {
+    "class": "wood",
+    "nameEN": "Poplar log (Y axis)",
+    "nameZH": "去皮杨木原木 (Y 轴)",
+    "version": "MC26_3",
+    "burnable": true
+  },
+  "minecraft:stripped_poplar_wood[axis=x]": {
+    "class": "wood",
+    "nameEN": "Poplar log (X axis)",
+    "nameZH": "去皮杨木原木 (X 轴)",
+    "version": "MC26_3",
+    "faces": [
+      "east",
+      "west",
+      "up",
+      "down"
+    ],
+    "burnable": true
+  },
+  "minecraft:stripped_poplar_wood[axis=z]": {
+    "class": "wood",
+    "nameEN": "Poplar log (Z axis)",
+    "nameZH": "去皮杨木原木 (Z 轴)",
+    "version": "MC26_3",
     "faces": [
       "north",
       "south"
