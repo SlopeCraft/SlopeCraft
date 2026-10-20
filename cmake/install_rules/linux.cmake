@@ -26,6 +26,9 @@ install(FILES ${PROJECT_SOURCE_DIR}/MapViewer/others/MapViewer_64.png
 install(FILES ${PROJECT_SOURCE_DIR}/MapViewer/others/MapViewer.desktop
     DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
 )
+####################### mc_schem
+install(FILES ${mc_schem_SHARED_LIB_LOCATION}
+    DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 ####################### for SlopeCraft
 # Install all block list archives

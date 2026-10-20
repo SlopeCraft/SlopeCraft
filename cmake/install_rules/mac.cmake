@@ -40,6 +40,8 @@ install(TARGETS SlopeCraftL
     RUNTIME DESTINATION MapViewer.app/Contents/Frameworks
     LIBRARY DESTINATION MapViewer.app/Contents/Frameworks
 )
+install(FILES ${mc_schem_SHARED_LIB_LOCATION}
+    DESTINATION MapViewer.app/Contents/Frameworks)
 file(GLOB MapViewer_Icon ${PROJECT_SOURCE_DIR}/MapViewer/others/MapViewer.icns)
 install(FILES ${MapViewer_Icon}
     DESTINATION MapViewer.app/Contents/Resources
@@ -77,6 +79,8 @@ install(TARGETS SlopeCraftL
     RUNTIME DESTINATION SlopeCraft.app/Contents/Frameworks
     LIBRARY DESTINATION SlopeCraft.app/Contents/Frameworks
 )
+install(FILES ${mc_schem_SHARED_LIB_LOCATION}
+    DESTINATION SlopeCraft.app/Contents/Frameworks)
 set(SlopeCraft_Icon ${PROJECT_SOURCE_DIR}/SlopeCraft/others/SlopeCraftIconNew.icns)
 install(FILES ${SlopeCraft_Icon}
     DESTINATION SlopeCraft.app/Contents/Resources
@@ -128,6 +132,8 @@ install(TARGETS VisualCraftL
     RUNTIME DESTINATION VisualCraft.app/Contents/Frameworks
     LIBRARY DESTINATION VisualCraft.app/Contents/Frameworks
 )
+install(FILES ${mc_schem_SHARED_LIB_LOCATION}
+    DESTINATION VisualCraft.app/Contents/Frameworks)
 install(FILES ${PROJECT_SOURCE_DIR}/VisualCraft/others/VisualCraft.icns
     DESTINATION VisualCraft.app/Contents/Resources
 )
