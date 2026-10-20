@@ -154,7 +154,7 @@ jobs:
           -DCMAKE_PREFIX_PATH:PATH="$(brew --prefix)" \
           -DCMAKE_INSTALL_PREFIX:PATH="$(pwd)/install" \
           -DCMAKE_BUILD_TYPE:STRING="$BUILD_TYPE" \
-          -DSlopeCraft_GPU_API:STRING="None"\
+          -DSlopeCraft_GPU_API:STRING="None" \
           -DMC_SCHEM_HAS_mdspan=OFF
 
       - name: CMake build
