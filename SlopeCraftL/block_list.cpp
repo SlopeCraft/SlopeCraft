@@ -24,9 +24,10 @@ General Public License for more details.
 #include <format>
 #include <json.hpp>
 #include <expected>
+
 #include <zip.h>
 #include <libpng_reader.h>
-#include <process_block_id.h>
+#include <mc_schem.hpp>
 
 #include <parse_game_version.hpp>
 #include <parse_version_set.hpp>
@@ -38,11 +39,14 @@ General Public License for more details.
 #include "color_table.h"
 #include "SCL_translator.h"
 
-#include <zip.h>
-
 using namespace SlopeCraft;
 
 // mc_block_interface *mc_block_interface::create() { return new mc_block; }
+
+static bool check_block_id(const std::string& id) {
+  auto result = mc_schem::block::create(id);
+  return result.has_value();
+}
 
 std::pair<uint8_t, mc_block> parse_block(const nlohmann::json& jo) noexcept(
     false) {
@@ -77,17 +81,14 @@ std::pair<uint8_t, mc_block> parse_block(const nlohmann::json& jo) noexcept(
   } else {
     ret.idOld = ret.id;
   }
-  if (not blkid::is_valid_id(ret.id)) {
+  if (not check_block_id(ret.id)) {
     throw std::runtime_error{
-      SCLTranslator::tr("无效的方块id %1").arg(ret.id.c_str()).toStdString()
-      // std::format("Invalid block id \"{}\"", ret.id)
-    };
+      SCLTranslator::tr("无效的方块id %1").arg(ret.id.c_str()).toStdString()};
   }
-  if (not blkid::is_valid_id(ret.idOld)) {
-    throw std::runtime_error{
-      SCLTranslator::tr("无效的1.12方块id %1").arg(ret.idOld.c_str()).toStdString()
-      // std::format("Invalid block id for 1.12 \"{}\"", ret.idOld)
-    };
+  if (not check_block_id(ret.idOld)) {
+    throw std::runtime_error{SCLTranslator::tr("无效的1.12方块id %1")
+                                 .arg(ret.idOld.c_str())
+                                 .toStdString()};
   }
 
   if (jo.contains("endermanPickable")) {

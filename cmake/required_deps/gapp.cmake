@@ -23,6 +23,7 @@ include(FetchContent)
 
 set(BUILD_SHARED_LIBS OFF)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(GAPP_DETERMINISM OFF CACHE BOOL "" FORCE)
 
 FetchContent_Declare(gapp
     GIT_REPOSITORY https://github.com/KRM7/gapp

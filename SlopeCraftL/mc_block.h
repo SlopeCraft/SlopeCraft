@@ -33,13 +33,16 @@ This file is part of SlopeCraft.
 
 #include <version_set.hpp>
 #include "SCLDefines.h"
+
+#include <mc_schem.hpp>
+
 using namespace SlopeCraft;
 
 typedef std::vector<std::string> stringList;
 
 struct block_detail_info {
-  std::string_view id_namespace;
-  std::string_view pure_id;
+  std::string id_namespace;
+  std::string pure_id;
 
   [[nodiscard]] inline bool operator==(
       const block_detail_info& b) const noexcept {
@@ -146,10 +149,6 @@ class mc_block : public ::SlopeCraft::mc_block_interface {
     *static_cast<mc_block*>(dst) = *this;
   }
 
-  //  static bool processBlockId(std::string_view id, std::string &netBlockId,
-  //                             std::vector<std::string_view> &proName,
-  //                             std::vector<std::string_view> &proVal);
-
   const char* idForVersion(SCL_gameVersion ver) const noexcept override {
     if (ver >= SCL_gameVersion::MC13) {
       return this->getId();
@@ -159,8 +158,10 @@ class mc_block : public ::SlopeCraft::mc_block_interface {
       return this->getId();
     }
     return this->getIdOld();
-  };
-  // mc_block& operator =(const mc_block &);
+  }
+
+  [[nodiscard]] mc_schem::unique_block to_mc_schem_block(
+      SCL_gameVersion ver) const;
 };
 
 #endif  // SIMPLEBLOCK_H

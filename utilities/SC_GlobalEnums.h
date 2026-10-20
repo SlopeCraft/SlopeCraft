@@ -850,6 +850,8 @@ enum class SCL_errorFlag : int {
   MEMORY_ALLOCATE_FAILED = 0x12,
 
   EXPORT_SCHEM_HAS_INVALID_ENTITY = 0x13,
+
+  MC_SCHEM_ERROR = 0x14,
 };
 
 enum class SCL_workStatus : int {

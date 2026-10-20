@@ -140,17 +140,23 @@ structure_3D* color_table_impl::build(
   return nullptr;
 }
 
-std::vector<std::string_view> color_table_impl::block_id_list(
+std::vector<mc_schem::unique_block> color_table_impl::block_id_list(
     bool contain_air) const noexcept {
-  std::vector<std::string_view> dest;
-  dest.reserve(this->blocks.size() + 1);
+  std::vector<mc_schem::unique_block> palette;
+  palette.reserve(blocks.size() + 1);
   if (contain_air) {
-    dest.emplace_back("minecraft:air");
+    palette.emplace_back(
+        mc_schem::block::from_common(mc_schem::common_block::air));
   }
-  for (auto& blk : this->blocks) {
-    dest.emplace_back(blk.idForVersion(this->mc_version_));
+  // Rest elements of array is filled with air blocks or empty. But mc_schem
+  // shouldn't encounter duplicates
+  for (const auto& blk : blocks) {
+    if (blk.id == "air" or blk.id.empty()) {
+      break;
+    }
+    palette.emplace_back(blk.to_mc_schem_block(this->mc_version()));
   }
-  return dest;
+  return palette;
 }
 
 uint64_t color_table_impl::hash() const noexcept {
@@ -434,12 +440,19 @@ color_table_impl::build_indexer() const noexcept {
 }
 
 const mc_block* color_table_searching_index::find(
-    std::string_view id) const noexcept {
+    const std::string& id) const noexcept {
   using namespace blkid;
-  char_range namespace_, pure_id;
-  if (not process_blk_id(id, &namespace_, &pure_id, nullptr)) {
-    return nullptr;
+
+  std::string namespace_, pure_id;
+  {
+    auto blk = mc_schem::block::create(id.c_str());
+    if (not blk) {
+      return nullptr;
+    }
+    namespace_ = (*blk)->namespace_();
+    pure_id = (*blk)->id();
   }
+
   const block_detail_info detail{
     .id_namespace{namespace_},
     .pure_id{pure_id},

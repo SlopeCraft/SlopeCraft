@@ -22,24 +22,21 @@ This file is part of SlopeCraft.
 
 #include "mc_block.h"
 #include "blocklist.h"
+#include "SCL_translator.h"
 
-#include "process_block_id.h"
+#include <magic_enum/magic_enum.hpp>
 
-mc_block::mc_block() {
-  image.resize(16, 16);
-}
+mc_block::mc_block() { image.resize(16, 16); }
 
 std::optional<block_detail_info> mc_block::detail_info(
     SCL_gameVersion current_version) const {
-  using namespace blkid;
-  char_range namespace_name;
-  char_range pure_id;
-  const bool ok = blkid::process_blk_id(this->idForVersion(current_version),
-                                        &namespace_name, &pure_id, nullptr);
-  if (not ok) {
+  auto blk = this->to_mc_schem_block(current_version);
+
+  if (not blk) {
     return std::nullopt;
   }
-  return block_detail_info{.id_namespace{namespace_name}, .pure_id{pure_id}};
+  return block_detail_info{.id_namespace{blk->namespace_()},
+                           .pure_id{blk->id()}};
 }
 
 void mc_block_interface::clear() noexcept {
@@ -108,3 +105,18 @@ size_t block_list::get_blocks(const mc_block_interface** dst,
 void block_list::clear() noexcept { this->m_blocks.clear(); }
 
 block_list::~block_list() { this->clear(); }
+
+mc_schem::unique_block mc_block::to_mc_schem_block(SCL_gameVersion ver) const {
+  auto full_id = this->idForVersion(ver);
+  auto blk_res = mc_schem::block::create(full_id);
+  if (not blk_res) {
+    const auto msg =
+        SCLTranslator::tr(
+            "内部错误：方块id\"%1\"通过了检查，但是再次检查出错：%2")
+            .arg(full_id)
+            .arg(magic_enum::enum_name(blk_res.error()));
+    throw std::runtime_error{msg.toStdString().c_str()};
+  }
+
+  return std::move(*blk_res);
+}

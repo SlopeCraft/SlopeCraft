@@ -13,6 +13,7 @@ find_package(PNG REQUIRED)
 find_package(cereal REQUIRED)
 find_package(libnbt++ REQUIRED)
 find_package(gapp 1.0.1 REQUIRED)
+find_package(mc_schem 1.3.0 REQUIRED)
 find_package(Qt6 COMPONENTS LinguistTools REQUIRED)
 
 set(SlopeCraft_SCL_windows_rc_files)
@@ -88,7 +89,7 @@ target_include_directories(SlopeCraftL PRIVATE
 set(SlopeCraft_SCL_link_libs
     ColorManip
     NBTWriter
-    Schem
+    mc_schem::mc_schem
     MapImageCvter
     FlatDiagram
     libpng_reader

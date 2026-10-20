@@ -5,28 +5,43 @@
 #ifndef SLOPECRAFT_STRUCTURE_3D_H
 #define SLOPECRAFT_STRUCTURE_3D_H
 
+#include <mc_schem.hpp>
+
 #include "SlopeCraftL.h"
 #include "converted_image.h"
-#include "Schem/Schem.h"
 #include "water_item.h"
 
 class structure_3D_impl : public structure_3D {
  private:
- public:
-  libSchem::Schem schem;
-  Eigen::ArrayXX<uint8_t>
-      map_color;  // map color may be modified by lossy
-                  // compression,so we store the modified one
+  // A copy of palette block id. This is to serve get_palette function.
+  // This violates single-information source rule, if any conflicts with schem,
+  // schem is right. This is not good, but don't know how to improve.
+  mutable std::vector<std::string> palette_copy;
 
-  size_t shape_x() const noexcept final { return this->schem.x_range(); }
-  size_t shape_y() const noexcept final { return this->schem.y_range(); }
-  size_t shape_z() const noexcept final { return this->schem.z_range(); }
-  size_t palette_length() const noexcept final {
-    return this->schem.palette_size();
+ public:
+  mc_schem::unique_schematic schem{nullptr};
+  // map color may be modified by lossy compression,so we store the modified one
+  Eigen::ArrayXX<uint8_t> map_color;
+
+  [[nodiscard]] size_t shape_x() const noexcept final {
+    return this->schem->shape<size_t>()[0];
+  }
+  [[nodiscard]] size_t shape_y() const noexcept final {
+    return this->schem->shape<size_t>()[1];
+  }
+  [[nodiscard]] size_t shape_z() const noexcept final {
+    return this->schem->shape<size_t>()[2];
+  }
+  [[nodiscard]] size_t palette_length() const noexcept final {
+    return this->schem->get_region(0)->palette_size();
   }
   void get_palette(const char** buffer_block_id) const noexcept final {
-    for (size_t i = 0; i < this->palette_length(); i++) {
-      buffer_block_id[i] = this->schem.palette()[i].c_str();
+    auto region = this->schem->get_region(0);
+    assert(region);
+    this->palette_copy.resize(region->palette_size(), "");
+    for (size_t i = 0; i < region->palette_size(); i++) {
+      palette_copy[i] = region->palette(i)->full_id();
+      buffer_block_id[i] = palette_copy[i].c_str();
     }
   }
 

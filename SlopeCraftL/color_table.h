@@ -18,7 +18,7 @@
 struct color_table_searching_index {
   std::unordered_map<block_detail_info, const mc_block*> block_LUT;
 
-  [[nodiscard]] const mc_block* find(std::string_view id) const noexcept;
+  [[nodiscard]] const mc_block* find(const std::string& id) const noexcept;
 };
 
 class color_table_impl : public SlopeCraft::color_table {
@@ -58,7 +58,7 @@ class color_table_impl : public SlopeCraft::color_table {
   [[nodiscard]] static std::optional<color_table_impl> create(
       const color_table_create_info& args) noexcept;
 
-  [[nodiscard]] std::vector<std::string_view> block_id_list(
+  [[nodiscard]] std::vector<mc_schem::unique_block> block_id_list(
       bool contain_air) const noexcept;
 
   [[nodiscard]] uint64_t hash() const noexcept;
