@@ -27,9 +27,9 @@ This file is part of SlopeCraft.
 #include <queue>
 #include <random>
 #include <stack>
-#include <unsupported/Eigen/CXX11/Tensor>
 #include <vector>
-#include <utilities/Schem/Schem.h>
+
+#include <mc_schem.hpp>
 
 #include "SCLDefines.h"
 #include "water_item.h"
@@ -70,12 +70,9 @@ class pairedEdge : public std::pair<rc_pos, rc_pos> {
   bool connectWith(rc_pos) const;
   void drawEdge(glassMap&, bool drawHead = false) const;
 };
-
-//[[deprecated]] TokiMap ySlice2TokiMap(
-//    const Eigen::Tensor<uint8_t, 3> &) noexcept;
-//[[deprecated]] TokiMap ySlice2TokiMap_u16(
-//    const Eigen::Tensor<uint32_t, 3> &) noexcept;
-TokiMap ySlice2TokiMap_u16(const Eigen::Tensor<uint16_t, 3>& xzy,
+/// XZY order is some remains of Eigen::Tensor. Due to R-ordering, YZX->XZY.
+/// mc_schem uses C-ordering, actually no change
+TokiMap ySlice2TokiMap_u16(const mc_schem::region& region,
                            std::span<const int, 3> start_xzy,
                            std::span<const int, 3> extension_xzy) noexcept;
 
@@ -108,7 +105,7 @@ class prim_glass_builder {
                                       const prim_glass_builder& map2,
                                       rc_pos offset2);
 };
-
+// for visualization
 EImage TokiMap2EImage(const TokiMap&);
 
 #endif  // PRIMGLASSBUILDER_H

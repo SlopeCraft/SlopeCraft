@@ -63,66 +63,8 @@ class color_table_impl : public SlopeCraft::color_table {
 
   [[nodiscard]] uint64_t hash() const noexcept;
 
-  [[nodiscard]] std::filesystem::path self_cache_dir(
-      const char* cache_root_dir) const noexcept;
-
-  [[nodiscard]] std::filesystem::path convert_task_cache_filename(
-      const_image_reference original_img, const convert_option& option,
-      const char* cache_root_dir) const noexcept;
-
-  [[nodiscard]] bool has_convert_cache(
-      const_image_reference original_img, const convert_option& option,
-      const char* cache_root_dir) const noexcept final;
-
-  [[nodiscard]] bool save_convert_cache(
-      const_image_reference original_img, const convert_option& option,
-      const converted_image& cvted, const char* cache_root_dir,
-      string_deliver* error) const noexcept final {
-    auto err =
-        this->save_convert_cache(original_img, option, cvted, cache_root_dir);
-    write_to_sd(error, err);
-    return err.empty();
-  }
-
-  [[nodiscard]] std::string save_convert_cache(
-      const_image_reference original_img, const convert_option& option,
-      const converted_image&, const char* cache_root_dir) const noexcept;
-
-  [[nodiscard]] converted_image* load_convert_cache(
-      const_image_reference original_img, const convert_option& option,
-      const char* cache_root_dir, string_deliver* error) const noexcept final {
-    auto res = this->load_convert_cache(original_img, option, cache_root_dir);
-    if (!res) {
-      write_to_sd(error, res.error());
-      return nullptr;
-    }
-
-    write_to_sd(error, "");
-
-    return new converted_image_impl{std::move(res.value())};
-  }
-
-  [[nodiscard]] std::expected<converted_image_impl, std::string>
-  load_convert_cache(const_image_reference original_img,
-                     const convert_option& option,
-                     const char* cache_root_dir) const noexcept;
-
   [[nodiscard]] structure_3D* build(const converted_image&,
                                     const build_options&) const noexcept final;
-
-  [[nodiscard]] std::filesystem::path build_task_cache_filename(
-      const converted_image&, const build_options&,
-      const char* cache_root_dir) const noexcept;
-
-  [[nodiscard]] bool save_build_cache(
-      const converted_image&, const build_options&, const structure_3D&,
-      const char* cache_root_dir, string_deliver* error) const noexcept final;
-  [[nodiscard]] bool has_build_cache(
-      const converted_image&, const build_options&,
-      const char* cache_root_dir) const noexcept final;
-  [[nodiscard]] structure_3D* load_build_cache(
-      const converted_image&, const build_options&, const char* cache_root_dir,
-      string_deliver* error) const noexcept final;
 
   void stat_blocks(const structure_3D& s,
                    size_t buffer[64]) const noexcept final;

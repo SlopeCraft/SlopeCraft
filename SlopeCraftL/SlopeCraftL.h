@@ -380,29 +380,29 @@ class color_table {
       const_image_reference original_img,
       const convert_option& option) const noexcept = 0;
 
-  [[nodiscard]] virtual bool has_convert_cache(
-      const_image_reference original_img, const convert_option& option,
-      const char* cache_dir) const noexcept = 0;
-  [[nodiscard]] virtual bool save_convert_cache(
-      const_image_reference original_img, const convert_option& option,
-      const converted_image&, const char* cache_dir,
-      string_deliver* error) const noexcept = 0;
-  [[nodiscard]] virtual converted_image* load_convert_cache(
-      const_image_reference original_img, const convert_option& option,
-      const char* cache_dir, string_deliver* error) const noexcept = 0;
+  // [[nodiscard]] virtual bool has_convert_cache(
+  //     const_image_reference original_img, const convert_option& option,
+  //     const char* cache_dir) const noexcept = 0;
+  // [[nodiscard]] virtual bool save_convert_cache(
+  //     const_image_reference original_img, const convert_option& option,
+  //     const converted_image&, const char* cache_dir,
+  //     string_deliver* error) const noexcept = 0;
+  // [[nodiscard]] virtual converted_image* load_convert_cache(
+  //     const_image_reference original_img, const convert_option& option,
+  //     const char* cache_dir, string_deliver* error) const noexcept = 0;
 
   [[nodiscard]] virtual structure_3D* build(
       const converted_image&, const build_options&) const noexcept = 0;
   // Once you cache a structure_3D, it can be released to save memory
-  [[nodiscard]] virtual bool save_build_cache(
-      const converted_image&, const build_options&, const structure_3D&,
-      const char* cache_root_dir, string_deliver* error) const noexcept = 0;
-  [[nodiscard]] virtual bool has_build_cache(
-      const converted_image&, const build_options&,
-      const char* cache_root_dir) const noexcept = 0;
-  [[nodiscard]] virtual structure_3D* load_build_cache(
-      const converted_image&, const build_options&, const char* cache_root_dir,
-      string_deliver* error) const noexcept = 0;
+  // [[nodiscard]] virtual bool save_build_cache(
+  //     const converted_image&, const build_options&, const structure_3D&,
+  //     const char* cache_root_dir, string_deliver* error) const noexcept = 0;
+  // [[nodiscard]] virtual bool has_build_cache(
+  //     const converted_image&, const build_options&,
+  //     const char* cache_root_dir) const noexcept = 0;
+  // [[nodiscard]] virtual structure_3D* load_build_cache(
+  //     const converted_image&, const build_options&, const char*
+  //     cache_root_dir, string_deliver* error) const noexcept = 0;
 
   virtual void stat_blocks(const structure_3D&,
                            size_t buffer[64]) const noexcept = 0;

@@ -145,8 +145,7 @@ std::vector<mc_schem::unique_block> color_table_impl::block_id_list(
   std::vector<mc_schem::unique_block> palette;
   palette.reserve(blocks.size() + 1);
   if (contain_air) {
-    palette.emplace_back(
-        mc_schem::block::from_common(mc_schem::common_block::air));
+    palette.emplace_back(mc_schem::block::create(mc_schem::common_block::air));
   }
   // Rest elements of array is filled with air blocks or empty. But mc_schem
   // shouldn't encounter duplicates
@@ -173,171 +172,215 @@ uint64_t color_table_impl::hash() const noexcept {
   return result[0] ^ result[1];
 }
 
-std::filesystem::path color_table_impl::self_cache_dir(
-    const char* cache_root_dir) const noexcept {
-  return std::format("{}/{:x}", cache_root_dir, this->hash());
-}
+// std::filesystem::path color_table_impl::self_cache_dir(
+//     const char* cache_root_dir) const noexcept {
+//   return std::format("{}/{:x}", cache_root_dir, this->hash());
+// }
+//
+// std::filesystem::path color_table_impl::convert_task_cache_filename(
+//     const_image_reference original_img, const convert_option& option,
+//     const char* cache_root_dir) const noexcept {
+//   auto self_cache_dir = this->self_cache_dir(cache_root_dir);
+//   self_cache_dir.append("convert");
+//   self_cache_dir.append(std::format(
+//       "{:x}", converted_image_impl::convert_task_hash(original_img,
+//       option)));
+//   return self_cache_dir;
+// }
+//
+// bool color_table_impl::has_convert_cache(
+//     const_image_reference original_img, const convert_option& option,
+//     const char* cache_root_dir) const noexcept {
+//   auto path =
+//       this->convert_task_cache_filename(original_img, option,
+//       cache_root_dir);
+//   return std::filesystem::is_regular_file(path);
+// }
+//
+// std::string color_table_impl::save_convert_cache(
+//     const_image_reference original_img, const convert_option& option,
+//     const converted_image& cvted, const char* cache_root_dir) const noexcept
+//     {
+//   try {
+//     auto filename =
+//         this->convert_task_cache_filename(original_img, option,
+//         cache_root_dir);
+//     std::filesystem::create_directories(filename.parent_path());
+//
+//     auto err =
+//         dynamic_cast<const
+//         converted_image_impl&>(cvted).save_cache(filename);
+//     if (!err.empty()) {
+//       auto msg_q = SCLTranslator::tr("无法将缓存保存至文件 %1：%2")
+//                        .arg(filename.string().c_str())
+//                        .arg(err.c_str());
+//       return msg_q.toStdString();
+//       // return std::format("Failed to save cache to file \"{}\": {}",
+//       //                    filename.string(), err);
+//     }
+//   } catch (const std::exception& e) {
+//     return SCLTranslator::tr("异常：%1").arg(e.what()).toStdString();
+//     // return std::format("Caught exception: {}", e.what());
+//   }
+//
+//   return {};
+// }
+//
+// [[nodiscard]] std::expected<converted_image_impl, std::string>
+// color_table_impl::load_convert_cache(
+//     const_image_reference original_img, const convert_option& option,
+//     const char* cache_root_dir) const noexcept {
+//   return converted_image_impl::load_cache(
+//       *this,
+//       this->convert_task_cache_filename(original_img, option,
+//       cache_root_dir));
+// }
 
-std::filesystem::path color_table_impl::convert_task_cache_filename(
-    const_image_reference original_img, const convert_option& option,
-    const char* cache_root_dir) const noexcept {
-  auto self_cache_dir = this->self_cache_dir(cache_root_dir);
-  self_cache_dir.append("convert");
-  self_cache_dir.append(std::format(
-      "{:x}", converted_image_impl::convert_task_hash(original_img, option)));
-  return self_cache_dir;
-}
+// std::filesystem::path color_table_impl::build_task_cache_filename(
+//     const converted_image& cvted_, const build_options& opt,
+//     const char* cache_root_dir) const noexcept {
+//   boost::uuids::detail::md5 hash;
+//   SC_HASH_ADD_DATA(hash, opt.max_allowed_height)
+//   SC_HASH_ADD_DATA(hash, opt.bridge_interval)
+//   SC_HASH_ADD_DATA(hash, opt.compress_method)
+//   SC_HASH_ADD_DATA(hash, opt.glass_method)
+//   SC_HASH_ADD_DATA(hash, opt.fire_proof)
+//   SC_HASH_ADD_DATA(hash, opt.enderman_proof)
+//   SC_HASH_ADD_DATA(hash, opt.connect_mushrooms)
+//
+//   auto& cvted = dynamic_cast<const converted_image_impl&>(cvted_);
+//   // this can be optimized
+//   auto map_mat = cvted.converter.mapcolor_matrix();
+//   hash.process_bytes(map_mat.data(), map_mat.size() * sizeof(uint8_t));
+//
+//   decltype(hash)::digest_type dig;
+//   hash.get_digest(dig);
+//   std::array<uint64_t, 2> dig_u64{0, 0};
+//   memcpy(dig_u64.data(), dig, sizeof(dig));
+//   const uint64_t hash_u64 = dig_u64[0] ^ dig_u64[1];
+//
+//   auto path = this->self_cache_dir(cache_root_dir);
+//   path.append("build");
+//   path.append(std::format("{:x}", hash_u64));
+//   return path;
+// }
+//
+// bool color_table_impl::save_build_cache(const converted_image& cvted,
+//                                         const build_options& option,
+//                                         const structure_3D& structure,
+//                                         const char* cache_root_dir,
+//                                         string_deliver* error) const noexcept
+//                                         {
+//   const auto filename =
+//       this->build_task_cache_filename(cvted, option, cache_root_dir);
+//   auto err_msg =
+//       dynamic_cast<const structure_3D_impl&>(structure).save_cache(filename);
+//   write_to_sd(error, err_msg);
+//
+//   return err_msg.empty();
+// }
+//
+// bool color_table_impl::has_build_cache(
+//     const SlopeCraft::converted_image& cvted,
+//     const SlopeCraft::build_options& option,
+//     const char* cache_root_dir) const noexcept {
+//   const auto filename =
+//       this->build_task_cache_filename(cvted, option, cache_root_dir);
+//   return std::filesystem::is_regular_file(filename);
+// }
+//
+// structure_3D* color_table_impl::load_build_cache(
+//     const SlopeCraft::converted_image& cvted,
+//     const SlopeCraft::build_options& option, const char* cache_root_dir,
+//     SlopeCraft::string_deliver* error) const noexcept {
+//   const auto filename =
+//       this->build_task_cache_filename(cvted, option, cache_root_dir);
+//   auto res = structure_3D_impl::load_cache(filename);
+//   if (res) {
+//     write_to_sd(error, "");
+//     return new structure_3D_impl{std::move(res.value())};
+//   }
+//   write_to_sd(error, res.error());
+//   return nullptr;
+// }
 
-bool color_table_impl::has_convert_cache(
-    const_image_reference original_img, const convert_option& option,
-    const char* cache_root_dir) const noexcept {
-  auto path =
-      this->convert_task_cache_filename(original_img, option, cache_root_dir);
-  return std::filesystem::is_regular_file(path);
-}
-
-std::string color_table_impl::save_convert_cache(
-    const_image_reference original_img, const convert_option& option,
-    const converted_image& cvted, const char* cache_root_dir) const noexcept {
-  try {
-    auto filename =
-        this->convert_task_cache_filename(original_img, option, cache_root_dir);
-    std::filesystem::create_directories(filename.parent_path());
-
-    auto err =
-        dynamic_cast<const converted_image_impl&>(cvted).save_cache(filename);
-    if (!err.empty()) {
-      auto msg_q = SCLTranslator::tr("无法将缓存保存至文件 %1：%2")
-                       .arg(filename.string().c_str())
-                       .arg(err.c_str());
-      return msg_q.toStdString();
-      // return std::format("Failed to save cache to file \"{}\": {}",
-      //                    filename.string(), err);
+static bool is_derived_from(const mc_schem::block& parent,
+                            const mc_schem::block& child) {
+  const bool is_namespace_ok = [&] {
+    // Same namespace, ok
+    if (parent.namespace_() == child.namespace_()) {
+      return true;
     }
-  } catch (const std::exception& e) {
-    return SCLTranslator::tr("异常：%1").arg(e.what()).toStdString();
-    // return std::format("Caught exception: {}", e.what());
-  }
+    // Namespace of parent is not declared, ok
+    if (parent.namespace_().empty()) {
+      return true;
+    }
+    // Different namespace
+    return false;
+  }();
 
-  return {};
-}
+  const bool is_pure_id_ok = parent.id() == child.id();
 
-[[nodiscard]] std::expected<converted_image_impl, std::string>
-color_table_impl::load_convert_cache(
-    const_image_reference original_img, const convert_option& option,
-    const char* cache_root_dir) const noexcept {
-  return converted_image_impl::load_cache(
-      *this,
-      this->convert_task_cache_filename(original_img, option, cache_root_dir));
-}
-
-std::filesystem::path color_table_impl::build_task_cache_filename(
-    const converted_image& cvted_, const build_options& opt,
-    const char* cache_root_dir) const noexcept {
-  boost::uuids::detail::md5 hash;
-  SC_HASH_ADD_DATA(hash, opt.max_allowed_height)
-  SC_HASH_ADD_DATA(hash, opt.bridge_interval)
-  SC_HASH_ADD_DATA(hash, opt.compress_method)
-  SC_HASH_ADD_DATA(hash, opt.glass_method)
-  SC_HASH_ADD_DATA(hash, opt.fire_proof)
-  SC_HASH_ADD_DATA(hash, opt.enderman_proof)
-  SC_HASH_ADD_DATA(hash, opt.connect_mushrooms)
-
-  auto& cvted = dynamic_cast<const converted_image_impl&>(cvted_);
-  // this can be optimized
-  auto map_mat = cvted.converter.mapcolor_matrix();
-  hash.process_bytes(map_mat.data(), map_mat.size() * sizeof(uint8_t));
-
-  decltype(hash)::digest_type dig;
-  hash.get_digest(dig);
-  std::array<uint64_t, 2> dig_u64{0, 0};
-  memcpy(dig_u64.data(), dig, sizeof(dig));
-  const uint64_t hash_u64 = dig_u64[0] ^ dig_u64[1];
-
-  auto path = this->self_cache_dir(cache_root_dir);
-  path.append("build");
-  path.append(std::format("{:x}", hash_u64));
-  return path;
-}
-
-bool color_table_impl::save_build_cache(const converted_image& cvted,
-                                        const build_options& option,
-                                        const structure_3D& structure,
-                                        const char* cache_root_dir,
-                                        string_deliver* error) const noexcept {
-  const auto filename =
-      this->build_task_cache_filename(cvted, option, cache_root_dir);
-  auto err_msg =
-      dynamic_cast<const structure_3D_impl&>(structure).save_cache(filename);
-  write_to_sd(error, err_msg);
-
-  return err_msg.empty();
-}
-
-bool color_table_impl::has_build_cache(
-    const SlopeCraft::converted_image& cvted,
-    const SlopeCraft::build_options& option,
-    const char* cache_root_dir) const noexcept {
-  const auto filename =
-      this->build_task_cache_filename(cvted, option, cache_root_dir);
-  return std::filesystem::is_regular_file(filename);
-}
-
-structure_3D* color_table_impl::load_build_cache(
-    const SlopeCraft::converted_image& cvted,
-    const SlopeCraft::build_options& option, const char* cache_root_dir,
-    SlopeCraft::string_deliver* error) const noexcept {
-  const auto filename =
-      this->build_task_cache_filename(cvted, option, cache_root_dir);
-  auto res = structure_3D_impl::load_cache(filename);
-  if (res) {
-    write_to_sd(error, "");
-    return new structure_3D_impl{std::move(res.value())};
-  }
-  write_to_sd(error, res.error());
-  return nullptr;
+  const bool is_attributes_ok = [&] {
+    bool ok = true;
+    parent.visit_attributes([&](std::string key, std::string parent_value) {
+      const auto child_value = child.get_attribute(key);
+      if (not child_value) {
+        ok = false;
+        return;
+      }
+      if (child_value.value() != parent_value) {
+        ok = false;
+        return;
+      }
+    });
+    return ok;
+  }();
+  return is_namespace_ok and is_pure_id_ok and is_attributes_ok;
 }
 
 void color_table_impl::stat_blocks(const structure_3D& s,
                                    size_t buffer[64]) const noexcept {
   const auto& structure = dynamic_cast<const structure_3D_impl&>(s);
 
-  const auto schem_stat = structure.schem.stat_blocks();
+  const mc_schem::region* region = structure.schem->get_region(0);
+  const auto schem_stat = [&] {
+    std::vector<size_t> result;
+    result.resize(region->palette_size(), 0);
+    region->visit_blocks(
+        [&](std::span<const int32_t, 3> pos_xyz, uint16_t blkid, auto&, auto) {
+          if (blkid >= result.size()) [[unlikely]] {
+            return;
+          }
+          result[blkid]++;
+        },
+        true);
+    return result;
+  }();
   assert(schem_stat.size() == structure.palette_length());
-  assert(schem_stat.size() == structure.schem.palette().size());
-  std::vector<blkid::block_id_parts> self_block_info;
-  self_block_info.reserve(64);
+  const auto self_blocks = this->block_id_list(false);
 
-  for (size_t idx_table = 0; idx_table < this->blocks.size(); idx_table++) {
-    const auto& blk_info = this->blocks[idx_table];
-    std::string_view full_id = blk_info.idForVersion(this->mc_version());
-    auto info = blkid::parse_block_id(full_id);
-    assert(info.has_value());
-    self_block_info.emplace_back(std::move(info).value());
-  }
+  // for (size_t idx_table = 0; idx_table < this->blocks.size(); idx_table++) {
+  //   const auto& blk_info = this->blocks[idx_table];
+  //   std::string_view full_id = blk_info.idForVersion(this->mc_version());
+  //   auto info = blkid::parse_block_id(full_id);
+  //   assert(info.has_value());
+  //   self_block_info.emplace_back(std::move(info).value());
+  // }
 
-  std::fill(buffer, buffer + 64, 0);
-  for (size_t idx_schem = 0; idx_schem < structure.schem.palette_size();
-       idx_schem++) {
-    auto blk_info_schem_opt =
-        blkid::parse_block_id(structure.schem.palette()[idx_schem]);
-    assert(blk_info_schem_opt.has_value());
-    if (not blk_info_schem_opt) [[unlikely]] {
-      continue;
-    }
-    const auto blk_info_schem = blk_info_schem_opt.value();
-    if (blk_info_schem.pure_id == "air") {
+  std::fill_n(buffer, 64, 0);
+  for (size_t idx_schem = 0; idx_schem < region->palette_size(); idx_schem++) {
+    const auto& blk_schem = region->palette(idx_schem);
+    if (blk_schem->is_air()) {
       continue;
     }
 
-    for (size_t idx_table = 0; idx_table < self_block_info.size();
-         idx_table++) {
+    for (size_t idx_table = 0; idx_table < self_blocks.size(); idx_table++) {
       assert(idx_table < 64);
-      const auto& blk_info_table = self_block_info[idx_table];
+      const auto& blk_info_table = self_blocks[idx_table];
 
-      if (blk_info_schem.is_derived_from(blk_info_table)) {
+      if (is_derived_from(*blk_info_table, *blk_schem)) {
         buffer[idx_table] += schem_stat[idx_schem];
-        continue;
       }
     }
   }

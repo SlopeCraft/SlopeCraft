@@ -69,17 +69,17 @@ class structure_3D_impl : public structure_3D {
 
   uint64_t block_count() const noexcept final;
 
-  template <class archive>
-  void load(archive& ar) {
-    ar(this->map_color);
-    ar(this->schem);
-  };
+  // template <class archive>
+  // void load(archive& ar) {
+  //   ar(this->map_color);
+  //   ar(this->schem);
+  // }
 
-  template <class archive>
-  void save(archive& ar) const {
-    ar(this->map_color);
-    ar(this->schem);
-  }
+  // template <class archive>
+  // void save(archive& ar) const {
+  //   ar(this->map_color);
+  //   ar(this->schem);
+  // }
 };
 
 #endif  // SLOPECRAFT_STRUCTURE_3D_H

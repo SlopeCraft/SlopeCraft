@@ -449,18 +449,18 @@ glassMap connectBetweenLayers(const TokiMap& map1, const TokiMap& map2,
   return result;
 }
 
-template <typename ele_t>
-TokiMap impl_ySlice2TokiMap(const Eigen::Tensor<ele_t, 3>& raw) noexcept {
-  assert(raw.dimension(2) == 1);
+// template <typename ele_t>
+// TokiMap impl_ySlice2TokiMap(const Eigen::ArrayXX<ele_t>& raw) noexcept {
+//   assert(raw.dimension(2) == 1);
+//
+//   TokiMap result(raw.dimension(0), raw.dimension(1));
+//   result.setZero();
+//   for (int i = 0; i < raw.size(); i++)
+//     if (raw(i) > 1) result(i) = prim_glass_builder::target;
+//   return result;
+// }
 
-  TokiMap result(raw.dimension(0), raw.dimension(1));
-  result.setZero();
-  for (int i = 0; i < raw.size(); i++)
-    if (raw(i) > 1) result(i) = prim_glass_builder::target;
-  return result;
-}
-
-TokiMap ySlice2TokiMap_u16(const Eigen::Tensor<uint16_t, 3>& xzy,
+TokiMap ySlice2TokiMap_u16(const mc_schem::region& region,
                            std::span<const int, 3> start_xzy,
                            std::span<const int, 3> extension_xzy) noexcept {
   // assert(raw.dimension(2) == 1);
@@ -471,8 +471,10 @@ TokiMap ySlice2TokiMap_u16(const Eigen::Tensor<uint16_t, 3>& xzy,
   result.setZero(extension_xzy[0], extension_xzy[1]);
   for (int x = 0; x < result.rows(); x++) {
     for (int z = 0; z < result.cols(); z++) {
-      if (xzy(x + start_xzy[0], z + start_xzy[1], start_xzy[2]) > 1)
+      if (region.block_index_at(
+              {x + start_xzy[0], z + start_xzy[1], start_xzy[2]}) > 1) {
         result(x, z) = prim_glass_builder::target;
+      }
     }
   }
   return result;
