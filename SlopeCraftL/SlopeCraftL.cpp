@@ -38,7 +38,7 @@ using namespace SlopeCraft;
 extern "C" {
 
 SCL_EXPORT const float* SCL_get_rgb_basic_colorset_source() {
-  return SlopeCraft::RGBBasicSource;
+  return RGBBasicSource;
 }
 
 SCL_EXPORT mc_block_interface* SCL_create_block() { return new mc_block; }
@@ -48,9 +48,9 @@ SCL_EXPORT block_list_interface* SCL_create_block_list(
     const char* zip_filename, const block_list_create_info& option) {
   auto [res, warnings] = create_block_list_from_file(zip_filename);
 
-  SlopeCraft::write_to_sd(option.warnings, warnings);
+  write_to_sd(option.warnings, warnings);
   if (not res) {
-    SlopeCraft::write_to_sd(option.error, res.error());
+    write_to_sd(option.error, res.error());
     return nullptr;
   }
 
@@ -63,7 +63,7 @@ SCL_EXPORT block_list_interface* SCL_create_block_list_from_buffer(
     const void* buffer, size_t buffer_bytes,
     const block_list_create_info& option) {
   if (buffer == nullptr or buffer_bytes <= 0) {
-    SlopeCraft::write_to_sd(
+    write_to_sd(
         option.error, SCLTranslator::tr("函数SCL_create_block_list_from_"
                                         "buffer遇到无效的输入，缓冲区为空")
                           .toStdString()

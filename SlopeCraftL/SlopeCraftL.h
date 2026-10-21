@@ -82,15 +82,15 @@ struct ostream_wrapper {
   using write_fun = void (*)(const void* data, size_t len_bytes, void* handle);
   write_fun callback_write_data{nullptr};
 
-  inline void write(const void* data, size_t len_bytes) {
+  void write(const void* data, size_t len_bytes) {
     this->callback_write_data(data, len_bytes, this->handle);
   }
-  inline void write(const char* str) {
+  void write(const char* str) {
     this->write(reinterpret_cast<const void*>(str), strlen(str));
   }
 
   template <class ostream_t>
-  [[nodiscard]] inline static ostream_wrapper wrap_std_ostream(
+  [[nodiscard]] static ostream_wrapper wrap_std_ostream(
       ostream_t& os) noexcept {
     return ostream_wrapper{
       .handle = reinterpret_cast<void*>(&os),
@@ -198,12 +198,12 @@ struct progress_callbacks {
   void (*cb_set_range)(void*, int, int, int){nullptr};
   void (*cb_add)(void*, int){nullptr};
 
-  inline void set_range(int min, int max, int val) const {
+  void set_range(int min, int max, int val) const {
     if (this->cb_set_range) {
       this->cb_set_range(this->widget, min, max, val);
     }
   }
-  inline void add(int delta) const {
+  void add(int delta) const {
     if (this->cb_add) {
       this->cb_add(this->widget, delta);
     }
@@ -216,18 +216,18 @@ struct ui_callbacks {
   void (*cb_report_error)(void*, errorFlag, const char*){nullptr};
   void (*cb_report_working_status)(void*, workStatus){nullptr};
 
-  inline void keep_awake() const {
+  void keep_awake() const {
     if (this->cb_keep_awake) {
       this->cb_keep_awake(this->wind);
     }
   }
 
-  inline void report_error(errorFlag e, const char* msg) const {
+  void report_error(errorFlag e, const char* msg) const {
     if (this->cb_report_error) {
       this->cb_report_error(this->wind, e, msg);
     }
   }
-  inline void report_working_status(workStatus ws) const {
+  void report_working_status(workStatus ws) const {
     if (this->cb_report_working_status) {
       this->cb_report_working_status(this->wind, ws);
     }
@@ -235,7 +235,6 @@ struct ui_callbacks {
 };
 
 struct convert_option {
-  uint64_t caller_api_version{SC_VERSION_U64};
   SCL_convertAlgo algo{SCL_convertAlgo::RGB_Better};
   bool dither{false};
   progress_callbacks progress{};
@@ -243,7 +242,6 @@ struct convert_option {
 };
 
 struct map_data_file_options {
-  uint64_t caller_api_version{SC_VERSION_U64};
   const char* folder_path{""};
   int begin_index{0};
   progress_callbacks progress{};
@@ -251,7 +249,6 @@ struct map_data_file_options {
 };
 
 struct map_data_file_give_command_options {
-  uint64_t caller_api_version{SC_VERSION_U64};
   ostream_wrapper* destination{};
   int begin_index{0};
   uint8_t stack_count{1};  /// <- Stack count of filed_map
@@ -261,7 +258,6 @@ struct map_data_file_give_command_options {
 };
 
 struct assembled_maps_options {
-  uint64_t caller_api_version{SC_VERSION_U64};
   SCL_item_frame_variant frame_variant{SCL_item_frame_variant::common};
   SCL_map_facing map_facing{SCL_map_facing::wall_north};
   SCL_gameVersion mc_version{SCL_gameVersion::MC19};
@@ -272,7 +268,6 @@ struct assembled_maps_options {
 };
 
 struct build_options {
-  uint64_t caller_api_version{SC_VERSION_U64};
   uint16_t max_allowed_height{256};
   uint16_t bridge_interval{3};
   compressSettings compress_method{::SCL_compressSettings::noCompress};
@@ -292,20 +287,17 @@ struct build_options {
 };
 
 struct litematic_options {
-  uint64_t caller_api_version{SC_VERSION_U64};
   const char* litename_utf8 = "by SlopeCraft";
   const char* region_name_utf8 = "by SlopeCraft";
   ui_callbacks ui;
   progress_callbacks progressbar;
 };
 struct vanilla_structure_options {
-  uint64_t caller_api_version{SC_VERSION_U64};
   bool is_air_structure_void{true};
   ui_callbacks ui;
   progress_callbacks progressbar;
 };
 struct WE_schem_options {
-  uint64_t caller_api_version{SC_VERSION_U64};
   int offset[3] = {0, 0, 0};
   int we_offset[3] = {0, 0, 0};
   const char* const* required_mods_name_utf8{nullptr};
@@ -315,8 +307,6 @@ struct WE_schem_options {
 };
 // Typo, but won't fix.
 struct flag_diagram_options {
-  uint64_t caller_api_version{SC_VERSION_U64};
-
   // 0 or negative number means no split lines
   int32_t split_line_row_margin{0};
   // 0 or negative number means no split lines
@@ -329,7 +319,6 @@ struct flag_diagram_options {
 };
 
 struct test_blocklist_options {
-  uint64_t caller_api_version{SC_VERSION_U64};
   const mc_block_interface* const* block_ptrs{nullptr};
   const uint8_t* basecolors{nullptr};
   size_t block_count{0};
@@ -352,11 +341,11 @@ class color_table {
   [[nodiscard]] virtual color_map_ptrs colors() const noexcept = 0;
   [[nodiscard]] virtual ::SCL_mapTypes map_type() const noexcept = 0;
 
-  [[nodiscard]] inline bool is_vanilla() const noexcept {
+  [[nodiscard]] bool is_vanilla() const noexcept {
     return this->map_type() != SCL_mapTypes::FileOnly;
   }
 
-  [[nodiscard]] inline bool is_flat() const noexcept {
+  [[nodiscard]] bool is_flat() const noexcept {
     return this->map_type() == SCL_mapTypes::Flat;
   }
 
@@ -380,29 +369,8 @@ class color_table {
       const_image_reference original_img,
       const convert_option& option) const noexcept = 0;
 
-  // [[nodiscard]] virtual bool has_convert_cache(
-  //     const_image_reference original_img, const convert_option& option,
-  //     const char* cache_dir) const noexcept = 0;
-  // [[nodiscard]] virtual bool save_convert_cache(
-  //     const_image_reference original_img, const convert_option& option,
-  //     const converted_image&, const char* cache_dir,
-  //     string_deliver* error) const noexcept = 0;
-  // [[nodiscard]] virtual converted_image* load_convert_cache(
-  //     const_image_reference original_img, const convert_option& option,
-  //     const char* cache_dir, string_deliver* error) const noexcept = 0;
-
   [[nodiscard]] virtual structure_3D* build(
       const converted_image&, const build_options&) const noexcept = 0;
-  // Once you cache a structure_3D, it can be released to save memory
-  // [[nodiscard]] virtual bool save_build_cache(
-  //     const converted_image&, const build_options&, const structure_3D&,
-  //     const char* cache_root_dir, string_deliver* error) const noexcept = 0;
-  // [[nodiscard]] virtual bool has_build_cache(
-  //     const converted_image&, const build_options&,
-  //     const char* cache_root_dir) const noexcept = 0;
-  // [[nodiscard]] virtual structure_3D* load_build_cache(
-  //     const converted_image&, const build_options&, const char*
-  //     cache_root_dir, string_deliver* error) const noexcept = 0;
 
   virtual void stat_blocks(const structure_3D&,
                            size_t buffer[64]) const noexcept = 0;
@@ -417,13 +385,13 @@ class converted_image {
   virtual ~converted_image() = default;
   [[nodiscard]] virtual size_t rows() const noexcept = 0;
   [[nodiscard]] virtual size_t cols() const noexcept = 0;
-  [[nodiscard]] inline size_t height() const noexcept { return this->rows(); }
-  [[nodiscard]] inline size_t width() const noexcept { return this->cols(); }
-  [[nodiscard]] inline size_t size() const noexcept {
+  [[nodiscard]] size_t height() const noexcept { return this->rows(); }
+  [[nodiscard]] size_t width() const noexcept { return this->cols(); }
+  [[nodiscard]] size_t size() const noexcept {
     return this->rows() * this->cols();
   }
 
-  [[nodiscard]] inline size_t size_in_bytes() const noexcept {
+  [[nodiscard]] size_t size_in_bytes() const noexcept {
     return sizeof(uint32_t) * this->rows() * this->cols();
   }
 
@@ -501,7 +469,6 @@ SCL_EXPORT void SCL_destroy_converted_image(converted_image*);
 SCL_EXPORT void SCL_destroy_structure_3D(structure_3D*);
 
 struct block_list_create_info {
-  uint64_t caller_api_version{SC_VERSION_U64};
   string_deliver* warnings{nullptr};
   string_deliver* error{nullptr};
 };

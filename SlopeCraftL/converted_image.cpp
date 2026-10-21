@@ -360,54 +360,6 @@ converted_image_impl::height_info(const color_table_impl& table,
   return ret;
 }
 
-// uint64_t converted_image_impl::convert_task_hash(
-//     const_image_reference original_img, const convert_option& option)
-//     noexcept {
-//   boost::uuids::detail::md5 hash;
-//
-//   SC_HASH_ADD_DATA(hash, option.algo)
-//   SC_HASH_ADD_DATA(hash, option.dither)
-//
-//   hash.process_bytes(original_img.data, original_img.rows *
-//   original_img.cols);
-//
-//   decltype(hash)::digest_type dig;
-//   hash.get_digest(dig);
-//   std::array<uint64_t, 2> temp;
-//   memcpy(temp.data(), dig, sizeof(temp));
-//   return temp[0] ^ temp[1];
-// }
-
-// std::string converted_image_impl::save_cache(
-//     const std::filesystem::path& file) const noexcept {
-//   if (this->converter.save_cache(file.string().c_str())) {
-//     return SCLTranslator::tr("打开文件%1失败")
-//         .arg(file.string().c_str())
-//         .toStdString();
-//   }
-//   return {};
-// }
-
-// std::expected<converted_image_impl, std::string>
-// converted_image_impl::load_cache(const color_table_impl& table,
-//                                  const std::filesystem::path& file) noexcept
-//                                  {
-//   converted_image_impl ret{table};
-//   if (!std::filesystem::is_regular_file(file)) {
-//     return std::unexpected(SCLTranslator::tr("文件%1不存在")
-//                                .arg(file.string().c_str())
-//                                .toStdString());
-//   }
-//   if (!ret.converter.load_cache(file.string().c_str())) {
-//     return std::unexpected(SCLTranslator::tr("加载缓存失败，%1包含错误")
-//                                .arg(file.string().c_str())
-//                                .toStdString()
-//                            // "Failed to load cache, the cache is incorrect"
-//     );
-//   }
-//   return ret;
-// }
-
 bool converted_image_impl::is_converted_from(
     const color_table& table_) const noexcept {
   const auto& table = dynamic_cast<const color_table_impl&>(table_);

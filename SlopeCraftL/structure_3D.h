@@ -61,26 +61,7 @@ class structure_3D_impl : public structure_3D {
       const char* filename, const color_table& table,
       const flag_diagram_options& option) const noexcept final;
 
-  // [[nodiscard]] std::string save_cache(
-  //     const std::filesystem::path& file) const noexcept;
-  //
-  // [[nodiscard]] static std::expected<structure_3D_impl, std::string>
-  // load_cache(
-  //     const std::filesystem::path& file) noexcept;
-
   uint64_t block_count() const noexcept final;
-
-  // template <class archive>
-  // void load(archive& ar) {
-  //   ar(this->map_color);
-  //   ar(this->schem);
-  // }
-
-  // template <class archive>
-  // void save(archive& ar) const {
-  //   ar(this->map_color);
-  //   ar(this->schem);
-  // }
 };
 
 #endif  // SLOPECRAFT_STRUCTURE_3D_H

@@ -742,7 +742,6 @@ void SCWind::on_pb_export_file_clicked() noexcept {
     const auto dir_name = dir.toLocal8Bit();
     //
     const SlopeCraft::map_data_file_options option{
-      .caller_api_version = SC_VERSION_U64,
       .folder_path = dir_name.data(),
       .begin_index = cur_seq_beg,
       .progress = progress_callback(this->ui->pbar_export),

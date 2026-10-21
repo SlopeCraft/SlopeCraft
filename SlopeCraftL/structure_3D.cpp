@@ -555,59 +555,6 @@ bool structure_3D_impl::export_flat_diagram(
   }
   return true;
 }
-//
-// std::string structure_3D_impl::save_cache(
-//     const std::filesystem::path& filename) const noexcept {
-//   try {
-//     std::filesystem::create_directories(filename.parent_path());
-//     boost::iostreams::filtering_ostream ofs{};
-//     ofs.set_auto_close(true);
-//     {
-//       boost::iostreams::zstd_params params;
-//       // ZSTD_defaultCLevel() doesn't exist below zstd 1.5
-// #if ZSTD_VERSION_MINOR >= 5
-//       params.level = static_cast<uint32_t>(ZSTD_defaultCLevel());
-// #else
-//       params.level = static_cast<uint32_t>(ZSTD_CLEVEL_DEFAULT);
-// #endif
-//       ofs.push(boost::iostreams::zstd_compressor{params});
-//       ofs.push(
-//           boost::iostreams::file_sink{filename.string(), std::ios::binary});
-//     }
-//
-//     {
-//       cereal::BinaryOutputArchive boa{ofs};
-//       boa(*this);
-//     }
-//
-//   } catch (const std::exception& e) {
-//     return SCLTranslator::tr("异常：%1").arg(e.what()).toStdString();
-//     // return std::format("Caught exception: {}", e.what());
-//   }
-//
-//   return {};
-// }
-//
-// std::expected<structure_3D_impl, std::string> structure_3D_impl::load_cache(
-//     const std::filesystem::path& filename) noexcept {
-//   structure_3D_impl ret;
-//   try {
-//     boost::iostreams::filtering_istream ifs;
-//     ifs.set_auto_close(true);
-//     ifs.push(boost::iostreams::zstd_decompressor{});
-//     ifs.push(
-//         boost::iostreams::file_source{filename.string(), std::ios::binary});
-//     {
-//       cereal::BinaryInputArchive bia{ifs};
-//       bia(ret);
-//     }
-//   } catch (const std::exception& e) {
-//     return std::unexpected(
-//         SCLTranslator::tr("异常：%1").arg(e.what()).toStdString());
-//   }
-//
-//   return ret;
-// }
 
 uint64_t structure_3D_impl::block_count() const noexcept {
   return this->schem->total_blocks(false);

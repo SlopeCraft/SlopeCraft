@@ -77,16 +77,6 @@ class converted_image_impl : public converted_image {
       const color_table_impl& table,
       const build_options& option) const noexcept;
 
-  // [[nodiscard]] static uint64_t convert_task_hash(
-  //     const_image_reference original_img,
-  //     const convert_option& option) noexcept;
-
-  // std::string save_cache(const std::filesystem::path& file) const noexcept;
-
-  // [[nodiscard]] static std::expected<converted_image_impl, std::string>
-  // load_cache(const color_table_impl& table,
-  //            const std::filesystem::path& file) noexcept;
-
   bool is_converted_from(const color_table& table_) const noexcept final;
 
   bool get_map_command(

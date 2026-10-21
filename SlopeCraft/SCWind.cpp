@@ -709,7 +709,6 @@ void SCWind::when_export_type_toggled() noexcept {
 
 SlopeCraft::convert_option SCWind::current_convert_option() noexcept {
   return SlopeCraft::convert_option{
-    .caller_api_version = SC_VERSION_U64,
     .algo = this->selected_algo(),
     .dither = this->is_dither_selected(),
     .progress = progress_callback(this->ui->pbar_cvt),
@@ -992,7 +991,6 @@ std::optional<SlopeCraft::litematic_options> SCWind::current_litematic_option(
   }
 
   return SlopeCraft::litematic_options{
-    .caller_api_version = SC_VERSION_U64,
     .litename_utf8 = litename.data(),
     .region_name_utf8 = region_name.data(),
     .ui = this->ui_callbacks(),
@@ -1103,7 +1101,6 @@ SCWind::current_flatdiagram_option(QString& err) const noexcept {
   }
 
   return SlopeCraft::flag_diagram_options{
-    .caller_api_version = SC_VERSION_U64,
     .split_line_row_margin = row_margin,
     .split_line_col_margin = col_margin,
     .ui = this->ui_callbacks(),
