@@ -15,6 +15,7 @@
 #include "height_line.h"
 #include "lossy_compressor.h"
 #include "NBTWriter/NBTWriter.h"
+#warning "TODO: remove NBTWriter. Replace with nbt++"
 #include "structure_3D.h"
 
 #include "entity.h"

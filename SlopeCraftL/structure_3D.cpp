@@ -91,8 +91,15 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
   assert(low_map.minCoeff() == 0);
 
   try {
+    const int32_t height = high_map.maxCoeff() + 1;
+    assert(height > 0);
+    assert(region->is_dense());// By default they are dense
+    if (height > 32) {
+      region->convert_to_sparse();
+    }
+
     region->reshape({static_cast<int32_t>(2 + cvted.cols()),
-                     static_cast<int32_t>(high_map.maxCoeff() + 1),
+                     static_cast<int32_t>(height),
                      static_cast<int32_t>(2 + cvted.rows())});
   } catch (const std::bad_alloc& e) {
     const std::array<uint64_t, 3> shape{
