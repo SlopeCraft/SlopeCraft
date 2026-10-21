@@ -43,7 +43,7 @@ include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
     ${PROJECT_BINARY_DIR}/SlopeCraftConfigVersion.cmake
     VERSION ${PROJECT_VERSION}
-    COMPATIBILITY AnyNewerVersion
+    COMPATIBILITY SameMinorVersion
 )
 install(FILES ${PROJECT_BINARY_DIR}/SlopeCraftConfigVersion.cmake
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/SlopeCraft
