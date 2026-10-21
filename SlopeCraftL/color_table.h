@@ -61,8 +61,6 @@ class color_table_impl : public SlopeCraft::color_table {
   [[nodiscard]] std::vector<mc_schem::unique_block> block_id_list(
       bool contain_air) const noexcept;
 
-  [[nodiscard]] uint64_t hash() const noexcept;
-
   [[nodiscard]] structure_3D* build(const converted_image&,
                                     const build_options&) const noexcept final;
 

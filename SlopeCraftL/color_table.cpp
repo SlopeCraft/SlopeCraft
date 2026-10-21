@@ -3,7 +3,8 @@
 //
 
 #include <format>
-#include <boost/uuid/detail/md5.hpp>
+#include <fstream>
+
 #include "SCLDefines.h"
 #include "color_table.h"
 
@@ -13,8 +14,6 @@
 #include "SCL_translator.h"
 #include "utilities/ProcessBlockId/process_block_id.h"
 #include "utilities/Schem/mushroom.h"
-
-#include <fstream>
 
 std::optional<color_table_impl> color_table_impl::create(
     const color_table_create_info& args) noexcept {
@@ -160,20 +159,6 @@ std::vector<mc_schem::unique_block> color_table_impl::block_id_list(
     palette.emplace_back(blk.to_mc_schem_block(this->mc_version()));
   }
   return palette;
-}
-
-uint64_t color_table_impl::hash() const noexcept {
-  boost::uuids::detail::md5 hash;
-  SC_HASH_ADD_DATA(hash, this->map_type_)
-  SC_HASH_ADD_DATA(hash, this->mc_version_)
-
-  this->allowed->hash_add_data(hash);
-  decltype(hash)::digest_type digest;
-  hash.get_digest(digest);
-  std::array<uint64_t, 2> result;
-  memcpy(result.data(), digest, sizeof digest);
-  static_assert(sizeof(digest) == sizeof(result));
-  return result[0] ^ result[1];
 }
 
 static bool is_derived_from(const mc_schem::block& parent,

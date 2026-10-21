@@ -42,7 +42,7 @@ jobs:
       # Homebrew's keg-only libomp -- Apple ships no OpenMP runtime.
       - name: Install dependencies with Homebrew
         run: |
-          brew install ninja libzip libpng zstd xz bzip2 boost cereal magic_enum xsimd eigen sevenzip libomp
+          brew install ninja libzip libpng xz bzip2 boost magic_enum xsimd eigen sevenzip libomp
 
       # Qt is the one big dependency: if Homebrew ever stops offering an arm64
       # bottle for it, "brew install qt" would silently start compiling Qt from

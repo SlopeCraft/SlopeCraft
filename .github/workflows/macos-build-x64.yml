@@ -44,7 +44,7 @@ jobs:
       # libomp: Apple clang's OpenMP runtime is separate from Homebrew's.
       - name: Install dependencies with Homebrew
         run: |
-          brew install ninja libzip libpng zstd xz bzip2 boost cereal magic_enum xsimd eigen sevenzip libomp
+          brew install ninja libzip libpng xz bzip2 boost magic_enum xsimd eigen sevenzip libomp
 
       # Qt is the one big dependency: if Homebrew ever stops offering an x86_64
       # bottle for it, "brew install qt" would silently start compiling Qt from
