@@ -822,7 +822,7 @@ mc_schem::unique_schematic converted_image_impl::assembled_maps(
     schem->set_metadata(std::move(*md));
   }
 
-  return std::move(schem);
+  return schem;
 }
 
 bool converted_image_impl::export_assembled_maps_litematic(

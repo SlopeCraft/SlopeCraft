@@ -352,7 +352,8 @@ void color_table_impl::stat_blocks(const structure_3D& s,
     std::vector<size_t> result;
     result.resize(region->palette_size(), 0);
     region->visit_blocks(
-        [&](std::span<const int32_t, 3> pos_xyz, uint16_t blkid, auto&, auto) {
+        [&](std::span<const int32_t, 3> pos_xyz [[maybe_unused]],
+            uint16_t blkid, auto&, auto) {
           if (blkid >= result.size()) [[unlikely]] {
             return;
           }
@@ -426,17 +427,8 @@ std::string color_table_impl::impl_generate_test_schematic(
       pal.reserve(realSrc.size() + 1);
       pal.emplace_back(mc_schem::block::create(mc_schem::common_block::air));
       for (auto i : realSrc) {
-        const std::string full_id = i->idForVersion(this->mc_version_);
-        auto blk_res = mc_schem::block::create(full_id);
-        if (not blk_res) {
-          const auto msg =
-              SCLTranslator::tr(
-                  "内部错误：方块id\"%1\"通过了检查，但是再次检查出错：%2")
-                  .arg(full_id)
-                  .arg(magic_enum::enum_name(blk_res.error()));
-          return msg.toStdString();
-        }
-        pal.emplace_back(std::move(*blk_res));
+        auto blk = i->to_mc_schem_block(this->mc_version());
+        pal.emplace_back(std::move(blk));
       }
 
       pal_view.reserve(realSrc.size() + 1);

@@ -60,7 +60,8 @@ std::optional<nbt::tag_compound> item::dump_tags(
 
 std::optional<nbt::tag_compound> filled_map::dump_tags(
     MCDataVersion::MCDataVersion_t data_version) const {
-  nbt::tag_compound ret = item::dump_tags(data_version).value_or({});
+  nbt::tag_compound ret =
+      item::dump_tags(data_version).value_or(nbt::tag_compound{});
 
   if (data_version < MCDataVersion::MCDataVersion_t::Java_1_20_5) {
     ret.insert("map", nbt::tag_int{this->map_id});

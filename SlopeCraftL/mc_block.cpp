@@ -114,7 +114,7 @@ mc_schem::unique_block mc_block::to_mc_schem_block(SCL_gameVersion ver) const {
         SCLTranslator::tr(
             "内部错误：方块id\"%1\"通过了检查，但是再次检查出错：%2")
             .arg(full_id)
-            .arg(magic_enum::enum_name(blk_res.error()));
+            .arg(magic_enum::enum_name(blk_res.error()).data());
     throw std::runtime_error{msg.toStdString().c_str()};
   }
 

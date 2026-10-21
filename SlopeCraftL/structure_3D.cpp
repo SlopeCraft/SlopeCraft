@@ -51,7 +51,7 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
     if (not region_res) {
       option.ui.report_error(errorFlag::MC_SCHEM_ERROR,
                              SCLTranslator::tr("创建区域失败：%1")
-                                 .arg(region_res.error()->message())
+                                 .arg(region_res.error()->message().c_str())
                                  .toStdString()
                                  .c_str());
       return nullptr;
@@ -93,7 +93,7 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
   try {
     const int32_t height = high_map.maxCoeff() + 1;
     assert(height > 0);
-    assert(region->is_dense());// By default they are dense
+    assert(region->is_dense());  // By default they are dense
     if (height > 32) {
       region->convert_to_sparse();
     }
@@ -217,7 +217,7 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
       glass_builder.ui = fixed_opt.ui;
       glass_builder.progress_bar = fixed_opt.sub_progressbar;
       fixed_opt.ui.keep_awake();
-      for (uint32_t y = 0; y < region->size_xyz()[1]; y++) {
+      for (int32_t y = 0; y < region->size_xyz()[1]; y++) {
         fixed_opt.sub_progressbar.add(step);
         if (y % (fixed_opt.bridge_interval + 1) == 0) {
           std::array<int, 3> start, extension;  // x,z,y
@@ -233,7 +233,7 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
           glass = glass_builder.makeBridge(targetMap);
           for (int32_t r = 0; r < glass.rows(); r++)
             for (int32_t c = 0; c < glass.cols(); c++) {
-              const std::array<int32_t, 3> pos{r, static_cast<int32_t>(y), c};
+              const std::array<int32_t, 3> pos{r, y, c};
               if (glass(r, c) == prim_glass_builder::glass and
                   region->block_index_at(pos) == prim_glass_builder::air) {
                 region->set_block(pos, prim_glass_builder::glass);
@@ -509,15 +509,7 @@ bool structure_3D_impl::export_flat_diagram(
               .arg(pblkid)
               .arg(blkid_full.c_str())
               .toStdString()
-              .c_str()
-          // std::format("SlopeCraftL internal error. Failed to find block image
-          // "
-          //             "for \"{}\". "
-          //             "In the 3d structure, the corresponding block idx is "
-          //             "{}.\nThe whole "
-          //             "block palette is as below: {}",
-          //             id, pblkid, blkid_full).c_str()
-      );
+              .c_str());
       return false;
     }
 
@@ -525,7 +517,7 @@ bool structure_3D_impl::export_flat_diagram(
   }
 
   auto block_at_callback =
-      [this, &img_list_rmj, region](
+      [&img_list_rmj, region](
           const int64_t r, const int64_t c) -> libFlatDiagram::block_img_ref_t {
     if (r < 0 or c < 0 or r >= region->size_xyz()[2] or
         c >= region->size_xyz()[0]) {  // out of range
