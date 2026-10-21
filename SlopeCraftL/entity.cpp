@@ -83,14 +83,10 @@ tag_compound item_frame::dump(
   return ret;
 }
 
-void SlopeCraft::dump_compound_to_bytes(const tag_compound& compound,
-                                        std::vector<uint8_t>& dest) {
-  dest.clear();
-
+std::string SlopeCraft::dump_compound_to_bytes(const tag_compound& compound) {
   std::ostringstream oss{std::ios::out | std::ios::binary};
   nbt::io::write_tag("", compound, oss);
 
   const auto s = oss.str();
-  dest.append_range(
-      std::span{reinterpret_cast<const uint8_t*>(s.data()), s.size()});
+  return s;
 }

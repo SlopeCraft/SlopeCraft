@@ -735,7 +735,6 @@ mc_schem::unique_schematic converted_image_impl::assembled_maps(
     return item_frame_variant::glowing;
   }();
 
-  std::vector<uint8_t> nbt_buffer;
   for (int r = 0; r < this->map_rows(); r++) {
     for (int c = 0; c < this->map_cols(); c++) {
       const int map_index = option.begin_index + r + c * this->map_rows();
@@ -775,17 +774,18 @@ mc_schem::unique_schematic converted_image_impl::assembled_maps(
         }
         return {};
       }(option.map_facing);
-      map_entity->item_rotation = rotation_of(option.map_facing);
+      map_entity->item_rotation =
+          static_cast<int8_t>(rotation_of(option.map_facing));
       {
         auto map_item = std::make_unique<filled_map>();
         map_item->map_id = map_index;
         map_entity->item_ = std::move(map_item);
       }
-      {
-        auto nbt = map_entity->dump(data_version);
-        dump_compound_to_bytes(nbt, nbt_buffer);
-      }
-      auto rs_nbt = mc_schem::nbt_hashmap::create_from_binary(nbt_buffer);
+
+      auto nbt = map_entity->dump(data_version);
+      auto buffer = dump_compound_to_bytes(nbt);
+      auto rs_nbt = mc_schem::nbt_hashmap::create_from_binary(std::span{
+        reinterpret_cast<const uint8_t*>(buffer.data()), buffer.size()});
       if (not rs_nbt) {
         throw std::runtime_error{
           SCLTranslator::tr("内部错误：mc_schem重新解析nbt失败：%1")
@@ -826,8 +826,8 @@ mc_schem::unique_schematic converted_image_impl::assembled_maps(
 }
 
 bool converted_image_impl::export_assembled_maps_litematic(
-    const char* filename, const SlopeCraft::assembled_maps_options& map_opt,
-    const SlopeCraft::litematic_options& export_opt) const noexcept {
+    const char* filename, const assembled_maps_options& map_opt,
+    const litematic_options& export_opt) const noexcept {
   try {
     auto schem = this->assembled_maps(map_opt);
 

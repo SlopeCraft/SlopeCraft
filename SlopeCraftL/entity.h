@@ -149,8 +149,7 @@ class item_frame : public hangable {
 };
 
 // not compressed
-void dump_compound_to_bytes(const nbt::tag_compound& compound,
-                            std::vector<uint8_t>& dest);
+std::string dump_compound_to_bytes(const nbt::tag_compound& compound);
 }  // namespace SlopeCraft
 
 #endif  // SLOPECRAFT_ENTITY_H
