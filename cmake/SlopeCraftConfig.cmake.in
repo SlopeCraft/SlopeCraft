@@ -1,0 +1,9 @@
+@PACKAGE_INIT@
+
+set(SlopeCraft_INCLUDE_DIR   "@CMAKE_INSTALL_FULL_INCLUDEDIR@" )
+set(SlopeCraft_DATA_DIR   "@CMAKE_INSTALL_PREFIX@/@RELATIVE_DATA_INSTALL_DIR@" )
+set(SlopeCraft_ICONS_DIR   "@CMAKE_INSTALL_PREFIX@/share/icons" )
+#...logic to determine installedPrefix from the own location...
+set(SlopeCraft_CONFIG_DIR  "${installedPrefix}/@CONFIG_INSTALL_DIR@" )
+
+include(${CMAKE_CURRENT_LIST_DIR}/SlopeCraftTargets.cmake)

@@ -45,7 +45,13 @@ write_basic_package_version_file(
     VERSION ${PROJECT_VERSION}
     COMPATIBILITY SameMinorVersion
 )
-install(FILES ${PROJECT_BINARY_DIR}/SlopeCraftConfigVersion.cmake
+configure_package_config_file(${PROJECT_SOURCE_DIR}/cmake/SlopeCraftConfig.cmake.in
+    ${PROJECT_BINARY_DIR}/SlopeCraftConfig.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/SlopeCraft
+)
+install(FILES
+    ${PROJECT_BINARY_DIR}/SlopeCraftConfigVersion.cmake
+    ${PROJECT_BINARY_DIR}/SlopeCraftConfig.cmake
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/SlopeCraft
 )
 
