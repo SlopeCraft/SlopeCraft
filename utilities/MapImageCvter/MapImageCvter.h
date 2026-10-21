@@ -25,9 +25,6 @@ This file is part of SlopeCraft.
 
 #include <ColorManip/ColorManip.h>
 #include <ColorManip/imageConvert.hpp>
-#include <cereal/cereal.hpp>
-#include <cereal/access.hpp>
-#include <cereal/types/unordered_map.hpp>
 #include <memory>
 #include <exception>
 
@@ -53,16 +50,18 @@ class MapImageCvter : public ::libImageCvt::ImageCvter<true> {
 
   // override
   void convert_image(const ::SCL_convertAlgo algo, bool dither) noexcept {
-    Base_t::convert_image(algo,dither,false);
+    Base_t::convert_image(algo, dither, false);
   }
 
-  [[nodiscard]] inline Eigen::ArrayXX<uint8_t> mapcolor_matrix() const noexcept {
+  [[nodiscard]] inline Eigen::ArrayXX<uint8_t> mapcolor_matrix()
+      const noexcept {
     static_assert(
         std::is_same_v<uint8_t, typename ImageCvter<true>::colorid_t>);
     return this->color_id();
   }
 
-  [[nodiscard]] inline Eigen::ArrayXX<uint8_t> basecolor_matrix() const noexcept {
+  [[nodiscard]] inline Eigen::ArrayXX<uint8_t> basecolor_matrix()
+      const noexcept {
     return this->color_id() / 4;
   }
 
@@ -102,82 +101,6 @@ class MapImageCvter : public ::libImageCvt::ImageCvter<true> {
       this->color_hash_ = std::move(temp.color_hash_);
     }
   }
-
- private:
-  friend class cereal::access;
-  template <class archive>
-  void save(archive& ar) const {
-    assert(this->raw_image_.rows() == this->dithered_image_.rows());
-    assert(this->raw_image_.cols() == this->dithered_image_.cols());
-    ar(this->raw_image_);
-    ar(this->algo);
-    ar(this->dither);
-    // ar(this->_color_hash);
-    ar(this->dithered_image_);
-    // save required colorset
-    {
-      std::unordered_set<uint32_t> colors_dithered_img;
-      colors_dithered_img.reserve(this->dithered_image_.size());
-      for (int64_t i = 0; i < this->dithered_image_.size(); i++) {
-        colors_dithered_img.emplace(this->dithered_image_(i));
-        colors_dithered_img.emplace(this->raw_image_(i));
-      }
-
-      const size_t size_colorset = colors_dithered_img.size();
-      ar(size_colorset);
-      for (uint32_t color : colors_dithered_img) {
-        auto it =
-            this->color_hash().find(convert_unit{color, this->convert_algo()});
-        if (it == this->color_hash().end()) {
-          assert(getA(color) <= 0);
-          continue;
-        }
-
-        ar(it->first, it->second);
-      }
-    }
-  }
-
-  template <class archive>
-  void load(archive& ar) {
-    ar(this->raw_image_);
-    ar(this->algo);
-    ar(this->dither);
-    // ar(this->_color_hash);
-    ar(this->dithered_image_);
-
-    assert(this->raw_image_.rows() == this->dithered_image_.rows());
-    assert(this->raw_image_.cols() == this->dithered_image_.cols());
-
-    {
-      size_t size_colorset{0};
-      ar(size_colorset);
-      for (size_t idx = 0; idx < size_colorset; idx++) {
-        convert_unit key;
-        TokiColor_t val;
-        ar(key, val);
-
-        this->color_hash_.emplace(key, val);
-      }
-
-      for (int64_t i = 0; i < this->dithered_image_.size(); i++) {
-        auto it = this->color_hash_.find(
-            convert_unit{this->dithered_image_(i), this->convert_algo()});
-        if (it == this->color_hash_.end()) {
-          throw std::runtime_error{
-            "One or more colors not found in cached colorhash"};
-        }
-      }
-    }
-  }
-
- public:
-  bool save_cache(const char* filename) const noexcept;
-  bool examine_cache(const char* filename, uint64_t expected_task_hash,
-                     MapImageCvter* itermediate = nullptr) const noexcept;
-  [[nodiscard]] bool load_cache(const char* filename,
-                                uint64_t expected_task_hash) noexcept;
-  bool load_cache(const char* filename) noexcept;
 };
 
 }  // namespace libMapImageCvt

@@ -33,7 +33,6 @@ This file is part of SlopeCraft.
 #include <thread>
 #include <type_traits>
 #include <unordered_map>
-#include <cereal/cereal.hpp>
 
 #include "../SC_GlobalEnums.h"
 #include "ColorManip.h"

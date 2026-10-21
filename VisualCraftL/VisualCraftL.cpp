@@ -22,7 +22,9 @@ This file is part of SlopeCraft.
 
 #include "VisualCraftL.h"
 
-#include <stddef.h>
+#include <cstddef>
+#include <cstdint>
+#include <unordered_set>
 
 #include <mutex>
 #include <sstream>

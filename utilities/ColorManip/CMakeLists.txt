@@ -2,7 +2,6 @@ project(ColorManip VERSION ${SlopeCraft_version} LANGUAGES C CXX)
 
 find_package(OpenMP REQUIRED)
 find_package(Eigen3 REQUIRED)
-find_package(cereal REQUIRED)
 find_package(xsimd REQUIRED)
 find_package(Boost CONFIG REQUIRED)
 
@@ -16,7 +15,7 @@ add_library(ColorManip
     newColorSet.hpp
     newTokiColor.hpp
 
-    hash.cpp
+    colorset_maptical.hpp
     colorset_maptical.hpp
     imageConvert.hpp
     newColorSet.hpp
@@ -34,7 +33,6 @@ target_include_directories(ColorManip PRIVATE
 target_link_libraries(ColorManip PUBLIC
     OpenMP::OpenMP_CXX
     Eigen3::Eigen
-    cereal::cereal
     xsimd)
 
 # target_compile_options(ColorManip BEFORE PUBLIC "-std=c++17")

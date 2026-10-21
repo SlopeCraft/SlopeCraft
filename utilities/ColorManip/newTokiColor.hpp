@@ -33,7 +33,6 @@ This file is part of SlopeCraft.
 #include <cmath>
 #include <functional>
 #include <iostream>
-#include <cereal/types/array.hpp>
 #include <span>
 
 // using Eigen::Dynamic;
