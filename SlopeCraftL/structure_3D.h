@@ -61,11 +61,12 @@ class structure_3D_impl : public structure_3D {
       const char* filename, const color_table& table,
       const flag_diagram_options& option) const noexcept final;
 
-  [[nodiscard]] std::string save_cache(
-      const std::filesystem::path& file) const noexcept;
-
-  [[nodiscard]] static std::expected<structure_3D_impl, std::string> load_cache(
-      const std::filesystem::path& file) noexcept;
+  // [[nodiscard]] std::string save_cache(
+  //     const std::filesystem::path& file) const noexcept;
+  //
+  // [[nodiscard]] static std::expected<structure_3D_impl, std::string>
+  // load_cache(
+  //     const std::filesystem::path& file) noexcept;
 
   uint64_t block_count() const noexcept final;
 
