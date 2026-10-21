@@ -78,7 +78,7 @@ class color_table_impl : public SlopeCraft::color_table {
   }
 
   std::string impl_generate_test_schematic(
-      std::string_view filename,
+      const std::string& filename,
       const test_blocklist_options& option) const noexcept;
 
   [[nodiscard]] std::expected<color_table_searching_index, std::string>

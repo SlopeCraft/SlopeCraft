@@ -14,6 +14,8 @@
 #include "utilities/ProcessBlockId/process_block_id.h"
 #include "utilities/Schem/mushroom.h"
 
+#include <fstream>
+
 std::optional<color_table_impl> color_table_impl::create(
     const color_table_create_info& args) noexcept {
   color_table_impl result;
@@ -389,78 +391,112 @@ void color_table_impl::stat_blocks(const structure_3D& s,
 }
 
 std::string color_table_impl::impl_generate_test_schematic(
-    std::string_view filename,
+    const std::string& filename,
     const test_blocklist_options& option) const noexcept {
   if (!filename.ends_with(".nbt")) {
     return SCLTranslator::tr("文件名必须以 *.nbt 结尾").toStdString();
     // return "File name should end with \".nbt\"";
   }
-  libSchem::Schem test;
-  test.set_MC_major_version_number(this->mc_version_);
-  test.set_MC_version_number(
-      MCDataVersion::suggested_version(this->mc_version_));
-  // const simpleBlock ** realSrc=(const simpleBlock **)src;
-  std::vector<const mc_block*> realSrc;
-  std::vector<uint8_t> realBaseColor;
-  realSrc.clear();
-  realBaseColor.clear();
-  for (size_t idx = 0; idx < option.block_count; idx++) {
-    if (option.block_ptrs[idx]->getVersion() > this->mc_version_) {
-      continue;
-    }
-    realSrc.emplace_back(static_cast<const mc_block*>(option.block_ptrs[idx]));
-    realBaseColor.emplace_back(option.basecolors[idx]);
-  }
 
-  std::vector<std::vector<int>> block_counter;
-  block_counter.resize(64);
-
-  for (uint32_t idx = 0; idx < realSrc.size(); idx++) {
-    block_counter[realBaseColor[idx]].push_back(idx);
-  }
-
-  {
-    std::vector<const char*> ids;
-    ids.reserve(realSrc.size() + 1);
-    ids.emplace_back("minecraft:air");
-    for (auto i : realSrc) {
-      ids.emplace_back(i->idForVersion(this->mc_version_));
+  try {
+    std::vector<const mc_block*> realSrc;
+    std::vector<uint8_t> realBaseColor;
+    realSrc.clear();
+    realBaseColor.clear();
+    for (size_t idx = 0; idx < option.block_count; idx++) {
+      if (option.block_ptrs[idx]->getVersion() > this->mc_version_) {
+        continue;
+      }
+      realSrc.emplace_back(
+          static_cast<const mc_block*>(option.block_ptrs[idx]));
+      realBaseColor.emplace_back(option.basecolors[idx]);
     }
 
-    test.set_block_id(ids.data(), ids.size());
-  }
+    std::vector<std::vector<int>> block_counter;
+    block_counter.resize(64);
 
-  int xSize = 0;
-  constexpr int zSize = 64, ySize = 2;
-  for (const auto& it : block_counter) {
-    xSize = std::max(size_t(xSize), it.size());
-  }
-  test.resize(xSize + 1, ySize, zSize);
-  test.set_zero();
-
-  for (uint8_t base = 0; base < 64; base++) {
-    for (uint32_t idx = 0; idx < block_counter[base].size(); idx++) {
-      int xPos = idx;
-      int yPos = 0;
-      int zPos = base;
-
-      test(xPos, yPos, zPos) = block_counter[base][idx] + 1;
+    for (uint32_t idx = 0; idx < realSrc.size(); idx++) {
+      block_counter[realBaseColor[idx]].push_back(idx);
     }
-    test(block_counter[base].size(), 1, base) = 1;  // glass block
+
+    mc_schem::unique_region region;
+    {
+      std::vector<mc_schem::unique_block> pal;
+      std::vector<const mc_schem::block*> pal_view;
+      pal.reserve(realSrc.size() + 1);
+      pal.emplace_back(mc_schem::block::create(mc_schem::common_block::air));
+      for (auto i : realSrc) {
+        const std::string full_id = i->idForVersion(this->mc_version_);
+        auto blk_res = mc_schem::block::create(full_id);
+        if (not blk_res) {
+          const auto msg =
+              SCLTranslator::tr(
+                  "内部错误：方块id\"%1\"通过了检查，但是再次检查出错：%2")
+                  .arg(full_id)
+                  .arg(magic_enum::enum_name(blk_res.error()));
+          return msg.toStdString();
+        }
+        pal.emplace_back(std::move(*blk_res));
+      }
+
+      pal_view.reserve(realSrc.size() + 1);
+      for (auto& blk : pal) {
+        pal_view.emplace_back(blk.get());
+      }
+      auto region_res =
+          mc_schem::region::create_with_palette({1, 1, 1}, pal_view);
+      if (not region_res) {
+        const auto msg = SCLTranslator::tr("SlopeCraftL内部错误：%1")
+                             .arg(region_res.error()->message().c_str());
+        return msg.toStdString();
+      }
+      region = std::move(*region_res);
+    }
+
+    int xSize = 0;
+    constexpr int zSize = 64, ySize = 2;
+    for (const auto& it : block_counter) {
+      xSize = std::max(size_t(xSize), it.size());
+    }
+    region->reshape({xSize + 1, ySize, zSize});
+    region->fill_with(*region->palette(0));  // fill with air
+
+    for (uint8_t base = 0; base < 64; base++) {
+      for (uint32_t idx = 0; idx < block_counter[base].size(); idx++) {
+        const int32_t xPos = idx;
+        const int32_t yPos = 0;
+        const int32_t zPos = base;
+
+        // region->set_block({}, );
+        region->set_block({xPos, yPos, zPos}, block_counter[base][idx] + 1);
+      }
+      region->set_block(
+          {static_cast<int32_t>(block_counter[base].size()), 1, base},
+          1);  // glass block
+    }
+
+    auto schem = mc_schem::schematic::create();
+    schem->metadata()->set_mc_data_version(static_cast<int32_t>(
+        MCDataVersion::suggested_version(this->mc_version_)));
+
+    schem->append_region(std::move(region));
+
+    std::ofstream ofs{filename, std::ios::binary};
+    mc_schem::vanilla_structure_save_option vsso{};
+    auto result = schem->save_vanilla_structure(ofs, vsso);
+    if (not result) {
+      const auto msg = SCLTranslator::tr("导出结构方块文件%1失败，：%2")
+                           .arg(filename.c_str())
+                           .arg(result.error()->message().c_str());
+      return msg.toStdString();
+    }
+  } catch (const std::exception& e) {
+    const auto msg = SCLTranslator::tr("导出结构方块文件%1失败，：%2")
+                         .arg(filename.c_str())
+                         .arg(e.what());
+    return msg.toStdString();
   }
 
-  auto result = test.export_structure(filename, true);
-  if (not result) {
-    auto& err = result.error();
-    return SCLTranslator::tr("导出结构方块文件%1失败，错误码%2，详情：%3")
-        .arg(filename.data())
-        .arg(static_cast<int>(err.first))
-        .arg(err.second.c_str())
-        .toStdString();
-    // return std::format(
-    //     "Failed to export structure file {}, error code = {}, detail: {}",
-    //     filename, int(err.first), err.second);
-  }
   return {};
 }
 
