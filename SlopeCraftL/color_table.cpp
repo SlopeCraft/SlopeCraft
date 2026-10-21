@@ -467,7 +467,6 @@ std::string color_table_impl::impl_generate_test_schematic(
         const int32_t yPos = 0;
         const int32_t zPos = base;
 
-        // region->set_block({}, );
         region->set_block({xPos, yPos, zPos}, block_counter[base][idx] + 1);
       }
       region->set_block(
@@ -510,8 +509,6 @@ color_table_impl::build_indexer() const noexcept {
         SCLTranslator::tr("遇到无效方块id \"%1\"")
             .arg(blk.idForVersion(this->mc_version()))
             .toStdString(),
-        // std::format("Found invalid block id:
-        // \"{}\"",blk.idForVersion(this->mc_version()))
       };
     }
     indexer.block_LUT.emplace(info_opt.value(), &blk);

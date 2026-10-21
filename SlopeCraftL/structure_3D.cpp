@@ -220,17 +220,22 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
           extension[0] = region->size_xyz()[0];
           extension[1] = region->size_xyz()[2];
           extension[2] = 1;
-          continue;
-#warning "TODO: Migrate glass bridge"
-          // TokiMap targetMap =
-          //     ySlice2TokiMap_u16(ret.schem.tensor(), start, extension);
-          // glassMap glass;
-          // glass = glass_builder.makeBridge(targetMap);
-          // for (int r = 0; r < glass.rows(); r++)
-          //   for (int c = 0; c < glass.cols(); c++)
-          //     if (ret.schem(r, y, c) == prim_glass_builder::air &&
-          //         glass(r, c) == prim_glass_builder::glass)
-          //       ret.schem(r, y, c) = prim_glass_builder::glass;
+          // continue;
+          TokiMap targetMap = ySlice2TokiMap_u16(*region, start, extension);
+          glassMap glass;
+          glass = glass_builder.makeBridge(targetMap);
+          for (int32_t r = 0; r < glass.rows(); r++)
+            for (int32_t c = 0; c < glass.cols(); c++) {
+              const std::array<int32_t, 3> pos{r, static_cast<int32_t>(y), c};
+              if (glass(r, c) == prim_glass_builder::glass and
+                  region->block_index_at(pos) == prim_glass_builder::air) {
+                region->set_block(pos, prim_glass_builder::glass);
+              }
+            }
+
+          // if (ret.schem(r, y, c) == prim_glass_builder::air &&
+          //     glass(r, c) == prim_glass_builder::glass)
+          //   ret.schem(r, y, c) = prim_glass_builder::glass;
         }
       }
       fixed_opt.ui.keep_awake();
