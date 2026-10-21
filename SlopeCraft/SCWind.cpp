@@ -797,9 +797,8 @@ SCWind::convert_and_build_if_need(cvt_task& task) noexcept {
       task.converted_images.at({table, this->current_convert_option()});
   const auto build_opt = this->current_build_option();
 
-  if (auto str_3D = cvt_result.load_build_cache(*table, build_opt,
-                                                this->cache_root_dir())) {
-    // The 3D structure is built, it exists in memory or can be loaded
+  if (auto str_3D = cvt_result.get_structure(build_opt)) {
+    // The 3D structure is built, it exists in memory
     return {cvted, *str_3D};
   }
   // Build 3D structure now
@@ -913,22 +912,20 @@ void SCWind::refresh_current_build_display(cvt_task* taskp) noexcept {
   if (cvted_it == task.converted_images.end()) {
     return;
   }
-  if (auto str_with_info = cvted_it->second.get_build_cache_with_info_noload(
-          *this->current_color_table(), this->current_build_option(),
-          this->cache_root_dir())) {
-    //    const SlopeCraft::structure_3D *str_3D = str_with_info->handle.get();
-    const auto x = str_with_info->shape[0], y = str_with_info->shape[1],
-               z = str_with_info->shape[2];
+  if (auto str_with_info =
+          cvted_it->second.get_structure(this->current_build_option())
+      // cvted_it->second.get_build_cache_with_info_noload(
+      //       *this->current_color_table(), this->current_build_option(),
+      //       this->cache_root_dir())
+  ) {
+    const auto x = str_with_info->shape_x(), y = str_with_info->shape_y(),
+               z = str_with_info->shape_z();
 
-    const auto block_count = str_with_info->block_count;
+    const auto block_count = str_with_info->block_count();
     this->ui->lb_show_3dsize->setText(
         tr("大小： %1 × %2 × %3").arg(x).arg(y).arg(z));
     this->ui->lb_show_block_count->setText(tr("方块数量：%1").arg(block_count));
   }
-
-  //  if (this->selected_export_type() == SCWind::export_type::data_file) {
-  //    this->when_data_file_command_changed();
-  //  }
 }
 
 std::expected<QString, QString> SCWind::get_command(
@@ -1241,9 +1238,10 @@ SCWind::load_selected_3D() noexcept {
              "新转化该图像。");
       return {nullptr, nullptr};
     }
-    auto str_3D = it->second.load_build_cache(*this->current_color_table(),
-                                              this->current_build_option(),
-                                              this->cache_root_dir());
+    auto str_3D = it->second.get_structure(this->current_build_option());
+    // it->second.load_build_cache(*this->current_color_table(),
+    //                                         this->current_build_option(),
+    //                                         this->cache_root_dir());
 
     if (str_3D == nullptr) {
       errtitle = tr("尚未构建三维结构");
@@ -1263,76 +1261,76 @@ SCWind::load_selected_3D() noexcept {
   return {cvted_img, structure_3D};
 }
 
-bool SCWind::should_auto_cache(bool suppress_warnings) noexcept {
-  bool result = false;
-  const auto self_used = get_self_memory_info();
-  QString error_template =
-      tr("这不是严重的问题，你可以直接忽略这个警告，或者把它反馈给开发者，"
-         "不影响正常使用。只是 Slopecraft "
-         "可能占用更多的内存。\n详细信息：\n%1");
+// bool SCWind::should_auto_cache(bool suppress_warnings) noexcept {
+//   bool result = false;
+//   const auto self_used = get_self_memory_info();
+//   QString error_template =
+//       tr("这不是严重的问题，你可以直接忽略这个警告，或者把它反馈给开发者，"
+//          "不影响正常使用。只是 Slopecraft "
+//          "可能占用更多的内存。\n详细信息：\n%1");
+//
+//   if (not self_used) {
+//     if (not suppress_warnings) {
+//       QMessageBox::warning(
+//           this, tr("获取本进程的内存占用失败"),
+//           error_template.arg(QString::fromLocal8Bit(self_used.error().c_str())),
+//           QMessageBox::StandardButtons{QMessageBox::StandardButton::Ok});
+//     }
+//   } else {
+//     result = this->mem_policy.should_cache(self_used.value()) or result;
+//   }
+//
+//   const auto system_info = get_system_memory_info();
+//   if (not system_info) {
+//     if (not suppress_warnings) {
+//       QMessageBox::warning(
+//           this, tr("获取操作系统内存占用失败"),
+//           error_template.arg(QString::fromLocal8Bit(self_used.error().c_str())),
+//           QMessageBox::StandardButtons{QMessageBox::StandardButton::Ok});
+//     }
+//   } else {
+//     result = this->mem_policy.should_cache(system_info.value()) or result;
+//   }
+//   return result;
+// }
 
-  if (not self_used) {
-    if (not suppress_warnings) {
-      QMessageBox::warning(
-          this, tr("获取本进程的内存占用失败"),
-          error_template.arg(QString::fromLocal8Bit(self_used.error().c_str())),
-          QMessageBox::StandardButtons{QMessageBox::StandardButton::Ok});
-    }
-  } else {
-    result = this->mem_policy.should_cache(self_used.value()) or result;
-  }
-
-  const auto system_info = get_system_memory_info();
-  if (not system_info) {
-    if (not suppress_warnings) {
-      QMessageBox::warning(
-          this, tr("获取操作系统内存占用失败"),
-          error_template.arg(QString::fromLocal8Bit(self_used.error().c_str())),
-          QMessageBox::StandardButtons{QMessageBox::StandardButton::Ok});
-    }
-  } else {
-    result = this->mem_policy.should_cache(system_info.value()) or result;
-  }
-  return result;
-}
-
-SCWind::auto_cache_report SCWind::auto_cache_3D(
-    [[maybe_unused]] bool cache_all) noexcept {
-  //  const auto colortable = this->current_color_table();
-  //  const auto build_opt = this->current_build_option();
-  auto_cache_report report{
-    .structures_cached = 0,
-    .memory_saved = 0,
-  };
-  const auto self_mem_before = get_self_memory_info();
-  const QString cache_root = this->cache_root_dir();
-
-  auto go_through = [this, cache_root, cache_all]() -> size_t {
-    size_t cached = 0;
-    for (auto& task : this->tasks) {
-      for (auto& [cvt_input, cvted] : task.converted_images) {
-        // if we don't need to cache, return.
-        if ((not cache_all) and (not this->should_auto_cache(true))) {
-          return cached;
-        }
-
-        auto report = cvted.cache_all_structures(
-            *cvt_input.table, *cvted.converted_image, cache_root);
-        cached += report.cache_num;
-      }
-    }
-    return cached;
-  };
-
-  report.structures_cached = go_through();
-  const auto self_mem_current = get_self_memory_info();
-  if (self_mem_before and self_mem_current) {
-    report.memory_saved =
-        self_mem_before.value().used - self_mem_current.value().used;
-  }
-
-  return report;
-}
+// SCWind::auto_cache_report SCWind::auto_cache_3D(
+//     [[maybe_unused]] bool cache_all) noexcept {
+//   //  const auto colortable = this->current_color_table();
+//   //  const auto build_opt = this->current_build_option();
+//   auto_cache_report report{
+//     .structures_cached = 0,
+//     .memory_saved = 0,
+//   };
+//   const auto self_mem_before = get_self_memory_info();
+//   const QString cache_root = this->cache_root_dir();
+//
+//   auto go_through = [this, cache_root, cache_all]() -> size_t {
+//     size_t cached = 0;
+//     for (auto& task : this->tasks) {
+//       for (auto& [cvt_input, cvted] : task.converted_images) {
+//         // if we don't need to cache, return.
+//         if ((not cache_all) and (not this->should_auto_cache(true))) {
+//           return cached;
+//         }
+//
+//         auto report = cvted.cache_all_structures(
+//             *cvt_input.table, *cvted.converted_image, cache_root);
+//         cached += report.cache_num;
+//       }
+//     }
+//     return cached;
+//   };
+//
+//   report.structures_cached = go_through();
+//   const auto self_mem_current = get_self_memory_info();
+//   if (self_mem_before and self_mem_current) {
+//     report.memory_saved =
+//         self_mem_before.value().used - self_mem_current.value().used;
+//   }
+//
+//   return report;
+// }
 
 SlopeCraft::assembled_maps_options SCWind::current_assembled_maps_option()
     const noexcept {

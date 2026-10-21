@@ -411,11 +411,6 @@ void SCWind::on_cb_compress_lossy_toggled(bool checked) noexcept {
 }
 
 void SCWind::on_pb_build3d_clicked() noexcept {
-  if (this->should_auto_cache(false)) {
-    [[maybe_unused]] const auto report = this->auto_cache_3D();
-    ;
-  }
-
   auto task_ptr = this->selected_export_task();
   if (task_ptr == nullptr) {
     QMessageBox::warning(this, tr("未选择图像"),
@@ -459,10 +454,6 @@ void SCWind::on_pb_build3d_clicked() noexcept {
 }
 
 void SCWind::on_pb_preview_materials_clicked() noexcept {
-  if (this->should_auto_cache(false)) {
-    this->auto_cache_3D();
-  }
-
   auto [cvted_img, structure_3D] = this->load_selected_3D();
   if (cvted_img == nullptr || structure_3D == nullptr) {
     return;
@@ -484,10 +475,6 @@ void SCWind::on_pb_preview_materials_clicked() noexcept {
 }
 
 void SCWind::on_pb_preview_compress_effect_clicked() noexcept {
-  if (this->should_auto_cache(false)) {
-    this->auto_cache_3D();
-  }
-
   auto [cvted_img, structure_3D] = this->load_selected_3D();
   if (cvted_img == nullptr || structure_3D == nullptr) {
     return;
@@ -626,10 +613,6 @@ void SCWind::on_pb_export_all_clicked() noexcept {
   }
 
   for (auto taskp : tasks_to_export) {
-    if (this->should_auto_cache(false)) {
-      this->auto_cache_3D();
-    }
-
     auto [cvted, str3D] = this->convert_and_build_if_need(*taskp);
 
     const std::string export_name =
@@ -1005,17 +988,12 @@ void SCWind::on_ac_test_blocklist_triggered() noexcept {
   }
 }
 
-void SCWind::on_ac_cache_all_3d_triggered() noexcept {
-  this->auto_cache_3D(true);
-}
-
 void SCWind::on_ac_memory_policy_triggered() noexcept {
   MemoryPolicyDialog diag{this, this->mem_policy};
   const auto result = diag.exec();
 
   if (result) {
     this->mem_policy = diag.current_value();
-    this->auto_cache_3D();
   }
 }
 

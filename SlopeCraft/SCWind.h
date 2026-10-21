@@ -148,9 +148,8 @@ class SCWind : public QMainWindow {
   void on_ac_get_current_colorlist_triggered() noexcept;
   void on_ac_test_blocklist_triggered() noexcept;
 
-  void on_ac_cache_all_3d_triggered() noexcept;
-
-  void on_ac_memory_policy_triggered() noexcept;
+  [[deprecated("TODO: remove memory policy from UI")]] void
+  on_ac_memory_policy_triggered() noexcept;
 
   void on_ac_blocklist_triggered() noexcept;
 
@@ -311,13 +310,13 @@ class SCWind : public QMainWindow {
 
   void report_error(::SCL_errorFlag flag, const char* msg) noexcept;
 
-  [[nodiscard]] bool should_auto_cache(bool suppress_warnings) noexcept;
+  // [[nodiscard]] bool should_auto_cache(bool suppress_warnings) noexcept;
 
-  struct auto_cache_report {
-    size_t structures_cached;
-    int64_t memory_saved;
-  };
-  auto_cache_report auto_cache_3D(bool cache_all = false) noexcept;
+  // struct auto_cache_report {
+  //   size_t structures_cached;
+  //   int64_t memory_saved;
+  // };
+  // auto_cache_report auto_cache_3D(bool cache_all = false) noexcept;
 
   [[nodiscard]] std::expected<QString, QString> get_command(
       const SlopeCraft::converted_image&, int begin_idx) const noexcept;
