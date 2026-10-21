@@ -16,24 +16,27 @@ add_library(ColorManip
     newTokiColor.hpp
 
     colorset_maptical.hpp
-    colorset_maptical.hpp
+    colorset_optical.hpp
     imageConvert.hpp
     newColorSet.hpp
     newTokiColor.hpp
+
+    MapImageCvter.h
 )
 
-target_compile_features(ColorManip PUBLIC cxx_std_20)
+target_compile_features(ColorManip PUBLIC cxx_std_23)
 
 target_include_directories(ColorManip PUBLIC
     ${CMAKE_SOURCE_DIR}/utilities
-    ${SlopeCraft_Chocobo1_Hash_include_dir})
+)
 target_include_directories(ColorManip PRIVATE
     ${Boost_INCLUDE_DIRS})
 
 target_link_libraries(ColorManip PUBLIC
     OpenMP::OpenMP_CXX
     Eigen3::Eigen
-    xsimd)
+    xsimd
+)
 
 # target_compile_options(ColorManip BEFORE PUBLIC "-std=c++17")
 target_compile_options(ColorManip PRIVATE ${SlopeCraft_vectorize_flags})
@@ -42,6 +45,8 @@ target_compile_options(ColorManip PRIVATE ${SlopeCraft_vectorize_flags})
 # ColorManip links to GPUInterface
 target_link_libraries(ColorManip PUBLIC GPUInterface)
 target_include_directories(ColorManip INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(ColorManip PRIVATE "${CMAKE_BINARY_DIR}/SlopeCraftL")
+
 
 if (NOT ${SlopeCraft_GPU_API} STREQUAL "None")
     add_executable(test_init_program tests/test_init_program.cpp)

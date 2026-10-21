@@ -93,7 +93,6 @@ set(SlopeCraft_SCL_link_libs
     ColorManip
     NBTWriter
     mc_schem::mc_schem
-    MapImageCvter
     FlatDiagram
     libpng_reader
     sNBT-formatter

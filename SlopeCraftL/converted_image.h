@@ -5,7 +5,7 @@
 #ifndef SLOPECRAFT_CONVERTED_IMAGE_H
 #define SLOPECRAFT_CONVERTED_IMAGE_H
 #include <Eigen/Dense>
-#include <MapImageCvter/MapImageCvter.h>
+#include <../utilities/ColorManip/MapImageCvter.h>
 #include <filesystem>
 #include <expected>
 #include <memory>

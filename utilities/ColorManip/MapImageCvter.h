@@ -43,7 +43,8 @@ class MapImageCvter : public ::libImageCvt::ImageCvter<true> {
   static constexpr int size_of_tokicolor = sizeof(TokiColor_t);
 
   MapImageCvter(const Base_t::basic_colorset_t& basic,
-                const Base_t::allowed_colorset_t& allowed);
+                const Base_t::allowed_colorset_t& allowed)
+      : ImageCvter<true>{basic, allowed} {};
   MapImageCvter(MapImageCvter&&) = default;
 
   ~MapImageCvter() = default;
