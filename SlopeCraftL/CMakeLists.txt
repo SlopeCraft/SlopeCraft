@@ -7,10 +7,9 @@ set(CMAKE_AUTORCC ON)
 find_package(ZLIB 1.2.11 REQUIRED)
 find_package(OpenMP REQUIRED)
 find_package(Eigen3 REQUIRED)
-find_package(Boost COMPONENTS iostreams OPTIONAL_COMPONENTS multi_array CONFIG REQUIRED)
+find_package(Boost OPTIONAL_COMPONENTS multi_array CONFIG REQUIRED)
 find_package(libzip REQUIRED)
 find_package(PNG REQUIRED)
-find_package(cereal REQUIRED)
 find_package(libnbt++ REQUIRED)
 find_package(gapp 1.0.1 REQUIRED)
 find_package(mc_schem 1.3.0 REQUIRED)
@@ -105,12 +104,9 @@ set(SlopeCraft_SCL_link_libs
     OpenMP::OpenMP_CXX
     Eigen3::Eigen
     gapp::gapp
-    Boost::iostreams
     Boost::multi_array
     libzip::zip
-    cereal::cereal
     nbt++
-    ${SC_zstd_target_name}
 )
 # link to dependents
 target_link_libraries(SlopeCraftL PRIVATE $<BUILD_INTERFACE:${SlopeCraft_SCL_link_libs}>)

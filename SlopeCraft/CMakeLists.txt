@@ -84,8 +84,6 @@ target_link_libraries(SlopeCraft PRIVATE
     AdaptiveLabel
     VersionDialog
     BlockListManager
-    StatMemory
-    MemoryPolicyDialog
 )
 
 target_include_directories(SlopeCraft PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})

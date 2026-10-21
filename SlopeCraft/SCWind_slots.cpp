@@ -16,7 +16,6 @@
 #include "TransparentStrategyWind.h"
 #include "CompressEffectViewer.h"
 #include "BlockListDialog.h"
-#include "stat_memory.h"
 
 #ifdef WIN32
 const char* SC_image_filter = "*.png;*.jpg";

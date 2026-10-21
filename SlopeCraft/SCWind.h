@@ -15,7 +15,6 @@
 #include "cvt_task.h"
 #include "PoolModel.h"
 #include "ExportTableModel.h"
-#include "MemoryPolicyDialog.h"
 
 class SCWind;
 
@@ -169,9 +168,6 @@ class SCWind : public QMainWindow {
   std::vector<std::unique_ptr<QTranslator>> translators;
 
   QString prev_load_image_dir{""};
-
-  memory_policy mem_policy{};
-  // QString fileonly_export_dir{""};
 
  public:
   task_pool tasks;

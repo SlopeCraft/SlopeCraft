@@ -2,12 +2,7 @@
 // Created by joseph on 4/17/24.
 //
 #include <format>
-#include <boost/iostreams/filtering_stream.hpp>
-#include <boost/iostreams/device/file.hpp>
-#include <boost/iostreams/filter/zstd.hpp>
-#include <zstd.h>
-#include <cereal/cereal.hpp>
-#include <cereal/archives/binary.hpp>
+#include <fstream>
 #include <magic_enum/magic_enum.hpp>
 
 #include "structure_3D.h"
