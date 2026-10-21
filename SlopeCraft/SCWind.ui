@@ -1701,18 +1701,8 @@
     <property name="title">
      <string>高级</string>
     </property>
-    <widget class="QMenu" name="menucache">
-     <property name="title">
-      <string>缓存</string>
-     </property>
-     <addaction name="ac_cache_dir_open"/>
-     <addaction name="ac_clear_cache"/>
-     <addaction name="ac_cache_all_3d"/>
-    </widget>
-    <addaction name="menucache"/>
     <addaction name="ac_test_blocklist"/>
     <addaction name="ac_get_current_colorlist"/>
-    <addaction name="ac_memory_policy"/>
     <addaction name="ac_blocklist"/>
    </widget>
    <widget class="QMenu" name="menu_3">

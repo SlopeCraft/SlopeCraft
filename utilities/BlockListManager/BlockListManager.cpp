@@ -70,7 +70,7 @@ BlockListManager::impl_addblocklist(const QByteArray& file_content) noexcept {
   std::string warning;
   warning.resize(8192);
   auto sd_warn = SlopeCraft::string_deliver::from_string(warning);
-  SlopeCraft::block_list_create_info option{SC_VERSION_U64, &sd_warn, &sd_err};
+  SlopeCraft::block_list_create_info option{&sd_warn, &sd_err};
 
   SlopeCraft::block_list_interface* bli =
       SlopeCraft::SCL_create_block_list_from_buffer(

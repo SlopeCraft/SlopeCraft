@@ -140,16 +140,10 @@ class SCWind : public QMainWindow {
   void when_data_file_command_changed() noexcept;
 
  private slots:
-  void on_ac_cache_dir_open_triggered() noexcept;
-  void on_ac_clear_cache_triggered() noexcept;
-
   void on_ac_about_triggered() noexcept;
 
   void on_ac_get_current_colorlist_triggered() noexcept;
   void on_ac_test_blocklist_triggered() noexcept;
-
-  [[deprecated("TODO: remove memory policy from UI")]] void
-  on_ac_memory_policy_triggered() noexcept;
 
   void on_ac_blocklist_triggered() noexcept;
 
@@ -182,7 +176,6 @@ class SCWind : public QMainWindow {
  public:
   task_pool tasks;
 
-  QString cache_root_dir() const noexcept;
   SlopeCraft::color_table* current_color_table() noexcept;
   SlopeCraft::convert_option current_convert_option() noexcept;
 
@@ -284,39 +277,18 @@ class SCWind : public QMainWindow {
              const SlopeCraft::structure_3D*>
   load_selected_3D() noexcept;
 
-  //  [[deprecated]] void kernel_set_image(int idx) noexcept;
-  //  [[deprecated]] void kernel_convert_image() noexcept;
-  //
-  //  [[deprecated]] void kernel_make_cvt_cache() noexcept;
-
-  //  [[deprecated]] void kernel_build_3d() noexcept;
-  //  [[deprecated]] void kernel_make_build_cache() noexcept;
-
   void refresh_current_cvt_display(std::optional<int> idx) noexcept;
   void refresh_current_cvt_display() noexcept {
     this->refresh_current_cvt_display(this->selected_cvt_task_idx());
   }
-
-  //  [[deprecated]] QImage get_converted_image_from_kernel() const noexcept;
-
   void refresh_current_build_display(cvt_task* taskp) noexcept;
   void refresh_current_build_display() noexcept {
     this->refresh_current_build_display(this->selected_export_task());
   }
 
-  //  void mark_all_task_unconverted() noexcept;
-
   void export_current_cvted_image(int idx, QString filename) noexcept;
 
   void report_error(::SCL_errorFlag flag, const char* msg) noexcept;
-
-  // [[nodiscard]] bool should_auto_cache(bool suppress_warnings) noexcept;
-
-  // struct auto_cache_report {
-  //   size_t structures_cached;
-  //   int64_t memory_saved;
-  // };
-  // auto_cache_report auto_cache_3D(bool cache_all = false) noexcept;
 
   [[nodiscard]] std::expected<QString, QString> get_command(
       const SlopeCraft::converted_image&, int begin_idx) const noexcept;

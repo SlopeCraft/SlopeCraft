@@ -303,7 +303,6 @@ void SCWind::on_pb_cvt_current_clicked() noexcept {
                                            std::move(cvted));
   }
 
-  //  this->kernel_make_cvt_cache();
   this->refresh_current_cvt_display(sel.value());
   this->ui->tw_cvt_image->setCurrentIndex(1);
 
@@ -436,11 +435,6 @@ void SCWind::on_pb_build3d_clicked() noexcept {
   }
   auto& cvted =
       task.converted_images.find(convert_input{table, cvt_option})->second;
-  //    this->kernel_set_image(gidx);
-  //    if (!this->kernel->loadConvertCache(this->selected_algo(),
-  //                                        this->is_dither_selected())) {
-  //      this->kernel_convert_image();
-  //    }
 
   const auto build_option = this->current_build_option();
   if (!cvted.is_built_with(build_option)) {
@@ -449,7 +443,6 @@ void SCWind::on_pb_build3d_clicked() noexcept {
       cvted.set_built(build_option, std::move(structure));
     }
   }
-  // load cache if converted
   this->refresh_current_build_display(&task);
 }
 
@@ -725,19 +718,7 @@ void SCWind::on_pb_export_file_clicked() noexcept {
   for (int idx = 0; idx < int(this->tasks.size()); idx++) {
     auto& task = this->tasks.at(idx);
     auto& cvted_img = this->convert_if_need(task);
-    //    this->kernel_set_image(idx);
-    //    bool need_to_convert{true};
-    //    if (task.is_converted()) {
-    //      if (this->kernel->loadConvertCache(this->selected_algo(),
-    //                                         this->is_dither_selected())) {
-    //        need_to_convert = false;
-    //      }
-    //    }
-    //
-    //    if (need_to_convert) {
-    //      this->kernel_convert_image();
-    //    }
-    //
+
     const int cur_seq_beg = this->tasks.map_range_of(seq_first, idx).first;
     const auto dir_name = dir.toLocal8Bit();
     //
@@ -758,64 +739,6 @@ void SCWind::on_pb_export_file_clicked() noexcept {
   if (fail_count > 0) {
     QMessageBox::warning(this, tr("%1 个图片导出失败").arg(fail_count),
                          tr("导出失败的图片依次为：\n%1").arg(fail_tasks));
-  }
-}
-
-void SCWind::on_ac_cache_dir_open_triggered() noexcept {
-  auto cache_dir = this->cache_root_dir();
-  QDesktopServices::openUrl(QUrl::fromLocalFile(cache_dir));
-}
-
-void SCWind::on_ac_clear_cache_triggered() noexcept {
-  const QString cache_dir_name = this->cache_root_dir();
-  QDir cache_dir{cache_dir_name};
-
-  if (!cache_dir.exists()) {
-    return;
-  }
-
-  emit this->image_changed();
-
-  const auto entries = cache_dir.entryList();
-
-  auto remove_cache_fun = [](QString filename) -> bool {
-    if (QFileInfo{filename}.isFile()) {
-      return QFile{filename}.remove();
-    } else {
-      return QDir{filename}.removeRecursively();
-    }
-  };
-
-  for (const auto& name : entries) {
-    if (name == "." || name == "..") {
-      continue;
-    }
-
-    QString filename = QStringLiteral("%1/%2").arg(cache_dir_name, name);
-
-    while (true) {
-      if (remove_cache_fun(filename)) {
-        break;
-      }
-
-      const auto ret = QMessageBox::warning(
-          this, tr("删除缓存失败"),
-          tr("无法删除文件或文件夹\"%1\"。\n点击 Ignore 以跳过，点击 Retry "
-             "以重试，点击 Cancel 以取消这次操作")
-              .arg(filename),
-          QMessageBox::StandardButtons{QMessageBox::StandardButton::Ignore,
-                                       QMessageBox::StandardButton::Retry,
-                                       QMessageBox::StandardButton::Cancel});
-
-      if (ret == QMessageBox::StandardButton::Retry) {
-        continue;
-      }
-      if (ret == QMessageBox::StandardButton::Ignore) {
-        break;
-      }
-      return;  // QMessageBox::StandardButton::Cancel and for closing the
-      // dialog
-    }
   }
 }
 
@@ -984,15 +907,6 @@ void SCWind::on_ac_test_blocklist_triggered() noexcept {
     QMessageBox::warning(
         this, tr("输出测试文件失败"),
         tr("保存测试文件 %1 时出现错误。详细信息：\n%2").arg(filename, qerr));
-  }
-}
-
-void SCWind::on_ac_memory_policy_triggered() noexcept {
-  MemoryPolicyDialog diag{this, this->mem_policy};
-  const auto result = diag.exec();
-
-  if (result) {
-    this->mem_policy = diag.current_value();
   }
 }
 
