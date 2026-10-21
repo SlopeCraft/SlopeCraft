@@ -13,9 +13,10 @@
 #include "SlopeCraftL.h"
 #include "SCLDefines.h"
 #include "mc_block.h"
-#include "Schem/Schem.h"
 #include "water_item.h"
 #include "string_deliver.h"
+
+#include <mc_schem.hpp>
 
 class color_table_impl;
 
@@ -76,23 +77,23 @@ class converted_image_impl : public converted_image {
       const color_table_impl& table,
       const build_options& option) const noexcept;
 
-  [[nodiscard]] static uint64_t convert_task_hash(
-      const_image_reference original_img,
-      const convert_option& option) noexcept;
+  // [[nodiscard]] static uint64_t convert_task_hash(
+  //     const_image_reference original_img,
+  //     const convert_option& option) noexcept;
 
-  std::string save_cache(const std::filesystem::path& file) const noexcept;
+  // std::string save_cache(const std::filesystem::path& file) const noexcept;
 
-  [[nodiscard]] static std::expected<converted_image_impl, std::string>
-  load_cache(const color_table_impl& table,
-             const std::filesystem::path& file) noexcept;
+  // [[nodiscard]] static std::expected<converted_image_impl, std::string>
+  // load_cache(const color_table_impl& table,
+  //            const std::filesystem::path& file) noexcept;
 
   bool is_converted_from(const color_table& table_) const noexcept final;
 
   bool get_map_command(
       const map_data_file_give_command_options& option) const final;
 
-  [[nodiscard]] libSchem::Schem assembled_maps(
-      const assembled_maps_options&) const noexcept;
+  [[nodiscard]] mc_schem::unique_schematic assembled_maps(
+      const assembled_maps_options&) const;
 
   bool export_assembled_maps_litematic(
       const char* filename, const assembled_maps_options&,

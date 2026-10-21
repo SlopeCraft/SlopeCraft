@@ -39,6 +39,8 @@ set(Slope_SCL_internal_headers
     optimize_chain.h
     prim_glass_builder.h
     SCL_translator.h
+    entity.h
+    item.h
 )
 
 set(SlopeCraft_SCL_sources
@@ -57,6 +59,8 @@ set(SlopeCraft_SCL_sources
     ${SlopeCraft_SCL_windows_rc_files}
     block_list.cpp
     blocklist.h
+    entity.cpp
+    item.cpp
 )
 
 add_library(SlopeCraftL SHARED

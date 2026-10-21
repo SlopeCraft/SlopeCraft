@@ -3,15 +3,22 @@
 //
 
 #include <format>
+#include <fstream>
 #include <boost/uuid/detail/md5.hpp>
+
 #include "SCLDefines.h"
 #include "SCL_translator.h"
 #include "converted_image.h"
+
+#include "MCDataVersion.h"
 #include "color_table.h"
 #include "height_line.h"
 #include "lossy_compressor.h"
 #include "NBTWriter/NBTWriter.h"
 #include "structure_3D.h"
+
+#include "entity.h"
+#include "item.h"
 
 converted_image_impl::converted_image_impl(const color_table_impl& table)
     : converter{*SlopeCraft::basic_colorset, *table.allowed},
@@ -352,50 +359,53 @@ converted_image_impl::height_info(const color_table_impl& table,
   return ret;
 }
 
-uint64_t converted_image_impl::convert_task_hash(
-    const_image_reference original_img, const convert_option& option) noexcept {
-  boost::uuids::detail::md5 hash;
+// uint64_t converted_image_impl::convert_task_hash(
+//     const_image_reference original_img, const convert_option& option)
+//     noexcept {
+//   boost::uuids::detail::md5 hash;
+//
+//   SC_HASH_ADD_DATA(hash, option.algo)
+//   SC_HASH_ADD_DATA(hash, option.dither)
+//
+//   hash.process_bytes(original_img.data, original_img.rows *
+//   original_img.cols);
+//
+//   decltype(hash)::digest_type dig;
+//   hash.get_digest(dig);
+//   std::array<uint64_t, 2> temp;
+//   memcpy(temp.data(), dig, sizeof(temp));
+//   return temp[0] ^ temp[1];
+// }
 
-  SC_HASH_ADD_DATA(hash, option.algo)
-  SC_HASH_ADD_DATA(hash, option.dither)
+// std::string converted_image_impl::save_cache(
+//     const std::filesystem::path& file) const noexcept {
+//   if (this->converter.save_cache(file.string().c_str())) {
+//     return SCLTranslator::tr("打开文件%1失败")
+//         .arg(file.string().c_str())
+//         .toStdString();
+//   }
+//   return {};
+// }
 
-  hash.process_bytes(original_img.data, original_img.rows * original_img.cols);
-
-  decltype(hash)::digest_type dig;
-  hash.get_digest(dig);
-  std::array<uint64_t, 2> temp;
-  memcpy(temp.data(), dig, sizeof(temp));
-  return temp[0] ^ temp[1];
-}
-
-std::string converted_image_impl::save_cache(
-    const std::filesystem::path& file) const noexcept {
-  if (this->converter.save_cache(file.string().c_str())) {
-    return SCLTranslator::tr("打开文件%1失败")
-        .arg(file.string().c_str())
-        .toStdString();
-  }
-  return {};
-}
-
-std::expected<converted_image_impl, std::string>
-converted_image_impl::load_cache(const color_table_impl& table,
-                                 const std::filesystem::path& file) noexcept {
-  converted_image_impl ret{table};
-  if (!std::filesystem::is_regular_file(file)) {
-    return std::unexpected(SCLTranslator::tr("文件%1不存在")
-                               .arg(file.string().c_str())
-                               .toStdString());
-  }
-  if (!ret.converter.load_cache(file.string().c_str())) {
-    return std::unexpected(SCLTranslator::tr("加载缓存失败，%1包含错误")
-                               .arg(file.string().c_str())
-                               .toStdString()
-                           // "Failed to load cache, the cache is incorrect"
-    );
-  }
-  return ret;
-}
+// std::expected<converted_image_impl, std::string>
+// converted_image_impl::load_cache(const color_table_impl& table,
+//                                  const std::filesystem::path& file) noexcept
+//                                  {
+//   converted_image_impl ret{table};
+//   if (!std::filesystem::is_regular_file(file)) {
+//     return std::unexpected(SCLTranslator::tr("文件%1不存在")
+//                                .arg(file.string().c_str())
+//                                .toStdString());
+//   }
+//   if (!ret.converter.load_cache(file.string().c_str())) {
+//     return std::unexpected(SCLTranslator::tr("加载缓存失败，%1包含错误")
+//                                .arg(file.string().c_str())
+//                                .toStdString()
+//                            // "Failed to load cache, the cache is incorrect"
+//     );
+//   }
+//   return ret;
+// }
 
 bool converted_image_impl::is_converted_from(
     const color_table& table_) const noexcept {
@@ -681,8 +691,8 @@ uint8_t rotation_of(SCL_map_facing facing) noexcept {
   }
 }
 
-libSchem::Schem converted_image_impl::assembled_maps(
-    const assembled_maps_options& option) const noexcept {
+mc_schem::unique_schematic converted_image_impl::assembled_maps(
+    const assembled_maps_options& option) const {
   const auto transform_mat = transform_mat_of(option.map_facing);
   const auto transform_mat_abs = transform_mat.array().abs().matrix();
   const Eigen::Vector3i offset =
@@ -708,27 +718,23 @@ libSchem::Schem converted_image_impl::assembled_maps(
     }
   }();
 
-  libSchem::Schem schem;
+  auto region = mc_schem::region::create(shape[0], shape[1], shape[2]);
   {
-    std::string_view id_list[1]{std::string_view{"minecraft:air"}};
-    schem.set_block_id(id_list);
-    schem.resize(shape[0], shape[1], shape[2]);
-    schem.fill(0);
-    schem.set_MC_major_version_number(option.mc_version);
-    schem.set_MC_version_number(data_version);
+    auto air = mc_schem::block::create(mc_schem::common_block::air);
+    region->fill_with(*air);
   }
 
-  const libSchem::item_frame_variant variant = [&option, this]() {
+  const item_frame_variant variant = [&option, this]() {
     if (this->game_version < SCL_gameVersion::MC17) {
-      return libSchem::item_frame_variant::common;
+      return item_frame_variant::common;
     }
     if (option.frame_variant == SCL_item_frame_variant::common) {
-      return libSchem::item_frame_variant::common;
-    } else {
-      return libSchem::item_frame_variant::glowing;
+      return item_frame_variant::common;
     }
+    return item_frame_variant::glowing;
   }();
 
+  std::vector<uint8_t> nbt_buffer;
   for (int r = 0; r < this->map_rows(); r++) {
     for (int c = 0; c < this->map_cols(); c++) {
       const int map_index = option.begin_index + r + c * this->map_rows();
@@ -739,60 +745,104 @@ libSchem::Schem converted_image_impl::assembled_maps(
         assert(position[dim] >= 0);
         assert(position[dim] < shape[dim]);
       }
-      auto map_entity = std::make_unique<libSchem::item_frame>();
+      auto map_entity = std::make_unique<item_frame>();
       map_entity->tile_position_ = {position[0], position[1], position[2]};
       map_entity->variant_ = variant;
       map_entity->invisible_ = option.invisible_frame;
       map_entity->fixed_ = option.fixed_frame;
       map_entity->direction_ =
-          [](SCL_map_facing f) -> libSchem::hangable_facing_direction {
+          [](SCL_map_facing f) -> hangable_facing_direction {
         switch (f) {
           case SCL_map_facing::wall_south:
-            return libSchem::hangable_facing_direction::south;
+            return hangable_facing_direction::south;
           case SCL_map_facing::wall_east:
-            return libSchem::hangable_facing_direction::east;
+            return hangable_facing_direction::east;
           case SCL_map_facing::wall_north:
-            return libSchem::hangable_facing_direction::north;
+            return hangable_facing_direction::north;
           case SCL_map_facing::wall_west:
-            return libSchem::hangable_facing_direction::west;
+            return hangable_facing_direction::west;
           case SCL_map_facing::top_north:
           case SCL_map_facing::top_south:
           case SCL_map_facing::top_east:
           case SCL_map_facing::top_west:
-            return libSchem::hangable_facing_direction::top;
+            return hangable_facing_direction::top;
           case SCL_map_facing::bottom_north:
           case SCL_map_facing::bottom_south:
           case SCL_map_facing::bottom_east:
           case SCL_map_facing::bottom_west:
-            return libSchem::hangable_facing_direction::bottom;
+            return hangable_facing_direction::bottom;
         }
         return {};
       }(option.map_facing);
       map_entity->item_rotation = rotation_of(option.map_facing);
       {
-        auto map_item = std::make_unique<libSchem::filled_map>();
+        auto map_item = std::make_unique<filled_map>();
         map_item->map_id = map_index;
         map_entity->item_ = std::move(map_item);
       }
-
-      schem.entity_list().emplace_back(std::move(map_entity));
+      {
+        auto nbt = map_entity->dump(data_version);
+        dump_compound_to_bytes(nbt, nbt_buffer);
+      }
+      auto rs_nbt = mc_schem::nbt_hashmap::create_from_binary(nbt_buffer);
+      if (not rs_nbt) {
+        throw std::runtime_error{
+          SCLTranslator::tr("内部错误：mc_schem重新解析nbt失败：%1")
+              .arg(rs_nbt.error().c_str())
+              .toStdString()};
+      }
+      auto rs_entity = mc_schem::entity::create(std::move(*rs_nbt));
+      if (not rs_entity) {
+        throw std::runtime_error{
+          SCLTranslator::tr("内部错误：mc_schem重写解析实体失败：%1")
+              .arg(rs_entity.error()->message().c_str())
+              .toStdString()};
+      }
+      region->add_entity(std::move(*rs_entity));
     }
   }
 
-  return schem;
+  auto schem = mc_schem::schematic::create();
+  schem->append_region(std::move(region));
+  {
+    const auto dv = static_cast<int32_t>(data_version);
+    auto md = mc_schem::metadata_ir::create(dv);
+    if (not md) {
+      throw std::runtime_error{
+        SCLTranslator::tr("内部错误：mc_schem不支持数据版本%1")
+            .arg(dv)
+            .toStdString()};
+    }
+    (*md)->set_author("SlopeCraftL");
+    (*md)->set_name("Assembled maps");
+    (*md)->set_description(
+        "This schematic contains item frame entity containing assembled maps "
+        "(filled).");
+    schem->set_metadata(std::move(*md));
+  }
+
+  return std::move(schem);
 }
 
 bool converted_image_impl::export_assembled_maps_litematic(
     const char* filename, const SlopeCraft::assembled_maps_options& map_opt,
     const SlopeCraft::litematic_options& export_opt) const noexcept {
-  auto schem = this->assembled_maps(map_opt);
-  libSchem::litematic_info info{};
-  info.lite_name_utf8 = export_opt.litename_utf8;
-  info.region_name_utf8 = export_opt.region_name_utf8;
+  try {
+    auto schem = this->assembled_maps(map_opt);
 
-  auto err = schem.export_litematic(filename, info);
-  if (not err) {
-    export_opt.ui.report_error(err.error().first, err.error().second.c_str());
+    schem->metadata()->set_name(export_opt.litename_utf8);
+    schem->get_region(0)->set_name(export_opt.region_name_utf8);
+
+    mc_schem::litematica_save_option lso{};
+    std::ofstream ofs{filename, std::ios::binary};
+    auto result = schem->save_litematica(ofs, lso);
+    if (not result) {
+      export_opt.ui.report_error(errorFlag::MC_SCHEM_ERROR,
+                                 result.error()->message().c_str());
+      return false;
+    }
+  } catch (const std::exception& e) {
+    export_opt.ui.report_error(errorFlag::MC_SCHEM_ERROR, e.what());
     return false;
   }
   return true;
@@ -801,10 +851,20 @@ bool converted_image_impl::export_assembled_maps_litematic(
 bool converted_image_impl::export_assembled_maps_vanilla_structure(
     const char* filename, const SlopeCraft::assembled_maps_options& map_opt,
     const SlopeCraft::vanilla_structure_options& export_opt) const noexcept {
-  auto schem = this->assembled_maps(map_opt);
-  auto err = schem.export_structure(filename, export_opt.is_air_structure_void);
-  if (not err) {
-    export_opt.ui.report_error(err.error().first, err.error().second.c_str());
+  try {
+    auto schem = this->assembled_maps(map_opt);
+    mc_schem::vanilla_structure_save_option vsso{};
+    vsso.keep_air = not export_opt.is_air_structure_void;
+
+    std::ofstream ofs{filename, std::ios::binary};
+    auto result = schem->save_vanilla_structure(ofs, vsso);
+    if (not result) {
+      export_opt.ui.report_error(errorFlag::MC_SCHEM_ERROR,
+                                 result.error()->message().c_str());
+      return false;
+    }
+  } catch (const std::exception& e) {
+    export_opt.ui.report_error(errorFlag::MC_SCHEM_ERROR, e.what());
     return false;
   }
   return true;

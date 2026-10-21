@@ -15,6 +15,7 @@
 #include "lossy_compressor.h"
 #include "prim_glass_builder.h"
 #include "FlatDiagram.h"
+#include "MCDataVersion.h"
 #include "SCL_translator.h"
 
 using mc_schem::unique_block;

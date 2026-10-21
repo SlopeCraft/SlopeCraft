@@ -6,6 +6,8 @@
 #include <boost/uuid/detail/md5.hpp>
 #include "SCLDefines.h"
 #include "color_table.h"
+
+#include "MCDataVersion.h"
 #include "water_item.h"
 #include "structure_3D.h"
 #include "SCL_translator.h"
