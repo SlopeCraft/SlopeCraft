@@ -27,11 +27,10 @@ This file is part of SlopeCraft.
 #define _USE_MATH_DEFINES
 #endif
 
-// #include <omp.h>
-
+#include <iostream>
+#include <memory>
 #define EIGEN_NO_DEBUG
 #include <Eigen/Dense>
-#include <iostream>
 #include <ColorManip/newColorSet.hpp>
 #include <ColorManip/newTokiColor.hpp>
 
