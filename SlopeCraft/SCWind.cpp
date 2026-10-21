@@ -912,16 +912,11 @@ void SCWind::refresh_current_build_display(cvt_task* taskp) noexcept {
   if (cvted_it == task.converted_images.end()) {
     return;
   }
-  if (auto str_with_info =
-          cvted_it->second.get_structure(this->current_build_option())
-      // cvted_it->second.get_build_cache_with_info_noload(
-      //       *this->current_color_table(), this->current_build_option(),
-      //       this->cache_root_dir())
-  ) {
-    const auto x = str_with_info->shape_x(), y = str_with_info->shape_y(),
-               z = str_with_info->shape_z();
+  if (auto str_with_info = cvted_it->second.get_structure_with_info(
+          this->current_build_option())) {
+    const auto [x, y, z] = str_with_info->shape;
 
-    const auto block_count = str_with_info->block_count();
+    const auto block_count = str_with_info->block_count;
     this->ui->lb_show_3dsize->setText(
         tr("大小： %1 × %2 × %3").arg(x).arg(y).arg(z));
     this->ui->lb_show_block_count->setText(tr("方块数量：%1").arg(block_count));

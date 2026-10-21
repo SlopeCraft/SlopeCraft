@@ -101,14 +101,21 @@ struct convert_result {
                      equal>
       built_structures;
 
-  [[nodiscard]] SlopeCraft::structure_3D* get_structure(
+  [[nodiscard]] const structure_with_info* get_structure_with_info(
       const SlopeCraft::build_options& opt) const noexcept {
     auto it = built_structures.find(opt);
     if (it == built_structures.end()) {
       return nullptr;
     }
     assert(it->second.handle);
-    return it->second.handle.get();
+    return &it->second;
+  }
+
+  [[nodiscard]] SlopeCraft::structure_3D* get_structure(
+      const SlopeCraft::build_options& opt) const noexcept {
+    auto ptr = get_structure_with_info(opt);
+    if (ptr) return ptr->handle.get();
+    return nullptr;
   }
   [[nodiscard]] bool is_built_with(
       const SlopeCraft::build_options& opt) const noexcept {
@@ -122,15 +129,15 @@ struct convert_result {
     opt.ui = {};
     opt.main_progressbar = {};
     opt.sub_progressbar = {};
-    // this->built_structures.emplace(opt,
-    //                                structure_with_info{std::move(structure)});
-    auto it = this->built_structures.find(opt);
-    if (it == built_structures.end()) {
-      this->built_structures.emplace(opt,
-                                     structure_with_info{std::move(structure)});
-      return;
-    }
-    it->second.handle = std::move(structure);
+    this->built_structures.emplace(opt,
+                                   structure_with_info{std::move(structure)});
+    // auto it = this->built_structures.find(opt);
+    // if (it == built_structures.end()) {
+    //   this->built_structures.emplace(opt,
+    //                                  structure_with_info{std::move(structure)});
+    //   return;
+    // }
+    // it->second.handle = std::move(structure);
   }
 };
 
