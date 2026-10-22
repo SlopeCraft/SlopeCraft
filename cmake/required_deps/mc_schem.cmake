@@ -20,4 +20,12 @@ endif ()
 
 message(STATUS "Found mc_schem shared lib at ${mc_schem_SHARED_LIB_LOCATION}")
 
-
+if (APPLE)
+    # Corrosion v0.6.1 hardcodes the CommandLineTools SDK usr/lib into
+    # INTERFACE_LINK_DIRECTORIES; it beats -isysroot in the linker search order.
+    foreach (t mc_schem-shared mc_schem-static schemtool mc_schem::mc_schem-shared)
+        if (TARGET ${t})
+            set_property(TARGET ${t} PROPERTY INTERFACE_LINK_DIRECTORIES "")
+        endif ()
+    endforeach ()
+endif ()
