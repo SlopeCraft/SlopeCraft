@@ -35,12 +35,6 @@ jobs:
           choco install ninja
           ninja --version
 
-      #      - name: Refresh vcpkg repo
-      #        shell: cmd
-      #        run: |
-      #          cd /d C:\vcpkg
-      #          git pull
-
       - name: Install deps with vcpkg
         shell: powershell
         run: |
@@ -53,28 +47,6 @@ jobs:
       - name: Install Vulkan with vcpkg
         if: matrix.gpu_api == 'Vulkan'
         run: vcpkg install --triplet=x64-windows glslang[tools] vulkan-headers vulkan-memory-allocator vulkan-loader
-
-      #      - name: Install winget
-      #        if: matrix.gpu_api == 'Vulkan'
-      #        shell: pwsh
-      #        run: |
-      #          $progressPreference = 'silentlyContinue'
-      #          Write-Information "Downloading WinGet and its dependencies..."
-      #          Invoke-WebRequest -Uri https://aka.ms/getwinget -OutFile Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle
-      #          Invoke-WebRequest -Uri https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx -OutFile Microsoft.VCLibs.x64.14.00.Desktop.appx
-      #          Invoke-WebRequest -Uri https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.8.6/Microsoft.UI.Xaml.2.8.x64.appx -OutFile Microsoft.UI.Xaml.2.8.x64.appx
-      #          Add-AppxPackage Microsoft.VCLibs.x64.14.00.Desktop.appx
-      #          Add-AppxPackage Microsoft.UI.Xaml.2.8.x64.appx
-      #          Add-AppxPackage Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle
-      #
-      #      - name: Install Vulkan with vcpkg
-      #        if: matrix.gpu_api == 'Vulkan'
-      #        run: winget install KhronosGroup.VulkanSDK
-      #      #          cmd
-      #      #          curl -JL -o bin/VulkanSDK.7z "https://github.com/SlopeCraft/QtBinaries/releases/download/vulkan1.3.250.1-windows/VulkanSDK-1.3.250.1.7z"
-      #      #          7z x -o"C:\Program Files\VulkanSDK" bin/VulkanSDK.7z
-      #      #          exit
-      #      #          tree /f "C:\Program Files\VulkanSDK"
 
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -93,18 +65,51 @@ jobs:
           echo "short_sha = $short_sha"
           echo "SHORT_SHA=$short_sha" >> $env:GITHUB_ENV
 
-      - name: Download Qt6.10.3-msvc-shared and extract
+      - name: Download Qt6.10.3-msvc-shared, verify and extract
         shell: cmd
+        env:
+          # SHA256 of Qt6.10.3-msvc-shared.7z, copied from the asset list on the
+          # release page. Re-uploading the archive to the release requires
+          # updating this value, otherwise the build fails on purpose.
+          QT_ARCHIVE_SHA256: ee5277793d9e5b44409ec69f74092975fa2a59f829b809c9dfdac830e54050e9
         run: |
           cd bin
-          curl -JL -o .\Qt6.10.3-msvc-shared.7z "https://github.com/SlopeCraft/QtBinaries/releases/download/qt6.10.3-x86_64-msvc-windows/Qt6.10.3-msvc-shared.7z"
+          curl -fL --retry 5 --retry-delay 10 -o .\Qt6.10.3-msvc-shared.7z "https://github.com/SlopeCraft/QtBinaries/releases/download/qt6.10.3-x86_64-msvc-windows/Qt6.10.3-msvc-shared.7z"
+          if "%QT_ARCHIVE_SHA256%"=="ee5277793d9e5b44409ec69f74092975fa2a59f829b809c9dfdac830e54050e9" (
+            echo ERROR: QT_ARCHIVE_SHA256 is still the placeholder. Pin the real SHA256 of the archive in windows-build.yml.
+            exit /b 1
+          )
+          certutil -hashfile .\Qt6.10.3-msvc-shared.7z SHA256 | findstr /i /c:"%QT_ARCHIVE_SHA256%" >nul
+          if errorlevel 1 (
+            echo ERROR: SHA256 of Qt6.10.3-msvc-shared.7z does not match the pinned value.
+            echo Expected: %QT_ARCHIVE_SHA256%
+            echo Actual:
+            certutil -hashfile .\Qt6.10.3-msvc-shared.7z SHA256
+            exit /b 1
+          )
           7z x -oQt6.10.3-msvc-shared .\Qt6.10.3-msvc-shared.7z
 
-      - name: Download and extract llvm
+      - name: Download llvm, verify and extract
         shell: cmd
+        env:
+          # SHA256 of LLVM-22.1.8-win64.exe, copied from the asset list on the
+          # release page. Bumping the LLVM version requires updating this value.
+          LLVM_INSTALLER_SHA256: 16e5709785fef73c854646241c4a92c5cd574318d1b33c63330dd7721903e55c
         run: |
           cd /d bin
-          curl -JL -o .\LLVM-22.1.8-win64.exe "https://github.com/llvm/llvm-project/releases/download/llvmorg-22.1.8/LLVM-22.1.8-win64.exe"
+          curl -fL --retry 5 --retry-delay 10 -o .\LLVM-22.1.8-win64.exe "https://github.com/llvm/llvm-project/releases/download/llvmorg-22.1.8/LLVM-22.1.8-win64.exe"
+          if "%LLVM_INSTALLER_SHA256%"=="16e5709785fef73c854646241c4a92c5cd574318d1b33c63330dd7721903e55c" (
+            echo ERROR: LLVM_INSTALLER_SHA256 is still the placeholder. Pin the real SHA256 of the installer in windows-build.yml.
+            exit /b 1
+          )
+          certutil -hashfile .\LLVM-22.1.8-win64.exe SHA256 | findstr /i /c:"%LLVM_INSTALLER_SHA256%" >nul
+          if errorlevel 1 (
+            echo ERROR: SHA256 of LLVM-22.1.8-win64.exe does not match the pinned value.
+            echo Expected: %LLVM_INSTALLER_SHA256%
+            echo Actual:
+            certutil -hashfile .\LLVM-22.1.8-win64.exe SHA256
+            exit /b 1
+          )
           7z x .\LLVM-22.1.8-win64.exe -ollvm "-xr!$PLUGINSDIR"
           .\llvm\bin\clang-cl --version
           cd ..
