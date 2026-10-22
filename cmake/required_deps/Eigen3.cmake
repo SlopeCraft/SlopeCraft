@@ -11,7 +11,7 @@ set(EIGEN_BUILD_TESTING OFF)
 set(EIGEN_LEAVE_TEST_IN_ALL_TARGET OFF)
 FetchContent_Declare(Eigen3
     GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
-    GIT_TAG 5.0.1
+    GIT_TAG bc3b39870ecb690a623a3f49149a358b95c5781d #5.0.1
     OVERRIDE_FIND_PACKAGE
     EXCLUDE_FROM_ALL
 )

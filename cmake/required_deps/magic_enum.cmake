@@ -11,7 +11,7 @@ if (NOT ${magic_enum_FOUND})
 
         # URL https://github.com/Neargye/magic_enum/releases/download/v0.8.2/magic_enum.hpp
         GIT_REPOSITORY https://github.com/Neargye/magic_enum.git
-        GIT_TAG "v0.9.7"
+        GIT_TAG 1384769c66bd16ec9bb1353f45fe8ec8ccc12dbd #v0.9.8
         OVERRIDE_FIND_PACKAGE
         EXCLUDE_FROM_ALL
     )

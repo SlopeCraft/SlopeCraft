@@ -27,7 +27,7 @@ set(GAPP_DETERMINISM OFF CACHE BOOL "" FORCE)
 
 FetchContent_Declare(gapp
     GIT_REPOSITORY https://github.com/KRM7/gapp
-    GIT_TAG v1.0.1
+    GIT_TAG c2f528d0b07d87314870b09da2b55d9a05e4273c #v1.0.1
     OVERRIDE_FIND_PACKAGE
     EXCLUDE_FROM_ALL
 )
