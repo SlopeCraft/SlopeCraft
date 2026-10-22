@@ -14,6 +14,10 @@ if (NOT mc_schem_FOUND)
     find_package(mc_schem CONFIG REQUIRED)
 endif ()
 
+if (NOT mc_schem_SHARED_LIB_LOCATION)
+    message(WARNING "mc_schem_SHARED_LIB_LOCATION is not defined or error. This is required for installation, install may fail")
+endif ()
+
 message(STATUS "Found mc_schem shared lib at ${mc_schem_SHARED_LIB_LOCATION}")
 
 
