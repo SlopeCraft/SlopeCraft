@@ -26,7 +26,7 @@ This file is part of SlopeCraft.
 // height_line::height_line() {}
 
 float height_line::make(
-    const TokiColor*const* src, const Eigen::ArrayX<uint8_t>& g,
+    const TokiColor* const* src, const Eigen::ArrayX<uint8_t>& g,
     bool allowNaturalCompress,
     const std::function<bool(uint8_t)>& need_support_from_base_color,
     Eigen::ArrayXi* dst) {
@@ -141,10 +141,6 @@ void height_line::updateWaterMap() {
     if (base(r) != 12) continue;
     waterMap[r] = water_y_range{HighLine(r) - 1, LowLine(r)};
   }
-}
-
-const std::map<uint32_t, water_y_range>& height_line::getWaterMap() const {
-  return waterMap;
 }
 
 EImage height_line::toImg() const {

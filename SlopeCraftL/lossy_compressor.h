@@ -57,7 +57,6 @@ struct lossy_compress_input {
   // ui pointers
   SlopeCraft::ui_callbacks ui;
   SlopeCraft::progress_callbacks progress_bar;
-
 };
 
 struct lossy_compress_result {
@@ -67,29 +66,5 @@ struct lossy_compress_result {
 };
 
 [[nodiscard]] lossy_compress_result lossy_compress(const lossy_compress_input&);
-
-class solver_t;
-
-// class lossy_compressor {
-//  public:
-//   lossy_compressor();
-//   ~lossy_compressor();
-//   void setSource(const Eigen::ArrayXi&, std::span<const TokiColor*>,
-//                  std::function<bool(uint8_t)> need_support_from_base_color);
-//   bool compress(uint16_t maxHeight, bool allowNaturalCompress);
-//   const Eigen::ArrayX<uint8_t>& getResult() const;
-//   double resultFitness() const;
-//
-//
-//  private:
-//   friend class solver_t;
-//   std::unique_ptr<solver_t> solver;
-//   std::vector<const TokiColor*> source;
-//   std::function<bool(uint8_t)> need_support_from_base_color;
-//
-//   static const uint16_t maxGeneration;
-//
-//   void runGenetic(uint16_t maxHeight, bool allowNaturalCompress);
-// };
 
 #endif  // LOSSYCOMPRESSOR_H

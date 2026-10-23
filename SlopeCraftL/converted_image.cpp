@@ -4,6 +4,7 @@
 
 #include <format>
 #include <fstream>
+#include <thread>
 
 #include "SCLDefines.h"
 #include "SCL_translator.h"
@@ -20,6 +21,8 @@
 
 #include <nbt_tags.h>
 #include <io/ozlibstream.h>
+// gapp thread pool
+#include <utility/thread_pool.hpp>
 
 converted_image_impl::converted_image_impl(const color_table_impl& table)
     : converter{*SlopeCraft::basic_colorset, *table.allowed},
@@ -214,8 +217,11 @@ bool converted_image_impl::export_map_data(
 std::optional<converted_image_impl::height_maps>
 converted_image_impl::height_info(const color_table_impl& table,
                                   const build_options& option) const noexcept {
-  //
-  //  std::unordered_map<rc_pos, water_y_range> water_list;
+  // Force single thread for GA solving. Parallelize by columns
+  {
+    static std::once_flag gapp_single_thread;
+    std::call_once(gapp_single_thread, [] { gapp::execution_threads(1); });
+  }
 
   Eigen::ArrayXXi map_color = this->converter.mapcolor_matrix().cast<int>();
 
@@ -226,7 +232,7 @@ converted_image_impl::height_info(const color_table_impl& table,
       static_cast<int>(option.compress_method) bitand
       static_cast<int>(compressSettings::ForcedOnly);
 
-  if (((map_color - 4 * (map_color / 4)) >= 3).any()) {
+  if ((map_color - 4 * (map_color / 4) >= 3).any()) [[unlikely]] {
     /*
      "Fatal error : SlopeCraftL found map color with depth 3 in a "
         "vanilla map.\n Map contents (map color matrix in col-major) :\n["
@@ -271,14 +277,25 @@ converted_image_impl::height_info(const color_table_impl& table,
   base.setZero(this->rows() + 1, this->cols());
   high_map.setZero(this->rows() + 1, this->cols());
   low_map.setZero(this->rows() + 1, this->cols());
-  std::unordered_map<rc_pos, water_y_range> water_list;
 
+  std::vector<std::map<uint32_t, water_y_range>> water_list_by_col;
+  water_list_by_col.resize(map_color.cols(), {});
+  struct fail_column_info {
+    int64_t col;
+    uint32_t max_allowed_height;
+    uint32_t max_actual_height;
+  };
+  std::vector<std::optional<fail_column_info>> fail_infos;
+  fail_infos.resize(map_color.cols(), std::nullopt);
+
+#pragma omp parallel for schedule(dynamic) \
+    num_threads(std::thread::hardware_concurrency())
   for (int64_t c = 0; c < map_color.cols(); c++) {
     height_line HL;
     HL.make(map_color.col(c), allow_lossless_compress,
             need_support_from_base_color);
 
-    if ((HL.maxHeight() > option.max_allowed_height) and allow_lossy_compress) {
+    if (HL.maxHeight() > option.max_allowed_height and allow_lossy_compress) {
       std::vector<const TokiColor*> ptr(map_color.rows());
 
       this->converter.col_TokiColor_ptrs(c, ptr);
@@ -297,17 +314,13 @@ converted_image_impl::height_info(const color_table_impl& table,
       Eigen::ArrayXi temp;
       HL.make(&ptr[0], result.gene, allow_lossless_compress,
               need_support_from_base_color, &temp);
-      if (HL.maxHeight() > option.max_allowed_height) {
-        option.ui.report_error(
-            SCL_errorFlag::LOSSYCOMPRESS_FAILED,
-            SCLTranslator::tr(
-                "3D结构的第%1列压缩失败。要求最大高度<=%2，但是只能压缩到%3")
-                .arg(c)
-                .arg(option.max_allowed_height)
-                .arg(HL.maxHeight())
-                .toStdString()
-                .c_str());
-        return std::nullopt;
+      if (HL.maxHeight() > option.max_allowed_height) [[unlikely]] {
+        fail_infos[c] = fail_column_info{
+          .col = c,
+          .max_allowed_height = HL.maxHeight(),
+          .max_actual_height = HL.maxHeight(),
+        };
+        continue;
       }
       map_color.col(c) = temp;
     }
@@ -315,36 +328,59 @@ converted_image_impl::height_info(const color_table_impl& table,
     high_map.col(c) = HL.getHighLine();
     low_map.col(c) = HL.getLowLine();
 
-    auto hl_water_list = HL.getWaterMap();
-    water_list.reserve(water_list.size() + hl_water_list.size());
-    for (const auto& [r, water_item] : hl_water_list) {
-      water_list.emplace(rc_pos{.row = static_cast<int32_t>(r),
-                                .col = static_cast<int32_t>(c)},
-                         water_item);
-    }
+    water_list_by_col[c] = std::move(HL.getWaterMap());
 
-    option.main_progressbar.add(4 * this->size());
+    // auto hl_water_list = HL.getWaterMap();
+    // auto& water_list = water_list_by_col[c];
+    // water_list.reserve(water_list.size() + hl_water_list.size());
+    // for (const auto& [r, water_item] : hl_water_list) {
+    //   water_list.emplace(rc_pos{.row = static_cast<int32_t>(r),
+    //                             .col = static_cast<int32_t>(c)},
+    //                      water_item);
+    // }
   }
-  // const bool contains_blocks_that_needs_support = [&] -> bool {
-  //   for (Eigen::Index r = 0; r < map_color.rows(); r++) {
-  //     for (Eigen::Index c = 0; c < map_color.cols(); c++) {
-  //       if (need_support_from_base_color(mapColor2baseColor(map_color(r,
-  //       c))))
-  //       {
-  //         return true;
-  //       }
-  //     }
-  //   }
-  //   return false;
-  // }();
 
-  auto ret = height_maps{.map_color = map_color,
-                         .base = base,
-                         .high_map = high_map,
-                         .low_map = low_map,
-                         .water_list = water_list};
+  for (const auto& info : fail_infos) {
+    if (not info) continue;
+    const auto [col, max_allowed_height, max_actual_height] = info.value();
+    option.ui.report_error(
+        SCL_errorFlag::LOSSYCOMPRESS_FAILED,
+        SCLTranslator::tr(
+            "3D结构的第%1列压缩失败。要求最大高度<=%2，但是只能压缩到%3")
+            .arg(col)
+            .arg(option.max_allowed_height)
+            .arg(max_actual_height)
+            .toStdString()
+            .c_str());
+    return std::nullopt;
+  }
+  assert(map_color.cols() ==
+         static_cast<Eigen::Index>(water_list_by_col.size()));
+  // collect water list
+  auto water_list = [&water_list_by_col] {
+    std::unordered_map<rc_pos, water_y_range> total_waters;
+    size_t count = 0;
+    for (const auto& hl_water_list : water_list_by_col) {
+      count += hl_water_list.size();
+    }
+    total_waters.reserve(count);
+    for (size_t c = 0; c < water_list_by_col.size(); c++) {
+      for (const auto& [r, water_item] : water_list_by_col[c]) {
+        total_waters.emplace(rc_pos{.row = static_cast<int32_t>(r),
+                                    .col = static_cast<int32_t>(c)},
+                             water_item);
+      }
+    }
+    return total_waters;
+  }();
 
-  return ret;
+  return height_maps{
+    .map_color = std::move(map_color),
+    .base = std::move(base),
+    .high_map = std::move(high_map),
+    .low_map = std::move(low_map),
+    .water_list = std::move(water_list),
+  };
 }
 
 bool converted_image_impl::is_converted_from(

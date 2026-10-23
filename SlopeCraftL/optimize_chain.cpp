@@ -22,7 +22,7 @@ This file is part of SlopeCraft.
 
 #include "optimize_chain.h"
 
-#define NInf -100000
+#define NInf (-100000)
 const Eigen::Array3i optimize_chain::Both(-1, 2, -1);
 const Eigen::Array3i optimize_chain::Left(-1, 1, 0);
 const Eigen::Array3i optimize_chain::Right(0, 1, -1);
@@ -265,7 +265,6 @@ void optimize_chain::divide_into_subchain(const region& Cur) {
   ScanLeft *= ScanBoth;
   ScanRight *= ScanBoth;
 
-
   bool isReady = false;
 
   // 表示已经检测出极大值区间的入口，找到出口就装入一个极大值区间
@@ -306,7 +305,6 @@ void optimize_chain::divide_into_subchain(const region& Cur) {
   } else if (SubChain.back().end < Cur.end)
     SubChain.push_back(
         region(SubChain.back().end + 1, Cur.end, region_type::independent));
-
 }
 
 void optimize_chain::sink(const region& Reg) {

@@ -36,7 +36,7 @@ This file is part of SlopeCraft.
 class height_line {
  public:
   height_line() = default;
-  float make(const TokiColor*const[],
+  float make(const TokiColor* const[],
              const Eigen::Array<uint8_t, Eigen::Dynamic, 1>&,
              bool allowNaturalCompress,
              const std::function<bool(uint8_t)>& need_support_from_base_color,
@@ -54,7 +54,13 @@ class height_line {
   }
 
   [[nodiscard]] auto& getBase() const noexcept { return this->base; }
-  [[nodiscard]] const std::map<uint32_t, water_y_range>& getWaterMap() const;
+  [[nodiscard]] const std::map<uint32_t, water_y_range>& getWaterMap() const& {
+    return waterMap;
+  }
+  [[nodiscard]] std::map<uint32_t, water_y_range>& getWaterMap() & {
+    return waterMap;
+  }
+
   [[nodiscard]] EImage toImg() const;
 
   static constexpr ARGB BlockColor = ARGB32(0, 0, 0);
