@@ -91,7 +91,7 @@ target_include_directories(SlopeCraftL PRIVATE
 
 set(SlopeCraft_SCL_link_libs
     ColorManip
-    NBTWriter
+    
     mc_schem::mc_schem
     FlatDiagram
     libpng_reader

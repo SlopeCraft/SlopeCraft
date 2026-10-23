@@ -13,12 +13,13 @@
 #include "color_table.h"
 #include "height_line.h"
 #include "lossy_compressor.h"
-#include "NBTWriter/NBTWriter.h"
-#warning "TODO: remove NBTWriter. Replace with nbt++"
 #include "structure_3D.h"
 
 #include "entity.h"
 #include "item.h"
+
+#include <nbt_tags.h>
+#include <io/ozlibstream.h>
 
 converted_image_impl::converted_image_impl(const color_table_impl& table)
     : converter{*SlopeCraft::basic_colorset, *table.allowed},
@@ -65,13 +66,14 @@ void converted_image_impl::get_compressed_image(
 
 bool converted_image_impl::export_map_data(
     const SlopeCraft::map_data_file_options& option) const noexcept {
+  using namespace nbt;
   const std::filesystem::path dir{option.folder_path};
   const auto mapPic = this->converter.mapcolor_matrix();
-  const int rows = this->map_rows();
-  const int cols = this->map_cols();
+  const int N_map_rows = this->map_rows();
+  const int N_map_cols = this->map_cols();
   //  const int rows = ceil(mapPic.rows() / 128.0f);
   //  const int cols = ceil(mapPic.cols() / 128.0f);
-  option.progress.set_range(0, 128 * rows * cols, 0);
+  option.progress.set_range(0, N_map_rows * N_map_cols, 0);
 
   // int offset[2] = {0, 0};  // r,c
   int currentIndex = option.begin_index;
@@ -79,9 +81,9 @@ bool converted_image_impl::export_map_data(
   option.ui.report_working_status(workStatus::writingMapDataFiles);
 
   int fail_count = 0;
-  for (int c = 0; c < cols; c++) {
-    for (int r = 0; r < rows; r++) {
-      const std::array<int, 2> offset = {r * 128, c * 128};
+  for (int map_c = 0; map_c < N_map_cols; map_c++) {
+    for (int map_r = 0; map_r < N_map_rows; map_r++) {
+      const std::array<int, 2> offset = {map_r * 128, map_c * 128};
       std::filesystem::path current_filename = dir;
       if (this->game_version < SCL_gameVersion::MC26_1) {
         current_filename.append(std::format("map_{}.dat", currentIndex));
@@ -90,9 +92,105 @@ bool converted_image_impl::export_map_data(
         current_filename.append(std::format("{}.dat", currentIndex));
       }
 
-      NBT::NBTWriter<true> MapFile;
+      tag_compound nbt;
+      // Data version
+      if (SCL_gameVersion::MIN_VALID <= game_version and
+          game_version < SCL_gameVersion::MC14) {
+        // do nothing
+      } else if (SCL_gameVersion::MC14 <= game_version and
+                 game_version <= SCL_gameVersion::MAX_VALID) {
+        nbt.insert("DataVersion",
+                   tag_int{static_cast<int32_t>(
+                       MCDataVersion::suggested_version(this->game_version))});
+      } else {
+        option.ui.report_error(
+            errorFlag::UNKNOWN_MAJOR_GAME_VERSION,
+            SCLTranslator::tr("无效的游戏版本 %1")
+                .arg(static_cast<int>(game_version))
+                .toStdString()
+                .c_str()
+            // std::format("Wrong game version {}",
+            //             static_cast<int>(this->game_version)).c_str()
+        );
+        fail_count += 1;
+        continue;
+      }
 
-      if (!MapFile.open(current_filename.string().c_str())) {
+      const std::string ExportedBy = std::format(
+          "Exported by SlopeCraft {}, developed by TokiNoBug", SC_VERSION_STR);
+      nbt.insert("ExportedBy", tag_string{ExportedBy});
+
+      {
+        tag_compound data;
+        // always required fields
+        data.insert("scale", tag_byte{0});
+        data.insert("trackingPosition", tag_byte{0});
+        data.insert("unlimitedTracking", 0);
+        data.insert("xCenter", tag_int{0});
+        data.insert("zCenter", tag_int{0});
+
+        if (game_version == SCL_gameVersion::MC12) {  // 1.12
+          data.insert("dimension", tag_byte{114});
+          data.insert("height", tag_short{128});
+          data.insert("width", tag_short{128});
+        } else if (SCL_gameVersion::MC13 <= game_version and
+                   game_version <= SCL_gameVersion::MAX_VALID) {  // 1.13+
+          data.insert("banners", tag_list::of<tag_compound>({}));
+          data.insert("frames", tag_list::of<tag_compound>({}));
+
+          if (game_version <= SCL_gameVersion::MC15) {
+            // 1.13~1.15 use number for dimension
+            // Any invalid dimension to avoid confliting with real world
+            data.insert("dimension", tag_int{114514});
+          } else {
+            // Since 1.16, dimension has to be string
+            data.insert("dimension", tag_string{"minecraft:overworld"});
+          }
+          // Since 1.14, maps can be locked
+          if (game_version >= SCL_gameVersion::MC14) {
+            data.insert("locked", tag_byte{1});
+          }
+        } else {
+          option.ui.report_error(errorFlag::UNKNOWN_MAJOR_GAME_VERSION,
+                                 SCLTranslator::tr("无效的游戏版本 %1")
+                                     .arg(static_cast<int>(game_version))
+                                     .toStdString()
+                                     .c_str());
+          fail_count += 1;
+          continue;
+        }
+
+        ///////////// colors /////////////////////////////////////
+        {
+          std::vector<int8_t> colors;
+          colors.reserve(128 * 128);
+
+          for (int local_pixel_r = 0; local_pixel_r < 128; local_pixel_r++) {
+            for (int local_pixel_c = 0; local_pixel_c < 128; local_pixel_c++) {
+              const int global_pixel_r = local_pixel_r + offset[0];
+              const int global_pixel_c = local_pixel_c + offset[1];
+              uint8_t val;
+              if (global_pixel_r < mapPic.rows() and
+                  global_pixel_c < mapPic.cols()) {
+                val = mapPic(global_pixel_r, global_pixel_c);
+              } else {
+                val = 0;
+              }
+              colors.emplace_back(reinterpret_cast<const int8_t&>(val));
+            }
+          }
+          assert(colors.size() == 128 * 128);
+          data.insert("colors", tag_byte_array{std::move(colors)});
+        }
+
+        nbt.insert("data", std::move(data));
+      }
+
+      try {
+        std::ofstream ofs{current_filename, std::ios::binary};
+        zlib::ozlibstream zos{ofs, 9, true};
+        io::write_tag("", nbt, zos);
+      } catch (const std::exception& e) {
         option.ui.report_error(errorFlag::EXPORT_MAP_DATA_FAILURE,
                                SCLTranslator::tr("无法创建nbt文件 %1")
                                    .arg(current_filename.string().c_str())
@@ -104,119 +202,9 @@ bool converted_image_impl::export_map_data(
         fail_count += 1;
         continue;
       }
-      switch (this->game_version) {
-        case SCL_gameVersion::MC12:
-        case SCL_gameVersion::MC13:
-          break;
-        case SCL_gameVersion::MC14:
-        case SCL_gameVersion::MC15:
-        case SCL_gameVersion::MC16:
-        case SCL_gameVersion::MC17:
-        case SCL_gameVersion::MC18:
-        case SCL_gameVersion::MC19:
-        case SCL_gameVersion::MC20:
-        case SCL_gameVersion::MC21:
-        case SCL_gameVersion::MC26_1:
-        case SCL_gameVersion::MC26_2:
-        case SCL_gameVersion::MC26_3:
-          MapFile.writeInt(
-              "DataVersion",
-              static_cast<int32_t>(
-                  MCDataVersion::suggested_version(this->game_version)));
-          break;
-        default:
-          option.ui.report_error(
-              errorFlag::UNKNOWN_MAJOR_GAME_VERSION,
-              SCLTranslator::tr("无效的游戏版本 %1")
-                  .arg(static_cast<int>(game_version))
-                  .toStdString()
-                  .c_str()
-              // std::format("Wrong game version {}",
-              //             static_cast<int>(this->game_version)).c_str()
-          );
-          fail_count += 1;
-          continue;
-      }
-
-      static const std::string ExportedBy = std::format(
-          "Exported by SlopeCraft {}, developed by TokiNoBug", SC_VERSION_STR);
-      MapFile.writeString("ExportedBy", ExportedBy.data());
-      MapFile.writeCompound("data");
-      {
-        MapFile.writeByte("scale", 0);
-        MapFile.writeByte("trackingPosition", 0);
-        MapFile.writeByte("unlimitedTracking", 0);
-        MapFile.writeInt("xCenter", 0);
-        MapFile.writeInt("zCenter", 0);
-        switch (this->game_version) {
-          case SCL_gameVersion::MC12:
-            MapFile.writeByte("dimension", 114);
-            MapFile.writeShort("height", 128);
-            MapFile.writeShort("width", 128);
-            break;
-          case SCL_gameVersion::MC13:
-            MapFile.writeListHead("banners", NBT::Compound, 0);
-            MapFile.writeListHead("frames", NBT::Compound, 0);
-            MapFile.writeInt("dimension", 889464);
-            break;
-          case SCL_gameVersion::MC14:
-            MapFile.writeListHead("banners", NBT::Compound, 0);
-            MapFile.writeListHead("frames", NBT::Compound, 0);
-            MapFile.writeInt("dimension", 0);
-            MapFile.writeByte("locked", 1);
-            break;
-          case SCL_gameVersion::MC15:
-            MapFile.writeListHead("banners", NBT::Compound, 0);
-            MapFile.writeListHead("frames", NBT::Compound, 0);
-            MapFile.writeInt("dimension", 0);
-            MapFile.writeByte("locked", 1);
-            break;
-          case SCL_gameVersion::MC16:
-          case SCL_gameVersion::MC17:
-          case SCL_gameVersion::MC18:
-          case SCL_gameVersion::MC19:
-          case SCL_gameVersion::MC20:
-          case SCL_gameVersion::MC21:
-          case SCL_gameVersion::MC26_1:
-          case SCL_gameVersion::MC26_2:
-          case SCL_gameVersion::MC26_3:
-            MapFile.writeListHead("banners", NBT::Compound, 0);
-            MapFile.writeListHead("frames", NBT::Compound, 0);
-            MapFile.writeString("dimension", "minecraft:overworld");
-            MapFile.writeByte("locked", 1);
-            break;
-          default:
-            option.ui.report_error(errorFlag::UNKNOWN_MAJOR_GAME_VERSION,
-                                   SCLTranslator::tr("无效的游戏版本 %1")
-                                       .arg(static_cast<int>(game_version))
-                                       .toStdString()
-                                       .c_str()
-                                   // "Unknown major game version!"
-            );
-            fail_count += 1;
-            continue;
-        }
-
-        MapFile.writeByteArrayHead("colors", 16384);
-        {
-          for (short rr = 0; rr < 128; rr++) {
-            for (short cc = 0; cc < 128; cc++) {
-              uint8_t ColorCur;
-              if (rr + offset[0] < mapPic.rows() &&
-                  cc + offset[1] < mapPic.cols())
-                ColorCur = mapPic(rr + offset[0], cc + offset[1]);
-              else
-                ColorCur = 0;
-              MapFile.writeByte("this should never be seen", ColorCur);
-            }
-            option.progress.add(1);
-          }
-        }
-      }
-      MapFile.endCompound();
-      MapFile.close();
 
       currentIndex++;
+      option.progress.add(1);
     }
   }
   option.ui.report_working_status(workStatus::none);
