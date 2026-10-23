@@ -409,6 +409,8 @@ void SCWind::on_cb_compress_lossy_toggled(bool checked) noexcept {
 }
 
 void SCWind::on_pb_build3d_clicked() noexcept {
+#warning \
+    "TODO: warn about extreme height. Suggest uses to compress instead of compress by default"
   auto task_ptr = this->selected_export_task();
   if (task_ptr == nullptr) {
     QMessageBox::warning(this, tr("未选择图像"),
@@ -435,14 +437,29 @@ void SCWind::on_pb_build3d_clicked() noexcept {
   auto& cvted =
       task.converted_images.find(convert_input{table, cvt_option})->second;
 
+  std::optional<int> exceed_height_warnings{std::nullopt};
   const auto build_option = this->current_build_option();
   if (!cvted.is_built_with(build_option)) {
     auto structure = this->build_3D(*cvted.converted_image);
     if (structure not_eq nullptr) {
+      const auto height = structure->shape_y();
       cvted.set_built(build_option, std::move(structure));
+      if (height >= 128) {
+        exceed_height_warnings = height;
+      }
     }
   }
   this->refresh_current_build_display(&task);
+
+  if (exceed_height_warnings) {
+    QMessageBox::warning(
+        this, tr("立体地图画过高"),
+        tr("当前地图画高度达到%"
+           "1，导出或建造时可能失败。强烈建议同时启用无损压缩"
+           "和有损压缩，压低高度。")
+            .arg(exceed_height_warnings.value()),
+        QMessageBox::StandardButtons{QMessageBox::StandardButton::Ok});
+  }
 }
 
 void SCWind::on_pb_preview_materials_clicked() noexcept {
