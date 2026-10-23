@@ -168,7 +168,7 @@ static bool is_derived_from(const mc_schem::block& parent,
       return true;
     }
     // Namespace of parent is not declared, ok
-    if (parent.namespace_().empty()) {
+    if (parent.namespace_().empty() and child.namespace_()=="minecraft") {
       return true;
     }
     // Different namespace
@@ -206,7 +206,10 @@ void color_table_impl::stat_blocks(const structure_3D& s,
     region->visit_blocks(
         [&](std::span<const int32_t, 3> pos_xyz [[maybe_unused]],
             uint16_t blkid, auto&, auto) {
+          assert(blkid<result.size());
           if (blkid >= result.size()) [[unlikely]] {
+            // release branch, silently ignore this. mc_schem have been tested
+            // heavily so this error is almost impossible
             return;
           }
           result[blkid]++;
@@ -217,29 +220,41 @@ void color_table_impl::stat_blocks(const structure_3D& s,
   assert(schem_stat.size() == structure.palette_length());
   const auto self_blocks = this->block_id_list(false);
 
-  // for (size_t idx_table = 0; idx_table < this->blocks.size(); idx_table++) {
-  //   const auto& blk_info = this->blocks[idx_table];
-  //   std::string_view full_id = blk_info.idForVersion(this->mc_version());
-  //   auto info = blkid::parse_block_id(full_id);
-  //   assert(info.has_value());
-  //   self_block_info.emplace_back(std::move(info).value());
-  // }
-
+  std::vector<uint16_t> schem_stat_hit_counter [[maybe_unused]];
+  schem_stat_hit_counter.resize(schem_stat.size(), 0);
   std::fill_n(buffer, 64, 0);
+
+  // Go through schem palette, match each block with base color.
   for (size_t idx_schem = 0; idx_schem < region->palette_size(); idx_schem++) {
     const auto& blk_schem = region->palette(idx_schem);
     if (blk_schem->is_air()) {
+      schem_stat_hit_counter[idx_schem]++;
       continue;
     }
 
+    [[maybe_unused]] bool is_hit=false;
     for (size_t idx_table = 0; idx_table < self_blocks.size(); idx_table++) {
       assert(idx_table < 64);
       const auto& blk_info_table = self_blocks[idx_table];
 
       if (is_derived_from(*blk_info_table, *blk_schem)) {
         buffer[idx_table] += schem_stat[idx_schem];
+        schem_stat_hit_counter[idx_schem]++;
+        is_hit=true;
+        // logically should only hit once. In debug mode, shadowing break will
+        // be helpful to find a bug. However, counting error is not very critical,
+        // just let it go in release mode
+#ifdef NDEBUG
+        break;
+#endif
       }
     }
+    assert(is_hit);
+  }
+
+  // A type of block in schem shouldn't be attributed to multiple base colors
+  for (size_t idx_schem = 0; idx_schem < schem_stat.size(); idx_schem++) {
+    assert(schem_stat_hit_counter[idx_schem]==1);
   }
 }
 

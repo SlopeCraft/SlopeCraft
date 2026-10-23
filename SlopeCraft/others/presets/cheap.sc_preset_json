@@ -16,7 +16,7 @@
   },
   {
     "baseColor": 3,
-    "blockId": "minecraft:mushroom_stem[east=true,west=true,north=true,south=true,up=true,down=true]",
+    "blockId": "minecraft:mushroom_stem",
     "enabled": true
   },
   {

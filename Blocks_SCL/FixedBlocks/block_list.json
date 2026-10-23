@@ -85,7 +85,7 @@
   },
   {
     "baseColor": 3,
-    "id": "minecraft:mushroom_stem[east=true,west=true,north=true,south=true,up=true,down=true]",
+    "id": "minecraft:mushroom_stem",
     "nameZH": "蘑菇柄",
     "nameEN": "Mushroom stem",
     "icon": "mushroom_stem.png",
@@ -349,7 +349,7 @@
   },
   {
     "baseColor": 10,
-    "id": "minecraft:brown_mushroom_block[east=true,west=true,north=true,south=true,up=true,down=true]",
+    "id": "minecraft:brown_mushroom_block",
     "nameZH": "棕色蘑菇方块",
     "nameEN": "Brown mushroom block",
     "icon": "brown_mushroom_block.png",
@@ -1309,7 +1309,7 @@
   },
   {
     "baseColor": 28,
-    "id": "minecraft:red_mushroom_block[east=true,west=true,north=true,south=true,up=true,down=true]",
+    "id": "minecraft:red_mushroom_block",
     "nameZH": "红色蘑菇方块",
     "nameEN": "Red mushroom block",
     "icon": "red_mushroom_block.png",
