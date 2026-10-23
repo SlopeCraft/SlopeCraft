@@ -6,7 +6,7 @@ if (NOT mc_schem_FOUND)
     message(STATUS "Failed to find mc_schem. Downloading...")
     FetchContent_Declare(mc_schem
         GIT_REPOSITORY https://github.com/SlopeCraft/mc_schem
-        GIT_TAG caa67320fc52d786d733954c78d362bf335197d4 #1.3.0
+        GIT_TAG a97ad3138847d587b40180328195362268fae3fd #Slightly after v1.3.0 (optimized for region statistic)
         OVERRIDE_FIND_PACKAGE
         EXCLUDE_FROM_ALL
     )
