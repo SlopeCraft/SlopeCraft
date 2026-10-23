@@ -3,6 +3,8 @@
 //
 #include <format>
 #include <fstream>
+#include <cstdlib>
+#include <chrono>
 #include <magic_enum/magic_enum.hpp>
 
 #include "structure_3D.h"
@@ -26,13 +28,12 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
         SCLTranslator::tr("允许最大高度应该不低于14，但是遇到了%1")
             .arg(option.max_allowed_height)
             .toStdString()
-            .c_str()
-        // std::format("Max allowed height should be >= 14, but found {}",
-        //             option.max_allowed_height).c_str()
-    );
+            .c_str());
     return std::nullopt;
   }
-  // structure_3D_impl ret;
+  const bool bench = std::getenv("SlopeCraft_benchmark");
+
+  const auto time_start = std::chrono::high_resolution_clock::now();
   auto region = [&] -> unique_region {
     const auto palette = table.block_id_list(true);
     std::vector<const mc_schem::block*> palette_view;
@@ -56,6 +57,7 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
   if (not region) {
     return std::nullopt;
   }
+  const auto time_make_palette = std::chrono::high_resolution_clock::now();
 
   build_options fixed_opt = option;
   if (table.is_flat() || !table.is_vanilla()) {
@@ -69,7 +71,7 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
     fixed_opt.main_progressbar.add(cvted.size());
   }
 
-  Eigen::ArrayXXi map_color, base_color, high_map, low_map;
+  Eigen::ArrayXXi map_color, base_color, high_map, low_map [[maybe_unused]];
   std::unordered_map<rc_pos, water_y_range> water_list;
   {
     auto opt = cvted.height_info(table, fixed_opt);
@@ -84,6 +86,8 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
   }
   assert((high_map >= low_map).all());
   assert(low_map.minCoeff() == 0);
+
+  const auto time_make_height_map = std::chrono::high_resolution_clock::now();
 
   try {
     const int32_t height = high_map.maxCoeff() + 1;
@@ -110,6 +114,8 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
             .c_str());
     return std::nullopt;
   }
+
+  const auto time_init_region = std::chrono::high_resolution_clock::now();
   try {
     // make 3D
     {
@@ -135,9 +141,8 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
         }
       }
 
-      fixed_opt.main_progressbar.add(cvted.size());
+      // fixed_opt.main_progressbar.add(cvted.size());
 
-      // std::println("{} rows, {} cols", cvted.rows(), cvted.cols());
       //  Common blocks
       for (int64_t r = -1; r < static_cast<int64_t>(cvted.rows()); r++) {
         for (int64_t c = 0; c < static_cast<int64_t>(cvted.cols()); c++) {
@@ -184,10 +189,9 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
 
           region->set_block({x, y, z}, cur_base_color + 1);
         }
-        fixed_opt.main_progressbar.add(cvted.cols());
+        // fixed_opt.main_progressbar.add(cvted.cols());
       }
-
-      fixed_opt.main_progressbar.add(cvted.size());
+      // fixed_opt.main_progressbar.add(cvted.size());
 
       for (auto it = water_list.cbegin(); it != water_list.cend(); ++it) {
         const int32_t x = it->first.col + 1;
@@ -199,7 +203,9 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
         }
       }
     }
-    fixed_opt.main_progressbar.set_range(0, 9 * cvted.size(), 8 * cvted.size());
+
+    const auto time_fill_region = std::chrono::high_resolution_clock::now();
+
     // build bridges
     if (table.map_type() == mapTypes::Slope &&
         fixed_opt.glass_method == glassBridgeSettings::withBridge) {
@@ -234,15 +240,13 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
                 region->set_block(pos, prim_glass_builder::glass);
               }
             }
-
-          // if (ret.schem(r, y, c) == prim_glass_builder::air &&
-          //     glass(r, c) == prim_glass_builder::glass)
-          //   ret.schem(r, y, c) = prim_glass_builder::glass;
         }
       }
-      fixed_opt.ui.keep_awake();
-      fixed_opt.sub_progressbar.set_range(0, 100, 100);
+      // fixed_opt.ui.keep_awake();
+      // fixed_opt.sub_progressbar.set_range(0, 100, 100);
     }
+
+    const auto time_build_bridges = std::chrono::high_resolution_clock::now();
 
     // mc_schem 1.3.0 doesn't support this function at 1.12-
     if (fixed_opt.connect_mushrooms and
@@ -252,6 +256,9 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
       };
       region->update_mushroom_state(opt);
     }
+
+    const auto time_update_mushrooms =
+        std::chrono::high_resolution_clock::now();
 
     // Add supporting block
     if (fixed_opt.support_block_settings not_eq
@@ -286,7 +293,8 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
         }
       }
     }
-
+    const auto time_add_supporting_blocks =
+        std::chrono::high_resolution_clock::now();
     {
       auto shrink_result = region->shrink_palette();
       if (not shrink_result) {
@@ -299,6 +307,52 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
         return std::nullopt;
       }
     }
+
+    const auto time_shrink_palette = std::chrono::high_resolution_clock::now();
+
+    if (bench) {
+      std::println(std::clog, "make palette: {} ms",
+                   std::chrono::duration_cast<std::chrono::microseconds>(
+                       time_make_palette - time_start)
+                           .count() /
+                       1000.0);
+      std::println(std::clog, "make height map: {} ms",
+                   std::chrono::duration_cast<std::chrono::microseconds>(
+                       time_make_height_map - time_make_palette)
+                           .count() /
+                       1000.0);
+      std::println(std::clog, "init region: {} ms",
+                   std::chrono::duration_cast<std::chrono::microseconds>(
+                       time_init_region - time_make_height_map)
+                           .count() /
+                       1000.0);
+      std::println(std::clog, "fill region: {} ms",
+                   std::chrono::duration_cast<std::chrono::microseconds>(
+                       time_fill_region - time_init_region)
+                           .count() /
+                       1000.0);
+      std::println(std::clog, "build bridges: {} ms",
+                   std::chrono::duration_cast<std::chrono::microseconds>(
+                       time_build_bridges - time_fill_region)
+                           .count() /
+                       1000.0);
+      std::println(std::clog, "update mushrooms: {} ms",
+                   std::chrono::duration_cast<std::chrono::microseconds>(
+                       time_update_mushrooms - time_build_bridges)
+                           .count() /
+                       1000.0);
+      std::println(std::clog, "add supporting blocks: {} ms",
+                   std::chrono::duration_cast<std::chrono::microseconds>(
+                       time_add_supporting_blocks - time_update_mushrooms)
+                           .count() /
+                       1000.0);
+      std::println(std::clog, "shrink palette: {} ms",
+                   std::chrono::duration_cast<std::chrono::microseconds>(
+                       time_shrink_palette - time_add_supporting_blocks)
+                           .count() /
+                       1000.0);
+    }
+
   } catch (const std::exception& e) {
     fixed_opt.ui.report_error(SCL_errorFlag::MC_SCHEM_ERROR,
                               SCLTranslator::tr("SlopeCraftL 内部错误：%1")
