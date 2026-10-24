@@ -125,6 +125,7 @@ qt_add_resources(SlopeCraft "SC_translations"
 if (${WIN32})
     add_custom_target(SC_create_symlink_SC
         COMMAND mklink SlopeCraftL.dll "..\\SlopeCraftL\\SlopeCraftL.dll"
+        COMMAND mklink mc_schem.dll "..\\_deps\\mc_schem-build\\mc_schem.dll"
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         DEPENDS SlopeCraftL
         COMMENT "Create symlink to SlopeCraftL.dll for SlopeCraft.exe")

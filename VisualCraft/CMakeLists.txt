@@ -128,6 +128,7 @@ configure_file(vc-config-build.json.in vc-config-build.json)
 if (${WIN32})
     add_custom_target(SC_create_symlink_VC
         COMMAND mklink VisualCraftL.dll "..\\VisualCraftL\\VisualCraftL.dll"
+        COMMAND mklink mc_schem.dll "..\\_deps\\mc_schem-build\\mc_schem.dll"
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         DEPENDS VisualCraftL
         COMMENT "Create symlink to VisualCraftL.dll for VisualCraft.exe")
