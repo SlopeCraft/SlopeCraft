@@ -221,15 +221,10 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
       for (int32_t y = 0; y < region->size_xyz()[1]; y++) {
         fixed_opt.sub_progressbar.add(step);
         if (y % (fixed_opt.bridge_interval + 1) == 0) {
-          std::array<int, 3> start, extension;  // x,z,y
-          start[0] = 0;
-          start[1] = 0;
-          start[2] = y;
-          extension[0] = region->size_xyz()[0];
-          extension[1] = region->size_xyz()[2];
-          extension[2] = 1;
+          const std::array<int32_t, 2> start{0, 0},
+              ext{region->size_xyz()[0], region->size_xyz()[2]};
           // continue;
-          TokiMap targetMap = ySlice2TokiMap_u16(*region, start, extension);
+          TokiMap targetMap = ySlice2TokiMap_u16(*region, y, start, ext);
           glassMap glass;
           glass = glass_builder.makeBridge(targetMap);
           for (int32_t r = 0; r < glass.rows(); r++)
@@ -400,8 +395,7 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
 }
 
 bool structure_3D_impl::export_litematica(
-    const char* filename,
-    const SlopeCraft::litematic_options& option) const noexcept {
+    const char* filename, const litematic_options& option) const noexcept {
   option.ui.report_working_status(workStatus::writingMetaInfo);
   option.progressbar.set_range(0, 100, 0);
 

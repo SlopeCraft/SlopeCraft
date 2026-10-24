@@ -460,19 +460,15 @@ glassMap connectBetweenLayers(const TokiMap& map1, const TokiMap& map2,
 //   return result;
 // }
 
-TokiMap ySlice2TokiMap_u16(const mc_schem::region& region,
-                           std::span<const int, 3> start_xzy,
-                           std::span<const int, 3> extension_xzy) noexcept {
-  // assert(raw.dimension(2) == 1);
-  assert(extension_xzy[2] == 1);
-
+TokiMap ySlice2TokiMap_u16(const mc_schem::region& region, int y,
+                           std::span<const int, 2> start_xz,
+                           std::span<const int, 2> extension_xz) noexcept {
   TokiMap result;
 
-  result.setZero(extension_xzy[0], extension_xzy[1]);
+  result.setZero(extension_xz[0], extension_xz[1]);
   for (int x = 0; x < result.rows(); x++) {
     for (int z = 0; z < result.cols(); z++) {
-      if (region.block_index_at(
-              {x + start_xzy[0], z + start_xzy[1], start_xzy[2]}) > 1) {
+      if (region.block_index_at({x + start_xz[0], y, z + start_xz[1]}) > 1) {
         result(x, z) = prim_glass_builder::target;
       }
     }

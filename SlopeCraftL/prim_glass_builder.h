@@ -40,7 +40,7 @@ extern const ARGB airColor;
 extern const ARGB targetColor;
 extern const ARGB glassColor;
 
-typedef Eigen::Array<uint8_t, Eigen::Dynamic, Eigen::Dynamic> TokiMap;
+typedef Eigen::ArrayXX<uint8_t> TokiMap;
 typedef TokiMap glassMap;
 typedef TokiMap walkableMap;
 
@@ -70,11 +70,11 @@ class pairedEdge : public std::pair<rc_pos, rc_pos> {
   bool connectWith(rc_pos) const;
   void drawEdge(glassMap&, bool drawHead = false) const;
 };
-/// XZY order is some remains of Eigen::Tensor. Due to R-ordering, YZX->XZY.
-/// mc_schem uses C-ordering, actually no change
-TokiMap ySlice2TokiMap_u16(const mc_schem::region& region,
-                           std::span<const int, 3> start_xzy,
-                           std::span<const int, 3> extension_xzy) noexcept;
+
+/// Take rectangle part of a y-slice from region. Ready for local prim
+TokiMap ySlice2TokiMap_u16(const mc_schem::region& region, int y,
+                           std::span<const int, 2> start_xz,
+                           std::span<const int, 2> extension_xz) noexcept;
 
 glassMap connectBetweenLayers(const TokiMap&, const TokiMap&,
                               walkableMap* walkable);
