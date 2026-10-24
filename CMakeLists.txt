@@ -46,6 +46,8 @@ option(SlopeCraft_gprof "Profile with gprof" OFF)
 
 option(SlopeCraft_sanitize "Build with sanitizer" OFF)
 
+option(SlopeCraft_no_download "Disable download and fetch content in configuring. This is required for some reproducible build" OFF)
+
 set(SlopeCraft_vccl_test_gpu_platform_idx 0 CACHE STRING "The opencl platform index used to test vccl")
 set(SlopeCraft_vccl_test_gpu_device_idx 0 CACHE STRING "The opencl device index used to test vccl")
 

@@ -96,7 +96,7 @@ target_link_libraries(VisualCraft PRIVATE
 )
 
 target_compile_definitions(VisualCraft PRIVATE SC_RESOURCE_DIR="${SlopeCraft_resource_dir}")
-target_include_directories(VisualCraft PRIVATE ${SlopeCraft_Nlohmann_json_include_dir})
+target_include_directories(VisualCraft PRIVATE ${SlopeCraft_nlohmann_json_include_dir})
 
 set_target_properties(VisualCraft PROPERTIES
     MACOSX_BUNDLE_ICON_FILE VisualCraft.icns

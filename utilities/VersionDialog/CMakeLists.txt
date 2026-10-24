@@ -29,7 +29,7 @@ add_library(VersionDialog STATIC
 target_include_directories(VersionDialog INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(VersionDialog PUBLIC Qt::Widgets Qt::Core Qt::Network)
 target_compile_features(VersionDialog PUBLIC cxx_std_20)
-target_include_directories(VersionDialog PRIVATE ${SlopeCraft_Nlohmann_json_include_dir})
+target_include_directories(VersionDialog PRIVATE ${SlopeCraft_nlohmann_json_include_dir})
 
 # translation
 qt_add_lupdate(VersionDialog

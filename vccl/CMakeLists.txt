@@ -35,7 +35,7 @@ target_link_libraries(vccl PRIVATE
 target_compile_definitions(vccl PRIVATE SC_RESOURCE_DIR="${SlopeCraft_resource_dir}")
 target_include_directories(vccl PRIVATE
     ${cli11_include_dir}
-    ${SlopeCraft_Nlohmann_json_include_dir}
+    ${SlopeCraft_nlohmann_json_include_dir}
 )
 
 if (${WIN32})

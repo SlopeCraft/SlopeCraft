@@ -83,7 +83,7 @@ target_include_directories(SlopeCraftL PUBLIC
     $<INSTALL_INTERFACE:include>
 )
 target_include_directories(SlopeCraftL PRIVATE
-    ${SlopeCraft_Nlohmann_json_include_dir}
+    ${SlopeCraft_nlohmann_json_include_dir}
     ${SlopeCraft_Chocobo1_Hash_include_dir}
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}/utilities

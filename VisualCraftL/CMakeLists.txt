@@ -78,9 +78,9 @@ find_package(libzip 1.7.0 REQUIRED)
 find_package(mc_schem 1.3.0 CONFIG REQUIRED)
 
 set(VCL_include_dirs
-    ${SlopeCraft_Nlohmann_json_include_dir}
-    ${SlopeCraft_HeuristicFlow_include_dir}
-    ${CMAKE_SOURCE_DIR})
+    ${SlopeCraft_nlohmann_json_include_dir}
+    ${CMAKE_SOURCE_DIR}
+)
 target_include_directories(VisualCraftL PRIVATE ${VCL_include_dirs})
 target_include_directories(VisualCraftL_static PUBLIC ${VCL_include_dirs})
 

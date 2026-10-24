@@ -26,7 +26,7 @@ target_link_libraries(sccl PRIVATE
 )
 target_include_directories(sccl PRIVATE
     ${cli11_include_dir}
-    ${SlopeCraft_Nlohmann_json_include_dir}
+    ${SlopeCraft_nlohmann_json_include_dir}
     ${CMAKE_SOURCE_DIR}/utilities
 )
 
