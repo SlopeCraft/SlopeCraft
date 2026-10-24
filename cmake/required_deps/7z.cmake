@@ -1,15 +1,20 @@
 find_program(z7_exe NAMES 7z 7za 7zr QUIET
     HINTS "C:/Program Files/7-Zip/7z.exe;/usr/bin/7z;"
     DOC "Find 7z to archive SlopeCraft block lists. 7z is required because file(ARCHIVE_CREATE in cmake too stupid to be used"
+    NO_CACHE
 )
 
 if (NOT z7_exe)
+    if (${SlopeCraft_no_download})
+        message(FATAL_ERROR "7z command line executable not found. SlopeCraft is forbidden to download. Install it and retry")
+    endif ()
+
     message(STATUS "7z not found, downloading...")
     if (${WIN32})
         file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/3rdParty")
-        file(DOWNLOAD "https://github.com/ip7z/7zip/releases/download/26.00/7z2600-extra.7z"
+        file(DOWNLOAD "https://github.com/ip7z/7zip/releases/download/26.05/7z2605-extra.7z"
             "${CMAKE_BINARY_DIR}/3rdParty/7z2600-extra.7z"
-            EXPECTED_HASH SHA256=1cc38a9e3777ce0e4bbf84475672888a581d400633b0448fd973a7a6aa56cfdc
+            EXPECTED_HASH SHA256=f27a8f103c84785026edcba1f67faf1357225df9d19ddb0b7760d55947141bc7
         )
         file(ARCHIVE_EXTRACT INPUT "${CMAKE_BINARY_DIR}/3rdParty/7z2600-extra.7z"
             DESTINATION "${CMAKE_BINARY_DIR}/3rdParty/7z"

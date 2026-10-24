@@ -5,8 +5,13 @@ cmake_minimum_required(VERSION 3.28)
 find_package(magic_enum QUIET)
 
 if (NOT ${magic_enum_FOUND})
-    include(FetchContent)
+    
+    if (${SlopeCraft_no_download})
+        message(FATAL_ERROR "magic_enum not found. SlopeCraft is forbidden to download. Install it and retry")
+    endif ()
 
+    message(STATUS "Downloading magic_enum......")
+    include(FetchContent)
     FetchContent_Declare(magic_enum
 
         # URL https://github.com/Neargye/magic_enum/releases/download/v0.8.2/magic_enum.hpp
@@ -15,8 +20,6 @@ if (NOT ${magic_enum_FOUND})
         OVERRIDE_FIND_PACKAGE
         EXCLUDE_FROM_ALL
     )
-
-    message(STATUS "Downloading magic_enum......")
 
     FetchContent_MakeAvailable(magic_enum)
 endif ()

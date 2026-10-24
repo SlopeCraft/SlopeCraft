@@ -3,6 +3,10 @@ if (xsimd_FOUND)
     return()
 endif ()
 
+if (${SlopeCraft_no_download})
+    message(FATAL_ERROR "xsimd not found. SlopeCraft is forbidden to download. Install it and retry")
+endif ()
+
 include(FetchContent)
 # TODO: Update to later version of xsimd
 FetchContent_Declare(xsimd
@@ -13,5 +17,4 @@ FetchContent_Declare(xsimd
 )
 
 FetchContent_MakeAvailable(xsimd)
-
 find_package(xsimd REQUIRED)

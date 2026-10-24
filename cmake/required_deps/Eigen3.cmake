@@ -6,6 +6,10 @@ if (${Eigen3_FOUND})
     return()
 endif ()
 
+if (${SlopeCraft_no_download})
+    message(FATAL_ERROR "Eigen3 or 5.0.1 not found. SlopeCraft is forbidden to download. Install it and retry")
+endif ()
+
 include(FetchContent)
 set(EIGEN_BUILD_TESTING OFF)
 set(EIGEN_LEAVE_TEST_IN_ALL_TARGET OFF)

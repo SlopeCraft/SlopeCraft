@@ -1,6 +1,10 @@
-find_package(mc_schem 1.3.0 CONFIG)
+find_package(mc_schem 1.3.0 CONFIG QUIET)
 
 if (NOT mc_schem_FOUND)
+    if (${SlopeCraft_no_download})
+        message(FATAL_ERROR "mc_schem not found. SlopeCraft is forbidden to download. Install it from https://github.com/SlopeCraft/mc_schem and retry")
+    endif ()
+
     set(MC_SCHEM_INSTALL OFF)
     set(MC_SCHEM_ENABLE_TESTS OFF)
     message(STATUS "Failed to find mc_schem. Downloading...")

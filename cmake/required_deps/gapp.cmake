@@ -1,4 +1,4 @@
-find_package(gapp 1.0.1 CONFIG)
+find_package(gapp 1.0.1 CONFIG QUIET)
 
 if (${gapp_FOUND})
     # Usually if gapp is found externally, gapp.hpp is located at <gapp/gapp.hpp>.
@@ -17,6 +17,10 @@ if (${gapp_FOUND})
     target_include_directories(gapp::gapp INTERFACE ${gapp_header_dir})
 
     return()
+endif ()
+
+if (${SlopeCraft_no_download})
+    message(FATAL_ERROR "gapp not found. SlopeCraft is forbidden to download. Install it from https://github.com/KRM7/gapp and retry")
 endif ()
 
 include(FetchContent)

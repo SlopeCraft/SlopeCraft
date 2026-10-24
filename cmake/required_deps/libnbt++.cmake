@@ -9,6 +9,10 @@ if (libnbt++_FOUND)
     return()
 endif ()
 
+if (${SlopeCraft_no_download})
+    message(FATAL_ERROR "libnbt++ not found. SlopeCraft is forbidden to download. Install it from https://github.com/PrismLauncher/libnbtplusplus and retry")
+endif ()
+
 include(FetchContent)
 message(STATUS "Failed to find libnbt++, cloning...")
 set(NBT_BUILD_SHARED OFF CACHE BOOL "")

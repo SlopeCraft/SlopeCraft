@@ -68,6 +68,10 @@ foreach (VCL_resource_idx RANGE 0 ${VCL_resource_idx_max})
         continue()
     endif ()
 
+    if (${SlopeCraft_no_download})
+        message(FATAL_ERROR "VCL vanilla zips not found. SlopeCraft is forbidden to download. Download it from https://github.com/SlopeCraft/VisualCraft-binaries/releases/download/resource-packs and retry")
+    endif ()
+
     message(STATUS "${VCL_current_zip_name} not found. Downloading...")
 
     string(CONCAT VCL_current_download_url ${VCL_url_prefix} ${VCL_current_zip_name})
