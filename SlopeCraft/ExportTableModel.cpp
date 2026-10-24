@@ -38,7 +38,10 @@ QSize map_size_of_images(QSize image_size) noexcept {
 //   return map_range{current_start_seq, current_start_seq + cmn - 1};
 // }
 
-QString map_data_filename(QString dir, int seq_number) noexcept {
+QString map_data_filename(QString dir, int seq_number,
+                          bool after_26_1_snapshot5) noexcept {
+  if (after_26_1_snapshot5)
+    return QStringLiteral("%1/%2.dat").arg(dir).arg(seq_number);
   return QStringLiteral("%1/map_%2.dat").arg(dir).arg(seq_number);
 }
 
@@ -77,8 +80,15 @@ QVariant ExportTableModel::data(const QModelIndex& qmi,
   if (!pair) {
     return {};
   }
+
+  const bool after_26_1_snapshot5 =
+      this->scwind()->selected_version() >= SCL_gameVersion::MC26_1;
   //  const auto task_global_index = pair.value().first;
   const auto& task = *pair.value().second;
+
+  const auto map_name_template = after_26_1_snapshot5
+                                     ? QStringLiteral("%1.dat")
+                                     : QStringLiteral("map_%1.dat");
 
   if (role == Qt::ItemDataRole::DisplayRole) {
     const QSize map_size = map_size_of_images(task.original_image.size());
@@ -102,9 +112,9 @@ QVariant ExportTableModel::data(const QModelIndex& qmi,
       case 3:
         return QStringLiteral("%1 ~ %2").arg(range.first).arg(range.last);
       case 4:
-        return QStringLiteral("map_%1.dat").arg(range.first);
+        return map_name_template.arg(range.first);
       case 5:
-        return QStringLiteral("map_%1.dat").arg(range.last);
+        return map_name_template.arg(range.last);
     }
   }
 

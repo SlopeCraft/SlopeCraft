@@ -409,8 +409,6 @@ void SCWind::on_cb_compress_lossy_toggled(bool checked) noexcept {
 }
 
 void SCWind::on_pb_build3d_clicked() noexcept {
-#warning \
-    "TODO: warn about extreme height. Suggest uses to compress instead of compress by default"
   auto task_ptr = this->selected_export_task();
   if (task_ptr == nullptr) {
     QMessageBox::warning(this, tr("未选择图像"),
@@ -677,6 +675,9 @@ void SCWind::on_pb_export_file_clicked() noexcept {
   }
   prev_dir = dir;
 
+  const bool after_26_1_snapshot5 =
+      this->selected_version() >= SCL_gameVersion::MC26_1;
+
   const int seq_first = this->current_map_begin_seq_number();
   {
     int exisiting_num = 0;
@@ -687,7 +688,7 @@ void SCWind::on_pb_export_file_clicked() noexcept {
         this->tasks.map_range_of(seq_first, this->tasks.size() - 1).last;
 
     for (int seq = seq_first; seq <= seq_last; seq++) {
-      QString filename = map_data_filename(dir, seq);
+      QString filename = map_data_filename(dir, seq, after_26_1_snapshot5);
       if (QFile{filename}.exists()) {
         if (exisiting_num > 0) {
           to_be_replaced.push_back('\n');

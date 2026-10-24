@@ -31,6 +31,6 @@ class ExportTableModel : public QAbstractTableModel {
 
 QSize map_size_of_images(QSize image_size) noexcept;
 
-QString map_data_filename(QString dir, int seq_number) noexcept;
+QString map_data_filename(QString dir, int seq_number, bool after_26_1_snapshot5) noexcept;
 
 #endif  //  SLOPECRAFT_SLOPECRAFT_EXPORTTABLEMODEL_H
