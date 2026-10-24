@@ -162,6 +162,14 @@ class device_impl final : public device_wrapper {
   vk::UniquePipelineCache pipeline_cache;
 
   const char* name_v() const noexcept { return name.c_str(); }
+
+  ~device_impl() override {
+    this->pipeline_cache.reset();
+    this->descriptor_pool.reset();
+    this->command_pool.reset();
+    this->allocator.reset();
+    this->device.reset();
+  }
 };
 
 uint32_t select_queue_family_index(const vk::PhysicalDevice& pd) {

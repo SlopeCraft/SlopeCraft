@@ -59,7 +59,7 @@ int main(int argc, char** argv) {
     return ::list_gpu();
   }
 
-  task_t task{{}, {}, platidx, devidx, SCL_convertAlgo(algo)};
+  task_t task{{}, {}, platidx, devidx, static_cast<SCL_convertAlgo>(algo)};
 
   task.colorset_c3.resize(colorset_size);
   task.task_c3.resize(task_size);
@@ -152,16 +152,15 @@ int run_task(task_t& task) noexcept {
     return 0;
   }
 
-  auto plat = gpu_wrapper::platform_wrapper::create(task.platidx);
+  auto plat = gpu_wrapper::unique_platform{
+    gpu_wrapper::platform_wrapper::create(task.platidx)};
 
-  auto dev = gpu_wrapper::device_wrapper::create(plat, task.devidx);
+  auto dev = gpu_wrapper::unique_device{
+    gpu_wrapper::device_wrapper::create(plat.get(), task.devidx)};
 
-  gpu_wrapper::gpu_interface* const gi =
-      gpu_wrapper::gpu_interface::create(plat, dev);
+  auto gi = gpu_wrapper::unique_gpu_interface{
+    gpu_wrapper::gpu_interface::create(plat.get(), dev.get())};
   HANDLE_ERR(gi, 1);
-
-  gpu_wrapper::device_wrapper::destroy(dev);
-  gpu_wrapper::platform_wrapper::destroy(plat);
 
   gi->set_colorset_v(
       task.colorset_c3.size(),
@@ -185,8 +184,6 @@ int run_task(task_t& task) noexcept {
       ret = 5;
     }
   }
-
-  gpu_wrapper::gpu_interface::destroy(gi);
 
   cout << "Success" << endl;
 

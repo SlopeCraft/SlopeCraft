@@ -13,13 +13,12 @@ std::uniform_real_distribution<float> rand_f32(0, 1);
 // std::uniform_int_distribution<uint32_t> rand_u32(0, UINT32_MAX);
 
 int main(int, char**) {
-  std::unique_ptr<gpu_wrapper::platform_wrapper> plat{
-    gpu_wrapper::platform_wrapper::create(0)};
-  std::unique_ptr<gpu_wrapper::device_wrapper> dev{
-    gpu_wrapper::device_wrapper::create(plat.get(), 0)};
+  using namespace gpu_wrapper;
 
-  gpu_wrapper::unique_gpu_interface gi{
-    gpu_wrapper::gpu_interface::create(plat.get(), dev.get())};
+  unique_platform plat{platform_wrapper::create(0)};
+  unique_device dev{device_wrapper::create(plat.get(), 0)};
+
+  unique_gpu_interface gi{gpu_interface::create(plat.get(), dev.get())};
 
   if (!gi->ok_v()) {
     cout << gi->error_code_v() << " : " << gi->error_detail_v() << endl;

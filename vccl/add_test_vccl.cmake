@@ -29,9 +29,9 @@ set(algos "RGB")
 
 set(dither "false")
 
-cmake_policy(PUSH)
+#cmake_policy(PUSH)
 
-cmake_policy(SET CMP0110 OLD)
+#cmake_policy(SET CMP0110 OLD)
 
 
 if (${SlopeCraft_GPU_API} STREQUAL "None")
@@ -62,7 +62,7 @@ foreach (_layers RANGE 1 3 1)
                     add_test(NAME ${test_name}
                         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                         # COMMAND vccl --bsl ${CMAKE_SOURCE_DIR}/VisualCraftL/VCL_blocks_fixed.json --rp ${zip_file} --mcver ${_ver} --face ${_face} --layers ${_layers} --img ${VCL_test_images} --dither=${_dither} -j1 --out-image --benchmark --prefix ${test_name} --gpu --disable-config
-                        COMMAND vccl --build-dir-mode --img ${test_source_images} --mcver "MC${_ver}" --face ${_face} --layers ${_layers} --dither=${_dither} -j20 --out-image --benchmark --prefix ${test_name} --lite --nbt ${generate_schem} ${gpu_flags}
+                        COMMAND vccl --build-dir-mode --img=${test_source_images} --mcver=MC${_ver} --face=${_face} --layers=${_layers} --dither=${_dither} -j1 --out-image --benchmark --prefix=${test_name} --lite --nbt ${generate_schem} ${gpu_flags}
                         COMMAND_EXPAND_LISTS
                     )
 
@@ -74,4 +74,4 @@ foreach (_layers RANGE 1 3 1)
 endforeach (_layers RANGE 1 3 1)
 
 
-cmake_policy(POP)
+#cmake_policy(POP)
