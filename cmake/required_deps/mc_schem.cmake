@@ -1,4 +1,4 @@
-find_package(mc_schem 1.3.0 CONFIG QUIET)
+find_package(mc_schem 1.3.2 CONFIG QUIET)
 
 if (NOT mc_schem_FOUND)
     if (${SlopeCraft_no_download})
@@ -10,7 +10,7 @@ if (NOT mc_schem_FOUND)
     message(STATUS "Failed to find mc_schem. Downloading...")
     FetchContent_Declare(mc_schem
         GIT_REPOSITORY https://github.com/SlopeCraft/mc_schem
-        GIT_TAG e6db780188edba234bba30f59bc9bf9f70b9fadb # v1.3.1
+        GIT_TAG 95c6f7190f1b9d526906a65c3c3127ad0c1c1daa # v1.3.2
         OVERRIDE_FIND_PACKAGE
         EXCLUDE_FROM_ALL
     )
