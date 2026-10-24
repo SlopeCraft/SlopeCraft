@@ -10,25 +10,39 @@ install(TARGETS imageCutter MapViewer
 install(FILES ${SlopeCraft_readme_and_license_files}
     DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/SlopeCraft
 )
-####################### for imageCutter
+
+####################### mc_schem. Shared library
+install(PROGRAMS ${mc_schem_SHARED_LIB_LOCATION}
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
+
+####################### Desktop shortcut files (hopes to have a+x)
+install(PROGRAMS
+    ${PROJECT_SOURCE_DIR}/imageCutter/others/imageCutter.desktop
+    ${PROJECT_SOURCE_DIR}/MapViewer/others/MapViewer.desktop
+    ${PROJECT_SOURCE_DIR}/SlopeCraft/others/SlopeCraft.desktop
+    ${PROJECT_SOURCE_DIR}/VisualCraft/others/VisualCraft.desktop
+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
+)
+
+####################### Icons
 install(FILES ${PROJECT_SOURCE_DIR}/imageCutter/others/imageCutterIconNew.png
     DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pixmaps
     RENAME com.github.SlopeCraft.imageCutter.png
 )
-install(FILES ${PROJECT_SOURCE_DIR}/imageCutter/others/imageCutter.desktop
-    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
-)
-####################### for MapViewer
+
 install(FILES ${PROJECT_SOURCE_DIR}/MapViewer/others/MapViewer_64.png
     DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pixmaps
     RENAME com.github.SlopeCraft.MapViewer.png
 )
-install(FILES ${PROJECT_SOURCE_DIR}/MapViewer/others/MapViewer.desktop
-    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
+install(FILES ${PROJECT_SOURCE_DIR}/SlopeCraft/others/SlopeCraftIconNew.png
+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pixmaps
+    RENAME com.github.SlopeCraft.SlopeCraft.png
 )
-####################### mc_schem
-install(FILES ${mc_schem_SHARED_LIB_LOCATION}
-    DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(FILES ${PROJECT_SOURCE_DIR}/VisualCraft/others/Vc_256.png
+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pixmaps
+    RENAME com.github.SlopeCraft.VisualCraft.png
+)
 
 ####################### for SlopeCraft
 # Install all block list archives
@@ -38,13 +52,6 @@ install(FILES ${SlopeCraft_block_list_archives}
 # Install presets
 install(FILES ${SlopeCraft_install_presets}
     DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/SlopeCraft/Blocks_SCL/Presets
-)
-install(FILES ${PROJECT_SOURCE_DIR}/SlopeCraft/others/SlopeCraftIconNew.png
-    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pixmaps
-    RENAME com.github.SlopeCraft.SlopeCraft.png
-)
-install(FILES ${PROJECT_SOURCE_DIR}/SlopeCraft/others/SlopeCraft.desktop
-    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
 )
 
 ####################### for visual family
@@ -61,13 +68,6 @@ configure_file(${PROJECT_SOURCE_DIR}/VisualCraft/vc-config-install.json.in ${vc_
 install(FILES ${vc_config_file_location}
     RENAME vc-config.json
     DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/SlopeCraft
-)
-install(FILES ${PROJECT_SOURCE_DIR}/VisualCraft/others/Vc_256.png
-    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pixmaps
-    RENAME com.github.SlopeCraft.VisualCraft.png
-)
-install(FILES ${PROJECT_SOURCE_DIR}/VisualCraft/others/VisualCraft.desktop
-    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
 )
 
 ####################### for vccl

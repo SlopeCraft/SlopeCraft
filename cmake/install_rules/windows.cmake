@@ -39,7 +39,7 @@ DLLD_add_deploy(MapViewer
 )
 
 ####################### mc_schem
-install(FILES ${mc_schem_SHARED_LIB_LOCATION}
+install(PROGRAMS ${mc_schem_SHARED_LIB_LOCATION}
     DESTINATION .)
 
 ####################### for SlopeCraftL
