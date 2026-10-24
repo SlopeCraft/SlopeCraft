@@ -32,7 +32,7 @@ This file is part of SlopeCraft.
 #include <QDir>
 #include <QImageReader>
 
-#include <CLI11.hpp>
+#include <CLI/CLI.hpp>
 #include "vccl_internal.h"
 #include <VCLConfigLoader.h>
 #include <magic_enum/magic_enum.hpp>

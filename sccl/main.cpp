@@ -18,19 +18,20 @@
     Contact with me:
     github:https://github.com/SlopeCraft/SlopeCraft
 */
+#include <cstdint>
+#include <cstddef>
 #include <filesystem>
 #include <string>
 #include <map>
 #include <optional>
-#include <cstdint>
-#include <cstddef>
+#include <iostream>
 #include <format>
 
 #include <QDir>
 #include <QTranslator>
 #include <QCoreApplication>
 
-#include <CLI11.hpp>
+#include <CLI/CLI.hpp>
 #include <magic_enum/magic_enum.hpp>
 
 #include <SC_version_buildtime.h>

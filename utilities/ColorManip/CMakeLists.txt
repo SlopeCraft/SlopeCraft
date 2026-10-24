@@ -50,10 +50,18 @@ target_include_directories(ColorManip PRIVATE "${CMAKE_BINARY_DIR}/SlopeCraftL")
 
 if (NOT ${SlopeCraft_GPU_API} STREQUAL "None")
     add_executable(test_init_program tests/test_init_program.cpp)
-    target_link_libraries(test_init_program PRIVATE OpenMP::OpenMP_CXX ColorManip)
+    target_link_libraries(test_init_program PRIVATE
+        OpenMP::OpenMP_CXX
+        ColorManip
+        CLI11::CLI11
+    )
 
     add_executable(test_algo tests/test_algo.cpp)
-    target_link_libraries(test_algo PRIVATE OpenMP::OpenMP_CXX ColorManip)
+    target_link_libraries(test_algo PRIVATE
+        OpenMP::OpenMP_CXX
+        ColorManip
+        CLI11::CLI11
+    )
 
     target_include_directories(test_algo PRIVATE ${cli11_include_dir})
 
