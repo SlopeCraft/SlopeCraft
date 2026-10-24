@@ -20,11 +20,12 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
-#include <json.hpp>
 #include <ranges>
 #include <string>
 #include <unordered_map>
 #include <set>
+
+#include <nlohmann/json.hpp>
 
 #include <process_block_id.h>
 #include "ParseResourcePack.h"

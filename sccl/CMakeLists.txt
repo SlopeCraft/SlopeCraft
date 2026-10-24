@@ -22,11 +22,11 @@ target_link_libraries(sccl PRIVATE
     OpenMP::OpenMP_CXX
     magic_enum::magic_enum
     CLI11::CLI11
+    nlohmann_json::nlohmann_json
     MCDataVersion
     BlockListManager
 )
 target_include_directories(sccl PRIVATE
-    ${SlopeCraft_nlohmann_json_include_dir}
     ${CMAKE_SOURCE_DIR}/utilities
 )
 

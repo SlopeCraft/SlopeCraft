@@ -78,7 +78,6 @@ find_package(libzip 1.7.0 REQUIRED)
 find_package(mc_schem 1.3.0 CONFIG REQUIRED)
 
 set(VCL_include_dirs
-    ${SlopeCraft_nlohmann_json_include_dir}
     ${CMAKE_SOURCE_DIR}
 )
 target_include_directories(VisualCraftL PRIVATE ${VCL_include_dirs})
@@ -101,6 +100,7 @@ set(VCL_link_libs
     PNG::PNG
     ${VCL_libzip_additions}
     mc_schem::mc_schem
+    nlohmann_json::nlohmann_json
     #    Schem
     ProcessBlockId
     FlatDiagram

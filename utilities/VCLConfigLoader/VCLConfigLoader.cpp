@@ -1,7 +1,7 @@
 #include "VCLConfigLoader.h"
 #include <fstream>
 #include <iostream>
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 
 using std::cout, std::endl;
 

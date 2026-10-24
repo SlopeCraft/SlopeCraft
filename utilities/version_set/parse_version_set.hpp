@@ -24,7 +24,7 @@
 
 #include <optional>
 
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 
 #include <parse_game_version.hpp>
 

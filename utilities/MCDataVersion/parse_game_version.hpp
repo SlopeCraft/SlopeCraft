@@ -24,7 +24,7 @@
 
 #include "MCDataVersion.h"
 #include <magic_enum/magic_enum.hpp>
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 
 namespace MCDataVersion {
 

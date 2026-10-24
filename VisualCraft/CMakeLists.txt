@@ -89,6 +89,7 @@ target_link_libraries(VisualCraft PRIVATE
     Qt6::Widgets
     Qt6::Network
     magic_enum::magic_enum
+    nlohmann_json::nlohmann_json
     OpenMP::OpenMP_CXX
     VersionDialog
     VCLConfigLoader
@@ -96,7 +97,6 @@ target_link_libraries(VisualCraft PRIVATE
 )
 
 target_compile_definitions(VisualCraft PRIVATE SC_RESOURCE_DIR="${SlopeCraft_resource_dir}")
-target_include_directories(VisualCraft PRIVATE ${SlopeCraft_nlohmann_json_include_dir})
 
 set_target_properties(VisualCraft PROPERTIES
     MACOSX_BUNDLE_ICON_FILE VisualCraft.icns

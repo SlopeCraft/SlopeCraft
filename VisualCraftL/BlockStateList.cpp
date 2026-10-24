@@ -24,7 +24,7 @@ This file is part of SlopeCraft.
 
 #include "BlockStateList.h"
 
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 #include <magic_enum/magic_enum.hpp>
 
 #include "ParseResourcePack.h"

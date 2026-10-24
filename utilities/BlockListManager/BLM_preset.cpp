@@ -21,7 +21,7 @@ This file is part of SlopeCraft.
 */
 
 #include "BlockListManager.h"
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 #include <QFile>
 
 using njson = nlohmann::json;

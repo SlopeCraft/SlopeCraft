@@ -1,11 +1,23 @@
+find_package(nlohmann_json CONFIG)
+
+if (nlohmann_json_FOUND)
+    # nlohmann_json::nlohmann_json
+    return()
+endif ()
+
+message(STATUS "Failed to find nlohmann json by find_package. Try manually")
+
+if (NOT TARGET nlohmann_json)
+    add_library(nlohmann_json INTERFACE)
+endif ()
+if (NOT TARGET nlohmann_json::nlohmann_json)
+    add_library(nlohmann_json::nlohmann_json ALIAS nlohmann_json)
+endif ()
 
 set(SlopeCraft_njson_hints)
 foreach (prefix ${CMAKE_PREFIX_PATH})
     list(APPEND SlopeCraft_njson_hints "${prefix}/include/nlohmann/json.hpp")
 endforeach ()
-
-#message(STATUS "hints = ${SlopeCraft_njson_hints}")
-
 find_file(nlohmann_json_location
     NAMES json.hpp
     HINTS ${SlopeCraft_njson_hints} "/usr/include/nlohmann/json.hpp"
@@ -13,7 +25,6 @@ find_file(nlohmann_json_location
     PATHS ${CMAKE_PREFIX_PATH} "/usr" "/usr/local"
     NO_CACHE
 )
-#message(STATUS "nlohmann_json_location = ${nlohmann_json_location}")
 
 if (NOT nlohmann_json_location)
     if (${SlopeCraft_no_download})
@@ -32,3 +43,6 @@ endif ()
 message(STATUS "nlohmann json found/downloaded at ${nlohmann_json_location}")
 
 cmake_path(GET nlohmann_json_location PARENT_PATH SlopeCraft_nlohmann_json_include_dir)
+cmake_path(GET SlopeCraft_nlohmann_json_include_dir PARENT_PATH SlopeCraft_nlohmann_json_include_dir)
+
+target_include_directories(nlohmann_json INTERFACE ${SlopeCraft_nlohmann_json_include_dir})

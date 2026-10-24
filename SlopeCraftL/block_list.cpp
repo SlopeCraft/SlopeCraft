@@ -22,7 +22,7 @@ General Public License for more details.
 */
 
 #include <format>
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 #include <expected>
 
 #include <zip.h>

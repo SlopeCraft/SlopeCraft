@@ -69,7 +69,7 @@ uint64_t version_string_to_u64(const char* str) noexcept {
   return SC_MAKE_VERSION_U64(numbers[0], numbers[1], numbers[2], numbers[3]);
 }
 
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 
 version_info extract_latest_version(std::string_view json_all_release) noexcept(
     false) {

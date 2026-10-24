@@ -28,15 +28,14 @@ target_link_libraries(vccl PRIVATE
     Qt6::Core
     Qt6::Gui
     magic_enum::magic_enum
+    nlohmann_json::nlohmann_json
     CLI11::CLI11
     OpenMP::OpenMP_CXX
     VCLConfigLoader
     MCDataVersion
 )
 target_compile_definitions(vccl PRIVATE SC_RESOURCE_DIR="${SlopeCraft_resource_dir}")
-target_include_directories(vccl PRIVATE
-    ${SlopeCraft_nlohmann_json_include_dir}
-)
+
 
 if (${WIN32})
     add_custom_target(SC_create_symlink_VCCL

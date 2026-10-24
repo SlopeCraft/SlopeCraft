@@ -21,7 +21,7 @@ This file is part of SlopeCraft.
 */
 
 #include <format>
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 #include <expected>
 #include <zip.h>
 #include <libpng_reader.h>
