@@ -156,7 +156,8 @@ class SCWind : public QMainWindow {
       colortable_settings,
       std::unique_ptr<SlopeCraft::color_table, SlopeCraft::deleter>>
       color_tables;
-  //  SlopeCraft::Kernel* kernel;
+
+  std::vector<std::pair<QRadioButton*, SCL_gameVersion>> version_buttons_;
 
   CvtPoolModel* cvt_pool_model{nullptr};
   ExportPoolModel* export_pool_model{nullptr};
@@ -192,8 +193,8 @@ class SCWind : public QMainWindow {
 
   std::array<QRadioButton*, 4> preset_buttons_no_custom() noexcept;
 
-  std::array<const QRadioButton*, 6> algo_buttons() const noexcept;
-  std::array<QRadioButton*, 6> algo_buttons() noexcept;
+  std::array<const QRadioButton*, 5> algo_buttons() const noexcept;
+  std::array<QRadioButton*, 5> algo_buttons() noexcept;
 
   QProgressBar* current_bar() noexcept;
 

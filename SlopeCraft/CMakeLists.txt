@@ -73,6 +73,7 @@ add_executable(SlopeCraft
 target_compile_definitions(SlopeCraft PRIVATE SC_RESOURCE_DIR="${SlopeCraft_resource_dir}")
 target_compile_features(SlopeCraft PRIVATE cxx_std_23)
 target_precompile_headers(SlopeCraft PRIVATE ${SlopeCraft_headers})
+target_include_directories(SlopeCraft PRIVATE ${CMAKE_SOURCE_DIR}/utilities)
 
 target_link_libraries(SlopeCraft PRIVATE
     Qt6::Core
@@ -84,6 +85,7 @@ target_link_libraries(SlopeCraft PRIVATE
     AdaptiveLabel
     VersionDialog
     BlockListManager
+    MCDataVersion
 )
 
 target_include_directories(SlopeCraft PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})

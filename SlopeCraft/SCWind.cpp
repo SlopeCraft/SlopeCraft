@@ -1,12 +1,17 @@
 #include "SCWind.h"
 #include "ui_SCWind.h"
+#include "SlopeCraft_autogen/include/ui_SCWind.h"
+
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QRadioButton>
 #include <QApplication>
 #include <QTableWidget>
 #include <magic_enum/magic_enum.hpp>
 #include <QDesktopServices>
 #include <qdir.h>
+
+#include <MCDataVersion.h>
 
 const QString SCWind::update_url{
   "https://api.github.com/repos/SlopeCraft/SlopeCraft/releases"};
@@ -15,6 +20,25 @@ const QString SCWind::update_url{
 SCWind::SCWind(QWidget* parent, const app_config& config_)
     : QMainWindow(parent), ui{new Ui::SCWind}, config{config_} {
   this->ui->setupUi(this);
+
+  // create versio buttons
+  for (const auto version : magic_enum::enum_values<SCL_gameVersion>()) {
+    if (version < SCL_gameVersion::MIN_VALID or
+        version > SCL_gameVersion::MAX_VALID) {
+      continue;
+    }
+    auto btn = new QRadioButton{this};
+    btn->setText(MCDataVersion::major_version_to_string(version).c_str());
+
+    if (version == SCL_gameVersion::MC20) {
+      btn->setChecked(true);
+    }
+
+    this->ui->gl_version_buttons->addWidget(
+        btn, static_cast<int>(this->version_buttons_.size()), 0);
+
+    this->version_buttons_.emplace_back(btn, version);
+  }
 
   this->connect_slots();
   // create translators
@@ -83,11 +107,13 @@ SCWind::SCWind(QWidget* parent, const app_config& config_)
     }
 
     for (auto [btnp, _] : this->version_buttons()) {
+      assert(btnp);
       connect(btnp, &QRadioButton::toggled, this,
               &SCWind::when_version_buttons_toggled);
     }
 
     for (auto btnp : this->type_buttons()) {
+      assert(btnp);
       connect(btnp, &QRadioButton::toggled, this,
               &SCWind::when_type_buttons_toggled);
     }
@@ -145,17 +171,21 @@ SCWind::SCWind(QWidget* parent, const app_config& config_)
   }
 
   for (QRadioButton* rbp : this->export_type_buttons()) {
+    assert(rbp);
     connect(rbp, &QRadioButton::clicked, this,
             &SCWind::when_export_type_toggled);
   }
   for (QRadioButton* rbp : this->preset_buttons_no_custom()) {
+    assert(rbp);
     connect(rbp, &QRadioButton::clicked, this, &SCWind::when_preset_clicked);
   }
   {
     for (QRadioButton* rbp : this->algo_buttons()) {
+      assert(rbp);
       connect(rbp, &QRadioButton::clicked, this,
               &SCWind::when_algo_btn_clicked);
     }
+    assert(this->ui->cb_algo_dither);
     connect(this->ui->cb_algo_dither, &QCheckBox::clicked, this,
             &SCWind::when_algo_btn_clicked);
   }
@@ -183,6 +213,7 @@ SCWind::SCWind(QWidget* parent, const app_config& config_)
 
   this->when_preset_clicked();
 
+  assert(this->ui->pb_manage_block_list);
   connect(this->ui->pb_manage_block_list, &QPushButton::clicked, this,
           &SCWind::on_ac_blocklist_triggered);
 
@@ -281,32 +312,18 @@ void SCWind::when_cvt_pool_selectionChanged() noexcept {
   this->refresh_current_cvt_display(selected_idx);
 }
 
-#define SC_SLOPECRAFT_PRIVATEMACRO_VERSION_BUTTON_LIST     \
-  {                                                        \
-    {this->ui->rb_ver12, SCL_gameVersion::MC12},           \
-        {this->ui->rb_ver13, SCL_gameVersion::MC13},       \
-        {this->ui->rb_ver14, SCL_gameVersion::MC14},       \
-        {this->ui->rb_ver15, SCL_gameVersion::MC15},       \
-        {this->ui->rb_ver16, SCL_gameVersion::MC16},       \
-        {this->ui->rb_ver17, SCL_gameVersion::MC17},       \
-        {this->ui->rb_ver18, SCL_gameVersion::MC18},       \
-        {this->ui->rb_ver19, SCL_gameVersion::MC19},       \
-        {this->ui->rb_ver20, SCL_gameVersion::MC20},       \
-        {this->ui->rb_ver21, SCL_gameVersion::MC21},       \
-        {this->ui->rb_ver26_1, SCL_gameVersion::MC26_1},   \
-        {this->ui->rb_ver26_2, SCL_gameVersion::MC26_2}, { \
-      this->ui->rb_ver26_3, SCL_gameVersion::MC26_3        \
-    }                                                      \
-  }
-
 std::vector<std::pair<QRadioButton*, SCL_gameVersion>>
 SCWind::version_buttons() noexcept {
-  return SC_SLOPECRAFT_PRIVATEMACRO_VERSION_BUTTON_LIST;
+  return this->version_buttons_;
 }
 
 std::vector<std::pair<const QRadioButton*, SCL_gameVersion>>
 SCWind::version_buttons() const noexcept {
-  return SC_SLOPECRAFT_PRIVATEMACRO_VERSION_BUTTON_LIST;
+  std::vector<std::pair<const QRadioButton*, SCL_gameVersion>> ret;
+  for (const auto& [first, second] : this->version_buttons_) {
+    ret.emplace_back(first, second);
+  }
+  return ret;
 }
 
 #define SC_SLOPECRAFT_PRIVATEMACRO_TYPE_BUTTON_LIST \
@@ -602,11 +619,11 @@ std::array<QRadioButton*, 4> SCWind::preset_buttons_no_custom() noexcept {
   {this->ui->rb_algo_RGB, this->ui->rb_algo_RGB_plus, this->ui->rb_algo_Lab94, \
    this->ui->rb_algo_Lab00, this->ui->rb_algo_XYZ}
 
-std::array<const QRadioButton*, 6> SCWind::algo_buttons() const noexcept {
+std::array<const QRadioButton*, 5> SCWind::algo_buttons() const noexcept {
   return SC_SLOPECRAFT_PRIVATEMARCO_ALGO_BUTTONS;
 }
 
-std::array<QRadioButton*, 6> SCWind::algo_buttons() noexcept {
+std::array<QRadioButton*, 5> SCWind::algo_buttons() noexcept {
   return SC_SLOPECRAFT_PRIVATEMARCO_ALGO_BUTTONS;
 }
 
