@@ -72,9 +72,9 @@ int main(int argc, char** argv) {
   const auto SCL_exclude_versions = {SCL_gameVersion::ANCIENT,
                                      SCL_gameVersion::FUTURE};
   app.add_option("--mcver", input.version, "MC version")
-      ->required()
       ->transform(CLI::CheckedTransformer{
         enum_mapping<SCL_gameVersion>(SCL_exclude_versions)})
+      ->required()
       ->group(group_color);
   app.add_option("--map-type", input.map_type, "Map type string")
       ->transform(CLI::CheckedTransformer{enum_mapping<SCL_mapTypes>()})
@@ -232,13 +232,13 @@ int main(int argc, char** argv) {
 
   //////////////////////////////////////////////////////////////////////////////
   export_WESchem_option eWEo{};
-  auto cmd_weshcem =
-      app.add_subcommand("export-WEshcem",
+  auto cmd_weschem =
+      app.add_subcommand("export-WEschem",
                          "Export as WorldEdit schematic (*.schem for 1.13+, "
                          "*.schematic for 1.12)");
-  cmd_weshcem->add_option("--names", eWEo.WESchem_names,
+  cmd_weschem->add_option("--names", eWEo.WESchem_names,
                           "Names of WE schematics (not filename)");
-  cmd_weshcem->add_option("--required-mods", eWEo.WESchem_required_mods,
+  cmd_weschem->add_option("--required-mods", eWEo.WESchem_required_mods,
                           "Required mods for WE schematic");
   //////////////////////////////////////////////////////////////////////////////
   export_flat_diagram_option efdo{};
@@ -275,7 +275,7 @@ int main(int argc, char** argv) {
     input.structure_option = std::move(eso);
   }
 
-  if (cmd_weshcem->count() > 0) {
+  if (cmd_weschem->count() > 0) {
     input.WESchem_option = std::move(eWEo);
   }
 
