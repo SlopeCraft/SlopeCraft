@@ -20,15 +20,20 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
+#include <iostream>
+#include <magic_enum/magic_enum.hpp>
+
 #include "VCWind.h"
 
+#include <QRadioButton>
 #include <QCryptographicHash>
 #include <QFileDialog>
 #include <QListWidgetItem>
-#include <QMessageBox>
-#include <iostream>
-#include <magic_enum/magic_enum.hpp>
 #include <QByteArrayView>
+#include <QMessageBox>
+
+#include <MCDataVersion.h>
+
 #include "VC_block_class.h"
 #include "ui_VCWind.h"
 
@@ -41,6 +46,23 @@ VCL_config VCWind::config;
 VCWind::VCWind(QWidget* parent)
     : QMainWindow{parent}, ui{new Ui::VCWind}, kernel{VCL_create_kernel()} {
   ui->setupUi(this);
+  // Setup version buttons
+  for (const auto version : magic_enum::enum_values<SCL_gameVersion>()) {
+    if (version < SCL_gameVersion::MIN_VALID or
+        version > SCL_gameVersion::MAX_VALID) {
+      continue;
+    }
+    auto btn = new QRadioButton{this};
+    btn->setText(MCDataVersion::major_version_to_string(version).c_str());
+    if (version == SCL_gameVersion::MC20) {
+      btn->setChecked(true);
+    }
+    const int btn_idx = this->version_buttons.size();
+    const int r = btn_idx / 2;
+    const int c = btn_idx % 2;
+    this->ui->gl_version_buttons->addWidget(btn, r, c);
+    this->version_buttons.emplace(version, btn);
+  }
 
   kernel->set_ui(this, callback_progress_range_set,
                  callback_progress_range_add);
@@ -98,7 +120,7 @@ void VCWind::append_default_to_rp_or_bsl(QListWidget* qlw,
                                          bool is_rp) noexcept {
   const QString txt =
       is_rp ? VCWind::tr("原版资源包") : VCWind::tr("原版 json");
-  QListWidgetItem* qlwi = new QListWidgetItem(txt);
+  auto* qlwi = new QListWidgetItem(txt);
 
   qlwi->setData(Qt::UserRole, true);
   qlwi->setCheckState(Qt::CheckState::Checked);
@@ -118,46 +140,11 @@ void VCWind::setup_ui_select_biome() noexcept {
 
 // utilitiy functions
 SCL_gameVersion VCWind::current_selected_version() const noexcept {
-  if (ui->rdb_version_12->isChecked()) {
-    return SCL_gameVersion::MC12;
+  for (const auto [version, btn] : this->version_buttons) {
+    if (btn->isChecked()) return version;
   }
-  if (ui->rdb_version_13->isChecked()) {
-    return SCL_gameVersion::MC13;
-  }
-  if (ui->rdb_version_14->isChecked()) {
-    return SCL_gameVersion::MC14;
-  }
-  if (ui->rdb_version_15->isChecked()) {
-    return SCL_gameVersion::MC15;
-  }
-  if (ui->rdb_version_16->isChecked()) {
-    return SCL_gameVersion::MC16;
-  }
-  if (ui->rdb_version_17->isChecked()) {
-    return SCL_gameVersion::MC17;
-  }
-  if (ui->rdb_version_18->isChecked()) {
-    return SCL_gameVersion::MC18;
-  }
-  if (ui->rdb_version_19->isChecked()) {
-    return SCL_gameVersion::MC19;
-  }
-  if (ui->rdb_version_20->isChecked()) {
-    return SCL_gameVersion::MC20;
-  }
-  if (ui->rdb_version_21->isChecked()) {
-    return SCL_gameVersion::MC21;
-  }
-  if (ui->rdb_version_26_1->isChecked()) {
-    return SCL_gameVersion::MC26_1;
-  }
-  if (ui->rdb_version_26_2->isChecked()) {
-    return SCL_gameVersion::MC26_2;
-  }
-  if (ui->rdb_version_26_3->isChecked()) {
-    return SCL_gameVersion::MC26_3;
-  }
-  abort();
+  assert(false);
+  return SCL_gameVersion::MC20;
 }
 
 VCL_face_t VCWind::current_selected_face() const noexcept {
@@ -213,8 +200,8 @@ VCWind::basic_colorset_option VCWind::current_basic_option() const noexcept {
   ret.face = this->current_selected_face();
   ret.layers = this->ui->sb_max_layers->value();
   ret.version = this->current_selected_version();
-  ret.biome =
-      (VCL_biome_t)this->ui->combobox_select_biome->currentData().toInt();
+  ret.biome = static_cast<VCL_biome_t>(
+      this->ui->combobox_select_biome->currentData().toInt());
   ret.is_leaves_transparent = this->ui->cb_leaves_transparent->isChecked();
   return ret;
 }

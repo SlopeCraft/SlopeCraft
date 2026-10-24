@@ -41,6 +41,7 @@ class QListWidget;
 class QListWidgetItem;
 class VC_block_class;
 class QCheckBox;
+class QRadioButton;
 
 namespace Ui {
 class VCWind;
@@ -79,6 +80,8 @@ class VCWind : public QMainWindow {
  private:
   // for all pages
   std::unique_ptr<Ui::VCWind> ui;
+  std::map<SCL_gameVersion, QRadioButton*> version_buttons;
+
   std::unique_ptr<VCL_Kernel, VCL_deleter> kernel{nullptr};
 
   std::unique_ptr<VCL_GPU_Platform, VCL_deleter> selected_gpu_platform{nullptr};
@@ -110,7 +113,7 @@ class VCWind : public QMainWindow {
 
   static VCL_config config;
 
-  inline const auto& block_class_widgets() const noexcept {
+  [[nodiscard]] const auto& block_class_widgets() const noexcept {
     return this->map_VC_block_class;
   }
 
