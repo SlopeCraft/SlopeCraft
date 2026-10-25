@@ -573,5 +573,149 @@
     "nameEN": "Cinnabar brick slab",
     "icon": "cinnabar_brick_slab.png",
     "version": "MC26_2"
+  },
+  {
+    "baseColor": 8,
+    "id": "minecraft:white_wool_slab[type=top,waterlogged=false]",
+    "nameZH": "白色羊毛台阶",
+    "nameEN": "White wool slab",
+    "icon": "white_wool_slab.png",
+    "version": "MC26_3",
+    "burnable": true
+  },
+  {
+    "baseColor": 15,
+    "id": "minecraft:orange_wool_slab[type=top,waterlogged=false]",
+    "nameZH": "橙色羊毛台阶",
+    "nameEN": "Orange wool slab",
+    "icon": "orange_wool_slab.png",
+    "version": "MC26_3",
+    "burnable": true
+  },
+  {
+    "baseColor": 16,
+    "id": "minecraft:magenta_wool_slab[type=top,waterlogged=false]",
+    "nameZH": "品红色羊毛台阶",
+    "nameEN": "Magenta wool slab",
+    "icon": "magenta_wool_slab.png",
+    "version": "MC26_3",
+    "burnable": true
+  },
+  {
+    "baseColor": 17,
+    "id": "minecraft:light_blue_wool_slab[type=top,waterlogged=false]",
+    "nameZH": "淡蓝色羊毛台阶",
+    "nameEN": "Light blue wool slab",
+    "icon": "light_blue_wool_slab.png",
+    "version": "MC26_3",
+    "burnable": true
+  },
+  {
+    "baseColor": 18,
+    "id": "minecraft:yellow_wool_slab[type=top,waterlogged=false]",
+    "nameZH": "黄色羊毛台阶",
+    "nameEN": "Yellow wool slab",
+    "icon": "yellow_wool_slab.png",
+    "version": "MC26_3",
+    "burnable": true
+  },
+  {
+    "baseColor": 19,
+    "id": "minecraft:lime_wool_slab[type=top,waterlogged=false]",
+    "nameZH": "黄绿色羊毛台阶",
+    "nameEN": "Lime wool slab",
+    "icon": "lime_wool_slab.png",
+    "version": "MC26_3",
+    "burnable": true
+  },
+  {
+    "baseColor": 20,
+    "id": "minecraft:pink_wool_slab[type=top,waterlogged=false]",
+    "nameZH": "粉红色羊毛台阶",
+    "nameEN": "Pink wool slab",
+    "icon": "pink_wool_slab.png",
+    "version": "MC26_3",
+    "burnable": true
+  },
+  {
+    "baseColor": 21,
+    "id": "minecraft:gray_wool_slab[type=top,waterlogged=false]",
+    "nameZH": "灰色羊毛台阶",
+    "nameEN": "Gray wool slab",
+    "icon": "gray_wool_slab.png",
+    "version": "MC26_3",
+    "burnable": true
+  },
+  {
+    "baseColor": 22,
+    "id": "minecraft:light_gray_wool_slab[type=top,waterlogged=false]",
+    "nameZH": "淡灰色羊毛台阶",
+    "nameEN": "Light gray wool slab",
+    "icon": "light_gray_wool_slab.png",
+    "version": "MC26_3",
+    "burnable": true
+  },
+  {
+    "baseColor": 23,
+    "id": "minecraft:cyan_wool_slab[type=top,waterlogged=false]",
+    "nameZH": "青色羊毛台阶",
+    "nameEN": "Cyan wool slab",
+    "icon": "cyan_wool_slab.png",
+    "version": "MC26_3",
+    "burnable": true
+  },
+  {
+    "baseColor": 24,
+    "id": "minecraft:purple_wool_slab[type=top,waterlogged=false]",
+    "nameZH": "紫色羊毛台阶",
+    "nameEN": "Purple wool slab",
+    "icon": "purple_wool_slab.png",
+    "version": "MC26_3",
+    "burnable": true
+  },
+  {
+    "baseColor": 25,
+    "id": "minecraft:blue_wool_slab[type=top,waterlogged=false]",
+    "nameZH": "蓝色羊毛台阶",
+    "nameEN": "Blue wool slab",
+    "icon": "blue_wool_slab.png",
+    "version": "MC26_3",
+    "burnable": true
+  },
+  {
+    "baseColor": 26,
+    "id": "minecraft:brown_wool_slab[type=top,waterlogged=false]",
+    "nameZH": "棕色羊毛台阶",
+    "nameEN": "Brown wool slab",
+    "icon": "brown_wool_slab.png",
+    "version": "MC26_3",
+    "burnable": true
+  },
+  {
+    "baseColor": 27,
+    "id": "minecraft:green_wool_slab[type=top,waterlogged=false]",
+    "nameZH": "绿色羊毛台阶",
+    "nameEN": "Green wool slab",
+    "icon": "green_wool_slab.png",
+    "version": "MC26_3",
+    "burnable": true
+  },
+  {
+    "baseColor": 28,
+    "id": "minecraft:red_wool_slab[type=top,waterlogged=false]",
+    "nameZH": "红色羊毛台阶",
+    "nameEN": "Red wool slab",
+    "icon": "red_wool_slab.png",
+    "version": "MC26_3",
+    "burnable": true
+  },
+  {
+    "baseColor": 29,
+    "id": "minecraft:black_wool_slab[type=top,waterlogged=false]",
+    "nameZH": "黑色羊毛台阶",
+    "nameEN": "Black wool slab",
+    "icon": "black_wool_slab.png",
+    "version": "MC26_3",
+    "burnable": true
   }
 ]
