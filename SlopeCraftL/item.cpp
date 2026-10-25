@@ -27,8 +27,9 @@ using namespace SlopeCraft;
 nbt::tag_compound item::dump(
     MCDataVersion::MCDataVersion_t data_version) const {
   auto basic_fields = this->dump_basic_fields(data_version);
+#warning "In some version it is "tag". At least 1.19.4"
   const std::string key =
-      data_version < MCDataVersion::MCDataVersion_t::Java_1_20_5 ? "tags"
+      data_version < MCDataVersion::MCDataVersion_t::Java_1_20_5 ? "tag"
                                                                  : "components";
   nbt::tag_compound ret{std::move(basic_fields)};
   {

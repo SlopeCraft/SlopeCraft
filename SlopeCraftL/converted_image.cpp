@@ -673,12 +673,12 @@ mc_schem::unique_schematic converted_image_impl::assembled_maps(
   const auto transform_mat_abs = transform_mat.array().abs().matrix();
   const Eigen::Vector3i offset =
       (transform_mat_abs - transform_mat) / 2 *
-      Eigen::Vector2i{{int(this->map_rows() - 1), int(this->map_cols() - 1)}};
+      Eigen::Vector2i{{(this->map_rows() - 1), (this->map_cols() - 1)}};
   // Shape of schematic
   const Eigen::Vector3i shape = [this, transform_mat_abs]() {
     Eigen::Vector3i s =
         transform_mat_abs *
-        Eigen::Vector2i{{int(this->map_rows()), int(this->map_cols())}};
+        Eigen::Vector2i{{(this->map_rows()), (this->map_cols())}};
     s = s.array().max(1).matrix();
     return s;
   }();

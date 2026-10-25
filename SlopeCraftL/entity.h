@@ -133,9 +133,9 @@ class item_frame : public hangable {
   [[nodiscard]] std::string_view id() const noexcept override {
     switch (this->variant_) {
       case item_frame_variant::common:
-        return "item_frame";
+        return "minecraft:item_frame";
       case item_frame_variant::glowing:
-        return "glow_item_frame";
+        return "minecraft:glow_item_frame";
     }
     return {};
   }
