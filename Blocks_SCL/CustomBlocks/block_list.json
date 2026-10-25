@@ -717,5 +717,133 @@
     "icon": "black_wool_slab.png",
     "version": "MC26_3",
     "burnable": true
+  },
+  {
+    "baseColor": 8,
+    "id": "minecraft:white_concrete_slab[type=top,waterlogged=false]",
+    "nameZH": "白色混凝土台阶",
+    "nameEN": "White concrete slab",
+    "icon": "white_concrete_slab.png",
+    "version": "MC26_3"
+  },
+  {
+    "baseColor": 15,
+    "id": "minecraft:orange_concrete_slab[type=top,waterlogged=false]",
+    "nameZH": "橙色混凝土台阶",
+    "nameEN": "Orange concrete slab",
+    "icon": "orange_concrete_slab.png",
+    "version": "MC26_3"
+  },
+  {
+    "baseColor": 16,
+    "id": "minecraft:magenta_concrete_slab[type=top,waterlogged=false]",
+    "nameZH": "品红色混凝土台阶",
+    "nameEN": "Magenta concrete slab",
+    "icon": "magenta_concrete_slab.png",
+    "version": "MC26_3"
+  },
+  {
+    "baseColor": 17,
+    "id": "minecraft:light_blue_concrete_slab[type=top,waterlogged=false]",
+    "nameZH": "淡蓝色混凝土台阶",
+    "nameEN": "Light blue concrete slab",
+    "icon": "light_blue_concrete_slab.png",
+    "version": "MC26_3"
+  },
+  {
+    "baseColor": 18,
+    "id": "minecraft:yellow_concrete_slab[type=top,waterlogged=false]",
+    "nameZH": "黄色混凝土台阶",
+    "nameEN": "Yellow concrete slab",
+    "icon": "yellow_concrete_slab.png",
+    "version": "MC26_3"
+  },
+  {
+    "baseColor": 19,
+    "id": "minecraft:lime_concrete_slab[type=top,waterlogged=false]",
+    "nameZH": "黄绿色混凝土台阶",
+    "nameEN": "Lime concrete slab",
+    "icon": "lime_concrete_slab.png",
+    "version": "MC26_3"
+  },
+  {
+    "baseColor": 20,
+    "id": "minecraft:pink_concrete_slab[type=top,waterlogged=false]",
+    "nameZH": "粉红色混凝土台阶",
+    "nameEN": "Pink concrete slab",
+    "icon": "pink_concrete_slab.png",
+    "version": "MC26_3"
+  },
+  {
+    "baseColor": 21,
+    "id": "minecraft:gray_concrete_slab[type=top,waterlogged=false]",
+    "nameZH": "灰色混凝土台阶",
+    "nameEN": "Gray concrete slab",
+    "icon": "gray_concrete_slab.png",
+    "version": "MC26_3"
+  },
+  {
+    "baseColor": 22,
+    "id": "minecraft:light_gray_concrete_slab[type=top,waterlogged=false]",
+    "nameZH": "淡灰色混凝土台阶",
+    "nameEN": "Light gray concrete slab",
+    "icon": "light_gray_concrete_slab.png",
+    "version": "MC26_3"
+  },
+  {
+    "baseColor": 23,
+    "id": "minecraft:cyan_concrete_slab[type=top,waterlogged=false]",
+    "nameZH": "青色混凝土台阶",
+    "nameEN": "Cyan concrete slab",
+    "icon": "cyan_concrete_slab.png",
+    "version": "MC26_3"
+  },
+  {
+    "baseColor": 24,
+    "id": "minecraft:purple_concrete_slab[type=top,waterlogged=false]",
+    "nameZH": "紫色混凝土台阶",
+    "nameEN": "Purple concrete slab",
+    "icon": "purple_concrete_slab.png",
+    "version": "MC26_3"
+  },
+  {
+    "baseColor": 25,
+    "id": "minecraft:blue_concrete_slab[type=top,waterlogged=false]",
+    "nameZH": "蓝色混凝土台阶",
+    "nameEN": "Blue concrete slab",
+    "icon": "blue_concrete_slab.png",
+    "version": "MC26_3"
+  },
+  {
+    "baseColor": 26,
+    "id": "minecraft:brown_concrete_slab[type=top,waterlogged=false]",
+    "nameZH": "棕色混凝土台阶",
+    "nameEN": "Brown concrete slab",
+    "icon": "brown_concrete_slab.png",
+    "version": "MC26_3"
+  },
+  {
+    "baseColor": 27,
+    "id": "minecraft:green_concrete_slab[type=top,waterlogged=false]",
+    "nameZH": "绿色混凝土台阶",
+    "nameEN": "Green concrete slab",
+    "icon": "green_concrete_slab.png",
+    "version": "MC26_3"
+  },
+  {
+    "baseColor": 28,
+    "id": "minecraft:red_concrete_slab[type=top,waterlogged=false]",
+    "nameZH": "红色混凝土台阶",
+    "nameEN": "Red concrete slab",
+    "icon": "red_concrete_slab.png",
+    "version": "MC26_3"
+  },
+  {
+    "baseColor": 29,
+    "id": "minecraft:black_concrete_slab[type=top,waterlogged=false]",
+    "nameZH": "黑色混凝土台阶",
+    "nameEN": "Black concrete slab",
+    "icon": "black_concrete_slab.png",
+    "version": "MC26_3"
   }
 ]
