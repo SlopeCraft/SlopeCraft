@@ -185,10 +185,11 @@ int main(int argc, char** argv) {
   app.add_flag("--benchmark", input.benchmark, "Display the performance data")
       ->default_val(false);
 
-  app.add_option("--threads,-j", input.num_threads,
-                 "CPU threads used to convert images")
-      ->check(CLI::PositiveNumber)
-      ->default_val(std::thread::hardware_concurrency());
+  app.add_option(
+         "-j,--parallel,--threads", input.num_threads,
+         "CPU threads used to convert images. 0 for hardware concurrency")
+      ->check(CLI::NonNegativeNumber)
+      ->default_val(0);
 
   // gpu
   app.add_flag("--gpu", input.prefer_gpu, "Use gpu as much as possible")

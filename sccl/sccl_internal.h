@@ -73,6 +73,7 @@ struct export_flat_diagram_option {
 };
 
 struct inputs {
+  uint32_t num_threads{0};
   // colors
   SCL_gameVersion version;
   SCL_mapTypes map_type{SCL_mapTypes::Slope};

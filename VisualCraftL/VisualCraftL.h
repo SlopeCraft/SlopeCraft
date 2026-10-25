@@ -237,10 +237,11 @@ class VCL_Kernel {
       bool* const is_row_major) const noexcept = 0;
 
   ////////////////////////////////////////////////////////////////////////
-  virtual bool convert(::SCL_convertAlgo algo,
-                       bool dither = false) noexcept = 0;
+  virtual bool convert(::SCL_convertAlgo algo, bool dither,
+                       uint32_t num_threads) noexcept = 0;
   virtual void converted_image(uint32_t* dest, int64_t* rows, int64_t* cols,
-                               bool write_dest_row_major) const noexcept = 0;
+                               bool write_dest_row_major,
+                               uint32_t num_threads) const noexcept = 0;
 
   struct flag_diagram_option {
     const uint64_t lib_version{SC_VERSION_U64};
@@ -263,7 +264,8 @@ class VCL_Kernel {
                                    int layer_idx) const noexcept = 0;
 
   ////////////////////////////////////////////////////////////////////////
-  virtual bool build() noexcept = 0;
+  virtual bool build(uint32_t num_threads) noexcept = 0;
+  
   virtual int64_t xyz_size(int64_t* x = nullptr, int64_t* y = nullptr,
                            int64_t* z = nullptr) const noexcept = 0;
   ////////////////////////////////////////////////////////////////////////
@@ -554,4 +556,4 @@ struct VCL_deleter {
   }
 };
 
-#endif  // SLOPECRAFT_VISUALCRAFT_VISUALCRAFT_H
+#endif  // SLOPECRAFT_VISUA

@@ -62,7 +62,7 @@ struct inputs {
 
   [[nodiscard]] inline bool need_to_convert() const noexcept {
     return this->make_converted_image || this->make_flat_diagram ||
-      this->need_to_build();
+           this->need_to_build();
   }
 
   [[nodiscard]] inline bool need_to_build() const noexcept {
@@ -70,7 +70,7 @@ struct inputs {
   }
 
   // compute
-  uint16_t num_threads;
+  uint32_t num_threads{0};
   bool benchmark{false};
 
   // gpu
@@ -99,6 +99,7 @@ int list_gpu();
 
 void list_supported_formats() noexcept;
 
-[[nodiscard]] std::pair<std::filesystem::path, std::filesystem::path> get_VCL_config_path(bool build_dir_mode);
+[[nodiscard]] std::pair<std::filesystem::path, std::filesystem::path>
+get_VCL_config_path(bool build_dir_mode);
 
 #endif  // #ifndef SLOPECRAFT_VCCL_INTERNAL_H

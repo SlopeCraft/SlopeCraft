@@ -294,6 +294,7 @@ void run(const inputs& task, bool build_dir_mode) {
     convert_option opt;
     opt.algo = task.algo;
     opt.dither = task.dither;
+    opt.num_threads = task.num_threads;
     opt.ui = ui;
     std::println("[{} / {}] Converting image {}", idx + 1, task.images.size(),
                  img_path.string());
@@ -429,6 +430,7 @@ void run(const inputs& task, bool build_dir_mode) {
       build_opt.connect_mushrooms = task.connect_mushroom;
       build_opt.support_block_settings = task.support_block;
       build_opt.ui = ui;
+      build_opt.num_threads = task.num_threads;
 
       std::println("[{} / {}] Building 3D structure for {}", task_counter++,
                    n_tasks, raw_img_path.string());

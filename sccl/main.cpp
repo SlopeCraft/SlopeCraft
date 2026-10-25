@@ -38,6 +38,8 @@
 #include <SlopeCraftL.h>
 #include "sccl_internal.h"
 
+#include <thread>
+
 template <class E>
 [[nodiscard]] std::map<std::string, E> enum_mapping(
     const std::set<E> excludes = {}) noexcept {
@@ -67,6 +69,11 @@ int main(int argc, char** argv) {
                "Read blocks and config files from local dir, only useful for "
                "development")
       ->default_val(false);
+  app.add_option(
+         "-j,--parallel,--threads", input.num_threads,
+         "Number of threads for convert and build. 0 for hardware concurrency")
+      ->check(CLI::NonNegativeNumber)
+      ->default_val(0);
   // colors
   const std::string group_color{"Color"};
   const auto SCL_exclude_versions = {SCL_gameVersion::ANCIENT,

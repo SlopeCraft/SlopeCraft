@@ -105,9 +105,11 @@ class TokiVC : public VCL_Kernel {
   const uint32_t* raw_image(int64_t* const rows, int64_t* const cols,
                             bool* const is_row_major) const noexcept override;
 
-  bool convert(::SCL_convertAlgo algo, bool dither) noexcept override;
+  bool convert(::SCL_convertAlgo algo, bool dither,
+               uint32_t num_threads) noexcept override;
   void converted_image(uint32_t* dest, int64_t* rows, int64_t* cols,
-                       bool write_dest_row_major) const noexcept override;
+                       bool write_dest_row_major,
+                       uint32_t num_threads) const noexcept override;
 
   //  void flag_diagram(uint32_t *image_u8c3_rowmajor, const flag_diagram_option
   //  &,
@@ -116,7 +118,7 @@ class TokiVC : public VCL_Kernel {
   bool export_flag_diagram(const char* png_filename, const flag_diagram_option&,
                            int layer_idx) const noexcept override;
 
-  bool build() noexcept override;
+  bool build(uint32_t num_threads) noexcept override;
   int64_t xyz_size(int64_t* x, int64_t* y, int64_t* z) const noexcept override;
 
   bool export_litematic(const char* localEncoding_filename,

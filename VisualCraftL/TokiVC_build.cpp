@@ -20,9 +20,13 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
+#include <cmath>
+#include <thread>
 #include <chrono>
 #include <vector>
 #include <fstream>
+
+#include <omp.h>
 
 #include "DirectionHandler.hpp"
 #include "TokiVC.h"
@@ -90,7 +94,7 @@ int64_t TokiVC::xyz_size(int64_t* x_dest, int64_t* y_dest,
          static_cast<int64_t>(z);
 }
 
-bool TokiVC::build() noexcept {
+bool TokiVC::build(uint32_t num_threads) noexcept {
   std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
 
   if (this->_step < VCL_Kernel_step::VCL_wait_for_build) {
@@ -107,64 +111,101 @@ bool TokiVC::build() noexcept {
        static_cast<int>(dirh.range_xyz()[1]),
        static_cast<int>(dirh.range_xyz()[2])});
 
-  std::atomic_bool ret = true;
-
   const Eigen::ArrayXX<uint16_t> color_id_mat = this->img_cvter.color_id();
-  // #warning resume omp here
-#pragma omp parallel for schedule(static)
-  for (int64_t r = 0; r < this->img_cvter.rows(); r++) {
-    for (int64_t c = 0; c < this->img_cvter.cols(); c++) {
-      auto color_id = color_id_mat(r, c);
-      if (color_id >= 0xFFFF)
-        continue;  // full transparent pixels, use air instead
+  {
+    auto region = this->schem->get_region(0);
+    assert(region);
 
-      const auto& variant = TokiVC::LUT_basic_color_idx_to_blocks[color_id];
+    /// Parallel element operation is safe for dense region, but not for sparse
+    if (not region->is_dense()) [[unlikely]] {
+      region->convert_to_dense();
+    }
+    assert(region->is_dense());
+    num_threads = std::max<uint32_t>(
+        num_threads > 0 ? num_threads : std::thread::hardware_concurrency(), 1);
 
-      const VCL_block* const* blockpp = nullptr;
-      size_t depth_current = 0;
-
-      if (variant.index() == 0) {
-        blockpp = &std::get<0>(variant);
-        depth_current = 1;
-      } else {
-        const std::vector<const VCL_block*>& vec = std::get<1>(variant);
-        blockpp = vec.data();
-        depth_current = vec.size();
+    std::atomic_bool global_ok = true;
+    std::vector<std::string> error_msg;
+    error_msg.resize(num_threads, {});
+#pragma omp parallel for schedule(static) num_threads(num_threads)
+    for (int64_t r = 0; r < this->img_cvter.rows(); r++) {
+      if (not global_ok) [[unlikely]] {
+        continue;
       }
 
-      auto region = this->schem->get_region(0);
-      assert(region);
-      for (size_t depth = 0; depth < depth_current; depth++) {
-        const auto coord = dirh.coordinate_of(r, c, depth);
-        const auto range = region->size_xyz();
-        for (size_t di = 0; di < 3; di++) {
-          if (coord[di] < 0 || coord[di] >= range[di]) {
-            std::string msg =
-                std::format("coordinate out of range : {}, {}, {}.\n", coord[0],
-                            coord[1], coord[2]);
-            VCL_report(VCL_report_type_t::error, msg.c_str());
+      for (int64_t c = 0; c < this->img_cvter.cols(); c++) {
+        auto color_id = color_id_mat(r, c);
+        if (color_id >= 0xFFFF)
+          continue;  // full transparent pixels, use air instead
+
+        const auto& variant = TokiVC::LUT_basic_color_idx_to_blocks[color_id];
+
+        const VCL_block* const* blockpp = nullptr;
+        size_t depth_current = 0;
+
+        if (variant.index() == 0) {
+          blockpp = &std::get<0>(variant);
+          depth_current = 1;
+        } else {
+          const std::vector<const VCL_block*>& vec = std::get<1>(variant);
+          blockpp = vec.data();
+          depth_current = vec.size();
+        }
+
+        const bool ok = [&] {
+          for (size_t depth = 0; depth < depth_current; depth++) {
+            const auto coord = dirh.coordinate_of(r, c, depth);
+            const auto range = region->size_xyz();
+
+            for (size_t di = 0; di < 3; di++) {
+              if (coord[di] < 0 || coord[di] >= range[di]) [[unlikely]] {
+                error_msg[omp_get_thread_num()] =
+                    std::format("coordinate out of range : {}, {}, {}.\n",
+                                coord[0], coord[1], coord[2]);
+                return false;
+              }
+            }
+
+            const VCL_block* const blkp = blockpp[depth];
+
+            auto it = TokiVC::blocks_allowed.find(blkp);
+            if (it == TokiVC::blocks_allowed.end()) [[unlikely]] {
+              error_msg[omp_get_thread_num()] = std::format(
+                  "Failed to find VCL_block at address {} named {} in "
+                  "allowed blocks. This is an internal error.",
+                  static_cast<const void*>(blkp), blkp->full_id_ptr()->c_str());
+              return false;
+            }
+
+            const uint16_t blk_id = it->second;
+            try {
+              region->set_block({static_cast<int32_t>(coord[0]),
+                                 static_cast<int32_t>(coord[1]),
+                                 static_cast<int32_t>(coord[2])},
+                                blk_id);
+            } catch (const std::exception& e) {
+              error_msg[omp_get_thread_num()] =
+                  std::format("Failed to set block: {}", e.what());
+              return false;
+            }
           }
+          return true;
+        }();
+
+        if (not ok) [[unlikely]] {
+          global_ok = false;
+          break;
         }
-
-        const VCL_block* const blkp = blockpp[depth];
-
-        auto it = TokiVC::blocks_allowed.find(blkp);
-        if (it == TokiVC::blocks_allowed.end()) {
-          std::string msg = std::format(
-              "Failed to find VCL_block at address {} named {} in "
-              "allowed blocks. This is an internal error.",
-              static_cast<const void*>(blkp), blkp->full_id_ptr()->c_str());
-          VCL_report(VCL_report_type_t::error, msg.c_str());
-          ret = false;
-        }
-
-        const uint16_t blk_id = it->second;
-
-        region->set_block(
-            {static_cast<int32_t>(coord[0]), static_cast<int32_t>(coord[1]),
-             static_cast<int32_t>(coord[2])},
-            blk_id);
       }
+    }
+
+    for (auto& msg : error_msg) {
+      if (msg.empty()) continue;
+      // logically if found error, global status should be false. But this is
+      // not very required
+      assert(not global_ok);
+      VCL_report(VCL_report_type_t::error, msg.c_str());
+      return false;
     }
   }
 
@@ -176,7 +217,7 @@ bool TokiVC::build() noexcept {
       auto msg = std::format("Failed to create metadata for data version {}",
                              data_version);
       VCL_report(VCL_report_type_t::error, msg.c_str());
-      ret = false;
+      return false;
     }
     (*md)->set_author("VisualCraftL");
     (*md)->set_description(
@@ -189,7 +230,7 @@ bool TokiVC::build() noexcept {
 
   this->_step = VCL_Kernel_step::VCL_built;
 
-  return ret;
+  return true;
 }
 
 bool TokiVC::export_litematic(const char* localEncoding_filename,

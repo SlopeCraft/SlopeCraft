@@ -37,7 +37,7 @@ converted_image* color_table_impl::convert_image(
   const auto algo = option.algo;
   cvted.converter.set_raw_image(original_img.data, original_img.rows,
                                 original_img.cols, false);
-  cvted.converter.convert_image(algo, option.dither);
+  cvted.converter.convert_image(algo, option.dither, option.num_threads);
 
   option.progress.set_range(0, 4 * cvted.size(), 4 * cvted.size());
   option.ui.report_working_status(workStatus::none);
@@ -288,8 +288,11 @@ converted_image_impl::height_info(const color_table_impl& table,
   std::vector<std::optional<fail_column_info>> fail_infos;
   fail_infos.resize(map_color.cols(), std::nullopt);
 
-#pragma omp parallel for schedule(dynamic) \
-    num_threads(std::thread::hardware_concurrency())
+  const uint32_t num_threads = std::max<uint32_t>(
+      option.num_threads > 0 ? option.num_threads
+                             : std::thread::hardware_concurrency(),
+      1);
+#pragma omp parallel for schedule(dynamic) num_threads(num_threads)
   for (int64_t c = 0; c < map_color.cols(); c++) {
     height_line HL;
     HL.make(map_color.col(c), allow_lossless_compress,

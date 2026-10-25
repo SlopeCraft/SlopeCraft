@@ -167,7 +167,7 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
   }
 
   bool convert_image(::SCL_convertAlgo algo_, bool dither_,
-                     bool try_gpu = false) noexcept {
+                     uint32_t num_threads, bool try_gpu) noexcept {
     this->dither = dither_;
 
     ui.rangeSet(0, 100, 0);
@@ -175,7 +175,7 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
     this->algo = algo_;
     this->add_colors_to_hash();
     ui.rangeSet(0, 100, 25);
-    if (!this->match_all_TokiColors(try_gpu)) {
+    if (!this->match_all_TokiColors(try_gpu, num_threads)) {
       return false;
     }
     ui.rangeSet(0, 100, 50);
@@ -191,22 +191,22 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
     if (this->dither) {
       switch (this->algo) {
         case ::SCL_convertAlgo::RGB:
-          this->template impl_dither__<::SCL_convertAlgo::RGB>();
+          this->template impl_dither<::SCL_convertAlgo::RGB>();
           break;
         case ::SCL_convertAlgo::RGB_Better:
-          this->template impl_dither__<::SCL_convertAlgo::RGB_Better>();
+          this->template impl_dither<::SCL_convertAlgo::RGB_Better>();
           break;
         case ::SCL_convertAlgo::HSV:
-          this->template impl_dither__<::SCL_convertAlgo::HSV>();
+          this->template impl_dither<::SCL_convertAlgo::HSV>();
           break;
         case ::SCL_convertAlgo::Lab94:
-          this->template impl_dither__<::SCL_convertAlgo::Lab94>();
+          this->template impl_dither<::SCL_convertAlgo::Lab94>();
           break;
         case ::SCL_convertAlgo::Lab00:
-          this->template impl_dither__<::SCL_convertAlgo::Lab00>();
+          this->template impl_dither<::SCL_convertAlgo::Lab00>();
           break;
         case ::SCL_convertAlgo::XYZ:
-          this->template impl_dither__<::SCL_convertAlgo::XYZ>();
+          this->template impl_dither<::SCL_convertAlgo::XYZ>();
           break;
 
         default:
@@ -291,16 +291,17 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
     return it->second.color_id();
   }
 
-  inline void converted_image(Eigen::ArrayXX<ARGB>& dest) const noexcept {
+  void converted_image(Eigen::ArrayXX<ARGB>& dest) const noexcept {
     dest.setZero(this->rows(), this->cols());
 
     converted_image(dest.data());
   }
 
-  inline void converted_image(
-      ARGB* const data_dest, int64_t* const rows_dest = nullptr,
-      int64_t* const cols_dest = nullptr,
-      const bool is_dest_col_major = true) const noexcept {
+  void converted_image(ARGB* const data_dest,
+                       int64_t* const rows_dest = nullptr,
+                       int64_t* const cols_dest = nullptr,
+                       const bool is_dest_col_major = true,
+                       uint32_t num_threads = 0) const noexcept {
     if (rows_dest != nullptr) {
       *rows_dest = this->rows();
     }
@@ -309,9 +310,13 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
     }
 
     if (data_dest != nullptr) {
+      num_threads = std::max<uint32_t>(
+          num_threads > 0 ? num_threads : std::thread::hardware_concurrency(),
+          1);
       Eigen::Map<
           Eigen::Array<ARGB, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>
           dest{data_dest, rows(), cols()};
+#pragma omp parallel for num_threads(num_threads)
       for (int64_t r = 0; r < rows(); r++) {
         for (int64_t c = 0; c < cols(); c++) {
           //          const int64_t idx =
@@ -362,9 +367,9 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
     }
   }
 
-  bool match_all_TokiColors(bool try_gpu) noexcept {
+  bool match_all_TokiColors(bool try_gpu, uint32_t num_threads) noexcept {
     if constexpr (is_not_optical) {
-      this->match_all_TokiColors_cpu();
+      this->match_all_TokiColors_cpu(num_threads);
       return true;
     } else {
       if constexpr (gpu_wrapper::have_api) {
@@ -376,14 +381,12 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
         }
       }
       // otherwise compute by cpu
-      this->match_all_TokiColors_cpu();
+      this->match_all_TokiColors_cpu(num_threads);
       return true;
     }
   }
 
-  void match_all_TokiColors_cpu() noexcept {
-    // const int threadCount = omp_get_num_threads();
-
+  void match_all_TokiColors_cpu(uint32_t num_threads) noexcept {
     std::vector<std::pair<const convert_unit, TokiColor_t>*> tasks;
     tasks.reserve(color_hash_.size());
     tasks.clear();
@@ -393,28 +396,23 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
     }
     const size_t taskCount = tasks.size();
 
-#pragma omp parallel for schedule(dynamic)
+    num_threads = std::max<uint32_t>(
+        num_threads > 0 ? num_threads : std::thread::hardware_concurrency(), 1);
+#pragma omp parallel for schedule(dynamic) num_threads(num_threads)
     for (int taskIdx = 0; taskIdx < (int)taskCount; taskIdx++) {
       tasks[taskIdx]->second.compute(tasks[taskIdx]->first,
                                      this->allowed_colorset);
     }
-    // #warning we should parallelize here
-    /*
-#pragma omp parallel for schedule(dynamic)
-    for (int thIdx = 0; thIdx < threadCount; thIdx++) {
-      for (uint64_t taskIdx = thIdx; taskIdx < taskCount;
-           taskIdx += threadCount) {
-      tasks[taskIdx]->second.compute(tasks[taskIdx]->first);
-      }
-    }
-  */
   }
 
   /// fill a colorid matrix according to raw image and colorhash
-  void fill_coloridmat_by_hash(Eigen::ArrayXX<colorid_t>& dest) const noexcept {
+  void fill_coloridmat_by_hash(Eigen::ArrayXX<colorid_t>& dest,
+                               uint32_t num_threads) const noexcept {
     dest.setZero(this->rows(), this->cols());
 
-#pragma omp parallel for
+    num_threads = std::max<uint32_t>(
+        num_threads > 0 ? num_threads : std::thread::hardware_concurrency(), 1);
+#pragma omp parallel for num_threads(num_threads)
     for (int64_t c = 0; c < this->cols(); c++) {
       for (int64_t r = 0; r < this->rows(); r++) {
         auto it = this->color_hash_.find(this->raw_image_(r, c));
@@ -471,7 +469,7 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
       }
 
       const Eigen::Array3f c3_eig = tasks[tid]->first.to_c3();
-      for (size_t channel = 0; channel < 3; channel++) {
+      for (int channel = 0; channel < 3; channel++) {
         task_colors[tid][channel] = c3_eig[channel];
       }
     }
@@ -558,7 +556,7 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
   }
 
   template <SCL_convertAlgo cvt_algo>
-  void impl_dither__() noexcept {
+  void impl_dither() noexcept {
     std::array<Eigen::ArrayXXf, 3> dither_c3;
     for (auto& i : dither_c3) {
       i.setZero(this->rows() + 2, this->cols() + 2);
@@ -682,21 +680,16 @@ class ImageCvter : public GPU_wrapper_wrapper<is_not_optical> {
 
       // report
     }
-    return;
   }
 
  public:
-  // [[deprecated]] uint64_t task_hash() const noexcept {
-  //   return this->task_hash(this->algo, this->dither);
-  // }
-
   [[nodiscard]] uint64_t task_hash(SCL_convertAlgo a, bool d) const noexcept {
     const auto& img = this->raw_image_;
     return std::hash<std::string_view>()(
 
-               std::string_view{(const char*)img.data(),
+               std::string_view{reinterpret_cast<const char*>(img.data()),
                                 img.size() * sizeof(uint32_t)}) ^
-           std::hash<char>()((char)a) ^ std::hash<bool>()(d);
+           std::hash<char>()(static_cast<char>(a)) ^ std::hash<bool>()(d);
   }
 };
 

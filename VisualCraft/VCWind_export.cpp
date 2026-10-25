@@ -20,11 +20,13 @@ This file is part of SlopeCraft.
     bilibili:https://space.bilibili.com/351429231
 */
 
-#include "VCWind.h"
-#include "ui_VCWind.h"
+#include <thread>
 
 #include <QFileDialog>
 #include <QMessageBox>
+
+#include "VCWind.h"
+#include "ui_VCWind.h"
 
 QString VCWind::get_dir_for_export() noexcept {
   static QString prev{""};
@@ -353,7 +355,8 @@ void VCWind::on_pb_execute_clicked() noexcept {
 
     this->setup_image(it->second.first);
 
-    success = this->kernel->convert(opt.algo, opt.dither);
+    success = this->kernel->convert(opt.algo, opt.dither,
+                                    this->ui->sb_threads->value());
     if (!success) {
       abort();
     }
@@ -365,8 +368,9 @@ void VCWind::on_pb_execute_clicked() noexcept {
 
     QImage new_img(it->second.first.width(), it->second.first.height(),
                    QImage::Format_ARGB32);
-    this->kernel->converted_image((uint32_t*)new_img.scanLine(0), nullptr,
-                                  nullptr, false);
+    this->kernel->converted_image(
+        reinterpret_cast<uint32_t*>(new_img.scanLine(0)), nullptr, nullptr,
+        false, this->ui->sb_threads->value());
     it->second.second = new_img;
 
     if (not converted_image_dest_path.isEmpty()) {
@@ -395,7 +399,7 @@ void VCWind::on_pb_execute_clicked() noexcept {
       continue;
     }
 
-    success = this->kernel->build();
+    success = this->kernel->build(this->ui->sb_threads->value());
     if (!success) {
       const auto ret [[maybe_unused]] = QMessageBox::critical(
           this, VCWind::tr("构建三维结构失败"),

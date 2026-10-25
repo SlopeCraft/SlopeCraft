@@ -1,3 +1,5 @@
+#include <thread>
+
 #include "SCWind.h"
 #include "ui_SCWind.h"
 #include "SlopeCraft_autogen/include/ui_SCWind.h"
@@ -514,6 +516,7 @@ SlopeCraft::build_options SCWind::current_build_option() const noexcept {
     .main_progressbar = progress_callback(this->ui->pbar_export),
     .sub_progressbar = {},
     .support_block_settings = this->support_block_settings(),
+    .num_threads = std::thread::hardware_concurrency(),
   };
 }
 
@@ -717,6 +720,7 @@ SlopeCraft::convert_option SCWind::current_convert_option() noexcept {
     .dither = this->is_dither_selected(),
     .progress = progress_callback(this->ui->pbar_cvt),
     .ui = this->ui_callbacks(),
+    .num_threads = std::thread::hardware_concurrency(),
   };
 }
 
@@ -816,7 +820,9 @@ QImage get_converted_image(const SlopeCraft::converted_image& cvted) noexcept {
   QImage img{
     QSize{static_cast<int>(cvted.cols()), static_cast<int>(cvted.rows())},
     QImage::Format::Format_ARGB32};
-  cvted.get_converted_image(reinterpret_cast<uint32_t*>(img.scanLine(0)));
+  cvted.get_converted_image(reinterpret_cast<uint32_t*>(img.scanLine(0)),
+                            0  // all threads.
+  );
   return img;
 }
 

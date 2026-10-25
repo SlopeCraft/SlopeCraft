@@ -37,6 +37,8 @@ This file is part of SlopeCraft.
 #include "VC_block_class.h"
 #include "ui_VCWind.h"
 
+#include <thread>
+
 using std::cout, std::endl;
 
 uint8_t is_language_ZH = true;
@@ -760,7 +762,8 @@ void VCWind::show_image(decltype(image_cache)::iterator it) noexcept {
 
   this->setup_image(it->second.first);
   const bool ok = this->kernel->convert(this->current_selected_algo(),
-                                        this->ui->cb_algo_dither->isChecked());
+                                        this->ui->cb_algo_dither->isChecked(),
+                                        this->ui->sb_threads->value());
   if (!ok) {
     it->second.second = QImage{};
     this->ui->lable_converted->setPixmap(QPixmap{});
@@ -768,7 +771,8 @@ void VCWind::show_image(decltype(image_cache)::iterator it) noexcept {
   }
 
   int64_t rows = 0, cols = 0;
-  this->kernel->converted_image(nullptr, &rows, &cols, true);
+  this->kernel->converted_image(nullptr, &rows, &cols, true,
+                                this->ui->sb_threads->value());
   if (rows <= 0 || cols <= 0) {
     it->second.second = QImage{};
     this->ui->lable_converted->setPixmap(QPixmap{});
@@ -779,7 +783,8 @@ void VCWind::show_image(decltype(image_cache)::iterator it) noexcept {
   memset(img.scanLine(0), 0xFF, img.sizeInBytes());
 
   this->kernel->converted_image(reinterpret_cast<uint32_t*>(img.scanLine(0)),
-                                nullptr, nullptr, false);
+                                nullptr, nullptr, false,
+                                this->ui->sb_threads->value());
 
   it->second.second = img;
   const auto size = this->ui->lable_converted->size().shrunkBy(margin);

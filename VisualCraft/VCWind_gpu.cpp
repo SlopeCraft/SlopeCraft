@@ -31,7 +31,7 @@ This file is part of SlopeCraft.
 #include "ui_VCWind.h"
 
 QString get_cpu_name(bool& error) noexcept {
-  QProcess proc{0};
+  QProcess proc{nullptr};
   error = true;
 
 #ifdef WIN32
@@ -116,7 +116,11 @@ QString get_cpu_name(bool& error) noexcept {
 }
 
 void VCWind::refresh_gpu_info() noexcept {
-  this->ui->sb_threads->setValue((int)std::thread::hardware_concurrency());
+  this->ui->sb_threads->setMinimum(1);
+  this->ui->sb_threads->setMaximum(
+      static_cast<int>(std::thread::hardware_concurrency()));
+  this->ui->sb_threads->setValue(
+      static_cast<int>(std::thread::hardware_concurrency()));
 
   this->ui->tw_gpu->clear();
   this->ui->combobox_select_device->clear();
@@ -211,10 +215,6 @@ void VCWind::select_default_device() noexcept {
   }
 
   this->ui->combobox_select_device->setCurrentIndex(selected_idx);
-}
-
-void VCWind::on_sb_threads_valueChanged(int val) noexcept {
-  omp_set_num_threads(val);
 }
 
 void VCWind::on_combobox_select_device_currentIndexChanged(int idx) noexcept {

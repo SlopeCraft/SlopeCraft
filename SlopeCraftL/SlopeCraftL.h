@@ -239,6 +239,9 @@ struct convert_option {
   bool dither{false};
   progress_callbacks progress{};
   ui_callbacks ui{};
+  /// Added in v5.5.0.
+  /// 0 for hardware concurrency
+  uint32_t num_threads{0};
 };
 
 struct map_data_file_options {
@@ -284,6 +287,9 @@ struct build_options {
   // added in v5.4
   SCL_supportBlockSettings support_block_settings{
     ::SCL_supportBlockSettings::none};
+  /// Added in v5.5.0.
+  /// 0 for hardware concurrency
+  uint32_t num_threads{0};
 };
 
 struct litematic_options {
@@ -397,7 +403,8 @@ class converted_image {
 
   virtual void get_original_image(uint32_t* buffer) const noexcept = 0;
   //  virtual void get_dithered_image(uint32_t *buffer) const noexcept = 0;
-  virtual void get_converted_image(uint32_t* buffer) const noexcept = 0;
+  virtual void get_converted_image(uint32_t* buffer,
+                                   uint32_t num_threads = 0) const noexcept = 0;
 
   virtual void get_compressed_image(const structure_3D& structure,
                                     uint32_t* buffer) const noexcept = 0;

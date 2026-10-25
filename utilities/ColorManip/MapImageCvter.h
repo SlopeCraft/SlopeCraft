@@ -50,8 +50,9 @@ class MapImageCvter : public ::libImageCvt::ImageCvter<true> {
   ~MapImageCvter() = default;
 
   // override
-  void convert_image(const ::SCL_convertAlgo algo, bool dither) noexcept {
-    Base_t::convert_image(algo, dither, false);
+  void convert_image(const ::SCL_convertAlgo algo, bool dither,
+                     uint32_t num_threads) noexcept {
+    Base_t::convert_image(algo, dither, num_threads, false);
   }
 
   [[nodiscard]] inline Eigen::ArrayXX<uint8_t> mapcolor_matrix()

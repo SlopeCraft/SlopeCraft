@@ -694,12 +694,14 @@ const uint32_t* TokiVC::raw_image(int64_t* const __rows, int64_t* const __cols,
   return this->img_cvter.raw_image().data();
 }
 
-bool TokiVC::convert(::SCL_convertAlgo algo, bool dither) noexcept {
+bool TokiVC::convert(::SCL_convertAlgo algo, bool dither,
+                     uint32_t num_threads) noexcept {
   std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
   if (this->_step < VCL_Kernel_step::VCL_wait_for_conversion) {
     return false;
   }
-  if (!this->img_cvter.convert_image(algo, dither, this->imgcvter_prefer_gpu)) {
+  if (!this->img_cvter.convert_image(algo, dither, num_threads,
+                                     this->imgcvter_prefer_gpu)) {
     std::string msg =
         std::format("Failed to convert. detail : {}, error code = {}",
                     this->img_cvter.gpu_resource()->error_detail_v(),
@@ -713,7 +715,8 @@ bool TokiVC::convert(::SCL_convertAlgo algo, bool dither) noexcept {
 }
 
 void TokiVC::converted_image(uint32_t* dest, int64_t* rows, int64_t* cols,
-                             bool write_dest_row_major) const noexcept {
+                             bool write_dest_row_major,
+                             uint32_t num_threads) const noexcept {
   std::shared_lock<std::shared_mutex> lkgd(TokiVC_internal::global_lock);
   if (this->_step < VCL_Kernel_step::VCL_wait_for_build) {
     return;
@@ -721,7 +724,8 @@ void TokiVC::converted_image(uint32_t* dest, int64_t* rows, int64_t* cols,
 
   // constexpr size_t sz = sizeof(decltype(this->img_cvter)::TokiColor_t);
 
-  this->img_cvter.converted_image(dest, rows, cols, write_dest_row_major);
+  this->img_cvter.converted_image(dest, rows, cols, write_dest_row_major,
+                                  num_threads);
 }
 
 bool TokiVC::set_gpu_resource(const VCL_GPU_Platform* p,

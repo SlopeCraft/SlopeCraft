@@ -47,8 +47,10 @@ class converted_image_impl : public converted_image {
     buf = this->converter.raw_image();
   }
   //  void get_dithered_image(uint32_t *buffer) const noexcept final {}
-  void get_converted_image(uint32_t* buffer) const noexcept final {
-    this->converter.converted_image(buffer, nullptr, nullptr, false);
+  void get_converted_image(uint32_t* buffer,
+                           uint32_t num_threads) const noexcept final {
+    this->converter.converted_image(buffer, nullptr, nullptr, false,
+                                    num_threads);
   }
 
   void get_compressed_image(const structure_3D& structure,

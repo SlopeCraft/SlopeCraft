@@ -298,9 +298,6 @@ class VCWind : public QMainWindow {
   // for page 4 ------------------------------------------
 
   // auto connected
-  void on_sb_threads_valueChanged(int val) noexcept;
-
-  // auto connected
   void on_combobox_select_device_currentIndexChanged(int idx) noexcept;
 };
 
