@@ -28,20 +28,24 @@ struct app_config {
 
 struct colortable_settings {
   colortable_settings() = delete;
-  colortable_settings(const selection& s, SCL_mapTypes t)
-      : selection_{s}, map_type{t} {}
+  colortable_settings(const selection& s, SCL_mapTypes t, SCL_gameVersion v)
+      : selection_{s}, map_type{t}, version{v} {}
 
-  colortable_settings(selection&& s, SCL_mapTypes t)
-      : selection_{std::move(s)}, map_type{t} {}
+  colortable_settings(selection&& s, SCL_mapTypes t, SCL_gameVersion v)
+      : selection_{std::move(s)}, map_type{t}, version{v} {}
 
   selection selection_;
   SCL_mapTypes map_type;
+  SCL_gameVersion version;
 
   [[nodiscard]] bool operator==(const colortable_settings& b) const noexcept {
     if (this->selection_ not_eq b.selection_) {
       return false;
     }
     if (this->map_type not_eq b.map_type) {
+      return false;
+    }
+    if (this->version not_eq b.version) {
       return false;
     }
     return true;
@@ -52,7 +56,7 @@ template <>
 struct std::hash<colortable_settings> {
   uint64_t operator()(const colortable_settings& s) const noexcept {
     return std::hash<selection>{}(s.selection_) xor
-           static_cast<int>(s.map_type);
+           static_cast<int>(s.map_type) xor (static_cast<int>(s.version) << 4);
   }
 };
 

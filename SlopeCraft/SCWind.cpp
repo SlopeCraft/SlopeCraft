@@ -226,8 +226,11 @@ SCWind::SCWind(QWidget* parent, const app_config& config_)
 SCWind::~SCWind() { this->ui = nullptr; }
 
 SlopeCraft::color_table* SCWind::current_color_table() noexcept {
-  auto settings = colortable_settings{this->ui->blm->current_selection(),
-                                      this->selected_type()};
+  auto settings = colortable_settings{
+    this->ui->blm->current_selection(),
+    this->selected_type(),
+    this->selected_version(),
+  };
   {
     auto find = this->color_tables.find(settings);
     if (find not_eq this->color_tables.end()) {
@@ -342,6 +345,7 @@ SCL_gameVersion SCWind::selected_version() const noexcept {
   for (auto [btn, version] : btns) {
     if (btn->isChecked()) return version;
   }
+  assert(false);
   return SCL_gameVersion::ANCIENT;
 }
 
