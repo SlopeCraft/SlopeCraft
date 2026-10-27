@@ -40,7 +40,7 @@ target_compile_definitions(vccl PRIVATE SC_RESOURCE_DIR="${SlopeCraft_resource_d
 if (${WIN32})
     add_custom_target(SC_create_symlink_VCCL
         COMMAND mklink VisualCraftL.dll "..\\VisualCraftL\\VisualCraftL.dll"
-        COMMAND mklink mc_schem.dll "..\\_deps\\mc_schem-build\\mc_schem.dll"
+        COMMAND mklink mc_schem.dll "..\\_deps\\mc_schem-build\\c_sources\\mc_schem.dll"
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         DEPENDS VisualCraftL
         COMMENT "Create symlink to VisualCraftL.dll for vccl.exe")
