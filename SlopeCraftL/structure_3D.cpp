@@ -295,7 +295,7 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
       if (not shrink_result) {
         fixed_opt.ui.report_error(
             SCL_errorFlag::EXPORT_SCHEM_HAS_INVALID_BLOCKS,
-            SCLTranslator::tr("SlopeCraftL为方块表去重时遇到内部错误：%1")
+            SCLTranslator::tr("SlopeCraftL精简方块表时遇到内部错误：%1")
                 .arg(shrink_result.error()->message().c_str())
                 .toStdString()
                 .c_str());

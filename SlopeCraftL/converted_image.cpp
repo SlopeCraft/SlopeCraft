@@ -773,7 +773,7 @@ mc_schem::unique_schematic converted_image_impl::assembled_maps(
       auto rs_entity = mc_schem::entity::create(std::move(*rs_nbt));
       if (not rs_entity) {
         throw std::runtime_error{
-          SCLTranslator::tr("内部错误：mc_schem重写解析实体失败：%1")
+          SCLTranslator::tr("内部错误：mc_schem重新解析实体失败：%1")
               .arg(rs_entity.error()->message().c_str())
               .toStdString()};
       }
