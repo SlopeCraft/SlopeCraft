@@ -14,6 +14,8 @@
 #include "SCL_translator.h"
 #include "utilities/ProcessBlockId/process_block_id.h"
 
+using mc_schem::unwrap;
+
 std::optional<color_table_impl> color_table_impl::create(
     const color_table_create_info& args) noexcept {
   color_table_impl result;
@@ -143,7 +145,7 @@ structure_3D* color_table_impl::build(
 }
 
 std::vector<mc_schem::unique_block> color_table_impl::block_id_list(
-    bool contain_air) const noexcept {
+    bool contain_air) const {
   std::vector<mc_schem::unique_block> palette;
   palette.reserve(blocks.size() + 1);
   if (contain_air) {
@@ -295,13 +297,13 @@ std::string color_table_impl::impl_generate_test_schematic(
                              .arg(region_res.error()->message().c_str());
         return msg.toStdString();
       }
-      region = std::move(*region_res);
+      region = std::move(region_res.value());
     }
 
     int xSize = 0;
     constexpr int zSize = 64, ySize = 2;
     for (const auto& it : block_counter) {
-      xSize = std::max(size_t(xSize), it.size());
+      xSize = std::max(static_cast<size_t>(xSize), it.size());
     }
     region->reshape({xSize + 1, ySize, zSize});
     region->fill_with(*region->palette(0));  // fill with air
@@ -368,12 +370,13 @@ const mc_block* color_table_searching_index::find(
 
   std::string namespace_, pure_id;
   {
-    auto blk = mc_schem::block::create(id.c_str());
-    if (not blk) {
+    auto blk_res = mc_schem::block::create(id.c_str());
+    if (not blk_res) {
       return nullptr;
     }
-    namespace_ = (*blk)->namespace_();
-    pure_id = (*blk)->id();
+    auto blk = unwrap(std::move(blk_res));
+    namespace_ = blk->namespace_();
+    pure_id = blk->id();
   }
 
   const block_detail_info detail{

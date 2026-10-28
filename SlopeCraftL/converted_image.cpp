@@ -770,14 +770,14 @@ mc_schem::unique_schematic converted_image_impl::assembled_maps(
               .arg(rs_nbt.error().c_str())
               .toStdString()};
       }
-      auto rs_entity = mc_schem::entity::create(std::move(*rs_nbt));
+      auto rs_entity = mc_schem::entity::create(std::move(rs_nbt.value()));
       if (not rs_entity) {
         throw std::runtime_error{
           SCLTranslator::tr("内部错误：mc_schem重新解析实体失败：%1")
               .arg(rs_entity.error()->message().c_str())
               .toStdString()};
       }
-      region->add_entity(std::move(*rs_entity));
+      region->add_entity(std::move(rs_entity.value()));
     }
   }
 
@@ -785,19 +785,20 @@ mc_schem::unique_schematic converted_image_impl::assembled_maps(
   schem->append_region(std::move(region));
   {
     const auto dv = static_cast<int32_t>(data_version);
-    auto md = mc_schem::metadata_ir::create(dv);
-    if (not md) {
+    auto md_res = mc_schem::metadata_ir::create(dv);
+    if (not md_res) {
       throw std::runtime_error{
         SCLTranslator::tr("内部错误：mc_schem不支持数据版本%1")
             .arg(dv)
             .toStdString()};
     }
-    (*md)->set_author("SlopeCraftL");
-    (*md)->set_name("Assembled maps");
-    (*md)->set_description(
+    auto md = std::move(md_res.value());
+    md->set_author("SlopeCraftL");
+    md->set_name("Assembled maps");
+    md->set_description(
         "This schematic contains item frame entity containing assembled maps "
         "(filled).");
-    schem->set_metadata(std::move(*md));
+    schem->set_metadata(std::move(md));
   }
 
   return schem;

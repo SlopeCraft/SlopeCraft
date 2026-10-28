@@ -118,5 +118,5 @@ mc_schem::unique_block mc_block::to_mc_schem_block(SCL_gameVersion ver) const {
     throw std::runtime_error{msg.toStdString().c_str()};
   }
 
-  return std::move(*blk_res);
+  return std::move(blk_res.value());
 }
