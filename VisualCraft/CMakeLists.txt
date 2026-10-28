@@ -8,9 +8,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
 find_package(Qt6 COMPONENTS Widgets LinguistTools Network REQUIRED)
-
 find_package(magic_enum REQUIRED)
-
 find_package(OpenMP REQUIRED)
 
 if (${WIN32})
@@ -23,7 +21,6 @@ endif ()
 set(VisualCraft_header_files
     VCWind.h
 
-    # advanced_qlist_widget_item.h
     CallbackFunctions.h
     VC_block_class.h
     BlockBrowser.h
@@ -94,6 +91,7 @@ target_link_libraries(VisualCraft PRIVATE
     VersionDialog
     VCLConfigLoader
     MCDataVersion
+    cpuInfo
 )
 
 target_compile_definitions(VisualCraft PRIVATE SC_RESOURCE_DIR="${SlopeCraft_resource_dir}")

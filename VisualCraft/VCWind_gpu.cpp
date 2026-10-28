@@ -22,98 +22,14 @@ This file is part of SlopeCraft.
 
 #include <omp.h>
 
+#include <cpu_info.h>
 #include <iostream>
 #include <thread>
 
 #include <QMessageBox>
-#include <QProcess>
+
 #include "VCWind.h"
 #include "ui_VCWind.h"
-
-QString get_cpu_name(bool& error) noexcept {
-  QProcess proc{nullptr};
-  error = true;
-
-#ifdef WIN32
-  const char* command = "wmic cpu get name";
-#elif defined(__linux__)
-  const char* command = "sh -c \"cat /proc/cpuinfo | grep name\"";
-#elif defined(__APPLE__)
-  const char* command = "sysctl machdep.cpu.brand_string";
-#else
-#warning Unknown OS
-  const char* command = nullptr;
-  return {};
-#endif
-
-  proc.startCommand(command);
-  if (!proc.waitForStarted()) {
-    return {};
-  }
-  if (!proc.waitForFinished()) {
-    return {};
-  }
-
-  QString output = QString::fromUtf8(proc.readAllStandardOutput());
-
-#ifdef WIN32
-  output = output.remove(QChar{'\r'});
-  auto splitted = output.split('\n');
-  if (splitted.size() < 2) {
-    return {};
-  }
-
-  if (splitted[0].remove(QChar{' '}) != QStringLiteral("Name")) {
-    return {};
-  }
-
-  const auto cpu_name = splitted[1];
-
-#elif defined(__linux__)
-
-  output.remove('\t');
-
-  auto spilitted = output.split('\n');
-  if (spilitted.size() <= 0) {
-    return {};
-  }
-  const auto line0 = spilitted[0];
-  if (!line0.contains(':')) {
-    return {};
-  }
-  auto line0_splitted = line0.split(':');
-  if (line0_splitted.size() != 2) {
-    return {};
-  }
-  if (line0_splitted[0].remove(' ') != "modelname") {
-    return {};
-  }
-  const auto cpu_name = line0_splitted[1];
-
-#elif defined(__APPLE__)
-  output.remove('\n');
-  auto split_out = output.split(':');
-  if (split_out.size() < 2) {
-    return {};
-  }
-  if (split_out[0] != "machdep.cpu.brand_string") {
-    return {};
-  }
-  auto cpu_name = split_out[1];
-  cpu_name.remove('\t');
-  while (cpu_name.front() == ' ') {
-    cpu_name.removeFirst();
-  }
-  while (cpu_name.back() == ' ') {
-    cpu_name.removeLast();
-  }
-#else
-#warning "Unknown OS"
-  QString cpu_name{};
-#endif
-  error = false;
-  return cpu_name;
-}
 
 void VCWind::refresh_gpu_info() noexcept {
   this->ui->sb_threads->setMinimum(1);
@@ -126,12 +42,13 @@ void VCWind::refresh_gpu_info() noexcept {
   this->ui->combobox_select_device->clear();
 
   {
-    bool error = false;
-    QString text("CPU : " + get_cpu_name(error));
-    // QString text("CPU : " +);
-    QTreeWidgetItem* cpu = new QTreeWidgetItem;
+    const auto cpu_name = get_cpu_name();
+
+    const QString text(QStringLiteral("CPU : %1").arg(cpu_name.value_or("")));
+
+    auto* cpu = new QTreeWidgetItem;
     cpu->setText(0, text);
-    if (error) {
+    if (not cpu_name.has_value()) {
       cpu->setFlags(Qt::ItemFlag::NoItemFlags);
     }
     this->ui->tw_gpu->addTopLevelItem(cpu);
