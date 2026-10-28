@@ -20,6 +20,35 @@ using mc_schem::unique_region;
 using mc_schem::unique_schematic;
 using mc_schem::unwrap;
 
+struct time_logger {
+  std::chrono::time_point<std::chrono::steady_clock> begin;
+
+  std::vector<std::pair<std::string,
+                        std::chrono::time_point<std::chrono::steady_clock>>>
+      logs{};
+
+  time_logger() : begin{std::chrono::high_resolution_clock::now()} {}
+
+  void add(std::string_view name) & {
+    logs.emplace_back(name, std::chrono::high_resolution_clock::now());
+  }
+
+  void dump(std::ostream& os) const& {
+    const std::chrono::time_point<std::chrono::steady_clock>* previous_time =
+        &begin;
+
+    for (const auto& [name, time] : logs) {
+      const auto duration =
+          std::chrono::duration_cast<std::chrono::milliseconds>(time -
+                                                                *previous_time)
+              .count();
+      std::println(os, "{}: {} ms", name,
+                   static_cast<double>(duration) / 1000.);
+      previous_time = &time;
+    }
+  }
+};
+
 std::optional<structure_3D_impl> structure_3D_impl::create(
     const color_table_impl& table, const converted_image_impl& cvted,
     const build_options& option) noexcept {
@@ -34,31 +63,29 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
   }
   const bool bench = std::getenv("SlopeCraft_benchmark");
 
-  const auto time_start = std::chrono::high_resolution_clock::now();
-  auto region = [&] -> unique_region {
+  time_logger logger;
+
+  unique_region region{nullptr};
+  try {
     const auto palette = table.block_id_list(true);
     std::vector<const mc_schem::block*> palette_view;
     palette_view.reserve(palette.size());
     for (auto& blk : palette) {
       palette_view.emplace_back(blk.get());
     }
-
-    auto region_res =
-        mc_schem::region::create_with_palette({1, 1, 1}, palette_view);
-    if (not region_res) {
-      option.ui.report_error(errorFlag::MC_SCHEM_ERROR,
-                             SCLTranslator::tr("创建区域失败：%1")
-                                 .arg(region_res.error()->message().c_str())
-                                 .toStdString()
-                                 .c_str());
-      return nullptr;
-    }
-    return std::move(region_res.value());
-  }();
-  if (not region) {
+    region =
+        unwrap(mc_schem::region::create_with_palette({1, 1, 1}, palette_view));
+  } catch (const std::exception& e) {
+    option.ui.report_error(errorFlag::MC_SCHEM_ERROR,
+                           SCLTranslator::tr("创建区域失败：%1")
+                               .arg(e.what())
+                               .toStdString()
+                               .c_str());
     return std::nullopt;
   }
-  const auto time_make_palette = std::chrono::high_resolution_clock::now();
+  assert(region);
+
+  if (bench) logger.add("make palette");
 
   build_options fixed_opt = option;
   if (table.is_flat() || !table.is_vanilla()) {
@@ -88,7 +115,7 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
   assert((high_map >= low_map).all());
   assert(low_map.minCoeff() == 0);
 
-  const auto time_make_height_map = std::chrono::high_resolution_clock::now();
+  if (bench) logger.add("make height map");
 
   try {
     const int32_t height = high_map.maxCoeff() + 1;
@@ -116,7 +143,7 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
     return std::nullopt;
   }
 
-  const auto time_init_region = std::chrono::high_resolution_clock::now();
+  if (bench) logger.add("make init region");
   try {
     // make 3D
     {
@@ -205,7 +232,7 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
       }
     }
 
-    const auto time_fill_region = std::chrono::high_resolution_clock::now();
+    if (bench) logger.add("fill region");
 
     // build bridges
     if (table.map_type() == mapTypes::Slope &&
@@ -242,7 +269,7 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
       // fixed_opt.sub_progressbar.set_range(0, 100, 100);
     }
 
-    const auto time_build_bridges = std::chrono::high_resolution_clock::now();
+    if (bench) logger.add("build bridges");
 
     // mc_schem 1.3.0 doesn't support this function at 1.12-
     if (fixed_opt.connect_mushrooms and
@@ -253,8 +280,7 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
       region->update_mushroom_state(opt);
     }
 
-    const auto time_update_mushrooms =
-        std::chrono::high_resolution_clock::now();
+    if (bench) logger.add("update mushrooms");
 
     // Add supporting block
     if (fixed_opt.support_block_settings not_eq
@@ -289,8 +315,8 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
         }
       }
     }
-    const auto time_add_supporting_blocks =
-        std::chrono::high_resolution_clock::now();
+
+    if (bench) logger.add("add supporting blocks");
     {
       auto shrink_result = region->shrink_palette();
       if (not shrink_result) {
@@ -304,49 +330,10 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
       }
     }
 
-    const auto time_shrink_palette = std::chrono::high_resolution_clock::now();
+    if (bench) logger.add("shrink palette");
 
     if (bench) {
-      std::println(std::clog, "make palette: {} ms",
-                   std::chrono::duration_cast<std::chrono::microseconds>(
-                       time_make_palette - time_start)
-                           .count() /
-                       1000.0);
-      std::println(std::clog, "make height map: {} ms",
-                   std::chrono::duration_cast<std::chrono::microseconds>(
-                       time_make_height_map - time_make_palette)
-                           .count() /
-                       1000.0);
-      std::println(std::clog, "init region: {} ms",
-                   std::chrono::duration_cast<std::chrono::microseconds>(
-                       time_init_region - time_make_height_map)
-                           .count() /
-                       1000.0);
-      std::println(std::clog, "fill region: {} ms",
-                   std::chrono::duration_cast<std::chrono::microseconds>(
-                       time_fill_region - time_init_region)
-                           .count() /
-                       1000.0);
-      std::println(std::clog, "build bridges: {} ms",
-                   std::chrono::duration_cast<std::chrono::microseconds>(
-                       time_build_bridges - time_fill_region)
-                           .count() /
-                       1000.0);
-      std::println(std::clog, "update mushrooms: {} ms",
-                   std::chrono::duration_cast<std::chrono::microseconds>(
-                       time_update_mushrooms - time_build_bridges)
-                           .count() /
-                       1000.0);
-      std::println(std::clog, "add supporting blocks: {} ms",
-                   std::chrono::duration_cast<std::chrono::microseconds>(
-                       time_add_supporting_blocks - time_update_mushrooms)
-                           .count() /
-                       1000.0);
-      std::println(std::clog, "shrink palette: {} ms",
-                   std::chrono::duration_cast<std::chrono::microseconds>(
-                       time_shrink_palette - time_add_supporting_blocks)
-                           .count() /
-                       1000.0);
+      logger.dump(std::clog);
     }
 
   } catch (const std::exception& e) {
@@ -363,37 +350,47 @@ std::optional<structure_3D_impl> structure_3D_impl::create(
 
   // finish region
 
-  auto schem = mc_schem::schematic::create();
-  schem->append_region(std::move(region));
-  assert(schem->regions_count() == 1);
-  {
-    const auto data_version = static_cast<int32_t>(
-        MCDataVersion::suggested_version(table.mc_version_));
-    auto md_res = mc_schem::metadata_ir::create(data_version);
-    if (not md_res) {
-      fixed_opt.ui.report_error(
-          SCL_errorFlag::MC_SCHEM_ERROR,
-          SCLTranslator::tr("SlopeCraftL 内部错误：mc_schem不支持数据版本%1")
-              .arg(data_version)
-              .toStdString()
-              .c_str());
-      return std::nullopt;
+  try {
+    auto schem = mc_schem::schematic::create();
+    assert(schem);
+    schem->append_region(std::move(region));
+    assert(schem->regions_count() == 1);
+    {
+      const auto data_version = static_cast<int32_t>(
+          MCDataVersion::suggested_version(table.mc_version_));
+      auto md_res = mc_schem::metadata_ir::create(data_version);
+      if (not md_res) {
+        fixed_opt.ui.report_error(
+            SCL_errorFlag::MC_SCHEM_ERROR,
+            SCLTranslator::tr("SlopeCraftL 内部错误：mc_schem不支持数据版本%1")
+                .arg(data_version)
+                .toStdString()
+                .c_str());
+        return std::nullopt;
+      }
+      auto md = unwrap(std::move(md_res));
+      md->set_author("SlopeCraftL");
+      md->set_name("by SlopeCraftL");
+      md->set_description(
+          "This file is generated by "
+          "SlopeCraft(https://github.com/SlopeCraft/SlopeCraft) and "
+          "mc_schem(https://github.com/SlopeCraft/mc_schem)");
+
+      schem->set_metadata(std::move(md));
     }
-    auto md = unwrap(std::move(md_res));
-    md->set_author("SlopeCraftL");
-    md->set_name("by SlopeCraftL");
-    md->set_description(
-        "This file is generated by "
-        "SlopeCraft(https://github.com/SlopeCraft/SlopeCraft) and "
-        "mc_schem(https://github.com/SlopeCraft/mc_schem)");
 
-    schem->set_metadata(std::move(md));
+    structure_3D_impl ret;
+    ret.schem = std::move(schem);
+    ret.map_color = map_color.cast<uint8_t>();
+    return ret;
+  } catch (const std::exception& e) {
+    fixed_opt.ui.report_error(SCL_errorFlag::MC_SCHEM_ERROR,
+                              SCLTranslator::tr("SlopeCraftL 内部错误：%1")
+                                  .arg(e.what())
+                                  .toStdString()
+                                  .c_str());
+    return std::nullopt;
   }
-
-  structure_3D_impl ret;
-  ret.schem = std::move(schem);
-  ret.map_color = map_color.cast<uint8_t>();
-  return ret;
 }
 
 bool structure_3D_impl::export_litematica(
@@ -484,121 +481,134 @@ bool structure_3D_impl::export_flat_diagram(
     const char* filename, const SlopeCraft::color_table& table_,
     const SlopeCraft::flag_diagram_options& option) const noexcept {
   const auto& table = dynamic_cast<const color_table_impl&>(table_);
-  if (table.map_type() != SCL_mapTypes::Flat) {
-    option.ui.report_error(
-        SCL_errorFlag::EXPORT_FLAT_DIAGRAM_ON_WRONG_MAP_TYPE,
-        SCLTranslator::tr(
-            "SlopeCraftL只能把平面地图画导出为平面示意图，但是遇到了%1")
-            .arg(magic_enum::enum_name(table.map_type()).data())
-            .toStdString()
-            .c_str()
-        // std::format(
-        //     "We can only export flat diagram for flat maps, but found {}",
-        //     magic_enum::enum_name(table.map_type())).c_str()
-    );
-    return false;
-  }
-  auto region = this->schem->get_region(0);
-  const libFlatDiagram::fd_option fdopt{
-    .row_start = 0,
-    .row_end = region->size_xyz<int64_t>()[2],
-    .cols = region->size_xyz<int64_t>()[0],
-    .split_line_row_margin = option.split_line_row_margin,
-    .split_line_col_margin = option.split_line_col_margin,
-    .png_compress_level = option.png_compress_level,
-    .png_compress_memory_level = option.png_compress_memory_level,
-  };
-
-  std::vector<Eigen::Array<uint32_t, 16, 16, Eigen::RowMajor>> img_list_rmj;
-  img_list_rmj.reserve(region->palette_size());
-
-  color_table_searching_index block_indexer;
-  {
-    auto indexer_opt =
-        dynamic_cast<const color_table_impl&>(table_).build_indexer();
-    if (not indexer_opt) {
-      option.ui.report_error(errorFlag::EXPORT_FLAT_DIAGRAM_FAILURE,
-                             SCLTranslator::tr("SlopeCraftL内部错误：%1")
-                                 .arg(indexer_opt.error().c_str())
-                                 .toStdString()
-                                 .c_str()
-                             // std::format("SlopeCraftL internal error. {}",
-                             // indexer_opt.error()).c_str()
+  try {
+    if (table.map_type() != SCL_mapTypes::Flat) {
+      option.ui.report_error(
+          SCL_errorFlag::EXPORT_FLAT_DIAGRAM_ON_WRONG_MAP_TYPE,
+          SCLTranslator::tr(
+              "SlopeCraftL只能把平面地图画导出为平面示意图，但是遇到了%1")
+              .arg(magic_enum::enum_name(table.map_type()).data())
+              .toStdString()
+              .c_str()
+          // std::format(
+          //     "We can only export flat diagram for flat maps, but found {}",
+          //     magic_enum::enum_name(table.map_type())).c_str()
       );
       return false;
     }
-    block_indexer = std::move(indexer_opt.value());
-  }
-  for (size_t pblkid = 0; pblkid < region->palette_size(); pblkid++) {
-    if (pblkid == 0) {  // air
-      img_list_rmj.emplace_back();
-      img_list_rmj[0].setZero();
-      continue;
-    }
-    std::string id =
-        region->palette(pblkid)->full_id();  // this->schem.palette()[pblkid];
-    const mc_block* blkp = block_indexer.find(id);
-    if (blkp == nullptr) {
-      std::string blkid_full;
-      blkid_full.reserve(64 * 2048);
-      for (const auto& blk : table.blocks) {
-        blkid_full += blk.id;
-        blkid_full.push_back('\n');
+    auto region = this->schem->get_region(0);
+    const libFlatDiagram::fd_option fdopt{
+      .row_start = 0,
+      .row_end = region->size_xyz<int64_t>()[2],
+      .cols = region->size_xyz<int64_t>()[0],
+      .split_line_row_margin = option.split_line_row_margin,
+      .split_line_col_margin = option.split_line_col_margin,
+      .png_compress_level = option.png_compress_level,
+      .png_compress_memory_level = option.png_compress_memory_level,
+    };
+
+    std::vector<Eigen::Array<uint32_t, 16, 16, Eigen::RowMajor>> img_list_rmj;
+    img_list_rmj.reserve(region->palette_size());
+
+    color_table_searching_index block_indexer;
+    {
+      auto indexer_opt =
+          dynamic_cast<const color_table_impl&>(table_).build_indexer();
+      if (not indexer_opt) {
+        option.ui.report_error(errorFlag::EXPORT_FLAT_DIAGRAM_FAILURE,
+                               SCLTranslator::tr("SlopeCraftL内部错误：%1")
+                                   .arg(indexer_opt.error().c_str())
+                                   .toStdString()
+                                   .c_str()
+                               // std::format("SlopeCraftL internal error. {}",
+                               // indexer_opt.error()).c_str()
+        );
+        return false;
       }
-      option.ui.report_error(
-          errorFlag::EXPORT_FLAT_DIAGRAM_FAILURE,
-          SCLTranslator::tr(
-              "SlopeCraftL内部错误。无法找到与方块%"
-              "1匹配的图像。3D结构中对应的方块索引为%2。整个方块列表如下：%3")
-              .arg(id.data())
-              .arg(pblkid)
-              .arg(blkid_full.c_str())
-              .toStdString()
-              .c_str());
+      block_indexer = std::move(indexer_opt.value());
+    }
+    for (size_t pblkid = 0; pblkid < region->palette_size(); pblkid++) {
+      if (pblkid == 0) {  // air
+        img_list_rmj.emplace_back();
+        img_list_rmj[0].setZero();
+        continue;
+      }
+      std::string id =
+          region->palette(pblkid)->full_id();  // this->schem.palette()[pblkid];
+      const mc_block* blkp = block_indexer.find(id);
+      if (blkp == nullptr) {
+        std::string blkid_full;
+        blkid_full.reserve(64 * 2048);
+        for (const auto& blk : table.blocks) {
+          blkid_full += blk.id;
+          blkid_full.push_back('\n');
+        }
+        option.ui.report_error(
+            errorFlag::EXPORT_FLAT_DIAGRAM_FAILURE,
+            SCLTranslator::tr(
+                "SlopeCraftL内部错误。无法找到与方块%"
+                "1匹配的图像。3D结构中对应的方块索引为%2。整个方块列表如下：%3")
+                .arg(id.data())
+                .arg(pblkid)
+                .arg(blkid_full.c_str())
+                .toStdString()
+                .c_str());
+        return false;
+      }
+
+      img_list_rmj.emplace_back(blkp->image);
+    }
+
+    auto block_at_callback =
+        [&img_list_rmj, region](
+            const int64_t r,
+            const int64_t c) -> libFlatDiagram::block_img_ref_t {
+      if (r < 0 or c < 0 or r >= region->size_xyz()[2] or
+          c >= region->size_xyz()[0]) {  // out of range
+        return libFlatDiagram::block_img_ref_t{img_list_rmj.at(0).data()};
+      }
+
+      const auto ele = region
+                           ->block_index_at({static_cast<int32_t>(c), 0,
+                                             static_cast<int32_t>(r)})
+                           .value();  // this->schem(c, 0, r);
+      assert(ele >= 0 and ele < static_cast<ptrdiff_t>(region->palette_size()));
+
+      return libFlatDiagram::block_img_ref_t{img_list_rmj.at(ele).data()};
+    };
+
+    std::array<std::pair<std::string, std::string>, 4> txt{
+      std::make_pair<std::string, std::string>(
+          "Title", "Flat diagram generated by SlopeCraftL."),
+      std::make_pair<std::string, std::string>("Software", "SlopeCraftL"),
+      std::make_pair<std::string, std::string>(
+          "Description",
+          "This image is a flat diagram created by SlopeCraftL, which is is "
+          "a subproject of SlopeCraft, developed by TokiNoBug."),
+      std::make_pair<std::string, std::string>(
+          "Comment",
+          "SlopeCraft is a free software published "
+          "under GPLv3 license. You can find "
+          "its repository at https://github.com/SlopeCraft/SlopeCraft")};
+
+    auto err = libFlatDiagram::export_flat_diagram(filename, fdopt,
+                                                   block_at_callback, txt);
+    if (not err.empty()) {
+      option.ui.report_error(errorFlag::EXPORT_FLAT_DIAGRAM_FAILURE,
+                             err.c_str());
       return false;
     }
+    return true;
+  } catch (const std::exception& e) {
+    option.ui.report_error(
+        errorFlag::MC_SCHEM_ERROR, SCLTranslator::tr("SlopeCraftL 内部错误：%1")
+                                       .arg(e.what())
+                                       .toStdString()
+                                       .c_str()
 
-    img_list_rmj.emplace_back(blkp->image);
-  }
-
-  auto block_at_callback =
-      [&img_list_rmj, region](
-          const int64_t r, const int64_t c) -> libFlatDiagram::block_img_ref_t {
-    if (r < 0 or c < 0 or r >= region->size_xyz()[2] or
-        c >= region->size_xyz()[0]) {  // out of range
-      return libFlatDiagram::block_img_ref_t{img_list_rmj.at(0).data()};
-    }
-
-    const auto ele = region
-                         ->block_index_at({static_cast<int32_t>(c), 0,
-                                           static_cast<int32_t>(r)})
-                         .value();  // this->schem(c, 0, r);
-    assert(ele >= 0 and ele < static_cast<ptrdiff_t>(region->palette_size()));
-
-    return libFlatDiagram::block_img_ref_t{img_list_rmj.at(ele).data()};
-  };
-
-  std::array<std::pair<std::string, std::string>, 4> txt{
-    std::make_pair<std::string, std::string>(
-        "Title", "Flat diagram generated by SlopeCraftL."),
-    std::make_pair<std::string, std::string>("Software", "SlopeCraftL"),
-    std::make_pair<std::string, std::string>(
-        "Description",
-        "This image is a flat diagram created by SlopeCraftL, which is is "
-        "a subproject of SlopeCraft, developed by TokiNoBug."),
-    std::make_pair<std::string, std::string>(
-        "Comment",
-        "SlopeCraft is a free software published "
-        "under GPLv3 license. You can find "
-        "its repository at https://github.com/SlopeCraft/SlopeCraft")};
-
-  auto err = libFlatDiagram::export_flat_diagram(filename, fdopt,
-                                                 block_at_callback, txt);
-  if (not err.empty()) {
-    option.ui.report_error(errorFlag::EXPORT_FLAT_DIAGRAM_FAILURE, err.c_str());
+    );
     return false;
   }
-  return true;
 }
 
 uint64_t structure_3D_impl::block_count() const noexcept {

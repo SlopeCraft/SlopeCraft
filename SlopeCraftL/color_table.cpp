@@ -204,9 +204,20 @@ void color_table_impl::stat_blocks(const structure_3D& s,
   const mc_schem::region* region = structure.schem->get_region(0);
 
   const auto [schem_stat, _] = region->stat_blocks();
-
-  assert(schem_stat.size() == structure.palette_length());
-  const auto self_blocks = this->block_id_list(false);
+  std::vector<mc_schem::unique_block> self_blocks;
+  try {
+    assert(schem_stat.size() == structure.palette_length());
+    self_blocks = this->block_id_list(false);
+  } catch (...) {
+    // Actually this error is rare. Block reparsing error shouldn't happen
+    // logically. No good way to proceed, just fill with 0 and exit
+    std::fill_n(buffer, 64, 0);
+    assert(
+        ("Logical impossible error: some block id passed mc_schem parsing but "
+         "retry failed.",
+         false));
+    return;
+  }
 
   std::vector<uint16_t> schem_stat_hit_counter [[maybe_unused]];
   schem_stat_hit_counter.resize(schem_stat.size(), 0);
@@ -348,20 +359,23 @@ std::string color_table_impl::impl_generate_test_schematic(
 
 std::expected<color_table_searching_index, std::string>
 color_table_impl::build_indexer() const noexcept {
-  color_table_searching_index indexer;
-  for (const auto& blk : this->blocks) {
-    auto info_opt = blk.detail_info(this->mc_version());
-    if (not info_opt) {
-      return std::unexpected{
-        SCLTranslator::tr("遇到无效方块id \"%1\"")
-            .arg(blk.idForVersion(this->mc_version()))
-            .toStdString(),
-      };
+  try {
+    color_table_searching_index indexer;
+    for (const auto& blk : this->blocks) {
+      auto info_opt = blk.detail_info(this->mc_version());
+      if (not info_opt) {
+        return std::unexpected{
+          SCLTranslator::tr("遇到无效方块id \"%1\"")
+              .arg(blk.idForVersion(this->mc_version()))
+              .toStdString(),
+        };
+      }
+      indexer.block_LUT.emplace(info_opt.value(), &blk);
     }
-    indexer.block_LUT.emplace(info_opt.value(), &blk);
+    return indexer;
+  } catch (const std::exception& e) {
+    return std::unexpected{e.what()};
   }
-
-  return indexer;
 }
 
 const mc_block* color_table_searching_index::find(
