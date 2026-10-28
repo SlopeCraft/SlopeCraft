@@ -21,10 +21,10 @@ using mc_schem::unique_schematic;
 using mc_schem::unwrap;
 
 struct time_logger {
-  std::chrono::time_point<std::chrono::steady_clock> begin;
+  std::chrono::time_point<std::chrono::high_resolution_clock> begin;
 
-  std::vector<std::pair<std::string,
-                        std::chrono::time_point<std::chrono::steady_clock>>>
+  std::vector<std::pair<
+      std::string, std::chrono::time_point<std::chrono::high_resolution_clock>>>
       logs{};
 
   time_logger() : begin{std::chrono::high_resolution_clock::now()} {}
@@ -34,8 +34,8 @@ struct time_logger {
   }
 
   void dump(std::ostream& os) const& {
-    const std::chrono::time_point<std::chrono::steady_clock>* previous_time =
-        &begin;
+    const std::chrono::time_point<std::chrono::high_resolution_clock>*
+        previous_time = &begin;
 
     for (const auto& [name, time] : logs) {
       const auto duration =
