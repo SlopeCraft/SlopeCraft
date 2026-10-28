@@ -60,7 +60,9 @@ target_link_libraries(MapViewer
     ZLIB::ZLIB
     Qt6::Widgets
     OpenMP::OpenMP_CXX
-    Eigen3::Eigen)
+    Eigen3::Eigen
+    nbt++
+)
 target_compile_features(MapViewer PRIVATE cxx_std_23)
 
 set_target_properties(MapViewer PROPERTIES

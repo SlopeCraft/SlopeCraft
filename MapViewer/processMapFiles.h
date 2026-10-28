@@ -23,19 +23,16 @@ This file is part of SlopeCraft.
 #ifndef PROCESSMAPFILES_H
 #define PROCESSMAPFILES_H
 
-#include <Eigen/Dense>
-#include <stdint.h>
+#include <cstdint>
 #include <string>
 #include <vector>
+#include <expected>
 
-// bool uncompress_map_file(const char * filename,std::vector<uint8_t>*const
-// dest);
+#include <Eigen/Dense>
+#include <QString>
 
-// const uint8_t * find_color_begin(const std::vector<uint8_t>&inflated);
-
-bool process_map_file(
-    const char* filename,
-    Eigen::Array<uint8_t, 128, 128, Eigen::RowMajor>* const dest,
-    std::string* const error_info);
+std::expected<std::unique_ptr<Eigen::Array<uint8_t, 128, 128, Eigen::RowMajor>>,
+              QString>
+load_map_file(const std::string& filename) noexcept;
 
 #endif  // PROCESSMAPFILES_H

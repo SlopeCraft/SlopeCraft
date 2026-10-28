@@ -522,8 +522,8 @@ void MapViewerWind::render_composed() {
 }
 
 void MapViewerWind::on_button_load_maps_clicked() {
-  QStringList filenames = QFileDialog::getOpenFileNames(
-      this, tr("选择地图数据文件"), "", "*.dat");
+  QStringList filenames =
+      QFileDialog::getOpenFileNames(this, tr("选择地图数据文件"), "", "*.dat");
   if (filenames.size() <= 0) {
     return;
   }
@@ -532,47 +532,24 @@ void MapViewerWind::on_button_load_maps_clicked() {
   this->maps.clear();
   this->maps.resize(filenames.size());
 
-  std::list<std::pair<QString, std::string>> error_list;
-  std::mutex lock;
-
-#pragma omp parallel for schedule(static)
   for (int idx = 0; idx < filenames.size(); idx++) {
-    std::string error_info;
-    if (!process_map_file(filenames[idx].toLocal8Bit().data(),
-                          (this->maps[idx].map_content).get(), &error_info)) {
-      lock.lock();
-
-      error_list.emplace_back(filenames[idx], error_info);
-
-      this->maps[idx].filename = "";
-
-      lock.unlock();
-    } else {
-      const int last_idx_of_reverse_slash = filenames[idx].lastIndexOf('\\');
-      const int last_idx_of_slash = filenames[idx].lastIndexOf('/');
-      const int last_idx_of_seperator =
-          std::max(last_idx_of_reverse_slash, last_idx_of_slash);
-
-      const int basename_length =
-          filenames[idx].length() - last_idx_of_seperator - 1;
-
-      this->maps[idx].filename = filenames[idx].last(basename_length);
-    }
-  }
-
-  for (const auto& error : error_list) {
-    QMessageBox::StandardButton user_clicked = QMessageBox::warning(
-        this, tr("加载地图文件失败"),
-        tr("出错的文件：") + error.first + tr("\n错误信息：\n") +
-            QString::fromLocal8Bit(error.second.data()),
-        {QMessageBox::StandardButton::Ignore,
-         QMessageBox::StandardButton::NoToAll},
-        QMessageBox::StandardButton::Ignore);
-    if (user_clicked == QMessageBox::StandardButton::Ignore) {
-      continue;
-    } else {
+    auto result = load_map_file(filenames[idx].toLocal8Bit().data());
+    if (not result) {
+      QMessageBox::StandardButton user_clicked = QMessageBox::warning(
+          this, tr("加载地图文件失败"),
+          tr("加载%1时遇到错误：%2").arg(filenames[idx]).arg(result.error()),
+          {QMessageBox::StandardButton::Ignore,
+           QMessageBox::StandardButton::NoToAll},
+          QMessageBox::StandardButton::Ignore);
+      if (user_clicked == QMessageBox::StandardButton::Ignore) {
+        continue;
+      }
       break;
     }
+
+    this->maps[idx].map_content = std::move(result.value());
+
+    this->maps[idx].filename = QFileInfo{filenames[idx]}.fileName();
   }
 
   for (auto it = this->maps.begin(); it != this->maps.end();) {
@@ -583,8 +560,8 @@ void MapViewerWind::on_button_load_maps_clicked() {
     }
   }
 
-#pragma omp parallel for schedule(static)
-  for (int idx = 0; idx < (int)this->maps.size(); idx++) {
+  // #pragma omp parallel for schedule(static)
+  for (size_t idx = 0; idx < this->maps.size(); idx++) {
     auto& map = this->maps[idx];
     map.image = QImage(128, 128, QImage::Format::Format_ARGB32);
     Eigen::Map<Eigen::Array<ARGB, 128, 128, Eigen::RowMajor>> image_map(
