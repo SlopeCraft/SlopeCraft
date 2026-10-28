@@ -63,10 +63,7 @@ inline std::optional<version_set> parse_version_set(
     for (const auto& val : ja) {
       const auto version_opt = MCDataVersion::parse_version_from_njson(val);
       if (not version_opt) {
-        const auto msg =
-            std::format("{} is not a valid major game version", val.dump());
-        VCL_report(VCL_report_type_t::error, msg.c_str());
-        return std::nullopt;
+        continue;
       }
       const SCL_gameVersion v = version_opt.value();
 
