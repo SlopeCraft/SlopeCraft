@@ -823,6 +823,13 @@ void SCWind::on_ac_about_triggered() noexcept {
 }
 
 void SCWind::on_ac_get_current_colorlist_triggered() noexcept {
+  const auto* color_table = this->current_color_table();
+  if (color_table == nullptr) {
+    QMessageBox::warning(this, tr("没有可用颜色"),
+                         tr("请先选择可用颜色，再导出颜色表。"));
+    return;
+  }
+
   constexpr int basecolors_per_row = 4;
   constexpr int basecolors_per_col = 16;
 
@@ -860,7 +867,7 @@ void SCWind::on_ac_get_current_colorlist_triggered() noexcept {
 */
   //  uint32_t argb_colors[256];
   //  uint8_t map_colors[256];
-  const auto color_ptrs = this->current_color_table()->colors();
+  const auto color_ptrs = color_table->colors();
   const int available_colors = color_ptrs.num_colors;
 
   for (int cidx = 0; cidx < available_colors; cidx++) {
