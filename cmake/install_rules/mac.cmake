@@ -148,8 +148,13 @@ set(vc_config_file_location ${PROJECT_BINARY_DIR}/VisualCraft/vc-config-install.
 set(vccl_config_file_location ${PROJECT_BINARY_DIR}/vccl/vccl-config-install.json)
 configure_file(${PROJECT_SOURCE_DIR}/VisualCraft/vc-config-install.json.in ${vc_config_file_location})
 configure_file(${PROJECT_SOURCE_DIR}/vccl/vccl-config-install.json.in ${vccl_config_file_location})
-install(FILES ${vc_config_file_location} ${vccl_config_file_location}
+install(FILES ${vc_config_file_location}
     DESTINATION VisualCraft.app/Contents/Resources
+    RENAME vc-config.json
+)
+install(FILES ${vccl_config_file_location}
+    DESTINATION VisualCraft.app/Contents/Resources
+    RENAME vccl-config.json
 )
 qt6_generate_deploy_app_script(
     TARGET VisualCraft
