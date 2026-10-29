@@ -23,6 +23,7 @@ This file is part of SlopeCraft.
 #include <QFileDialog>
 #include <QFont>
 #include <QMessageBox>
+#include <QImageWriter>
 #include <QPainter>
 #include <QPen>
 #include <iostream>
@@ -580,6 +581,30 @@ void MapViewerWind::on_checkbox_composed_show_spacing_toggled(bool is_checked) {
   ui->grid_layout_compose_maps->setVerticalSpacing(spacing);
 }
 
+namespace {
+QString image_save_filter() {
+  const auto supported = QImageWriter::supportedImageFormats();
+  QStringList filters;
+  for (const QByteArray format : {QByteArray{"png"}, QByteArray{"jpg"},
+                                 QByteArray{"gif"}}) {
+    if (supported.contains(format)) {
+      filters.append(QStringLiteral("*.%1").arg(QString::fromLatin1(format)));
+    }
+  }
+  return filters.join(";;");
+}
+
+void save_image_with_feedback(QWidget* parent, const QImage& image,
+                              const QString& filename) {
+  QImageWriter writer{filename};
+  if (!writer.write(image)) {
+    QMessageBox::warning(parent, MapViewerWind::tr("保存图片失败"),
+                         MapViewerWind::tr("无法保存图片 %1。\n%2")
+                             .arg(filename, writer.errorString()));
+  }
+}
+}  // namespace
+
 void MapViewerWind::on_button_save_single_clicked() {
   if (this->maps.size() <= 0) return;
 
@@ -590,20 +615,20 @@ void MapViewerWind::on_button_save_single_clicked() {
   QPixmap pixmap = ui->label_show_single_map->pixmap();
 
   const QString dest = QFileDialog::getSaveFileName(this, tr("保存为图片"), "",
-                                                    "*.png;;*.jpg;;*.gif");
+                                                    image_save_filter());
 
   if (dest.isEmpty()) {
     return;
   }
 
-  pixmap.save(dest);
+  save_image_with_feedback(this, pixmap.toImage(), dest);
 }
 
 void MapViewerWind::on_button_save_composed_clicked() {
   if (this->maps.size() <= 0) return;
 
   const QString dest = QFileDialog::getSaveFileName(this, tr("保存为图片"), "",
-                                                    "*.png;;*.jpg;;*.gif");
+                                                    image_save_filter());
   if (dest.isEmpty()) return;
 
   const int map_rows = ui->spinbox_rows->value();
@@ -642,5 +667,5 @@ void MapViewerWind::on_button_save_composed_clicked() {
     emap_result.block<128, 128>(128 * map_r, 128 * map_c) = emap_qimg;
   }
 
-  result.save(dest);
+  save_image_with_feedback(this, result, dest);
 }

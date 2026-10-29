@@ -152,5 +152,15 @@
 Error details:
 </translation>
     </message>
+    <message>
+        <source>保存图片失败</source>
+        <translation>Failed to save image</translation>
+    </message>
+    <message>
+        <source>无法保存图片 %1。
+%2</source>
+        <translation>Could not save image %1.
+%2</translation>
+    </message>
 </context>
 </TS>
