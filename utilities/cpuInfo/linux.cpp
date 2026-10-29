@@ -2,41 +2,33 @@
 // Created by Joseph on 2026/10/28.
 //
 #include <QList>
-#include <QProcess>
+#include <QRegularExpression>
+#include <QFile>
 
 #include "cpu_info.h"
 std::optional<QString> get_cpu_name() noexcept {
-  QProcess proc{nullptr};
-  const auto command =
-      QStringLiteral("sh -c \"cat /proc/cpuinfo | grep name\"");
+  QFile file("/proc/cpuinfo");
 
-  proc.start(command);
-  if (!proc.waitForStarted()) {
-    return std::nullopt;
-  }
-  if (!proc.waitForFinished()) {
+  if (not file.open(QIODevice::ReadOnly | QIODevice::Text)) {
     return std::nullopt;
   }
 
-  QString output = QString::fromUtf8(proc.readAllStandardOutput());
+  const auto lines = QString::fromUtf8(file.readAll()).split('\n');
+  // Expect cpu name contains whitespace and non-empty chars
+  const QRegularExpression cpu_re(R"(^model name[\s]*:[\s]*([\S ]+)[\s]*$)");
+  assert(cpu_re.isValid());
+  if (not cpu_re.isValid()) {
+    return std::nullopt;
+  }
 
-  output.remove('\t');
+  for (const auto &line : lines) {
+    auto match = cpu_re.match(line);
+    if (not match.hasMatch()) {
+      continue;
+    }
 
-  auto spilitted = output.split('\n');
-  if (spilitted.size() <= 0) {
-    return std::nullopt;
+    return match.captured(1);
   }
-  const auto line0 = spilitted[0];
-  if (!line0.contains(':')) {
-    return std::nullopt;
-  }
-  auto line0_splitted = line0.split(':');
-  if (line0_splitted.size() != 2) {
-    return std::nullopt;
-  }
-  if (line0_splitted[0].remove(' ') != "modelname") {
-    return std::nullopt;
-  }
-  const auto cpu_name = line0_splitted[1];
-  return cpu_name;
+
+  return std::nullopt;
 }
