@@ -9,7 +9,7 @@ else ()
 endif ()
 
 if (NOT TARGET Boost::multi_array)
-    message(WARNING "find_package failed to find Boost::multi_array, trying to find its headers manually...")
+    message(STATUS "find_package failed to find Boost::multi_array, trying to find its headers manually...")
     set(hints)
     foreach (prefix ${CMAKE_PREFIX_PATH})
         list(APPEND hints "${prefix}/include/boost/multi_array.hpp")
