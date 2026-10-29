@@ -92,6 +92,8 @@ class MapViewerWind : public QMainWindow {
   std::vector<std::unique_ptr<QLabel>> labels;
 
  private:
+  void clear_views();
+
  private slots:
   void update_contents();
   void reshape_tables();

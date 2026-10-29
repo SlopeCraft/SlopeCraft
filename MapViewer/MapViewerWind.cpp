@@ -206,7 +206,7 @@ void MapViewerWind::reshape_tables() {
   const int cols = ui->spinbox_cols->value();
   const bool is_col_major = ui->radio_is_col_major->isChecked();
 
-  this->clear_all();
+  this->clear_views();
 
   ui->table_display_filename->setRowCount(rows);
   ui->table_display_filename->setColumnCount(cols);
@@ -243,6 +243,12 @@ void MapViewerWind::reshape_tables() {
 }
 
 void MapViewerWind::clear_all() {
+  this->clear_views();
+  this->maps.clear();
+  this->labels.clear();
+}
+
+void MapViewerWind::clear_views() {
   ui->table_display_filename->clearContents();
   ui->combobox_select_map->clear();
   ui->label_show_single_map->setPixmap(QPixmap());
@@ -528,7 +534,7 @@ void MapViewerWind::on_button_load_maps_clicked() {
     return;
   }
 
-  this->clear_all();
+  this->clear_views();
   this->maps.clear();
   this->maps.resize(filenames.size());
 
