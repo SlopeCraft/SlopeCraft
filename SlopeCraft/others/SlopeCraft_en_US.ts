@@ -1633,6 +1633,10 @@ Details:
         <translation>An error occured when saving test file %1. Details:
 %2</translation>
     </message>
+    <message>
+        <source>请先选择可用颜色，再导出颜色表。</source>
+        <translation>Select available colors before exporting the palette.</translation>
+    </message>
 </context>
 <context>
     <name>TransparentStrategyWind</name>
