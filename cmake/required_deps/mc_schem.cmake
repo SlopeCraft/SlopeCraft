@@ -9,8 +9,8 @@ if (NOT mc_schem_FOUND)
     set(MC_SCHEM_ENABLE_TESTS OFF)
     message(STATUS "Failed to find mc_schem. Downloading...")
     FetchContent_Declare(mc_schem
-        GIT_REPOSITORY https://github.com/SlopeCraft/mc_schem
-        GIT_TAG da8d5e6977ef9c0b9a0dc7921180ab7003940342 # after v1.3.2
+        URL https://github.com/SlopeCraft/mc_schem/archive/refs/tags/v1.4.0.tar.gz
+        URL_HASH SHA256=32597f032335be157f6cba5f7a2dff0ada046492998d796807b66460f55d30c3
         OVERRIDE_FIND_PACKAGE
         EXCLUDE_FROM_ALL
     )
