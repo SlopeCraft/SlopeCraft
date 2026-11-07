@@ -20,7 +20,7 @@ VS_VERSION_INFO VERSIONINFO
 			BLOCK "000404b0"
 			BEGIN
 				VALUE "CompanyName", "\0"
-				VALUE "FileDescription", "VisualCraft Commandline Tool\0"
+				VALUE "FileDescription", "SlopeCraft Commandline Tool\0"
 				VALUE "FileVersion", "@sccl_VERSION@.0\0"
 				VALUE "LegalCopyright", "TokiNoBug\0"
 				VALUE "OriginalFilename", "sccl.exe\0"
