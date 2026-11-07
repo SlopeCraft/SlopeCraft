@@ -843,44 +843,44 @@ If you select a block in &quot;Avaliable blocks&quot; page, the other page will 
         <translation>The great amount of colors makes GPU accleration necessary. Now OpenCL is supported, and %1 is what currently being used.</translation>
     </message>
     <message>
-        <location filename="../VCWind_gpu.cpp" line="145"/>
+        <location filename="../VCWind_gpu.cpp" line="62"/>
         <source>可用的计算设备（CPU + %1可用的显卡）</source>
         <translation>Avaliable compute devices (CPU + %1-avaliable-GPUs)</translation>
     </message>
     <message>
-        <location filename="../VCWind_gpu.cpp" line="156"/>
+        <location filename="../VCWind_gpu.cpp" line="73"/>
         <source>无法获取 platform 信息。请检查驱动。%1 错误码：%2.</source>
         <translation>Failed to get platform info. Please check GPU driver. %1 error code: %2.</translation>
     </message>
     <message>
-        <location filename="../VCWind_gpu.cpp" line="180"/>
+        <location filename="../VCWind_gpu.cpp" line="97"/>
         <source>无法获取 device 信息。请检查驱动。错误码：%1</source>
         <translation>Failed to get device info. Please check GPU driver. Error code: %1</translation>
     </message>
     <message>
-        <location filename="../VCWind_gpu.cpp" line="238"/>
+        <location filename="../VCWind_gpu.cpp" line="155"/>
         <source>这不是一个致命错误，您可以选择其他的显卡，或者只使用 CPU 计算。点击 Ignore 将忽略这个错误，点击 Close 将关闭 VisualCraft</source>
         <translation>This is not a fatal error, you can use other GPUs or your CPU instead. Click Ignore will ignore this error, or click Close to close VisualCraft</translation>
     </message>
     <message>
-        <location filename="../VCWind_gpu.cpp" line="267"/>
+        <location filename="../VCWind_gpu.cpp" line="184"/>
         <source>创建 GPU 平台失败，平台序号为%1，设备序号为%2</source>
         <translation>Failed to create GPU platform, Platform index = %1, device index = %2</translation>
     </message>
     <message>
-        <location filename="../VCWind_gpu.cpp" line="274"/>
+        <location filename="../VCWind_gpu.cpp" line="191"/>
         <source>创建 GPU 设备失败，平台序号为%1，设备序号为%2</source>
         <translation>Failed to create GPU device, Platform index = %1, device index = %2</translation>
     </message>
     <message>
-        <location filename="../VCWind_gpu.cpp" line="289"/>
+        <location filename="../VCWind_gpu.cpp" line="206"/>
         <source>设置 GPU 设备失败。平台序号为%1，设备序号为%2，详细错误信息：
 %3</source>
         <translation>Failed to set GPU device. Platform index = %1, device index = %2, detailed information:
 %3</translation>
     </message>
     <message>
-        <location filename="../VCWind_gpu.cpp" line="236"/>
+        <location filename="../VCWind_gpu.cpp" line="153"/>
         <source>设置计算设备失败</source>
         <translation>Failed to set compute device</translation>
     </message>

@@ -4,15 +4,15 @@
 <context>
     <name>SlopeCraft::SCLTranslator</name>
     <message>
-        <location filename="../color_table.cpp" line="121"/>
+        <location filename="../color_table.cpp" line="123"/>
         <source>SlopeCraftL可用颜色过少：仅仅%1种。
 可用的基色：%2</source>
         <translation>Too few colors for SlopeCraftL: only %1 color(s).
 Avaibale base colors: %2</translation>
     </message>
     <message>
-        <location filename="../color_table.cpp" line="332"/>
-        <location filename="../color_table.cpp" line="338"/>
+        <location filename="../color_table.cpp" line="345"/>
+        <location filename="../color_table.cpp" line="351"/>
         <source>导出结构方块文件%1失败，：%2</source>
         <translation>Failed to export vanilla structure file %1 due to: %2</translation>
     </message>
@@ -25,7 +25,7 @@ Avaibale base colors: %2</translation>
         <translation type="vanished">Caught exception: %1</translation>
     </message>
     <message>
-        <location filename="../color_table.cpp" line="251"/>
+        <location filename="../color_table.cpp" line="264"/>
         <source>文件名必须以 *.nbt 结尾</source>
         <translation>File name should end with &quot;.nbt&quot;</translation>
     </message>
@@ -34,7 +34,7 @@ Avaibale base colors: %2</translation>
         <translation type="vanished">Failed to export structure file %1, error code = %2, detail: %3</translation>
     </message>
     <message>
-        <location filename="../color_table.cpp" line="354"/>
+        <location filename="../color_table.cpp" line="368"/>
         <source>遇到无效方块id &quot;%1&quot;</source>
         <translation>Found invalid block id &quot;%1&quot;</translation>
     </message>
@@ -44,39 +44,41 @@ Avaibale base colors: %2</translation>
         <translation>SCL_create_block_list_from_buffer met invalid value, either buffer is nullptr or buffer size is 0</translation>
     </message>
     <message>
-        <location filename="../structure_3D.cpp" line="28"/>
+        <location filename="../structure_3D.cpp" line="58"/>
         <source>允许最大高度应该不低于14，但是遇到了%1</source>
         <translation>Max allowed height should be &gt;= 14, but found %1</translation>
     </message>
     <message>
-        <location filename="../structure_3D.cpp" line="49"/>
+        <location filename="../structure_3D.cpp" line="80"/>
         <source>创建区域失败：%1</source>
         <translation>Failed to create region: %1</translation>
     </message>
     <message>
-        <location filename="../structure_3D.cpp" line="110"/>
+        <location filename="../structure_3D.cpp" line="138"/>
         <source>分配内存失败，需要%1GiB。详情：&quot;%2&quot;</source>
         <translation>Failed to allocate memory for this structure, required %1 GiB. The exception says: &quot;%2&quot;</translation>
     </message>
     <message>
-        <location filename="../structure_3D.cpp" line="298"/>
+        <location filename="../structure_3D.cpp" line="325"/>
         <source>SlopeCraftL精简方块表时遇到内部错误：%1</source>
         <translation>Internal error when SlopeCraftL tries to shrink palette: %1</translation>
     </message>
     <message>
-        <location filename="../structure_3D.cpp" line="353"/>
+        <location filename="../structure_3D.cpp" line="341"/>
+        <location filename="../structure_3D.cpp" line="388"/>
+        <location filename="../structure_3D.cpp" line="604"/>
         <source>SlopeCraftL 内部错误：%1</source>
         <translation>SlopeCraft internal error: %1</translation>
     </message>
     <message>
-        <location filename="../structure_3D.cpp" line="375"/>
+        <location filename="../structure_3D.cpp" line="365"/>
         <source>SlopeCraftL 内部错误：mc_schem不支持数据版本%1</source>
         <translation>SlopeCraft internal error: mc_schem doesn&apos;t support data version %1</translation>
     </message>
     <message>
-        <location filename="../structure_3D.cpp" line="411"/>
-        <location filename="../structure_3D.cpp" line="437"/>
-        <location filename="../structure_3D.cpp" line="468"/>
+        <location filename="../structure_3D.cpp" line="410"/>
+        <location filename="../structure_3D.cpp" line="436"/>
+        <location filename="../structure_3D.cpp" line="467"/>
         <source>导出%1失败：%2</source>
         <translation>Failed to export %1 because: %2</translation>
     </message>
@@ -86,7 +88,7 @@ Avaibale base colors: %2</translation>
         <translation>SlopeCraftL can only export flat diagram for flat maps, but found %1</translation>
     </message>
     <message>
-        <location filename="../color_table.cpp" line="294"/>
+        <location filename="../color_table.cpp" line="307"/>
         <location filename="../structure_3D.cpp" line="519"/>
         <source>SlopeCraftL内部错误：%1</source>
         <translation>SlopeCraftL internal error: %1</translation>

@@ -1286,8 +1286,8 @@ Click Ignore to skip this image, and Cancel to cancel.</translation>
     </message>
     <message>
         <location filename="../SCWind_slots.cpp" line="671"/>
-        <location filename="../SCWind_slots.cpp" line="970"/>
-        <location filename="../SCWind_slots.cpp" line="1027"/>
+        <location filename="../SCWind_slots.cpp" line="977"/>
+        <location filename="../SCWind_slots.cpp" line="1034"/>
         <source>设置导出位置</source>
         <translation>Set export directory</translation>
     </message>
@@ -1361,49 +1361,49 @@ Click Ignore to skip, Retry to retry and Cancel to cancel</translation>
         <translation>Copyright © 2021-2026 SlopeCraft Developers (TokiNoBug, AbrasiveBoar, iXOR Technology, Mifan-T, and contributors). All rights reserved.</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="938"/>
+        <location filename="../SCWind_slots.cpp" line="945"/>
         <source>同时选中多个图片时，不显示 /give 命令。如果想预览导出的命令，请只选择一个图片。</source>
         <translation>Can&apos;t show /give command when you selecte multiple images. To view the command, select one image only.</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="997"/>
+        <location filename="../SCWind_slots.cpp" line="1004"/>
         <source>无法为 %1 生成命令：%2
 </source>
         <translation>Failed to generate command for %1: %2
 </translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="1006"/>
+        <location filename="../SCWind_slots.cpp" line="1013"/>
         <source>无法创建/打开文件 %1：%2
 </source>
         <translation>Failed to create/open file %1: %2
 </translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="1013"/>
+        <location filename="../SCWind_slots.cpp" line="1020"/>
         <source>无法写入文件 %1：%2
 </source>
         <translation>Failed to write file %1: %2
 </translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="1019"/>
-        <location filename="../SCWind_slots.cpp" line="1100"/>
+        <location filename="../SCWind_slots.cpp" line="1026"/>
+        <location filename="../SCWind_slots.cpp" line="1107"/>
         <source>%1 个文件保存失败</source>
         <translation>Failed to save %1 file(s)</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="1067"/>
+        <location filename="../SCWind_slots.cpp" line="1074"/>
         <source>SlopeCraftL 未提供详细报错信息。</source>
         <translation>SlopeCraftL doesn&apos;t give further details.</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="1070"/>
+        <location filename="../SCWind_slots.cpp" line="1077"/>
         <source>错误码：%1，详情：%2</source>
         <translation>Error code: %1, details: %2</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="1094"/>
+        <location filename="../SCWind_slots.cpp" line="1101"/>
         <source>%1 生成失败，%2
 </source>
         <translation>Failed to generate %1, %2
@@ -1446,48 +1446,49 @@ Click Ignore to skip, Retry to retry and Cancel to cancel</translation>
 Since they are not essential, you can ignore this error and go on.</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="1113"/>
+        <location filename="../SCWind_slots.cpp" line="1120"/>
         <source>墙面</source>
         <translation>Wall</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="1113"/>
+        <location filename="../SCWind_slots.cpp" line="1120"/>
         <source>顶面</source>
         <translation>Top</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="1113"/>
+        <location filename="../SCWind_slots.cpp" line="1120"/>
         <source>底面</source>
         <translation>Bottom</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="1114"/>
+        <location filename="../SCWind_slots.cpp" line="1121"/>
         <source>北</source>
         <translation>north</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="1114"/>
+        <location filename="../SCWind_slots.cpp" line="1121"/>
         <source>南</source>
         <translation>south</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="1114"/>
+        <location filename="../SCWind_slots.cpp" line="1121"/>
         <source>东</source>
         <translation>east</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="1114"/>
+        <location filename="../SCWind_slots.cpp" line="1121"/>
         <source>西</source>
         <translation>west</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="1117"/>
+        <location filename="../SCWind_slots.cpp" line="1124"/>
         <source>%1，向%2</source>
         <translation>%1, %2</translation>
     </message>
     <message>
         <location filename="../SCWind.cpp" line="739"/>
         <location filename="../SCWind_slots.cpp" line="519"/>
+        <location filename="../SCWind_slots.cpp" line="828"/>
         <source>没有可用颜色</source>
         <translation>No available color</translation>
     </message>
@@ -1596,44 +1597,45 @@ Details:
         <translation type="vanished">Failed to query system memory usage</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="837"/>
+        <location filename="../SCWind_slots.cpp" line="844"/>
         <source>保存颜色表</source>
         <translation>Save palette</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="848"/>
-        <location filename="../SCWind_slots.cpp" line="884"/>
+        <location filename="../SCWind_slots.cpp" line="855"/>
+        <location filename="../SCWind_slots.cpp" line="891"/>
         <source>保存颜色表失败</source>
         <translation>Failed to save colormap image</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="848"/>
+        <location filename="../SCWind_slots.cpp" line="855"/>
         <source>分配内存失败</source>
         <translation>Failed to allocate memory for image</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="885"/>
+        <location filename="../SCWind_slots.cpp" line="892"/>
         <source>无法生成文件 %1</source>
         <translation>Failed to generate %1</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="892"/>
+        <location filename="../SCWind_slots.cpp" line="899"/>
         <source>保存测试文件</source>
         <translation>Save testing file</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="925"/>
+        <location filename="../SCWind_slots.cpp" line="932"/>
         <source>输出测试文件失败</source>
         <translation>Failed to save testing file</translation>
     </message>
     <message>
-        <location filename="../SCWind_slots.cpp" line="926"/>
+        <location filename="../SCWind_slots.cpp" line="933"/>
         <source>保存测试文件 %1 时出现错误。详细信息：
 %2</source>
         <translation>An error occured when saving test file %1. Details:
 %2</translation>
     </message>
     <message>
+        <location filename="../SCWind_slots.cpp" line="829"/>
         <source>请先选择可用颜色，再导出颜色表。</source>
         <translation>Select available colors before exporting the palette.</translation>
     </message>
