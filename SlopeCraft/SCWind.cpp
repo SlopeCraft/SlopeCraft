@@ -564,15 +564,20 @@ void SCWind::when_type_buttons_toggled(bool checked) noexcept {
   this->when_blocklist_changed();
   this->update_button_states();
   {
+    bool valid_checked = false;
     auto valid_buttons = this->valid_export_type_buttons(this->selected_type());
     for (auto btnp : valid_buttons) {
       if (btnp->isChecked()) {
-        return;
+        valid_checked = true;
+        break;
       }
     }
-    valid_buttons[0]->click();
+    if (not valid_checked) {
+      valid_buttons[0]->click();
+      return;
+    }
   }
-  // this->when_export_type_toggled();
+  this->when_export_type_toggled();
 }
 
 void SCWind::when_blocklist_changed() noexcept {
