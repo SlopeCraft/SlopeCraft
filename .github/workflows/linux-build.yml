@@ -41,18 +41,6 @@ jobs:
         run: |
           sudo apt install libqt6widgets6 libqt6gui6 libqt6network6 qt6-base-dev qt6-tools-dev-tools qt6-tools-dev qt6-l10n-tools
           sudo apt install x11-utils libxcb-xinerama0 libxv1 libgl-dev
-        # ^: additional qt-related packages
-
-      - name: Install xsimd
-        run: |
-          cd build
-          git clone https://github.com/xtensor-stack/xsimd.git
-          cd xsimd
-          git checkout 11.1.0
-          cmake -S . -B build-xsimd -G Ninja -DCMAKE_BUILD_TYPE:STRING=$BUILD_TYPE
-          sudo cmake --install ./build-xsimd
-          cd ..
-          rm -rf xsimd
 
       - name: Install gapp
         run: |

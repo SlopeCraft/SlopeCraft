@@ -8,7 +8,6 @@ if (${SlopeCraft_no_download})
 endif ()
 
 include(FetchContent)
-# TODO: Update to later version of xsimd
 FetchContent_Declare(xsimd
     GIT_REPOSITORY https://github.com/xtensor-stack/xsimd.git
     GIT_TAG e88a72831858123924f7118f345dfe5d70d95991 #14.3.0
