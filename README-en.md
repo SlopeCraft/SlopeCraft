@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-    <img src="https://img.shields.io/badge/Minecraft-1.12~26.2-green?style=for-the-badge" />
+    <img src="https://img.shields.io/badge/Minecraft-1.12~26.3-green?style=for-the-badge" />
     <a href="LICENSE">
         <img src="https://img.shields.io/badge/License-GPL--3.0-important?style=for-the-badge" />
     </a>
@@ -17,7 +17,7 @@
     </a>
     <br />
     <img src="https://img.shields.io/badge/C%2B%2B-23-blue?style=for-the-badge" />
-    <img src="https://img.shields.io/badge/Qt-v6.10-brightgreen?style=for-the-badge" />
+    <img src="https://img.shields.io/badge/Qt-v6.12-brightgreen?style=for-the-badge" />
     <img src="https://img.shields.io/badge/Eigen-v5.0.1-yellowgreen?style=for-the-badge" />
 </p>
 
@@ -78,11 +78,7 @@ a map - because SlopeCraft is specifically designed for map pixel art.
 
 ## 🛠️ Other Related Repositories
 
-* [NBTWriter](https://github.com/ToKiNoBug/NBTWriter-of-Toki) - Lib for writing NBT files.
-* [SlopeCraftTutorial](https://github.com/ToKiNoBug/SlopeCraftTutorial) - Tutorials
-* [SlopeCraftCompressLib](https://github.com/ToKiNoBug/SlopeCraftCompressLib) - Lib for building height map and lossless
-  compression lib.
-* [SlopeCraftLossyCompression](https://github.com/ToKiNoBug/SlopeCraftLossyCompression) - Lossy compression lib, based
-  on SlopeCraftCompressLib.
-* [SlopeCraftGlassBuilder](https://github.com/ToKiNoBug/SlopeCraftGlassBuilder) - Glass bridge building lib.
-* [HeuristicFlow](https://github.com/TokiNoBug/HeuristicFlow) - GA implementation.
+- [mc_schem](https://github.com/SlopeCraft/mc_schem) - Schematic library
+- [libnbt++](https://github.com/PrismLauncher/libnbtplusplus) NBT library for C++ side
+- [fastnbt](https://github.com/owengage/fastnbt) NBT library for Rust side(used by mc_schem)
+- [gapp](https://github.com/KRM7/gapp) - Genetic algorithm

@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-    <img src="https://img.shields.io/badge/Minecraft-1.12~26.2-green?style=for-the-badge" />
+    <img src="https://img.shields.io/badge/Minecraft-1.12~26.3-green?style=for-the-badge" />
     <a href="LICENSE">
         <img src="https://img.shields.io/badge/License-GPL--3.0-important?style=for-the-badge" />
     </a>
@@ -16,7 +16,7 @@
     </a>
     <br />
     <img src="https://img.shields.io/badge/C%2B%2B-23-blue?style=for-the-badge" />
-    <img src="https://img.shields.io/badge/Qt-v6.10-brightgreen?style=for-the-badge" />
+    <img src="https://img.shields.io/badge/Qt-v6.12-brightgreen?style=for-the-badge" />
     <img src="https://img.shields.io/badge/Eigen-v5.0.1-yellowgreen?style=for-the-badge" />
 </p>
 
@@ -69,8 +69,7 @@ SlopeCraft 是一款基于 Qt + Eigen + zlib 开发的，用于在 Minecraft 中
 
 ## 🛠️ 其他相关仓库
 
-- [NBTWriter](https://github.com/ToKiNoBug/NBTWriter-of-Toki) - 写 NBT 文件的库（自己写的，功能比较弱，满足自己的需求就够了）
-- [SlopeCraftCompressLib](https://github.com/ToKiNoBug/SlopeCraftCompressLib) - 无损压缩库，也承担了构建高度矩阵的功能
-- [SlopeCraftLossyCompression](https://github.com/ToKiNoBug/SlopeCraftLossyCompression) - 有损压缩库，基于无损压缩库实现
-- [SlopeCraftGlassBuilder](https://github.com/ToKiNoBug/SlopeCraftGlassBuilder) - 搭桥库
-- [HeuristicFlow](https://github.com/TokiNoBug/HeuristicFlow) - 遗传算法实现
+- [mc_schem](https://github.com/SlopeCraft/mc_schem) - 原理图库
+- [libnbt++](https://github.com/PrismLauncher/libnbtplusplus) C++侧使用的NBT库
+- [fastnbt](https://github.com/owengage/fastnbt) Rust侧使用的NBT库（mc_schem依赖）
+- [gapp](https://github.com/KRM7/gapp) - 遗传算法实现
