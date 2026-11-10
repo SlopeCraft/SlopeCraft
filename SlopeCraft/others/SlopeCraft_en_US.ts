@@ -1332,8 +1332,8 @@ Click Ignore to skip, Retry to retry and Cancel to cancel</translation>
     </message>
     <message>
         <location filename="../SCWind_slots.cpp" line="806"/>
-        <source>本软件的开发持续集成与 macOS 软件适配由 iXOR Technology (Cubik65536 以及贡献者) 提供</source>
-        <translation>The continuous integration solution and macOS version maintenance of this software is provided by iXOR Technology (Cubik65536 and contributors)</translation>
+        <source>本软件的开发持续集成与 macOS 软件适配由 iXOR Technology (Qubik65536 以及贡献者) 提供</source>
+        <translation>The continuous integration solution and macOS version maintenance of this software is provided by iXOR Technology (Qubik65536 and contributors)</translation>
     </message>
     <message>
         <location filename="../SCWind_slots.cpp" line="809"/>

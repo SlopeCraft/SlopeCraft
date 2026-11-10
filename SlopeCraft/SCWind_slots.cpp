@@ -803,7 +803,7 @@ void SCWind::on_ac_about_triggered() noexcept {
          "中制造可以生存实装的立体地图画（但同样支持传统的平面地图画）。");
   info += "\n";
   info +=
-      tr("本软件的开发持续集成与 macOS 软件适配由 iXOR Technology (Cubik65536 "
+      tr("本软件的开发持续集成与 macOS 软件适配由 iXOR Technology (Qubik65536 "
          "以及贡献者) 提供");
   info += "\n\n";
   info += tr("感谢 AbrasiveBoar902 为本软件的设计和优化贡献的力量");

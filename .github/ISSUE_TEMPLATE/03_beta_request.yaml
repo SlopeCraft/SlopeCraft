@@ -1,7 +1,7 @@
 name: "Beta Request"
 description: "Request a beta version"
 title: "[BETA]: "
-assignees: ["ToKiNoBug", "Cubik65536"]
+assignees: [ "ToKiNoBug", "Qubik65536" ]
 
 body:
   - type: checkboxes

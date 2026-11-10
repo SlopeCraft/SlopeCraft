@@ -1,7 +1,7 @@
 name: "Beta 申请"
 description: "申请试用版"
 title: "[BETA]: "
-assignees: ["ToKiNoBug", "Cubik65536"]
+assignees: [ "ToKiNoBug", "Qubik65536" ]
 
 body:
   - type: checkboxes

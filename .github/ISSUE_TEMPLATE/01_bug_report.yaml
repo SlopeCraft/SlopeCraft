@@ -1,8 +1,8 @@
 name: "Bug Report"
 description: "Create a report to help us improve SlopeCraft"
 title: "[Bug]: "
-labels: ["bug"]
-assignees: ["ToKiNoBug", "Cubik65536"]
+labels: [ "bug" ]
+assignees: [ "ToKiNoBug", "Qubik65536" ]
 
 body:
   - type: markdown
@@ -17,7 +17,7 @@ body:
         >
         > For usage questions, please refer to the following resources:
         > * [Search or ask in Discussion](https://github.com/SlopeCraft/SlopeCraft/discussions)
-        
+
   - type: checkboxes
     id: confirm
     attributes:

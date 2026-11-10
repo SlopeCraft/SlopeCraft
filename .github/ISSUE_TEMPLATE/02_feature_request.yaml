@@ -1,8 +1,8 @@
 name: "Feature Request"
 description: "Suggest an idea for SlopeCraft"
 title: "[Feature Request]: "
-labels: ["enhancement"]
-assignees: ["ToKiNoBug", "Cubik65536"]
+labels: [ "enhancement" ]
+assignees: [ "ToKiNoBug", "Qubik65536" ]
 
 body:
   - type: markdown
@@ -59,7 +59,7 @@ body:
         Please search to see if an issue related to this feature request already exists.
         
         ---------
-  
+
   - type: checkboxes
     id: terms
     attributes:
