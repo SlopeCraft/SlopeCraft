@@ -1,4 +1,4 @@
-find_package(mc_schem 1.4.1 CONFIG QUIET)
+find_package(mc_schem 1.4.2 CONFIG QUIET)
 
 if (NOT mc_schem_FOUND)
     if (${SlopeCraft_no_download})
@@ -9,13 +9,13 @@ if (NOT mc_schem_FOUND)
     set(MC_SCHEM_ENABLE_TESTS OFF)
     message(STATUS "Failed to find mc_schem. Downloading...")
     FetchContent_Declare(mc_schem
-        URL https://github.com/SlopeCraft/mc_schem/archive/refs/tags/v1.4.1.tar.gz
-        URL_HASH SHA512=0a8979e5c259b344f0195e63d76f853ea282c2a909189569fcc5d31a9578538b26919b1aade629956d967f1c1258c87ba768e19de1dbdff824ec5d43abf3432a
+        URL https://github.com/SlopeCraft/mc_schem/archive/refs/tags/v1.4.2.tar.gz
+        URL_HASH SHA512=39de9a76e8b53e05b544f06c68ece30421295e19bcab3a767ca146dcd5a11184b3430ef9b7306b156f4d0265f2b50f4f5ba4d2de5b8aba468ed14dacda05d787
         OVERRIDE_FIND_PACKAGE
         EXCLUDE_FROM_ALL
     )
     FetchContent_MakeAvailable(mc_schem)
-    find_package(mc_schem CONFIG REQUIRED)
+    find_package(mc_schem 1.4.2 CONFIG REQUIRED)
 endif ()
 
 if (NOT mc_schem_SHARED_LIB_LOCATION)
