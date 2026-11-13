@@ -400,6 +400,9 @@ bool structure_3D_impl::export_litematica(
 
   auto md = this->schem->metadata();
   md->set_name(option.litename_utf8);
+#warning \
+    "TODO: this patch is temporary. 1.20.4 is different from 1.20.5, set subversion from UI is the right way."
+  md->set_litematica_version(std::min(md->litematica_version(), 6));
   option.progressbar.set_range(1, 100, 0);
   {
     std::ofstream ofs{filename, std::ios::binary};

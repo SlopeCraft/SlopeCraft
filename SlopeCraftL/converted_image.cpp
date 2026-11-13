@@ -810,7 +810,13 @@ bool converted_image_impl::export_assembled_maps_litematic(
   try {
     auto schem = this->assembled_maps(map_opt);
 
-    schem->metadata()->set_name(export_opt.litename_utf8);
+    {
+      auto md = schem->metadata();
+      md->set_name(export_opt.litename_utf8);
+#warning \
+    "TODO: this patch is temporary. 1.20.4 is different from 1.20.5, set subversion from UI is the right way."
+      md->set_litematica_version(std::min(md->litematica_version(), 6));
+    }
     schem->get_region(0)->set_name(export_opt.region_name_utf8);
 
     mc_schem::litematica_save_option lso{};

@@ -224,6 +224,9 @@ bool TokiVC::build(uint32_t num_threads) noexcept {
           "(\"https://github.com/SlopeCraft/SlopeCraft\") and mc_schem "
           "(\"https://github.com/SlopeCraft/mc_schem\"), both are developed by "
           "TokiNoBug.");
+#warning \
+    "TODO: this patch is temporary. 1.20.4 is different from 1.20.5, set subversion from UI is the right way."
+      md->set_litematica_version(std::min(md->litematica_version(), 6));
       this->schem->set_metadata(std::move(md));
     }
 
